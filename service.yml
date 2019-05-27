@@ -1,0 +1,6 @@
+# https://services.shopify.io/services/tapioca/production
+owners:
+  - Shopify/rails
+classification: library
+slack_channels:
+  - sorbet

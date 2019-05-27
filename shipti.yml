@@ -1,0 +1,4 @@
+deploy:
+  override:
+    - "bundle exec rake build"
+    - "bundle exec package_cloud push shopify/gems pkg/*.gem"
