@@ -14,3 +14,8 @@ end
 group(:deployment, :development) do
   gem("rake", "~> 12.3")
 end
+
+source("https://stripe.dev/sorbet-repo/super-secret-private-beta/") do
+  gem("sorbet", :group => :development)
+  gem("sorbet-runtime")
+end
