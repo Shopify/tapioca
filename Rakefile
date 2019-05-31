@@ -6,7 +6,7 @@ require "rake/testtask"
 begin
   require 'rspec/core/rake_task'
   RSpec::Core::RakeTask.new(:spec)
-rescue LoadError
+rescue LoadError # rubocop:disable Lint/HandleExceptions
 end
 
 task(default: :spec)

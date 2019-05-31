@@ -82,7 +82,7 @@ module Tapioca
 
         sig { params(symbol: String).returns(BasicObject) }
         def resolve_constant(symbol)
-          Object.const_get(symbol, false) # rubocop:disable Sorbet/ConstantsFromStrings
+          Object.const_get(symbol, false)
         rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
           nil
         end

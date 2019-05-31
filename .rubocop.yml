@@ -5,7 +5,8 @@ inherit_from:
 
 AllCops:
   TargetRubyVersion: 2.5
+  Exclude:
+  - 'vendor/**/*'
 
-require:
-  - tapioca
-
+Style/CaseEquality:
+  Enabled: false
