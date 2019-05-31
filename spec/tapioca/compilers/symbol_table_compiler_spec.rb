@@ -1,6 +1,8 @@
+# typed: false
 # frozen_string_literal: true
 
 require "spec_helper"
+require "pathname"
 require "tmpdir"
 
 # Since we load all examples into memory,
