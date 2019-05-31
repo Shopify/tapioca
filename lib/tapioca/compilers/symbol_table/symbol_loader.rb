@@ -13,7 +13,7 @@ module Tapioca
         extend(T::Sig)
         T::Hooks.install(self)
 
-        SORBET = T.let(Gem.bin_path("sorbet", "srb"), String)
+        SORBET = Pathname.new(Gem::Specification.find_by_name("sorbet-static").full_gem_path) / "libexec" / "sorbet"
 
         class << self
           extend(T::Sig)
@@ -29,7 +29,7 @@ module Tapioca
 
           private
 
-          sig { params(paths: T.any(String, T::Array[String])).returns(T::Set[String]) }
+          sig { params(paths: T::Array[String]).returns(T::Set[String]) }
           def load_symbols(paths)
             output = T.cast(Tempfile.create('sorbet') do |file|
               file.write(Array(paths).join("\n"))
@@ -40,46 +40,39 @@ module Tapioca
 
             return Set.new if output.nil? || output.empty?
 
-            parser = SymbolTableParser.new(output)
-            parser.symbols
+            SymbolTableParser.parse(output)
           end
 
           def ignored_symbols
             unless @ignored_symbols
               output = symbol_table_from("''", table_type: "symbol-table-full")
-              parser = SymbolTableParser.new(output)
-              @ignored_symbols = parser.symbols
+              @ignored_symbols = SymbolTableParser.parse(output)
             end
 
             @ignored_symbols
           end
 
           def symbol_table_from(input, table_type: "symbol-table")
-            IO.popen(
-              [
-                SORBET,
-                "tc",
-                "--print=#{table_type}",
-                "--quiet",
-                input,
-              ].shelljoin,
-              err: "/dev/null"
-            ).read
+            # Change dir since you might have a sorbet/config in your cwd
+            Dir.chdir(Dir.tmpdir) do
+              return IO.popen(
+                [
+                  SORBET,
+                  "--print=#{table_type}",
+                  "--quiet",
+                  input,
+                ].shelljoin,
+                err: "/dev/null"
+              ).read
+            end
           end
         end
 
         class SymbolTableParser
-          attr_accessor :symbols
-
-          def initialize(symbol_table)
-            @symbols = Set.new
-            parse_symbol_table(symbol_table)
-          end
-
-          def parse_symbol_table(symbol_table_str)
-            symbol_table_str.each_line do |line|
+          def self.parse(symbol_table)
+            symbols = Set.new
+            symbol_table.each_line do |line|
               next if line.strip!.empty?
-
               kind, name = line.split(" ")
 
               next if kind.nil? || name.nil?
@@ -92,6 +85,7 @@ module Tapioca
 
               symbols.add(name)
             end
+            symbols
           end
         end
       end
