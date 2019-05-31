@@ -10,7 +10,7 @@ module Tapioca
         params(
           gem: Gemfile::Gem,
           indent: Integer,
-          generate_header: T.any(TrueClass, FalseClass),
+          generate_header: T::Boolean,
           command: String,
           typed_sigil: String
         ).returns(String)

@@ -9,9 +9,6 @@ module Tapioca
       class SymbolGenerator
         extend(T::Sig)
 
-        Boolean = T.type_alias(T.any(TrueClass, FalseClass))
-        private_constant(:Boolean)
-
         IGNORED_SYMBOLS = %w{
           YAML
           MiniTest
@@ -418,19 +415,19 @@ module Tapioca
           indented("def #{method_name}#{parameters}; end")
         end
 
-        sig { params(symbol_name: String).returns(Boolean) }
+        sig { params(symbol_name: String).returns(T::Boolean) }
         def symbol_ignored?(symbol_name)
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        sig { params(path: String).returns(Boolean) }
+        sig { params(path: String).returns(T::Boolean) }
         def path_in_gem?(path)
           path.start_with?(gem.full_gem_path)
         end
 
         SPECIAL_METHOD_NAMES = %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `]
 
-        sig { params(name: String).returns(Boolean) }
+        sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)
           return true if SPECIAL_METHOD_NAMES.include?(name)
           !!name.match(/^[[:word:]]+[?!=]?$/)
@@ -456,7 +453,7 @@ module Tapioca
           " " * @indent + str
         end
 
-        sig { params(method: UnboundMethod).returns(Boolean) }
+        sig { params(method: UnboundMethod).returns(T::Boolean) }
         def method_in_gem?(method)
           source_location = method.source_location&.first
           return false if source_location.nil?
@@ -464,7 +461,7 @@ module Tapioca
           path_in_gem?(source_location)
         end
 
-        sig { params(constant: Module, strict: Boolean).returns(Boolean) }
+        sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
         def defined_in_gem?(constant, strict: true)
           files = get_file_candidates(constant)
 
@@ -489,7 +486,7 @@ module Tapioca
           @alias_namespace.add("#{name}::")
         end
 
-        sig { params(name: String).returns(Boolean) }
+        sig { params(name: String).returns(T::Boolean) }
         def alias_namespaced?(name)
           @alias_namespace.any? do |namespace|
             name.start_with?(namespace)
@@ -501,7 +498,7 @@ module Tapioca
           @seen.add(name)
         end
 
-        sig { params(name: String).returns(Boolean) }
+        sig { params(name: String).returns(T::Boolean) }
         def seen?(name)
           @seen.include?(name)
         end
@@ -524,7 +521,7 @@ module Tapioca
           constants_of(parent).include?(name_parts.last.to_sym)
         end
 
-        sig { params(constant: Module).returns(Boolean) }
+        sig { params(constant: Module).returns(T::Boolean) }
         def public_module?(constant)
           constant_name = name_of(constant)
           return false unless constant_name
@@ -567,7 +564,7 @@ module Tapioca
           Class.instance_method(:superclass).bind(constant).call
         end
 
-        sig { params(constant: Module, other: Module).returns(Boolean) }
+        sig { params(constant: Module, other: Module).returns(T::Boolean) }
         def are_equal?(constant, other)
           BasicObject.instance_method(:equal?).bind(constant).call(other)
         end
