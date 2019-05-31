@@ -34,7 +34,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
         allow(spec).to(receive(:full_gem_path).and_return(dir))
         allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
-        gem = Tapioca::Compilers::Gemfile::Gem.new(spec)
+        gem = Tapioca::Gemfile::Gem.new(spec)
 
         # Require the file
         require(dir.join("lib/file.rb"))
