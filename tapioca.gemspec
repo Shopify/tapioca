@@ -27,10 +27,12 @@ Gem::Specification.new do |spec|
     Rakefile
   )
 
+  spec.add_dependency("thor", "~> 0.20.3")
+  spec.add_dependency("pry", ">= 0.12.2")
+
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("rspec", "~> 3.7")
   spec.add_development_dependency("rubocop", "~> 0.70.0")
   spec.add_development_dependency("zeitwerk", "~> 2.1")
-  spec.add_development_dependency("pry", ">= 0.12.2")
   spec.add_development_dependency("pry-byebug")
 end
