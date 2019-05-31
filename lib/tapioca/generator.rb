@@ -1,4 +1,4 @@
-# frozen_string_literals: true
+# frozen_string_literal: true
 # typed: true
 
 require 'pathname'
@@ -52,7 +52,7 @@ module Tapioca
       Tapioca.silence_warnings do
         anything_done = [
           perform_removals,
-          perform_additions
+          perform_additions,
         ].any?
 
         if anything_done
@@ -234,10 +234,10 @@ module Tapioca
       anything_done
     end
 
-    sig {
+    sig do
       params(gem_names: T::Array[String])
         .returns(T::Array[Gemfile::Gem])
-    }
+    end
     def gems_to_generate(gem_names)
       return gemfile.dependencies if gem_names.empty?
 
