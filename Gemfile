@@ -2,9 +2,6 @@
 
 source("https://rubygems.org")
 
-PACKAGE_CLOUD = "https://packages.shopify.io/shopify/gems"
-source(PACKAGE_CLOUD)
-
 gemspec
 
 group(:deployment) do
