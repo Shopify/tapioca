@@ -131,14 +131,28 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
               end
             end
           end
+
           class Integer
             def to_foo(base = 10)
               42 + base
             end
           end
+
+          class Hash
+            def to_bar
+              {}
+            end
+          end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
+          class Hash
+            include(::JSON::Ext::Generator::GeneratorMethods::Hash)
+            include(::Enumerable)
+
+            def to_bar; end
+          end
+
           class Integer < ::Numeric
             include(::JSON::Ext::Generator::GeneratorMethods::Integer)
 

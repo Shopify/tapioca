@@ -83,7 +83,7 @@ module Tapioca
               kind, name = line.split(" ")
 
               next if kind.nil? || name.nil?
-              name = name.sub(/^::/, "")
+              name = name.sub(/^::/, "").sub(/\[.*$/, "")
 
               next unless %w[class static-field].include?(kind)
               next if name =~ /[<>()$]/
