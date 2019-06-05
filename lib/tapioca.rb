@@ -5,6 +5,7 @@ require "zeitwerk"
 require "sorbet-runtime"
 
 loader = Zeitwerk::Loader.for_gem
+loader.eager_load
 loader.setup
 
 module Tapioca
