@@ -1,20 +1,11 @@
 # frozen_string_literal: true
-# typed: true
+# typed: strict
 
 require 'pathname'
 
 module Tapioca
   class Generator < Thor::Shell::Color
     extend(T::Sig)
-
-    class GemNameError < RuntimeError
-      attr_reader :gem_name
-
-      def initialize(message, gem_name)
-        super(message)
-        @gem_name = gem_name
-      end
-    end
 
     sig { returns(Pathname) }
     attr_reader :outdir
@@ -38,6 +29,10 @@ module Tapioca
       @prerequire = T.let(prerequire, T.nilable(String))
       @postrequire = T.let(postrequire, T.nilable(String))
       @gemfile = T.let(gemfile, T.nilable(String))
+      @bundle = T.let(nil, T.nilable(Gemfile))
+      @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
+      @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
+      @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
       super()
     end
 
@@ -145,36 +140,18 @@ module Tapioca
     sig { params(filename: Pathname).void }
     def add(filename)
       say("++ Adding: #{filename}", :green)
-      # status = execute("git add '#{filename}'")
-
-      # unless status.success?
-      #   $stderr.puts("    Failed to add RBI: #{filename}")
-      #   exit(3)
-      # end
     end
 
     sig { params(filename: Pathname).void }
     def remove(filename)
       say("-- Removing: #{filename}", :green)
       filename.unlink
-      # status = execute("git rm '#{filename}'")
-
-      # unless status.success?
-      #   $stderr.puts("    Failed to remove RBI: #{filename}")
-      #   exit(3)
-      # end
     end
 
     sig { params(old_filename: Pathname, new_filename: Pathname).void }
     def move(old_filename, new_filename)
       say("-> Moving: #{old_filename} to #{new_filename}", :green)
       old_filename.rename(new_filename.to_s)
-      # status = execute("git mv '#{old_filename}' '#{new_filename}'")
-
-      # unless status.success?
-      #   $stderr.puts("    Failed to move RBI: #{old_filename}")
-      #   exit(3)
-      # end
     end
 
     sig { void }
@@ -182,7 +159,7 @@ module Tapioca
       say("Removing RBI files of gems that have been removed:", [:blue, :bold])
       puts
 
-      anything_done = false
+      anything_done = T.let(false, T::Boolean)
 
       gems = removed_rbis
 
@@ -209,7 +186,7 @@ module Tapioca
       say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
       puts
 
-      anything_done = false
+      anything_done = T.let(false, T::Boolean)
 
       gems = added_rbis
 
@@ -252,7 +229,10 @@ module Tapioca
 
       gem_names.map do |gem_name|
         gem = bundle.gem(gem_name)
-        raise GemNameError.new("cannot find gem", gem_name) if gem.nil?
+        if gem.nil?
+          say("Error: Cannot find gem '#{gem_name}'", :red)
+          exit(1)
+        end
         gem
       end
     end
