@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: true
+# typed: strict
 
 require "bundler"
 
@@ -9,32 +9,29 @@ module Tapioca
 
     Spec = T.type_alias(T.any(::Bundler::StubSpecification, ::Gem::Specification))
 
-    attr_reader(:gemfile, :lockfile)
-
     sig { params(gemfile: T.nilable(T.any(Pathname, String))).void }
     def initialize(gemfile:)
       gemfile = gemfile || Bundler.default_gemfile
       lockfile = Pathname.new("#{gemfile}.lock")
-      @gemfile = File.new(gemfile.to_s)
-      @lockfile = File.new(lockfile.to_s)
+      @gemfile = T.let(File.new(gemfile.to_s), File)
+      @lockfile = T.let(File.new(lockfile.to_s), File)
+      @dependencies = T.let(nil, T.nilable(T::Array[Gem]))
     end
 
     sig { returns(T::Array[Gem]) }
     def dependencies
-      bundler = Bundler::Dsl.evaluate(gemfile, lockfile, {})
-      bundler
-        .resolve
-        .materialize(bundler.specs.to_a)
-        .reject { |gem| gem == "sorbet" }
-        .map { |gem| Gem.new(gem) }
-        .reject { |gem| gem.full_gem_path.start_with?(gemfile_dir) }
-        .uniq(&:rbi_file_name)
-        .sort_by(&:rbi_file_name)
-    end
+      @dependencies ||= begin
+        bundler = Bundler::Dsl.evaluate(gemfile, lockfile, {})
+        specs = bundler.specs.to_a
 
-    sig { returns(String) }
-    def gemfile_dir
-      File.expand_path(gemfile.path + "/..")
+        bundler
+          .resolve
+          .materialize(specs)
+          .reject { |spec| ignore_gem_spec?(spec) }
+          .map { |spec| Gem.new(spec) }
+          .uniq(&:rbi_file_name)
+          .sort_by(&:rbi_file_name)
+      end
     end
 
     sig { params(gem_name: String).returns(T.nilable(Gem)) }
@@ -58,6 +55,20 @@ module Tapioca
 
     private
 
+    sig { returns(File) }
+    attr_reader(:gemfile, :lockfile)
+
+    sig { params(spec: Spec).returns(T::Boolean) }
+    def ignore_gem_spec?(spec)
+      spec.name == "sorbet" ||
+        spec.full_gem_path.start_with?(gemfile_dir)
+    end
+
+    sig { returns(String) }
+    def gemfile_dir
+      File.expand_path(gemfile.path + "/..")
+    end
+
     sig { void }
     def load_rails_engines
       return unless Object.const_defined?("Rails::Engine")
@@ -68,7 +79,7 @@ module Tapioca
 
         engine.config.eager_load_paths.each do |load_path|
           Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-            require(T.must(file))
+            require(file)
           rescue LoadError, StandardError
             errored_files << file
           end
