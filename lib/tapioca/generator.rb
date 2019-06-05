@@ -4,7 +4,7 @@
 require 'pathname'
 
 module Tapioca
-  class Generator
+  class Generator < Thor::Shell::Color
     extend(T::Sig)
 
     class GemNameError < RuntimeError
@@ -18,10 +18,8 @@ module Tapioca
 
     sig { returns(Pathname) }
     attr_reader :outdir
-
     sig { returns(T.nilable(String)) }
     attr_reader :prerequire
-
     sig { returns(T.nilable(String)) }
     attr_reader :postrequire
 
@@ -30,6 +28,7 @@ module Tapioca
       @outdir = T.let(Pathname.new(outdir), Pathname)
       @prerequire = T.let(prerequire, T.nilable(String))
       @postrequire = T.let(postrequire, T.nilable(String))
+      super()
     end
 
     sig { params(gem_names: T::Array[String]).void }
@@ -38,12 +37,15 @@ module Tapioca
         require_gem_file
 
         gems_to_generate(gem_names).map do |gem|
-          compile_rbi(gem)
-          puts
+          say("Processing '#{gem.name}' gem:", :green)
+          indent do
+            compile_rbi(gem)
+            puts
+          end
         end
 
-        puts("All operations performed in working directory.")
-        puts("Please review changes and commit them.")
+        say("All operations performed in working directory.", [:green, :bold])
+        say("Please review changes and commit them.", [:green, :bold])
       end
     end
 
@@ -56,10 +58,10 @@ module Tapioca
         ].any?
 
         if anything_done
-          puts("All operations performed in working directory.")
-          puts("Please review changes and commit them.")
+          say("All operations performed in working directory.", [:green, :bold])
+          say("Please review changes and commit them.", [:green, :bold])
         else
-          puts("No operations performed, all RBIs are up-to-date.")
+          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
         end
 
         puts
@@ -139,7 +141,7 @@ module Tapioca
 
     sig { params(filename: Pathname).void }
     def add(filename)
-      puts("  ++ Adding: #{filename}")
+      say("++ Adding: #{filename}", :green)
       # status = execute("git add '#{filename}'")
 
       # unless status.success?
@@ -150,7 +152,7 @@ module Tapioca
 
     sig { params(filename: Pathname).void }
     def remove(filename)
-      puts("  -- Removing: #{filename}")
+      say("-- Removing: #{filename}", :green)
       filename.unlink
       # status = execute("git rm '#{filename}'")
 
@@ -162,7 +164,7 @@ module Tapioca
 
     sig { params(old_filename: Pathname, new_filename: Pathname).void }
     def move(old_filename, new_filename)
-      puts("  -> Moving: #{old_filename} to #{new_filename}")
+      say("-> Moving: #{old_filename} to #{new_filename}", :green)
       old_filename.rename(new_filename.to_s)
       # status = execute("git mv '#{old_filename}' '#{new_filename}'")
 
@@ -174,22 +176,24 @@ module Tapioca
 
     sig { void }
     def perform_removals
-      puts("# Removing RBI files of gems that have been removed:")
+      say("Removing RBI files of gems that have been removed:", [:blue, :bold])
       puts
 
       anything_done = false
 
       gems = removed_rbis
 
-      if gems.empty?
-        puts("  Nothing to do.")
-      else
-        gems.each do |removed|
-          filename = existing_rbi(removed)
-          remove(filename)
-        end
+      indent do
+        if gems.empty?
+          say("Nothing to do.")
+        else
+          gems.each do |removed|
+            filename = existing_rbi(removed)
+            remove(filename)
+          end
 
-        anything_done = true
+          anything_done = true
+        end
       end
 
       puts
@@ -199,31 +203,33 @@ module Tapioca
 
     sig { void }
     def perform_additions
-      puts("# Generating RBI files of gems that are added or updated:")
+      say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
       puts
 
       anything_done = false
 
       gems = added_rbis
 
-      if gems.empty?
-        puts("  Nothing to do.")
-      else
-        require_gem_file
+      indent do
+        if gems.empty?
+          say("Nothing to do.")
+        else
+          require_gem_file
 
-        gems.each do |gem_name|
-          filename = expected_rbi(gem_name)
+          gems.each do |gem_name|
+            filename = expected_rbi(gem_name)
 
-          if rbi_exists?(gem_name)
-            old_filename = existing_rbi(gem_name)
-            move(old_filename, filename) unless old_filename == filename
+            if rbi_exists?(gem_name)
+              old_filename = existing_rbi(gem_name)
+              move(old_filename, filename) unless old_filename == filename
+            end
+
+            gem = T.must(bundle.gem(gem_name))
+            compile_rbi(gem)
+            add(filename)
+
+            puts
           end
-
-          gem = T.must(gemfile.gem(gem_name))
-          compile_rbi(gem)
-          add(filename)
-
-          puts
         end
 
         anything_done = true
@@ -251,7 +257,7 @@ module Tapioca
     sig { params(gem: Gemfile::Gem).void }
     def compile_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
-      puts "  Compiling #{gem.name}, this may take a few seconds..."
+      say("Compiling #{gem.name}, this may take a few seconds...")
 
       content = compiler.compile(gem)
 
@@ -259,7 +265,7 @@ module Tapioca
       filename = outdir / gem.rbi_file_name
       File.write(filename.to_s, content)
 
-      puts "  Compiled #{filename}"
+      say("Compiled #{filename}")
     end
   end
 end
