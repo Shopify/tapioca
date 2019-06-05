@@ -1,0 +1,29 @@
+PATH
+  remote: ../gems/bar
+  specs:
+    bar (0.3.0)
+
+PATH
+  remote: ../gems/baz
+  specs:
+    baz (0.0.2)
+
+PATH
+  remote: ../gems/foo
+  specs:
+    foo (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bar!
+  baz!
+  foo!
+
+BUNDLED WITH
+   1.17.3
