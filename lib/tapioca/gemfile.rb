@@ -1,21 +1,27 @@
 # frozen_string_literal: true
 # typed: true
 
+require "bundler"
+
 module Tapioca
   class Gemfile
     extend(T::Sig)
 
     Spec = T.type_alias(T.any(::Bundler::StubSpecification, ::Gem::Specification))
 
-    sig { params(gemfile: T.any(Pathname, String), gemfile_lock: T.any(Pathname, String)).void }
-    def initialize(gemfile: Bundler.default_gemfile, gemfile_lock: Bundler.default_lockfile)
+    attr_reader(:gemfile, :lockfile)
+
+    sig { params(gemfile: T.nilable(T.any(Pathname, String))).void }
+    def initialize(gemfile:)
+      gemfile = gemfile || Bundler.default_gemfile
+      lockfile = Pathname.new("#{gemfile}.lock")
       @gemfile = File.new(gemfile.to_s)
-      @gemfile_lock = File.new(gemfile_lock.to_s)
+      @lockfile = File.new(lockfile.to_s)
     end
 
     sig { returns(T::Array[Gem]) }
     def dependencies
-      bundler = Bundler::Dsl.evaluate(gemfile, gemfile_lock, {})
+      bundler = Bundler::Dsl.evaluate(gemfile, lockfile, {})
       bundler
         .resolve
         .materialize(bundler.specs.to_a)
@@ -40,7 +46,10 @@ module Tapioca
     def require_bundle(initialize_file, require_file)
       require(initialize_file) if initialize_file && File.exist?(initialize_file)
 
-      Bundler.require(*T.unsafe(Bundler.definition.groups))
+      definition = Bundler::Dsl.evaluate(gemfile, lockfile, {})
+      runtime = Bundler::Runtime.new(File.dirname(gemfile.path), definition)
+      groups = Bundler.definition.groups
+      runtime.setup(*groups).require(*groups)
 
       require(require_file) if require_file && File.exist?(require_file)
 
@@ -74,8 +83,6 @@ module Tapioca
         end
       end
     end
-
-    attr_reader(:gemfile, :gemfile_lock)
 
     class Gem
       extend(T::Sig)

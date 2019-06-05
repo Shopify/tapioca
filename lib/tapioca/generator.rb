@@ -22,12 +22,22 @@ module Tapioca
     attr_reader :prerequire
     sig { returns(T.nilable(String)) }
     attr_reader :postrequire
+    sig { returns(T.nilable(String)) }
+    attr_reader :gemfile
 
-    sig { params(outdir: String, prerequire: T.nilable(String), postrequire: T.nilable(String)).void }
-    def initialize(outdir:, prerequire:, postrequire:)
+    sig do
+      params(
+        outdir: String,
+        prerequire: T.nilable(String),
+        postrequire: T.nilable(String),
+        gemfile:  T.nilable(String)
+      ).void
+    end
+    def initialize(outdir:, prerequire:, postrequire:, gemfile:)
       @outdir = T.let(Pathname.new(outdir), Pathname)
       @prerequire = T.let(prerequire, T.nilable(String))
       @postrequire = T.let(postrequire, T.nilable(String))
+      @gemfile = T.let(gemfile, T.nilable(String))
       super()
     end
 
@@ -67,8 +77,13 @@ module Tapioca
     private
 
     sig { returns(Gemfile) }
-    def gemfile
-      @gemfile ||= Gemfile.new
+    def bundle
+      @bundle ||= Gemfile.new(gemfile: gemfile)
+    end
+
+    sig { returns(String) }
+    def bundle_path
+      File.dirname(bundle.gemfile.path)
     end
 
     sig { returns(Compilers::SymbolTableCompiler) }
@@ -78,29 +93,21 @@ module Tapioca
 
     sig { void }
     def require_gem_file
-      gemfile.require_bundle(prerequire, postrequire)
+      bundle.require_bundle(prerequire, postrequire)
     end
 
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
-      @existing_rbis ||= Dir.glob("*@*.rbi", T.unsafe(base: outdir.to_s))
-        .map do |f|
-          File.basename(f, ".*").split('@')
-        end.to_h
+      @existing_rbis ||= Dir.glob("*@*.rbi", T.unsafe(base: outdir))
+        .map { |f| File.basename(f, ".*").split('@') }
+        .to_h
     end
 
     sig { returns(T::Hash[String, String]) }
     def expected_rbis
-      @expected_rbis ||= gemfile.dependencies
-        .reject do |gem|
-          # We don't want to generate RBIs for gems
-          # that might happen to be in the current
-          # directory (loaded via `path`)
-          gem.full_gem_path.start_with?(Dir.pwd)
-        end
-        .map do |gem|
-          [gem.name, gem.version.to_s]
-        end.to_h
+      @expected_rbis ||= bundle.dependencies
+        .map { |gem| [gem.name, gem.version.to_s] }
+        .to_h
     end
 
     sig { params(gem_name: String, version: String).returns(Pathname) }
@@ -241,10 +248,10 @@ module Tapioca
         .returns(T::Array[Gemfile::Gem])
     end
     def gems_to_generate(gem_names)
-      return gemfile.dependencies if gem_names.empty?
+      return bundle.dependencies if gem_names.empty?
 
       gem_names.map do |gem_name|
-        gem = gemfile.gem(gem_name)
+        gem = bundle.gem(gem_name)
         raise GemNameError.new("cannot find gem", gem_name) if gem.nil?
         gem
       end

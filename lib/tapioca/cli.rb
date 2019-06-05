@@ -7,6 +7,7 @@ module Tapioca
   class Cli < Thor
     class_option :prerequire
     class_option :postrequire
+    class_option :gemfile
     class_option :outdir, default: "sorbet/rbi/gems"
 
     desc "generate [gem...]", "generate RBIs from gems"
@@ -29,6 +30,7 @@ module Tapioca
           outdir: options[:outdir],
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
+          gemfile: options[:gemfile]
         )
       end
     end
