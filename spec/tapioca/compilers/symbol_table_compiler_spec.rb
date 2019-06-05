@@ -29,20 +29,19 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         # Add an empty Ruby file "foo.rb" to use for requires
         File.write(dir.join("lib/foo.rb"), "")
 
-        compiler = Tapioca::Compilers::SymbolTableCompiler.new
-
-        spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
-        allow(spec).to(receive(:full_gem_path).and_return(dir))
-        allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
-        gem = Tapioca::Gemfile::Gem.new(spec)
-
-        # Require the file
-        require(dir.join("lib/file.rb"))
-
         Tapioca.silence_warnings do
+          compiler = Tapioca::Compilers::SymbolTableCompiler.new
+
+          spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
+          allow(spec).to(receive(:full_gem_path).and_return(dir))
+          allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
+          gem = Tapioca::Gemfile::Gem.new(spec)
+
+          # Require the file
+          require(dir.join("lib/file.rb"))
+
           compiler.compile(gem, generate_header: false).chomp
         end
-
       ensure
         # Remove the wrapper namespace module
         # (and, thus, everything else defined within)
