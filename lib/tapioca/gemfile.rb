@@ -11,7 +11,7 @@ module Tapioca
 
     sig { params(gemfile: T.nilable(T.any(Pathname, String))).void }
     def initialize(gemfile:)
-      gemfile = gemfile || Bundler.default_gemfile
+      gemfile ||= Bundler.default_gemfile
       lockfile = Pathname.new("#{gemfile}.lock")
       @gemfile = T.let(File.new(gemfile.to_s), File)
       @lockfile = T.let(File.new(lockfile.to_s), File)
