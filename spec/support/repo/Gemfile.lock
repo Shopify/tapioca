@@ -1,21 +1,40 @@
 PATH
-  remote: spec/support/gems/bar
+  remote: ../../..
+  specs:
+    tapioca (0.1.0)
+      pry (>= 0.12.2)
+      sorbet-runtime
+      sorbet-static
+      thor (~> 0.20.3)
+      zeitwerk (~> 2.1)
+
+PATH
+  remote: ../gems/bar
   specs:
     bar (0.3.0)
 
 PATH
-  remote: spec/support/gems/baz
+  remote: ../gems/baz
   specs:
     baz (0.0.2)
 
 PATH
-  remote: spec/support/gems/foo
+  remote: ../gems/foo
   specs:
     foo (0.0.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    coderay (1.1.2)
+    method_source (0.9.2)
+    pry (0.12.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    sorbet-runtime (0.4.4103)
+    sorbet-static (0.4.4103-universal-darwin-18)
+    thor (0.20.3)
+    zeitwerk (2.1.6)
 
 PLATFORMS
   ruby
@@ -24,6 +43,7 @@ DEPENDENCIES
   bar!
   baz!
   foo!
+  tapioca!
 
 BUNDLED WITH
    1.17.3

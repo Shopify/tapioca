@@ -14,22 +14,18 @@ module Tapioca
     attr_reader :prerequire
     sig { returns(T.nilable(String)) }
     attr_reader :postrequire
-    sig { returns(T.nilable(String)) }
-    attr_reader :gemfile
 
     sig do
       params(
         outdir: String,
         prerequire: T.nilable(String),
-        postrequire: T.nilable(String),
-        gemfile:  T.nilable(String)
+        postrequire: T.nilable(String)
       ).void
     end
-    def initialize(outdir:, prerequire:, postrequire:, gemfile:)
+    def initialize(outdir:, prerequire:, postrequire:)
       @outdir = T.let(Pathname.new(outdir), Pathname)
       @prerequire = T.let(prerequire, T.nilable(String))
       @postrequire = T.let(postrequire, T.nilable(String))
-      @gemfile = T.let(gemfile, T.nilable(String))
       @bundle = T.let(nil, T.nilable(Gemfile))
       @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
       @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -74,12 +70,7 @@ module Tapioca
 
     sig { returns(Gemfile) }
     def bundle
-      @bundle ||= Gemfile.new(gemfile: gemfile)
-    end
-
-    sig { returns(String) }
-    def bundle_path
-      File.dirname(bundle.gemfile.path)
+      @bundle ||= Gemfile.new
     end
 
     sig { returns(Compilers::SymbolTableCompiler) }

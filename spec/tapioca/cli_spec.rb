@@ -12,7 +12,6 @@ RSpec.describe(Tapioca::Cli) do
   def run(command, args = [], flags = {})
     flags = {
       outdir: outdir,
-      gemfile: (repo_path / "Gemfile").to_s,
     }.merge(flags).flat_map { |k, v| ["--#{k}", v] }
 
     @exec_command = [
@@ -23,8 +22,11 @@ RSpec.describe(Tapioca::Cli) do
     ]
 
     IO.popen(
+      {
+        "BUNDLE_GEMFILE" => (repo_path / "Gemfile").to_s,
+      },
       @exec_command,
-      chdir: Pathname.new(__dir__) / ".." / ".." / "exe"
+      chdir: repo_path / "bin"
     ).read
   end
 
@@ -127,7 +129,9 @@ RSpec.describe(Tapioca::Cli) do
         Processing 'foo' gem:
           Compiling foo, this may take a few seconds...
           Compiled #{outdir}/foo@0.0.1.rbi
+      OUTPUT
 
+      expect(output).to(include(<<~OUTPUT))
         Processing 'bar' gem:
           Compiling bar, this may take a few seconds...
           Compiled #{outdir}/bar@0.3.0.rbi
@@ -149,11 +153,15 @@ RSpec.describe(Tapioca::Cli) do
         Processing 'bar' gem:
           Compiling bar, this may take a few seconds...
           Compiled #{outdir}/bar@0.3.0.rbi
+      OUTPUT
 
+      expect(output).to(include(<<~OUTPUT))
         Processing 'baz' gem:
           Compiling baz, this may take a few seconds...
           Compiled #{outdir}/baz@0.0.2.rbi
+      OUTPUT
 
+      expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:
           Compiling foo, this may take a few seconds...
           Compiled #{outdir}/foo@0.0.1.rbi
@@ -171,13 +179,7 @@ RSpec.describe(Tapioca::Cli) do
 
   describe("#bundle") do
     it 'must perform no operations if everything is up-to-date' do
-      %w{
-        foo@0.0.1.rbi
-        bar@0.3.0.rbi
-        baz@0.0.2.rbi
-      }.each do |rbi|
-        FileUtils.touch("#{outdir}/#{rbi}")
-      end
+      run("generate")
 
       output = run("bundle")
 
@@ -199,18 +201,11 @@ RSpec.describe(Tapioca::Cli) do
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
       expect(File).to(exist("#{outdir}/bar@0.3.0.rbi"))
       expect(File).to(exist("#{outdir}/baz@0.0.2.rbi"))
-      expect(File).to_not(exist("#{outdir}/outdated@5.0.0.rbi"))
     end
 
     it 'must remove outdated RBIs' do
-      %w{
-        foo@0.0.1.rbi
-        bar@0.3.0.rbi
-        baz@0.0.2.rbi
-        outdated@5.0.0.rbi
-      }.each do |rbi|
-        FileUtils.touch("#{outdir}/#{rbi}")
-      end
+      run("generate")
+      FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
 
       output = run("bundle")
 

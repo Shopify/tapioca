@@ -9,12 +9,10 @@ module Tapioca
 
     Spec = T.type_alias(T.any(::Bundler::StubSpecification, ::Gem::Specification))
 
-    sig { params(gemfile: T.nilable(T.any(Pathname, String))).void }
-    def initialize(gemfile:)
-      gemfile ||= Bundler.default_gemfile
-      lockfile = Pathname.new("#{gemfile}.lock")
-      @gemfile = T.let(File.new(gemfile.to_s), File)
-      @lockfile = T.let(File.new(lockfile.to_s), File)
+    sig { void }
+    def initialize
+      @gemfile = T.let(File.new(Bundler.default_gemfile), File)
+      @lockfile = T.let(File.new(Bundler.default_lockfile), File)
       @dependencies = T.let(nil, T.nilable(T::Array[Gem]))
       @definition = T.let(nil, T.nilable(Bundler::Definition))
     end
@@ -59,10 +57,7 @@ module Tapioca
 
     sig { returns(Bundler::Definition) }
     def definition
-      @definition ||= begin
-        ENV["BUNDLE_GEMFILE"] = gemfile.path
-        Bundler::Dsl.evaluate(gemfile, lockfile, {})
-      end
+      @definition ||= Bundler::Dsl.evaluate(gemfile, lockfile, {})
     end
 
     sig { params(spec: Spec).returns(T::Boolean) }
