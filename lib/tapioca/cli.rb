@@ -11,12 +11,16 @@ module Tapioca
 
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)
-      generator.build_gem_rbis(gems)
+      Tapioca.silence_warnings do
+        generator.build_gem_rbis(gems)
+      end
     end
 
     desc "bundle", "sync RBIs to Gemfile"
     def bundle
-      generator.sync_rbis_with_gemfile
+      Tapioca.silence_warnings do
+        generator.sync_rbis_with_gemfile
+      end
     end
 
     no_commands do

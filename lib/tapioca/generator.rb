@@ -33,39 +33,35 @@ module Tapioca
 
     sig { params(gem_names: T::Array[String]).void }
     def build_gem_rbis(gem_names)
-      Tapioca.silence_warnings do
-        require_gem_file
+      require_gem_file
 
-        gems_to_generate(gem_names).map do |gem|
-          say("Processing '#{gem.name}' gem:", :green)
-          indent do
-            compile_rbi(gem)
-            puts
-          end
+      gems_to_generate(gem_names).map do |gem|
+        say("Processing '#{gem.name}' gem:", :green)
+        indent do
+          compile_rbi(gem)
+          puts
         end
-
-        say("All operations performed in working directory.", [:green, :bold])
-        say("Please review changes and commit them.", [:green, :bold])
       end
+
+      say("All operations performed in working directory.", [:green, :bold])
+      say("Please review changes and commit them.", [:green, :bold])
     end
 
     sig { void }
     def sync_rbis_with_gemfile
-      Tapioca.silence_warnings do
-        anything_done = [
-          perform_removals,
-          perform_additions,
-        ].any?
+      anything_done = [
+        perform_removals,
+        perform_additions,
+      ].any?
 
-        if anything_done
-          say("All operations performed in working directory.", [:green, :bold])
-          say("Please review changes and commit them.", [:green, :bold])
-        else
-          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
-        end
-
-        puts
+      if anything_done
+        say("All operations performed in working directory.", [:green, :bold])
+        say("Please review changes and commit them.", [:green, :bold])
+      else
+        say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
       end
+
+      puts
     end
 
     private
