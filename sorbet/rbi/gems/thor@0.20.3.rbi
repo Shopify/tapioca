@@ -369,6 +369,8 @@ end
 class Thor::CoreExt::OrderedHash < ::Hash
 end
 
+Thor::Correctable = DidYouMean::Correctable
+
 class Thor::DynamicCommand < ::Thor::Command
   def initialize(name, options = _); end
 
@@ -489,6 +491,10 @@ class Thor::LineEditor::Readline::PathCompletion
 end
 
 class Thor::MalformattedArgumentError < ::Thor::InvocationError
+end
+
+class Thor::NoKwargSpellChecker < ::DidYouMean::SpellChecker
+  def initialize(dictionary); end
 end
 
 class Thor::Option < ::Thor::Argument
@@ -746,6 +752,8 @@ Thor::THOR_RESERVED_WORDS = T.let(T.unsafe(nil), Array)
 Thor::Task = Thor::Command
 
 class Thor::UndefinedCommandError < ::Thor::Error
+  include(::DidYouMean::Correctable)
+
   def initialize(command, all_commands, namespace); end
 
   def all_commands; end
@@ -763,6 +771,8 @@ end
 Thor::UndefinedTaskError = Thor::UndefinedCommandError
 
 class Thor::UnknownArgumentError < ::Thor::Error
+  include(::DidYouMean::Correctable)
+
   def initialize(switches, unknown); end
 
   def switches; end

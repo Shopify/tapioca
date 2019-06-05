@@ -770,3 +770,19 @@ class Rake::Win32::Win32HomeError < ::RuntimeError
 end
 
 RakeFileUtils = Rake::FileUtilsExt
+
+class String
+  include(::Rainbow::Ext::String::InstanceMethods)
+  include(::JSON::Ext::Generator::GeneratorMethods::String)
+  include(::Comparable)
+  extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
+
+  def ext(newext = _); end
+  def pathmap(spec = _, &block); end
+
+  protected
+
+  def pathmap_explode; end
+  def pathmap_partial(n); end
+  def pathmap_replace(patterns, &block); end
+end

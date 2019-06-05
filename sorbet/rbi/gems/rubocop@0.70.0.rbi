@@ -11505,6 +11505,7 @@ RuboCop::NodePattern::Compiler::TOKENS = T.let(T.unsafe(nil), Regexp)
 RuboCop::NodePattern::Compiler::WILDCARD = T.let(T.unsafe(nil), Regexp)
 
 class String
+  include(::Rainbow::Ext::String::InstanceMethods)
   include(::JSON::Ext::Generator::GeneratorMethods::String)
   include(::Comparable)
   extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
@@ -11512,7 +11513,3 @@ class String
   def blank?; end
   def strip_indent; end
 end
-
-String::COLORS = T.let(T.unsafe(nil), Hash)
-
-String::MODES = T.let(T.unsafe(nil), Hash)

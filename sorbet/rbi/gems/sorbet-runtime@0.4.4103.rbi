@@ -131,7 +131,6 @@ module T::Props::ClassMethods
   def extended(child); end
   def included(child); end
   def inherited(child); end
-  def optional(*args); end
   def plugin(mod); end
   def plugins; end
   def prepended(child); end
@@ -151,7 +150,7 @@ module T::Props::Constructor
   include(::T::Props::Optional)
   include(::T::Props::Plugin)
   include(::T::Props)
-  extend(::T::Props::Optional::ClassMethods)
+  extend(::T::Props::Plugin::ClassMethods)
   extend(::T::Props::ClassMethods)
 
   def initialize(hash = _); end
@@ -201,6 +200,7 @@ class T::Props::Decorator
   def handle_foreign_hint_only_option(*args, &blk); end
   def handle_foreign_option(*args, &blk); end
   def handle_redaction_option(*args, &blk); end
+  def hash_key_custom_type(*args, &blk); end
   def hash_value_subdoc_type(*args, &blk); end
   def is_nilable?(*args, &blk); end
   def shallow_clone_ok(*args, &blk); end
@@ -246,15 +246,8 @@ module T::Props::Optional
   extend(::T::Props::Plugin::ClassMethods)
 end
 
-module T::Props::Optional::ClassMethods
-  extend(::T::Sig)
-
-  def optional(*args, &blk); end
-end
-
 module T::Props::Optional::DecoratorMethods
   def add_prop_definition(prop, rules); end
-  def check_prop_type(prop, val, rules = _); end
   def get_default(rules, instance_class); end
   def has_default?(rules); end
   def prop_optional?(prop); end
@@ -303,7 +296,6 @@ module T::Props::Serializable
   include(::T::Props::Optional)
   include(::T::Props::Plugin)
   include(::T::Props)
-  extend(::T::Props::Optional::ClassMethods)
   extend(::T::Props::ClassMethods)
   extend(::T::Props::Plugin::ClassMethods)
 
@@ -311,6 +303,11 @@ module T::Props::Serializable
   def required_prop_missing_from_deserialize(prop); end
   def required_prop_missing_from_deserialize?(prop); end
   def serialize(strict = _); end
+  def with(changed_props); end
+
+  private
+
+  def with_existing_hash(changed_props, existing_hash:); end
 end
 
 module T::Props::Serializable::ClassMethods
@@ -325,7 +322,6 @@ module T::Props::Serializable::DecoratorMethods
   def from_hash(hash, strict = _); end
   def get_id(instance); end
   def prop_by_serialized_forms; end
-  def prop_defined(name, cls, rules = _); end
   def prop_dont_store?(prop); end
   def prop_serialized_form(prop); end
   def prop_validate_definition!(name, cls, rules, type); end
@@ -373,7 +369,7 @@ module T::Props::WeakConstructor
   include(::T::Props::Optional)
   include(::T::Props::Plugin)
   include(::T::Props)
-  extend(::T::Props::Optional::ClassMethods)
+  extend(::T::Props::Plugin::ClassMethods)
   extend(::T::Props::ClassMethods)
 
   def initialize(hash = _); end
@@ -391,18 +387,8 @@ module T::Sig
   def sig(&blk); end
 end
 
-class T::Struct
-  include(::T::Props::Constructor)
-  include(::T::Props::WeakConstructor)
-  include(::T::Props::Serializable)
-  include(::T::Props::PrettyPrintable)
-  include(::T::Props::Optional)
-  include(::T::Props::Plugin)
-  include(::T::Props)
-  extend(::T::Props::Serializable::ClassMethods)
-  extend(::T::Props::Plugin::ClassMethods)
-  extend(::T::Props::Optional::ClassMethods)
-  extend(::T::Props::ClassMethods)
+module T::Sig::WithoutRuntime
+  def self.sig(&blk); end
 end
 
 module T::Types
@@ -618,8 +604,8 @@ class T::Types::Union < ::T::Types::Base
 
   private
 
-  def pretty_names(names); end
   def subtype_of_single?(other); end
+  def type_shortcuts(types); end
 end
 
 class T::Types::Untyped < ::T::Types::Base
@@ -649,6 +635,9 @@ end
 
 module T::Utils::Nilable
   def self.get_type_info(prop_type); end
+  def self.get_underlying_type(prop_type); end
+  def self.get_underlying_type_object(prop_type); end
+  def self.is_union_with_nilclass(prop_type); end
 end
 
 class T::Utils::Nilable::TypeInfo < ::Struct
@@ -661,6 +650,12 @@ class T::Utils::Nilable::TypeInfo < ::Struct
   def self.inspect; end
   def self.members; end
   def self.new(*_); end
+end
+
+module T::Utils::Props
+  def self.merge_serialized_optional_rule(prop_rules); end
+  def self.optional_prop?(prop_rules); end
+  def self.required_prop?(prop_rules); end
 end
 
 module T::Private::Abstract
@@ -955,6 +950,18 @@ class T::Private::Types::NotTyped < ::T::Types::Base
 end
 
 T::Private::Types::NotTyped::ERROR_MESSAGE = T.let(T.unsafe(nil), String)
+
+class T::Private::Types::StringHolder < ::T::Types::Base
+  def initialize(string); end
+
+  def name; end
+  def string; end
+  def valid?(obj); end
+
+  private
+
+  def subtype_of_single?(other); end
+end
 
 class T::Private::Types::Void < ::T::Types::Base
   def name; end

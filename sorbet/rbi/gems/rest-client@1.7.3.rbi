@@ -3,51 +3,6 @@
 
 # typed: true
 
-module MIME
-end
-
-class MIME::InvalidContentType < ::RuntimeError
-end
-
-class MIME::Types
-  extend(::Enumerable)
-
-  def initialize(data_version = _); end
-
-  def [](type_id, flags = _); end
-  def add(*types); end
-  def add_type_variant(mime_type); end
-  def count; end
-  def data_version; end
-  def defined_types; end
-  def each; end
-  def index_extensions(mime_type); end
-  def of(filename, platform = _); end
-  def type_for(filename, platform = _); end
-  def type_for_extension(ext); end
-
-  private
-
-  def match(pattern); end
-  def prune_matches(matches, flags); end
-
-  def self.[](type_id, flags = _); end
-  def self.add(*types); end
-  def self.add_type_variant(mime_type); end
-  def self.cache_file; end
-  def self.count; end
-  def self.each; end
-  def self.index_extensions(mime_type); end
-  def self.load_from_file(filename); end
-  def self.of(filename, platform = _); end
-  def self.type_for(filename, platform = _); end
-  def self.type_for_extension(ext); end
-end
-
-MIME::Types::DATA_VERSION = T.let(T.unsafe(nil), Integer)
-
-MIME::Types::VERSION = T.let(T.unsafe(nil), String)
-
 module RestClient
   def self.add_before_execution_proc(&proc); end
   def self.before_execution_procs; end
@@ -207,6 +162,10 @@ class RestClient::MultipleChoices < ::RestClient::RequestFailed
   def message; end
 end
 
+class RestClient::NetworkAuthenticationRequired < ::RestClient::RequestFailed
+  def message; end
+end
+
 class RestClient::NoContent < ::RestClient::RequestFailed
   def message; end
 end
@@ -286,11 +245,11 @@ class RestClient::Payload::UrlEncoded < ::RestClient::Payload::Base
   def build_stream(params = _); end
   def handle_key(key); end
   def headers; end
-
-  private
-
-  def parser; end
 end
+
+RestClient::Payload::UrlEncoded::Escape = T.let(T.unsafe(nil), Regexp)
+
+RestClient::Payload::UrlEncoded::Parser = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
 class RestClient::PaymentRequired < ::RestClient::RequestFailed
   def message; end
@@ -298,11 +257,15 @@ end
 
 module RestClient::Platform
   def self.jruby?; end
-  def self.mac?; end
+  def self.mac_mri?; end
   def self.windows?; end
 end
 
 class RestClient::PreconditionFailed < ::RestClient::RequestFailed
+  def message; end
+end
+
+class RestClient::PreconditionRequired < ::RestClient::RequestFailed
   def message; end
 end
 
@@ -347,6 +310,7 @@ class RestClient::Request
   def max_redirects; end
   def method; end
   def net_http_class; end
+  def net_http_do_request(http, req, body = _, &block); end
   def net_http_request_class(method); end
   def open_timeout; end
   def parse_url(url); end
@@ -361,30 +325,45 @@ class RestClient::Request
   def raw_response; end
   def setup_credentials(req); end
   def ssl_ca_file; end
+  def ssl_ca_path; end
+  def ssl_cert_store; end
+  def ssl_ciphers; end
   def ssl_client_cert; end
   def ssl_client_key; end
+  def ssl_opts; end
   def ssl_verify_callback; end
   def ssl_verify_callback_warnings; end
+  def ssl_version; end
   def stringify_headers(headers); end
   def timeout; end
   def transmit(uri, req, payload, &block); end
   def url; end
   def user; end
+  def valid_cookie_key?(string); end
+  def valid_cookie_value?(value); end
   def verify_ssl; end
 
   private
 
+  def maybe_convert_extension(ext); end
   def parser; end
 
   def self.decode(content_encoding, body); end
+  def self.default_ssl_cert_store; end
   def self.execute(args, &block); end
 end
+
+RestClient::Request::DefaultCiphers = T.let(T.unsafe(nil), String)
 
 RestClient::Request::Redirect = RestClient::Redirect
 
 RestClient::Request::RequestFailed = RestClient::RequestFailed
 
+RestClient::Request::SSLOptionList = T.let(T.unsafe(nil), Array)
+
 RestClient::Request::Unauthorized = RestClient::Unauthorized
+
+RestClient::Request::WeakDefaultCiphers = T.let(T.unsafe(nil), Set)
 
 class RestClient::RequestEntityTooLarge < ::RestClient::RequestFailed
   def message; end
@@ -393,6 +372,10 @@ end
 class RestClient::RequestFailed < ::RestClient::ExceptionWithResponse
   def message; end
   def to_s; end
+end
+
+class RestClient::RequestHeaderFieldsTooLarge < ::RestClient::RequestFailed
+  def message; end
 end
 
 class RestClient::RequestTimeout < ::RestClient::RequestFailed
@@ -443,7 +426,6 @@ module RestClient::Response
   def args; end
   def args=(_); end
   def body; end
-  def body=(_); end
   def net_http_res; end
   def net_http_res=(_); end
 
@@ -492,6 +474,10 @@ class RestClient::TooManyConnectionsFromThisIP < ::RestClient::RequestFailed
   def message; end
 end
 
+class RestClient::TooManyRequests < ::RestClient::RequestFailed
+  def message; end
+end
+
 class RestClient::Unauthorized < ::RestClient::ExceptionWithResponse
   def message; end
 end
@@ -520,4 +506,7 @@ RestClient::VERSION = T.let(T.unsafe(nil), String)
 
 class RestClient::VariantAlsoNegotiates < ::RestClient::RequestFailed
   def message; end
+end
+
+module RestClient::Windows
 end
