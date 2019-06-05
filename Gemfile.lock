@@ -3,7 +3,10 @@ PATH
   specs:
     tapioca (0.1.0)
       pry (>= 0.12.2)
+      sorbet-runtime
+      sorbet-static
       thor (~> 0.20.3)
+      zeitwerk (~> 2.1)
 
 GEM
   remote: https://rubygems.org/
