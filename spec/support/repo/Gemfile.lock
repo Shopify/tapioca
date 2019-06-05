@@ -1,15 +1,15 @@
 PATH
-  remote: ../gems/bar
+  remote: spec/support/gems/bar
   specs:
     bar (0.3.0)
 
 PATH
-  remote: ../gems/baz
+  remote: spec/support/gems/baz
   specs:
     baz (0.0.2)
 
 PATH
-  remote: ../gems/foo
+  remote: spec/support/gems/foo
   specs:
     foo (0.0.1)
 

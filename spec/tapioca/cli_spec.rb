@@ -7,24 +7,25 @@ require "shellwords"
 RSpec.describe(Tapioca::Cli) do
   let(:outdir) { @outdir }
   let(:repo_path) { Pathname.new(__dir__) / ".." / "support" / "repo" }
-  let(:exe_path) { Pathname.new(__dir__) / ".." / ".." / "exe" }
   let(:exec_command) { @exec_command.join(" ") }
 
   def run(command, args = [], flags = {})
-    Dir.chdir(exe_path) do
-      flags = {
-        outdir: outdir,
-        gemfile: (repo_path / "Gemfile").to_s,
-      }.merge(flags)
+    flags = {
+      outdir: outdir,
+      gemfile: (repo_path / "Gemfile").to_s,
+    }.merge(flags).flat_map { |k, v| ["--#{k}", v] }
 
-      @exec_command = [
-        "tapioca",
-        command,
-        *flags.flat_map { |k, v| ["--#{k}", v] },
-        *args,
-      ]
-      IO.popen(@exec_command).read
-    end
+    @exec_command = [
+      "tapioca",
+      command,
+      *flags,
+      *args,
+    ]
+
+    IO.popen(
+      @exec_command,
+      chdir: Pathname.new(__dir__) / ".." / ".." / "exe"
+    ).read
   end
 
   around(:each) do |example|

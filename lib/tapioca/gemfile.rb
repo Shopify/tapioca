@@ -16,15 +16,15 @@ module Tapioca
       @gemfile = T.let(File.new(gemfile.to_s), File)
       @lockfile = T.let(File.new(lockfile.to_s), File)
       @dependencies = T.let(nil, T.nilable(T::Array[Gem]))
+      @definition = T.let(nil, T.nilable(Bundler::Definition))
     end
 
     sig { returns(T::Array[Gem]) }
     def dependencies
       @dependencies ||= begin
-        bundler = Bundler::Dsl.evaluate(gemfile, lockfile, {})
-        specs = bundler.specs.to_a
+        specs = definition.specs.to_a
 
-        bundler
+        definition
           .resolve
           .materialize(specs)
           .reject { |spec| ignore_gem_spec?(spec) }
@@ -43,7 +43,6 @@ module Tapioca
     def require_bundle(initialize_file, require_file)
       require(initialize_file) if initialize_file && File.exist?(initialize_file)
 
-      definition = Bundler::Dsl.evaluate(gemfile, lockfile, {})
       runtime = Bundler::Runtime.new(File.dirname(gemfile.path), definition)
       groups = Bundler.definition.groups
       runtime.setup(*groups).require(*groups)
@@ -57,6 +56,14 @@ module Tapioca
 
     sig { returns(File) }
     attr_reader(:gemfile, :lockfile)
+
+    sig { returns(Bundler::Definition) }
+    def definition
+      @definition ||= begin
+        ENV["BUNDLE_GEMFILE"] = gemfile.path
+        Bundler::Dsl.evaluate(gemfile, lockfile, {})
+      end
+    end
 
     sig { params(spec: Spec).returns(T::Boolean) }
     def ignore_gem_spec?(spec)
