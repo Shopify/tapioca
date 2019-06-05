@@ -2,9 +2,10 @@
 # typed: strict
 
 require 'pathname'
+require 'thor'
 
 module Tapioca
-  class Generator < Thor::Shell::Color
+  class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
     sig { returns(Pathname) }

@@ -6,6 +6,6 @@ rvm:
   - 2.6.2
 before_install: gem install bundler -v 1.17.3
 script:
-  - bundle exec rubocop --config .rubocop.yml
-  - bundle exec srb tc
-  - bundle exec rake
+  - bin/style --config .rubocop.yml
+  - bin/typecheck
+  - bin/test

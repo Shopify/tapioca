@@ -13,6 +13,8 @@ commands:
     desc: "start a console"
     run: "bin/console"
   test:
-    run: 'bin/test "$@"'
+    run: "bin/test"
   style:
     run: "bin/style"
+  typecheck:
+    run: "bin/typecheck"
