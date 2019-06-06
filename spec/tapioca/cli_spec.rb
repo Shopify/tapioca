@@ -83,8 +83,7 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:
-          Compiling foo, this may take a few seconds...
-          Compiled #{outdir}/foo@0.0.1.rbi
+          Compiling foo, this may take a few seconds...   Done
       OUTPUT
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
@@ -99,8 +98,7 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:
-          Compiling foo, this may take a few seconds...
-          Compiled #{outdir}/foo@0.0.1.rbi
+          Compiling foo, this may take a few seconds...   Done
       OUTPUT
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
@@ -121,14 +119,12 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:
-          Compiling foo, this may take a few seconds...
-          Compiled #{outdir}/foo@0.0.1.rbi
+          Compiling foo, this may take a few seconds...   Done
       OUTPUT
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'bar' gem:
-          Compiling bar, this may take a few seconds...
-          Compiled #{outdir}/bar@0.3.0.rbi
+          Compiling bar, this may take a few seconds...   Done
       OUTPUT
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
@@ -145,20 +141,17 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'bar' gem:
-          Compiling bar, this may take a few seconds...
-          Compiled #{outdir}/bar@0.3.0.rbi
+          Compiling bar, this may take a few seconds...   Done
       OUTPUT
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'baz' gem:
-          Compiling baz, this may take a few seconds...
-          Compiled #{outdir}/baz@0.0.2.rbi
+          Compiling baz, this may take a few seconds...   Done
       OUTPUT
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:
-          Compiling foo, this may take a few seconds...
-          Compiled #{outdir}/foo@0.0.1.rbi
+          Compiling foo, this may take a few seconds...   Done
       OUTPUT
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))

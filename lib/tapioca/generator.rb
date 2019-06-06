@@ -88,7 +88,10 @@ module Tapioca
 
     sig { void }
     def require_gem_file
+      say("Requiring all gems to prepare for compiling... ")
       bundle.require_bundle(prerequire, postrequire)
+      say(" Done", :green)
+      puts
     end
 
     sig { returns(T::Hash[String, String]) }
@@ -139,18 +142,18 @@ module Tapioca
 
     sig { params(filename: Pathname).void }
     def add(filename)
-      say("++ Adding: #{filename}", :green)
+      say("++ Adding: #{filename}")
     end
 
     sig { params(filename: Pathname).void }
     def remove(filename)
-      say("-- Removing: #{filename}", :green)
+      say("-- Removing: #{filename}")
       filename.unlink
     end
 
     sig { params(old_filename: Pathname, new_filename: Pathname).void }
     def move(old_filename, new_filename)
-      say("-> Moving: #{old_filename} to #{new_filename}", :green)
+      say("-> Moving: #{old_filename} to #{new_filename}")
       old_filename.rename(new_filename.to_s)
     end
 
@@ -251,7 +254,8 @@ module Tapioca
     sig { params(gem: Gemfile::Gem).void }
     def compile_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
-      say("Compiling #{gem.name}, this may take a few seconds...")
+      gem_name = set_color(gem.name, :yellow, :bold)
+      say("Compiling #{gem_name}, this may take a few seconds... ")
 
       typed_sigil = typed_overrides.fetch(gem.name, "true")
 
@@ -262,7 +266,7 @@ module Tapioca
       filename = outdir / gem.rbi_file_name
       File.write(filename.to_s, content)
 
-      say("Compiled #{filename}")
+      say("Done", :green)
     end
   end
 end
