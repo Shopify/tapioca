@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tapioca (0.1.0)
+    tapioca (0.1.1)
       pry (>= 0.12.2)
       sorbet-static
       thor (~> 0.20.3)
