@@ -52,7 +52,7 @@ RSpec.describe(Tapioca::Cli) do
     flags = {
       outdir: outdir,
       generate_command: "generate command",
-    }.merge(flags).flat_map { |k, v| ["--#{k}", v] }
+    }.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
     exec_command = [
       "bin/tapioca",
@@ -95,7 +95,7 @@ RSpec.describe(Tapioca::Cli) do
     end
 
     it 'must perform postrequire properly' do
-      output = run("generate", "foo", postrequire: (repo_path / "postrequire.rb").to_s)
+      output = run("generate", "foo", postrequire: repo_path / "postrequire.rb")
 
       expect(output).to(include(<<~OUTPUT))
         Processing 'foo' gem:

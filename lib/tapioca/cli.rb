@@ -5,11 +5,29 @@ require 'thor'
 
 module Tapioca
   class Cli < Thor
-    class_option :prerequire
-    class_option :postrequire
-    class_option :outdir, default: "sorbet/rbi/gems"
-    class_option :generate_command
-    class_option :typed_overrides, type: :hash, default: {}
+    class_option :prerequire,
+                  aliases: ["--pre", "-b"],
+                  banner: "file",
+                  desc: "A file to be required before Bundler.require is called"
+    class_option :postrequire,
+                  aliases: ["--post", "-a"],
+                  banner: "file",
+                  desc: "A file to be required after Bundler.require is called"
+    class_option :outdir,
+                  aliases: ["--out", "-o"],
+                  default: "sorbet/rbi/gems",
+                  banner: "directory",
+                  desc: "The output directory for generated RBI files"
+    class_option :generate_command,
+                  aliases: ["--cmd", "-c"],
+                  banner: "command",
+                  desc: "The command to run to regenerate RBI files"
+    class_option :typed_overrides,
+                  aliases: ["--typed", "-t"],
+                  type: :hash,
+                  default: {},
+                  banner: "gem:level",
+                  desc: "Overrides for typed sigils for generated gem RBIs"
 
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)
