@@ -49,6 +49,31 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       end
     end
 
+    it("compiles DelegateClass") do
+      expect(
+        compile(<<~RUBY)
+          module SymbolTableCompilerTest
+            class Bar
+            end
+
+            class Foo < DelegateClass(Bar)
+            end
+          end
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          module SymbolTableCompilerTest
+          end
+
+          class SymbolTableCompilerTest::Bar
+          end
+
+          class SymbolTableCompilerTest::Foo
+          end
+        RUBY
+      )
+    end
+
     it("compiles extensions to BasicObject and Object") do
       expect(
         compile(<<~RUBY)
@@ -65,9 +90,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       ).to(
         eq(<<~RUBY.chomp)
           class BasicObject
-            extend(::Class)
-            extend(::Module)
-
             def hello; end
           end
 
@@ -77,6 +99,42 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
             def hello; end
           end
+
+          ::ARGF = T.let(T.unsafe(nil), T.untyped)
+
+          ::ARGV = T.let(T.unsafe(nil), Array)
+
+          ::ENV = T.let(T.unsafe(nil), Object)
+
+          ::NAMESPACE = T.let(T.unsafe(nil), Symbol)
+
+          ::RUBY_COPYRIGHT = T.let(T.unsafe(nil), String)
+
+          ::RUBY_DESCRIPTION = T.let(T.unsafe(nil), String)
+
+          ::RUBY_ENGINE = T.let(T.unsafe(nil), String)
+
+          ::RUBY_ENGINE_VERSION = T.let(T.unsafe(nil), String)
+
+          ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Integer)
+
+          ::RUBY_PLATFORM = T.let(T.unsafe(nil), String)
+
+          ::RUBY_RELEASE_DATE = T.let(T.unsafe(nil), String)
+
+          ::RUBY_REVISION = T.let(T.unsafe(nil), Integer)
+
+          ::RUBY_VERSION = T.let(T.unsafe(nil), String)
+
+          ::STDERR = T.let(T.unsafe(nil), IO)
+
+          ::STDIN = T.let(T.unsafe(nil), IO)
+
+          ::STDOUT = T.let(T.unsafe(nil), IO)
+
+          ::TOPLEVEL_BINDING = T.let(T.unsafe(nil), Binding)
+
+          ::TRUE = T.let(T.unsafe(nil), TrueClass)
         RUBY
       )
     end
@@ -1417,7 +1475,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     end
 
     it("can handle BasicObjects") do
-      skip("this test is failing due to sorbet-runtime failure handling BasicObject instances")
       expect(
         compile(<<~RUBY)
           class SymbolTableCompilerTest

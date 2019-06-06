@@ -69,9 +69,6 @@ module Tapioca
         def generate_from_symbol(symbol)
           constant = resolve_constant(symbol)
 
-          # require 'pry'
-          # binding.pry
-
           return unless constant
 
           compile(symbol, constant)
@@ -127,8 +124,6 @@ module Tapioca
 
         sig { params(name: String, value: BasicObject).returns(T.nilable(String)) }
         def compile_object(name, value)
-          return if SymbolLoader.ignore_symbol?(name)
-
           indented("#{name} = T.let(T.unsafe(nil), #{type_name_of(value)})")
         end
 
@@ -183,14 +178,13 @@ module Tapioca
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
         def compile_subconstants(name, constant)
-          # Don't compile subconstants of Object because Object::Foo == Foo
-          # Don't compile subconstants of because BasicObject::BasicObject == BasicObject
-          return if Object == constant || BasicObject == constant
-
           output = constants_of(constant).sort.uniq.map do |constant_name|
-            symbol = "#{name}::#{constant_name}"
+            symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
             subconstant = resolve_constant(symbol)
 
+            # Don't compile modules of Object because Object::Foo == Foo
+            # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
+            next if (Object == constant || BasicObject == constant) && Module === subconstant
             next unless subconstant
 
             compile(symbol, subconstant)
@@ -246,7 +240,7 @@ module Tapioca
             break
           end
 
-          return "" if superclass == ::Object
+          return "" if superclass == ::Object || superclass == ::Delegator
           return "" if superclass.nil?
 
           name = name_of(superclass)
@@ -281,7 +275,8 @@ module Tapioca
             .reject do |mod|
               mod == constant.singleton_class ||
                 inherited_singleton_class_ancestors.include?(mod) ||
-                !public_module?(mod)
+                !public_module?(mod) ||
+                Module != class_of(mod)
             end
 
           prepends = prepend
@@ -547,6 +542,8 @@ module Tapioca
         sig { params(constant: Module).returns(T.nilable(String)) }
         def name_of(constant)
           name = Module.instance_method(:name).bind(constant).call
+          return if name.nil?
+          return unless are_equal?(constant, resolve_constant(name))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
@@ -564,7 +561,7 @@ module Tapioca
           Class.instance_method(:superclass).bind(constant).call
         end
 
-        sig { params(constant: Module, other: Module).returns(T::Boolean) }
+        sig { params(constant: Module, other: BasicObject).returns(T::Boolean) }
         def are_equal?(constant, other)
           BasicObject.instance_method(:equal?).bind(constant).call(other)
         end
