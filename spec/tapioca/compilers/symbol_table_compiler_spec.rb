@@ -40,7 +40,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           # Require the file
           require(dir.join("lib/file.rb"))
 
-          compiler.compile(gem, generate_header: false).chomp
+          compiler.compile(gem).chomp
         end
       ensure
         # Remove the wrapper namespace module
