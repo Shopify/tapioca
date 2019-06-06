@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "zeitwerk"
-require "sorbet-runtime"
+require_relative "./t"
 
 loader = Zeitwerk::Loader.for_gem
 loader.eager_load

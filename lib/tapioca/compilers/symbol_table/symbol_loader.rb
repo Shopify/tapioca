@@ -10,9 +10,6 @@ module Tapioca
   module Compilers
     module SymbolTable
       module SymbolLoader
-        extend(T::Sig)
-        T::Hooks.install(self)
-
         SORBET = Pathname.new(Gem::Specification.find_by_name("sorbet-static").full_gem_path) / "libexec" / "sorbet"
 
         class << self

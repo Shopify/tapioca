@@ -1,3 +1,4 @@
 .
 --ignore=/vendor
 --ignore=/spec
+--ignore=t.rb

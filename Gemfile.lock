@@ -3,7 +3,6 @@ PATH
   specs:
     tapioca (0.1.0)
       pry (>= 0.12.2)
-      sorbet-runtime
       sorbet-static
       thor (~> 0.20.3)
       zeitwerk (~> 2.1)
@@ -66,7 +65,6 @@ GEM
     ruby-progressbar (1.10.1)
     sorbet (0.4.4103)
       sorbet-static (= 0.4.4103)
-    sorbet-runtime (0.4.4103)
     sorbet-static (0.4.4103-universal-darwin-14)
     thor (0.20.3)
     unicode-display_width (1.6.0)
@@ -83,7 +81,6 @@ DEPENDENCIES
   rspec (~> 3.7)
   rubocop (~> 0.70.0)
   sorbet!
-  sorbet-runtime!
   tapioca!
   zeitwerk (~> 2.1)
 

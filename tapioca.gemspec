@@ -28,7 +28,6 @@ Gem::Specification.new do |spec|
   )
 
   spec.add_dependency("pry", ">= 0.12.2")
-  spec.add_dependency("sorbet-runtime")
   spec.add_dependency("sorbet-static")
   spec.add_dependency("thor", "~> 0.20.3")
   spec.add_dependency("zeitwerk", "~> 2.1")

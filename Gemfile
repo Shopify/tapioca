@@ -14,5 +14,4 @@ end
 
 source("https://stripe.dev/sorbet-repo/super-secret-private-beta/") do
   gem("sorbet", group: :development, require: false)
-  gem("sorbet-runtime")
 end
