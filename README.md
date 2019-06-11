@@ -2,35 +2,37 @@
 
 [![Build Status](https://travis-ci.com/Shopify/tapioca.svg?token=AuiMGLmuYDrK2mb81pyq&branch=master)](https://travis-ci.com/Shopify/tapioca)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tapioca`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Tapioca is a library used to generate RBI (Ruby interface) files for use with [Sorbet](https://sorbet.org). RBI files provide the structure (classes, modules, methods, parameters) of the gem/library to Sorbet to assist with typechecking. 
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tapioca'
+gem 'tapioca', '~> 0.1.1'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install tapioca
 
 ## Usage
 
-TODO: Write usage instructions here
+### Generate for gems
 
-## Development
+Command: `tapioca generate [gems...]`
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+This will generate RBIs for the specified gems and place them in the RBI directory.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### Generate for all gems in Gemfile
+
+Command: `tapioca bundle`
+
+This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
+
+### Flags
+
+- `--prerequire [file]`: A file to be required before `Bundler.require` is called.
+- `--postrequire [file]`: A file to be required after `Bundler.require` is called.
+- `--out [directory]`: The output directory for generated RBI files, default to `sorbet/rbi/gems`.
+- `--generate_command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
+- `--typed_overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
 ## Contributing
 
@@ -39,7 +41,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/paracy
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Tapioca project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/paracycle/tapioca/blob/master/CODE_OF_CONDUCT.md).
