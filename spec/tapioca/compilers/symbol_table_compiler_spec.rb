@@ -5,18 +5,24 @@ require "spec_helper"
 require "pathname"
 require "tmpdir"
 
-# Since we load all examples into memory,
-# we need to wrap all examples in a Namespace module
-# so that we can clean up.
-#
-# This is the name of the Namespace module
-#
-NAMESPACE = :SymbolTableCompilerTest
-
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
-    def remove_namespace
-      Object.send(:remove_const, NAMESPACE) if Object.const_defined?(NAMESPACE)
+    def run_in_child
+      read, write = IO.pipe
+
+      pid = fork do
+        Tapioca.silence_warnings do
+          read.close
+          result = yield
+          write.puts(result)
+        end
+      end
+
+      write.close
+      Process.wait(pid)
+      read.read.chomp
+    ensure
+      read&.close
     end
 
     def compile(contents)
@@ -29,7 +35,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         # Add an empty Ruby file "foo.rb" to use for requires
         File.write(dir.join("lib/foo.rb"), "")
 
-        Tapioca.silence_warnings do
+        run_in_child do
           compiler = Tapioca::Compilers::SymbolTableCompiler.new
 
           spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
@@ -40,35 +46,26 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           # Require the file
           require(dir.join("lib/file.rb"))
 
-          compiler.compile(gem).chomp
+          compiler.compile(gem)
         end
-      ensure
-        # Remove the wrapper namespace module
-        # (and, thus, everything else defined within)
-        remove_namespace
       end
     end
 
     it("compiles DelegateClass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-            end
+          class Bar
+          end
 
-            class Foo < DelegateClass(Bar)
-            end
+          class Foo < DelegateClass(Bar)
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class Bar
           end
 
-          class SymbolTableCompilerTest::Bar
-          end
-
-          class SymbolTableCompilerTest::Foo
+          class Foo
           end
         RUBY
       )
@@ -106,8 +103,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
           ::ENV = T.let(T.unsafe(nil), Object)
 
-          ::NAMESPACE = T.let(T.unsafe(nil), Symbol)
-
           ::RUBY_COPYRIGHT = T.let(T.unsafe(nil), String)
 
           ::RUBY_DESCRIPTION = T.let(T.unsafe(nil), String)
@@ -142,20 +137,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles classes that have overridden == method that errors") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Foo
-              def self.==(other)
-                raise RuntimeError
-              end
+          class Foo
+            def self.==(other)
+              raise RuntimeError
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Foo
+          class Foo
             def self.==(other); end
           end
         RUBY
@@ -178,14 +168,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles extensions to core types") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Foo
-              def to_s
-                "Foo"
-              end
-              def bar
-                "bar"
-              end
+          class Foo
+            def to_s
+              "Foo"
+            end
+            def bar
+              "bar"
             end
           end
 
@@ -203,6 +191,11 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
+          class Foo
+            def bar; end
+            def to_s; end
+          end
+
           class Hash
             include(::JSON::Ext::Generator::GeneratorMethods::Hash)
             include(::Enumerable)
@@ -215,14 +208,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
             def to_foo(base = _); end
           end
-
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Foo
-            def bar; end
-            def to_s; end
-          end
         RUBY
       )
     end
@@ -230,20 +215,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles without annotations") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def num(a)
-                foo
-              end
+          class Bar
+            def num(a)
+              foo
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def num(a); end
           end
         RUBY
@@ -253,22 +233,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles methods and leaves spacing") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def num
-              end
+          class Bar
+            def num
+            end
 
-              def bar
-              end
+            def bar
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def bar; end
             def num; end
           end
@@ -279,24 +254,19 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles constants assignments") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module A
-              ABC = 1
-              DEF = ABC.to_s
-            end
+          module A
+            ABC = 1
+            DEF = ABC.to_s
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module A
           end
 
-          module SymbolTableCompilerTest::A
-          end
+          A::ABC = T.let(T.unsafe(nil), Integer)
 
-          SymbolTableCompilerTest::A::ABC = T.let(T.unsafe(nil), Integer)
-
-          SymbolTableCompilerTest::A::DEF = T.let(T.unsafe(nil), String)
+          A::DEF = T.let(T.unsafe(nil), String)
       RUBY
       )
     end
@@ -304,19 +274,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles simple arguments") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Foo
-              def add(a, b:)
-              end
+          class Foo
+            def add(a, b:)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Foo
+          class Foo
             def add(a, b:); end
           end
         RUBY
@@ -326,19 +291,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles default arguments") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Foo
-              def add(a = nil, b: 1)
-              end
+          class Foo
+            def add(a = nil, b: 1)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Foo
+          class Foo
             def add(a = _, b: _); end
           end
         RUBY
@@ -348,20 +308,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles modules") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              # @return [Integer] a number
-              def num(a)
-              end
+          module Foo
+            # @return [Integer] a number
+            def num(a)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::Foo
+          module Foo
             def num(a); end
           end
         RUBY
@@ -371,25 +326,20 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles compact SymbolTableCompilerTests") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-            end
+          module Foo
+          end
 
-            module Foo::Bar
-              def num(a)
-              end
+          module Foo::Bar
+            def num(a)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
-          end
-
-          module SymbolTableCompilerTest::Foo::Bar
+          module Foo::Bar
             def num(a); end
           end
         RUBY
@@ -399,24 +349,19 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles nested namespaces") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              class Bar
-                def num(a)
-                end
+          module Foo
+            class Bar
+              def num(a)
               end
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
-          end
-
-          class SymbolTableCompilerTest::Foo::Bar
+          class Foo::Bar
             def num(a); end
           end
         RUBY
@@ -426,29 +371,24 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles compact namespaces nested") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              module Bar
-              end
-              class Bar::Baz
-                def num(a)
-                end
+          module Foo
+            module Bar
+            end
+            class Bar::Baz
+              def num(a)
               end
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
+          module Foo::Bar
           end
 
-          module SymbolTableCompilerTest::Foo::Bar
-          end
-
-          class SymbolTableCompilerTest::Foo::Bar::Baz
+          class Foo::Bar::Baz
             def num(a); end
           end
         RUBY
@@ -458,12 +398,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles deeply nested namespaces") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              class Bar
-                class Baz
-                  def num(a)
-                  end
+          module Foo
+            class Bar
+              class Baz
+                def num(a)
                 end
               end
             end
@@ -471,16 +409,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
+          class Foo::Bar
           end
 
-          class SymbolTableCompilerTest::Foo::Bar
-          end
-
-          class SymbolTableCompilerTest::Foo::Bar::Baz
+          class Foo::Bar::Baz
             def num(a); end
           end
         RUBY
@@ -490,25 +425,20 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class with a superclass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Baz
-              def toto
-              end
+          class Baz
+            def toto
             end
+          end
 
-            class Bar < Baz
-            end
+          class Bar < Baz
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class Bar < ::Baz
           end
 
-          class SymbolTableCompilerTest::Bar < ::SymbolTableCompilerTest::Baz
-          end
-
-          class SymbolTableCompilerTest::Baz
+          class Baz
             def toto; end
           end
         RUBY
@@ -518,27 +448,22 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class with a relative superclass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              class Baz
-              end
-              class Bar < Baz
-              end
+          module Foo
+            class Baz
+            end
+            class Bar < Baz
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
+          class Foo::Bar < ::Foo::Baz
           end
 
-          class SymbolTableCompilerTest::Foo::Bar < ::SymbolTableCompilerTest::Foo::Baz
-          end
-
-          class SymbolTableCompilerTest::Foo::Baz
+          class Foo::Baz
           end
         RUBY
       )
@@ -547,28 +472,23 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class with an anchored superclass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Baz
-            end
+          class Baz
+          end
 
-            module Foo
-              class Bar < ::SymbolTableCompilerTest::Baz
-              end
+          module Foo
+            class Bar < ::Baz
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class Baz
           end
 
-          class SymbolTableCompilerTest::Baz
+          module Foo
           end
 
-          module SymbolTableCompilerTest::Foo
-          end
-
-          class SymbolTableCompilerTest::Foo::Bar < ::SymbolTableCompilerTest::Baz
+          class Foo::Bar < ::Baz
           end
         RUBY
       )
@@ -577,12 +497,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class with an private superclass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
+          module Toto
             class Baz
             end
 
             module Foo
-              class Bar < ::SymbolTableCompilerTest::Baz
+              class Bar < ::Toto::Baz
               end
             end
 
@@ -591,13 +511,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Toto
           end
 
-          module SymbolTableCompilerTest::Foo
+          module Toto::Foo
           end
 
-          class SymbolTableCompilerTest::Foo::Bar
+          class Toto::Foo::Bar
           end
         RUBY
       )
@@ -606,7 +526,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class which effectively has itself as a superclass") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
+          module Foo
             class Baz < Numeric
             end
 
@@ -622,11 +542,11 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Foo
             def self.const_missing(name); end
           end
 
-          class SymbolTableCompilerTest::Bar < ::Numeric
+          class Foo::Bar < ::Numeric
           end
         RUBY
       )
@@ -635,58 +555,53 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a class with mixins") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Baz
-              def baz
-              end
+          class Baz
+            def baz
             end
+          end
 
-            module Foo
-              def foo
-              end
+          module Foo
+            def foo
             end
+          end
 
-            module Toto
-              def toto
-              end
+          module Toto
+            def toto
             end
+          end
 
-            module Tutu
-              def tutu
-              end
+          module Tutu
+            def tutu
             end
+          end
 
-            class Bar < Baz
-              include Foo
-              extend Toto
-              prepend Tutu
-            end
+          class Bar < Baz
+            include Foo
+            extend Toto
+            prepend Tutu
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class Bar < ::Baz
+            include(::Tutu)
+            include(::Foo)
+            extend(::Toto)
           end
 
-          class SymbolTableCompilerTest::Bar < ::SymbolTableCompilerTest::Baz
-            include(::SymbolTableCompilerTest::Tutu)
-            include(::SymbolTableCompilerTest::Foo)
-            extend(::SymbolTableCompilerTest::Toto)
-          end
-
-          class SymbolTableCompilerTest::Baz
+          class Baz
             def baz; end
           end
 
-          module SymbolTableCompilerTest::Foo
+          module Foo
             def foo; end
           end
 
-          module SymbolTableCompilerTest::Toto
+          module Toto
             def toto; end
           end
 
-          module SymbolTableCompilerTest::Tutu
+          module Tutu
             def tutu; end
           end
         RUBY
@@ -696,61 +611,56 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles Structs, Classes, and Modules") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class S1 < Struct.new(:foo)
-            end
-            S2 = Struct.new(:foo) do
-              def foo
-              end
-            end
-            S3 = Struct.new(:foo)
-            class S4 < Struct.new("Foo", :foo)
-            end
-            class C1 < Class.new
-            end
-            C2 = Class.new do
-              def foo
-              end
-            end
-            C3 = Class.new
-            module M1
-            end
-            M2 = Module.new do
-              def foo
-              end
-            end
-            M3 = Module.new
+          class S1 < Struct.new(:foo)
           end
+          S2 = Struct.new(:foo) do
+            def foo
+            end
+          end
+          S3 = Struct.new(:foo)
+          class S4 < Struct.new("Foo", :foo)
+          end
+          class C1 < Class.new
+          end
+          C2 = Class.new do
+            def foo
+            end
+          end
+          C3 = Class.new
+          module M1
+          end
+          M2 = Module.new do
+            def foo
+            end
+          end
+          M3 = Module.new
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class C1
           end
 
-          class SymbolTableCompilerTest::C1
-          end
-
-          class SymbolTableCompilerTest::C2
+          class C2
             def foo; end
           end
 
-          class SymbolTableCompilerTest::C3
+          class C3
           end
 
-          module SymbolTableCompilerTest::M1
+          module M1
           end
 
-          module SymbolTableCompilerTest::M2
+          module M2
             def foo; end
           end
 
-          module SymbolTableCompilerTest::M3
+          module M3
           end
 
-          class SymbolTableCompilerTest::S1 < ::Struct
+          class S1 < ::Struct
           end
 
-          class SymbolTableCompilerTest::S2 < ::Struct
+          class S2 < ::Struct
             def foo; end
             def foo=(_); end
 
@@ -760,7 +670,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def self.new(*_); end
           end
 
-          class SymbolTableCompilerTest::S3 < ::Struct
+          class S3 < ::Struct
             def foo; end
             def foo=(_); end
 
@@ -770,7 +680,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def self.new(*_); end
           end
 
-          class SymbolTableCompilerTest::S4 < ::Struct
+          class S4 < ::Struct
           end
         RUBY
       )
@@ -779,39 +689,34 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("handles dynamic mixins") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
+          module Foo
+          end
+
+          module Baz
+          end
+
+          class Bar
+            def self.abc
+              Baz
             end
 
-            module Baz
-            end
-
-            class Bar
-              def self.abc
-                Baz
-              end
-
-              include(Module.new, Foo)
-              include(abc)
-            end
+            include(Module.new, Foo)
+            include(abc)
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
-            include(::SymbolTableCompilerTest::Baz)
-            include(::SymbolTableCompilerTest::Foo)
+          class Bar
+            include(::Baz)
+            include(::Foo)
 
             def self.abc; end
           end
 
-          module SymbolTableCompilerTest::Baz
+          module Baz
           end
 
-          module SymbolTableCompilerTest::Foo
+          module Foo
           end
         RUBY
       )
@@ -820,20 +725,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles methods on the class's singleton class") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def self.num(a)
-                a
-              end
+          class Bar
+            def self.num(a)
+              a
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def self.num(a); end
           end
         RUBY
@@ -843,22 +743,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("doesn't compile non-static singleton class reopening") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              obj = Object.new
+          class Bar
+            obj = Object.new
 
-              class << obj
-                define_method(:foo) {}
-              end
+            class << obj
+              define_method(:foo) {}
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
           end
         RUBY
       )
@@ -867,21 +762,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("ignores methods on other objects") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              a = Object.new
+          class Bar
+            a = Object.new
 
-              def a.num(a)
-              end
+            def a.num(a)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
           end
         RUBY
       )
@@ -890,21 +780,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles a singleton class") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              class << self
-                def num(a)
-                end
+          class Bar
+            class << self
+              def num(a)
               end
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def self.num(a); end
           end
         RUBY
@@ -914,22 +799,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles blocks") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def size(&block)
-              end
+          class Bar
+            def size(&block)
+            end
 
-              def unwrap(&block)
-              end
+            def unwrap(&block)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def size(&block); end
             def unwrap(&block); end
           end
@@ -940,24 +820,19 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles attr_reader/attr_writer/attr_accessor") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              attr_reader(:foo)
+          class Bar
+            attr_reader(:foo)
 
-              attr_accessor(:bar)
+            attr_accessor(:bar)
 
-              attr_writer(:baz)
+            attr_writer(:baz)
 
-              attr_reader(:a, :b)
-            end
+            attr_reader(:a, :b)
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def a; end
             def b; end
             def bar; end
@@ -972,24 +847,19 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("ignores methods with invalid names") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              define_method("foo") do
-                :foo
-              end
+          class Bar
+            define_method("foo") do
+              :foo
+            end
 
-              define_method("invalid_method_name?=") do
-                1
-              end
+            define_method("invalid_method_name?=") do
+              1
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def foo; end
           end
         RUBY
@@ -1001,22 +871,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         compile(<<~RUBY)
           require_relative("./foo")
 
-          module SymbolTableCompilerTest
-            class Bar
-              def self.a
-                2
-              end
-
-              a + 1
+          class Bar
+            def self.a
+              2
             end
+
+            a + 1
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def self.a; end
           end
         RUBY
@@ -1026,27 +891,22 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("ignores loops") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Toto
-              for x in [1, 2, 3]
-                puts x
-              end
+          class Toto
+            for x in [1, 2, 3]
+              puts x
+            end
 
-              loop do
-                break
-              end
+            loop do
+              break
+            end
 
-              while false
-              end
+            while false
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Toto
+          class Toto
           end
         RUBY
       )
@@ -1055,19 +915,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("renames unnamed splats") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Toto
-              def toto(a, *, **)
-              end
+          class Toto
+            def toto(a, *, **)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Toto
+          class Toto
             def toto(a, *_, **_); end
           end
         RUBY
@@ -1077,20 +932,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("ignores ivar and cvar assigns") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-              @@mod_var = 1
-              @ivar = 2
-              @ivar ||= 1
-            end
+          module Foo
+            @@mod_var = 1
+            @ivar = 2
+            @ivar ||= 1
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::Foo
+          module Foo
           end
         RUBY
       )
@@ -1108,35 +958,30 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             .puts "oopsie"
           end
 
-          module SymbolTableCompilerTest
-            module Foo
+          module Foo
+          end
+
+          obj = Object.new
+
+          Dir.glob(File.join('yard', 'core_ext', '*.rb')).each do |file|
+            require file
+          rescue LoadError
+          end
+
+          def tap; yield(self); self end unless defined?(tap)
+
+          case obj
+          when :constants
+            class Job
             end
-
-            obj = Object.new
-
-            Dir.glob(File.join('yard', 'core_ext', '*.rb')).each do |file|
-              require file
-            rescue LoadError
-            end
-
-            def tap; yield(self); self end unless defined?(tap)
-
-            case obj
-            when :constants
-              class Job
-              end
-            when :method
-              def hi
-              end
+          when :method
+            def hi
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::Foo
+          module Foo
           end
         RUBY
       )
@@ -1145,55 +990,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles methods of all visibility for classes") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def toto
-              end
-              private(:toto)
-
-              def tutu
-              end
-
-              protected
-
-              def num(a)
-              end
-
-              private
-
-              def foo(b)
-              end
-
-              protected(def pc; end)
-            end
-          end
-        RUBY
-      ).to(
-        eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
-            def tutu; end
-
-            protected
-
-            def num(a); end
-            def pc; end
-
-            private
-
-            def foo(b); end
-            def toto; end
-          end
-        RUBY
-      )
-    end
-
-    it("compiles methods of all visibility for modules") do
-      expect(
-        compile(<<~RUBY)
-          module SymbolTableCompilerTest
+          class Bar
             def toto
             end
             private(:toto)
@@ -1216,7 +1013,50 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          class Bar
+            def tutu; end
+
+            protected
+
+            def num(a); end
+            def pc; end
+
+            private
+
+            def foo(b); end
+            def toto; end
+          end
+        RUBY
+      )
+    end
+
+    it("compiles methods of all visibility for modules") do
+      expect(
+        compile(<<~RUBY)
+          module Foo
+            def toto
+            end
+            private(:toto)
+
+            def tutu
+            end
+
+            protected
+
+            def num(a)
+            end
+
+            private
+
+            def foo(b)
+            end
+
+            protected(def pc; end)
+          end
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          module Foo
             def tutu; end
 
             protected
@@ -1236,21 +1076,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("removes useless spacing") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              a = b = c = 1
-              a
-              b
-              c
-            end
+          class Bar
+            a = b = c = 1
+            a
+            b
+            c
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
           end
         RUBY
       )
@@ -1259,19 +1094,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles initialize") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Bar
-              def initialize
-              end
+          class Bar
+            def initialize
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Bar
+          class Bar
             def initialize; end
           end
         RUBY
@@ -1281,29 +1111,24 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("understands redefined attr_accessor") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Toto
-              # @return [String]
-              attr_accessor(:foo)
+          class Toto
+            # @return [String]
+            attr_accessor(:foo)
 
-              undef :foo
+            undef :foo
 
-              def foo
-              end
+            def foo
+            end
 
-              undef :foo=
+            undef :foo=
 
-              def foo=(the_foo)
-              end
+            def foo=(the_foo)
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Toto
+          class Toto
             def foo; end
             def foo=(the_foo); end
           end
@@ -1314,7 +1139,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("handles inheritance properly when the parent is a method call") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
+          module Baz
             class Bar; end
 
             def self.foo(x)
@@ -1327,14 +1152,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Baz
             def self.foo(x); end
           end
 
-          class SymbolTableCompilerTest::Bar
+          class Baz::Bar
           end
 
-          class SymbolTableCompilerTest::Toto < ::SymbolTableCompilerTest::Bar
+          class Baz::Toto < ::Baz::Bar
           end
         RUBY
       )
@@ -1343,30 +1168,25 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("handles multiple assign of constants") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Toto
-              A, B, C, *D, e = "1.2.3.4".split(".")
-              NUMS = [A, B, C, *D]
-            end
+          module Toto
+            A, B, C, *D, e = "1.2.3.4".split(".")
+            NUMS = [A, B, C, *D]
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Toto
           end
 
-          module SymbolTableCompilerTest::Toto
-          end
+          Toto::A = T.let(T.unsafe(nil), String)
 
-          SymbolTableCompilerTest::Toto::A = T.let(T.unsafe(nil), String)
+          Toto::B = T.let(T.unsafe(nil), String)
 
-          SymbolTableCompilerTest::Toto::B = T.let(T.unsafe(nil), String)
+          Toto::C = T.let(T.unsafe(nil), String)
 
-          SymbolTableCompilerTest::Toto::C = T.let(T.unsafe(nil), String)
+          Toto::D = T.let(T.unsafe(nil), Array)
 
-          SymbolTableCompilerTest::Toto::D = T.let(T.unsafe(nil), Array)
-
-          SymbolTableCompilerTest::Toto::NUMS = T.let(T.unsafe(nil), Array)
+          Toto::NUMS = T.let(T.unsafe(nil), Array)
         RUBY
       )
     end
@@ -1374,22 +1194,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("handles constants that override #!") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            class Hostile
-              class << self
-                def !
-                  self
-                end
+          class Hostile
+            class << self
+              def !
+                self
               end
             end
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          class SymbolTableCompilerTest::Hostile
+          class Hostile
             def self.!; end
           end
         RUBY
@@ -1399,21 +1214,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("handles ranges properly") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Toto
-              A = ('a'...'z')
-            end
+          module Toto
+            A = ('a'...'z')
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
+          module Toto
           end
 
-          module SymbolTableCompilerTest::Toto
-          end
-
-          SymbolTableCompilerTest::Toto::A = T.let(T.unsafe(nil), T::Range[String])
+          Toto::A = T.let(T.unsafe(nil), T::Range[String])
         RUBY
       )
     end
@@ -1421,26 +1231,21 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("doesn't output prepend for modules unrechable via constants") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-            end
+          module Foo
+          end
 
-            class << Foo
-              module Bar
-                def hi  # unfortunately we miss out on this
-                end
+          class << Foo
+            module Bar
+              def hi  # unfortunately we miss out on this
               end
-
-              prepend(Bar)
             end
+
+            prepend(Bar)
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::Foo
+          module Foo
           end
         RUBY
       )
@@ -1449,26 +1254,21 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("doesn't output include for modules unrechable via constants") do
       expect(
         compile(<<~RUBY)
-          module SymbolTableCompilerTest
-            module Foo
-            end
+          module Foo
+          end
 
-            class << Foo
-              module Bar
-                def hi  # unfortunately we miss out on this
-                end
+          class << Foo
+            module Bar
+              def hi  # unfortunately we miss out on this
               end
-
-              include(Bar)
             end
+
+            include(Bar)
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::Foo
+          module Foo
           end
         RUBY
       )
@@ -1477,30 +1277,25 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("can handle BasicObjects") do
       expect(
         compile(<<~RUBY)
-          class SymbolTableCompilerTest
-            module BasicObjectTest
-              class B < ::BasicObject
-              end
-
-              Basic = B.new
-              VeryBasic = ::BasicObject.new
+          module BasicObjectTest
+            class B < ::BasicObject
             end
+
+            Basic = B.new
+            VeryBasic = ::BasicObject.new
           end
         RUBY
       ).to(
         eq(<<~RUBY.chomp)
-          class SymbolTableCompilerTest
+          module BasicObjectTest
           end
 
-          module SymbolTableCompilerTest::BasicObjectTest
+          class BasicObjectTest::B < ::BasicObject
           end
 
-          class SymbolTableCompilerTest::BasicObjectTest::B < ::BasicObject
-          end
+          BasicObjectTest::Basic = T.let(T.unsafe(nil), BasicObjectTest::B)
 
-          SymbolTableCompilerTest::BasicObjectTest::Basic = T.let(T.unsafe(nil), SymbolTableCompilerTest::BasicObjectTest::B)
-
-          SymbolTableCompilerTest::BasicObjectTest::VeryBasic = T.let(T.unsafe(nil), BasicObject)
+          BasicObjectTest::VeryBasic = T.let(T.unsafe(nil), BasicObject)
         RUBY
       )
     end
@@ -1513,26 +1308,24 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             end
           end
 
-          module SymbolTableCompilerTest
-            module FooConcern
-              extend(ActiveSupport::Concern)
+          module FooConcern
+            extend(ActiveSupport::Concern)
 
-              module ClassMethods
-                def wow_a_class_method
-                  "something"
-                end
-              end
-
-              def a_normal_method
-                123
+            module ClassMethods
+              def wow_a_class_method
+                "something"
               end
             end
 
-            module BarConcern
-              extend(ActiveSupport::Concern)
-
-              ClassMethods = 1
+            def a_normal_method
+              123
             end
+          end
+
+          module BarConcern
+            extend(ActiveSupport::Concern)
+
+            ClassMethods = 1
           end
         RUBY
       ).to(
@@ -1543,16 +1336,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           module ActiveSupport::Concern
           end
 
-          module SymbolTableCompilerTest
-          end
-
-          module SymbolTableCompilerTest::BarConcern
+          module BarConcern
             extend(::ActiveSupport::Concern)
           end
 
-          SymbolTableCompilerTest::BarConcern::ClassMethods = T.let(T.unsafe(nil), Integer)
+          BarConcern::ClassMethods = T.let(T.unsafe(nil), Integer)
 
-          module SymbolTableCompilerTest::FooConcern
+          module FooConcern
             extend(::ActiveSupport::Concern)
 
             mixes_in_class_methods(ClassMethods)
@@ -1560,7 +1350,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def a_normal_method; end
           end
 
-          module SymbolTableCompilerTest::FooConcern::ClassMethods
+          module FooConcern::ClassMethods
             def wow_a_class_method; end
           end
         RUBY
