@@ -8,6 +8,8 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
+    DEFAULT_OUTDIR = "sorbet/rbi/gems"
+
     sig { returns(Pathname) }
     attr_reader :outdir
     sig { returns(T.nilable(String)) }
@@ -21,19 +23,19 @@ module Tapioca
 
     sig do
       params(
-        outdir: String,
+        outdir: T.nilable(String),
         prerequire: T.nilable(String),
         postrequire: T.nilable(String),
-        command: String,
-        typed_overrides: T::Hash[String, String]
+        command: T.nilable(String),
+        typed_overrides: T.nilable(T::Hash[String, String])
       ).void
     end
-    def initialize(outdir:, prerequire:, postrequire:, command:, typed_overrides:)
-      @outdir = T.let(Pathname.new(outdir), Pathname)
+    def initialize(outdir: nil, prerequire: nil, postrequire: nil, command: nil, typed_overrides: nil)
+      @outdir = T.let(Pathname.new(outdir || DEFAULT_OUTDIR), Pathname)
       @prerequire = T.let(prerequire, T.nilable(String))
       @postrequire = T.let(postrequire, T.nilable(String))
-      @command = T.let(command, String)
-      @typed_overrides = T.let(typed_overrides, T::Hash[String, String])
+      @command = T.let(command || default_command, String)
+      @typed_overrides = T.let(typed_overrides || {}, T::Hash[String, String])
       @bundle = T.let(nil, T.nilable(Gemfile))
       @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
       @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -75,6 +77,14 @@ module Tapioca
     end
 
     private
+
+    sig { returns(String) }
+    def default_command
+      command = File.basename($PROGRAM_NAME)
+      args = ARGV.join(" ")
+
+      "#{command} #{args}"
+    end
 
     sig { returns(Gemfile) }
     def bundle

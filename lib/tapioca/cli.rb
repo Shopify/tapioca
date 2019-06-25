@@ -15,7 +15,7 @@ module Tapioca
                   desc: "A file to be required after Bundler.require is called"
     class_option :outdir,
                   aliases: ["--out", "-o"],
-                  default: "sorbet/rbi/gems",
+                  default: Generator::DEFAULT_OUTDIR,
                   banner: "directory",
                   desc: "The output directory for generated RBI files"
     class_option :generate_command,
@@ -49,16 +49,9 @@ module Tapioca
           outdir: options[:outdir],
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
-          command: options[:generate_command] || default_command,
+          command: options[:generate_command],
           typed_overrides: options[:typed_overrides]
         )
-      end
-
-      def default_command
-        command = File.basename($PROGRAM_NAME)
-        args = ARGV.join(" ")
-
-        "#{command} #{args}"
       end
     end
   end
