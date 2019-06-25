@@ -277,6 +277,10 @@ module Tapioca
       File.write(filename.to_s, content)
 
       say("Done", :green)
+
+      outdir.glob("#{gem.name}@*.rbi") do |file|
+        remove(file) unless file.basename.to_s == gem.rbi_file_name
+      end
     end
   end
 end
