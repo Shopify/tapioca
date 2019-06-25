@@ -5,8 +5,8 @@ require "zeitwerk"
 require_relative "./t"
 
 loader = Zeitwerk::Loader.for_gem
-loader.eager_load
 loader.setup
+loader.eager_load
 
 module Tapioca
   def self.silence_warnings
