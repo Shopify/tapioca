@@ -11,7 +11,3 @@ end
 group(:deployment, :development) do
   gem("rake", "~> 12.3")
 end
-
-group(:development) do
-  gem("sorbet", group: :development)
-end
