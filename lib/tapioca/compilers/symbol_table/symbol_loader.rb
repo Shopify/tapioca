@@ -32,55 +32,64 @@ module Tapioca
               file.write(Array(paths).join("\n"))
               file.flush
 
-              symbol_table_from("@#{file.path}")
+              symbol_table_json_from("@#{file.path}")
             end, T.nilable(String))
 
             return Set.new if output.nil? || output.empty?
 
-            SymbolTableParser.parse(output)
+            json = JSON.parse(output)
+            SymbolTableParser.parse(json)
           end
 
           def ignored_symbols
             unless @ignored_symbols
-              output = symbol_table_from("''", table_type: "symbol-table-full")
-              @ignored_symbols = SymbolTableParser.parse(output)
+              output = symbol_table_json_from("''", table_type: "symbol-table-full-json")
+              json = JSON.parse(output)
+              @ignored_symbols = SymbolTableParser.parse(json)
             end
 
             @ignored_symbols
           end
 
-          def symbol_table_from(input, table_type: "symbol-table")
-            # Change dir since you might have a sorbet/config in your cwd
-            Dir.chdir(Dir.tmpdir) do
-              return IO.popen(
-                [
-                  SORBET,
-                  "--print=#{table_type}",
-                  "--quiet",
-                  input,
-                ].shelljoin,
-                err: "/dev/null"
-              ).read
-            end
+          def symbol_table_json_from(input, table_type: "symbol-table-json")
+            IO.popen(
+              [
+                SORBET,
+                # We don't want to pick up any sorbet/config files in cwd
+                "--no-config",
+                "--print=#{table_type}",
+                "--quiet",
+                input,
+              ].shelljoin,
+              err: "/dev/null"
+            ).read
           end
         end
 
         class SymbolTableParser
-          def self.parse(symbol_table)
+          def self.parse(object, parents = [])
             symbols = Set.new
-            symbol_table.each_line do |line|
-              next if line.strip!.empty?
-              kind, name = line.split(" ")
+
+            children = object.fetch("children", [])
+
+            children.each do |child|
+              kind = child.fetch("kind")
+              name = child.fetch("name")
+              name = name.fetch("name") if name.is_a?(Hash)
 
               next if kind.nil? || name.nil?
-              name = name.sub(/^::/, "").sub(/\[.*$/, "")
 
-              next unless %w[class static-field].include?(kind)
+              next unless %w[CLASS STATIC_FIELD].include?(kind)
               next if name =~ /[<>()$]/
               next if name =~ /^[0-9]+$/
               next if name == "T::Helpers"
 
-              symbols.add(name)
+              parents << name
+
+              symbols.add(parents.join("::"))
+              symbols.merge(parse(child, parents))
+
+              parents.pop
             end
             symbols
           end
