@@ -8,8 +8,8 @@ require "tapioca/version"
 Gem::Specification.new do |spec|
   spec.name          = "tapioca"
   spec.version       = Tapioca::VERSION
-  spec.authors       = ["Ufuk Kayserilioglu"]
-  spec.email         = ["ufuk.kayserilioglu@shopify.com"]
+  spec.authors       = ["Ufuk Kayserilioglu", "Alan Wu", "Alexandre Terrasa", "Peter Zhu"]
+  spec.email         = ["rails@shopify.com"]
 
   spec.summary       = "A Ruby Interface file generator for gems, core types and the Ruby standard library"
   spec.homepage      = "https://github.com/Shopify/tapioca"

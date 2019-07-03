@@ -6,10 +6,28 @@ Tapioca is a library used to generate RBI (Ruby interface) files for use with [S
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'tapioca', '~> 0.1.1'
+gem 'tapioca', '~> 0.1.2', require: false
+```
+
+and do not forget to execute `tapioca` using `bundler`:
+
+```shell
+$ bundle exec tapioca
+Commands:
+  tapioca bundle             # sync RBIs to Gemfile
+  tapioca generate [gem...]  # generate RBIs from gems
+  tapioca help [COMMAND]     # Describe available commands or one specific command
+
+Options:
+  --pre, -b, [--prerequire=file]              # A file to be required before Bundler.require is called
+  --post, -a, [--postrequire=file]            # A file to be required after Bundler.require is called
+  --out, -o, [--outdir=directory]             # The output directory for generated RBI files
+                                              # Default: sorbet/rbi/gems
+  --cmd, -c, [--generate-command=command]     # The command to run to regenerate RBI files
+  --typed, -t, [--typed-overrides=gem:level]  # Overrides for typed sigils for generated gem RBIs
 ```
 
 ## Usage
@@ -36,7 +54,7 @@ This will sync the RBIs with the gems in the Gemfile and will add, update, and r
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/paracycle/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
