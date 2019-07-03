@@ -15,8 +15,6 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/Shopify/tapioca"
   spec.license       = "MIT"
 
-  spec.metadata["allowed_push_host"] = "no"
-
   spec.bindir        = "exe"
   spec.executables   = %w(tapioca)
   spec.require_paths = ["lib"]

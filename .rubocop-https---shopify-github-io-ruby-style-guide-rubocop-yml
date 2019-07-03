@@ -558,88 +558,6 @@ Lint/UnusedMethodArgument:
   AllowUnusedKeywordArguments: false
   IgnoreEmptyMethods: true
 
-Rails/ActionFilter:
-  EnforcedStyle: action
-  SupportedStyles:
-  - action
-  - filter
-  Include:
-  - app/controllers/**/*.rb
-
-Rails/Date:
-  EnforcedStyle: flexible
-  SupportedStyles:
-  - strict
-  - flexible
-
-Rails/DynamicFindBy:
-  Whitelist:
-  - find_by_sql
-
-Rails/Exit:
-  Include:
-  - app/**/*.rb
-  - config/**/*.rb
-  - lib/**/*.rb
-  Exclude:
-  - 'lib/**/*.rake'
-
-Rails/FindBy:
-  Include:
-  - app/models/**/*.rb
-
-Rails/FindEach:
-  Include:
-  - app/models/**/*.rb
-
-Rails/HasAndBelongsToMany:
-  Include:
-  - app/models/**/*.rb
-
-Rails/NotNullColumn:
-  Include:
-  - db/migrate/*.rb
-
-Rails/Output:
-  Include:
-  - app/**/*.rb
-  - config/**/*.rb
-  - db/**/*.rb
-  - lib/**/*.rb
-
-Rails/ReadWriteAttribute:
-  Include:
-  - app/models/**/*.rb
-
-Rails/RequestReferer:
-  EnforcedStyle: referer
-  SupportedStyles:
-  - referer
-  - referrer
-
-Rails/SafeNavigation:
-  ConvertTry: false
-
-Rails/ScopeArgs:
-  Include:
-  - app/models/**/*.rb
-
-Rails/TimeZone:
-  EnforcedStyle: flexible
-  SupportedStyles:
-  - strict
-  - flexible
-
-Rails/UniqBeforePluck:
-  EnforcedStyle: conservative
-  SupportedStyles:
-  - conservative
-  - aggressive
-
-Rails/Validation:
-  Include:
-  - app/models/**/*.rb
-
 Naming/AccessorMethodName:
   Enabled: true
 
@@ -1066,26 +984,6 @@ Lint/UselessSetterCall:
   Enabled: true
 
 Lint/Void:
-  Enabled: true
-
-Rails/ApplicationRecord:
-  Enabled: true
-
-Rails/DelegateAllowBlank:
-  Enabled: true
-
-Rails/HttpPositionalArguments:
-  Include:
-  - spec/**/*
-  - test/**/*
-
-Rails/InverseOf:
-  Enabled: true
-
-Rails/OutputSafety:
-  Enabled: true
-
-Rails/PluralizationGrammar:
   Enabled: true
 
 Security/Eval:
