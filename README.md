@@ -9,7 +9,9 @@ Tapioca is a library used to generate RBI (Ruby interface) files for use with [S
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'tapioca', '~> 0.1.2', require: false
+group :development do
+  gem 'tapioca', '~> 0.1.2', require: false
+end
 ```
 
 and do not forget to execute `tapioca` using `bundler`:
