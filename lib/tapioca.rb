@@ -6,7 +6,6 @@ require_relative "./t"
 
 loader = Zeitwerk::Loader.for_gem
 loader.setup
-loader.eager_load
 
 module Tapioca
   def self.silence_warnings
@@ -19,3 +18,5 @@ module Tapioca
 
   class Error < StandardError; end
 end
+
+loader.eager_load
