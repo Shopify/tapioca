@@ -102,7 +102,7 @@ module Tapioca
 
       sig { params(spec: Spec).void }
       def initialize(spec)
-        @spec = T.let(spec, Spec)
+        @spec = T.let(spec, Tapioca::Gemfile::Spec)
       end
 
       sig { returns(String) }
