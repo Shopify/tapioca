@@ -459,6 +459,7 @@ module Tapioca
         sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
         def defined_in_gem?(constant, strict: true)
           files = get_file_candidates(constant)
+          files = Tapioca::ConstantLocator.files_for(constant) if files.empty?
 
           return !strict if files.empty?
 
