@@ -2,6 +2,7 @@
 # typed: true
 
 require 'pathname'
+require "active_support/core_ext/class/subclasses"
 
 module Tapioca
   module Compilers

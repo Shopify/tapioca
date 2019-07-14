@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("sorbet-static", "~> 0.4.4371")
   spec.add_dependency("thor", "~> 0.20.3")
   spec.add_dependency("zeitwerk", "~> 2.1")
+  spec.add_dependency("activesupport")
 
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("pry-byebug")

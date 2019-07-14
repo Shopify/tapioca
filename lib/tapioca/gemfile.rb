@@ -2,6 +2,7 @@
 # typed: strict
 
 require "bundler"
+require "active_support/core_ext/class/subclasses"
 
 module Tapioca
   class Gemfile
