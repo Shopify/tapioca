@@ -71,12 +71,25 @@ module Tapioca
       File.expand_path(gemfile.path + "/..")
     end
 
+    sig { returns(T::Array[T.untyped]) }
+    def rails_engines
+      engines = []
+
+      return engines unless Object.const_defined?("Rails::Engine")
+
+      base = Object.const_get("Rails::Engine")
+      ObjectSpace.each_object(base.singleton_class) do |k|
+        k = T.cast(k, Class)
+        next if k.singleton_class?
+        engines.unshift(k) unless k == base
+      end
+
+      engines.reject(&:abstract_railtie?)
+    end
+
     sig { void }
     def load_rails_engines
-      return unless Object.const_defined?("Rails::Engine")
-      engines = Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
-
-      engines.each do |engine|
+      rails_engines.each do |engine|
         errored_files = []
 
         engine.config.eager_load_paths.each do |load_path|
