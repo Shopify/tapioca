@@ -1429,3 +1429,5 @@ module Kernel
   def debugger; end
   def remote_byebug(host = _, port = _); end
 end
+
+Kernel::RUBYGEMS_ACTIVATION_MONITOR = T.let(T.unsafe(nil), Monitor)

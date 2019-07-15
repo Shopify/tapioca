@@ -59,7 +59,6 @@ class Zeitwerk::Loader
   def reloading_enabled?; end
   def root_dirs; end
   def setup; end
-  def shadowed_files; end
   def tag; end
   def tag=(tag); end
   def to_unload; end

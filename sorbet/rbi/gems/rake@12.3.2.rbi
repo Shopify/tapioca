@@ -23,6 +23,12 @@ end
 
 FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 
+FileUtils::LOW_METHODS = T.let(T.unsafe(nil), Array)
+
+FileUtils::METHODS = T.let(T.unsafe(nil), Array)
+
+FileUtils::OPT_TABLE = T.let(T.unsafe(nil), Hash)
+
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
 FileUtils::VERSION = T.let(T.unsafe(nil), String)

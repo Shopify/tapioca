@@ -4,9 +4,6 @@
 # typed: true
 
 class BasicObject
-  extend(::Class)
-  extend(::Module)
-
   def __binding__; end
 end
 
@@ -18,6 +15,40 @@ class Object < ::BasicObject
   def __binding__; end
   def pry(object = _, hash = _); end
 end
+
+::ARGF = T.let(T.unsafe(nil), T.untyped)
+
+::ARGV = T.let(T.unsafe(nil), Array)
+
+::ENV = T.let(T.unsafe(nil), Object)
+
+::RUBY_COPYRIGHT = T.let(T.unsafe(nil), String)
+
+::RUBY_DESCRIPTION = T.let(T.unsafe(nil), String)
+
+::RUBY_ENGINE = T.let(T.unsafe(nil), String)
+
+::RUBY_ENGINE_VERSION = T.let(T.unsafe(nil), String)
+
+::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Integer)
+
+::RUBY_PLATFORM = T.let(T.unsafe(nil), String)
+
+::RUBY_RELEASE_DATE = T.let(T.unsafe(nil), String)
+
+::RUBY_REVISION = T.let(T.unsafe(nil), Integer)
+
+::RUBY_VERSION = T.let(T.unsafe(nil), String)
+
+::STDERR = T.let(T.unsafe(nil), IO)
+
+::STDIN = T.let(T.unsafe(nil), IO)
+
+::STDOUT = T.let(T.unsafe(nil), IO)
+
+::TOPLEVEL_BINDING = T.let(T.unsafe(nil), Binding)
+
+::TRUE = T.let(T.unsafe(nil), TrueClass)
 
 class Pry
   extend(::Pry::Config::Convenience)

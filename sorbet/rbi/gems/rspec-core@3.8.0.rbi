@@ -1792,6 +1792,7 @@ class RSpec::Core::OutputWrapper
   def lineno=(*args, &block); end
   def lines(*args, &block); end
   def method_missing(name, *args, &block); end
+  def nread(*args, &block); end
   def output; end
   def output=(_); end
   def pathconf(*args, &block); end
@@ -1811,6 +1812,7 @@ class RSpec::Core::OutputWrapper
   def readline(*args, &block); end
   def readlines(*args, &block); end
   def readpartial(*args, &block); end
+  def ready?(*args, &block); end
   def reopen(*args, &block); end
   def respond_to?(name, priv = _); end
   def rewind(*args, &block); end
@@ -1828,6 +1830,9 @@ class RSpec::Core::OutputWrapper
   def tty?(*args, &block); end
   def ungetbyte(*args, &block); end
   def ungetc(*args, &block); end
+  def wait(*args, &block); end
+  def wait_readable(*args, &block); end
+  def wait_writable(*args, &block); end
   def write(*args, &block); end
   def write_nonblock(*args, &block); end
 end
@@ -2129,11 +2134,6 @@ end
 RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
 
 RSpec::SharedContext = RSpec::Core::SharedContext
-
-module RSpec::Version
-end
-
-RSpec::Version::STRING = T.let(T.unsafe(nil), String)
 
 module RSpec::Core::Bisect
 end
