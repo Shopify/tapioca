@@ -1223,7 +1223,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           module Toto
           end
 
-          Toto::A = T.let(T.unsafe(nil), T::Range[String])
+          Toto::A = T.let(T.unsafe(nil), Range)
         RUBY
       )
     end
