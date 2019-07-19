@@ -62,7 +62,7 @@ module Tapioca
 
     sig { params(spec: Spec).returns(T::Boolean) }
     def ignore_gem_spec?(spec)
-      ["sorbet", "sorbet-static"].include?(spec.name) ||
+      ["sorbet", "sorbet-static", "sorbet-runtime"].include?(spec.name) ||
         spec.full_gem_path.start_with?(gemfile_dir)
     end
 
