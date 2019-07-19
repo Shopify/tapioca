@@ -9,6 +9,11 @@ module Tapioca
     extend(T::Sig)
 
     DEFAULT_OUTDIR = "sorbet/rbi/gems"
+    DEFAULT_OVERRIDES = T.let({
+      # ActiveSupport overrides some core methods with different signatures
+      # so we generate a typed: false RBI for it to suppress errors
+      "activesupport" => "false",
+    }, T::Hash[String, String])
 
     sig { returns(Pathname) }
     attr_reader :outdir
@@ -267,7 +272,7 @@ module Tapioca
       gem_name = set_color(gem.name, :yellow, :bold)
       say("Compiling #{gem_name}, this may take a few seconds... ")
 
-      typed_sigil = typed_overrides.fetch(gem.name, "true")
+      typed_sigil = typed_overrides[gem.name] || DEFAULT_OVERRIDES[gem.name] || "true"
 
       content = compiler.compile(gem)
       content.prepend(rbi_header(command, typed_sigil))
