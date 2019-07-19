@@ -7,7 +7,15 @@ module Tapioca
   class Gemfile
     extend(T::Sig)
 
-    Spec = T.type_alias(T.any(::Bundler::StubSpecification, ::Gem::Specification))
+    Spec = T.type_alias(
+      T.any(
+        T.all(
+          ::Bundler::StubSpecification,
+          ::Bundler::RemoteSpecification
+        ),
+        ::Gem::Specification
+      )
+    )
 
     sig { void }
     def initialize
