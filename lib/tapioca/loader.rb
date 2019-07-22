@@ -14,6 +14,9 @@ module Tapioca
     def load_bundle(initialize_file, require_file)
       require(initialize_file) if initialize_file && File.exist?(initialize_file)
 
+      load_rails
+      load_rake
+
       require_bundle
 
       require(require_file) if require_file && File.exist?(require_file)
@@ -45,6 +48,27 @@ module Tapioca
       end
 
       engines.reject(&:abstract_railtie?)
+    end
+
+    sig { params(path: String).void }
+    def safe_require(path)
+      require path
+    rescue LoadError
+      nil
+    end
+
+    sig { void }
+    def load_rake
+      safe_require("rake")
+    end
+
+    sig { void }
+    def load_rails
+      return unless File.exist?("config/application.rb")
+
+      safe_require("rails")
+      safe_require("rails/generators/test_case")
+      safe_require("./config/application")
     end
 
     sig { void }
