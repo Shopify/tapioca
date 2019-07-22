@@ -45,23 +45,25 @@ module Tapioca
       dependencies.detect { |dep| dep.name == gem_name }
     end
 
-    sig { params(initialize_file: T.nilable(String), require_file: T.nilable(String)).void }
-    def require_bundle(initialize_file, require_file)
-      require(initialize_file) if initialize_file && File.exist?(initialize_file)
-
-      runtime = Bundler::Runtime.new(File.dirname(gemfile.path), definition)
-      groups = Bundler.definition.groups
-      runtime.setup(*groups).require(*groups)
-
-      require(require_file) if require_file && File.exist?(require_file)
-
-      load_rails_engines
+    sig { void }
+    def require
+      T.unsafe(runtime).setup(*groups).require(*groups)
     end
 
     private
 
     sig { returns(File) }
     attr_reader(:gemfile, :lockfile)
+
+    sig { returns(Bundler::Runtime) }
+    def runtime
+      Bundler::Runtime.new(File.dirname(gemfile.path), definition)
+    end
+
+    sig { returns(T::Array[Symbol]) }
+    def groups
+      definition.groups
+    end
 
     sig { returns(Bundler::Definition) }
     def definition
@@ -77,45 +79,6 @@ module Tapioca
     sig { returns(String) }
     def gemfile_dir
       File.expand_path(gemfile.path + "/..")
-    end
-
-    sig { returns(T::Array[T.untyped]) }
-    def rails_engines
-      engines = []
-
-      return engines unless Object.const_defined?("Rails::Engine")
-
-      base = Object.const_get("Rails::Engine")
-      ObjectSpace.each_object(base.singleton_class) do |k|
-        k = T.cast(k, Class)
-        next if k.singleton_class?
-        engines.unshift(k) unless k == base
-      end
-
-      engines.reject(&:abstract_railtie?)
-    end
-
-    sig { void }
-    def load_rails_engines
-      rails_engines.each do |engine|
-        errored_files = []
-
-        engine.config.eager_load_paths.each do |load_path|
-          Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-            require(file)
-          rescue LoadError, StandardError
-            errored_files << file
-          end
-        end
-
-        # Try files that have errored one more time
-        # It might have been a load order problem
-        errored_files.each do |file|
-          require(file)
-        rescue LoadError, StandardError
-          nil
-        end
-      end
     end
 
     class Gem

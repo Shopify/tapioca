@@ -42,6 +42,7 @@ module Tapioca
       @command = T.let(command || default_command, String)
       @typed_overrides = T.let(typed_overrides || {}, T::Hash[String, String])
       @bundle = T.let(nil, T.nilable(Gemfile))
+      @loader = T.let(nil, T.nilable(Loader))
       @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
       @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
       @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -96,6 +97,11 @@ module Tapioca
       @bundle ||= Gemfile.new
     end
 
+    sig { returns(Loader) }
+    def loader
+      @loader ||= Loader.new(bundle)
+    end
+
     sig { returns(Compilers::SymbolTableCompiler) }
     def compiler
       @compiler ||= Compilers::SymbolTableCompiler.new
@@ -104,7 +110,7 @@ module Tapioca
     sig { void }
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
-      bundle.require_bundle(prerequire, postrequire)
+      loader.load_bundle(prerequire, postrequire)
       say(" Done", :green)
       puts
     end
