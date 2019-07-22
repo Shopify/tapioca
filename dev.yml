@@ -9,12 +9,10 @@ up:
   - bundler
 
 commands:
-  console:
-    desc: "start a console"
-    run: "bin/console"
-  test:
-    run: "bin/test"
-  style:
-    run: "bin/style"
   typecheck:
-    run: "bin/typecheck"
+    aliases: [ "tc" ]
+    run:     "bin/typecheck"
+  console:   "bin/console"
+  test:      "bin/test"
+  style:     "bin/style"
+  sanity:    "bin/typecheck && bin/style && bin/test"
