@@ -541,12 +541,34 @@ module Tapioca
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
+        def raw_name_of(constant)
+          Module.instance_method(:name).bind(constant).call
+        end
+
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def name_of(constant)
-          name = Module.instance_method(:name).bind(constant).call
+          name = name_of_proxy_target(constant)
+          return name if name
+          name = raw_name_of(constant)
           return if name.nil?
           return unless are_equal?(constant, resolve_constant(name))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
+        end
+
+        sig { params(constant: Module).returns(T.nilable(String)) }
+        def name_of_proxy_target(constant)
+          klass = class_of(constant)
+          return unless raw_name_of(klass) == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
+          # We are dealing with a ActiveSupport::Deprecation::DeprecatedConstantProxy
+          # so try to get the name of the target class
+          begin
+            target = Kernel.instance_method(:send).bind(constant).call(:target)
+          rescue NoMethodError
+            return nil
+          end
+
+          name_of(target)
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }

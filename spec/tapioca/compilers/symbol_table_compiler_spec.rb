@@ -1356,5 +1356,182 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       )
     end
+
+    it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
+      expect(
+        compile(<<~RUBY)
+          module ActiveSupport
+            class Deprecation
+              class DeprecationProxy #:nodoc:
+                def self.new(*args, &block)
+                  object = args.first
+
+                  return object unless object
+                  super
+                end
+
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match?(m) }
+
+                def inspect
+                  target.inspect
+                end
+
+                private
+                  def method_missing(called, *args, &block)
+                    target.__send__(called, *args, &block)
+                  end
+              end
+
+              class DeprecatedConstantProxy < DeprecationProxy
+                def initialize(old_const, new_const)
+                  @old_const = old_const
+                  @new_const = new_const
+                end
+
+                def class
+                  target.class
+                end
+
+                private
+                  def target
+                    Object.const_get(@new_const.to_s)
+                  end
+
+                  def warn(callstack, called, args)
+                    @deprecator.warn(@message, callstack)
+                  end
+              end
+            end
+          end
+
+          class Foo
+            def self.name
+              "SomethingElse"
+            end
+          end
+
+          Bar = ActiveSupport::Deprecation::DeprecatedConstantProxy.new("Bar", "Foo")
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          module ActiveSupport
+          end
+
+          class ActiveSupport::Deprecation
+          end
+
+          class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::ActiveSupport::Deprecation::DeprecationProxy
+            def initialize(old_const, new_const); end
+
+            def class; end
+
+            private
+
+            def target; end
+            def warn(callstack, called, args); end
+          end
+
+          class ActiveSupport::Deprecation::DeprecationProxy
+            def inspect; end
+
+            private
+
+            def method_missing(called, *args, &block); end
+
+            def self.new(*args, &block); end
+          end
+
+          Bar = T.let(T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedConstantProxy)
+
+          class Foo
+            def self.name; end
+          end
+        RUBY
+      )
+    end
+
+    it("properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
+      expect(
+        compile(<<~RUBY)
+          module ActiveSupport
+            class Deprecation
+              class DeprecatedConstantProxy < Module
+                def self.new(*args, &block)
+                  object = args.first
+
+                  return object unless object
+                  super
+                end
+
+                def initialize(old_const, new_const)
+                  @old_const = old_const
+                  @new_const = new_const
+                end
+
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match?(m) }
+
+                def inspect
+                  target.inspect
+                end
+
+                def class
+                  target.class
+                end
+
+                private
+                  def target
+                    Object.const_get(@new_const.to_s)
+                  end
+
+                  def const_missing(name)
+                    target.const_get(name)
+                  end
+
+                  def method_missing(called, *args, &block)
+                    target.__send__(called, *args, &block)
+                  end
+              end
+            end
+          end
+
+          class Foo
+            def self.name
+              "SomethingElse"
+            end
+          end
+
+          Bar = ActiveSupport::Deprecation::DeprecatedConstantProxy.new("Bar", "Foo")
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          module ActiveSupport
+          end
+
+          class ActiveSupport::Deprecation
+          end
+
+          class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
+            def initialize(old_const, new_const); end
+
+            def class; end
+            def inspect; end
+
+            private
+
+            def const_missing(name); end
+            def method_missing(called, *args, &block); end
+            def target; end
+
+            def self.new(*args, &block); end
+          end
+
+          Bar = Foo
+
+          class Foo
+            def self.name; end
+          end
+        RUBY
+      )
+    end
   end
 end
