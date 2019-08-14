@@ -70,9 +70,13 @@ module Tapioca
       @definition ||= Bundler::Dsl.evaluate(gemfile, lockfile, {})
     end
 
+    IGNORED_GEMS = T.let(%w{
+      sorbet sorbet-static sorbet-runtime tapioca
+    }.freeze, T::Array[String])
+
     sig { params(spec: Spec).returns(T::Boolean) }
     def ignore_gem_spec?(spec)
-      ["sorbet", "sorbet-static", "sorbet-runtime"].include?(spec.name) ||
+      IGNORED_GEMS.include?(spec.name) ||
         spec.full_gem_path.start_with?(gemfile_dir)
     end
 
