@@ -166,11 +166,11 @@ RSpec.describe(Tapioca::Cli) do
     end
   end
 
-  describe("#bundle") do
+  describe("#sync") do
     it 'must perform no operations if everything is up-to-date' do
       run("generate")
 
-      output = run("bundle")
+      output = run("sync")
 
       expect(output).to_not(include("-- Removing:"))
       expect(output).to_not(include("++ Adding:"))
@@ -196,7 +196,7 @@ RSpec.describe(Tapioca::Cli) do
       run("generate")
       FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
 
-      output = run("bundle")
+      output = run("sync")
 
       expect(output).to(include("-- Removing: #{outdir}/outdated@5.0.0.rbi\n"))
       expect(output).to_not(include("++ Adding:"))
@@ -221,7 +221,7 @@ RSpec.describe(Tapioca::Cli) do
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 
-      output = run("bundle")
+      output = run("sync")
 
       expect(output).to(include("++ Adding: #{outdir}/bar@0.3.0.rbi\n"))
       expect(output).to(include("++ Adding: #{outdir}/baz@0.0.2.rbi\n"))
@@ -248,7 +248,7 @@ RSpec.describe(Tapioca::Cli) do
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 
-      output = run("bundle")
+      output = run("sync")
 
       expect(output).to(include("-> Moving: #{outdir}/bar@0.0.1.rbi to #{outdir}/bar@0.3.0.rbi\n"))
       expect(output).to(include("++ Adding: #{outdir}/bar@0.3.0.rbi\n"))

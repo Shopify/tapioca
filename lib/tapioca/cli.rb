@@ -36,8 +36,8 @@ module Tapioca
       end
     end
 
-    desc "bundle", "sync RBIs to Gemfile"
-    def bundle
+    desc "sync", "sync RBIs to Gemfile"
+    def sync
       Tapioca.silence_warnings do
         generator.sync_rbis_with_gemfile
       end

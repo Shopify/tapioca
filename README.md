@@ -19,9 +19,9 @@ and do not forget to execute `tapioca` using `bundler`:
 ```shell
 $ bundle exec tapioca
 Commands:
-  tapioca bundle             # sync RBIs to Gemfile
   tapioca generate [gem...]  # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
+  tapioca sync               # sync RBIs to Gemfile
 
 Options:
   --pre, -b, [--prerequire=file]              # A file to be required before Bundler.require is called
@@ -42,7 +42,7 @@ This will generate RBIs for the specified gems and place them in the RBI directo
 
 ### Generate for all gems in Gemfile
 
-Command: `tapioca bundle`
+Command: `tapioca sync`
 
 This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
 
