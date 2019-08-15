@@ -13,7 +13,7 @@ module Tapioca
       # ActiveSupport overrides some core methods with different signatures
       # so we generate a typed: false RBI for it to suppress errors
       "activesupport" => "false",
-    }, T::Hash[String, String])
+    }.freeze, T::Hash[String, String])
 
     sig { returns(Pathname) }
     attr_reader :outdir
