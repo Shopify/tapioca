@@ -131,11 +131,7 @@ module Tapioca
         def type_name_of(value)
           klass = class_of(value)
 
-          type_name = public_module?(klass) && name_of(klass) || "T.untyped"
-          # Range needs to be processed separately to be put in the T::Range[] form
-          type_name = "T::Range[#{type_name_of(T.cast(value, T::Range[T.untyped]).first)}]" if klass == Range
-
-          type_name
+          public_module?(klass) && name_of(klass) || "T.untyped"
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }

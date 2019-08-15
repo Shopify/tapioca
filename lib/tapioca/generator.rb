@@ -9,6 +9,11 @@ module Tapioca
     extend(T::Sig)
 
     DEFAULT_OUTDIR = "sorbet/rbi/gems"
+    DEFAULT_OVERRIDES = T.let({
+      # ActiveSupport overrides some core methods with different signatures
+      # so we generate a typed: false RBI for it to suppress errors
+      "activesupport" => "false",
+    }.freeze, T::Hash[String, String])
 
     sig { returns(Pathname) }
     attr_reader :outdir
@@ -37,6 +42,7 @@ module Tapioca
       @command = T.let(command || default_command, String)
       @typed_overrides = T.let(typed_overrides || {}, T::Hash[String, String])
       @bundle = T.let(nil, T.nilable(Gemfile))
+      @loader = T.let(nil, T.nilable(Loader))
       @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
       @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
       @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -91,6 +97,11 @@ module Tapioca
       @bundle ||= Gemfile.new
     end
 
+    sig { returns(Loader) }
+    def loader
+      @loader ||= Loader.new(bundle)
+    end
+
     sig { returns(Compilers::SymbolTableCompiler) }
     def compiler
       @compiler ||= Compilers::SymbolTableCompiler.new
@@ -99,7 +110,7 @@ module Tapioca
     sig { void }
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
-      bundle.require_bundle(prerequire, postrequire)
+      loader.load_bundle(prerequire, postrequire)
       say(" Done", :green)
       puts
     end
@@ -267,7 +278,7 @@ module Tapioca
       gem_name = set_color(gem.name, :yellow, :bold)
       say("Compiling #{gem_name}, this may take a few seconds... ")
 
-      typed_sigil = typed_overrides.fetch(gem.name, "true")
+      typed_sigil = typed_overrides[gem.name] || DEFAULT_OVERRIDES[gem.name] || "true"
 
       content = compiler.compile(gem)
       content.prepend(rbi_header(command, typed_sigil))
