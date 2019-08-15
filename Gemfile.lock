@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tapioca (0.1.5)
+    tapioca (0.2.0)
       pry (>= 0.12.2)
       sorbet-runtime
       sorbet-static (~> 0.4.4471)
@@ -65,7 +65,7 @@ GEM
     ruby-progressbar (1.10.1)
     sorbet (0.4.4476)
       sorbet-static (= 0.4.4476)
-    sorbet-runtime (0.4.4476)
+    sorbet-runtime (0.4.4602)
     sorbet-static (0.4.4476-universal-darwin-14)
     thor (0.20.3)
     unicode-display_width (1.6.0)
