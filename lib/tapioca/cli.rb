@@ -11,6 +11,7 @@ module Tapioca
                   desc: "A file to be required before Bundler.require is called"
     class_option :postrequire,
                   aliases: ["--post", "-a"],
+                  default: Generator::DEFAULT_POSTREQUIRE,
                   banner: "file",
                   desc: "A file to be required after Bundler.require is called"
     class_option :outdir,

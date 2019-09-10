@@ -8,6 +8,7 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
+    DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
     DEFAULT_OUTDIR = "sorbet/rbi/gems"
     DEFAULT_OVERRIDES = T.let({
       # ActiveSupport overrides some core methods with different signatures
@@ -38,7 +39,7 @@ module Tapioca
     def initialize(outdir: nil, prerequire: nil, postrequire: nil, command: nil, typed_overrides: nil)
       @outdir = T.let(Pathname.new(outdir || DEFAULT_OUTDIR), Pathname)
       @prerequire = T.let(prerequire, T.nilable(String))
-      @postrequire = T.let(postrequire, T.nilable(String))
+      @postrequire = T.let(postrequire || DEFAULT_POSTREQUIRE, T.nilable(String))
       @command = T.let(command || default_command, String)
       @typed_overrides = T.let(typed_overrides || {}, T::Hash[String, String])
       @bundle = T.let(nil, T.nilable(Gemfile))
