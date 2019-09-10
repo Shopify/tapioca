@@ -5,6 +5,8 @@ require 'thor'
 
 module Tapioca
   class Cli < Thor
+    include(Thor::Actions)
+
     class_option :prerequire,
                   aliases: ["--pre", "-b"],
                   banner: "file",
@@ -29,6 +31,24 @@ module Tapioca
                   default: {},
                   banner: "gem:level",
                   desc: "Overrides for typed sigils for generated gem RBIs"
+
+    desc "init", "initalizes folder structure"
+    def init
+      create_file(Generator::SORBET_CONFIG, skip: true) do
+        <<~CONTENT
+          --dir
+          .
+        CONTENT
+      end
+      create_file(Generator::DEFAULT_POSTREQUIRE, skip: true) do
+        <<~CONTENT
+          # frozen_string_literal: true
+          # typed: false
+
+          # Add your extra requires here
+        CONTENT
+      end
+    end
 
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)

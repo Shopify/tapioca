@@ -8,6 +8,7 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
+    SORBET_CONFIG = "sorbet/config"
     DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
     DEFAULT_OUTDIR = "sorbet/rbi/gems"
     DEFAULT_OVERRIDES = T.let({
