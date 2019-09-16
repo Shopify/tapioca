@@ -21,6 +21,7 @@ $ bundle exec tapioca
 Commands:
   tapioca generate [gem...]  # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
+  tapioca init               # initalizes folder structure
   tapioca sync               # sync RBIs to Gemfile
 
 Options:
@@ -33,6 +34,12 @@ Options:
 ```
 
 ## Usage
+
+### Initialize folder structure
+
+Command: `tapioca init`
+
+This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
 ### Generate for gems
 

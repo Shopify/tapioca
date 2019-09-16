@@ -79,6 +79,56 @@ RSpec.describe(Tapioca::Cli) do
     end
   end
 
+  describe("#init") do
+    before(:each) do
+      FileUtils.rm_rf(repo_path / "sorbet")
+    end
+
+    after(:each) do
+      FileUtils.rm_rf(repo_path / "sorbet")
+    end
+
+    it 'must create proper files' do
+      output = run("init")
+
+      expect(output).to(eq(<<-OUTPUT))
+      create  sorbet/config
+      create  sorbet/tapioca/require.rb
+      OUTPUT
+
+      expect(File).to(exist(repo_path / "sorbet/config"))
+      expect(File.read(repo_path / "sorbet/config")).to(eq(<<~CONTENTS))
+        --dir
+        .
+      CONTENTS
+      expect(File).to(exist(repo_path / "sorbet/tapioca/require.rb"))
+      expect(File.read(repo_path / "sorbet/tapioca/require.rb")).to(eq(<<~CONTENTS))
+        # frozen_string_literal: true
+        # typed: false
+
+        # Add your extra requires here
+      CONTENTS
+    end
+
+    it 'must not overwrite files' do
+      FileUtils.mkdir_p(repo_path / "sorbet/tapioca")
+      FileUtils.touch([
+        repo_path / "sorbet/config",
+        repo_path / "sorbet/tapioca/require.rb",
+      ])
+
+      output = run("init")
+
+      expect(output).to(eq(<<-OUTPUT))
+        skip  sorbet/config
+        skip  sorbet/tapioca/require.rb
+      OUTPUT
+
+      expect(File.read(repo_path / "sorbet/config")).to(be_empty)
+      expect(File.read(repo_path / "sorbet/tapioca/require.rb")).to(be_empty)
+    end
+  end
+
   describe("#generate") do
     it 'must generate a single gem RBI' do
       output = run("generate", "foo")
