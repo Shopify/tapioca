@@ -79,7 +79,10 @@ module Tapioca
 
               next if kind.nil? || name.nil?
 
-              next unless %w[CLASS STATIC_FIELD].include?(kind)
+              # TODO: CLASS is removed since v0.4.4730 of Sorbet
+              # but keeping here for backward compatibility. Remove
+              # once the minimum version is moved past that.
+              next unless %w[CLASS CLASS_OR_MODULE STATIC_FIELD].include?(kind)
               next if name =~ /[<>()$]/
               next if name =~ /^[0-9]+$/
               next if name == "T::Helpers"
