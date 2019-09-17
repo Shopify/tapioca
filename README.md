@@ -21,7 +21,7 @@ $ bundle exec tapioca
 Commands:
   tapioca generate [gem...]  # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
-  tapioca init               # initalizes folder structure
+  tapioca init               # initializes folder structure
   tapioca sync               # sync RBIs to Gemfile
 
 Options:

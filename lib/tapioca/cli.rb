@@ -32,7 +32,7 @@ module Tapioca
                   banner: "gem:level",
                   desc: "Overrides for typed sigils for generated gem RBIs"
 
-    desc "init", "initalizes folder structure"
+    desc "init", "initializes folder structure"
     def init
       create_file(Generator::SORBET_CONFIG, skip: true) do
         <<~CONTENT
