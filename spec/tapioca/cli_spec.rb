@@ -130,6 +130,10 @@ RSpec.describe(Tapioca::Cli) do
   end
 
   describe("#generate") do
+    before(:each) do
+      run("init")
+    end
+
     it 'must generate a single gem RBI' do
       output = run("generate", "foo")
 
@@ -217,6 +221,10 @@ RSpec.describe(Tapioca::Cli) do
   end
 
   describe("#sync") do
+    before(:each) do
+      run("init")
+    end
+
     it 'must perform no operations if everything is up-to-date' do
       run("generate")
 
