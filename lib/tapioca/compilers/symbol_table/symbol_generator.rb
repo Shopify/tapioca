@@ -517,6 +517,7 @@ module Tapioca
         def public_module?(constant)
           constant_name = name_of(constant)
           return false unless constant_name
+          return false if constant_name.start_with?('T::Private')
 
           begin
             # can't use !! here because the constant might override ! and mess with us
