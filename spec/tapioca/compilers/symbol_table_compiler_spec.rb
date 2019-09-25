@@ -1533,5 +1533,28 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       )
     end
+
+    it("properly filters out T::Private modules") do
+      expect(
+        compile(<<~RUBY)
+          class Foo
+            extend(T::Private::Methods::SingletonMethodHooks)
+            extend(T::Private::Abstract::Hooks)
+            extend(T::Private::Methods)
+            extend(T::Private::Methods::MethodHooks)
+
+            def self.name
+              "SomethingElse"
+            end
+          end
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          class Foo
+            def self.name; end
+          end
+        RUBY
+      )
+    end
   end
 end
