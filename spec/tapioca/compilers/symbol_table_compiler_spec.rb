@@ -208,6 +208,8 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
             def to_foo(base = _); end
           end
+
+          Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
         RUBY
       )
     end
