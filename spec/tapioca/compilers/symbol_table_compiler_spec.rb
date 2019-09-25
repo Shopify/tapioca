@@ -964,8 +964,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           obj = Object.new
 
           Dir.glob(File.join('yard', 'core_ext', '*.rb')).each do |file|
-            require file
-          rescue LoadError
+            begin
+              require file
+            rescue LoadError
+            end
           end
 
           def tap; yield(self); self end unless defined?(tap)
