@@ -12,14 +12,14 @@ module Tapioca
 
     sig { params(initialize_file: T.nilable(String), require_file: T.nilable(String)).void }
     def load_bundle(initialize_file, require_file)
-      require(initialize_file) if initialize_file && File.exist?(initialize_file)
+      require_helper(initialize_file)
 
       load_rails
       load_rake
 
       require_bundle
 
-      require(require_file) if require_file && File.exist?(require_file)
+      require_helper(require_file)
 
       load_rails_engines
     end
@@ -28,6 +28,15 @@ module Tapioca
 
     sig { returns(Tapioca::Gemfile) }
     attr_reader :gemfile
+
+    sig { params(file: T.nilable(String)).void }
+    def require_helper(file)
+      return unless file
+      file = File.absolute_path(file)
+      return unless File.exist?(file)
+
+      require(file)
+    end
 
     sig { void }
     def require_bundle
