@@ -291,7 +291,7 @@ module Tapioca
 
       say("Done", :green)
 
-      outdir.glob("#{gem.name}@*.rbi") do |file|
+      Pathname.glob("#{outdir}/#{gem.name}@*.rbi") do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
       end
     end
