@@ -119,7 +119,7 @@ module Tapioca
 
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
-      @existing_rbis ||= Dir.glob("*@*.rbi", T.unsafe(base: outdir))
+      @existing_rbis ||= Dir.glob("#{outdir}/*@*.rbi")
         .map { |f| File.basename(f, ".*").split('@') }
         .to_h
     end
