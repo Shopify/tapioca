@@ -1,10 +1,7 @@
 # typed: true
 # frozen_string_literal: true
-require "sorbet-runtime"
-require "zeitwerk"
 
-loader = Zeitwerk::Loader.for_gem
-loader.setup
+require "sorbet-runtime"
 
 module Tapioca
   def self.silence_warnings
@@ -31,4 +28,12 @@ rescue
   nil
 end
 
-loader.eager_load
+require_relative "tapioca/loader"
+require_relative "tapioca/constant_locator"
+require_relative "tapioca/generator"
+require_relative "tapioca/cli"
+require_relative "tapioca/gemfile"
+require_relative "tapioca/compilers/symbol_table_compiler"
+require_relative "tapioca/compilers/symbol_table/symbol_generator"
+require_relative "tapioca/compilers/symbol_table/symbol_loader"
+require_relative "tapioca/version"

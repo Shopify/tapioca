@@ -4,6 +4,7 @@
 require "spec_helper"
 require "pathname"
 require "tmpdir"
+require "bundler"
 
 RSpec.configure do |config|
   # Some tests are not compatible with different Ruby versions.
