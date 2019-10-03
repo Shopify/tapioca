@@ -73,21 +73,15 @@ RSpec.describe(Tapioca::Cli) do
   end
 
   around(:each) do |example|
+    FileUtils.rm_rf(repo_path / "sorbet")
     Dir.mktmpdir do |outdir|
       @outdir = outdir
       example.run
     end
+    FileUtils.rm_rf(repo_path / "sorbet")
   end
 
   describe("#init") do
-    before(:each) do
-      FileUtils.rm_rf(repo_path / "sorbet")
-    end
-
-    after(:each) do
-      FileUtils.rm_rf(repo_path / "sorbet")
-    end
-
     it 'must create proper files' do
       output = run("init")
 

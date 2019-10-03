@@ -119,8 +119,8 @@ module Tapioca
 
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
-      @existing_rbis ||= Dir.glob("*@*.rbi", T.unsafe(base: outdir))
-        .map { |f| File.basename(f, ".*").split('@') }
+      @existing_rbis ||= Pathname.glob((Pathname.new(outdir) / "*@*.rbi").to_s)
+        .map { |f| f.basename(".*").to_s.split('@') }
         .to_h
     end
 
@@ -291,7 +291,7 @@ module Tapioca
 
       say("Done", :green)
 
-      outdir.glob("#{gem.name}@*.rbi") do |file|
+      Pathname.glob((outdir / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
       end
     end

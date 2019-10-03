@@ -101,7 +101,7 @@ module Tapioca
       sig { returns(T::Array[Pathname]) }
       def files
         @spec.full_require_paths.flat_map do |path|
-          Pathname.new(path).glob("**/*.rb")
+          Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
         end
       end
 
