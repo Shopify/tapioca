@@ -504,7 +504,8 @@ module Tapioca
         def parent_declares_constant?(name)
           name_parts = name.split("::")
 
-          parent_name = name_parts[0...-1].join("::").delete_prefix("::")
+          parent_name = name_parts[0...-1].join("::")
+          parent_name = parent_name[2..-1] if parent_name.start_with?("::")
           parent_name = 'Object' if parent_name == ""
           parent = T.cast(resolve_constant(parent_name), T.nilable(Module))
 

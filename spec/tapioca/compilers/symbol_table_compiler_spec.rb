@@ -5,6 +5,19 @@ require "spec_helper"
 require "pathname"
 require "tmpdir"
 
+RSpec.configure do |config|
+  # Some tests are not compatible with different Ruby versions.
+  # You can add `ruby: "X.Y.Z"` on a spec to specify which version should run it.
+  #
+  # For example:
+  #   it("tests something with Ruby 2.5 or greater", ruby: ">= 2.5.0") do
+  #     # ...
+  #   end
+  config.filter_run_excluding(ruby: ->(v) do
+    !Gem::Requirement.new(v).satisfied_by?(Gem::Version.new(RUBY_VERSION))
+  end)
+end
+
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
     def run_in_child
@@ -608,7 +621,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       )
     end
 
-    it("compiles Structs, Classes, and Modules") do
+    it("compiles Structs, Classes, and Modules for Ruby >= 2.5", ruby: ">= 2.5.0") do
       expect(
         compile(<<~RUBY)
           class S1 < Struct.new(:foo)
@@ -676,6 +689,82 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
             def self.[](*_); end
             def self.inspect; end
+            def self.members; end
+            def self.new(*_); end
+          end
+
+          class S4 < ::Struct
+          end
+        RUBY
+      )
+    end
+
+    it("compiles Structs, Classes, and Modules for Ruby < 2.5", ruby: "~> 2.4.0") do
+      expect(
+        compile(<<~RUBY)
+          class S1 < Struct.new(:foo)
+          end
+          S2 = Struct.new(:foo) do
+            def foo
+            end
+          end
+          S3 = Struct.new(:foo)
+          class S4 < Struct.new("Foo", :foo)
+          end
+          class C1 < Class.new
+          end
+          C2 = Class.new do
+            def foo
+            end
+          end
+          C3 = Class.new
+          module M1
+          end
+          M2 = Module.new do
+            def foo
+            end
+          end
+          M3 = Module.new
+        RUBY
+      ).to(
+        eq(<<~RUBY.chomp)
+          class C1
+          end
+
+          class C2
+            def foo; end
+          end
+
+          class C3
+          end
+
+          module M1
+          end
+
+          module M2
+            def foo; end
+          end
+
+          module M3
+          end
+
+          class S1 < ::Struct
+          end
+
+          class S2 < ::Struct
+            def foo; end
+            def foo=(_); end
+
+            def self.[](*_); end
+            def self.members; end
+            def self.new(*_); end
+          end
+
+          class S3 < ::Struct
+            def foo; end
+            def foo=(_); end
+
+            def self.[](*_); end
             def self.members; end
             def self.new(*_); end
           end
@@ -964,8 +1053,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           obj = Object.new
 
           Dir.glob(File.join('yard', 'core_ext', '*.rb')).each do |file|
-            require file
-          rescue LoadError
+            begin
+              require file
+            rescue LoadError
+            end
           end
 
           def tap; yield(self); self end unless defined?(tap)
