@@ -5,19 +5,6 @@ require "spec_helper"
 require "pathname"
 require "tmpdir"
 
-RSpec.configure do |config|
-  # Some tests are not compatible with different Ruby versions.
-  # You can add `ruby: "X.Y.Z"` on a spec to specify which version should run it.
-  #
-  # For example:
-  #   it("tests something with Ruby 2.5 or greater", ruby: ">= 2.5.0") do
-  #     # ...
-  #   end
-  config.filter_run_excluding(ruby: ->(v) do
-    !Gem::Requirement.new(v).satisfied_by?(Gem::Version.new(RUBY_VERSION))
-  end)
-end
-
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
     def run_in_child
@@ -64,6 +51,14 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       end
     end
 
+    def ruby_version(selector)
+      Gem::Requirement.new(selector).satisfied_by?(Gem::Version.new(RUBY_VERSION))
+    end
+
+    def template(src)
+      ERB.new(src, nil, ">").result(binding).chomp
+    end
+
     it("compiles DelegateClass") do
       expect(
         compile(<<~RUBY)
@@ -74,7 +69,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
           end
 
@@ -98,12 +93,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class BasicObject
             def hello; end
           end
 
           class Object < ::BasicObject
+          <% if defined?(PP::ObjectMixin) %>
+            include(::PP::ObjectMixin)
+          <% end %>
             include(::JSON::Ext::Generator::GeneratorMethods::Object)
             include(::Kernel)
 
@@ -157,7 +155,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Foo
             def self.==(other); end
           end
@@ -171,7 +169,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           SymbolTableCompilerTest = Class.new
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class SymbolTableCompilerTest
           end
         RUBY
@@ -203,7 +201,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Foo
             def bar; end
             def to_s; end
@@ -235,7 +233,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def num(a); end
           end
@@ -255,7 +253,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def bar; end
             def num; end
@@ -273,7 +271,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module A
           end
 
@@ -293,7 +291,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Foo
             def add(a, b:); end
           end
@@ -310,7 +308,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Foo
             def add(a = _, b: _); end
           end
@@ -328,7 +326,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
             def num(a); end
           end
@@ -348,7 +346,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
 
@@ -370,7 +368,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
 
@@ -394,7 +392,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
 
@@ -421,7 +419,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
 
@@ -447,7 +445,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar < ::Baz
           end
 
@@ -469,7 +467,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
 
@@ -494,7 +492,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Baz
           end
 
@@ -523,7 +521,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Toto
           end
 
@@ -554,7 +552,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
             def self.const_missing(name); end
           end
@@ -595,7 +593,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar < ::Baz
             include(::Tutu)
             include(::Foo)
@@ -621,7 +619,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       )
     end
 
-    it("compiles Structs, Classes, and Modules for Ruby >= 2.5", ruby: ">= 2.5.0") do
+    it("compiles Structs, Classes, and Modules") do
       expect(
         compile(<<~RUBY)
           class S1 < Struct.new(:foo)
@@ -649,7 +647,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           M3 = Module.new
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class C1
           end
 
@@ -678,7 +676,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def foo=(_); end
 
             def self.[](*_); end
+          <% if ruby_version(">= 2.5.0") %>
             def self.inspect; end
+          <% end %>
             def self.members; end
             def self.new(*_); end
           end
@@ -688,83 +688,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def foo=(_); end
 
             def self.[](*_); end
+          <% if ruby_version(">= 2.5.0") %>
             def self.inspect; end
-            def self.members; end
-            def self.new(*_); end
-          end
-
-          class S4 < ::Struct
-          end
-        RUBY
-      )
-    end
-
-    it("compiles Structs, Classes, and Modules for Ruby < 2.5", ruby: "~> 2.4.0") do
-      expect(
-        compile(<<~RUBY)
-          class S1 < Struct.new(:foo)
-          end
-          S2 = Struct.new(:foo) do
-            def foo
-            end
-          end
-          S3 = Struct.new(:foo)
-          class S4 < Struct.new("Foo", :foo)
-          end
-          class C1 < Class.new
-          end
-          C2 = Class.new do
-            def foo
-            end
-          end
-          C3 = Class.new
-          module M1
-          end
-          M2 = Module.new do
-            def foo
-            end
-          end
-          M3 = Module.new
-        RUBY
-      ).to(
-        eq(<<~RUBY.chomp)
-          class C1
-          end
-
-          class C2
-            def foo; end
-          end
-
-          class C3
-          end
-
-          module M1
-          end
-
-          module M2
-            def foo; end
-          end
-
-          module M3
-          end
-
-          class S1 < ::Struct
-          end
-
-          class S2 < ::Struct
-            def foo; end
-            def foo=(_); end
-
-            def self.[](*_); end
-            def self.members; end
-            def self.new(*_); end
-          end
-
-          class S3 < ::Struct
-            def foo; end
-            def foo=(_); end
-
-            def self.[](*_); end
+          <% end %>
             def self.members; end
             def self.new(*_); end
           end
@@ -794,7 +720,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             include(::Baz)
             include(::Foo)
@@ -821,7 +747,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def self.num(a); end
           end
@@ -841,7 +767,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
           end
         RUBY
@@ -859,7 +785,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
           end
         RUBY
@@ -877,7 +803,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def self.num(a); end
           end
@@ -897,7 +823,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def size(&block); end
             def unwrap(&block); end
@@ -920,7 +846,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def a; end
             def b; end
@@ -947,7 +873,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def foo; end
           end
@@ -969,7 +895,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def self.a; end
           end
@@ -994,7 +920,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Toto
           end
         RUBY
@@ -1010,7 +936,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Toto
             def toto(a, *_, **_); end
           end
@@ -1028,7 +954,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
         RUBY
@@ -1071,7 +997,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
         RUBY
@@ -1103,7 +1029,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def tutu; end
 
@@ -1146,7 +1072,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
             def tutu; end
 
@@ -1175,7 +1101,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
           end
         RUBY
@@ -1191,7 +1117,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Bar
             def initialize; end
           end
@@ -1218,7 +1144,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Toto
             def foo; end
             def foo=(the_foo); end
@@ -1242,7 +1168,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Baz
             def self.foo(x); end
           end
@@ -1265,7 +1191,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Toto
           end
 
@@ -1294,7 +1220,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Hostile
             def self.!; end
           end
@@ -1310,7 +1236,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Toto
           end
 
@@ -1335,7 +1261,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
         RUBY
@@ -1358,7 +1284,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module Foo
           end
         RUBY
@@ -1377,7 +1303,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module BasicObjectTest
           end
 
@@ -1420,7 +1346,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module ActiveSupport
           end
 
@@ -1504,7 +1430,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           Bar = ActiveSupport::Deprecation::DeprecatedConstantProxy.new("Bar", "Foo")
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module ActiveSupport
           end
 
@@ -1594,7 +1520,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           Bar = ActiveSupport::Deprecation::DeprecatedConstantProxy.new("Bar", "Foo")
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           module ActiveSupport
           end
 
@@ -1640,7 +1566,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
         RUBY
       ).to(
-        eq(<<~RUBY.chomp)
+        eq(template(<<~RUBY))
           class Foo
             def self.name; end
           end
