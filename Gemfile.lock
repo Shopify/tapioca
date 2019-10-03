@@ -6,7 +6,6 @@ PATH
       sorbet-runtime
       sorbet-static (~> 0.4.4471)
       thor (~> 0.20.3)
-      zeitwerk (~> 2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -69,7 +68,6 @@ GEM
     sorbet-static (0.4.4476-universal-darwin-14)
     thor (0.20.3)
     unicode-display_width (1.6.0)
-    zeitwerk (2.1.8)
 
 PLATFORMS
   ruby
@@ -83,7 +81,6 @@ DEPENDENCIES
   rubocop (~> 0.70.0)
   sorbet
   tapioca!
-  zeitwerk (~> 2.1)
 
 BUNDLED WITH
    1.17.3

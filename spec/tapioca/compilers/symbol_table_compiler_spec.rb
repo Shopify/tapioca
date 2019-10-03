@@ -4,6 +4,7 @@
 require "spec_helper"
 require "pathname"
 require "tmpdir"
+require "bundler"
 
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
