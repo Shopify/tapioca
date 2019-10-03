@@ -56,7 +56,11 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     end
 
     def template(src)
-      ERB.new(src, nil, ">").result(binding).chomp
+      if RUBY_VERSION >= '2.6'
+         ERB.new(src, trim_mode: ">").result(binding).chomp
+      else
+         ERB.new(src, nil, ">").result(binding).chomp
+      end
     end
 
     it("compiles DelegateClass") do
