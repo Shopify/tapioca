@@ -1382,7 +1382,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
                   super
                 end
 
-                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match?(m) }
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) != nil }
 
                 def inspect
                   target.inspect
@@ -1480,7 +1480,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
                   @new_const = new_const
                 end
 
-                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match?(m) }
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) != nil }
 
                 def inspect
                   target.inspect
