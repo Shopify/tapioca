@@ -57,7 +57,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     end
 
     def template(src)
-      if RUBY_VERSION >= '2.6'
+      if ::ERB.instance_method(:initialize).parameters.assoc(:key)
         ERB.new(src, trim_mode: ">").result(binding).chomp
       else
         ERB.new(src, nil, ">").result(binding).chomp
