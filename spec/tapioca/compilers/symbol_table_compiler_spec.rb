@@ -52,14 +52,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       end
     end
 
-    def ruby_version(selector)
-      Gem::Requirement.new(selector).satisfied_by?(Gem::Version.new(RUBY_VERSION))
-    end
-
-    def template(src)
-      ERB.new(src, nil, ">").result(binding).chomp
-    end
-
     it("compiles DelegateClass") do
       expect(
         compile(<<~RUBY)

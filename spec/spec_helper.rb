@@ -27,3 +27,21 @@ RSpec.configure do |config|
     config.default_formatter = "doc"
   end
 end
+
+module RSpec
+  module Matchers
+    class Binding
+      def ruby_version(selector)
+        Gem::Requirement.new(selector).satisfied_by?(Gem::Version.new(RUBY_VERSION))
+      end
+
+      def erb_bindings
+        binding
+      end
+    end
+
+    def template(src)
+      ERB.new(src, nil, ">").result(Binding.new.erb_bindings).chomp
+    end
+  end
+end
