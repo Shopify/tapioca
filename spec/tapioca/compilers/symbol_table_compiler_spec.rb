@@ -115,13 +115,21 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
           ::RUBY_ENGINE_VERSION = T.let(T.unsafe(nil), String)
 
+          <% if ruby_version(">= 2.4.0") %>
           ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Integer)
+          <% else %>
+          ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Fixnum)
+          <% end %>
 
           ::RUBY_PLATFORM = T.let(T.unsafe(nil), String)
 
           ::RUBY_RELEASE_DATE = T.let(T.unsafe(nil), String)
 
+          <% if ruby_version(">= 2.4.0") %>
           ::RUBY_REVISION = T.let(T.unsafe(nil), Integer)
+          <% else %>
+          ::RUBY_REVISION = T.let(T.unsafe(nil), Fixnum)
+          <% end %>
 
           ::RUBY_VERSION = T.let(T.unsafe(nil), String)
 
@@ -270,7 +278,11 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           module A
           end
 
+          <% if ruby_version(">= 2.4.0") %>
           A::ABC = T.let(T.unsafe(nil), Integer)
+          <% else %>
+          A::ABC = T.let(T.unsafe(nil), Fixnum)
+          <% end %>
 
           A::DEF = T.let(T.unsafe(nil), String)
       RUBY
@@ -1352,7 +1364,11 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             extend(::ActiveSupport::Concern)
           end
 
+          <% if ruby_version(">= 2.4.0") %>
           BarConcern::ClassMethods = T.let(T.unsafe(nil), Integer)
+          <% else %>
+          BarConcern::ClassMethods = T.let(T.unsafe(nil), Fixnum)
+          <% end %>
 
           module FooConcern
             extend(::ActiveSupport::Concern)
@@ -1382,7 +1398,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
                   super
                 end
 
-                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) != nil }
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) }
 
                 def inspect
                   target.inspect
@@ -1480,7 +1496,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
                   @new_const = new_const
                 end
 
-                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) != nil }
+                instance_methods.each { |m| undef_method m unless /^__|^object_id$/.match(m) }
 
                 def inspect
                   target.inspect
