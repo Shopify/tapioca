@@ -5,19 +5,6 @@ require "spec_helper"
 require "pathname"
 require "tmpdir"
 
-RSpec.configure do |config|
-  # Some tests are not compatible with different Ruby versions.
-  # You can add `ruby: "X.Y.Z"` on a spec to specify which version should run it.
-  #
-  # For example:
-  #   it("tests something with Ruby 2.5 or greater", ruby: ">= 2.5.0") do
-  #     # ...
-  #   end
-  config.filter_run_excluding(ruby: ->(v) do
-    !Gem::Requirement.new(v).satisfied_by?(Gem::Version.new(RUBY_VERSION))
-  end)
-end
-
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
     def run_in_child
@@ -64,6 +51,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       end
     end
 
+    def ruby_version(selector)
+      Gem::Requirement.new(selector).satisfied_by?(Gem::Version.new(RUBY_VERSION))
+    end
+
     def template(src)
       ERB.new(src, nil, ">").result(binding).chomp
     end
@@ -108,6 +99,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
 
           class Object < ::BasicObject
+          <% if defined?(PP::ObjectMixin) %>
+            include(::PP::ObjectMixin)
+          <% end %>
             include(::JSON::Ext::Generator::GeneratorMethods::Object)
             include(::Kernel)
 
@@ -682,7 +676,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def foo=(_); end
 
             def self.[](*_); end
+          <% if ruby_version(">= 2.5.0") %>
             def self.inspect; end
+          <% end %>
             def self.members; end
             def self.new(*_); end
           end
@@ -692,7 +688,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def foo=(_); end
 
             def self.[](*_); end
+          <% if ruby_version(">= 2.5.0") %>
             def self.inspect; end
+          <% end %>
             def self.members; end
             def self.new(*_); end
           end
