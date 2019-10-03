@@ -11,7 +11,3 @@ script:
   - bin/style --config .rubocop.yml
   - bin/typecheck
   - bin/test
-
-matrix:
-  allow_failures:
-    - rvm: 2.4
