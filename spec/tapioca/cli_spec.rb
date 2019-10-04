@@ -152,12 +152,17 @@ RSpec.describe(Tapioca::Cli) do
       OUTPUT
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
-      expect(File.read("#{outdir}/foo@0.0.1.rbi")).to(eq(<<~CONTENTS))
+      expect(File.read("#{outdir}/foo@0.0.1.rbi")).to(eq(template(<<~CONTENTS)))
         #{Contents::FOO_RBI}
         class Foo::Secret
         end
 
+        <% if ruby_version(">= 2.4.0") %>
         Foo::Secret::VALUE = T.let(T.unsafe(nil), Integer)
+        <% else %>
+        Foo::Secret::VALUE = T.let(T.unsafe(nil), Fixnum)
+        <% end %>
+
       CONTENTS
 
       expect(File).to_not(exist("#{outdir}/bar@0.3.0.rbi"))
