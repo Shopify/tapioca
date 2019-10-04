@@ -40,8 +40,17 @@ module RSpec
       end
     end
 
+    ERB_SUPPORTS_KVARGS = ::ERB.instance_method(:initialize).parameters.assoc(:key)
+    private_constant :ERB_SUPPORTS_KVARGS
+
     def template(src)
-      ERB.new(src, nil, ">").result(Binding.new.erb_bindings).chomp
+      erb = if ERB_SUPPORTS_KVARGS
+        ::ERB.new(src, trim_mode: ">")
+      else
+        ::ERB.new(src, nil, ">")
+      end
+
+      erb.result(Binding.new.erb_bindings).chomp
     end
   end
 end

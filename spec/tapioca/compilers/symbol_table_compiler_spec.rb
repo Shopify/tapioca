@@ -181,9 +181,9 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             end
           end
 
-          class Integer
-            def to_foo(base = 10)
-              42 + base
+          class String
+            def to_foo(base = "def")
+              "abc" + base
             end
           end
 
@@ -207,8 +207,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def to_bar; end
           end
 
-          class Integer < ::Numeric
-            include(::JSON::Ext::Generator::GeneratorMethods::Integer)
+          class String
+            include(::JSON::Ext::Generator::GeneratorMethods::String)
+            include(::Comparable)
+            extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
 
             def to_foo(base = _); end
           end
