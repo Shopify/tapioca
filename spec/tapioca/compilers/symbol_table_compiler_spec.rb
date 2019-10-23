@@ -1584,5 +1584,39 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       )
     end
+
+    it("doesn't crash when `singleton_class` is overloaded") do
+      expect(
+        compile(<<~RUBY)
+          class Foo
+            module Bar
+
+              private
+
+              def singleton_class(klass)
+                class << klass; self; end
+              end
+            end
+
+            class << self
+              include Bar
+            end
+          end
+        RUBY
+      ).to(
+        eq(template(<<~RUBY))
+          class Foo
+            extend(::Foo::Bar)
+          end
+
+          module Foo::Bar
+
+            private
+
+            def singleton_class(klass); end
+          end
+        RUBY
+      )
+    end
   end
 end
