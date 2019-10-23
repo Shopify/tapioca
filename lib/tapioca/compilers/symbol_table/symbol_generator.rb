@@ -257,7 +257,7 @@ module Tapioca
 
           inherited_singleton_class_ancestors =
             if constant.is_a?(Class)
-              Set.new(constant.superclass.singleton_class.ancestors)
+              Set.new(singleton_class_of(constant.superclass).ancestors)
             else
               Module.ancestors
             end
@@ -267,9 +267,9 @@ module Tapioca
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
-          extend  = constant.singleton_class.ancestors
+          extend  = singleton_class_of(constant).ancestors
             .reject do |mod|
-              mod == constant.singleton_class ||
+              mod == singleton_class_of(constant) ||
                 inherited_singleton_class_ancestors.include?(mod) ||
                 !public_module?(mod) ||
                 Module != class_of(mod)
@@ -321,7 +321,7 @@ module Tapioca
           )
 
           instance_methods = compile_directly_owned_methods(name, constant)
-          singleton_methods = compile_directly_owned_methods(name, constant.singleton_class, [:public])
+          singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant), [:public])
 
           return if symbol_ignored?(name) && instance_methods.empty? && singleton_methods.empty?
 
@@ -541,6 +541,11 @@ module Tapioca
         sig { params(constant: Module).returns(T.nilable(String)) }
         def raw_name_of(constant)
           Module.instance_method(:name).bind(constant).call
+        end
+
+        sig { params(constant: BasicObject).returns(Class) }
+        def singleton_class_of(constant)
+          Object.instance_method(:singleton_class).bind(constant).call
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
