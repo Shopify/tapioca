@@ -321,7 +321,9 @@ module Tapioca
           )
 
           instance_methods = compile_directly_owned_methods(name, constant)
-          singleton_methods = compile_directly_owned_methods(name, constant.singleton_class, [:public])
+
+          constant_singleton = Object.instance_method(:singleton_class).bind(constant).call
+          singleton_methods = compile_directly_owned_methods(name, constant_singleton, [:public])
 
           return if symbol_ignored?(name) && instance_methods.empty? && singleton_methods.empty?
 
