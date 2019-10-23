@@ -10,7 +10,7 @@ Add this line to your application's `Gemfile`:
 
 ```ruby
 group :development do
-  gem 'tapioca', '~> 0.1.2', require: false
+  gem 'tapioca', require: false
 end
 ```
 
