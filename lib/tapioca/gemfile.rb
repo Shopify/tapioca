@@ -42,6 +42,9 @@ module Tapioca
 
     sig { params(gem_name: String).returns(T.nilable(Gem)) }
     def gem(gem_name)
+      if gem_name == "bundler" then
+        return Gem.new(::Gem::Specification.new("bundler"))
+      end
       dependencies.detect { |dep| dep.name == gem_name }
     end
 
