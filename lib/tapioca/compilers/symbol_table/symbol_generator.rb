@@ -400,7 +400,7 @@ module Tapioca
             end
           end.join(', ')
 
-          method_name.prepend(constant.singleton_class? ? 'self.' : '')
+          method_name = "#{'self.' if constant.singleton_class?}#{method_name}"
           parameters = "(#{parameters})" if parameters != ""
 
           indented("def #{method_name}#{parameters}; end")
