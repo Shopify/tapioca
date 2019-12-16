@@ -28,12 +28,12 @@ Gem::Specification.new do |spec|
   spec.add_dependency("pry", ">= 0.12.2")
   spec.add_dependency("sorbet-static", "~> 0.4.4471")
   spec.add_dependency("sorbet-runtime")
-  spec.add_dependency("thor", ">= 0.20.3")
+  spec.add_dependency("thor")
 
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("pry-byebug")
-  spec.add_development_dependency("rspec", "~> 3.7")
-  spec.add_development_dependency("rubocop", "~> 0.70.0")
+  spec.add_development_dependency("rspec")
+  spec.add_development_dependency("rubocop")
   spec.add_development_dependency("sorbet")
 
   spec.required_ruby_version = ">= 2.3.7"
