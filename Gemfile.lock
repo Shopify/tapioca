@@ -5,7 +5,7 @@ PATH
       pry (>= 0.12.2)
       sorbet-runtime
       sorbet-static (~> 0.4.4471)
-      thor (~> 0.20.3)
+      thor (>= 0.20.3)
 
 GEM
   remote: https://rubygems.org/
