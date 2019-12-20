@@ -72,10 +72,21 @@ module Tapioca
     end
 
     sig { void }
+    def silence_deprecations
+      # Stop any ActiveSupport Deprecations from being reported
+      Object.const_get("ActiveSupport::Deprecation").silenced = true
+    rescue NameError
+      nil
+    end
+
+    sig { void }
     def load_rails
       return unless File.exist?("config/application.rb")
 
       safe_require("rails")
+
+      silence_deprecations
+
       safe_require("rails/generators/test_case")
       safe_require("./config/application")
     end
