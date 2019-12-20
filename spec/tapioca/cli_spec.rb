@@ -48,7 +48,7 @@ end
 
 RSpec.describe(Tapioca::Cli) do
   let(:outdir) { @outdir }
-  let(:repo_path) { Pathname.new(__dir__) / ".." / "support" / "repo" }
+  let(:repo_path) { @repo_path }
 
   def run(command, args = [], flags = {})
     flags = {
@@ -69,6 +69,16 @@ RSpec.describe(Tapioca::Cli) do
       },
       exec_command,
       chdir: repo_path
+    ).read
+  end
+
+  before(:all) do
+    @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
+    IO.popen(
+      {
+        "BUNDLE_GEMFILE" => (@repo_path / "Gemfile").to_s,
+      },
+      ["bundle", "install", "--quiet"]
     ).read
   end
 

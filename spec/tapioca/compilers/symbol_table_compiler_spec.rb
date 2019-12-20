@@ -101,6 +101,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             def hello; end
           end
 
+          <% if defined?(::APPLE_GEM_HOME) %>
+          ::APPLE_GEM_HOME = T.let(T.unsafe(nil), String)
+
+          <% end %>
           ::ARGF = T.let(T.unsafe(nil), T.untyped)
 
           ::ARGV = T.let(T.unsafe(nil), Array)
@@ -115,6 +119,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
           ::RUBY_ENGINE_VERSION = T.let(T.unsafe(nil), String)
 
+          <% if defined?(::RUBY_FRAMEWORK) %>
+          ::RUBY_FRAMEWORK = T.let(T.unsafe(nil), TrueClass)
+
+          ::RUBY_FRAMEWORK_VERSION = T.let(T.unsafe(nil), String)
+
+          <% end %>
           <% if ruby_version(">= 2.4.0") %>
           ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Integer)
           <% else %>
