@@ -14,3 +14,6 @@ commands:
   test:      "bin/test"
   style:     "bin/style"
   sanity:    "bin/typecheck && bin/style && bin/test"
+
+open:
+  travis: "https://travis-ci.org/Shopify/tapioca"
