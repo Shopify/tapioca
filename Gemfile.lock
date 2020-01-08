@@ -4,7 +4,7 @@ PATH
     tapioca (0.2.5)
       pry (>= 0.12.2)
       sorbet-runtime
-      sorbet-static (~> 0.4.4471)
+      sorbet-static (>= 0.4.4471)
       thor
 
 GEM
