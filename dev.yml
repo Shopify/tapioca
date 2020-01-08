@@ -3,9 +3,7 @@ name: tapioca
 type: ruby
 
 up:
-  - homebrew:
-    - openssl
-  - ruby: 2.5.5
+  - ruby: 2.6.5
   - bundler
 
 commands:
