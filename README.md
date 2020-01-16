@@ -85,8 +85,8 @@ This will sync the RBIs with the gems in the Gemfile and will add, update, and r
 - `--prerequire [file]`: A file to be required before `Bundler.require` is called.
 - `--postrequire [file]`: A file to be required after `Bundler.require` is called.
 - `--out [directory]`: The output directory for generated RBI files, default to `sorbet/rbi/gems`.
-- `--generate_command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
-- `--typed_overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
+- `--generate-command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
+- `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
 ## Contributing
 
