@@ -82,20 +82,18 @@ module Tapioca
         sorbet sorbet-static sorbet-runtime tapioca
       }.freeze, T::Array[String])
 
+      sig { returns(String) }
+      attr_reader :full_gem_path
+
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
-      end
-
-      sig { returns(String) }
-      def full_gem_path
-        @spec.full_gem_path.to_s
+        @full_gem_path = T.let(@spec.full_gem_path.to_s, String)
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
       def ignore?(gemfile_dir)
-        IGNORED_GEMS.include?(name) ||
-          full_gem_path.start_with?(gemfile_dir)
+        gem_ignored? || gem_in_app_dir?(gemfile_dir)
       end
 
       sig { returns(T::Array[Pathname]) }
@@ -118,6 +116,23 @@ module Tapioca
       sig { returns(String) }
       def rbi_file_name
         "#{name}@#{version}.rbi"
+      end
+
+      private
+
+      sig { returns(T::Boolean) }
+      def gem_ignored?
+        IGNORED_GEMS.include?(name)
+      end
+
+      sig { params(gemfile_dir: String).returns(T::Boolean) }
+      def gem_in_app_dir?(gemfile_dir)
+        !gem_in_bundle_path? && full_gem_path.start_with?(gemfile_dir)
+      end
+
+      sig { returns(T::Boolean) }
+      def gem_in_bundle_path?
+        full_gem_path.start_with?(Bundler.bundle_path.to_s)
       end
     end
   end
