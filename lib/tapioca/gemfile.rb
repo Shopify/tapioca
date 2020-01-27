@@ -33,8 +33,8 @@ module Tapioca
         definition
           .resolve
           .materialize(specs)
-          .reject { |spec| ignore_gem_spec?(spec) }
           .map { |spec| Gem.new(spec) }
+          .reject { |gem| gem.ignore?(dir) }
           .uniq(&:rbi_file_name)
           .sort_by(&:rbi_file_name)
       end
@@ -70,32 +70,30 @@ module Tapioca
       @definition ||= Bundler::Dsl.evaluate(gemfile, lockfile, {})
     end
 
-    IGNORED_GEMS = T.let(%w{
-      sorbet sorbet-static sorbet-runtime tapioca
-    }.freeze, T::Array[String])
-
-    sig { params(spec: Spec).returns(T::Boolean) }
-    def ignore_gem_spec?(spec)
-      IGNORED_GEMS.include?(spec.name) ||
-        spec.full_gem_path.start_with?(gemfile_dir)
-    end
-
     sig { returns(String) }
-    def gemfile_dir
+    def dir
       File.expand_path(gemfile.path + "/..")
     end
 
     class Gem
       extend(T::Sig)
 
+      IGNORED_GEMS = T.let(%w{
+        sorbet sorbet-static sorbet-runtime tapioca
+      }.freeze, T::Array[String])
+
+      sig { returns(String) }
+      attr_reader :full_gem_path
+
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
+        @full_gem_path = T.let(@spec.full_gem_path.to_s, String)
       end
 
-      sig { returns(String) }
-      def full_gem_path
-        @spec.full_gem_path.to_s
+      sig { params(gemfile_dir: String).returns(T::Boolean) }
+      def ignore?(gemfile_dir)
+        gem_ignored? || gem_in_app_dir?(gemfile_dir)
       end
 
       sig { returns(T::Array[Pathname]) }
@@ -118,6 +116,23 @@ module Tapioca
       sig { returns(String) }
       def rbi_file_name
         "#{name}@#{version}.rbi"
+      end
+
+      private
+
+      sig { returns(T::Boolean) }
+      def gem_ignored?
+        IGNORED_GEMS.include?(name)
+      end
+
+      sig { params(gemfile_dir: String).returns(T::Boolean) }
+      def gem_in_app_dir?(gemfile_dir)
+        !gem_in_bundle_path? && full_gem_path.start_with?(gemfile_dir)
+      end
+
+      sig { returns(T::Boolean) }
+      def gem_in_bundle_path?
+        full_gem_path.start_with?(Bundler.bundle_path.to_s)
       end
     end
   end
