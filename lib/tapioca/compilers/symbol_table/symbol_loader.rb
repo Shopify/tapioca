@@ -21,6 +21,7 @@ module Tapioca
           end
 
           def ignore_symbol?(symbol)
+            symbol = symbol[2..-1] if symbol.start_with?("::")
             ignored_symbols.include?(symbol)
           end
 
