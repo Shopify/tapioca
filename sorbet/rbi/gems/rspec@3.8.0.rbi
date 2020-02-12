@@ -3,6 +3,36 @@
 
 # typed: true
 
+module RSpec
+  extend(::RSpec::Core::Warnings)
+  extend(::RSpec::Support::Warnings)
+
+  def self.clear_examples; end
+  def self.configuration; end
+  def self.configuration=(_); end
+  def self.configure; end
+  def self.const_missing(name); end
+  def self.context(*args, &example_group_block); end
+  def self.current_example; end
+  def self.current_example=(example); end
+  def self.describe(*args, &example_group_block); end
+  def self.example_group(*args, &example_group_block); end
+  def self.fcontext(*args, &example_group_block); end
+  def self.fdescribe(*args, &example_group_block); end
+  def self.reset; end
+  def self.shared_context(name, *args, &block); end
+  def self.shared_examples(name, *args, &block); end
+  def self.shared_examples_for(name, *args, &block); end
+  def self.world; end
+  def self.world=(_); end
+  def self.xcontext(*args, &example_group_block); end
+  def self.xdescribe(*args, &example_group_block); end
+end
+
+RSpec::MODULES_TO_AUTOLOAD = T.let(T.unsafe(nil), Hash)
+
+RSpec::SharedContext = RSpec::Core::SharedContext
+
 module RSpec::Version
 end
 
