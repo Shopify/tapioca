@@ -48,11 +48,11 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
     ruby-progressbar (1.10.1)
-    sorbet (0.4.4476)
-      sorbet-static (= 0.4.4476)
-    sorbet-runtime (0.4.4770)
-    sorbet-static (0.4.4476-universal-darwin-14)
-    thor (1.0.0)
+    sorbet (0.5.5365)
+      sorbet-static (= 0.5.5365)
+    sorbet-runtime (0.5.5365)
+    sorbet-static (0.5.5365-universal-darwin-14)
+    thor (1.0.1)
     unicode-display_width (1.6.0)
 
 PLATFORMS

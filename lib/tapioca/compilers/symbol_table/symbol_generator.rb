@@ -74,14 +74,18 @@ module Tapioca
           compile(symbol, constant)
         end
 
-        sig { params(symbol: String).returns(BasicObject) }
+        sig { params(symbol: String).returns(BasicObject).checked(:never) }
         def resolve_constant(symbol)
           Object.const_get(symbol, false)
         rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
           nil
         end
 
-        sig { params(name: T.nilable(String), constant: BasicObject).returns(T.nilable(String)) }
+        sig do
+          params(name: T.nilable(String), constant: BasicObject)
+            .returns(T.nilable(String))
+            .checked(:never)
+        end
         def compile(name, constant)
           return unless constant
           return unless name
@@ -96,7 +100,11 @@ module Tapioca
           compile_constant(name, constant)
         end
 
-        sig { params(name: String, constant: BasicObject).returns(T.nilable(String)) }
+        sig do
+          params(name: String, constant: BasicObject)
+            .returns(T.nilable(String))
+            .checked(:never)
+        end
         def compile_constant(name, constant)
           case constant
           when Module
@@ -122,13 +130,17 @@ module Tapioca
           indented("#{name} = #{constant_name}")
         end
 
-        sig { params(name: String, value: BasicObject).returns(T.nilable(String)) }
+        sig do
+          params(name: String, value: BasicObject)
+            .returns(T.nilable(String))
+            .checked(:never)
+        end
         def compile_object(name, value)
           return if symbol_ignored?(name)
           indented("#{name} = T.let(T.unsafe(nil), #{type_name_of(value)})")
         end
 
-        sig { params(value: BasicObject).returns(String) }
+        sig { params(value: BasicObject).returns(String).checked(:never) }
         def type_name_of(value)
           klass = class_of(value)
 
@@ -529,7 +541,7 @@ module Tapioca
           end
         end
 
-        sig { params(constant: BasicObject).returns(Class) }
+        sig { params(constant: BasicObject).returns(Class).checked(:never) }
         def class_of(constant)
           Kernel.instance_method(:class).bind(constant).call
         end
@@ -544,7 +556,7 @@ module Tapioca
           Module.instance_method(:name).bind(constant).call
         end
 
-        sig { params(constant: BasicObject).returns(Class) }
+        sig { params(constant: BasicObject).returns(Class).checked(:never) }
         def singleton_class_of(constant)
           Object.instance_method(:singleton_class).bind(constant).call
         end
@@ -588,7 +600,7 @@ module Tapioca
           Class.instance_method(:superclass).bind(constant).call
         end
 
-        sig { params(constant: Module, other: BasicObject).returns(T::Boolean) }
+        sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
         def are_equal?(constant, other)
           BasicObject.instance_method(:equal?).bind(constant).call(other)
         end

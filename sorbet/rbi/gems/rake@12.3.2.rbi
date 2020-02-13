@@ -25,8 +25,6 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
-FileUtils::VERSION = T.let(T.unsafe(nil), String)
-
 class Module
   def rake_extension(method); end
 end
