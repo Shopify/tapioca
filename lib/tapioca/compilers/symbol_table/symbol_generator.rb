@@ -591,8 +591,12 @@ module Tapioca
         def qualified_name_of(constant)
           name = name_of(constant)
           return if name.nil?
-          name.prepend("::") unless name.start_with?("::")
-          name
+
+          if name.start_with?("::")
+            name
+          else
+            "::#{name}"
+          end
         end
 
         sig { params(constant: Class).returns(T.nilable(Class)) }
