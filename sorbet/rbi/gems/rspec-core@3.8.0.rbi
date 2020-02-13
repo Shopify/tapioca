@@ -511,7 +511,9 @@ end
 class RSpec::Core::Example::Procsy
   def initialize(example, &block); end
 
+  def <<(*a, &b); end
   def ===(*a, &b); end
+  def >>(*a, &b); end
   def [](*a, &b); end
   def arity(*a, &b); end
   def binding(*a, &b); end
@@ -1116,6 +1118,7 @@ module RSpec::Core::HashImitatable
   def all?(*args, &block); end
   def any?(*args, &block); end
   def assoc(*args, &block); end
+  def chain(*args, &block); end
   def chunk(*args, &block); end
   def chunk_while(*args, &block); end
   def clear(*args, &block); end
@@ -1150,6 +1153,8 @@ module RSpec::Core::HashImitatable
   def entries(*args, &block); end
   def fetch(*args, &block); end
   def fetch_values(*args, &block); end
+  def filter(*args, &block); end
+  def filter!(*args, &block); end
   def find(*args, &block); end
   def find_all(*args, &block); end
   def find_index(*args, &block); end

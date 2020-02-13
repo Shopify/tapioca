@@ -8,6 +8,7 @@ module Rainbow
   def self.enabled=(value); end
   def self.global; end
   def self.new; end
+  def self.uncolor(string); end
 end
 
 class Rainbow::Color
@@ -28,6 +29,7 @@ class Rainbow::Color::Named < ::Rainbow::Color::Indexed
   def initialize(ground, name); end
 
   def self.color_names; end
+  def self.valid_names; end
 end
 
 Rainbow::Color::Named::NAMES = T.let(T.unsafe(nil), Hash)
@@ -53,43 +55,23 @@ class Rainbow::Color::X11Named < ::Rainbow::Color::RGB
   def initialize(ground, name); end
 
   def self.color_names; end
-end
-
-module Rainbow::Ext
-end
-
-module Rainbow::Ext::String
-end
-
-module Rainbow::Ext::String::InstanceMethods
-  def background(*color); end
-  def blink; end
-  def bright; end
-  def color(*color); end
-  def colour(*color); end
-  def faint; end
-  def foreground(*color); end
-  def hide; end
-  def inverse; end
-  def italic; end
-  def reset; end
-  def underline; end
+  def self.valid_names; end
 end
 
 class Rainbow::NullPresenter < ::String
-  def background(*values); end
-  def bg(*values); end
+  def background(*_values); end
+  def bg(*_values); end
   def black; end
   def blink; end
   def blue; end
   def bold; end
   def bright; end
-  def color(*values); end
+  def color(*_values); end
   def cyan; end
   def dark; end
   def faint; end
-  def fg(*values); end
-  def foreground(*values); end
+  def fg(*_values); end
+  def foreground(*_values); end
   def green; end
   def hide; end
   def inverse; end
@@ -101,6 +83,10 @@ class Rainbow::NullPresenter < ::String
   def underline; end
   def white; end
   def yellow; end
+
+  private
+
+  def respond_to_missing?(method_name, *args); end
 end
 
 class Rainbow::Presenter < ::String
@@ -131,12 +117,14 @@ class Rainbow::Presenter < ::String
 
   private
 
+  def respond_to_missing?(method_name, *args); end
   def wrap_with_sgr(codes); end
 end
 
 Rainbow::Presenter::TERM_EFFECTS = T.let(T.unsafe(nil), Hash)
 
 class Rainbow::StringUtils
+  def self.uncolor(string); end
   def self.wrap_with_sgr(string, codes); end
 end
 
@@ -152,11 +140,3 @@ module Rainbow::X11ColorNames
 end
 
 Rainbow::X11ColorNames::NAMES = T.let(T.unsafe(nil), Hash)
-
-module Sickill
-end
-
-module Sickill::Rainbow
-  def self.enabled; end
-  def self.enabled=(value); end
-end

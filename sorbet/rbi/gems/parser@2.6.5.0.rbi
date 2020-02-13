@@ -73,6 +73,7 @@ class Parser::AST::Processor < ::AST::Processor
   def on_next(node); end
   def on_not(node); end
   def on_nth_ref(node); end
+  def on_numblock(node); end
   def on_op_asgn(node); end
   def on_optarg(node); end
   def on_or(node); end
@@ -198,6 +199,7 @@ class Parser::Builders::Default
   def ivar(token); end
   def keyword_cmd(type, keyword_t, lparen_t = _, args = _, rparen_t = _); end
   def kwarg(name_t); end
+  def kwnilarg(dstar_t, nil_t); end
   def kwoptarg(name_t, value); end
   def kwrestarg(dstar_t, name_t = _); end
   def kwsplat(dstar_t, arg); end
@@ -211,6 +213,8 @@ class Parser::Builders::Default
   def nil(nil_t); end
   def not_op(not_t, begin_t = _, receiver = _, end_t = _); end
   def nth_ref(token); end
+  def numargs(max_numparam); end
+  def numparam(token); end
   def objc_kwarg(kwname_t, assoc_t, name_t); end
   def objc_restarg(star_t, name = _); end
   def objc_varargs(pair, rest_of_varargs); end
@@ -260,6 +264,7 @@ class Parser::Builders::Default
   def binary_op_map(left_e, op_t, right_e); end
   def block_map(receiver_l, begin_t, end_t); end
   def check_condition(cond); end
+  def check_duplicate_arg(this_arg, map = _); end
   def check_duplicate_args(args, map = _); end
   def collapse_string_parts?(parts); end
   def collection_map(begin_t, parts, end_t); end
@@ -304,6 +309,8 @@ class Parser::Builders::Default
   def var_send_map(variable_e); end
   def variable_map(name_t); end
 
+  def self.emit_arg_inside_procarg0; end
+  def self.emit_arg_inside_procarg0=(_); end
   def self.emit_encoding; end
   def self.emit_encoding=(_); end
   def self.emit_index; end
@@ -323,7 +330,9 @@ class Parser::Context
 
   def class_definition_allowed?; end
   def dynamic_const_definition_allowed?; end
+  def in_block?; end
   def in_class?; end
+  def in_lambda?; end
   def indirectly_in_def?; end
   def module_definition_allowed?; end
   def pop; end
@@ -394,6 +403,8 @@ class Parser::Lexer
   def force_utf32=(_); end
   def in_kwarg; end
   def in_kwarg=(_); end
+  def max_numparam; end
+  def max_numparam_stack; end
   def pop_cmdarg; end
   def pop_cond; end
   def push_cmdarg; end
@@ -410,7 +421,7 @@ class Parser::Lexer
 
   protected
 
-  def arg_or_cmdarg; end
+  def arg_or_cmdarg(cmd_state); end
   def diagnostic(type, reason, arguments = _, location = _, highlights = _); end
   def emit(type, value = _, s = _, e = _); end
   def emit_comment(s = _, e = _); end
@@ -535,6 +546,23 @@ end
 Parser::Lexer::Literal::DELIMITERS = T.let(T.unsafe(nil), Hash)
 
 Parser::Lexer::Literal::TYPES = T.let(T.unsafe(nil), Hash)
+
+class Parser::Lexer::MaxNumparamStack
+  def initialize; end
+
+  def can_have_numparams?; end
+  def cant_have_numparams!; end
+  def pop; end
+  def push; end
+  def register(numparam); end
+  def top; end
+
+  private
+
+  def set(value); end
+end
+
+Parser::Lexer::NUMPARAM_MAX = T.let(T.unsafe(nil), Integer)
 
 Parser::Lexer::PUNCTUATION = T.let(T.unsafe(nil), Hash)
 

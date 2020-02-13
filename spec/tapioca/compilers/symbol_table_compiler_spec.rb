@@ -100,58 +100,6 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
             def hello; end
           end
-
-          <% if defined?(::APPLE_GEM_HOME) %>
-          ::APPLE_GEM_HOME = T.let(T.unsafe(nil), String)
-
-          <% end %>
-          ::ARGF = T.let(T.unsafe(nil), T.untyped)
-
-          ::ARGV = T.let(T.unsafe(nil), Array)
-
-          ::ENV = T.let(T.unsafe(nil), Object)
-
-          ::RUBY_COPYRIGHT = T.let(T.unsafe(nil), String)
-
-          ::RUBY_DESCRIPTION = T.let(T.unsafe(nil), String)
-
-          ::RUBY_ENGINE = T.let(T.unsafe(nil), String)
-
-          ::RUBY_ENGINE_VERSION = T.let(T.unsafe(nil), String)
-
-          <% if defined?(::RUBY_FRAMEWORK) %>
-          ::RUBY_FRAMEWORK = T.let(T.unsafe(nil), TrueClass)
-
-          ::RUBY_FRAMEWORK_VERSION = T.let(T.unsafe(nil), String)
-
-          <% end %>
-          <% if ruby_version(">= 2.4.0") %>
-          ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Integer)
-          <% else %>
-          ::RUBY_PATCHLEVEL = T.let(T.unsafe(nil), Fixnum)
-          <% end %>
-
-          ::RUBY_PLATFORM = T.let(T.unsafe(nil), String)
-
-          ::RUBY_RELEASE_DATE = T.let(T.unsafe(nil), String)
-
-          <% if ruby_version(">= 2.4.0") %>
-          ::RUBY_REVISION = T.let(T.unsafe(nil), Integer)
-          <% else %>
-          ::RUBY_REVISION = T.let(T.unsafe(nil), Fixnum)
-          <% end %>
-
-          ::RUBY_VERSION = T.let(T.unsafe(nil), String)
-
-          ::STDERR = T.let(T.unsafe(nil), IO)
-
-          ::STDIN = T.let(T.unsafe(nil), IO)
-
-          ::STDOUT = T.let(T.unsafe(nil), IO)
-
-          ::TOPLEVEL_BINDING = T.let(T.unsafe(nil), Binding)
-
-          ::TRUE = T.let(T.unsafe(nil), TrueClass)
         RUBY
       )
     end

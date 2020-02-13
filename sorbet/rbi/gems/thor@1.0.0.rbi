@@ -17,12 +17,13 @@ class Thor
   def self.command_help(shell, command_name); end
   def self.default_command(meth = _); end
   def self.default_task(meth = _); end
+  def self.deprecation_warning(message); end
   def self.desc(usage, description, options = _); end
   def self.disable_required_check!(*command_names); end
   def self.disable_required_check?(command); end
   def self.help(shell, subcommand = _); end
   def self.long_desc(long_description, options = _); end
-  def self.map(mappings = _); end
+  def self.map(mappings = _, **kw); end
   def self.method_option(name, options = _); end
   def self.method_options(options = _); end
   def self.option(name, options = _); end
@@ -181,8 +182,10 @@ class Thor::Actions::InjectIntoFile < ::Thor::Actions::EmptyDirectory
   protected
 
   def replace!(regexp, string, force); end
-  def say_status(behavior); end
+  def say_status(behavior, warning: _, color: _); end
 end
+
+Thor::Actions::WARNINGS = T.let(T.unsafe(nil), Hash)
 
 class Thor::AmbiguousCommandError < ::Thor::Error
 end
@@ -260,6 +263,7 @@ end
 module Thor::Base::ClassMethods
   def all_commands; end
   def all_tasks; end
+  def allow_incompatible_default_type!; end
   def argument(name, options = _); end
   def arguments; end
   def attr_accessor(*_); end
@@ -267,7 +271,6 @@ module Thor::Base::ClassMethods
   def attr_writer(*_); end
   def check_default_type; end
   def check_default_type!; end
-  def check_default_type?; end
   def check_unknown_options; end
   def check_unknown_options!; end
   def check_unknown_options?(config); end
@@ -275,13 +278,16 @@ module Thor::Base::ClassMethods
   def class_options(options = _); end
   def commands; end
   def disable_required_check?(command_name); end
+  def exit_on_failure?; end
   def group(name = _); end
   def handle_argument_error(command, error, args, arity); end
   def handle_no_command_error(command, has_namespace = _); end
   def handle_no_task_error(command, has_namespace = _); end
   def namespace(name = _); end
-  def no_commands; end
-  def no_tasks; end
+  def no_commands(&block); end
+  def no_commands?; end
+  def no_commands_context; end
+  def no_tasks(&block); end
   def public_command(*names); end
   def public_task(*names); end
   def remove_argument(*names); end
@@ -305,7 +311,6 @@ module Thor::Base::ClassMethods
   def create_command(meth); end
   def create_task(meth); end
   def dispatch(command, given_args, given_opts, config); end
-  def exit_on_failure?; end
   def find_and_refresh_command(name); end
   def find_and_refresh_task(name); end
   def from_superclass(method, default = _); end
@@ -331,6 +336,7 @@ class Thor::Command < ::Struct
   def not_debugging?(instance); end
   def private_method?(instance); end
   def public_method?(instance); end
+  def required_arguments_for(klass, usage); end
   def required_options; end
   def sans_backtrace(backtrace, caller); end
 
@@ -364,9 +370,6 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
 
   def convert_key(key); end
   def method_missing(method, *args); end
-end
-
-class Thor::CoreExt::OrderedHash < ::Hash
 end
 
 Thor::Correctable = DidYouMean::Correctable
@@ -493,6 +496,18 @@ end
 class Thor::MalformattedArgumentError < ::Thor::InvocationError
 end
 
+class Thor::NestedContext
+  def initialize; end
+
+  def enter; end
+  def entered?; end
+
+  private
+
+  def pop; end
+  def push; end
+end
+
 class Thor::NoKwargSpellChecker < ::DidYouMean::SpellChecker
   def initialize(dictionary); end
 end
@@ -509,6 +524,7 @@ class Thor::Option < ::Thor::Argument
   def human_name; end
   def lazy_default; end
   def numeric?; end
+  def repeatable; end
   def string?; end
   def switch_name; end
   def usage(padding = _); end
@@ -536,6 +552,7 @@ class Thor::Options < ::Thor::Arguments
 
   protected
 
+  def assign_result!(option, result); end
   def current_is_switch?; end
   def current_is_switch_formatted?; end
   def current_is_value?; end
@@ -626,6 +643,7 @@ class Thor::Shell::Basic
 
   protected
 
+  def answer_match(possibilities, answer, case_insensitive); end
   def as_unicode; end
   def ask_filtered(statement, color, options); end
   def ask_simply(statement, color, options); end
@@ -655,6 +673,7 @@ class Thor::Shell::Color < ::Thor::Shell::Basic
 
   protected
 
+  def are_colors_disabled?; end
   def can_display_colors?; end
   def diff_lcs_loaded?; end
   def output_diff_line(diff); end
@@ -790,6 +809,7 @@ end
 module Thor::Util
   def self.camel_case(str); end
   def self.escape_globs(path); end
+  def self.escape_html(string); end
   def self.find_by_namespace(namespace); end
   def self.find_class_and_command_by_namespace(namespace, fallback = _); end
   def self.find_class_and_task_by_namespace(namespace, fallback = _); end

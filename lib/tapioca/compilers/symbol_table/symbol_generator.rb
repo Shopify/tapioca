@@ -124,6 +124,7 @@ module Tapioca
 
         sig { params(name: String, value: BasicObject).returns(T.nilable(String)) }
         def compile_object(name, value)
+          return if symbol_ignored?(name)
           indented("#{name} = T.let(T.unsafe(nil), #{type_name_of(value)})")
         end
 
