@@ -1,0 +1,14 @@
+version = 1
+
+test_patterns = [
+  "spec/**"
+]
+
+exclude_patterns = [
+  "lib/**",
+  "sorbet/**"
+]
+
+[[analyzers]]
+name = "ruby"
+enabled = true
