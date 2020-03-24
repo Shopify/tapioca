@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("pry-byebug")
   spec.add_development_dependency("rspec")
-  spec.add_development_dependency("rubocop", "~> 0.78.0")
   spec.add_development_dependency("sorbet")
 
   spec.required_ruby_version = ">= 2.3.7"

@@ -47,6 +47,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-shopify (1.0.0)
+      rubocop (>= 0.78.0)
     ruby-progressbar (1.10.1)
     sorbet (0.5.5365)
       sorbet-static (= 0.5.5365)
@@ -63,7 +65,7 @@ DEPENDENCIES
   pry-byebug
   rake (~> 12.3)
   rspec
-  rubocop (~> 0.78.0)
+  rubocop-shopify
   sorbet
   tapioca!
 
