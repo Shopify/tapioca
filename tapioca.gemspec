@@ -25,6 +25,8 @@ Gem::Specification.new do |spec|
     Rakefile
   )
 
+  spec.metadata['allowed_push_host'] = "https://rubygems.org"
+
   spec.add_dependency("pry", ">= 0.12.2")
   spec.add_dependency("sorbet-static", ">= 0.4.4471")
   spec.add_dependency("sorbet-runtime")
