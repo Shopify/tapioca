@@ -426,7 +426,7 @@ module Tapioca
 
         sig { params(path: String).returns(T::Boolean) }
         def path_in_gem?(path)
-          path.start_with?(gem.full_gem_path)
+          File.realpath(path).start_with?(gem.full_gem_path)
         end
 
         SPECIAL_METHOD_NAMES = %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `]
