@@ -63,7 +63,7 @@ module Tapioca
 
     no_commands do
       def generator
-        @generator ||= Generator.new(Config.from_options(options))
+        @generator ||= Generator.new(ConfigBuilder.from_options(options))
       end
     end
   end
