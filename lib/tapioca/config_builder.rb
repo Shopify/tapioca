@@ -34,7 +34,7 @@ module Tapioca
         command = File.basename($PROGRAM_NAME)
         args = ARGV.join(" ")
 
-        "#{command} #{args}"
+        "#{command} #{args}".strip
       end
 
       sig { params(options: T::Hash[String, T.untyped]).returns(T::Hash[String, T.untyped]) }
