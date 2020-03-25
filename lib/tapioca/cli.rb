@@ -13,12 +13,10 @@ module Tapioca
                   desc: "A file to be required before Bundler.require is called"
     class_option :postrequire,
                   aliases: ["--post", "-a"],
-                  default: Generator::DEFAULT_POSTREQUIRE,
                   banner: "file",
                   desc: "A file to be required after Bundler.require is called"
     class_option :outdir,
                   aliases: ["--out", "-o"],
-                  default: Generator::DEFAULT_OUTDIR,
                   banner: "directory",
                   desc: "The output directory for generated RBI files"
     class_option :generate_command,
@@ -28,19 +26,18 @@ module Tapioca
     class_option :typed_overrides,
                   aliases: ["--typed", "-t"],
                   type: :hash,
-                  default: {},
                   banner: "gem:level",
                   desc: "Overrides for typed sigils for generated gem RBIs"
 
     desc "init", "initializes folder structure"
     def init
-      create_file(Generator::SORBET_CONFIG, skip: true) do
+      create_file(Config::SORBET_CONFIG, skip: true) do
         <<~CONTENT
           --dir
           .
         CONTENT
       end
-      create_file(Generator::DEFAULT_POSTREQUIRE, skip: true) do
+      create_file(Config::DEFAULT_POSTREQUIRE, skip: true) do
         <<~CONTENT
           # frozen_string_literal: true
           # typed: false
@@ -66,13 +63,7 @@ module Tapioca
 
     no_commands do
       def generator
-        @generator ||= Generator.new(
-          outdir: options[:outdir],
-          prerequire: options[:prerequire],
-          postrequire: options[:postrequire],
-          command: options[:generate_command],
-          typed_overrides: options[:typed_overrides]
-        )
+        @generator ||= Generator.new(Config.from_options(options))
       end
     end
   end

@@ -30,6 +30,7 @@ end
 
 require_relative "tapioca/loader"
 require_relative "tapioca/constant_locator"
+require_relative "tapioca/config"
 require_relative "tapioca/generator"
 require_relative "tapioca/cli"
 require_relative "tapioca/gemfile"
