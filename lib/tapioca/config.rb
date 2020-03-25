@@ -25,11 +25,20 @@ module Tapioca
       sig { params(options: T::Hash[String, T.untyped]).returns(T.self_type) }
       def from_options(options)
         Config.from_hash(
-          merge_options(default_options, options)
+          merge_options(default_options, config_options, options)
         )
       end
 
       private
+
+      sig { returns(T::Hash[String, T.untyped]) }
+      def config_options
+        if File.exist?(CONFIG_FILE_PATH)
+          YAML.load_file(CONFIG_FILE_PATH, fallback: {})
+        else
+          {}
+        end
+      end
 
       sig { returns(T::Hash[String, T.untyped]) }
       def default_options
@@ -58,6 +67,7 @@ module Tapioca
       end
     end
 
+    CONFIG_FILE_PATH = "sorbet/tapioca/config.yml"
     SORBET_CONFIG = "sorbet/config"
 
     DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
