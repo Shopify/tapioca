@@ -6,3 +6,5 @@ gem("foo", path: "../gems/foo")
 gem("bar", path: "../gems/bar")
 gem("baz", path: "../gems/baz")
 gem("tapioca", path: "../../../")
+
+gem("psych")
