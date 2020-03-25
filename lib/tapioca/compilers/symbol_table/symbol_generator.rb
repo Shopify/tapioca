@@ -424,11 +424,6 @@ module Tapioca
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        sig { params(path: String).returns(T::Boolean) }
-        def path_in_gem?(path)
-          File.realpath(path).start_with?(gem.full_gem_path)
-        end
-
         SPECIAL_METHOD_NAMES = %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `]
 
         sig { params(name: String).returns(T::Boolean) }
@@ -462,7 +457,7 @@ module Tapioca
           source_location = method.source_location&.first
           return false if source_location.nil?
 
-          path_in_gem?(source_location)
+          gem.contains_path?(source_location)
         end
 
         sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
@@ -473,7 +468,7 @@ module Tapioca
           return !strict if files.empty?
 
           files.any? do |file|
-            path_in_gem?(file)
+            gem.contains_path?(file)
           end
         end
 

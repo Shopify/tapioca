@@ -88,7 +88,7 @@ module Tapioca
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
-        real_gem_path = File.realpath(@spec.full_gem_path.to_s)
+        real_gem_path = to_realpath(@spec.full_gem_path)
         @full_gem_path = T.let(real_gem_path, String)
       end
 
@@ -119,7 +119,19 @@ module Tapioca
         "#{name}@#{version}.rbi"
       end
 
+      sig { params(path: String).returns(T::Boolean) }
+      def contains_path?(path)
+        to_realpath(path).start_with?(full_gem_path)
+      end
+
       private
+
+      sig { params(path: T.any(String, Pathname)).returns(String) }
+      def to_realpath(path)
+        path_string = path.to_s
+        path_string = File.realpath(path_string) if File.exist?(path_string)
+        path_string
+      end
 
       sig { returns(T::Boolean) }
       def gem_ignored?
