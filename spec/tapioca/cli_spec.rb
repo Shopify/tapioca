@@ -53,7 +53,7 @@ RSpec.describe(Tapioca::Cli) do
   def run(command, args = [], flags = {})
     flags = {
       outdir: outdir,
-      generate_command: "generate command",
+      generate_command: "'generate command'",
     }.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
     exec_command = [
@@ -67,7 +67,7 @@ RSpec.describe(Tapioca::Cli) do
       {
         "BUNDLE_GEMFILE" => (repo_path / "Gemfile").to_s,
       },
-      exec_command,
+      exec_command.join(' '),
       chdir: repo_path
     ).read
   end
