@@ -227,6 +227,31 @@ RSpec.describe(Tapioca::Cli) do
       expect(File.read("#{outdir}/bar@0.3.0.rbi")).to(eq(Contents::BAR_RBI))
       expect(File.read("#{outdir}/baz@0.0.2.rbi")).to(eq(Contents::BAZ_RBI))
     end
+
+    it 'must respect exclude option' do
+      output = run("generate", "", exclude: "foo bar")
+
+      expect(output).to_not(include(<<~OUTPUT))
+        Processing 'bar' gem:
+          Compiling bar, this may take a few seconds...   Done
+      OUTPUT
+
+      expect(output).to(include(<<~OUTPUT))
+        Processing 'baz' gem:
+          Compiling baz, this may take a few seconds...   Done
+      OUTPUT
+
+      expect(output).to_not(include(<<~OUTPUT))
+        Processing 'foo' gem:
+          Compiling foo, this may take a few seconds...   Done
+      OUTPUT
+
+      expect(File).to_not(exist("#{outdir}/foo@0.0.1.rbi"))
+      expect(File).to_not(exist("#{outdir}/bar@0.3.0.rbi"))
+      expect(File).to(exist("#{outdir}/baz@0.0.2.rbi"))
+
+      expect(File.read("#{outdir}/baz@0.0.2.rbi")).to(eq(Contents::BAZ_RBI))
+    end
   end
 
   describe("#sync") do
@@ -256,6 +281,33 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
       expect(File).to(exist("#{outdir}/bar@0.3.0.rbi"))
+      expect(File).to(exist("#{outdir}/baz@0.0.2.rbi"))
+    end
+
+    it 'must respect exclude option' do
+      run("generate")
+
+      output = run("sync", "", exclude: "foo bar")
+
+      expect(output).to(include("-- Removing: #{outdir}/foo@0.0.1.rbi\n"))
+      expect(output).to(include("-- Removing: #{outdir}/bar@0.3.0.rbi\n"))
+      expect(output).to_not(include("-- Removing: #{outdir}/baz@0.0.2.rbi\n"))
+      expect(output).to_not(include("++ Adding:"))
+      expect(output).to_not(include("-> Moving:"))
+
+      expect(output).to_not(include(<<~OUTPUT))
+        Removing RBI files of gems that have been removed:
+
+          Nothing to do.
+      OUTPUT
+      expect(output).to(include(<<~OUTPUT))
+        Generating RBI files of gems that are added or updated:
+
+          Nothing to do.
+      OUTPUT
+
+      expect(File).to_not(exist("#{outdir}/foo@0.0.1.rbi"))
+      expect(File).to_not(exist("#{outdir}/bar@0.3.0.rbi"))
       expect(File).to(exist("#{outdir}/baz@0.0.2.rbi"))
     end
 
