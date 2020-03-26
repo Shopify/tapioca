@@ -67,6 +67,10 @@ module Tapioca
     end
 
     no_commands do
+      def self.exit_on_failure?
+        true
+      end
+
       def generator
         @generator ||= Generator.new(ConfigBuilder.from_options(options))
       end
