@@ -8,41 +8,16 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
-    SORBET_CONFIG = "sorbet/config"
-    DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
-    DEFAULT_OUTDIR = "sorbet/rbi/gems"
-    DEFAULT_OVERRIDES = T.let({
-      # ActiveSupport overrides some core methods with different signatures
-      # so we generate a typed: false RBI for it to suppress errors
-      "activesupport" => "false",
-    }.freeze, T::Hash[String, String])
-
-    sig { returns(Pathname) }
-    attr_reader :outdir
-    sig { returns(T.nilable(String)) }
-    attr_reader :prerequire
-    sig { returns(T.nilable(String)) }
-    attr_reader :postrequire
-    sig { returns(String) }
-    attr_reader :command
-    sig { returns(T::Hash[String, String]) }
-    attr_reader :typed_overrides
+    sig { returns(Config) }
+    attr_reader :config
 
     sig do
       params(
-        outdir: T.nilable(String),
-        prerequire: T.nilable(String),
-        postrequire: T.nilable(String),
-        command: T.nilable(String),
-        typed_overrides: T.nilable(T::Hash[String, String])
+        config: Config
       ).void
     end
-    def initialize(outdir: nil, prerequire: nil, postrequire: nil, command: nil, typed_overrides: nil)
-      @outdir = T.let(Pathname.new(outdir || DEFAULT_OUTDIR), Pathname)
-      @prerequire = T.let(prerequire, T.nilable(String))
-      @postrequire = T.let(postrequire || DEFAULT_POSTREQUIRE, T.nilable(String))
-      @command = T.let(command || default_command, String)
-      @typed_overrides = T.let(typed_overrides || {}, T::Hash[String, String])
+    def initialize(config)
+      @config = config
       @bundle = T.let(nil, T.nilable(Gemfile))
       @loader = T.let(nil, T.nilable(Loader))
       @compiler = T.let(nil, T.nilable(Compilers::SymbolTableCompiler))
@@ -86,14 +61,6 @@ module Tapioca
 
     private
 
-    sig { returns(String) }
-    def default_command
-      command = File.basename($PROGRAM_NAME)
-      args = ARGV.join(" ")
-
-      "#{command} #{args}"
-    end
-
     sig { returns(Gemfile) }
     def bundle
       @bundle ||= Gemfile.new
@@ -112,14 +79,14 @@ module Tapioca
     sig { void }
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
-      loader.load_bundle(prerequire, postrequire)
+      loader.load_bundle(config.prerequire, config.postrequire)
       say(" Done", :green)
       puts
     end
 
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
-      @existing_rbis ||= Pathname.glob((Pathname.new(outdir) / "*@*.rbi").to_s)
+      @existing_rbis ||= Pathname.glob((config.outpath / "*@*.rbi").to_s)
         .map { |f| f.basename(".*").to_s.split('@') }
         .to_h
     end
@@ -133,7 +100,7 @@ module Tapioca
 
     sig { params(gem_name: String, version: String).returns(Pathname) }
     def rbi_filename(gem_name, version)
-      outdir / "#{gem_name}@#{version}.rbi"
+      config.outpath / "#{gem_name}@#{version}.rbi"
     end
 
     sig { params(gem_name: String).returns(Pathname) }
@@ -280,18 +247,18 @@ module Tapioca
       gem_name = set_color(gem.name, :yellow, :bold)
       say("Compiling #{gem_name}, this may take a few seconds... ")
 
-      typed_sigil = typed_overrides[gem.name] || DEFAULT_OVERRIDES[gem.name] || "true"
+      typed_sigil = config.typed_overrides[gem.name] || "true"
 
       content = compiler.compile(gem)
-      content.prepend(rbi_header(command, typed_sigil))
+      content.prepend(rbi_header(config.generate_command, typed_sigil))
 
-      FileUtils.mkdir_p(outdir)
-      filename = outdir / gem.rbi_file_name
+      FileUtils.mkdir_p(config.outdir)
+      filename = config.outpath / gem.rbi_file_name
       File.write(filename.to_s, content)
 
       say("Done", :green)
 
-      Pathname.glob((outdir / "#{gem.name}@*.rbi").to_s) do |file|
+      Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
       end
     end
