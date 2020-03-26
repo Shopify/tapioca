@@ -30,13 +30,15 @@ module Tapioca
     def build_gem_rbis(gem_names)
       require_gem_file
 
-      gems_to_generate(gem_names).map do |gem|
-        say("Processing '#{gem.name}' gem:", :green)
-        indent do
-          compile_rbi(gem)
-          puts
+      gems_to_generate(gem_names)
+        .reject { |gem| config.exclude.include?(gem.name) }
+        .each do |gem|
+          say("Processing '#{gem.name}' gem:", :green)
+          indent do
+            compile_rbi(gem)
+            puts
+          end
         end
-      end
 
       say("All operations performed in working directory.", [:green, :bold])
       say("Please review changes and commit them.", [:green, :bold])
@@ -94,6 +96,7 @@ module Tapioca
     sig { returns(T::Hash[String, String]) }
     def expected_rbis
       @expected_rbis ||= bundle.dependencies
+        .reject { |gem| config.exclude.include?(gem.name) }
         .map { |gem| [gem.name, gem.version.to_s] }
         .to_h
     end
