@@ -55,6 +55,7 @@ module Tapioca
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
       "outdir" => Config::DEFAULT_OUTDIR,
       "generate_command" => default_command,
+      "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
     }.freeze, T::Hash[String, T.untyped])
   end

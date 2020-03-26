@@ -23,10 +23,15 @@ module Tapioca
                   aliases: ["--cmd", "-c"],
                   banner: "command",
                   desc: "The command to run to regenerate RBI files"
+    class_option :exclude,
+                  aliases: ["-x"],
+                  type: :array,
+                  banner: "gem [gem ...]",
+                  desc: "Excludes the given gem(s) from RBI generation"
     class_option :typed_overrides,
                   aliases: ["--typed", "-t"],
                   type: :hash,
-                  banner: "gem:level",
+                  banner: "gem:level [gem:level ...]",
                   desc: "Overrides for typed sigils for generated gem RBIs"
 
     desc "init", "initializes folder structure"
