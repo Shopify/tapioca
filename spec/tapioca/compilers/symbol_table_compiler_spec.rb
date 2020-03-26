@@ -76,8 +76,8 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       expect(
         compile(<<~RUBY)
           module Bar
-            extend(T::Sig)
-            extend(T::Helpers)
+            extend(::T::Sig)
+            extend(::T::Helpers)
             extend(T::Generic)
 
             Elem = type_member(fixed: Integer)
@@ -85,7 +85,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
             interface!
 
             Arr = T.let([1,2,3], T::Array[Integer])
-            Foo = T.type_alias { T.any(String, Symbol) }
+            Foo = ::T.type_alias { T.any(String, Symbol) }
           end
         RUBY
       ).to(
