@@ -72,6 +72,32 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       )
     end
 
+    it("does not compile Sorbet related constants") do
+      expect(
+        compile(<<~RUBY)
+          module Bar
+            extend(T::Sig)
+            extend(T::Helpers)
+            extend(T::Generic)
+
+            Elem = type_member(fixed: Integer)
+
+            interface!
+
+            Arr = T.let([1,2,3], T::Array[Integer])
+            Foo = T.type_alias { T.any(String, Symbol) }
+          end
+        RUBY
+      ).to(
+        eq(template(<<~RUBY))
+          module Bar
+          end
+
+          Bar::Arr = T.let(T.unsafe(nil), Array)
+        RUBY
+      )
+    end
+
     it("compiles extensions to BasicObject and Object") do
       expect(
         compile(<<~RUBY)

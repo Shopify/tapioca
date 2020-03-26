@@ -137,14 +137,11 @@ module Tapioca
         end
         def compile_object(name, value)
           return if symbol_ignored?(name)
-          indented("#{name} = T.let(T.unsafe(nil), #{type_name_of(value)})")
-        end
-
-        sig { params(value: BasicObject).returns(String).checked(:never) }
-        def type_name_of(value)
           klass = class_of(value)
+          return if name_of(klass)&.start_with?("T::Types::", "T::Private::")
 
-          public_module?(klass) && name_of(klass) || "T.untyped"
+          type_name = public_module?(klass) && name_of(klass) || "T.untyped"
+          indented("#{name} = T.let(T.unsafe(nil), #{type_name})")
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
@@ -289,7 +286,7 @@ module Tapioca
             end
 
           prepends = prepend
-            .select(&method(:name_of))
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
               # TODO: Sorbet currently does not handle prepend
@@ -299,14 +296,14 @@ module Tapioca
             end
 
           includes = include
-            .select(&method(:name_of))
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
               indented("include(#{qualified_name_of(mod)})")
             end
 
           extends = extend
-            .select(&method(:name_of))
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
               indented("extend(#{qualified_name_of(mod)})")
