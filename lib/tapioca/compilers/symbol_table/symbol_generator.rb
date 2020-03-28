@@ -177,6 +177,7 @@ module Tapioca
 
             [
               compile_mixins(constant),
+              compile_mixes_in_class_methods(constant),
               methods,
             ].select { |b| b != "" }.join("\n\n")
           end
@@ -309,17 +310,23 @@ module Tapioca
               indented("extend(#{qualified_name_of(mod)})")
             end
 
-          mixes_class_methods = extend
-            .select do |mod|
-              qualified_name_of(mod) == "::ActiveSupport::Concern" &&
-                Module === resolve_constant("#{name_of(constant)}::ClassMethods")
-            end
-            .first(1)
-            .flat_map do
-              ["", indented("mixes_in_class_methods(ClassMethods)")]
-            end
+          (prepends + includes + extends).join("\n")
+        end
 
-          (prepends + includes + extends + mixes_class_methods).join("\n")
+        sig { params(constant: Module).returns(String) }
+        def compile_mixes_in_class_methods(constant)
+          return "" if constant.is_a?(Class)
+
+          temp = Class.new
+          ancestors_before = temp.singleton_class.ancestors
+          temp.include(constant)
+          ancestors_after = temp.singleton_class.ancestors
+
+          mixed_in_module = (ancestors_after - ancestors_before).first
+
+          return "" if mixed_in_module.nil?
+
+          indented("mixes_in_class_methods(#{qualified_name_of(mixed_in_module)})")
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
