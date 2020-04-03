@@ -1346,6 +1346,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
               end
             end
           end
+
+          module SomeOtherConcern
+            def included(base)
+              base.include(FooConcern)
+              base.include(BarConcern)
+            end
+          end
+
+          module Baz
+            extend SomeOtherConcern
+          end
         RUBY
       ).to(
         eq(template(<<~RUBY))
@@ -1355,6 +1366,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
           module BarConcern::Something
             def another_class_method; end
+          end
+
+          module Baz
+            extend(::SomeOtherConcern)
+
+            include(::FooConcern)
+            include(::BarConcern)
           end
 
           module Concern
@@ -1371,6 +1389,10 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
 
           module FooConcern::ClassMethods
             def wow_a_class_method; end
+          end
+
+          module SomeOtherConcern
+            def included(base); end
           end
         RUBY
       )

@@ -317,16 +317,54 @@ module Tapioca
         def compile_mixes_in_class_methods(constant)
           return "" if constant.is_a?(Class)
 
-          temp = Class.new
-          ancestors_before = temp.singleton_class.ancestors
-          temp.include(constant)
-          ancestors_after = temp.singleton_class.ancestors
+          mixins_from_modules = {}
 
-          mixed_in_module = (ancestors_after - ancestors_before).first
+          Class.new do
+            # rubocop:disable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            def method_missing(symbol, *args)
+            end
 
-          return "" if mixed_in_module.nil?
+            define_singleton_method(:include) do |mod|
+              before = singleton_class.ancestors
+              super(mod).tap do
+                mixins_from_modules[mod] = singleton_class.ancestors - before
+              end
+            end
 
-          indented("mixes_in_class_methods(#{qualified_name_of(mixed_in_module)})")
+            class << self
+              def method_missing(symbol, *args)
+              end
+            end
+            # rubocop:enable Style/MethodMissingSuper, Style/MissingRespondToMissing
+          end.include(constant)
+
+          all_dynamic_extends = mixins_from_modules.delete(constant)
+          all_dynamic_includes = mixins_from_modules.keys
+          dynamic_extends_from_dynamic_includes = mixins_from_modules.values.flatten
+          dynamic_extends = all_dynamic_extends - dynamic_extends_from_dynamic_includes
+
+          result = all_dynamic_includes
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select(&method(:public_module?))
+            .map do |mod|
+              indented("include(#{qualified_name_of(mod)})")
+            end.join("\n")
+
+          mixed_in_module = dynamic_extends.find do |mod|
+            mod != constant && public_module?(mod)
+          end
+
+          return result if mixed_in_module.nil?
+
+          qualified_name = qualified_name_of(mixed_in_module)
+          return result if qualified_name == ""
+
+          [
+            result,
+            indented("mixes_in_class_methods(#{qualified_name})"),
+          ].select { |b| b != "" }.join("\n\n")
+        rescue
+          ""
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
