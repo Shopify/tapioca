@@ -1308,16 +1308,17 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       )
     end
 
-    it("adds mixes_in_class_methods to modules extending ActiveSupport::Concern") do
+    it("adds mixes_in_class_methods to modules that extend base classes") do
       expect(
         compile(<<~RUBY)
-          module ActiveSupport
-            module Concern
+          module Concern
+            def included(base)
+              base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
             end
           end
 
           module FooConcern
-            extend(ActiveSupport::Concern)
+            extend(Concern)
 
             module ClassMethods
               def wow_a_class_method
@@ -1331,39 +1332,67 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
 
           module BarConcern
-            extend(ActiveSupport::Concern)
+            module Something
+              def another_class_method
+                "super awesome"
+              end
+            end
 
-            ClassMethods = 1
+            class << self
+              private
+
+              def included(base)
+                base.extend(Something)
+              end
+            end
+          end
+
+          module SomeOtherConcern
+            def included(base)
+              base.include(FooConcern)
+              base.include(BarConcern)
+            end
+          end
+
+          module Baz
+            extend SomeOtherConcern
           end
         RUBY
       ).to(
         eq(template(<<~RUBY))
-          module ActiveSupport
-          end
-
-          module ActiveSupport::Concern
-          end
-
           module BarConcern
-            extend(::ActiveSupport::Concern)
+            mixes_in_class_methods(::BarConcern::Something)
           end
 
-          <% if ruby_version(">= 2.4.0") %>
-          BarConcern::ClassMethods = T.let(T.unsafe(nil), Integer)
-          <% else %>
-          BarConcern::ClassMethods = T.let(T.unsafe(nil), Fixnum)
-          <% end %>
+          module BarConcern::Something
+            def another_class_method; end
+          end
+
+          module Baz
+            extend(::SomeOtherConcern)
+
+            include(::FooConcern)
+            include(::BarConcern)
+          end
+
+          module Concern
+            def included(base); end
+          end
 
           module FooConcern
-            extend(::ActiveSupport::Concern)
+            extend(::Concern)
 
-            mixes_in_class_methods(ClassMethods)
+            mixes_in_class_methods(::FooConcern::ClassMethods)
 
             def a_normal_method; end
           end
 
           module FooConcern::ClassMethods
             def wow_a_class_method; end
+          end
+
+          module SomeOtherConcern
+            def included(base); end
           end
         RUBY
       )

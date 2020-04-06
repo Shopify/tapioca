@@ -177,6 +177,7 @@ module Tapioca
 
             [
               compile_mixins(constant),
+              compile_mixes_in_class_methods(constant),
               methods,
             ].select { |b| b != "" }.join("\n\n")
           end
@@ -309,17 +310,61 @@ module Tapioca
               indented("extend(#{qualified_name_of(mod)})")
             end
 
-          mixes_class_methods = extend
-            .select do |mod|
-              qualified_name_of(mod) == "::ActiveSupport::Concern" &&
-                Module === resolve_constant("#{name_of(constant)}::ClassMethods")
-            end
-            .first(1)
-            .flat_map do
-              ["", indented("mixes_in_class_methods(ClassMethods)")]
+          (prepends + includes + extends).join("\n")
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_mixes_in_class_methods(constant)
+          return "" if constant.is_a?(Class)
+
+          mixins_from_modules = {}
+
+          Class.new do
+            # rubocop:disable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            def method_missing(symbol, *args)
             end
 
-          (prepends + includes + extends + mixes_class_methods).join("\n")
+            define_singleton_method(:include) do |mod|
+              before = singleton_class.ancestors
+              super(mod).tap do
+                mixins_from_modules[mod] = singleton_class.ancestors - before
+              end
+            end
+
+            class << self
+              def method_missing(symbol, *args)
+              end
+            end
+            # rubocop:enable Style/MethodMissingSuper, Style/MissingRespondToMissing
+          end.include(constant)
+
+          all_dynamic_extends = mixins_from_modules.delete(constant)
+          all_dynamic_includes = mixins_from_modules.keys
+          dynamic_extends_from_dynamic_includes = mixins_from_modules.values.flatten
+          dynamic_extends = all_dynamic_extends - dynamic_extends_from_dynamic_includes
+
+          result = all_dynamic_includes
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select(&method(:public_module?))
+            .map do |mod|
+              indented("include(#{qualified_name_of(mod)})")
+            end.join("\n")
+
+          mixed_in_module = dynamic_extends.find do |mod|
+            mod != constant && public_module?(mod)
+          end
+
+          return result if mixed_in_module.nil?
+
+          qualified_name = qualified_name_of(mixed_in_module)
+          return result if qualified_name == ""
+
+          [
+            result,
+            indented("mixes_in_class_methods(#{qualified_name})"),
+          ].select { |b| b != "" }.join("\n\n")
+        rescue
+          ""
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
