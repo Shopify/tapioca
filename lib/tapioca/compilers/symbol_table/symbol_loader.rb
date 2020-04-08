@@ -61,7 +61,7 @@ module Tapioca
                 "--print=#{table_type}",
                 "--quiet",
                 input,
-              ].shelljoin,
+              ].join(' '),
               err: "/dev/null"
             ).read
           end
