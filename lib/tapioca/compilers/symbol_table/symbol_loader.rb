@@ -44,7 +44,7 @@ module Tapioca
 
           def ignored_symbols
             unless @ignored_symbols
-              output = symbol_table_json_from("''", table_type: "symbol-table-full-json")
+              output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
               json = JSON.parse(output)
               @ignored_symbols = SymbolTableParser.parse(json)
             end
