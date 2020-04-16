@@ -436,6 +436,7 @@ module Tapioca
           params = T.let(method.parameters, T::Array[T::Array[Symbol]])
           parameters = params.map do |(type, name)|
             name ||= :_
+            name = name.to_s.gsub(/&|\*/, '_') # avoid incorrect names from `delegate`
 
             case type
             when :req
