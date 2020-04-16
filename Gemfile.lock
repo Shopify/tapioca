@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    tapioca (0.2.7)
+    tapioca (0.3.0)
       pry (>= 0.12.2)
       sorbet-runtime
       sorbet-static (>= 0.4.4471)
-      thor
+      thor (>= 0.19.2)
 
 GEM
   remote: https://rubygems.org/
@@ -47,10 +47,12 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-shopify (1.0.0)
+      rubocop (>= 0.78.0)
     ruby-progressbar (1.10.1)
     sorbet (0.5.5365)
       sorbet-static (= 0.5.5365)
-    sorbet-runtime (0.5.5365)
+    sorbet-runtime (0.5.5449)
     sorbet-static (0.5.5365-universal-darwin-14)
     thor (1.0.1)
     unicode-display_width (1.6.0)
@@ -63,7 +65,7 @@ DEPENDENCIES
   pry-byebug
   rake (~> 12.3)
   rspec
-  rubocop (~> 0.78.0)
+  rubocop-shopify
   sorbet
   tapioca!
 

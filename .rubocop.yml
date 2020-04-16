@@ -1,13 +1,12 @@
 # This file strictly follows the rules defined in the Ruby style guide:
 #   http://shopify.github.io/ruby-style-guide/
-inherit_from:
-  - https://shopify.github.io/ruby-style-guide/rubocop.yml
+inherit_gem:
+  rubocop-shopify: rubocop.yml
 
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
   - 'vendor/**/*'
-  - 'lib/t.rb'
 
 Style/CaseEquality:
   Enabled: false

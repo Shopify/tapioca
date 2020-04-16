@@ -25,15 +25,16 @@ Gem::Specification.new do |spec|
     Rakefile
   )
 
+  spec.metadata['allowed_push_host'] = "https://rubygems.org"
+
   spec.add_dependency("pry", ">= 0.12.2")
   spec.add_dependency("sorbet-static", ">= 0.4.4471")
   spec.add_dependency("sorbet-runtime")
-  spec.add_dependency("thor")
+  spec.add_dependency("thor", ">= 0.19.2")
 
   spec.add_development_dependency("bundler", "~> 1.17")
   spec.add_development_dependency("pry-byebug")
   spec.add_development_dependency("rspec")
-  spec.add_development_dependency("rubocop", "~> 0.78.0")
   spec.add_development_dependency("sorbet")
 
   spec.required_ruby_version = ">= 2.3.7"
