@@ -253,6 +253,21 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(File.read("#{outdir}/baz@0.0.2.rbi")).to(eq(Contents::BAZ_RBI))
     end
+
+    it 'does not crash when the extras gem is loaded' do
+      File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/all"')
+      output = run("generate", "foo")
+
+      expect(output).to(include(<<~OUTPUT))
+        Processing 'foo' gem:
+          Compiling foo, this may take a few seconds...   Done
+      OUTPUT
+
+      expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
+      expect(File.read("#{outdir}/foo@0.0.1.rbi")).to(eq(Contents::FOO_RBI))
+
+      File.delete(repo_path / "sorbet/tapioca/require.rb")
+    end
   end
 
   describe("#sync") do
