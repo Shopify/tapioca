@@ -437,9 +437,12 @@ module Tapioca
           parameters = params.map do |(type, name)|
             name ||= :_
 
+            # Sanitize param names
+            name = name.to_s.gsub(/[^a-zA-Z0-9_]/, '_')
+
             case type
             when :req
-              name.to_s
+              name
             when :opt
               "#{name} = _"
             when :rest

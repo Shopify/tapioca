@@ -1631,5 +1631,25 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       )
     end
+
+    it("sanitize parameter names creating through meta-programming") do
+      expect(
+        compile(template(<<~RUBY))
+          class Foo
+          <% if ruby_version(">= 2.7.0") %>
+            module_eval("def foo(...); end")
+          <% end %>
+          end
+        RUBY
+      ).to(
+        eq(template(<<~RUBY))
+          class Foo
+          <% if ruby_version(">= 2.7.0") %>
+            def foo(*_, &_); end
+          <% end %>
+          end
+        RUBY
+      )
+    end
   end
 end
