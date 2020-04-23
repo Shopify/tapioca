@@ -57,29 +57,30 @@ RSpec.describe(Tapioca::Cli) do
     }.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
     exec_command = [
+      "bundle",
+      "exec",
       "bin/tapioca",
       command,
       *flags,
       *args,
     ]
 
-    IO.popen(
-      {
-        "BUNDLE_GEMFILE" => (repo_path / "Gemfile").to_s,
-      },
-      exec_command.join(' '),
-      chdir: repo_path
-    ).read
+    Bundler.with_clean_env do
+      IO.popen(
+        exec_command.join(' '),
+        chdir: repo_path
+      ).read
+    end
   end
 
   before(:all) do
     @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
-    IO.popen(
-      {
-        "BUNDLE_GEMFILE" => (@repo_path / "Gemfile").to_s,
-      },
-      ["bundle", "install", "--quiet"]
-    ).read
+    Bundler.with_clean_env do
+      IO.popen(
+        ["bundle", "install", "--quiet"],
+        chdir: @repo_path
+      ).read
+    end
   end
 
   around(:each) do |example|
