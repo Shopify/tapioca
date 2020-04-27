@@ -55,7 +55,7 @@ module Tapioca
           def symbol_table_json_from(input, table_type: "symbol-table-json")
             IO.popen(
               [
-                SORBET,
+                sorbet_path,
                 # We don't want to pick up any sorbet/config files in cwd
                 "--no-config",
                 "--print=#{table_type}",
@@ -64,6 +64,11 @@ module Tapioca
               ].join(' '),
               err: "/dev/null"
             ).read
+          end
+
+          sig { returns(String) }
+          def sorbet_path
+            SORBET.to_s.shellescape
           end
         end
 
