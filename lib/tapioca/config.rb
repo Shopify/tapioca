@@ -24,7 +24,8 @@ module Tapioca
     SORBET_CONFIG = "sorbet/config"
 
     DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
-    DEFAULT_OUTDIR = "sorbet/rbi/gems"
+    DEFAULT_RBIDIR = "sorbet/rbi"
+    DEFAULT_OUTDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
     DEFAULT_OVERRIDES = T.let({
       # ActiveSupport overrides some core methods with different signatures
       # so we generate a typed: false RBI for it to suppress errors
