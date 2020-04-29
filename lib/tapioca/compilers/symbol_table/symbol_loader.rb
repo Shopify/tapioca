@@ -33,7 +33,7 @@ module Tapioca
               file.write(Array(paths).join("\n"))
               file.flush
 
-              symbol_table_json_from("@#{file.path}")
+              symbol_table_json_from("@#{file.path.shellescape}")
             end, T.nilable(String))
 
             return Set.new if output.nil? || output.empty?
@@ -44,7 +44,7 @@ module Tapioca
 
           def ignored_symbols
             unless @ignored_symbols
-              output = symbol_table_json_from("''", table_type: "symbol-table-full-json")
+              output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
               json = JSON.parse(output)
               @ignored_symbols = SymbolTableParser.parse(json)
             end
@@ -55,15 +55,20 @@ module Tapioca
           def symbol_table_json_from(input, table_type: "symbol-table-json")
             IO.popen(
               [
-                SORBET,
+                sorbet_path,
                 # We don't want to pick up any sorbet/config files in cwd
                 "--no-config",
                 "--print=#{table_type}",
                 "--quiet",
                 input,
-              ].shelljoin,
+              ].join(' '),
               err: "/dev/null"
             ).read
+          end
+
+          sig { returns(String) }
+          def sorbet_path
+            SORBET.to_s.shellescape
           end
         end
 

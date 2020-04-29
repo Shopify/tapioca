@@ -8,3 +8,4 @@ gem("baz", path: "../gems/baz")
 gem("tapioca", path: "../../../")
 
 gem("psych")
+gem("extras")

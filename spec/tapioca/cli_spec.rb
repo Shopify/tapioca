@@ -57,29 +57,30 @@ RSpec.describe(Tapioca::Cli) do
     }.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
     exec_command = [
+      "bundle",
+      "exec",
       "bin/tapioca",
       command,
       *flags,
       *args,
     ]
 
-    IO.popen(
-      {
-        "BUNDLE_GEMFILE" => (repo_path / "Gemfile").to_s,
-      },
-      exec_command.join(' '),
-      chdir: repo_path
-    ).read
+    Bundler.with_clean_env do
+      IO.popen(
+        exec_command.join(' '),
+        chdir: repo_path
+      ).read
+    end
   end
 
   before(:all) do
     @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
-    IO.popen(
-      {
-        "BUNDLE_GEMFILE" => (@repo_path / "Gemfile").to_s,
-      },
-      ["bundle", "install", "--quiet"]
-    ).read
+    Bundler.with_clean_env do
+      IO.popen(
+        ["bundle", "install", "--quiet"],
+        chdir: @repo_path
+      ).read
+    end
   end
 
   around(:each) do |example|
@@ -251,6 +252,21 @@ RSpec.describe(Tapioca::Cli) do
       expect(File).to(exist("#{outdir}/baz@0.0.2.rbi"))
 
       expect(File.read("#{outdir}/baz@0.0.2.rbi")).to(eq(Contents::BAZ_RBI))
+    end
+
+    it 'does not crash when the extras gem is loaded' do
+      File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/all"')
+      output = run("generate", "foo")
+
+      expect(output).to(include(<<~OUTPUT))
+        Processing 'foo' gem:
+          Compiling foo, this may take a few seconds...   Done
+      OUTPUT
+
+      expect(File).to(exist("#{outdir}/foo@0.0.1.rbi"))
+      expect(File.read("#{outdir}/foo@0.0.1.rbi")).to(eq(Contents::FOO_RBI))
+
+      File.delete(repo_path / "sorbet/tapioca/require.rb")
     end
   end
 
