@@ -11,6 +11,7 @@ module Tapioca
     const(:generate_command, String)
     const(:exclude, T::Array[String])
     const(:typed_overrides, T::Hash[String, String])
+    const(:todos_path, String)
 
     sig { returns(Pathname) }
     def outpath
@@ -31,5 +32,6 @@ module Tapioca
       # so we generate a typed: false RBI for it to suppress errors
       "activesupport" => "false",
     }.freeze, T::Hash[String, String])
+    DEFAULT_TODOSPATH = T.let("#{DEFAULT_RBIDIR}/todo.rbi", String)
   end
 end

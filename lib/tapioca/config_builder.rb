@@ -57,6 +57,7 @@ module Tapioca
       "generate_command" => default_command,
       "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
+      "todos_path" => Config::DEFAULT_TODOSPATH,
     }.freeze, T::Hash[String, T.untyped])
   end
 end

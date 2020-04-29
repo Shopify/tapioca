@@ -52,6 +52,13 @@ module Tapioca
       end
     end
 
+    desc "todo", "generate the list of unresolved constants"
+    def todo
+      Tapioca.silence_warnings do
+        generator.build_todos
+      end
+    end
+
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)
       Tapioca.silence_warnings do
