@@ -50,6 +50,7 @@ Commands:
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
   tapioca sync               # sync RBIs to Gemfile
+  tapioca todo               # generate the list of unresolved constants
 
 Options:
   --pre, -b, [--prerequire=file]              # A file to be required before Bundler.require is called
@@ -79,6 +80,12 @@ This will generate RBIs for the specified gems and place them in the RBI directo
 Command: `tapioca sync`
 
 This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
+
+### Generate the list of all unresolved constants
+
+Command: `tapioca todo`
+
+This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
 ### Flags
 
