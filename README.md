@@ -31,6 +31,9 @@ In order to make sure that `tapioca` can reflect on that type, we need to add th
 
 If you ever run into a case, where you add a gem or update the version of a gem and run `tapioca sync` but don't have some types you expect in the generated gem RBI files, you will need to make sure you have added the necessary requires to the `sorbet/tapioca/require.rb` file.
 
+You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
+in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
+
 ## Installation
 
 Add this line to your application's `Gemfile`:
@@ -49,6 +52,7 @@ Commands:
   tapioca generate [gem...]  # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
+  tapioca require            # generate the list of files to be required by tapioca
   tapioca sync               # sync RBIs to Gemfile
   tapioca todo               # generate the list of unresolved constants
 
