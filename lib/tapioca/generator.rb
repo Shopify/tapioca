@@ -145,9 +145,40 @@ module Tapioca
     sig { void }
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
-      loader.load_bundle(config.prerequire, config.postrequire)
+      begin
+        loader.load_bundle(config.prerequire, config.postrequire)
+      rescue LoadError => e
+        explain_failed_require(config.postrequire, e)
+        exit(1)
+      end
       say(" Done", :green)
       puts
+    end
+
+    sig { params(file: String, error: LoadError).void }
+    def explain_failed_require(file, error)
+      say_error("\n\nLoadError: #{error}", :bold, :red)
+      say_error("\nTapioca could not load all the gems required by your application.", :yellow)
+      say_error("If you populated ", :yellow)
+      say_error("#{file} ", :bold, :blue)
+      say_error("with ", :yellow)
+      say_error("tapioca require", :bold, :blue)
+      say_error("you should probably review it and remove the faulty line.", :yellow)
+    end
+
+    sig do
+      params(
+        message: String,
+        color: T.any(Symbol, T::Array[Symbol]),
+      ).void
+    end
+    def say_error(message = "", *color)
+      force_new_line = (message.to_s !~ /( |\t)\Z/)
+      buffer = prepare_message(*T.unsafe([message, *T.unsafe(color)]))
+      buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
+
+      stderr.print(buffer)
+      stderr.flush
     end
 
     sig { returns(T::Hash[String, String]) }
