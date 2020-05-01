@@ -68,7 +68,8 @@ RSpec.describe(Tapioca::Cli) do
     Bundler.with_clean_env do
       IO.popen(
         exec_command.join(' '),
-        chdir: repo_path
+        chdir: repo_path,
+        err: [:child, :out],
       ).read
     end
   end
@@ -252,6 +253,20 @@ RSpec.describe(Tapioca::Cli) do
 
       expect(File).to_not(exist("#{outdir}/bar@0.3.0.rbi"))
       expect(File).to_not(exist("#{outdir}/baz@0.0.2.rbi"))
+    end
+
+    it 'explains what went wrong when it can\'t load the postrequire properly' do
+      output = run("generate", "foo", postrequire: repo_path / "postrequire_faulty.rb")
+
+      output.sub!(%r{/.*/postrequire_faulty\.rb}, "/postrequire_faulty.rb")
+      expect(output).to(include(<<~OUTPUT))
+        Requiring all gems to prepare for compiling... \n
+        LoadError: cannot load such file -- foo/will_fail
+
+        Tapioca could not load all the files required by your application.
+        If you populated /postrequire_faulty.rb with tapioca require
+        you should probably review it and remove the faulty line.
+      OUTPUT
     end
 
     it 'must generate multiple gem RBIs' do
