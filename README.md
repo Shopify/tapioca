@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Shopify/tapioca.svg?branch=master)](https://travis-ci.org/Shopify/tapioca)
 
-Tapioca is a library used to generate RBI (Ruby interface) files for use with [Sorbet](https://sorbet.org). RBI files provide the structure (classes, modules, methods, parameters) of the gem/library to Sorbet to assist with typechecking. 
+Tapioca is a library used to generate RBI (Ruby interface) files for use with [Sorbet](https://sorbet.org). RBI files provide the structure (classes, modules, methods, parameters) of the gem/library to Sorbet to assist with typechecking.
 
 As yet, no gem exports type information in a consumable format and it would be a huge effort to manually maintain such an interface file for all the gems that your codebase depends on. Thus, there is a need for an automated way to generate the appropriate RBI file for a given gem. The `tapioca` gem, developed at Shopify, is able to do exactly that to almost 99% accuracy. It can generate the definitions for all statically defined types and most of the runtime defined types exported from Ruby gems (non-Ruby gems are not handled yet).
 
@@ -27,7 +27,7 @@ from (pry):3:in `__pry__`
 => BetterHtml::Parser
 ```
 
-In order to make sure that `tapioca` can reflect on that type, we need to add the line `require "better_html/parser"` to the `sorbet/tapioca/require.rb` file. This will make sure `BetterHtml::Parser` is loaded into memory and a type annotation is generated for it in the `better_html.rbi` file. If this extra `require` line is not added to `sorbet/tapioca/require.rb` file, then the definition for that type will be missing from the RBI file. 
+In order to make sure that `tapioca` can reflect on that type, we need to add the line `require "better_html/parser"` to the `sorbet/tapioca/require.rb` file. This will make sure `BetterHtml::Parser` is loaded into memory and a type annotation is generated for it in the `better_html.rbi` file. If this extra `require` line is not added to `sorbet/tapioca/require.rb` file, then the definition for that type will be missing from the RBI file.
 
 If you ever run into a case, where you add a gem or update the version of a gem and run `tapioca sync` but don't have some types you expect in the generated gem RBI files, you will need to make sure you have added the necessary requires to the `sorbet/tapioca/require.rb` file.
 
@@ -50,6 +50,7 @@ Commands:
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
   tapioca sync               # sync RBIs to Gemfile
+  tapioca todo               # generate the list of unresolved constants
 
 Options:
   --pre, -b, [--prerequire=file]              # A file to be required before Bundler.require is called
@@ -79,6 +80,12 @@ This will generate RBIs for the specified gems and place them in the RBI directo
 Command: `tapioca sync`
 
 This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
+
+### Generate the list of all unresolved constants
+
+Command: `tapioca todo`
+
+This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
 ### Flags
 

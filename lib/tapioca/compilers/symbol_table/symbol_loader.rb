@@ -2,16 +2,12 @@
 # typed: true
 
 require 'json'
-require 'pathname'
 require 'tempfile'
-require 'shellwords'
 
 module Tapioca
   module Compilers
     module SymbolTable
       module SymbolLoader
-        SORBET = Pathname.new(Gem::Specification.find_by_name("sorbet-static").full_gem_path) / "libexec" / "sorbet"
-
         class << self
           extend(T::Sig)
 
@@ -53,22 +49,7 @@ module Tapioca
           end
 
           def symbol_table_json_from(input, table_type: "symbol-table-json")
-            IO.popen(
-              [
-                sorbet_path,
-                # We don't want to pick up any sorbet/config files in cwd
-                "--no-config",
-                "--print=#{table_type}",
-                "--quiet",
-                input,
-              ].join(' '),
-              err: "/dev/null"
-            ).read
-          end
-
-          sig { returns(String) }
-          def sorbet_path
-            SORBET.to_s.shellescape
+            Tapioca::Compilers::Sorbet.run("--no-config", "--print=#{table_type}", input)
           end
         end
 
