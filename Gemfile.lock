@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tapioca (0.3.1)
+    tapioca (0.4.0)
       pry (>= 0.12.2)
       sorbet-runtime
       sorbet-static (>= 0.4.4471)
