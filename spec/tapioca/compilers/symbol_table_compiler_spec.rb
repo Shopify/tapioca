@@ -118,13 +118,58 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
 
           class Object < ::BasicObject
+            include(::Kernel)
+            include(::JSON::Ext::Generator::GeneratorMethods::Object)
           <% if defined?(PP::ObjectMixin) %>
             include(::PP::ObjectMixin)
           <% end %>
-            include(::JSON::Ext::Generator::GeneratorMethods::Object)
-            include(::Kernel)
 
             def hello; end
+          end
+        RUBY
+      )
+    end
+
+    it("compiles mixins in the correct order") do
+      expect(
+        compile(<<~RUBY)
+          module ModuleA
+          end
+
+          module ModuleB
+          end
+
+          module ModuleC
+          end
+
+          class Bar
+            include ModuleA
+            include ModuleB
+            include ModuleC
+
+            extend ModuleC
+            extend ModuleB
+            extend ModuleA
+          end
+        RUBY
+      ).to(
+        eq(template(<<~RUBY))
+          class Bar
+            include(::ModuleA)
+            include(::ModuleB)
+            include(::ModuleC)
+            extend(::ModuleC)
+            extend(::ModuleB)
+            extend(::ModuleA)
+          end
+
+          module ModuleA
+          end
+
+          module ModuleB
+          end
+
+          module ModuleC
           end
         RUBY
       )
@@ -193,15 +238,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           end
 
           class Hash
-            include(::JSON::Ext::Generator::GeneratorMethods::Hash)
             include(::Enumerable)
+            include(::JSON::Ext::Generator::GeneratorMethods::Hash)
 
             def to_bar; end
           end
 
           class String
-            include(::JSON::Ext::Generator::GeneratorMethods::String)
             include(::Comparable)
+            include(::JSON::Ext::Generator::GeneratorMethods::String)
             extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
 
             def to_foo(base = _); end
@@ -713,8 +758,8 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       ).to(
         eq(template(<<~RUBY))
           class Bar
-            include(::Baz)
             include(::Foo)
+            include(::Baz)
 
             def self.abc; end
           end

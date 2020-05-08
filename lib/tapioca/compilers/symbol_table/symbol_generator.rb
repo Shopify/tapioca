@@ -287,6 +287,7 @@ module Tapioca
             end
 
           prepends = prepend
+            .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
@@ -297,6 +298,7 @@ module Tapioca
             end
 
           includes = include
+            .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
@@ -304,6 +306,7 @@ module Tapioca
             end
 
           extends = extend
+            .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
