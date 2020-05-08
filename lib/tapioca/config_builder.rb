@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require 'yaml'
+
 module Tapioca
   class ConfigBuilder
     class << self
