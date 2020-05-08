@@ -15,8 +15,8 @@ module Tapioca
 
     sig { returns(Pathname) }
     def outpath
-      @outpath ||= T.let(Pathname.new(outdir), T.nilable(Pathname))
-      T.must(@outpath)
+      @outpath = T.let(@outpath, T.nilable(Pathname))
+      @outpath ||= Pathname.new(outdir)
     end
 
     private_class_method :new
