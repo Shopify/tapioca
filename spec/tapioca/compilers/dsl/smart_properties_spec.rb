@@ -44,4 +44,20 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       end
     end
   end
+
+  describe("decorate") do
+    it("generates nothing if there are no smart properties") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi("")).to(be_empty)
+      end
+    end
+  end
 end
