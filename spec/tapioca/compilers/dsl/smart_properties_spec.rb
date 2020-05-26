@@ -60,14 +60,37 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       end
     end
 
-    it("generates RBI file if there are smart properties") do
+    it("generates RBI file for simple smart property") do
       content = <<~RUBY
         class Post
           include SmartProperties
           property :title, accepts: String
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(::String)) }
+          def title; end
+
+          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+          def title=(title); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for required smart property") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
           property! :description, accepts: String
-          property :published, accepts: [true, false], reader: :published?
-          property :enabled, accepts: [true, false], default: false
         end
       RUBY
 
@@ -79,23 +102,83 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
 
           sig { params(description: ::String).returns(::String) }
           def description=(description); end
+        end
+      RUBY
 
-          sig { returns(T.nilable(T::Boolean)) }
-          def enabled; end
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
 
-          sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def enabled=(enabled); end
+    it("generates RBI file for smart property that accepts an array") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :published, accepts: [true, false], reader: :published?
+        end
+      RUBY
 
+      expected = <<~RUBY
+        # typed: strong
+        class Post
           sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
           def published=(published); end
 
           sig { returns(T.nilable(T::Boolean)) }
           def published?; end
+        end
+      RUBY
 
-          sig { returns(T.nilable(::String)) }
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for smart property that accepts an array and has a default") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :enabled, accepts: [true, false], default: false
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(T::Boolean)) }
+          def enabled; end
+
+          sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+          def enabled=(enabled); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for smart property that accepts a lambda") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :title, accepts: lambda { |title| /^Lorem \w+$/ =~ title }
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.untyped) }
           def title; end
 
-          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+          sig { params(title: T.untyped).returns(T.untyped) }
           def title=(title); end
         end
       RUBY
