@@ -56,7 +56,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       with_contents(content) do
         parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
         subject.decorate(parlour.root, Post)
-        expect(parlour.rbi("")).to(be_empty)
+        expect(parlour.rbi).to(eq("# typed: strong\n\n"))
       end
     end
   end
