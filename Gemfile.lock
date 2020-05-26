@@ -59,6 +59,7 @@ GEM
     rubocop-shopify (1.0.0)
       rubocop (>= 0.78.0)
     ruby-progressbar (1.10.1)
+    smart_properties (1.15.0)
     sorbet (0.5.5365)
       sorbet-static (= 0.5.5365)
     sorbet-runtime (0.5.5675)
@@ -75,6 +76,7 @@ DEPENDENCIES
   rake (~> 12.3)
   rspec
   rubocop-shopify
+  smart_properties (>= 1.15.0)
   sorbet
   tapioca!
 
