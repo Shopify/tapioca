@@ -46,6 +46,12 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
   end
 
   describe("#decorate") do
+    let(:output) do
+      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+      subject.decorate(parlour.root, Post)
+      parlour.rbi
+    end
+
     it("generates empty RBI file if there are no smart properties") do
       content = <<~RUBY
         class Post
@@ -53,10 +59,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
+      expected = <<~RUBY
+        # typed: strong
+
+      RUBY
+
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq("# typed: strong\n\n"))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -80,9 +89,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -106,9 +113,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -132,9 +137,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -158,9 +161,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -184,9 +185,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -210,9 +209,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -236,9 +233,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -262,9 +257,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -288,9 +281,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -314,9 +305,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -340,9 +329,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -366,9 +353,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
 
@@ -399,9 +384,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       RUBY
 
       with_contents(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        expect(parlour.rbi).to(eq(expected))
+        expect(output).to(eq(expected))
       end
     end
   end
