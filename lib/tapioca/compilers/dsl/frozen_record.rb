@@ -3,7 +3,6 @@
 
 require "parlour"
 
-# TODO: @kaan check this is okay
 begin
   require "frozen_record"
 rescue LoadError
