@@ -43,10 +43,10 @@ module Tapioca
       #   sig { params(title: T.nilable(String)).returns(T.nilable(String)) }
       #   def title=(title); end
       #
-      #   sig { returns(String) }
+      #   sig { returns(::String) }
       #   def description; end
       #
-      #   sig { params(description: String).returns(String) }
+      #   sig { params(description: ::String).returns(::String) }
       #   def description=(description); end
       #
       #   sig { returns(T.nilable(T::Boolean)) }
@@ -55,10 +55,10 @@ module Tapioca
       #   sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
       #   def published=(published); end
       #
-      #   sig { returns(T::Boolean) }
+      #   ssig { returns(T.nilable(T::Boolean)) }
       #   def enabled; end
       #
-      #   sig { params(enabled: T::Boolean).returns(T::Boolean) }
+      #   sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
       #   def enabled=(enabled); end
       # end
       # ~~~
