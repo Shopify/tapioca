@@ -37,10 +37,10 @@ module Tapioca
       # # post.rbi
       # # typed: true
       # class Post
-      #   sig { returns(T.nilable(String)) }
+      #   sig { returns(T.nilable(::String)) }
       #   def title; end
       #
-      #   sig { params(title: T.nilable(String)).returns(T.nilable(String)) }
+      #   sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
       #   def title=(title); end
       #
       #   sig { returns(::String) }
