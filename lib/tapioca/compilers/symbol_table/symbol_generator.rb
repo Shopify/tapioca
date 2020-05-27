@@ -433,6 +433,9 @@ module Tapioca
           return unless method.owner == constant
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
 
+          signature = T::Private::Methods.signature_for_method(method)
+          method = signature.method if signature
+
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
 
@@ -464,7 +467,46 @@ module Tapioca
           method_name = "#{'self.' if constant.singleton_class?}#{method_name}"
           parameters = "(#{parameters})" if parameters != ""
 
-          indented("def #{method_name}#{parameters}; end")
+          signature_str = indented(compile_signature(signature)) if signature
+          [
+            signature_str,
+            indented("def #{method_name}#{parameters}; end"),
+          ].compact.join("\n")
+        end
+
+        TYPE_PARAMETER_MATCHER = /T\.type_parameter\(([[:word:]]+)\)/
+
+        sig { params(signature: T.untyped).returns(String) }
+        def compile_signature(signature)
+          params = signature.arg_types
+          params += signature.kwarg_types.to_a
+          params << [signature.rest_name, signature.rest_type] if signature.has_rest
+          params << [signature.block_name, signature.block_type] if signature.block_name
+
+          params = params.compact.map {|name, type| "#{name}: #{type}" }.join(", ")
+          returns = signature.return_type.to_s
+          signature_body = ".params(#{params}).returns(#{returns})"
+
+          type_parameters = signature_body.scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map {|p| ":#{p}" }.join(", ")
+          type_parameters = ".type_parameters(#{type_parameters})" unless type_parameters.empty?
+
+          mode = case signature.mode
+          when "abstract"
+            ".abstract"
+          when "override"
+            ".override"
+          when "overridable_override"
+            ".overridable.override"
+          when "overridable"
+            ".overridable"
+          else
+            ""
+          end
+
+          signature_body = "#{mode}#{type_parameters}#{signature_body}"[1..-1]
+          "sig { #{signature_body} }"
+            .gsub('.returns(<VOID>)', '.void')
+            .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")
         end
 
         sig { params(symbol_name: String).returns(T::Boolean) }
