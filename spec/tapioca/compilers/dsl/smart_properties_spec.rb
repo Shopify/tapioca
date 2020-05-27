@@ -189,5 +189,38 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         expect(parlour.rbi).to(eq(expected))
       end
     end
+
+    it("generates RBI file for smart property that accepts another ObjectClass") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          class TrackingInfoInput
+            include SmartProperties
+
+            property! :number, accepts: String
+            property :carrier_id, accepts: String
+            property :url, accepts: String
+          end
+          property :title, accepts: TrackingInfoInput
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(::Post::TrackingInfoInput)) }
+          def title; end
+
+          sig { params(title: T.nilable(::Post::TrackingInfoInput)).returns(T.nilable(::Post::TrackingInfoInput)) }
+          def title=(title); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
   end
 end
