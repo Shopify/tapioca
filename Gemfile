@@ -12,4 +12,5 @@ end
 
 group(:development, :test) do
   gem("smart_properties", ">= 1.15.0")
+  gem("frozen_record", ">= 0.17")
 end
