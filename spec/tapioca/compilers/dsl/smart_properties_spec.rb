@@ -112,22 +112,22 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       end
     end
 
-    it("generates RBI file for smart property that accepts an array") do
+    it("defaults to T.untyped for smart property that does not have an accepter") do
       content = <<~RUBY
         class Post
           include SmartProperties
-          property :published, accepts: [true, false], reader: :published?
+          property :title
         end
       RUBY
 
       expected = <<~RUBY
         # typed: strong
         class Post
-          sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def published=(published); end
+          sig { returns(T.untyped) }
+          def title; end
 
-          sig { returns(T.nilable(T::Boolean)) }
-          def published?; end
+          sig { params(title: T.untyped).returns(T.untyped) }
+          def title=(title); end
         end
       RUBY
 
@@ -138,7 +138,189 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
       end
     end
 
-    it("generates RBI file for smart property that accepts an array and has a default") do
+    it("defaults to T::Array for smart property that accepts Arrays") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :categories, accepts: Array
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(T::Array[T.untyped])) }
+          def categories; end
+
+          sig { params(categories: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+          def categories=(categories); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for smart property that accepts booleans") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :published, accepts: [true, false]
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(T::Boolean)) }
+          def published; end
+
+          sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+          def published=(published); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for smart property that accepts an array of values") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :status, accepts: [String, Integer]
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(T.any(::String, ::Integer))) }
+          def status; end
+
+          sig { params(status: T.nilable(T.any(::String, ::Integer))).returns(T.nilable(T.any(::String, ::Integer))) }
+          def status=(status); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("defaults to T.untyped if a converter is defined") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :status, accepts: Integer, converts: :to_s
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.untyped) }
+          def status; end
+
+          sig { params(status: T.untyped).returns(T.untyped) }
+          def status=(status); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("ignores required if it is a lambda") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :status, accepts: Integer, required: -> { true }
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(::Integer)) }
+          def status; end
+
+          sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+          def status=(status); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("ignores required if property is not typed") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :status, required: true
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.untyped) }
+          def status; end
+
+          sig { params(status: T.untyped).returns(T.untyped) }
+          def status=(status); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates a reader that has been renamed correctly") do
+      content = <<~RUBY
+        class Post
+          include SmartProperties
+          property :status, accepts: Integer, reader: :reader_for_status
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(::Integer)) }
+          def reader_for_status; end
+
+          sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+          def status=(status); end
+        end
+      RUBY
+
+      with_contents(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        expect(parlour.rbi).to(eq(expected))
+      end
+    end
+
+    it("generates RBI file for smart property that accepts boolean and has a default") do
       content = <<~RUBY
         class Post
           include SmartProperties
