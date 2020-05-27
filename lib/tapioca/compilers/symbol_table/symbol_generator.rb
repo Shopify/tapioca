@@ -178,9 +178,38 @@ module Tapioca
             [
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
+              compile_props(constant),
               methods,
             ].select { |b| b != "" }.join("\n\n")
           end
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_module_helpers(constant)
+          abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
+
+          if abstract_type
+            indented("#{abstract_type}!")
+          elsif T::Private::Final.final_module?(constant)
+            indented("final!")
+          elsif T::Private::Sealed.sealed_module?(constant)
+            indented("sealed!")
+          else
+            ""
+          end
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_props(constant)
+          return "" unless T::Props::ClassMethods === constant
+
+          constant.props.map do |name, prop|
+            method = "prop"
+            method = "const" if prop.fetch(:immutable, false)
+            type = prop.fetch(:type_object, "T.untyped")
+
+            indented("#{method} :#{name}, #{type}")
+          end.join("\n")
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
@@ -421,6 +450,16 @@ module Tapioca
           }
         end
 
+        sig { params(constant: Module, method_name: String).returns(T::Boolean) }
+        def struct_method?(constant, method_name)
+          return false unless constant < T::Struct
+
+          T.cast(constant, T.class_of(T::Struct))
+            .props
+            .keys
+            .include?(method_name.gsub(/=$/, '').to_sym)
+        end
+
         sig do
           params(
             symbol_name: String,
@@ -438,6 +477,8 @@ module Tapioca
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
+          return if struct_method?(constant, method_name)
+          return if method_name.start_with?("__t_props_generated_")
 
           params = T.let(method.parameters, T::Array[T::Array[Symbol]])
           parameters = params.map do |(type, name)|
