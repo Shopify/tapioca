@@ -121,7 +121,7 @@ module Tapioca
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
       @existing_rbis ||= Pathname.glob((config.outpath / "*@*.rbi").to_s)
-        .map { |f| f.basename(".*").to_s.split('@') }
+        .map { |f| T.cast(f.basename(".*").to_s.split('@', 2), [String, String]) }
         .to_h
     end
 
