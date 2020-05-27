@@ -28,6 +28,46 @@ RSpec.configure do |config|
   end
 end
 
+def run_in_child
+  read, write = IO.pipe
+
+  pid = fork do
+    Tapioca.silence_warnings do
+      read.close
+      result = yield
+      write.puts(result)
+    end
+  end
+
+  write.close
+  Process.wait(pid)
+  read.read.chomp
+ensure
+  read&.close
+end
+
+def with_contents(contents, dir_name: "", extra_files: [], &block)
+  Dir.mktmpdir(dir_name) do |path|
+    dir = Pathname.new(path)
+    # Create a "lib" folder
+    Dir.mkdir(dir.join("lib"))
+    # Add our content into "file.rb" in lib folder
+    File.write(dir.join("lib/file.rb"), contents)
+
+    # Add an empty Ruby files
+    extra_files.each do |file|
+      File.write(dir.join(file), "")
+    end
+
+    run_in_child do
+      # Require the file
+      require(dir.join("lib/file.rb"))
+
+      block.call(dir)
+    end
+  end
+end
+
 module RSpec
   module Matchers
     class Binding

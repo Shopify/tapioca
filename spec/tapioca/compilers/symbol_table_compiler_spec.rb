@@ -8,47 +8,16 @@ require "bundler"
 
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
-    def run_in_child
-      read, write = IO.pipe
-
-      pid = fork do
-        Tapioca.silence_warnings do
-          read.close
-          result = yield
-          write.puts(result)
-        end
-      end
-
-      write.close
-      Process.wait(pid)
-      read.read.chomp
-    ensure
-      read&.close
-    end
-
     def compile(contents)
-      Dir.mktmpdir("gem") do |path|
-        dir = Pathname.new(path)
-        # Create a "lib" folder
-        Dir.mkdir(dir.join("lib"))
-        # Add our content into "file.rb" in lib folder
-        File.write(dir.join("lib/file.rb"), contents)
-        # Add an empty Ruby file "foo.rb" to use for requires
-        File.write(dir.join("lib/foo.rb"), "")
+      with_contents(contents, dir_name: "gem", extra_files: ["lib/foo.rb"]) do |dir|
+        compiler = Tapioca::Compilers::SymbolTableCompiler.new
 
-        run_in_child do
-          compiler = Tapioca::Compilers::SymbolTableCompiler.new
+        spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
+        allow(spec).to(receive(:full_gem_path).and_return(dir))
+        allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
+        gem = Tapioca::Gemfile::Gem.new(spec)
 
-          spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
-          allow(spec).to(receive(:full_gem_path).and_return(dir))
-          allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
-          gem = Tapioca::Gemfile::Gem.new(spec)
-
-          # Require the file
-          require(dir.join("lib/file.rb"))
-
-          compiler.compile(gem)
-        end
+        compiler.compile(gem)
       end
     end
 
