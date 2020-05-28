@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "pathname"
-require "tmpdir"
 require "bundler"
 
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
