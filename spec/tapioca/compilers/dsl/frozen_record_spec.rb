@@ -33,7 +33,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
 
     it("genereates empty RBI file if there are no frozen records") do
       files = {
-        "file.rb" => <<~RUBY
+        "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
           end
         RUBY
@@ -55,7 +55,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
 
     it("genereates an RBI file for frozen records") do
       files = {
-        "file.rb" => <<~RUBY
+        "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
           end
         RUBY

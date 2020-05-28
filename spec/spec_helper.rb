@@ -68,6 +68,10 @@ def with_contents(contents, requires: [contents.keys.first], &block)
   end
 end
 
+def with_content(content, &block)
+  with_contents({ "file.rb" => content }, &block)
+end
+
 module RSpec
   module Matchers
     class Binding
