@@ -9,7 +9,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     def compile(contents)
       files = {
         "file.rb" => contents,
-        "foo.rb" => ""
+        "foo.rb" => "",
       }
       with_contents(files) do |dir|
         spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)

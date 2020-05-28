@@ -4,7 +4,7 @@
 require 'spec_helper'
 
 RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
-  before(:each) do |example|
+  before(:each) do |_example|
     require "tapioca/compilers/dsl/frozen_record"
   end
 
@@ -42,7 +42,7 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
           end
         RUBY
 
-        "students.yml" => <<~YAML
+        "students.yml" => <<~YAML,
         YAML
       }
 
@@ -64,7 +64,7 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
           end
         RUBY
 
-        "students.yml" => <<~YAML
+        "students.yml" => <<~YAML,
           - id: 1
             first_name: John
             last_name: Smith

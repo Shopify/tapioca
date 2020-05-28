@@ -39,8 +39,8 @@ RSpec.configure do |config|
     example.instance_variable_set(:@executed, true)
   end
 
-  config.before(:each) do |example|
-    described_class = Object.const_get(described_class) if String === described_class
+  config.before(:each) do |_example|
+    Object.const_get(described_class) if String === described_class
   end
 end
 
