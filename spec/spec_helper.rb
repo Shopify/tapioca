@@ -46,36 +46,26 @@ ensure
   read&.close
 end
 
-def with_contents(contents, dir_name: "", extra_files: [], &block)
-  Dir.mktmpdir(dir_name) do |path|
+def with_contents(contents, requires: [contents.keys.first], &block)
+  Dir.mktmpdir do |path|
     dir = Pathname.new(path)
     # Create a "lib" folder
     Dir.mkdir(dir.join("lib"))
 
-    # Add an empty Ruby files
-    extra_files.each do |file|
-      File.write(dir.join(file), "")
-    end
-
-    contents.each do |file_name, content|
+    contents.each do |file, content|
       # Add our contents into their files in lib folder
-      File.write(dir.join("lib/#{file_name}"), content)
+      File.write(dir.join("lib/#{file}"), content)
     end
 
-    contents.each_key do |file_name|
-      next unless File.extname(file_name) == ".rb"
-      run_in_child do
-        # Require the file
-        require(dir.join("lib/#{file_name}"))
-
-        block.call(dir)
+    run_in_child do
+      # Require files
+      requires.each do |file|
+        require(dir.join("lib/#{file}"))
       end
+
+      block.call(dir)
     end
   end
-end
-
-def with_content(content, dir_name: "", extra_files: [], &block)
-  with_contents({ "file.rb" => content }, dir_name: dir_name, extra_files: extra_files, &block)
 end
 
 module RSpec
