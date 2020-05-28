@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "parlour"
+require_relative "../../../../core_ext/class"
 
 begin
   require "state_machines"
