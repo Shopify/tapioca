@@ -32,41 +32,43 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
     end
 
     it("genereates empty RBI file if there are no frozen records") do
-      model_content = <<~RUBY
-        class Student < FrozenRecord::Base
-        end
-      RUBY
+      files = {
+        "file.rb" => <<~RUBY
+          class Student < FrozenRecord::Base
+          end
+        RUBY
 
-      static_data = <<~YAML
-      YAML
+        "students.yml" => <<~YAML
+        YAML
+      }
 
       expected = <<~RUBY
         # typed: strong
 
       RUBY
 
-      with_contents({ "file.rb" => model_content,
-                      "students.yml" => static_data }) do |dir|
+      with_contents(files) do |dir|
         FrozenRecord::Base.base_path = dir + "lib"
         expect(output).to(eq(expected))
       end
     end
 
     it("genereates an RBI file for frozen records") do
-      model_content = <<~RUBY
-        class Student < FrozenRecord::Base
-        end
-      RUBY
+      files = {
+        "file.rb" => <<~RUBY
+          class Student < FrozenRecord::Base
+          end
+        RUBY
 
-      static_data = <<~YAML
-        - id: 1
-          first_name: John
-          last_name: Smith
-        - id: 2
-          first_name: Dan
-          last_name:  Lord
-      YAML
-
+        "students.yml" => <<~YAML
+          - id: 1
+            first_name: John
+            last_name: Smith
+          - id: 2
+            first_name: Dan
+            last_name:  Lord
+        YAML
+      }
       # TODO: Output from documentation. Delete
       # expected = <<~RUBY
       #   # typed: true
@@ -112,8 +114,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      with_contents({ "file.rb" => model_content,
-                      "students.yml" => static_data }) do |dir|
+      with_contents(files) do |dir|
         FrozenRecord::Base.base_path = dir + "lib"
         expect(output).to(eq(expected))
       end
