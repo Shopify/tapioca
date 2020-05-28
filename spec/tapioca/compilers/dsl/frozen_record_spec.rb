@@ -22,7 +22,7 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
         end
       RUBY
 
-      with_contents({"file.rb" => content}) do
+      with_content(content) do
         expect(subject.processable_constants).to(eq(Set.new([Student])))
       end
     end

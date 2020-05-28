@@ -12,14 +12,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         "foo.rb" => ""
       }
       with_contents(files) do |dir|
-        compiler = Tapioca::Compilers::SymbolTableCompiler.new
-
         spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
         allow(spec).to(receive(:full_gem_path).and_return(dir))
         allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
         gem = Tapioca::Gemfile::Gem.new(spec)
 
-        compiler.compile(gem)
+        subject.compile(gem)
       end
     end
 
