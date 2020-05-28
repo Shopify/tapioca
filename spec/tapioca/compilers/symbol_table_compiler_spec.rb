@@ -9,7 +9,7 @@ require "bundler"
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
     def compile(contents)
-      with_contents(contents, dir_name: "gem", extra_files: ["lib/foo.rb"]) do |dir|
+      with_content(contents, dir_name: "gem", extra_files: ["lib/foo.rb"]) do |dir|
         compiler = Tapioca::Compilers::SymbolTableCompiler.new
 
         spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)

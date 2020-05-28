@@ -23,7 +23,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(subject.processable_constants).to(eq(Set.new([Post, User])))
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(subject.processable_constants).to(be_empty)
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
 
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -88,7 +88,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -112,7 +112,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -136,7 +136,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -160,7 +160,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -184,7 +184,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -232,7 +232,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -256,7 +256,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -280,7 +280,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -304,7 +304,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -328,7 +328,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -352,7 +352,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
@@ -383,7 +383,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(output).to(eq(expected))
       end
     end
