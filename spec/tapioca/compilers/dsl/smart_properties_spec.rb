@@ -3,7 +3,10 @@
 
 require "spec_helper"
 
-RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
+RSpec.describe("Tapioca::Compilers::Dsl::SmartProperties") do
+  subject { Tapioca::Compilers::Dsl::SmartProperties.new }
+  before(:each) { require "tapioca/compilers/dsl/smart_properties" }
+
   describe("#initialize") do
     it("gathers no constants if there are no SmartProperty classes") do
       expect(subject.processable_constants).to(be_empty)

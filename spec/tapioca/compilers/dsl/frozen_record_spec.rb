@@ -3,7 +3,11 @@
 
 require 'spec_helper'
 
-RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
+RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
+  before(:each) do |example|
+    require "tapioca/compilers/dsl/frozen_record"
+  end
+
   describe("#initialize") do
     it("gathers no constants if there are no FrozenRecord classes") do
       expect(subject.processable_constants).to(be_empty)
