@@ -340,7 +340,7 @@ module Tapioca
           class_methods = helper_modules[:class].instance_methods(false)
 
           class_methods
-            .select { |method| method.start_with?("with_", "without_") }
+            .select { |method| method.to_s.start_with?("with_", "without_") }
             .each do |method|
               create_method(
                 class_module,
