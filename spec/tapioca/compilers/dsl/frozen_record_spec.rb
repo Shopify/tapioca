@@ -35,7 +35,7 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
       parlour.rbi
     end
 
-    it("genereates empty RBI file if there are no frozen records") do
+    it("generates empty RBI file if there are no frozen records") do
       files = {
         "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
@@ -57,7 +57,7 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
       end
     end
 
-    it("genereates an RBI file for frozen records") do
+    it("generates an RBI file for frozen records") do
       files = {
         "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
@@ -73,23 +73,6 @@ RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
             last_name:  Lord
         YAML
       }
-      # TODO: Output from documentation. Delete
-      # expected = <<~RUBY
-      #   # typed: true
-      #   class Student
-      #     sig { returns(T::Boolean) }
-      #     def first_name?; end
-
-      #     sig { returns(T.untyped) }
-      #     def first_name; end
-
-      #     sig { returns(T::Boolean) }
-      #     def last_name?; end
-
-      #     sig { returns(T.untyped) }
-      #     def last_name; end
-      #  end
-      # RUBY
 
       expected = <<~RUBY
         # typed: strong

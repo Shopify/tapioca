@@ -40,20 +40,29 @@ module Tapioca
       #
       # ~~~rbi
       # # Student.rbi
-      # # typed: true
+      # # typed: strong
       # class Student
+      #   include Student::FrozenRecordAttributeMethods
+      # end
+      #
+      # module Student::FrozenRecordAttributeMethods
+      #   sig { returns(T.untyped) }
+      #   def first_name; end
       #
       #   sig { returns(T::Boolean) }
       #   def first_name?; end
       #
       #   sig { returns(T.untyped) }
-      #   def first_name; end
+      #   def id; end
       #
       #   sig { returns(T::Boolean) }
-      #   def last_name?; end
+      #   def id?; end
       #
       #   sig { returns(T.untyped) }
       #   def last_name; end
+      #
+      #   sig { returns(T::Boolean) }
+      #   def last_name?; end
       # end
       # ~~~
       class FrozenRecord < Base
