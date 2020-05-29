@@ -35,24 +35,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       parlour.rbi
     end
 
-    # it(" Empty RBI file for classes with no state_machines attributes") do
-    #   content = <<~RUBY
-    #     class Vehicle
-    #       include StateMachines::InstanceMethods
-    #      end
-
-    #   RUBY
-
-    #   expected = <<~RUBY
-    #      # typed: strong
-
-    #   RUBY
-
-    #   with_contents(content) do
-    #     expect(output).to(eq(expected))
-    #   end
-    # end
-
     it(" generate RBI for classes with state_machines with event and state") do
       content = <<~RUBY
         class Vehicle
