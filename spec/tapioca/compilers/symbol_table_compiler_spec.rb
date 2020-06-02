@@ -72,6 +72,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles extensions to BasicObject and Object") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
+          class Module
+            remove_const :Concerning
+          end
+
           class BasicObject
             def hello
             end
@@ -180,6 +190,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles extensions to core types") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class String
+            remove_const :BLANK_RE
+            remove_const :ENCODED_BLANKS
+          end
+
           class Foo
             def to_s
               "Foo"
@@ -1417,6 +1434,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
           module ActiveSupport
             class Deprecation
               class DeprecationProxy #:nodoc:
@@ -1510,6 +1533,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
           module ActiveSupport
             class Deprecation
               class DeprecatedConstantProxy < Module
