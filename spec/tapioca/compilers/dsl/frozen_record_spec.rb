@@ -2,12 +2,9 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require "tapioca/compilers/dsl/frozen_record"
 
-RSpec.describe("Tapioca::Compilers::Dsl::FrozenRecord") do
-  before(:each) do |_example|
-    require "tapioca/compilers/dsl/frozen_record"
-  end
-
+RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
   describe("#initialize") do
     it("gathers no constants if there are no FrozenRecord classes") do
       expect(subject.processable_constants).to(be_empty)

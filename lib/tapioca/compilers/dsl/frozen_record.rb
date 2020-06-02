@@ -1,7 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-require_relative "base.rb"
 require "parlour"
 
 begin

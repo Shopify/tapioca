@@ -2,11 +2,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "tapioca/compilers/dsl/smart_properties"
 
-RSpec.describe("Tapioca::Compilers::Dsl::SmartProperties") do
-  subject { Tapioca::Compilers::Dsl::SmartProperties.new }
-  before(:each) { require "tapioca/compilers/dsl/smart_properties" }
-
+RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
   describe("#initialize") do
     it("gathers no constants if there are no SmartProperty classes") do
       expect(subject.processable_constants).to(be_empty)
