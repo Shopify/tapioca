@@ -62,7 +62,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
 
       RUBY
@@ -78,7 +78,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(::String)) }
@@ -100,7 +100,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(::String) }
@@ -122,7 +122,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -144,7 +144,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Array[T.untyped])) }
@@ -166,7 +166,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Boolean)) }
@@ -188,7 +188,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(T.any(::String, ::Integer))) }
@@ -210,7 +210,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -232,7 +232,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(::Integer)) }
@@ -254,7 +254,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -276,7 +276,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(::Integer)) }
@@ -298,7 +298,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Boolean)) }
@@ -320,7 +320,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -349,7 +349,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Post
           sig { returns(T.nilable(::Post::TrackingInfoInput)) }

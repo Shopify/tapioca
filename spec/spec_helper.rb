@@ -41,7 +41,7 @@ def run_in_child
 
   write.close
   Process.wait(pid)
-  read.read.chomp
+  read.read
 ensure
   read&.close
 end
@@ -94,7 +94,7 @@ module RSpec
         ::ERB.new(src, nil, ">")
       end
 
-      erb.result(Binding.new.erb_bindings).chomp
+      erb.result(Binding.new.erb_bindings)
     end
   end
 end

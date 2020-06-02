@@ -46,7 +46,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         YAML
       }
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
 
       RUBY
@@ -71,7 +71,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         YAML
       }
 
-      expected = <<~RUBY.chomp
+      expected = <<~RUBY
         # typed: strong
         class Student
           include Student::FrozenRecordAttributeMethods
