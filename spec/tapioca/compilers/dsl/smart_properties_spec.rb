@@ -47,10 +47,12 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
   end
 
   describe("#decorate") do
-    let(:output) do
-      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-      subject.decorate(parlour.root, Post)
-      parlour.rbi
+    def rbi_for(content)
+      with_content(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Post)
+        parlour.rbi
+      end
     end
 
     it("generates empty RBI file if there are no smart properties") do
@@ -60,14 +62,12 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
 
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for simple smart property") do
@@ -78,7 +78,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(::String)) }
@@ -89,9 +89,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for required smart property") do
@@ -102,7 +100,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(::String) }
@@ -113,9 +111,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("defaults to T.untyped for smart property that does not have an accepter") do
@@ -126,7 +122,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -137,9 +133,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("defaults to T::Array for smart property that accepts Arrays") do
@@ -150,7 +144,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Array[T.untyped])) }
@@ -161,9 +155,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for smart property that accepts booleans") do
@@ -174,7 +166,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Boolean)) }
@@ -185,9 +177,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for smart property that accepts an array of values") do
@@ -198,7 +188,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(T.any(::String, ::Integer))) }
@@ -209,9 +199,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("defaults to T.untyped if a converter is defined") do
@@ -222,7 +210,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -233,9 +221,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("ignores required if it is a lambda") do
@@ -246,7 +232,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(::Integer)) }
@@ -257,9 +243,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("ignores required if property is not typed") do
@@ -270,7 +254,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -281,9 +265,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates a reader that has been renamed correctly") do
@@ -294,7 +276,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(::Integer)) }
@@ -305,9 +287,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for smart property that accepts boolean and has a default") do
@@ -318,7 +298,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(T::Boolean)) }
@@ -329,9 +309,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for smart property that accepts a lambda") do
@@ -342,7 +320,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -353,9 +331,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
 
     it("generates RBI file for smart property that accepts another ObjectClass") do
@@ -373,7 +349,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RUBY.chomp
         # typed: strong
         class Post
           sig { returns(T.nilable(::Post::TrackingInfoInput)) }
@@ -384,9 +360,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
     end
   end
 end
