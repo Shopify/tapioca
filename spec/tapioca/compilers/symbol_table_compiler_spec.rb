@@ -9,15 +9,17 @@ require "bundler"
 RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
   describe("compile") do
     def compile(contents)
-      with_contents(contents, dir_name: "gem", extra_files: ["lib/foo.rb"]) do |dir|
-        compiler = Tapioca::Compilers::SymbolTableCompiler.new
-
+      files = {
+        "file.rb" => contents,
+        "foo.rb" => "",
+      }
+      with_contents(files) do |dir|
         spec = Bundler::StubSpecification.new("the-dep", "1.1.2", nil, nil)
         allow(spec).to(receive(:full_gem_path).and_return(dir))
         allow(spec).to(receive(:full_require_paths).and_return([dir.join("lib")]))
         gem = Tapioca::Gemfile::Gem.new(spec)
 
-        compiler.compile(gem)
+        subject.compile(gem)
       end
     end
 
@@ -70,6 +72,16 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles extensions to BasicObject and Object") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
+          class Module
+            remove_const :Concerning
+          end
+
           class BasicObject
             def hello
             end
@@ -178,6 +190,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("compiles extensions to core types") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class String
+            remove_const :BLANK_RE
+            remove_const :ENCODED_BLANKS
+          end
+
           class Foo
             def to_s
               "Foo"
@@ -1415,6 +1434,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
           module ActiveSupport
             class Deprecation
               class DeprecationProxy #:nodoc:
@@ -1508,6 +1533,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
     it("properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
       expect(
         compile(<<~RUBY)
+          # TODO: Remove this. Currently needed because we have poor
+          # isolation between test suites and AS leaks into this test.
+          class Object
+            remove_const :ActiveSupport
+          end
+
           module ActiveSupport
             class Deprecation
               class DeprecatedConstantProxy < Module
