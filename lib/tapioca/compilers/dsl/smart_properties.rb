@@ -140,7 +140,7 @@ module Tapioca
             "T.untyped"
           elsif accepter == Array
             "T::Array[T.untyped]"
-          elsif BOOLEANS.any?(accepter)
+          elsif BOOLEANS.include?(accepter)
             "T::Boolean"
           elsif Array(accepter).all? { |a| a.is_a?(Module) }
             accepters = Array(accepter)
