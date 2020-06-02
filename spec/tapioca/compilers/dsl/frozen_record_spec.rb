@@ -26,10 +26,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
   end
 
   describe("#decorate") do
-    let(:output) do
-      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-      subject.decorate(parlour.root, Student)
-      parlour.rbi
+    def rbi_for(contents)
+      with_contents(contents) do |dir|
+        FrozenRecord::Base.base_path = dir + "lib"
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, Student)
+        parlour.rbi
+      end
     end
 
     it("generates empty RBI file if there are no frozen records") do
@@ -48,10 +51,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
 
       RUBY
 
-      with_contents(files) do |dir|
-        FrozenRecord::Base.base_path = dir + "lib"
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(files)).to(eq(expected))
     end
 
     it("generates an RBI file for frozen records") do
@@ -98,10 +98,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      with_contents(files) do |dir|
-        FrozenRecord::Base.base_path = dir + "lib"
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(files)).to(eq(expected))
     end
   end
 end
