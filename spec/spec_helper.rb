@@ -3,8 +3,6 @@
 
 require "tapioca"
 require "rubocop/rspec/support"
-require "pathname"
-require "tmpdir"
 
 RSpec.configure do |config|
   config.include(RuboCop::RSpec::ExpectOffense)
@@ -27,20 +25,6 @@ RSpec.configure do |config|
 
   if config.files_to_run.one?
     config.default_formatter = "doc"
-  end
-
-  config.around(:each) do |example|
-    run_in_child do
-      example.run
-    end
-    # Super hacky but necessary, without this RSpec
-    # does not understand that the example was run,
-    # since it gets set in the forked process.
-    example.instance_variable_set(:@executed, true)
-  end
-
-  config.before(:each) do |_example|
-    Object.const_get(described_class) if String === described_class
   end
 end
 
@@ -73,12 +57,14 @@ def with_contents(contents, requires: [contents.keys.first], &block)
       File.write(dir.join("lib/#{file}"), content)
     end
 
-    # Require files
-    requires.each do |file|
-      require(dir.join("lib/#{file}"))
-    end
+    run_in_child do
+      # Require files
+      requires.each do |file|
+        require(dir.join("lib/#{file}"))
+      end
 
-    block.call(dir)
+      block.call(dir)
+    end
   end
 end
 
