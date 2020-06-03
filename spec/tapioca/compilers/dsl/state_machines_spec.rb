@@ -39,7 +39,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       end
     end
 
-    it(" generate RBI for a classe with state_machine, verify state accessor methods") do
+    it(" generates an RBI that includes state accessor methods") do
       content = <<~RUBY
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -134,7 +134,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for a class with state_machine, to verify helpers methods start with human_") do
+    it("generates an RBI that includes name helpers methods") do
       content = <<~RUBY
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -166,7 +166,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it(" generate RBI for a classe with state_machine, verify path, event and state helper methods ") do
+    it("generates an RBI with path, event and state helper methods") do
       content = <<~RUBY
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -215,7 +215,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for a classe with state_machine, verify path helper method only ") do
+    it("generates an RBI with path helper methods only") do
       content = <<~RUBY
         class Vehicle
           attr_accessor :seatbelt_on, :time_used, :auto_shop_busy
@@ -233,9 +233,8 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it(" generate RBI for a class with state_machine, verify helper methods start with_ and without") do
+    it("generates an RBI with scope methods when state machine defines scopes") do
       content = <<~RUBY
-
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base
           def self.integration_name
@@ -249,7 +248,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
             -> {}
           end
         end
+
         StateMachines::Integrations.register(CustomAttributeIntegration)
+
         class Vehicle
           state_machine :state, integration: :custom_attribute
         end
@@ -271,9 +272,8 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for a class with state_machine, verify helper method for machine.action ") do
+    it("generates an RBI with action methods when state machine defines an action") do
       content = <<~RUBY
-
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base
           def self.integration_name
@@ -281,7 +281,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           end
           @defaults = { action: :save, use_transactions: false }
         end
+
         StateMachines::Integrations.register(CustomAttributeIntegration)
+
         class Vehicle
           state_machine :state, integration: :custom_attribute
         end
