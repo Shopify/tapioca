@@ -367,6 +367,9 @@ module ActiveJob::QueuePriority::ClassMethods
   def self.default_priority=(obj); end
 end
 
+class ActiveJob::Railtie < ::Rails::Railtie
+end
+
 class ActiveJob::SerializationError < ::ArgumentError
 end
 

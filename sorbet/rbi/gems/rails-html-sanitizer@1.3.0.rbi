@@ -95,6 +95,27 @@ end
 ActionView::TemplateError = ActionView::Template::Error
 
 module Rails
+  extend(::ActiveSupport::Autoload)
+
+  def self.app_class; end
+  def self.app_class=(_); end
+  def self.application; end
+  def self.application=(_); end
+  def self.backtrace_cleaner; end
+  def self.cache; end
+  def self.cache=(_); end
+  def self.configuration; end
+  def self.env; end
+  def self.env=(environment); end
+  def self.gem_version; end
+  def self.groups(*groups); end
+  def self.initialize!(*args, &block); end
+  def self.initialized?(*args, &block); end
+  def self.logger; end
+  def self.logger=(_); end
+  def self.public_path; end
+  def self.root; end
+  def self.version; end
 end
 
 module Rails::Html

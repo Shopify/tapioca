@@ -211,6 +211,13 @@ module AbstractController::Logger
   include(::ActiveSupport::Benchmarkable)
 end
 
+module AbstractController::Railties
+end
+
+module AbstractController::Railties::RoutesHelpers
+  def self.with(routes, include_path_helpers = _); end
+end
+
 module AbstractController::Rendering
   extend(::ActiveSupport::Concern)
 
@@ -261,6 +268,9 @@ end
 
 module ActionController
   extend(::ActiveSupport::Autoload)
+
+  def self.add_renderer(key, &block); end
+  def self.remove_renderer(key); end
 end
 
 class ActionController::API < ::ActionController::Metal
@@ -357,12 +367,19 @@ end
 
 ActionController::API::MODULES = T.let(T.unsafe(nil), Array)
 
+class ActionController::ActionControllerError < ::StandardError
+end
+
 module ActionController::ApiRendering
   extend(::ActiveSupport::Concern)
 
   include(::ActionController::Rendering)
 
   def render_to_body(options = _); end
+end
+
+class ActionController::BadRequest < ::ActionController::ActionControllerError
+  def initialize(msg = _); end
 end
 
 class ActionController::Base < ::ActionController::Metal
@@ -928,6 +945,12 @@ module ActionController::Instrumentation::ClassMethods
   def log_process_action(payload); end
 end
 
+class ActionController::InvalidAuthenticityToken < ::ActionController::ActionControllerError
+end
+
+class ActionController::InvalidCrossOriginRequest < ::ActionController::ActionControllerError
+end
+
 module ActionController::Live
   extend(::ActiveSupport::Concern)
 
@@ -986,6 +1009,25 @@ end
 
 ActionController::Live::SSE::WHITELISTED_OPTIONS = T.let(T.unsafe(nil), Array)
 
+class ActionController::LogSubscriber < ::ActiveSupport::LogSubscriber
+  def exist_fragment?(event); end
+  def expire_fragment(event); end
+  def expire_page(event); end
+  def halted_callback(event); end
+  def logger; end
+  def process_action(event); end
+  def read_fragment(event); end
+  def redirect_to(event); end
+  def send_data(event); end
+  def send_file(event); end
+  def start_processing(event); end
+  def unpermitted_parameters(event); end
+  def write_fragment(event); end
+  def write_page(event); end
+end
+
+ActionController::LogSubscriber::INTERNAL_PARAMS = T.let(T.unsafe(nil), Array)
+
 class ActionController::Metal < ::AbstractController::Base
   def initialize; end
 
@@ -1030,6 +1072,30 @@ class ActionController::Metal < ::AbstractController::Base
   def self.use(*args, &block); end
 end
 
+class ActionController::MethodNotAllowed < ::ActionController::ActionControllerError
+  def initialize(*allowed_methods); end
+end
+
+class ActionController::MiddlewareStack < ::ActionDispatch::MiddlewareStack
+  def build(action, app = _, &block); end
+
+  private
+
+  def build_middleware(klass, args, block); end
+end
+
+ActionController::MiddlewareStack::EXCLUDE = T.let(T.unsafe(nil), Proc)
+
+ActionController::MiddlewareStack::INCLUDE = T.let(T.unsafe(nil), Proc)
+
+class ActionController::MiddlewareStack::Middleware < ::ActionDispatch::MiddlewareStack::Middleware
+  def initialize(klass, args, actions, strategy, block); end
+
+  def valid?(action); end
+end
+
+ActionController::MiddlewareStack::NULL = T.let(T.unsafe(nil), Proc)
+
 module ActionController::MimeResponds
   def respond_to(*mimes); end
 end
@@ -1059,6 +1125,16 @@ class ActionController::MimeResponds::Collector::VariantCollector
   private
 
   def variant_key; end
+end
+
+class ActionController::MissingFile < ::ActionController::ActionControllerError
+end
+
+class ActionController::MissingRenderer < ::LoadError
+  def initialize(format); end
+end
+
+class ActionController::NotImplemented < ::ActionController::MethodNotAllowed
 end
 
 module ActionController::ParameterEncoding
@@ -1225,6 +1301,16 @@ class ActionController::ParamsWrapper::Options < ::Struct
   def self.from_hash(hash); end
 end
 
+class ActionController::Railtie < ::Rails::Railtie
+end
+
+module ActionController::Railties
+end
+
+module ActionController::Railties::Helpers
+  def inherited(klass); end
+end
+
 module ActionController::Redirecting
   extend(::ActiveSupport::Concern)
 
@@ -1244,6 +1330,9 @@ module ActionController::Redirecting
   def _url_host_allowed?(url); end
 
   def self._compute_redirect_to_location(request, options); end
+end
+
+class ActionController::RenderError < ::ActionController::ActionControllerError
 end
 
 class ActionController::Renderer
@@ -1429,6 +1518,18 @@ module ActionController::Rescue
   def process_action(*args); end
 end
 
+class ActionController::RoutingError < ::ActionController::ActionControllerError
+  def initialize(message, failures = _); end
+
+  def failures; end
+end
+
+class ActionController::SessionOverflowError < ::ActionController::ActionControllerError
+  def initialize(message = _); end
+end
+
+ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), String)
+
 module ActionController::Streaming
   extend(::ActiveSupport::Concern)
 
@@ -1531,6 +1632,12 @@ class ActionController::UnfilteredParameters < ::ArgumentError
   def initialize; end
 end
 
+class ActionController::UnknownFormat < ::ActionController::ActionControllerError
+end
+
+class ActionController::UnknownHttpMethod < ::ActionController::ActionControllerError
+end
+
 class ActionController::UnpermittedParameters < ::IndexError
   def initialize(params); end
 
@@ -1546,17 +1653,7 @@ module ActionController::UrlFor
   def url_options; end
 end
 
-class ActionController::ActionControllerError < ::StandardError
-end
-
-class ActionController::BadRequest < ::ActionController::ActionControllerError
-  def initialize(msg = _); end
-end
-
-class ActionController::InvalidAuthenticityToken < ::ActionController::ActionControllerError
-end
-
-class ActionController::InvalidCrossOriginRequest < ::ActionController::ActionControllerError
+class ActionController::UrlGenerationError < ::ActionController::ActionControllerError
 end
 
 class ActionController::LiveTestResponse < ::ActionController::Live::Response
@@ -1564,74 +1661,6 @@ class ActionController::LiveTestResponse < ::ActionController::Live::Response
   def missing?; end
   def success?; end
 end
-
-class ActionController::LogSubscriber < ::ActiveSupport::LogSubscriber
-  def exist_fragment?(event); end
-  def expire_fragment(event); end
-  def expire_page(event); end
-  def halted_callback(event); end
-  def logger; end
-  def process_action(event); end
-  def read_fragment(event); end
-  def redirect_to(event); end
-  def send_data(event); end
-  def send_file(event); end
-  def start_processing(event); end
-  def unpermitted_parameters(event); end
-  def write_fragment(event); end
-  def write_page(event); end
-end
-
-ActionController::LogSubscriber::INTERNAL_PARAMS = T.let(T.unsafe(nil), Array)
-
-class ActionController::MethodNotAllowed < ::ActionController::ActionControllerError
-  def initialize(*allowed_methods); end
-end
-
-class ActionController::MiddlewareStack < ::ActionDispatch::MiddlewareStack
-  def build(action, app = _, &block); end
-
-  private
-
-  def build_middleware(klass, args, block); end
-end
-
-ActionController::MiddlewareStack::EXCLUDE = T.let(T.unsafe(nil), Proc)
-
-ActionController::MiddlewareStack::INCLUDE = T.let(T.unsafe(nil), Proc)
-
-class ActionController::MiddlewareStack::Middleware < ::ActionDispatch::MiddlewareStack::Middleware
-  def initialize(klass, args, actions, strategy, block); end
-
-  def valid?(action); end
-end
-
-ActionController::MiddlewareStack::NULL = T.let(T.unsafe(nil), Proc)
-
-class ActionController::MissingFile < ::ActionController::ActionControllerError
-end
-
-class ActionController::MissingRenderer < ::LoadError
-  def initialize(format); end
-end
-
-class ActionController::NotImplemented < ::ActionController::MethodNotAllowed
-end
-
-class ActionController::RenderError < ::ActionController::ActionControllerError
-end
-
-class ActionController::RoutingError < ::ActionController::ActionControllerError
-  def initialize(message, failures = _); end
-
-  def failures; end
-end
-
-class ActionController::SessionOverflowError < ::ActionController::ActionControllerError
-  def initialize(message = _); end
-end
-
-ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), String)
 
 class ActionController::TestRequest < ::ActionDispatch::TestRequest
   def initialize(env, session, controller_class); end
@@ -1668,12 +1697,6 @@ class ActionController::TestSession < ::Rack::Session::Abstract::SessionHash
 end
 
 ActionController::TestSession::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
-
-class ActionController::UnknownFormat < ::ActionController::ActionControllerError
-end
-
-class ActionController::UnknownHttpMethod < ::ActionController::ActionControllerError
-end
 
 module ActionDispatch
   extend(::ActiveSupport::Autoload)
@@ -3299,6 +3322,9 @@ class ActionDispatch::PublicExceptions
   def render_html(status); end
 end
 
+class ActionDispatch::Railtie < ::Rails::Railtie
+end
+
 class ActionDispatch::Reloader < ::ActionDispatch::Executor
 end
 
@@ -3726,6 +3752,15 @@ class ActionDispatch::Routing::ConsoleFormatter
   def draw_header(routes); end
   def draw_section(routes); end
   def widths(routes); end
+end
+
+class ActionDispatch::Routing::Endpoint
+  def app; end
+  def dispatcher?; end
+  def engine?; end
+  def matches?(req); end
+  def rack_app; end
+  def redirect?; end
 end
 
 ActionDispatch::Routing::HTTP_METHODS = T.let(T.unsafe(nil), Array)
@@ -4508,15 +4543,6 @@ class ActionDispatch::RequestEncoder::IdentityEncoder
   def response_parser; end
 end
 
-class ActionDispatch::Routing::Endpoint
-  def app; end
-  def dispatcher?; end
-  def engine?; end
-  def matches?(req); end
-  def rack_app; end
-  def redirect?; end
-end
-
 class ActionDispatch::Routing::OptionRedirect < ::ActionDispatch::Routing::Redirect
   def inspect; end
   def options; end
@@ -4708,3 +4734,128 @@ class Mime::Type::AcceptList
   def self.find_item_by_name(array, name); end
   def self.sort!(list); end
 end
+
+module Rack
+  def self.release; end
+  def self.version; end
+end
+
+Rack::CACHE_CONTROL = T.let(T.unsafe(nil), String)
+
+Rack::CONTENT_LENGTH = T.let(T.unsafe(nil), String)
+
+Rack::CONTENT_TYPE = T.let(T.unsafe(nil), String)
+
+Rack::DELETE = T.let(T.unsafe(nil), String)
+
+Rack::ETAG = T.let(T.unsafe(nil), String)
+
+Rack::EXPIRES = T.let(T.unsafe(nil), String)
+
+Rack::File = Rack::Files
+
+Rack::GET = T.let(T.unsafe(nil), String)
+
+Rack::HEAD = T.let(T.unsafe(nil), String)
+
+Rack::HTTPS = T.let(T.unsafe(nil), String)
+
+Rack::HTTP_COOKIE = T.let(T.unsafe(nil), String)
+
+Rack::HTTP_HOST = T.let(T.unsafe(nil), String)
+
+Rack::HTTP_PORT = T.let(T.unsafe(nil), String)
+
+Rack::HTTP_VERSION = T.let(T.unsafe(nil), String)
+
+Rack::LINK = T.let(T.unsafe(nil), String)
+
+Rack::OPTIONS = T.let(T.unsafe(nil), String)
+
+Rack::PATCH = T.let(T.unsafe(nil), String)
+
+Rack::PATH_INFO = T.let(T.unsafe(nil), String)
+
+Rack::POST = T.let(T.unsafe(nil), String)
+
+Rack::PUT = T.let(T.unsafe(nil), String)
+
+Rack::QUERY_STRING = T.let(T.unsafe(nil), String)
+
+Rack::RACK_ERRORS = T.let(T.unsafe(nil), String)
+
+Rack::RACK_HIJACK = T.let(T.unsafe(nil), String)
+
+Rack::RACK_HIJACK_IO = T.let(T.unsafe(nil), String)
+
+Rack::RACK_INPUT = T.let(T.unsafe(nil), String)
+
+Rack::RACK_IS_HIJACK = T.let(T.unsafe(nil), String)
+
+Rack::RACK_LOGGER = T.let(T.unsafe(nil), String)
+
+Rack::RACK_METHODOVERRIDE_ORIGINAL_METHOD = T.let(T.unsafe(nil), String)
+
+Rack::RACK_MULTIPART_BUFFER_SIZE = T.let(T.unsafe(nil), String)
+
+Rack::RACK_MULTIPART_TEMPFILE_FACTORY = T.let(T.unsafe(nil), String)
+
+Rack::RACK_MULTIPROCESS = T.let(T.unsafe(nil), String)
+
+Rack::RACK_MULTITHREAD = T.let(T.unsafe(nil), String)
+
+Rack::RACK_RECURSIVE_INCLUDE = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_COOKIE_HASH = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_COOKIE_STRING = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_FORM_HASH = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_FORM_INPUT = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_FORM_VARS = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_QUERY_HASH = T.let(T.unsafe(nil), String)
+
+Rack::RACK_REQUEST_QUERY_STRING = T.let(T.unsafe(nil), String)
+
+Rack::RACK_RUNONCE = T.let(T.unsafe(nil), String)
+
+Rack::RACK_SESSION = T.let(T.unsafe(nil), String)
+
+Rack::RACK_SESSION_OPTIONS = T.let(T.unsafe(nil), String)
+
+Rack::RACK_SESSION_UNPACKED_COOKIE_DATA = T.let(T.unsafe(nil), String)
+
+Rack::RACK_SHOWSTATUS_DETAIL = T.let(T.unsafe(nil), String)
+
+Rack::RACK_TEMPFILES = T.let(T.unsafe(nil), String)
+
+Rack::RACK_URL_SCHEME = T.let(T.unsafe(nil), String)
+
+Rack::RACK_VERSION = T.let(T.unsafe(nil), String)
+
+Rack::RELEASE = T.let(T.unsafe(nil), String)
+
+Rack::REQUEST_METHOD = T.let(T.unsafe(nil), String)
+
+Rack::REQUEST_PATH = T.let(T.unsafe(nil), String)
+
+Rack::SCRIPT_NAME = T.let(T.unsafe(nil), String)
+
+Rack::SERVER_NAME = T.let(T.unsafe(nil), String)
+
+Rack::SERVER_PORT = T.let(T.unsafe(nil), String)
+
+Rack::SERVER_PROTOCOL = T.let(T.unsafe(nil), String)
+
+Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
+
+Rack::TRACE = T.let(T.unsafe(nil), String)
+
+Rack::TRANSFER_ENCODING = T.let(T.unsafe(nil), String)
+
+Rack::UNLINK = T.let(T.unsafe(nil), String)
+
+Rack::VERSION = T.let(T.unsafe(nil), Array)

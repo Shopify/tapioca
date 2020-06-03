@@ -437,6 +437,10 @@ end
 module ActiveSupport::Concurrency
 end
 
+class ActiveSupport::Concurrency::LoadInterlockAwareMonitor < ::Monitor
+  def mon_enter; end
+end
+
 class ActiveSupport::Concurrency::ShareLock
   include(::MonitorMixin)
 
@@ -976,6 +980,59 @@ module ActiveSupport::EachTimeWithZone
   def ensure_iteration_allowed; end
 end
 
+class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
+  def initialize(config_path:, key_path:, env_key:, raise_if_missing_key:); end
+
+  def [](*args, &block); end
+  def config; end
+  def fetch(*args, &block); end
+  def method_missing(method, *args, &block); end
+  def read; end
+  def write(contents); end
+
+  private
+
+  def deserialize(config); end
+  def options; end
+  def respond_to_missing?(name, include_private = _); end
+  def serialize(config); end
+end
+
+class ActiveSupport::EncryptedFile
+  def initialize(content_path:, key_path:, env_key:, raise_if_missing_key:); end
+
+  def change(&block); end
+  def content_path; end
+  def env_key; end
+  def key; end
+  def key_path; end
+  def raise_if_missing_key; end
+  def read; end
+  def write(contents); end
+
+  private
+
+  def decrypt(contents); end
+  def encrypt(contents); end
+  def encryptor; end
+  def handle_missing_key; end
+  def read_env_key; end
+  def read_key_file; end
+  def writing(contents); end
+
+  def self.generate_key; end
+end
+
+ActiveSupport::EncryptedFile::CIPHER = T.let(T.unsafe(nil), String)
+
+class ActiveSupport::EncryptedFile::MissingContentError < ::RuntimeError
+  def initialize(content_path); end
+end
+
+class ActiveSupport::EncryptedFile::MissingKeyError < ::RuntimeError
+  def initialize(key_path:, env_key:); end
+end
+
 class ActiveSupport::EventedFileUpdateChecker
   def initialize(files, dirs = _, &block); end
 
@@ -1455,6 +1512,14 @@ class ActiveSupport::Messages::Metadata
   def self.wrap(message, expires_at: _, expires_in: _, purpose: _); end
 end
 
+class ActiveSupport::Messages::RotationConfiguration
+  def initialize; end
+
+  def encrypted; end
+  def rotate(kind, *args); end
+  def signed; end
+end
+
 module ActiveSupport::Messages::Rotator
   def initialize(*_, **options); end
 
@@ -1925,6 +1990,9 @@ end
 
 class ActiveSupport::ProxyObject < ::BasicObject
   def raise(*args); end
+end
+
+class ActiveSupport::Railtie < ::Rails::Railtie
 end
 
 module ActiveSupport::RangeWithFormat
@@ -2762,6 +2830,7 @@ class DateTime < ::Date
   def beginning_of_minute; end
   def blank?; end
   def change(options); end
+  def default_inspect; end
   def end_of_day; end
   def end_of_hour; end
   def end_of_minute; end
@@ -2895,6 +2964,34 @@ class Hash
 end
 
 HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
+
+module I18n
+  extend(::I18n::Base)
+
+  def self.interpolate(string, values); end
+  def self.interpolate_hash(string, values); end
+  def self.new_double_nested_cache; end
+end
+
+I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
+
+I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
+
+I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
+
+I18n::RESERVED_KEYS_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+class I18n::Railtie < ::Rails::Railtie
+  def self.include_fallbacks_module; end
+  def self.init_fallbacks(fallbacks); end
+  def self.initialize_i18n(app); end
+  def self.validate_fallbacks(fallbacks); end
+  def self.watched_dirs_with_extensions(paths); end
+end
+
+I18n::VERSION = T.let(T.unsafe(nil), String)
 
 class IO
   include(::Enumerable)

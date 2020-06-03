@@ -412,6 +412,9 @@ module ActionMailer::Previews::ClassMethods
   def register_preview_interceptors(*interceptors); end
 end
 
+class ActionMailer::Railtie < ::Rails::Railtie
+end
+
 class ActionMailer::TestCase < ::ActiveSupport::TestCase
   include(::ActiveSupport::Testing::ConstantLookup)
   include(::ActiveJob::TestHelper)

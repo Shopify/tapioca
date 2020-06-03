@@ -1507,6 +1507,9 @@ class ActionView::PathSet
   def typecast(paths); end
 end
 
+class ActionView::Railtie < ::Rails::Engine
+end
+
 module ActionView::RecordIdentifier
   include(::ActionView::ModelNaming)
   extend(::ActionView::RecordIdentifier)

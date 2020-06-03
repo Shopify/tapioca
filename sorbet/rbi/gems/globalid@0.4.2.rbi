@@ -75,6 +75,9 @@ class GlobalID::Locator::UnscopedLocator < ::GlobalID::Locator::BaseLocator
   def unscoped(model_class); end
 end
 
+class GlobalID::Railtie < ::Rails::Railtie
+end
+
 class GlobalID::Verifier < ::ActiveSupport::MessageVerifier
 
   private
