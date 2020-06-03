@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "tapioca/compilers/dsl/smart_properties"
 RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
   describe("#initialize") do
     it("gathers no constants if there are no StateMachines classes") do
@@ -11,11 +12,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
     it("gathers only StateMachines classes") do
       content = <<~RUBY
         class Vehicle
-          include ::StateMachines::InstanceMethods
+          state_machine
         end
 
         class User
-          include ::StateMachines::InstanceMethods
+          state_machine
         end
 
         class Comment
@@ -34,6 +35,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       subject.decorate(parlour.root, Vehicle)
       parlour.rbi
     end
+
 
     it(" generate RBI for classes with state_machines with event and state") do
       content = <<~RUBY
@@ -132,7 +134,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       end
     end
 
-    it("generate RBI for classes with state_machine, with event, and only initial state defined") do
+    it("generate RBI for a class with state_machine, to verify helpers methods start with human_") do
       content = <<~RUBY
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -148,7 +150,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       RUBY
 
       expected = <<~RUBY
-        # typed: strong
         class Vehicle
           include Vehicle::StateMachineInstanceHelperModule
           extend Vehicle::StateMachineClassHelperModule
@@ -161,72 +162,10 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           sig { params(state: T.any(String, Symbol)).returns(String) }
           def human_alarm_state_name(state); end
         end
-
-        module Vehicle::StateMachineInstanceHelperModule
-          sig { returns(T::Boolean) }
-          def alarm_active?; end
-
-          sig { returns(T::Boolean) }
-          def alarm_off?; end
-
-          sig { returns(T::Boolean) }
-          def alarm_on?; end
-
-          sig { returns(String) }
-          def alarm_state; end
-
-          sig { params(value: String).returns(String) }
-          def alarm_state=(value); end
-
-          sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
-          def alarm_state?(state); end
-
-          sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
-          def alarm_state_events(*args); end
-
-          sig { returns(T.any(String, Symbol)) }
-          def alarm_state_name; end
-
-          sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-          def alarm_state_paths(*args); end
-
-          sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-          def alarm_state_transitions(*args); end
-
-          sig { returns(T::Boolean) }
-          def can_disable_alarm?; end
-
-          sig { returns(T::Boolean) }
-          def can_enable_alarm?; end
-
-          sig { params(args: T.untyped).returns(T::Boolean) }
-          def disable_alarm(*args); end
-
-          sig { params(args: T.untyped).returns(T::Boolean) }
-          def disable_alarm!(*args); end
-
-          sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-          def disable_alarm_transition(*args); end
-
-          sig { params(args: T.untyped).returns(T::Boolean) }
-          def enable_alarm(*args); end
-
-          sig { params(args: T.untyped).returns(T::Boolean) }
-          def enable_alarm!(*args); end
-
-          sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-          def enable_alarm_transition(*args); end
-
-          sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
-          def fire_alarm_state_event(event, *args); end
-
-          sig { returns(String) }
-          def human_alarm_state_name; end
-        end
       RUBY
 
       with_contents(content) do
-        expect(output).to(eq(expected))
+        expect(output).to include(expected)
       end
     end
 
@@ -524,6 +463,82 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
 
       with_contents(content) do
         expect(output).to(eq(expected))
+      end
+    end
+
+    it(" generate RBI for classe with state_machines with methods start with_ and without") do
+      content = <<~RUBY
+
+      module CustomAttributeIntegration
+        include StateMachines::Integrations::Base
+        def self.integration_name
+          :custom_attribute
+        end
+
+        def create_with_scope(_name)
+          -> {}
+        end
+        def create_without_scope(_name)
+          -> {}
+        end
+      end
+      StateMachines::Integrations.register(CustomAttributeIntegration)
+      class Vehicle
+        state_machine :state, integration: :custom_attribute
+      end
+      RUBY
+
+      expected = <<~RUBY
+        sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+          def with_state(*states); end
+
+          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+          def with_states(*states); end
+
+          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+          def without_state(*states); end
+
+          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+          def without_states(*states); end
+      RUBY
+
+      with_contents(content) do
+        expect(output).to include(expected)
+      end
+    end
+
+    it("generate RBI for class with state_machines with action") do
+      content = <<~RUBY
+
+      module CustomAttributeIntegration
+        include StateMachines::Integrations::Base
+        def self.integration_name
+          :custom_attribute
+        end
+        @defaults = { action: :save, use_transactions: false }
+      end
+      StateMachines::Integrations.register(CustomAttributeIntegration)
+      class Vehicle
+        state_machine :state, integration: :custom_attribute
+      end
+      RUBY
+
+      expected = <<~RUBY
+        sig { returns(T.nilable(Symbol)) }
+          def state_event; end
+
+          sig { params(value: T.any(String, Symbol)).returns(T.any(String, Symbol)) }
+          def state_event=(value); end
+
+          sig { returns(T.nilable(::StateMachines::Transition)) }
+          def state_event_transition; end
+
+          sig { params(value: ::StateMachines::Transition).returns(::StateMachines::Transition) }
+          def state_event_transition=(value); end
+      RUBY
+
+      with_contents(content) do
+        expect(output).to include(expected)
       end
     end
   end
