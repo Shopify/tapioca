@@ -1703,5 +1703,120 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         RUBY
       )
     end
+
+    it("compiles signatures and structs in source files") do
+      expect(
+        compile(template(<<~RUBY))
+          class Foo
+            extend(T::Sig)
+
+            sig { params(a: Integer, b: String).void }
+            def foo(a, b:)
+            end
+
+            sig { params(a: Integer, b: String).returns(Integer) }
+            def bar(a, b:)
+            end
+
+            sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+            def baz(a)
+              a
+            end
+
+            class << self
+              extend(T::Sig)
+
+              sig { void }
+              def quux
+              end
+            end
+          end
+
+          class Bar < T::Struct
+            const :foo, Integer
+            prop :bar, String
+            const :baz, T::Hash[String, T.untyped]
+            prop :quux, T.untyped, default: [1, 2, 3]
+          end
+
+          class Baz
+            extend(T::Sig)
+            extend(T::Helpers)
+
+            abstract!
+
+            sig { abstract.void }
+            def do_it
+            end
+          end
+
+          module Quux
+            extend(T::Sig)
+            extend(T::Helpers)
+
+            interface!
+
+            sig { abstract.returns(Integer) }
+            def something
+            end
+
+            class Concrete
+              extend(T::Sig)
+              include Quux
+
+              sig { override.returns(Integer) }
+              def something
+              end
+            end
+          end
+        RUBY
+      ).to(
+        eq(template(<<~RUBY))
+          class Bar < ::T::Struct
+            const :foo, Integer
+            prop :bar, String
+            const :baz, T::Hash[String, T.untyped]
+            prop :quux, T.untyped
+
+            def self.inherited(s); end
+          end
+
+          class Baz
+            abstract!
+
+            def initialize(*args, &blk); end
+
+            sig { abstract.void }
+            def do_it; end
+          end
+
+          class Foo
+            sig { params(a: Integer, b: String).returns(Integer) }
+            def bar(a, b:); end
+            sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+            def baz(a); end
+            sig { params(a: Integer, b: String).void }
+            def foo(a, b:); end
+
+            sig { void }
+            def self.quux; end
+          end
+
+          module Quux
+            interface!
+
+            sig { abstract.returns(Integer) }
+            def something; end
+          end
+
+          class Quux::Concrete
+            include(::Quux)
+
+            sig { override.returns(Integer) }
+            def something; end
+          end
+        RUBY
+      )
+    end
   end
 end
