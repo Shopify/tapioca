@@ -18,7 +18,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(subject.processable_constants).to(eq(Set.new([NotifierMailer])))
       end
     end
@@ -32,17 +32,19 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         end
       RUBY
 
-      with_contents(content) do
+      with_content(content) do
         expect(subject.processable_constants).to(eq(Set.new([NotifierMailer])))
       end
     end
   end
 
   describe("#decorate") do
-    let(:output) do
-      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-      subject.decorate(parlour.root, NotifierMailer)
-      parlour.rbi
+    def rbi_for(content)
+      with_content(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, NotifierMailer)
+        parlour.rbi
+      end
     end
 
     it("generates empty RBI file if there are no methods") do
@@ -53,13 +55,31 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
 
       expected = <<~RUBY
         # typed: strong
-        class NotifierMailier
+        class NotifierMailer
         end
       RUBY
 
-      with_contents(content) do
-        expect(output).to(eq(expected))
-      end
+      expect(rbi_for(content)).to(eq(expected))
+    end
+
+    it("generates correct RBI file for subclass with methods") do
+      content = <<~RUBY
+        class NotifierMailer < ActionMailer::Base
+          def notify_customer(customer_id)
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class NotifierMailer
+          sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_customer(customer_id); end
+        end
+      RUBY
+
+      expect(rbi_for(content)).to(eq(expected))
     end
   end
 end
