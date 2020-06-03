@@ -177,7 +177,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 5.2)
   bundler (~> 1.17)
   frozen_record (>= 0.17)
   pry-byebug
