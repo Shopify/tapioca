@@ -28,6 +28,7 @@ rescue
   nil
 end
 
+require_relative "../sorbet/tapioca/require"
 require "tapioca/loader"
 require "tapioca/constant_locator"
 require "tapioca/config"
