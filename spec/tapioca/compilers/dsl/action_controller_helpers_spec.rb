@@ -68,4 +68,32 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
       end
     end
   end
+
+  describe("#decorate") do
+    def rbi_for(content)
+      with_content(content) do
+        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        subject.decorate(parlour.root, UserController)
+        parlour.rbi
+      end
+    end
+
+    #TODO: Add more tests and reorder as necessary
+
+    #TODO: Combining the helper module and controller in the same file should be fine. Don't split
+
+
+    it("does not generate helper module when there are no helper methods") do
+    end
+
+    it("generates helper proxy class when there are no helper methods") do # TODO: Idk if this happens
+    end
+
+    it("generates helper module and helper proxy class when there are helper methods") do
+    end
+
+    it("does not generate helper methods when there are no helper methods specified") do
+    end
+
+  end
 end
