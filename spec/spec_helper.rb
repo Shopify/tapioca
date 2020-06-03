@@ -20,7 +20,7 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = "spec/examples.txt"
   config.disable_monkey_patching!
   config.warnings = true
-  config.order = :random
+  config.order = :defined
   Kernel.srand(config.seed)
 
   if config.files_to_run.one?

@@ -1535,6 +1535,12 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
         compile(<<~RUBY)
           # TODO: Remove this. Currently needed because we have poor
           # isolation between test suites and AS leaks into this test.
+          # module ActiveSupport
+          #   module Dependencies
+          #     remove_const :ModuleConstMissing
+          #   end
+          #   remove_const :Dependencies
+          # end
           class Object
             remove_const :ActiveSupport
           end
