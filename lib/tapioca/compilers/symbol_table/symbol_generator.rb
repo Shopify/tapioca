@@ -515,7 +515,7 @@ module Tapioca
           ].compact.join("\n")
         end
 
-        TYPE_PARAMETER_MATCHER = /T\.type_parameter\(([[:word:]]+)\)/
+        TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
         sig { params(signature: T.untyped).returns(String) }
         def compile_signature(signature)
@@ -524,11 +524,10 @@ module Tapioca
           params << [signature.rest_name, signature.rest_type] if signature.has_rest
           params << [signature.block_name, signature.block_type] if signature.block_name
 
-          params = params.compact.map {|name, type| "#{name}: #{type}" }.join(", ")
+          params = params.compact.map { |name, type| "#{name}: #{type}" }.join(", ")
           returns = signature.return_type.to_s
-          signature_body = ".params(#{params}).returns(#{returns})"
 
-          type_parameters = signature_body.scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map {|p| ":#{p}" }.join(", ")
+          type_parameters = (params + returns).scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map { |p| ":#{p}" }.join(", ")
           type_parameters = ".type_parameters(#{type_parameters})" unless type_parameters.empty?
 
           mode = case signature.mode
@@ -544,10 +543,16 @@ module Tapioca
             ""
           end
 
-          signature_body = "#{mode}#{type_parameters}#{signature_body}"[1..-1]
-          "sig { #{signature_body} }"
+          signature_body = +""
+          signature_body << mode
+          signature_body << type_parameters
+          signature_body << ".params(#{params})" unless params.empty?
+          signature_body << ".returns(#{returns})"
+          signature_body = signature_body
             .gsub('.returns(<VOID>)', '.void')
-            .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")
+            .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")[1..-1]
+
+          "sig { #{signature_body} }"
         end
 
         sig { params(symbol_name: String).returns(T::Boolean) }
