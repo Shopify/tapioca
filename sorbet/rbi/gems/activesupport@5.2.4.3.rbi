@@ -256,7 +256,6 @@ class ActiveSupport::Cache::Strategy::LocalCache::LocalStore < ::ActiveSupport::
   def read_multi_entries(keys, options); end
   def synchronize; end
   def write_entry(key, value, options); end
-<<<<<<< HEAD:sorbet/rbi/gems/activesupport@5.2.4.3.rbi
 end
 
 class ActiveSupport::Cache::Strategy::LocalCache::Middleware
@@ -266,8 +265,6 @@ class ActiveSupport::Cache::Strategy::LocalCache::Middleware
   def local_cache_key; end
   def name; end
   def new(app); end
-=======
->>>>>>> 7cc0fd5... result of the tapioca sync:sorbet/rbi/gems/activesupport@6.0.3.1.rbi
 end
 
 ActiveSupport::Cache::UNIVERSAL_OPTIONS = T.let(T.unsafe(nil), Array)
@@ -1642,7 +1639,6 @@ class ActiveSupport::Multibyte::Unicode::Codepoint
   def uppercase_mapping; end
   def uppercase_mapping=(_); end
 end
-<<<<<<< HEAD:sorbet/rbi/gems/activesupport@5.2.4.3.rbi
 
 ActiveSupport::Multibyte::Unicode::HANGUL_LBASE = T.let(T.unsafe(nil), Integer)
 
@@ -1658,23 +1654,6 @@ ActiveSupport::Multibyte::Unicode::HANGUL_SLAST = T.let(T.unsafe(nil), Integer)
 
 ActiveSupport::Multibyte::Unicode::HANGUL_TBASE = T.let(T.unsafe(nil), Integer)
 
-=======
-
-ActiveSupport::Multibyte::Unicode::HANGUL_LBASE = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_LCOUNT = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_NCOUNT = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_SBASE = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_SCOUNT = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_SLAST = T.let(T.unsafe(nil), Integer)
-
-ActiveSupport::Multibyte::Unicode::HANGUL_TBASE = T.let(T.unsafe(nil), Integer)
-
->>>>>>> 7cc0fd5... result of the tapioca sync:sorbet/rbi/gems/activesupport@6.0.3.1.rbi
 ActiveSupport::Multibyte::Unicode::HANGUL_TCOUNT = T.let(T.unsafe(nil), Integer)
 
 ActiveSupport::Multibyte::Unicode::HANGUL_VBASE = T.let(T.unsafe(nil), Integer)
@@ -2152,7 +2131,6 @@ end
 
 ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS = T.let(T.unsafe(nil), Array)
 
-<<<<<<< HEAD:sorbet/rbi/gems/activesupport@5.2.4.3.rbi
 module ActiveSupport::SecurityUtils
 
   private
@@ -2164,8 +2142,6 @@ module ActiveSupport::SecurityUtils
   def self.secure_compare(a, b); end
 end
 
-=======
->>>>>>> 7cc0fd5... result of the tapioca sync:sorbet/rbi/gems/activesupport@6.0.3.1.rbi
 class ActiveSupport::StringInquirer < ::String
 
   private
@@ -2271,124 +2247,6 @@ class ActiveSupport::TestCase < ::Minitest::Test
 end
 
 ActiveSupport::TestCase::Assertion = Minitest::Assertion
-
-module ActiveSupport::Testing
-end
-
-module ActiveSupport::Testing::Assertions
-  def assert_changes(expression, message = _, from: _, to: _, &block); end
-  def assert_difference(expression, *args, &block); end
-  def assert_no_changes(expression, message = _, &block); end
-  def assert_no_difference(expression, message = _, &block); end
-  def assert_not(object, message = _); end
-  def assert_nothing_raised; end
-end
-
-ActiveSupport::Testing::Assertions::UNTRACKED = T.let(T.unsafe(nil), Object)
-
-module ActiveSupport::Testing::ConstantLookup
-  extend(::ActiveSupport::Concern)
-
-  mixes_in_class_methods(::ActiveSupport::Testing::ConstantLookup::ClassMethods)
-end
-
-module ActiveSupport::Testing::ConstantLookup::ClassMethods
-  def determine_constant_from_test_name(test_name); end
-end
-
-module ActiveSupport::Testing::Declarative
-  def test(name, &block); end
-end
-
-module ActiveSupport::Testing::Deprecation
-  def assert_deprecated(match = _, deprecator = _, &block); end
-  def assert_not_deprecated(deprecator = _, &block); end
-  def collect_deprecations(deprecator = _); end
-end
-
-module ActiveSupport::Testing::FileFixtures
-  extend(::ActiveSupport::Concern)
-
-  def file_fixture(fixture_name); end
-end
-
-module ActiveSupport::Testing::Isolation
-  include(::ActiveSupport::Testing::Isolation::Forking)
-
-  def run; end
-
-  def self.forking_env?; end
-  def self.included(klass); end
-end
-
-module ActiveSupport::Testing::Isolation::Forking
-  def run_in_isolation(&blk); end
-end
-
-module ActiveSupport::Testing::Isolation::Subprocess
-  def run_in_isolation(&blk); end
-end
-
-ActiveSupport::Testing::Isolation::Subprocess::ORIG_ARGV = T.let(T.unsafe(nil), Array)
-
-module ActiveSupport::Testing::SetupAndTeardown
-  def after_teardown; end
-  def before_setup; end
-
-  def self.prepended(klass); end
-end
-
-module ActiveSupport::Testing::SetupAndTeardown::ClassMethods
-  def setup(*args, &block); end
-  def teardown(*args, &block); end
-end
-
-class ActiveSupport::Testing::SimpleStubs
-  def initialize; end
-
-  def stub_object(object, method_name, &block); end
-  def stubbing(object, method_name); end
-  def unstub_all!; end
-
-  private
-
-  def unstub_object(stub); end
-end
-
-class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
-  def method_name; end
-  def method_name=(_); end
-  def object; end
-  def object=(_); end
-  def original_method; end
-  def original_method=(_); end
-
-  def self.[](*_); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*_); end
-end
-
-module ActiveSupport::Testing::TaggedLogging
-  def before_setup; end
-  def tagged_logger=(_); end
-
-  private
-
-  def tagged_logger; end
-end
-
-module ActiveSupport::Testing::TimeHelpers
-  def after_teardown; end
-  def freeze_time(&block); end
-  def travel(duration, &block); end
-  def travel_back; end
-  def travel_to(date_or_time); end
-
-  private
-
-  def simple_stubs; end
-end
 
 class ActiveSupport::TimeWithZone
   include(::DateAndTime::Compatibility)
@@ -2640,141 +2498,6 @@ end
 
 ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
 
-<<<<<<< HEAD:sorbet/rbi/gems/activesupport@5.2.4.3.rbi
-=======
-class ActiveSupport::CachingKeyGenerator
-  def initialize(key_generator); end
-
-  def generate_key(*args); end
-end
-
-module ActiveSupport::Concurrency
-end
-
-class ActiveSupport::Concurrency::ShareLock
-  include(::MonitorMixin)
-
-  def initialize; end
-
-  def exclusive(purpose: _, compatible: _, after_compatible: _, no_wait: _); end
-  def raw_state; end
-  def sharing; end
-  def start_exclusive(purpose: _, compatible: _, no_wait: _); end
-  def start_sharing; end
-  def stop_exclusive(compatible: _); end
-  def stop_sharing; end
-  def yield_shares(purpose: _, compatible: _, block_share: _); end
-
-  private
-
-  def busy_for_exclusive?(purpose); end
-  def busy_for_sharing?(purpose); end
-  def eligible_waiters?(compatible); end
-  def wait_for(method); end
-end
-
-class ActiveSupport::InheritableOptions < ::ActiveSupport::OrderedOptions
-  def initialize(parent = _); end
-
-  def inheritable_copy; end
-end
-
-class ActiveSupport::LegacyKeyGenerator
-  def initialize(secret); end
-
-  def generate_key(salt); end
-
-  private
-
-  def ensure_secret_secure(secret); end
-end
-
-ActiveSupport::LegacyKeyGenerator::SECRET_MIN_LENGTH = T.let(T.unsafe(nil), Integer)
-
-module ActiveSupport::Messages
-end
-
-class ActiveSupport::Messages::Metadata
-  def initialize(message, expires_at = _, purpose = _); end
-
-  def as_json(options = _); end
-  def verify(purpose); end
-
-  private
-
-  def fresh?; end
-  def match?(purpose); end
-
-  def self.verify(message, purpose); end
-  def self.wrap(message, expires_at: _, expires_in: _, purpose: _); end
-end
-
-module ActiveSupport::Messages::Rotator
-  def initialize(*_, **options); end
-
-  def rotate(*secrets, **options); end
-
-  private
-
-  def run_rotations(on_rotation); end
-end
-
-module ActiveSupport::Messages::Rotator::Encryptor
-  include(::ActiveSupport::Messages::Rotator)
-
-  def decrypt_and_verify(*args, on_rotation: _, **options); end
-
-  private
-
-  def build_rotation(secret = _, sign_secret = _, options); end
-end
-
-module ActiveSupport::Messages::Rotator::Verifier
-  include(::ActiveSupport::Messages::Rotator)
-
-  def verified(*args, on_rotation: _, **options); end
-
-  private
-
-  def build_rotation(secret = _, options); end
-end
-
-module ActiveSupport::SecurityUtils
-
-  private
-
-  def fixed_length_secure_compare(a, b); end
-  def secure_compare(a, b); end
-
-  def self.fixed_length_secure_compare(a, b); end
-  def self.secure_compare(a, b); end
-end
-
-class ActiveSupport::Subscriber
-  def initialize; end
-
-  def finish(name, id, payload); end
-  def patterns; end
-  def start(name, id, payload); end
-
-  private
-
-  def event_stack; end
-  def now; end
-
-  def self.attach_to(namespace, subscriber = _, notifier = _); end
-  def self.method_added(event); end
-  def self.subscribers; end
-end
-
-class ActiveSupport::SubscriberQueueRegistry
-  extend(::ActiveSupport::PerThreadRegistry)
-
-  def initialize; end
-
-  def get_queue(queue_key); end
-end
-
 module ActiveSupport::Testing
 end
 
@@ -2893,7 +2616,6 @@ module ActiveSupport::Testing::TimeHelpers
   def simple_stubs; end
 end
 
->>>>>>> 7cc0fd5... result of the tapioca sync:sorbet/rbi/gems/activesupport@6.0.3.1.rbi
 class Array
   include(::Enumerable)
   include(::JSON::Ext::Generator::GeneratorMethods::Array)
@@ -2939,14 +2661,9 @@ BigDecimal::EXCEPTION_NaN = T.let(T.unsafe(nil), Integer)
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
 class Class < ::Module
-<<<<<<< HEAD:sorbet/rbi/gems/activesupport@5.2.4.3.rbi
-  def class_attribute(*attrs); end
-  def descendants; end
-=======
   include(::StateMachines::MacroMethods)
 
   def class_attribute(*attrs); end
->>>>>>> 7cc0fd5... result of the tapioca sync:sorbet/rbi/gems/activesupport@6.0.3.1.rbi
   def subclasses; end
 end
 
