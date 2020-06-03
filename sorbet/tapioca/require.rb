@@ -2,3 +2,4 @@
 # typed: false
 
 # Add your extra requires here
+require "rails/all"

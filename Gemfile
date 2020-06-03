@@ -11,7 +11,8 @@ group(:deployment, :development) do
 end
 
 group(:development, :test) do
-  gem("smart_properties", ">= 1.15.0")
-  gem("frozen_record", ">= 0.17")
-  gem("activesupport", "~> 5.2")
+  gem("smart_properties", ">= 1.15.0", require: false)
+  gem("frozen_record", ">= 0.17", require: false)
+  gem("sprockets", "~> 3.7", require: false)
+  gem("rails", "~> 5.2", require: false)
 end

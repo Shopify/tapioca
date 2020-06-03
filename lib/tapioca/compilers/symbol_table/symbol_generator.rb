@@ -627,7 +627,7 @@ module Tapioca
             return nil
           end
 
-          name_of(target)
+          raw_name_of(target)
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }

@@ -39,21 +39,34 @@ class ActiveModel::Attribute
 
   protected
 
+  def assigned?; end
+  def original_attribute; end
   def original_value_for_database; end
 
   private
 
   def _original_value_for_database; end
-  def assigned?; end
   def changed_from_assignment?; end
   def initialize_dup(other); end
-  def original_attribute; end
 
   def self.from_database(name, value, type); end
   def self.from_user(name, value, type, original_attribute = _); end
   def self.null(name); end
   def self.uninitialized(name, type); end
   def self.with_cast_value(name, value, type); end
+end
+
+class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute
+  def initialize(name, value, type, database_default); end
+
+  def marshal_dump; end
+  def marshal_load(values); end
+  def value_before_type_cast; end
+  def with_type(type); end
+
+  protected
+
+  def user_provided_value; end
 end
 
 module ActiveModel::AttributeAssignment
@@ -86,12 +99,6 @@ module ActiveModel::AttributeMethods
   def missing_attribute(attr_name, stack); end
 end
 
-module ActiveModel::AttributeMethods::AttrNames
-  def self.define_attribute_accessor_method(mod, attr_name, writer: _); end
-end
-
-ActiveModel::AttributeMethods::AttrNames::DEF_SAFE_NAME = T.let(T.unsafe(nil), Regexp)
-
 ActiveModel::AttributeMethods::CALL_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 module ActiveModel::AttributeMethods::ClassMethods
@@ -109,7 +116,7 @@ module ActiveModel::AttributeMethods::ClassMethods
 
   def attribute_method_matchers_cache; end
   def attribute_method_matchers_matching(method_name); end
-  def define_proxy_call(include_private, mod, name, target, *extra); end
+  def define_proxy_call(include_private, mod, name, send, *extra); end
   def generated_attribute_methods; end
   def instance_method_already_implemented?(method_name); end
 end
@@ -118,16 +125,18 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher
   def initialize(options = _); end
 
   def match(method_name); end
+  def method_missing_target; end
   def method_name(attr_name); end
   def plain?; end
   def prefix; end
   def suffix; end
-  def target; end
 end
 
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher::AttributeMethodMatch < ::Struct
   def attr_name; end
   def attr_name=(_); end
+  def method_name; end
+  def method_name=(_); end
   def target; end
   def target=(_); end
 
@@ -139,6 +148,86 @@ end
 
 ActiveModel::AttributeMethods::NAME_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
+class ActiveModel::AttributeMutationTracker
+  def initialize(attributes); end
+
+  def any_changes?; end
+  def change_to_attribute(attr_name); end
+  def changed?(attr_name, from: _, to: _); end
+  def changed_attribute_names; end
+  def changed_in_place?(attr_name); end
+  def changed_values; end
+  def changes; end
+  def force_change(attr_name); end
+  def forget_change(attr_name); end
+  def original_value(attr_name); end
+
+  protected
+
+  def attributes; end
+  def forced_changes; end
+
+  private
+
+  def attr_names; end
+end
+
+ActiveModel::AttributeMutationTracker::OPTION_NOT_GIVEN = T.let(T.unsafe(nil), Object)
+
+class ActiveModel::AttributeSet
+  def initialize(attributes); end
+
+  def ==(other); end
+  def [](name); end
+  def []=(name, value); end
+  def accessed; end
+  def deep_dup; end
+  def each_value(*args, &block); end
+  def except(*args, &block); end
+  def fetch(*args, &block); end
+  def fetch_value(name); end
+  def freeze; end
+  def key?(name); end
+  def keys; end
+  def map(&block); end
+  def reset(key); end
+  def to_h; end
+  def to_hash; end
+  def values_before_type_cast; end
+  def write_cast_value(name, value); end
+  def write_from_database(name, value); end
+  def write_from_user(name, value); end
+
+  protected
+
+  def attributes; end
+
+  private
+
+  def initialize_clone(_); end
+  def initialize_dup(_); end
+  def initialized_attributes; end
+end
+
+class ActiveModel::AttributeSet::Builder
+  def initialize(types, default_attributes = _); end
+
+  def build_from_database(values = _, additional_types = _); end
+  def default_attributes; end
+  def types; end
+end
+
+class ActiveModel::AttributeSet::YAMLEncoder
+  def initialize(default_types); end
+
+  def decode(coder); end
+  def encode(attribute_set, coder); end
+
+  protected
+
+  def default_types; end
+end
+
 module ActiveModel::Attributes
   extend(::ActiveSupport::Concern)
 
@@ -148,7 +237,6 @@ module ActiveModel::Attributes
 
   def initialize(*_); end
 
-  def attribute_names; end
   def attributes; end
 
   private
@@ -160,7 +248,6 @@ end
 
 module ActiveModel::Attributes::ClassMethods
   def attribute(name, type = _, **options); end
-  def attribute_names; end
 
   private
 
@@ -209,10 +296,10 @@ module ActiveModel::Dirty
 
   include(::ActiveModel::AttributeMethods)
 
-  def attribute_changed?(attr_name, **options); end
+  def attribute_changed?(attr, from: _, to: _); end
   def attribute_changed_in_place?(attr_name); end
-  def attribute_previously_changed?(attr_name); end
-  def attribute_was(attr_name); end
+  def attribute_previously_changed?(attr); end
+  def attribute_was(attr); end
   def changed; end
   def changed?; end
   def changed_attributes; end
@@ -221,19 +308,26 @@ module ActiveModel::Dirty
   def clear_attribute_changes(attr_names); end
   def clear_changes_information; end
   def previous_changes; end
-  def restore_attributes(attr_names = _); end
+  def restore_attributes(attributes = _); end
 
   private
 
-  def attribute_change(attr_name); end
-  def attribute_previous_change(attr_name); end
-  def attribute_will_change!(attr_name); end
+  def attribute_change(attr); end
+  def attribute_changed_by_setter?(attr_name); end
+  def attribute_previous_change(attr); end
+  def attribute_will_change!(attr); end
+  def attributes_changed_by_setter; end
+  def cache_changed_attributes; end
+  def changes_include?(attr_name); end
   def clear_attribute_change(attr_name); end
+  def clear_changed_attributes_cache; end
   def forget_attribute_assignments; end
   def initialize_dup(other); end
   def mutations_before_last_save; end
   def mutations_from_database; end
-  def restore_attribute!(attr_name); end
+  def previous_changes_include?(attr_name); end
+  def restore_attribute!(attr); end
+  def set_attribute_was(attr, old_value); end
 end
 
 class ActiveModel::EachValidator < ::ActiveModel::Validator
@@ -275,9 +369,7 @@ class ActiveModel::Errors
   def marshal_load(array); end
   def merge!(other); end
   def messages; end
-  def of_kind?(attribute, message = _); end
   def size; end
-  def slice!(*keys); end
   def to_a; end
   def to_hash(full_messages = _); end
   def to_xml(options = _); end
@@ -290,14 +382,14 @@ class ActiveModel::Errors
   def normalize_detail(message, options); end
   def normalize_message(attribute, message, options); end
   def without_default_proc(hash); end
-
-  def self.i18n_customize_full_message; end
-  def self.i18n_customize_full_message=(_); end
 end
 
 ActiveModel::Errors::CALLBACKS_OPTIONS = T.let(T.unsafe(nil), Array)
 
 ActiveModel::Errors::MESSAGE_OPTIONS = T.let(T.unsafe(nil), Array)
+
+class ActiveModel::ForbiddenAttributesError < ::StandardError
+end
 
 module ActiveModel::ForbiddenAttributesProtection
 
@@ -305,6 +397,38 @@ module ActiveModel::ForbiddenAttributesProtection
 
   def sanitize_for_mass_assignment(attributes); end
   def sanitize_forbidden_attributes(attributes); end
+end
+
+class ActiveModel::LazyAttributeHash
+  def initialize(types, values, additional_types, default_attributes, delegate_hash = _); end
+
+  def ==(other); end
+  def [](key); end
+  def []=(key, value); end
+  def deep_dup; end
+  def each_key(*args, &block); end
+  def each_value(*args, &block); end
+  def except(*args, &block); end
+  def fetch(*args, &block); end
+  def key?(key); end
+  def marshal_dump; end
+  def marshal_load(values); end
+  def select; end
+  def transform_values(*args, &block); end
+
+  protected
+
+  def additional_types; end
+  def default_attributes; end
+  def delegate_hash; end
+  def materialize; end
+  def types; end
+  def values; end
+
+  private
+
+  def assign_default_value(name); end
+  def initialize_dup(_); end
 end
 
 module ActiveModel::Lint
@@ -359,7 +483,6 @@ class ActiveModel::Name
   def eql?(*args, &block); end
   def human(options = _); end
   def i18n_key; end
-  def match?(*args, &block); end
   def name; end
   def param_key; end
   def plural; end
@@ -386,6 +509,27 @@ module ActiveModel::Naming
   def self.uncountable?(record_or_class); end
 end
 
+class ActiveModel::NullMutationTracker
+  include(::Singleton)
+  extend(::Singleton::SingletonClassMethods)
+
+  def any_changes?(*_); end
+  def change_to_attribute(attr_name); end
+  def changed?(*_); end
+  def changed_attribute_names(*_); end
+  def changed_in_place?(*_); end
+  def changed_values(*_); end
+  def changes(*_); end
+  def force_change(*_); end
+  def forget_change(*_); end
+  def original_value(*_); end
+
+  def self.instance; end
+end
+
+class ActiveModel::Railtie < ::Rails::Railtie
+end
+
 class ActiveModel::RangeError < ::RangeError
 end
 
@@ -399,11 +543,14 @@ module ActiveModel::SecurePassword
 end
 
 module ActiveModel::SecurePassword::ClassMethods
-  def has_secure_password(attribute = _, validations: _); end
+  def has_secure_password(options = _); end
 end
 
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation < ::Module
-  def initialize(attribute); end
+module ActiveModel::SecurePassword::InstanceMethodsOnActivation
+  def authenticate(unencrypted_password); end
+  def password; end
+  def password=(unencrypted_password); end
+  def password_confirmation=(unencrypted_password); end
 end
 
 ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED = T.let(T.unsafe(nil), Integer)
@@ -488,6 +635,7 @@ ActiveModel::Type::Boolean::FALSE_VALUES = T.let(T.unsafe(nil), Set)
 class ActiveModel::Type::Date < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
 
+  def serialize(value); end
   def type; end
   def type_cast_for_schema(value); end
 
@@ -506,6 +654,7 @@ class ActiveModel::Type::DateTime < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
   include(::ActiveModel::Type::Helpers::TimeValue)
 
+  def serialize(value); end
   def type; end
 
   private
@@ -535,6 +684,7 @@ ActiveModel::Type::Decimal::BIGDECIMAL_PRECISION = T.let(T.unsafe(nil), Integer)
 class ActiveModel::Type::Float < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Numeric)
 
+  def serialize(value); end
   def type; end
   def type_cast_for_schema(value); end
 
@@ -558,7 +708,6 @@ end
 module ActiveModel::Type::Helpers::Numeric
   def cast(value); end
   def changed?(old_value, _new_value, new_value_before_type_cast); end
-  def serialize(value); end
 
   private
 
@@ -597,11 +746,15 @@ end
 class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Numeric)
 
-  def initialize(*_, **_); end
+  def initialize(*_); end
 
   def deserialize(value); end
   def serialize(value); end
   def type; end
+
+  protected
+
+  def range; end
 
   private
 
@@ -610,7 +763,6 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   def ensure_in_range(value); end
   def max_value; end
   def min_value; end
-  def range; end
 end
 
 ActiveModel::Type::Integer::DEFAULT_LIMIT = T.let(T.unsafe(nil), Integer)
@@ -621,7 +773,7 @@ class ActiveModel::Type::Registration
   def call(_registry, *args, **kwargs); end
   def matches?(type_name, *args, **kwargs); end
 
-  private
+  protected
 
   def block; end
   def name; end
@@ -630,14 +782,17 @@ end
 class ActiveModel::Type::Registry
   def initialize; end
 
-  def lookup(symbol, *args, **kwargs); end
+  def lookup(symbol, *args); end
   def register(type_name, klass = _, **options, &block); end
+
+  protected
+
+  def registrations; end
 
   private
 
   def find_registration(symbol, *args); end
   def registration_klass; end
-  def registrations; end
 end
 
 class ActiveModel::Type::String < ::ActiveModel::Type::ImmutableString
@@ -652,6 +807,7 @@ class ActiveModel::Type::Time < ::ActiveModel::Type::Value
   include(::ActiveModel::Type::Helpers::Timezone)
   include(::ActiveModel::Type::Helpers::TimeValue)
 
+  def serialize(value); end
   def type; end
   def user_input_in_time_zone(value); end
 
@@ -707,6 +863,12 @@ ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
+class ActiveModel::ValidationError < ::StandardError
+  def initialize(model); end
+
+  def model; end
+end
+
 module ActiveModel::Validations
   extend(::ActiveSupport::Concern)
 
@@ -745,17 +907,23 @@ class ActiveModel::Validations::AcceptanceValidator < ::ActiveModel::EachValidat
   def setup!(klass); end
 end
 
-class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < ::Module
+class ActiveModel::Validations::AcceptanceValidator::AttributeDefinition
   def initialize(attributes); end
 
-  def ==(other); end
   def define_on(klass); end
-  def included(klass); end
   def matches?(method_name); end
 
   protected
 
   def attributes; end
+
+  private
+
+  def convert_to_reader_name(method_name); end
+end
+
+class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < ::Module
+  def initialize(attribute_definition); end
 end
 
 module ActiveModel::Validations::Callbacks
@@ -894,8 +1062,6 @@ end
 
 ActiveModel::Validations::NumericalityValidator::CHECKS = T.let(T.unsafe(nil), Hash)
 
-ActiveModel::Validations::NumericalityValidator::HEXADECIMAL_REGEX = T.let(T.unsafe(nil), Regexp)
-
 ActiveModel::Validations::NumericalityValidator::INTEGER_REGEX = T.let(T.unsafe(nil), Regexp)
 
 ActiveModel::Validations::NumericalityValidator::RESERVED_OPTIONS = T.let(T.unsafe(nil), Array)
@@ -920,170 +1086,6 @@ end
 
 ActiveModel::Attribute::Uninitialized::UNINITIALIZED_ORIGINAL_VALUE = T.let(T.unsafe(nil), Object)
 
-class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute
-  def initialize(name, value, type, database_default); end
-
-  def marshal_dump; end
-  def marshal_load(values); end
-  def value_before_type_cast; end
-  def with_type(type); end
-
-  private
-
-  def user_provided_value; end
-end
-
-class ActiveModel::AttributeMutationTracker
-  def initialize(attributes, forced_changes = _); end
-
-  def any_changes?; end
-  def change_to_attribute(attr_name); end
-  def changed?(attr_name, from: _, to: _); end
-  def changed_attribute_names; end
-  def changed_in_place?(attr_name); end
-  def changed_values; end
-  def changes; end
-  def force_change(attr_name); end
-  def forget_change(attr_name); end
-  def original_value(attr_name); end
-
-  private
-
-  def attr_names; end
-  def attribute_changed?(attr_name); end
-  def attributes; end
-  def fetch_value(attr_name); end
-  def forced_changes; end
-end
-
-ActiveModel::AttributeMutationTracker::OPTION_NOT_GIVEN = T.let(T.unsafe(nil), Object)
-
-class ActiveModel::AttributeSet
-  def initialize(attributes); end
-
-  def ==(other); end
-  def [](name); end
-  def []=(name, value); end
-  def accessed; end
-  def deep_dup; end
-  def each_value(*args, &block); end
-  def except(*args, &block); end
-  def fetch(*args, &block); end
-  def fetch_value(name, &block); end
-  def freeze; end
-  def key?(name); end
-  def keys; end
-  def map(&block); end
-  def reset(key); end
-  def to_h; end
-  def to_hash; end
-  def values_before_type_cast; end
-  def write_cast_value(name, value); end
-  def write_from_database(name, value); end
-  def write_from_user(name, value); end
-
-  protected
-
-  def attributes; end
-
-  private
-
-  def initialize_clone(_); end
-  def initialize_dup(_); end
-  def initialized_attributes; end
-end
-
-class ActiveModel::AttributeSet::Builder
-  def initialize(types, default_attributes = _); end
-
-  def build_from_database(values = _, additional_types = _); end
-  def default_attributes; end
-  def types; end
-end
-
-class ActiveModel::AttributeSet::YAMLEncoder
-  def initialize(default_types); end
-
-  def decode(coder); end
-  def encode(attribute_set, coder); end
-
-  private
-
-  def default_types; end
-end
-
-class ActiveModel::ForbiddenAttributesError < ::StandardError
-end
-
-class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTracker
-  def initialize(attributes, forced_changes = _); end
-
-  def change_to_attribute(attr_name); end
-  def changed_in_place?(attr_name); end
-  def finalize_changes; end
-  def force_change(attr_name); end
-  def forget_change(attr_name); end
-  def original_value(attr_name); end
-
-  private
-
-  def attr_names; end
-  def attribute_changed?(attr_name); end
-  def clone_value(attr_name); end
-  def fetch_value(attr_name); end
-  def finalized_changes; end
-end
-
-class ActiveModel::LazyAttributeHash
-  def initialize(types, values, additional_types, default_attributes, delegate_hash = _); end
-
-  def ==(other); end
-  def [](key); end
-  def []=(key, value); end
-  def deep_dup; end
-  def each_key(*args, &block); end
-  def each_value(*args, &block); end
-  def except(*args, &block); end
-  def fetch(*args, &block); end
-  def key?(key); end
-  def marshal_dump; end
-  def marshal_load(values); end
-  def select; end
-  def transform_values(*args, &block); end
-
-  protected
-
-  def materialize; end
-
-  private
-
-  def additional_types; end
-  def assign_default_value(name); end
-  def default_attributes; end
-  def delegate_hash; end
-  def initialize_dup(_); end
-  def types; end
-  def values; end
-end
-
-class ActiveModel::NullMutationTracker
-  include(::Singleton)
-  extend(::Singleton::SingletonClassMethods)
-
-  def any_changes?; end
-  def change_to_attribute(attr_name); end
-  def changed?(attr_name, **_); end
-  def changed_attribute_names; end
-  def changed_in_place?(attr_name); end
-  def changed_values; end
-  def changes; end
-  def original_value(attr_name); end
-
-  def self.instance; end
-end
-
-class ActiveModel::ValidationError < ::StandardError
-  def initialize(model); end
-
-  def model; end
+module ActiveModel::AttributeMethods::AttrNames
+  def self.set_name_cache(name, value); end
 end
