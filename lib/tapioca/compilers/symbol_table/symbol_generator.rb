@@ -176,6 +176,7 @@ module Tapioca
             return if symbol_ignored?(name) && methods.nil?
 
             [
+              compile_module_helpers(constant),
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
               compile_props(constant),

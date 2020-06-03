@@ -62,6 +62,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
       ).to(
         eq(template(<<~RUBY))
           module Bar
+            interface!
           end
 
           Bar::Arr = T.let(T.unsafe(nil), Array)
