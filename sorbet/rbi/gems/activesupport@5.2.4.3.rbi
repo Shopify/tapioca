@@ -2248,6 +2248,124 @@ end
 
 ActiveSupport::TestCase::Assertion = Minitest::Assertion
 
+module ActiveSupport::Testing
+end
+
+module ActiveSupport::Testing::Assertions
+  def assert_changes(expression, message = _, from: _, to: _, &block); end
+  def assert_difference(expression, *args, &block); end
+  def assert_no_changes(expression, message = _, &block); end
+  def assert_no_difference(expression, message = _, &block); end
+  def assert_not(object, message = _); end
+  def assert_nothing_raised; end
+end
+
+ActiveSupport::Testing::Assertions::UNTRACKED = T.let(T.unsafe(nil), Object)
+
+module ActiveSupport::Testing::ConstantLookup
+  extend(::ActiveSupport::Concern)
+
+  mixes_in_class_methods(::ActiveSupport::Testing::ConstantLookup::ClassMethods)
+end
+
+module ActiveSupport::Testing::ConstantLookup::ClassMethods
+  def determine_constant_from_test_name(test_name); end
+end
+
+module ActiveSupport::Testing::Declarative
+  def test(name, &block); end
+end
+
+module ActiveSupport::Testing::Deprecation
+  def assert_deprecated(match = _, deprecator = _, &block); end
+  def assert_not_deprecated(deprecator = _, &block); end
+  def collect_deprecations(deprecator = _); end
+end
+
+module ActiveSupport::Testing::FileFixtures
+  extend(::ActiveSupport::Concern)
+
+  def file_fixture(fixture_name); end
+end
+
+module ActiveSupport::Testing::Isolation
+  include(::ActiveSupport::Testing::Isolation::Forking)
+
+  def run; end
+
+  def self.forking_env?; end
+  def self.included(klass); end
+end
+
+module ActiveSupport::Testing::Isolation::Forking
+  def run_in_isolation(&blk); end
+end
+
+module ActiveSupport::Testing::Isolation::Subprocess
+  def run_in_isolation(&blk); end
+end
+
+ActiveSupport::Testing::Isolation::Subprocess::ORIG_ARGV = T.let(T.unsafe(nil), Array)
+
+module ActiveSupport::Testing::SetupAndTeardown
+  def after_teardown; end
+  def before_setup; end
+
+  def self.prepended(klass); end
+end
+
+module ActiveSupport::Testing::SetupAndTeardown::ClassMethods
+  def setup(*args, &block); end
+  def teardown(*args, &block); end
+end
+
+class ActiveSupport::Testing::SimpleStubs
+  def initialize; end
+
+  def stub_object(object, method_name, &block); end
+  def stubbing(object, method_name); end
+  def unstub_all!; end
+
+  private
+
+  def unstub_object(stub); end
+end
+
+class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
+  def method_name; end
+  def method_name=(_); end
+  def object; end
+  def object=(_); end
+  def original_method; end
+  def original_method=(_); end
+
+  def self.[](*_); end
+  def self.inspect; end
+  def self.members; end
+  def self.new(*_); end
+end
+
+module ActiveSupport::Testing::TaggedLogging
+  def before_setup; end
+  def tagged_logger=(_); end
+
+  private
+
+  def tagged_logger; end
+end
+
+module ActiveSupport::Testing::TimeHelpers
+  def after_teardown; end
+  def freeze_time(&block); end
+  def travel(duration, &block); end
+  def travel_back; end
+  def travel_to(date_or_time); end
+
+  private
+
+  def simple_stubs; end
+end
+
 class ActiveSupport::TimeWithZone
   include(::DateAndTime::Compatibility)
   include(::Comparable)
@@ -2497,124 +2615,6 @@ module ActiveSupport::XmlMini_REXML
 end
 
 ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
-
-module ActiveSupport::Testing
-end
-
-module ActiveSupport::Testing::Assertions
-  def assert_changes(expression, message = _, from: _, to: _, &block); end
-  def assert_difference(expression, *args, &block); end
-  def assert_no_changes(expression, message = _, &block); end
-  def assert_no_difference(expression, message = _, &block); end
-  def assert_not(object, message = _); end
-  def assert_nothing_raised; end
-end
-
-ActiveSupport::Testing::Assertions::UNTRACKED = T.let(T.unsafe(nil), Object)
-
-module ActiveSupport::Testing::ConstantLookup
-  extend(::ActiveSupport::Concern)
-
-  mixes_in_class_methods(::ActiveSupport::Testing::ConstantLookup::ClassMethods)
-end
-
-module ActiveSupport::Testing::ConstantLookup::ClassMethods
-  def determine_constant_from_test_name(test_name); end
-end
-
-module ActiveSupport::Testing::Declarative
-  def test(name, &block); end
-end
-
-module ActiveSupport::Testing::Deprecation
-  def assert_deprecated(match = _, deprecator = _, &block); end
-  def assert_not_deprecated(deprecator = _, &block); end
-  def collect_deprecations(deprecator = _); end
-end
-
-module ActiveSupport::Testing::FileFixtures
-  extend(::ActiveSupport::Concern)
-
-  def file_fixture(fixture_name); end
-end
-
-module ActiveSupport::Testing::Isolation
-  include(::ActiveSupport::Testing::Isolation::Forking)
-
-  def run; end
-
-  def self.forking_env?; end
-  def self.included(klass); end
-end
-
-module ActiveSupport::Testing::Isolation::Forking
-  def run_in_isolation(&blk); end
-end
-
-module ActiveSupport::Testing::Isolation::Subprocess
-  def run_in_isolation(&blk); end
-end
-
-ActiveSupport::Testing::Isolation::Subprocess::ORIG_ARGV = T.let(T.unsafe(nil), Array)
-
-module ActiveSupport::Testing::SetupAndTeardown
-  def after_teardown; end
-  def before_setup; end
-
-  def self.prepended(klass); end
-end
-
-module ActiveSupport::Testing::SetupAndTeardown::ClassMethods
-  def setup(*args, &block); end
-  def teardown(*args, &block); end
-end
-
-class ActiveSupport::Testing::SimpleStubs
-  def initialize; end
-
-  def stub_object(object, method_name, &block); end
-  def stubbing(object, method_name); end
-  def unstub_all!; end
-
-  private
-
-  def unstub_object(stub); end
-end
-
-class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
-  def method_name; end
-  def method_name=(_); end
-  def object; end
-  def object=(_); end
-  def original_method; end
-  def original_method=(_); end
-
-  def self.[](*_); end
-  def self.inspect; end
-  def self.members; end
-  def self.new(*_); end
-end
-
-module ActiveSupport::Testing::TaggedLogging
-  def before_setup; end
-  def tagged_logger=(_); end
-
-  private
-
-  def tagged_logger; end
-end
-
-module ActiveSupport::Testing::TimeHelpers
-  def after_teardown; end
-  def freeze_time(&block); end
-  def travel(duration, &block); end
-  def travel_back; end
-  def travel_to(date_or_time); end
-
-  private
-
-  def simple_stubs; end
-end
 
 class Array
   include(::Enumerable)

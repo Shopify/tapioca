@@ -6,6 +6,7 @@
 class BasicObject
   extend(::Module::Concerning)
   extend(::ActiveSupport::Dependencies::ModuleConstMissing)
+  extend(::StateMachines::MacroMethods)
 
   def __binding__; end
 end
