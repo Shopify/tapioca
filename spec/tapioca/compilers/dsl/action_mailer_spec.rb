@@ -22,12 +22,27 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         expect(subject.processable_constants).to(eq(Set.new([NotifierMailer])))
       end
     end
+
+    it("gathers subclasses of ActionMailer subclasses") do
+      content = <<~RUBY
+        class NotifierMailer < ActionMailer::Base
+        end
+
+        class SecondaryMailer < NotifierMailer
+        end
+      RUBY
+
+      with_content(content) do
+        expect(subject.processable_constants).to(eq(Set.new([NotifierMailer, SecondaryMailer])))
+      end
+    end
+
     it("ignores abstract subclasses") do
       content = <<~RUBY
         class NotifierMailer < ActionMailer::Base
         end
 
-        class SecondayMailer < ActionMailer::Base
+        class AbstractMailer < ActionMailer::Base
           abstract!
         end
       RUBY
@@ -65,6 +80,55 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
     it("generates correct RBI file for subclass with methods") do
       content = <<~RUBY
         class NotifierMailer < ActionMailer::Base
+          def notify_customer(customer_id)
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class NotifierMailer
+          sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_customer(customer_id); end
+        end
+      RUBY
+
+      expect(rbi_for(content)).to(eq(expected))
+    end
+
+    it("generates correct RBI file for subclass with method signatures") do
+      content = <<~RUBY
+        class NotifierMailer < ActionMailer::Base
+          extend T::Sig
+          sig { params(customer_id: Integer).void }
+          def notify_customer(customer_id)
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class NotifierMailer
+          sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_customer(customer_id); end
+        end
+      RUBY
+      expect(rbi_for(content)).to(eq(expected))
+    end
+
+    it("does not generate RBI for methods defined in abstract classes") do
+      content = <<~RUBY
+        class AbstractMailer < ActionMailer::Base
+          abstract!
+
+          def helper_method
+            # ...
+          end
+        end
+
+        class NotifierMailer < AbstractMailer
           def notify_customer(customer_id)
             # ...
           end
