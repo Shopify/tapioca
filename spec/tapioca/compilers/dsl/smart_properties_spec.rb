@@ -6,6 +6,12 @@ require "tapioca/compilers/dsl/smart_properties"
 
 RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
   describe("#initialize") do
+    def rbi_for(content)
+      with_content(content) do
+        subject.processable_constants.to_a.map(&:to_s)
+      end
+    end
+
     it("gathers no constants if there are no SmartProperty classes") do
       expect(subject.processable_constants).to(be_empty)
     end
@@ -24,9 +30,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([Post, User])))
-      end
+      expect(rbi_for(content).to_a).to(eq(["User", "Post"]))
     end
 
     it("ignores SmartProperty classes without a name") do

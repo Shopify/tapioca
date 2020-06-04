@@ -57,14 +57,16 @@ def with_contents(contents, requires: [contents.keys.first], &block)
       File.write(dir.join("lib/#{file}"), content)
     end
 
-    run_in_child do
+    result = run_in_child do
       # Require files
       requires.each do |file|
         require(dir.join("lib/#{file}"))
       end
 
-      block.call(dir)
+      block.call(dir).to_yaml
     end
+
+    YAML.load(result)
   end
 end
 
