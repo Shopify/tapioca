@@ -19,7 +19,7 @@ module Tapioca
       # For example, with the following `MyHelper` module:
       #
       # ~~~rb
-      # class MyHelper
+      # module MyHelper
       #   def greet(user)
       #     # ...
       #   end
@@ -33,7 +33,7 @@ module Tapioca
       # and the following controller:
       #
       # ~~~rb
-      # class UserController < ApplicationController
+      # class UserController < ActionController::Base
       #   include MyHelper
       #   helper_method :current_user_name
       #
@@ -46,22 +46,19 @@ module Tapioca
       #
       # ~~~rbi
       # # user_controller.rbi
-      # # typed: true
-      #
+      # # typed: strong
       # class UserController
       #   sig { returns(UserController::HelperProxy) }
       #   def helpers; end
       # end
       #
-      # module UserController::HelperModule
-      #  include MyHelper
-      #
-      #  sig { returns(T.untyped) }
-      #  def current_user_name; end
-      # end
+      # module UserController::HelperMethods
+      #    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+      #    def current_user_name(*args, &blk); end
+      #  end
       #
       # class UserController::HelperProxy < ::ActionView::Base
-      #  include UserController::HelperModule
+      #   include UserController::HelperMethods
       # end
       # ~~~
       class ActionControllerHelpers < Base

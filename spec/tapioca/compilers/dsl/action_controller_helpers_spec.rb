@@ -70,30 +70,97 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
+    def rbi_for(contents)
+      with_contents(contents, requires: contents.keys) do
         parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
         subject.decorate(parlour.root, UserController)
         parlour.rbi
       end
     end
 
-    #TODO: Add more tests and reorder as necessary
+    it("generates empty helper module when there are no helper methods specified") do
+      files = {
+        "helper.rb" => <<~RUBY,
+          module MyHelper
+            def greet(user)
+              # ...
+            end
+          end
+        RUBY
 
-    #TODO: Combining the helper module and controller in the same file should be fine. Don't split
+        "controller.rb" => <<~RUBY,
+          class UserController < ActionController::Base
+            include MyHelper
 
+            def current_user_name
+              # ...
+            end
+          end
+        RUBY
+      }
 
-    it("does not generate helper module when there are no helper methods") do
-    end
+      expected = <<~RUBY
+        # typed: strong
+        class UserController
+          sig { returns(UserController::HelperProxy) }
+          def helpers; end
+        end
 
-    it("generates helper proxy class when there are no helper methods") do # TODO: Idk if this happens
+        module UserController::HelperMethods
+        end
+
+        class UserController::HelperProxy < ::ActionView::Base
+          include UserController::HelperMethods
+        end
+      RUBY
+
+      expect(rbi_for(files)).to(eq(expected))
     end
 
     it("generates helper module and helper proxy class when there are helper methods") do
-    end
+      files = {
+        "helper.rb" => <<~RUBY,
+          module MyHelper
+              def greet(user)
+              # ...
+            end
 
-    it("does not generate helper methods when there are no helper methods specified") do
-    end
+            def localized_time
+              # ...
+            end
+          end
+        RUBY
 
+        "controller.rb" => <<~RUBY,
+          class UserController < ActionController::Base
+            include MyHelper
+            helper_method :current_user_name
+
+            def current_user_name
+              # ...
+            end
+          end
+        RUBY
+      }
+
+      expected = <<~RUBY
+        # typed: strong
+        class UserController
+          sig { returns(UserController::HelperProxy) }
+          def helpers; end
+        end
+
+        module UserController::HelperMethods
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          def current_user_name(*args, &blk); end
+        end
+
+        class UserController::HelperProxy < ::ActionView::Base
+          include UserController::HelperMethods
+        end
+      RUBY
+
+      expect(rbi_for(files)).to(eq(expected))
+    end
   end
 end
