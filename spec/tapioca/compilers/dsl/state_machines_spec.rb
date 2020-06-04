@@ -6,6 +6,12 @@ require "tapioca/compilers/dsl/smart_properties"
 
 RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
   describe("#initialize") do
+    def constants_from(content)
+      with_content(content) do
+        subject.processable_constants.map(&:to_s).sort
+      end
+    end
+
     it("gathers no constants if there are no StateMachines classes") do
       expect(subject.processable_constants).to(be_empty)
     end
@@ -24,9 +30,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([Vehicle, User])))
-      end
+      expect(constants_from(content)).to(eq(["User", "Vehicle"]))
     end
   end
 

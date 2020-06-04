@@ -5,6 +5,12 @@ require "spec_helper"
 
 RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
   describe("#initialize") do
+    def constants_from(content)
+      with_content(content) do
+        subject.processable_constants.map(&:to_s).sort
+      end
+    end
+
     it("gathers no constants if there are no ActionMailer subclasses") do
       expect(subject.processable_constants).to(be_empty)
     end
@@ -18,9 +24,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([NotifierMailer])))
-      end
+      expect(constants_from(content)).to(eq(["NotifierMailer"]))
     end
 
     it("gathers subclasses of ActionMailer subclasses") do
@@ -32,9 +36,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([NotifierMailer, SecondaryMailer])))
-      end
+      expect(constants_from(content)).to(eq(["NotifierMailer", "SecondaryMailer"]))
     end
 
     it("ignores abstract subclasses") do
@@ -47,9 +49,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionMailer) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([NotifierMailer])))
-      end
+      expect(constants_from(content)).to(eq(["NotifierMailer"]))
     end
   end
 

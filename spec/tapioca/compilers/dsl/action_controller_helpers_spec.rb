@@ -6,6 +6,12 @@ require "tapioca/compilers/dsl/action_controller_helpers"
 
 RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
   describe("#initialize") do
+    def constants_from(content)
+      with_content(content) do
+        subject.processable_constants.map(&:to_s).sort
+      end
+    end
+
     it("gathers no constants if there are no  classes") do
       expect(subject.processable_constants).to(be_empty)
     end
@@ -19,9 +25,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([UserController])))
-      end
+      expect(constants_from(content)).to(eq(["UserController"]))
     end
 
     it("does not gather included modules as their own processable constant") do
@@ -34,9 +38,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([UserController])))
-      end
+      expect(constants_from(content)).to(eq(["UserController"]))
     end
 
     it("gathers subclasses of ActionController subclasses") do
@@ -48,9 +50,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([UserController, HandController])))
-      end
+      expect(constants_from(content)).to(eq(["HandController", "UserController"]))
     end
 
     it("ignores abstract subclasses of ActionController") do
@@ -63,9 +63,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([UserController])))
-      end
+      expect(constants_from(content)).to(eq(["UserController"]))
     end
   end
 

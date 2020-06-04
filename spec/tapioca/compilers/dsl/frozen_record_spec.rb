@@ -6,6 +6,12 @@ require "tapioca/compilers/dsl/frozen_record"
 
 RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
   describe("#initialize") do
+    def constants_from(content)
+      with_content(content) do
+        subject.processable_constants.map(&:to_s).sort
+      end
+    end
+
     it("gathers no constants if there are no FrozenRecord classes") do
       expect(subject.processable_constants).to(be_empty)
     end
@@ -19,9 +25,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      with_content(content) do
-        expect(subject.processable_constants).to(eq(Set.new([Student])))
-      end
+      expect(constants_from(content)).to(eq(["Student"]))
     end
   end
 
