@@ -136,8 +136,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
 
         module UserController::HelperMethods
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-          def current_user_name(*args, &blk); end
+          sig { returns(T.untyped) }
+          def current_user_name; end
+
+          sig { params(user_id: Integer).returns(<VOID>) }
+          def notify_user(user_id); end
         end
 
         class UserController::HelperProxy < ::ActionView::Base
