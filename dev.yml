@@ -6,6 +6,9 @@ up:
   - ruby: 2.6.5
   - bundler
 
+env:
+  SRB_SKIP_GEM_RBIS: 'true'
+
 commands:
   typecheck:
     aliases: [ "tc" ]
