@@ -107,13 +107,21 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
       expect(rbi_for(files)).to(eq(expected))
     end
 
-    it("generates helper module and helper proxy class when there are helper methods specified") do
+    it("generates helper module and helper proxy class when defining helper using helper_method") do
       files = {
         "controller.rb" => <<~RUBY,
           class UserController < ActionController::Base
+            extend T::Sig
+
             helper_method :current_user_name
+            helper_method :notify_user
 
             def current_user_name
+              # ...
+            end
+
+            sig { params(user_id: Integer).void }
+            def notify_user(user_id)
               # ...
             end
           end
@@ -140,7 +148,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
       expect(rbi_for(files)).to(eq(expected))
     end
 
-    it("generates helper module and helper proxy class when defining helper using block syntax") do
+    it("generates helper module and helper proxy class when defining helper using block") do
       files = {
         "controller.rb" => <<~RUBY,
           class UserController < ActionController::Base
@@ -173,43 +181,44 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
       expect(rbi_for(files)).to(eq(expected))
     end
 
-    # it("generates helper module and helper proxy class for defining helper using module symbol") do
-    #   files = {
-    #     "greet_helper.rb" => <<~RUBY,
-    #       module Greet
-    #         def greet(user)
-    #           # ...
-    #         end
-    #       end
-    #     RUBY
+    it("generates helper module and helper proxy class for defining external helper") do
+      files = {
+        "greet_helper.rb" => <<~RUBY,
+          module GreetHelper
+            def greet(user)
+              # ...
+            end
+          end
+        RUBY
 
-    #     "controller.rb" => <<~RUBY,
-    #       class UserController < ActionController::Base
-    #         helper :greet
+        "controller.rb" => <<~RUBY,
+          class UserController < ActionController::Base
+            helper GreetHelper
 
-    #         def current_user_name
-    #           # ...
-    #         end
-    #       end
-    #     RUBY
-    #   }
+            def current_user_name
+              # ...
+            end
+          end
+        RUBY
+      }
 
-    #   expected = <<~RUBY
-    #     # typed: strong
-    #     class UserController
-    #       sig { returns(UserController::HelperProxy) }
-    #       def helpers; end
-    #     end
+      expected = <<~RUBY
+        # typed: strong
+        class UserController
+          sig { returns(UserController::HelperProxy) }
+          def helpers; end
+        end
 
-    #     module UserController::HelperMethods
-    #     end
+        module UserController::HelperMethods
+          include GreetHelper
+        end
 
-    #     class UserController::HelperProxy < ::ActionView::Base
-    #       include UserController::HelperMethods
-    #     end
-    #   RUBY
+        class UserController::HelperProxy < ::ActionView::Base
+          include UserController::HelperMethods
+        end
+      RUBY
 
-    #   expect(rbi_for(files)).to(eq(expected))
-    # end
+      expect(rbi_for(files)).to(eq(expected))
+    end
   end
 end

@@ -34,7 +34,8 @@ module Tapioca
       #
       # ~~~rb
       # class UserController < ActionController::Base
-      #   include MyHelper
+      #   helper MyHelper
+      #   helper { def age(user) "99" end }
       #   helper_method :current_user_name
       #
       #   def current_user_name
@@ -53,6 +54,11 @@ module Tapioca
       # end
       #
       # module UserController::HelperMethods
+      #    include MyHelper
+      #
+      #    sig { params(user: T.untyped).returns(T.untyped) }
+      #    def age(user); end
+      #
       #    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
       #    def current_user_name(*args, &blk); end
       #  end
