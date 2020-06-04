@@ -156,6 +156,14 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         "controller.rb" => <<~RUBY,
           class UserController < ActionController::Base
             helper { def greet(user) "Hello" end }
+            helper do
+              extend T::Sig
+
+              sig { params(user_id: Integer).void }
+              def notify_user(user_id)
+                # ...
+              end
+            end
 
             def current_user_name
               # ...
@@ -174,6 +182,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         module UserController::HelperMethods
           sig { params(user: T.untyped).returns(T.untyped) }
           def greet(user); end
+
+          sig { params(user_id: Integer).returns(<VOID>) }
+          def notify_user(user_id); end
         end
 
         class UserController::HelperProxy < ::ActionView::Base
