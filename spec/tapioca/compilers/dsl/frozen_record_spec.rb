@@ -6,9 +6,9 @@ require "tapioca/compilers/dsl/frozen_record"
 
 RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
   describe("#initialize") do
-    def rbi_for(content)
+    def constants_from(content)
       with_content(content) do
-        subject.processable_constants.to_a.map(&:to_s)
+        subject.processable_constants.map(&:to_s).sort
       end
     end
 
@@ -25,7 +25,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      expect(rbi_for(content).to_a).to(eq(["Student"]))
+      expect(constants_from(content)).to(eq(["Student"]))
     end
   end
 
