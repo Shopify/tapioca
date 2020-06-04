@@ -8,6 +8,9 @@ rvm:
   - 2.6
   - 2.7
 before_install: gem install bundler -v 1.17.3
+env:
+  global:
+    - SRB_SKIP_GEM_RBIS=true
 script:
   - bin/style --config .rubocop.yml
   - bin/typecheck

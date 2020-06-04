@@ -176,11 +176,41 @@ module Tapioca
             return if symbol_ignored?(name) && methods.nil?
 
             [
+              compile_module_helpers(constant),
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
+              compile_props(constant),
               methods,
             ].select { |b| b != "" }.join("\n\n")
           end
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_module_helpers(constant)
+          abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
+
+          if abstract_type
+            indented("#{abstract_type}!")
+          elsif T::Private::Final.final_module?(constant)
+            indented("final!")
+          elsif T::Private::Sealed.sealed_module?(constant)
+            indented("sealed!")
+          else
+            ""
+          end
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_props(constant)
+          return "" unless T::Props::ClassMethods === constant
+
+          constant.props.map do |name, prop|
+            method = "prop"
+            method = "const" if prop.fetch(:immutable, false)
+            type = prop.fetch(:type_object, "T.untyped")
+
+            indented("#{method} :#{name}, #{type}")
+          end.join("\n")
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
@@ -421,6 +451,16 @@ module Tapioca
           }
         end
 
+        sig { params(constant: Module, method_name: String).returns(T::Boolean) }
+        def struct_method?(constant, method_name)
+          return false unless constant < T::Struct
+
+          T.cast(constant, T.class_of(T::Struct))
+            .props
+            .keys
+            .include?(method_name.gsub(/=$/, '').to_sym)
+        end
+
         sig do
           params(
             symbol_name: String,
@@ -433,8 +473,13 @@ module Tapioca
           return unless method.owner == constant
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
 
+          signature = T::Private::Methods.signature_for_method(method)
+          method = signature.method if signature
+
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
+          return if struct_method?(constant, method_name)
+          return if method_name.start_with?("__t_props_generated_")
 
           params = T.let(method.parameters, T::Array[T::Array[Symbol]])
           parameters = params.map do |(type, name)|
@@ -464,7 +509,52 @@ module Tapioca
           method_name = "#{'self.' if constant.singleton_class?}#{method_name}"
           parameters = "(#{parameters})" if parameters != ""
 
-          indented("def #{method_name}#{parameters}; end")
+          signature_str = indented(compile_signature(signature)) if signature
+          [
+            signature_str,
+            indented("def #{method_name}#{parameters}; end"),
+          ].compact.join("\n")
+        end
+
+        TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
+
+        sig { params(signature: T.untyped).returns(String) }
+        def compile_signature(signature)
+          params = signature.arg_types
+          params += signature.kwarg_types.to_a
+          params << [signature.rest_name, signature.rest_type] if signature.has_rest
+          params << [signature.block_name, signature.block_type] if signature.block_name
+
+          params = params.compact.map { |name, type| "#{name}: #{type}" }.join(", ")
+          returns = signature.return_type.to_s
+
+          type_parameters = (params + returns).scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map { |p| ":#{p}" }.join(", ")
+          type_parameters = ".type_parameters(#{type_parameters})" unless type_parameters.empty?
+
+          mode = case signature.mode
+          when "abstract"
+            ".abstract"
+          when "override"
+            ".override"
+          when "overridable_override"
+            ".overridable.override"
+          when "overridable"
+            ".overridable"
+          else
+            ""
+          end
+
+          signature_body = +""
+          signature_body << mode
+          signature_body << type_parameters
+          signature_body << ".params(#{params})" unless params.empty?
+          signature_body << ".returns(#{returns})"
+          signature_body = signature_body
+            .gsub(".returns(<VOID>)", ".void")
+            .gsub("<NOT-TYPED>", "T.untyped")
+            .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")[1..-1]
+
+          "sig { #{signature_body} }"
         end
 
         sig { params(symbol_name: String).returns(T::Boolean) }
