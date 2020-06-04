@@ -550,7 +550,8 @@ module Tapioca
           signature_body << ".params(#{params})" unless params.empty?
           signature_body << ".returns(#{returns})"
           signature_body = signature_body
-            .gsub('.returns(<VOID>)', '.void')
+            .gsub(".returns(<VOID>)", ".void")
+            .gsub("<NOT-TYPED>", "T.untyped")
             .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")[1..-1]
 
           "sig { #{signature_body} }"
