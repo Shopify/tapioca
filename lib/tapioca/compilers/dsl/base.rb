@@ -119,7 +119,12 @@ module Tapioca
         end
         def compile_method_return_type_to_parlour(method_def)
           signature = T::Private::Methods.signature_for_method(method_def)
-          signature.nil? ? 'T.untyped' : signature.return_type.to_s
+          return_type = signature.nil? ? 'T.untyped' : signature.return_type.to_s
+          # Map <VOID> to `nil` since `nil` means a `void` return for Parlour
+          return_type = nil if return_type == "<VOID>"
+          # Map <NOT-TYPED> to `T.untyped`
+          return_type = "T.untyped" if return_type == "<NOT-TYPED>"
+          return_type
         end
 
         # Get the types of each parameter from a method signature
