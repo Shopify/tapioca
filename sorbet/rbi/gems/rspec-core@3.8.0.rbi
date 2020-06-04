@@ -1119,6 +1119,7 @@ module RSpec::Core::HashImitatable
   def []=(key, value); end
   def all?(*args, &block); end
   def any?(*args, &block); end
+  def assert_exclusive_keys(*args, &block); end
   def assert_valid_keys(*args, &block); end
   def assoc(*args, &block); end
   def chain(*args, &block); end

@@ -77,6 +77,7 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           # isolation between test suites and AS leaks into this test.
           class Object
             remove_const :ActiveSupport
+            remove_const :StateMachines
           end
 
           class Module

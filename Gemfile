@@ -15,4 +15,5 @@ group(:development, :test) do
   gem("frozen_record", ">= 0.17", require: false)
   gem("sprockets", "~> 3.7", require: false)
   gem("rails", "~> 5.2", require: false)
+  gem("state_machines", "~> 0.5.0", require: false)
 end

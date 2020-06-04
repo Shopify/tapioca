@@ -2661,8 +2661,9 @@ BigDecimal::EXCEPTION_NaN = T.let(T.unsafe(nil), Integer)
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
 class Class < ::Module
+  include(::StateMachines::MacroMethods)
+
   def class_attribute(*attrs); end
-  def descendants; end
   def subclasses; end
 end
 
@@ -2922,7 +2923,6 @@ class Hash
   include(::JSON::Ext::Generator::GeneratorMethods::Hash)
 
   def as_json(options = _); end
-  def assert_valid_keys(*valid_keys); end
   def deep_dup; end
   def deep_merge(other_hash, &block); end
   def deep_merge!(other_hash, &block); end

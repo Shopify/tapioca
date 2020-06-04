@@ -253,15 +253,17 @@ module Sprockets
   extend(::Sprockets::PathDigestUtils)
   extend(::Sprockets::Dependencies)
   extend(::Sprockets::Compressing)
-  extend(::Sprockets::Exporting)
   extend(::Sprockets::ProcessorUtils)
   extend(::Sprockets::Processing)
   extend(::Sprockets::HTTPUtils)
   extend(::Sprockets::Transformers)
+  extend(::Sprockets::Engines)
   extend(::Sprockets::Mime)
   extend(::Sprockets::Paths)
   extend(::Sprockets::Configuration)
 end
+
+Sprockets::Index = Sprockets::CachedEnvironment
 
 module Sprockets::Rails
 end
@@ -387,5 +389,7 @@ end
 class Sprockets::Railtie::OrderedOptions < ::ActiveSupport::OrderedOptions
   def configure(&block); end
 end
+
+Sprockets::SassFunctions = Sprockets::SassProcessor::Functions
 
 Sprockets::VERSION = T.let(T.unsafe(nil), String)
