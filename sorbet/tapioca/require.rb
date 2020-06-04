@@ -3,3 +3,4 @@
 
 # Add your extra requires here
 require "rails/all"
+require "activerecord-typedstore"
