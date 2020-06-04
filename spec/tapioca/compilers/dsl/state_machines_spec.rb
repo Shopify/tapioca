@@ -39,6 +39,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
       end
     end
 
+    def indented(str, indent)
+      str.lines.map! do |line|
+        next line if line.chomp.empty?
+        " " * indent + line
+      end.join
+    end
+
     it(" generates an RBI that includes state accessor methods") do
       content = <<~RUBY
         class Vehicle
@@ -55,8 +62,8 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
             state :off, :value => 0
           end
         end
-
       RUBY
+
       expected = <<~RUBY
         # typed: strong
         class Vehicle
@@ -131,6 +138,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           def human_alarm_state_name; end
         end
       RUBY
+
       expect(rbi_for(content)).to(eq(expected))
     end
 
@@ -163,6 +171,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           def human_alarm_state_name(state); end
         end
       RUBY
+
       expect(rbi_for(content)).to(include(expected))
     end
 
@@ -174,8 +183,8 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
             state :off, :value => 0
           end
         end
-
       RUBY
+
       expected = <<~RUBY
         module Vehicle::StateMachineInstanceHelperModule
           sig { returns(T::Boolean) }
@@ -212,6 +221,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           def human_alarm_state_name; end
         end
       RUBY
+
       expect(rbi_for(content)).to(include(expected))
     end
 
@@ -230,6 +240,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
           def state_paths(*args); end
       RUBY
+
       expect(rbi_for(content)).to(include(expected))
     end
 
@@ -256,19 +267,20 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = indented(<<~RUBY, 2)
         sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
-          def with_state(*states); end
+        def with_state(*states); end
 
-          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
-          def with_states(*states); end
+        sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+        def with_states(*states); end
 
-          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
-          def without_state(*states); end
+        sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+        def without_state(*states); end
 
-          sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
-          def without_states(*states); end
+        sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+        def without_states(*states); end
       RUBY
+
       expect(rbi_for(content)).to(include(expected))
     end
 
@@ -289,19 +301,20 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = indented(<<~RUBY, 2)
         sig { returns(T.nilable(Symbol)) }
-          def state_event; end
+        def state_event; end
 
-          sig { params(value: T.any(String, Symbol)).returns(T.any(String, Symbol)) }
-          def state_event=(value); end
+        sig { params(value: T.any(String, Symbol)).returns(T.any(String, Symbol)) }
+        def state_event=(value); end
 
-          sig { returns(T.nilable(::StateMachines::Transition)) }
-          def state_event_transition; end
+        sig { returns(T.nilable(::StateMachines::Transition)) }
+        def state_event_transition; end
 
-          sig { params(value: ::StateMachines::Transition).returns(::StateMachines::Transition) }
-          def state_event_transition=(value); end
+        sig { params(value: ::StateMachines::Transition).returns(::StateMachines::Transition) }
+        def state_event_transition=(value); end
       RUBY
+
       expect(rbi_for(content)).to(include(expected))
     end
   end
