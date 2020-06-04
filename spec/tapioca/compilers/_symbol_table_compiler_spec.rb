@@ -1764,6 +1764,15 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
               extend(T::Sig)
               include Quux
 
+              sig { returns(T::Array[Integer]) }
+              attr_accessor :foo
+
+              sig { returns(String) }
+              attr_reader :bar
+
+              sig { params(baz: T::Hash[String, Object]).returns(T::Hash[String, Object]) }
+              attr_writer :baz
+
               sig { override.returns(Integer) }
               def something
               end
@@ -1812,6 +1821,13 @@ RSpec.describe(Tapioca::Compilers::SymbolTableCompiler) do
           class Quux::Concrete
             include(::Quux)
 
+            sig { returns(String) }
+            def bar; end
+            sig { params(baz: T::Hash[String, Object]).returns(T::Hash[String, Object]) }
+            def baz=(_); end
+            sig { returns(T::Array[Integer]) }
+            def foo; end
+            def foo=(_); end
             sig { override.returns(Integer) }
             def something; end
           end
