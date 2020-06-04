@@ -59,8 +59,8 @@ module Tapioca
       #    sig { params(user: T.untyped).returns(T.untyped) }
       #    def age(user); end
       #
-      #    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-      #    def current_user_name(*args, &blk); end
+      #    sig { returns(T.untyped) }
+      #    def current_user_name; end
       #  end
       #
       # class UserController::HelperProxy < ::ActionView::Base
