@@ -139,7 +139,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
           sig { returns(T.untyped) }
           def current_user_name; end
 
-          sig { params(user_id: Integer).returns(<VOID>) }
+          sig { params(user_id: Integer).void }
           def notify_user(user_id); end
         end
 
@@ -183,7 +183,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
           sig { params(user: T.untyped).returns(T.untyped) }
           def greet(user); end
 
-          sig { params(user_id: Integer).returns(<VOID>) }
+          sig { params(user_id: Integer).void }
           def notify_user(user_id); end
         end
 
