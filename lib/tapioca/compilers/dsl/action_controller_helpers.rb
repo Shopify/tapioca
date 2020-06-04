@@ -78,7 +78,7 @@ module Tapioca
         def decorate(root, constant)
           helper_proxy_name = "#{constant}::HelperProxy"
           helper_methods_name = "#{constant}::HelperMethods"
-          instance_methods = constant.instance_methods
+          proxied_helper_methods = constant._helper_methods.map(&:to_sym)
 
           # Create helper method module
           root.create_module(helper_methods_name) do |helper_methods|
@@ -89,7 +89,7 @@ module Tapioca
             end
 
             helpers_module.instance_methods(false).each do |method_name|
-              method = if instance_methods.include?(method_name)
+              method = if proxied_helper_methods.include?(method_name)
                 constant.instance_method(method_name)
               else
                 helpers_module.instance_method(method_name)

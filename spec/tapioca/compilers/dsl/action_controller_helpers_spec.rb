@@ -114,7 +114,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
             extend T::Sig
 
             helper_method :current_user_name
-            helper_method :notify_user
+            helper_method "notify_user"
 
             def current_user_name
               # ...
