@@ -29,7 +29,7 @@ module Tapioca
       #
       # ~~~rbi
       # # notifier_mailer.rbi
-      # # typed: strong
+      # # typed: true
       # class NotifierMailer
       #   sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
       #   def self.notify_customer(customer_id); end
