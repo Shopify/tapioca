@@ -14,7 +14,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
 
     it("gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses") do
       expect(subject.processable_constants).to(be_empty)
-
     end
 
     it("gathers only ActiveSupport::CurrentAttributes subclasses") do
@@ -107,6 +106,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
 
           sig { params(user_id: Integer).void }
           def authenticate(user_id)
+            # ...
           end
         end
       RUBY
