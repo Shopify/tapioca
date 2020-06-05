@@ -103,7 +103,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for TypedStore classes with fields nul and default as false") do
+    it("generate RBI for TypedStore classes with fields null and default as false") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
