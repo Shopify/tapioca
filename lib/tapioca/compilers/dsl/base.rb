@@ -66,7 +66,8 @@ module Tapioca
         sig do
           params(
             namespace: Parlour::RbiGenerator::Namespace,
-            method_def: T.any(Method, UnboundMethod)
+            method_def: T.any(Method, UnboundMethod),
+            class_method: T::Boolean
           ).void
         end
         def create_method_from_def(namespace, method_def, class_method: false)

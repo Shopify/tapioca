@@ -108,7 +108,7 @@ module Tapioca
         sig { params(klass: Parlour::RbiGenerator::Namespace, method: String, class_method: T::Boolean).void }
         def generate_method(klass, method, class_method:)
           if method.end_with?("=")
-            parameter = Parlour::RbiGenerator::Parameter.new(method[0...-1], type: "T.untyped")
+            parameter = Parlour::RbiGenerator::Parameter.new(T.must(method[0...-1]), type: "T.untyped")
             klass.create_method(method, class_method: class_method, parameters: [parameter], return_type: "T.untyped")
           else
             klass.create_method(method, class_method: class_method, return_type: "T.untyped")
