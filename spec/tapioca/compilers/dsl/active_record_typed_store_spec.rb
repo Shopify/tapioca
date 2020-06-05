@@ -23,8 +23,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           end
         end
 
-        class CustomePost < Post
+        class CustomPost < Post
         end
+
         class Shop < ActiveRecord::Base
         end
 
@@ -32,7 +33,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["CustomePost", "Post"]))
+      expect(constants_from(content)).to(eq(["CustomPost", "Post"]))
     end
   end
 
@@ -51,6 +52,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           typed_store :metadata do |s|
             s.string(:reviewer, blank: false, accessor: false)
           end
+
+          typed_store :properties, accessors: false do |s|
+            s.string(:title)
+            s.integer(:comment_count)
+          end
         end
       RUBY
 
@@ -66,7 +72,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
-            s.string(:reviewer, blank: false, accessor: true)
+            s.string(:reviewer)
           end
         end
       RUBY
@@ -106,7 +112,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for TypedStore classes with fields null and default as false") do
+    it("generates methods with non-nilable types for accessors marked as not null") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -253,6 +259,48 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(kind: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
           def kind=(kind); end
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with integer type ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.integer(:rate)
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(Integer)) }
+          def rate; end
+
+          sig { params(rate: T.nilable(Integer)).returns(T.nilable(Integer)) }
+          def rate=(rate); end
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with float type ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.float(:rate)
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(Float)) }
+          def rate; end
+
+          sig { params(rate: T.nilable(Float)).returns(T.nilable(Float)) }
+          def rate=(rate); end
         RUBY
       expect(rbi_for(content)).to(include(expected))
     end
