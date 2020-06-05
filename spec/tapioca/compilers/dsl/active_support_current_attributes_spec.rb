@@ -52,7 +52,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generates method sigs for each current attribute") do
+    it("generates method sigs for every current attribute") do
       content = <<~RUBY
         class Current < ActiveSupport::CurrentAttributes
           attribute :account, :user
