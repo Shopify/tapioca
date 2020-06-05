@@ -7,9 +7,8 @@ require "tapioca/core_ext/class"
 begin
   require "activerecord-typedstore"
   require "active_record"
-  require "action_controller"
 rescue LoadError
-  # means StateMachines is not installed,
+  # means ActiveRecord::TypedStore is not installed,
   # so let's not even define the generator.
   return
 end

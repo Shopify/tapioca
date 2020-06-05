@@ -22,6 +22,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
             s.string(:reviewer, blank: false, accessor: false)
           end
         end
+
+        class CustomePost < Post
+        end
         class Shop < ActiveRecord::Base
         end
 
@@ -29,7 +32,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Post"]))
+      expect(constants_from(content)).to(eq(["CustomePost", "Post"]))
     end
   end
 
@@ -42,10 +45,10 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       end
     end
 
-    it("generate RBI for TypedStore classes without accessor") do
+    it("generates no definitions if there are no accessors to define") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
-          typed_store :metadatado do |s|
+          typed_store :metadata do |s|
             s.string(:reviewer, blank: false, accessor: false)
           end
         end
@@ -59,7 +62,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for TypedStore classes with accessor") do
+    it("generate RBI for TypedStore classes with string type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -147,7 +150,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with no fields specified ") do
+    it("generate RBI for simple TypedStore classes with date type ") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -189,6 +192,69 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
         RUBY
 
       expect(rbi_for(content)).to(eq(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with datetime ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.datetime(:review_date)
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(DateTime)) }
+          def review_date; end
+
+          sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
+          def review_date=(review_date); end
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with decimal type ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.decimal(:rate)
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(BigDecimal)) }
+          def rate; end
+
+          sig { params(rate: T.nilable(BigDecimal)).returns(T.nilable(BigDecimal)) }
+          def rate=(rate); end
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with any type ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.any(:kind)
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(T.untyped)) }
+          def kind; end
+
+          sig { params(kind: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
+          def kind=(kind); end
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
     end
   end
 end
