@@ -5,7 +5,9 @@ require "parlour"
 require "tapioca/core_ext/class"
 
 begin
-  require "state_machines"
+  require "activerecord-typedstore"
+  require "active_record"
+  require "action_controller"
 rescue LoadError
   # means StateMachines is not installed,
   # so let's not even define the generator.
