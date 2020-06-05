@@ -69,12 +69,13 @@ module Tapioca
             method_def: T.any(Method, UnboundMethod)
           ).void
         end
-        def create_method_from_def(namespace, method_def)
+        def create_method_from_def(namespace, method_def, class_method: false)
           create_method(
             namespace,
             method_def.name.to_s,
             parameters: compile_method_parameters_to_parlour(method_def),
-            return_type: compile_method_return_type_to_parlour(method_def)
+            return_type: compile_method_return_type_to_parlour(method_def),
+            class_method: class_method
           )
         end
 

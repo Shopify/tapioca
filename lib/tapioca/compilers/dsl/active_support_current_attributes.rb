@@ -37,7 +37,8 @@ module Tapioca
             instance_methods.each do |method|
               # instance methods are only elevated to class methods
               # no need to add separate instance methods for them
-              generate_method(k, method.to_s, class_method: true)
+              method = constant.instance_method(method)
+              create_method_from_def(k, method, class_method: true)
             end
           end
         end

@@ -127,7 +127,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
           def account=(account); end
 
           sig { params(user_id: Integer).void }
-          def self.authenticate; end
+          def self.authenticate(user_id); end
 
           sig { returns(T.untyped) }
           def self.helper; end
