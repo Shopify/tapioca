@@ -4,17 +4,17 @@
 require "spec_helper"
 require_relative "../../lib/tapioca/sorbet_config_parser"
 
-RSpec.describe(Tapioca::SorbetConfig) do
+describe(Tapioca::SorbetConfig) do
   it("parses empty config strings") do
     config = Tapioca::SorbetConfig.parse_string('')
-    expect(config.paths.empty?)
-    expect(config.ignore.empty?)
+    assert_empty(config.paths)
+    assert_empty(config.ignore)
   end
 
   it("parses a simple config string") do
     config = Tapioca::SorbetConfig.parse_string('.')
-    expect(config.paths).to(eq(['.']))
-    expect(config.ignore.empty?)
+    assert_equal(config.paths, ['.'])
+    assert_empty(config.ignore)
   end
 
   it("parses a config string with paths") do
@@ -22,8 +22,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       lib/a
       lib/b
     CONFIG
-    expect(config.paths).to(eq(['lib/a', 'lib/b']))
-    expect(config.ignore.empty?)
+    assert_equal(config.paths, ['lib/a', 'lib/b'])
+    assert_empty(config.ignore)
   end
 
   it("parses a config string with --file options") do
@@ -35,8 +35,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    expect(config.paths).to(eq(['a', 'b', 'c', 'd', 'e']))
-    expect(config.ignore.empty?)
+    assert_equal(config.paths, ['a', 'b', 'c', 'd', 'e'])
+    assert_empty(config.ignore)
   end
 
   it("parses a config string with --dir options") do
@@ -48,8 +48,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    expect(config.paths).to(eq(['a', 'b', 'c', 'd', 'e']))
-    expect(config.ignore.empty?)
+    assert_equal(config.paths, ['a', 'b', 'c', 'd', 'e'])
+    assert_empty(config.ignore)
   end
 
   it("parses a config string with --ignore options") do
@@ -61,8 +61,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    expect(config.paths).to(eq(['a', 'c', 'e']))
-    expect(config.ignore).to(eq(['b', 'd']))
+    assert_equal(config.paths, ['a', 'c', 'e'])
+    assert_equal(config.ignore, ['b', 'd'])
   end
 
   it("parses a config string with other options") do
@@ -75,8 +75,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       e
       -f
     CONFIG
-    expect(config.paths).to(eq(['a', 'c', 'e']))
-    expect(config.ignore.empty?)
+    assert_equal(config.paths, ['a', 'c', 'e'])
+    assert_empty(config.ignore)
   end
 
   it("parses a config string with mixed options") do
@@ -101,8 +101,8 @@ RSpec.describe(Tapioca::SorbetConfig) do
       --o
       p
     CONFIG
-    expect(config.paths).to(eq(['a', 'c', 'f', 'h', 'i', 'l', 'm']))
-    expect(config.ignore).to(eq(['j', 'k']))
+    assert_equal(config.paths, ['a', 'c', 'f', 'h', 'i', 'l', 'm'])
+    assert_equal(config.ignore, ['j', 'k'])
   end
 
   it("parses a real config string") do
@@ -117,7 +117,7 @@ RSpec.describe(Tapioca::SorbetConfig) do
       --allowed-extension=.rake
       --allowed-extension=.ru
     CONFIG
-    expect(config.paths).to(eq(['.']))
-    expect(config.ignore).to(eq(['.git/', '.idea/', 'vendor/']))
+    assert_equal(config.paths, ['.'])
+    assert_equal(config.ignore, ['.git/', '.idea/', 'vendor/'])
   end
 end

@@ -2,9 +2,16 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/dsl/action_controller_helpers"
 
-RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
+describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
+  before(:each) do
+    require "tapioca/compilers/dsl/action_controller_helpers"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::ActionControllerHelpers.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +20,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
     end
 
     it("gathers no constants if there are no  classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only ActionController subclasses") do
@@ -25,7 +32,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["UserController"]))
+      assert_equal(constants_from(content), ["UserController"])
     end
 
     it("does not gather included modules as their own processable constant") do
@@ -38,7 +45,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["UserController"]))
+      assert_equal(constants_from(content), ["UserController"])
     end
 
     it("gathers subclasses of ActionController subclasses") do
@@ -50,7 +57,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["HandController", "UserController"]))
+      assert_equal(constants_from(content), ["HandController", "UserController"])
     end
 
     it("ignores abstract subclasses of ActionController") do
@@ -63,7 +70,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["UserController"]))
+      assert_equal(constants_from(content), ["UserController"])
     end
   end
 
@@ -102,7 +109,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
 
     it("generates helper module and helper proxy class when defining helper using helper_method") do
@@ -146,7 +153,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
 
     it("generates helper module and helper proxy class when defining helper using block") do
@@ -190,7 +197,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
 
     it("generates helper module and helper proxy class for defining external helper") do
@@ -230,7 +237,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActionControllerHelpers) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
   end
 end

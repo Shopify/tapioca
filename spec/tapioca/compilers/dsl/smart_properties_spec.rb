@@ -2,9 +2,16 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/dsl/smart_properties"
 
-RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
+describe("Tapioca::Compilers::Dsl::SmartProperties") do
+  before(:each) do
+    require "tapioca/compilers/dsl/smart_properties"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::SmartProperties.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +20,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
     end
 
     it("gathers no constants if there are no SmartProperty classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only SmartProperty classes") do
@@ -30,7 +37,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Post", "User"]))
+      assert_equal(constants_from(content), ["Post", "User"])
     end
 
     it("ignores SmartProperty classes without a name") do
@@ -44,7 +51,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(constants_from(content)).to(be_empty)
+      assert_empty(constants_from(content))
     end
   end
 
@@ -69,7 +76,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
 
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for simple smart property") do
@@ -91,7 +98,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for required smart property") do
@@ -113,7 +120,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("defaults to T.untyped for smart property that does not have an accepter") do
@@ -135,7 +142,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("defaults to T::Array for smart property that accepts Arrays") do
@@ -157,7 +164,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for smart property that accepts booleans") do
@@ -179,7 +186,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for smart property that accepts an array of values") do
@@ -201,7 +208,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("defaults to T.untyped if a converter is defined") do
@@ -223,7 +230,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("ignores required if it is a lambda") do
@@ -245,7 +252,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("ignores required if property is not typed") do
@@ -267,7 +274,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates a reader that has been renamed correctly") do
@@ -289,7 +296,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for smart property that accepts boolean and has a default") do
@@ -311,7 +318,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for smart property that accepts a lambda") do
@@ -333,7 +340,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI file for smart property that accepts another ObjectClass") do
@@ -362,7 +369,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::SmartProperties) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
   end
 end

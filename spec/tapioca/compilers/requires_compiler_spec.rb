@@ -4,15 +4,15 @@
 require "spec_helper"
 require_relative "../../../lib/tapioca/compilers/requires_compiler"
 
-RSpec.describe(Tapioca::Compilers::RequiresCompiler) do
+describe(Tapioca::Compilers::RequiresCompiler) do
   it("it does nothing on an empty project") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/empty/sorbet/config')
-    expect(compiler.compile).to(eq(''))
+    assert_equal(compiler.compile, '')
   end
 
   it("it extracts the requires from a simple project") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/simple/sorbet/config')
-    expect(compiler.compile).to(eq(<<~REQ))
+    assert_equal(compiler.compile, <<~REQ)
       require 'a'
       require 'b'
       require 'c'
@@ -28,7 +28,7 @@ RSpec.describe(Tapioca::Compilers::RequiresCompiler) do
 
   it("it extracts the requires from all the files listed in the sorbet config") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/multi/sorbet/config')
-    expect(compiler.compile).to(eq(<<~REQ))
+    assert_equal(compiler.compile, <<~REQ)
       require 'a'
       require 'b'
       require 'c'
@@ -38,7 +38,7 @@ RSpec.describe(Tapioca::Compilers::RequiresCompiler) do
 
   it("it ignores files ignored in the sorbet config") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/sorbet_ignore/sorbet/config')
-    expect(compiler.compile).to(eq(<<~REQ))
+    assert_equal(compiler.compile, <<~REQ)
       require 'c'
       require 'd'
     REQ
@@ -46,7 +46,7 @@ RSpec.describe(Tapioca::Compilers::RequiresCompiler) do
 
   it("it ignores files located in the project") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/project_ignore/sorbet/config')
-    expect(compiler.compile).to(eq(<<~REQ))
+    assert_equal(compiler.compile, <<~REQ)
       require 'liba'
       require 'libb'
       require 'libc'
