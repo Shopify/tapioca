@@ -69,11 +69,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
           sig { returns(T.untyped) }
           def account; end
 
-          sig { params(account: T.untyped).returns(T.untyped) }
-          def self.account=(account); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def self.account=(value); end
 
-          sig { params(account: T.untyped).returns(T.untyped) }
-          def account=(account); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def account=(value); end
 
           sig { returns(T.untyped) }
           def self.user; end
@@ -81,11 +81,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
           sig { returns(T.untyped) }
           def user; end
 
-          sig { params(user: T.untyped).returns(T.untyped) }
-          def self.user=(user); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def self.user=(value); end
 
-          sig { params(user: T.untyped).returns(T.untyped) }
-          def user=(user); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def user=(value); end
         end
       RUBY
 
@@ -120,11 +120,11 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
           sig { returns(T.untyped) }
           def account; end
 
-          sig { params(account: T.untyped).returns(T.untyped) }
-          def self.account=(account); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def self.account=(value); end
 
-          sig { params(account: T.untyped).returns(T.untyped) }
-          def account=(account); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def account=(value); end
 
           sig { params(user_id: Integer).void }
           def self.authenticate(user_id); end
