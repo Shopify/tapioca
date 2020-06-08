@@ -51,7 +51,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
     end
 
     def rbi_for(contents)
-      with_contents(contents, requires: contents.keys) do |dir|
+      with_contents(contents, requires: contents.keys) do
         parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
         subject.decorate(parlour.root, Post)
         parlour.rbi
@@ -72,7 +72,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
           end
         RUBY
 
-        "schema.rb" => <<~RUBY
+        "schema.rb" => <<~RUBY,
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
@@ -158,7 +158,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
           end
         RUBY
 
-        "schema.rb" => <<~RUBY
+        "schema.rb" => <<~RUBY,
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
@@ -221,17 +221,17 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       expect(output).to(include(expected))
 
       expected = indented(<<~RUBY, 2)
-          sig { void }
-          def restore_body!; end
+        sig { void }
+        def restore_body!; end
       RUBY
       expect(output).to(include(expected))
 
       expected = indented(<<~RUBY, 2)
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
-          def saved_change_to_body; end
+        sig { returns([T.nilable(::String), T.nilable(::String)]) }
+        def saved_change_to_body; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_body?; end
+        sig { returns(T::Boolean) }
+        def saved_change_to_body?; end
       RUBY
       expect(output).to(include(expected))
     end
