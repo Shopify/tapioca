@@ -25,4 +25,5 @@ group(:development, :test) do
   gem("rails", "~> 5.2", require: false)
   gem("state_machines", "~> 0.5.0", require: false)
   gem("activerecord-typedstore", "~> 1.3", require: false)
+  gem("sqlite3")
 end
