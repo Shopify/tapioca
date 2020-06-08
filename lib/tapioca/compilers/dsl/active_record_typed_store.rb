@@ -15,7 +15,7 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Comilers::DSL::ActiveRecordTypedStore` generates RBI files for ActiveRecord models that use
+      # `Tapioca::Compilers::DSL::ActiveRecordTypedStore` generates RBI files for ActiveRecord models that use
       # `ActiveRecord::TypedStore` features (see https://github.com/byroot/activerecord-typedstore).
       #
       # For example, with the following ActiveRecord class:
@@ -108,7 +108,11 @@ module Tapioca
               store_data.accessors.each do |accessor|
                 field = store_data.fields[accessor]
                 type = type_for(field.type_sym)
-                type = "T.nilable(#{type})" if field.null
+                if type == "T.untyped"
+                  type = type.to_s
+                elsif field.null
+                  type = "T.nilable(#{type})"
+                end
                 generate_methods(field.name.to_s, type, k)
               end
             end

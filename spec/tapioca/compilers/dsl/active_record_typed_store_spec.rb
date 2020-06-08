@@ -69,7 +69,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for TypedStore classes with string type") do
+    it("generates RBI for TypedStore classes with string type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -188,7 +188,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with date type ") do
+    it("generates methods with Date type for attributes with date type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -263,7 +263,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(eq(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with datetime ") do
+    it("generates methods with DteTime type for attributes with datetime type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -286,7 +286,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with time ") do
+    it("generates methods with Time type for attributes with time type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -309,7 +309,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with decimal type ") do
+    it("generates methods with Decimal type for attributes with decimal type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -330,7 +330,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with any type ") do
+    it("generates methods with T.untyped type for attributes with any type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -342,16 +342,16 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expected = <<~RUBY
         # typed: strong
         class Post
-          sig { returns(T.nilable(T.untyped)) }
+          sig { returns(T.untyped) }
           def kind; end
 
-          sig { params(kind: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
+          sig { params(kind: T.untyped).returns(T.untyped) }
           def kind=(kind); end
         RUBY
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with integer type ") do
+    it("generates methods with Integer type for attributes with integer type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -372,7 +372,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
       expect(rbi_for(content)).to(include(expected))
     end
 
-    it("generate RBI for simple TypedStore classes with float type ") do
+    it("generates methods with Float type for attributes with float type") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
