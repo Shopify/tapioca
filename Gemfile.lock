@@ -43,6 +43,8 @@ GEM
       activemodel (= 5.2.4.3)
       activesupport (= 5.2.4.3)
       arel (>= 9.0)
+    activerecord-typedstore (1.3.0)
+      activerecord (>= 5.2)
     activestorage (5.2.4.3)
       actionpack (= 5.2.4.3)
       activerecord (= 5.2.4.3)
@@ -178,6 +180,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-typedstore (~> 1.3)
   bundler (~> 1.17)
   frozen_record (>= 0.17)
   pry-byebug
