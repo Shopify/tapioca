@@ -108,11 +108,7 @@ module Tapioca
               store_data.accessors.each do |accessor|
                 field = store_data.fields[accessor]
                 type = type_for(field.type_sym)
-                if type == "T.untyped"
-                  type = type.to_s
-                elsif field.null
-                  type = "T.nilable(#{type})"
-                end
+                type = "T.nilable(#{type})" if field.null && type != "T.untyped"
                 generate_methods(field.name.to_s, type, k)
               end
             end
