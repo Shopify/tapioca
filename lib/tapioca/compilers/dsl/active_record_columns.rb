@@ -302,7 +302,8 @@ module Tapioca
         def type_for(constant, column_name)
           column_type = constant.attribute_types[column_name]
 
-          if Object.const_defined?(:StrongTypeGeneration) && !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+          if Object.const_defined?(:StrongTypeGeneration) &&
+              !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
             return ["T.untyped", "T.untyped"]
           end
 

@@ -332,5 +332,5 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
       expect(output).to(include(expected))
     end
- end
+  end
 end
