@@ -6,7 +6,6 @@ require "tapioca/core_ext/class"
 
 begin
   require "activerecord-typedstore"
-  require "active_record"
 rescue LoadError
   # means ActiveRecord::TypedStore is not installed,
   # so let's not even define the generator.
@@ -16,7 +15,7 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Comiler::DSL::ActiveRecordTypedStore` generates RBI files for ActiveRecord models that use
+      # `Tapioca::Comilers::DSL::ActiveRecordTypedStore` generates RBI files for ActiveRecord models that use
       # `ActiveRecord::TypedStore` features (see https://github.com/byroot/activerecord-typedstore).
       #
       # For example, with the following ActiveRecord class:

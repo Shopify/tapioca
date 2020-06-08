@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "active_record"
 
 RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
   describe("#initialize") do
@@ -74,6 +75,10 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           typed_store :metadata do |s|
             s.string(:reviewer)
           end
+
+          typed_store :properties do |s|
+            s.string(:title)
+          end
         end
       RUBY
 
@@ -106,6 +111,33 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { returns(T::Boolean) }
           def saved_change_to_reviewer?; end
+
+          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+          def saved_change_to_title; end
+
+          sig { returns(T::Boolean) }
+          def saved_change_to_title?; end
+
+          sig { returns(T.nilable(String)) }
+          def title; end
+
+          sig { params(title: T.nilable(String)).returns(T.nilable(String)) }
+          def title=(title); end
+
+          sig { returns(T::Boolean) }
+          def title?; end
+
+          sig { returns(T.nilable(String)) }
+          def title_before_last_save; end
+
+          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+          def title_change; end
+
+          sig { returns(T::Boolean) }
+          def title_changed?; end
+
+          sig { returns(T.nilable(String)) }
+          def title_was; end
         end
        RUBY
 
@@ -162,6 +194,10 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           typed_store :metadata do |s|
             s.date(:review_date)
           end
+
+          typed_store :properties do |s|
+            s.date(:title_date)
+          end
         end
       RUBY
 
@@ -194,6 +230,33 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { returns(T::Boolean) }
           def saved_change_to_review_date?; end
+
+          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+          def saved_change_to_title_date; end
+
+          sig { returns(T::Boolean) }
+          def saved_change_to_title_date?; end
+
+          sig { returns(T.nilable(Date)) }
+          def title_date; end
+
+          sig { params(title_date: T.nilable(Date)).returns(T.nilable(Date)) }
+          def title_date=(title_date); end
+
+          sig { returns(T::Boolean) }
+          def title_date?; end
+
+          sig { returns(T.nilable(Date)) }
+          def title_date_before_last_save; end
+
+          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+          def title_date_change; end
+
+          sig { returns(T::Boolean) }
+          def title_date_changed?; end
+
+          sig { returns(T.nilable(Date)) }
+          def title_date_was; end
         end
         RUBY
 
@@ -206,6 +269,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           typed_store :metadata do |s|
             s.datetime(:review_date)
           end
+
         end
       RUBY
 
@@ -217,6 +281,30 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
           def review_date=(review_date); end
+
+        RUBY
+      expect(rbi_for(content)).to(include(expected))
+    end
+
+    it("generate RBI for simple TypedStore classes with time ") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          typed_store :metadata do |s|
+            s.time(:review_time)
+          end
+
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(Time)) }
+          def review_time; end
+
+          sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
+          def review_time=(review_time); end
+
         RUBY
       expect(rbi_for(content)).to(include(expected))
     end
