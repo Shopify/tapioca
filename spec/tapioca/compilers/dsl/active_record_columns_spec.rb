@@ -65,10 +65,14 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       end.join
     end
 
-    it("generates RBI file for class without custom attributes") do
+    it("generates RBI file for class without custom attributes with StrongTypeGeneration") do
       files = {
         "file.rb" => <<~RUBY,
+          module StrongTypeGeneration
+          end
+
           class Post < ActiveRecord::Base
+            extend StrongTypeGeneration
           end
         RUBY
 
@@ -151,10 +155,14 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       expect(rbi_for(files)).to(eq(expected))
     end
 
-    it("generates RBI file that includes custom attributes") do
+    it("generates RBI file for custom attributes with strong type generation") do
       files = {
         "file.rb" => <<~RUBY,
+          module StrongTypeGeneration
+          end
+
           class Post < ActiveRecord::Base
+            extend StrongTypeGeneration
           end
         RUBY
 
@@ -236,147 +244,93 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       expect(output).to(include(expected))
     end
 
-    # TODO: Split this test. Ugly.
-    # it("generates RBI that includes all dsl methods") do
-    #   files = {
-    #     "file.rb" => <<~RUBY,
-    #       class Post < ActiveRecord::Base
-    #       end
-    #     RUBY
+    it("generates RBI file for custom attributes without strong type generation") do
+      files = {
+        "file.rb" => <<~RUBY,
+          module StrongTypeGeneration
+          end
 
-    #     "schema.rb" => <<~RUBY
-    #       ActiveRecord::Schema.define do
-    #         create_table :posts do |t|
-    #           t.string :body
-    #         end
-    #       end
-    #    RUBY
-    #   }
+          class Post < ActiveRecord::Base
+            # StrongTypeGeneration is not extended
+          end
+        RUBY
 
-    #   expected = <<~RUBY
-    #     # typed: strong
-    #     class Post
-    #       include Post::GeneratedAttributeMethods
-    #     end
+        "schema.rb" => <<~RUBY,
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+                t.string :body
+              end
+            end
+          end
+        RUBY
+      }
 
-    #     module Post::GeneratedAttributeMethods
-    #       sig { returns(T.nilable(::String)) }
-    #       def body; end
+      expected = <<~RUBY
+        module Post::GeneratedAttributeMethods
+          sig { returns(T.untyped) }
+          def body; end
 
-    #       sig { params(value: ::String).returns(::String) }
-    #       def body=(value); end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def body=(value); end
 
-    #       sig { returns(T::Boolean) }
-    #       def body?; end
+          sig { returns(T::Boolean) }
+          def body?; end
 
-    #       sig { returns(T.nilable(::String)) }
-    #       def body_before_last_save; end
+          sig { returns(T.untyped) }
+          def body_before_last_save; end
 
-    #       sig { returns(T.untyped) }
-    #       def body_before_type_cast; end
+          sig { returns(T.untyped) }
+          def body_before_type_cast; end
 
-    #       sig { returns(T::Boolean) }
-    #       def body_came_from_user?; end
+          sig { returns(T::Boolean) }
+          def body_came_from_user?; end
 
-    #       sig { returns([T.nilable(::String), T.nilable(::String)]) }
-    #       def body_change; end
+          sig { returns([T.untyped, T.untyped]) }
+          def body_change; end
 
-    #       sig { returns([T.nilable(::String), T.nilable(::String)]) }
-    #       def body_change_to_be_saved; end
+          sig { returns([T.untyped, T.untyped]) }
+          def body_change_to_be_saved; end
 
-    #       sig { returns(T::Boolean) }
-    #       def body_changed?; end
+          sig { returns(T::Boolean) }
+          def body_changed?; end
 
-    #       sig { returns(T.nilable(::String)) }
-    #       def body_in_database; end
+          sig { returns(T.untyped) }
+          def body_in_database; end
 
-    #       sig { returns([T.nilable(::String), T.nilable(::String)]) }
-    #       def body_previous_change; end
+          sig { returns([T.untyped, T.untyped]) }
+          def body_previous_change; end
 
-    #       sig { returns(T::Boolean) }
-    #       def body_previously_changed?; end
+          sig { returns(T::Boolean) }
+          def body_previously_changed?; end
 
-    #       sig { returns(T.nilable(::String)) }
-    #       def body_previously_was; end
+          sig { returns(T.untyped) }
+          def body_previously_was; end
 
-    #       sig { returns(T.nilable(::String)) }
-    #       def body_was; end
+          sig { returns(T.untyped) }
+          def body_was; end
 
-    #       sig { void }
-    #       def body_will_change!; end
+          sig { void }
+          def body_will_change!; end
+      RUBY
 
-    #       sig { returns(T.nilable(::Integer)) }
-    #       def id; end
+      output = rbi_for(files)
+      expect(output).to(include(expected))
 
-    #       sig { params(value: ::Integer).returns(::Integer) }
-    #       def id=(value); end
+      expected = indented(<<~RUBY, 2)
+        sig { void }
+        def restore_body!; end
+      RUBY
+      expect(output).to(include(expected))
 
-    #       sig { returns(T::Boolean) }
-    #       def id?; end
+      expected = indented(<<~RUBY, 2)
+        sig { returns([T.untyped, T.untyped]) }
+        def saved_change_to_body; end
 
-    #       sig { returns(T.nilable(::Integer)) }
-    #       def id_before_last_save; end
-
-    #       sig { returns(T.untyped) }
-    #       def id_before_type_cast; end
-
-    #       sig { returns(T::Boolean) }
-    #       def id_came_from_user?; end
-
-    #       sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
-    #       def id_change; end
-
-    #       sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
-    #       def id_change_to_be_saved; end
-
-    #       sig { returns(T::Boolean) }
-    #       def id_changed?; end
-
-    #       sig { returns(T.nilable(::Integer)) }
-    #       def id_in_database; end
-
-    #       sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
-    #       def id_previous_change; end
-
-    #       sig { returns(T::Boolean) }
-    #       def id_previously_changed?; end
-
-    #       sig { returns(T.nilable(::Integer)) }
-    #       def id_previously_was; end
-
-    #       sig { returns(T.nilable(::Integer)) }
-    #       def id_was; end
-
-    #       sig { void }
-    #       def id_will_change!; end
-
-    #       sig { void }
-    #       def restore_body!; end
-
-    #       sig { void }
-    #       def restore_id!; end
-
-    #       sig { returns([T.nilable(::String), T.nilable(::String)]) }
-    #       def saved_change_to_body; end
-
-    #       sig { returns(T::Boolean) }
-    #       def saved_change_to_body?; end
-
-    #       sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
-    #       def saved_change_to_id; end
-
-    #       sig { returns(T::Boolean) }
-    #       def saved_change_to_id?; end
-
-    #       sig { returns(T::Boolean) }
-    #       def will_save_change_to_body?; end
-
-    #       sig { returns(T::Boolean) }
-    #       def will_save_change_to_id?; end
-    #     end
-    #   RUBY
-
-    #   expect(rbi_for(files)).to(eq(expected))
-    # end
-  end
+        sig { returns(T::Boolean) }
+        def saved_change_to_body?; end
+      RUBY
+      expect(output).to(include(expected))
+    end
+ end
 end

@@ -302,10 +302,9 @@ module Tapioca
         def type_for(constant, column_name)
           column_type = constant.attribute_types[column_name]
 
-          # TODO: Uncomment and resolve this shopify specific dependency
-          # unless constant.singleton_class < StrongTypeGeneration
-          #   return ["T.untyped", "T.untyped"]
-          # end
+          if Object.const_defined?(:StrongTypeGeneration) && !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+            return ["T.untyped", "T.untyped"]
+          end
 
           getter_type =
             case column_type
@@ -325,10 +324,6 @@ module Tapioca
               "::DateTime"
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
-              # Do this better: Support pluggable type-lookups so that we can move the type mappings
-              # below this line into other classes
-            when MoneyColumn::ActiveRecordType
-              "::Money"
             else
               "T.untyped"
             end
