@@ -3,10 +3,21 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 
-begin
-  require 'rspec/core/rake_task'
-  RSpec::Core::RakeTask.new(:spec)
-rescue LoadError # rubocop:disable Lint/SuppressedException
+Rake.application.options.trace = false
+
+Rake::TestTask.new do |t|
+  t.libs << "lib"
+  t.libs << "spec"
+  t.warning = false
+  t.test_files = FileList['spec/**/*_spec.rb']
+end
+
+task(:spec) do
+  begin
+    Rake::Task[:test].execute
+  rescue RuntimeError
+    exit(1)
+  end
 end
 
 task(default: :spec)

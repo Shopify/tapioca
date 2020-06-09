@@ -2,9 +2,16 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/dsl/smart_properties"
 
-RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
+describe("Tapioca::Compilers::Dsl::StateMachines") do
+  before(:each) do
+    require "tapioca/compilers/dsl/state_machines"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::StateMachines.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +20,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
     end
 
     it("gathers no constants if there are no StateMachines classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only StateMachines classes") do
@@ -30,7 +37,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["User", "Vehicle"]))
+      assert_equal(constants_from(content), ["User", "Vehicle"])
     end
   end
 
@@ -143,7 +150,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates an RBI that includes name helpers methods") do
@@ -176,7 +183,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates an RBI with path, event and state helper methods") do
@@ -226,7 +233,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates an RBI with path helper methods only") do
@@ -245,7 +252,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
           def state_paths(*args); end
       RUBY
 
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates an RBI with scope methods when state machine defines scopes") do
@@ -285,7 +292,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         def without_states(*states); end
       RUBY
 
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates an RBI with action methods when state machine defines an action") do
@@ -319,7 +326,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::StateMachines) do
         def state_event_transition=(value); end
       RUBY
 
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
   end
 end

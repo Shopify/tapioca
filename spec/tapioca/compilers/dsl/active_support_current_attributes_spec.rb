@@ -2,9 +2,16 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/dsl/active_support_current_attributes"
 
-RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
+describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
+  before(:each) do
+    require "tapioca/compilers/dsl/active_support_current_attributes"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +20,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
     end
 
     it("gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only ActiveSupport::CurrentAttributes subclasses") do
@@ -25,7 +32,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Current"]))
+      assert_equal(constants_from(content), ["Current"])
     end
   end
 
@@ -49,7 +56,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
 
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates method sigs for every current attribute") do
@@ -89,7 +96,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("only generates a class method definition for non current attribute methods") do
@@ -102,7 +109,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
           def helper
             # ...
           end
-
 
           sig { params(user_id: Integer).void }
           def authenticate(user_id)
@@ -134,7 +140,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes) do
         end
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
   end
 end

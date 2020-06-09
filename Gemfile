@@ -7,8 +7,16 @@ gemspec
 gem 'rubocop-shopify', require: false
 
 group(:deployment, :development) do
-  gem("rake", "~> 12.3")
+  gem("rake")
 end
+
+gem("bundler", "~> 1.17")
+gem("pry-byebug")
+gem("minitest")
+gem("minitest-hooks")
+gem("minitest-fork_executor")
+gem("minitest-reporters")
+gem("sorbet")
 
 group(:development, :test) do
   gem("smart_properties", ">= 1.15.0", require: false)

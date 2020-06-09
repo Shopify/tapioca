@@ -2,9 +2,17 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require "tapioca/compilers/dsl/frozen_record"
 
-RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
+describe("Tapioca::Compilers::Dsl::FrozenRecord") do
+  before(:each) do
+    require "rails/railtie"
+    require "tapioca/compilers/dsl/frozen_record"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::FrozenRecord.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +21,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
     end
 
     it("gathers no constants if there are no FrozenRecord classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only FrozenRecord classes") do
@@ -25,7 +33,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Student"]))
+      assert_equal(constants_from(content), ["Student"])
     end
   end
 
@@ -55,7 +63,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
 
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
 
     it("generates an RBI file for frozen records") do
@@ -102,7 +110,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::FrozenRecord) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
   end
 end

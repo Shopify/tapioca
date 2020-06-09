@@ -2,9 +2,17 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "active_record"
 
-RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
+describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
+  before(:each) do
+    require "active_record"
+    require "tapioca/compilers/dsl/active_record_typed_store"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::ActiveRecordTypedStore.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +21,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
     end
 
     it("gathers no constants if there are no ActiveRecordTypedStore classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gather only TypedStore classes") do
@@ -34,7 +42,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["CustomPost", "Post"]))
+      assert_equal(constants_from(content), ["CustomPost", "Post"])
     end
   end
 
@@ -66,7 +74,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
       RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates RBI for TypedStore classes with string type") do
@@ -139,9 +147,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           sig { returns(T.nilable(String)) }
           def title_was; end
         end
-       RUBY
+      RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods with non-nilable types for accessors marked as not null") do
@@ -183,9 +191,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           sig { returns(T::Boolean) }
           def saved_change_to_reviewed?; end
         end
-        RUBY
+      RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods with Date type for attributes with date type") do
@@ -258,9 +266,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           sig { returns(T.nilable(Date)) }
           def title_date_was; end
         end
-        RUBY
+      RUBY
 
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods with DteTime type for attributes with datetime type") do
@@ -281,9 +289,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
           def review_date=(review_date); end
+      RUBY
 
-        RUBY
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates methods with Time type for attributes with time type") do
@@ -292,7 +300,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
           typed_store :metadata do |s|
             s.time(:review_time)
           end
-
         end
       RUBY
 
@@ -304,9 +311,8 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
           def review_time=(review_time); end
-
         RUBY
-      expect(rbi_for(content)).to(include(expected))
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates methods with Decimal type for attributes with decimal type") do
@@ -326,8 +332,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(rate: T.nilable(BigDecimal)).returns(T.nilable(BigDecimal)) }
           def rate=(rate); end
-        RUBY
-      expect(rbi_for(content)).to(include(expected))
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates methods with T.untyped type for attributes with any type") do
@@ -347,8 +354,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(kind: T.untyped).returns(T.untyped) }
           def kind=(kind); end
-        RUBY
-      expect(rbi_for(content)).to(include(expected))
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates methods with Integer type for attributes with integer type") do
@@ -368,8 +376,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(rate: T.nilable(Integer)).returns(T.nilable(Integer)) }
           def rate=(rate); end
-        RUBY
-      expect(rbi_for(content)).to(include(expected))
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
     end
 
     it("generates methods with Float type for attributes with float type") do
@@ -389,8 +398,9 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordTypedStore) do
 
           sig { params(rate: T.nilable(Float)).returns(T.nilable(Float)) }
           def rate=(rate); end
-        RUBY
-      expect(rbi_for(content)).to(include(expected))
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
     end
   end
 end
