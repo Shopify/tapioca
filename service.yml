@@ -3,4 +3,4 @@ owners:
   - Shopify/sorbet
 classification: library
 slack_channels:
-  - sorbet
+  - help-ruby-typing
