@@ -300,12 +300,9 @@ module Tapioca
           ).returns([String, String])
         end
         def type_for(constant, column_name)
-          column_type = constant.attribute_types[column_name]
+          return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(constant)
 
-          if Object.const_defined?(:StrongTypeGeneration) &&
-              !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
-            return ["T.untyped", "T.untyped"]
-          end
+          column_type = constant.attribute_types[column_name]
 
           getter_type =
             case column_type
@@ -340,6 +337,11 @@ module Tapioca
           end
 
           [getter_type, setter_type]
+        end
+
+        def do_not_generate_strong_types?(constant)
+          Object.const_defined?(:StrongTypeGeneration) &&
+              !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
         end
       end
     end
