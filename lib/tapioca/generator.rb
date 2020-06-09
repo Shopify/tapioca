@@ -45,6 +45,38 @@ module Tapioca
     end
 
     sig { void }
+    def build_requires
+      requires_path = Config::DEFAULT_POSTREQUIRE
+      compiler = Compilers::RequiresCompiler.new(Config::SORBET_CONFIG)
+      name = set_color(requires_path, :yellow, :bold)
+      say("Compiling #{name}, this may take a few seconds... ")
+
+      rb_string = compiler.compile
+      if rb_string.empty?
+        say("Nothing to do", :green)
+        return
+      end
+
+      # Clean all existing requires before regenerating the list so we update
+      # it with the new one found in the client code and remove the old ones.
+      File.delete(requires_path) if File.exist?(requires_path)
+
+      content = String.new
+      content << rbi_header(config.generate_command, "false")
+      content << rb_string
+
+      outdir = File.dirname(requires_path)
+      FileUtils.mkdir_p(outdir)
+      File.write(requires_path, content)
+
+      say("Done", :green)
+
+      say("All requires from this application have been written to #{name}.", [:green, :bold])
+      cmd = set_color("tapioca sync", :yellow, :bold)
+      say("Please review changes and commit them, then run #{cmd}.", [:green, :bold])
+    end
+
+    sig { void }
     def build_todos
       todos_path = config.todos_path
       compiler = Compilers::TodosCompiler.new
@@ -113,9 +145,40 @@ module Tapioca
     sig { void }
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
-      loader.load_bundle(config.prerequire, config.postrequire)
+      begin
+        loader.load_bundle(config.prerequire, config.postrequire)
+      rescue LoadError => e
+        explain_failed_require(config.postrequire, e)
+        exit(1)
+      end
       say(" Done", :green)
       puts
+    end
+
+    sig { params(file: String, error: LoadError).void }
+    def explain_failed_require(file, error)
+      say_error("\n\nLoadError: #{error}", :bold, :red)
+      say_error("\nTapioca could not load all the gems required by your application.", :yellow)
+      say_error("If you populated ", :yellow)
+      say_error("#{file} ", :bold, :blue)
+      say_error("with ", :yellow)
+      say_error("tapioca require", :bold, :blue)
+      say_error("you should probably review it and remove the faulty line.", :yellow)
+    end
+
+    sig do
+      params(
+        message: String,
+        color: T.any(Symbol, T::Array[Symbol]),
+      ).void
+    end
+    def say_error(message = "", *color)
+      force_new_line = (message.to_s !~ /( |\t)\Z/)
+      buffer = prepare_message(*T.unsafe([message, *T.unsafe(color)]))
+      buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
+
+      stderr.print(buffer)
+      stderr.flush
     end
 
     sig { returns(T::Hash[String, String]) }

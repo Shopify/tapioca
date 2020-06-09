@@ -52,6 +52,13 @@ module Tapioca
       end
     end
 
+    desc "require", "generate the list of files to be required by tapioca"
+    def require
+      Tapioca.silence_warnings do
+        generator.build_requires
+      end
+    end
+
     desc "todo", "generate the list of unresolved constants"
     def todo
       Tapioca.silence_warnings do
