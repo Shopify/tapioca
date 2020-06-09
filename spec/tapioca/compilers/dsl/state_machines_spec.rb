@@ -50,13 +50,6 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
       end
     end
 
-    def indented(str, indent)
-      str.lines.map! do |line|
-        next line if line.chomp.empty?
-        " " * indent + line
-      end.join
-    end
-
     it(" generates an RBI that includes state accessor methods") do
       content = <<~RUBY
         class Vehicle

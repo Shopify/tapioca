@@ -58,13 +58,6 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       end
     end
 
-    def indented(str, indent)
-      str.lines.map! do |line|
-        next line if line.chomp.empty?
-        " " * indent + line
-      end.join
-    end
-
     it("generates RBI file for class without custom attributes with StrongTypeGeneration") do
       files = {
         "file.rb" => <<~RUBY,
