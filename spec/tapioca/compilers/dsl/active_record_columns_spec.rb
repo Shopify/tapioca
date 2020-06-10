@@ -2,9 +2,17 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/dsl/active_record_columns"
+require "active_record"
 
-RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
+describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
+  before(:each) do
+    require "tapioca/compilers/dsl/active_record_columns"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::ActiveRecordColumns.new
+  end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +21,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
     end
 
     it("gathers no constants if there are no ActiveRecord subclasses") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gathers only ActiveRecord subclasses") do
@@ -25,7 +33,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Post"]))
+      assert_equal(constants_from(content), ["Post"])
     end
 
     it("rejects abstract ActiveRecord subclasses") do
@@ -38,7 +46,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         end
       RUBY
 
-      expect(constants_from(content)).to(eq(["Post"]))
+      assert_equal(constants_from(content), ["Post"])
     end
   end
 
@@ -145,7 +153,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         end
       RUBY
 
-      expect(rbi_for(files)).to(eq(expected))
+      assert_equal(rbi_for(files), expected)
     end
 
     it("generates RBI file for custom attributes with strong type generation") do
@@ -219,13 +227,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { void }
         def restore_body!; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([T.nilable(::String), T.nilable(::String)]) }
@@ -234,7 +242,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generates RBI file for custom attributes without strong type generation") do
@@ -308,13 +316,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { void }
         def restore_body!; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([T.untyped, T.untyped]) }
@@ -323,13 +331,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(T::Boolean) }
         def will_save_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generates RBI file given nullability of an attribute") do
@@ -404,7 +412,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([T.nilable(::String), T.nilable(::String)]) }
@@ -413,7 +421,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([::String, ::String]) }
@@ -422,7 +430,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_title?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(::String) }
@@ -470,7 +478,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { void }
         def title_will_change!; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(T.nilable(::DateTime)) }
@@ -479,8 +487,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns([T.nilable(::DateTime), T.nilable(::DateTime)]) }
         def created_at_previous_change; end
       RUBY
-
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(T.nilable(::DateTime)) }
@@ -489,8 +496,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns([T.nilable(::DateTime), T.nilable(::DateTime)]) }
         def updated_at_previous_change; end
       RUBY
-
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generates RBI file containing every ActiveRecord column type") do
@@ -527,43 +533,43 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::String).returns(::String) }
         def column2=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::Date).returns(::Date) }
         def column3=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::BigDecimal).returns(::BigDecimal) }
         def column4=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::Float).returns(::Float) }
         def column5=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: T::Boolean).returns(T::Boolean) }
         def column6=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::DateTime).returns(::DateTime) }
         def column7=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generates RBI file for time_zone_aware_attributes") do
@@ -597,19 +603,19 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
         def column2=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
         def column3=(value); end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generates RBI file for alias_attributes") do
@@ -681,13 +687,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { void }
         def restore_author!; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([T.untyped, T.untyped]) }
@@ -696,13 +702,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_author?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(T::Boolean) }
         def will_save_change_to_author?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
 
     it("generated RBI file ignores conflicting alias_attributes") do
@@ -777,13 +783,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
       RUBY
 
       output = rbi_for(files)
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { void }
         def restore_body!; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns([T.nilable(::String), T.nilable(::String)]) }
@@ -792,13 +798,13 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordColumns) do
         sig { returns(T::Boolean) }
         def saved_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { returns(T::Boolean) }
         def will_save_change_to_body?; end
       RUBY
-      expect(output).to(include(expected))
+      assert_includes(output, expected)
     end
   end
 end

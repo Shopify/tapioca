@@ -18,5 +18,12 @@ module Minitest
   class Test
     include ContentHelper
     include TemplateHelper
+
+    def indented(str, indent)
+      str.lines.map! do |line|
+        next line if line.chomp.empty?
+        " " * indent + line
+      end.join
+    end
   end
 end
