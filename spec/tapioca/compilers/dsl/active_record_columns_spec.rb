@@ -276,67 +276,9 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
           sig { returns(T::Boolean) }
           def body?; end
-
-          sig { returns(T.untyped) }
-          def body_before_last_save; end
-
-          sig { returns(T.untyped) }
-          def body_before_type_cast; end
-
-          sig { returns(T::Boolean) }
-          def body_came_from_user?; end
-
-          sig { returns([T.untyped, T.untyped]) }
-          def body_change; end
-
-          sig { returns([T.untyped, T.untyped]) }
-          def body_change_to_be_saved; end
-
-          sig { returns(T::Boolean) }
-          def body_changed?; end
-
-          sig { returns(T.untyped) }
-          def body_in_database; end
-
-          sig { returns([T.untyped, T.untyped]) }
-          def body_previous_change; end
-
-          sig { returns(T::Boolean) }
-          def body_previously_changed?; end
-
-          sig { returns(T.untyped) }
-          def body_previously_was; end
-
-          sig { returns(T.untyped) }
-          def body_was; end
-
-          sig { void }
-          def body_will_change!; end
       RUBY
 
-      output = rbi_for(files)
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { void }
-        def restore_body!; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns([T.untyped, T.untyped]) }
-        def saved_change_to_body; end
-
-        sig { returns(T::Boolean) }
-        def saved_change_to_body?; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns(T::Boolean) }
-        def will_save_change_to_body?; end
-      RUBY
-      assert_includes(output, expected)
+      assert_includes(rbi_for(files), expected)
     end
 
     it("generates RBI file given nullability of an attribute") do
@@ -372,63 +314,8 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
         sig { returns(T::Boolean) }
         def body?; end
-
-        sig { returns(T.nilable(::String)) }
-        def body_before_last_save; end
-
-        sig { returns(T.untyped) }
-        def body_before_type_cast; end
-
-        sig { returns(T::Boolean) }
-        def body_came_from_user?; end
-
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
-        def body_change; end
-
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
-        def body_change_to_be_saved; end
-
-        sig { returns(T::Boolean) }
-        def body_changed?; end
-
-        sig { returns(T.nilable(::String)) }
-        def body_in_database; end
-
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
-        def body_previous_change; end
-
-        sig { returns(T::Boolean) }
-        def body_previously_changed?; end
-
-        sig { returns(T.nilable(::String)) }
-        def body_previously_was; end
-
-        sig { returns(T.nilable(::String)) }
-        def body_was; end
-
-        sig { void }
-        def body_will_change!; end
       RUBY
-
       output = rbi_for(files)
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
-        def saved_change_to_body; end
-
-        sig { returns(T::Boolean) }
-        def saved_change_to_body?; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns([::String, ::String]) }
-        def saved_change_to_title; end
-
-        sig { returns(T::Boolean) }
-        def saved_change_to_title?; end
-      RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
@@ -440,60 +327,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
         sig { returns(T::Boolean) }
         def title?; end
-
-        sig { returns(::String) }
-        def title_before_last_save; end
-
-        sig { returns(T.untyped) }
-        def title_before_type_cast; end
-
-        sig { returns(T::Boolean) }
-        def title_came_from_user?; end
-
-        sig { returns([::String, ::String]) }
-        def title_change; end
-
-        sig { returns([::String, ::String]) }
-        def title_change_to_be_saved; end
-
-        sig { returns(T::Boolean) }
-        def title_changed?; end
-
-        sig { returns(::String) }
-        def title_in_database; end
-
-        sig { returns([::String, ::String]) }
-        def title_previous_change; end
-
-        sig { returns(T::Boolean) }
-        def title_previously_changed?; end
-
-        sig { returns(::String) }
-        def title_previously_was; end
-
-        sig { returns(::String) }
-        def title_was; end
-
-        sig { void }
-        def title_will_change!; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns(T.nilable(::DateTime)) }
-        def created_at_in_database; end
-
-        sig { returns([T.nilable(::DateTime), T.nilable(::DateTime)]) }
-        def created_at_previous_change; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns(T.nilable(::DateTime)) }
-        def updated_at_in_database; end
-
-        sig { returns([T.nilable(::DateTime), T.nilable(::DateTime)]) }
-        def updated_at_previous_change; end
       RUBY
       assert_includes(output, expected)
     end
@@ -513,13 +346,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
-                t.integer :column1
-                t.string :column2
-                t.date :column3
-                t.decimal :column4
-                t.float :column5
-                t.boolean :column6
-                t.datetime :column7
+                t.integer :integer_column
+                t.string :string_column
+                t.date :date_column
+                t.decimal :decimal_column
+                t.float :float_column
+                t.boolean :boolean_column
+                t.datetime :datetime_column
               end
             end
           end
@@ -528,7 +361,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::Integer).returns(::Integer) }
-        def column1=(value); end
+        def integer_column=(value); end
       RUBY
 
       output = rbi_for(files)
@@ -536,37 +369,37 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::String).returns(::String) }
-        def column2=(value); end
+        def string_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::Date).returns(::Date) }
-        def column3=(value); end
+        def date_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::BigDecimal).returns(::BigDecimal) }
-        def column4=(value); end
+        def decimal_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::Float).returns(::Float) }
-        def column5=(value); end
+        def float_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: T::Boolean).returns(T::Boolean) }
-        def column6=(value); end
+        def boolean_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::DateTime).returns(::DateTime) }
-        def column7=(value); end
+        def datetime_column=(value); end
       RUBY
       assert_includes(output, expected)
     end
@@ -587,9 +420,9 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
-                t.timestamp :column1
-                t.datetime :column2
-                t.time :column3
+                t.timestamp :integer_column
+                t.datetime :string_column
+                t.time :date_column
               end
             end
           end
@@ -598,7 +431,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def column1=(value); end
+        def integer_column=(value); end
       RUBY
 
       output = rbi_for(files)
@@ -606,13 +439,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def column2=(value); end
+        def string_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
         sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def column3=(value); end
+        def date_column=(value); end
       RUBY
       assert_includes(output, expected)
     end
