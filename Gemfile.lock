@@ -187,14 +187,11 @@ DEPENDENCIES
   bundler (~> 1.17)
   cityhash
   frozen_record (>= 0.17)
-<<<<<<< HEAD
+  identity_cache (~> 1.0)
   minitest
   minitest-fork_executor
   minitest-hooks
   minitest-reporters
-=======
-  identity_cache (~> 1.0)
->>>>>>> 8014467... Extract  generator
   pry-byebug
   rails (~> 5.2)
   rake
