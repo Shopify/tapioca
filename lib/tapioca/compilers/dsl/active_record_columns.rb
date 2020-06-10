@@ -46,7 +46,7 @@ module Tapioca
       #   sig { returns(T.nilable(::String)) }
       #   def body; end
       #
-      #   sig { params(value: ::String).returns(::String) }
+      #   sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
       #   def body=; end
       #
       #   sig { params(args: T.untyped).returns(T::Boolean) }
