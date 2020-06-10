@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "active_record"
 
 describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
   before(:each) do
@@ -51,7 +50,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
   end
 
   describe("#decorate") do
-    before(:all) do
+    before(:each) do
       ActiveRecord::Base.establish_connection(
         adapter: 'sqlite3',
         database: ':memory:'
