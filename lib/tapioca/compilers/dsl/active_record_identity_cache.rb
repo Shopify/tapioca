@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "parlour"
-require "tapioca/core_ext/class"
 
 begin
   require "identity_cache"

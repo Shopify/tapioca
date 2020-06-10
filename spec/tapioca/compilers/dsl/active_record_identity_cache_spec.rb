@@ -2,9 +2,15 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "active_record"
 
-RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
+describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
+  before(:each) do
+    require "tapioca/compilers/dsl/active_record_identity_cache"
+  end
+
+  subject do
+    Tapioca::Compilers::Dsl::ActiveRecordIdentityCache.new
+  end
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -13,7 +19,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
     end
 
     it("gathers no constants if there are no ActiveRecordIdentityCache classes") do
-      expect(subject.processable_constants).to(be_empty)
+      assert_empty(subject.processable_constants)
     end
 
     it("gather only IdentityCache classes") do
@@ -31,8 +37,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
         class User
         end
       RUBY
-
-      expect(constants_from(content)).to(eq(["CustomPost", "Post"]))
+      assert_equal(constants_from(content), ["CustomPost", "Post"])
     end
   end
 
@@ -71,8 +76,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
-
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
@@ -104,8 +108,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
-
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods for combined cache_indexes") do
@@ -134,7 +137,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods for classes with cache_has_manys index") do
@@ -160,7 +163,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def fetch_users; end
         end
       RUBY
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods for classes with cache_has_one index") do
@@ -186,7 +189,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def fetch_user_id; end
         end
       RUBY
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
 
     it("generates methods for classes with cache_belongs_to index") do
@@ -209,7 +212,7 @@ RSpec.describe(Tapioca::Compilers::Dsl::ActiveRecordIdentityCache) do
           def fetch_user; end
         end
       RUBY
-      expect(rbi_for(content)).to(eq(expected))
+      assert_equal(rbi_for(content), expected)
     end
   end
 end
