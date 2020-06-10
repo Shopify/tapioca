@@ -4,6 +4,7 @@
 require "parlour"
 
 begin
+  require "rails/railtie"
   require "identity_cache"
 rescue LoadError
   # means ActiveRecord::TypedStore is not installed,
