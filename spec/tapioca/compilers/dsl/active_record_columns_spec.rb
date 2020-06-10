@@ -182,66 +182,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T.nilable(::String)) }
           def body; end
 
-          sig { params(value: ::String).returns(::String) }
+          sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
           def body=(value); end
 
           sig { returns(T::Boolean) }
           def body?; end
-
-          sig { returns(T.nilable(::String)) }
-          def body_before_last_save; end
-
-          sig { returns(T.untyped) }
-          def body_before_type_cast; end
-
-          sig { returns(T::Boolean) }
-          def body_came_from_user?; end
-
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
-          def body_change; end
-
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
-          def body_change_to_be_saved; end
-
-          sig { returns(T::Boolean) }
-          def body_changed?; end
-
-          sig { returns(T.nilable(::String)) }
-          def body_in_database; end
-
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
-          def body_previous_change; end
-
-          sig { returns(T::Boolean) }
-          def body_previously_changed?; end
-
-          sig { returns(T.nilable(::String)) }
-          def body_previously_was; end
-
-          sig { returns(T.nilable(::String)) }
-          def body_was; end
-
-          sig { void }
-          def body_will_change!; end
       RUBY
-
-      output = rbi_for(files)
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { void }
-        def restore_body!; end
-      RUBY
-      assert_includes(output, expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
-        def saved_change_to_body; end
-
-        sig { returns(T::Boolean) }
-        def saved_change_to_body?; end
-      RUBY
-      assert_includes(output, expected)
+      assert_includes(rbi_for(files), expected)
     end
 
     it("generates RBI file for custom attributes without strong type generation") do
@@ -309,7 +256,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
         sig { returns(T.nilable(::String)) }
         def body; end
 
-        sig { params(value: ::String).returns(::String) }
+        sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
         def body=(value); end
 
         sig { returns(T::Boolean) }
@@ -360,7 +307,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       }
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::Integer).returns(::Integer) }
+        sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
         def integer_column=(value); end
       RUBY
 
@@ -368,37 +315,37 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::String).returns(::String) }
+        sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
         def string_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::Date).returns(::Date) }
+        sig { params(value: T.nilable(::Date)).returns(T.nilable(::Date)) }
         def date_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::BigDecimal).returns(::BigDecimal) }
+        sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
         def decimal_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::Float).returns(::Float) }
+        sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
         def float_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: T::Boolean).returns(T::Boolean) }
+        sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
         def boolean_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::DateTime).returns(::DateTime) }
+        sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
         def datetime_column=(value); end
       RUBY
       assert_includes(output, expected)
@@ -420,9 +367,9 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
-                t.timestamp :integer_column
-                t.datetime :string_column
-                t.time :date_column
+                t.timestamp :timestamp_column
+                t.datetime :datetime_column
+                t.time :time_column
               end
             end
           end
@@ -430,22 +377,22 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       }
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def integer_column=(value); end
+        sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+        def timestamp_column=(value); end
       RUBY
 
       output = rbi_for(files)
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def string_column=(value); end
+        sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+        def datetime_column=(value); end
       RUBY
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-        def date_column=(value); end
+        sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+        def time_column=(value); end
       RUBY
       assert_includes(output, expected)
     end
@@ -475,16 +422,16 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
 
       expected = <<~RUBY
         module Post::GeneratedAttributeMethods
-          sig { returns(T.untyped) }
+          sig { returns(T.nilable(::String)) }
           def author; end
 
-          sig { params(value: T.untyped).returns(T.untyped) }
+          sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
           def author=(value); end
 
           sig { returns(T::Boolean) }
           def author?; end
 
-          sig { returns(T.untyped) }
+          sig { returns(T.nilable(::String)) }
           def author_before_last_save; end
 
           sig { returns(T.untyped) }
@@ -493,25 +440,25 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T::Boolean) }
           def author_came_from_user?; end
 
-          sig { returns([T.untyped, T.untyped]) }
+          sig { returns([T.nilable(::String), T.nilable(::String)]) }
           def author_change; end
 
-          sig { returns([T.untyped, T.untyped]) }
+          sig { returns([T.nilable(::String), T.nilable(::String)]) }
           def author_change_to_be_saved; end
 
           sig { returns(T::Boolean) }
           def author_changed?; end
 
-          sig { returns(T.untyped) }
+          sig { returns(T.nilable(::String)) }
           def author_in_database; end
 
-          sig { returns([T.untyped, T.untyped]) }
+          sig { returns([T.nilable(::String), T.nilable(::String)]) }
           def author_previous_change; end
 
           sig { returns(T::Boolean) }
           def author_previously_changed?; end
 
-          sig { returns(T.untyped) }
+          sig { returns(T.nilable(::String)) }
           def author_was; end
 
           sig { void }
@@ -528,7 +475,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { returns([T.untyped, T.untyped]) }
+        sig { returns([T.nilable(::String), T.nilable(::String)]) }
         def saved_change_to_author; end
 
         sig { returns(T::Boolean) }
@@ -571,7 +518,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T.nilable(::String)) }
           def body; end
 
-          sig { params(value: ::String).returns(::String) }
+          sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
           def body=(value); end
 
           sig { returns(T::Boolean) }

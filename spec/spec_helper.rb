@@ -19,6 +19,7 @@ module Minitest
     include ContentHelper
     include TemplateHelper
 
+    Minitest::Test.make_my_diffs_pretty!
     def indented(str, indent)
       str.lines.map! do |line|
         next line if line.chomp.empty?

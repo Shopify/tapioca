@@ -107,14 +107,14 @@ module Tapioca
               add_methods_for_attribute(mod, constant, column_name)
             end
 
-            constant.attribute_aliases.each do |new_name, old_name|
-              new_name = new_name.to_s
-              old_name = old_name.to_s
-              new_method_names = constant.attribute_method_matchers.map { |m| m.method_name(new_name) }
-              old_method_names = constant.attribute_method_matchers.map { |m| m.method_name(old_name) }
+            constant.attribute_aliases.each do |attribute_name, column_name|
+              attribute_name = attribute_name.to_s
+              column_name = column_name.to_s
+              new_method_names = constant.attribute_method_matchers.map { |m| m.method_name(attribute_name) }
+              old_method_names = constant.attribute_method_matchers.map { |m| m.method_name(column_name) }
               methods_to_add = new_method_names - old_method_names
 
-              add_methods_for_attribute(mod, constant, new_name, methods_to_add)
+              add_methods_for_attribute(mod, constant, column_name, attribute_name, methods_to_add)
             end
           end
 
@@ -155,17 +155,18 @@ module Tapioca
             klass: Parlour::RbiGenerator::Namespace,
             constant: T.class_of(ActiveRecord::Base),
             column_name: String,
+            attribute_name: String,
             methods_to_add: T.nilable(T::Array[String])
           ).void
         end
-        def add_methods_for_attribute(klass, constant, column_name, methods_to_add = nil)
+        def add_methods_for_attribute(klass, constant, column_name, attribute_name = column_name, methods_to_add = nil)
           getter_type, setter_type = type_for(constant, column_name)
 
           # Added by ActiveRecord::AttributeMethods::Read
           #
           add_method(
             klass,
-            column_name.to_s,
+            attribute_name.to_s,
             methods_to_add,
             return_type: getter_type
           )
@@ -174,7 +175,7 @@ module Tapioca
           #
           add_method(
             klass,
-            "#{column_name}=",
+            "#{attribute_name}=",
             methods_to_add,
             parameters: [["value", setter_type]],
             return_type: setter_type
@@ -184,7 +185,7 @@ module Tapioca
           #
           add_method(
             klass,
-            "#{column_name}?",
+            "#{attribute_name}?",
             methods_to_add,
             return_type: "T::Boolean"
           )
@@ -193,37 +194,37 @@ module Tapioca
           #
           add_method(
             klass,
-            "#{column_name}_before_last_save",
+            "#{attribute_name}_before_last_save",
             methods_to_add,
             return_type: getter_type
           )
           add_method(
             klass,
-            "#{column_name}_change_to_be_saved",
+            "#{attribute_name}_change_to_be_saved",
             methods_to_add,
             return_type: "[#{getter_type}, #{getter_type}]"
           )
           add_method(
             klass,
-            "#{column_name}_in_database",
+            "#{attribute_name}_in_database",
             methods_to_add,
             return_type: getter_type
           )
           add_method(
             klass,
-            "saved_change_to_#{column_name}",
+            "saved_change_to_#{attribute_name}",
             methods_to_add,
             return_type: "[#{getter_type}, #{getter_type}]"
           )
           add_method(
             klass,
-            "saved_change_to_#{column_name}?",
+            "saved_change_to_#{attribute_name}?",
             methods_to_add,
             return_type: "T::Boolean"
           )
           add_method(
             klass,
-            "will_save_change_to_#{column_name}?",
+            "will_save_change_to_#{attribute_name}?",
             methods_to_add,
             return_type: "T::Boolean"
           )
@@ -232,48 +233,48 @@ module Tapioca
           #
           add_method(
             klass,
-            "#{column_name}_change",
+            "#{attribute_name}_change",
             methods_to_add,
             return_type: "[#{getter_type}, #{getter_type}]"
           )
           add_method(
             klass,
-            "#{column_name}_changed?",
+            "#{attribute_name}_changed?",
             methods_to_add,
             return_type: "T::Boolean"
           )
           add_method(
             klass,
-            "#{column_name}_will_change!",
+            "#{attribute_name}_will_change!",
             methods_to_add
           )
           add_method(
             klass,
-            "#{column_name}_was",
+            "#{attribute_name}_was",
             methods_to_add,
             return_type: getter_type
           )
           add_method(
             klass,
-            "#{column_name}_previous_change",
+            "#{attribute_name}_previous_change",
             methods_to_add,
             return_type: "[#{getter_type}, #{getter_type}]"
           )
           add_method(
             klass,
-            "#{column_name}_previously_changed?",
+            "#{attribute_name}_previously_changed?",
             methods_to_add,
             return_type: "T::Boolean"
           )
           add_method(
             klass,
-            "#{column_name}_previously_was",
+            "#{attribute_name}_previously_was",
             methods_to_add,
             return_type: getter_type
           )
           add_method(
             klass,
-            "restore_#{column_name}!",
+            "restore_#{attribute_name}!",
             methods_to_add
           )
 
@@ -281,13 +282,13 @@ module Tapioca
           #
           add_method(
             klass,
-            "#{column_name}_before_type_cast",
+            "#{attribute_name}_before_type_cast",
             methods_to_add,
             return_type: "T.untyped"
           )
           add_method(
             klass,
-            "#{column_name}_came_from_user?",
+            "#{attribute_name}_came_from_user?",
             methods_to_add,
             return_type: "T::Boolean"
           )
@@ -329,8 +330,11 @@ module Tapioca
           column = constant.columns_hash[column_name]
           setter_type = getter_type
 
-          if column&.null ||
-              column_name == constant.primary_key ||
+          if column&.null
+            return ["T.nilable(#{getter_type})", "T.nilable(#{setter_type})"]
+          end
+
+          if column_name == constant.primary_key ||
               column_name == "created_at" ||
               column_name == "updated_at"
             getter_type = "T.nilable(#{getter_type})"
