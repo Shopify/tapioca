@@ -7,7 +7,7 @@ begin
   require "rails/railtie"
   require "identity_cache"
 rescue LoadError
-  # means ActiveRecord::TypedStore is not installed,
+  # means IdentityCache is not installed,
   # so let's not even define the generator.
   return
 end
