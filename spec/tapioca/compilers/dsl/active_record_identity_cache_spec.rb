@@ -216,6 +216,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
 
       assert_equal(rbi_for(content), expected)
     end
+
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
       content = <<~RUBY
         class User < ActiveRecord::Base
