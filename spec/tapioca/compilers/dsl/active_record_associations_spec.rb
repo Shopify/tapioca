@@ -116,7 +116,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it ("generates RBI file for has_one association") do
+    it("generates RBI file for has_one association") do
       content = <<~RUBY
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -157,6 +157,129 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
           sig { returns(T.nilable(::User)) }
           def reload_author; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for has_many association") do
+      content = <<~RUBY
+        class Comment
+        end
+
+        class Post < ActiveRecord::Base
+          has_many :comments
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
+
+        module Post::GeneratedAssociationMethods
+          sig { returns(T::Array[T.untyped]) }
+          def comment_ids; end
+
+          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+          def comment_ids=(ids); end
+
+          sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+          def comments; end
+
+          sig { params(value: T::Enumerable[T.untyped]).void }
+          def comments=(value); end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for has_many :through association") do
+      content = <<~RUBY
+        class Commenter < ActiveRecord::Base
+          has_many :comments
+          has_many :posts, through: :comments
+        end
+
+        class Comment < ActiveRecord::Base
+          belongs_to :commenter
+          belongs_to :post
+        end
+
+        class Post < ActiveRecord::Base
+          has_many :comments
+          has_many :commenters, through: :comments
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
+
+        module Post::GeneratedAssociationMethods
+          sig { returns(T::Array[T.untyped]) }
+          def comment_ids; end
+
+          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+          def comment_ids=(ids); end
+
+          sig { returns(T::Array[T.untyped]) }
+          def commenter_ids; end
+
+          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+          def commenter_ids=(ids); end
+
+          sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+          def commenters; end
+
+          sig { params(value: T::Enumerable[T.untyped]).void }
+          def commenters=(value); end
+
+          sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+          def comments; end
+
+          sig { params(value: T::Enumerable[T.untyped]).void }
+          def comments=(value); end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for has_and_belongs_to_many association") do
+      content = <<~RUBY
+        class Commenter < ActiveRecord::Base
+          has_and_belongs_to_many :posts
+        end
+
+        class Post < ActiveRecord::Base
+          has_and_belongs_to_many :commenters
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
+
+        module Post::GeneratedAssociationMethods
+          sig { returns(T::Array[T.untyped]) }
+          def commenter_ids; end
+
+          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+          def commenter_ids=(ids); end
+
+          sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+          def commenters; end
+
+          sig { params(value: T::Enumerable[T.untyped]).void }
+          def commenters=(value); end
         end
       RUBY
 
