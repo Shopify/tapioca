@@ -50,6 +50,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
   end
 
   describe("#decorate") do
+    before(:each) do
+      ActiveRecord::Base.establish_connection(
+        adapter: 'sqlite3',
+        database: ':memory:'
+      )
+    end
+
     def rbi_for(content)
       with_content(content) do
         parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
@@ -81,7 +88,76 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
       expected = <<~RUBY
         # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
 
+        module Post::GeneratedAssociationMethods
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          def build_category(*args, &blk); end
+
+          sig { returns(T.nilable(T.untyped)) }
+          def category; end
+
+          sig { params(value: T.nilable(T.untyped)).void }
+          def category=(value); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          def create_category(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          def create_category!(*args, &blk); end
+
+          sig { returns(T.nilable(T.untyped)) }
+          def reload_category; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it ("generates RBI file for has_one association") do
+      content = <<~RUBY
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+            end
+          end
+        end
+
+        class User
+        end
+
+        class Post < ActiveRecord::Base
+          has_one :author, class_name: "User"
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
+
+        module Post::GeneratedAssociationMethods
+          sig { returns(T.nilable(::User)) }
+          def author; end
+
+          sig { params(value: T.nilable(::User)).void }
+          def author=(value); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def build_author(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def create_author(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def create_author!(*args, &blk); end
+
+          sig { returns(T.nilable(::User)) }
+          def reload_author; end
+        end
       RUBY
 
       assert_equal(rbi_for(content), expected)
