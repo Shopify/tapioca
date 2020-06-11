@@ -26,4 +26,6 @@ group(:development, :test) do
   gem("state_machines", "~> 0.5.0", require: false)
   gem("activerecord-typedstore", "~> 1.3", require: false)
   gem("sqlite3")
+  gem("identity_cache", "~> 1.0", require: false)
+  gem('cityhash', github: 'csfrancis/cityhash', ref: '3cfc7d01f333c01811d5e834f1495eaa29f87c36', require: false)
 end
