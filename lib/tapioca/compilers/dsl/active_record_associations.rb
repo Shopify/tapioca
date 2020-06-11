@@ -133,10 +133,10 @@ module Tapioca
         def populate_single_assoc_getter_setter(klass, constant, association_name, reflection)
           association_class = type_for(constant, reflection)
           association_type = if belongs_to_and_required?(constant, reflection)
-                               association_class
-                             else
-                               "T.nilable(#{association_class})"
-                             end
+            association_class
+          else
+            "T.nilable(#{association_class})"
+          end
 
           create_method(
             klass,
