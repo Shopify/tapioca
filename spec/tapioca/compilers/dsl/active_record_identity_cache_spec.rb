@@ -11,6 +11,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
   subject do
     Tapioca::Compilers::Dsl::ActiveRecordIdentityCache.new
   end
+
   describe("#initialize") do
     def constants_from(content)
       with_content(content) do
@@ -37,6 +38,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         class User
         end
       RUBY
+
       assert_equal(constants_from(content), ["CustomPost", "Post"])
     end
   end
@@ -57,7 +59,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           cache_index :blog_id
           cache_index :title
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -76,6 +77,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
+
       assert_equal(rbi_for(content), expected)
     end
 
@@ -86,7 +88,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           cache_index :blog_id
           cache_index :title, unique: true
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -108,6 +109,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
+
       assert_equal(rbi_for(content), expected)
     end
 
@@ -118,7 +120,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           cache_index :title
           cache_index :title, :review_date, unique: true
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -137,6 +138,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
       RUBY
+
       assert_equal(rbi_for(content), expected)
     end
 
@@ -150,7 +152,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           has_many :users
           cache_has_many :users
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -163,6 +164,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def fetch_users; end
         end
       RUBY
+
       assert_equal(rbi_for(content), expected)
     end
 
@@ -176,7 +178,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           has_one :user
           cache_has_one :user, embed: :id
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -189,10 +190,11 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def fetch_user_id; end
         end
       RUBY
+
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates methods for classes with cache_belongs_to index") do
+    it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
       content = <<~RUBY
         class User < ActiveRecord::Base
         end
@@ -202,7 +204,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           belongs_to :user, polymorphic: true
           cache_belongs_to :user
         end
-
       RUBY
 
       expected = <<~RUBY
@@ -212,6 +213,29 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
           def fetch_user; end
         end
       RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+    it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
+      content = <<~RUBY
+        class User < ActiveRecord::Base
+        end
+
+        class Post < ActiveRecord::Base
+          include IdentityCache
+          belongs_to :user
+          cache_belongs_to :user
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          sig { returns(::User) }
+          def fetch_user; end
+        end
+      RUBY
+
       assert_equal(rbi_for(content), expected)
     end
   end
