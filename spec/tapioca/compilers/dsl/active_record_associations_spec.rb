@@ -50,19 +50,41 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
   end
 
   describe("#decorate") do
-    before(:each) do
-      ActiveRecord::Base.establish_connection(
-        adapter: 'sqlite3',
-        database: ':memory:'
-      )
-    end
-
-    def rbi_for(contents)
-      with_contents(contents, requires: contents.keys) do
+    def rbi_for(content)
+      with_content(content) do
         parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
         subject.decorate(parlour.root, Post)
         parlour.rbi
       end
+    end
+
+    it("generates empty RBI file if there are no associations") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for belongs_to association") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          belongs_to :category
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
     end
   end
 end
