@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/csfrancis/cityhash.git
+  remote: https://github.com/csfrancis/cityhash.git
   revision: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
   ref: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
   specs:
