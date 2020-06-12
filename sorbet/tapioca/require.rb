@@ -5,3 +5,5 @@
 require "rails/all"
 require "activerecord-typedstore"
 require "identity_cache"
+require "minitest/spec"
+require "ansi/code"
