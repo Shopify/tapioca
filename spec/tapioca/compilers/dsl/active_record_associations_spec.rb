@@ -79,7 +79,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for belongs_to association") do
+    it("generates RBI file for belongs_to single association") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           belongs_to :category
@@ -116,7 +116,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for polymorphic belongs_to association") do
+    it("generates RBI file for polymorphic belongs_to single association") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           belongs_to :category, polymorphic: true
@@ -144,7 +144,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for has_one association") do
+    it("generates RBI file for has_one single association") do
       content = <<~RUBY
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -191,7 +191,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for has_many association") do
+    it("generates RBI file for has_many collection association") do
       content = <<~RUBY
         class Comment
         end
@@ -225,7 +225,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for has_many :through association") do
+    it("generates RBI file for has_many :through collection association") do
       content = <<~RUBY
         class Commenter < ActiveRecord::Base
           has_many :comments
@@ -279,7 +279,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for has_and_belongs_to_many association") do
+    it("generates RBI file for has_and_belongs_to_many collection association") do
       content = <<~RUBY
         class Commenter < ActiveRecord::Base
           has_and_belongs_to_many :posts
