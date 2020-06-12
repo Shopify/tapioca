@@ -116,6 +116,34 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       assert_equal(rbi_for(content), expected)
     end
 
+    it("generates RBI file for polymorphic belongs_to association") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          belongs_to :category, polymorphic: true
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Post
+          include Post::GeneratedAssociationMethods
+        end
+
+        module Post::GeneratedAssociationMethods
+          sig { returns(T.nilable(T.untyped)) }
+          def category; end
+
+          sig { params(value: T.nilable(T.untyped)).void }
+          def category=(value); end
+
+          sig { returns(T.nilable(T.untyped)) }
+          def reload_category; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
     it("generates RBI file for has_one association") do
       content = <<~RUBY
         ActiveRecord::Migration.suppress_messages do
