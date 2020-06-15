@@ -5,10 +5,7 @@
 
 module CityHash
   def self.hash128(input, seed = _); end
-  def self.hash32(input); end
   def self.hash64(input, seed1 = _, seed2 = _); end
-  def self.packed_seed(seed); end
-  def self.unpacked_digest(digest); end
 end
 
 CityHash::HIGH64_MASK = T.let(T.unsafe(nil), Integer)
@@ -16,7 +13,6 @@ CityHash::HIGH64_MASK = T.let(T.unsafe(nil), Integer)
 module CityHash::Internal
   def self.hash128(_); end
   def self.hash128_with_seed(_, _); end
-  def self.hash32(_); end
   def self.hash64(_); end
   def self.hash64_with_seed(_, _); end
   def self.hash64_with_seeds(_, _, _); end

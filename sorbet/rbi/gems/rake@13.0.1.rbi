@@ -9,8 +9,8 @@ module FileUtils
   include(::FileUtils::StreamUtils_)
   extend(::FileUtils::StreamUtils_)
 
-  def ruby(*args, &block); end
-  def safe_ln(*args); end
+  def ruby(*args, **options, &block); end
+  def safe_ln(*args, **options); end
   def sh(*cmd, &block); end
   def split_all(path); end
 
@@ -255,14 +255,11 @@ class Rake::FileList
   def empty?(*args, &block); end
   def entries(*args, &block); end
   def exclude(*patterns, &block); end
-  def exclude?(*args, &block); end
   def excluded_from_list?(fn); end
   def existing; end
   def existing!; end
   def ext(newext = _); end
-  def extract_options!(*args, &block); end
   def fetch(*args, &block); end
-  def fifth(*args, &block); end
   def fill(*args, &block); end
   def filter(*args, &block); end
   def filter!(*args, &block); end
@@ -273,23 +270,16 @@ class Rake::FileList
   def flat_map(*args, &block); end
   def flatten(*args, &block); end
   def flatten!(*args, &block); end
-  def forty_two(*args, &block); end
-  def fourth(*args, &block); end
-  def from(*args, &block); end
   def grep(*args, &block); end
   def grep_v(*args, &block); end
   def group_by(*args, &block); end
   def gsub(pat, rep); end
   def gsub!(pat, rep); end
   def import(array); end
-  def in_groups(*args, &block); end
-  def in_groups_of(*args, &block); end
   def include(*filenames); end
   def include?(*args, &block); end
   def index(*args, &block); end
-  def index_by(*args, &block); end
   def inject(*args, &block); end
-  def inquiry(*args, &block); end
   def insert(*args, &block); end
   def inspect(*args, &block); end
   def is_a?(klass); end
@@ -299,7 +289,6 @@ class Rake::FileList
   def last(*args, &block); end
   def lazy(*args, &block); end
   def length(*args, &block); end
-  def many?(*args, &block); end
   def map(*args, &block); end
   def map!(*args, &block); end
   def max(*args, &block); end
@@ -315,7 +304,6 @@ class Rake::FileList
   def partition(&block); end
   def pathmap(spec = _, &block); end
   def permutation(*args, &block); end
-  def pluck(*args, &block); end
   def pop(*args, &block); end
   def prepend(*args, &block); end
   def product(*args, &block); end
@@ -335,8 +323,6 @@ class Rake::FileList
   def rotate(*args, &block); end
   def rotate!(*args, &block); end
   def sample(*args, &block); end
-  def second(*args, &block); end
-  def second_to_last(*args, &block); end
   def select(*args, &block); end
   def select!(*args, &block); end
   def shelljoin(*args, &block); end
@@ -353,31 +339,22 @@ class Rake::FileList
   def sort!(*args, &block); end
   def sort_by(*args, &block); end
   def sort_by!(*args, &block); end
-  def split(*args, &block); end
   def sub(pat, rep); end
   def sub!(pat, rep); end
   def sum(*args, &block); end
   def take(*args, &block); end
   def take_while(*args, &block); end
-  def third(*args, &block); end
-  def third_to_last(*args, &block); end
-  def to(*args, &block); end
   def to_a; end
   def to_ary; end
-  def to_default_s(*args, &block); end
-  def to_formatted_s(*args, &block); end
   def to_h(*args, &block); end
   def to_s; end
-  def to_sentence(*args, &block); end
   def to_set(*args, &block); end
-  def to_xml(*args, &block); end
   def transpose(*args, &block); end
   def union(*args, &block); end
   def uniq(*args, &block); end
   def uniq!(*args, &block); end
   def unshift(*args, &block); end
   def values_at(*args, &block); end
-  def without(*args, &block); end
   def zip(*args, &block); end
   def |(*args, &block); end
 
@@ -425,41 +402,40 @@ module Rake::FileUtilsExt
   extend(::FileUtils)
   extend(::Rake::FileUtilsExt)
 
-  def cd(*args, &block); end
-  def chdir(*args, &block); end
-  def chmod(*args, &block); end
-  def chmod_R(*args, &block); end
-  def chown(*args, &block); end
-  def chown_R(*args, &block); end
-  def copy(*args, &block); end
-  def cp(*args, &block); end
-  def cp_lr(*args, &block); end
-  def cp_r(*args, &block); end
-  def install(*args, &block); end
-  def link(*args, &block); end
-  def ln(*args, &block); end
-  def ln_s(*args, &block); end
-  def ln_sf(*args, &block); end
-  def makedirs(*args, &block); end
-  def mkdir(*args, &block); end
-  def mkdir_p(*args, &block); end
-  def mkpath(*args, &block); end
-  def move(*args, &block); end
-  def mv(*args, &block); end
+  def cd(*args, **options, &block); end
+  def chdir(*args, **options, &block); end
+  def chmod(*args, **options, &block); end
+  def chmod_R(*args, **options, &block); end
+  def chown(*args, **options, &block); end
+  def chown_R(*args, **options, &block); end
+  def copy(*args, **options, &block); end
+  def cp(*args, **options, &block); end
+  def cp_lr(*args, **options, &block); end
+  def cp_r(*args, **options, &block); end
+  def install(*args, **options, &block); end
+  def link(*args, **options, &block); end
+  def ln(*args, **options, &block); end
+  def ln_s(*args, **options, &block); end
+  def ln_sf(*args, **options, &block); end
+  def makedirs(*args, **options, &block); end
+  def mkdir(*args, **options, &block); end
+  def mkdir_p(*args, **options, &block); end
+  def mkpath(*args, **options, &block); end
+  def move(*args, **options, &block); end
+  def mv(*args, **options, &block); end
   def nowrite(value = _); end
   def rake_check_options(options, *optdecl); end
-  def rake_merge_option(args, defaults); end
   def rake_output_message(message); end
-  def remove(*args, &block); end
-  def rm(*args, &block); end
-  def rm_f(*args, &block); end
-  def rm_r(*args, &block); end
-  def rm_rf(*args, &block); end
-  def rmdir(*args, &block); end
-  def rmtree(*args, &block); end
-  def safe_unlink(*args, &block); end
-  def symlink(*args, &block); end
-  def touch(*args, &block); end
+  def remove(*args, **options, &block); end
+  def rm(*args, **options, &block); end
+  def rm_f(*args, **options, &block); end
+  def rm_r(*args, **options, &block); end
+  def rm_rf(*args, **options, &block); end
+  def rmdir(*args, **options, &block); end
+  def rmtree(*args, **options, &block); end
+  def safe_unlink(*args, **options, &block); end
+  def symlink(*args, **options, &block); end
+  def touch(*args, **options, &block); end
   def verbose(value = _); end
   def when_writing(msg = _); end
 
@@ -643,6 +619,7 @@ class Rake::Task
   def name; end
   def name_with_args; end
   def needed?; end
+  def order_only_prerequisites; end
   def prereqs; end
   def prerequisite_tasks; end
   def prerequisites; end
@@ -654,6 +631,7 @@ class Rake::Task
   def sources=(_); end
   def timestamp; end
   def to_s; end
+  def |(deps); end
 
   protected
 
@@ -673,6 +651,7 @@ class Rake::Task
   def self.clear; end
   def self.create_rule(*args, &block); end
   def self.define_task(*args, &block); end
+  def self.format_deps(deps); end
   def self.scope_name(scope, task_name); end
   def self.task_defined?(task_name); end
   def self.tasks; end
