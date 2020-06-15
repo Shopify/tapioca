@@ -5,3 +5,4 @@
 require "rails/all"
 require "activerecord-typedstore"
 require "identity_cache"
+require "ansi/code"
