@@ -66,6 +66,13 @@ module Tapioca
       end
     end
 
+    desc "dsl [constant...]", "generate RBIs for dynamic methods"
+    def dsl(*constants)
+      Tapioca.silence_warnings do
+        generator.build_dsl(*constants)
+      end
+    end
+
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)
       Tapioca.silence_warnings do
