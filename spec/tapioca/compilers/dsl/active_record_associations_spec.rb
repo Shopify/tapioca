@@ -37,7 +37,10 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
     it("rejects abstract ActiveRecord subclasses") do
       content = <<~RUBY
-        class Post < ActiveRecord::Base
+        class Comment < ActiveRecord::Base
+        end
+
+        class Post < Comment
         end
 
         class Current < ActiveRecord::Base
@@ -45,7 +48,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Post"])
+      assert_equal(constants_from(content), ["Comment", "Post"])
     end
   end
 
@@ -227,6 +230,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
     it("generates RBI file for has_many :through collection association") do
       content = <<~RUBY
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+            end
+          end
+        end
+
         class Commenter < ActiveRecord::Base
           has_many :comments
           has_many :posts, through: :comments
@@ -265,13 +275,13 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
           sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
           def commenters; end
 
-          sig { params(value: T::Enumerable[T.untyped]).void }
+          sig { params(value: T::Enumerable[::Commenter]).void }
           def commenters=(value); end
 
           sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
           def comments; end
 
-          sig { params(value: T::Enumerable[T.untyped]).void }
+          sig { params(value: T::Enumerable[::Comment]).void }
           def comments=(value); end
         end
       RUBY
