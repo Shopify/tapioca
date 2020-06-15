@@ -21,10 +21,11 @@ module Tapioca
 
     private_class_method :new
 
-    CONFIG_FILE_PATH = "sorbet/tapioca/config.yml"
-    SORBET_CONFIG = "sorbet/config"
+    TAPIOCA_PATH = T.let("sorbet/tapioca", String)
+    CONFIG_FILE_PATH = T.let("#{TAPIOCA_PATH}/config.yml", String)
+    SORBET_CONFIG = T.let("sorbet/config", String)
 
-    DEFAULT_POSTREQUIRE = "sorbet/tapioca/require.rb"
+    DEFAULT_POSTREQUIRE = T.let("#{TAPIOCA_PATH}/require.rb", String)
     DEFAULT_RBIDIR = "sorbet/rbi"
     DEFAULT_OUTDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
     DEFAULT_OVERRIDES = T.let({

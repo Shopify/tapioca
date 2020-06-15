@@ -24,6 +24,21 @@ module Tapioca
       load_rails_engines
     end
 
+    sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
+    def load_rails(environment_load: false, eager_load: false)
+      return unless File.exist?("config/application.rb")
+
+      safe_require("rails")
+
+      silence_deprecations
+
+      safe_require("rails/generators/test_case")
+      safe_require("./config/application")
+
+      load_rails_environment if environment_load
+      eager_load_rails_app if eager_load
+    end
+
     private
 
     sig { returns(Tapioca::Gemfile) }
@@ -80,15 +95,13 @@ module Tapioca
     end
 
     sig { void }
-    def load_rails
-      return unless File.exist?("config/application.rb")
+    def eager_load_rails_app
+      Object.const_get("Rails").autoloaders.each(&:eager_load)
+    end
 
-      safe_require("rails")
-
-      silence_deprecations
-
-      safe_require("rails/generators/test_case")
-      safe_require("./config/application")
+    sig { void }
+    def load_rails_environment
+      Object.const_get("Rails").application.require_environment!
     end
 
     sig { void }
