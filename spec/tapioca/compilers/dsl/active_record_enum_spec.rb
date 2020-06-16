@@ -84,10 +84,10 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for classes with an enum attribute with hash values") do
+    it("generates RBI file for classes with an enum attribute with string values") do
       content = <<~RUBY
         class Conversation < ActiveRecord::Base
-          enum status: { active: 0, archived: 1 }
+          enum status: { active: "0", archived: "1" }
         end
 
       RUBY
@@ -97,7 +97,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         class Conversation
           include Conversation::EnumMethodsModule
 
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          sig { returns(T::Hash[T.any(String, Symbol), String]) }
           def self.statuses; end
         end
 
