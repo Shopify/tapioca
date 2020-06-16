@@ -47,55 +47,51 @@ module Tapioca
             end
           end
 
-          root.create_class("ActionController::Base") do |klass|
-            klass.create_include("GeneratedPathHelpersModule")
-            klass.create_include("GeneratedUrlHelpersModule")
-          end
+          # root.create_class("ActionController::Base") do |klass|
+          #   klass.create_include("GeneratedPathHelpersModule")
+          #   klass.create_include("GeneratedUrlHelpersModule")
+          # end
 
-          root.create_class("ActionController::API") do |klass|
-            klass.create_include("GeneratedPathHelpersModule")
-            klass.create_include("GeneratedUrlHelpersModule")
-          end
+          # root.create_class("ActionController::API") do |klass|
+          #   klass.create_include("GeneratedPathHelpersModule")
+          #   klass.create_include("GeneratedUrlHelpersModule")
+          # end
 
           root.create_class("ActionDispatch::IntegrationTest") do |klass|
             klass.create_include("GeneratedPathHelpersModule")
             klass.create_include("GeneratedUrlHelpersModule")
           end
 
-          root.create_class("ActionMailer::Base") do |mod|
-            # In Action Mailer, the path helpers are not supported
-            mod.create_include("GeneratedUrlHelpersModule")
-          end
+          # root.create_class("ActionMailer::Base") do |mod|
+          #   # In Action Mailer, the path helpers are not supported
+          #   mod.create_include("GeneratedUrlHelpersModule")
+          # end
 
-          root.create_module("ActionView::Helpers") do |mod|
-            mod.create_include("GeneratedPathHelpersModule")
-            mod.create_include("GeneratedUrlHelpersModule")
-          end
+          # root.create_module("ActionView::Helpers") do |mod|
+          #   mod.create_include("GeneratedPathHelpersModule")
+          #   mod.create_include("GeneratedUrlHelpersModule")
+          # end
 
-          if Object.const_defined?(:UrlHelpers)
-            root.path(::UrlHelpers) do |mod|
-              mod.create_extend("GeneratedPathHelpersModule")
-              mod.create_extend("GeneratedUrlHelpersModule")
-            end
+          root.path(constant) do |mod|
+            mod.create_extend("GeneratedPathHelpersModule")
+            mod.create_extend("GeneratedUrlHelpersModule")
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          # rubocop:disable all
-          generatedUrlHelpersModule = Rails.application.routes.named_routes.url_helpers_module
-          generatedPathHelpersModule = Rails.application.routes.named_routes.path_helpers_module
-          # rubocop:enable all
+          generated_url_helpers_module = Rails.application.routes.named_routes.url_helpers_module
+          generated_path_helpers_module = Rails.application.routes.named_routes.path_helpers_module
 
           ObjectSpace.each_object(Module).select do |mod|
-            (mod.ancestors.include?(generatedUrlHelpersModule) &&
-             !mod.try(:superclass)&.ancestors&.include?(generatedUrlHelpersModule)) ||
-            (mod.singleton_class.ancestors.include?(generatedUrlHelpersModule) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generatedUrlHelpersModule)) ||
-            (mod.ancestors.include?(generatedPathHelpersModule) &&
-             !mod.try(:superclass)&.ancestors&.include?(generatedPathHelpersModule)) ||
-            (mod.singleton_class.ancestors.include?(generatedPathHelpersModule) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generatedPathHelpersModule))
+            (mod.ancestors.include?(generated_url_helpers_module) &&
+             !mod.try(:superclass)&.ancestors&.include?(generated_url_helpers_module)) ||
+            (mod.singleton_class.ancestors.include?(generated_url_helpers_module) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generated_url_helpers_module)) ||
+            (mod.ancestors.include?(generated_path_helpers_module) &&
+             !mod.try(:superclass)&.ancestors&.include?(generated_path_helpers_module)) ||
+            (mod.singleton_class.ancestors.include?(generated_path_helpers_module) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generated_path_helpers_module))
           end.select(&:name)
         end
       end
