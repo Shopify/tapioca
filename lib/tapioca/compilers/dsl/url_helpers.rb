@@ -21,8 +21,7 @@ module Tapioca
           path_helper_methods = named_routes.path_helpers_module.instance_methods(false)
           url_helper_methods = named_routes.url_helpers_module.instance_methods(false)
 
-          generate_path_helper_methods = !path_helper_methods.empty?
-          if generate_path_helper_methods
+          if constant == GeneratedPathHelpersModule
             root.create_module("GeneratedPathHelpersModule") do |mod|
               mod.create_include("ActionDispatch::Routing::UrlFor")
               mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
@@ -35,10 +34,7 @@ module Tapioca
                 )
               end
             end
-          end
-
-          generate_url_helper_methods = !url_helper_methods.empty?
-          if generate_url_helper_methods
+          elsif constant == GeneratedUrlHelpersModule
             root.create_module("GeneratedUrlHelpersModule") do |mod|
               mod.create_include("ActionDispatch::Routing::UrlFor")
               mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
@@ -51,34 +47,30 @@ module Tapioca
                 )
               end
             end
-          end
-
-          root.create_class("ActionDispatch::IntegrationTest") do |klass|
-            klass.create_include("GeneratedPathHelpersModule") if generate_path_helper_methods
-            klass.create_include("GenerateUrlHelpersModule") if generate_url_helper_methods
-          end
-
-          root.path(constant) do |mod|
-            mod.create_extend("GeneratedPathHelpersModule") if generate_path_helper_methods
-            mod.create_extend("GeneratedUrlHelpersModule") if generate_url_helper_methods
+          else
+            root.path(constant) do |mod|
+              mod.create_include("GeneratedUrlHelpersModule") if constant.ancestors.include?(GeneratedUrlHelpersModule)
+              mod.create_include("GeneratedPathHelpersModule") if constant.ancestors.include?(GeneratedPathHelpersModule)
+              mod.create_extend("GeneratedUrlHelpersModule") if constant.superclass.ancestors.include?(GeneratedUrlHelpersModule)
+              mod.create_extend("GeneratedPathHelpersModule") if constant.superclass.ancestors.include?(GeneratedPathHelpersModule)
+            end
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          generated_url_helpers_module = Rails.application.routes.named_routes.url_helpers_module
-          generated_path_helpers_module = Rails.application.routes.named_routes.path_helpers_module
-
+          Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
+          Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
           ObjectSpace.each_object(Module).select do |mod|
-            (mod.ancestors.include?(generated_url_helpers_module) &&
-             !mod.try(:superclass)&.ancestors&.include?(generated_url_helpers_module)) ||
-            (mod.singleton_class.ancestors.include?(generated_url_helpers_module) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generated_url_helpers_module)) ||
-            (mod.ancestors.include?(generated_path_helpers_module) &&
-             !mod.try(:superclass)&.ancestors&.include?(generated_path_helpers_module)) ||
-            (mod.singleton_class.ancestors.include?(generated_path_helpers_module) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generated_path_helpers_module))
-          end.select(&:name)
+            (mod.ancestors.include?(GeneratedUrlHelpersModule) &&
+             !mod.try(:superclass)&.ancestors&.include?(GeneratedUrlHelpersModule)) ||
+            (mod.singleton_class.ancestors.include?(GeneratedUrlHelpersModule) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
+            (mod.ancestors.include?(GeneratedPathHelpersModule) &&
+             !mod.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
+            (mod.singleton_class.ancestors.include?(GeneratedPathHelpersModule) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule))
+          end.select(&:name) << "ActionDispatch::IntegrationTest"
         end
       end
     end
