@@ -21,60 +21,48 @@ module Tapioca
           path_helper_methods = named_routes.path_helpers_module.instance_methods(false)
           url_helper_methods = named_routes.url_helpers_module.instance_methods(false)
 
-          root.create_module("GeneratedPathHelpersModule") do |mod|
-            mod.create_include("ActionDispatch::Routing::UrlFor")
-            mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
+          require "byebug";byebug
 
-            path_helper_methods.each do |method|
-              mod.create_method(
-                method.to_s,
-                parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
-                return_type: "String"
-              )
+          generate_path_helper_methods = !path_helper_methods.empty?
+          if generate_path_helper_methods
+            root.create_module("GeneratedPathHelpersModule") do |mod|
+              mod.create_include("ActionDispatch::Routing::UrlFor")
+              mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
+
+              path_helper_methods.each do |method|
+                mod.create_method(
+                  method.to_s,
+                  parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+                  return_type: "String"
+                )
+              end
             end
           end
 
-          root.create_module("GeneratedUrlHelpersModule") do |mod|
-            mod.create_include("ActionDispatch::Routing::UrlFor")
-            mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
+          generate_url_helper_methods = !url_helper_methods.empty?
+          if generate_url_helper_methods
+            root.create_module("GeneratedUrlHelpersModule") do |mod|
+              mod.create_include("ActionDispatch::Routing::UrlFor")
+              mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
 
-            url_helper_methods.each do |method|
-              mod.create_method(
-                method.to_s,
-                parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
-                return_type: "String"
-              )
+              url_helper_methods.each do |method|
+                mod.create_method(
+                  method.to_s,
+                  parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+                  return_type: "String"
+                )
+              end
             end
           end
-
-          # root.create_class("ActionController::Base") do |klass|
-          #   klass.create_include("GeneratedPathHelpersModule")
-          #   klass.create_include("GeneratedUrlHelpersModule")
-          # end
-
-          # root.create_class("ActionController::API") do |klass|
-          #   klass.create_include("GeneratedPathHelpersModule")
-          #   klass.create_include("GeneratedUrlHelpersModule")
-          # end
 
           root.create_class("ActionDispatch::IntegrationTest") do |klass|
-            klass.create_include("GeneratedPathHelpersModule")
-            klass.create_include("GeneratedUrlHelpersModule")
+            klass.create_include("GeneratedPathHelpersModule") if generate_path_helper_methods
+            klass.create_include("GenerateUrlHelpersModule") if generate_url_helper_methods
           end
 
-          # root.create_class("ActionMailer::Base") do |mod|
-          #   # In Action Mailer, the path helpers are not supported
-          #   mod.create_include("GeneratedUrlHelpersModule")
-          # end
-
-          # root.create_module("ActionView::Helpers") do |mod|
-          #   mod.create_include("GeneratedPathHelpersModule")
-          #   mod.create_include("GeneratedUrlHelpersModule")
-          # end
-
           root.path(constant) do |mod|
-            mod.create_extend("GeneratedPathHelpersModule")
-            mod.create_extend("GeneratedUrlHelpersModule")
+            mod.create_extend("GeneratedPathHelpersModule") if generate_path_helper_methods
+            mod.create_extend("GeneratedUrlHelpersModule") if generate_url_helper_methods
           end
         end
 
