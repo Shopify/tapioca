@@ -21,8 +21,6 @@ module Tapioca
           path_helper_methods = named_routes.path_helpers_module.instance_methods(false)
           url_helper_methods = named_routes.url_helpers_module.instance_methods(false)
 
-          require "byebug";byebug
-
           generate_path_helper_methods = !path_helper_methods.empty?
           if generate_path_helper_methods
             root.create_module("GeneratedPathHelpersModule") do |mod|
