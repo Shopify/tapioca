@@ -16,7 +16,7 @@ module Tapioca
         extend T::Sig
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, _: T.untyped).void }
-        def decorate(root, _)
+        def decorate(root, constant)
           named_routes = Rails.application.routes.named_routes
           path_helper_methods = named_routes.path_helpers_module.instance_methods(false)
           url_helper_methods = named_routes.url_helpers_module.instance_methods(false)
@@ -82,7 +82,21 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          [::ActionDispatch::Routing::RouteSet::NamedRouteCollection]
+          # rubocop:disable all
+          generatedUrlHelpersModule = Rails.application.routes.named_routes.url_helpers_module
+          generatedPathHelpersModule = Rails.application.routes.named_routes.path_helpers_module
+          # rubocop:enable all
+
+          ObjectSpace.each_object(Module).select do |mod|
+            (mod.ancestors.include?(generatedUrlHelpersModule) &&
+             !mod.try(:superclass)&.ancestors&.include?(generatedUrlHelpersModule)) ||
+            (mod.singleton_class.ancestors.include?(generatedUrlHelpersModule) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generatedUrlHelpersModule)) ||
+            (mod.ancestors.include?(generatedPathHelpersModule) &&
+             !mod.try(:superclass)&.ancestors&.include?(generatedPathHelpersModule)) ||
+            (mod.singleton_class.ancestors.include?(generatedPathHelpersModule) &&
+             !mod.singleton_class.try(:superclass)&.ancestors&.include?(generatedPathHelpersModule))
+          end.select(&:name)
         end
       end
     end

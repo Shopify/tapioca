@@ -13,8 +13,66 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
   end
 
   describe("#initialize") do
-    it("gathers ActionDispatch::Routing::RouteSet::NamedRouteCollection") do
-      assert_equal(subject.processable_constants, Set.new([ActionDispatch::Routing::RouteSet::NamedRouteCollection]))
+    def constants_from(content)
+      with_content(content) do
+        subject.processable_constants.map(&:to_s).sort
+      end
+    end
+
+    content = <<~RUBY
+      class Application < Rails::Application
+      end
+    RUBY
+
+    it("gathers constants that include path_helpers_module") do
+      content += <<~RUBY
+        module MyModule
+            include Rails.application.routes.named_routes.path_helpers_module
+        end
+      RUBY
+
+      assert_equal(constants_from(content), ["MyModule"])
+    end
+
+    it("gathers constants that extend path_helpers_module") do
+      content += <<~RUBY
+        module MyModule
+            extend Rails.application.routes.named_routes.path_helpers_module
+        end
+      RUBY
+
+      assert_equal(constants_from(content), ["MyModule"])
+    end
+
+    it("gathers constants that include url_helpers_module") do
+      content += <<~RUBY
+        module MyModule
+            include Rails.application.routes.named_routes.url_helpers_module
+        end
+      RUBY
+
+      assert_equal(constants_from(content), ["MyModule"])
+    end
+
+    it("gathers constants that extend url_helpers_module") do
+      content += <<~RUBY
+        module MyModule
+            extend Rails.application.routes.named_routes.url_helpers_module
+        end
+      RUBY
+
+      assert_equal(constants_from(content), ["MyModule"])
+    end
+
+    it("gathers constants that include both path_helpers_module and url_helpers_module") do
+      content += <<~RUBY
+        module MyModule
+            include Rails.application.routes.named_routes.path_helpers_module
+            include Rails.application.routes.named_routes.url_helpers_module
+        end
+      RUBY
+
+      assert_equal(constants_from(content), ["MyModule"])
     end
   end
 
