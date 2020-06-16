@@ -5,9 +5,8 @@ require "parlour"
 
 begin
   require "active_record"
-  require "action_controller"
 rescue LoadError
-  # means ActiveRecord::Enum is not installed,
+  # means ActiveRecord is not installed,
   # so let's not even define the generator.
   return
 end
@@ -15,8 +14,9 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `RbiGenerator:: ActiveRecordEnum` decorates RBI files for subclasses of `ActiveRecord::Base` which declare
-      # `enum` fields (see https://api.rubyonrails.org/classes/ActiveRecord/Enum.html).
+      # `Tapioca::Compilers::Dsl::ActiveRecordEnum` decorates RBI files for subclasses of
+      # `ActiveRecord::Base` which declare `enum` fields
+      # (see https://api.rubyonrails.org/classes/ActiveRecord/Enum.html).
       #
       # For example, with the following `ActiveRecord::Base` subclass:
       #

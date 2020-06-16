@@ -25,9 +25,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
 
     it("gathers only ActiveRecord constants with no abstract classes") do
       content = <<~RUBY
-        class UserController < ActionController::Base
-        end
-
         class Conversation < ActiveRecord::Base
         end
 
@@ -87,6 +84,82 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
       assert_equal(rbi_for(content), expected)
     end
 
+    it("generates RBI file for classes with an enum attribute with hash values") do
+      content = <<~RUBY
+        class Conversation < ActiveRecord::Base
+          enum status: { active: 0, archived: 1 }
+        end
+
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Conversation
+          include Conversation::EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.statuses; end
+        end
+
+        module Conversation::EnumMethodsModule
+          sig { void }
+          def active!; end
+
+          sig { returns(T::Boolean) }
+          def active?; end
+
+          sig { void }
+          def archived!; end
+
+          sig { returns(T::Boolean) }
+          def archived?; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for classes with an enum attribute with mix value types") do
+      content = <<~RUBY
+        class Conversation < ActiveRecord::Base
+          enum status: { active: 0, archived: true, inactive: "Inactive" }
+        end
+
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Conversation
+          include Conversation::EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+          def self.statuses; end
+        end
+
+        module Conversation::EnumMethodsModule
+          sig { void }
+          def active!; end
+
+          sig { returns(T::Boolean) }
+          def active?; end
+
+          sig { void }
+          def archived!; end
+
+          sig { returns(T::Boolean) }
+          def archived?; end
+
+          sig { void }
+          def inactive!; end
+
+          sig { returns(T::Boolean) }
+          def inactive?; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
     it("generates RBI file for classes with multiple enum attributes") do
       content = <<~RUBY
         class Conversation < ActiveRecord::Base
@@ -132,6 +205,75 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
 
           sig { returns(T::Boolean) }
           def on?; end
+        end
+      RUBY
+
+      assert_equal(rbi_for(content), expected)
+    end
+
+    it("generates RBI file for classes with multiple enum attributes with mix value types") do
+      content = <<~RUBY
+        class Conversation < ActiveRecord::Base
+          enum status: { active: 0, archived: true, inactive: "Inactive" }
+          enum comments_status: { on: 0, off: false, ongoing: "Ongoing", topic: [1,2,3] }
+        end
+
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class Conversation
+          include Conversation::EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String, Array)]) }
+          def self.comments_statuses; end
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+          def self.statuses; end
+        end
+
+        module Conversation::EnumMethodsModule
+          sig { void }
+          def active!; end
+
+          sig { returns(T::Boolean) }
+          def active?; end
+
+          sig { void }
+          def archived!; end
+
+          sig { returns(T::Boolean) }
+          def archived?; end
+
+          sig { void }
+          def inactive!; end
+
+          sig { returns(T::Boolean) }
+          def inactive?; end
+
+          sig { void }
+          def off!; end
+
+          sig { returns(T::Boolean) }
+          def off?; end
+
+          sig { void }
+          def on!; end
+
+          sig { returns(T::Boolean) }
+          def on?; end
+
+          sig { void }
+          def ongoing!; end
+
+          sig { returns(T::Boolean) }
+          def ongoing?; end
+
+          sig { void }
+          def topic!; end
+
+          sig { returns(T::Boolean) }
+          def topic?; end
         end
       RUBY
 
