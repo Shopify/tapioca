@@ -31,7 +31,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"])
+      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
     end
 
     it("gathers constants that extend path_helpers_module") do
@@ -41,7 +41,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"])
+      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
     end
 
     it("gathers constants that include url_helpers_module") do
@@ -51,7 +51,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"])
+      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
     end
 
     it("gathers constants that extend url_helpers_module") do
@@ -61,7 +61,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"])
+      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
     end
 
     it("gathers constants that include both path_helpers_module and url_helpers_module") do
@@ -72,7 +72,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"])
+      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
     end
   end
 
@@ -90,6 +90,100 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       end
     RUBY
 
+    it("generates RBI for GeneratedPathHelpersModule") do
+      expected = <<~RUBY
+        # typed: strong
+        module GeneratedPathHelpersModule
+          include ActionDispatch::Routing::PolymorphicRoutes
+          include ActionDispatch::Routing::UrlFor
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :GeneratedPathHelpersModule))
+    end
+
+    it("generates RBI for GeneratedUrlHelpersModule") do
+      expected = <<~RUBY
+        # typed: strong
+        module GeneratedUrlHelpersModule
+          include ActionDispatch::Routing::PolymorphicRoutes
+          include ActionDispatch::Routing::UrlFor
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
+    end
+
+    it("generates RBI for GeneratedPathHelpersModule with helper methods") do
+      content = <<~RUBY
+        class Application < Rails::Application
+          routes.draw do
+            resource :index
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        module GeneratedPathHelpersModule
+          include ActionDispatch::Routing::PolymorphicRoutes
+          include ActionDispatch::Routing::UrlFor
+
+          sig { params(args: T.untyped).returns(String) }
+          def edit_index_path(*args); end
+
+          sig { params(args: T.untyped).returns(String) }
+          def index_path(*args); end
+
+          sig { params(args: T.untyped).returns(String) }
+          def new_index_path(*args); end
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :GeneratedPathHelpersModule))
+    end
+
+    it("generates RBI for GeneratedUrlHelpersModule with helper methods") do
+      content = <<~RUBY
+        class Application < Rails::Application
+          routes.draw do
+            resource :index
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        module GeneratedUrlHelpersModule
+          include ActionDispatch::Routing::PolymorphicRoutes
+          include ActionDispatch::Routing::UrlFor
+
+          sig { params(args: T.untyped).returns(String) }
+          def edit_index_url(*args); end
+
+          sig { params(args: T.untyped).returns(String) }
+          def index_url(*args); end
+
+          sig { params(args: T.untyped).returns(String) }
+          def new_index_url(*args); end
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
+    end
+        # module GeneratedUrlHelpersModule
+        #   include ActionDispatch::Routing::PolymorphicRoutes
+        #   include ActionDispatch::Routing::UrlFor
+
+        #   sig { params(args: T.untyped).returns(String) }
+        #   def edit_index_url(*args); end
+
+        #   sig { params(args: T.untyped).returns(String) }
+        #   def index_url(*args); end
+
+        #   sig { params(args: T.untyped).returns(String) }
+        #   def new_index_url(*args); end
+        # end
     it("generates RBI for constant that includes path_helpers_module") do
       content += <<~RUBY
         class MyClass
@@ -104,7 +198,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(rbi_for(content, :MyClass), expected)
+      assert_equal(expected, rbi_for(content, :MyClass))
     end
 
     it("generates RBI for constant that includes url_helpers_module") do
@@ -121,7 +215,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(rbi_for(content, :MyClass), expected)
+      assert_equal(expected, rbi_for(content, :MyClass))
     end
 
     it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
@@ -140,7 +234,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(rbi_for(content, :MyClass), expected)
+      assert_equal(expected, rbi_for(content, :MyClass))
     end
 
     it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
@@ -159,7 +253,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(rbi_for(content, :MyClass), expected)
+      assert_equal(expected, rbi_for(content, :MyClass))
     end
 
     it("generates RBI when constant itself and its singleton class includes path_helpers_module") do
@@ -180,54 +274,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(rbi_for(content, :MyClass), expected)
+      assert_equal(expected, rbi_for(content, :MyClass))
     end
-
-    # TODO: Test generation of the 2 modules by passing those constant names
-    # TODO: Delete below
   end
 end
-
-        # class Application < Rails::Application
-        #   routes.draw do
-        #     resource :index
-        #   end
-        # end
-        # # typed: strong
-        # class ActionDispatch::IntegrationTest
-        #   include GenerateUrlHelpersModule
-        #   include GeneratedPathHelpersModule
-        # end
-
-        # module GeneratedPathHelpersModule
-        #   include ActionDispatch::Routing::PolymorphicRoutes
-        #   include ActionDispatch::Routing::UrlFor
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def edit_index_path(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def index_path(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def new_index_path(*args); end
-        # end
-
-        # module GeneratedUrlHelpersModule
-        #   include ActionDispatch::Routing::PolymorphicRoutes
-        #   include ActionDispatch::Routing::UrlFor
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def edit_index_url(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def index_url(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def new_index_url(*args); end
-        # end
-
-        # class MyClass
-        #   extend GeneratedPathHelpersModule
-        #   extend GeneratedUrlHelpersModule
-        # end
