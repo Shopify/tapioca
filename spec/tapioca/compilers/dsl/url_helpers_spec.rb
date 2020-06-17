@@ -124,13 +124,51 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       assert_equal(rbi_for(content, :MyClass), expected)
     end
 
-    it("generates RBI for constant that has a superclass which includes path_helpers_module") do
+    it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
       content += <<~RUBY
-        class MySuperClass
-          include Rails.application.routes.named_routes.path_helpers_module
+        class MyClass
+          class << self
+            include Rails.application.routes.named_routes.path_helpers_module
+          end
         end
+      RUBY
 
-        class MyClass < MySuperClass
+      expected = <<~RUBY
+        # typed: strong
+        class MyClass
+          extend GeneratedPathHelpersModule
+        end
+      RUBY
+
+      assert_equal(rbi_for(content, :MyClass), expected)
+    end
+
+    it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
+      content += <<~RUBY
+        class MyClass
+          class << self
+            include Rails.application.routes.named_routes.url_helpers_module
+          end
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class MyClass
+          extend GeneratedUrlHelpersModule
+        end
+      RUBY
+
+      assert_equal(rbi_for(content, :MyClass), expected)
+    end
+
+    it("generates RBI when constant itself and its singleton class includes path_helpers_module") do
+      content += <<~RUBY
+        class MyClass
+          include Rails.application.routes.named_routes.path_helpers_module
+          class << self
+            include Rails.application.routes.named_routes.path_helpers_module
+          end
         end
       RUBY
 
@@ -145,29 +183,8 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       assert_equal(rbi_for(content, :MyClass), expected)
     end
 
-    it("generates RBI for constant that has a superclass which extends path_helpers_module") do
-      content += <<~RUBY
-        class MySuperClass
-          include Rails.application.routes.named_routes.url_helpers_module
-        end
-
-        class MyClass < MySuperClass
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-        class MyClass
-          include GeneratedUrlHelpersModule
-          extend GeneratedUrlHelpersModule
-        end
-      RUBY
-
-      assert_equal(rbi_for(content, :MyClass), expected)
-    end
-
-    # TODO: Confirm both include and extend is OK in the generation above
     # TODO: Test generation of the 2 modules by passing those constant names
+    # TODO: Delete below
   end
 end
 
