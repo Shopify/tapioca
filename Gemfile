@@ -29,4 +29,6 @@ group(:development, :test) do
   gem("identity_cache", "~> 1.0", require: false)
   gem('cityhash', git: 'https://github.com/csfrancis/cityhash.git',
                   ref: '3cfc7d01f333c01811d5e834f1495eaa29f87c36', require: false)
+  gem("activemodel-serializers-xml", "~> 1.0", require: false)
+  gem("activeresource", "~> 5.1", require: false)
 end
