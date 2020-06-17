@@ -31,7 +31,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+      ], constants_from(content))
     end
 
     it("gathers constants that extend path_helpers_module") do
@@ -41,7 +46,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+      ], constants_from(content))
     end
 
     it("gathers constants that include url_helpers_module") do
@@ -51,7 +61,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+      ], constants_from(content))
     end
 
     it("gathers constants that extend url_helpers_module") do
@@ -61,7 +76,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+      ], constants_from(content))
     end
 
     it("gathers constants that include both path_helpers_module and url_helpers_module") do
@@ -72,7 +92,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         end
       RUBY
 
-      assert_equal(["ActionDispatch::IntegrationTest", "GeneratedPathHelpersModule", "GeneratedUrlHelpersModule", "MyClass"], constants_from(content))
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+      ], constants_from(content))
     end
   end
 
@@ -171,19 +196,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
     end
-        # module GeneratedUrlHelpersModule
-        #   include ActionDispatch::Routing::PolymorphicRoutes
-        #   include ActionDispatch::Routing::UrlFor
 
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def edit_index_url(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def index_url(*args); end
-
-        #   sig { params(args: T.untyped).returns(String) }
-        #   def new_index_url(*args); end
-        # end
     it("generates RBI for constant that includes path_helpers_module") do
       content += <<~RUBY
         class MyClass

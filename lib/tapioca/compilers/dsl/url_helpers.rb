@@ -49,10 +49,14 @@ module Tapioca
             end
           else
             root.path(constant) do |mod|
-              mod.create_include("GeneratedUrlHelpersModule") if constant.ancestors.include?(GeneratedUrlHelpersModule)
-              mod.create_include("GeneratedPathHelpersModule") if constant.ancestors.include?(GeneratedPathHelpersModule)
-              mod.create_extend("GeneratedUrlHelpersModule") if constant.singleton_class.ancestors.include?(GeneratedUrlHelpersModule)
-              mod.create_extend("GeneratedPathHelpersModule") if constant.singleton_class.ancestors.include?(GeneratedPathHelpersModule)
+              mod.create_include("GeneratedUrlHelpersModule") if
+                constant.ancestors.include?(GeneratedUrlHelpersModule)
+              mod.create_include("GeneratedPathHelpersModule") if
+                constant.ancestors.include?(GeneratedPathHelpersModule)
+              mod.create_extend("GeneratedUrlHelpersModule") if
+                constant.singleton_class.ancestors.include?(GeneratedUrlHelpersModule)
+              mod.create_extend("GeneratedPathHelpersModule") if
+                constant.singleton_class.ancestors.include?(GeneratedPathHelpersModule)
             end
           end
         end
