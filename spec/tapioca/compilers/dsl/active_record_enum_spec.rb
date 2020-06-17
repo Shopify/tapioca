@@ -36,7 +36,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Conversation"])
+      assert_equal(["Conversation"], constants_from(content))
     end
   end
 
@@ -81,7 +81,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with an enum attribute with string values") do
@@ -116,7 +116,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with an enum attribute with mix value types") do
@@ -157,7 +157,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with multiple enum attributes") do
@@ -208,7 +208,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with multiple enum attributes with mix value types") do
@@ -277,7 +277,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with enum attribute with suffix specified") do
@@ -312,7 +312,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for classes with enum attribute with prefix specified") do
@@ -347,7 +347,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
   end
 end

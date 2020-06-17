@@ -37,7 +37,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Post", "User"])
+      assert_equal(["Post", "User"], constants_from(content))
     end
 
     it("ignores SmartProperty classes without a name") do
@@ -76,7 +76,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
 
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for simple smart property") do
@@ -98,7 +98,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for required smart property") do
@@ -120,7 +120,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("defaults to T.untyped for smart property that does not have an accepter") do
@@ -142,7 +142,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("defaults to T::Array for smart property that accepts Arrays") do
@@ -164,7 +164,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for smart property that accepts booleans") do
@@ -186,7 +186,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for smart property that accepts an array of values") do
@@ -208,7 +208,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("defaults to T.untyped if a converter is defined") do
@@ -230,7 +230,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("ignores required if it is a lambda") do
@@ -252,7 +252,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("ignores required if property is not typed") do
@@ -274,7 +274,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates a reader that has been renamed correctly") do
@@ -296,7 +296,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for smart property that accepts boolean and has a default") do
@@ -318,7 +318,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for smart property that accepts a lambda") do
@@ -340,7 +340,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates RBI file for smart property that accepts another ObjectClass") do
@@ -369,7 +369,7 @@ describe("Tapioca::Compilers::Dsl::SmartProperties") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
   end
 end

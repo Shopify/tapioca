@@ -13,7 +13,7 @@ describe(Tapioca::SorbetConfig) do
 
   it("parses a simple config string") do
     config = Tapioca::SorbetConfig.parse_string('.')
-    assert_equal(config.paths, ['.'])
+    assert_equal(['.'], config.paths)
     assert_empty(config.ignore)
   end
 
@@ -22,7 +22,7 @@ describe(Tapioca::SorbetConfig) do
       lib/a
       lib/b
     CONFIG
-    assert_equal(config.paths, ['lib/a', 'lib/b'])
+    assert_equal(['lib/a', 'lib/b'], config.paths)
     assert_empty(config.ignore)
   end
 
@@ -35,7 +35,7 @@ describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    assert_equal(config.paths, ['a', 'b', 'c', 'd', 'e'])
+    assert_equal(['a', 'b', 'c', 'd', 'e'], config.paths)
     assert_empty(config.ignore)
   end
 
@@ -48,7 +48,7 @@ describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    assert_equal(config.paths, ['a', 'b', 'c', 'd', 'e'])
+    assert_equal(['a', 'b', 'c', 'd', 'e'], config.paths)
     assert_empty(config.ignore)
   end
 
@@ -61,8 +61,8 @@ describe(Tapioca::SorbetConfig) do
       d
       e
     CONFIG
-    assert_equal(config.paths, ['a', 'c', 'e'])
-    assert_equal(config.ignore, ['b', 'd'])
+    assert_equal(['a', 'c', 'e'], config.paths)
+    assert_equal(['b', 'd'], config.ignore)
   end
 
   it("parses a config string with other options") do
@@ -75,7 +75,7 @@ describe(Tapioca::SorbetConfig) do
       e
       -f
     CONFIG
-    assert_equal(config.paths, ['a', 'c', 'e'])
+    assert_equal(['a', 'c', 'e'], config.paths)
     assert_empty(config.ignore)
   end
 
@@ -101,8 +101,8 @@ describe(Tapioca::SorbetConfig) do
       --o
       p
     CONFIG
-    assert_equal(config.paths, ['a', 'c', 'f', 'h', 'i', 'l', 'm'])
-    assert_equal(config.ignore, ['j', 'k'])
+    assert_equal(['a', 'c', 'f', 'h', 'i', 'l', 'm'], config.paths)
+    assert_equal(['j', 'k'], config.ignore)
   end
 
   it("parses a real config string") do
@@ -117,7 +117,7 @@ describe(Tapioca::SorbetConfig) do
       --allowed-extension=.rake
       --allowed-extension=.ru
     CONFIG
-    assert_equal(config.paths, ['.'])
-    assert_equal(config.ignore, ['.git/', '.idea/', 'vendor/'])
+    assert_equal(['.'], config.paths)
+    assert_equal(['.git/', '.idea/', 'vendor/'], config.ignore)
   end
 end

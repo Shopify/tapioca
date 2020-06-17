@@ -32,7 +32,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Current"])
+      assert_equal(["Current"], constants_from(content))
     end
   end
 
@@ -56,7 +56,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
 
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates method sigs for every current attribute") do
@@ -96,7 +96,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("only generates a class method definition for non current attribute methods") do
@@ -140,7 +140,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
   end
 end

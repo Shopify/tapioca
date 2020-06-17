@@ -32,7 +32,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["NotifierMailer"])
+      assert_equal(["NotifierMailer"], constants_from(content))
     end
 
     it("gathers subclasses of ActionMailer subclasses") do
@@ -44,7 +44,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["NotifierMailer", "SecondaryMailer"])
+      assert_equal(["NotifierMailer", "SecondaryMailer"], constants_from(content))
     end
 
     it("ignores abstract subclasses") do
@@ -57,7 +57,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["NotifierMailer"])
+      assert_equal(["NotifierMailer"], constants_from(content))
     end
   end
 
@@ -82,7 +82,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates correct RBI file for subclass with methods") do
@@ -102,7 +102,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates correct RBI file for subclass with method signatures") do
@@ -124,7 +124,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("does not generate RBI for methods defined in abstract classes") do
@@ -152,7 +152,7 @@ describe("Tapioca::Compilers::Dsl::ActionMailer") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
   end
 end
