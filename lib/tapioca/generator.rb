@@ -121,11 +121,17 @@ module Tapioca
       base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
       generation_command_template = config.generate_command
 
+      say("Loading Rails application... ")
+
       loader = Loader.new(Gemfile.new)
       loader.load_rails(
         environment_load: true,
         eager_load: requested_constants.empty?
       )
+
+      say("Done", :green)
+
+      say("Loading DSL generator classes... ")
 
       Dir["#{Config::TAPIOCA_PATH}/generators/**/*.rb"].each do |generator|
         require File.expand_path(generator)
@@ -134,6 +140,11 @@ module Tapioca
       Dir["#{__dir__}/compilers/dsl/*.rb"].each do |generator|
         require File.expand_path(generator)
       end
+
+      say("Done", :green)
+
+      say("Compiling DSL RBI files...")
+      say("")
 
       compiler = Compilers::DslCompiler.new(
         requested_constants: requested_constants.map(&:constantize),
@@ -159,6 +170,12 @@ module Tapioca
         say("Wrote: ", [:green])
         say(filename)
       end
+
+      say("")
+      say("Done", :green)
+
+      say("All operations performed in working directory.", [:green, :bold])
+      say("Please review changes and commit them.", [:green, :bold])
     end
 
     sig { void }
