@@ -15,7 +15,7 @@ module Tapioca
       class UrlHelpers < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, _: T.untyped).void }
+        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Object)).void }
         def decorate(root, constant)
           named_routes = Rails.application.routes.named_routes
           path_helper_methods = named_routes.path_helpers_module.instance_methods(false)
@@ -61,20 +61,20 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
+        # sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
           ObjectSpace.each_object(Module).select do |mod|
-            (mod.ancestors.include?(GeneratedUrlHelpersModule) &&
-             !mod.try(:superclass)&.ancestors&.include?(GeneratedUrlHelpersModule)) ||
-            (mod.singleton_class.ancestors.include?(GeneratedUrlHelpersModule) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
-            (mod.ancestors.include?(GeneratedPathHelpersModule) &&
-             !mod.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
-            (mod.singleton_class.ancestors.include?(GeneratedPathHelpersModule) &&
-             !mod.singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule))
-          end.select(&:name) << "ActionDispatch::IntegrationTest"
+            (T.unsafe(mod).ancestors.include?(GeneratedUrlHelpersModule) &&
+             !T.unsafe(mod).try(:superclass)&.ancestors&.include?(GeneratedUrlHelpersModule)) ||
+            (T.unsafe(mod).singleton_class.ancestors.include?(GeneratedUrlHelpersModule) &&
+             !T.unsafe(mod).singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
+            (T.unsafe(mod).ancestors.include?(GeneratedPathHelpersModule) &&
+             !T.unsafe(mod).try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule)) ||
+            (T.unsafe(mod).singleton_class.ancestors.include?(GeneratedPathHelpersModule) &&
+             !T.unsafe(mod).singleton_class.try(:superclass)&.ancestors&.include?(GeneratedPathHelpersModule))
+          end.select(&T.unsafe(:name)) << "ActionDispatch::IntegrationTest"
         end
       end
     end
