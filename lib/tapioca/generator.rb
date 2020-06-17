@@ -148,7 +148,10 @@ module Tapioca
 
       compiler = Compilers::DslCompiler.new(
         requested_constants: requested_constants.map(&:constantize),
-        requested_generators: ENV.fetch("GENERATORS", "").split(",").map(&:strip)
+        requested_generators: ENV.fetch("GENERATORS", "").split(",").map(&:strip),
+        error_handler: ->(error) {
+          say_error(error, :bold, :red)
+        }
       )
 
       compiler.run do |constant, contents|

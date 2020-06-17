@@ -10,21 +10,27 @@ module Tapioca
 
       sig { returns(T::Enumerable[Dsl::Base]) }
       attr_reader :generators
+
       sig { returns(T::Array[Module]) }
       attr_reader :requested_constants
+
+      sig { returns(T.nilable(T.proc.params(error: String).void)) }
+      attr_reader :error_handler
 
       sig do
         params(
           requested_constants: T::Array[Module],
-          requested_generators: T::Array[String]
+          requested_generators: T::Array[String],
+          error_handler: T.nilable(T.proc.params(error: String).void)
         ).void
       end
-      def initialize(requested_constants:, requested_generators: [])
+      def initialize(requested_constants:, requested_generators: [], error_handler: nil)
         @generators = T.let(
           gather_generators(requested_generators),
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
+        @error_handler = error_handler
       end
 
       sig { params(blk: T.proc.params(constant: Module, rbi: String).void).void }
@@ -32,9 +38,10 @@ module Tapioca
         constants_to_process = gather_constants(requested_constants)
 
         if constants_to_process.empty?
-          $stderr.puts "!!! No classes/modules can be matched for RBI generation."
-          $stderr.puts "!!! Please check that the requested classes/modules include processable DSL methods."
-          exit(1)
+          report_error(<<~ERROR)
+            No classes/modules can be matched for RBI generation.
+            Please check that the requested classes/modules include processable DSL methods.
+          ERROR
         end
 
         constants_to_process.each do |constant|
@@ -92,14 +99,26 @@ module Tapioca
       sig { params(parlour: Parlour::RbiGenerator).void }
       def resolve_conflicts(parlour)
         Parlour::ConflictResolver.new.resolve_conflicts(parlour.root) do |msg, candidates|
-          $stderr.puts "=== Error ==="
-          $stderr.puts msg
-          $stderr.puts "# Candidates"
+          error = StringIO.new
+          error.puts "=== Error ==="
+          error.puts msg
+          error.puts "# Candidates"
           candidates.each_with_index do |candidate, index|
-            $stderr.puts "#{index}. #{candidate.describe}"
+            error.puts "  #{index}. #{candidate.describe}"
           end
-          exit 1
+          report_error(error.to_s)
         end
+      end
+
+      sig { params(error: String).returns(T.noreturn) }
+      def report_error(error)
+        handler = error_handler
+        if handler
+          handler.call(error)
+        else
+          $stderr.puts(error)
+        end
+        exit(1)
       end
     end
   end
