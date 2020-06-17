@@ -61,7 +61,7 @@ module Tapioca
           end
         end
 
-        # sig { override.returns(T::Enumerable[Module]) }
+        sig { override.returns(T::Enumerable[T.untyped]) }
         def gather_constants
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
