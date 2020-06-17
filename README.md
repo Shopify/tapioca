@@ -99,6 +99,9 @@ This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved consta
 - `--generate-command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
 - `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
+## How does tapioca compare to "srb rbi gems" ?
+[Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/Shopify/tapioca/blob/master/CODE_OF_CONDUCT.md) code of conduct.
