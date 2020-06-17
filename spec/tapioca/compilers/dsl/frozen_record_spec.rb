@@ -33,7 +33,7 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Student"])
+      assert_equal(["Student"], constants_from(content))
     end
   end
 
@@ -63,7 +63,7 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
 
       RUBY
 
-      assert_equal(rbi_for(files), expected)
+      assert_equal(expected, rbi_for(files))
     end
 
     it("generates an RBI file for frozen records") do
@@ -110,7 +110,7 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
         end
       RUBY
 
-      assert_equal(rbi_for(files), expected)
+      assert_equal(expected, rbi_for(files))
     end
   end
 end

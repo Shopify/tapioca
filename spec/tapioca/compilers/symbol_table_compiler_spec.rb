@@ -47,7 +47,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("does not compile Sorbet related constants") do
@@ -74,7 +74,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         Bar::Arr = T.let(T.unsafe(nil), Array)
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles extensions to BasicObject and Object") do
@@ -109,7 +109,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles mixins in the correct order") do
@@ -154,7 +154,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles classes that have overridden == method that errors") do
@@ -172,7 +172,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles classes defined as static fields") do
@@ -185,7 +185,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles extensions to core types") do
@@ -234,7 +234,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles without annotations") do
@@ -252,7 +252,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles methods and leaves spacing") do
@@ -273,7 +273,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles constants assignments") do
@@ -297,7 +297,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         A::DEF = T.let(T.unsafe(nil), String)
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles simple arguments") do
@@ -314,7 +314,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles default arguments") do
@@ -331,7 +331,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles modules") do
@@ -349,7 +349,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles compact SymbolTableCompilerTests") do
@@ -372,7 +372,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles nested namespaces") do
@@ -394,7 +394,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles compact namespaces nested") do
@@ -421,7 +421,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles deeply nested namespaces") do
@@ -448,7 +448,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class with a superclass") do
@@ -471,7 +471,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class with a relative superclass") do
@@ -495,7 +495,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class with an anchored superclass") do
@@ -520,7 +520,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class with an private superclass") do
@@ -549,7 +549,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class which effectively has itself as a superclass") do
@@ -578,7 +578,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a class with mixins") do
@@ -634,7 +634,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles Structs, Classes, and Modules") do
@@ -716,7 +716,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("handles dynamic mixins") do
@@ -752,7 +752,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles methods on the class's singleton class") do
@@ -770,7 +770,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("doesn't compile non-static singleton class reopening") do
@@ -789,7 +789,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores methods on other objects") do
@@ -807,7 +807,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles a singleton class") do
@@ -826,7 +826,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles blocks") do
@@ -847,7 +847,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles attr_reader/attr_writer/attr_accessor") do
@@ -874,7 +874,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores methods with invalid names") do
@@ -896,7 +896,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores method calls") do
@@ -918,7 +918,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores loops") do
@@ -942,7 +942,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("renames unnamed splats") do
@@ -959,7 +959,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores ivar and cvar assigns") do
@@ -976,7 +976,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("ignores things done in the file body") do
@@ -1019,7 +1019,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles methods of all visibility for classes") do
@@ -1062,7 +1062,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles methods of all visibility for modules") do
@@ -1105,7 +1105,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("removes useless spacing") do
@@ -1123,7 +1123,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles initialize") do
@@ -1140,7 +1140,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("understands redefined attr_accessor") do
@@ -1168,7 +1168,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("handles inheritance properly when the parent is a method call") do
@@ -1197,7 +1197,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("handles multiple assign of constants") do
@@ -1223,7 +1223,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         Toto::NUMS = T.let(T.unsafe(nil), Array)
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("handles constants that override #!") do
@@ -1243,7 +1243,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("handles ranges properly") do
@@ -1260,7 +1260,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         Toto::A = T.let(T.unsafe(nil), Range)
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("doesn't output prepend for modules unrechable via constants") do
@@ -1283,7 +1283,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("doesn't output include for modules unrechable via constants") do
@@ -1306,7 +1306,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("can handle BasicObjects") do
@@ -1332,7 +1332,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         BasicObjectTest::VeryBasic = T.let(T.unsafe(nil), BasicObject)
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("adds mixes_in_class_methods to modules that extend base classes") do
@@ -1422,7 +1422,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
@@ -1515,7 +1515,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
@@ -1599,7 +1599,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("properly filters out T::Private modules") do
@@ -1622,7 +1622,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("doesn't crash when `singleton_class` is overloaded") do
@@ -1656,7 +1656,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("sanitize parameter names creating through meta-programming") do
@@ -1676,7 +1676,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
 
     it("compiles signatures and structs in source files") do
@@ -1807,7 +1807,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
       RUBY
 
-      assert_equal(source, output)
+      assert_equal(output, source)
     end
   end
 end

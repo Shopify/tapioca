@@ -32,7 +32,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Post"])
+      assert_equal(["Post"], constants_from(content))
     end
 
     it("rejects abstract ActiveRecord subclasses") do
@@ -45,7 +45,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Post"])
+      assert_equal(["Post"], constants_from(content))
     end
   end
 
@@ -152,7 +152,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
         end
       RUBY
 
-      assert_equal(rbi_for(files), expected)
+      assert_equal(expected, rbi_for(files))
     end
 
     it("generates RBI file for custom attributes with strong type generation") do

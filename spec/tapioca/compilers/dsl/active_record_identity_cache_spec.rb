@@ -39,7 +39,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["CustomPost", "Post"])
+      assert_equal(["CustomPost", "Post"], constants_from(content))
     end
   end
 
@@ -78,7 +78,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
@@ -110,7 +110,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates methods for combined cache_indexes") do
@@ -139,7 +139,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates methods for classes with cache_has_manys index") do
@@ -165,7 +165,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates methods for classes with cache_has_one index") do
@@ -191,7 +191,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
@@ -214,7 +214,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
@@ -237,7 +237,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
   end
 end

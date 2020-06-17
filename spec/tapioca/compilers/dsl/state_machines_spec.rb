@@ -37,7 +37,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         end
       RUBY
 
-      assert_equal(constants_from(content), ["User", "Vehicle"])
+      assert_equal(["User", "Vehicle"], constants_from(content))
     end
   end
 
@@ -143,7 +143,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(expected, rbi_for(content))
     end
 
     it("generates an RBI that includes name helpers methods") do
