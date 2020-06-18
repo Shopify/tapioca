@@ -145,8 +145,16 @@ module Tapioca
       say("Compiling DSL RBI files...")
       say("")
 
+      requested_constants = requested_constants.map do |constant|
+        begin
+          constant.constantize
+        rescue NameError
+          nil
+        end
+      end.compact
+
       compiler = Compilers::DslCompiler.new(
-        requested_constants: requested_constants.map(&:constantize),
+        requested_constants: requested_constants,
         requested_generators: config.generators,
         error_handler: ->(error) {
           say_error(error, :bold, :red)
