@@ -8,4 +8,11 @@ gem("baz", path: "../gems/baz")
 gem("tapioca", path: "../../../")
 
 gem("psych")
+# `extras` gem is causing problems by modifying
+# `Shellwords` functionaly. Depending on it to
+# ensure that we don't fail.
 gem("extras")
+# Needed for DSL generation tests. The simplest
+# gem that we have a DSL generator for.
+gem("smart_properties")
+gem("activesupport")
