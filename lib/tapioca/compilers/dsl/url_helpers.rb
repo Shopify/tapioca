@@ -47,7 +47,7 @@ module Tapioca
 
         sig { params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module)).void }
         def generate_module_for(root, constant)
-          root.create_module(constant.name) do |mod|
+          root.create_module(T.must(constant.name)) do |mod|
             mod.create_include("ActionDispatch::Routing::UrlFor")
             mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
 
