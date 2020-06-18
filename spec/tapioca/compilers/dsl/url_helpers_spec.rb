@@ -52,7 +52,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("gathers constants that extend url_helpers_module") do
+    it("gathers constants that extend url_helpers") do
       content += <<~RUBY
         class MyClass
           extend Rails.application.routes.url_helpers
@@ -67,7 +67,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("gathers constants that have a singleton class that includes url_helpers_module") do
+    it("gathers constants that have a singleton class that includes url_helpers") do
       content += <<~RUBY
         class MyClass
           class << self
@@ -84,7 +84,62 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    #TODO: More tests. Superclass including it. Superclass of a singleton including it. Extending Rails.application.routes.url_helpers (should fail)
+    it("gathers constant when its superclass includes url_helpers") do
+      content += <<~RUBY
+        class SuperClass
+          include Rails.application.routes.url_helpers
+        end
+
+        class MyClass < SuperClass
+        end
+      RUBY
+
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+        "SuperClass",
+      ], constants_from(content))
+    end
+
+    it("gathers constant when its superclass extends url_helpers") do
+      content += <<~RUBY
+        class SuperClass
+          extend Rails.application.routes.url_helpers
+        end
+
+        class MyClass < SuperClass
+        end
+      RUBY
+
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "MyClass",
+        "SuperClass",
+      ], constants_from(content))
+    end
+
+    it("does not gather constant when it includes url_helpers as well as its superclass") do
+      content += <<~RUBY
+        class SuperClass
+          include Rails.application.routes.url_helpers
+        end
+
+        class MyClass < SuperClass
+          include Rails.application.routes.url_helpers
+        end
+      RUBY
+
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+        "SuperClass",
+      ], constants_from(content))
+    end
   end
 
   describe("#decorate") do
@@ -101,10 +156,13 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       end
     RUBY
 
-    it("generates empty RBI when there are no helper methods") do
+    it("generates RBI when there are no helper methods") do
       expected = <<~RUBY
         # typed: strong
-
+        module GeneratedUrlHelpersModule
+          include ActionDispatch::Routing::PolymorphicRoutes
+          include ActionDispatch::Routing::UrlFor
+        end
       RUBY
 
       assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))

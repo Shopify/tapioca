@@ -50,7 +50,6 @@ module Tapioca
         private
 
         def generate_module_for(root, constant, helper_methods)
-          return if helper_methods.empty?
           root.create_module(constant.name) do |mod|
             mod.create_include("ActionDispatch::Routing::UrlFor")
             mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
@@ -73,7 +72,7 @@ module Tapioca
         def includes_helper?(mod, helper)
           superclass_ancestors = []
           superclass_ancestors << mod.try(:superclass)&.ancestors if mod === Class
-          (mod.ancestors - superclass_ancestors).include?(helper)
+          (mod.ancestors - superclass_ancestors.flatten).include?(helper)
         end
       end
     end
