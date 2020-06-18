@@ -7,11 +7,7 @@ require 'active_support/all'
 # Fake as much of Rails as we can
 class Rails
   def self.autoloaders
-    [
-      Class.new do
-        def eager_load; end
-      end.new
-    ]
+    []
   end
 end
 
