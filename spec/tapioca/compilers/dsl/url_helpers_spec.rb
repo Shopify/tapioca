@@ -24,10 +24,9 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       end
     RUBY
 
-    it("gathers constants that include path_helpers_module") do
+    it("does not gather constant when url_helpers is not included") do
       content += <<~RUBY
         class MyClass
-          include Rails.application.routes.named_routes.path_helpers_module
         end
       RUBY
 
@@ -35,29 +34,13 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         "ActionDispatch::IntegrationTest",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
-        "MyClass",
       ], constants_from(content))
     end
 
-    it("gathers constants that extend path_helpers_module") do
+    it("gathers constants that include url_helpers") do
       content += <<~RUBY
         class MyClass
-          extend Rails.application.routes.named_routes.path_helpers_module
-        end
-      RUBY
-
-      assert_equal([
-        "ActionDispatch::IntegrationTest",
-        "GeneratedPathHelpersModule",
-        "GeneratedUrlHelpersModule",
-        "MyClass",
-      ], constants_from(content))
-    end
-
-    it("gathers constants that include url_helpers_module") do
-      content += <<~RUBY
-        class MyClass
-          include Rails.application.routes.named_routes.url_helpers_module
+          include Rails.application.routes.url_helpers
         end
       RUBY
 
@@ -72,7 +55,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
     it("gathers constants that extend url_helpers_module") do
       content += <<~RUBY
         class MyClass
-          extend Rails.application.routes.named_routes.url_helpers_module
+          extend Rails.application.routes.url_helpers
         end
       RUBY
 
@@ -84,11 +67,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("gathers constants that include both path_helpers_module and url_helpers_module") do
+    it("gathers constants that have a singleton class that includes url_helpers_module") do
       content += <<~RUBY
         class MyClass
-          include Rails.application.routes.named_routes.path_helpers_module
-          include Rails.application.routes.named_routes.url_helpers_module
+          class << self
+            include Rails.application.routes.url_helpers
+          end
         end
       RUBY
 
@@ -99,6 +83,8 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         "MyClass",
       ], constants_from(content))
     end
+
+    #TODO: More tests. Superclass including it. Superclass of a singleton including it. Extending Rails.application.routes.url_helpers (should fail)
   end
 
   describe("#decorate") do
@@ -115,25 +101,10 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       end
     RUBY
 
-    it("generates RBI for GeneratedPathHelpersModule") do
+    it("generates empty RBI when there are no helper methods") do
       expected = <<~RUBY
         # typed: strong
-        module GeneratedPathHelpersModule
-          include ActionDispatch::Routing::PolymorphicRoutes
-          include ActionDispatch::Routing::UrlFor
-        end
-      RUBY
 
-      assert_equal(expected, rbi_for(content, :GeneratedPathHelpersModule))
-    end
-
-    it("generates RBI for GeneratedUrlHelpersModule") do
-      expected = <<~RUBY
-        # typed: strong
-        module GeneratedUrlHelpersModule
-          include ActionDispatch::Routing::PolymorphicRoutes
-          include ActionDispatch::Routing::UrlFor
-        end
       RUBY
 
       assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
@@ -197,10 +168,10 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
     end
 
-    it("generates RBI for constant that includes path_helpers_module") do
+    it("generates RBI for constant that includes url_helpers") do
       content += <<~RUBY
         class MyClass
-          include Rails.application.routes.named_routes.path_helpers_module
+          include Rails.application.routes.url_helpers
         end
       RUBY
 
@@ -208,22 +179,6 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         # typed: strong
         class MyClass
           include GeneratedPathHelpersModule
-        end
-      RUBY
-
-      assert_equal(expected, rbi_for(content, :MyClass))
-    end
-
-    it("generates RBI for constant that includes url_helpers_module") do
-      content += <<~RUBY
-        class MyClass
-          include Rails.application.routes.named_routes.url_helpers_module
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-        class MyClass
           include GeneratedUrlHelpersModule
         end
       RUBY
@@ -231,11 +186,50 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       assert_equal(expected, rbi_for(content, :MyClass))
     end
 
-    it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
+    it("generates RBI for constant that extends url_helpers") do
+      content += <<~RUBY
+        class MyClass
+          extend Rails.application.routes.url_helpers
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class MyClass
+          extend GeneratedPathHelpersModule
+          extend GeneratedUrlHelpersModule
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :MyClass))
+    end
+
+    it("generates RBI for constant that includes and extends url_helpers") do
+      content += <<~RUBY
+        class MyClass
+          include Rails.application.routes.url_helpers
+          extend Rails.application.routes.url_helpers
+        end
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        class MyClass
+          include GeneratedPathHelpersModule
+          include GeneratedUrlHelpersModule
+          extend GeneratedPathHelpersModule
+          extend GeneratedUrlHelpersModule
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, :MyClass))
+    end
+
+    it("generates RBI for constant that has a singleton class which includes url_helpers") do
       content += <<~RUBY
         class MyClass
           class << self
-            include Rails.application.routes.named_routes.path_helpers_module
+            include Rails.application.routes.url_helpers
           end
         end
       RUBY
@@ -244,24 +238,6 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         # typed: strong
         class MyClass
           extend GeneratedPathHelpersModule
-        end
-      RUBY
-
-      assert_equal(expected, rbi_for(content, :MyClass))
-    end
-
-    it("generates RBI for constant that has a singleton class which includes path_helpers_module") do
-      content += <<~RUBY
-        class MyClass
-          class << self
-            include Rails.application.routes.named_routes.url_helpers_module
-          end
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-        class MyClass
           extend GeneratedUrlHelpersModule
         end
       RUBY
@@ -269,12 +245,12 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       assert_equal(expected, rbi_for(content, :MyClass))
     end
 
-    it("generates RBI when constant itself and its singleton class includes path_helpers_module") do
+    it("generates RBI when constant itself and its singleton class includes url_helpers") do
       content += <<~RUBY
         class MyClass
-          include Rails.application.routes.named_routes.path_helpers_module
+          include Rails.application.routes.url_helpers
           class << self
-            include Rails.application.routes.named_routes.path_helpers_module
+            include Rails.application.routes.url_helpers
           end
         end
       RUBY
@@ -283,7 +259,9 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
         # typed: strong
         class MyClass
           include GeneratedPathHelpersModule
+          include GeneratedUrlHelpersModule
           extend GeneratedPathHelpersModule
+          extend GeneratedUrlHelpersModule
         end
       RUBY
 
