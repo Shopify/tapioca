@@ -24,7 +24,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       end
     RUBY
 
-    it("does not gather constant when url_helpers is not included") do
+    it("does not gather constants when url_helpers is not included") do
       content += <<~RUBY
         class MyClass
         end
@@ -84,7 +84,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("does not gather constant when its superclass includes url_helpers") do
+    it("does not gather constants when its superclass includes url_helpers") do
       content += <<~RUBY
         class SuperClass
           include Rails.application.routes.url_helpers
@@ -102,7 +102,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("gathers constant when its superclass extends url_helpers") do
+    it("gathers constants when its superclass extends url_helpers") do
       content += <<~RUBY
         class SuperClass
           extend Rails.application.routes.url_helpers
@@ -120,7 +120,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       ], constants_from(content))
     end
 
-    it("does not gather constant when the constant and its superclass includes url_helpers") do
+    it("does not gather constants when the constant and its superclass includes url_helpers") do
       content += <<~RUBY
         class SuperClass
           include Rails.application.routes.url_helpers
