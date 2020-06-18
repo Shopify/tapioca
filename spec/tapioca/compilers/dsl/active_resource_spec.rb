@@ -30,6 +30,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
 
         class Product < Post
         end
+
         class User
         end
       RUBY
@@ -186,75 +187,72 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
       content = <<~RUBY
         class Post < ActiveResource::Base
           schema do
-            integer 'id'
-            string  'title'
-            boolean 'reviewed'
-            date    'month'
-            float   'price'
-            decimal 'credit_point'
-            datetime 'reviewed_time'
-            text     'message'
+            boolean  'reviewed'
+            integer  'id'
+            string   'title'
+            float    'price'
+            date     'month'
+            time     'post_time'
+            datetime 'review_time'
+            decimal  'credit_point'
             binary   'active'
+            text     'message'
           end
         end
 
       RUBY
 
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: Binary).returns(Binary) }
-        def active=(value); end
-      RUBY
+      rbi_output = rbi_for(content)
 
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: BigDecimal).returns(BigDecimal) }
-        def credit_point=(value); end
-      RUBY
-
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: Integer).returns(Integer) }
-        def id=(value); end
-      RUBY
-
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: Text).returns(Text) }
-        def message=(value); end
-      RUBY
-
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: Date).returns(Date) }
-        def month=(value); end
-      RUBY
-
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
-        sig { params(value: Float).returns(Float) }
-        def price=(value); end
-      RUBY
-
-      assert_includes(rbi_for(content), expected)
-
-      expected = indented(<<~RUBY, 2)
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
         sig { params(value: T::Boolean).returns(T::Boolean) }
         def reviewed=(value); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Integer).returns(Integer) }
+        def id=(value); end
+      RUBY
 
-      expected = indented(<<~RUBY, 2)
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
         sig { params(value: String).returns(String) }
         def title=(value); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Float).returns(Float) }
+        def price=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Date).returns(Date) }
+        def month=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Time).returns(Time) }
+        def post_time=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: DateTime).returns(DateTime) }
+        def review_time=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: BigDecimal).returns(BigDecimal) }
+        def credit_point=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: String).returns(String) }
+        def active=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: String).returns(String) }
+        def message=(value); end
+      RUBY
     end
   end
 end

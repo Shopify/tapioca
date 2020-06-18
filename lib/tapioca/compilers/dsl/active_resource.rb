@@ -14,7 +14,7 @@ module Tapioca
     module Dsl
       # `Tapioca::Compilers::Dsl::ActiveResource` decorates RBI files for subclasses of
       # `ActiveResource::Base` which declare `schema` fields
-      # (see https://api.rubyonrails.org/v3.2.6/classes/ActiveResource/Base.html).
+      # (see https://github.com/rails/activeresource).
       #
       # For example, with the following `ActiveResource::Base` subclass:
       #
@@ -71,9 +71,9 @@ module Tapioca
         end
         def decorate(root, constant)
           return if constant.schema.blank?
-          root.path(constant) do |k|
+          root.path(constant) do |klass|
             constant.schema.each do |attribute, type|
-              create_schema_methods(k, attribute, type)
+              create_schema_methods(klass, attribute, type)
             end
           end
         end
@@ -94,8 +94,8 @@ module Tapioca
           time: "Time",
           datetime: "DateTime",
           decimal: "BigDecimal",
-          binary: "Binary",
-          text: "Text",
+          binary: "String",
+          text: "String",
         }
 
         def type_for(attr_type)
@@ -104,22 +104,34 @@ module Tapioca
 
         sig do
           params(
-            k: Parlour::RbiGenerator::Namespace,
+            klass: Parlour::RbiGenerator::Namespace,
             attribute: String,
             type: String
           ).void
         end
-        def create_schema_methods(k, attribute, type)
+        def create_schema_methods(klass, attribute, type)
           return_type = type_for(type.to_sym)
-          k.create_method(attribute,
-            return_type: return_type)
 
-          k.create_method("#{attribute}?",
-            return_type: "T::Boolean")
+          create_method(
+            klass,
+            attribute,
+            return_type: return_type
+          )
 
-          k.create_method("#{attribute}=", parameters: [
-            Parlour::RbiGenerator::Parameter.new("value", type: return_type),
-          ], return_type: return_type)
+          create_method(
+            klass,
+            "#{attribute}?",
+            return_type: "T::Boolean"
+          )
+
+          create_method(
+            klass,
+            "#{attribute}=",
+            parameters: [
+              Parlour::RbiGenerator::Parameter.new("value", type: return_type),
+            ],
+            return_type: return_type
+          )
         end
       end
     end
