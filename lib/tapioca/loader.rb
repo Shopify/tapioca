@@ -33,9 +33,12 @@ module Tapioca
       silence_deprecations
 
       safe_require("rails/generators/test_case")
-      safe_require("./config/application")
+      if environment_load
+        safe_require("./config/environment")
+      else
+        safe_require("./config/application")
+      end
 
-      load_rails_environment if environment_load
       eager_load_rails_app if eager_load
     end
 
@@ -97,11 +100,6 @@ module Tapioca
     sig { void }
     def eager_load_rails_app
       Object.const_get("Rails").autoloaders.each(&:eager_load)
-    end
-
-    sig { void }
-    def load_rails_environment
-      Object.const_get("Rails").application.require_environment!
     end
 
     sig { void }
