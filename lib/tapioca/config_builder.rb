@@ -19,8 +19,8 @@ module Tapioca
 
       sig { returns(T::Hash[String, T.untyped]) }
       def config_options
-        if File.exist?(Config::CONFIG_FILE_PATH)
-          YAML.load_file(Config::CONFIG_FILE_PATH, fallback: {})
+        if File.exist?(Config::TAPIOCA_CONFIG)
+          YAML.load_file(Config::TAPIOCA_CONFIG, fallback: {})
         else
           {}
         end
