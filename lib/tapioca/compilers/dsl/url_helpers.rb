@@ -17,13 +17,9 @@ module Tapioca
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module)).void }
         def decorate(root, constant)
-          path_helper_methods = GeneratedPathHelpersModule.instance_methods(false)
-          url_helper_methods = GeneratedUrlHelpersModule.instance_methods(false)
-
-          if constant == GeneratedPathHelpersModule
-            generate_module_for(root, GeneratedPathHelpersModule, path_helper_methods)
-          elsif constant == GeneratedUrlHelpersModule
-            generate_module_for(root, GeneratedUrlHelpersModule, url_helper_methods)
+          case constant
+          when GeneratedPathHelpersModule.singleton_class, GeneratedUrlHelpersModule.singleton_class
+            generate_module_for(root, constant)
           else
             root.path(constant) do |mod|
               create_mixins_for(mod, constant, GeneratedUrlHelpersModule)
@@ -49,12 +45,13 @@ module Tapioca
 
         private
 
-        def generate_module_for(root, constant, helper_methods)
+        sig { params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module)).void }
+        def generate_module_for(root, constant)
           root.create_module(constant.name) do |mod|
             mod.create_include("ActionDispatch::Routing::UrlFor")
             mod.create_include("ActionDispatch::Routing::PolymorphicRoutes")
 
-            helper_methods.each do |method|
+            constant.instance_methods(false).each do |method|
               mod.create_method(
                 method.to_s,
                 parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
@@ -70,9 +67,9 @@ module Tapioca
         end
 
         def includes_helper?(mod, helper)
-          superclass_ancestors = []
-          superclass_ancestors << mod.try(:superclass)&.ancestors if mod === Class
-          (mod.ancestors - superclass_ancestors.flatten).include?(helper)
+          superclass_ancestors = mod.superclass&.ancestors if Class === mod
+          superclass_ancestors ||= []
+          (mod.ancestors - superclass_ancestors).include?(helper)
         end
       end
     end
