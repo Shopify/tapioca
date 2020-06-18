@@ -447,7 +447,7 @@ module Tapioca
       return if contents.nil?
 
       base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
-      generation_command_template = "tapioca dsl %s"
+      generation_command_template = config.generate_command
 
       command = format(generation_command_template, constant.name)
       constant_name = Module.instance_method(:name).bind(constant).call

@@ -225,6 +225,7 @@ describe(Tapioca::Cli) do
         .
         --ignore=postrequire.rb
         --ignore=postrequire_faulty.rb
+        --ignore=config/
       CONFIG
 
       output = execute("require")
@@ -259,8 +260,10 @@ describe(Tapioca::Cli) do
 
         # typed: false
 
+        require 'active_support/all'
         require 'foo/secret'
         require 'foo/will_fail'
+        require 'smart_properties'
       CONTENTS
     end
 
@@ -268,6 +271,7 @@ describe(Tapioca::Cli) do
       File.write(repo_path / "sorbet/config", <<~CONFIG)
         .
         --ignore=postrequire_faulty.rb
+        --ignore=config/
       CONFIG
 
       output = execute("require")
