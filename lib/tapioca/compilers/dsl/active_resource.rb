@@ -4,7 +4,6 @@
 require "parlour"
 
 begin
-  require "active_record"
   require "active_resource"
 rescue LoadError
   return
@@ -73,8 +72,8 @@ module Tapioca
         def decorate(root, constant)
           return if constant.schema.blank?
           root.path(constant) do |k|
-            constant.schema.each do |schema, type|
-              create_schema_methods(k, schema, type)
+            constant.schema.each do |attribute, type|
+              create_schema_methods(k, attribute, type)
             end
           end
         end
@@ -86,18 +85,20 @@ module Tapioca
 
         private
 
-        TYPES =
-          {
-            boolean: "T::Boolean",
-            integer: "Integer",
-            string: "String",
-            float: "Float",
-            date: "Date",
-            time: "Time",
-            datetime: "DateTime",
-            decimal: "BigDecimal",
-            any: "T.untyped",
-          }
+        TYPES = {
+          boolean: "T::Boolean",
+          integer: "Integer",
+          string: "String",
+          float: "Float",
+          date: "Date",
+          time: "Time",
+          datetime: "DateTime",
+          decimal: "BigDecimal",
+          binary: "Binary",
+          text: "Text",
+          any: "T.untyped",
+        }
+
         def type_for(attr_type)
           TYPES.fetch(attr_type, "T.untyped")
         end
@@ -105,20 +106,20 @@ module Tapioca
         sig do
           params(
             k: Parlour::RbiGenerator::Namespace,
-            schema: String,
+            attribute: String,
             type: String
           ).void
         end
-        def create_schema_methods(k, schema, type)
+        def create_schema_methods(k, attribute, type)
           return_type = type_for(type.to_sym)
-          k.create_method(schema,
+          k.create_method(attribute,
             return_type: return_type)
 
-          k.create_method("#{schema}?",
+          k.create_method("#{attribute}?",
             return_type: "T::Boolean")
 
-          k.create_method("#{schema}=", parameters: [
-            Parlour::RbiGenerator::Parameter.new(schema, type: return_type),
+          k.create_method("#{attribute}=", parameters: [
+            Parlour::RbiGenerator::Parameter.new("value", type: return_type),
           ], return_type: return_type)
         end
       end

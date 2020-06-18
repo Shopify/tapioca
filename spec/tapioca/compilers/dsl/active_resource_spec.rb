@@ -28,14 +28,13 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
         class Post < ActiveResource::Base
         end
 
-        class Product < ActiveRecord::Base
+        class Product < Post
         end
-
         class User
         end
       RUBY
 
-      assert_equal(constants_from(content), ["Post"])
+      assert_equal(constants_from(content), ["Post", "Product"])
     end
   end
 
@@ -64,8 +63,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(Integer) }
           def id; end
 
-          sig { params(id: Integer).returns(Integer) }
-          def id=(id); end
+          sig { params(value: Integer).returns(Integer) }
+          def id=(value); end
 
           sig { returns(T::Boolean) }
           def id?; end
@@ -91,8 +90,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(Integer) }
           def id; end
 
-          sig { params(id: Integer).returns(Integer) }
-          def id=(id); end
+          sig { params(value: Integer).returns(Integer) }
+          def id=(value); end
 
           sig { returns(T::Boolean) }
           def id?; end
@@ -100,8 +99,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(Integer) }
           def month; end
 
-          sig { params(month: Integer).returns(Integer) }
-          def month=(month); end
+          sig { params(value: Integer).returns(Integer) }
+          def month=(value); end
 
           sig { returns(T::Boolean) }
           def month?; end
@@ -109,8 +108,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(Integer) }
           def year; end
 
-          sig { params(year: Integer).returns(Integer) }
-          def year=(year); end
+          sig { params(value: Integer).returns(Integer) }
+          def year=(value); end
 
           sig { returns(T::Boolean) }
           def year?; end
@@ -120,7 +119,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for ActiveResource classes with two type schema fields") do
+    it("generates RBI file for ActiveResource classes with schema with different types") do
       content = <<~RUBY
         class Post < ActiveResource::Base
           schema do
@@ -137,8 +136,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(Integer) }
           def month; end
 
-          sig { params(month: Integer).returns(Integer) }
-          def month=(month); end
+          sig { params(value: Integer).returns(Integer) }
+          def month=(value); end
 
           sig { returns(T::Boolean) }
           def month?; end
@@ -146,8 +145,8 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
           sig { returns(String) }
           def title; end
 
-          sig { params(title: String).returns(String) }
-          def title=(title); end
+          sig { params(value: String).returns(String) }
+          def title=(value); end
 
           sig { returns(T::Boolean) }
           def title?; end
@@ -157,13 +156,11 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
       assert_equal(rbi_for(content), expected)
     end
 
-    it("generates RBI file for ActiveResource classes including boolean type schema field") do
+    it("generates methods for ActiveResource classes with an unsupported schema type") do
       content = <<~RUBY
         class Post < ActiveResource::Base
-          schema do
-            integer 'month'
-            string  'title'
-            boolean 'reviewed'
+          schema  do
+            attribute 'id',nil
           end
         end
 
@@ -172,36 +169,92 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
       expected = <<~RUBY
         # typed: strong
         class Post
-          sig { returns(Integer) }
-          def month; end
+          sig { returns(T.untyped) }
+          def id; end
 
-          sig { params(month: Integer).returns(Integer) }
-          def month=(month); end
-
-          sig { returns(T::Boolean) }
-          def month?; end
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def id=(value); end
 
           sig { returns(T::Boolean) }
-          def reviewed; end
-
-          sig { params(reviewed: T::Boolean).returns(T::Boolean) }
-          def reviewed=(reviewed); end
-
-          sig { returns(T::Boolean) }
-          def reviewed?; end
-
-          sig { returns(String) }
-          def title; end
-
-          sig { params(title: String).returns(String) }
-          def title=(title); end
-
-          sig { returns(T::Boolean) }
-          def title?; end
+          def id?; end
         end
       RUBY
 
       assert_equal(rbi_for(content), expected)
+    end
+    it("generates methods for ActiveResource classes including all types in schema field") do
+      content = <<~RUBY
+        class Post < ActiveResource::Base
+          schema do
+            integer 'id'
+            string  'title'
+            boolean 'reviewed'
+            date    'month'
+            float   'price'
+            decimal 'credit_point'
+            datetime 'reviewed_time'
+            text     'message'
+            binary   'active'
+          end
+        end
+
+      RUBY
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: Binary).returns(Binary) }
+        def active=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: BigDecimal).returns(BigDecimal) }
+        def credit_point=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: Integer).returns(Integer) }
+        def id=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: Text).returns(Text) }
+        def message=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: Date).returns(Date) }
+        def month=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: Float).returns(Float) }
+        def price=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: T::Boolean).returns(T::Boolean) }
+        def reviewed=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
+
+      expected = indented(<<~RUBY, 2)
+        sig { params(value: String).returns(String) }
+        def title=(value); end
+      RUBY
+
+      assert_includes(rbi_for(content), expected)
     end
   end
 end
