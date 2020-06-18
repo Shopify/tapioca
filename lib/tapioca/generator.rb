@@ -35,7 +35,7 @@ module Tapioca
         .each do |gem|
           say("Processing '#{gem.name}' gem:", :green)
           indent do
-            compile_rbi(gem)
+            compile_gem_rbi(gem)
             puts
           end
         end
@@ -118,43 +118,14 @@ module Tapioca
 
     sig { params(requested_constants: T::Array[String]).void }
     def build_dsl(requested_constants)
-      base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
-      generation_command_template = config.generate_command
-
-      say("Loading Rails application... ")
-
-      loader = Loader.new(Gemfile.new)
-      loader.load_rails(
-        environment_load: true,
-        eager_load: requested_constants.empty?
-      )
-
-      say("Done", :green)
-
-      say("Loading DSL generator classes... ")
-
-      Dir.glob([
-        "#{__dir__}/compilers/dsl/*.rb",
-        "#{Config::TAPIOCA_PATH}/generators/**/*.rb",
-      ]).each do |generator|
-        require File.expand_path(generator)
-      end
-
-      say("Done", :green)
+      load_application(eager_load: requested_constants.empty?)
+      load_dsl_generators
 
       say("Compiling DSL RBI files...")
       say("")
 
-      requested_constants = requested_constants.map do |constant|
-        begin
-          constant.constantize
-        rescue NameError
-          nil
-        end
-      end.compact
-
       compiler = Compilers::DslCompiler.new(
-        requested_constants: requested_constants,
+        requested_constants: constantize(requested_constants),
         requested_generators: config.generators,
         error_handler: ->(error) {
           say_error(error, :bold, :red)
@@ -162,23 +133,7 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        next if contents.nil?
-
-        command = format(generation_command_template, constant.name)
-        constant_name = Module.instance_method(:name).bind(constant).call
-        filename = base_directory.join(constant_name.underscore + ".rbi")
-
-        out = String.new
-        out << rbi_header(
-          command,
-          reason: "dynamic methods in `#{constant.name}`"
-        )
-        out << contents
-
-        FileUtils.mkdir_p(File.dirname(filename))
-        File.write(filename, out)
-        say("Wrote: ", [:green])
-        say(filename)
+        compile_dsl_rbi(constant, contents)
       end
 
       say("")
@@ -261,6 +216,43 @@ module Tapioca
       stderr.flush
     end
 
+    sig { params(eager_load: T::Boolean).void }
+    def load_application(eager_load:)
+      say("Loading Rails application... ")
+
+      loader.load_rails(
+        environment_load: true,
+        eager_load: eager_load
+      )
+
+      say("Done", :green)
+    end
+
+    sig { void }
+    def load_dsl_generators
+      say("Loading DSL generator classes... ")
+
+      Dir.glob([
+        "#{__dir__}/compilers/dsl/*.rb",
+        "#{Config::TAPIOCA_PATH}/generators/**/*.rb",
+      ]).each do |generator|
+        require File.expand_path(generator)
+      end
+
+      say("Done", :green)
+    end
+
+    sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
+    def constantize(constant_names)
+      constant_names.map do |name|
+        begin
+          name.constantize
+        rescue NameError
+          nil
+        end
+      end.compact
+    end
+
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
       @existing_rbis ||= Pathname.glob((config.outpath / "*@*.rbi").to_s)
@@ -277,22 +269,22 @@ module Tapioca
     end
 
     sig { params(gem_name: String, version: String).returns(Pathname) }
-    def rbi_filename(gem_name, version)
+    def gem_rbi_filename(gem_name, version)
       config.outpath / "#{gem_name}@#{version}.rbi"
     end
 
     sig { params(gem_name: String).returns(Pathname) }
     def existing_rbi(gem_name)
-      rbi_filename(gem_name, T.must(existing_rbis[gem_name]))
+      gem_rbi_filename(gem_name, T.must(existing_rbis[gem_name]))
     end
 
     sig { params(gem_name: String).returns(Pathname) }
     def expected_rbi(gem_name)
-      rbi_filename(gem_name, T.must(expected_rbis[gem_name]))
+      gem_rbi_filename(gem_name, T.must(expected_rbis[gem_name]))
     end
 
     sig { params(gem_name: String).returns(T::Boolean) }
-    def rbi_exists?(gem_name)
+    def gem_rbi_exists?(gem_name)
       existing_rbis.key?(gem_name)
     end
 
@@ -370,13 +362,13 @@ module Tapioca
           gems.each do |gem_name|
             filename = expected_rbi(gem_name)
 
-            if rbi_exists?(gem_name)
+            if gem_rbi_exists?(gem_name)
               old_filename = existing_rbi(gem_name)
               move(old_filename, filename) unless old_filename == filename
             end
 
             gem = T.must(bundle.gem(gem_name))
-            compile_rbi(gem)
+            compile_gem_rbi(gem)
             add(filename)
 
             puts
@@ -424,7 +416,7 @@ module Tapioca
     end
 
     sig { params(gem: Gemfile::Gem).void }
-    def compile_rbi(gem)
+    def compile_gem_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
       gem_name = set_color(gem.name, :yellow, :bold)
       say("Compiling #{gem_name}, this may take a few seconds... ")
@@ -448,6 +440,30 @@ module Tapioca
       Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
       end
+    end
+
+    sig { params(constant: Module, contents: String).void }
+    def compile_dsl_rbi(constant, contents)
+      return if contents.nil?
+
+      base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
+      generation_command_template = "tapioca dsl %s"
+
+      command = format(generation_command_template, constant.name)
+      constant_name = Module.instance_method(:name).bind(constant).call
+      filename = base_directory.join(constant_name.underscore + ".rbi")
+
+      out = String.new
+      out << rbi_header(
+        command,
+        reason: "dynamic methods in `#{constant.name}`"
+      )
+      out << contents
+
+      FileUtils.mkdir_p(File.dirname(filename))
+      File.write(filename, out)
+      say("Wrote: ", [:green])
+      say(filename)
     end
   end
 end
