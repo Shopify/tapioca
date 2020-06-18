@@ -116,8 +116,8 @@ module Tapioca
       say("Please review changes and commit them.", [:green, :bold])
     end
 
-    sig { params(requested_constants: String).void }
-    def build_dsl(*requested_constants)
+    sig { params(requested_constants: T::Array[String]).void }
+    def build_dsl(requested_constants)
       base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
       generation_command_template = config.generate_command
 
@@ -148,7 +148,7 @@ module Tapioca
 
       compiler = Compilers::DslCompiler.new(
         requested_constants: requested_constants.map(&:constantize),
-        requested_generators: ENV.fetch("GENERATORS", "").split(",").map(&:strip),
+        requested_generators: config.generators,
         error_handler: ->(error) {
           say_error(error, :bold, :red)
         }

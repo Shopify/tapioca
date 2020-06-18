@@ -12,6 +12,7 @@ module Tapioca
     const(:exclude, T::Array[String])
     const(:typed_overrides, T::Hash[String, String])
     const(:todos_path, String)
+    const(:generators, T::Array[String])
 
     sig { returns(Pathname) }
     def outpath

@@ -67,9 +67,14 @@ module Tapioca
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
+    option :generators,
+      type: :array,
+      aliases: ["--gen", "-g"],
+      banner: "generator [generator ...]",
+      desc: "Only run supplied DSL generators"
     def dsl(*constants)
       Tapioca.silence_warnings do
-        generator.build_dsl(*constants)
+        generator.build_dsl(constants)
       end
     end
 
