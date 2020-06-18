@@ -44,7 +44,7 @@ module Tapioca
           ERROR
         end
 
-        constants_to_process.each do |constant|
+        constants_to_process.sort_by { |c| c.name.to_s }.each do |constant|
           rbi = rbi_for_constant(constant)
           next if rbi.nil?
 
