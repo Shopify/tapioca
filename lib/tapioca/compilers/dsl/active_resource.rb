@@ -96,7 +96,6 @@ module Tapioca
           decimal: "BigDecimal",
           binary: "Binary",
           text: "Text",
-          any: "T.untyped",
         }
 
         def type_for(attr_type)
