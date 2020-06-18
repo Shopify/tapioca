@@ -5,6 +5,7 @@ require "parlour"
 
 begin
   require "rails"
+  require "action_controller"
 rescue LoadError
   return
 end
@@ -32,15 +33,18 @@ module Tapioca
         def gather_constants
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
+
           constants = ObjectSpace.each_object(Module).select do |mod|
-            mod = T.let(mod, T.class_of(Module))
+            mod = T.cast(mod, T.class_of(Module))
+            next unless mod.name
+
             includes_helper?(mod, GeneratedUrlHelpersModule) ||
               includes_helper?(mod, GeneratedPathHelpersModule) ||
               includes_helper?(mod.singleton_class, GeneratedUrlHelpersModule) ||
               includes_helper?(mod.singleton_class, GeneratedPathHelpersModule)
-          end.select(&:name)
+          end
 
-          constants << "ActionDispatch::IntegrationTest"
+          constants << ActionDispatch::IntegrationTest
         end
 
         private
