@@ -133,11 +133,10 @@ module Tapioca
 
       say("Loading DSL generator classes... ")
 
-      Dir["#{Config::TAPIOCA_PATH}/generators/**/*.rb"].each do |generator|
-        require File.expand_path(generator)
-      end
-
-      Dir["#{__dir__}/compilers/dsl/*.rb"].each do |generator|
+      Dir.glob([
+        "#{__dir__}/compilers/dsl/*.rb",
+        "#{Config::TAPIOCA_PATH}/generators/**/*.rb",
+      ]).each do |generator|
         require File.expand_path(generator)
       end
 
