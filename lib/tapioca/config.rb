@@ -29,12 +29,14 @@ module Tapioca
 
     DEFAULT_POSTREQUIRE = T.let("#{TAPIOCA_PATH}/require.rb", String)
     DEFAULT_RBIDIR = T.let("#{SORBET_PATH}/rbi", String)
-    DEFAULT_OUTDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
+    DEFAULT_DSLDIR = T.let("#{DEFAULT_RBIDIR}/dsl", String)
+    DEFAULT_GEMDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
+    DEFAULT_TODOSPATH = T.let("#{DEFAULT_RBIDIR}/todo.rbi", String)
+
     DEFAULT_OVERRIDES = T.let({
       # ActiveSupport overrides some core methods with different signatures
       # so we generate a typed: false RBI for it to suppress errors
       "activesupport" => "false",
     }.freeze, T::Hash[String, String])
-    DEFAULT_TODOSPATH = T.let("#{DEFAULT_RBIDIR}/todo.rbi", String)
   end
 end

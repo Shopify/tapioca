@@ -8,10 +8,10 @@ module Tapioca
     class << self
       extend(T::Sig)
 
-      sig { params(options: T::Hash[String, T.untyped]).returns(Config) }
-      def from_options(options)
+      sig { params(command: Symbol, options: T::Hash[String, T.untyped]).returns(Config) }
+      def from_options(command, options)
         Config.from_hash(
-          merge_options(default_options, config_options, options)
+          merge_options(default_options(command), config_options, options)
         )
       end
 
@@ -26,9 +26,18 @@ module Tapioca
         end
       end
 
-      sig { returns(T::Hash[String, T.untyped]) }
-      def default_options
-        DEFAULT_OPTIONS
+      sig { params(command: Symbol).returns(T::Hash[String, T.untyped]) }
+      def default_options(command)
+        default_outdir = case command
+        when :sync, :generate
+          Config::DEFAULT_GEMDIR
+        when :dsl
+          Config::DEFAULT_DSLDIR
+        else
+          Config::SORBET_PATH
+        end
+
+        DEFAULT_OPTIONS.merge(outdir: default_outdir)
       end
 
       sig { returns(String) }
@@ -55,7 +64,7 @@ module Tapioca
 
     DEFAULT_OPTIONS = T.let({
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
-      "outdir" => Config::DEFAULT_OUTDIR,
+      "outdir" => nil,
       "generate_command" => default_command,
       "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,

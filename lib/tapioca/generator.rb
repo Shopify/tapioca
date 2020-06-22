@@ -446,12 +446,10 @@ module Tapioca
     def compile_dsl_rbi(constant, contents)
       return if contents.nil?
 
-      base_directory = Pathname.new("#{Config::DEFAULT_RBIDIR}/dsl")
-      generation_command_template = config.generate_command
-
-      command = format(generation_command_template, constant.name)
+      command = format(config.generate_command, constant.name)
       constant_name = Module.instance_method(:name).bind(constant).call
-      filename = base_directory.join(constant_name.underscore + ".rbi")
+      rbi_name = constant_name.underscore + ".rbi"
+      filename = config.outpath / rbi_name
 
       out = String.new
       out << rbi_header(

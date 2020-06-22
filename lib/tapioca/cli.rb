@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: false
+# typed: true
 
 require 'thor'
 
@@ -98,7 +98,9 @@ module Tapioca
       end
 
       def generator
-        @generator ||= Generator.new(ConfigBuilder.from_options(options))
+        @generator ||= Generator.new(
+          ConfigBuilder.from_options(current_command_chain.first, options)
+        )
       end
     end
   end
