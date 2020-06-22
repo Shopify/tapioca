@@ -35,6 +35,7 @@ You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/r
 in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
 
 ## How does tapioca compare to "srb rbi gems" ?
+
 [Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
 
 ## Installation
