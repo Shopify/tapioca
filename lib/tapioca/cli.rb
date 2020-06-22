@@ -98,8 +98,9 @@ module Tapioca
       end
 
       def generator
+        current_command = T.must(current_command_chain.first)
         @generator ||= Generator.new(
-          ConfigBuilder.from_options(current_command_chain.first, options)
+          ConfigBuilder.from_options(current_command, options)
         )
       end
     end

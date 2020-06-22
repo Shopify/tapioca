@@ -14,7 +14,7 @@ module Tapioca
       sig { returns(T::Array[Module]) }
       attr_reader :requested_constants
 
-      sig { returns(T.nilable(T.proc.params(error: String).void)) }
+      sig { returns(T.proc.params(error: String).void) }
       attr_reader :error_handler
 
       sig do
@@ -30,7 +30,7 @@ module Tapioca
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
-        @error_handler = error_handler
+        @error_handler = error_handler || $stderr.method(:puts)
       end
 
       sig { params(blk: T.proc.params(constant: Module, rbi: String).void).void }
@@ -113,11 +113,7 @@ module Tapioca
       sig { params(error: String).returns(T.noreturn) }
       def report_error(error)
         handler = error_handler
-        if handler
-          handler.call(error)
-        else
-          $stderr.puts(error)
-        end
+        handler.call(error)
         exit(1)
       end
     end
