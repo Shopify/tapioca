@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: false
+# typed: true
 
 require 'thor'
 
@@ -66,6 +66,18 @@ module Tapioca
       end
     end
 
+    desc "dsl [constant...]", "generate RBIs for dynamic methods"
+    option :generators,
+      type: :array,
+      aliases: ["--gen", "-g"],
+      banner: "generator [generator ...]",
+      desc: "Only run supplied DSL generators"
+    def dsl(*constants)
+      Tapioca.silence_warnings do
+        generator.build_dsl(constants)
+      end
+    end
+
     desc "generate [gem...]", "generate RBIs from gems"
     def generate(*gems)
       Tapioca.silence_warnings do
@@ -86,7 +98,10 @@ module Tapioca
       end
 
       def generator
-        @generator ||= Generator.new(ConfigBuilder.from_options(options))
+        current_command = T.must(current_command_chain.first)
+        @generator ||= Generator.new(
+          ConfigBuilder.from_options(current_command, options)
+        )
       end
     end
   end
