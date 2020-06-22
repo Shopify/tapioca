@@ -473,7 +473,7 @@ module Tapioca
           return unless method.owner == constant
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
 
-          signature = T::Private::Methods.signature_for_method(method)
+          signature = signature_of(method)
           method = signature.method if signature
 
           method_name = method.name.to_s
@@ -735,6 +735,13 @@ module Tapioca
         sig { params(constant: Class).returns(T.nilable(Class)) }
         def superclass_of(constant)
           Class.instance_method(:superclass).bind(constant).call
+        end
+
+        sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
+        def signature_of(method)
+          T::Private::Methods.signature_for_method(method)
+        rescue LoadError, StandardError
+          nil
         end
 
         sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
