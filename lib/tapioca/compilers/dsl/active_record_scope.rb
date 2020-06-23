@@ -20,6 +20,8 @@ module Tapioca
       #
       # ~~~rb
       # class Post < ApplicationRecord
+      #   scope :public_kind, -> { where.not(kind: 'private') }
+      #   scope :private_kind, -> {where(kind: 'private')}
       # end
       # ~~~
       #
@@ -29,6 +31,14 @@ module Tapioca
       # # post.rbi
       # # typed: true
       # class Post
+      #   extend Post::GeneratedRelationMethods
+      # end
+      # module Post::GeneratedRelationMethods
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+      #   def private_kind(*args, &blk); end
+
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+      #   def public_kind(*args, &blk); end
       # end
       # ~~~
       class ActiveRecordScope < Base
@@ -43,17 +53,16 @@ module Tapioca
         def decorate(root, constant)
           scopes = constant.send(:generated_relation_methods).instance_methods(false)
           return if scopes.blank?
+
           module_name = "#{constant}::GeneratedRelationMethods"
           root.create_module(module_name) do |mod|
-            generate_instance_methods(constant, mod)
+            scopes.each do |scope_method|
+              generate_instance_methods(scope_method, mod)
+            end
           end
 
           root.path(constant) do |k|
-            k.create_include(module_name)
-
-            # scopes.each do |scope, value|
-            #   create_method(k, scope.to_s, class_method: true, return_type: "T.untyped")
-            # end
+            k.create_extend(module_name)
           end
         end
 
@@ -66,25 +75,23 @@ module Tapioca
 
         sig do
           params(
-            constant: T.class_of(::ActiveRecord::Base),
-            klass: Parlour::RbiGenerator::Namespace,
+            scope_method: String,
+            mod: Parlour::RbiGenerator::Namespace,
           ).void
         end
-        def generate_instance_methods(constant, klass)
-          methods = constant.send(:generated_relation_methods).instance_methods(false)
-          methods.each do |method|
-            method = method.to_s
-            return_type = "T.untyped"
+        def generate_instance_methods(scope_method, mod)
+          # This return type should actually be Model::ActiveRecord_Relation
+          return_type = "T.untyped"
 
-            create_method(
-              klass,
-              method,
-              parameters: [
-                Parlour::RbiGenerator::Parameter.new("*args", type: return_type),
-              ],
-              return_type: return_type,
-            )
-          end
+          create_method(
+            mod,
+            scope_method,
+            parameters: [
+              Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
+              Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+            ],
+            return_type: return_type,
+          )
         end
       end
     end

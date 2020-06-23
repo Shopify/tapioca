@@ -52,7 +52,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
     it("generates RBI file for ActiveRecord classes with a scope field") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
-          #extend Post::GeneratedRelationMethods
           scope :public_kind, -> { where.not(kind: 'private') }
         end
 
@@ -61,12 +60,12 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedRelationMethods
+          extend Post::GeneratedRelationMethods
         end
 
         module Post::GeneratedRelationMethods
-          sig { params(args: T.untyped).returns(T.untyped) }
-          def public_kind(*args); end
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          def public_kind(*args, &blk); end
         end
       RUBY
 
@@ -76,7 +75,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
     it("generates RBI file for ActiveRecord classes with multiple scope fields") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
-          #extend Post::GeneratedRelationMethods
           scope :public_kind, -> { where.not(kind: 'private') }
           scope :private_kind, -> {where(kind: 'private')}
         end
@@ -86,15 +84,15 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedRelationMethods
+          extend Post::GeneratedRelationMethods
         end
 
         module Post::GeneratedRelationMethods
-          sig { params(args: T.untyped).returns(T.untyped) }
-          def private_kind(*args); end
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          def private_kind(*args, &blk); end
 
-          sig { params(args: T.untyped).returns(T.untyped) }
-          def public_kind(*args); end
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          def public_kind(*args, &blk); end
         end
       RUBY
 
