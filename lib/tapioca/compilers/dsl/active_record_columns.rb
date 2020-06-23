@@ -348,14 +348,16 @@ module Tapioca
               !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
         end
 
-        def handle_unknown_type(constant)
-          if constant.method_defined?(:serialize)
-            method = constant.instance_method(:serialize)
-            signature = T::Private::Methods.signature_for_method(method)
+        def handle_unknown_type(column_type)
+          if column_type.ancestors.include?(ActiveModel::Type::Value)
+            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:deserialize))
+            return signature.return_type.to_s if signature
 
-            if signature
-              return  signature.arg_types.first.last.to_s # Assuming it's correct for arg type to be getter and setter type
-            end
+            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:cast))
+            return signature.return_type.to_s if signature
+
+            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:serialize))
+            return signature.arg_types.first.last.to_s if signature
           end
 
           "T.untyped"
