@@ -37,7 +37,7 @@ module Tapioca
           Config::SORBET_PATH
         end
 
-        DEFAULT_OPTIONS.merge(outdir: default_outdir)
+        DEFAULT_OPTIONS.merge("outdir" => default_outdir)
       end
 
       sig { returns(String) }
