@@ -34,6 +34,10 @@ If you ever run into a case, where you add a gem or update the version of a gem 
 You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
 in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
 
+## How does tapioca compare to "srb rbi gems" ?
+
+[Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
+
 ## Installation
 
 Add this line to your application's `Gemfile`:
