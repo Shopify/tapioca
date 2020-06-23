@@ -1809,5 +1809,37 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       assert_equal(output, source)
     end
+
+    it("skips signatures if they raise") do
+      source = compile(<<~RUBY)
+        class Foo
+          extend(T::Sig)
+
+          sig { raise ArgumentError }
+          def foo(a, b:)
+          end
+
+          sig { raise LoadError }
+          def bar(a, b:)
+          end
+
+          sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+          def baz(a)
+            a
+          end
+        end
+      RUBY
+
+      output = template(<<~RUBY)
+        class Foo
+          def bar(*args, &blk); end
+          sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+          def baz(a); end
+          def foo(*args, &blk); end
+        end
+      RUBY
+
+      assert_equal(output, source)
+    end
   end
 end
