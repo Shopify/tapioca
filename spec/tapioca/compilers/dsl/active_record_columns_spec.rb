@@ -586,7 +586,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(output, expected)
     end
 
-    it("generates RBI file for custom type with signature on deserialize method TODO") do
+    it("generates RBI file for custom type with signature on deserialize method") do
       files = {
         "file.rb" => <<~RUBY,
           module StrongTypeGeneration
@@ -638,60 +638,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(rbi_for(files), expected)
     end
 
-    it("generates RBI file for custom type with signature on serialize method TODO2") do
-      files = {
-        "file.rb" => <<~RUBY,
-          module StrongTypeGeneration
-          end
-
-          class Money
-            attr_accessor :value
-
-            def initialize(number = 0.0)
-              @value = number
-            end
-
-            class Type < ActiveRecord::Type::Decimal
-              extend(T::Sig)
-
-              sig { params(money: ::Money).returns(Numeric) }
-              def serialize(money)
-                money = super unless money.is_a?(::Money)
-                money.value unless money.nil?
-              end
-            end
-          end
-
-          class Post < ActiveRecord::Base
-            extend StrongTypeGeneration
-
-            attribute :cost, Money::Type
-          end
-        RUBY
-
-        "schema.rb" => <<~RUBY,
-          ActiveRecord::Migration.suppress_messages do
-            ActiveRecord::Schema.define do
-              create_table :posts do |t|
-                t.decimal :cost
-              end
-            end
-          end
-        RUBY
-      }
-
-      expected = indented(<<~RUBY, 2)
-        sig { returns(T.nilable(Money)) }
-        def cost; end
-
-        sig { params(value: T.nilable(Money)).returns(T.nilable(Money)) }
-        def cost=(value); end
-      RUBY
-
-      assert_includes(rbi_for(files), expected)
-    end
-
-    it("generates RBI file for custom type with signature on cast method TODO3") do
+    it("generates RBI file for custom type with signature on cast method") do
       files = {
         "file.rb" => <<~RUBY,
           module StrongTypeGeneration
@@ -745,7 +692,60 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(rbi_for(files), expected)
     end
 
-    it("generates RBI file for custom type without signatures TODO4") do
+    it("generates RBI file for custom type with signature on serialize method") do
+      files = {
+        "file.rb" => <<~RUBY,
+          module StrongTypeGeneration
+          end
+
+          class Money
+            attr_accessor :value
+
+            def initialize(number = 0.0)
+              @value = number
+            end
+
+            class Type < ActiveRecord::Type::Decimal
+              extend(T::Sig)
+
+              sig { params(money: ::Money).returns(Numeric) }
+              def serialize(money)
+                money = super unless money.is_a?(::Money)
+                money.value unless money.nil?
+              end
+            end
+          end
+
+          class Post < ActiveRecord::Base
+            extend StrongTypeGeneration
+
+            attribute :cost, Money::Type
+          end
+        RUBY
+
+        "schema.rb" => <<~RUBY,
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+                t.decimal :cost
+              end
+            end
+          end
+        RUBY
+      }
+
+      expected = indented(<<~RUBY, 2)
+        sig { returns(T.nilable(Money)) }
+        def cost; end
+
+        sig { params(value: T.nilable(Money)).returns(T.nilable(Money)) }
+        def cost=(value); end
+      RUBY
+
+      assert_includes(rbi_for(files), expected)
+    end
+
+    it("generates RBI file for custom type without signatures") do
       files = {
         "file.rb" => <<~RUBY,
           module StrongTypeGeneration
