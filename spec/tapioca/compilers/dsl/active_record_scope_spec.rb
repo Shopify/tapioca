@@ -63,6 +63,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
 
       assert_equal(expected, rbi_for(content))
     end
+
     it("generates RBI file for ActiveRecord classes with a scope field") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
@@ -90,7 +91,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
           scope :public_kind, -> { where.not(kind: 'private') }
-          scope :private_kind, -> {where(kind: 'private')}
+          scope :private_kind, -> { where(kind: 'private') }
         end
 
       RUBY

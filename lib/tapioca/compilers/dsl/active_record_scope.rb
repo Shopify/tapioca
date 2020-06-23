@@ -21,7 +21,7 @@ module Tapioca
       # ~~~rb
       # class Post < ApplicationRecord
       #   scope :public_kind, -> { where.not(kind: 'private') }
-      #   scope :private_kind, -> {where(kind: 'private')}
+      #   scope :private_kind, -> { where(kind: 'private') }
       # end
       # ~~~
       #
@@ -33,6 +33,7 @@ module Tapioca
       # class Post
       #   extend Post::GeneratedRelationMethods
       # end
+      #
       # module Post::GeneratedRelationMethods
       #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
       #   def private_kind(*args, &blk); end
@@ -51,13 +52,13 @@ module Tapioca
           ).void
         end
         def decorate(root, constant)
-          scopes = constant.send(:generated_relation_methods).instance_methods(false)
-          return if scopes.blank?
+          scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
+          return if scope_method_names.blank?
 
           module_name = "#{constant}::GeneratedRelationMethods"
           root.create_module(module_name) do |mod|
-            scopes.each do |scope_method|
-              generate_instance_methods(scope_method, mod)
+            scope_method_names.each do |scope_method|
+              generate_scope_method(scope_method, mod)
             end
           end
 
@@ -79,7 +80,7 @@ module Tapioca
             mod: Parlour::RbiGenerator::Namespace,
           ).void
         end
-        def generate_instance_methods(scope_method, mod)
+        def generate_scope_method(scope_method, mod)
           # This return type should actually be Model::ActiveRecord_Relation
           return_type = "T.untyped"
 
