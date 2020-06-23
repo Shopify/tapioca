@@ -324,7 +324,7 @@ module Tapioca
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
             else
-              "T.untyped"
+              handle_unknown_type(column_type)
             end
 
           column = constant.columns_hash[column_name]
@@ -346,6 +346,19 @@ module Tapioca
         def do_not_generate_strong_types?(constant)
           Object.const_defined?(:StrongTypeGeneration) &&
               !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+        end
+
+        def handle_unknown_type(constant)
+          if constant.method_defined?(:serialize)
+            method = constant.instance_method(:serialize)
+            signature = T::Private::Methods.signature_for_method(method)
+
+            if signature
+              return  signature.arg_types.first.last.to_s # Assuming it's correct for arg type to be getter and setter type
+            end
+          end
+
+          "T.untyped"
         end
       end
     end

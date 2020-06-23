@@ -585,5 +585,57 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       RUBY
       assert_includes(output, expected)
     end
+
+    it("generates RBI file for TODO") do
+      files = {
+        "file.rb" => <<~RUBY,
+          # require "rails/all"
+          # require "money"
+          module StrongTypeGeneration
+          end
+
+          class Money
+            attr_accessor :value
+
+            def initialize(number = 0.0)
+              @value = number
+            end
+
+            class Type < ActiveRecord::Type::Decimal
+              extend(T::Sig)
+
+              sig { params(money: ::Money).returns(::Money) }
+              def serialize(money)
+                money = super unless money.is_a?(::Money)
+                money.value unless money.nil?
+              end
+            end
+          end
+
+          class Post < ActiveRecord::Base
+            extend StrongTypeGeneration
+
+            attribute :cost, Money::Type
+          end
+        RUBY
+
+        "schema.rb" => <<~RUBY,
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+                t.decimal :cost
+              end
+            end
+          end
+        RUBY
+      }
+
+      expected = <<~RUBY
+        module Post::GeneratedAttributeMethods
+        # TODO
+      RUBY
+
+      assert_includes(rbi_for(files), expected)
+    end
   end
 end
