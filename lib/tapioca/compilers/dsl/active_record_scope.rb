@@ -53,7 +53,7 @@ module Tapioca
         end
         def decorate(root, constant)
           scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
-          return if scope_method_names.blank?
+          return if scope_method_names.empty?
 
           module_name = "#{constant}::GeneratedRelationMethods"
           root.create_module(module_name) do |mod|
