@@ -49,6 +49,20 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
       end
     end
 
+    it("generates an empty RBI file for ActiveRecord classes with no scope field") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+        end
+
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+
+      RUBY
+
+      assert_equal(expected, rbi_for(content))
+    end
     it("generates RBI file for ActiveRecord classes with a scope field") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
