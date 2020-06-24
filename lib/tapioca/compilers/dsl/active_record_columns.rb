@@ -349,18 +349,22 @@ module Tapioca
         end
 
         def handle_unknown_type(column_type)
-          if column_type.ancestors.include?(ActiveModel::Type::Value)
-            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:deserialize))
-            return signature.return_type.to_s if signature
+          return "T.untyped" unless column_type.ancestors.include?(ActiveModel::Type::Value)
 
-            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:cast))
-            return signature.return_type.to_s if signature
+          lookup_return_type_of_method(column_type, :deserialize) ||
+            lookup_return_type_of_method(column_type, :cast) ||
+            lookup_arg_type_of_method(column_type, :serialize) ||
+            "T.untyped"
+        end
 
-            signature = T::Private::Methods.signature_for_method(column_type.instance_method(:serialize))
-            return signature.arg_types.first.last.to_s if signature
-          end
+        def lookup_return_type_of_method(column_type, method)
+          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
+          signature.return_type.to_s if signature && !signature.return_type.to_s.include?("T::Private::Types")
+        end
 
-          "T.untyped"
+        def lookup_arg_type_of_method(column_type, method)
+          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
+          signature.arg_types.first.last.to_s if signature
         end
       end
     end
