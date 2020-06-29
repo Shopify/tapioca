@@ -349,7 +349,7 @@ module Tapioca
         end
 
         def handle_unknown_type(column_type)
-          return "T.untyped" unless column_type.ancestors.include?(ActiveModel::Type::Value)
+          return "T.untyped" unless column_type < ActiveModel::Type::Value
 
           lookup_return_type_of_method(column_type, :deserialize) ||
             lookup_return_type_of_method(column_type, :cast) ||
@@ -359,7 +359,10 @@ module Tapioca
 
         def lookup_return_type_of_method(column_type, method)
           signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
-          signature.return_type.to_s if signature && !signature.return_type.to_s.include?("T::Private::Types")
+          return unless signature
+
+          signature.return_type.to_s if signature.return_type.to_s != "<VOID>" &&
+              signature.return_type.to_s != "<NOT-TYPED>"
         end
 
         def lookup_arg_type_of_method(column_type, method)
