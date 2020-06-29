@@ -324,7 +324,7 @@ module Tapioca
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
             else
-              "T.untyped"
+              handle_unknown_type(column_type)
             end
 
           column = constant.columns_hash[column_name]
@@ -346,6 +346,28 @@ module Tapioca
         def do_not_generate_strong_types?(constant)
           Object.const_defined?(:StrongTypeGeneration) &&
               !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+        end
+
+        def handle_unknown_type(column_type)
+          return "T.untyped" unless column_type < ActiveModel::Type::Value
+
+          lookup_return_type_of_method(column_type, :deserialize) ||
+            lookup_return_type_of_method(column_type, :cast) ||
+            lookup_arg_type_of_method(column_type, :serialize) ||
+            "T.untyped"
+        end
+
+        def lookup_return_type_of_method(column_type, method)
+          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
+          return unless signature
+
+          return_type = signature.return_type.to_s
+          return_type if return_type != "<VOID>" && return_type != "<NOT-TYPED>"
+        end
+
+        def lookup_arg_type_of_method(column_type, method)
+          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
+          signature.arg_types.first.last.to_s if signature
         end
       end
     end
