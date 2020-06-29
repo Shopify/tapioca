@@ -361,8 +361,8 @@ module Tapioca
           signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
           return unless signature
 
-          signature.return_type.to_s if signature.return_type.to_s != "<VOID>" &&
-              signature.return_type.to_s != "<NOT-TYPED>"
+          return_type = signature.return_type.to_s
+          return_type if return_type != "<VOID>" && return_type != "<NOT-TYPED>"
         end
 
         def lookup_arg_type_of_method(column_type, method)
