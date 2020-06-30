@@ -36,7 +36,7 @@ module Tapioca
 
           constants = ObjectSpace.each_object(Module).select do |mod|
             mod = T.cast(mod, T.class_of(Module))
-            next unless mod.name
+            next unless Module.instance_method(:name).bind(mod).call
 
             includes_helper?(mod, GeneratedUrlHelpersModule) ||
               includes_helper?(mod, GeneratedPathHelpersModule) ||
