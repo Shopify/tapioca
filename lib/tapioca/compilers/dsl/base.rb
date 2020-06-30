@@ -40,7 +40,7 @@ module Tapioca
         private
 
         SPECIAL_METHOD_NAMES = T.let(
-          %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `],
+          %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `].freeze,
           T::Array[String]
         )
 

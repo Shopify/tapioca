@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -127,7 +127,10 @@ module Tapioca
           klass.create_method(property.reader.to_s, return_type: type) if block.call(property.reader.to_s)
         end
 
-        BOOLEANS = [[true, false], [false, true]].freeze
+        BOOLEANS = T.let([
+          [true, false],
+          [false, true],
+        ].freeze, T::Array[[T::Boolean, T::Boolean]])
 
         sig { params(property: ::SmartProperties::Property).returns(String) }
         def type_for(property)
@@ -159,6 +162,7 @@ module Tapioca
           type
         end
 
+        sig { params(type: Module).returns(String) }
         def name_of(type)
           name = Module.instance_method(:name).bind(type).call
           name.start_with?("::") ? name : "::#{name}"

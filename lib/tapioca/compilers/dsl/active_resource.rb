@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -85,7 +85,7 @@ module Tapioca
 
         private
 
-        TYPES = {
+        TYPES = T.let({
           boolean: "T::Boolean",
           integer: "Integer",
           string: "String",
@@ -96,8 +96,9 @@ module Tapioca
           decimal: "BigDecimal",
           binary: "String",
           text: "String",
-        }
+        }.freeze, T::Hash[Symbol, String])
 
+        sig { params(attr_type: Symbol).returns(String) }
         def type_for(attr_type)
           TYPES.fetch(attr_type, "T.untyped")
         end

@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -36,7 +36,7 @@ module Tapioca
 
           constants = ObjectSpace.each_object(Module).select do |mod|
             mod = T.cast(mod, T.class_of(Module))
-            next unless mod.name
+            next unless Module.instance_method(:name).bind(mod).call
 
             includes_helper?(mod, GeneratedUrlHelpersModule) ||
               includes_helper?(mod, GeneratedPathHelpersModule) ||
@@ -65,11 +65,13 @@ module Tapioca
           end
         end
 
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module), helper_module: Module).void }
         def create_mixins_for(mod, constant, helper_module)
-          mod.create_include(helper_module.name) if constant.ancestors.include?(helper_module)
-          mod.create_extend(helper_module.name) if constant.singleton_class.ancestors.include?(helper_module)
+          mod.create_include(T.must(helper_module.name)) if constant.ancestors.include?(helper_module)
+          mod.create_extend(T.must(helper_module.name)) if constant.singleton_class.ancestors.include?(helper_module)
         end
 
+        sig { params(mod: Module, helper: Module).returns(T::Boolean) }
         def includes_helper?(mod, helper)
           superclass_ancestors = mod.superclass&.ancestors if Class === mod
           superclass_ancestors ||= []

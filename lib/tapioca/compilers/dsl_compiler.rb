@@ -106,7 +106,7 @@ module Tapioca
           candidates.each_with_index do |candidate, index|
             error.puts "  #{index}. #{candidate.describe}"
           end
-          report_error(error.to_s)
+          report_error(error.string)
         end
       end
 
