@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -65,7 +65,10 @@ module Tapioca
       class ActiveRecordIdentityCache < Base
         extend T::Sig
 
-        COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" }
+        COLLECTION_TYPE = T.let(
+          ->(type) { "T::Array[::#{type}]" },
+          T.proc.params(type: Module).returns(String)
+        )
 
         sig do
           override

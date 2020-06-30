@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -163,6 +163,7 @@ module Tapioca
 
         private
 
+        sig { params(machine: ::StateMachines::Machine).returns(String) }
         def state_type_for(machine)
           value_types = machine.states.map { |state| state.value.class.name }.uniq
 
@@ -173,6 +174,7 @@ module Tapioca
           end
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace).void }
         def define_activerecord_methods(instance_module)
           create_method(
             instance_module,
@@ -181,6 +183,7 @@ module Tapioca
           )
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_state_methods(instance_module, machine)
           machine.states.each do |state|
             create_method(
@@ -191,6 +194,7 @@ module Tapioca
           end
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_event_methods(instance_module, machine)
           machine.events.each do |event|
             create_method(
@@ -219,6 +223,13 @@ module Tapioca
           end
         end
 
+        sig do
+          params(
+            instance_module: Parlour::RbiGenerator::Namespace,
+            machine: ::StateMachines::Machine,
+            state_type: String
+          ).void
+        end
         def define_state_accessor(instance_module, machine, state_type)
           attribute = machine.attribute.to_s
           create_method(
@@ -234,6 +245,7 @@ module Tapioca
           )
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_state_predicate(instance_module, machine)
           create_method(
             instance_module,
@@ -243,6 +255,7 @@ module Tapioca
           )
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_event_helpers(instance_module, machine)
           events_attribute = machine.attribute(:events).to_s
           transitions_attribute = machine.attribute(:transitions).to_s
@@ -296,6 +309,7 @@ module Tapioca
           end
         end
 
+        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_path_helpers(instance_module, machine)
           paths_attribute = machine.attribute(:paths).to_s
 
@@ -307,6 +321,13 @@ module Tapioca
           )
         end
 
+        sig do
+          params(
+            instance_module: Parlour::RbiGenerator::Namespace,
+            class_module: Parlour::RbiGenerator::Namespace,
+            machine: ::StateMachines::Machine
+          ).void
+        end
         def define_name_helpers(instance_module, class_module, machine)
           name_attribute = machine.attribute(:name).to_s
           event_name_attribute = machine.attribute(:event_name).to_s
@@ -335,6 +356,7 @@ module Tapioca
           )
         end
 
+        sig { params(class_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
         def define_scopes(class_module, machine)
           helper_modules = machine.instance_variable_get(:@helper_modules)
           class_methods = helper_modules[:class].instance_methods(false)

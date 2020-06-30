@@ -1,3 +1,5 @@
+# typed: strict
+
 module T::Private
   module Abstract
     class Data

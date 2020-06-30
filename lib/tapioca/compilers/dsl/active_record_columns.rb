@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "parlour"
@@ -343,11 +343,13 @@ module Tapioca
           [getter_type, setter_type]
         end
 
+        sig { params(constant: Module).returns(T::Boolean) }
         def do_not_generate_strong_types?(constant)
           Object.const_defined?(:StrongTypeGeneration) &&
               !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
         end
 
+        sig { params(column_type: Module).returns(String) }
         def handle_unknown_type(column_type)
           return "T.untyped" unless column_type < ActiveModel::Type::Value
 
@@ -357,6 +359,7 @@ module Tapioca
             "T.untyped"
         end
 
+        sig { params(column_type: Module, method: Symbol).returns(T.nilable(String)) }
         def lookup_return_type_of_method(column_type, method)
           signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
           return unless signature
@@ -365,6 +368,7 @@ module Tapioca
           return_type if return_type != "<VOID>" && return_type != "<NOT-TYPED>"
         end
 
+        sig { params(column_type: Module, method: Symbol).returns(T.nilable(String)) }
         def lookup_arg_type_of_method(column_type, method)
           signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
           signature.arg_types.first.last.to_s if signature
