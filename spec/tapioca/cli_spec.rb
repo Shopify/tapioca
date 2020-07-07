@@ -13,7 +13,9 @@ module Contents
     # typed: true
 
     module Foo
-      def self.bar(a = _, b: _, **opts); end
+      class << self
+        def bar(a = _, b: _, **opts); end
+      end
     end
 
     Foo::PI = T.let(T.unsafe(nil), Float)
@@ -27,7 +29,9 @@ module Contents
     # typed: true
 
     module Bar
-      def self.bar(a = _, b: _, **opts); end
+      class << self
+        def bar(a = _, b: _, **opts); end
+      end
     end
 
     Bar::PI = T.let(T.unsafe(nil), Float)

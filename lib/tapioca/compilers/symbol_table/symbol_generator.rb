@@ -409,7 +409,7 @@ module Tapioca
           )
 
           instance_methods = compile_directly_owned_methods(name, constant)
-          singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant), [:public])
+          singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant))
 
           return if symbol_ignored?(name) && instance_methods.empty? && singleton_methods.empty?
 
@@ -422,24 +422,44 @@ module Tapioca
 
         sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(String) }
         def compile_directly_owned_methods(module_name, mod, for_visibility = [:public, :protected, :private])
-          method_names_by_visibility(mod)
-            .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
-            .flat_map do |visibility, method_list|
-              compiled = method_list.sort!.map do |name|
-                next if name == :initialize
-                compile_method(module_name, mod, mod.instance_method(name))
-              end
-              compiled.compact!
+          indent_step = 0
+          preamble = nil
+          postamble = nil
 
-              unless compiled.empty? || visibility == :public
-                # add visibility badge
-                compiled.unshift('', indented(visibility.to_s), '')
-              end
+          if mod.singleton_class?
+            indent_step = 1
+            preamble = indented("class << self")
+            postamble = indented("end")
+          end
 
-              compiled
-            end
-            .compact
-            .join("\n")
+          methods = with_indentation(indent_step) do
+            method_names_by_visibility(mod)
+              .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
+              .flat_map do |visibility, method_list|
+                compiled = method_list.sort!.map do |name|
+                  next if name == :initialize
+                  compile_method(module_name, mod, mod.instance_method(name))
+                end
+                compiled.compact!
+
+                unless compiled.empty? || visibility == :public
+                  # add visibility badge
+                  compiled.unshift('', indented(visibility.to_s), '')
+                end
+
+                compiled
+              end
+              .compact
+              .join("\n")
+          end
+
+          return "" if methods.strip == ""
+
+          [
+            preamble,
+            methods,
+            postamble,
+          ].compact.join("\n")
         end
 
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
@@ -506,7 +526,6 @@ module Tapioca
             end
           end.join(', ')
 
-          method_name = "#{'self.' if constant.singleton_class?}#{method_name}"
           parameters = "(#{parameters})" if parameters != ""
 
           signature_str = indented(compile_signature(signature)) if signature
@@ -573,16 +592,17 @@ module Tapioca
         sig do
           type_parameters(:U)
             .params(
+              step: Integer,
               _blk: T.proc
                 .returns(T.type_parameter(:U))
             )
             .returns(T.type_parameter(:U))
         end
-        def with_indentation(&_blk)
-          @indent += 2
+        def with_indentation(step = 1, &_blk)
+          @indent += 2 * step
           yield
         ensure
-          @indent -= 2
+          @indent -= 2 * step
         end
 
         sig { params(str: String).returns(String) }

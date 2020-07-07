@@ -168,7 +168,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Foo
-          def self.==(other); end
+          class << self
+            def ==(other); end
+          end
         end
       RUBY
 
@@ -571,7 +573,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         module Foo
-          def self.const_missing(name); end
+          class << self
+            def const_missing(name); end
+          end
         end
 
         class Foo::Bar < ::Numeric
@@ -692,24 +696,28 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           def foo; end
           def foo=(_); end
 
-          def self.[](*_); end
+          class << self
+            def [](*_); end
         <% if ruby_version(">= 2.5.0") %>
-          def self.inspect; end
+            def inspect; end
         <% end %>
-          def self.members; end
-          def self.new(*_); end
+            def members; end
+            def new(*_); end
+          end
         end
 
         class S3 < ::Struct
           def foo; end
           def foo=(_); end
 
-          def self.[](*_); end
+          class << self
+            def [](*_); end
         <% if ruby_version(">= 2.5.0") %>
-          def self.inspect; end
+            def inspect; end
         <% end %>
-          def self.members; end
-          def self.new(*_); end
+            def members; end
+            def new(*_); end
+          end
         end
 
         class S4 < ::Struct
@@ -742,7 +750,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           include(::Foo)
           include(::Baz)
 
-          def self.abc; end
+          class << self
+            def abc; end
+          end
         end
 
         module Baz
@@ -766,7 +776,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Bar
-          def self.num(a); end
+          class << self
+            def num(a); end
+          end
         end
       RUBY
 
@@ -822,7 +834,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Bar
-          def self.num(a); end
+          class << self
+            def num(a); end
+          end
         end
       RUBY
 
@@ -914,7 +928,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Bar
-          def self.a; end
+          class << self
+            def a; end
+          end
         end
       RUBY
 
@@ -1042,6 +1058,21 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           def foo(b)
           end
 
+          class << self
+            def fim
+            end
+
+            protected
+
+            def fom
+            end
+
+            private
+
+            def fum
+            end
+          end
+
           protected(def pc; end)
         end
       RUBY
@@ -1059,6 +1090,18 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
           def foo(b); end
           def toto; end
+
+          class << self
+            def fim; end
+
+            protected
+
+            def fom; end
+
+            private
+
+            def fum; end
+          end
         end
       RUBY
 
@@ -1187,7 +1230,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         module Baz
-          def self.foo(x); end
+          class << self
+            def foo(x); end
+          end
         end
 
         class Baz::Bar
@@ -1239,7 +1284,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Hostile
-          def self.!; end
+          class << self
+            def !; end
+          end
         end
       RUBY
 
@@ -1388,6 +1435,13 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       output = template(<<~RUBY)
         module BarConcern
           mixes_in_class_methods(::BarConcern::Something)
+
+          class << self
+
+            private
+
+            def included(base); end
+          end
         end
 
         module BarConcern::Something
@@ -1505,13 +1559,17 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
           def method_missing(called, *args, &block); end
 
-          def self.new(*args, &block); end
+          class << self
+            def new(*args, &block); end
+          end
         end
 
         Bar = T.let(T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedConstantProxy)
 
         class Foo
-          def self.name; end
+          class << self
+            def name; end
+          end
         end
       RUBY
 
@@ -1589,13 +1647,17 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           def method_missing(called, *args, &block); end
           def target; end
 
-          def self.new(*args, &block); end
+          class << self
+            def new(*args, &block); end
+          end
         end
 
         Bar = Foo
 
         class Foo
-          def self.name; end
+          class << self
+            def name; end
+          end
         end
       RUBY
 
@@ -1618,7 +1680,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Foo
-          def self.name; end
+          class << self
+            def name; end
+          end
         end
       RUBY
 
@@ -1761,7 +1825,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           const :baz, T::Hash[String, T.untyped]
           prop :quux, T.untyped
 
-          def self.inherited(s); end
+          class << self
+            def inherited(s); end
+          end
         end
 
         class Baz
@@ -1781,8 +1847,10 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           sig { params(a: Integer, b: String).void }
           def foo(a, b:); end
 
-          sig { void }
-          def self.quux; end
+          class << self
+            sig { void }
+            def quux; end
+          end
         end
 
         module Quux
