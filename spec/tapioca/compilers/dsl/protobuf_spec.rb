@@ -212,5 +212,63 @@ describe("Tapioca::Compilers::Dsl::Protobuf") do
 
       assert_equal(expected, rbi_for(content))
     end
+
+    it("generates methods in RBI files for classes with Protobuf with all types") do
+      content = <<~RUBY
+        require 'google/protobuf/timestamp_pb'
+        require 'google/protobuf/wrappers_pb'
+        Google::Protobuf::DescriptorPool.generated_pool.build do
+          add_file("cart.proto", :syntax => :proto3) do
+            add_message "MyCart" do
+              optional :shop_id, :int32, 1
+              optional :customer_id, :int64, 2
+              optional :number_value, :double, 3
+              optional :string_value, :string, 4
+              optional :bool_value, :bool, 5
+              optional :money_value, :float, 6
+              optional :byte_value, :bytes, 7
+            end
+          end
+        end
+        Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+      RUBY
+
+      rbi_output = rbi_for(content)
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: T::Boolean).returns(T::Boolean) }
+        def bool_value=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: String).returns(String) }
+        def byte_value=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Integer).returns(Integer) }
+        def customer_id=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Float).returns(Float) }
+        def money_value=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Float).returns(Float) }
+        def number_value=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Integer).returns(Integer) }
+        def shop_id=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: String).returns(String) }
+        def string_value=(value); end
+      RUBY
+    end
   end
 end
