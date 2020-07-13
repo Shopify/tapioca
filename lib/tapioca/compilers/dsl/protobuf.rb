@@ -46,7 +46,6 @@ module Tapioca
         end
         def type_of(descriptor)
           case descriptor.type
-
           when :enum
             descriptor.subtype.enummodule.name
           when :message
