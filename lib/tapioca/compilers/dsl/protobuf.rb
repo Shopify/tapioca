@@ -22,7 +22,7 @@ module Tapioca
         end
         def decorate(root, constant)
           descriptor = T.let(T.unsafe(constant).descriptor, Google::Protobuf::Descriptor)
-          return if descriptor.to_a.empty?
+          return unless descriptor.any?
 
           root.path(constant) do |klass|
             descriptor.each do |desc|
