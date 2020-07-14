@@ -228,6 +228,7 @@ describe("Tapioca::Compilers::Dsl::Protobuf") do
               optional :money_value, :float, 6
               optional :byte_value, :bytes, 7
               optional :id, :uint64, 8
+              optional :item_id, :uint32, 9
             end
           end
         end
@@ -254,6 +255,11 @@ describe("Tapioca::Compilers::Dsl::Protobuf") do
       assert_includes(rbi_output, indented(<<~RUBY, 2))
         sig { params(value: Integer).returns(Integer) }
         def id=(value); end
+      RUBY
+
+      assert_includes(rbi_output, indented(<<~RUBY, 2))
+        sig { params(value: Integer).returns(Integer) }
+        def item_id=(value); end
       RUBY
 
       assert_includes(rbi_output, indented(<<~RUBY, 2))
