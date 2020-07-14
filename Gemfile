@@ -31,4 +31,5 @@ group(:development, :test) do
                   ref: '3cfc7d01f333c01811d5e834f1495eaa29f87c36', require: false)
   gem("activemodel-serializers-xml", "~> 1.0", require: false)
   gem("activeresource", "~> 5.1", require: false)
+  gem("google-protobuf", "~>3.12.0", require: false)
 end
