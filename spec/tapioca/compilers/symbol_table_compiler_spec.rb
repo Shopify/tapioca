@@ -1777,6 +1777,14 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           prop :quux, T.untyped, default: [1, 2, 3]
         end
 
+        class Buzz
+          include T::Props::Constructor
+          extend T::Props::ClassMethods
+
+          const :foo, Integer
+          prop :bar, String
+        end
+
         class Baz
           extend(T::Sig)
           extend(T::Helpers)
@@ -1837,6 +1845,11 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
           sig { abstract.void }
           def do_it; end
+        end
+
+        class Buzz
+          const :foo, Integer
+          prop :bar, String
         end
 
         class Foo

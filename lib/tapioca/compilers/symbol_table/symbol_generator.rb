@@ -473,9 +473,9 @@ module Tapioca
 
         sig { params(constant: Module, method_name: String).returns(T::Boolean) }
         def struct_method?(constant, method_name)
-          return false unless constant < T::Struct
+          return false unless T::Props::ClassMethods === constant
 
-          T.cast(constant, T.class_of(T::Struct))
+          constant
             .props
             .keys
             .include?(method_name.gsub(/=$/, '').to_sym)
