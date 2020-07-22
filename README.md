@@ -34,6 +34,8 @@ If you ever run into a case, where you add a gem or update the version of a gem 
 You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
 in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
 
+`tapioca` supports stronger/stricter type generation if class extends `StrongTypeGenerataion` module. `StrongTypeGenerataion` module does not allow the object to be initialize with a bad state by checking each non_nilable attribute to ensure they are not nil. `tapioca`  ActiveRecordColumns RBI generator allows for more strict type signature if the object class extend `StrongTypeGenerataion` by generating sig with exact defined type instead of T.untyped.
+
 ## How does tapioca compare to "srb rbi gems" ?
 
 [Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
