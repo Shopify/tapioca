@@ -103,6 +103,10 @@ This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved consta
 - `--generate-command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
 - `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
+### Strong typing option for ActiveRecord column methods
+
+`tapioca` gives you the option to generate stricter type signatures for your ActiveRecord column types. By default, methods generated for columns that are defined in the schema have signatures of T.untyped. However, if the object extends a module with name StrongTypeGeneration, tapioca will generate stricter signatures that follow closely with the types defined in the schema. Expectation is the StrongTypeGeneration module you define in your application won't allow objects to be initialized with "bad state". It will check all the attributes that are not nillable to ensure they are not nil.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/Shopify/tapioca/blob/master/CODE_OF_CONDUCT.md) code of conduct.
