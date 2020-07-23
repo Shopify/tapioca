@@ -1303,7 +1303,7 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(with_todo_comment: T::Boolean).void }
   def add_sig_templates!(with_todo_comment: T.unsafe(nil)); end
 
-  sig { params(name: String, superclass_name: T.nilable(String), block: T.nilable(T.proc.params(scope: RBI::Scope).void)).void }
+  sig { params(name: String, superclass_name: T.nilable(String), block: T.nilable(T.proc.params(scope: RBI::Scope).void)).returns(RBI::Scope) }
   def create_class(name, superclass_name: T.unsafe(nil), &block); end
 
   sig { params(name: String, value: String).void }
@@ -1321,7 +1321,7 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(name: String).void }
   def create_mixes_in_class_methods(name); end
 
-  sig { params(name: String, block: T.nilable(T.proc.params(scope: RBI::Scope).void)).void }
+  sig { params(name: String, block: T.nilable(T.proc.params(scope: RBI::Scope).void)).returns(RBI::Scope) }
   def create_module(name, &block); end
 
   sig { params(constant: Module, block: T.nilable(T.proc.params(scope: RBI::Scope).void)).void }

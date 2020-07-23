@@ -50,19 +50,32 @@ module Tapioca
           ).void
         end
         def decorate(root, constant)
-          scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
+          scope_method_names = T.let(
+            constant.send(:generated_relation_methods).instance_methods(false),
+            T::Array[Symbol]
+          )
           return if scope_method_names.empty?
 
           root.create_path(constant) do |model|
-            module_name = "GeneratedRelationMethods"
+            relation_methods_module_name = "GeneratedRelationMethods"
+            relation_methods_module = model.create_module(relation_methods_module_name)
+            association_relation_methods_module_name = "GeneratedAssociationRelationMethods"
+            association_relation_methods_module = model.create_module(association_relation_methods_module_name)
 
-            model.create_module(module_name) do |mod|
-              scope_method_names.each do |scope_method|
-                generate_scope_method(scope_method.to_s, mod)
-              end
+            scope_method_names.each do |scope_method|
+              generate_scope_method(
+                relation_methods_module,
+                scope_method.to_s,
+                "PrivateRelation"
+              )
+              generate_scope_method(
+                association_relation_methods_module,
+                scope_method.to_s,
+                "PrivateAssociationRelation"
+              )
             end
 
-            model.create_extend(module_name)
+            model.create_extend(relation_methods_module_name)
           end
         end
 
@@ -75,14 +88,12 @@ module Tapioca
 
         sig do
           params(
-            scope_method: String,
             mod: RBI::Scope,
+            scope_method: String,
+            return_type: String
           ).void
         end
-        def generate_scope_method(scope_method, mod)
-          # This return type should actually be Model::ActiveRecord_Relation
-          return_type = "T.untyped"
-
+        def generate_scope_method(mod, scope_method, return_type)
           mod.create_method(
             scope_method,
             parameters: [

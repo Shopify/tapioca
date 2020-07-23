@@ -256,8 +256,7 @@ module Tapioca
           "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                             polymorphic_association?(reflection)
 
-          # Change to: "::#{reflection.klass.name}::ActiveRecord_Associations_CollectionProxy"
-          "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
+          "#{qualified_name_of(reflection.klass)}::PrivateCollectionProxy"
         end
 
         sig do

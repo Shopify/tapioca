@@ -53,8 +53,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def public_kind(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def public_kind(*args, &blk); end
           end
         end
@@ -77,11 +82,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
-          module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def private_kind(*args, &blk); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def public_kind(*args, &blk); end
+          end
+
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def private_kind(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def public_kind(*args, &blk); end
           end
         end
