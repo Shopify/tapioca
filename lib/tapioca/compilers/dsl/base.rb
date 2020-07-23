@@ -97,13 +97,13 @@ module Tapioca
             when :req
               ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i])
             when :opt
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i], default: '_')
+              ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i], default: 'T.unsafe(nil)')
             when :rest
               ::Parlour::RbiGenerator::Parameter.new("*#{name}", type: method_types[i])
             when :keyreq
               ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_types[i])
             when :key
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_types[i], default: '_')
+              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_types[i], default: 'T.unsafe(nil)')
             when :keyrest
               ::Parlour::RbiGenerator::Parameter.new("**#{name}", type: method_types[i])
             when :block
