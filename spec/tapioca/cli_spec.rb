@@ -14,7 +14,7 @@ module Contents
 
     module Foo
       class << self
-        def bar(a = _, b: _, **opts); end
+        def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
       end
     end
 
@@ -30,7 +30,7 @@ module Contents
 
     module Bar
       class << self
-        def bar(a = _, b: _, **opts); end
+        def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
       end
     end
 

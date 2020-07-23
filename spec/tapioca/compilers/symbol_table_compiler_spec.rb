@@ -232,7 +232,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           include(::JSON::Ext::Generator::GeneratorMethods::String)
           extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
 
-          def to_foo(base = _); end
+          def to_foo(base = T.unsafe(nil)); end
         end
       RUBY
 
@@ -329,7 +329,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         class Foo
-          def add(a = _, b: _); end
+          def add(a = T.unsafe(nil), b: T.unsafe(nil)); end
         end
       RUBY
 
