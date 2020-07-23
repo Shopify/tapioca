@@ -512,13 +512,13 @@ module Tapioca
             when :req
               name
             when :opt
-              "#{name} = _"
+              "#{name} = T.unsafe(nil)"
             when :rest
               "*#{name}"
             when :keyreq
               "#{name}:"
             when :key
-              "#{name}: _"
+              "#{name}: T.unsafe(nil)"
             when :keyrest
               "**#{name}"
             when :block
