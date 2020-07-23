@@ -34,8 +34,6 @@ If you ever run into a case, where you add a gem or update the version of a gem 
 You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
 in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
 
-`tapioca` supports stronger/stricter type generation if class extends `StrongTypeGeneration` module. `StrongTypeGeneration` module does not allow the object to be initialize with a bad state by checking each non_nilable attribute to ensure they are not nil. `tapioca`  ActiveRecordColumns RBI generator allows for more strict type signature if the object class extend `StrongTypeGeneration` by generating sig with exact defined type instead of T.untyped.
-
 ## How does tapioca compare to "srb rbi gems" ?
 
 [Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
@@ -104,6 +102,10 @@ This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved consta
 - `--out [directory]`: The output directory for generated RBI files, default to `sorbet/rbi/gems`.
 - `--generate-command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
 - `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
+
+### Strong typing option for ActiveRecord Column methods
+
+`tapioca` gives you the option to generate stricter type signatures for your ActiveRecord column types. By default, methods generated for columns that are defined in the schema have signatures of T.untyped. However, if the object extends a module with name StrongTypeGeneration, tapioca will generate stricter signatures that follow closely with the types defined in the schema. Expectation is the StrongTypeGeneration module you define in your application won't allow objects to be initialized with "bad state". It will check all the attributes that are not nillable to ensure they are not nil.
 
 ## Contributing
 
