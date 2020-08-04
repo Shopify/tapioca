@@ -29,7 +29,7 @@ module Tapioca
         def generate
           symbols
             .sort
-            .map(&method(:generate_from_symbol))
+            .map { |symbol| generate_from_symbol(symbol) }
             .compact
             .join("\n\n")
             .concat("\n")
