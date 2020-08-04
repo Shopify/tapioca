@@ -422,20 +422,24 @@ module Tapioca
       say("Compiling #{gem_name}, this may take a few seconds... ")
 
       strictness = config.typed_overrides[gem.name] || "true"
-
+      rbi_body_content = compiler.compile(gem)
       content = String.new
       content << rbi_header(
         config.generate_command,
         reason: "types exported from the `#{gem.name}` gem",
         strictness: strictness
       )
-      content << compiler.compile(gem)
-
+      content << rbi_body_content
       FileUtils.mkdir_p(config.outdir)
       filename = config.outpath / gem.rbi_file_name
-      File.write(filename.to_s, content)
 
-      say("Done", :green)
+      if rbi_body_content.strip.empty?
+        FileUtils.safe_unlink(filename.to_s)
+        say("Skipped", :red)
+      else
+        File.write(filename.to_s, content)
+        say("Done", :green)
+      end
 
       Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
