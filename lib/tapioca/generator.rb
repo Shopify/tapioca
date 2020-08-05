@@ -415,6 +415,15 @@ module Tapioca
       [statement, sigil].compact.join("\n").strip.concat("\n\n")
     end
 
+    sig { params(command: String, reason: T.nilable(String)).returns(String) }
+    def empty_rbi_comment(command, reason: nil)
+      statement = <<~CONTENT
+        # THIS IS AN EMPTY RBI FILE.
+      CONTENT
+
+      statement
+    end
+
     sig { params(gem: Gemfile::Gem).void }
     def compile_gem_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
@@ -434,12 +443,15 @@ module Tapioca
       filename = config.outpath / gem.rbi_file_name
 
       if rbi_body_content.strip.empty?
-        FileUtils.safe_unlink(filename.to_s)
-        say("Skipped", :red)
+        content << empty_rbi_comment(config.generate_command,
+          reason: "types exported from the `#{gem.name}` gem"
+        )
+        output = "Done (Empty_rbi_output)"
       else
-        File.write(filename.to_s, content)
-        say("Done", :green)
+        output = "Done"
       end
+      File.write(filename.to_s, content)
+      say(output, :green)
 
       Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
