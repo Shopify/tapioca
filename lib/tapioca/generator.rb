@@ -415,8 +415,8 @@ module Tapioca
       [statement, sigil].compact.join("\n").strip.concat("\n\n")
     end
 
-    sig { params(command: String, reason: T.nilable(String)).returns(String) }
-    def empty_rbi_comment(command, reason: nil)
+    sig { returns(String) }
+    def empty_rbi_comment
       statement = <<~CONTENT
         # THIS IS AN EMPTY RBI FILE.
       CONTENT
@@ -443,9 +443,7 @@ module Tapioca
       filename = config.outpath / gem.rbi_file_name
 
       if rbi_body_content.strip.empty?
-        content << empty_rbi_comment(config.generate_command,
-          reason: "types exported from the `#{gem.name}` gem"
-        )
+        content << empty_rbi_comment
         output = "Done (Empty_rbi_output)"
       else
         output = "Done"
