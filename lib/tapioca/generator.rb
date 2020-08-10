@@ -419,6 +419,7 @@ module Tapioca
     def empty_rbi_comment
       statement = <<~CONTENT
         # THIS IS AN EMPTY RBI FILE.
+        # see https://github.com/Shopify/tapioca/blob/master/README.md
       CONTENT
 
       statement
