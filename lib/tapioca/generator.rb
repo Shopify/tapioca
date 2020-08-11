@@ -162,6 +162,11 @@ module Tapioca
 
     private
 
+    EMPTY_RBI_COMMENT = <<~CONTENT
+      # THIS IS AN EMPTY RBI FILE.
+      # see https://github.com/Shopify/tapioca/blob/master/README.md
+    CONTENT
+
     sig { returns(Gemfile) }
     def bundle
       @bundle ||= Gemfile.new
@@ -415,16 +420,6 @@ module Tapioca
       [statement, sigil].compact.join("\n").strip.concat("\n\n")
     end
 
-    sig { returns(String) }
-    def empty_rbi_comment
-      statement = <<~CONTENT
-        # THIS IS AN EMPTY RBI FILE.
-        # see https://github.com/Shopify/tapioca/blob/master/README.md
-      CONTENT
-
-      statement
-    end
-
     sig { params(gem: Gemfile::Gem).void }
     def compile_gem_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
@@ -439,18 +434,18 @@ module Tapioca
         reason: "types exported from the `#{gem.name}` gem",
         strictness: strictness
       )
-      content << rbi_body_content
+
       FileUtils.mkdir_p(config.outdir)
       filename = config.outpath / gem.rbi_file_name
 
       if rbi_body_content.strip.empty?
-        content << empty_rbi_comment
-        output = "Done (Empty_rbi_output)"
+        content << EMPTY_RBI_COMMENT
+        say("Done (EMPTY output)", :yellow)
       else
-        output = "Done"
+        content << rbi_body_content
+        say("Done", :green)
       end
       File.write(filename.to_s, content)
-      say(output, :green)
 
       Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
