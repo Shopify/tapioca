@@ -164,7 +164,7 @@ module Tapioca
 
     EMPTY_RBI_COMMENT = <<~CONTENT
       # THIS IS AN EMPTY RBI FILE.
-      # see https://github.com/Shopify/tapioca/blob/master/README.md
+      # see https://github.com/Shopify/tapioca/blob/master/README.md#manual-gem-requires
     CONTENT
 
     sig { returns(Gemfile) }
