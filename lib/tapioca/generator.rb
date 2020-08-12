@@ -440,7 +440,7 @@ module Tapioca
 
       if rbi_body_content.strip.empty?
         content << EMPTY_RBI_COMMENT
-        say("Done (EMPTY output)", :yellow)
+        say("Done (empty output)", :yellow)
       else
         content << rbi_body_content
         say("Done", :green)

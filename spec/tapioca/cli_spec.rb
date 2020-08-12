@@ -602,6 +602,17 @@ describe(Tapioca::Cli) do
       assert_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
+    it 'generate output  Done (empty output) after generating an empty RBI file' do
+      execute("generate", ["foo"])
+
+      output = execute("sync")
+
+      assert_includes(output, "++ Adding: #{outdir}/ast@2.4.0.rbi\n")
+      assert_includes(output, <<~OUTPUT)
+        Compiling ast, this may take a few seconds...   Done (empty output)
+      OUTPUT
+    end
+
     it 'must respect exclude option' do
       execute("generate")
 
