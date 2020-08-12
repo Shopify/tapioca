@@ -607,7 +607,7 @@ describe(Tapioca::Cli) do
 
       output = execute("sync")
 
-      assert_includes(output, "++ Adding: #{outdir}/ast@2.4.0.rbi\n")
+      assert_includes(output, "++ Adding: #{outdir}/ast@2.4.1.rbi\n")
       assert_includes(output, <<~OUTPUT)
         Compiling ast, this may take a few seconds...   Done (empty output)
       OUTPUT
