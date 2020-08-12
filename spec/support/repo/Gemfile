@@ -5,6 +5,7 @@ source("https://rubygems.org")
 gem("foo", path: "../gems/foo")
 gem("bar", path: "../gems/bar")
 gem("baz", path: "../gems/baz")
+gem("qux", path: "../gems/qux", require: false)
 gem("tapioca", path: "../../../")
 
 gem("psych")
