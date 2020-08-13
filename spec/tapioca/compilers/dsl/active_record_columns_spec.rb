@@ -599,7 +599,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(value: Numeric).returns(::Money)}
@@ -612,7 +612,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -651,7 +651,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(value: ::Numeric).returns(T.any(::Money, Numeric)) }
@@ -666,7 +666,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -705,7 +705,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(money: ::Money).returns(Numeric) }
@@ -719,7 +719,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -758,7 +758,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               def deserialize(value)
@@ -770,7 +770,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
