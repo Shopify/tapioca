@@ -14,4 +14,9 @@ module T::Private
   class Sealed
     def self.sealed_module?(mod); end
   end
+
+  module Types
+    class NotTyped < T::Types::Base
+    end
+  end
 end

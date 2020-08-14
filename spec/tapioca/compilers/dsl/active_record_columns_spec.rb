@@ -599,7 +599,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(value: Numeric).returns(::Money)}
@@ -612,7 +612,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -651,7 +651,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(value: ::Numeric).returns(T.any(::Money, Numeric)) }
@@ -666,7 +666,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -705,7 +705,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               sig { params(money: ::Money).returns(Numeric) }
@@ -719,7 +719,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 
@@ -745,6 +745,56 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(rbi_for(files), expected)
     end
 
+    it("generates RBI file for custom type that returns a generic type") do
+      files = {
+        "file.rb" => <<~RUBY,
+          module StrongTypeGeneration
+          end
+
+          class ValueType
+            extend T::Generic
+
+            Elem = type_member
+          end
+
+          class ColumnType < ActiveRecord::Type::Value
+            extend(T::Sig)
+
+            sig { params(value: ::ValueType[Integer]).returns(Numeric) }
+            def serialize(value)
+              super
+            end
+          end
+
+          class Post < ActiveRecord::Base
+            extend StrongTypeGeneration
+
+            attribute :cost, ColumnType.new
+          end
+        RUBY
+
+        "schema.rb" => <<~RUBY,
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+                t.decimal :cost
+              end
+            end
+          end
+        RUBY
+      }
+
+      expected = indented(<<~RUBY, 2)
+        sig { returns(T.nilable(T.untyped)) }
+        def cost; end
+
+        sig { params(value: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
+        def cost=(value); end
+      RUBY
+
+      assert_includes(rbi_for(files), expected)
+    end
+
     it("generates RBI file for custom type without signatures") do
       files = {
         "file.rb" => <<~RUBY,
@@ -758,7 +808,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
               @value = number
             end
 
-            class Type < ActiveRecord::Type::Decimal
+            class Type < ActiveRecord::Type::Value
               extend(T::Sig)
 
               def deserialize(value)
@@ -770,7 +820,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           class Post < ActiveRecord::Base
             extend StrongTypeGeneration
 
-            attribute :cost, Money::Type
+            attribute :cost, Money::Type.new
           end
         RUBY
 

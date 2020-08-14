@@ -349,9 +349,9 @@ module Tapioca
               !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
         end
 
-        sig { params(column_type: Module).returns(String) }
+        sig { params(column_type: Object).returns(String) }
         def handle_unknown_type(column_type)
-          return "T.untyped" unless column_type < ActiveModel::Type::Value
+          return "T.untyped" unless ActiveModel::Type::Value === column_type
 
           lookup_return_type_of_method(column_type, :deserialize) ||
             lookup_return_type_of_method(column_type, :cast) ||
@@ -359,19 +359,27 @@ module Tapioca
             "T.untyped"
         end
 
-        sig { params(column_type: Module, method: Symbol).returns(T.nilable(String)) }
+        sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_return_type_of_method(column_type, method)
-          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
+          signature = T::Private::Methods.signature_for_method(column_type.method(method))
           return unless signature
 
-          return_type = signature.return_type.to_s
-          return_type if return_type != "<VOID>" && return_type != "<NOT-TYPED>"
+          return_type = signature.return_type
+          return if T::Types::Simple === return_type && T::Generic === return_type.raw_type
+          return if return_type == T::Private::Types::Void || return_type == T::Private::Types::NotTyped
+
+          return_type.to_s
         end
 
-        sig { params(column_type: Module, method: Symbol).returns(T.nilable(String)) }
+        sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_arg_type_of_method(column_type, method)
-          signature = T::Private::Methods.signature_for_method(column_type.instance_method(method))
-          signature.arg_types.first.last.to_s if signature
+          signature = T::Private::Methods.signature_for_method(column_type.method(method))
+          return unless signature
+
+          arg_type = signature.arg_types.first.last
+          return if T::Types::Simple === arg_type && T::Generic === arg_type.raw_type
+
+          arg_type.to_s
         end
       end
     end
