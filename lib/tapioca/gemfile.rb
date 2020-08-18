@@ -117,7 +117,7 @@ module Tapioca
 
       sig { params(path: String).returns(T::Boolean) }
       def contains_path?(path)
-        to_realpath(path).start_with?(full_gem_path)
+        to_realpath(path).start_with?(full_gem_path) || has_parent_gemspec?(path)
       end
 
       private
@@ -127,6 +127,26 @@ module Tapioca
         version = @spec.version.to_s
         version += "-#{@spec.source.revision}" if Bundler::Source::Git === @spec.source
         version
+      end
+
+      sig { params(path: String).returns(T::Boolean) }
+      def has_parent_gemspec?(path)
+        # For some Git installed gems the location of the loaded file can
+        # be different from the gem path as indicated by the spec file
+        #
+        # To compensate for these cases, we walk up the directory hierarchy
+        # from the given file and try to match a <gem-name.gemspec> file in
+        # one of those folders to see if the path really belongs in the given gem
+        # or not.
+        return false unless Bundler::Source::Git === @spec.source
+        parent = Pathname.new(path)
+
+        until parent.root?
+          parent = parent.parent.expand_path
+          return true if parent.join("#{name}.gemspec").file?
+        end
+
+        false
       end
 
       sig { params(path: T.any(String, Pathname)).returns(String) }
