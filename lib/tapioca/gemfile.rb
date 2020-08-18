@@ -79,7 +79,7 @@ module Tapioca
       extend(T::Sig)
 
       IGNORED_GEMS = T.let(%w{
-        sorbet sorbet-static sorbet-runtime tapioca
+        sorbet sorbet-static sorbet-runtime
       }.freeze, T::Array[String])
 
       sig { returns(String) }
