@@ -531,6 +531,17 @@ describe(Tapioca::Cli) do
       assert_equal(Contents::BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
     end
 
+    it 'must generate git gem RBIs with source revision numbers' do
+      output = execute("generate", "ast")
+
+      assert_includes(output, <<~OUTPUT)
+        Processing 'ast' gem:
+          Compiling ast, this may take a few seconds...   Done
+      OUTPUT
+
+      assert_path_exists("#{outdir}/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
+    end
+
     it 'must respect exclude option' do
       output = execute("generate", "", exclude: "foo bar")
 
