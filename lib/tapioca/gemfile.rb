@@ -28,7 +28,7 @@ module Tapioca
     sig { returns(T::Array[Gem]) }
     def dependencies
       @dependencies ||= begin
-        specs = definition.specs.to_a
+        specs = definition.locked_gems.specs.to_a
 
         definition
           .resolve
@@ -83,13 +83,14 @@ module Tapioca
       }.freeze, T::Array[String])
 
       sig { returns(String) }
-      attr_reader :full_gem_path
+      attr_reader :full_gem_path, :version
 
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
         real_gem_path = to_realpath(@spec.full_gem_path)
         @full_gem_path = T.let(real_gem_path, String)
+        @version = T.let(version_string, String)
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -109,11 +110,6 @@ module Tapioca
         @spec.name
       end
 
-      sig { returns(::Gem::Version) }
-      def version
-        @spec.version
-      end
-
       sig { returns(String) }
       def rbi_file_name
         "#{name}@#{version}.rbi"
@@ -125,6 +121,13 @@ module Tapioca
       end
 
       private
+
+      sig { returns(String) }
+      def version_string
+        version = @spec.version.to_s
+        version += "-#{@spec.source.revision}" if Bundler::Source::Git === @spec.source
+        version
+      end
 
       sig { params(path: T.any(String, Pathname)).returns(String) }
       def to_realpath(path)
