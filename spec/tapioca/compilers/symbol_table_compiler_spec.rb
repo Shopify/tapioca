@@ -1879,7 +1879,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
           sig { returns(String) }
           def bar; end
           sig { params(baz: T::Hash[String, Object]).returns(T::Hash[String, Object]) }
-          def baz=(_); end
+          def baz=(baz); end
           sig { returns(T::Array[Integer]) }
           def foo; end
           def foo=(_); end
