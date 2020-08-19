@@ -6,6 +6,7 @@ require "parlour"
 begin
   require "rails"
   require "action_controller"
+  require "action_view"
 rescue LoadError
   return
 end
@@ -29,13 +30,18 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[T.untyped]) }
+        NON_DISCOVERABLE_INCLUDERS = T.let([
+          ActionDispatch::IntegrationTest,
+          ActionView::Helpers,
+        ], T::Array[Module])
+
+        sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
-          constants = ObjectSpace.each_object(Module).select do |mod|
-            mod = T.cast(mod, T.class_of(Module))
+          module_enumerator = T.cast(ObjectSpace.each_object(Module), T::Enumerator[Module])
+          constants = module_enumerator.select do |mod|
             next unless Module.instance_method(:name).bind(mod).call
 
             includes_helper?(mod, GeneratedUrlHelpersModule) ||
@@ -44,7 +50,7 @@ module Tapioca
               includes_helper?(mod.singleton_class, GeneratedPathHelpersModule)
           end
 
-          constants << ActionDispatch::IntegrationTest
+          constants.concat(NON_DISCOVERABLE_INCLUDERS)
         end
 
         private
@@ -67,8 +73,11 @@ module Tapioca
 
         sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module), helper_module: Module).void }
         def create_mixins_for(mod, constant, helper_module)
-          mod.create_include(T.must(helper_module.name)) if constant.ancestors.include?(helper_module)
-          mod.create_extend(T.must(helper_module.name)) if constant.singleton_class.ancestors.include?(helper_module)
+          include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
+          extend_helper = constant.singleton_class.ancestors.include?(helper_module)
+
+          mod.create_include(T.must(helper_module.name)) if include_helper
+          mod.create_extend(T.must(helper_module.name)) if extend_helper
         end
 
         sig { params(mod: Module, helper: Module).returns(T::Boolean) }
