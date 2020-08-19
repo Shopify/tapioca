@@ -15,4 +15,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.files         = Dir.glob("lib/**/*.rb")
+
+  spec.add_dependency("zeitwerk")
+  spec.add_dependency("smart_properties")
 end
