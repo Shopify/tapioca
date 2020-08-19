@@ -32,6 +32,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
       ], constants_from(content))
@@ -46,6 +47,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
@@ -61,6 +63,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
@@ -78,6 +81,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
@@ -96,6 +100,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
@@ -114,6 +119,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
@@ -133,6 +139,7 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
 
       assert_equal([
         "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
@@ -222,6 +229,40 @@ describe("Tapioca::Compilers::Dsl::UrlHelpers") do
       RUBY
 
       assert_equal(expected, rbi_for(content, :GeneratedUrlHelpersModule))
+    end
+
+    it("generates RBI for ActionDispatch::IntegrationTest") do
+      content += <<~RUBY
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        module ActionDispatch
+          class IntegrationTest
+            include GeneratedPathHelpersModule
+            include GeneratedUrlHelpersModule
+          end
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, "ActionDispatch::IntegrationTest"))
+    end
+
+    it("generates RBI for ActionView::Helpers") do
+      content += <<~RUBY
+      RUBY
+
+      expected = <<~RUBY
+        # typed: strong
+        module ActionView
+          module Helpers
+            include GeneratedPathHelpersModule
+            include GeneratedUrlHelpersModule
+          end
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(content, "ActionView::Helpers"))
     end
 
     it("generates RBI for constant that includes url_helpers") do
