@@ -503,7 +503,27 @@ module Tapioca
 
           params = T.let(method.parameters, T::Array[T::Array[Symbol]])
           parameters = params.map do |(type, name)|
-            name ||= :_
+            unless name
+              # For attr_writer methods, Sorbet signatures have the name
+              # of the method (without the trailing = sign) as the name of
+              # the only parameter. So, if the parameter does not have a name
+              # then the replacement name should be the name of the method
+              # (minus trailing =) if and only if there is a signature for the
+              # method and the parameter is required and there is a single
+              # parameter and the signature also defines a single parameter and
+              # the name of the method ends with a = character.
+              writer_method_with_sig = signature &&
+                type == :req &&
+                params.size == 1 &&
+                signature.arg_types.size == 1 &&
+                method_name[-1] == "="
+
+              name = if writer_method_with_sig
+                method_name[0...-1].to_sym
+              else
+                :_
+              end
+            end
 
             # Sanitize param names
             name = name.to_s.gsub(/[^a-zA-Z0-9_]/, '_')
