@@ -3,11 +3,15 @@
 
 require 'smart_properties'
 require 'active_support/all'
+require 'baz'
 
 # Fake as much of Rails as we can
 class Rails
   def self.autoloaders
     []
+  end
+
+  def self.application
   end
 end
 
