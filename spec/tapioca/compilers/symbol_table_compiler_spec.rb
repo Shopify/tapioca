@@ -1922,5 +1922,49 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       assert_equal(output, source)
     end
+
+    it("handles signatures with attached classes") do
+      source = compile(<<~RUBY)
+        class Foo
+          class FooAttachedClass; end
+          class << self
+            extend(T::Sig)
+
+            sig { returns(T.attached_class) }
+            def a
+              Foo.new
+            end
+
+            sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
+            def b
+              { Foo.new => [Foo.new] }
+            end
+
+            sig { returns(FooAttachedClass) }
+            def c
+              FooAttachedClass.new
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RUBY)
+        class Foo
+          class << self
+            sig { returns(T.attached_class) }
+            def a; end
+            sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
+            def b; end
+            sig { returns(Foo::FooAttachedClass) }
+            def c; end
+          end
+        end
+
+        class Foo::FooAttachedClass
+        end
+      RUBY
+
+      assert_equal(output, source)
+    end
   end
 end

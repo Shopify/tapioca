@@ -565,7 +565,7 @@ module Tapioca
           params << [signature.block_name, signature.block_type] if signature.block_name
 
           params = params.compact.map { |name, type| "#{name}: #{type}" }.join(", ")
-          returns = signature.return_type.to_s
+          returns = type_of(signature.return_type)
 
           type_parameters = (params + returns).scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map { |p| ":#{p}" }.join(", ")
           type_parameters = ".type_parameters(#{type_parameters})" unless type_parameters.empty?
@@ -782,6 +782,11 @@ module Tapioca
           T::Private::Methods.signature_for_method(method)
         rescue LoadError, StandardError
           nil
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def type_of(constant)
+          constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
 
         sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
