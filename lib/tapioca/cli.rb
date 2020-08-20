@@ -45,7 +45,7 @@ module Tapioca
       create_file(Config::DEFAULT_POSTREQUIRE, skip: true) do
         <<~CONTENT
           # typed: false
-          # frozen_string_literal: true          
+          # frozen_string_literal: true
 
           # Add your extra requires here
         CONTENT
