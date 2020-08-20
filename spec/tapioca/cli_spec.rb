@@ -121,8 +121,8 @@ describe(Tapioca::Cli) do
       CONTENTS
       assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
       assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
-        # frozen_string_literal: true
         # typed: false
+        # frozen_string_literal: true
 
         # Add your extra requires here
       CONTENTS
@@ -245,8 +245,8 @@ describe(Tapioca::Cli) do
 
       assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
       assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
-        # frozen_string_literal: true
         # typed: false
+        # frozen_string_literal: true
 
         # Add your extra requires here
       CONTENTS
