@@ -13,6 +13,7 @@ PATH
       pry (>= 0.12.2)
       sorbet-runtime
       sorbet-static (>= 0.4.4471)
+      spoom
       thor (>= 0.19.2)
 
 GEM
@@ -176,6 +177,9 @@ GEM
       sorbet-static (= 0.5.5730)
     sorbet-runtime (0.5.5870)
     sorbet-static (0.5.5730-universal-darwin-14)
+    spoom (1.0.3)
+      sorbet (~> 0.5.5)
+      sorbet-runtime
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
