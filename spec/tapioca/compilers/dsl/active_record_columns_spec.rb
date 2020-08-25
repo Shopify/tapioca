@@ -111,10 +111,10 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T::Boolean) }
           def id_came_from_user?; end
 
-          sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+          sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
           def id_change; end
 
-          sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+          sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
           def id_change_to_be_saved; end
 
           sig { returns(T::Boolean) }
@@ -123,7 +123,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T.nilable(::Integer)) }
           def id_in_database; end
 
-          sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+          sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
           def id_previous_change; end
 
           sig { returns(T::Boolean) }
@@ -141,7 +141,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { void }
           def restore_id!; end
 
-          sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+          sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
           def saved_change_to_id; end
 
           sig { returns(T::Boolean) }
@@ -440,10 +440,10 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T::Boolean) }
           def author_came_from_user?; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def author_change; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def author_change_to_be_saved; end
 
           sig { returns(T::Boolean) }
@@ -452,7 +452,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T.nilable(::String)) }
           def author_in_database; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def author_previous_change; end
 
           sig { returns(T::Boolean) }
@@ -475,7 +475,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
+        sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
         def saved_change_to_author; end
 
         sig { returns(T::Boolean) }
@@ -533,10 +533,10 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T::Boolean) }
           def body_came_from_user?; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def body_change; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def body_change_to_be_saved; end
 
           sig { returns(T::Boolean) }
@@ -545,7 +545,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
           sig { returns(T.nilable(::String)) }
           def body_in_database; end
 
-          sig { returns([T.nilable(::String), T.nilable(::String)]) }
+          sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def body_previous_change; end
 
           sig { returns(T::Boolean) }
@@ -571,7 +571,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
       assert_includes(output, expected)
 
       expected = indented(<<~RUBY, 2)
-        sig { returns([T.nilable(::String), T.nilable(::String)]) }
+        sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
         def saved_change_to_body; end
 
         sig { returns(T::Boolean) }
