@@ -132,11 +132,7 @@ module Tapioca
         end
         def populate_single_assoc_getter_setter(klass, constant, association_name, reflection)
           association_class = type_for(constant, reflection)
-          association_type = if belongs_to_and_required?(constant, reflection)
-            association_class
-          else
-            "T.nilable(#{association_class})"
-          end
+          association_type = "T.nilable(#{association_class})"
 
           create_method(
             klass,
@@ -225,20 +221,6 @@ module Tapioca
             ],
             return_type: "T::Array[T.untyped]"
           )
-        end
-
-        sig do
-          params(
-            constant: T.class_of(ActiveRecord::Base),
-            reflection: ReflectionType
-          ).returns(T::Boolean)
-        end
-        def belongs_to_and_required?(constant, reflection)
-          return false unless constant.table_exists?
-          return false unless reflection.belongs_to?
-          column_definition = constant.columns_hash[reflection.foreign_key.to_s]
-
-          !column_definition.nil? && !column_definition.null
         end
 
         sig do
