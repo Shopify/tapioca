@@ -196,25 +196,25 @@ module Tapioca
             klass,
             "#{attribute_name}_before_last_save",
             methods_to_add,
-            return_type: getter_type
+            return_type: as_nilable_type(getter_type)
           )
           add_method(
             klass,
             "#{attribute_name}_change_to_be_saved",
             methods_to_add,
-            return_type: "[#{getter_type}, #{getter_type}]"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
           )
           add_method(
             klass,
             "#{attribute_name}_in_database",
             methods_to_add,
-            return_type: getter_type
+            return_type: as_nilable_type(getter_type)
           )
           add_method(
             klass,
             "saved_change_to_#{attribute_name}",
             methods_to_add,
-            return_type: "[#{getter_type}, #{getter_type}]"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
           )
           add_method(
             klass,
@@ -235,7 +235,7 @@ module Tapioca
             klass,
             "#{attribute_name}_change",
             methods_to_add,
-            return_type: "[#{getter_type}, #{getter_type}]"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
           )
           add_method(
             klass,
@@ -252,13 +252,13 @@ module Tapioca
             klass,
             "#{attribute_name}_was",
             methods_to_add,
-            return_type: getter_type
+            return_type: as_nilable_type(getter_type)
           )
           add_method(
             klass,
             "#{attribute_name}_previous_change",
             methods_to_add,
-            return_type: "[#{getter_type}, #{getter_type}]"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
           )
           add_method(
             klass,
@@ -270,7 +270,7 @@ module Tapioca
             klass,
             "#{attribute_name}_previously_was",
             methods_to_add,
-            return_type: getter_type
+            return_type: as_nilable_type(getter_type)
           )
           add_method(
             klass,
@@ -380,6 +380,12 @@ module Tapioca
           return if T::Types::Simple === arg_type && T::Generic === arg_type.raw_type
 
           arg_type.to_s
+        end
+
+        sig { params(type: String).returns(String) }
+        def as_nilable_type(type)
+          return type if type.start_with?("T.nilable(")
+          "T.nilable(#{type})"
         end
       end
     end
