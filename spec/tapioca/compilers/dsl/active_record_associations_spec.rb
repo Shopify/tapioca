@@ -84,8 +84,24 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
     it("generates RBI file for belongs_to single association") do
       content = <<~RUBY
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.references(:category, null: true)
+              t.references(:author, null: false)
+            end
+          end
+        end
+
+        class Category < ActiveRecord::Base
+        end
+
+        class User < ActiveRecord::Base
+        end
+
         class Post < ActiveRecord::Base
           belongs_to :category
+          belongs_to :author, class_name: "User"
         end
       RUBY
 
@@ -96,22 +112,40 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
 
         module Post::GeneratedAssociationMethods
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          sig { returns(T.nilable(::User)) }
+          def author; end
+
+          sig { params(value: T.nilable(::User)).void }
+          def author=(value); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def build_author(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
           def build_category(*args, &blk); end
 
-          sig { returns(T.nilable(T.untyped)) }
+          sig { returns(T.nilable(::Category)) }
           def category; end
 
-          sig { params(value: T.nilable(T.untyped)).void }
+          sig { params(value: T.nilable(::Category)).void }
           def category=(value); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def create_author(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+          def create_author!(*args, &blk); end
+
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
           def create_category(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(T.untyped)) }
+          sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
           def create_category!(*args, &blk); end
 
-          sig { returns(T.nilable(T.untyped)) }
+          sig { returns(T.nilable(::User)) }
+          def reload_author; end
+
+          sig { returns(T.nilable(::Category)) }
           def reload_category; end
         end
       RUBY
