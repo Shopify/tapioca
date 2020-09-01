@@ -1,5 +1,6 @@
 ---
-sudo: false
+os: linux
+dist: bionic
 language: ruby
 cache: bundler
 rvm:
