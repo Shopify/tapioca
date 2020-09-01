@@ -494,15 +494,16 @@ module Tapioca
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
 
           signature = signature_of(method)
-          method = signature.method if signature
+          method = T.let(signature.method, UnboundMethod) if signature
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
           return if struct_method?(constant, method_name)
           return if method_name.start_with?("__t_props_generated_")
 
-          params = T.let(method.parameters, T::Array[T::Array[Symbol]])
-          parameters = params.map do |(type, name)|
+          parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+
+          sanitized_parameters = parameters.map do |type, name|
             unless name
               # For attr_writer methods, Sorbet signatures have the name
               # of the method (without the trailing = sign) as the name of
@@ -512,14 +513,15 @@ module Tapioca
               # method and the parameter is required and there is a single
               # parameter and the signature also defines a single parameter and
               # the name of the method ends with a = character.
-              writer_method_with_sig = signature &&
-                type == :req &&
-                params.size == 1 &&
+              writer_method_with_sig = (
+                signature && type == :req &&
+                parameters.size == 1 &&
                 signature.arg_types.size == 1 &&
                 method_name[-1] == "="
+              )
 
               name = if writer_method_with_sig
-                method_name[0...-1].to_sym
+                T.must(method_name[0...-1]).to_sym
               else
                 :_
               end
@@ -528,6 +530,10 @@ module Tapioca
             # Sanitize param names
             name = name.to_s.gsub(/[^a-zA-Z0-9_]/, '_')
 
+            [type, name]
+          end
+
+          parameter_list = sanitized_parameters.map do |type, name|
             case type
             when :req
               name
@@ -546,25 +552,30 @@ module Tapioca
             end
           end.join(', ')
 
-          parameters = "(#{parameters})" if parameters != ""
+          parameter_list = "(#{parameter_list})" if parameter_list != ""
+          signature_str = indented(compile_signature(signature, sanitized_parameters)) if signature
 
-          signature_str = indented(compile_signature(signature)) if signature
           [
             signature_str,
-            indented("def #{method_name}#{parameters}; end"),
+            indented("def #{method_name}#{parameter_list}; end"),
           ].compact.join("\n")
         end
 
         TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
-        sig { params(signature: T.untyped).returns(String) }
-        def compile_signature(signature)
-          params = signature.arg_types
-          params += signature.kwarg_types.to_a
-          params << [signature.rest_name, signature.rest_type] if signature.has_rest
-          params << [signature.block_name, signature.block_type] if signature.block_name
+        sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(String) }
+        def compile_signature(signature, parameters)
+          parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
+          parameter_types.merge!(signature.kwarg_types)
+          parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
+          parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest
+          parameter_types[signature.block_name] = signature.block_type if signature.block_name
 
-          params = params.compact.map { |name, type| "#{name}: #{type}" }.join(", ")
+          params = parameters.map do |_, name|
+            type = parameter_types[name.to_sym]
+            "#{name}: #{type}"
+          end.join(", ")
+
           returns = type_of(signature.return_type)
 
           type_parameters = (params + returns).scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map { |p| ":#{p}" }.join(", ")
