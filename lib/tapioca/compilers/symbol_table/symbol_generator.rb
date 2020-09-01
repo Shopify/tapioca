@@ -384,7 +384,9 @@ module Tapioca
             end.join("\n")
 
           mixed_in_module = dynamic_extends.find do |mod|
-            mod != constant && public_module?(mod)
+            mod != constant && qualified_name_of(mod) == "::ActiveSupport::Concern" ||
+            (singleton_class_of(constant).ancestors.include?(ActiveSupport::Concern) &&
+             mod == constant.const_get(:ClassMethods))
           end
 
           return result if mixed_in_module.nil?
