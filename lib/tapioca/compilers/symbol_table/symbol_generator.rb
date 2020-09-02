@@ -390,7 +390,7 @@ module Tapioca
           class_methods_module = resolve_constant("#{name_of(constant)}::ClassMethods")
 
           mixed_in_module = if extends_as_concern && Module === class_methods_module
-            constant.const_get(:ClassMethods)
+            class_methods_module
           else
             dynamic_extends.find do |mod|
               mod != constant && public_module?(mod)
