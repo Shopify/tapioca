@@ -5,7 +5,6 @@ require "spec_helper"
 require "pathname"
 require "tmpdir"
 require "bundler"
-require "active_support/concern"
 
 describe("Tapioca::Compilers::SymbolTableCompiler") do
   subject do
@@ -1383,7 +1382,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       assert_equal(output, source)
     end
 
-    it("adds mixes_in_class_methods to modules that extend ActiveSupport::Concern classes") do
+    it("adds mixes_in_class_methods to modules that extend base classes") do
       source = compile(<<~RUBY)
         module Concern
           def included(base)
@@ -1392,8 +1391,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
 
         module FooConcern
-          extend ActiveSupport::Concern
-
+          extend(Concern)
 
           module ClassMethods
             def wow_a_class_method
@@ -1436,6 +1434,8 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
       output = template(<<~RUBY)
         module BarConcern
+          mixes_in_class_methods(::BarConcern::Something)
+
           class << self
 
             private
@@ -1460,7 +1460,7 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
 
         module FooConcern
-          extend(::ActiveSupport::Concern)
+          extend(::Concern)
 
           mixes_in_class_methods(::FooConcern::ClassMethods)
 
