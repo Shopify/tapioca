@@ -11,6 +11,7 @@ group(:deployment, :development) do
 end
 
 gem("bundler", "~> 1.17")
+gem("yard", "~> 0.9.25")
 gem("pry-byebug")
 gem("minitest")
 gem("minitest-hooks")
