@@ -17,6 +17,17 @@ module Tapioca
       # responsible for defining the attribute methods that would be created for the columns that
       # are defined in the Active Record model.
       #
+      # **Note:** This generator, by default, generates weak signatures for column methods and treats each
+      # column to be `T.untyped`. This is done on purpose to ensure that the nilability of Active Record
+      # columns do not make it hard for existing code to adopt gradual typing. It is possible, however, to
+      # generate stricter type signatures for your ActiveRecord column types. If your ActiveRecord model extends
+      # a module with name `StrongTypeGeneration`, this generator will generate stricter signatures that follow
+      # closely with the types defined in the schema.
+      #
+      # The `StrongTypeGeneration` module you define in your application should add an `after_initialize` callback
+      # to the model and ensure that all the non-nilable attributes of the model are actually initialized with non-`nil`
+      # values.
+      #
       # For example, with the following model class:
       #
       # ~~~rb

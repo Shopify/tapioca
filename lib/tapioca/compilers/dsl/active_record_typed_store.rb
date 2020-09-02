@@ -86,8 +86,6 @@ module Tapioca
       #   def saved_change_to_reviewed; end
       # end
       # ~~~
-      # end
-
       class ActiveRecordTypedStore < Base
         extend T::Sig
 

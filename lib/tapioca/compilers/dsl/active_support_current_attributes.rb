@@ -34,7 +34,7 @@ module Tapioca
       #     # ...
       #   end
       # end
-      # ~~~rb
+      # ~~~
       #
       # this generator will produce an RBI file with the following content:
       # ~~~rbi
