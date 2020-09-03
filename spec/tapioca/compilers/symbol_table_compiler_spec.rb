@@ -1479,6 +1479,82 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       assert_equal(output, source)
     end
 
+    it("adds mixes_in_class_methods to modules that extend from a constant named ActiveSuport::Concern") do
+      source = compile(<<~RUBY)
+        module ActiveSupport
+          module Concern
+            def included(base = nil, &block)
+              if base.nil?
+                if instance_variable_defined?(:@_included_block)
+                  if @_included_block.source_location != block.source_location
+                    raise MultipleIncludedBlocks
+                  end
+                else
+                  @_included_block = block
+                end
+              else
+                super
+              end
+            end
+          end
+
+          def self.extended(base)
+            base.instance_variable_set(:@_dependencies, [])
+          end
+        end
+
+        module ActiveModel
+          module Validations
+            extend ActiveSupport::Concern
+            included do
+              extend ActiveModel::Naming
+              extend ActiveModel::Callbacks
+              extend ActiveModel::Translation
+
+              extend  HelperMethods
+              include HelperMethods
+            end
+
+            module HelperMethods
+            end
+
+            module ClassMethods
+            end
+
+          end
+        end
+      RUBY
+
+      output = template(<<~RUBY)
+        module ActiveModel
+        end
+
+        module ActiveModel::Validations
+          extend(::ActiveSupport::Concern)
+
+          mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
+        end
+
+        module ActiveModel::Validations::ClassMethods
+        end
+
+        module ActiveModel::Validations::HelperMethods
+        end
+
+        module ActiveSupport
+          class << self
+            def extended(base); end
+          end
+        end
+
+        module ActiveSupport::Concern
+          def included(base = T.unsafe(nil), &block); end
+        end
+      RUBY
+
+      assert_equal(output, source)
+    end
+
     it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
       source = compile(<<~RUBY)
         module ActiveSupport
