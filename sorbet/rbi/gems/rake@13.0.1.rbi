@@ -709,6 +709,14 @@ class Rake::TaskArguments
   def lookup(name); end
 end
 
+class Rake::TaskLib
+  include(::Rake::Cloneable)
+  include(::FileUtils::StreamUtils_)
+  include(::FileUtils)
+  include(::Rake::FileUtilsExt)
+  include(::Rake::DSL)
+end
+
 module Rake::TaskManager
   def initialize; end
 
@@ -747,6 +755,45 @@ module Rake::TaskManager
     def record_task_metadata; end
     def record_task_metadata=(_); end
   end
+end
+
+class Rake::TestTask < ::Rake::TaskLib
+  def initialize(name = T.unsafe(nil)); end
+
+  def define; end
+  def deps; end
+  def deps=(_); end
+  def description; end
+  def description=(_); end
+  def file_list; end
+  def file_list_string; end
+  def find_dir(fn); end
+  def find_file(fn); end
+  def lib_path; end
+  def libs; end
+  def libs=(_); end
+  def loader; end
+  def loader=(_); end
+  def name; end
+  def name=(_); end
+  def option_list; end
+  def options; end
+  def options=(_); end
+  def pattern; end
+  def pattern=(_); end
+  def rake_include_arg; end
+  def rake_lib_dir; end
+  def rake_loader; end
+  def ruby_opts; end
+  def ruby_opts=(_); end
+  def ruby_opts_string; end
+  def ruby_version; end
+  def run_code; end
+  def test_files=(list); end
+  def verbose; end
+  def verbose=(_); end
+  def warning; end
+  def warning=(_); end
 end
 
 class Rake::ThreadHistoryDisplay

@@ -197,6 +197,7 @@ GEM
     websocket-driver (0.7.2)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    yard (0.9.25)
 
 PLATFORMS
   ruby
@@ -224,6 +225,7 @@ DEPENDENCIES
   sqlite3
   state_machines (~> 0.5.0)
   tapioca!
+  yard (~> 0.9.25)
 
 BUNDLED WITH
    1.17.3

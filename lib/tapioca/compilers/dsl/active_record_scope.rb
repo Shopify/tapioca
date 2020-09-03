@@ -37,7 +37,7 @@ module Tapioca
       # module Post::GeneratedRelationMethods
       #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
       #   def private_kind(*args, &blk); end
-
+      #
       #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
       #   def public_kind(*args, &blk); end
       # end

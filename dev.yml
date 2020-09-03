@@ -16,6 +16,7 @@ commands:
   console:   "bin/console"
   test:      "bin/test"
   style:     "bin/style"
+  docs:      "bin/docs"
   sanity:    "bin/typecheck && bin/style && bin/test"
 
 open:

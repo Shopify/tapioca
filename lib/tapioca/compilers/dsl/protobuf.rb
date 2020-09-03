@@ -12,19 +12,19 @@ module Tapioca
   module Compilers
     module Dsl
       # `Tapioca::Compilers::Dsl::Protobuf` decorates RBI files for subclasses of
-      # `Google::Protobuf::MessageExts`.
-      # (see https://github.com/coinbase/protoc-gen-rbi).
+      # `Google::Protobuf::MessageExts` (see https://github.com/protocolbuffers/protobuf/tree/master/ruby).
       #
       # For example, with the following "cart.rb" file:
       #
       # ~~~rb
       # Google::Protobuf::DescriptorPool.generated_pool.build do
-      # add_file("cart.proto", :syntax => :proto3) do
-      #   add_message "MyCart" do
-      #     optional :shop_id, :int32, 1
-      #     optional :customer_id, :int64, 2
-      #     optional :number_value, :double, 3
-      #     optional :string_value, :string, 4
+      #   add_file("cart.proto", :syntax => :proto3) do
+      #     add_message "MyCart" do
+      #       optional :shop_id, :int32, 1
+      #       optional :customer_id, :int64, 2
+      #       optional :number_value, :double, 3
+      #       optional :string_value, :string, 4
+      #     end
       #   end
       # end
       # ~~~
