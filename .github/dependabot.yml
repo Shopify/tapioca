@@ -6,7 +6,6 @@ updates:
       interval: "daily"
     allow:
       - dependency-name: "sorbet"
-      - dependency-name: "sorbet-static"
       - dependency-name: "sorbet-runtime"
     reviewers:
       - "Shopify/sorbet"
