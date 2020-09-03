@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "sorbet"
+      - dependency-name: "sorbet-static"
+      - dependency-name: "sorbet-runtime"
+    reviewers:
+      - "Shopify/sorbet"
