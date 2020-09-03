@@ -1386,14 +1386,14 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       source = compile(<<~RUBY)
         module Concern
           def included(base)
-            base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
+            base.extend(const_get(:CustomClassMethods)) if const_defined?(:CustomClassMethods)
           end
         end
 
         module FooConcern
           extend(Concern)
 
-          module ClassMethods
+          module CustomClassMethods
             def wow_a_class_method
               "something"
             end
@@ -1462,12 +1462,12 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         module FooConcern
           extend(::Concern)
 
-          mixes_in_class_methods(::FooConcern::ClassMethods)
+          mixes_in_class_methods(::FooConcern::CustomClassMethods)
 
           def a_normal_method; end
         end
 
-        module FooConcern::ClassMethods
+        module FooConcern::CustomClassMethods
           def wow_a_class_method; end
         end
 
@@ -1479,48 +1479,36 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       assert_equal(output, source)
     end
 
-    it("adds mixes_in_class_methods to modules that extend from a constant named ActiveSuport::Concern") do
+    it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSuport::Concern") do
       source = compile(<<~RUBY)
         module ActiveSupport
           module Concern
             def included(base = nil, &block)
               if base.nil?
-                if instance_variable_defined?(:@_included_block)
-                  if @_included_block.source_location != block.source_location
-                    raise MultipleIncludedBlocks
-                  end
-                else
-                  @_included_block = block
-                end
+                @_included_block = block
               else
+                base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
+                base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
                 super
               end
             end
-          end
-
-          def self.extended(base)
-            base.instance_variable_set(:@_dependencies, [])
           end
         end
 
         module ActiveModel
           module Validations
-            extend ActiveSupport::Concern
-            included do
-              extend ActiveModel::Naming
-              extend ActiveModel::Callbacks
-              extend ActiveModel::Translation
-
-              extend  HelperMethods
-              include HelperMethods
-            end
-
             module HelperMethods
             end
 
             module ClassMethods
             end
 
+            extend ActiveSupport::Concern
+
+            included do
+              extend  HelperMethods
+              include HelperMethods
+            end
           end
         end
       RUBY
@@ -1532,6 +1520,8 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         module ActiveModel::Validations
           extend(::ActiveSupport::Concern)
 
+          include(::ActiveModel::Validations::HelperMethods)
+
           mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
         end
 
@@ -1542,9 +1532,6 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         end
 
         module ActiveSupport
-          class << self
-            def extended(base); end
-          end
         end
 
         module ActiveSupport::Concern
