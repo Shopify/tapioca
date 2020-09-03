@@ -20,4 +20,5 @@ env:
 script:
   - bin/style --config .rubocop.yml
   - bin/typecheck
+  - bin/docs
   - bin/test
