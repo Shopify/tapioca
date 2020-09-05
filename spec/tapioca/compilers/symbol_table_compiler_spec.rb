@@ -1386,14 +1386,14 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
       source = compile(<<~RUBY)
         module Concern
           def included(base)
-            base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
+            base.extend(const_get(:CustomClassMethods)) if const_defined?(:CustomClassMethods)
           end
         end
 
         module FooConcern
           extend(Concern)
 
-          module ClassMethods
+          module CustomClassMethods
             def wow_a_class_method
               "something"
             end
@@ -1462,17 +1462,80 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
         module FooConcern
           extend(::Concern)
 
-          mixes_in_class_methods(::FooConcern::ClassMethods)
+          mixes_in_class_methods(::FooConcern::CustomClassMethods)
 
           def a_normal_method; end
         end
 
-        module FooConcern::ClassMethods
+        module FooConcern::CustomClassMethods
           def wow_a_class_method; end
         end
 
         module SomeOtherConcern
           def included(base); end
+        end
+      RUBY
+
+      assert_equal(output, source)
+    end
+
+    it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSuport::Concern") do
+      source = compile(<<~RUBY)
+        module ActiveSupport
+          module Concern
+            def included(base = nil, &block)
+              if base.nil?
+                @_included_block = block
+              else
+                base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
+                base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
+                super
+              end
+            end
+          end
+        end
+
+        module ActiveModel
+          module Validations
+            module HelperMethods
+            end
+
+            module ClassMethods
+            end
+
+            extend ActiveSupport::Concern
+
+            included do
+              extend  HelperMethods
+              include HelperMethods
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RUBY)
+        module ActiveModel
+        end
+
+        module ActiveModel::Validations
+          extend(::ActiveSupport::Concern)
+
+          include(::ActiveModel::Validations::HelperMethods)
+
+          mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
+        end
+
+        module ActiveModel::Validations::ClassMethods
+        end
+
+        module ActiveModel::Validations::HelperMethods
+        end
+
+        module ActiveSupport
+        end
+
+        module ActiveSupport::Concern
+          def included(base = T.unsafe(nil), &block); end
         end
       RUBY
 

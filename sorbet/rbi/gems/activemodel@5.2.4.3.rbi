@@ -538,6 +538,10 @@ class ActiveModel::NullMutationTracker
   def force_change(*_); end
   def forget_change(*_); end
   def original_value(*_); end
+
+  class << self
+    def instance; end
+  end
 end
 
 class ActiveModel::Railtie < ::Rails::Railtie
@@ -894,7 +898,7 @@ module ActiveModel::Validations
   include(::ActiveSupport::Callbacks)
   include(::ActiveModel::Validations::HelperMethods)
 
-  mixes_in_class_methods(::ActiveModel::Validations::HelperMethods)
+  mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
 
   def errors; end
   def invalid?(context = T.unsafe(nil)); end

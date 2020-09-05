@@ -383,8 +383,18 @@ module Tapioca
               indented("include(#{qualified_name_of(mod)})")
             end.join("\n")
 
-          mixed_in_module = dynamic_extends.find do |mod|
-            mod != constant && public_module?(mod)
+          ancestors = singleton_class_of(constant).ancestors
+          extends_as_concern = ancestors.any? do |mod|
+            qualified_name_of(mod) == "::ActiveSupport::Concern"
+          end
+          class_methods_module = resolve_constant("#{name_of(constant)}::ClassMethods")
+
+          mixed_in_module = if extends_as_concern && Module === class_methods_module
+            class_methods_module
+          else
+            dynamic_extends.find do |mod|
+              mod != constant && public_module?(mod)
+            end
           end
 
           return result if mixed_in_module.nil?
