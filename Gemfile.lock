@@ -173,10 +173,10 @@ GEM
       rubocop (>= 0.78.0)
     ruby-progressbar (1.10.1)
     smart_properties (1.15.0)
-    sorbet (0.5.5890)
-      sorbet-static (= 0.5.5890)
+    sorbet (0.5.5891)
+      sorbet-static (= 0.5.5891)
     sorbet-runtime (0.5.5890)
-    sorbet-static (0.5.5890-universal-darwin-14)
+    sorbet-static (0.5.5891-universal-darwin-14)
     spoom (1.0.3)
       sorbet (~> 0.5.5)
       sorbet-runtime
