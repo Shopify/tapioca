@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     allow:
       - dependency-name: "sorbet"
       - dependency-name: "sorbet-runtime"
