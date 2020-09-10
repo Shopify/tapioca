@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    tapioca (0.4.4)
+    tapioca (0.4.5)
       parlour (>= 2.1.0)
       pry (>= 0.12.2)
       sorbet-runtime
@@ -78,6 +78,7 @@ GEM
     builder (3.2.4)
     byebug (11.0.1)
     coderay (1.1.2)
+    colorize (0.8.1)
     commander (4.5.2)
       highline (~> 2.0.0)
     concurrent-ruby (1.1.6)
@@ -175,11 +176,13 @@ GEM
     smart_properties (1.15.0)
     sorbet (0.5.5895)
       sorbet-static (= 0.5.5895)
-    sorbet-runtime (0.5.5895)
+    sorbet-runtime (0.5.5898)
     sorbet-static (0.5.5895-universal-darwin-14)
-    spoom (1.0.3)
+    spoom (1.0.4)
+      colorize
       sorbet (~> 0.5.5)
       sorbet-runtime
+      thor (>= 0.19.2)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
