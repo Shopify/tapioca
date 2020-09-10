@@ -229,7 +229,9 @@ describe("Tapioca::Compilers::SymbolTableCompiler") do
 
         class String
           include(::Comparable)
+          include(::Colorize::InstanceMethods)
           include(::JSON::Ext::Generator::GeneratorMethods::String)
+          extend(::Colorize::ClassMethods)
           extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
 
           def to_foo(base = T.unsafe(nil)); end
