@@ -183,7 +183,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
       expected = <<~RUBY
         # typed: strong
         class Post
-          sig { returns(::User) }
+          sig { returns(T.nilable(::User)) }
           def fetch_user; end
 
           sig { returns(T.untyped) }
@@ -232,7 +232,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
       expected = <<~RUBY
         # typed: strong
         class Post
-          sig { returns(::User) }
+          sig { returns(T.nilable(::User)) }
           def fetch_user; end
         end
       RUBY

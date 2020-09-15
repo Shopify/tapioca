@@ -126,7 +126,7 @@ module Tapioca
           if returns_collection
             COLLECTION_TYPE.call(cache_type)
           else
-            "::#{cache_type}"
+            "T.nilable(::#{cache_type})"
           end
         rescue ArgumentError
           "T.untyped"
