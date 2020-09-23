@@ -105,6 +105,18 @@ describe(Tapioca::Cli) do
     FileUtils.rm_rf(repo_path / "sorbet")
   end
 
+  describe("#version") do
+    it 'must display the version when passing --version' do
+      output = execute("--version")
+      assert_equal("Tapioca v#{Tapioca::VERSION}", output&.strip)
+    end
+
+    it 'must display the version when passing -v' do
+      output = execute("-v")
+      assert_equal("Tapioca v#{Tapioca::VERSION}", output&.strip)
+    end
+  end
+
   describe("#init") do
     it 'must create proper files' do
       output = execute("init")

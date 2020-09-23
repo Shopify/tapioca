@@ -34,6 +34,8 @@ module Tapioca
                   banner: "gem:level [gem:level ...]",
                   desc: "Overrides for typed sigils for generated gem RBIs"
 
+    map T.unsafe(%w[--version -v] => :__print_version)
+
     desc "init", "initializes folder structure"
     def init
       create_file(Config::SORBET_CONFIG, skip: true) do
@@ -90,6 +92,11 @@ module Tapioca
       Tapioca.silence_warnings do
         generator.sync_rbis_with_gemfile
       end
+    end
+
+    desc "--version, -v", "show version"
+    def __print_version
+      puts "Tapioca v#{Spoom::VERSION}"
     end
 
     no_commands do
