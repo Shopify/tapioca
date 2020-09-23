@@ -96,7 +96,7 @@ module Tapioca
 
     desc "--version, -v", "show version"
     def __print_version
-      puts "Tapioca v#{Spoom::VERSION}"
+      puts "Tapioca v#{Tapioca::VERSION}"
     end
 
     no_commands do
