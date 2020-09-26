@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 #
 # rubocop:disable Layout/ExtraSpacing
@@ -13,7 +14,7 @@ require"e"
 require("f")
 require_relative 'z'
 
-if true
+if Random.rand > 0.5
   require 'g'
   require_relative "z"
 else
