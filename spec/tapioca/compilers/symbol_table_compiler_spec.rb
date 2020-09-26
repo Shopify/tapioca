@@ -7,7 +7,7 @@ require "tmpdir"
 require "bundler"
 
 class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
-  sig {returns(Tapioca::Compilers::SymbolTableCompiler)}
+  sig { returns(Tapioca::Compilers::SymbolTableCompiler) }
   def subject
     Tapioca::Compilers::SymbolTableCompiler.new
   end

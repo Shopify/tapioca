@@ -10,3 +10,7 @@ AllCops:
 
 Style/CaseEquality:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+  - spec/tapioca/**/*

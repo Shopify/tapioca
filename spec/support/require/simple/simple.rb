@@ -3,7 +3,6 @@
 #
 # rubocop:disable Layout/ExtraSpacing
 # rubocop:disable Layout/SpaceBeforeFirstArg
-# rubocop:disable Lint/LiteralAsCondition
 # rubocop:disable Lint/ParenthesesAsGroupedExpression
 # rubocop:disable Style/RedundantParentheses/
 require 'a'

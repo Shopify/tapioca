@@ -26,7 +26,7 @@ module ContentHelper
       Tapioca.silence_warnings do
         # Require Ruby files
         contents.keys
-          .select {|k| k.end_with?(".rb") }
+          .select { |k| k.end_with?(".rb") }
           .each do |file|
             Kernel.require(dir.join("lib/#{file}").to_s)
           end

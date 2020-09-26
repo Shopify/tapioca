@@ -27,13 +27,13 @@ end
 class DslSpec < Minitest::Spec
   before(:all) do
     extra_require = T.unsafe(self).target_class.instance_variable_get(:@require_before)
-    extra_require.call if extra_require
+    extra_require&.call
     Kernel.require(T.unsafe(self).underscore(T.unsafe(self).target_class_name))
   end
 
   subject do
     class_name = T.unsafe(self).target_class_name
-    Object.const_get(class_name).new # rubocop:disable Sorbet/ConstantsFromStrings
+    Object.const_get(class_name).new
   end
 
   sig { params(blk: T.proc.void).void }
@@ -45,9 +45,7 @@ class DslSpec < Minitest::Spec
   sig { returns(Class) }
   def target_class
     klass = T.unsafe(self).class
-    while klass.superclass != DslSpec
-      klass = klass.superclass
-    end
+    klass = klass.superclass while klass.superclass != DslSpec
     klass
   end
 

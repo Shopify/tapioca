@@ -56,7 +56,7 @@ module Tapioca
 
       sig { params(requested_generators: T::Array[String]).returns(T.proc.params(klass: Class).returns(T::Boolean)) }
       def generator_filter(requested_generators)
-        return ->(klass) { true } if requested_generators.empty?
+        return ->(_klass) { true } if requested_generators.empty?
 
         generators = requested_generators.map(&:downcase)
 
