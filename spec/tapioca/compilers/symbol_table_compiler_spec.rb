@@ -1,4 +1,4 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
@@ -6,12 +6,14 @@ require "pathname"
 require "tmpdir"
 require "bundler"
 
-describe("Tapioca::Compilers::SymbolTableCompiler") do
-  subject do
+class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
+  sig {returns(Tapioca::Compilers::SymbolTableCompiler)}
+  def subject
     Tapioca::Compilers::SymbolTableCompiler.new
   end
 
   describe("compile") do
+    sig { params(contents: String).returns(String) }
     def compile(contents)
       files = {
         "file.rb" => contents,

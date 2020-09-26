@@ -1,10 +1,9 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
-require_relative "../../../lib/tapioca/compilers/requires_compiler"
 
-describe(Tapioca::Compilers::RequiresCompiler) do
+class Tapioca::Compilers::RequiresCompilerSpec < Minitest::HooksSpec
   it("it does nothing on an empty project") do
     compiler = Tapioca::Compilers::RequiresCompiler.new('spec/support/require/empty/sorbet/config')
     assert_equal('', compiler.compile)
