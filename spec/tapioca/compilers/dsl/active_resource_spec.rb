@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveResource") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_resource"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveResource.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveResource classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActiveResource constants ") do
@@ -40,14 +26,6 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        parlour.rbi
-      end
-    end
-
     it("generates RBI file for ActiveResource classes with an integer schema field") do
       content = <<~RUBY
         class Post < ActiveResource::Base
@@ -72,7 +50,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for ActiveResource classes with multiple integer schema fields") do
@@ -117,7 +95,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for ActiveResource classes with schema with different types") do
@@ -154,7 +132,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for ActiveResource classes with an unsupported schema type") do
@@ -181,7 +159,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
     it("generates methods for ActiveResource classes including all types in schema field") do
       content = <<~RUBY
@@ -202,7 +180,7 @@ describe("Tapioca::Compilers::Dsl::ActiveResource") do
 
       RUBY
 
-      rbi_output = rbi_for(content)
+      rbi_output = rbi_for(:Post, content)
 
       assert_includes(rbi_output, indented(<<~RUBY, 2))
         sig { params(value: T::Boolean).returns(T::Boolean) }

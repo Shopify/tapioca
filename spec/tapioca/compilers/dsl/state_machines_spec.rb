@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::StateMachines") do
-  before(:each) do
-    require "tapioca/compilers/dsl/state_machines"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::StateMachines.new
-  end
-
+class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no StateMachines classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only StateMachines classes") do
@@ -42,14 +28,6 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Vehicle)
-        parlour.rbi
-      end
-    end
-
     it(" generates an RBI that includes state accessor methods") do
       content = <<~RUBY
         class Vehicle
@@ -143,7 +121,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Vehicle, content))
     end
 
     it("generates an RBI that includes name helpers methods") do
@@ -176,7 +154,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Vehicle, content), expected)
     end
 
     it("generates an RBI with path, event and state helper methods") do
@@ -226,7 +204,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Vehicle, content), expected)
     end
 
     it("generates an RBI with path helper methods only") do
@@ -245,7 +223,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
           def state_paths(*args); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Vehicle, content), expected)
     end
 
     it("generates an RBI with scope methods when state machine defines scopes") do
@@ -285,7 +263,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         def without_states(*states); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Vehicle, content), expected)
     end
 
     it("generates an RBI with action methods when state machine defines an action") do
@@ -319,7 +297,7 @@ describe("Tapioca::Compilers::Dsl::StateMachines") do
         def state_event_transition=(value); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Vehicle, content), expected)
     end
   end
 end

@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_record_enum"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveRecordEnum.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveRecord classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
@@ -41,14 +27,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Conversation)
-        parlour.rbi
-      end
-    end
-
     it("generates RBI file for classes with an enum attribute") do
       content = <<~RUBY
         class Conversation < ActiveRecord::Base
@@ -81,7 +59,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with an enum attribute with string values") do
@@ -116,7 +94,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with an enum attribute with mix value types") do
@@ -157,7 +135,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with multiple enum attributes") do
@@ -208,7 +186,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with multiple enum attributes with mix value types") do
@@ -277,7 +255,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with enum attribute with suffix specified") do
@@ -312,7 +290,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
 
     it("generates RBI file for classes with enum attribute with prefix specified") do
@@ -347,7 +325,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordEnum") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Conversation, content))
     end
   end
 end

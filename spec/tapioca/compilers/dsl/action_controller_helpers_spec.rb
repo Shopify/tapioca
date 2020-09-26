@@ -1,26 +1,12 @@
-# typed: false
 # frozen_string_literal: true
+# typed: strict
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
-  before(:each) do
-    require "tapioca/compilers/dsl/action_controller_helpers"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActionControllerHelpers.new
-  end
-
+class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no  classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActionController subclasses") do
@@ -75,14 +61,6 @@ describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
   end
 
   describe("#decorate") do
-    def rbi_for(contents)
-      with_contents(contents, requires: contents.keys) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, UserController)
-        parlour.rbi
-      end
-    end
-
     it("generates empty helper module when there are no helper methods specified") do
       files = {
         "controller.rb" => <<~RUBY,
@@ -109,7 +87,7 @@ describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:UserController, files))
     end
 
     it("generates helper module and helper proxy class when defining helper using helper_method") do
@@ -153,7 +131,7 @@ describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:UserController, files))
     end
 
     it("generates helper module and helper proxy class when defining helper using block") do
@@ -197,7 +175,7 @@ describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:UserController, files))
     end
 
     it("generates helper module and helper proxy class for defining external helper") do
@@ -237,7 +215,7 @@ describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:UserController, files))
     end
   end
 end

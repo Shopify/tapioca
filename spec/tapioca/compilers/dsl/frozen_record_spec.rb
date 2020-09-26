@@ -1,27 +1,16 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require 'spec_helper'
 
-describe("Tapioca::Compilers::Dsl::FrozenRecord") do
-  before(:each) do
+class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
+  require_before do
     require "rails/railtie"
-    require "tapioca/compilers/dsl/frozen_record"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::FrozenRecord.new
   end
 
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no FrozenRecord classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only FrozenRecord classes") do
@@ -38,19 +27,11 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
   end
 
   describe("#decorate") do
-    def rbi_for(contents)
-      with_contents(contents) do |dir|
-        FrozenRecord::Base.base_path = dir + "lib"
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Student)
-        parlour.rbi
-      end
-    end
-
     it("generates empty RBI file if there are no frozen records") do
       files = {
         "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
+            self.base_path = __dir__
           end
         RUBY
 
@@ -63,13 +44,14 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
 
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:Student, files))
     end
 
     it("generates an RBI file for frozen records") do
       files = {
         "file.rb" => <<~RUBY,
           class Student < FrozenRecord::Base
+            self.base_path = __dir__
           end
         RUBY
 
@@ -110,7 +92,7 @@ describe("Tapioca::Compilers::Dsl::FrozenRecord") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(files))
+      assert_equal(expected, rbi_for(:Student, files))
     end
   end
 end

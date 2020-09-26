@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_support_current_attributes"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActiveSupport::CurrentAttributes subclasses") do
@@ -37,14 +23,6 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Current)
-        parlour.rbi
-      end
-    end
-
     it("generates empty RBI file if there are no current attributes") do
       content = <<~RUBY
         class Current < ActiveSupport::CurrentAttributes
@@ -56,7 +34,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
 
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Current, content))
     end
 
     it("generates method sigs for every current attribute") do
@@ -96,7 +74,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Current, content))
     end
 
     it("only generates a class method definition for non current attribute methods") do
@@ -140,7 +118,7 @@ describe("Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Current, content))
     end
   end
 end

@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_record_scope"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveRecordScope.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveRecord classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
@@ -41,14 +27,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        parlour.rbi
-      end
-    end
-
     it("generates an empty RBI file for ActiveRecord classes with no scope field") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
@@ -61,7 +39,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
 
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for ActiveRecord classes with a scope field") do
@@ -84,7 +62,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for ActiveRecord classes with multiple scope fields") do
@@ -111,7 +89,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordScope") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
   end
 end
