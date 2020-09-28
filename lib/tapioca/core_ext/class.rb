@@ -19,8 +19,10 @@ class Class
   #   C.descendants # => [B, A, D]
   sig { returns(T::Array[Class]) }
   def descendants
-    T.cast(ObjectSpace.each_object(singleton_class).reject do |k|
+    result = ObjectSpace.each_object(singleton_class).reject do |k|
       T.cast(k, Module).singleton_class? || k == self
-    end, T::Array[Class])
+    end
+
+    T.cast(result, T::Array[Class])
   end
 end
