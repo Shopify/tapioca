@@ -99,10 +99,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         class Object < ::BasicObject
           include(::Kernel)
-          include(::JSON::Ext::Generator::GeneratorMethods::Object)
         <% if defined?(Minitest::Expectations) %>
           include(::Minitest::Expectations)
         <% end %>
+          include(::JSON::Ext::Generator::GeneratorMethods::Object)
         <% if defined?(PP::ObjectMixin) %>
           include(::PP::ObjectMixin)
         <% end %>
