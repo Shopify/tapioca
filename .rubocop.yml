@@ -3,6 +3,9 @@
 inherit_gem:
   rubocop-shopify: rubocop.yml
 
+require:
+ - rubocop-sorbet
+
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
@@ -14,3 +17,19 @@ Style/CaseEquality:
 Style/ClassAndModuleChildren:
   Exclude:
   - spec/tapioca/**/*
+
+Sorbet:
+  Enabled: true
+
+Sorbet/FalseSigil:
+  Enabled: false
+
+Sorbet/TrueSigil:
+  Enabled: true
+  Include:
+  - "**/*.rb"
+  Exclude:
+  - "spec/support/gems/baz/lib/baz.rb"
+
+Sorbet/ConstantsFromStrings:
+  Enabled: false
