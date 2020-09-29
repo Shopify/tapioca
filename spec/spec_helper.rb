@@ -10,21 +10,17 @@ require "minitest/reporters"
 
 require "content_helper"
 require "template_helper"
+require "dsl_spec"
 
 Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(color: true))
 Minitest.parallel_executor = Minitest::ForkExecutor.new
 
 module Minitest
   class Test
+    extend T::Sig
     include ContentHelper
     include TemplateHelper
 
     Minitest::Test.make_my_diffs_pretty!
-    def indented(str, indent)
-      str.lines.map! do |line|
-        next line if line.chomp.empty?
-        " " * indent + line
-      end.join
-    end
   end
 end

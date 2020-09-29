@@ -34,3 +34,5 @@ group(:development, :test) do
   gem("activeresource", "~> 5.1", require: false)
   gem("google-protobuf", "~>3.12.0", require: false)
 end
+
+gem "rubocop-sorbet", ">= 0.4.1"

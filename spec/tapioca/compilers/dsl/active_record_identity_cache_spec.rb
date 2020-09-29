@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_record_identity_cache"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveRecordIdentityCache.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveRecordIdentityCacheSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveRecordIdentityCache classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gather only IdentityCache classes") do
@@ -44,14 +30,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        parlour.rbi
-      end
-    end
-
     it("generates RBI file for classes with multiple cache_indexes") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
@@ -78,7 +56,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
@@ -110,7 +88,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for combined cache_indexes") do
@@ -139,7 +117,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for classes with cache_has_manys index") do
@@ -165,7 +143,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for classes with cache_has_one index") do
@@ -191,7 +169,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
@@ -214,7 +192,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
@@ -237,7 +215,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordIdentityCache") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
   end
 end

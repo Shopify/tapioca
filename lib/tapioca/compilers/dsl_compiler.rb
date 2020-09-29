@@ -1,5 +1,5 @@
+# typed: strict
 # frozen_string_literal: true
-# typed: true
 
 require "tapioca/compilers/dsl/base"
 
@@ -30,7 +30,7 @@ module Tapioca
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
-        @error_handler = error_handler || $stderr.method(:puts)
+        @error_handler = T.let(error_handler || $stderr.method(:puts), T.proc.params(error: String).void)
       end
 
       sig { params(blk: T.proc.params(constant: Module, rbi: String).void).void }
@@ -54,9 +54,9 @@ module Tapioca
 
       private
 
-      sig { params(requested_generators: T::Array[String]).returns(Proc) }
+      sig { params(requested_generators: T::Array[String]).returns(T.proc.params(klass: Class).returns(T::Boolean)) }
       def generator_filter(requested_generators)
-        return proc { true } if requested_generators.empty?
+        return ->(_klass) { true } if requested_generators.empty?
 
         generators = requested_generators.map(&:downcase)
 
@@ -70,7 +70,7 @@ module Tapioca
       def gather_generators(requested_generators)
         generator_filter = generator_filter(requested_generators)
 
-        Dsl::Base.descendants.select(&generator_filter).map(&:new)
+        T.cast(Dsl::Base.descendants.select(&generator_filter).map(&:new), T::Enumerable[Dsl::Base])
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }

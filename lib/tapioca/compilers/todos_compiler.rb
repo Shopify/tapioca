@@ -1,5 +1,5 @@
-# frozen_string_literal: true
 # typed: strong
+# frozen_string_literal: true
 
 module Tapioca
   module Compilers

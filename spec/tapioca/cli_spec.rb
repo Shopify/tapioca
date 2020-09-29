@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 require "spec_helper"
@@ -58,7 +59,7 @@ module Contents
   CONTENTS
 end
 
-describe(Tapioca::Cli) do
+class Tapioca::CliSpec < Minitest::HooksSpec
   attr_reader :outdir
   attr_reader :repo_path
 
@@ -97,12 +98,12 @@ describe(Tapioca::Cli) do
   end
 
   around(:each) do |&blk|
-    FileUtils.rm_rf(repo_path / "sorbet")
+    FileUtils.rm_rf(T.unsafe(self).repo_path / "sorbet")
     Dir.mktmpdir do |outdir|
       @outdir = outdir
       super(&blk)
     end
-    FileUtils.rm_rf(repo_path / "sorbet")
+    FileUtils.rm_rf(T.unsafe(self).repo_path / "sorbet")
   end
 
   describe("#version") do
@@ -160,7 +161,7 @@ describe(Tapioca::Cli) do
   end
 
   describe("#todo") do
-    before(:each) do
+    before do
       execute("init")
     end
 
@@ -237,7 +238,7 @@ describe(Tapioca::Cli) do
   end
 
   describe("#require") do
-    before(:each) do
+    before do
       execute("init")
     end
 
@@ -463,7 +464,7 @@ describe(Tapioca::Cli) do
   end
 
   describe("#generate") do
-    before(:each) do
+    before do
       execute("init")
     end
 
@@ -607,7 +608,7 @@ describe(Tapioca::Cli) do
     end
 
     it 'does not crash when the extras gem is loaded' do
-      File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/all"')
+      File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/shell"')
       output = execute("generate", "foo")
 
       assert_includes(output, <<~OUTPUT)
@@ -623,7 +624,7 @@ describe(Tapioca::Cli) do
   end
 
   describe("#sync") do
-    before(:each) do
+    before do
       execute("init")
     end
 

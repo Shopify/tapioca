@@ -1,27 +1,16 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
-  before(:each) do
+class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
+  require_before do
     require "active_record"
-    require "tapioca/compilers/dsl/active_record_typed_store"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveRecordTypedStore.new
   end
 
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveRecordTypedStore classes") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gather only TypedStore classes") do
@@ -47,14 +36,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
   end
 
   describe("#decorate") do
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        parlour.rbi
-      end
-    end
-
     it("generates no definitions if there are no accessors to define") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
@@ -74,7 +55,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
 
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(rbi_for(:Post, content), expected)
     end
 
     it("generates RBI for TypedStore classes with string type") do
@@ -149,7 +130,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with non-nilable types for accessors marked as not null") do
@@ -193,7 +174,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with Date type for attributes with date type") do
@@ -268,7 +249,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
         end
       RUBY
 
-      assert_equal(rbi_for(content), expected)
+      assert_equal(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with DteTime type for attributes with datetime type") do
@@ -291,7 +272,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           def review_date=(review_date); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with Time type for attributes with time type") do
@@ -312,7 +293,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
           def review_time=(review_time); end
         RUBY
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with Decimal type for attributes with decimal type") do
@@ -334,7 +315,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           def rate=(rate); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with T.untyped type for attributes with any type") do
@@ -356,7 +337,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           def kind=(kind); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with Integer type for attributes with integer type") do
@@ -378,7 +359,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           def rate=(rate); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
 
     it("generates methods with Float type for attributes with float type") do
@@ -400,7 +381,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordTypedStore") do
           def rate=(rate); end
       RUBY
 
-      assert_includes(rbi_for(content), expected)
+      assert_includes(rbi_for(:Post, content), expected)
     end
   end
 end

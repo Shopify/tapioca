@@ -1,8 +1,8 @@
+# typed: true
 # frozen_string_literal: true
 #
 # rubocop:disable Layout/ExtraSpacing
 # rubocop:disable Layout/SpaceBeforeFirstArg
-# rubocop:disable Lint/LiteralAsCondition
 # rubocop:disable Lint/ParenthesesAsGroupedExpression
 # rubocop:disable Style/RedundantParentheses/
 require 'a'
@@ -13,7 +13,7 @@ require"e"
 require("f")
 require_relative 'z'
 
-if true
+if Random.rand > 0.5
   require 'g'
   require_relative "z"
 else

@@ -1,26 +1,12 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
-describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
-  before(:each) do
-    require "tapioca/compilers/dsl/active_record_associations"
-  end
-
-  subject do
-    Tapioca::Compilers::Dsl::ActiveRecordAssociations.new
-  end
-
+class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe("#initialize") do
-    def constants_from(content)
-      with_content(content) do
-        subject.processable_constants.map(&:to_s).sort
-      end
-    end
-
     it("gathers no constants if there are no ActiveRecord subclasses") do
-      assert_empty(subject.processable_constants)
+      assert_empty(constants_from(""))
     end
 
     it("gathers only ActiveRecord subclasses") do
@@ -60,14 +46,6 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
       )
     end
 
-    def rbi_for(content)
-      with_content(content) do
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-        subject.decorate(parlour.root, Post)
-        parlour.rbi
-      end
-    end
-
     it("generates empty RBI file if there are no associations") do
       content = <<~RUBY
         class Post < ActiveRecord::Base
@@ -79,7 +57,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
 
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for belongs_to single association") do
@@ -150,7 +128,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for polymorphic belongs_to single association") do
@@ -178,7 +156,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for has_one single association") do
@@ -225,7 +203,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for has_many collection association") do
@@ -259,7 +237,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for has_many :through collection association") do
@@ -320,7 +298,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
 
     it("generates RBI file for has_and_belongs_to_many collection association") do
@@ -355,7 +333,7 @@ describe("Tapioca::Compilers::Dsl::ActiveRecordAssociations") do
         end
       RUBY
 
-      assert_equal(expected, rbi_for(content))
+      assert_equal(expected, rbi_for(:Post, content))
     end
   end
 end
