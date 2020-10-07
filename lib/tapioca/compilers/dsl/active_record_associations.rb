@@ -45,10 +45,10 @@ module Tapioca
       #   sig { params(value: T.nilable(::User)).void }
       #   def author=(value); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #   def build_author(*args, &blk); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
       #   def build_category(*args, &blk); end
       #
       #   sig { returns(T.nilable(::Category)) }
@@ -69,16 +69,16 @@ module Tapioca
       #   sig { params(value: T::Enumerable[::Comment]).void }
       #   def comments=(value); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #   def create_author(*args, &blk); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::User)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #   def create_author!(*args, &blk); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
       #   def create_category(*args, &blk); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.nilable(::Category)) }
+      #   sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
       #   def create_category!(*args, &blk); end
       #
       #   sig { returns(T.nilable(::User)) }
@@ -160,7 +160,7 @@ module Tapioca
                 Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
                 Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
               ],
-              return_type: association_type
+              return_type: association_class
             )
             create_method(
               klass,
@@ -169,7 +169,7 @@ module Tapioca
                 Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
                 Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
               ],
-              return_type: association_type
+              return_type: association_class
             )
             create_method(
               klass,
@@ -178,7 +178,7 @@ module Tapioca
                 Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
                 Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
               ],
-              return_type: association_type
+              return_type: association_class
             )
           end
         end
