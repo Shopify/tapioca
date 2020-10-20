@@ -21,7 +21,7 @@ module Tapioca
           override
             .params(
               root: Parlour::RbiGenerator::Namespace,
-              constant: T.class_of(::GraphQL::Schema::Member)
+              constant: T.class_of(::GraphQL::Schema::InputObject)
             )
             .void
         end
