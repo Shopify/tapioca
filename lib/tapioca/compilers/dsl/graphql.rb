@@ -11,7 +11,6 @@ rescue LoadError
   return
 end
 
-
 module Tapioca
   module Compilers
     module Dsl
