@@ -31,6 +31,7 @@ module Tapioca
             T::Hash[String, ::GraphQL::Schema::Argument]
           )
           return if arguments.empty?
+          puts constant
 
           root.path(constant) do |k|
             arguments.values.each do |argument|
