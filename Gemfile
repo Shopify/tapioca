@@ -33,6 +33,7 @@ group(:development, :test) do
   gem("activemodel-serializers-xml", "~> 1.0", require: false)
   gem("activeresource", "~> 5.1", require: false)
   gem("google-protobuf", "~>3.12.0", require: false)
+  gem("graphql", '~> 1.11.4', require: false)
 end
 
 gem "rubocop-sorbet", ">= 0.4.1"

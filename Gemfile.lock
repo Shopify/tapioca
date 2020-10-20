@@ -89,6 +89,7 @@ GEM
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     google-protobuf (3.12.2)
+    graphql (1.11.5)
     highline (2.0.3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
@@ -215,6 +216,7 @@ DEPENDENCIES
   cityhash!
   frozen_record (>= 0.17)
   google-protobuf (~> 3.12.0)
+  graphql (~> 1.11.4)
   identity_cache (~> 1.0)
   minitest
   minitest-fork_executor
