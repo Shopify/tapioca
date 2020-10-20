@@ -209,7 +209,11 @@ module Tapioca
             method = "const" if prop.fetch(:immutable, false)
             type = prop.fetch(:type_object, "T.untyped")
 
-            indented("#{method} :#{name}, #{type}")
+            if prop.key?(:default)
+              indented("#{method} :#{name}, #{type}, default: T.unsafe(nil)")
+            else
+              indented("#{method} :#{name}, #{type}")
+            end
           end.join("\n")
         end
 

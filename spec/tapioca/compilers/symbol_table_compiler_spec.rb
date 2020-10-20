@@ -1902,7 +1902,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           const :foo, Integer
           prop :bar, String
           const :baz, T::Hash[String, T.untyped]
-          prop :quux, T.untyped
+          prop :quux, T.untyped, default: T.unsafe(nil)
 
           class << self
             def inherited(s); end
@@ -1958,6 +1958,53 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def foo=(_); end
           sig { override.returns(Integer) }
           def something; end
+        end
+      RUBY
+
+      assert_equal(output, source)
+    end
+
+    it("compiles structs with default values") do
+      source = compile(<<~RUBY)
+        class Foo < T::Struct
+          extend T::Sig
+
+          prop :a, T.nilable(Integer), default: nil
+          prop :b, T::Boolean, default: true
+          prop :c, T::Boolean, default: false
+          prop :d, Symbol, default: :Bar
+          prop :e, String, default: "Foo"
+          prop :f, Integer, default: 42
+          prop :g, Float, default: 4.2
+          prop :h, T::Array[String], default: ["1", "2"]
+          prop :i, T::Hash[String, Integer], default: {"1": 1, "2": 2}
+
+          prop :k, Foo, default: Foo.new(a: 10, h: ["a", "b"])
+          prop :l, T::Array[Foo], default: [Foo.new(a: 10, h: ["a", "b"])]
+          prop :m, T::Hash[Foo, Foo], default: {Foo.new(a: 10, h: ["a", "b"]) => Foo.new(a: 10, h: ["a", "b"])}
+          prop :n, Foo, default: T.unsafe(nil)
+        end
+      RUBY
+
+      output = template(<<~RUBY)
+        class Foo < ::T::Struct
+          prop :a, T.nilable(Integer), default: T.unsafe(nil)
+          prop :b, T::Boolean, default: T.unsafe(nil)
+          prop :c, T::Boolean, default: T.unsafe(nil)
+          prop :d, Symbol, default: T.unsafe(nil)
+          prop :e, String, default: T.unsafe(nil)
+          prop :f, Integer, default: T.unsafe(nil)
+          prop :g, Float, default: T.unsafe(nil)
+          prop :h, T::Array[String], default: T.unsafe(nil)
+          prop :i, T::Hash[String, Integer], default: T.unsafe(nil)
+          prop :k, Foo, default: T.unsafe(nil)
+          prop :l, T::Array[Foo], default: T.unsafe(nil)
+          prop :m, T::Hash[Foo, Foo], default: T.unsafe(nil)
+          prop :n, Foo, default: T.unsafe(nil)
+
+          class << self
+            def inherited(s); end
+          end
         end
       RUBY
 
