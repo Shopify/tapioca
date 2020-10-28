@@ -94,7 +94,7 @@ module Tapioca
 
           method_def.parameters.each_with_index.map do |(type, name), i|
             name ||= :_
-            name = name.to_s.gsub(/&|\*/, '_') # avoid incorrect names from `delegate`
+            name = name.to_s.gsub(/&|\*/, "_#{i}") # avoid incorrect names from `delegate`
             case type
             when :req
               ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i])
