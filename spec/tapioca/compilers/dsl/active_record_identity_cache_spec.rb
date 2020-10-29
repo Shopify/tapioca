@@ -27,6 +27,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordIdentityCacheSpec < DslSpec
 
       assert_equal(["CustomPost", "Post"], constants_from(content))
     end
+
+    it("gathers IdentityCache::WithoutPrimaryIndex classes") do
+      content = <<~RUBY
+        class Post < ActiveRecord::Base
+          include IdentityCache::WithoutPrimaryIndex
+        end
+      RUBY
+
+      assert_equal(["Post"], constants_from(content))
+    end
   end
 
   describe("#decorate") do
