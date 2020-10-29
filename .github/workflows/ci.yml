@@ -1,0 +1,33 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  SRB_SKIP_GEM_RBIS: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ 2.4, 2.5, 2.6, 2.7 ]
+    name: Test Ruby ${{ matrix.ruby }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install dependencies
+        run: |
+          gem install bundler -v 1.17.3
+          bundle install --jobs 4 --retry 3
+      - name: Run tests
+        run: bin/test
+      - name: Lint Ruby files
+        run: bin/style --config .rubocop.yml
+      - name: Run type check
+        run: bin/typecheck
+      - name: Verify documentation
+        run: bin/docs
