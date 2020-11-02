@@ -178,7 +178,7 @@ GEM
     smart_properties (1.15.0)
     sorbet (0.5.6025)
       sorbet-static (= 0.5.6025)
-    sorbet-runtime (0.5.5994)
+    sorbet-runtime (0.5.6025)
     sorbet-static (0.5.6025-universal-darwin-14)
     spoom (1.0.4)
       colorize
