@@ -3,6 +3,7 @@
 
 require 'pathname'
 require 'thor'
+require 'tapioca/sorbet_ext/generic_name_patch'
 
 module Tapioca
   class Generator < ::Thor::Shell::Color

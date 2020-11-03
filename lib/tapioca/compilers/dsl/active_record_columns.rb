@@ -371,7 +371,6 @@ module Tapioca
           return unless signature
 
           return_type = signature.return_type
-          return if T::Types::Simple === return_type && T::Generic === return_type.raw_type
           return if return_type == T::Private::Types::Void || return_type == T::Private::Types::NotTyped
 
           return_type.to_s
@@ -380,12 +379,7 @@ module Tapioca
         sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_arg_type_of_method(column_type, method)
           signature = T::Private::Methods.signature_for_method(column_type.method(method))
-          return unless signature
-
-          arg_type = signature.arg_types.first.last
-          return if T::Types::Simple === arg_type && T::Generic === arg_type.raw_type
-
-          arg_type.to_s
+          signature.arg_types.first.last.to_s if signature
         end
 
         sig { params(type: String).returns(String) }
