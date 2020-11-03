@@ -1930,7 +1930,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def baz(a); end
           sig { params(a: Integer, b: String).void }
           def foo(a, b:); end
-          sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.params().void).void }
+          sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.void).void }
           def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
 
           class << self
