@@ -7,40 +7,52 @@ module T
   module Generic
     module TypeStoragePatch
       def [](*types)
-        instances = T::Private::Abstract::Data.set_default(self, "generic_instances", {})
-        instance_key = types.join(", ")
-        name = "#{Module.instance_method(:name).bind(self).call}[#{instance_key}]"
+        name = __type_name(types)
 
-        return instances[instance_key] if instances.key?(instance_key)
-
-        T.unsafe(self).singleton_class.prepend(Module.new { T.unsafe(self).define_method(:name) { name } })
-        instances[instance_key] = self
+        __instances[name] ||= __create_typed_instance(name)
       end
 
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        super.tap do |type_member|
-          type_member.singleton_class.instance_exec do
-            T.unsafe(self).define_method(:fixed) { fixed }
-            T.unsafe(self).define_method(:lower) { lower unless lower == T.untyped }
-            T.unsafe(self).define_method(:upper) { upper unless upper == BasicObject }
-          end
-          T::Private::Abstract::Data.set_default(self, "type_variables", []) << type_member
-        end
+        __store_type_variable(super, fixed, lower, upper)
       end
 
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        super.tap do |type_template|
-          type_template.singleton_class.instance_exec do
-            T.unsafe(self).define_method(:fixed) { fixed }
-            T.unsafe(self).define_method(:lower) { lower unless lower == T.untyped }
-            T.unsafe(self).define_method(:upper) { upper unless upper == BasicObject }
-          end
-          T::Private::Abstract::Data.set_default(self, "type_variables", []) << type_template
-        end
+        __store_type_variable(super, fixed, lower, upper)
       end
 
       def __type_variables
-        T::Private::Abstract::Data.get(self, "type_variables")
+        T::Private::Abstract::Data.set_default(self, "type_variables", [])
+      end
+
+      private
+
+      def __instances
+        T::Private::Abstract::Data.set_default(self, "generic_instances", {})
+      end
+
+      def __type_name(types)
+        type_list = types.join(", ")
+        name = Module.instance_method(:name).bind(self).call
+
+        "#{name}[#{type_list}]"
+      end
+
+      def __create_typed_instance(name)
+        T.unsafe(self).clone.tap do |me|
+          me.singleton_class.instance_exec do
+            T.unsafe(self).send(:define_method, :name) { name }
+          end
+        end
+      end
+
+      def __store_type_variable(type_variable, fixed, lower, upper)
+        type_variable.singleton_class.instance_exec do
+          T.unsafe(self).send(:define_method, :fixed) { fixed }
+          T.unsafe(self).send(:define_method, :lower) { lower unless lower == T.untyped }
+          T.unsafe(self).send(:define_method, :upper) { upper unless upper == BasicObject }
+        end
+        __type_variables << type_variable
+        type_variable
       end
     end
 
