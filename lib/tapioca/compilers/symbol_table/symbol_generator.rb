@@ -142,9 +142,11 @@ module Tapioca
         def compile_object(name, value)
           return if symbol_ignored?(name)
           klass = class_of(value)
-          return if name_of(klass)&.start_with?("T::Types::", "T::Private::")
+          klass_name = name_of(klass)
 
-          type_name = public_module?(klass) && name_of(klass) || "T.untyped"
+          return if klass_name&.start_with?("T::Types::", "T::Private::")
+
+          type_name = public_module?(klass) && klass_name || "T.untyped"
           indented("#{name} = T.let(T.unsafe(nil), #{type_name})")
         end
 
@@ -164,8 +166,11 @@ module Tapioca
 
           return if symbol_ignored?(name) && body.nil?
 
+          type_variables = compile_type_variables(name, constant)
+
           [
             header,
+            type_variables,
             body,
             indented("end"),
             compile_subconstants(name, constant),
@@ -253,6 +258,44 @@ module Tapioca
           return "" if output.empty?
 
           "\n" + output.join("\n\n")
+        end
+
+        sig { params(value: T.untyped).returns(String) }
+        def compile_type_variable_args(value)
+          parts = []
+          parts << ":#{value.variance}" unless value.variance == :invariant
+          parts << "fixed: #{value.fixed}" if value.fixed
+          parts << "lower: #{value.lower}" if value.lower
+          parts << "upper: #{value.upper}" if value.upper
+
+          parts.join(", ")
+        end
+
+        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
+        def compile_type_variables(name, constant)
+          with_indentation do
+            type_variables = constant.respond_to?(:__type_variables) && T.unsafe(constant).__type_variables
+            return unless type_variables
+
+            type_constants_with_index = constants_of(constant).sort.uniq.map do |constant_name|
+              symbol = "#{name}::#{constant_name}"
+              subconstant = resolve_constant(symbol)
+              index = type_variables.index(subconstant)
+              [constant_name, subconstant, index] if index
+            end.compact
+
+            output = type_constants_with_index.sort_by(&:last).map do |constant_name, value|
+              if T::Types::TypeMember === value
+                indented("#{constant_name} = type_member(#{compile_type_variable_args(value)})")
+              elsif T::Types::TypeTemplate === value
+                indented("#{constant_name} = type_template(#{compile_type_variable_args(value)})")
+              end
+            end
+
+            return if output.empty?
+
+            output.join("\n") + "\n"
+          end
         end
 
         sig { params(constant: Class).returns(String) }
