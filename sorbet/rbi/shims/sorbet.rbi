@@ -4,6 +4,7 @@ module T::Private
   module Abstract
     class Data
       def self.get(mod, key); end
+      def self.set_default(mod, key, value); end
     end
   end
 
