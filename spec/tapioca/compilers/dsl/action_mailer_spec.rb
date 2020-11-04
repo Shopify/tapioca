@@ -105,6 +105,33 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierMailer, content))
     end
 
+    it("generates correct RBI file for mailer with delegated methods") do
+      content = template(<<~RUBY)
+        class NotifierMailer < ActionMailer::Base
+          delegate :notify_customer, to: :foo
+
+        <% if ruby_version(">= 2.7.0") %>
+          module_eval("def notify_admin(...); end")
+        <% end %>
+        end
+      RUBY
+
+      expected = template(<<~RUBY)
+        # typed: strong
+        class NotifierMailer
+        <% if ruby_version(">= 2.7.0") %>
+          sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_admin(*_arg0, &_arg1); end
+
+        <% end %>
+          sig { params(args: T.untyped, block: T.untyped).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_customer(*args, &block); end
+        end
+      RUBY
+
+      assert_equal(expected, rbi_for(:NotifierMailer, content))
+    end
+
     it("does not generate RBI for methods defined in abstract classes") do
       content = <<~RUBY
         class AbstractMailer < ActionMailer::Base

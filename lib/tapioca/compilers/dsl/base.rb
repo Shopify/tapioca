@@ -92,24 +92,28 @@ module Tapioca
           method_def = signature.nil? ? method_def : signature.method
           method_types = parameters_types_from_signature(method_def, signature)
 
-          method_def.parameters.each_with_index.map do |(type, name), i|
-            name ||= :_
-            name = name.to_s.gsub(/&|\*/, "_#{i}") # avoid incorrect names from `delegate`
+          method_def.parameters.each_with_index.map do |(type, name), index|
+            fallback_arg_name = "_arg#{index}"
+
+            name ||= fallback_arg_name
+            name = name.to_s.gsub(/&|\*/, fallback_arg_name) # avoid incorrect names from `delegate`
+            method_type = method_types[index]
+
             case type
             when :req
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i])
+              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type)
             when :opt
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_types[i], default: 'T.unsafe(nil)')
+              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type, default: 'T.unsafe(nil)')
             when :rest
-              ::Parlour::RbiGenerator::Parameter.new("*#{name}", type: method_types[i])
+              ::Parlour::RbiGenerator::Parameter.new("*#{name}", type: method_type)
             when :keyreq
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_types[i])
+              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type)
             when :key
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_types[i], default: 'T.unsafe(nil)')
+              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type, default: 'T.unsafe(nil)')
             when :keyrest
-              ::Parlour::RbiGenerator::Parameter.new("**#{name}", type: method_types[i])
+              ::Parlour::RbiGenerator::Parameter.new("**#{name}", type: method_type)
             when :block
-              ::Parlour::RbiGenerator::Parameter.new("&#{name}", type: method_types[i])
+              ::Parlour::RbiGenerator::Parameter.new("&#{name}", type: method_type)
             else
               raise "Unknown type `#{type}`."
             end

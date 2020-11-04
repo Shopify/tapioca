@@ -701,12 +701,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def foo=(_); end
 
           class << self
-            def [](*_); end
+            def [](*_arg0); end
         <% if ruby_version(">= 2.5.0") %>
             def inspect; end
         <% end %>
             def members; end
-            def new(*_); end
+            def new(*_arg0); end
           end
         end
 
@@ -715,12 +715,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def foo=(_); end
 
           class << self
-            def [](*_); end
+            def [](*_arg0); end
         <% if ruby_version(">= 2.5.0") %>
             def inspect; end
         <% end %>
             def members; end
-            def new(*_); end
+            def new(*_arg0); end
           end
         end
 
@@ -886,8 +886,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def a; end
           def b; end
           def bar; end
-          def bar=(_); end
-          def baz=(_); end
+          def bar=(_arg0); end
+          def baz=(_arg0); end
           def foo; end
         end
       RUBY
@@ -975,7 +975,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RUBY)
         class Toto
-          def toto(a, *_, **_); end
+          def toto(a, *_arg1, **_arg2); end
         end
       RUBY
 
@@ -1790,7 +1790,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, source)
     end
 
-    it("sanitize parameter names creating through meta-programming") do
+    it("sanitize parameter names created through meta-programming") do
       source = compile(template(<<~RUBY))
         class Foo
         <% if ruby_version(">= 2.7.0") %>
@@ -1802,7 +1802,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       output = template(<<~RUBY)
         class Foo
         <% if ruby_version(">= 2.7.0") %>
-          def foo(*_, &_); end
+          def foo(*_arg0, &_arg1); end
         <% end %>
         end
       RUBY
@@ -1955,7 +1955,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def baz=(baz); end
           sig { returns(T::Array[Integer]) }
           def foo; end
-          def foo=(_); end
+          def foo=(_arg0); end
           sig { override.returns(Integer) }
           def something; end
         end
