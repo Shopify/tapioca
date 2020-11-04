@@ -12,7 +12,7 @@ require "content_helper"
 require "template_helper"
 require "dsl_spec"
 
-Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(color: true))
+Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))
 Minitest.parallel_executor = Minitest::ForkExecutor.new
 
 module Minitest
