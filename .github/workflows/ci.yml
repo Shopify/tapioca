@@ -15,6 +15,11 @@ jobs:
     name: Test Ruby ${{ matrix.ruby }}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -22,6 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           gem install bundler -v 1.17.3
+          bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Run tests
         run: bin/test

@@ -7,5 +7,4 @@
 /spec/examples.txt
 /spec/reports/
 /tmp/
-
-.rubocop-https--*
+/vendor/
