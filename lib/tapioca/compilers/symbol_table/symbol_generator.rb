@@ -517,7 +517,9 @@ module Tapioca
 
           parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
 
-          sanitized_parameters = parameters.map do |type, name|
+          sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
+            fallback_arg_name = "_arg#{index}"
+
             unless name
               # For attr_writer methods, Sorbet signatures have the name
               # of the method (without the trailing = sign) as the name of
@@ -537,12 +539,12 @@ module Tapioca
               name = if writer_method_with_sig
                 T.must(method_name[0...-1]).to_sym
               else
-                :_
+                fallback_arg_name
               end
             end
 
             # Sanitize param names
-            name = name.to_s.gsub(/[^a-zA-Z0-9_]/, '_')
+            name = name.to_s.gsub(/[^a-zA-Z0-9_]/, fallback_arg_name)
 
             [type, name]
           end
