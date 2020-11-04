@@ -34,7 +34,8 @@ module Tapioca
           path = (Pathname.new(@sorbet_path) / "../.." / path).cleanpath
           if path.directory?
             Dir.glob("#{path}/**/*.rb", File::FNM_EXTGLOB).reject do |file|
-              file_ignored_by_sorbet?(config, file)
+              relative_file_path = Pathname.new(file).relative_path_from(path)
+              file_ignored_by_sorbet?(config, relative_file_path)
             end
           else
             [path.to_s]
@@ -49,11 +50,38 @@ module Tapioca
         end.compact
       end
 
-      sig { params(config: Spoom::Sorbet::Config, file: String).returns(T::Boolean) }
-      def file_ignored_by_sorbet?(config, file)
-        config.ignore.any? do |path|
-          Regexp.new(Regexp.escape(path)) =~ file
+      sig { params(config: Spoom::Sorbet::Config, file_path: Pathname).returns(T::Boolean) }
+      def file_ignored_by_sorbet?(config, file_path)
+        file_path_parts = path_parts(file_path)
+
+        config.ignore.any? do |ignore|
+          # Sorbet --ignore matching method:
+          # ---
+          # Ignores input files that contain the given
+          # string in their paths (relative to the input
+          # path passed to Sorbet).
+          #
+          # Strings beginning with / match against the
+          # prefix of these relative paths; others are
+          # substring matchs.
+
+          # Matches must be against whole folder and file
+          # names, so `foo` matches `/foo/bar.rb` and
+          # `/bar/foo/baz.rb` but not `/foo.rb` or
+          # `/foo2/bar.rb`.
+          ignore_parts = path_parts(Pathname.new(ignore))
+          file_path_part_sequences = file_path_parts.each_cons(ignore_parts.size)
+          # if ignore string begins with /, we only want the first sequence to match
+          file_path_part_sequences = [file_path_part_sequences.first].to_enum if ignore.start_with?("/")
+
+          # we need to match whole segments
+          file_path_part_sequences.include?(ignore_parts)
         end
+      end
+
+      sig { params(path: Pathname).returns(T::Array[String]) }
+      def path_parts(path)
+        T.unsafe(path).descend.map { |part| part.basename.to_s }
       end
 
       sig { params(files: T::Enumerable[String], name: String).returns(T::Boolean) }
