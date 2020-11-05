@@ -20,15 +20,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Install dependencies
-        run: |
-          gem install bundler -v 1.17.3
-          bundle install --jobs 4 --retry 3
-      - name: Run tests
-        run: bin/test
-      - name: Lint Ruby files
-        run: bin/style --config .rubocop.yml
       - name: Run type check
         run: bin/typecheck
+      - name: Lint Ruby files
+        run: bin/style --config .rubocop.yml
       - name: Verify documentation
         run: bin/docs
+      - name: Run tests
+        run: bin/test

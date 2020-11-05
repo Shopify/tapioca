@@ -1,6 +1,6 @@
 # Tapioca
 
-[![Build Status](https://travis-ci.org/Shopify/tapioca.svg?branch=master)](https://travis-ci.org/Shopify/tapioca)
+![Build Status](https://github.com/Shopify/tapioca/workflows/CI/badge.svg)
 
 Tapioca is a library used to generate RBI (Ruby interface) files for use with [Sorbet](https://sorbet.org). RBI files provide the structure (classes, modules, methods, parameters) of the gem/library to Sorbet to assist with typechecking.
 
