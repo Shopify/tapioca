@@ -231,10 +231,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         class String
           include(::Comparable)
-          include(::Colorize::InstanceMethods)
           include(::JSON::Ext::Generator::GeneratorMethods::String)
-          extend(::Colorize::ClassMethods)
+          include(::Colorize::InstanceMethods)
           extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
+          extend(::Colorize::ClassMethods)
 
           def to_foo(base = T.unsafe(nil)); end
         end
