@@ -98,11 +98,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Object < ::BasicObject
+          include(::JSON::Ext::Generator::GeneratorMethods::Object)
           include(::Kernel)
         <% if defined?(Minitest::Expectations) %>
           include(::Minitest::Expectations)
         <% end %>
-          include(::JSON::Ext::Generator::GeneratorMethods::Object)
         <% if defined?(PP::ObjectMixin) %>
           include(::PP::ObjectMixin)
         <% end %>
@@ -130,9 +130,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           include ModuleB
           include ModuleC
 
-          extend ModuleC
-          extend ModuleB
           extend ModuleA
+          extend ModuleB
+          extend ModuleC
         end
       RUBY
 
@@ -141,9 +141,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           include(::ModuleA)
           include(::ModuleB)
           include(::ModuleC)
-          extend(::ModuleC)
-          extend(::ModuleB)
           extend(::ModuleA)
+          extend(::ModuleB)
+          extend(::ModuleC)
         end
 
         module ModuleA
@@ -230,8 +230,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class String
-          include(::Comparable)
           include(::Colorize::InstanceMethods)
+          include(::Comparable)
           include(::JSON::Ext::Generator::GeneratorMethods::String)
           extend(::Colorize::ClassMethods)
           extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
@@ -751,8 +751,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RUBY)
         class Bar
-          include(::Foo)
           include(::Baz)
+          include(::Foo)
 
           class << self
             def abc; end

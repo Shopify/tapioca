@@ -329,7 +329,7 @@ module Tapioca
               # properly for method resolution, so we generate an
               # include statement instead
               indented("include(#{qualified_name_of(mod)})")
-            end
+            end.sort
 
           includes = include
             .reverse
@@ -337,7 +337,7 @@ module Tapioca
             .select(&method(:public_module?))
             .map do |mod|
               indented("include(#{qualified_name_of(mod)})")
-            end
+            end.sort
 
           extends = extend
             .reverse
@@ -345,7 +345,7 @@ module Tapioca
             .select(&method(:public_module?))
             .map do |mod|
               indented("extend(#{qualified_name_of(mod)})")
-            end
+            end.sort
 
           (prepends + includes + extends).join("\n")
         end
