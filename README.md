@@ -55,6 +55,8 @@ and do not forget to execute `tapioca` using `bundler`:
 ```shell
 $ bundle exec tapioca
 Commands:
+  tapioca --version, -v      # show version
+  tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca generate [gem...]  # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
@@ -63,12 +65,12 @@ Commands:
   tapioca todo               # generate the list of unresolved constants
 
 Options:
-  --pre, -b, [--prerequire=file]              # A file to be required before Bundler.require is called
-  --post, -a, [--postrequire=file]            # A file to be required after Bundler.require is called
-  --out, -o, [--outdir=directory]             # The output directory for generated RBI files
-                                              # Default: sorbet/rbi/gems
-  --cmd, -c, [--generate-command=command]     # The command to run to regenerate RBI files
-  --typed, -t, [--typed-overrides=gem:level]  # Overrides for typed sigils for generated gem RBIs
+  --pre, -b, [--prerequire=file]                              # A file to be required before Bundler.require is called
+  --post, -a, [--postrequire=file]                            # A file to be required after Bundler.require is called
+  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]                     # The command to run to regenerate RBI files
+  -x, [--exclude=gem [gem ...]]                               # Excludes the given gem(s) from RBI generation
+  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Overrides for typed sigils for generated gem RBIs
 ```
 
 ## Usage
