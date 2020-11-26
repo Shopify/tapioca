@@ -38,24 +38,24 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active!; end
-
-          sig { returns(T::Boolean) }
-          def active?; end
-
-          sig { void }
-          def archived!; end
-
-          sig { returns(T::Boolean) }
-          def archived?; end
         end
       RUBY
 
@@ -73,24 +73,24 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), String]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active!; end
-
-          sig { returns(T::Boolean) }
-          def active?; end
-
-          sig { void }
-          def archived!; end
-
-          sig { returns(T::Boolean) }
-          def archived?; end
         end
       RUBY
 
@@ -108,30 +108,30 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+
+            sig { void }
+            def inactive!; end
+
+            sig { returns(T::Boolean) }
+            def inactive?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active!; end
-
-          sig { returns(T::Boolean) }
-          def active?; end
-
-          sig { void }
-          def archived!; end
-
-          sig { returns(T::Boolean) }
-          def archived?; end
-
-          sig { void }
-          def inactive!; end
-
-          sig { returns(T::Boolean) }
-          def inactive?; end
         end
       RUBY
 
@@ -150,39 +150,39 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+
+            sig { void }
+            def off!; end
+
+            sig { returns(T::Boolean) }
+            def off?; end
+
+            sig { void }
+            def on!; end
+
+            sig { returns(T::Boolean) }
+            def on?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.comments_statuses; end
 
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active!; end
-
-          sig { returns(T::Boolean) }
-          def active?; end
-
-          sig { void }
-          def archived!; end
-
-          sig { returns(T::Boolean) }
-          def archived?; end
-
-          sig { void }
-          def off!; end
-
-          sig { returns(T::Boolean) }
-          def off?; end
-
-          sig { void }
-          def on!; end
-
-          sig { returns(T::Boolean) }
-          def on?; end
         end
       RUBY
 
@@ -201,57 +201,57 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+
+            sig { void }
+            def inactive!; end
+
+            sig { returns(T::Boolean) }
+            def inactive?; end
+
+            sig { void }
+            def off!; end
+
+            sig { returns(T::Boolean) }
+            def off?; end
+
+            sig { void }
+            def on!; end
+
+            sig { returns(T::Boolean) }
+            def on?; end
+
+            sig { void }
+            def ongoing!; end
+
+            sig { returns(T::Boolean) }
+            def ongoing?; end
+
+            sig { void }
+            def topic!; end
+
+            sig { returns(T::Boolean) }
+            def topic?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String, Array)]) }
           def self.comments_statuses; end
 
           sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active!; end
-
-          sig { returns(T::Boolean) }
-          def active?; end
-
-          sig { void }
-          def archived!; end
-
-          sig { returns(T::Boolean) }
-          def archived?; end
-
-          sig { void }
-          def inactive!; end
-
-          sig { returns(T::Boolean) }
-          def inactive?; end
-
-          sig { void }
-          def off!; end
-
-          sig { returns(T::Boolean) }
-          def off?; end
-
-          sig { void }
-          def on!; end
-
-          sig { returns(T::Boolean) }
-          def on?; end
-
-          sig { void }
-          def ongoing!; end
-
-          sig { returns(T::Boolean) }
-          def ongoing?; end
-
-          sig { void }
-          def topic!; end
-
-          sig { returns(T::Boolean) }
-          def topic?; end
         end
       RUBY
 
@@ -269,24 +269,24 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active_status!; end
+
+            sig { returns(T::Boolean) }
+            def active_status?; end
+
+            sig { void }
+            def archived_status!; end
+
+            sig { returns(T::Boolean) }
+            def archived_status?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def active_status!; end
-
-          sig { returns(T::Boolean) }
-          def active_status?; end
-
-          sig { void }
-          def archived_status!; end
-
-          sig { returns(T::Boolean) }
-          def archived_status?; end
         end
       RUBY
 
@@ -304,24 +304,24 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Conversation
-          include Conversation::EnumMethodsModule
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def comments_active!; end
+
+            sig { returns(T::Boolean) }
+            def comments_active?; end
+
+            sig { void }
+            def comments_archived!; end
+
+            sig { returns(T::Boolean) }
+            def comments_archived?; end
+          end
 
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
-        end
-
-        module Conversation::EnumMethodsModule
-          sig { void }
-          def comments_active!; end
-
-          sig { returns(T::Boolean) }
-          def comments_active?; end
-
-          sig { void }
-          def comments_archived!; end
-
-          sig { returns(T::Boolean) }
-          def comments_archived?; end
         end
       RUBY
 

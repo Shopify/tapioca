@@ -31,26 +31,30 @@ module Tapioca
       # # post.rbi
       # # typed: true
       # class Post
-      #   sig { void }
-      #   def all_title!; end
+      #   include EnumMethodsModule
       #
-      #   sig { returns(T::Boolean) }
-      #   def all_title?; end
+      #   module EnumMethodsModule
+      #     sig { void }
+      #     def all_title!; end
       #
-      #   sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-      #   def self.title_types; end
+      #     sig { returns(T::Boolean) }
+      #     def all_title?; end
       #
-      #   sig { void }
-      #   def book_title!; end
+      #     sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+      #     def self.title_types; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def book_title?; end
+      #     sig { void }
+      #     def book_title!; end
       #
-      #   sig { void }
-      #   def web_title!; end
+      #     sig { returns(T::Boolean) }
+      #     def book_title?; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def web_title?; end
+      #     sig { void }
+      #     def web_title!; end
+      #
+      #     sig { returns(T::Boolean) }
+      #     def web_title?; end
+      #   end
       # end
       # ~~~
       class ActiveRecordEnum < Base
@@ -60,17 +64,18 @@ module Tapioca
         def decorate(root, constant)
           return if constant.defined_enums.empty?
 
-          module_name = "#{constant}::EnumMethodsModule"
-          root.create_module(module_name) do |mod|
-            generate_instance_methods(constant, mod)
-          end
+          root.path(constant) do |model|
+            module_name = "EnumMethodsModule"
 
-          root.path(constant) do |k|
-            k.create_include(module_name)
+            model.create_module(module_name) do |mod|
+              generate_instance_methods(constant, mod)
+            end
+
+            model.create_include(module_name)
 
             constant.defined_enums.each do |name, enum_map|
               type = type_for_enum(enum_map)
-              create_method(k, name.pluralize, class_method: true, return_type: type)
+              create_method(model, name.pluralize, class_method: true, return_type: type)
             end
           end
         end
