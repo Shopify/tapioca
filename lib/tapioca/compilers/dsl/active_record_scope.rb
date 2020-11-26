@@ -31,15 +31,15 @@ module Tapioca
       # # post.rbi
       # # typed: true
       # class Post
-      #   extend Post::GeneratedRelationMethods
-      # end
+      #   extend GeneratedRelationMethods
       #
-      # module Post::GeneratedRelationMethods
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-      #   def private_kind(*args, &blk); end
+      #   module GeneratedRelationMethods
+      #     sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+      #     def private_kind(*args, &blk); end
       #
-      #   sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-      #   def public_kind(*args, &blk); end
+      #     sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+      #     def public_kind(*args, &blk); end
+      #   end
       # end
       # ~~~
       class ActiveRecordScope < Base
@@ -55,15 +55,16 @@ module Tapioca
           scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
           return if scope_method_names.empty?
 
-          module_name = "#{constant}::GeneratedRelationMethods"
-          root.create_module(module_name) do |mod|
-            scope_method_names.each do |scope_method|
-              generate_scope_method(scope_method, mod)
-            end
-          end
+          root.path(constant) do |model|
+            module_name = "GeneratedRelationMethods"
 
-          root.path(constant) do |k|
-            k.create_extend(module_name)
+            model.create_module(module_name) do |mod|
+              scope_method_names.each do |scope_method|
+                generate_scope_method(scope_method, mod)
+              end
+            end
+
+            model.create_extend(module_name)
           end
         end
 
