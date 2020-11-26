@@ -83,25 +83,25 @@ module Tapioca
           cache_indexes = constant.send(:cache_indexes)
           return if caches.empty? && cache_indexes.empty?
 
-          root.path(constant) do |k|
+          root.path(constant) do |model|
             cache_manys = constant.send(:cached_has_manys)
             cache_ones = constant.send(:cached_has_ones)
             cache_belongs = constant.send(:cached_belongs_tos)
 
             cache_indexes.each do |field|
-              create_fetch_by_methods(field, k, constant)
+              create_fetch_by_methods(field, model, constant)
             end
 
             cache_manys.values.each do |field|
-              create_fetch_field_methods(field, k, returns_collection: true)
+              create_fetch_field_methods(field, model, returns_collection: true)
             end
 
             cache_ones.values.each do |field|
-              create_fetch_field_methods(field, k, returns_collection: false)
+              create_fetch_field_methods(field, model, returns_collection: false)
             end
 
             cache_belongs.values.each do |field|
-              create_fetch_field_methods(field, k, returns_collection: false)
+              create_fetch_field_methods(field, model, returns_collection: false)
             end
           end
         end
