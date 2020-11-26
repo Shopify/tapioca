@@ -49,22 +49,22 @@ module Tapioca
       # # user_controller.rbi
       # # typed: strong
       # class UserController
-      #   sig { returns(UserController::HelperProxy) }
+      #   module HelperMethods
+      #     include MyHelper
+      #
+      #     sig { params(user: T.untyped).returns(T.untyped) }
+      #     def age(user); end
+      #
+      #     sig { returns(T.untyped) }
+      #     def current_user_name; end
+      #   end
+      #
+      #   class HelperProxy < ::ActionView::Base
+      #     include HelperMethods
+      #   end
+      #
+      #   sig { returns(HelperProxy) }
       #   def helpers; end
-      # end
-      #
-      # module UserController::HelperMethods
-      #    include MyHelper
-      #
-      #    sig { params(user: T.untyped).returns(T.untyped) }
-      #    def age(user); end
-      #
-      #    sig { returns(T.untyped) }
-      #    def current_user_name; end
-      #  end
-      #
-      # class UserController::HelperProxy < ::ActionView::Base
-      #   include UserController::HelperMethods
       # end
       # ~~~
       class ActionControllerHelpers < Base
@@ -76,36 +76,36 @@ module Tapioca
             .void
         end
         def decorate(root, constant)
-          helper_proxy_name = "#{constant}::HelperProxy"
-          helper_methods_name = "#{constant}::HelperMethods"
+          helper_proxy_name = "HelperProxy"
+          helper_methods_name = "HelperMethods"
           proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
-
-          # Create helper method module
-          root.create_module(helper_methods_name) do |helper_methods|
-            helpers_module = constant._helpers
-
-            gather_includes(helpers_module).each do |ancestor|
-              helper_methods.create_include(ancestor)
-            end
-
-            helpers_module.instance_methods(false).each do |method_name|
-              method = if proxied_helper_methods.include?(method_name)
-                constant.instance_method(method_name)
-              else
-                helpers_module.instance_method(method_name)
-              end
-              create_method_from_def(helper_methods, method)
-            end
-          end
-
-          # Create helper proxy class
-          root.create_class(helper_proxy_name, superclass: "::ActionView::Base") do |proxy|
-            proxy.create_include(helper_methods_name)
-          end
 
           # Define the helpers method
           root.path(constant) do |controller|
             create_method(controller, 'helpers', return_type: helper_proxy_name)
+
+            # Create helper method module
+            controller.create_module(helper_methods_name) do |helper_methods|
+              helpers_module = constant._helpers
+
+              gather_includes(helpers_module).each do |ancestor|
+                helper_methods.create_include(ancestor)
+              end
+
+              helpers_module.instance_methods(false).each do |method_name|
+                method = if proxied_helper_methods.include?(method_name)
+                  constant.instance_method(method_name)
+                else
+                  helpers_module.instance_method(method_name)
+                end
+                create_method_from_def(helper_methods, method)
+              end
+            end
+
+            # Create helper proxy class
+            controller.create_class(helper_proxy_name, superclass: "::ActionView::Base") do |proxy|
+              proxy.create_include(helper_methods_name)
+            end
           end
         end
 
