@@ -37,21 +37,21 @@ this generator will produce an RBI file `user_controller.rbi` with the following
 # user_controller.rbi
 # typed: strong
 class UserController
-  sig { returns(UserController::HelperProxy) }
+  module HelperMethods
+    include MyHelper
+
+    sig { params(user: T.untyped).returns(T.untyped) }
+    def age(user); end
+
+    sig { returns(T.untyped) }
+    def current_user_name; end
+  end
+
+  class HelperProxy < ::ActionView::Base
+    include HelperMethods
+  end
+
+  sig { returns(HelperProxy) }
   def helpers; end
-end
-
-module UserController::HelperMethods
-   include MyHelper
-
-   sig { params(user: T.untyped).returns(T.untyped) }
-   def age(user); end
-
-   sig { returns(T.untyped) }
-   def current_user_name; end
- end
-
-class UserController::HelperProxy < ::ActionView::Base
-  include UserController::HelperMethods
 end
 ~~~

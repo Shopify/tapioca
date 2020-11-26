@@ -32,74 +32,74 @@ this generator will produce the RBI file `vehicle.rbi` with the following conten
 # vehicle.rbi
 # typed: true
 class Vehicle
-  include Vehicle::StateMachineInstanceHelperModule
-  extend Vehicle::StateMachineClassHelperModule
-end
+  include StateMachineInstanceHelperModule
+  extend StateMachineClassHelperModule
 
-module Vehicle::StateMachineClassHelperModule
-  sig { params(event: T.any(String, Symbol)).returns(String) }
-  def human_alarm_state_event_name(event); end
+  module StateMachineClassHelperModule
+    sig { params(event: T.any(String, Symbol)).returns(String) }
+    def human_alarm_state_event_name(event); end
 
-  sig { params(state: T.any(String, Symbol)).returns(String) }
-  def human_alarm_state_name(state); end
-end
+    sig { params(state: T.any(String, Symbol)).returns(String) }
+    def human_alarm_state_name(state); end
+  end
 
-module Vehicle::StateMachineInstanceHelperModule
-  sig { returns(T::Boolean) }
-  def alarm_active?; end
+  module StateMachineInstanceHelperModule
+    sig { returns(T::Boolean) }
+    def alarm_active?; end
 
-  sig { returns(T::Boolean) }
-  def alarm_off?; end
+    sig { returns(T::Boolean) }
+    def alarm_off?; end
 
-  sig { returns(Integer) }
-  def alarm_state; end
+    sig { returns(Integer) }
+    def alarm_state; end
 
-  sig { params(value: Integer).returns(Integer) }
-  def alarm_state=(value); end
+    sig { params(value: Integer).returns(Integer) }
+    def alarm_state=(value); end
 
-  sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
-  def alarm_state?(state); end
+    sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
+    def alarm_state?(state); end
 
-  sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
-  def alarm_state_events(*args); end
+    sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
+    def alarm_state_events(*args); end
 
-  sig { returns(T.any(String, Symbol)) }
-  def alarm_state_name; end
+    sig { returns(T.any(String, Symbol)) }
+    def alarm_state_name; end
 
-  sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-  def alarm_state_paths(*args); end
+    sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+    def alarm_state_paths(*args); end
 
-  sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-  def alarm_state_transitions(*args); end
+    sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+    def alarm_state_transitions(*args); end
 
-  sig { returns(T::Boolean) }
-  def can_disable_alarm?; end
+    sig { returns(T::Boolean) }
+    def can_disable_alarm?; end
 
-  sig { returns(T::Boolean) }
-  def can_enable_alarm?; end
+    sig { returns(T::Boolean) }
+    def can_enable_alarm?; end
 
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def disable_alarm(*args); end
+    sig { params(args: T.untyped).returns(T::Boolean) }
+    def disable_alarm(*args); end
 
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def disable_alarm!(*args); end
+    sig { params(args: T.untyped).returns(T::Boolean) }
+    def disable_alarm!(*args); end
 
-  sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-  def disable_alarm_transition(*args); end
+    sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+    def disable_alarm_transition(*args); end
 
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def enable_alarm(*args); end
+    sig { params(args: T.untyped).returns(T::Boolean) }
+    def enable_alarm(*args); end
 
-  sig { params(args: T.untyped).returns(T::Boolean) }
-  def enable_alarm!(*args); end
+    sig { params(args: T.untyped).returns(T::Boolean) }
+    def enable_alarm!(*args); end
 
-  sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-  def enable_alarm_transition(*args); end
+    sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+    def enable_alarm_transition(*args); end
 
-  sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
-  def fire_alarm_state_event(event, *args); end
+    sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
+    def fire_alarm_state_event(event, *args); end
 
-  sig { returns(String) }
-  def human_alarm_state_name; end
+    sig { returns(String) }
+    def human_alarm_state_name; end
+  end
 end
 ~~~
