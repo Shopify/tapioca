@@ -203,7 +203,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         # typed: strong
         class UserController
           module HelperMethods
-            include GreetHelper
+            include ::GreetHelper
           end
 
           class HelperProxy < ::ActionView::Base

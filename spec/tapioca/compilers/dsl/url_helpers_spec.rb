@@ -159,8 +159,8 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         module GeneratedUrlHelpersModule
-          include ActionDispatch::Routing::PolymorphicRoutes
-          include ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
+          include ::ActionDispatch::Routing::UrlFor
         end
       RUBY
 
@@ -179,8 +179,8 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         module GeneratedPathHelpersModule
-          include ActionDispatch::Routing::PolymorphicRoutes
-          include ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
+          include ::ActionDispatch::Routing::UrlFor
 
           sig { params(args: T.untyped).returns(String) }
           def edit_index_path(*args); end
@@ -208,8 +208,8 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         module GeneratedUrlHelpersModule
-          include ActionDispatch::Routing::PolymorphicRoutes
-          include ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
+          include ::ActionDispatch::Routing::UrlFor
 
           sig { params(args: T.untyped).returns(String) }
           def edit_index_url(*args); end

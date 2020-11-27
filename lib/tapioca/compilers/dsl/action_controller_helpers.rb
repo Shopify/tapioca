@@ -120,7 +120,7 @@ module Tapioca
         def gather_includes(mod)
           mod.ancestors
             .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || ancestor.name.nil? }
-            .map { |ancestor| T.must(ancestor.name) }
+            .map { |ancestor| "::#{ancestor.name}" }
             .reverse
         end
       end
