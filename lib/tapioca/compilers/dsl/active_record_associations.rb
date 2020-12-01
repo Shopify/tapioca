@@ -152,7 +152,7 @@ module Tapioca
             "reload_#{association_name}",
             return_type: association_type,
           )
-          if reflection.constructable?
+          unless reflection.polymorphic?
             create_method(
               klass,
               "build_#{association_name}",
