@@ -18,7 +18,12 @@ end
 ~~~rb
 app/models/post.rb
 class Post
-  include Rails.application.routes.url_helpers
+  # Use `T.unsafe` so that Sorbet does not complain about a dynamic
+  # module being included. This allows the `include` to happen properly
+  # at runtime but Sorbet won't see the include. However, since this
+  # generator will generate the proper RBI files for the include,
+  # type-checking will work as expected.
+  T.unsafe(self).include Rails.application.routes.url_helpers
 end
 ~~~
 
