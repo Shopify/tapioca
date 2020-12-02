@@ -17,7 +17,8 @@ module Tapioca
     module Dsl
       # `Tapioca::Compilers::DSL::ActiveRecordIdentityCache` generates RBI files for ActiveRecord models
       #  that use `include IdentityCache`.
-      # `IdentityCache` is a blob level caching solution to plug into ActiveRecord. (see https://github.com/Shopify/identity_cache).
+      # [`IdentityCache`](https://github.com/Shopify/identity_cache) is a blob level caching solution
+      # to plug into Active Record.
       #
       # For example, with the following ActiveRecord class:
       #

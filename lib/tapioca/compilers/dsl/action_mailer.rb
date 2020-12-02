@@ -12,8 +12,8 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::Dsl::ActionMailer` generates RBI files for subclasses of `ActionMailer::Base`
-      # (see https://api.rubyonrails.org/classes/ActionMailer/Base.html).
+      # `Tapioca::Compilers::Dsl::ActionMailer` generates RBI files for subclasses of
+      # [`ActionMailer::Base`](https://api.rubyonrails.org/classes/ActionMailer/Base.html).
       #
       # For example, with the following `ActionMailer` subclass:
       #

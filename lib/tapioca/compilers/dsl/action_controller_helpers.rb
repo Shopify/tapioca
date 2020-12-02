@@ -13,8 +13,7 @@ module Tapioca
   module Compilers
     module Dsl
       # `Tapioca::Compilers::Dsl::ActionControllerHelpers` decorates RBI files for all
-      # subclasses of `::ActionController::Base`
-      # to add helper methods (see https://api.rubyonrails.org/classes/ActionController/Helpers.html).
+      # subclasses of [`ActionController::Base`](https://api.rubyonrails.org/classes/ActionController/Helpers.html)
       #
       # For example, with the following `MyHelper` module:
       #
