@@ -20,7 +20,7 @@ module Tapioca
       # **Note:** This generator, by default, generates weak signatures for column methods and treats each
       # column to be `T.untyped`. This is done on purpose to ensure that the nilability of Active Record
       # columns do not make it hard for existing code to adopt gradual typing. It is possible, however, to
-      # generate stricter type signatures for your ActiveRecord column types. If your ActiveRecord model extends
+      # generate stricter type signatures for your Active Record column types. If your Active Record model extends
       # a module with name `StrongTypeGeneration`, this generator will generate stricter signatures that follow
       # closely with the types defined in the schema.
       #
