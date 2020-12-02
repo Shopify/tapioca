@@ -13,9 +13,8 @@ module Tapioca
   module Compilers
     module Dsl
       # `Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes` decorates RBI files for all
-      # subclasses of `ActiveSupport::CurrentAttributes`
-      #
-      # To add attributes see https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html
+      # subclasses of
+      # [`ActiveSupport::CurrentAttributes`](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html).
       #
       # For example, with the following singleton class
       #

@@ -15,8 +15,7 @@ module Tapioca
   module Compilers
     module Dsl
       # `Tapioca::Compilers::Dsl::UrlHelpers` generates RBI files for classes that include or extend
-      # `Rails.application.routes.url_helpers`
-      # (see https://api.rubyonrails.org/v5.1.7/classes/ActionDispatch/Routing/UrlFor.html#module-ActionDispatch::Routing::UrlFor-label-URL+generation+for+named+routes).
+      # [`Rails.application.routes.url_helpers`](https://api.rubyonrails.org/v5.1.7/classes/ActionDispatch/Routing/UrlFor.html#module-ActionDispatch::Routing::UrlFor-label-URL+generation+for+named+routes).
       #
       # For example, with the following setup:
       #
@@ -32,7 +31,12 @@ module Tapioca
       # ~~~rb
       # app/models/post.rb
       # class Post
-      #   include Rails.application.routes.url_helpers
+      #   # Use `T.unsafe` so that Sorbet does not complain about a dynamic
+      #   # module being included. This allows the `include` to happen properly
+      #   # at runtime but Sorbet won't see the include. However, since this
+      #   # generator will generate the proper RBI files for the include,
+      #   # static type checking will work as expected.
+      #   T.unsafe(self).include Rails.application.routes.url_helpers
       # end
       # ~~~
       #

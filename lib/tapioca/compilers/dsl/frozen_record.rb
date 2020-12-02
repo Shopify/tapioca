@@ -12,8 +12,8 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::Dsl::FrozenRecord` generates RBI files for subclasses of `FrozenRecord::Base`
-      # (see https://github.com/byroot/frozen_record).
+      # `Tapioca::Compilers::Dsl::FrozenRecord` generates RBI files for subclasses of
+      # [`FrozenRecord::Base`](https://github.com/byroot/frozen_record).
       #
       # For example, with the following FrozenRecord class:
       #

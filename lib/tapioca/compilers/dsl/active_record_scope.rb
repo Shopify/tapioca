@@ -12,9 +12,9 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::Dsl::ActiveRecordScope` decorates RBI files for subclasses of
-      # `ActiveRecord::Base` which declare `scope` fields
-      # (see https://api.rubyonrails.org).
+      # `Tapioca::Compilers::Dsl::ActiveRecordScope` decorates RBI files for
+      # subclasses of `ActiveRecord::Base` which declare
+      # [`scope` fields](https://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html#method-i-scope).
       #
       # For example, with the following `ActiveRecord::Base` subclass:
       #

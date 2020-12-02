@@ -1,7 +1,7 @@
 ## SmartProperties
 
 `Tapioca::Compilers::Dsl::SmartProperties` generates RBI files for classes that include
-`SmartProperties` (see https://github.com/t6d/smart_properties).
+[`SmartProperties`](https://github.com/t6d/smart_properties).
 
 For example, with the following class that includes `SmartProperties`:
 

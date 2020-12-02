@@ -15,8 +15,8 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::DSL::ActiveRecordTypedStore` generates RBI files for ActiveRecord models that use
-      # `ActiveRecord::TypedStore` features (see https://github.com/byroot/activerecord-typedstore).
+      # `Tapioca::Compilers::DSL::ActiveRecordTypedStore` generates RBI files for Active Record models that use
+      # [`ActiveRecord::TypedStore`](https://github.com/byroot/activerecord-typedstore) features.
       #
       # For example, with the following ActiveRecord class:
       #
