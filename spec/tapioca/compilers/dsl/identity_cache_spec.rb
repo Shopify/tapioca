@@ -3,9 +3,9 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordIdentityCacheSpec < DslSpec
+class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
   describe("#initialize") do
-    it("gathers no constants if there are no ActiveRecordIdentityCache classes") do
+    it("gathers no constants if there are no IdentityCache classes") do
       assert_empty(constants_from(""))
     end
 

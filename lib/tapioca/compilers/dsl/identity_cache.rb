@@ -15,7 +15,7 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::DSL::ActiveRecordIdentityCache` generates RBI files for Active Record models
+      # `Tapioca::Compilers::DSL::IdentityCache` generates RBI files for Active Record models
       #  that use `include IdentityCache`.
       # [`IdentityCache`](https://github.com/Shopify/identity_cache) is a blob level caching solution
       # to plug into Active Record.
@@ -62,7 +62,7 @@ module Tapioca
       #   def fetch_by_title_and_review_date(title, review_date, includes: nil); end
       # end
       # ~~~
-      class ActiveRecordIdentityCache < Base
+      class IdentityCache < Base
         extend T::Sig
 
         COLLECTION_TYPE = T.let(
@@ -109,7 +109,7 @@ module Tapioca
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           ::ActiveRecord::Base.descendants.select do |klass|
-            klass < IdentityCache::WithoutPrimaryIndex
+            klass < ::IdentityCache::WithoutPrimaryIndex
           end
         end
 
