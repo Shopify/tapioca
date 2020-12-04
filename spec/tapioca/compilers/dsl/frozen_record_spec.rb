@@ -68,27 +68,27 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Student
-          include Student::FrozenRecordAttributeMethods
-        end
+          include FrozenRecordAttributeMethods
 
-        module Student::FrozenRecordAttributeMethods
-          sig { returns(T.untyped) }
-          def first_name; end
+          module FrozenRecordAttributeMethods
+            sig { returns(T.untyped) }
+            def first_name; end
 
-          sig { returns(T::Boolean) }
-          def first_name?; end
+            sig { returns(T::Boolean) }
+            def first_name?; end
 
-          sig { returns(T.untyped) }
-          def id; end
+            sig { returns(T.untyped) }
+            def id; end
 
-          sig { returns(T::Boolean) }
-          def id?; end
+            sig { returns(T::Boolean) }
+            def id?; end
 
-          sig { returns(T.untyped) }
-          def last_name; end
+            sig { returns(T.untyped) }
+            def last_name; end
 
-          sig { returns(T::Boolean) }
-          def last_name?; end
+            sig { returns(T::Boolean) }
+            def last_name?; end
+          end
         end
       RUBY
 

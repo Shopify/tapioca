@@ -41,27 +41,27 @@ module Tapioca
       # # Student.rbi
       # # typed: strong
       # class Student
-      #   include Student::FrozenRecordAttributeMethods
-      # end
+      #   include FrozenRecordAttributeMethods
       #
-      # module Student::FrozenRecordAttributeMethods
-      #   sig { returns(T.untyped) }
-      #   def first_name; end
+      #   module FrozenRecordAttributeMethods
+      #     sig { returns(T.untyped) }
+      #     def first_name; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def first_name?; end
+      #     sig { returns(T::Boolean) }
+      #     def first_name?; end
       #
-      #   sig { returns(T.untyped) }
-      #   def id; end
+      #     sig { returns(T.untyped) }
+      #     def id; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def id?; end
+      #     sig { returns(T::Boolean) }
+      #     def id?; end
       #
-      #   sig { returns(T.untyped) }
-      #   def last_name; end
+      #     sig { returns(T.untyped) }
+      #     def last_name; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def last_name?; end
+      #     sig { returns(T::Boolean) }
+      #     def last_name?; end
+      #   end
       # end
       # ~~~
       class FrozenRecord < Base
@@ -72,17 +72,17 @@ module Tapioca
           attributes = constant.attributes
           return if attributes.empty?
 
-          module_name = "#{constant}::FrozenRecordAttributeMethods"
+          root.path(constant) do |record|
+            module_name = "FrozenRecordAttributeMethods"
 
-          root.create_module(module_name) do |mod|
-            attributes.each do |attribute|
-              create_method(mod, "#{attribute}?", return_type: 'T::Boolean')
-              create_method(mod, attribute.to_s, return_type: 'T.untyped')
+            record.create_module(module_name) do |mod|
+              attributes.each do |attribute|
+                create_method(mod, "#{attribute}?", return_type: 'T::Boolean')
+                create_method(mod, attribute.to_s, return_type: 'T.untyped')
+              end
             end
-          end
 
-          root.path(constant) do |klass|
-            klass.create_include(module_name)
+            record.create_include(module_name)
           end
         end
 

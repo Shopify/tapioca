@@ -86,45 +86,45 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T.nilable(::User)) }
-          def author; end
+          module GeneratedAssociationMethods
+            sig { returns(T.nilable(::User)) }
+            def author; end
 
-          sig { params(value: T.nilable(::User)).void }
-          def author=(value); end
+            sig { params(value: T.nilable(::User)).void }
+            def author=(value); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def build_author(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def build_author(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
-          def build_category(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+            def build_category(*args, &blk); end
 
-          sig { returns(T.nilable(::Category)) }
-          def category; end
+            sig { returns(T.nilable(::Category)) }
+            def category; end
 
-          sig { params(value: T.nilable(::Category)).void }
-          def category=(value); end
+            sig { params(value: T.nilable(::Category)).void }
+            def category=(value); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def create_author(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def create_author(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def create_author!(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def create_author!(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
-          def create_category(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+            def create_category(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
-          def create_category!(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+            def create_category!(*args, &blk); end
 
-          sig { returns(T.nilable(::User)) }
-          def reload_author; end
+            sig { returns(T.nilable(::User)) }
+            def reload_author; end
 
-          sig { returns(T.nilable(::Category)) }
-          def reload_category; end
+            sig { returns(T.nilable(::Category)) }
+            def reload_category; end
+          end
         end
       RUBY
 
@@ -141,18 +141,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T.nilable(T.untyped)) }
-          def category; end
+          module GeneratedAssociationMethods
+            sig { returns(T.nilable(T.untyped)) }
+            def category; end
 
-          sig { params(value: T.nilable(T.untyped)).void }
-          def category=(value); end
+            sig { params(value: T.nilable(T.untyped)).void }
+            def category=(value); end
 
-          sig { returns(T.nilable(T.untyped)) }
-          def reload_category; end
+            sig { returns(T.nilable(T.untyped)) }
+            def reload_category; end
+          end
         end
       RUBY
 
@@ -179,27 +179,27 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T.nilable(::User)) }
-          def author; end
+          module GeneratedAssociationMethods
+            sig { returns(T.nilable(::User)) }
+            def author; end
 
-          sig { params(value: T.nilable(::User)).void }
-          def author=(value); end
+            sig { params(value: T.nilable(::User)).void }
+            def author=(value); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def build_author(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def build_author(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def create_author(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def create_author(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
-          def create_author!(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+            def create_author!(*args, &blk); end
 
-          sig { returns(T.nilable(::User)) }
-          def reload_author; end
+            sig { returns(T.nilable(::User)) }
+            def reload_author; end
+          end
         end
       RUBY
 
@@ -219,21 +219,21 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T::Array[T.untyped]) }
-          def comment_ids; end
+          module GeneratedAssociationMethods
+            sig { returns(T::Array[T.untyped]) }
+            def comment_ids; end
 
-          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-          def comment_ids=(ids); end
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def comment_ids=(ids); end
 
-          sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
-          def comments; end
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+            def comments; end
 
-          sig { params(value: T::Enumerable[T.untyped]).void }
-          def comments=(value); end
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def comments=(value); end
+          end
         end
       RUBY
 
@@ -268,33 +268,33 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T::Array[T.untyped]) }
-          def comment_ids; end
+          module GeneratedAssociationMethods
+            sig { returns(T::Array[T.untyped]) }
+            def comment_ids; end
 
-          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-          def comment_ids=(ids); end
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def comment_ids=(ids); end
 
-          sig { returns(T::Array[T.untyped]) }
-          def commenter_ids; end
+            sig { returns(T::Array[T.untyped]) }
+            def commenter_ids; end
 
-          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-          def commenter_ids=(ids); end
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def commenter_ids=(ids); end
 
-          sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
-          def commenters; end
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+            def commenters; end
 
-          sig { params(value: T::Enumerable[::Commenter]).void }
-          def commenters=(value); end
+            sig { params(value: T::Enumerable[::Commenter]).void }
+            def commenters=(value); end
 
-          sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
-          def comments; end
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+            def comments; end
 
-          sig { params(value: T::Enumerable[::Comment]).void }
-          def comments=(value); end
+            sig { params(value: T::Enumerable[::Comment]).void }
+            def comments=(value); end
+          end
         end
       RUBY
 
@@ -315,21 +315,21 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          include Post::GeneratedAssociationMethods
-        end
+          include GeneratedAssociationMethods
 
-        module Post::GeneratedAssociationMethods
-          sig { returns(T::Array[T.untyped]) }
-          def commenter_ids; end
+          module GeneratedAssociationMethods
+            sig { returns(T::Array[T.untyped]) }
+            def commenter_ids; end
 
-          sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-          def commenter_ids=(ids); end
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def commenter_ids=(ids); end
 
-          sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
-          def commenters; end
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+            def commenters; end
 
-          sig { params(value: T::Enumerable[T.untyped]).void }
-          def commenters=(value); end
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def commenters=(value); end
+          end
         end
       RUBY
 

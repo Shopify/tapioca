@@ -19,14 +19,14 @@ this generator will produce the RBI file `post.rbi` with the following content:
 # post.rbi
 # typed: true
 class Post
-  extend Post::GeneratedRelationMethods
-end
+  extend GeneratedRelationMethods
 
-module Post::GeneratedRelationMethods
-  sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-  def private_kind(*args, &blk); end
+  module GeneratedRelationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+    def private_kind(*args, &blk); end
 
-  sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-  def public_kind(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+    def public_kind(*args, &blk); end
+  end
 end
 ~~~

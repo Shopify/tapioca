@@ -47,75 +47,75 @@ module Tapioca
       # # vehicle.rbi
       # # typed: true
       # class Vehicle
-      #   include Vehicle::StateMachineInstanceHelperModule
-      #   extend Vehicle::StateMachineClassHelperModule
-      # end
+      #   include StateMachineInstanceHelperModule
+      #   extend StateMachineClassHelperModule
       #
-      # module Vehicle::StateMachineClassHelperModule
-      #   sig { params(event: T.any(String, Symbol)).returns(String) }
-      #   def human_alarm_state_event_name(event); end
+      #   module StateMachineClassHelperModule
+      #     sig { params(event: T.any(String, Symbol)).returns(String) }
+      #     def human_alarm_state_event_name(event); end
       #
-      #   sig { params(state: T.any(String, Symbol)).returns(String) }
-      #   def human_alarm_state_name(state); end
-      # end
+      #     sig { params(state: T.any(String, Symbol)).returns(String) }
+      #     def human_alarm_state_name(state); end
+      #   end
       #
-      # module Vehicle::StateMachineInstanceHelperModule
-      #   sig { returns(T::Boolean) }
-      #   def alarm_active?; end
+      #   module StateMachineInstanceHelperModule
+      #     sig { returns(T::Boolean) }
+      #     def alarm_active?; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def alarm_off?; end
+      #     sig { returns(T::Boolean) }
+      #     def alarm_off?; end
       #
-      #   sig { returns(Integer) }
-      #   def alarm_state; end
+      #     sig { returns(Integer) }
+      #     def alarm_state; end
       #
-      #   sig { params(value: Integer).returns(Integer) }
-      #   def alarm_state=(value); end
+      #     sig { params(value: Integer).returns(Integer) }
+      #     def alarm_state=(value); end
       #
-      #   sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
-      #   def alarm_state?(state); end
+      #     sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
+      #     def alarm_state?(state); end
       #
-      #   sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
-      #   def alarm_state_events(*args); end
+      #     sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
+      #     def alarm_state_events(*args); end
       #
-      #   sig { returns(T.any(String, Symbol)) }
-      #   def alarm_state_name; end
+      #     sig { returns(T.any(String, Symbol)) }
+      #     def alarm_state_name; end
       #
-      #   sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-      #   def alarm_state_paths(*args); end
+      #     sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+      #     def alarm_state_paths(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
-      #   def alarm_state_transitions(*args); end
+      #     sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+      #     def alarm_state_transitions(*args); end
       #
-      #   sig { returns(T::Boolean) }
-      #   def can_disable_alarm?; end
+      #     sig { returns(T::Boolean) }
+      #     def can_disable_alarm?; end
       #
-      #   sig { returns(T::Boolean) }
-      #   def can_enable_alarm?; end
+      #     sig { returns(T::Boolean) }
+      #     def can_enable_alarm?; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def disable_alarm(*args); end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def disable_alarm(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def disable_alarm!(*args); end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def disable_alarm!(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-      #   def disable_alarm_transition(*args); end
+      #     sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+      #     def disable_alarm_transition(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def enable_alarm(*args); end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def enable_alarm(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def enable_alarm!(*args); end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def enable_alarm!(*args); end
       #
-      #   sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
-      #   def enable_alarm_transition(*args); end
+      #     sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+      #     def enable_alarm_transition(*args); end
       #
-      #   sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
-      #   def fire_alarm_state_event(event, *args); end
+      #     sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
+      #     def fire_alarm_state_event(event, *args); end
       #
-      #   sig { returns(String) }
-      #   def human_alarm_state_name; end
+      #     sig { returns(String) }
+      #     def human_alarm_state_name; end
+      #   end
       # end
       # ~~~
       class StateMachines < Base
@@ -125,34 +125,34 @@ module Tapioca
         def decorate(root, constant)
           return if constant.state_machines.empty?
 
-          instance_module_name = "#{constant}::StateMachineInstanceHelperModule"
-          class_module_name = "#{constant}::StateMachineClassHelperModule"
-
-          instance_module = root.create_module(instance_module_name)
-          class_module = root.create_module(class_module_name)
-
-          constant.state_machines.each_value do |machine|
-            state_type = state_type_for(machine)
-
-            define_state_accessor(instance_module, machine, state_type)
-            define_state_predicate(instance_module, machine)
-            define_event_helpers(instance_module, machine)
-            define_path_helpers(instance_module, machine)
-            define_name_helpers(instance_module, class_module, machine)
-            define_scopes(class_module, machine)
-
-            define_state_methods(instance_module, machine)
-            define_event_methods(instance_module, machine)
-          end
-
-          matching_integration_name = ::StateMachines::Integrations.match(constant)&.integration_name
-
-          case matching_integration_name
-          when :active_record
-            define_activerecord_methods(instance_module)
-          end
-
           root.path(constant) do |klass|
+            instance_module_name = "StateMachineInstanceHelperModule"
+            class_module_name = "StateMachineClassHelperModule"
+
+            instance_module = klass.create_module(instance_module_name)
+            class_module = klass.create_module(class_module_name)
+
+            constant.state_machines.each_value do |machine|
+              state_type = state_type_for(machine)
+
+              define_state_accessor(instance_module, machine, state_type)
+              define_state_predicate(instance_module, machine)
+              define_event_helpers(instance_module, machine)
+              define_path_helpers(instance_module, machine)
+              define_name_helpers(instance_module, class_module, machine)
+              define_scopes(class_module, machine)
+
+              define_state_methods(instance_module, machine)
+              define_event_methods(instance_module, machine)
+            end
+
+            matching_integration_name = ::StateMachines::Integrations.match(constant)&.integration_name
+
+            case matching_integration_name
+            when :active_record
+              define_activerecord_methods(instance_module)
+            end
+
             klass.create_include(instance_module_name)
             klass.create_extend(class_module_name)
           end

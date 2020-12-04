@@ -101,13 +101,14 @@ module Tapioca
           stores = constant.typed_stores
           return if stores.values.flat_map(&:accessors).empty?
 
-          root.path(constant) do |k|
+          root.path(constant) do |model|
             stores.values.each do |store_data|
               store_data.accessors.each do |accessor|
                 field = store_data.fields[accessor]
                 type = type_for(field.type_sym)
                 type = "T.nilable(#{type})" if field.null && type != "T.untyped"
-                generate_methods(field.name.to_s, type, k)
+
+                generate_methods(model, field.name.to_s, type)
               end
             end
           end
@@ -141,13 +142,13 @@ module Tapioca
 
         sig do
           params(
+            klass: Parlour::RbiGenerator::Namespace,
             name: String,
-            type: String,
-            klass: Parlour::RbiGenerator::Namespace
+            type: String
           )
             .void
         end
-        def generate_methods(name, type, klass)
+        def generate_methods(klass, name, type)
           klass.create_method(
             "#{name}=",
             parameters: [Parlour::RbiGenerator::Parameter.new(name, type: type)],

@@ -54,54 +54,58 @@ module Tapioca
       # # post.rbi
       # # typed: true
       # class Post
-      #   sig { returns(T.nilable(::String)) }
-      #   def body; end
+      #   include GeneratedAttributeMethods
       #
-      #   sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-      #   def body=; end
+      #   module GeneratedAttributeMethods
+      #     sig { returns(T.nilable(::String)) }
+      #     def body; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def body?; end
+      #     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+      #     def body=; end
       #
-      #   sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-      #   def created_at; end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def body?; end
       #
-      #   sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-      #   def created_at=; end
+      #     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+      #     def created_at; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def created_at?; end
+      #     sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
+      #     def created_at=; end
       #
-      #   sig { returns(T.nilable(T::Boolean)) }
-      #   def published; end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def created_at?; end
       #
-      #   sig { params(value: T::Boolean).returns(T::Boolean) }
-      #   def published=; end
+      #     sig { returns(T.nilable(T::Boolean)) }
+      #     def published; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def published?; end
+      #     sig { params(value: T::Boolean).returns(T::Boolean) }
+      #     def published=; end
       #
-      #   sig { returns(::String) }
-      #   def title; end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def published?; end
       #
-      #   sig { params(value: ::String).returns(::String) }
-      #   def title=(value); end
+      #     sig { returns(::String) }
+      #     def title; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def title?(*args); end
+      #     sig { params(value: ::String).returns(::String) }
+      #     def title=(value); end
       #
-      #   sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-      #   def updated_at; end
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def title?(*args); end
       #
-      #   sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
-      #   def updated_at=; end
+      #     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+      #     def updated_at; end
       #
-      #   sig { params(args: T.untyped).returns(T::Boolean) }
-      #   def updated_at?; end
+      #     sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
+      #     def updated_at=; end
       #
-      #   ## Also the methods added by https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Dirty.html
-      #   ## Also the methods added by https://api.rubyonrails.org/classes/ActiveModel/Dirty.html
-      #   ## Also the methods added by https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/BeforeTypeCast.html
+      #     sig { params(args: T.untyped).returns(T::Boolean) }
+      #     def updated_at?; end
+      #
+      #     ## Also the methods added by https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Dirty.html
+      #     ## Also the methods added by https://api.rubyonrails.org/classes/ActiveModel/Dirty.html
+      #     ## Also the methods added by https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/BeforeTypeCast.html
+      #   end
       # end
       # ~~~
       class ActiveRecordColumns < Base
@@ -111,26 +115,27 @@ module Tapioca
         def decorate(root, constant)
           return unless constant.table_exists?
 
-          module_name = "#{constant}::GeneratedAttributeMethods"
-          root.create_module(module_name) do |mod|
-            constant.columns_hash.each_key do |column_name|
-              column_name = column_name.to_s
-              add_methods_for_attribute(mod, constant, column_name)
+          root.path(constant) do |model|
+            module_name = "GeneratedAttributeMethods"
+
+            model.create_module(module_name) do |mod|
+              constant.columns_hash.each_key do |column_name|
+                column_name = column_name.to_s
+                add_methods_for_attribute(mod, constant, column_name)
+              end
+
+              constant.attribute_aliases.each do |attribute_name, column_name|
+                attribute_name = attribute_name.to_s
+                column_name = column_name.to_s
+                new_method_names = constant.attribute_method_matchers.map { |m| m.method_name(attribute_name) }
+                old_method_names = constant.attribute_method_matchers.map { |m| m.method_name(column_name) }
+                methods_to_add = new_method_names - old_method_names
+
+                add_methods_for_attribute(mod, constant, column_name, attribute_name, methods_to_add)
+              end
             end
 
-            constant.attribute_aliases.each do |attribute_name, column_name|
-              attribute_name = attribute_name.to_s
-              column_name = column_name.to_s
-              new_method_names = constant.attribute_method_matchers.map { |m| m.method_name(attribute_name) }
-              old_method_names = constant.attribute_method_matchers.map { |m| m.method_name(column_name) }
-              methods_to_add = new_method_names - old_method_names
-
-              add_methods_for_attribute(mod, constant, column_name, attribute_name, methods_to_add)
-            end
-          end
-
-          root.path(constant) do |klass|
-            klass.create_include(module_name)
+            model.create_include(module_name)
           end
         end
 

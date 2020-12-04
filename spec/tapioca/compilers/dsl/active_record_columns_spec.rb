@@ -68,66 +68,66 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         expected = <<~RUBY
           # typed: strong
           class Post
-            include Post::GeneratedAttributeMethods
-          end
+            include GeneratedAttributeMethods
 
-          module Post::GeneratedAttributeMethods
-            sig { returns(T.nilable(::Integer)) }
-            def id; end
+            module GeneratedAttributeMethods
+              sig { returns(T.nilable(::Integer)) }
+              def id; end
 
-            sig { params(value: ::Integer).returns(::Integer) }
-            def id=(value); end
+              sig { params(value: ::Integer).returns(::Integer) }
+              def id=(value); end
 
-            sig { returns(T::Boolean) }
-            def id?; end
+              sig { returns(T::Boolean) }
+              def id?; end
 
-            sig { returns(T.nilable(::Integer)) }
-            def id_before_last_save; end
+              sig { returns(T.nilable(::Integer)) }
+              def id_before_last_save; end
 
-            sig { returns(T.untyped) }
-            def id_before_type_cast; end
+              sig { returns(T.untyped) }
+              def id_before_type_cast; end
 
-            sig { returns(T::Boolean) }
-            def id_came_from_user?; end
+              sig { returns(T::Boolean) }
+              def id_came_from_user?; end
 
-            sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-            def id_change; end
+              sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+              def id_change; end
 
-            sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-            def id_change_to_be_saved; end
+              sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+              def id_change_to_be_saved; end
 
-            sig { returns(T::Boolean) }
-            def id_changed?; end
+              sig { returns(T::Boolean) }
+              def id_changed?; end
 
-            sig { returns(T.nilable(::Integer)) }
-            def id_in_database; end
+              sig { returns(T.nilable(::Integer)) }
+              def id_in_database; end
 
-            sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-            def id_previous_change; end
+              sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+              def id_previous_change; end
 
-            sig { returns(T::Boolean) }
-            def id_previously_changed?; end
+              sig { returns(T::Boolean) }
+              def id_previously_changed?; end
 
-            sig { returns(T.nilable(::Integer)) }
-            def id_previously_was; end
+              sig { returns(T.nilable(::Integer)) }
+              def id_previously_was; end
 
-            sig { returns(T.nilable(::Integer)) }
-            def id_was; end
+              sig { returns(T.nilable(::Integer)) }
+              def id_was; end
 
-            sig { void }
-            def id_will_change!; end
+              sig { void }
+              def id_will_change!; end
 
-            sig { void }
-            def restore_id!; end
+              sig { void }
+              def restore_id!; end
 
-            sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-            def saved_change_to_id; end
+              sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+              def saved_change_to_id; end
 
-            sig { returns(T::Boolean) }
-            def saved_change_to_id?; end
+              sig { returns(T::Boolean) }
+              def saved_change_to_id?; end
 
-            sig { returns(T::Boolean) }
-            def will_save_change_to_id?; end
+              sig { returns(T::Boolean) }
+              def will_save_change_to_id?; end
+            end
           end
         RUBY
 
@@ -156,8 +156,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = <<~RUBY
-          module Post::GeneratedAttributeMethods
+        expected = indented(<<~RUBY, 2)
+          module GeneratedAttributeMethods
             sig { returns(T.nilable(::String)) }
             def body; end
 
@@ -192,8 +192,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = <<~RUBY
-          module Post::GeneratedAttributeMethods
+        expected = indented(<<~RUBY, 2)
+          module GeneratedAttributeMethods
             sig { returns(T.untyped) }
             def body; end
 
@@ -233,7 +233,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
         output = rbi_for(:Post, files)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(::String)) }
           def body; end
 
@@ -245,7 +245,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(::String) }
           def title; end
 
@@ -288,43 +288,43 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
         output = rbi_for(:Post, files)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
           def integer_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
           def string_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::Date)).returns(T.nilable(::Date)) }
           def date_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
           def decimal_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
           def float_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
           def boolean_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
           def datetime_column=(value); end
         RUBY
@@ -358,19 +358,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
         output = rbi_for(:Post, files)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
           def timestamp_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
           def datetime_column=(value); end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
           def time_column=(value); end
         RUBY
@@ -402,8 +402,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
         output = rbi_for(:Post, files)
 
-        expected = <<~RUBY
-          module Post::GeneratedAttributeMethods
+        expected = indented(<<~RUBY, 2)
+          module GeneratedAttributeMethods
             sig { returns(T.nilable(::String)) }
             def author; end
 
@@ -448,13 +448,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { void }
           def restore_author!; end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def saved_change_to_author; end
 
@@ -463,7 +463,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T::Boolean) }
           def will_save_change_to_author?; end
         RUBY
@@ -495,8 +495,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
         output = rbi_for(:Post, files)
 
-        expected = <<~RUBY
-          module Post::GeneratedAttributeMethods
+        expected = indented(<<~RUBY, 2)
+          module GeneratedAttributeMethods
             sig { returns(T.nilable(::String)) }
             def body; end
 
@@ -544,13 +544,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { void }
           def restore_body!; end
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
           def saved_change_to_body; end
 
@@ -559,7 +559,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
         assert_includes(output, expected)
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T::Boolean) }
           def will_save_change_to_body?; end
         RUBY
@@ -607,7 +607,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(Money)) }
           def cost; end
 
@@ -661,7 +661,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(T.any(Money, Numeric))) }
           def cost; end
 
@@ -714,7 +714,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(Money)) }
           def cost; end
 
@@ -764,7 +764,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(T.untyped)) }
           def cost; end
 
@@ -815,7 +815,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         }
 
-        expected = indented(<<~RUBY, 2)
+        expected = indented(<<~RUBY, 4)
           sig { returns(T.nilable(T.untyped)) }
           def cost; end
 

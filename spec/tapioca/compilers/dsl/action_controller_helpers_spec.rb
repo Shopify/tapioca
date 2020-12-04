@@ -83,15 +83,15 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class UserController
-          sig { returns(UserController::HelperProxy) }
+          module HelperMethods
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+
+          sig { returns(HelperProxy) }
           def helpers; end
-        end
-
-        module UserController::HelperMethods
-        end
-
-        class UserController::HelperProxy < ::ActionView::Base
-          include UserController::HelperMethods
         end
       RUBY
 
@@ -122,20 +122,20 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class UserController
-          sig { returns(UserController::HelperProxy) }
+          module HelperMethods
+            sig { returns(T.untyped) }
+            def current_user_name; end
+
+            sig { params(user_id: Integer).void }
+            def notify_user(user_id); end
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+
+          sig { returns(HelperProxy) }
           def helpers; end
-        end
-
-        module UserController::HelperMethods
-          sig { returns(T.untyped) }
-          def current_user_name; end
-
-          sig { params(user_id: Integer).void }
-          def notify_user(user_id); end
-        end
-
-        class UserController::HelperProxy < ::ActionView::Base
-          include UserController::HelperMethods
         end
       RUBY
 
@@ -166,20 +166,20 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class UserController
-          sig { returns(UserController::HelperProxy) }
+          module HelperMethods
+            sig { params(user: T.untyped).returns(T.untyped) }
+            def greet(user); end
+
+            sig { params(user_id: Integer).void }
+            def notify_user(user_id); end
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+
+          sig { returns(HelperProxy) }
           def helpers; end
-        end
-
-        module UserController::HelperMethods
-          sig { params(user: T.untyped).returns(T.untyped) }
-          def greet(user); end
-
-          sig { params(user_id: Integer).void }
-          def notify_user(user_id); end
-        end
-
-        class UserController::HelperProxy < ::ActionView::Base
-          include UserController::HelperMethods
         end
       RUBY
 
@@ -210,16 +210,16 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class UserController
-          sig { returns(UserController::HelperProxy) }
+          module HelperMethods
+            include ::GreetHelper
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+
+          sig { returns(HelperProxy) }
           def helpers; end
-        end
-
-        module UserController::HelperMethods
-          include GreetHelper
-        end
-
-        class UserController::HelperProxy < ::ActionView::Base
-          include UserController::HelperMethods
         end
       RUBY
 

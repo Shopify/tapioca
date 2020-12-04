@@ -40,12 +40,12 @@ module Tapioca
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActionMailer::Base)).void }
         def decorate(root, constant)
-          root.path(constant) do |k|
+          root.path(constant) do |mailer|
             constant.action_methods.to_a.each do |mailer_method|
               method_def = constant.instance_method(mailer_method)
               parameters = compile_method_parameters_to_parlour(method_def)
               create_method(
-                k,
+                mailer,
                 mailer_method,
                 parameters: parameters,
                 return_type: '::ActionMailer::MessageDelivery',

@@ -17,25 +17,29 @@ this generator will produce the RBI file `post.rbi` with the following content:
 # post.rbi
 # typed: true
 class Post
-  sig { void }
-  def all_title!; end
+  include EnumMethodsModule
 
-  sig { returns(T::Boolean) }
-  def all_title?; end
+  module EnumMethodsModule
+    sig { void }
+    def all_title!; end
 
-  sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-  def self.title_types; end
+    sig { returns(T::Boolean) }
+    def all_title?; end
 
-  sig { void }
-  def book_title!; end
+    sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+    def self.title_types; end
 
-  sig { returns(T::Boolean) }
-  def book_title?; end
+    sig { void }
+    def book_title!; end
 
-  sig { void }
-  def web_title!; end
+    sig { returns(T::Boolean) }
+    def book_title?; end
 
-  sig { returns(T::Boolean) }
-  def web_title?; end
+    sig { void }
+    def web_title!; end
+
+    sig { returns(T::Boolean) }
+    def web_title?; end
+  end
 end
 ~~~

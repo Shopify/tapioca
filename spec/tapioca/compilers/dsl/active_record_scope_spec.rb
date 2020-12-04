@@ -53,12 +53,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          extend Post::GeneratedRelationMethods
-        end
+          extend GeneratedRelationMethods
 
-        module Post::GeneratedRelationMethods
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-          def public_kind(*args, &blk); end
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def public_kind(*args, &blk); end
+          end
         end
       RUBY
 
@@ -77,15 +77,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       expected = <<~RUBY
         # typed: strong
         class Post
-          extend Post::GeneratedRelationMethods
-        end
+          extend GeneratedRelationMethods
 
-        module Post::GeneratedRelationMethods
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-          def private_kind(*args, &blk); end
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def private_kind(*args, &blk); end
 
-          sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
-          def public_kind(*args, &blk); end
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def public_kind(*args, &blk); end
+          end
         end
       RUBY
 

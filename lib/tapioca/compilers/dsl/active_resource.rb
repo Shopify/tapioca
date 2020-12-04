@@ -71,9 +71,10 @@ module Tapioca
         end
         def decorate(root, constant)
           return if constant.schema.blank?
-          root.path(constant) do |klass|
+
+          root.path(constant) do |resource|
             constant.schema.each do |attribute, type|
-              create_schema_methods(klass, attribute, type)
+              create_schema_methods(resource, attribute, type)
             end
           end
         end
