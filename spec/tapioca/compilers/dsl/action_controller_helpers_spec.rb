@@ -58,6 +58,14 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       assert_equal(["UserController"], constants_from(content))
     end
+
+    it("ignores anonymous subclasses of ActionController") do
+      content = <<~RUBY
+        Class.new(ActionController::Base)
+      RUBY
+
+      assert_equal([], constants_from(content))
+    end
   end
 
   describe("#decorate") do

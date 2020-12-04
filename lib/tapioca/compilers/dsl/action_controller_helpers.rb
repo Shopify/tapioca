@@ -111,7 +111,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ::ActionController::Base.descendants.reject(&:abstract?)
+          ::ActionController::Base.descendants.reject(&:abstract?).select(&:name)
         end
 
         private
