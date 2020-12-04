@@ -76,8 +76,6 @@ module Tapioca
             .void
         end
         def decorate(root, constant)
-          return unless constant.name
-
           helper_proxy_name = "#{constant}::HelperProxy"
           helper_methods_name = "#{constant}::HelperMethods"
           proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
@@ -113,7 +111,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ::ActionController::Base.descendants.reject(&:abstract?)
+          ::ActionController::Base.descendants.reject(&:abstract?).select(&:name)
         end
 
         private

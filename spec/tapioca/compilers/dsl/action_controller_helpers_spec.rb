@@ -58,6 +58,14 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       assert_equal(["UserController"], constants_from(content))
     end
+
+    it("ignores anonymous subclasses of ActionController") do
+      content = <<~RUBY
+        Class.new(ActionController::Base)
+      RUBY
+
+      assert_equal([], constants_from(content))
+    end
   end
 
   describe("#decorate") do
@@ -216,20 +224,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal(expected, rbi_for(:UserController, files))
-    end
-
-    it("generates an empty rbi file for anonymous classes") do
-      anonymous_class = T.unsafe(Class.new(ActionController::Base))
-      action_controller_helpers_dsl = ::Tapioca::Compilers::Dsl::ActionControllerHelpers.new
-      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-      action_controller_helpers_dsl.decorate(parlour.root, anonymous_class)
-
-      expected = <<~RUBY
-        # typed: strong
-
-      RUBY
-
-      assert_equal(expected, parlour.rbi)
     end
   end
 end
