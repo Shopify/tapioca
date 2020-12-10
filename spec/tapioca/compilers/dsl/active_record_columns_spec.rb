@@ -214,7 +214,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("generates a proper type for every ActiveRecord column type") do
           files = {
             "file.rb" => <<~RUBY,
+              require "rails/railtie"
+              require "money"
+
               class Post < ActiveRecord::Base
+                money_column(:money_column, currency: "USD")
               end
             RUBY
 
@@ -229,6 +233,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                     t.float :float_column
                     t.boolean :boolean_column
                     t.datetime :datetime_column
+                    t.decimal :money_column
                   end
                 end
               end
@@ -276,6 +281,46 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           expected = indented(<<~RUBY, 4)
             sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
             def datetime_column=(value); end
+          RUBY
+          assert_includes(output, expected)
+
+          expected = indented(<<~RUBY, 4)
+            sig { params(value: T.nilable(::Money)).returns(T.nilable(::Money)) }
+            def money_column=(value); end
+          RUBY
+          assert_includes(output, expected)
+        end
+
+        it("falls back to generating BigDecimal for money column if MoneyColumn is not defined") do
+          files = {
+            "file.rb" => <<~RUBY,
+              require "rails/railtie"
+              require "money"
+
+              class Post < ActiveRecord::Base
+                money_column(:money_column, currency: "USD")
+              end
+
+              # Make `MoneyColumn` disappear artifically
+              Object.send(:remove_const, :MoneyColumn)
+            RUBY
+
+            "schema.rb" => <<~RUBY,
+              ActiveRecord::Migration.suppress_messages do
+                ActiveRecord::Schema.define do
+                  create_table :posts do |t|
+                    t.decimal :money_column
+                  end
+                end
+              end
+            RUBY
+          }
+
+          output = rbi_for(:Post, files)
+
+          expected = indented(<<~RUBY, 4)
+            sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
+            def money_column=(value); end
           RUBY
           assert_includes(output, expected)
         end
