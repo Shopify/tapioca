@@ -17,20 +17,20 @@ module Minitest
     def after_run(&block); end
     def autorun; end
     def backtrace_filter; end
-    def backtrace_filter=(_); end
+    def backtrace_filter=(_arg0); end
     def clock_time; end
     def extensions; end
-    def extensions=(_); end
+    def extensions=(_arg0); end
     def filter_backtrace(bt); end
     def info_signal; end
-    def info_signal=(_); end
+    def info_signal=(_arg0); end
     def init_plugins(options); end
     def load_plugins; end
     def parallel_executor; end
-    def parallel_executor=(_); end
+    def parallel_executor=(_arg0); end
     def process_args(args = T.unsafe(nil)); end
     def reporter; end
-    def reporter=(_); end
+    def reporter=(_arg0); end
     def run(args = T.unsafe(nil)); end
     def run_one_method(klass, method_name); end
   end
@@ -136,7 +136,7 @@ class Minitest::CompositeReporter < ::Minitest::AbstractReporter
   def record(result); end
   def report; end
   def reporters; end
-  def reporters=(_); end
+  def reporters=(_arg0); end
   def start; end
 end
 
@@ -181,10 +181,10 @@ class Minitest::Expectation < ::Struct
   def wont_respond_to(*args); end
 
   class << self
-    def [](*_); end
+    def [](*_arg0); end
     def inspect; end
     def members; end
-    def new(*_); end
+    def new(*_arg0); end
   end
 end
 
@@ -271,9 +271,9 @@ class Minitest::Reporter < ::Minitest::AbstractReporter
   def initialize(io = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def io; end
-  def io=(_); end
+  def io=(_arg0); end
   def options; end
-  def options=(_); end
+  def options=(_arg0); end
 end
 
 class Minitest::Result < ::Minitest::Runnable
@@ -281,9 +281,9 @@ class Minitest::Result < ::Minitest::Runnable
 
   def class_name; end
   def klass; end
-  def klass=(_); end
+  def klass=(_arg0); end
   def source_location; end
-  def source_location=(_); end
+  def source_location=(_arg0); end
   def to_s; end
 
   class << self
@@ -295,10 +295,10 @@ class Minitest::Runnable
   def initialize(name); end
 
   def assertions; end
-  def assertions=(_); end
+  def assertions=(_arg0); end
   def failure; end
   def failures; end
-  def failures=(_); end
+  def failures=(_arg0); end
   def marshal_dump; end
   def marshal_load(ary); end
   def name; end
@@ -308,7 +308,7 @@ class Minitest::Runnable
   def run; end
   def skipped?; end
   def time; end
-  def time=(_); end
+  def time=(_arg0); end
   def time_it; end
 
   class << self
@@ -378,37 +378,37 @@ class Minitest::StatisticsReporter < ::Minitest::Reporter
   def initialize(io = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def assertions; end
-  def assertions=(_); end
+  def assertions=(_arg0); end
   def count; end
-  def count=(_); end
+  def count=(_arg0); end
   def errors; end
-  def errors=(_); end
+  def errors=(_arg0); end
   def failures; end
-  def failures=(_); end
+  def failures=(_arg0); end
   def passed?; end
   def record(result); end
   def report; end
   def results; end
-  def results=(_); end
+  def results=(_arg0); end
   def skips; end
-  def skips=(_); end
+  def skips=(_arg0); end
   def start; end
   def start_time; end
-  def start_time=(_); end
+  def start_time=(_arg0); end
   def total_time; end
-  def total_time=(_); end
+  def total_time=(_arg0); end
 end
 
 class Minitest::SummaryReporter < ::Minitest::StatisticsReporter
   def aggregated_results(io); end
   def old_sync; end
-  def old_sync=(_); end
+  def old_sync=(_arg0); end
   def report; end
   def start; end
   def statistics; end
   def summary; end
   def sync; end
-  def sync=(_); end
+  def sync=(_arg0); end
   def to_s; end
 
   private
@@ -431,7 +431,7 @@ class Minitest::Test < ::Minitest::Runnable
   class << self
     def i_suck_and_my_tests_are_order_dependent!; end
     def io_lock; end
-    def io_lock=(_); end
+    def io_lock=(_arg0); end
     def make_my_diffs_pretty!; end
     def parallelize_me!; end
     def runnable_methods; end
@@ -457,7 +457,7 @@ class Minitest::UnexpectedError < ::Minitest::Assertion
 
   def backtrace; end
   def error; end
-  def error=(_); end
+  def error=(_arg0); end
   def message; end
   def result_label; end
 end

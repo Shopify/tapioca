@@ -15,11 +15,11 @@ CityHash::HIGH64_MASK = T.let(T.unsafe(nil), Integer)
 
 module CityHash::Internal
   class << self
-    def hash128(_); end
-    def hash128_with_seed(_, _); end
-    def hash64(_); end
-    def hash64_with_seed(_, _); end
-    def hash64_with_seeds(_, _, _); end
+    def hash128(_arg0); end
+    def hash128_with_seed(_arg0, _arg1); end
+    def hash64(_arg0); end
+    def hash64_with_seed(_arg0, _arg1); end
+    def hash64_with_seeds(_arg0, _arg1, _arg2); end
   end
 end
 
