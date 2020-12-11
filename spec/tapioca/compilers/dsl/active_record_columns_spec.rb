@@ -214,7 +214,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("generates a proper type for every ActiveRecord column type") do
           files = {
             "file.rb" => <<~RUBY,
+              require "rails/railtie"
+              require "money"
+
               class Post < ActiveRecord::Base
+                money_column(:money_column, currency: "USD")
               end
             RUBY
 
@@ -229,6 +233,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                     t.float :float_column
                     t.boolean :boolean_column
                     t.datetime :datetime_column
+                    t.decimal :money_column
                   end
                 end
               end
@@ -276,6 +281,46 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           expected = indented(<<~RUBY, 4)
             sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
             def datetime_column=(value); end
+          RUBY
+          assert_includes(output, expected)
+
+          expected = indented(<<~RUBY, 4)
+            sig { params(value: T.nilable(::Money)).returns(T.nilable(::Money)) }
+            def money_column=(value); end
+          RUBY
+          assert_includes(output, expected)
+        end
+
+        it("falls back to generating BigDecimal for money column if MoneyColumn is not defined") do
+          files = {
+            "file.rb" => <<~RUBY,
+              require "rails/railtie"
+              require "money"
+
+              class Post < ActiveRecord::Base
+                money_column(:money_column, currency: "USD")
+              end
+
+              # Make `MoneyColumn` disappear artifically
+              Object.send(:remove_const, :MoneyColumn)
+            RUBY
+
+            "schema.rb" => <<~RUBY,
+              ActiveRecord::Migration.suppress_messages do
+                ActiveRecord::Schema.define do
+                  create_table :posts do |t|
+                    t.decimal :money_column
+                  end
+                end
+              end
+            RUBY
+          }
+
+          output = rbi_for(:Post, files)
+
+          expected = indented(<<~RUBY, 4)
+            sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
+            def money_column=(value); end
           RUBY
           assert_includes(output, expected)
         end
@@ -506,7 +551,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("discovers custom type from signature on deserialize method") do
           files = {
             "file.rb" => <<~RUBY,
-              class Money
+              class CustomType
                 attr_accessor :value
 
                 def initialize(number = 0.0)
@@ -516,15 +561,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 class Type < ActiveRecord::Type::Value
                   extend(T::Sig)
 
-                  sig { params(value: Numeric).returns(::Money)}
+                  sig { params(value: Numeric).returns(::CustomType)}
                   def deserialize(value)
-                    Money.new(value)
+                    CustomType.new(value)
                   end
                 end
               end
 
               class Post < ActiveRecord::Base
-                attribute :cost, Money::Type.new
+                attribute :cost, CustomType::Type.new
               end
             RUBY
 
@@ -540,10 +585,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           }
 
           expected = indented(<<~RUBY, 4)
-            sig { returns(T.nilable(Money)) }
+            sig { returns(T.nilable(CustomType)) }
             def cost; end
 
-            sig { params(value: T.nilable(Money)).returns(T.nilable(Money)) }
+            sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
             def cost=(value); end
           RUBY
 
@@ -553,7 +598,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("discovers custom type from signature on cast method") do
           files = {
             "file.rb" => <<~RUBY,
-              class Money
+              class CustomType
                 attr_accessor :value
 
                 def initialize(number = 0.0)
@@ -563,17 +608,17 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 class Type < ActiveRecord::Type::Value
                   extend(T::Sig)
 
-                  sig { params(value: ::Numeric).returns(T.any(::Money, Numeric)) }
+                  sig { params(value: ::Numeric).returns(T.any(::CustomType, Numeric)) }
                   def cast(value)
                     decimal = super
-                    return Money.new(decimal) if decimal
+                    return CustomType.new(decimal) if decimal
                     decimal
                   end
                 end
               end
 
               class Post < ActiveRecord::Base
-                attribute :cost, Money::Type.new
+                attribute :cost, CustomType::Type.new
               end
             RUBY
 
@@ -589,10 +634,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           }
 
           expected = indented(<<~RUBY, 4)
-            sig { returns(T.nilable(T.any(Money, Numeric))) }
+            sig { returns(T.nilable(T.any(CustomType, Numeric))) }
             def cost; end
 
-            sig { params(value: T.nilable(T.any(Money, Numeric))).returns(T.nilable(T.any(Money, Numeric))) }
+            sig { params(value: T.nilable(T.any(CustomType, Numeric))).returns(T.nilable(T.any(CustomType, Numeric))) }
             def cost=(value); end
           RUBY
 
@@ -602,7 +647,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("discovers custom type from signature on serialize method") do
           files = {
             "file.rb" => <<~RUBY,
-              class Money
+              class CustomType
                 attr_accessor :value
 
                 def initialize(number = 0.0)
@@ -612,16 +657,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 class Type < ActiveRecord::Type::Value
                   extend(T::Sig)
 
-                  sig { params(money: ::Money).returns(Numeric) }
+                  sig { params(money: ::CustomType).returns(Numeric) }
                   def serialize(money)
-                    money = super unless money.is_a?(::Money)
+                    money = super unless money.is_a?(::CustomType)
                     money.value unless money.nil?
                   end
                 end
               end
 
               class Post < ActiveRecord::Base
-                attribute :cost, Money::Type.new
+                attribute :cost, CustomType::Type.new
               end
             RUBY
 
@@ -637,10 +682,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           }
 
           expected = indented(<<~RUBY, 4)
-            sig { returns(T.nilable(Money)) }
+            sig { returns(T.nilable(CustomType)) }
             def cost; end
 
-            sig { params(value: T.nilable(Money)).returns(T.nilable(Money)) }
+            sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
             def cost=(value); end
           RUBY
 
@@ -695,7 +740,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         it("generates a weak type if custom type cannot be discovered from signatures") do
           files = {
             "file.rb" => <<~RUBY,
-              class Money
+              class CustomType
                 attr_accessor :value
 
                 def initialize(number = 0.0)
@@ -706,13 +751,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                   extend(T::Sig)
 
                   def deserialize(value)
-                    Money.new(value)
+                    CustomType.new(value)
                   end
                 end
               end
 
               class Post < ActiveRecord::Base
-                attribute :cost, Money::Type.new
+                attribute :cost, CustomType::Type.new
               end
             RUBY
 

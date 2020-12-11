@@ -311,6 +311,8 @@ module Tapioca
 
           getter_type =
             case column_type
+            when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
+              "::Money"
             when ActiveRecord::Type::Integer
               "::Integer"
             when ActiveRecord::Type::String

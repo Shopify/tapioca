@@ -8,13 +8,15 @@ module Parlour
 end
 
 class Parlour::ConflictResolver
-  sig { params(namespace: Parlour::RbiGenerator::Namespace, resolver: T.proc.params(desc: String, choices: T::Array[Parlour::RbiGenerator::RbiObject]).returns(Parlour::RbiGenerator::RbiObject)).void }
+  sig { params(namespace: Parlour::RbiGenerator::Namespace, resolver: T.proc.params(desc: String, choices: T::Array[Parlour::RbiGenerator::RbiObject]).returns(T.nilable(Parlour::RbiGenerator::RbiObject))).void }
   def resolve_conflicts(namespace, &resolver); end
 
   private
 
   sig { params(arr: T::Array[T.untyped]).returns(T::Boolean) }
   def all_eql?(arr); end
+  sig { params(namespace: Parlour::RbiGenerator::Namespace, name: T.nilable(String)).void }
+  def deduplicate_mixins_of_name(namespace, name); end
   sig { params(arr: T::Array[T.untyped]).returns(T.nilable(Symbol)) }
   def merge_strategy(arr); end
 end
@@ -77,7 +79,7 @@ class Parlour::Plugin
   def generate(root); end
   sig { returns(T.nilable(String)) }
   def strictness; end
-  def strictness=(_); end
+  def strictness=(_arg0); end
 
   class << self
     sig { params(new_plugin: T.class_of(Parlour::Plugin)).void }
@@ -95,7 +97,7 @@ class Parlour::RbiGenerator
 
   sig { overridable.returns(T.nilable(Parlour::Plugin)) }
   def current_plugin; end
-  def current_plugin=(_); end
+  def current_plugin=(_arg0); end
   sig { overridable.returns(Parlour::RbiGenerator::Options) }
   def options; end
   sig { overridable.params(strictness: String).returns(String) }
@@ -112,7 +114,7 @@ class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
   def ==(other); end
   sig { returns(String) }
   def code; end
-  def code=(_); end
+  def code=(_arg0); end
   sig { override.returns(String) }
   def describe; end
   sig { override.params(indent_level: Integer, options: Parlour::RbiGenerator::Options).returns(T::Array[String]) }
@@ -484,10 +486,10 @@ class Parlour::TypeParser
 
   sig { returns(Parser::AST::Node) }
   def ast; end
-  def ast=(_); end
+  def ast=(_arg0); end
   sig { returns(Parlour::RbiGenerator) }
   def generator; end
-  def generator=(_); end
+  def generator=(_arg0); end
   sig { returns(Parlour::RbiGenerator::Namespace) }
   def parse_all; end
   sig { params(path: Parlour::TypeParser::NodePath, is_within_eigenclass: T::Boolean).returns(T::Array[Parlour::RbiGenerator::Method]) }
