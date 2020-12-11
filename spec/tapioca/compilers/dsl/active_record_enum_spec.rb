@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
         end
 
@@ -22,20 +22,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Conversation"], constants_from(content))
+      assert_equal(["Conversation"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates RBI file for classes with an enum attribute") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [ :active, :archived ]
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -57,20 +56,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with an enum attribute with string values") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: "0", archived: "1" }
         end
 
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -92,20 +91,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), String]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with an enum attribute with mix value types") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: 0, archived: true, inactive: "Inactive" }
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -133,21 +131,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with multiple enum attributes") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [ :active, :archived ]
           enum comments_status: [:on, :off]
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -184,21 +181,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with multiple enum attributes with mix value types") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: 0, archived: true, inactive: "Inactive" }
           enum comments_status: { on: 0, off: false, ongoing: "Ongoing", topic: [1,2,3] }
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -253,20 +249,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with enum attribute with suffix specified") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [:active, :archived], _suffix: true
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -288,20 +283,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
 
     it("generates RBI file for classes with enum attribute with prefix specified") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [:active, :archived], _prefix: :comments
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Conversation
           include EnumMethodsModule
@@ -323,9 +317,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
           sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
           def self.statuses; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Conversation, content))
+      assert_equal(expected, rbi_for(:Conversation))
     end
   end
 end

@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
-      content = <<~RUBY
+      add_ruby_file("conversation.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
 
@@ -22,35 +22,33 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Post"], constants_from(content))
+      assert_equal(["Post"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates an empty RBI file for ActiveRecord classes with no scope field") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
 
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for ActiveRecord classes with a scope field") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           scope :public_kind, -> { where.not(kind: 'private') }
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           extend GeneratedRelationMethods
@@ -60,21 +58,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
             def public_kind(*args, &blk); end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for ActiveRecord classes with multiple scope fields") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           scope :public_kind, -> { where.not(kind: 'private') }
           scope :private_kind, -> { where(kind: 'private') }
         end
-
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           extend GeneratedRelationMethods
@@ -87,9 +84,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
             def public_kind(*args, &blk); end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
   end
 end

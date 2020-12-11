@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord subclasses") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActiveRecord subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
 
@@ -18,11 +18,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Post"], constants_from(content))
+      assert_equal(["Post"], gathered_constants)
     end
 
     it("rejects abstract ActiveRecord subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Comment < ActiveRecord::Base
         end
 
@@ -34,34 +34,36 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Comment", "Post"], constants_from(content))
+      assert_equal(["Comment", "Post"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     before(:each) do
-      ActiveRecord::Base.establish_connection(
+      require "active_record"
+
+      ::ActiveRecord::Base.establish_connection(
         adapter: 'sqlite3',
         database: ':memory:'
       )
     end
 
     it("generates empty RBI file if there are no associations") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
 
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for belongs_to single association") do
-      content = <<~RUBY
+      add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
             create_table :posts do |t|
@@ -70,20 +72,26 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             end
           end
         end
+      RUBY
 
+      add_ruby_file("category.rb", <<~RUBY)
         class Category < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           belongs_to :category
           belongs_to :author, class_name: "User"
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -126,19 +134,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def reload_category; end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for polymorphic belongs_to single association") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           belongs_to :category, polymorphic: true
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -154,29 +162,33 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def reload_category; end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for has_one single association") do
-      content = <<~RUBY
+      add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
             create_table :posts do |t|
             end
           end
         end
+      RUBY
 
+      add_ruby_file("user.rb", <<~RUBY)
         class User
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_one :author, class_name: "User"
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -201,22 +213,24 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def reload_author; end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for has_many collection association") do
-      content = <<~RUBY
+      add_ruby_file("comment.rb", <<~RUBY)
         class Comment
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many :comments
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -235,37 +249,43 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def comments=(value); end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for has_many :through collection association") do
-      content = <<~RUBY
+      add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
             create_table :posts do |t|
             end
           end
         end
+      RUBY
 
+      add_ruby_file("commenter.rb", <<~RUBY)
         class Commenter < ActiveRecord::Base
           has_many :comments
           has_many :posts, through: :comments
         end
+      RUBY
 
+      add_ruby_file("comment.rb", <<~RUBY)
         class Comment < ActiveRecord::Base
           belongs_to :commenter
           belongs_to :post
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many :comments
           has_many :commenters, through: :comments
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -296,23 +316,25 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def comments=(value); end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates RBI file for has_and_belongs_to_many collection association") do
-      content = <<~RUBY
+      add_ruby_file("schema.rb", <<~RUBY)
         class Commenter < ActiveRecord::Base
           has_and_belongs_to_many :posts
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_and_belongs_to_many :commenters
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           include GeneratedAssociationMethods
@@ -331,9 +353,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             def commenters=(value); end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
   end
 end

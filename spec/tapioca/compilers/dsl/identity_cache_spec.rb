@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no IdentityCache classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gather only IdentityCache classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
         end
@@ -25,23 +25,23 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["CustomPost", "Post"], constants_from(content))
+      assert_equal(["CustomPost", "Post"], gathered_constants)
     end
 
     it("gathers IdentityCache::WithoutPrimaryIndex classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache::WithoutPrimaryIndex
         end
       RUBY
 
-      assert_equal(["Post"], constants_from(content))
+      assert_equal(["Post"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates RBI file for classes with multiple cache_indexes") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           cache_index :blog_id
@@ -49,7 +49,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
@@ -64,13 +64,13 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
           sig { params(index_values: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           cache_index :blog_id
@@ -78,7 +78,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
@@ -96,13 +96,13 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
           sig { params(index_values: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates methods for combined cache_indexes") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           cache_index :title
@@ -110,7 +110,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
@@ -125,16 +125,18 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
           sig { params(index_values: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_multi_by_title(index_values, includes: nil); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates methods for classes with cache_has_manys index") do
-      content = <<~RUBY
+      add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           has_many :users
@@ -142,7 +144,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T::Array[T.untyped]) }
@@ -151,16 +153,18 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
           sig { returns(T::Array[::User]) }
           def fetch_users; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates methods for classes with cache_has_one index") do
-      content = <<~RUBY
+      add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           has_one :user
@@ -168,7 +172,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(::User)) }
@@ -177,16 +181,18 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
           sig { returns(T.untyped) }
           def fetch_user_id; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
-      content = <<~RUBY
+      add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           belongs_to :user, polymorphic: true
@@ -194,22 +200,24 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.untyped) }
           def fetch_user; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
 
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
-      content = <<~RUBY
+      add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
+      RUBY
 
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
           belongs_to :user
@@ -217,15 +225,15 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(::User)) }
           def fetch_user; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Post, content))
+      assert_equal(expected, rbi_for(:Post))
     end
   end
 end

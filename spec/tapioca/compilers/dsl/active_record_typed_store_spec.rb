@@ -4,17 +4,19 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
-  require_before do
-    require "active_record"
+  before do
+    add_ruby_file("require.rb", <<~RUBY)
+      require "active_record"
+    RUBY
   end
 
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecordTypedStore classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gather only TypedStore classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.string(:reviewer, blank: false, accessor: false)
@@ -31,13 +33,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      assert_equal(constants_from(content), ["CustomPost", "Post"])
+      assert_equal(gathered_constants, ["CustomPost", "Post"])
     end
   end
 
   describe("#decorate") do
     it("generates no definitions if there are no accessors to define") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.string(:reviewer, blank: false, accessor: false)
@@ -50,16 +52,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
 
-      RUBY
+      RBI
 
-      assert_equal(rbi_for(:Post, content), expected)
+      assert_equal(rbi_for(:Post), expected)
     end
 
     it("generates RBI for TypedStore classes with string type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.string(:reviewer)
@@ -71,7 +73,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(String)) }
@@ -128,13 +130,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
           sig { returns(T.nilable(String)) }
           def title_was; end
         end
-      RUBY
+      RBI
 
-      assert_equal(rbi_for(:Post, content), expected)
+      assert_equal(rbi_for(:Post), expected)
     end
 
     it("generates methods with non-nilable types for accessors marked as not null") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.boolean(:reviewed, null: false, default: false)
@@ -142,7 +144,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T::Boolean) }
@@ -172,13 +174,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
           sig { returns(T::Boolean) }
           def saved_change_to_reviewed?; end
         end
-      RUBY
+      RBI
 
-      assert_equal(rbi_for(:Post, content), expected)
+      assert_equal(rbi_for(:Post), expected)
     end
 
     it("generates methods with Date type for attributes with date type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.date(:review_date)
@@ -190,7 +192,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(Date)) }
@@ -247,22 +249,21 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
           sig { returns(T.nilable(Date)) }
           def title_date_was; end
         end
-      RUBY
+      RBI
 
-      assert_equal(rbi_for(:Post, content), expected)
+      assert_equal(rbi_for(:Post), expected)
     end
 
     it("generates methods with DteTime type for attributes with datetime type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.datetime(:review_date)
           end
-
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(DateTime)) }
@@ -270,13 +271,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
           def review_date=(review_date); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Post, content), expected)
+      assert_includes(rbi_for(:Post), expected)
     end
 
     it("generates methods with Time type for attributes with time type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.time(:review_time)
@@ -284,7 +285,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(Time)) }
@@ -292,12 +293,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
           def review_time=(review_time); end
-        RUBY
-      assert_includes(rbi_for(:Post, content), expected)
+      RBI
+
+      assert_includes(rbi_for(:Post), expected)
     end
 
     it("generates methods with Decimal type for attributes with decimal type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.decimal(:rate)
@@ -305,7 +307,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(BigDecimal)) }
@@ -313,13 +315,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(rate: T.nilable(BigDecimal)).returns(T.nilable(BigDecimal)) }
           def rate=(rate); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Post, content), expected)
+      assert_includes(rbi_for(:Post), expected)
     end
 
     it("generates methods with T.untyped type for attributes with any type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.any(:kind)
@@ -327,7 +329,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.untyped) }
@@ -335,13 +337,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(kind: T.untyped).returns(T.untyped) }
           def kind=(kind); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Post, content), expected)
+      assert_includes(rbi_for(:Post), expected)
     end
 
     it("generates methods with Integer type for attributes with integer type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.integer(:rate)
@@ -349,7 +351,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(Integer)) }
@@ -357,13 +359,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(rate: T.nilable(Integer)).returns(T.nilable(Integer)) }
           def rate=(rate); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Post, content), expected)
+      assert_includes(rbi_for(:Post), expected)
     end
 
     it("generates methods with Float type for attributes with float type") do
-      content = <<~RUBY
+      add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
             s.float(:rate)
@@ -371,7 +373,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Post
           sig { returns(T.nilable(Float)) }
@@ -379,9 +381,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
           sig { params(rate: T.nilable(Float)).returns(T.nilable(Float)) }
           def rate=(rate); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Post, content), expected)
+      assert_includes(rbi_for(:Post), expected)
     end
   end
 end
