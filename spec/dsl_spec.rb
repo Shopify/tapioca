@@ -5,11 +5,13 @@ require "sorbet-runtime"
 require "minitest/spec"
 require "content_helper"
 require "template_helper"
+require "isolation_helper"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
   include ContentHelper
   include TemplateHelper
+  include IsolationHelper
 
   sig { void }
   def after_setup

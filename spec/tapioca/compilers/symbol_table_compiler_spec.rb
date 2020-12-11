@@ -9,6 +9,7 @@ require "bundler"
 class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
   include ContentHelper
   include TemplateHelper
+  include IsolationHelper
 
   describe("compile") do
     sig { returns(String) }
