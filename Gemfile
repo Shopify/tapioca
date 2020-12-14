@@ -15,7 +15,6 @@ gem("yard", "~> 0.9.25")
 gem("pry-byebug")
 gem("minitest")
 gem("minitest-hooks")
-gem("minitest-fork_executor")
 gem("minitest-reporters")
 gem("sorbet")
 
