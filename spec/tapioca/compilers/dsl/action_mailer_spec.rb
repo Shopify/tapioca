@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActionMailer subclasses") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActionMailer subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
 
@@ -18,11 +18,11 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["NotifierMailer"], constants_from(content))
+      assert_equal(["NotifierMailer"], gathered_constants)
     end
 
     it("gathers subclasses of ActionMailer subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
 
@@ -30,11 +30,11 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["NotifierMailer", "SecondaryMailer"], constants_from(content))
+      assert_equal(["NotifierMailer", "SecondaryMailer"], gathered_constants)
     end
 
     it("ignores abstract subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
 
@@ -43,28 +43,28 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["NotifierMailer"], constants_from(content))
+      assert_equal(["NotifierMailer"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates empty RBI file if there are no methods") do
-      content = <<~RUBY
+      add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class NotifierMailer
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer, content))
+      assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
     it("generates correct RBI file for subclass with methods") do
-      content = <<~RUBY
+      add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
           def notify_customer(customer_id)
             # ...
@@ -72,19 +72,19 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class NotifierMailer
           sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer, content))
+      assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
     it("generates correct RBI file for subclass with method signatures") do
-      content = <<~RUBY
+      add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
           extend T::Sig
           sig { params(customer_id: Integer).void }
@@ -94,19 +94,19 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class NotifierMailer
           sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer, content))
+      assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
     it("generates correct RBI file for mailer with delegated methods") do
-      content = template(<<~RUBY)
+      add_ruby_file("mailer.rb", template(<<~RUBY))
         class NotifierMailer < ActionMailer::Base
           delegate :notify_customer, to: :foo
 
@@ -116,7 +116,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      expected = template(<<~RUBY)
+      expected = template(<<~RBI)
         # typed: strong
         class NotifierMailer
         <% if ruby_version(">= 2.7.0") %>
@@ -127,13 +127,13 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
           sig { params(args: T.untyped, block: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(*args, &block); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer, content))
+      assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
     it("does not generate RBI for methods defined in abstract classes") do
-      content = <<~RUBY
+      add_ruby_file("mailer.rb", <<~RUBY)
         class AbstractMailer < ActionMailer::Base
           abstract!
 
@@ -149,15 +149,15 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class NotifierMailer
           sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer, content))
+      assert_equal(expected, rbi_for(:NotifierMailer))
     end
   end
 end

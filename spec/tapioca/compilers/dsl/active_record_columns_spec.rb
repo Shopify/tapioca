@@ -7,11 +7,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
     describe("#initialize") do
       it("gathers no constants if there are no ActiveRecord subclasses") do
-        assert_empty(constants_from(""))
+        assert_empty(gathered_constants)
       end
 
       it("gathers only ActiveRecord subclasses") do
-        content = <<~RUBY
+        add_ruby_file("content.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
 
@@ -19,11 +19,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           end
         RUBY
 
-        assert_equal(["Post"], constants_from(content))
+        assert_equal(["Post"], gathered_constants)
       end
 
       it("rejects abstract ActiveRecord subclasses") do
-        content = <<~RUBY
+        add_ruby_file("content.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
 
@@ -32,13 +32,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           end
         RUBY
 
-        assert_equal(["Post"], constants_from(content))
+        assert_equal(["Post"], gathered_constants)
       end
     end
 
     describe("#decorate") do
       before(:each) do
-        ActiveRecord::Base.establish_connection(
+        require "active_record"
+
+        ::ActiveRecord::Base.establish_connection(
           adapter: 'sqlite3',
           database: ':memory:'
         )
@@ -46,23 +48,21 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
       describe("by default") do
         it("generates default columns with strong types") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = <<~RUBY
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+            end
+          RUBY
+
+          expected = <<~RBI
             # typed: strong
             class Post
               include GeneratedAttributeMethods
@@ -126,30 +126,28 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 def will_save_change_to_id?; end
               end
             end
-          RUBY
+          RBI
 
-          assert_equal(expected, rbi_for(:Post, files))
+          assert_equal(expected, rbi_for(:Post))
         end
 
         it("generates attributes with strong types") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :body
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :body
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 2)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 2)
             module GeneratedAttributeMethods
               sig { returns(T.nilable(::String)) }
               def body; end
@@ -159,34 +157,32 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { returns(T::Boolean) }
               def body?; end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("respects nullability of attributes") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :title, null: false
-                    t.string :body, null: true
-                    t.timestamps
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :title, null: false
+                  t.string :body, null: true
+                  t.timestamps
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(::String)) }
             def body; end
 
@@ -195,10 +191,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
             sig { returns(T::Boolean) }
             def body?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(::String) }
             def title; end
 
@@ -207,188 +203,180 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
             sig { returns(T::Boolean) }
             def title?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("generates a proper type for every ActiveRecord column type") do
-          files = {
-            "file.rb" => <<~RUBY,
-              require "rails/railtie"
-              require "money"
-
-              class Post < ActiveRecord::Base
-                money_column(:money_column, currency: "USD")
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.integer :integer_column
-                    t.string :string_column
-                    t.date :date_column
-                    t.decimal :decimal_column
-                    t.float :float_column
-                    t.boolean :boolean_column
-                    t.datetime :datetime_column
-                    t.decimal :money_column
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.integer :integer_column
+                  t.string :string_column
+                  t.date :date_column
+                  t.decimal :decimal_column
+                  t.float :float_column
+                  t.boolean :boolean_column
+                  t.datetime :datetime_column
+                  t.decimal :money_column
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            require "rails/railtie"
+            require "money"
 
-          expected = indented(<<~RUBY, 4)
+            class Post < ActiveRecord::Base
+              money_column(:money_column, currency: "USD")
+            end
+          RUBY
+
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
             def integer_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
             def string_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::Date)).returns(T.nilable(::Date)) }
             def date_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
             def decimal_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
             def float_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
             def boolean_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
             def datetime_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::Money)).returns(T.nilable(::Money)) }
             def money_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("falls back to generating BigDecimal for money column if MoneyColumn is not defined") do
-          files = {
-            "file.rb" => <<~RUBY,
-              require "rails/railtie"
-              require "money"
-
-              class Post < ActiveRecord::Base
-                money_column(:money_column, currency: "USD")
-              end
-
-              # Make `MoneyColumn` disappear artifically
-              Object.send(:remove_const, :MoneyColumn)
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :money_column
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :money_column
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            require "rails/railtie"
+            require "money"
 
-          expected = indented(<<~RUBY, 4)
+            class Post < ActiveRecord::Base
+              money_column(:money_column, currency: "USD")
+            end
+
+            # Make `MoneyColumn` disappear artifically
+            Object.send(:remove_const, :MoneyColumn)
+          RUBY
+
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::BigDecimal)).returns(T.nilable(::BigDecimal)) }
             def money_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("generates proper types for time_zone_aware_attributes") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Base.time_zone_aware_attributes = true
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.timestamp :timestamp_column
-                    t.datetime :datetime_column
-                    t.time :time_column
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Base.time_zone_aware_attributes = true
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.timestamp :timestamp_column
+                  t.datetime :datetime_column
+                  t.time :time_column
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
             def timestamp_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
             def datetime_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
             def time_column=(value); end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("generates methods for alias_attributes") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                alias_attribute :author, :name
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :name
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :name
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              alias_attribute :author, :name
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 2)
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 2)
             module GeneratedAttributeMethods
               sig { returns(T.nilable(::String)) }
               def author; end
@@ -431,53 +419,51 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { void }
               def author_will_change!; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { void }
             def restore_author!; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
             def saved_change_to_author; end
 
             sig { returns(T::Boolean) }
             def saved_change_to_author?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(T::Boolean) }
             def will_save_change_to_author?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("ignores conflicting alias_attributes") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                alias_attribute :body?, :body
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :body
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :body
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          output = rbi_for(:Post, files)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              alias_attribute :body?, :body
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 2)
+          output = rbi_for(:Post)
+
+          expected = indented(<<~RBI, 2)
             module GeneratedAttributeMethods
               sig { returns(T.nilable(::String)) }
               def body; end
@@ -523,297 +509,292 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { void }
               def body_will_change!; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { void }
             def restore_body!; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
             def saved_change_to_body; end
 
             sig { returns(T::Boolean) }
             def saved_change_to_body?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(T::Boolean) }
             def will_save_change_to_body?; end
-          RUBY
+          RBI
           assert_includes(output, expected)
         end
 
         it("discovers custom type from signature on deserialize method") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class CustomType
-                attr_accessor :value
-
-                def initialize(number = 0.0)
-                  @value = number
-                end
-
-                class Type < ActiveRecord::Type::Value
-                  extend(T::Sig)
-
-                  sig { params(value: Numeric).returns(::CustomType)}
-                  def deserialize(value)
-                    CustomType.new(value)
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :cost
                 end
               end
+            end
+          RUBY
 
-              class Post < ActiveRecord::Base
-                attribute :cost, CustomType::Type.new
+          add_ruby_file("custom_type.rb", <<~RUBY)
+            class CustomType
+              attr_accessor :value
+
+              def initialize(number = 0.0)
+                @value = number
               end
-            RUBY
 
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :cost
-                  end
+              class Type < ActiveRecord::Type::Value
+                extend(T::Sig)
+
+                sig { params(value: Numeric).returns(::CustomType)}
+                def deserialize(value)
+                  CustomType.new(value)
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              attribute :cost, CustomType::Type.new
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(CustomType)) }
             def cost; end
 
             sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
             def cost=(value); end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("discovers custom type from signature on cast method") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class CustomType
-                attr_accessor :value
-
-                def initialize(number = 0.0)
-                  @value = number
-                end
-
-                class Type < ActiveRecord::Type::Value
-                  extend(T::Sig)
-
-                  sig { params(value: ::Numeric).returns(T.any(::CustomType, Numeric)) }
-                  def cast(value)
-                    decimal = super
-                    return CustomType.new(decimal) if decimal
-                    decimal
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :cost
                 end
               end
+            end
+          RUBY
 
-              class Post < ActiveRecord::Base
-                attribute :cost, CustomType::Type.new
+          add_ruby_file("custom_type.rb", <<~RUBY)
+            class CustomType
+              attr_accessor :value
+
+              def initialize(number = 0.0)
+                @value = number
               end
-            RUBY
 
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :cost
-                  end
+              class Type < ActiveRecord::Type::Value
+                extend(T::Sig)
+
+                sig { params(value: ::Numeric).returns(T.any(::CustomType, Numeric)) }
+                def cast(value)
+                  decimal = super
+                  return CustomType.new(decimal) if decimal
+                  decimal
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              attribute :cost, CustomType::Type.new
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(T.any(CustomType, Numeric))) }
             def cost; end
 
             sig { params(value: T.nilable(T.any(CustomType, Numeric))).returns(T.nilable(T.any(CustomType, Numeric))) }
             def cost=(value); end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("discovers custom type from signature on serialize method") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class CustomType
-                attr_accessor :value
-
-                def initialize(number = 0.0)
-                  @value = number
-                end
-
-                class Type < ActiveRecord::Type::Value
-                  extend(T::Sig)
-
-                  sig { params(money: ::CustomType).returns(Numeric) }
-                  def serialize(money)
-                    money = super unless money.is_a?(::CustomType)
-                    money.value unless money.nil?
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :cost
                 end
               end
+            end
+          RUBY
 
-              class Post < ActiveRecord::Base
-                attribute :cost, CustomType::Type.new
+          add_ruby_file("custom_type.rb", <<~RUBY)
+            class CustomType
+              attr_accessor :value
+
+              def initialize(number = 0.0)
+                @value = number
               end
-            RUBY
 
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :cost
-                  end
+              class Type < ActiveRecord::Type::Value
+                extend(T::Sig)
+
+                sig { params(value: ::CustomType).returns(Numeric) }
+                def serialize(value)
+                  value = super unless value.is_a?(::CustomType)
+                  value.value unless value.nil?
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              attribute :cost, CustomType::Type.new
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(CustomType)) }
             def cost; end
 
             sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
             def cost=(value); end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("generates a weak type if custom type is generic") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class ValueType
-                extend T::Generic
-
-                Elem = type_member
-              end
-
-              class ColumnType < ActiveRecord::Type::Value
-                extend(T::Sig)
-
-                sig { params(value: ::ValueType[Integer]).returns(Numeric) }
-                def serialize(value)
-                  super
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :cost
                 end
               end
+            end
+          RUBY
 
-              class Post < ActiveRecord::Base
-                attribute :cost, ColumnType.new
+          add_ruby_file("column_type.rb", <<~RUBY)
+            class ValueType
+              extend T::Generic
+
+              Elem = type_member
+            end
+
+            class ColumnType < ActiveRecord::Type::Value
+              extend(T::Sig)
+
+              sig { params(value: ::ValueType[Integer]).returns(Numeric) }
+              def serialize(value)
+                super
               end
-            RUBY
+            end
+          RUBY
 
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :cost
-                  end
-                end
-              end
-            RUBY
-          }
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              attribute :cost, ColumnType.new
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(T.untyped)) }
             def cost; end
 
             sig { params(value: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
             def cost=(value); end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("generates a weak type if custom type cannot be discovered from signatures") do
-          files = {
-            "file.rb" => <<~RUBY,
-              class CustomType
-                attr_accessor :value
-
-                def initialize(number = 0.0)
-                  @value = number
-                end
-
-                class Type < ActiveRecord::Type::Value
-                  extend(T::Sig)
-
-                  def deserialize(value)
-                    CustomType.new(value)
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.decimal :cost
                 end
               end
+            end
+          RUBY
 
-              class Post < ActiveRecord::Base
-                attribute :cost, CustomType::Type.new
+          add_ruby_file("custom_type.rb", <<~RUBY)
+            class CustomType
+              attr_accessor :value
+
+              def initialize(number = 0.0)
+                @value = number
               end
-            RUBY
 
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.decimal :cost
-                  end
+              class Type < ActiveRecord::Type::Value
+                extend(T::Sig)
+
+                def deserialize(value)
+                  CustomType.new(value)
                 end
               end
-            RUBY
-          }
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 4)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              attribute :cost, CustomType::Type.new
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 4)
             sig { returns(T.nilable(T.untyped)) }
             def cost; end
 
             sig { params(value: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
             def cost=(value); end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
       end
 
       describe("when StrongTypeGeneration is defined") do
-        sig { returns(T::Hash[String, String]) }
-        def default_files
-          {
-            "strong_type_generation.rb" => <<~RUBY,
-              module StrongTypeGeneration
-              end
-            RUBY
-          }
+        before do
+          add_ruby_file("strong_type_generation.rb", <<~RUBY)
+            module StrongTypeGeneration
+            end
+          RUBY
         end
 
         it("generates default columns with strong types if model extends StrongTypeGeneration") do
-          files = default_files.merge({
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                extend StrongTypeGeneration
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
                 end
               end
-            RUBY
-          })
+            end
+          RUBY
 
-          expected = <<~RUBY
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              extend StrongTypeGeneration
+            end
+          RUBY
+
+          expected = <<~RBI
             # typed: strong
             class Post
               include GeneratedAttributeMethods
@@ -877,30 +858,28 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 def will_save_change_to_id?; end
               end
             end
-          RUBY
+          RBI
 
-          assert_equal(expected, rbi_for(:Post, files))
+          assert_equal(expected, rbi_for(:Post))
         end
 
         it("generates default columns with weak types if model does not extend StrongTypeGeneration") do
-          files = default_files.merge({
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                # StrongTypeGeneration is not extended
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
                 end
               end
-            RUBY
-          })
+            end
+          RUBY
 
-          expected = <<~RUBY
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              # StrongTypeGeneration is not extended
+            end
+          RUBY
+
+          expected = <<~RBI
             # typed: strong
             class Post
               include GeneratedAttributeMethods
@@ -964,31 +943,29 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 def will_save_change_to_id?; end
               end
             end
-          RUBY
+          RBI
 
-          assert_equal(expected, rbi_for(:Post, files))
+          assert_equal(expected, rbi_for(:Post))
         end
 
         it("generates attributes with strong types if model extends StrongTypeGeneration") do
-          files = default_files.merge({
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                extend StrongTypeGeneration
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :body
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :body
                 end
               end
-            RUBY
-          })
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 2)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              extend StrongTypeGeneration
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 2)
             module GeneratedAttributeMethods
               sig { returns(T.nilable(::String)) }
               def body; end
@@ -998,30 +975,29 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { returns(T::Boolean) }
               def body?; end
-          RUBY
-          assert_includes(rbi_for(:Post, files), expected)
+          RBI
+
+          assert_includes(rbi_for(:Post), expected)
         end
 
         it("generates attributes with weak types if model does not extend StrongTypeGeneration") do
-          files = default_files.merge({
-            "file.rb" => <<~RUBY,
-              class Post < ActiveRecord::Base
-                # StrongTypeGeneration is not extended
-              end
-            RUBY
-
-            "schema.rb" => <<~RUBY,
-              ActiveRecord::Migration.suppress_messages do
-                ActiveRecord::Schema.define do
-                  create_table :posts do |t|
-                    t.string :body
-                  end
+          add_ruby_file("schema.rb", <<~RUBY)
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                  t.string :body
                 end
               end
-            RUBY
-          })
+            end
+          RUBY
 
-          expected = indented(<<~RUBY, 2)
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post < ActiveRecord::Base
+              # StrongTypeGeneration is not extended
+            end
+          RUBY
+
+          expected = indented(<<~RBI, 2)
             module GeneratedAttributeMethods
               sig { returns(T.untyped) }
               def body; end
@@ -1031,9 +1007,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { returns(T::Boolean) }
               def body?; end
-          RUBY
+          RBI
 
-          assert_includes(rbi_for(:Post, files), expected)
+          assert_includes(rbi_for(:Post), expected)
         end
       end
     end

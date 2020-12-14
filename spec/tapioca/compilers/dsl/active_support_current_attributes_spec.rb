@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActiveSupport::CurrentAttributes subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class User
         end
 
@@ -18,34 +18,33 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Current"], constants_from(content))
+      assert_equal(["Current"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates empty RBI file if there are no current attributes") do
-      content = <<~RUBY
+      add_ruby_file("current.rb", <<~RUBY)
         class Current < ActiveSupport::CurrentAttributes
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
 
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Current, content))
+      assert_equal(expected, rbi_for(:Current))
     end
 
     it("generates method sigs for every current attribute") do
-      content = <<~RUBY
+      add_ruby_file("current.rb", <<~RUBY)
         class Current < ActiveSupport::CurrentAttributes
           attribute :account, :user
-
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Current
           sig { returns(T.untyped) }
@@ -72,13 +71,13 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
           sig { params(value: T.untyped).returns(T.untyped) }
           def user=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Current, content))
+      assert_equal(expected, rbi_for(:Current))
     end
 
     it("only generates a class method definition for non current attribute methods") do
-      content = <<~RUBY
+      add_ruby_file("current.rb", <<~RUBY)
         class Current < ActiveSupport::CurrentAttributes
           extend T::Sig
 
@@ -95,7 +94,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Current
           sig { returns(T.untyped) }
@@ -116,9 +115,9 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
           sig { returns(T.untyped) }
           def self.helper; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Current, content))
+      assert_equal(expected, rbi_for(:Current))
     end
   end
 end

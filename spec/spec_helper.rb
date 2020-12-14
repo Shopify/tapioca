@@ -18,8 +18,6 @@ Minitest.parallel_executor = Minitest::ForkExecutor.new
 module Minitest
   class Test
     extend T::Sig
-    include ContentHelper
-    include TemplateHelper
 
     Minitest::Test.make_my_diffs_pretty!
   end

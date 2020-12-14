@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no StateMachines classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only StateMachines classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Vehicle
           state_machine
         end
@@ -23,13 +23,13 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["User", "Vehicle"], constants_from(content))
+      assert_equal(["User", "Vehicle"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it(" generates an RBI that includes state accessor methods") do
-      content = <<~RUBY
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
             event :enable do
@@ -46,7 +46,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Vehicle
           include StateMachineInstanceHelperModule
@@ -119,13 +119,13 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
             def human_alarm_state_name; end
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Vehicle, content))
+      assert_equal(expected, rbi_for(:Vehicle))
     end
 
     it("generates an RBI that includes name helpers methods") do
-      content = <<~RUBY
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
             event :enable do
@@ -139,7 +139,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         class Vehicle
           include StateMachineInstanceHelperModule
           extend StateMachineClassHelperModule
@@ -151,13 +151,13 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
             sig { params(state: T.any(String, Symbol)).returns(String) }
             def human_alarm_state_name(state); end
           end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Vehicle, content), expected)
+      assert_includes(rbi_for(:Vehicle), expected)
     end
 
     it("generates an RBI with path, event and state helper methods") do
-      content = <<~RUBY
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
             state :active, :value => 1
@@ -166,7 +166,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
       RUBY
 
-      expected = indented(<<~RUBY, 2)
+      expected = indented(<<~RBI, 2)
         module StateMachineInstanceHelperModule
           sig { returns(T::Boolean) }
           def alarm_active?; end
@@ -201,13 +201,13 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
           sig { returns(String) }
           def human_alarm_state_name; end
         end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Vehicle, content), expected)
+      assert_includes(rbi_for(:Vehicle), expected)
     end
 
     it("generates an RBI with path helper methods only") do
-      content = <<~RUBY
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           attr_accessor :seatbelt_on, :time_used, :auto_shop_busy
 
@@ -217,16 +217,16 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
       RUBY
 
-      expected = indented(<<~RUBY, 4)
+      expected = indented(<<~RBI, 4)
         sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
         def state_paths(*args); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Vehicle, content), expected)
+      assert_includes(rbi_for(:Vehicle), expected)
     end
 
     it("generates an RBI with scope methods when state machine defines scopes") do
-      content = <<~RUBY
+      add_ruby_file("custom_attribute_integration.rb", <<~RUBY)
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base
           def self.integration_name
@@ -242,13 +242,15 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
 
         StateMachines::Integrations.register(CustomAttributeIntegration)
+      RUBY
 
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :state, integration: :custom_attribute
         end
       RUBY
 
-      expected = indented(<<~RUBY, 4)
+      expected = indented(<<~RBI, 4)
         sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
         def with_state(*states); end
 
@@ -260,13 +262,13 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
 
         sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
         def without_states(*states); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Vehicle, content), expected)
+      assert_includes(rbi_for(:Vehicle), expected)
     end
 
     it("generates an RBI with action methods when state machine defines an action") do
-      content = <<~RUBY
+      add_ruby_file("custom_attribute_integration.rb", <<~RUBY)
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base
           def self.integration_name
@@ -276,13 +278,15 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
         end
 
         StateMachines::Integrations.register(CustomAttributeIntegration)
+      RUBY
 
+      add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :state, integration: :custom_attribute
         end
       RUBY
 
-      expected = indented(<<~RUBY, 4)
+      expected = indented(<<~RBI, 4)
         sig { returns(T.nilable(Symbol)) }
         def state_event; end
 
@@ -294,9 +298,9 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
 
         sig { params(value: ::StateMachines::Transition).returns(::StateMachines::Transition) }
         def state_event_transition=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_for(:Vehicle, content), expected)
+      assert_includes(rbi_for(:Vehicle), expected)
     end
   end
 end

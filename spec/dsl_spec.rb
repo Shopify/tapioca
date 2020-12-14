@@ -3,18 +3,18 @@
 
 require "sorbet-runtime"
 require "minitest/spec"
+require "content_helper"
+require "template_helper"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
+  include ContentHelper
+  include TemplateHelper
 
-  before(:all) do
-    # Get an unsafe reference to `self`
-    this = T.unsafe(self)
-    # See if there are any registered "require_before" blocks, and call them
-    extra_require = this.spec_test_class.instance_variable_get(:@require_before)
-    extra_require&.call
+  sig { void }
+  def after_setup
     # Require the file that the target class should be loaded from
-    Kernel.require(this.target_class_file)
+    Kernel.require(T.unsafe(self).target_class_file)
   end
 
   subject do
@@ -23,12 +23,6 @@ class DslSpec < Minitest::Spec
     class_name = T.unsafe(self).target_class_name
     Object.const_get(class_name).new
   end
-
-  sig { params(blk: T.proc.void).void }
-  def self.require_before(&blk)
-    @require_before = blk
-  end
-  @require_before = T.let(nil, T.nilable(T.proc.void))
 
   sig { returns(Class) }
   def spec_test_class
@@ -70,30 +64,19 @@ class DslSpec < Minitest::Spec
     end.join
   end
 
-  sig do
-    params(
-      content: String
-    ).void
-  end
-  def constants_from(content)
-    with_contents({ "file.rb" => content }) do
-      T.unsafe(self).subject.processable_constants.map(&:to_s).sort
-    end
+  sig { returns(T::Array[String]) }
+  def gathered_constants
+    T.unsafe(self).subject.processable_constants.map(&:to_s).sort
   end
 
   sig do
     params(
-      constant_name: T.any(Symbol, String),
-      contents: T.any(String, T::Hash[String, String])
+      constant_name: T.any(Symbol, String)
     ).returns(String)
   end
-  def rbi_for(constant_name, contents)
-    contents = { "file.rb" => contents } if String === contents
-
-    with_contents(contents) do
-      parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-      T.unsafe(self).subject.decorate(parlour.root, Object.const_get(constant_name))
-      parlour.rbi
-    end
+  def rbi_for(constant_name)
+    parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+    T.unsafe(self).subject.decorate(parlour.root, Object.const_get(constant_name))
+    parlour.rbi
   end
 end

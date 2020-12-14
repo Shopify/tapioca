@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
   describe("#initialize") do
     it("does not gather constants when url_helpers is not included") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -19,11 +19,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "ActionView::Helpers",
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("gathers constants that include url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -38,11 +38,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("gathers constants that extend url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -57,11 +57,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("gathers constants that have a singleton class that includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -78,11 +78,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "MyClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("does not gather constants when its superclass includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -100,11 +100,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("gathers constants when its superclass extends url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -122,11 +122,11 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
 
     it("does not gather constants when the constant and its superclass includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class Application < Rails::Application
         end
 
@@ -145,30 +145,30 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
         "SuperClass",
-      ], constants_from(content))
+      ], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates RBI when there are no helper methods") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         module GeneratedUrlHelpersModule
           include ::ActionDispatch::Routing::PolymorphicRoutes
           include ::ActionDispatch::Routing::UrlFor
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule, content))
+      assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule))
     end
 
     it("generates RBI for GeneratedPathHelpersModule with helper methods") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
           routes.draw do
             resource :index
@@ -176,7 +176,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         module GeneratedPathHelpersModule
           include ::ActionDispatch::Routing::PolymorphicRoutes
@@ -191,13 +191,13 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
           sig { params(args: T.untyped).returns(String) }
           def new_index_path(*args); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:GeneratedPathHelpersModule, content))
+      assert_equal(expected, rbi_for(:GeneratedPathHelpersModule))
     end
 
     it("generates RBI for GeneratedUrlHelpersModule with helper methods") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
           routes.draw do
             resource :index
@@ -205,7 +205,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         module GeneratedUrlHelpersModule
           include ::ActionDispatch::Routing::PolymorphicRoutes
@@ -220,18 +220,18 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
           sig { params(args: T.untyped).returns(String) }
           def new_index_url(*args); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule, content))
+      assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule))
     end
 
     it("generates RBI for ActionDispatch::IntegrationTest") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         module ActionDispatch
           class IntegrationTest
@@ -239,18 +239,18 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
             include GeneratedUrlHelpersModule
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for("ActionDispatch::IntegrationTest", content))
+      assert_equal(expected, rbi_for("ActionDispatch::IntegrationTest"))
     end
 
     it("generates RBI for ActionView::Helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         module ActionView
           module Helpers
@@ -258,65 +258,71 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
             include GeneratedUrlHelpersModule
           end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for("ActionView::Helpers", content))
+      assert_equal(expected, rbi_for("ActionView::Helpers"))
     end
 
     it("generates RBI for constant that includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
+      RUBY
 
+      add_ruby_file("my_class.rb", <<~RUBY)
         class MyClass
           include Rails.application.routes.url_helpers
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class MyClass
           include GeneratedPathHelpersModule
           include GeneratedUrlHelpersModule
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:MyClass, content))
+      assert_equal(expected, rbi_for(:MyClass))
     end
 
     it("generates RBI for constant that extends url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
+      RUBY
 
+      add_ruby_file("my_class.rb", <<~RUBY)
         class MyClass
           extend Rails.application.routes.url_helpers
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class MyClass
           extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:MyClass, content))
+      assert_equal(expected, rbi_for(:MyClass))
     end
 
     it("generates RBI for constant that includes and extends url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
+      RUBY
 
+      add_ruby_file("my_class.rb", <<~RUBY)
         class MyClass
           include Rails.application.routes.url_helpers
           extend Rails.application.routes.url_helpers
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class MyClass
           include GeneratedPathHelpersModule
@@ -324,16 +330,18 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
           extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:MyClass, content))
+      assert_equal(expected, rbi_for(:MyClass))
     end
 
     it("generates RBI for constant that has a singleton class which includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
+      RUBY
 
+      add_ruby_file("my_class.rb", <<~RUBY)
         class MyClass
           class << self
             include Rails.application.routes.url_helpers
@@ -341,22 +349,24 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class MyClass
           extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:MyClass, content))
+      assert_equal(expected, rbi_for(:MyClass))
     end
 
     it("generates RBI when constant itself and its singleton class includes url_helpers") do
-      content = <<~RUBY
+      add_ruby_file("routes.rb", <<~RUBY)
         class Application < Rails::Application
         end
+      RUBY
 
+      add_ruby_file("my_class.rb", <<~RUBY)
         class MyClass
           include Rails.application.routes.url_helpers
           class << self
@@ -365,7 +375,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         end
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class MyClass
           include GeneratedPathHelpersModule
@@ -373,9 +383,9 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
           extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:MyClass, content))
+      assert_equal(expected, rbi_for(:MyClass))
     end
   end
 end

@@ -1,38 +1,42 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "fileutils"
+
 module ContentHelper
   extend T::Sig
 
-  sig do
-    type_parameters(:Result)
-      .params(
-        contents: T::Hash[String, String],
-        block: T.proc.params(dir: Pathname).returns(T.type_parameter(:Result))
-      )
-      .returns(T.type_parameter(:Result))
+  sig { void }
+  def teardown
+    super
+    remove_tmp_path
   end
-  def with_contents(contents, &block)
-    Dir.mktmpdir do |path|
-      dir = Pathname.new(path)
-      # Create a "lib" folder
-      Dir.mkdir(dir.join("lib").to_s)
 
-      contents.each do |file, content|
-        # Add our contents into their files in lib folder
-        File.write(dir.join("lib/#{file}"), content)
-      end
+  sig { params(args: String).returns(String) }
+  def tmp_path(*args)
+    @tmp_path = T.let(@tmp_path, T.nilable(String))
+    @tmp_path ||= Dir.mktmpdir
+    T.unsafe(File).join(@tmp_path, *args)
+  end
 
-      Tapioca.silence_warnings do
-        # Require Ruby files
-        contents.keys
-          .select { |k| k.end_with?(".rb") }
-          .each do |file|
-            Kernel.require(dir.join("lib/#{file}").to_s)
-          end
+  sig { void }
+  def remove_tmp_path
+    FileUtils.rm_rf(tmp_path)
+  end
 
-        block.call(dir)
-      end
+  sig { params(name: String, content: String, require_file: T::Boolean).returns(String) }
+  def add_ruby_file(name, content, require_file: true)
+    add_content_file(name, content).tap do |file_name|
+      Tapioca.silence_warnings { Kernel.require(file_name) } if require_file
     end
+  end
+
+  sig { params(name: String, content: String).returns(String) }
+  def add_content_file(name, content)
+    file_name = tmp_path("lib/#{name}")
+    Kernel.raise ArgumentError, "a file named '#{name}' was already added; cannot overwrite." if File.exist?(file_name)
+    FileUtils.mkdir_p(File.dirname(file_name))
+    File.write(file_name, content)
+    file_name
   end
 end

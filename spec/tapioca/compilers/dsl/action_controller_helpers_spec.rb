@@ -6,11 +6,11 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no  classes") do
-      assert_empty(constants_from(""))
+      assert_empty(gathered_constants)
     end
 
     it("gathers only ActionController subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
 
@@ -18,11 +18,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["UserController"], constants_from(content))
+      assert_equal(["UserController"], gathered_constants)
     end
 
     it("does not gather included modules as their own processable constant") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         module UserHelper
         end
 
@@ -31,11 +31,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["UserController"], constants_from(content))
+      assert_equal(["UserController"], gathered_constants)
     end
 
     it("gathers subclasses of ActionController subclasses") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
 
@@ -43,11 +43,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["HandController", "UserController"], constants_from(content))
+      assert_equal(["HandController", "UserController"], gathered_constants)
     end
 
     it("ignores abstract subclasses of ActionController") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
 
@@ -56,31 +56,29 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["UserController"], constants_from(content))
+      assert_equal(["UserController"], gathered_constants)
     end
 
     it("ignores anonymous subclasses of ActionController") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         Class.new(ActionController::Base)
       RUBY
 
-      assert_equal([], constants_from(content))
+      assert_equal([], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates empty helper module when there are no helper methods specified") do
-      files = {
-        "controller.rb" => <<~RUBY,
-          class UserController < ActionController::Base
-            def current_user_name
-              # ...
-            end
+      add_ruby_file("controller.rb", <<~RUBY)
+        class UserController < ActionController::Base
+          def current_user_name
+            # ...
           end
-        RUBY
-      }
+        end
+      RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class UserController
           module HelperMethods
@@ -93,33 +91,31 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           sig { returns(HelperProxy) }
           def helpers; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:UserController, files))
+      assert_equal(expected, rbi_for(:UserController))
     end
 
     it("generates helper module and helper proxy class when defining helper using helper_method") do
-      files = {
-        "controller.rb" => <<~RUBY,
-          class UserController < ActionController::Base
-            extend T::Sig
+      add_ruby_file("controller.rb", <<~RUBY)
+        class UserController < ActionController::Base
+          extend T::Sig
 
-            helper_method :current_user_name
-            helper_method "notify_user"
+          helper_method :current_user_name
+          helper_method "notify_user"
 
-            def current_user_name
-              # ...
-            end
-
-            sig { params(user_id: Integer).void }
-            def notify_user(user_id)
-              # ...
-            end
+          def current_user_name
+            # ...
           end
-        RUBY
-      }
 
-      expected = <<~RUBY
+          sig { params(user_id: Integer).void }
+          def notify_user(user_id)
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
         # typed: strong
         class UserController
           module HelperMethods
@@ -137,33 +133,31 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           sig { returns(HelperProxy) }
           def helpers; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:UserController, files))
+      assert_equal(expected, rbi_for(:UserController))
     end
 
     it("generates helper module and helper proxy class when defining helper using block") do
-      files = {
-        "controller.rb" => <<~RUBY,
-          class UserController < ActionController::Base
-            helper { def greet(user) "Hello" end }
-            helper do
-              extend T::Sig
+      add_ruby_file("controller.rb", <<~RUBY)
+        class UserController < ActionController::Base
+          helper { def greet(user) "Hello" end }
+          helper do
+            extend T::Sig
 
-              sig { params(user_id: Integer).void }
-              def notify_user(user_id)
-                # ...
-              end
-            end
-
-            def current_user_name
+            sig { params(user_id: Integer).void }
+            def notify_user(user_id)
               # ...
             end
           end
-        RUBY
-      }
 
-      expected = <<~RUBY
+          def current_user_name
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
         # typed: strong
         class UserController
           module HelperMethods
@@ -181,33 +175,31 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           sig { returns(HelperProxy) }
           def helpers; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:UserController, files))
+      assert_equal(expected, rbi_for(:UserController))
     end
 
     it("generates helper module and helper proxy class for defining external helper") do
-      files = {
-        "greet_helper.rb" => <<~RUBY,
-          module GreetHelper
-            def greet(user)
-              # ...
-            end
+      add_ruby_file("greet_helper.rb", <<~RUBY)
+        module GreetHelper
+          def greet(user)
+            # ...
           end
-        RUBY
+        end
+      RUBY
 
-        "controller.rb" => <<~RUBY,
-          class UserController < ActionController::Base
-            helper GreetHelper
+      add_ruby_file("controller.rb", <<~RUBY)
+        class UserController < ActionController::Base
+          helper GreetHelper
 
-            def current_user_name
-              # ...
-            end
+          def current_user_name
+            # ...
           end
-        RUBY
-      }
+        end
+      RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class UserController
           module HelperMethods
@@ -221,9 +213,9 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           sig { returns(HelperProxy) }
           def helpers; end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:UserController, files))
+      assert_equal(expected, rbi_for(:UserController))
     end
   end
 end

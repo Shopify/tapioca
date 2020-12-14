@@ -6,16 +6,16 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
   describe("#gather_constants") do
     it("gathers no constants if there are no Google::Protobuf classes") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
         end
       RUBY
 
-      assert_equal([], constants_from(content))
+      assert_equal([], gathered_constants)
     end
 
     it("gathers only classes with Protobuf Module") do
-      content = <<~RUBY
+      add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -28,13 +28,13 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      assert_equal(["Cart"], constants_from(content))
+      assert_equal(["Cart"], gathered_constants)
     end
   end
 
   describe("#decorate") do
     it("generates methods in RBI files for classes with Protobuf with integer field type") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -47,7 +47,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Cart
           sig { returns(Integer) }
@@ -62,13 +62,13 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value: Integer).returns(Integer) }
           def shop_id=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Cart, content))
+      assert_equal(expected, rbi_for(:Cart))
     end
 
     it("generates methods in RBI files for classes with Protobuf with string field type") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -80,7 +80,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Cart
           sig { returns(String) }
@@ -89,15 +89,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value: String).returns(String) }
           def events=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Cart, content))
+      assert_equal(expected, rbi_for(:Cart))
     end
 
     it("generates methods in RBI files for classes with Protobuf with message field type") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
+
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -109,7 +110,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Cart
           sig { returns(Google::Protobuf::UInt64Value) }
@@ -118,15 +119,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
           def cart_item_index=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Cart, content))
+      assert_equal(expected, rbi_for(:Cart))
     end
 
     it("generates methods in RBI files for classes with Protobuf with enum field") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
+
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -139,11 +141,12 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
             end
           end
         end
+
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
         Cart::VALUE_TYPE = Google::Protobuf::DescriptorPool.generated_pool.lookup("VALUE_TYPE").enummodule
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Cart
           sig { returns(Cart::VALUE_TYPE) }
@@ -152,15 +155,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value: Cart::VALUE_TYPE).returns(Cart::VALUE_TYPE) }
           def value_type=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Cart, content))
+      assert_equal(expected, rbi_for(:Cart))
     end
 
     it("generates methods in RBI files for classes with Protobuf with enum field with defined type") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
+
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -173,11 +177,12 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
             end
           end
         end
+
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
         Cart::MYVALUETYPE = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart.MYVALUETYPE").enummodule
       RUBY
 
-      expected = <<~RUBY
+      expected = <<~RBI
         # typed: strong
         class Cart
           sig { returns(Cart::MYVALUETYPE) }
@@ -186,15 +191,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value: Cart::MYVALUETYPE).returns(Cart::MYVALUETYPE) }
           def value_type=(value); end
         end
-      RUBY
+      RBI
 
-      assert_equal(expected, rbi_for(:Cart, content))
+      assert_equal(expected, rbi_for(:Cart))
     end
 
     it("generates methods in RBI files for classes with Protobuf with all types") do
-      content = <<~RUBY
+      add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
+
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
             add_message "MyCart" do
@@ -210,55 +216,56 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
             end
           end
         end
+
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      rbi_output = rbi_for(:Cart, content)
+      rbi_output = rbi_for(:Cart)
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: T::Boolean).returns(T::Boolean) }
         def bool_value=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: String).returns(String) }
         def byte_value=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Integer).returns(Integer) }
         def customer_id=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Integer).returns(Integer) }
         def id=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Integer).returns(Integer) }
         def item_id=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Float).returns(Float) }
         def money_value=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Float).returns(Float) }
         def number_value=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: Integer).returns(Integer) }
         def shop_id=(value); end
-      RUBY
+      RBI
 
-      assert_includes(rbi_output, indented(<<~RUBY, 2))
+      assert_includes(rbi_output, indented(<<~RBI, 2))
         sig { params(value: String).returns(String) }
         def string_value=(value); end
-      RUBY
+      RBI
     end
   end
 end
