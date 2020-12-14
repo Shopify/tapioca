@@ -67,7 +67,7 @@ class Post
     def title=(value); end
 
     sig { returns(T::Boolean) }
-    def title?(*args); end
+    def title?; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
