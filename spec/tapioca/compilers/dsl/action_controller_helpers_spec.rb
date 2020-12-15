@@ -4,218 +4,220 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
-  describe("#initialize") do
-    it("gathers no constants if there are no  classes") do
-      assert_empty(gathered_constants)
-    end
+  describe("Tapioca::Compilers::Dsl::ActionControllerHelpers") do
+    describe("#initialize") do
+      it("gathers no constants if there are no  classes") do
+        assert_empty(gathered_constants)
+      end
 
-    it("gathers only ActionController subclasses") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class UserController < ActionController::Base
-        end
-
-        class User
-        end
-      RUBY
-
-      assert_equal(["UserController"], gathered_constants)
-    end
-
-    it("does not gather included modules as their own processable constant") do
-      add_ruby_file("content.rb", <<~RUBY)
-        module UserHelper
-        end
-
-        class UserController < ActionController::Base
-          include UserHelper
-        end
-      RUBY
-
-      assert_equal(["UserController"], gathered_constants)
-    end
-
-    it("gathers subclasses of ActionController subclasses") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class UserController < ActionController::Base
-        end
-
-        class HandController < UserController
-        end
-      RUBY
-
-      assert_equal(["HandController", "UserController"], gathered_constants)
-    end
-
-    it("ignores abstract subclasses of ActionController") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class UserController < ActionController::Base
-        end
-
-        class HomeController < ActionController::Base
-          abstract!
-        end
-      RUBY
-
-      assert_equal(["UserController"], gathered_constants)
-    end
-
-    it("ignores anonymous subclasses of ActionController") do
-      add_ruby_file("content.rb", <<~RUBY)
-        Class.new(ActionController::Base)
-      RUBY
-
-      assert_equal([], gathered_constants)
-    end
-  end
-
-  describe("#decorate") do
-    it("generates empty helper module when there are no helper methods specified") do
-      add_ruby_file("controller.rb", <<~RUBY)
-        class UserController < ActionController::Base
-          def current_user_name
-            # ...
-          end
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-        class UserController
-          module HelperMethods
+      it("gathers only ActionController subclasses") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class UserController < ActionController::Base
           end
 
-          class HelperProxy < ::ActionView::Base
-            include HelperMethods
+          class User
+          end
+        RUBY
+
+        assert_equal(["UserController"], gathered_constants)
+      end
+
+      it("does not gather included modules as their own processable constant") do
+        add_ruby_file("content.rb", <<~RUBY)
+          module UserHelper
           end
 
-          sig { returns(HelperProxy) }
-          def helpers; end
-        end
-      RBI
+          class UserController < ActionController::Base
+            include UserHelper
+          end
+        RUBY
 
-      assert_equal(expected, rbi_for(:UserController))
+        assert_equal(["UserController"], gathered_constants)
+      end
+
+      it("gathers subclasses of ActionController subclasses") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class UserController < ActionController::Base
+          end
+
+          class HandController < UserController
+          end
+        RUBY
+
+        assert_equal(["HandController", "UserController"], gathered_constants)
+      end
+
+      it("ignores abstract subclasses of ActionController") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class UserController < ActionController::Base
+          end
+
+          class HomeController < ActionController::Base
+            abstract!
+          end
+        RUBY
+
+        assert_equal(["UserController"], gathered_constants)
+      end
+
+      it("ignores anonymous subclasses of ActionController") do
+        add_ruby_file("content.rb", <<~RUBY)
+          Class.new(ActionController::Base)
+        RUBY
+
+        assert_equal([], gathered_constants)
+      end
     end
 
-    it("generates helper module and helper proxy class when defining helper using helper_method") do
-      add_ruby_file("controller.rb", <<~RUBY)
-        class UserController < ActionController::Base
-          extend T::Sig
-
-          helper_method :current_user_name
-          helper_method "notify_user"
-
-          def current_user_name
-            # ...
+    describe("#decorate") do
+      it("generates empty helper module when there are no helper methods specified") do
+        add_ruby_file("controller.rb", <<~RUBY)
+          class UserController < ActionController::Base
+            def current_user_name
+              # ...
+            end
           end
+        RUBY
 
-          sig { params(user_id: Integer).void }
-          def notify_user(user_id)
-            # ...
+        expected = <<~RBI
+          # typed: strong
+          class UserController
+            module HelperMethods
+            end
+
+            class HelperProxy < ::ActionView::Base
+              include HelperMethods
+            end
+
+            sig { returns(HelperProxy) }
+            def helpers; end
           end
-        end
-      RUBY
+        RBI
 
-      expected = <<~RBI
-        # typed: strong
-        class UserController
-          module HelperMethods
-            sig { returns(T.untyped) }
-            def current_user_name; end
+        assert_equal(expected, rbi_for(:UserController))
+      end
 
-            sig { params(user_id: Integer).void }
-            def notify_user(user_id); end
-          end
-
-          class HelperProxy < ::ActionView::Base
-            include HelperMethods
-          end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:UserController))
-    end
-
-    it("generates helper module and helper proxy class when defining helper using block") do
-      add_ruby_file("controller.rb", <<~RUBY)
-        class UserController < ActionController::Base
-          helper { def greet(user) "Hello" end }
-          helper do
+      it("generates helper module and helper proxy class when defining helper using helper_method") do
+        add_ruby_file("controller.rb", <<~RUBY)
+          class UserController < ActionController::Base
             extend T::Sig
+
+            helper_method :current_user_name
+            helper_method "notify_user"
+
+            def current_user_name
+              # ...
+            end
 
             sig { params(user_id: Integer).void }
             def notify_user(user_id)
               # ...
             end
           end
+        RUBY
 
-          def current_user_name
-            # ...
+        expected = <<~RBI
+          # typed: strong
+          class UserController
+            module HelperMethods
+              sig { returns(T.untyped) }
+              def current_user_name; end
+
+              sig { params(user_id: Integer).void }
+              def notify_user(user_id); end
+            end
+
+            class HelperProxy < ::ActionView::Base
+              include HelperMethods
+            end
+
+            sig { returns(HelperProxy) }
+            def helpers; end
           end
-        end
-      RUBY
+        RBI
 
-      expected = <<~RBI
-        # typed: strong
-        class UserController
-          module HelperMethods
-            sig { params(user: T.untyped).returns(T.untyped) }
-            def greet(user); end
+        assert_equal(expected, rbi_for(:UserController))
+      end
 
-            sig { params(user_id: Integer).void }
-            def notify_user(user_id); end
+      it("generates helper module and helper proxy class when defining helper using block") do
+        add_ruby_file("controller.rb", <<~RUBY)
+          class UserController < ActionController::Base
+            helper { def greet(user) "Hello" end }
+            helper do
+              extend T::Sig
+
+              sig { params(user_id: Integer).void }
+              def notify_user(user_id)
+                # ...
+              end
+            end
+
+            def current_user_name
+              # ...
+            end
           end
+        RUBY
 
-          class HelperProxy < ::ActionView::Base
-            include HelperMethods
+        expected = <<~RBI
+          # typed: strong
+          class UserController
+            module HelperMethods
+              sig { params(user: T.untyped).returns(T.untyped) }
+              def greet(user); end
+
+              sig { params(user_id: Integer).void }
+              def notify_user(user_id); end
+            end
+
+            class HelperProxy < ::ActionView::Base
+              include HelperMethods
+            end
+
+            sig { returns(HelperProxy) }
+            def helpers; end
           end
+        RBI
 
-          sig { returns(HelperProxy) }
-          def helpers; end
-        end
-      RBI
+        assert_equal(expected, rbi_for(:UserController))
+      end
 
-      assert_equal(expected, rbi_for(:UserController))
-    end
-
-    it("generates helper module and helper proxy class for defining external helper") do
-      add_ruby_file("greet_helper.rb", <<~RUBY)
-        module GreetHelper
-          def greet(user)
-            # ...
+      it("generates helper module and helper proxy class for defining external helper") do
+        add_ruby_file("greet_helper.rb", <<~RUBY)
+          module GreetHelper
+            def greet(user)
+              # ...
+            end
           end
-        end
-      RUBY
+        RUBY
 
-      add_ruby_file("controller.rb", <<~RUBY)
-        class UserController < ActionController::Base
-          helper GreetHelper
+        add_ruby_file("controller.rb", <<~RUBY)
+          class UserController < ActionController::Base
+            helper GreetHelper
 
-          def current_user_name
-            # ...
+            def current_user_name
+              # ...
+            end
           end
-        end
-      RUBY
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
-        class UserController
-          module HelperMethods
-            include ::GreetHelper
+        expected = <<~RBI
+          # typed: strong
+          class UserController
+            module HelperMethods
+              include ::GreetHelper
+            end
+
+            class HelperProxy < ::ActionView::Base
+              include HelperMethods
+            end
+
+            sig { returns(HelperProxy) }
+            def helpers; end
           end
+        RBI
 
-          class HelperProxy < ::ActionView::Base
-            include HelperMethods
-          end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:UserController))
+        assert_equal(expected, rbi_for(:UserController))
+      end
     end
   end
 end
