@@ -19,7 +19,7 @@ class DslSpec < Minitest::Spec
 
     # We want to perform requires etc delayed to ensure namespace is not polluted
     # so we register an `after_setup` method to perform those operations
-    test_class.define_method(:after_setup) do
+    test_class.send(:define_method, :after_setup) do
       # Allow other `after_setup` methods to run
       super()
       # Require the file that the target class should be loaded from
