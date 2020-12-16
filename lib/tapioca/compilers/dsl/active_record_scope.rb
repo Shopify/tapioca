@@ -52,7 +52,7 @@ module Tapioca
           ).void
         end
         def decorate(root, constant)
-          scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
+          scope_method_names = T.let(constant.send(:generated_relation_methods), Module).instance_methods(false)
           return if scope_method_names.empty?
 
           root.path(constant) do |model|
@@ -60,7 +60,7 @@ module Tapioca
 
             model.create_module(module_name) do |mod|
               scope_method_names.each do |scope_method|
-                generate_scope_method(scope_method, mod)
+                generate_scope_method(scope_method.to_s, mod)
               end
             end
 
