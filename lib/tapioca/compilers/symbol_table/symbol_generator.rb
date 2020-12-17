@@ -294,8 +294,7 @@ module Tapioca
         def compile_mixins(constant)
           ignorable_ancestors =
             if constant.is_a?(Class)
-              ancestors = constant.superclass&.ancestors || Object.ancestors
-              Set.new(ancestors)
+              constant.superclass&.ancestors || Object.ancestors
             else
               Module.ancestors
             end
@@ -307,8 +306,7 @@ module Tapioca
               Module.ancestors
             end
 
-          interesting_ancestors =
-            constant.ancestors.reject { |mod| ignorable_ancestors.include?(mod) }
+          interesting_ancestors = constant.ancestors - ignorable_ancestors
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)

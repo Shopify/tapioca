@@ -555,6 +555,52 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles constants that have a hash method on the constant which does not return an Integer") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          class << self
+            def hash
+              {}
+            end
+          end
+
+          class Baz
+            def self.hash
+              {}
+            end
+          end
+
+          module Bar
+            def self.hash
+              {}
+            end
+          end
+        end
+      RUBY
+
+      output = <<~RBI
+        class Foo
+          class << self
+            def hash; end
+          end
+        end
+
+        module Foo::Bar
+          class << self
+            def hash; end
+          end
+        end
+
+        class Foo::Baz
+          class << self
+            def hash; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles a class which effectively has itself as a superclass") do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
