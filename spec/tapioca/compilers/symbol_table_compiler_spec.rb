@@ -585,7 +585,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         module Toto; end
         module Toto::Foo; end
-        class Toto::Foo::Bar; end
+        class Toto::Foo::Bar < ::Toto::Baz; end
       RBI
 
       assert_equal(output, compile)
@@ -698,6 +698,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Foo::Bar < ::Numeric; end
+
+        Foo::Baz = Foo::Bar
       RBI
 
       assert_equal(output, compile)

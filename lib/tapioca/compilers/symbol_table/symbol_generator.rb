@@ -97,7 +97,6 @@ module Tapioca
           return if name.downcase == name
           return if alias_namespaced?(name)
           return if seen?(name)
-          return unless parent_declares_constant?(name)
           return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
           mark_seen(name)
@@ -147,7 +146,6 @@ module Tapioca
 
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_module(tree, name, constant)
-          return unless public_module?(constant)
           return unless defined_in_gem?(constant, strict: false)
 
           scope =
@@ -282,15 +280,6 @@ module Tapioca
           while (superclass = superclass_of(constant))
             constant_name = name_of(constant)
             constant = superclass
-
-            # Some classes have superclasses that are private constants
-            # so if we generate code with that superclass, the output
-            # will not be compilable (since private constants are not
-            # publicly visible).
-            #
-            # So we skip superclasses that are not public and walk up the
-            # chain.
-            next unless public_module?(superclass)
 
             # Some types have "themselves" as their superclass
             # which can happen via:
@@ -686,19 +675,6 @@ module Tapioca
           constant.instance_method(:initialize)
         rescue
           nil
-        end
-
-        def parent_declares_constant?(name)
-          name_parts = name.split("::")
-
-          parent_name = name_parts[0...-1].join("::")
-          parent_name = parent_name[2..-1] if parent_name.start_with?("::")
-          parent_name = 'Object' if parent_name == ""
-          parent = T.cast(resolve_constant(parent_name), T.nilable(Module))
-
-          return false unless parent
-
-          constants_of(parent).include?(name_parts.last.to_sym)
         end
 
         sig { params(constant: Module).returns(T::Boolean) }
