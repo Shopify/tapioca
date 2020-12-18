@@ -601,34 +601,25 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles constants that have horrible ==, eql? or equal? overrides") do
+    it("compiles constants that have horrible eql? or equal? overrides") do
       add_ruby_file("foo.rb", <<~RUBY)
-        class Foo
-          class << self
-            def ==(other)
-              false
-            end
-          end
-
+        module Foo
           module Bar
             def self.equal?
-              false
+              raise RuntimeError
             end
           end
 
           class Baz
             def self.eql?
-              false
+              raise RuntimeError
             end
           end
         end
       RUBY
 
       output = <<~RBI
-        class Foo
-          class << self
-            def ==(other); end
-          end
+        module Foo
         end
 
         module Foo::Bar

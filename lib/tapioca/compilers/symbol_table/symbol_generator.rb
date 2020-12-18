@@ -294,19 +294,8 @@ module Tapioca
         def compile_mixins(constant)
           singleton_class = singleton_class_of(constant)
 
-          inherited_ancestors_ids = Set.new(
-            inherited_ancestors_of(constant).map { |mod| object_id_of(mod) }
-          )
-          interesting_ancestors = constant.ancestors.reject do |mod|
-            inherited_ancestors_ids.include?(object_id_of(mod))
-          end
-
-          inherited_singleton_class_ancestors_ids = Set.new(
-            inherited_ancestors_of(singleton_class).map { |mod| object_id_of(mod) }
-          )
-          interesting_singleton_class_ancestors = singleton_class.ancestors.reject do |mod|
-            inherited_singleton_class_ancestors_ids.include?(object_id_of(mod))
-          end
+          interesting_ancestors = interesting_ancestors_of(constant)
+          interesting_singleton_class_ancestors = interesting_ancestors_of(singleton_class)
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
@@ -767,6 +756,33 @@ module Tapioca
             ancestors_of(superclass_of(constant) || Object)
           else
             Module.ancestors
+          end
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def interesting_ancestors_of(constant)
+          inherited_ancestors_ids = Set.new(
+            inherited_ancestors_of(constant).map { |mod| object_id_of(mod) }
+          )
+          # TODO: There is actually a bug here where this will drop modules that
+          # may be included twice. For example:
+          #
+          # ```ruby
+          # class Foo
+          #   prepend Kernel
+          # end
+          # ````
+          # would give:
+          # ```ruby
+          # Foo.ancestors #=> [Kernel, Foo, Object, Kernel, BasicObject]
+          # ````
+          # but since we drop `Kernel` whenever we match it, we would miss
+          # the `prepend Kernel` in the output.
+          #
+          # Instead, we should only drop the tail matches of the ancestors and
+          # inherited ancestors, past the location of the constant itself.
+          constant.ancestors.reject do |mod|
+            inherited_ancestors_ids.include?(object_id_of(mod))
           end
         end
 
