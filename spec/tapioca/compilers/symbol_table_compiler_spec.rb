@@ -564,13 +564,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             end
           end
 
-          class Baz
+          module Bar
             def self.hash
               {}
             end
           end
 
-          module Bar
+          class Baz
             def self.hash
               {}
             end
@@ -594,6 +594,52 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Foo::Baz
           class << self
             def hash; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("compiles constants that have horrible ==, eql? or equal? overrides") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          class << self
+            def ==(other)
+              false
+            end
+          end
+
+          module Bar
+            def self.equal?
+              false
+            end
+          end
+
+          class Baz
+            def self.eql?
+              false
+            end
+          end
+        end
+      RUBY
+
+      output = <<~RBI
+        class Foo
+          class << self
+            def ==(other); end
+          end
+        end
+
+        module Foo::Bar
+          class << self
+            def equal?; end
+          end
+        end
+
+        class Foo::Baz
+          class << self
+            def eql?; end
           end
         end
       RBI

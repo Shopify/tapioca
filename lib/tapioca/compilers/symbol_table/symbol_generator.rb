@@ -292,33 +292,27 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def compile_mixins(constant)
-          ignorable_ancestors =
-            if constant.is_a?(Class)
-              constant.superclass&.ancestors || Object.ancestors
-            else
-              Module.ancestors
-            end
+          singleton_class = singleton_class_of(constant)
 
-          inherited_singleton_class_ancestors =
-            if constant.is_a?(Class)
-              Set.new(singleton_class_of(constant.superclass).ancestors)
-            else
-              Module.ancestors
-            end
-
+          inherited_ancestors_ids = Set.new(
+            inherited_ancestors_of(constant).map { |mod| object_id_of(mod) }
+          )
           interesting_ancestors = constant.ancestors.reject do |mod|
-            ignorable_ancestors.any? { |ignorable_ancestor| are_equal?(mod, ignorable_ancestor) }
+            inherited_ancestors_ids.include?(object_id_of(mod))
+          end
+
+          inherited_singleton_class_ancestors_ids = Set.new(
+            inherited_ancestors_of(singleton_class).map { |mod| object_id_of(mod) }
+          )
+          interesting_singleton_class_ancestors = singleton_class.ancestors.reject do |mod|
+            inherited_singleton_class_ancestors_ids.include?(object_id_of(mod))
           end
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
-          extend  = singleton_class_of(constant).ancestors
-            .reject do |mod|
-              mod == singleton_class_of(constant) ||
-                inherited_singleton_class_ancestors.include?(mod) ||
-                !public_module?(mod) ||
-                Module != class_of(mod)
-            end
+          extend  = interesting_singleton_class_ancestors.reject do |mod|
+            !public_module?(mod) || Module != class_of(mod) || are_equal?(mod, singleton_class)
+          end
 
           prepends = prepend
             .reverse
@@ -757,9 +751,23 @@ module Tapioca
           Module.instance_method(:name).bind(constant).call
         end
 
-        sig { params(constant: BasicObject).returns(Class).checked(:never) }
+        sig { params(constant: Module).returns(Class) }
         def singleton_class_of(constant)
           Object.instance_method(:singleton_class).bind(constant).call
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def ancestors_of(constant)
+          Module.instance_method(:ancestors).bind(constant).call
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def inherited_ancestors_of(constant)
+          if Class === constant
+            ancestors_of(superclass_of(constant) || Object)
+          else
+            Module.ancestors
+          end
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
@@ -815,6 +823,11 @@ module Tapioca
         sig { params(constant: Module).returns(String) }
         def type_of(constant)
           constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+        end
+
+        sig { params(object: Object).returns(T::Boolean).checked(:never) }
+        def object_id_of(object)
+          Object.instance_method(:object_id).bind(object).call
         end
 
         sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
