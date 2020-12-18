@@ -292,33 +292,16 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def compile_mixins(constant)
-          ignorable_ancestors =
-            if constant.is_a?(Class)
-              ancestors = constant.superclass&.ancestors || Object.ancestors
-              Set.new(ancestors)
-            else
-              Module.ancestors
-            end
+          singleton_class = singleton_class_of(constant)
 
-          inherited_singleton_class_ancestors =
-            if constant.is_a?(Class)
-              Set.new(singleton_class_of(constant.superclass).ancestors)
-            else
-              Module.ancestors
-            end
-
-          interesting_ancestors =
-            constant.ancestors.reject { |mod| ignorable_ancestors.include?(mod) }
+          interesting_ancestors = interesting_ancestors_of(constant)
+          interesting_singleton_class_ancestors = interesting_ancestors_of(singleton_class)
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
-          extend  = singleton_class_of(constant).ancestors
-            .reject do |mod|
-              mod == singleton_class_of(constant) ||
-                inherited_singleton_class_ancestors.include?(mod) ||
-                !public_module?(mod) ||
-                Module != class_of(mod)
-            end
+          extend  = interesting_singleton_class_ancestors.reject do |mod|
+            !public_module?(mod) || Module != class_of(mod) || are_equal?(mod, singleton_class)
+          end
 
           prepends = prepend
             .reverse
@@ -757,9 +740,50 @@ module Tapioca
           Module.instance_method(:name).bind(constant).call
         end
 
-        sig { params(constant: BasicObject).returns(Class).checked(:never) }
+        sig { params(constant: Module).returns(Class) }
         def singleton_class_of(constant)
           Object.instance_method(:singleton_class).bind(constant).call
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def ancestors_of(constant)
+          Module.instance_method(:ancestors).bind(constant).call
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def inherited_ancestors_of(constant)
+          if Class === constant
+            ancestors_of(superclass_of(constant) || Object)
+          else
+            Module.ancestors
+          end
+        end
+
+        sig { params(constant: Module).returns(T::Array[Module]) }
+        def interesting_ancestors_of(constant)
+          inherited_ancestors_ids = Set.new(
+            inherited_ancestors_of(constant).map { |mod| object_id_of(mod) }
+          )
+          # TODO: There is actually a bug here where this will drop modules that
+          # may be included twice. For example:
+          #
+          # ```ruby
+          # class Foo
+          #   prepend Kernel
+          # end
+          # ````
+          # would give:
+          # ```ruby
+          # Foo.ancestors #=> [Kernel, Foo, Object, Kernel, BasicObject]
+          # ````
+          # but since we drop `Kernel` whenever we match it, we would miss
+          # the `prepend Kernel` in the output.
+          #
+          # Instead, we should only drop the tail matches of the ancestors and
+          # inherited ancestors, past the location of the constant itself.
+          constant.ancestors.reject do |mod|
+            inherited_ancestors_ids.include?(object_id_of(mod))
+          end
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
@@ -815,6 +839,11 @@ module Tapioca
         sig { params(constant: Module).returns(String) }
         def type_of(constant)
           constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+        end
+
+        sig { params(object: Object).returns(T::Boolean).checked(:never) }
+        def object_id_of(object)
+          Object.instance_method(:object_id).bind(object).call
         end
 
         sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
