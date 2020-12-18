@@ -306,7 +306,9 @@ module Tapioca
               Module.ancestors
             end
 
-          interesting_ancestors = constant.ancestors - ignorable_ancestors
+          interesting_ancestors = constant.ancestors.reject do |mod|
+            ignorable_ancestors.any? { |ignorable_ancestor| are_equal?(mod, ignorable_ancestor) }
+          end
 
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
