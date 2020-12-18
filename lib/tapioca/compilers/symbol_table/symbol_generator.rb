@@ -140,7 +140,7 @@ module Tapioca
 
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
-          type_name = public_module?(klass) && klass_name || "T.untyped"
+          type_name = klass_name || "T.untyped"
           tree << RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         end
 
@@ -328,13 +328,12 @@ module Tapioca
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
           extend  = interesting_singleton_class_ancestors.reject do |mod|
-            !public_module?(mod) || Module != class_of(mod) || are_equal?(mod, singleton_class)
+            Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
           prepend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
@@ -346,7 +345,6 @@ module Tapioca
           include
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
@@ -355,7 +353,6 @@ module Tapioca
           extend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
               qname = qualified_name_of(mod)
               tree << RBI::Extend.new(T.must(qname))
@@ -398,7 +395,6 @@ module Tapioca
 
           all_dynamic_includes
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
@@ -413,9 +409,7 @@ module Tapioca
           mixed_in_module = if extends_as_concern && Module === class_methods_module
             class_methods_module
           else
-            dynamic_extends.find do |mod|
-              mod != constant && public_module?(mod)
-            end
+            dynamic_extends.find { |mod| mod != constant }
           end
 
           return if mixed_in_module.nil?
@@ -675,20 +669,6 @@ module Tapioca
           constant.instance_method(:initialize)
         rescue
           nil
-        end
-
-        sig { params(constant: Module).returns(T::Boolean) }
-        def public_module?(constant)
-          constant_name = name_of(constant)
-          return false unless constant_name
-          return false if constant_name.start_with?('T::Private')
-
-          begin
-            # can't use !! here because the constant might override ! and mess with us
-            Module === eval(constant_name) # rubocop:disable Security/Eval
-          rescue NameError
-            false
-          end
         end
 
         sig { params(constant: BasicObject).returns(Class).checked(:never) }
