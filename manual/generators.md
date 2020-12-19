@@ -15,6 +15,7 @@ In the following section you will find all available DSL generators:
 * [FrozenRecord](generator_frozenrecord.md)
 * [IdentityCache](generator_identitycache.md)
 * [Protobuf](generator_protobuf.md)
+* [SidekiqWorker](generator_sidekiqworker.md)
 * [SmartProperties](generator_smartproperties.md)
 * [StateMachines](generator_statemachines.md)
 * [UrlHelpers](generator_urlhelpers.md)
