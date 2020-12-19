@@ -134,6 +134,8 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     rack (2.2.2)
+    rack-protection (2.1.0)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.4.3)
@@ -162,7 +164,7 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
     rake (13.0.1)
-    redis (4.2.5)
+    redis (4.1.4)
     rubocop (0.78.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -176,10 +178,11 @@ GEM
       rubocop
     ruby-progressbar (1.10.1)
     shopify-money (0.14.1)
-    sidekiq (6.1.2)
-      connection_pool (>= 2.2.2)
+    sidekiq (5.2.9)
+      connection_pool (~> 2.2, >= 2.2.2)
       rack (~> 2.0)
-      redis (>= 4.2.0)
+      rack-protection (>= 1.5.0)
+      redis (>= 3.3.5, < 4.2)
     smart_properties (1.15.0)
     sorbet (0.5.6154)
       sorbet-static (= 0.5.6154)
@@ -230,7 +233,7 @@ DEPENDENCIES
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
   shopify-money (= 0.14.1)
-  sidekiq (~> 6.0)
+  sidekiq (~> 5.0)
   smart_properties (>= 1.15.0)
   sorbet
   sprockets (~> 3.7)

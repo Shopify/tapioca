@@ -11,20 +11,18 @@ module Sidekiq
     def configure_client; end
     def configure_server; end
     def death_handlers; end
+    def default_retries_exhausted=(prok); end
     def default_server_middleware; end
     def default_worker_options; end
     def default_worker_options=(hash); end
     def dump_json(object); end
     def error_handlers; end
     def load_json(string); end
-    def log_formatter; end
-    def log_formatter=(log_formatter); end
     def logger; end
-    def logger=(logger); end
+    def logger=(log); end
     def on(event, &block); end
     def options; end
     def options=(opts); end
-    def pro?; end
     def redis; end
     def redis=(hash); end
     def redis_info; end
@@ -50,7 +48,6 @@ class Sidekiq::Client
   def normalized_hash(item_class); end
   def process_single(worker_class, item); end
   def raw_push(payloads); end
-  def validate(item); end
 
   class << self
     def enqueue(klass, *args); end
@@ -60,13 +57,6 @@ class Sidekiq::Client
     def push(item); end
     def push_bulk(items); end
     def via(pool); end
-  end
-end
-
-module Sidekiq::Context
-  class << self
-    def current; end
-    def with(hash); end
   end
 end
 
@@ -88,47 +78,31 @@ Sidekiq::FAKE_INFO = T.let(T.unsafe(nil), Hash)
 
 Sidekiq::LICENSE = T.let(T.unsafe(nil), String)
 
-class Sidekiq::Logger < ::Logger
-  include(::Sidekiq::LoggingUtils)
+module Sidekiq::Logging
+  def logger; end
 
-  def initialize(*args, **kwargs); end
+  class << self
+    def initialize_logger(log_target = T.unsafe(nil)); end
+    def job_hash_context(job_hash); end
+    def logger; end
+    def logger=(log); end
+    def reopen_logs; end
+    def tid; end
+    def with_context(msg); end
+    def with_job_hash_context(job_hash, &block); end
+  end
 end
 
-module Sidekiq::Logger::Formatters
+class Sidekiq::Logging::Pretty < ::Logger::Formatter
+  def call(severity, time, program_name, message); end
+  def context; end
 end
 
-class Sidekiq::Logger::Formatters::Base < ::Logger::Formatter
-  def ctx; end
-  def format_context; end
-  def tid; end
-end
+Sidekiq::Logging::Pretty::SPACE = T.let(T.unsafe(nil), String)
 
-class Sidekiq::Logger::Formatters::JSON < ::Sidekiq::Logger::Formatters::Base
+class Sidekiq::Logging::WithoutTimestamp < ::Sidekiq::Logging::Pretty
   def call(severity, time, program_name, message); end
 end
-
-class Sidekiq::Logger::Formatters::Pretty < ::Sidekiq::Logger::Formatters::Base
-  def call(severity, time, program_name, message); end
-end
-
-class Sidekiq::Logger::Formatters::WithoutTimestamp < ::Sidekiq::Logger::Formatters::Pretty
-  def call(severity, time, program_name, message); end
-end
-
-module Sidekiq::LoggingUtils
-  def add(severity, message = T.unsafe(nil), progname = T.unsafe(nil), &block); end
-  def debug?; end
-  def error?; end
-  def fatal?; end
-  def info?; end
-  def level; end
-  def local_level; end
-  def local_level=(level); end
-  def log_at(level); end
-  def warn?; end
-end
-
-Sidekiq::LoggingUtils::LEVELS = T.let(T.unsafe(nil), Hash)
 
 module Sidekiq::Middleware
 end
@@ -141,7 +115,6 @@ class Sidekiq::Middleware::Chain
   def add(klass, *args); end
   def clear; end
   def each(&block); end
-  def empty?; end
   def entries; end
   def exists?(klass); end
   def insert_after(oldklass, newklass, *args); end
@@ -195,8 +168,6 @@ end
 Sidekiq::VERSION = T.let(T.unsafe(nil), String)
 
 module Sidekiq::Worker
-  include(::Sidekiq::Worker::Options)
-
   mixes_in_class_methods(::Sidekiq::Worker::ClassMethods)
 
   def jid; end
@@ -213,30 +184,18 @@ module Sidekiq::Worker::ClassMethods
   def delay(*args); end
   def delay_for(*args); end
   def delay_until(*args); end
+  def get_sidekiq_options; end
   def perform_async(*args); end
   def perform_at(interval, *args); end
   def perform_in(interval, *args); end
   def set(options); end
-  def sidekiq_options(opts = T.unsafe(nil)); end
-end
-
-module Sidekiq::Worker::Options
-  mixes_in_class_methods(::Sidekiq::Worker::Options::ClassMethods)
-
-  class << self
-    def included(base); end
-  end
-end
-
-module Sidekiq::Worker::Options::ClassMethods
-  def get_sidekiq_options; end
   def sidekiq_class_attribute(*attrs); end
   def sidekiq_options(opts = T.unsafe(nil)); end
   def sidekiq_retries_exhausted(&block); end
   def sidekiq_retry_in(&block); end
 end
 
-Sidekiq::Worker::Options::ClassMethods::ACCESSOR_MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
+Sidekiq::Worker::ClassMethods::ACCESSOR_MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
 
 class Sidekiq::Worker::Setter
   def initialize(klass, opts); end
