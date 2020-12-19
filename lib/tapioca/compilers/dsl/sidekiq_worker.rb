@@ -52,23 +52,23 @@ module Tapioca
           root.path(constant) do |worker|
             method_def = constant.instance_method(:perform)
 
-            perform_async_params = compile_method_parameters_to_parlour(method_def)
+            async_params = compile_method_parameters_to_parlour(method_def)
 
             # `perform_at` and is just an alias for `perform_in` so both methods technically
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
-            perform_at_params = [
+            at_params = [
               Parlour::RbiGenerator::Parameter.new('interval', type: 'T.any(DateTime, Time)'),
-              *perform_async_params,
+              *async_params,
             ]
-            perform_in_params = [
+            in_params = [
               Parlour::RbiGenerator::Parameter.new('interval', type: 'Numeric'),
-              *perform_async_params,
+              *async_params,
             ]
 
-            create_method(worker, 'perform_async', parameters: perform_async_params, return_type: 'String', class_method: true)
-            create_method(worker, 'perform_at', parameters: perform_at_params, return_type: 'String', class_method: true)
-            create_method(worker, 'perform_in', parameters: perform_in_params, return_type: 'String', class_method: true)
+            create_method(worker, 'perform_async', parameters: async_params, return_type: 'String', class_method: true)
+            create_method(worker, 'perform_at', parameters: at_params, return_type: 'String', class_method: true)
+            create_method(worker, 'perform_in', parameters: in_params, return_type: 'String', class_method: true)
           end
         end
 
