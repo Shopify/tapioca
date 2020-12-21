@@ -4,160 +4,162 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
-  describe("#initialize") do
-    it("gathers no constants if there are no ActionMailer subclasses") do
-      assert_empty(gathered_constants)
-    end
+  describe("Tapioca::Compilers::Dsl::ActionMailer") do
+    describe("#initialize") do
+      it("gathers no constants if there are no ActionMailer subclasses") do
+        assert_empty(gathered_constants)
+      end
 
-    it("gathers only ActionMailer subclasses") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-        end
-
-        class User
-        end
-      RUBY
-
-      assert_equal(["NotifierMailer"], gathered_constants)
-    end
-
-    it("gathers subclasses of ActionMailer subclasses") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-        end
-
-        class SecondaryMailer < NotifierMailer
-        end
-      RUBY
-
-      assert_equal(["NotifierMailer", "SecondaryMailer"], gathered_constants)
-    end
-
-    it("ignores abstract subclasses") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-        end
-
-        class AbstractMailer < ActionMailer::Base
-          abstract!
-        end
-      RUBY
-
-      assert_equal(["NotifierMailer"], gathered_constants)
-    end
-  end
-
-  describe("#decorate") do
-    it("generates empty RBI file if there are no methods") do
-      add_ruby_file("mailer.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-        class NotifierMailer
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:NotifierMailer))
-    end
-
-    it("generates correct RBI file for subclass with methods") do
-      add_ruby_file("mailer.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-          def notify_customer(customer_id)
-            # ...
+      it("gathers only ActionMailer subclasses") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
           end
-        end
-      RUBY
 
-      expected = <<~RBI
-        # typed: strong
-        class NotifierMailer
-          sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
-          def self.notify_customer(customer_id); end
-        end
-      RBI
+          class User
+          end
+        RUBY
 
-      assert_equal(expected, rbi_for(:NotifierMailer))
+        assert_equal(["NotifierMailer"], gathered_constants)
+      end
+
+      it("gathers subclasses of ActionMailer subclasses") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
+          end
+
+          class SecondaryMailer < NotifierMailer
+          end
+        RUBY
+
+        assert_equal(["NotifierMailer", "SecondaryMailer"], gathered_constants)
+      end
+
+      it("ignores abstract subclasses") do
+        add_ruby_file("content.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
+          end
+
+          class AbstractMailer < ActionMailer::Base
+            abstract!
+          end
+        RUBY
+
+        assert_equal(["NotifierMailer"], gathered_constants)
+      end
     end
 
-    it("generates correct RBI file for subclass with method signatures") do
-      add_ruby_file("mailer.rb", <<~RUBY)
-        class NotifierMailer < ActionMailer::Base
-          extend T::Sig
-          sig { params(customer_id: Integer).void }
-          def notify_customer(customer_id)
-            # ...
+    describe("#decorate") do
+      it("generates empty RBI file if there are no methods") do
+        add_ruby_file("mailer.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
           end
-        end
-      RUBY
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
-        class NotifierMailer
-          sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
-          def self.notify_customer(customer_id); end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:NotifierMailer))
-    end
-
-    it("generates correct RBI file for mailer with delegated methods") do
-      add_ruby_file("mailer.rb", template(<<~RUBY))
-        class NotifierMailer < ActionMailer::Base
-          delegate :notify_customer, to: :foo
-
-        <% if ruby_version(">= 2.7.0") %>
-          module_eval("def notify_admin(...); end")
-        <% end %>
-        end
-      RUBY
-
-      expected = template(<<~RBI)
-        # typed: strong
-        class NotifierMailer
-        <% if ruby_version(">= 2.7.0") %>
-          sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
-          def self.notify_admin(*_arg0, &_arg1); end
-
-        <% end %>
-          sig { params(args: T.untyped, block: T.untyped).returns(::ActionMailer::MessageDelivery) }
-          def self.notify_customer(*args, &block); end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:NotifierMailer))
-    end
-
-    it("does not generate RBI for methods defined in abstract classes") do
-      add_ruby_file("mailer.rb", <<~RUBY)
-        class AbstractMailer < ActionMailer::Base
-          abstract!
-
-          def helper_method
-            # ...
+        expected = <<~RBI
+          # typed: strong
+          class NotifierMailer
           end
-        end
+        RBI
 
-        class NotifierMailer < AbstractMailer
-          def notify_customer(customer_id)
-            # ...
+        assert_equal(expected, rbi_for(:NotifierMailer))
+      end
+
+      it("generates correct RBI file for subclass with methods") do
+        add_ruby_file("mailer.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
+            def notify_customer(customer_id)
+              # ...
+            end
           end
-        end
-      RUBY
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
-        class NotifierMailer
-          sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
-          def self.notify_customer(customer_id); end
-        end
-      RBI
+        expected = <<~RBI
+          # typed: strong
+          class NotifierMailer
+            sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def self.notify_customer(customer_id); end
+          end
+        RBI
 
-      assert_equal(expected, rbi_for(:NotifierMailer))
+        assert_equal(expected, rbi_for(:NotifierMailer))
+      end
+
+      it("generates correct RBI file for subclass with method signatures") do
+        add_ruby_file("mailer.rb", <<~RUBY)
+          class NotifierMailer < ActionMailer::Base
+            extend T::Sig
+            sig { params(customer_id: Integer).void }
+            def notify_customer(customer_id)
+              # ...
+            end
+          end
+        RUBY
+
+        expected = <<~RBI
+          # typed: strong
+          class NotifierMailer
+            sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
+            def self.notify_customer(customer_id); end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:NotifierMailer))
+      end
+
+      it("generates correct RBI file for mailer with delegated methods") do
+        add_ruby_file("mailer.rb", template(<<~RUBY))
+          class NotifierMailer < ActionMailer::Base
+            delegate :notify_customer, to: :foo
+
+          <% if ruby_version(">= 2.7.0") %>
+            module_eval("def notify_admin(...); end")
+          <% end %>
+          end
+        RUBY
+
+        expected = template(<<~RBI)
+          # typed: strong
+          class NotifierMailer
+          <% if ruby_version(">= 2.7.0") %>
+            sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def self.notify_admin(*_arg0, &_arg1); end
+
+          <% end %>
+            sig { params(args: T.untyped, block: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def self.notify_customer(*args, &block); end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:NotifierMailer))
+      end
+
+      it("does not generate RBI for methods defined in abstract classes") do
+        add_ruby_file("mailer.rb", <<~RUBY)
+          class AbstractMailer < ActionMailer::Base
+            abstract!
+
+            def helper_method
+              # ...
+            end
+          end
+
+          class NotifierMailer < AbstractMailer
+            def notify_customer(customer_id)
+              # ...
+            end
+          end
+        RUBY
+
+        expected = <<~RBI
+          # typed: strong
+          class NotifierMailer
+            sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def self.notify_customer(customer_id); end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:NotifierMailer))
+      end
     end
   end
 end

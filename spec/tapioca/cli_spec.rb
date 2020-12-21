@@ -60,7 +60,7 @@ module Contents
 end
 
 class Tapioca::CliSpec < Minitest::HooksSpec
-  include TemplateHelper
+  include Tapioca::Testing::OutputHelpers
 
   attr_reader :outdir
   attr_reader :repo_path

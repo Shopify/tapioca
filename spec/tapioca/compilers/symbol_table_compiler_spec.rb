@@ -7,9 +7,7 @@ require "tmpdir"
 require "bundler"
 
 class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
-  include ContentHelper
-  include TemplateHelper
-  include IsolationHelper
+  include Tapioca::TestHelper
 
   describe("compile") do
     sig { returns(String) }

@@ -89,7 +89,7 @@ module Tapioca
       class UrlHelpers < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module)).void }
+        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
         def decorate(root, constant)
           case constant
           when GeneratedPathHelpersModule.singleton_class, GeneratedUrlHelpersModule.singleton_class
@@ -127,7 +127,7 @@ module Tapioca
 
         private
 
-        sig { params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module)).void }
+        sig { params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
         def generate_module_for(root, constant)
           root.create_module(T.must(constant.name)) do |mod|
             mod.create_include("::ActionDispatch::Routing::UrlFor")
@@ -143,7 +143,7 @@ module Tapioca
           end
         end
 
-        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(Module), helper_module: Module).void }
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: Module, helper_module: Module).void }
         def create_mixins_for(mod, constant, helper_module)
           include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
           extend_helper = constant.singleton_class.ancestors.include?(helper_module)

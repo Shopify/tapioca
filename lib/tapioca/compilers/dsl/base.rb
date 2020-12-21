@@ -123,7 +123,7 @@ module Tapioca
         # Compile a Ruby method return type into a Parlour type
         sig do
           params(method_def: T.any(Method, UnboundMethod))
-            .returns(String)
+            .returns(T.nilable(String))
         end
         def compile_method_return_type_to_parlour(method_def)
           signature = T::Private::Methods.signature_for_method(method_def)
