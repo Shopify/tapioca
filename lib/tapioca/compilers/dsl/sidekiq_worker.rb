@@ -47,7 +47,7 @@ module Tapioca
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::Sidekiq::Worker)).void }
         def decorate(root, constant)
-          return [] unless constant.instance_methods.include?(:perform)
+          return unless constant.instance_methods.include?(:perform)
 
           root.path(constant) do |worker|
             method_def = constant.instance_method(:perform)
