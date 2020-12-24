@@ -19,13 +19,15 @@ module IsolationHelper
   end
 
   module Forking
+    include Kernel
+
     def run_in_isolation(&_blk)
       read, write = IO.pipe
       read.binmode
       write.binmode
 
       this = T.cast(self, Minitest::Test)
-      pid = Kernel.fork do
+      pid = fork do
         read.close
         yield
         begin
@@ -46,7 +48,7 @@ module IsolationHelper
         end
 
         write.puts [result].pack("m")
-        Kernel.exit!(false)
+        exit!(false)
       end
 
       write.close
@@ -57,13 +59,14 @@ module IsolationHelper
   end
 
   module Subprocess
+    include Kernel
     ORIG_ARGV = ARGV.dup unless defined?(ORIG_ARGV)
 
     # Crazy H4X to get this working in windows / jruby with
     # no forking.
     def run_in_isolation(&_blk)
       this = T.cast(self, Minitest::Test)
-      Kernel.require "tempfile"
+      require "tempfile"
 
       if ENV["ISOLATION_TEST"]
         yield
@@ -71,7 +74,7 @@ module IsolationHelper
         File.open(T.must(ENV["ISOLATION_OUTPUT"]), "w") do |file|
           file.puts [Marshal.dump(test_result)].pack("m")
         end
-        Kernel.exit!(false)
+        exit!(false)
       else
         Tempfile.open("isolation") do |tmpfile|
           env = {

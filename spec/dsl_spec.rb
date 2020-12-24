@@ -9,6 +9,7 @@ require "isolation_helper"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
+  include Kernel
   include ContentHelper
   include TemplateHelper
   include IsolationHelper
@@ -16,7 +17,7 @@ class DslSpec < Minitest::Spec
   sig { void }
   def after_setup
     # Require the file that the target class should be loaded from
-    Kernel.require(T.unsafe(self).target_class_file)
+    require(T.unsafe(self).target_class_file)
   end
 
   subject do
