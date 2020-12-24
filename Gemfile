@@ -34,6 +34,7 @@ group(:development, :test) do
   gem("google-protobuf", "~>3.12.0", require: false)
   # Fix version to 0.14.1 since it is the last version to support Ruby 2.4
   gem("shopify-money", "= 0.14.1", require: false)
+  gem("sidekiq", "~>5.0", require: false) # Version 6 dropped support for Ruby 2.4
 end
 
 gem "rubocop-sorbet", ">= 0.4.1"
