@@ -6,6 +6,8 @@ require "fileutils"
 module ContentHelper
   extend T::Sig
 
+  include Kernel
+
   sig { void }
   def teardown
     super
@@ -27,14 +29,14 @@ module ContentHelper
   sig { params(name: String, content: String, require_file: T::Boolean).returns(String) }
   def add_ruby_file(name, content, require_file: true)
     add_content_file(name, content).tap do |file_name|
-      Tapioca.silence_warnings { Kernel.require(file_name) } if require_file
+      Tapioca.silence_warnings { require(file_name) } if require_file
     end
   end
 
   sig { params(name: String, content: String).returns(String) }
   def add_content_file(name, content)
     file_name = tmp_path("lib/#{name}")
-    Kernel.raise ArgumentError, "a file named '#{name}' was already added; cannot overwrite." if File.exist?(file_name)
+    raise ArgumentError, "a file named '#{name}' was already added; cannot overwrite." if File.exist?(file_name)
     FileUtils.mkdir_p(File.dirname(file_name))
     File.write(file_name, content)
     file_name
