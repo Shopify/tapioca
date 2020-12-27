@@ -223,12 +223,14 @@ module Tapioca
 
     sig { params(eager_load: T::Boolean).void }
     def load_application(eager_load:)
-      say("Loading Rails application... ")
+      say("Loading Rails application and Non-Rails application")
 
       loader.load_rails(
         environment_load: true,
         eager_load: eager_load
       )
+
+      loader.load_sequel
 
       say("Done", :green)
     end

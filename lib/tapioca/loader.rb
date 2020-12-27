@@ -42,6 +42,17 @@ module Tapioca
       eager_load_rails_app if eager_load
     end
 
+    sig { void }
+    def load_sequel
+      return unless File.exist?("config/environment.rb")
+
+      safe_require("sequel")
+
+      silence_deprecations
+
+      safe_require("./config/environment")
+    end
+
     private
 
     sig { returns(Tapioca::Gemfile) }
