@@ -168,7 +168,7 @@ module Tapioca
         def type_for(constant, column_name)
           return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(constant)
 
-          raw_column_type = constant.db_schema.dig(column_name.to_sym,:db_type)
+          raw_column_type = constant.db_schema.dig(column_name.to_sym, :db_type)
           column_type = raw_column_type == "uuid" ? :string : constant.db.send(:schema_column_type, raw_column_type)
 
           getter_type =

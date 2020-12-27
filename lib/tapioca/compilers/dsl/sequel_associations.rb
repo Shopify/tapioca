@@ -122,7 +122,6 @@ module Tapioca
           ).void
         end
         def populate_collection_assoc_getter_setter(klass, constant, association_name, reflection)
-          association_class = type_for(constant, reflection)
           relation_class = relation_type_for(constant, reflection)
 
           create_method(
@@ -146,11 +145,11 @@ module Tapioca
 
         sig do
           params(
-            constant: T.class_of(Sequel::Model),
+            _constant: T.class_of(Sequel::Model),
             reflection: Sequel::Model::Associations::AssociationReflection
           ).returns(String)
         end
-        def relation_type_for(constant, reflection)
+        def relation_type_for(_constant, reflection)
           "T::Array[#{reflection.associated_class.name}]"
         end
       end
