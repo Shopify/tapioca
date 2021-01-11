@@ -184,10 +184,10 @@ GEM
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 4.2)
     smart_properties (1.15.0)
-    sorbet (0.5.6189)
-      sorbet-static (= 0.5.6189)
+    sorbet (0.5.6205)
+      sorbet-static (= 0.5.6205)
     sorbet-runtime (0.5.6189)
-    sorbet-static (0.5.6189-universal-darwin-14)
+    sorbet-static (0.5.6205-universal-darwin-14)
     spoom (1.0.7)
       colorize
       sorbet (~> 0.5.5)
