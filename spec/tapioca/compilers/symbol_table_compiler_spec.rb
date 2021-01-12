@@ -499,6 +499,38 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles a class alias that is pointing to a constant which has been overwritten") do
+      add_ruby_file("baz.rb", <<~RUBY)
+        class HTTPClient
+          module CookieManager
+          end
+        end
+
+        class WebMockHTTPClient < HTTPClient
+        end
+
+        HTTPClient = WebMockHTTPClient
+
+        class WebAgent
+          CookieManager = ::HTTPClient::CookieManager
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        HTTPClient = WebMockHTTPClient
+
+        class WebAgent
+        end
+
+        WebAgent::CookieManager = HTTPClient::CookieManager
+
+        class WebMockHTTPClient
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles a class with an anchored superclass") do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz

@@ -74,9 +74,9 @@ module Tapioca
           compile(symbol, constant)
         end
 
-        sig { params(symbol: String).returns(BasicObject).checked(:never) }
-        def resolve_constant(symbol)
-          Object.const_get(symbol, false)
+        sig { params(symbol: String, inherit: T::Boolean).returns(BasicObject).checked(:never) }
+        def resolve_constant(symbol, inherit: false)
+          Object.const_get(symbol, inherit)
         rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
           nil
         end
@@ -792,7 +792,7 @@ module Tapioca
           return name if name
           name = raw_name_of(constant)
           return if name.nil?
-          return unless are_equal?(constant, resolve_constant(name))
+          return unless are_equal?(constant, resolve_constant(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
