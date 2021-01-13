@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+if RUBY_VERSION >= '3.0'
+  module BundlerHack
+    def __materialize__
+      if name == 'google-protobuf'
+        Bundler.settings.temporary(force_ruby_platform: true) do
+          super
+        end
+      else
+        super
+      end
+    end
+  end
+  Bundler::LazySpecification.prepend(BundlerHack)
+end
+
 source("https://rubygems.org")
 
 gemspec
@@ -10,7 +25,7 @@ group(:deployment, :development) do
   gem("rake")
 end
 
-gem("bundler", "~> 1.17")
+gem("bundler")
 gem("yard", "~> 0.9.25")
 gem("pry-byebug")
 gem("minitest")
@@ -22,7 +37,7 @@ group(:development, :test) do
   gem("smart_properties", ">= 1.15.0", require: false)
   gem("frozen_record", ">= 0.17", require: false)
   gem("sprockets", "~> 3.7", require: false)
-  gem("rails", "~> 5.2", require: false)
+  gem("rails", "~> 6.1", require: false)
   gem("state_machines", "~> 0.5.0", require: false)
   gem("activerecord-typedstore", "~> 1.3", require: false)
   gem("sqlite3")
