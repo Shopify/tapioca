@@ -61,7 +61,7 @@ module Tapioca
         end
         def create_method(namespace, name, options = {})
           return unless valid_method_name?(name)
-          T.unsafe(namespace).create_method(name, options)
+          T.unsafe(namespace).create_method(name, **options)
         end
 
         # Create a Parlour method inside `namespace` from its Ruby definition
