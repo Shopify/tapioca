@@ -531,32 +531,47 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a constant which is aliased to a constant that has been overwritten and the names don't match") do
+    it("compiles a constant which is aliased to a constant that has been overwritten as a placeholder") do
       add_ruby_file("bar.rb", <<~RUBY)
         class MyClient
         end
 
         module MyModule
+        end
+
+        module SomeModule
           # The test above doesn't catch this because the names are different
           OriginalClient = ::MyClient
+          OriginalModule = ::MyModule
         end
 
         class MockClient < MyClient
         end
 
+        module MockModule
+        end
+
         MyClient = MockClient
+        MyModule = MockModule
       RUBY
 
       output = template(<<~RBI)
         class MockClient
         end
 
-        MyClient = MockClient
-
-        module MyModule
+        module MockModule
         end
 
-        MyModule::OriginalClient = MyClient
+        MyClient = MockClient
+
+        MyModule = MockModule
+
+        module SomeModule
+        end
+
+        SomeModule::OriginalClient = Class.new
+
+        SomeModule::OriginalModule = Module.new
       RBI
 
       assert_equal(output, compile)

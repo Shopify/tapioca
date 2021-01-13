@@ -123,11 +123,13 @@ module Tapioca
           return if symbol_ignored?(name)
 
           constant_name = name_of(constant)
+          target = constant_name.nil? ? "#{constant.class}.new" : constant_name
+
           add_to_alias_namespace(name)
 
           return if IGNORED_SYMBOLS.include?(name)
 
-          indented("#{name} = #{constant_name}")
+          indented("#{name} = #{target}")
         end
 
         sig do
@@ -792,6 +794,7 @@ module Tapioca
           return name if name
           name = raw_name_of(constant)
           return if name.nil?
+          return unless are_equal?(constant, resolve_constant(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
