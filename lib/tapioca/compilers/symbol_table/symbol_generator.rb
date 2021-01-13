@@ -792,7 +792,6 @@ module Tapioca
           return name if name
           name = raw_name_of(constant)
           return if name.nil?
-          return unless are_equal?(constant, resolve_constant(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end

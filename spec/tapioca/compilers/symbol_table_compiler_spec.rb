@@ -531,6 +531,37 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles a constant which is aliased to a constant that has been overwritten and the names don't match") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class MyClient
+        end
+
+        module MyModule
+          # The test above doesn't catch this because the names are different
+          OriginalClient = ::MyClient
+        end
+
+        class MockClient < MyClient
+        end
+
+        MyClient = MockClient
+      RUBY
+
+      output = template(<<~RBI)
+        class MockClient
+        end
+
+        MyClient = MockClient
+
+        module MyModule
+        end
+
+        MyModule::OriginalClient = MyClient
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles a class with an anchored superclass") do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz
