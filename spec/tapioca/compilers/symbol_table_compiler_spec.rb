@@ -532,7 +532,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
     end
 
     it("compiles a constant which is aliased to a constant that has been overwritten as a placeholder") do
-      add_ruby_file("bar.rb", <<~RUBY)
+      add_ruby_file("overwritten_class_module_references.rb", <<~RUBY)
         class MyClient
         end
 
