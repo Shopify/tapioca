@@ -122,8 +122,9 @@ module Tapioca
         def compile_alias(name, constant)
           return if symbol_ignored?(name)
 
-          constant_name = name_of(constant)
-          target = constant_name.nil? ? "#{constant.class}.new" : constant_name
+          target = name_of(constant)
+          # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
+          target = "#{constant.class}.new" unless target
 
           add_to_alias_namespace(name)
 
