@@ -531,6 +531,52 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles a constant which is aliased to a constant that has been overwritten as a placeholder") do
+      add_ruby_file("overwritten_class_module_references.rb", <<~RUBY)
+        class MyClient
+        end
+
+        module MyModule
+        end
+
+        module SomeModule
+          # The test above doesn't catch this because the names are different
+          OriginalClient = ::MyClient
+          OriginalModule = ::MyModule
+        end
+
+        class MockClient < MyClient
+        end
+
+        module MockModule
+        end
+
+        MyClient = MockClient
+        MyModule = MockModule
+      RUBY
+
+      output = template(<<~RBI)
+        class MockClient
+        end
+
+        module MockModule
+        end
+
+        MyClient = MockClient
+
+        MyModule = MockModule
+
+        module SomeModule
+        end
+
+        SomeModule::OriginalClient = Class.new
+
+        SomeModule::OriginalModule = Module.new
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles a class with an anchored superclass") do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz
