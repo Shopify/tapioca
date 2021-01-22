@@ -58,7 +58,7 @@ class Post
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def comment_ids=(ids); end
 
-    sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+    sig { returns(::Comment::ActiveRecord_Associations_CollectionProxy) }
     def comments; end
 
     sig { params(value: T::Enumerable[::Comment]).void }

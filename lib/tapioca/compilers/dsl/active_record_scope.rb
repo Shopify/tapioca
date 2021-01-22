@@ -33,6 +33,10 @@ module Tapioca
       # class Post
       #   extend GeneratedRelationMethods
       #
+      #   class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
+      #     include GeneratedRelationMethods
+      #   end
+      #
       #   module GeneratedRelationMethods
       #     sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
       #     def private_kind(*args, &blk); end
@@ -57,6 +61,11 @@ module Tapioca
 
           root.path(constant) do |model|
             module_name = "GeneratedRelationMethods"
+            class_name = "ActiveRecord_Associations_CollectionProxy"
+
+            model.create_class(class_name, superclass: "ActiveRecord::Relation") do |cls|
+              cls.create_include(module_name)
+            end
 
             model.create_module(module_name) do |mod|
               scope_method_names.each do |scope_method|

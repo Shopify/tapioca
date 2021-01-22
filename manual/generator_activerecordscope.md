@@ -21,6 +21,10 @@ this generator will produce the RBI file `post.rbi` with the following content:
 class Post
   extend GeneratedRelationMethods
 
+  class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
+    include GeneratedRelationMethods
+  end
+
   module GeneratedRelationMethods
     sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
     def private_kind(*args, &blk); end

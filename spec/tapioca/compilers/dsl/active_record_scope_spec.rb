@@ -53,6 +53,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
+            include GeneratedRelationMethods
+          end
+
           module GeneratedRelationMethods
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
             def public_kind(*args, &blk); end
@@ -75,6 +79,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         # typed: strong
         class Post
           extend GeneratedRelationMethods
+
+          class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
+            include GeneratedRelationMethods
+          end
 
           module GeneratedRelationMethods
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
