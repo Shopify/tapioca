@@ -24,6 +24,8 @@ module Tapioca
       #   belongs_to :category
       #   has_many :comments
       #   has_one :author, class_name: "User"
+      #
+      #   accepts_nested_attributes_for :category, :comments, :author
       # end
       # ~~~
       #
@@ -44,6 +46,9 @@ module Tapioca
       #     sig { params(value: T.nilable(::User)).void }
       #     def author=(value); end
       #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def author_attributes=(attributes); end
+      #
       #     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #     def build_author(*args, &blk); end
       #
@@ -56,6 +61,9 @@ module Tapioca
       #     sig { params(value: T.nilable(::Category)).void }
       #     def category=(value); end
       #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def category_attributes=(attributes); end
+      #
       #     sig { returns(T::Array[T.untyped]) }
       #     def comment_ids; end
       #
@@ -67,6 +75,9 @@ module Tapioca
       #
       #     sig { params(value: T::Enumerable[::Comment]).void }
       #     def comments=(value); end
+      #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def comments_attributes=(attributes); end
       #
       #     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #     def create_author(*args, &blk); end
