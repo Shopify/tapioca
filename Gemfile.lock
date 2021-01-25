@@ -188,7 +188,7 @@ GEM
       sorbet-static (= 0.5.6231)
     sorbet-runtime (0.5.6231)
     sorbet-static (0.5.6231-universal-darwin-14)
-    spoom (1.0.7)
+    spoom (1.0.8)
       colorize
       sorbet (~> 0.5.5)
       sorbet-runtime
