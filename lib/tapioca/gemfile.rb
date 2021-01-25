@@ -30,9 +30,12 @@ module Tapioca
       @dependencies ||= begin
         specs = definition.locked_gems.specs.to_a
 
+        # TODO: Somehow display these missing specs to the user?!
+        missing_specs = Array.new # rubocop:disable Style/EmptyLiteral
+
         definition
           .resolve
-          .materialize(specs)
+          .materialize(specs, missing_specs)
           .map { |spec| Gem.new(spec) }
           .reject { |gem| gem.ignore?(dir) }
           .uniq(&:rbi_file_name)
