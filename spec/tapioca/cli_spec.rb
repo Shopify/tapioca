@@ -571,6 +571,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(Contents::BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
     end
 
+    it 'must not generate RBIs for missing gem specs' do
+      output = execute("generate")
+
+      refute_includes(output, <<~OUTPUT)
+        Processing 'mini_portile2' gem:
+          Compiling mini_portile2, this may take a few seconds...   Done
+      OUTPUT
+    end
+
     it 'must generate git gem RBIs with source revision numbers' do
       output = execute("generate", "ast")
 
