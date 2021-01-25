@@ -88,6 +88,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         class Post < ActiveRecord::Base
           belongs_to :category
           belongs_to :author, class_name: "User"
+
+          accepts_nested_attributes_for :category, :author
         end
       RUBY
 
@@ -103,6 +105,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(value: T.nilable(::User)).void }
             def author=(value); end
 
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def author_attributes=(attributes); end
+
             sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
             def build_author(*args, &blk); end
 
@@ -114,6 +119,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
             sig { params(value: T.nilable(::Category)).void }
             def category=(value); end
+
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def category_attributes=(attributes); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
             def create_author(*args, &blk); end
@@ -143,6 +151,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           belongs_to :category, polymorphic: true
+
+          accepts_nested_attributes_for :category
         end
       RUBY
 
@@ -157,6 +167,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
             sig { params(value: T.nilable(T.untyped)).void }
             def category=(value); end
+
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def category_attributes=(attributes); end
 
             sig { returns(T.nilable(T.untyped)) }
             def reload_category; end
@@ -185,6 +198,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_one :author, class_name: "User"
+
+          accepts_nested_attributes_for :author
         end
       RUBY
 
@@ -199,6 +214,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
             sig { params(value: T.nilable(::User)).void }
             def author=(value); end
+
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def author_attributes=(attributes); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
             def build_author(*args, &blk); end
@@ -227,6 +245,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many :comments
+
+          accepts_nested_attributes_for :comments
         end
       RUBY
 
@@ -247,6 +267,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
             sig { params(value: T::Enumerable[T.untyped]).void }
             def comments=(value); end
+
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def comments_attributes=(attributes); end
           end
         end
       RBI
@@ -282,6 +305,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         class Post < ActiveRecord::Base
           has_many :comments
           has_many :commenters, through: :comments
+
+          accepts_nested_attributes_for :commenters
         end
       RUBY
 
@@ -309,6 +334,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(value: T::Enumerable[::Commenter]).void }
             def commenters=(value); end
 
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def commenters_attributes=(attributes); end
+
             sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
             def comments; end
 
@@ -331,6 +359,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_and_belongs_to_many :commenters
+
+          accepts_nested_attributes_for :commenters
         end
       RUBY
 
@@ -351,6 +381,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
             sig { params(value: T::Enumerable[T.untyped]).void }
             def commenters=(value); end
+
+            sig { params(attributes: T.untyped).returns(T.untyped) }
+            def commenters_attributes=(attributes); end
           end
         end
       RBI

@@ -103,13 +103,8 @@ module Tapioca
             module_name = "GeneratedAssociationMethods"
 
             model.create_module(module_name) do |mod|
-              constant.reflections.each do |association_name, reflection|
-                if reflection.collection?
-                  populate_collection_assoc_getter_setter(mod, constant, association_name, reflection)
-                else
-                  populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
-                end
-              end
+              populate_nested_attribute_writers(mod, constant)
+              populate_associations(mod, constant)
             end
 
             model.create_include(module_name)
@@ -122,6 +117,31 @@ module Tapioca
         end
 
         private
+
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        def populate_nested_attribute_writers(mod, constant)
+          constant.nested_attributes_options.keys.each do |association_name|
+            create_method(
+              mod,
+              "#{association_name}_attributes=",
+              parameters: [
+                Parlour::RbiGenerator::Parameter.new("attributes", type: "T.untyped"),
+              ],
+              return_type: "T.untyped"
+            )
+          end
+        end
+
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        def populate_associations(mod, constant)
+          constant.reflections.each do |association_name, reflection|
+            if reflection.collection?
+              populate_collection_assoc_getter_setter(mod, constant, association_name, reflection)
+            else
+              populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
+            end
+          end
+        end
 
         sig do
           params(
