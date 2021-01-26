@@ -192,6 +192,10 @@ module Tapioca
         exit(1)
       end
       say(" Done", :green)
+      unless bundle.missing_specs.empty?
+        say("  completed with missing specs: ")
+        say(bundle.missing_specs.join(', '), :yellow)
+      end
       puts
     end
 
