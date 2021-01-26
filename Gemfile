@@ -10,7 +10,7 @@ group(:deployment, :development) do
   gem("rake")
 end
 
-gem("bundler", "~> 1.17")
+gem("bundler", ">= 2")
 gem("yard", "~> 0.9.25")
 gem("pry-byebug")
 gem("minitest")
