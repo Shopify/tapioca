@@ -24,6 +24,8 @@ module Tapioca
       #   belongs_to :category
       #   has_many :comments
       #   has_one :author, class_name: "User"
+      #
+      #   accepts_nested_attributes_for :category, :comments, :author
       # end
       # ~~~
       #
@@ -44,6 +46,9 @@ module Tapioca
       #     sig { params(value: T.nilable(::User)).void }
       #     def author=(value); end
       #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def author_attributes=(attributes); end
+      #
       #     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #     def build_author(*args, &blk); end
       #
@@ -56,6 +61,9 @@ module Tapioca
       #     sig { params(value: T.nilable(::Category)).void }
       #     def category=(value); end
       #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def category_attributes=(attributes); end
+      #
       #     sig { returns(T::Array[T.untyped]) }
       #     def comment_ids; end
       #
@@ -67,6 +75,9 @@ module Tapioca
       #
       #     sig { params(value: T::Enumerable[::Comment]).void }
       #     def comments=(value); end
+      #
+      #     sig { params(attributes: T.untyped).returns(T.untyped) }
+      #     def comments_attributes=(attributes); end
       #
       #     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
       #     def create_author(*args, &blk); end
@@ -103,13 +114,8 @@ module Tapioca
             module_name = "GeneratedAssociationMethods"
 
             model.create_module(module_name) do |mod|
-              constant.reflections.each do |association_name, reflection|
-                if reflection.collection?
-                  populate_collection_assoc_getter_setter(mod, constant, association_name, reflection)
-                else
-                  populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
-                end
-              end
+              populate_nested_attribute_writers(mod, constant)
+              populate_associations(mod, constant)
             end
 
             model.create_include(module_name)
@@ -122,6 +128,31 @@ module Tapioca
         end
 
         private
+
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        def populate_nested_attribute_writers(mod, constant)
+          constant.nested_attributes_options.keys.each do |association_name|
+            create_method(
+              mod,
+              "#{association_name}_attributes=",
+              parameters: [
+                Parlour::RbiGenerator::Parameter.new("attributes", type: "T.untyped"),
+              ],
+              return_type: "T.untyped"
+            )
+          end
+        end
+
+        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        def populate_associations(mod, constant)
+          constant.reflections.each do |association_name, reflection|
+            if reflection.collection?
+              populate_collection_assoc_getter_setter(mod, constant, association_name, reflection)
+            else
+              populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
+            end
+          end
+        end
 
         sig do
           params(
