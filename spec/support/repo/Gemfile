@@ -2,6 +2,8 @@
 
 source("https://rubygems.org")
 
+nokogiri_installable = Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.5")
+
 gem("foo", path: "../gems/foo")
 gem("bar", path: "../gems/bar")
 gem("baz", path: "../gems/baz")
@@ -20,4 +22,4 @@ gem("activesupport")
 # Needed to test Git gems
 gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
 # Needed to test missing gems
-gem("nokogiri", ">= 1.11.1")
+gem("nokogiri", ">= 1.11.1") if nokogiri_installable
