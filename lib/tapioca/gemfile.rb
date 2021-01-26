@@ -17,30 +17,23 @@ module Tapioca
       )
     end
 
+    sig { returns(Bundler::Definition) }
+    attr_reader(:definition)
+
+    sig { returns(T::Array[Gem]) }
+    attr_reader(:dependencies)
+
+    sig { returns(T::Array[String]) }
+    attr_reader(:missing_specs)
+
     sig { void }
     def initialize
       @gemfile = T.let(File.new(Bundler.default_gemfile), File)
       @lockfile = T.let(File.new(Bundler.default_lockfile), File)
-      @dependencies = T.let(nil, T.nilable(T::Array[Gem]))
-      @definition = T.let(nil, T.nilable(Bundler::Definition))
-    end
-
-    sig { returns(T::Array[Gem]) }
-    def dependencies
-      @dependencies ||= begin
-        specs = definition.locked_gems.specs.to_a
-
-        # TODO: Somehow display these missing specs to the user?!
-        missing_specs = Array.new # rubocop:disable Style/EmptyLiteral
-
-        definition
-          .resolve
-          .materialize(specs, missing_specs)
-          .map { |spec| Gem.new(spec) }
-          .reject { |gem| gem.ignore?(dir) }
-          .uniq(&:rbi_file_name)
-          .sort_by(&:rbi_file_name)
-      end
+      @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
+      dependencies, missing_specs = load_dependencies
+      @dependencies = T.let(dependencies, T::Array[Gem])
+      @missing_specs = T.let(missing_specs, T::Array[String])
     end
 
     sig { params(gem_name: String).returns(T.nilable(Gem)) }
@@ -58,6 +51,23 @@ module Tapioca
     sig { returns(File) }
     attr_reader(:gemfile, :lockfile)
 
+    sig { returns([T::Array[Gem], T::Array[String]]) }
+    def load_dependencies
+      specs = definition.locked_gems.specs.to_a
+
+      missing_specs = T::Array[String].new
+
+      dependencies = definition
+        .resolve
+        .materialize(specs, missing_specs)
+        .map { |spec| Gem.new(spec) }
+        .reject { |gem| gem.ignore?(dir) }
+        .uniq(&:rbi_file_name)
+        .sort_by(&:rbi_file_name)
+
+      [dependencies, missing_specs]
+    end
+
     sig { returns(Bundler::Runtime) }
     def runtime
       Bundler::Runtime.new(File.dirname(gemfile.path), definition)
@@ -66,11 +76,6 @@ module Tapioca
     sig { returns(T::Array[Symbol]) }
     def groups
       definition.groups
-    end
-
-    sig { returns(Bundler::Definition) }
-    def definition
-      @definition ||= Bundler::Dsl.evaluate(gemfile, lockfile, {})
     end
 
     sig { returns(String) }
