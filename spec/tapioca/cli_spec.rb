@@ -574,7 +574,12 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     it 'must not generate RBIs for missing gem specs' do
       output = execute("generate")
 
-      refute_includes(output, <<~OUTPUT)
+      assert_includes(output, <<~OUTPUT.strip) if ruby_version(">= 2.5")
+        Requiring all gems to prepare for compiling...  Done
+          completed with missing specs: mini_portile2
+      OUTPUT
+
+      refute_includes(output, <<~OUTPUT.strip)
         Processing 'mini_portile2' gem:
           Compiling mini_portile2, this may take a few seconds...   Done
       OUTPUT
