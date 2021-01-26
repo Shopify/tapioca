@@ -92,10 +92,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
   before(:all) do
     @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
     Bundler.with_clean_env do
-      IO.popen(
-        ["bundle", "install", "--quiet"],
-        chdir: @repo_path
-      ).read
+      IO.popen(["bundle", "install", "--quiet"], chdir: @repo_path).read
+      IO.popen(["bundle", "lock", "--add-platform=ruby"], chdir: @repo_path).read
     end
   end
 
@@ -571,6 +569,20 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(Contents::FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
       assert_equal(Contents::BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
       assert_equal(Contents::BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
+    end
+
+    it 'must not generate RBIs for missing gem specs' do
+      output = execute("generate")
+
+      assert_includes(output, <<~OUTPUT.strip) if ruby_version(">= 2.5")
+        Requiring all gems to prepare for compiling...  Done
+          completed with missing specs: mini_portile2
+      OUTPUT
+
+      refute_includes(output, <<~OUTPUT.strip)
+        Processing 'mini_portile2' gem:
+          Compiling mini_portile2, this may take a few seconds...   Done
+      OUTPUT
     end
 
     it 'must generate git gem RBIs with source revision numbers' do
