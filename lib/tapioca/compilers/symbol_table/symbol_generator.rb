@@ -23,12 +23,15 @@ module Tapioca
           @indent = indent
           @seen = Set.new
           @alias_namespace ||= Set.new
+          @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
         end
 
         sig { returns(String) }
         def generate
           rbi = RBI::Tree.new
-          symbols.sort.each { |symbol| generate_from_symbol(rbi, symbol) }
+
+          generate_from_symbol(rbi, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+
           rbi.nest_singleton_methods!
           rbi.nest_non_public_methods!
           rbi.group_nodes!
@@ -38,10 +41,16 @@ module Tapioca
 
         private
 
+        def add_to_symbol_queue(name)
+          @symbol_queue << name unless symbols.include?(name)
+        end
+
         sig { returns(T::Set[String]) }
         def symbols
-          symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(gem.files)
-          symbols.union(engine_symbols(symbols))
+          @symbols ||= begin
+            symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(gem.files)
+            symbols.union(engine_symbols(symbols))
+          end
         end
 
         sig { params(symbols: T::Set[String]).returns(T::Set[String]) }
@@ -315,6 +324,8 @@ module Tapioca
           name = name_of(superclass)
           return if name.nil? || name.empty?
 
+          add_to_symbol_queue(name)
+
           "::#{name}"
         end
 
@@ -335,6 +346,8 @@ module Tapioca
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
@@ -346,6 +359,8 @@ module Tapioca
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
             end
@@ -354,6 +369,8 @@ module Tapioca
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Extend.new(T.must(qname))
             end
@@ -396,6 +413,8 @@ module Tapioca
           all_dynamic_includes
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
             end.join("\n")
@@ -576,11 +595,13 @@ module Tapioca
 
           parameters.each do |_, name|
             type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
+            add_to_symbol_queue(type)
             sig << RBI::SigParam.new(name, type)
           end
 
           return_type = type_of(signature.return_type)
           sig.return_type = sanitize_signature_types(return_type)
+          add_to_symbol_queue(sig.return_type)
 
           parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
             sig.type_params << k
