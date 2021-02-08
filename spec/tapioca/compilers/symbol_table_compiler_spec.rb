@@ -2090,7 +2090,32 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
       RUBY
 
+      add_ruby_file("adt.rb", <<~RUBY)
+        module Adt
+          extend(T::Sig)
+          extend(T::Helpers)
+          interface!
+          sealed!
+
+          class Foo; include Adt; end
+          class Bar; include Adt; end
+        end
+      RUBY
+
       output = template(<<~RBI)
+        module Adt
+          interface!
+          sealed!
+        end
+
+        class Adt::Bar
+          include(::Adt)
+        end
+
+        class Adt::Foo
+          include(::Adt)
+        end
+
         class Bar < ::T::Struct
           const :foo, Integer
           prop :bar, String
