@@ -207,7 +207,7 @@ module Tapioca
           constant.props.map do |name, prop|
             method = "prop"
             method = "const" if prop.fetch(:immutable, false)
-            type = prop.fetch(:type_object, "T.untyped")
+            type = prop.fetch(:type_object, "T.untyped").to_s.gsub(".returns(<VOID>)", ".void")
 
             if prop.key?(:default)
               indented("#{method} :#{name}, #{type}, default: T.unsafe(nil)")
