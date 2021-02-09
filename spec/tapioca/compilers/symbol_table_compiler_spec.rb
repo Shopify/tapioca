@@ -2094,6 +2094,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module Adt
           extend(T::Sig)
           extend(T::Helpers)
+
           interface!
           sealed!
 
