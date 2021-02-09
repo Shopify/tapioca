@@ -3,6 +3,41 @@
 
 require 'pathname'
 
+module T
+  module Private
+    module Types
+      #
+      # A reference to a generic type, keeping track of the type parameters for generation.
+      #
+      class GenericReference < T::Types::Base
+        def initialize(raw, types)
+          @simple = ::T::Types::Simple.new(raw)
+          @types = types
+        end
+
+        def valid?(obj)
+          @simple.valid?(obj)
+        end
+
+        private def subtype_of_single?(type)
+          @simple.subtype_of_single?(type)
+        end
+
+        def name
+          "#{@simple.name}[#{@types.map(&:name).join(', ')}]"
+        end
+      end
+    end
+  end
+
+  module Generic
+    # Hijack generic type references to use our own class since Sorbet runtime does type erasure.
+    def [](*types)
+      ::T::Private::Types::GenericReference.new(self, types)
+    end
+  end
+end
+
 module Tapioca
   module Compilers
     module SymbolTable
@@ -293,6 +328,15 @@ module Tapioca
           " < ::#{name}"
         end
 
+        sig { params(name: String).returns(T::Boolean) }
+        def generate_sorbet_type?(name)
+          !(
+            name == 'T::Sig' ||
+            name.start_with?('T::InterfaceWrapper') ||
+            name.start_with?('T::Private')
+          )
+        end
+
         sig { params(constant: Module).returns(String) }
         def compile_mixins(constant)
           singleton_class = singleton_class_of(constant)
@@ -308,7 +352,7 @@ module Tapioca
 
           prepends = prepend
             .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select { |mod| (name = name_of(mod)) && generate_sorbet_type?(name) }
             .select(&method(:public_module?))
             .map do |mod|
               # TODO: Sorbet currently does not handle prepend
@@ -319,7 +363,7 @@ module Tapioca
 
           includes = include
             .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select { |mod| (name = name_of(mod)) && generate_sorbet_type?(name) }
             .select(&method(:public_module?))
             .map do |mod|
               indented("include(#{qualified_name_of(mod)})")
@@ -327,7 +371,7 @@ module Tapioca
 
           extends = extend
             .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select { |mod| (name = name_of(mod)) && generate_sorbet_type?(name) }
             .select(&method(:public_module?))
             .map do |mod|
               indented("extend(#{qualified_name_of(mod)})")
@@ -367,7 +411,7 @@ module Tapioca
           dynamic_extends = all_dynamic_extends - dynamic_extends_from_dynamic_includes
 
           result = all_dynamic_includes
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select { |mod| (name = name_of(mod)) && generate_sorbet_type?(name) }
             .select(&method(:public_module?))
             .map do |mod|
               indented("include(#{qualified_name_of(mod)})")
