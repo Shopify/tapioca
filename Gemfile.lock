@@ -110,6 +110,8 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.2)
+    minitest-focus (1.2.1)
+      minitest (>= 4, < 6)
     minitest-hooks (1.5.0)
       minitest (> 5.3)
     minitest-reporters (1.4.2)
@@ -232,6 +234,7 @@ DEPENDENCIES
   google-protobuf (~> 3.12.0)
   identity_cache (~> 1.0)
   minitest
+  minitest-focus
   minitest-hooks
   minitest-reporters
   pry-byebug

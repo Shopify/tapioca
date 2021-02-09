@@ -3,6 +3,7 @@
 
 require "tapioca"
 require "minitest/autorun"
+require 'minitest/focus'
 require "minitest/spec"
 require "minitest/hooks/default"
 require "minitest/reporters"

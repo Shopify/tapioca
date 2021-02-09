@@ -2100,6 +2100,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           class Foo; include Adt; end
           class Bar; include Adt; end
+      RUBY
+
+      add_ruby_file("base.rb", <<~RUBY)
+        module Base
+          include T::Props::Constructor
         end
       RUBY
 
@@ -2126,6 +2131,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           class << self
             def inherited(s); end
           end
+        end
+
+        module Base
+          mixes_in_class_methods(::T::Props::Plugin::ClassMethods)
+          mixes_in_class_methods(::T::Props::ClassMethods)
         end
 
         class Baz

@@ -13,6 +13,7 @@ end
 gem("yard", "~> 0.9.25")
 gem("pry-byebug")
 gem("minitest")
+gem("minitest-focus")
 gem("minitest-hooks")
 gem("minitest-reporters")
 gem("sorbet")

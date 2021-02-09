@@ -376,23 +376,28 @@ module Tapioca
           end
           class_methods_module = resolve_constant("#{name_of(constant)}::ClassMethods")
 
-          mixed_in_module = if extends_as_concern && Module === class_methods_module
-            class_methods_module
+          mixed_in_modules = if extends_as_concern && Module === class_methods_module
+            [class_methods_module]
           else
-            dynamic_extends.find do |mod|
+            dynamic_extends.select do |mod|
               mod != constant && public_module?(mod)
             end
           end
 
-          return result if mixed_in_module.nil?
+          return result if mixed_in_modules.empty?
 
-          qualified_name = qualified_name_of(mixed_in_module)
-          return result if qualified_name == ""
+          mixins = []
+          mixed_in_modules.each do |mixed_in_module|
+            qualified_name = qualified_name_of(mixed_in_module)
+            return result if qualified_name == ""
+            mixins << indented("mixes_in_class_methods(#{qualified_name})") unless qualified_name == ""
+          end
 
           [
             result,
-            indented("mixes_in_class_methods(#{qualified_name})"),
+            mixins.join("\n"),
           ].select { |b| b != "" }.join("\n\n")
+
         rescue
           ""
         end
