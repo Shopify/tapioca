@@ -192,15 +192,12 @@ module Tapioca
         def compile_module_helpers(constant)
           abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
 
-          if abstract_type
-            indented("#{abstract_type}!")
-          elsif T::Private::Final.final_module?(constant)
-            indented("final!")
-          elsif T::Private::Sealed.sealed_module?(constant)
-            indented("sealed!")
-          else
-            ""
-          end
+          helpers = []
+          helpers << indented("#{abstract_type}!") if abstract_type
+          helpers << indented("final!") if T::Private::Final.final_module?(constant)
+          helpers << indented("sealed!") if T::Private::Sealed.sealed_module?(constant)
+
+          helpers.join("\n")
         end
 
         sig { params(constant: Module).returns(String) }
