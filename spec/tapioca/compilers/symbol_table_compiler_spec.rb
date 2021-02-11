@@ -2043,6 +2043,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           const :foo, Integer
           prop :bar, String
+          const :baz, T.proc.params(arg0: String).void
         end
       RUBY
 
@@ -2140,6 +2141,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Buzz
           const :foo, Integer
           prop :bar, String
+          const :baz, T.proc.params(arg0: String).void
         end
 
         class Foo
