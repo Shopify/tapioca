@@ -72,25 +72,33 @@ module Tapioca
 
         sig do
           override
-            .params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActionController::Base))
+            .params(root: Parlour::RbiGenerator::Namespace, constant: Module)
             .void
         end
         def decorate(root, constant)
+          if constant == ApplicationHelper
+            root.path(constant) do |helper|
+              gather_includes(ApplicationController._helpers).each do |ancestor|
+                helper.create_include(ancestor)
+              end
+            end
+
+            return
+          end
+
           helper_proxy_name = "HelperProxy"
           helper_methods_name = "HelperMethods"
           proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
 
           # Define the helpers method
           root.path(constant) do |controller|
-            create_method(controller, 'helpers', return_type: helper_proxy_name)
+            create_method(controller, "helpers", return_type: helper_proxy_name)
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
               helpers_module = constant._helpers
 
-              gather_includes(helpers_module).each do |ancestor|
-                helper_methods.create_include(ancestor)
-              end
+              helper_methods.create_include("ApplicationHelper")
 
               helpers_module.instance_methods(false).each do |method_name|
                 method = if proxied_helper_methods.include?(method_name)
@@ -111,7 +119,8 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ::ActionController::Base.descendants.reject(&:abstract?).select(&:name)
+          [ApplicationHelper] +
+            ::ActionController::Base.descendants.reject(&:abstract?).select(&:name)
         end
 
         private
