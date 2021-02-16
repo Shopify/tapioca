@@ -13,11 +13,11 @@ desc("Generate docs of all DSL generators")
 task generate_dsl_documentation: :yard_for_generate_documentation do
   def assert_manual_synchronized
     # Do not print diff and yield whether exit code was zero
-    sh("git diff --quiet manual") do |outcome, _|
+    sh('test -z "$(git status --porcelain manual)"') do |outcome, _|
       return if outcome
 
       # Output diff before raising error
-      sh("GIT_PAGER=cat git diff manual")
+      sh("git status --porcelain manual")
 
       warn <<~WARNING
         The manual directory is out of sync.
