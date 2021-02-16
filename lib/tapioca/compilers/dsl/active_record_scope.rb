@@ -33,7 +33,7 @@ module Tapioca
       # class Post
       #   extend GeneratedRelationMethods
       #
-      #   class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
+      #   class PrivateCollectionProxy
       #     include GeneratedRelationMethods
       #   end
       #
@@ -61,9 +61,9 @@ module Tapioca
 
           root.path(constant) do |model|
             module_name = "GeneratedRelationMethods"
-            class_name = "ActiveRecord_Associations_CollectionProxy"
+            class_name = "PrivateCollectionProxy"
 
-            model.create_class(class_name, superclass: "ActiveRecord::Relation") do |cls|
+            model.create_class(class_name) do |cls|
               cls.create_include(module_name)
             end
 

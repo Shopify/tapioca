@@ -70,7 +70,7 @@ module Tapioca
       #     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
       #     def comment_ids=(ids); end
       #
-      #     sig { returns(::Comment::ActiveRecord_Associations_CollectionProxy) }
+      #     sig { returns(::Comment::PrivateCollectionProxy) }
       #     def comments; end
       #
       #     sig { params(value: T::Enumerable[::Comment]).void }
@@ -277,7 +277,7 @@ module Tapioca
           "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                             polymorphic_association?(reflection)
 
-          "::#{reflection.klass.name}::ActiveRecord_Associations_CollectionProxy"
+          "::#{reflection.klass.name}::PrivateCollectionProxy"
         end
 
         sig do

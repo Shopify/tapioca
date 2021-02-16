@@ -53,13 +53,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
-          class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
-            include GeneratedRelationMethods
-          end
-
           module GeneratedRelationMethods
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
             def public_kind(*args, &blk); end
+          end
+
+          class PrivateCollectionProxy
+            include GeneratedRelationMethods
           end
         end
       RBI
@@ -80,16 +80,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
-          class ActiveRecord_Associations_CollectionProxy < ActiveRecord::Relation
-            include GeneratedRelationMethods
-          end
-
           module GeneratedRelationMethods
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
             def private_kind(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
             def public_kind(*args, &blk); end
+          end
+
+          class PrivateCollectionProxy
+            include GeneratedRelationMethods
           end
         end
       RBI
