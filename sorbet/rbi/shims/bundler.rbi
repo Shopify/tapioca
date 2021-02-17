@@ -3785,7 +3785,7 @@ module Bundler
 
   def self.which(executable); end
 
-  def self.with_clean_env(); end
+  def self.with_unbundled_env(); end
 
   def self.with_original_env(); end
 end

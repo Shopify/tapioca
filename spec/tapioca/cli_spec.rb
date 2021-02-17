@@ -80,7 +80,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       *args,
     ]
 
-    Bundler.with_clean_env do
+    Bundler.with_unbundled_env do
       IO.popen(
         exec_command.join(' '),
         chdir: repo_path,
@@ -91,7 +91,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
   before(:all) do
     @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
-    Bundler.with_clean_env do
+    Bundler.with_unbundled_env do
       IO.popen(["bundle", "install", "--quiet"], chdir: @repo_path).read
       IO.popen(["bundle", "lock", "--add-platform=ruby"], chdir: @repo_path).read
     end
