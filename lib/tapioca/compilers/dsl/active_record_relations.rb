@@ -357,8 +357,7 @@ module Tapioca
             end
 
             find_or_create_methods = %i[
-              first_or_create first_or_create! first_or_initialize find_or_create_by
-              find_or_create_by! find_or_initialize_by create_or_find_by create_or_find_by!
+              find_or_create_by find_or_create_by! find_or_initialize_by create_or_find_by create_or_find_by!
             ]
 
             find_or_create_methods.each do |method_name|

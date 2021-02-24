@@ -132,15 +132,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { returns(Post) }
             def first!; end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_create(attributes, &block); end
-
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_create!(attributes, &block); end
-
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_initialize(attributes, &block); end
-
             sig { returns(T.nilable(Post)) }
             def forty_two; end
 
@@ -451,15 +442,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(Post) }
             def first!; end
-
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_create(attributes, &block); end
-
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_create!(attributes, &block); end
-
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def first_or_initialize(attributes, &block); end
 
             sig { returns(T.nilable(Post)) }
             def forty_two; end
