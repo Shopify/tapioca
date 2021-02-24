@@ -303,7 +303,7 @@ module Tapioca
                 )
               when :calculate
                 add_method(
-                  method_name.to_s,
+                  "calculate",
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new("operation", type: "Symbol"),
                     Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)"),
@@ -320,7 +320,7 @@ module Tapioca
                 add_method("ids", return_type: "Array")
               when :pick, :pluck
                 add_method(
-                  "pluck",
+                  method_name.to_s,
                   parameters: [Parlour::RbiGenerator::Parameter.new("*column_names", type: "T.untyped")],
                   return_type: "T.untyped"
                 )
