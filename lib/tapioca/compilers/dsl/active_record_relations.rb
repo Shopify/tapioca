@@ -259,6 +259,12 @@ module Tapioca
                   parameters: [Parlour::RbiGenerator::Parameter.new("conditions", type: "T.untyped", default: ":none")],
                   return_type: "T::Boolean"
                 )
+              when :include?
+                add_method(
+                  "include?",
+                  parameters: [Parlour::RbiGenerator::Parameter.new("record", type: "T.untyped")],
+                  return_type: "T::Boolean"
+                )
               when :find, :find_by!
                 add_method(
                   "find",
