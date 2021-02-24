@@ -313,7 +313,7 @@ module Tapioca
               when :count
                 add_method(
                   "count",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.untyped")],
+                  parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.untyped", default: "nil")],
                   return_type: "T.untyped"
                 )
               when :ids
