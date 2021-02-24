@@ -48,20 +48,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def average(column_name); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def build(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(::Hash), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def build(attributes = nil, &block); end
 
             sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def calculate(operation, column_name); end
 
             sig { params(column_name: T.untyped).returns(T.untyped) }
-            def count(column_name); end
+            def count(column_name = nil); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def create(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def create(attributes = nil, &block); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def create!(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def create!(attributes = nil, &block); end
 
             sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
             def create_or_find_by(attributes, &block); end
@@ -228,8 +228,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def minimum(column_name); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def new(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(::Hash), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def new(attributes = nil, &block); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def none(*args, &blk); end
@@ -368,20 +368,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def average(column_name); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def build(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(::Hash), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def build(attributes = nil, &block); end
 
             sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def calculate(operation, column_name); end
 
             sig { params(column_name: T.untyped).returns(T.untyped) }
-            def count(column_name); end
+            def count(column_name = nil); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def create(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def create(attributes = nil, &block); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def create!(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def create!(attributes = nil, &block); end
 
             sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
             def create_or_find_by(attributes, &block); end
@@ -548,8 +548,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
             def minimum(column_name); end
 
-            sig { params(attributes: ::Hash, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
-            def new(attributes = {}, &block); end
+            sig { params(attributes: T.nilable(::Hash), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            def new(attributes = nil, &block); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def none(*args, &blk); end

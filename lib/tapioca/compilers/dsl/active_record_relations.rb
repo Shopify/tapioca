@@ -375,12 +375,33 @@ module Tapioca
               )
             end
 
-            creation_methods = %i[create create! new build]
-            creation_methods.each do |method_name|
+            %i[new build].each do |method_name|
               add_method(
                 method_name.to_s,
                 parameters: [
-                  Parlour::RbiGenerator::Parameter.new("attributes", type: "::Hash", default: "{}"),
+                  Parlour::RbiGenerator::Parameter.new(
+                    "attributes",
+                    type: "T.nilable(::Hash)",
+                    default: "nil"
+                  ),
+                  Parlour::RbiGenerator::Parameter.new(
+                    "&block",
+                    type: "T.nilable(T.proc.params(object: #{@constant}).void)",
+                  ),
+                ],
+                return_type: @constant.to_s
+              )
+            end
+
+            %i[create create!].each do |method_name|
+              add_method(
+                method_name.to_s,
+                parameters: [
+                  Parlour::RbiGenerator::Parameter.new(
+                    "attributes",
+                    type: "T.nilable(T.any(::Hash, T::Array[::Hash]))",
+                    default: "nil"
+                  ),
                   Parlour::RbiGenerator::Parameter.new(
                     "&block",
                     type: "T.nilable(T.proc.params(object: #{@constant}).void)",
