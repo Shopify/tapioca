@@ -330,7 +330,8 @@ module Tapioca
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new(
                       "column_name",
-                      type: "T.nilable(T.any(String, Symbol))"
+                      type: "T.nilable(T.any(String, Symbol))",
+                      default: "nil"
                     ),
                     Parlour::RbiGenerator::Parameter.new(
                       "&block",

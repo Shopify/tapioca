@@ -316,7 +316,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def spawn(*args, &blk); end
 
             sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(Numeric))).returns(Numeric) }
-            def sum(column_name, &block); end
+            def sum(column_name = nil, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }
             def take(limit = nil); end
@@ -627,7 +627,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def spawn(*args, &blk); end
 
             sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(Numeric))).returns(Numeric) }
-            def sum(column_name, &block); end
+            def sum(column_name = nil, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }
             def take(limit = nil); end
