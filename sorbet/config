@@ -1,3 +1,4 @@
 --dir
 .
 --ignore=/vendor
+--enable-experimental-requires-ancestor
