@@ -50,11 +50,9 @@ module Tapioca
           ).void
         end
         def decorate(root, constant)
-          scope_method_names = T.let(
-            constant.send(:generated_relation_methods).instance_methods(false),
-            T::Array[Symbol]
-          )
-          return if scope_method_names.empty?
+          method_names = scope_method_names(constant)
+
+          return if method_names.empty?
 
           root.create_path(constant) do |model|
             relation_methods_module_name = "GeneratedRelationMethods"
@@ -62,7 +60,7 @@ module Tapioca
             association_relation_methods_module_name = "GeneratedAssociationRelationMethods"
             association_relation_methods_module = model.create_module(association_relation_methods_module_name)
 
-            scope_method_names.each do |scope_method|
+            method_names.each do |scope_method|
               generate_scope_method(
                 relation_methods_module,
                 scope_method.to_s,
@@ -85,6 +83,21 @@ module Tapioca
         end
 
         private
+
+        sig { params(constant: T.class_of(::ActiveRecord::Base)).returns(T::Array[Symbol]) }
+        def scope_method_names(constant)
+          scope_methods = T.let([], T::Array[Symbol])
+
+          # Keep gathering scope methods until we hit "ActiveRecord::Base" or an abstract superclass
+          until constant == ActiveRecord::Base || constant.abstract_class?
+            scope_methods.concat(constant.send(:generated_relation_methods).instance_methods(false))
+
+            # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
+            constant = T.cast(constant.superclass, T.class_of(ActiveRecord::Base))
+          end
+
+          scope_methods
+        end
 
         sig do
           params(

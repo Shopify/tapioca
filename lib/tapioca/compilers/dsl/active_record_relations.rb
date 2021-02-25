@@ -71,19 +71,6 @@ module Tapioca
           def generate
             create_classes_and_includes
             create_common_methods
-
-            # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
-            superclass = T.cast(@constant.superclass, T.class_of(ActiveRecord::Base))
-
-            # Only generate includes if we have a non-abstract model class as parent
-            unless superclass == ActiveRecord::Base || superclass.abstract_class?
-              @relation_methods_module.create_include(
-                "::#{superclass}::GeneratedRelationMethods"
-              )
-              @association_relation_methods_module.create_include(
-                "::#{superclass}::GeneratedAssociationRelationMethods"
-              )
-            end
           end
 
           private

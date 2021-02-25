@@ -730,50 +730,5 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
       assert_equal(expected, rbi_for(:Post))
     end
-
-    it("generates relation includes from non-abstract parent models") do
-      add_ruby_file("post.rb", <<~RUBY)
-        class Post < ActiveRecord::Base
-        end
-
-        class CustomPost < Post
-        end
-      RUBY
-
-      output = rbi_for(:CustomPost)
-
-      assert_includes(output, indented(<<~RUBY, 2))
-        module GeneratedAssociationRelationMethods
-          include ::Post::GeneratedAssociationRelationMethods
-      RUBY
-
-      assert_includes(output, indented(<<~RUBY, 2))
-        module GeneratedRelationMethods
-          include ::Post::GeneratedRelationMethods
-      RUBY
-    end
-
-    it("does not generate relation includes from abstract parent models") do
-      add_ruby_file("post.rb", <<~RUBY)
-        class ApplicationRecord < ActiveRecord::Base
-          self.abstract_class = true
-        end
-
-        class Post < ApplicationRecord
-        end
-      RUBY
-
-      output = rbi_for(:Post)
-
-      refute_includes(output, indented(<<~RUBY, 2))
-        module GeneratedAssociationRelationMethods
-          include ::ApplicationRecord::GeneratedAssociationRelationMethods
-      RUBY
-
-      refute_includes(output, indented(<<~RUBY, 2))
-        module GeneratedRelationMethods
-          include ::ApplicationRecord::GeneratedRelationMethods
-      RUBY
-    end
   end
 end
