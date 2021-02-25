@@ -53,13 +53,13 @@ module Tapioca
 
     sig { returns([T::Array[Gem], T::Array[String]]) }
     def load_dependencies
-      specs = definition.locked_gems.specs.to_a
+      deps = definition.locked_gems.dependencies.values
 
       missing_specs = T::Array[String].new
 
       dependencies = definition
         .resolve
-        .materialize(specs, missing_specs)
+        .materialize(deps, missing_specs)
         .map { |spec| Gem.new(spec) }
         .reject { |gem| gem.ignore?(dir) }
         .uniq(&:rbi_file_name)
