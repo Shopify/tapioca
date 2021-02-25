@@ -342,7 +342,6 @@ module Tapioca
               when :sum
                 add_method(
                   "sum",
-                  type_parameters: [:U],
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new(
                       "column_name",
@@ -351,10 +350,10 @@ module Tapioca
                     ),
                     Parlour::RbiGenerator::Parameter.new(
                       "&block",
-                      type: "T.nilable(T.proc.params(record: #{@constant}).returns(T.type_parameter(:U)))"
+                      type: "T.nilable(T.proc.params(record: #{@constant}).returns(T.untyped))"
                     ),
                   ],
-                  return_type: "T.type_parameter(:U)"
+                  return_type: "T.untyped"
                 )
               end
             end
