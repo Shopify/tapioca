@@ -315,7 +315,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def spawn(*args, &blk); end
 
-            sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(Numeric))).returns(Numeric) }
+            sig { type_parameters(:U).params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(T.type_parameter(:U)))).returns(T.type_parameter(:U)) }
             def sum(column_name = nil, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }
@@ -626,7 +626,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def spawn(*args, &blk); end
 
-            sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(Numeric))).returns(Numeric) }
+            sig { type_parameters(:U).params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(T.type_parameter(:U)))).returns(T.type_parameter(:U)) }
             def sum(column_name = nil, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }

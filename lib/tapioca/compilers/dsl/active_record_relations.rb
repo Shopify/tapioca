@@ -321,12 +321,15 @@ module Tapioca
               when :pick, :pluck
                 add_method(
                   method_name.to_s,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("*column_names", type: "T.untyped")],
+                  parameters: [
+                    Parlour::RbiGenerator::Parameter.new("*column_names", type: "T.untyped"),
+                  ],
                   return_type: "T.untyped"
                 )
               when :sum
                 add_method(
                   "sum",
+                  type_parameters: [:U],
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new(
                       "column_name",
@@ -335,10 +338,10 @@ module Tapioca
                     ),
                     Parlour::RbiGenerator::Parameter.new(
                       "&block",
-                      type: "T.nilable(T.proc.params(record: #{@constant}).returns(Numeric))"
+                      type: "T.nilable(T.proc.params(record: #{@constant}).returns(T.type_parameter(:U)))"
                     ),
                   ],
-                  return_type: "Numeric"
+                  return_type: "T.type_parameter(:U)"
                 )
               end
             end
@@ -417,11 +420,19 @@ module Tapioca
               mod: Parlour::RbiGenerator::Namespace,
               name: String,
               parameters: T::Array[Parlour::RbiGenerator::Parameter],
-              return_type: T.nilable(String)
+              return_type: T.nilable(String),
+              type_parameters: T.nilable(T::Array[Symbol]),
             ).void
           end
-          def create_method(mod, name, parameters:, return_type:)
-            @compiler.send(:create_method, mod, name, parameters: parameters, return_type: return_type)
+          def create_method(mod, name, parameters:, return_type:, type_parameters: nil)
+            @compiler.send(
+              :create_method,
+              mod,
+              name,
+              type_parameters: type_parameters,
+              parameters: parameters,
+              return_type: return_type
+            )
           end
 
           sig { params(name: String, parameters: T::Array[Parlour::RbiGenerator::Parameter]).void }
@@ -436,23 +447,26 @@ module Tapioca
           sig do
             params(
               name: String,
+              type_parameters: T.nilable(T::Array[Symbol]),
               parameters: T::Array[Parlour::RbiGenerator::Parameter],
               return_type: T.any(String, [String, String])
             ).void
           end
-          def add_method(name, parameters: [], return_type: "")
+          def add_method(name, type_parameters: nil, parameters: [], return_type: "")
             relation_return = Array(return_type).first
             association_relation_return = Array(return_type).last
 
             create_method(
               @relation_methods_module,
               name,
+              type_parameters: type_parameters,
               parameters: parameters,
               return_type: relation_return
             )
             create_method(
               @association_relation_methods_module,
               name,
+              type_parameters: type_parameters,
               parameters: parameters,
               return_type: association_relation_return
             )
