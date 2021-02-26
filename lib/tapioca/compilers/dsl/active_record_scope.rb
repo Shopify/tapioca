@@ -88,8 +88,8 @@ module Tapioca
         def scope_method_names(constant)
           scope_methods = T.let([], T::Array[Symbol])
 
-          # Keep gathering scope methods until we hit "ActiveRecord::Base" or an abstract superclass
-          until constant == ActiveRecord::Base || constant.abstract_class?
+          # Keep gathering scope methods until we hit "ActiveRecord::Base"
+          until constant == ActiveRecord::Base
             scope_methods.concat(constant.send(:generated_relation_methods).instance_methods(false))
 
             # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"

@@ -150,7 +150,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       assert_equal(expected, rbi_for(:SuperCustomPost))
     end
 
-    it("does not generate relation includes from abstract parent models") do
+    it("generates relation includes from abstract parent models") do
       add_ruby_file("post.rb", <<~RUBY)
         class ApplicationRecord < ActiveRecord::Base
           self.abstract_class = true
@@ -170,10 +170,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
           module GeneratedAssociationRelationMethods
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def app_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def post_scope(*args, &blk); end
           end
 
           module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def app_scope(*args, &blk); end
+
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def post_scope(*args, &blk); end
           end
