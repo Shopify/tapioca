@@ -529,6 +529,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
             Elem = type_member(fixed: Post)
+
+            sig { returns(ActiveRecord::Associations::Association) }
+            def proxy_association; end
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -538,9 +541,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def <<(*records); end
-
-            sig { params(other: T.untyped).void }
-            def ==(other); end
 
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def append(*records); end
@@ -554,9 +554,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(T::Array[Post]) }
             def delete(*records); end
 
-            sig { params(dependent: T.untyped).void }
-            def delete_all(dependent = nil); end
-
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(T::Array[Post]) }
             def destroy(*records); end
 
@@ -566,25 +563,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def prepend(*records); end
 
-            sig { void }
+            sig { returns(ActiveRecord::Associations::Association) }
             def proxy_association; end
 
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def push(*records); end
 
-            sig { void }
-            def reload; end
-
             sig { params(other_array: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).void }
             def replace(other_array); end
-
-            sig { void }
-            def reset; end
 
             sig { returns(PrivateAssociationRelation) }
             def scope; end
 
-            sig { returns(T.untyped) }
+            sig { returns(T::Array[Post]) }
             def target; end
           end
 

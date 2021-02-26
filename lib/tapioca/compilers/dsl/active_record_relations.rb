@@ -115,6 +115,8 @@ module Tapioca
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@association_relation_methods_module_name)
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
+
+              create_association_methods(klass)
             end
           end
 
@@ -128,101 +130,122 @@ module Tapioca
               klass.create_include(@association_relation_methods_module_name)
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
 
-              const_collection = "T.any(" + [
-                @constant.to_s,
-                "T::Array[#{@constant}]",
-                "T::Array[#{@associations_collection_proxy_class_name}]",
-              ].join(", ") + ")"
+              create_association_methods(klass)
+              create_collection_proxy_methods(klass)
+            end
+          end
 
-              collection_proxy_methods = ::ActiveRecord::Associations::CollectionProxy.instance_methods -
-                ::ActiveRecord::AssociationRelation.instance_methods
+          sig { params(klass: Parlour::RbiGenerator::ClassNamespace).void }
+          def create_association_methods(klass)
+            association_methods = ::ActiveRecord::AssociationRelation.instance_methods -
+              ::ActiveRecord::Relation.instance_methods
 
-              collection_proxy_methods.each do |method_name|
-                case method_name
-                when :<<, :append, :concat, :prepend, :push
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
-                    return_type: @associations_collection_proxy_class_name
-                  )
-                when :clear
-                  create_method(
-                    klass,
-                    "clear",
-                    parameters: [],
-                    return_type: @associations_collection_proxy_class_name
-                  )
-                when :delete, :destroy
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
-                    return_type: "T::Array[#{@constant}]"
-                  )
-                when :load_target
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [],
-                    return_type: "T::Array[#{@constant}]"
-                  )
-                when :replace
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [Parlour::RbiGenerator::Parameter.new("other_array", type: const_collection)],
-                    return_type: nil
-                  )
-                when :reset_scope
-                  # skip
-                when :scope
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [],
-                    return_type: @association_relation_class_name
-                  )
-                when :target
-                  create_method(
-                    klass,
-                    method_name.to_s,
-                    parameters: [],
-                    return_type: "T.untyped"
-                  )
-                end
-              end
-
-              methods = T.let({
-                "==": {
-                  params: [
-                    Parlour::RbiGenerator::Parameter.new("other", type: "T.untyped"),
-                  ],
-                  return_type: "T::Boolean",
-                },
-                delete_all: {
-                  params: [
-                    Parlour::RbiGenerator::Parameter.new("dependent", type: "T.untyped", default: "nil"),
-                  ],
-                  return_type: "Integer",
-                },
-                proxy_association: {
-                  return_type: "T.untyped",
-                },
-                reload: {
-                  return_type: nil,
-                },
-                reset: {
-                  return_type: nil,
-                },
-              }, T::Hash[Symbol, MethodDefinition])
-
-              methods.each_pair do |method, props|
+            association_methods.each do |method_name|
+              case method_name
+              when :insert_all, :insert_all!, :upsert_all
                 create_method(
                   klass,
-                  method.to_s,
-                  parameters: props[:params],
-                  return_type: props[:returns]
+                  method_name,
+                  parameters: [
+                    Parlour::RbiGenerator::Parameter.new("attributes", type: "T::Array[Hash]"),
+                    Parlour::RbiGenerator::Parameter.new("returning:", type: "T::Array[Symbol]", default: "nil"),
+                    Parlour::RbiGenerator::Parameter.new(
+                      "unique_by:",
+                      type: "T.any(T::Array[Symbol], Symbol)",
+                      default: "nil"
+                    ),
+                  ],
+                  return_type: "ActiveRecord::Result"
+                )
+              when :insert, :insert!, :upsert
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [
+                    Parlour::RbiGenerator::Parameter.new("attributes", type: "Hash"),
+                    Parlour::RbiGenerator::Parameter.new("returning:", type: "T::Array[Symbol]", default: "nil"),
+                    Parlour::RbiGenerator::Parameter.new(
+                      "unique_by:",
+                      type: "T.any(T::Array[Symbol], Symbol)",
+                      default: "nil"
+                    ),
+                  ],
+                  return_type: "ActiveRecord::Result"
+                )
+              when :proxy_association
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [],
+                  return_type: "ActiveRecord::Associations::Association"
+                )
+              end
+            end
+          end
+
+          sig { params(klass: Parlour::RbiGenerator::ClassNamespace).void }
+          def create_collection_proxy_methods(klass)
+            const_collection = "T.any(" + [
+              @constant.to_s,
+              "T::Array[#{@constant}]",
+              "T::Array[#{@associations_collection_proxy_class_name}]",
+            ].join(", ") + ")"
+
+            collection_proxy_methods = ::ActiveRecord::Associations::CollectionProxy.instance_methods -
+              ::ActiveRecord::AssociationRelation.instance_methods
+
+            collection_proxy_methods.each do |method_name|
+              case method_name
+              when :<<, :append, :concat, :prepend, :push
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
+                  return_type: @associations_collection_proxy_class_name
+                )
+              when :clear
+                create_method(
+                  klass,
+                  "clear",
+                  parameters: [],
+                  return_type: @associations_collection_proxy_class_name
+                )
+              when :delete, :destroy
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
+                  return_type: "T::Array[#{@constant}]"
+                )
+              when :load_target
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [],
+                  return_type: "T::Array[#{@constant}]"
+                )
+              when :replace
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [Parlour::RbiGenerator::Parameter.new("other_array", type: const_collection)],
+                  return_type: nil
+                )
+              when :reset_scope
+                # skip
+              when :scope
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [],
+                  return_type: @association_relation_class_name
+                )
+              when :target
+                create_method(
+                  klass,
+                  method_name,
+                  parameters: [],
+                  return_type: "T::Array[#{@constant}]"
                 )
               end
             end
