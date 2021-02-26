@@ -253,8 +253,8 @@ module Tapioca
 
           sig { void }
           def create_relation_methods
-            add_relation_method("all")
-            add_relation_method(
+            create_relation_method("all")
+            create_relation_method(
               "not",
               parameters: [
                 Parlour::RbiGenerator::Parameter.new("opts", type: "T.untyped"),
@@ -272,8 +272,8 @@ module Tapioca
               when /(_clause|_values?|=)$/
                 # skip
               else
-                add_relation_method(
-                  method_name.to_s,
+                create_relation_method(
+                  method_name,
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
                     Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
@@ -285,36 +285,36 @@ module Tapioca
 
           sig { void }
           def create_common_methods
-            add_common_method("destroy_all", return_type: "T::Array[#{@constant}]")
+            create_common_method("destroy_all", return_type: "T::Array[#{@constant}]")
 
             ActiveRecord::FinderMethods.instance_methods(false).each do |method_name|
               case method_name
               when :exists?
-                add_common_method(
+                create_common_method(
                   "exists?",
                   parameters: [Parlour::RbiGenerator::Parameter.new("conditions", type: "T.untyped", default: ":none")],
                   return_type: "T::Boolean"
                 )
               when :include?
-                add_common_method(
+                create_common_method(
                   "include?",
                   parameters: [Parlour::RbiGenerator::Parameter.new("record", type: "T.untyped")],
                   return_type: "T::Boolean"
                 )
               when :find, :find_by!
-                add_common_method(
+                create_common_method(
                   "find",
                   parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
                   return_type: "T.untyped"
                 )
               when :find_by
-                add_common_method(
+                create_common_method(
                   "find_by",
                   parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
                   return_type: "T.nilable(#{@constant})"
                 )
               when :first, :last, :take
-                add_common_method(
+                create_common_method(
                   method_name,
                   parameters: [Parlour::RbiGenerator::Parameter.new("limit", type: "T.untyped", default: "nil")],
                   return_type: "T.untyped"
@@ -322,7 +322,7 @@ module Tapioca
               when :raise_record_not_found_exception!
                 # skip
               else
-                add_common_method(
+                create_common_method(
                   method_name,
                   return_type: method_name.to_s.end_with?("!") ? @constant.to_s : "T.nilable(#{@constant})"
                 )
@@ -332,13 +332,13 @@ module Tapioca
             ActiveRecord::Calculations.instance_methods(false).each do |method_name|
               case method_name
               when :average, :maximum, :minimum
-                add_common_method(
+                create_common_method(
                   method_name,
                   parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)")],
                   return_type: "T.nilable(Numeric)"
                 )
               when :calculate
-                add_common_method(
+                create_common_method(
                   "calculate",
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new("operation", type: "Symbol"),
@@ -347,15 +347,15 @@ module Tapioca
                   return_type: "T.nilable(Numeric)"
                 )
               when :count
-                add_common_method(
+                create_common_method(
                   "count",
                   parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.untyped", default: "nil")],
                   return_type: "T.untyped"
                 )
               when :ids
-                add_common_method("ids", return_type: "Array")
+                create_common_method("ids", return_type: "Array")
               when :pick, :pluck
-                add_common_method(
+                create_common_method(
                   method_name,
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new("*column_names", type: "T.untyped"),
@@ -363,7 +363,7 @@ module Tapioca
                   return_type: "T.untyped"
                 )
               when :sum
-                add_common_method(
+                create_common_method(
                   "sum",
                   parameters: [
                     Parlour::RbiGenerator::Parameter.new(
@@ -383,7 +383,7 @@ module Tapioca
 
             enumerable_query_methods = %i[any? many? none? one?]
             enumerable_query_methods.each do |method_name|
-              add_common_method(
+              create_common_method(
                 method_name,
                 parameters: [
                   Parlour::RbiGenerator::Parameter.new(
@@ -400,7 +400,7 @@ module Tapioca
             ]
 
             find_or_create_methods.each do |method_name|
-              add_common_method(
+              create_common_method(
                 method_name,
                 parameters: [
                   Parlour::RbiGenerator::Parameter.new("attributes", type: "T.untyped"),
@@ -414,7 +414,7 @@ module Tapioca
             end
 
             %i[new build create create!].each do |method_name|
-              add_common_method(
+              create_common_method(
                 method_name,
                 parameters: [
                   Parlour::RbiGenerator::Parameter.new(
@@ -459,7 +459,7 @@ module Tapioca
               return_type: T.nilable(String)
             ).void
           end
-          def add_common_method(name, parameters: [], return_type: nil)
+          def create_common_method(name, parameters: [], return_type: nil)
             create_method(
               @common_relation_methods_module,
               name,
@@ -469,7 +469,7 @@ module Tapioca
           end
 
           sig { params(name: T.any(Symbol, String), parameters: T::Array[Parlour::RbiGenerator::Parameter]).void }
-          def add_relation_method(name, parameters: [])
+          def create_relation_method(name, parameters: [])
             create_method(
               @relation_methods_module,
               name,
