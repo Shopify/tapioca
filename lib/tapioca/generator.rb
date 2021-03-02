@@ -265,13 +265,25 @@ module Tapioca
 
     sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
     def constantize(constant_names)
-      constant_names.map do |name|
+      constant_map = constant_names.map do |name|
         begin
-          name.constantize
+          [name, name.constantize]
         rescue NameError
-          nil
+          [name, nil]
         end
-      end.compact
+      end.to_h
+
+      unprocessable_constants = constant_map.select { |_, v| v.nil? }
+      unless unprocessable_constants.empty?
+        unprocessable_constants.each do |name, _|
+          say("Error: Cannot find constant '#{name}'", :red)
+          remove(dsl_rbi_filename(name))
+        end
+
+        exit(1)
+      end
+
+      constant_map.values
     end
 
     sig { params(requested_constants: T::Array[String]).returns(T::Set[Pathname]) }
