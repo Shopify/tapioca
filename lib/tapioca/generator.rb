@@ -358,6 +358,7 @@ module Tapioca
 
     sig { params(filename: Pathname).void }
     def remove(filename)
+      return unless filename.exist?
       say("-- Removing: #{filename}")
       filename.unlink
     end
