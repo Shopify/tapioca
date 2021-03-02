@@ -1995,6 +1995,57 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles T::Enum") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Bar
+          class Baz < T::Enum
+            enums do
+              A = new('abc')
+              B = new
+            end
+          end
+        end
+
+        class Foo < T::Enum
+          enums do
+            A = new
+            B = new('xyz')
+          end
+
+          CONSTANT = 123
+
+          class C
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+        end
+
+        class Bar::Baz < ::T::Enum
+          enums do
+            A = new
+            B = new
+          end
+        end
+
+        class Foo < ::T::Enum
+          enums do
+            A = new
+            B = new
+          end
+        end
+
+        class Foo::C
+        end
+
+        Foo::CONSTANT = T.let(T.unsafe(nil), Integer)
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles signatures and structs in source files") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo

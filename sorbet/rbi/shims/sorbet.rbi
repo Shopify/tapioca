@@ -20,3 +20,7 @@ module T::Private
     end
   end
 end
+
+class T::Enum
+  def values; end
+end
