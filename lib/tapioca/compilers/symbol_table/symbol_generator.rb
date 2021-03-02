@@ -95,6 +95,7 @@ module Tapioca
           return if alias_namespaced?(name)
           return if seen?(name)
           return unless parent_declares_constant?(name)
+          return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
           mark_seen(name)
           compile_constant(name, constant)
@@ -183,6 +184,7 @@ module Tapioca
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
               compile_props(constant),
+              compile_enums(constant),
               methods,
             ].select { |b| b != "" }.join("\n\n")
           end
@@ -215,6 +217,25 @@ module Tapioca
               indented("#{method} :#{name}, #{type}")
             end
           end.join("\n")
+        end
+
+        sig { params(constant: Module).returns(String) }
+        def compile_enums(constant)
+          return "" unless T::Enum > constant
+
+          # T::Enum doesn't currently give a nice way to get the actual enum name so you
+          # need to parse it from the string representation which is in the form `#<SomeEnum::A>`
+          enums = T.cast(constant, T::Enum).values.map do |value|
+            value.to_s.match(/#<([\w:]+)>/)[1].split('::').last
+          end
+
+          content = [
+            indented('enums do'),
+            *enums.map { |e| indented("  #{e} = new") }.join("\n"),
+            indented('end'),
+          ]
+
+          content.join("\n")
         end
 
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
