@@ -221,12 +221,10 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def compile_enums(constant)
-          return "" unless T::Enum > constant
+          return "" unless constant < T::Enum
 
-          # T::Enum doesn't currently give a nice way to get the actual enum name so you
-          # need to parse it from the string representation which is in the form `#<SomeEnum::A>`
-          enums = T.cast(constant, T::Enum).values.map do |value|
-            value.to_s.match(/#<([\w:]+)>/)[1].split('::').last
+          enums = T.cast(constant, T::Enum).values.map do |enum_type|
+            enum_type.instance_variable_get(:@const_name).to_s
           end
 
           content = [
