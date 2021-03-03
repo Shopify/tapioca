@@ -373,6 +373,53 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
+    it 'errors for unprocessable required constants' do
+      output = execute("dsl", ["NonExistent::Foo", "NonExistent::Bar", "NonExistent::Baz"])
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Error: Cannot find constant 'NonExistent::Foo'
+        Error: Cannot find constant 'NonExistent::Bar'
+        Error: Cannot find constant 'NonExistent::Baz'
+      OUTPUT
+
+      refute_path_exists("#{outdir}/baz/role.rbi")
+      refute_path_exists("#{outdir}/post.rbi")
+      refute_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
+    it 'removes RBI files for unprocessable required constants' do
+      FileUtils.mkdir_p("#{outdir}/non_existent")
+      FileUtils.touch("#{outdir}/non_existent/foo.rbi")
+      FileUtils.touch("#{outdir}/non_existent/baz.rbi")
+
+      output = execute("dsl", ["NonExistent::Foo", "NonExistent::Bar", "NonExistent::Baz"])
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Error: Cannot find constant 'NonExistent::Foo'
+        -- Removing: #{outdir}/non_existent/foo.rbi
+        Error: Cannot find constant 'NonExistent::Bar'
+        Error: Cannot find constant 'NonExistent::Baz'
+        -- Removing: #{outdir}/non_existent/baz.rbi
+      OUTPUT
+
+      refute_path_exists("#{outdir}/non_existent/foo.rbi")
+      refute_path_exists("#{outdir}/non_existent/baz.rbi")
+
+      refute_path_exists("#{outdir}/baz/role.rbi")
+      refute_path_exists("#{outdir}/post.rbi")
+      refute_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
     it 'generates RBI files for all processable constants' do
       output = execute("dsl")
 
@@ -443,6 +490,67 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           end
         end
       CONTENTS
+    end
+
+    it 'removes stale RBI files' do
+      FileUtils.mkdir_p("#{outdir}/to_be_deleted")
+      FileUtils.touch("#{outdir}/to_be_deleted/foo.rbi")
+      FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
+      FileUtils.touch("#{outdir}/does_not_exist.rbi")
+
+      output = execute("dsl")
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Wrote: #{outdir}/baz/role.rbi
+        Wrote: #{outdir}/namespace/comment.rbi
+        Wrote: #{outdir}/post.rbi
+
+        Removing stale RBI files...
+        -- Removing: #{outdir}/does_not_exist.rbi
+        -- Removing: #{outdir}/to_be_deleted/baz.rbi
+        -- Removing: #{outdir}/to_be_deleted/foo.rbi
+
+        Done
+        All operations performed in working directory.
+        Please review changes and commit them.
+      OUTPUT
+
+      refute_path_exists("#{outdir}/does_not_exist.rbi")
+      refute_path_exists("#{outdir}/to_be_deleted/foo.rbi")
+      refute_path_exists("#{outdir}/to_be_deleted/baz.rbi")
+
+      assert_path_exists("#{outdir}/baz/role.rbi")
+      assert_path_exists("#{outdir}/post.rbi")
+      assert_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
+    it 'removes stale RBI files of requested constants' do
+      FileUtils.touch("#{outdir}/user.rbi")
+
+      output = execute("dsl", ["Post", "User"])
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Wrote: #{outdir}/post.rbi
+
+        Removing stale RBI files...
+        -- Removing: #{outdir}/user.rbi
+
+        Done
+        All operations performed in working directory.
+        Please review changes and commit them.
+      OUTPUT
+
+      assert_path_exists("#{outdir}/post.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
     end
 
     it 'does not generate anything if there are no matching generators' do

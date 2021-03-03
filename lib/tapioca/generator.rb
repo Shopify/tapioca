@@ -121,6 +121,8 @@ module Tapioca
       load_application(eager_load: requested_constants.empty?)
       load_dsl_generators
 
+      rbi_files_to_purge = existing_rbi_filenames(requested_constants)
+
       say("Compiling DSL RBI files...")
       say("")
 
@@ -133,7 +135,17 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        compile_dsl_rbi(constant, contents)
+        filename = compile_dsl_rbi(constant, contents)
+        rbi_files_to_purge.delete(filename) if filename
+      end
+
+      unless rbi_files_to_purge.empty?
+        say("")
+        say("Removing stale RBI files...")
+
+        rbi_files_to_purge.sort.each do |filename|
+          remove(filename)
+        end
       end
 
       say("")
@@ -253,13 +265,38 @@ module Tapioca
 
     sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
     def constantize(constant_names)
-      constant_names.map do |name|
+      constant_map = constant_names.map do |name|
         begin
-          name.constantize
+          [name, name.constantize]
         rescue NameError
-          nil
+          [name, nil]
         end
-      end.compact
+      end.to_h
+
+      unprocessable_constants = constant_map.select { |_, v| v.nil? }
+      unless unprocessable_constants.empty?
+        unprocessable_constants.each do |name, _|
+          say("Error: Cannot find constant '#{name}'", :red)
+          remove(dsl_rbi_filename(name))
+        end
+
+        exit(1)
+      end
+
+      constant_map.values
+    end
+
+    sig { params(requested_constants: T::Array[String]).returns(T::Set[Pathname]) }
+    def existing_rbi_filenames(requested_constants)
+      filenames = if requested_constants.empty?
+        Pathname.glob(config.outpath / "**/*.rbi")
+      else
+        requested_constants.map do |constant_name|
+          dsl_rbi_filename(constant_name)
+        end
+      end
+
+      filenames.to_set
     end
 
     sig { returns(T::Hash[String, String]) }
@@ -275,6 +312,11 @@ module Tapioca
         .reject { |gem| config.exclude.include?(gem.name) }
         .map { |gem| [gem.name, gem.version.to_s] }
         .to_h
+    end
+
+    sig { params(constant_name: String).returns(Pathname) }
+    def dsl_rbi_filename(constant_name)
+      config.outpath / "#{constant_name.underscore}.rbi"
     end
 
     sig { params(gem_name: String, version: String).returns(Pathname) }
@@ -316,6 +358,7 @@ module Tapioca
 
     sig { params(filename: Pathname).void }
     def remove(filename)
+      return unless filename.exist?
       say("-- Removing: #{filename}")
       filename.unlink
     end
@@ -456,7 +499,7 @@ module Tapioca
       end
     end
 
-    sig { params(constant: Module, contents: String).void }
+    sig { params(constant: Module, contents: String).returns(T.nilable(Pathname)) }
     def compile_dsl_rbi(constant, contents)
       return if contents.nil?
 
@@ -476,6 +519,8 @@ module Tapioca
       File.write(filename, out)
       say("Wrote: ", [:green])
       say(filename)
+
+      filename
     end
   end
 end
