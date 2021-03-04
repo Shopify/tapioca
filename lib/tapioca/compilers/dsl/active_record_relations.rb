@@ -103,6 +103,8 @@ module Tapioca
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@relation_methods_module_name)
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
+
+              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
             end
           end
 
@@ -116,6 +118,7 @@ module Tapioca
               klass.create_include(@association_relation_methods_module_name)
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
 
+              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
               create_association_methods(klass)
             end
           end
@@ -130,6 +133,7 @@ module Tapioca
               klass.create_include(@association_relation_methods_module_name)
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
 
+              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
               create_association_methods(klass)
               create_collection_proxy_methods(klass)
             end

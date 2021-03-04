@@ -532,6 +532,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(ActiveRecord::Associations::Association) }
             def proxy_association; end
+
+            sig { returns(T::Array[Post]) }
+            def to_ary; end
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -577,12 +580,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(T::Array[Post]) }
             def target; end
+
+            sig { returns(T::Array[Post]) }
+            def to_ary; end
           end
 
           class PrivateRelation < ::ActiveRecord::Relation
             include CommonRelationMethods
             include GeneratedRelationMethods
             Elem = type_member(fixed: Post)
+
+            sig { returns(T::Array[Post]) }
+            def to_ary; end
           end
         end
       RUBY
