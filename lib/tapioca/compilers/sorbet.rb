@@ -26,7 +26,12 @@ module Tapioca
 
         sig { returns(String) }
         def sorbet_path
-          SORBET.to_s.shellescape
+          custom_sorbet_path = ENV["TPC_SORBET_EXE"]
+          if custom_sorbet_path.nil? || custom_sorbet_path.empty?
+            SORBET.to_s.shellescape
+          else
+            custom_sorbet_path.shellescape
+          end
         end
       end
     end
