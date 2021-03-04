@@ -91,7 +91,7 @@ module Tapioca
             model.create_extend(@relation_methods_module_name)
             create_relation_class
             create_association_relation_class
-            create_association_collection_proxy_class
+            create_collection_proxy_class
           end
 
           sig { void }
@@ -119,12 +119,12 @@ module Tapioca
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
 
               create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
-              create_association_methods(klass)
+              create_association_relation_methods(klass)
             end
           end
 
           sig { void }
-          def create_association_collection_proxy_class
+          def create_collection_proxy_class
             superclass = "::ActiveRecord::Associations::CollectionProxy"
 
             # The relation subclass includes the generated association relation module
@@ -134,13 +134,13 @@ module Tapioca
               klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
 
               create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
-              create_association_methods(klass)
+              create_association_relation_methods(klass)
               create_collection_proxy_methods(klass)
             end
           end
 
           sig { params(klass: Parlour::RbiGenerator::ClassNamespace).void }
-          def create_association_methods(klass)
+          def create_association_relation_methods(klass)
             association_methods = ::ActiveRecord::AssociationRelation.instance_methods -
               ::ActiveRecord::Relation.instance_methods
 
