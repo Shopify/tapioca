@@ -172,8 +172,15 @@ module Tapioca
 
           scope =
             if constant.is_a?(Class)
-              superclass = compile_superclass(constant)
-              RBI::Class.new(name, superclass_name: superclass)
+              if constant < Struct && struct_definition?(constant)
+                members = constant.members.map(&:to_sym)
+                keyword_init = /\(keyword_init: true\)/.freeze.match?(constant.inspect)
+
+                RBI::Struct.new(name, members: members, keyword_init: keyword_init)
+              else
+                superclass = compile_superclass(constant)
+                RBI::Class.new(name, superclass_name: superclass)
+              end
             else
               RBI::Module.new(name)
             end
@@ -293,6 +300,32 @@ module Tapioca
           return if type_variable_declarations.empty?
 
           tree << RBI::Extend.new("T::Generic")
+        end
+
+        sig { params(constant: Class).returns(T::Boolean) }
+        def struct_definition?(constant)
+          superclass = superclass_of(constant)
+          return false unless superclass
+
+          # If the superclass is anonymous, maybe this is an instance of
+          # the bad but popular `class Bar < Struct.new(:a, :b); end` usage
+          # which creates an anonymous superclass that itself inherits from
+          # `Struct`.
+          #
+          # Similarly, if the superclass name is like `Struct::XXX`, this maybe
+          # an instance of a much less popular but still valid
+          # `class Bar < Struct.new("Name", :a, :b); end` usage
+          # which creates a `Struct::Name` named superclass that itself inherits
+          # from `Struct`.
+          #
+          # In those case, we need to look at the superclass of this superclass to
+          # see if it is `Struct`.
+          superclass_name = name_of(superclass)
+          if !superclass_name || superclass_name =~ /^(::)?Struct::[^:]+$/.freeze
+            superclass = superclass_of(superclass)
+          end
+
+          are_equal?(Struct, superclass)
         end
 
         sig { params(constant: Class).returns(T.nilable(String)) }
@@ -810,7 +843,6 @@ module Tapioca
           name = super(constant)
           return if name.nil?
           return unless are_equal?(constant, resolve_constant(name, inherit: true))
-          name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
 
