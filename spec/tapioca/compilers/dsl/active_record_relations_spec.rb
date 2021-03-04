@@ -43,13 +43,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
             def any?(&block); end
 
-            sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
+            sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def average(column_name); end
 
             sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
             def build(attributes = nil, &block); end
 
-            sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
+            sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.untyped) }
             def calculate(operation, column_name); end
 
             sig { params(column_name: T.untyped).returns(T.untyped) }
@@ -127,10 +127,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
             def many?(&block); end
 
-            sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
+            sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def maximum(column_name); end
 
-            sig { params(column_name: T.any(String, Symbol)).returns(T.nilable(Numeric)) }
+            sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def minimum(column_name); end
 
             sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
@@ -157,7 +157,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { returns(Post) }
             def second_to_last!; end
 
-            sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T.untyped) }
+            sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
             def sum(column_name = nil, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }

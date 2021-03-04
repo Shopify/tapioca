@@ -335,7 +335,7 @@ module Tapioca
                 create_common_method(
                   method_name,
                   parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)")],
-                  return_type: "T.nilable(Numeric)"
+                  return_type: "T.untyped"
                 )
               when :calculate
                 create_common_method(
@@ -344,7 +344,7 @@ module Tapioca
                     Parlour::RbiGenerator::Parameter.new("operation", type: "Symbol"),
                     Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)"),
                   ],
-                  return_type: "T.nilable(Numeric)"
+                  return_type: "T.untyped"
                 )
               when :count
                 create_common_method(
@@ -373,7 +373,7 @@ module Tapioca
                     ),
                     Parlour::RbiGenerator::Parameter.new(
                       "&block",
-                      type: "T.nilable(T.proc.params(record: #{@constant}).returns(T.untyped))"
+                      type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"
                     ),
                   ],
                   return_type: "T.untyped"
