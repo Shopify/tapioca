@@ -5,6 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::SorbetSpec < Minitest::Spec
   before do
+    @temp_env_value = T.let(nil, T.nilable(String))
     @temp_env_value = ENV["TPC_SORBET_EXE"]
   end
 
