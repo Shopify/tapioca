@@ -124,7 +124,7 @@ module Tapioca
           def create_association_collection_proxy_class
             superclass = "::ActiveRecord::Associations::CollectionProxy"
 
-            # The relation subclass includes the generated relation module
+            # The relation subclass includes the generated association relation module
             model.create_class(@associations_collection_proxy_class_name, superclass: superclass) do |klass|
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@association_relation_methods_module_name)
