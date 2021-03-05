@@ -4,6 +4,7 @@
 require "spec_helper"
 
 class Tapioca::Compilers::SorbetSpec < Minitest::Spec
+  sig { params(path: T.nilable(String), block: T.proc.params(custom_path: T.nilable(String)).void).void }
   def with_custom_sorbet_exe_path(path, &block)
     sorbet_exe_env_value = ENV["TAPIOCA_SORBET_EXE"]
     begin
