@@ -187,19 +187,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def create_with(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def create_with!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def distinct(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def distinct!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def eager_load(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def eager_load!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def except(*args, &blk); end
@@ -208,37 +199,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def extending(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def extending!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def from(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def from!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def group(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def group!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def having(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def having!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def includes(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def includes!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def joins(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def joins!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def left_joins(*args, &blk); end
@@ -247,31 +220,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def left_outer_joins(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def left_outer_joins!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def limit(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def limit!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def lock(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def lock!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def merge(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def merge!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def none(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def none!(*args, &blk); end
 
             sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
             def not(opts, *rest); end
@@ -280,52 +238,28 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def offset(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def offset!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def only(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def or(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def or!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def order(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def order!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def preload(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def preload!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def readonly(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def readonly!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def references(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def references!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def reorder(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def reorder!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def reverse_order(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def reverse_order!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def rewhere(*args, &blk); end
@@ -334,22 +268,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def select(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def skip_query_cache!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def spawn(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def unscope(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def unscope!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def where(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-            def where!(*args, &blk); end
           end
 
           module GeneratedRelationMethods
@@ -360,19 +282,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def create_with(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def create_with!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def distinct(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def distinct!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def eager_load(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def eager_load!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def except(*args, &blk); end
@@ -381,37 +294,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def extending(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def extending!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def from(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def from!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def group(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def group!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def having(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def having!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def includes(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def includes!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def joins(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def joins!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def left_joins(*args, &blk); end
@@ -420,31 +315,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def left_outer_joins(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def left_outer_joins!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def limit(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def limit!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def lock(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def lock!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def merge(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def merge!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def none(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def none!(*args, &blk); end
 
             sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
             def not(opts, *rest); end
@@ -453,52 +333,28 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def offset(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def offset!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def only(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def or(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def or!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def order(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def order!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def preload(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def preload!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def readonly(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def readonly!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def references(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def references!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def reorder(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def reorder!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def reverse_order(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def reverse_order!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def rewhere(*args, &blk); end
@@ -507,31 +363,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def select(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def skip_query_cache!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def spawn(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def unscope(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def unscope!(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def where(*args, &blk); end
-
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-            def where!(*args, &blk); end
           end
 
           class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
             Elem = type_member(fixed: Post)
-
-            sig { returns(ActiveRecord::Associations::Association) }
-            def proxy_association; end
 
             sig { returns(T::Array[Post]) }
             def to_ary; end
@@ -565,9 +406,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def prepend(*records); end
-
-            sig { returns(ActiveRecord::Associations::Association) }
-            def proxy_association; end
 
             sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def push(*records); end

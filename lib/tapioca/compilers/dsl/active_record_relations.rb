@@ -177,12 +177,7 @@ module Tapioca
                   return_type: "ActiveRecord::Result"
                 )
               when :proxy_association
-                create_method(
-                  klass,
-                  method_name,
-                  parameters: [],
-                  return_type: "ActiveRecord::Associations::Association"
-                )
+                # skip - private method
               end
             end
           end
@@ -266,24 +261,33 @@ module Tapioca
               ]
             )
 
+            # Grab all Query methods
             query_methods = ActiveRecord::QueryMethods.instance_methods(false)
+            # Grab all Spawn methods
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
+            # Remove the ones we know are private API
+            query_methods -= %i(
+              arel
+              build_subquery
+              construct_join_dependency
+              extensions
+              spawn
+            )
+            # Remove the methods that ...
+            query_methods = query_methods
+              .grep_v(/_clause$/) # end with "_clause"
+              .grep_v(/_values?$/) # end with "_value" or "_values"
+              .grep_v(/=$/) # end with "=""
+              .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
 
             query_methods.each do |method_name|
-              case method_name
-              when :_select!, :arel, :build_subquery, :construct_join_dependency, :extensions, :extract_associated
-                # skip
-              when /(_clause|_values?|=)$/
-                # skip
-              else
-                create_relation_method(
-                  method_name,
-                  parameters: [
-                    Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-                    Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
-                  ]
-                )
-              end
+              create_relation_method(
+                method_name,
+                parameters: [
+                  Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
+                  Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+                ]
+              )
             end
           end
 
