@@ -17,6 +17,7 @@ module Tapioca
   class Error < StandardError; end
 end
 
+require "tapioca/reflection"
 require "tapioca/compilers/dsl/base"
 require "tapioca/helpers/active_record_column_type_helper"
 require "tapioca/version"
