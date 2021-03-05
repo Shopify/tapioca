@@ -8,6 +8,7 @@ module Tapioca
     module SymbolTable
       class SymbolGenerator
         extend(T::Sig)
+        include(Reflection)
 
         IGNORED_SYMBOLS = %w{
           YAML
@@ -744,40 +745,6 @@ module Tapioca
           end
         end
 
-        sig { params(constant: BasicObject).returns(Class).checked(:never) }
-        def class_of(constant)
-          Kernel.instance_method(:class).bind(constant).call
-        end
-
-        sig { params(constant: Module).returns(T::Array[Symbol]) }
-        def constants_of(constant)
-          Module.instance_method(:constants).bind(constant).call(false)
-        end
-
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def raw_name_of(constant)
-          Module.instance_method(:name).bind(constant).call
-        end
-
-        sig { params(constant: Module).returns(Class) }
-        def singleton_class_of(constant)
-          Object.instance_method(:singleton_class).bind(constant).call
-        end
-
-        sig { params(constant: Module).returns(T::Array[Module]) }
-        def ancestors_of(constant)
-          Module.instance_method(:ancestors).bind(constant).call
-        end
-
-        sig { params(constant: Module).returns(T::Array[Module]) }
-        def inherited_ancestors_of(constant)
-          if Class === constant
-            ancestors_of(superclass_of(constant) || Object)
-          else
-            Module.ancestors
-          end
-        end
-
         sig { params(constant: Module).returns(T::Array[Module]) }
         def interesting_ancestors_of(constant)
           inherited_ancestors_ids = Set.new(
@@ -807,19 +774,18 @@ module Tapioca
 
         sig { params(constant: Module).returns(T.nilable(String)) }
         def name_of(constant)
-          name = name_of_proxy_target(constant)
+          name = name_of_proxy_target(constant, super(class_of(constant)))
           return name if name
-          name = raw_name_of(constant)
+          name = super(constant)
           return if name.nil?
           return unless are_equal?(constant, resolve_constant(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
 
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def name_of_proxy_target(constant)
-          klass = class_of(constant)
-          return unless raw_name_of(klass) == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
+        sig { params(constant: Module, class_name: T.nilable(String)).returns(T.nilable(String)) }
+        def name_of_proxy_target(constant, class_name)
+          return unless class_name == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
           # We are dealing with a ActiveSupport::Deprecation::DeprecatedConstantProxy
           # so try to get the name of the target class
           begin
@@ -828,46 +794,7 @@ module Tapioca
             return nil
           end
 
-          raw_name_of(target)
-        end
-
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def qualified_name_of(constant)
-          name = name_of(constant)
-          return if name.nil?
-
-          if name.start_with?("::")
-            name
-          else
-            "::#{name}"
-          end
-        end
-
-        sig { params(constant: Class).returns(T.nilable(Class)) }
-        def superclass_of(constant)
-          Class.instance_method(:superclass).bind(constant).call
-        end
-
-        sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
-        def signature_of(method)
-          T::Private::Methods.signature_for_method(method)
-        rescue LoadError, StandardError
-          nil
-        end
-
-        sig { params(constant: Module).returns(String) }
-        def type_of(constant)
-          constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
-        end
-
-        sig { params(object: Object).returns(T::Boolean).checked(:never) }
-        def object_id_of(object)
-          Object.instance_method(:object_id).bind(object).call
-        end
-
-        sig { params(constant: Module, other: BasicObject).returns(T::Boolean).checked(:never) }
-        def are_equal?(constant, other)
-          BasicObject.instance_method(:equal?).bind(constant).call(other)
+          name_of(target)
         end
       end
     end

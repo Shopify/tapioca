@@ -30,6 +30,7 @@ rescue
   nil
 end
 
+require "tapioca/reflection"
 require "tapioca/loader"
 require "tapioca/constant_locator"
 require "tapioca/config"
