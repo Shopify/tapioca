@@ -23,7 +23,7 @@ class Tapioca::Compilers::SorbetSpec < Minitest::Spec
   it("returns the default sorbet path if TPC_SORBET_EXE is not set") do
     ENV["TPC_SORBET_EXE"] = ''
     gem_path = Gem::Specification.find_by_name("sorbet-static").full_gem_path
-    default_path = File.join(gem_path, "libexec", "sorbet")
+    default_path = Tapioca::Compilers::Sorbet::SORBET
     sorbet_path = Tapioca::Compilers::Sorbet.sorbet_path
     assert_equal(sorbet_path, default_path)
   end
