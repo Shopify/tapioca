@@ -26,4 +26,11 @@ class Tapioca::Compilers::SorbetSpec < Minitest::Spec
       assert_equal(Tapioca::Compilers::Sorbet.sorbet_path, default_path)
     end
   end
+
+  it("returns the default sorbet path if TAPIOCA_SORBET_EXE is not set") do
+    default_path = Tapioca::Compilers::Sorbet::SORBET.to_s.shellescape
+    with_custom_sorbet_exe_path(nil) do
+      assert_equal(Tapioca::Compilers::Sorbet.sorbet_path, default_path)
+    end
+  end
 end
