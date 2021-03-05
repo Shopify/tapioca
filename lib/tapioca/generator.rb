@@ -8,6 +8,8 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
+    class OutOfSyncError < StandardError; end
+
     sig { returns(Config) }
     attr_reader :config
 
@@ -135,7 +137,7 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        filename = compile_dsl_rbi(constant, contents)
+        filename = compile_dsl_rbi(constant, contents, outpath: config.outpath)
         rbi_files_to_purge.delete(filename) if filename
       end
 
@@ -153,6 +155,62 @@ module Tapioca
 
       say("All operations performed in working directory.", [:green, :bold])
       say("Please review changes and commit them.", [:green, :bold])
+    end
+
+    sig { params(requested_constants: T::Array[String]).void }
+    def verify_dsl(requested_constants)
+      Dir.mktmpdir do |dir|
+        load_application(eager_load: requested_constants.empty?)
+        load_dsl_generators
+
+        say("Checking for out of date RBIs...")
+        say("")
+
+        compiler = Compilers::DslCompiler.new(
+          requested_constants: constantize(requested_constants),
+          requested_generators: config.generators,
+          error_handler: ->(error) {
+            say_error(error, :bold, :red)
+          }
+        )
+
+        compiler.run do |constant, contents|
+          compile_dsl_rbi(constant, contents, outpath: Pathname.new(dir))
+        end
+
+        begin
+          existing_rbis = get_file_list(dir: config.outdir).sort
+          test_rbis = get_file_list(dir: dir).sort
+
+          current_count = existing_rbis.count
+          new_count = test_rbis.count
+
+          raise(OutOfSyncError.new, "New file(s) introduced.") if current_count != new_count
+
+          desynced_files = []
+
+          (0..current_count - 1).each do |i|
+            desynced_files << test_rbis[i] unless FileUtils.identical?(existing_rbis[i], test_rbis[i])
+          end
+
+          if desynced_files.count > 0
+            filenames = desynced_files.map(&:to_s).each do |file|
+              file.sub!(dir.to_s, "sorbet/rbi/dsl")
+            end.join("\n  - ")
+
+            raise(OutOfSyncError.new, "File(s) updated:\n  - #{filenames}")
+          end
+        rescue OutOfSyncError => e
+          say("")
+          say("RBI files are out-of-date, please run `bundle exec tapioca dsl` to update.")
+          say("Reason: ", [:red])
+          say(e.message.to_s)
+          exit(1)
+        else
+          say("")
+          say("Nothing to do, all RBIs are up-to-date.")
+        end
+      end
     end
 
     sig { void }
@@ -499,14 +557,14 @@ module Tapioca
       end
     end
 
-    sig { params(constant: Module, contents: String).returns(T.nilable(Pathname)) }
-    def compile_dsl_rbi(constant, contents)
+    sig { params(constant: Module, contents: String, outpath: Pathname).returns(T.nilable(Pathname)) }
+    def compile_dsl_rbi(constant, contents, outpath: config.outpath)
       return if contents.nil?
 
       command = format(config.generate_command, constant.name)
       constant_name = Module.instance_method(:name).bind(constant).call
       rbi_name = constant_name.underscore + ".rbi"
-      filename = config.outpath / rbi_name
+      filename = outpath / rbi_name
 
       out = String.new
       out << rbi_header(
@@ -521,6 +579,11 @@ module Tapioca
       say(filename)
 
       filename
+    end
+
+    sig { params(dir: String).returns(T::Array[Pathname]) }
+    def get_file_list(dir:)
+      Dir.glob("#{dir}/**/*.rbi").reject { |e| e =~ /gems/ }.map { |f| Pathname.new(f) }
     end
   end
 end

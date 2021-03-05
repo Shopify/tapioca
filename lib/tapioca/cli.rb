@@ -74,9 +74,17 @@ module Tapioca
       aliases: ["--gen", "-g"],
       banner: "generator [generator ...]",
       desc: "Only run supplied DSL generators"
+    option :verify,
+      type: :boolean,
+      default: false,
+      desc: "Verifies correctness of RBIs"
     def dsl(*constants)
       Tapioca.silence_warnings do
-        generator.build_dsl(constants)
+        if options[:verify]
+          generator.verify_dsl(constants)
+        else
+          generator.build_dsl(constants)
+        end
       end
     end
 
