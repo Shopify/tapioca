@@ -4,27 +4,26 @@
 require "spec_helper"
 
 class Tapioca::Compilers::SorbetSpec < Minitest::Spec
-  before do
-    @temp_env_value = T.let(nil, T.nilable(String))
-    @temp_env_value = ENV["TAPIOCA_SORBET_EXE"]
-  end
-
-  after do
-    ENV["TAPIOCA_SORBET_EXE"] = @temp_env_value
+  def with_custom_sorbet_exe_path(path, &block)
+    sorbet_exe_env_value = ENV["TAPIOCA_SORBET_EXE"]
+    begin
+      ENV["TAPIOCA_SORBET_EXE"] = path
+      block.call(path)
+    ensure
+      ENV["TAPIOCA_SORBET_EXE"] = sorbet_exe_env_value
+    end
   end
 
   it("returns the value of TAPIOCA_SORBET_EXE if set") do
-    custom_path = 'bin/custom-sorbet-static'
-    ENV["TAPIOCA_SORBET_EXE"] = custom_path
-    sorbet_path = Tapioca::Compilers::Sorbet.sorbet_path
-    assert_equal(sorbet_path, custom_path)
+    with_custom_sorbet_exe_path("bin/custom-sorbet-static") do |custom_path|
+      assert_equal(Tapioca::Compilers::Sorbet.sorbet_path, custom_path)
+    end
   end
 
-  it("returns the default sorbet path if TAPIOCA_SORBET_EXE is not set") do
-    ENV["TAPIOCA_SORBET_EXE"] = ''
-    gem_path = Gem::Specification.find_by_name("sorbet-static").full_gem_path
-    default_path = Tapioca::Compilers::Sorbet::SORBET
-    sorbet_path = Tapioca::Compilers::Sorbet.sorbet_path
-    assert_equal(sorbet_path, default_path)
+  it("returns the default sorbet path if TAPIOCA_SORBET_EXE is empty") do
+    default_path = Tapioca::Compilers::Sorbet::SORBET.to_s.shellescape
+    with_custom_sorbet_exe_path("") do
+      assert_equal(Tapioca::Compilers::Sorbet.sorbet_path, default_path)
+    end
   end
 end
