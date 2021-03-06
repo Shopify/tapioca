@@ -6,12 +6,12 @@ require "spec_helper"
 class Tapioca::Compilers::SorbetSpec < Minitest::Spec
   sig { params(path: T.nilable(String), block: T.proc.params(custom_path: T.nilable(String)).void).void }
   def with_custom_sorbet_exe_path(path, &block)
-    sorbet_exe_env_value = ENV["TAPIOCA_SORBET_EXE"]
+    sorbet_exe_env_value = ENV[Tapioca::Compilers::Sorbet::EXE_PATH_ENV_VAR]
     begin
-      ENV["TAPIOCA_SORBET_EXE"] = path
+      ENV[Tapioca::Compilers::Sorbet::EXE_PATH_ENV_VAR] = path
       block.call(path)
     ensure
-      ENV["TAPIOCA_SORBET_EXE"] = sorbet_exe_env_value
+      ENV[Tapioca::Compilers::Sorbet::EXE_PATH_ENV_VAR] = sorbet_exe_env_value
     end
   end
 
