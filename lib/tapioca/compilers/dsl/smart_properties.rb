@@ -93,8 +93,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          classes = T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class])
-          classes.select do |c|
+          all_classes.select do |c|
             c < ::SmartProperties
           end.reject do |c|
             name_of(c).nil? || c == ::SmartProperties::Validations::Ancestor

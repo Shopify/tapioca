@@ -54,6 +54,26 @@ module Tapioca
           !!name.match(/^[a-zA-Z_][[:word:]]*[?!=]?$/)
         end
 
+        sig { returns(T::Enumerable[Class]) }
+        def all_classes
+          T.must(
+            @all_classes ||= T.let(
+              T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class]),
+              T.nilable(T::Enumerable[Class])
+            )
+          )
+        end
+
+        sig { returns(T::Enumerable[Module]) }
+        def all_modules
+          T.must(
+            @all_modules ||= T.let(
+              T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]),
+              T.nilable(T::Enumerable[Module])
+            )
+          )
+        end
+
         sig do
           params(
             namespace: Parlour::RbiGenerator::Namespace,
