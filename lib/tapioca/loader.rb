@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/core_ext/class"
+
 module Tapioca
   class Loader
     extend(T::Sig)
@@ -63,18 +65,9 @@ module Tapioca
 
     sig { returns(T::Array[T.untyped]) }
     def rails_engines
-      engines = []
+      return [] unless Object.const_defined?("Rails::Engine")
 
-      return engines unless Object.const_defined?("Rails::Engine")
-
-      base = Object.const_get("Rails::Engine")
-      ObjectSpace.each_object(base.singleton_class) do |k|
-        k = T.cast(k, Class)
-        next if k.singleton_class?
-        engines.unshift(k) unless k == base
-      end
-
-      engines.reject(&:abstract_railtie?)
+      Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
     end
 
     sig { params(path: String).void }
