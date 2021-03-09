@@ -43,6 +43,18 @@ module Tapioca
 
         private
 
+        sig { returns(T::Enumerable[Class]) }
+        def all_classes
+          @all_classes = T.let(@all_classes, T.nilable(T::Enumerable[Class]))
+          @all_classes ||= T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class]).each
+        end
+
+        sig { returns(T::Enumerable[Module]) }
+        def all_modules
+          @all_modules = T.let(@all_modules, T.nilable(T::Enumerable[Module]))
+          @all_modules ||= T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each
+        end
+
         # Get the types of each parameter from a method signature
         sig do
           params(

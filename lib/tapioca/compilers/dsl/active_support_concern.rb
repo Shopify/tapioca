@@ -70,10 +70,8 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          modules = T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module])
-
           # Find all Modules that are:
-          modules.select do |mod|
+          all_modules.select do |mod|
             # named (i.e. not anonymous)
             name_of(mod) &&
               # not singleton classes
