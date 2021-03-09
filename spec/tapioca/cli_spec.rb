@@ -65,6 +65,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
   attr_reader :outdir
   attr_reader :repo_path
+  attr_accessor :exit_status
 
   def execute(command, args = [], flags = {})
     flags = {
@@ -82,11 +83,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     ]
 
     Bundler.with_unbundled_env do
-      IO.popen(
+      process = IO.popen(
         exec_command.join(' '),
         chdir: repo_path,
         err: [:child, :out],
-      ).read
+      )
+      body = process.read
+      process.close
+      @exit_status = $?.to_s.include?("1") ? 1 : 0
+      body
     end
   end
 
@@ -584,6 +589,11 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             Nothing to do, all RBIs are up-to-date.
           OUTPUT
         end
+
+        it ' returns the correct exit code' do
+          output = execute("dsl", "--verify")
+          assert_equal(0, @exit_status)
+        end
       end
 
       describe("with new file") do
@@ -615,11 +625,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         it 'returns the correct exit code' do
-          skip "works in practice, but not correctly raising in test"
-
-          assert_raises SystemExit do
-            execute("dsl", "--verify")
-          end
+          output = execute("dsl", "--verify")
+          assert_equal(1, @exit_status)
         end
       end
 
@@ -664,11 +671,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         it 'returns the correct exit code' do
-          skip "works in practice, but not correctly raising in test"
-
-          assert_raises SystemExit do
-            execute("dsl", "--verify")
-          end
+          output = execute("dsl", "--verify")
+          assert_equal(1, @exit_status)
         end
       end
     end
