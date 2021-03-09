@@ -7,11 +7,12 @@ require 'baz'
 
 # Fake as much of Rails as we can
 module Rails
-  def self.autoloaders
-    []
+  class Application
+    attr_reader :config
   end
 
   def self.application
+    Application.new
   end
 end
 

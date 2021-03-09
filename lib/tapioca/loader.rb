@@ -99,17 +99,28 @@ module Tapioca
 
     sig { void }
     def eager_load_rails_app
+      rails = Object.const_get("Rails")
+      application = rails.application
+
       if Object.const_defined?("ActiveSupport")
         Object.const_get("ActiveSupport").run_load_hooks(
           :before_eager_load,
-          Object.const_get("Rails").application
+          application
         )
       end
+
       if Object.const_defined?("Zeitwerk::Loader")
         zeitwerk_loader = Object.const_get("Zeitwerk::Loader")
         zeitwerk_loader.eager_load_all
       end
-      Object.const_get("Rails").autoloaders.each(&:eager_load)
+
+      if rails.respond_to?(:autoloaders) && rails.autoloaders.zeitwerk_enabled?
+        rails.autoloaders.each(&:eager_load)
+      end
+
+      if application.config.respond_to?(:eager_load_namespaces)
+        application.config.eager_load_namespaces.each(&:eager_load!)
+      end
     end
 
     sig { void }
