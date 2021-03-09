@@ -1662,6 +1662,59 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("safely bails out of generating mixes_in_class_methods for modules that do weird things") do
+      add_ruby_file("concern_that_requires_random_stuff.rb", <<~RUBY)
+        module ConcernThatRequiresRandomStuff
+          def self.included(base)
+            require "non_existent_require_path"
+          end
+        end
+      RUBY
+
+      add_ruby_file("concern_that_explicitly_raises.rb", <<~RUBY)
+        module ConcernThatExplicitlyRaises
+          def self.included(base)
+            raise "I ran into an exception case"
+          end
+        end
+      RUBY
+
+      add_ruby_file("concern_that_performs_an_illegal_operation.rb", <<~RUBY)
+        module ConcernThatPerfomsAnIllegalOperation
+          def self.included(base)
+            sum(2)
+          end
+
+          def self.sum(a, b)
+            a + b
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module ConcernThatExplicitlyRaises
+          class << self
+            def included(base); end
+          end
+        end
+
+        module ConcernThatPerfomsAnIllegalOperation
+          class << self
+            def included(base); end
+            def sum(a, b); end
+          end
+        end
+
+        module ConcernThatRequiresRandomStuff
+          class << self
+            def included(base); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSuport::Concern") do
       add_ruby_file("active_support/concern.rb", <<~RUBY)
         module ActiveSupport
