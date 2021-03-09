@@ -90,7 +90,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       )
       body = process.read
       process.close
-      @exit_status = $?.to_s.include?("1") ? 1 : 0
+      @exit_status = $CHILD_STATUS.to_s.include?("1") ? 1 : 0
       body
     end
   end
@@ -591,7 +591,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         it ' returns the correct exit code' do
-          output = execute("dsl", "--verify")
+          execute("dsl", "--verify")
           assert_equal(0, @exit_status)
         end
       end
@@ -625,7 +625,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         it 'returns the correct exit code' do
-          output = execute("dsl", "--verify")
+          execute("dsl", "--verify")
           assert_equal(1, @exit_status)
         end
       end
@@ -671,7 +671,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         it 'returns the correct exit code' do
-          output = execute("dsl", "--verify")
+          execute("dsl", "--verify")
           assert_equal(1, @exit_status)
         end
       end
