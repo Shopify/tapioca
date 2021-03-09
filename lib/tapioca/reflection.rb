@@ -16,6 +16,9 @@ module Tapioca
     SUPERCLASS_METHOD = T.let(Class.instance_method(:superclass), UnboundMethod)
     OBJECT_ID_METHOD = T.let(BasicObject.instance_method(:__id__), UnboundMethod)
     EQUAL_METHOD = T.let(BasicObject.instance_method(:equal?), UnboundMethod)
+    PUBLIC_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:public_instance_methods), UnboundMethod)
+    PROTECTED_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:protected_instance_methods), UnboundMethod)
+    PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
 
     sig { params(object: BasicObject).returns(Class).checked(:never) }
     def class_of(object)
@@ -55,6 +58,21 @@ module Tapioca
     sig { params(object: BasicObject, other: BasicObject).returns(T::Boolean).checked(:never) }
     def are_equal?(object, other)
       EQUAL_METHOD.bind(object).call(other)
+    end
+
+    sig { params(constant: Module).returns(T::Array[Symbol]) }
+    def public_instance_methods_of(constant)
+      PUBLIC_INSTANCE_METHODS_METHOD.bind(constant).call
+    end
+
+    sig { params(constant: Module).returns(T::Array[Symbol]) }
+    def protected_instance_methods_of(constant)
+      PROTECTED_INSTANCE_METHODS_METHOD.bind(constant).call
+    end
+
+    sig { params(constant: Module).returns(T::Array[Symbol]) }
+    def private_instance_methods_of(constant)
+      PRIVATE_INSTANCE_METHODS_METHOD.bind(constant).call
     end
 
     sig { params(constant: Module).returns(T::Array[Module]) }

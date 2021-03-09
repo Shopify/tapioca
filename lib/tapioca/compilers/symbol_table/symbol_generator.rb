@@ -558,9 +558,9 @@ module Tapioca
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
         def method_names_by_visibility(mod)
           {
-            public: Module.instance_method(:public_instance_methods).bind(mod).call,
-            protected: Module.instance_method(:protected_instance_methods).bind(mod).call,
-            private: Module.instance_method(:private_instance_methods).bind(mod).call,
+            public: public_instance_methods_of(mod),
+            protected: protected_instance_methods_of(mod),
+            private: private_instance_methods_of(mod),
           }
         end
 
