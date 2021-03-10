@@ -221,7 +221,7 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def compile_enums(constant)
-          return "" unless constant < T::Enum
+          return "" unless T::Enum > constant
 
           enums = T.cast(constant, T::Enum).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s

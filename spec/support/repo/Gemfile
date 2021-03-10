@@ -10,6 +10,9 @@ gem("baz", path: "../gems/baz")
 gem("qux", path: "../gems/qux", require: false)
 gem("tapioca", path: "../../../")
 
+# Temp fix for https://github.com/sorbet/sorbet/pull/4074
+gem("sorbet-runtime", "< 0.5.6331")
+
 gem("psych")
 # `extras` gem is causing problems by modifying
 # `Shellwords` functionaly. Depending on it to

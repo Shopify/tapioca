@@ -2099,6 +2099,31 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("does not think random types that override < are T::Enum") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          def self.<(other)
+            true
+          end
+
+          def self.values
+            []
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          class << self
+            def <(other); end
+            def values; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles signatures and structs in source files") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
