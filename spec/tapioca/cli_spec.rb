@@ -4,7 +4,6 @@
 require "spec_helper"
 require "pathname"
 require "shellwords"
-require "pry"
 
 module Contents
   FOO_RBI = <<~CONTENTS
@@ -586,7 +585,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           assert_includes(output, <<~OUTPUT)
             Nothing to do, all RBIs are up-to-date.
           OUTPUT
-          assert_includes($CHILD_STATUS.to_s, "exit 0")
+          assert_includes($?.to_s, "exit 0")
         end
       end
 
@@ -616,7 +615,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             RBI files are out-of-date, please run `generate command` to update.
             Reason: New file(s) introduced.
           OUTPUT
-          assert_includes($CHILD_STATUS.to_s, "exit 1")
+          assert_includes($?.to_s, "exit 1")
         end
       end
 
@@ -658,7 +657,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             Reason: File(s) updated:
               - sorbet/rbi/dsl/image.rbi
           OUTPUT
-          assert_includes($CHILD_STATUS.to_s, "exit 1")
+          assert_includes($?.to_s, "exit 1")
         end
       end
     end

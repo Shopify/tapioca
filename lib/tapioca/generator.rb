@@ -8,8 +8,6 @@ module Tapioca
   class Generator < ::Thor::Shell::Color
     extend(T::Sig)
 
-    class OutOfSyncError < StandardError; end
-
     sig { returns(Config) }
     attr_reader :config
 
@@ -162,12 +160,10 @@ module Tapioca
 
       say("")
       if should_verify
-        begin
-          verify_dsl_rbi(tmp_dir: Pathname.new(outpath))
-        rescue OutOfSyncError => e
+        if error = verify_dsl_rbi(tmp_dir: Pathname.new(outpath))
           say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
           say("Reason: ", [:red])
-          say(e.message.to_s)
+          say(error)
           exit(1)
         else
           say("Nothing to do, all RBIs are up-to-date.")
@@ -548,29 +544,26 @@ module Tapioca
       filename
     end
 
-    sig { params(tmp_dir: Pathname).void }
+    sig { params(tmp_dir: Pathname).returns(T.nilable(String)) }
     def verify_dsl_rbi(tmp_dir:)
       existing_rbis = get_file_list(dir: config.outpath).sort
-      test_rbis = get_file_list(dir: tmp_dir).sort
+      new_rbis = get_file_list(dir: tmp_dir).sort
 
-      current_count = existing_rbis.count
-      new_count = test_rbis.count
-
-      raise(OutOfSyncError.new, "New file(s) introduced.") if current_count != new_count
+      return "New file(s) introduced." if existing_rbis.length != new_rbis.length
 
       desynced_files = []
 
-      (0..current_count - 1).each do |i|
-        desynced_files << test_rbis[i] unless FileUtils.identical?(existing_rbis[i], test_rbis[i])
+      (0..existing_rbis.length - 1).each do |i|
+        desynced_files << new_rbis[i] unless FileUtils.identical?(existing_rbis[i], new_rbis[i])
       end
 
-      if desynced_files.count > 0
-        filenames = desynced_files.map(&:to_s).each do |file|
-          file.sub!(tmp_dir.to_s, "sorbet/rbi/dsl")
-        end.join("\n  - ")
+      unless desynced_files.empty?
+        filenames = desynced_files.map { |f| f.to_s.sub!(tmp_dir.to_s, "sorbet/rbi/dsl") }.join("\n  - ")
 
-        raise(OutOfSyncError.new, "File(s) updated:\n  - #{filenames}")
+        return "File(s) updated:\n  - #{filenames}"
       end
+
+      nil
     end
 
     sig { params(dir: Pathname).returns(T::Array[Pathname]) }
