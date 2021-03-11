@@ -81,7 +81,7 @@ module Tapioca
     def dsl(*constants)
       Tapioca.silence_warnings do
         if options[:verify]
-          generator.verify_dsl(constants)
+          generator.build_dsl(constants, should_verify: true)
         else
           generator.build_dsl(constants)
         end
