@@ -160,7 +160,7 @@ module Tapioca
 
       say("")
       if should_verify
-        if error = verify_dsl_rbi(tmp_dir: Pathname.new(outpath))
+        if (error = verify_dsl_rbi(tmp_dir: Pathname.new(outpath)))
           say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
           say("Reason: ", [:red])
           say(error)
