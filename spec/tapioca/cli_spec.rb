@@ -65,7 +65,6 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
   attr_reader :outdir
   attr_reader :repo_path
-  attr_accessor :exit_status
 
   def execute(command, args = [], flags = {})
     flags = {
@@ -90,7 +89,6 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       )
       body = process.read
       process.close
-      @exit_status = $CHILD_STATUS.to_s.include?("1") ? 1 : 0
       body
     end
   end
@@ -582,17 +580,13 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           execute("dsl")
         end
 
-        it 'does nothing if no RBIs have changed' do
+        it 'does nothing and returns exit_status 0' do
           output = execute("dsl", "--verify")
 
           assert_includes(output, <<~OUTPUT)
             Nothing to do, all RBIs are up-to-date.
           OUTPUT
-        end
-
-        it ' returns the correct exit code' do
-          execute("dsl", "--verify")
-          assert_equal(0, @exit_status)
+          assert_includes($CHILD_STATUS.to_s, "exit 0")
         end
       end
 
@@ -615,18 +609,14 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           File.delete(repo_path / "lib" / "image.rb") if File.exist?(repo_path / "lib" / "image.rb")
         end
 
-        it 'provides correct reason' do
+        it 'advises of new file(s) and returns exit_status 1' do
           output = execute("dsl", "--verify")
 
           assert_includes(output, <<~OUTPUT)
-            RBI files are out-of-date, please run `bundle exec tapioca dsl` to update.
+            RBI files are out-of-date, please run `generate command` to update.
             Reason: New file(s) introduced.
           OUTPUT
-        end
-
-        it 'returns the correct exit code' do
-          execute("dsl", "--verify")
-          assert_equal(1, @exit_status)
+          assert_includes($CHILD_STATUS.to_s, "exit 1")
         end
       end
 
@@ -660,19 +650,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           File.delete(repo_path / "lib" / "image.rb") if File.exist?(repo_path / "lib" / "image.rb")
         end
 
-        it 'provides correct reason' do
+        it 'advises of modified file(s) and returns exit status 1' do
           output = execute("dsl", "--verify")
 
           assert_includes(output, <<~OUTPUT)
-            RBI files are out-of-date, please run `bundle exec tapioca dsl` to update.
+            RBI files are out-of-date, please run `generate command` to update.
             Reason: File(s) updated:
               - sorbet/rbi/dsl/image.rbi
           OUTPUT
-        end
-
-        it 'returns the correct exit code' do
-          execute("dsl", "--verify")
-          assert_equal(1, @exit_status)
+          assert_includes($CHILD_STATUS.to_s, "exit 1")
         end
       end
     end

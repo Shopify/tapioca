@@ -165,7 +165,7 @@ module Tapioca
         begin
           verify_dsl_rbi(tmp_dir: Pathname.new(outpath))
         rescue OutOfSyncError => e
-          say("RBI files are out-of-date, please run `bundle exec tapioca dsl` to update.")
+          say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
           say("Reason: ", [:red])
           say(e.message.to_s)
           exit(1)

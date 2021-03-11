@@ -43,7 +43,8 @@ module Tapioca
       sig { returns(String) }
       def default_command
         command = File.basename($PROGRAM_NAME)
-        args = ARGV.join(" ")
+        # Hack to avoid flags ending up in the header of the RBIs
+        args = ARGV.reject { |arg| arg.include?("--") }.join(" ")
 
         "#{command} #{args}".strip
       end
