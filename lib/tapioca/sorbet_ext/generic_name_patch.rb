@@ -4,20 +4,52 @@
 require 'tapioca/sorbet_ext/name_patch'
 
 module T
+  module Types
+    class CustomTypeVariable < T::Types::TypeVariable
+      def initialize(type_variable_type, type_variable, fixed, lower, upper)
+        parts = []
+        parts << ":#{type_variable.variance}" unless type_variable.variance == :invariant
+        parts << "fixed: #{fixed}" if fixed
+        parts << "lower: #{lower}" unless lower == T.untyped
+        parts << "upper: #{upper}" unless upper == BasicObject
+
+        parameters = parts.join(", ")
+
+        @string_format = "#{type_variable_type}(#{parameters})"
+      end
+
+      def to_s
+        @string_format
+      end
+    end
+  end
+
   module Generic
     module TypeStoragePatch
       def [](*types)
-        name = __type_name(types)
+        # generate the name for this generic type
+        type_list = types.join(", ")
+        name = Module.instance_method(:name).bind(self).call
+        name = "#{name}[#{type_list}]"
 
-        __instances[name] ||= __create_typed_instance(name)
+        # lookup or create a clone of self with an overridden "name"
+        # method that returns the proper name for the concrete
+        # generic type that this instance represents.
+        __instances[name] ||= T.unsafe(self).clone.tap do |clone|
+          clone.define_singleton_method(:name) { name }
+        end
       end
 
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        __store_type_variable(super, fixed, lower, upper)
+        T::Types::CustomTypeVariable.new(:type_member, super, fixed, lower, upper).tap do |type_variable|
+          __type_variables << type_variable
+        end
       end
 
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        __store_type_variable(super, fixed, lower, upper)
+        T::Types::CustomTypeVariable.new(:type_template, super, fixed, lower, upper).tap do |type_variable|
+          __type_variables << type_variable
+        end
       end
 
       def __type_variables
@@ -29,31 +61,6 @@ module T
       def __instances
         T::Private::Abstract::Data.set_default(self, "generic_instances", {})
       end
-
-      def __type_name(types)
-        type_list = types.join(", ")
-        name = Module.instance_method(:name).bind(self).call
-
-        "#{name}[#{type_list}]"
-      end
-
-      def __create_typed_instance(name)
-        T.unsafe(self).clone.tap do |me|
-          me.singleton_class.instance_exec do
-            T.unsafe(self).send(:define_method, :name) { name }
-          end
-        end
-      end
-
-      def __store_type_variable(type_variable, fixed, lower, upper)
-        type_variable.singleton_class.instance_exec do
-          T.unsafe(self).send(:define_method, :fixed) { fixed }
-          T.unsafe(self).send(:define_method, :lower) { lower unless lower == T.untyped }
-          T.unsafe(self).send(:define_method, :upper) { upper unless upper == BasicObject }
-        end
-        __type_variables << type_variable
-        type_variable
-      end
     end
 
     prepend TypeStoragePatch
@@ -63,8 +70,14 @@ module T
     class Simple
       module GenericNamePatch
         def name
-          return super unless T::Generic === @raw_type
-          @name ||= T.unsafe(@raw_type).name.freeze
+          if T::Generic === @raw_type
+            # for types that are generic, use the name
+            # returned by the "name" method of this instance
+            @name ||= T.unsafe(@raw_type).name.freeze
+          else
+            # otherwise, fallback to the normal name lookup
+            super
+          end
         end
       end
 

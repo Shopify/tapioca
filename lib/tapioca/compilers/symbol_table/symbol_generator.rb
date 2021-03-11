@@ -260,37 +260,40 @@ module Tapioca
           "\n" + output.join("\n\n")
         end
 
-        sig { params(value: T.untyped).returns(String) }
-        def compile_type_variable_args(value)
-          parts = []
-          parts << ":#{value.variance}" unless value.variance == :invariant
-          parts << "fixed: #{value.fixed}" if value.fixed
-          parts << "lower: #{value.lower}" if value.lower
-          parts << "upper: #{value.upper}" if value.upper
-
-          parts.join(", ")
-        end
-
         sig { params(name: String, constant: Module).returns(T.nilable(String)) }
         def compile_type_variables(name, constant)
           with_indentation do
+            # Try to find the type variables defined on this constant, bail if we can't
             type_variables = constant.respond_to?(:__type_variables) && T.unsafe(constant).__type_variables
-            return unless type_variables
+            return unless type_variables && Array === type_variables
 
-            type_constants_with_index = constants_of(constant).sort.uniq.map do |constant_name|
-              symbol = "#{name}::#{constant_name}"
-              subconstant = resolve_constant(symbol)
-              index = type_variables.index(subconstant)
-              [constant_name, subconstant, index] if index
-            end.compact
-
-            output = type_constants_with_index.sort_by(&:last).map do |constant_name, value|
-              if T::Types::TypeMember === value
-                indented("#{constant_name} = type_member(#{compile_type_variable_args(value)})")
-              elsif T::Types::TypeTemplate === value
-                indented("#{constant_name} = type_template(#{compile_type_variable_args(value)})")
+            # For each subconstant defined under this constant
+            # we resolve it to a subconstant object and look up its index the
+            # value of it in the type variable list that we have collected.
+            #
+            # If the constant does not exist in that list, we drop it.
+            #
+            # If the constant does exist in that list, the index in the type
+            # variables array gives us the declaration order of the constant.
+            #
+            # So, we sort all the collected constants and their values by that index
+            # and generate the proper type_member/type_template definitions for them.
+            output = constants_of(constant)
+              .sort
+              .uniq
+              .map do |constant_name|
+                constant_value = resolve_constant("#{name}::#{constant_name}")
+                index = type_variables.index(constant_value)
+                [constant_name, constant_value, index] if index
               end
-            end
+              .compact
+              .sort_by(&:last)
+              .map do |constant_name, constant_value|
+                # Here, we know that constant_value will be an instance of
+                # T::Types::CustomTypeVariable, which knows how to serialize
+                # itself to a type_member/type_template
+                indented("#{constant_name} = #{constant_value}")
+              end
 
             return if output.empty?
 
