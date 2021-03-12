@@ -264,36 +264,35 @@ module Tapioca
         def compile_type_variables(name, constant)
           with_indentation do
             # Try to find the type variables defined on this constant, bail if we can't
-            type_variables = constant.respond_to?(:__type_variables) && T.unsafe(constant).__type_variables
-            return unless type_variables && Array === type_variables
+            type_variables = GenericTypeRegistry.lookup_type_variables(constant)
+            return unless type_variables
 
-            # For each subconstant defined under this constant
-            # we resolve it to a subconstant object and look up its index the
-            # value of it in the type variable list that we have collected.
+            # Create a map of subconstants (via their object ids) to their names.
+            # We need this later when we want to lookup the name of the registered type
+            # variable via the value of the type variable constant.
+            subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
+              [
+                object_id_of(resolve_constant("#{name}::#{constant_name}")),
+                constant_name,
+              ]
+            end.to_h
+
+            # Map each type variable to its string representation.
             #
-            # If the constant does not exist in that list, we drop it.
+            # Each entry of `type_variables` maps an object_id to a TypeVariableSerializer,
+            # and the order they are inserted into the hash is the order they should be
+            # defined in the source code.
             #
-            # If the constant does exist in that list, the index in the type
-            # variables array gives us the declaration order of the constant.
-            #
-            # So, we sort all the collected constants and their values by that index
-            # and generate the proper type_member/type_template definitions for them.
-            output = constants_of(constant)
-              .sort
-              .uniq
-              .map do |constant_name|
-                constant_value = resolve_constant("#{name}::#{constant_name}")
-                index = type_variables.index(constant_value)
-                [constant_name, constant_value, index] if index
-              end
-              .compact
-              .sort_by(&:last)
-              .map do |constant_name, constant_value|
-                # Here, we know that constant_value will be an instance of
-                # T::Types::CustomTypeVariable, which knows how to serialize
-                # itself to a type_member/type_template
-                indented("#{constant_name} = #{constant_value}")
-              end
+            # By looping over these entries and then getting the actual constant name
+            # from the `subconstant_to_name_lookup` we defined above, gives us all the
+            # information we need to serialize type variable definitions.
+            output = type_variables.map do |type_variable_id, type_variable_serializer|
+              constant_name = subconstant_to_name_lookup[type_variable_id]
+              # Here, we know that constant_value will be an instance of
+              # T::Types::CustomTypeVariable, which knows how to serialize
+              # itself to a type_member/type_template
+              indented("#{constant_name} = #{type_variable_serializer}")
+            end
 
             return if output.empty?
 
