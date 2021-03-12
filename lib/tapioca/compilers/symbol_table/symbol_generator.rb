@@ -909,7 +909,7 @@ module Tapioca
           constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
 
-        sig { params(object: Object).returns(T::Boolean).checked(:never) }
+        sig { params(object: BasicObject).returns(Integer).checked(:never) }
         def object_id_of(object)
           Object.instance_method(:object_id).bind(object).call
         end
