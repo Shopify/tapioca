@@ -1,5 +1,5 @@
-# frozen_string_literal: true
 # typed: strict
+# frozen_string_literal: true
 
 module Tapioca
   module GenericTypeRegistry
@@ -26,7 +26,7 @@ module Tapioca
         @str = T.let("#{type_variable_type}(#{parameters})", String)
       end
 
-      sig {returns(String)}
+      sig { returns(String) }
       def to_s
         @str
       end
