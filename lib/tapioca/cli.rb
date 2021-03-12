@@ -77,14 +77,10 @@ module Tapioca
     option :verify,
       type: :boolean,
       default: false,
-      desc: "Verifies correctness of RBIs"
+      desc: "Verifies RBIs are up-to-date"
     def dsl(*constants)
       Tapioca.silence_warnings do
-        if options[:verify]
-          generator.build_dsl(constants, should_verify: true)
-        else
-          generator.build_dsl(constants)
-        end
+        generator.build_dsl(constants, should_verify: options[:verify])
       end
     end
 

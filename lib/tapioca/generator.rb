@@ -149,7 +149,7 @@ module Tapioca
         rbi_files_to_purge.delete(filename) if filename
       end
 
-      if !rbi_files_to_purge.empty? && !should_verify
+      if rbi_files_to_purge.any? && !should_verify
         say("")
         say("Removing stale RBI files...")
 
@@ -568,7 +568,7 @@ module Tapioca
 
     sig { params(dir: Pathname).returns(T::Array[Pathname]) }
     def get_file_list(dir:)
-      Dir.glob("#{dir}/**/*.rbi").reject { |e| e =~ /gems/ }.map { |f| Pathname.new(f) }
+      Dir.glob("#{dir}/**/*.rbi").reject { |e| e =~ /gems|shims/ }.map { |f| Pathname.new(f) }
     end
   end
 end

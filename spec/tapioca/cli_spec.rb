@@ -605,7 +605,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         after do
-          File.delete(repo_path / "lib" / "image.rb") if File.exist?(repo_path / "lib" / "image.rb")
+          FileUtils.rm_f(repo_path / "lib" / "image.rb")
         end
 
         it 'advises of new file(s) and returns exit_status 1' do
@@ -646,7 +646,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         end
 
         after do
-          File.delete(repo_path / "lib" / "image.rb") if File.exist?(repo_path / "lib" / "image.rb")
+          FileUtils.rm_f(repo_path / "lib" / "image.rb")
         end
 
         it 'advises of modified file(s) and returns exit status 1' do
