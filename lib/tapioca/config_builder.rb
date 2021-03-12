@@ -44,7 +44,7 @@ module Tapioca
       def default_command
         command = File.basename($PROGRAM_NAME)
         # Hack to avoid flags ending up in the header of the RBIs
-        args = ARGV.reject { |arg| arg.include?("--") }.join(" ")
+        args = ARGV.grep_v(/^-/).join(" ")
 
         "#{command} #{args}".strip
       end

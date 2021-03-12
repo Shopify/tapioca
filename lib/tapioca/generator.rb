@@ -148,27 +148,13 @@ module Tapioca
         filename = compile_dsl_rbi(constant, contents, outpath: Pathname.new(outpath))
         rbi_files_to_purge.delete(filename) if filename
       end
-
-      if rbi_files_to_purge.any? && !should_verify
-        say("")
-        say("Removing stale RBI files...")
-
-        rbi_files_to_purge.sort.each do |filename|
-          remove(filename)
-        end
-      end
-
       say("")
+
       if should_verify
-        if (error = verify_dsl_rbi(tmp_dir: Pathname.new(outpath)))
-          say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
-          say("Reason: ", [:red])
-          say(error)
-          exit(1)
-        else
-          say("Nothing to do, all RBIs are up-to-date.")
-        end
+        perform_dsl_verification(outpath)
       else
+        purge_stale_dsl_rbi_files(rbi_files_to_purge)
+
         say("Done", :green)
 
         say("All operations performed in working directory.", [:green, :bold])
@@ -307,10 +293,10 @@ module Tapioca
       constant_map.values
     end
 
-    sig { params(requested_constants: T::Array[String]).returns(T::Set[Pathname]) }
-    def existing_rbi_filenames(requested_constants)
+    sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
+    def existing_rbi_filenames(requested_constants, path: config.outpath)
       filenames = if requested_constants.empty?
-        Pathname.glob(config.outpath / "**/*.rbi")
+        Pathname.glob(path / "**/*.rbi")
       else
         requested_constants.map do |constant_name|
           dsl_rbi_filename(constant_name)
@@ -546,8 +532,8 @@ module Tapioca
 
     sig { params(tmp_dir: Pathname).returns(T.nilable(String)) }
     def verify_dsl_rbi(tmp_dir:)
-      existing_rbis = get_file_list(dir: config.outpath).sort
-      new_rbis = get_file_list(dir: tmp_dir).sort
+      existing_rbis = existing_rbi_filenames([]).sort
+      new_rbis = existing_rbi_filenames([], path: tmp_dir).grep_v(/gem|shim/).sort
 
       return "New file(s) introduced." if existing_rbis.length != new_rbis.length
 
@@ -566,9 +552,30 @@ module Tapioca
       nil
     end
 
-    sig { params(dir: Pathname).returns(T::Array[Pathname]) }
-    def get_file_list(dir:)
-      Dir.glob("#{dir}/**/*.rbi").reject { |e| e =~ /gems|shims/ }.map { |f| Pathname.new(f) }
+    sig { params(dir: String).void }
+    def perform_dsl_verification(dir)
+      if (error = verify_dsl_rbi(tmp_dir: Pathname.new(dir)))
+        say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
+        say("Reason: ", [:red])
+        say(error)
+        exit(1)
+      else
+        say("Nothing to do, all RBIs are up-to-date.")
+      end
+    ensure
+      FileUtils.remove_entry(dir)
+    end
+
+    sig { params(files: T::Set[Pathname]).void }
+    def purge_stale_dsl_rbi_files(files)
+      if files.any?
+        say("Removing stale RBI files...")
+
+        files.sort.each do |filename|
+          remove(filename)
+        end
+        say("")
+      end
     end
   end
 end
