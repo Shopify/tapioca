@@ -259,14 +259,30 @@ module Tapioca
             compile(symbol, subconstant)
           end.compact
 
-          return "" if output.empty?
+          return if output.empty?
 
           "\n" + output.join("\n\n")
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_type_variables(name, constant)
-          with_indentation do
+        sig { params(constant: Module).returns(T.nilable(String)) }
+        def compile_type_variables(constant)
+          type_variables = compile_type_variable_declarations(constant)
+          singleton_class_type_variables = compile_type_variable_declarations(singleton_class_of(constant))
+
+          return if !type_variables && !singleton_class_type_variables
+
+          type_variables += "\n" if type_variables
+          singleton_class_type_variables += "\n" if singleton_class_type_variables
+
+          [
+            type_variables,
+            singleton_class_type_variables,
+          ].compact.join("\n").rstrip
+        end
+
+        sig { params(constant: Module).returns(T.nilable(String)) }
+        def compile_type_variable_declarations(constant)
+          with_indentation_for_constant(constant) do
             # Try to find the type variables defined on this constant, bail if we can't
             type_variables = GenericTypeRegistry.lookup_type_variables(constant)
             return unless type_variables
@@ -276,7 +292,7 @@ module Tapioca
             # variable via the value of the type variable constant.
             subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
               [
-                object_id_of(resolve_constant("#{name}::#{constant_name}")),
+                object_id_of(resolve_constant(constant_name.to_s, namespace: constant)),
                 constant_name,
               ]
             end.to_h
@@ -290,17 +306,21 @@ module Tapioca
             # By looping over these entries and then getting the actual constant name
             # from the `subconstant_to_name_lookup` we defined above, gives us all the
             # information we need to serialize type variable definitions.
-            output = type_variables.map do |type_variable_id, type_variable_serializer|
+            type_variable_declarations = type_variables.map do |type_variable_id, type_variable_serializer|
               constant_name = subconstant_to_name_lookup[type_variable_id]
               # Here, we know that constant_value will be an instance of
               # T::Types::CustomTypeVariable, which knows how to serialize
               # itself to a type_member/type_template
               indented("#{constant_name} = #{type_variable_serializer}")
-            end
+            end.compact
 
-            return if output.empty?
+            return if type_variable_declarations.empty?
 
-            output.join("\n") + "\n"
+            [
+              indented("extend T::Generic"),
+              "",
+              *type_variable_declarations,
+            ].compact.join("\n")
           end
         end
 
