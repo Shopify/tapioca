@@ -8,7 +8,6 @@ module Tapioca
     const(:outdir, String)
     const(:prerequire, T.nilable(String))
     const(:postrequire, String)
-    const(:generate_command, String)
     const(:exclude, T::Array[String])
     const(:typed_overrides, T::Hash[String, String])
     const(:todos_path, String)

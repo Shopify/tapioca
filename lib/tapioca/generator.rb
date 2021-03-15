@@ -63,7 +63,7 @@ module Tapioca
 
       content = String.new
       content << rbi_header(
-        config.generate_command,
+        "tapioca require",
         reason: "explicit gem requires",
         strictness: "false"
       )
@@ -99,7 +99,7 @@ module Tapioca
 
       content = String.new
       content << rbi_header(
-        config.generate_command,
+        "tapioca todo",
         reason: "unresolved constants",
         strictness: "false"
       )
@@ -484,7 +484,7 @@ module Tapioca
       rbi_body_content = compiler.compile(gem)
       content = String.new
       content << rbi_header(
-        config.generate_command,
+        "tapioca sync",
         reason: "types exported from the `#{gem.name}` gem",
         strictness: strictness
       )
@@ -510,14 +510,13 @@ module Tapioca
     def compile_dsl_rbi(constant, contents, outpath: config.outpath)
       return if contents.nil?
 
-      command = format(config.generate_command, constant.name)
       constant_name = Module.instance_method(:name).bind(constant).call
       rbi_name = constant_name.underscore + ".rbi"
       filename = outpath / rbi_name
 
       out = String.new
       out << rbi_header(
-        command,
+        "tapioca dsl",
         reason: "dynamic methods in `#{constant.name}`"
       )
       out << contents
@@ -555,7 +554,7 @@ module Tapioca
     sig { params(dir: String).void }
     def perform_dsl_verification(dir)
       if (error = verify_dsl_rbi(tmp_dir: Pathname.new(dir)))
-        say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
+        say("RBI files are out-of-date, please run `tapioca dsl` to update.")
         say("Reason: ", [:red])
         say(error)
         exit(1)
