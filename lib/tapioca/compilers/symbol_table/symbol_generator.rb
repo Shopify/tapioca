@@ -195,11 +195,11 @@ module Tapioca
               compile_props(constant),
               compile_enums(constant),
               methods,
-            ].select { |b| b != "" }.join("\n\n")
+            ].select { |b| b && b != "" }.join("\n\n")
           end
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_module_helpers(constant)
           abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
 
@@ -208,12 +208,14 @@ module Tapioca
           helpers << indented("final!") if T::Private::Final.final_module?(constant)
           helpers << indented("sealed!") if T::Private::Sealed.sealed_module?(constant)
 
+          return if helpers.empty?
+
           helpers.join("\n")
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_props(constant)
-          return "" unless T::Props::ClassMethods === constant
+          return unless T::Props::ClassMethods === constant
 
           constant.props.map do |name, prop|
             method = "prop"
@@ -228,9 +230,9 @@ module Tapioca
           end.join("\n")
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_enums(constant)
-          return "" unless T::Enum > constant
+          return unless T::Enum > constant
 
           enums = T.unsafe(constant).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s
