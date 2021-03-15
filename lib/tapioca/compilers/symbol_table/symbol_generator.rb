@@ -172,11 +172,8 @@ module Tapioca
 
           return if symbol_ignored?(name) && body.nil?
 
-          type_variables = compile_type_variables(name, constant)
-
           [
             header,
-            type_variables,
             body,
             indented("end"),
             compile_subconstants(name, constant),
@@ -192,6 +189,7 @@ module Tapioca
 
             [
               compile_module_helpers(constant),
+              compile_type_variables(constant),
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
               compile_props(constant),
