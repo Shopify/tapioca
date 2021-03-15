@@ -262,7 +262,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
             def comment_ids=(ids); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+            sig { returns(::Comment::PrivateCollectionProxy) }
             def comments; end
 
             sig { params(value: T::Enumerable[T.untyped]).void }
@@ -328,7 +328,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
             def commenter_ids=(ids); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+            sig { returns(::Commenter::PrivateCollectionProxy) }
             def commenters; end
 
             sig { params(value: T::Enumerable[::Commenter]).void }
@@ -337,7 +337,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(attributes: T.untyped).returns(T.untyped) }
             def commenters_attributes=(attributes); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[Comment]) }
+            sig { returns(::Comment::PrivateCollectionProxy) }
             def comments; end
 
             sig { params(value: T::Enumerable[::Comment]).void }
@@ -376,7 +376,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
             def commenter_ids=(ids); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[Commenter]) }
+            sig { returns(::Commenter::PrivateCollectionProxy) }
             def commenters; end
 
             sig { params(value: T::Enumerable[T.untyped]).void }
