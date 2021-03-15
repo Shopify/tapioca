@@ -16,20 +16,6 @@ module Rails
   end
 end
 
-# A type with a DSL
-class Post
-  include SmartProperties
-  property :title, accepts: String
-end
-
-# Another type with a DSL in a namespace
-module Namespace
-  class Comment
-    include SmartProperties
-    property! :body, accepts: String
-  end
-end
-
-# A simple type
-class User
+Dir[File.expand_path("../../lib/**/*.rb", __FILE__)].sort.each do |file|
+  require(file)
 end

@@ -116,15 +116,25 @@ module Tapioca
       say("Please review changes and commit them.", [:green, :bold])
     end
 
-    sig { params(requested_constants: T::Array[String]).void }
-    def build_dsl(requested_constants)
+    sig do
+      params(
+        requested_constants: T::Array[String],
+        should_verify: T::Boolean,
+      ).void
+    end
+    def build_dsl(requested_constants, should_verify: false)
       load_application(eager_load: requested_constants.empty?)
       load_dsl_generators
 
-      rbi_files_to_purge = existing_rbi_filenames(requested_constants)
-
-      say("Compiling DSL RBI files...")
+      if should_verify
+        say("Checking for out-of-date RBIs...")
+      else
+        say("Compiling DSL RBI files...")
+      end
       say("")
+
+      outpath = should_verify ? Dir.mktmpdir : config.outpath
+      rbi_files_to_purge = existing_rbi_filenames(requested_constants)
 
       compiler = Compilers::DslCompiler.new(
         requested_constants: constantize(requested_constants),
@@ -135,24 +145,21 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        filename = compile_dsl_rbi(constant, contents)
+        filename = compile_dsl_rbi(constant, contents, outpath: Pathname.new(outpath))
         rbi_files_to_purge.delete(filename) if filename
       end
-
-      unless rbi_files_to_purge.empty?
-        say("")
-        say("Removing stale RBI files...")
-
-        rbi_files_to_purge.sort.each do |filename|
-          remove(filename)
-        end
-      end
-
       say("")
-      say("Done", :green)
 
-      say("All operations performed in working directory.", [:green, :bold])
-      say("Please review changes and commit them.", [:green, :bold])
+      if should_verify
+        perform_dsl_verification(outpath)
+      else
+        purge_stale_dsl_rbi_files(rbi_files_to_purge)
+
+        say("Done", :green)
+
+        say("All operations performed in working directory.", [:green, :bold])
+        say("Please review changes and commit them.", [:green, :bold])
+      end
     end
 
     sig { void }
@@ -286,10 +293,10 @@ module Tapioca
       constant_map.values
     end
 
-    sig { params(requested_constants: T::Array[String]).returns(T::Set[Pathname]) }
-    def existing_rbi_filenames(requested_constants)
+    sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
+    def existing_rbi_filenames(requested_constants, path: config.outpath)
       filenames = if requested_constants.empty?
-        Pathname.glob(config.outpath / "**/*.rbi")
+        Pathname.glob(path / "**/*.rbi")
       else
         requested_constants.map do |constant_name|
           dsl_rbi_filename(constant_name)
@@ -499,14 +506,14 @@ module Tapioca
       end
     end
 
-    sig { params(constant: Module, contents: String).returns(T.nilable(Pathname)) }
-    def compile_dsl_rbi(constant, contents)
+    sig { params(constant: Module, contents: String, outpath: Pathname).returns(T.nilable(Pathname)) }
+    def compile_dsl_rbi(constant, contents, outpath: config.outpath)
       return if contents.nil?
 
       command = format(config.generate_command, constant.name)
       constant_name = Module.instance_method(:name).bind(constant).call
       rbi_name = constant_name.underscore + ".rbi"
-      filename = config.outpath / rbi_name
+      filename = outpath / rbi_name
 
       out = String.new
       out << rbi_header(
@@ -521,6 +528,54 @@ module Tapioca
       say(filename)
 
       filename
+    end
+
+    sig { params(tmp_dir: Pathname).returns(T.nilable(String)) }
+    def verify_dsl_rbi(tmp_dir:)
+      existing_rbis = existing_rbi_filenames([]).sort
+      new_rbis = existing_rbi_filenames([], path: tmp_dir).grep_v(/gem|shim/).sort
+
+      return "New file(s) introduced." if existing_rbis.length != new_rbis.length
+
+      desynced_files = []
+
+      (0..existing_rbis.length - 1).each do |i|
+        desynced_files << new_rbis[i] unless FileUtils.identical?(existing_rbis[i], new_rbis[i])
+      end
+
+      unless desynced_files.empty?
+        filenames = desynced_files.map { |f| f.to_s.sub!(tmp_dir.to_s, "sorbet/rbi/dsl") }.join("\n  - ")
+
+        return "File(s) updated:\n  - #{filenames}"
+      end
+
+      nil
+    end
+
+    sig { params(dir: String).void }
+    def perform_dsl_verification(dir)
+      if (error = verify_dsl_rbi(tmp_dir: Pathname.new(dir)))
+        say("RBI files are out-of-date, please run `#{config.generate_command}` to update.")
+        say("Reason: ", [:red])
+        say(error)
+        exit(1)
+      else
+        say("Nothing to do, all RBIs are up-to-date.")
+      end
+    ensure
+      FileUtils.remove_entry(dir)
+    end
+
+    sig { params(files: T::Set[Pathname]).void }
+    def purge_stale_dsl_rbi_files(files)
+      if files.any?
+        say("Removing stale RBI files...")
+
+        files.sort.each do |filename|
+          remove(filename)
+        end
+        say("")
+      end
     end
   end
 end

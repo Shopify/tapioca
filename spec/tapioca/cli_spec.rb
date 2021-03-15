@@ -81,11 +81,14 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     ]
 
     Bundler.with_unbundled_env do
-      IO.popen(
+      process = IO.popen(
         exec_command.join(' '),
         chdir: repo_path,
         err: [:child, :out],
-      ).read
+      )
+      body = process.read
+      process.close
+      body
     end
   end
 
@@ -568,6 +571,95 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/post.rbi")
       refute_path_exists("#{outdir}/namespace/comment.rbi")
       refute_path_exists("#{outdir}/user.rbi")
+    end
+
+    describe("verify") do
+      describe("with no changes") do
+        before do
+          execute("dsl")
+        end
+
+        it 'does nothing and returns exit_status 0' do
+          output = execute("dsl", "--verify")
+
+          assert_includes(output, <<~OUTPUT)
+            Nothing to do, all RBIs are up-to-date.
+          OUTPUT
+          assert_includes($?.to_s, "exit 0") # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
+
+      describe("with new file") do
+        before do
+          execute("dsl")
+          File.write(repo_path / "lib" / "image.rb", <<~RUBY)
+            # typed: true
+            # frozen_string_literal: true
+
+            class Image
+              include(SmartProperties)
+
+              property :title, accepts: String
+            end
+          RUBY
+        end
+
+        after do
+          FileUtils.rm_f(repo_path / "lib" / "image.rb")
+        end
+
+        it 'advises of new file(s) and returns exit_status 1' do
+          output = execute("dsl", "--verify")
+
+          assert_includes(output, <<~OUTPUT)
+            RBI files are out-of-date, please run `generate command` to update.
+            Reason: New file(s) introduced.
+          OUTPUT
+          assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
+
+      describe("with modified file") do
+        before do
+          File.write(repo_path / "lib" / "image.rb", <<~RUBY)
+            # typed: true
+            # frozen_string_literal: true
+
+            class Image
+              include(SmartProperties)
+
+              property :title, accepts: String
+            end
+          RUBY
+          execute("dsl")
+          File.write(repo_path / "lib" / "image.rb", <<~RUBY)
+            # typed: true
+            # frozen_string_literal: true
+
+            class Image
+              include SmartProperties
+
+              property :title, accepts: String
+              property :src, accepts: String
+            end
+          RUBY
+        end
+
+        after do
+          FileUtils.rm_f(repo_path / "lib" / "image.rb")
+        end
+
+        it 'advises of modified file(s) and returns exit status 1' do
+          output = execute("dsl", "--verify")
+
+          assert_includes(output, <<~OUTPUT)
+            RBI files are out-of-date, please run `generate command` to update.
+            Reason: File(s) updated:
+              - sorbet/rbi/dsl/image.rbi
+          OUTPUT
+          assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
     end
   end
 
