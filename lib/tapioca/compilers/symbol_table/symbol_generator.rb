@@ -74,9 +74,15 @@ module Tapioca
           compile(symbol, constant)
         end
 
-        sig { params(symbol: String, inherit: T::Boolean).returns(BasicObject).checked(:never) }
-        def resolve_constant(symbol, inherit: false)
-          Object.const_get(symbol, inherit)
+        sig do
+          params(
+            symbol: String,
+            inherit: T::Boolean,
+            namespace: Module
+          ).returns(BasicObject).checked(:never)
+        end
+        def resolve_constant(symbol, inherit: false, namespace: Object)
+          namespace.const_get(symbol, inherit)
         rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
           nil
         end
