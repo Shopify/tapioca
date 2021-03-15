@@ -480,29 +480,19 @@ module Tapioca
           instance_methods = compile_directly_owned_methods(name, constant)
           singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant))
 
-          return if symbol_ignored?(name) && instance_methods.empty? && singleton_methods.empty?
+          return if symbol_ignored?(name) && !instance_methods && !singleton_methods
 
           [
             initialize_method || "",
             instance_methods,
             singleton_methods,
-          ].select { |b| b.strip != "" }.join("\n\n")
+          ].select { |b| b && b.strip != "" }.join("\n\n")
         end
 
-        sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(String) }
+        sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(T.nilable(String)) }
         def compile_directly_owned_methods(module_name, mod, for_visibility = [:public, :protected, :private])
-          indent_step = 0
-          preamble = nil
-          postamble = nil
-
-          if mod.singleton_class?
-            indent_step = 1
-            preamble = indented("class << self")
-            postamble = indented("end")
-          end
-
-          methods = with_indentation(indent_step) do
-            method_names_by_visibility(mod)
+          with_indentation_for_constant(mod) do
+            methods = method_names_by_visibility(mod)
               .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
               .flat_map do |visibility, method_list|
                 compiled = method_list.sort!.map do |name|
@@ -519,16 +509,11 @@ module Tapioca
                 compiled
               end
               .compact
-              .join("\n")
+
+            return if methods.empty?
+
+            methods.join("\n")
           end
-
-          return "" if methods.strip == ""
-
-          [
-            preamble,
-            methods,
-            postamble,
-          ].compact.join("\n")
         end
 
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
@@ -706,6 +691,33 @@ module Tapioca
           yield
         ensure
           @indent -= 2 * step
+        end
+
+        sig do
+          params(
+            constant: Module,
+            blk: T.proc
+              .returns(T.nilable(String))
+          )
+          .returns(T.nilable(String))
+        end
+        def with_indentation_for_constant(constant, &blk)
+          step = if constant.singleton_class?
+            1
+          else
+            0
+          end
+
+          result = with_indentation(step, &blk)
+
+          return result unless result
+          return result unless constant.singleton_class?
+
+          [
+            indented("class << self"),
+            result,
+            indented("end"),
+          ].compact.join("\n")
         end
 
         sig { params(str: String).returns(String) }
