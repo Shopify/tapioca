@@ -49,7 +49,10 @@ module Tapioca
       def register_type(constant, types)
         # Build the name of the instantiated generic type,
         # something like `Foo[X, Y, Z]`
-        type_list = types.map { |type| name_of(type) }.join(", ")
+        type_list = types.map do |type|
+          next type.name if T::Types::Base === type
+          name_of(type)
+        end.join(", ")
         name = "#{name_of(constant)}[#{type_list}]"
 
         # Create a clone of the constant with an overridden `name`
@@ -126,7 +129,7 @@ module Tapioca
         @type_variables[object_id_of(constant)] ||= {}
       end
 
-      sig { params(constant: Module).returns(T.nilable(String)) }
+      sig { params(constant: Module).returns(T.nilable(String)).checked(:never) }
       def name_of(constant)
         Module.instance_method(:name).bind(constant).call
       end
