@@ -65,11 +65,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Bar
+          interface!
+
+          extend T::Generic
+
           Elem = type_template(:in, fixed: Integer)
           K = type_member(upper: Numeric)
           V = type_member(lower: String)
-
-          interface!
         end
 
         Bar::Arr = T.let(T.unsafe(nil), Array)
@@ -2209,6 +2211,18 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           E = type_member(fixed: Integer, upper: Numeric)
           F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
 
+          class << self
+            extend(T::Generic)
+
+            A = type_template(:in)
+            B = type_template(:out)
+            C = type_template
+
+            D = type_member(fixed: Integer)
+            E = type_member(fixed: Integer, upper: Numeric)
+            F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+          end
+
           interface!
 
           sig { abstract.returns(Integer) }
@@ -2305,6 +2319,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module Quux
+          interface!
+
+          extend T::Generic
+
           A = type_template(:in)
           B = type_template(:out)
           C = type_template()
@@ -2312,7 +2330,16 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           E = type_member(fixed: Integer, upper: Numeric)
           F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
 
-          interface!
+          class << self
+            extend T::Generic
+
+            A = type_template(:in)
+            B = type_template(:out)
+            C = type_template()
+            D = type_member(fixed: Integer)
+            E = type_member(fixed: Integer, upper: Numeric)
+            F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+          end
 
           sig { abstract.returns(Integer) }
           def something; end
