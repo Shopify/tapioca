@@ -494,7 +494,7 @@ module Tapioca
       end
       File.write(filename.to_s, content)
 
-      Pathname.glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
+      T.unsafe(Pathname).glob((config.outpath / "#{gem.name}@*.rbi").to_s) do |file|
         remove(file) unless file.basename.to_s == gem.rbi_file_name
       end
     end
