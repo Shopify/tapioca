@@ -141,6 +141,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
         # Add your extra requires here
       CONTENTS
+
+      assert_path_exists(repo_path / "bin/tapioca")
     end
 
     it 'must not overwrite files' do
