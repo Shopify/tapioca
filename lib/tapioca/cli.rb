@@ -19,6 +19,10 @@ module Tapioca
                   aliases: ["--out", "-o"],
                   banner: "directory",
                   desc: "The output directory for generated RBI files"
+    class_option :generate_command,
+                  aliases: ["--cmd", "-c"],
+                  banner: "command",
+                  desc: "[DEPRECATED] The command to run to regenerate RBI files"
     class_option :exclude,
                   aliases: ["-x"],
                   type: :array,
