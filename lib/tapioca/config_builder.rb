@@ -10,6 +10,9 @@ module Tapioca
 
       sig { params(command: Symbol, options: T::Hash[String, T.untyped]).returns(Config) }
       def from_options(command, options)
+        puts(<<~MSG) if options.include?("generate_command")
+        DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.
+        MSG
         Config.from_hash(
           merge_options(default_options(command), config_options, options)
         )

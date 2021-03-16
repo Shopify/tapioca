@@ -22,7 +22,7 @@ module Tapioca
     class_option :generate_command,
                   aliases: ["--cmd", "-c"],
                   banner: "command",
-                  desc: "[DEPRECATED] The command to run to regenerate RBI files"
+                  desc: "The command to run to regenerate RBI files"
     class_option :exclude,
                   aliases: ["-x"],
                   type: :array,
