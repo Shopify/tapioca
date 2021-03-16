@@ -721,7 +721,7 @@ module Tapioca
             blk: T.proc
               .returns(T.nilable(String))
           )
-          .returns(T.nilable(String))
+            .returns(T.nilable(String))
         end
         def with_indentation_for_constant(constant, &blk)
           step = if constant.singleton_class?
