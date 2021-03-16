@@ -26,4 +26,4 @@ end
 require "rubygems"
 require "bundler/setup"
 
-load Gem.bin_path("tapioca", "tapioca")
+load(Gem.bin_path("tapioca", "tapioca"))
