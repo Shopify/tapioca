@@ -30,6 +30,7 @@ Sorbet/TrueSigil:
   - "**/*.rb"
   Exclude:
   - "spec/support/gems/baz/lib/baz.rb"
+  - "spec/support/repo/bin/tapioca"
 
 Sorbet/ConstantsFromStrings:
   Enabled: false
