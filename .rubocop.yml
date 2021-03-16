@@ -10,6 +10,7 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude:
   - 'vendor/**/*'
+  - "spec/support/repo/bin/tapioca"
 
 Style/CaseEquality:
   Enabled: false
@@ -30,7 +31,6 @@ Sorbet/TrueSigil:
   - "**/*.rb"
   Exclude:
   - "spec/support/gems/baz/lib/baz.rb"
-  - "spec/support/repo/bin/tapioca"
 
 Sorbet/ConstantsFromStrings:
   Enabled: false

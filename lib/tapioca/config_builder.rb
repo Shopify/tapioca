@@ -10,12 +10,13 @@ module Tapioca
 
       sig { params(command: Symbol, options: T::Hash[String, T.untyped]).returns(Config) }
       def from_options(command, options)
+        merged_options = merge_options(default_options(command), config_options, options)
+
         puts(<<~MSG) if options.include?("generate_command")
           DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.
         MSG
-        Config.from_hash(
-          merge_options(default_options(command), config_options, options)
-        )
+
+        Config.from_hash(merged_options)
       end
 
       private
@@ -60,7 +61,6 @@ module Tapioca
     DEFAULT_OPTIONS = T.let({
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
       "outdir" => nil,
-      "generate_command" => Config::DEFAULT_COMMAND,
       "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
       "todos_path" => Config::DEFAULT_TODOSPATH,
