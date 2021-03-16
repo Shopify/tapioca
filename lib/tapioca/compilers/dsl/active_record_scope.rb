@@ -60,7 +60,7 @@ module Tapioca
 
             model.create_module(module_name) do |mod|
               scope_method_names.each do |scope_method|
-                generate_scope_method(scope_method, mod)
+                generate_scope_method(scope_method.to_s, mod)
               end
             end
 

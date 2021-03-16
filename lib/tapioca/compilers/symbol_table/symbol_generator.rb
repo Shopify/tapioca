@@ -223,7 +223,7 @@ module Tapioca
         def compile_enums(constant)
           return "" unless T::Enum > constant
 
-          enums = T.cast(constant, T::Enum).values.map do |enum_type|
+          enums = T.unsafe(constant).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s
           end
 
@@ -859,7 +859,7 @@ module Tapioca
           nil
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: T::Types::Base).returns(String) }
         def type_of(constant)
           constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
