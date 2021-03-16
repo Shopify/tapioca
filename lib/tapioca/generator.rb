@@ -516,7 +516,7 @@ module Tapioca
 
       out = String.new
       out << rbi_header(
-        "tapioca dsl",
+        "tapioca dsl #{constant_name}",
         reason: "dynamic methods in `#{constant.name}`"
       )
       out << contents
