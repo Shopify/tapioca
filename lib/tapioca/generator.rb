@@ -63,7 +63,7 @@ module Tapioca
 
       content = String.new
       content << rbi_header(
-        "tapioca require",
+        "#{Config::DEFAULT_COMMAND} require",
         reason: "explicit gem requires",
         strictness: "false"
       )
@@ -76,8 +76,8 @@ module Tapioca
       say("Done", :green)
 
       say("All requires from this application have been written to #{name}.", [:green, :bold])
-      cmd = set_color("tapioca sync", :yellow, :bold)
-      say("Please review changes and commit them, then run #{cmd}.", [:green, :bold])
+      cmd = set_color("#{Config::DEFAULT_COMMAND} sync", :yellow, :bold)
+      say("Please review changes and commit them, then run `#{cmd}`.", [:green, :bold])
     end
 
     sig { void }
@@ -99,7 +99,7 @@ module Tapioca
 
       content = String.new
       content << rbi_header(
-        "tapioca todo",
+        "#{Config::DEFAULT_COMMAND} todo",
         reason: "unresolved constants",
         strictness: "false"
       )
@@ -225,7 +225,7 @@ module Tapioca
       say_error("If you populated ", :yellow)
       say_error("#{file} ", :bold, :blue)
       say_error("with ", :yellow)
-      say_error("tapioca require", :bold, :blue)
+      say_error("`#{Config::DEFAULT_COMMAND} require`", :bold, :blue)
       say_error("you should probably review it and remove the faulty line.", :yellow)
     end
 
@@ -484,7 +484,7 @@ module Tapioca
       rbi_body_content = compiler.compile(gem)
       content = String.new
       content << rbi_header(
-        "tapioca sync",
+        "#{Config::DEFAULT_COMMAND} sync",
         reason: "types exported from the `#{gem.name}` gem",
         strictness: strictness
       )
@@ -516,7 +516,7 @@ module Tapioca
 
       out = String.new
       out << rbi_header(
-        "tapioca dsl #{constant_name}",
+        "#{Config::DEFAULT_COMMAND} dsl #{constant_name}",
         reason: "dynamic methods in `#{constant.name}`"
       )
       out << contents
@@ -554,7 +554,7 @@ module Tapioca
     sig { params(dir: String).void }
     def perform_dsl_verification(dir)
       if (error = verify_dsl_rbi(tmp_dir: Pathname.new(dir)))
-        say("RBI files are out-of-date, please run `tapioca dsl` to update.")
+        say("RBI files are out-of-date, please run `#{Config::DEFAULT_COMMAND} dsl` to update.")
         say("Reason: ", [:red])
         say(error)
         exit(1)

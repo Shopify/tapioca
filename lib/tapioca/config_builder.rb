@@ -40,15 +40,6 @@ module Tapioca
         DEFAULT_OPTIONS.merge("outdir" => default_outdir)
       end
 
-      sig { returns(String) }
-      def default_command
-        command = File.basename($PROGRAM_NAME)
-        # Hack to avoid flags ending up in the header of the RBIs
-        args = ARGV.grep_v(/^-/).join(" ")
-
-        "#{command} #{args}".strip
-      end
-
       sig { params(options: T::Hash[String, T.untyped]).returns(T::Hash[String, T.untyped]) }
       def merge_options(*options)
         options.each_with_object({}) do |option, result|
@@ -66,7 +57,7 @@ module Tapioca
     DEFAULT_OPTIONS = T.let({
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
       "outdir" => nil,
-      "generate_command" => default_command,
+      "generate_command" => Config::DEFAULT_COMMAND,
       "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
       "todos_path" => Config::DEFAULT_TODOSPATH,
