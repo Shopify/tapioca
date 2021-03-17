@@ -10,6 +10,7 @@ AllCops:
   TargetRubyVersion: 2.4
   Exclude:
   - 'vendor/**/*'
+  - "spec/support/repo/bin/tapioca"
 
 Style/CaseEquality:
   Enabled: false

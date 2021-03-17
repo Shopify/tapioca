@@ -38,20 +38,9 @@ module Tapioca
 
     desc "init", "initializes folder structure"
     def init
-      create_file(Config::SORBET_CONFIG, skip: true) do
-        <<~CONTENT
-          --dir
-          .
-        CONTENT
-      end
-      create_file(Config::DEFAULT_POSTREQUIRE, skip: true) do
-        <<~CONTENT
-          # typed: false
-          # frozen_string_literal: true
-
-          # Add your extra requires here
-        CONTENT
-      end
+      create_config
+      create_post_require
+      generate_binstub
     end
 
     desc "require", "generate the list of files to be required by tapioca"
@@ -101,6 +90,34 @@ module Tapioca
     desc "--version, -v", "show version"
     def __print_version
       puts "Tapioca v#{Tapioca::VERSION}"
+    end
+
+    private
+
+    def create_config
+      create_file(Config::SORBET_CONFIG, skip: true) do
+        <<~CONTENT
+          --dir
+          .
+        CONTENT
+      end
+    end
+
+    def create_post_require
+      create_file(Config::DEFAULT_POSTREQUIRE, skip: true) do
+        <<~CONTENT
+          # typed: false
+          # frozen_string_literal: true
+
+          # Add your extra requires here
+        CONTENT
+      end
+    end
+
+    def generate_binstub
+      installer = Bundler::Installer.new(Bundler.root, Bundler.definition)
+      spec = Bundler.definition.specs.find { |s| s.name == "tapioca" }
+      installer.generate_bundler_executable_stubs(spec, { force: true })
     end
 
     no_commands do

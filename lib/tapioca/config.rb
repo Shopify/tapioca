@@ -8,7 +8,6 @@ module Tapioca
     const(:outdir, String)
     const(:prerequire, T.nilable(String))
     const(:postrequire, String)
-    const(:generate_command, String)
     const(:exclude, T::Array[String])
     const(:typed_overrides, T::Hash[String, String])
     const(:todos_path, String)
@@ -27,6 +26,7 @@ module Tapioca
     TAPIOCA_PATH = T.let("#{SORBET_PATH}/tapioca", String)
     TAPIOCA_CONFIG = T.let("#{TAPIOCA_PATH}/config.yml", String)
 
+    DEFAULT_COMMAND = T.let("bin/tapioca", String)
     DEFAULT_POSTREQUIRE = T.let("#{TAPIOCA_PATH}/require.rb", String)
     DEFAULT_RBIDIR = T.let("#{SORBET_PATH}/rbi", String)
     DEFAULT_DSLDIR = T.let("#{DEFAULT_RBIDIR}/dsl", String)

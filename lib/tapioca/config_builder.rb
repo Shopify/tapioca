@@ -10,9 +10,13 @@ module Tapioca
 
       sig { params(command: Symbol, options: T::Hash[String, T.untyped]).returns(Config) }
       def from_options(command, options)
-        Config.from_hash(
-          merge_options(default_options(command), config_options, options)
-        )
+        merged_options = merge_options(default_options(command), config_options, options)
+
+        puts(<<~MSG) if merged_options.include?("generate_command")
+          DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.
+        MSG
+
+        Config.from_hash(merged_options)
       end
 
       private
@@ -40,15 +44,6 @@ module Tapioca
         DEFAULT_OPTIONS.merge("outdir" => default_outdir)
       end
 
-      sig { returns(String) }
-      def default_command
-        command = File.basename($PROGRAM_NAME)
-        # Hack to avoid flags ending up in the header of the RBIs
-        args = ARGV.grep_v(/^-/).join(" ")
-
-        "#{command} #{args}".strip
-      end
-
       sig { params(options: T::Hash[String, T.untyped]).returns(T::Hash[String, T.untyped]) }
       def merge_options(*options)
         options.each_with_object({}) do |option, result|
@@ -66,7 +61,6 @@ module Tapioca
     DEFAULT_OPTIONS = T.let({
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
       "outdir" => nil,
-      "generate_command" => default_command,
       "exclude" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
       "todos_path" => Config::DEFAULT_TODOSPATH,
