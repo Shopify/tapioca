@@ -155,7 +155,11 @@ module Tapioca
 
           header =
             if constant.is_a?(Class)
-              indented("class #{name}#{compile_superclass(constant)}")
+              if constant < Struct && struct_definition?(constant)
+                indented("#{name} = #{compile_struct_definition(constant)} do")
+              else
+                indented("class #{name}#{compile_superclass(constant)}")
+              end
             else
               indented("module #{name}")
             end
@@ -253,6 +257,44 @@ module Tapioca
           return "" if output.empty?
 
           "\n" + output.join("\n\n")
+        end
+
+        sig { params(constant: Class).returns(T::Boolean) }
+        def struct_definition?(constant)
+          superclass = superclass_of(constant)
+          return false unless superclass
+
+          # If the superclass is anonymous, maybe this is an instance of
+          # the bad but popular `class Bar < Struct.new(:a, :b); end` usage
+          # which creates an anonymous superclass that itself inherits from
+          # `Struct`.
+          #
+          # Similarly, if the superclass name is like `Struct::XXX`, this maybe
+          # an instance of a much less popular but still valid
+          # `class Bar < Struct.new("Name", :a, :b); end` usage
+          # which creates a `Struct::Name` named superclass that itself inherits
+          # from `Struct`.
+          #
+          # In those case, we need to look at the superclass of this superclass to
+          # see if it is `Struct`.
+          superclass_name = name_of(superclass)
+          if !superclass_name || superclass_name =~ /^(::)?Struct::[^:]+$/.freeze
+            superclass = superclass_of(superclass)
+          end
+
+          are_equal?(Struct, superclass)
+        end
+
+        sig { params(constant: T.class_of(Struct)).returns(String) }
+        def compile_struct_definition(constant)
+          keyword_init = /\(keyword_init: true\)/.freeze.match?(constant.inspect)
+
+          parameters = constant.members.map { |member| ":#{member}" }
+          parameters = [*parameters, "keyword_init: true"] if keyword_init
+
+          parameter_list = parameters.join(", ")
+
+          "Struct.new(#{parameter_list})"
         end
 
         sig { params(constant: Class).returns(String) }
@@ -492,7 +534,7 @@ module Tapioca
         end
 
         sig { params(constant: Module, method_name: String).returns(T::Boolean) }
-        def struct_method?(constant, method_name)
+        def typed_struct_method?(constant, method_name)
           return false unless T::Props::ClassMethods === constant
 
           constant
@@ -518,7 +560,7 @@ module Tapioca
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
-          return if struct_method?(constant, method_name)
+          return if typed_struct_method?(constant, method_name)
           return if method_name.start_with?("__t_props_generated_")
 
           parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
@@ -816,7 +858,6 @@ module Tapioca
           name = raw_name_of(constant)
           return if name.nil?
           return unless are_equal?(constant, resolve_constant(name, inherit: true))
-          name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
 
