@@ -12,7 +12,7 @@ module Tapioca
       def from_options(command, options)
         merged_options = merge_options(default_options(command), config_options, options)
 
-        puts(<<~MSG) if options.include?("generate_command")
+        puts(<<~MSG) if merged_options.include?("generate_command")
           DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.
         MSG
 
