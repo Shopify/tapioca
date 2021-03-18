@@ -129,12 +129,12 @@ module Tapioca
         @type_variables[object_id_of(constant)] ||= {}
       end
 
-      sig { params(constant: Module).returns(T.nilable(String)).checked(:never) }
+      sig { params(constant: Module).returns(T.nilable(String)) }
       def name_of(constant)
         Module.instance_method(:name).bind(constant).call
       end
 
-      sig { params(object: BasicObject).returns(Integer).checked(:never) }
+      sig { params(object: BasicObject).returns(Integer) }
       def object_id_of(object)
         Object.instance_method(:object_id).bind(object).call
       end
