@@ -379,7 +379,13 @@ module Tapioca
         sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_arg_type_of_method(column_type, method)
           signature = T::Private::Methods.signature_for_method(column_type.method(method))
-          signature.arg_types.first.last.to_s if signature
+          return unless signature
+
+          # Arg types is an array [name, type] entries, so we desctructure the type of
+          # first argument to get the first argument type
+          _, first_argument_type = signature.arg_types.first
+
+          first_argument_type.to_s
         end
 
         sig { params(type: String).returns(String) }
