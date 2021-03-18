@@ -195,7 +195,7 @@ module Tapioca
               compile_props(constant),
               compile_enums(constant),
               methods,
-            ].select { |b| b && b != "" }.join("\n\n")
+            ].select { |b| b && !b.empty? }.join("\n\n")
           end
         end
 
@@ -505,10 +505,10 @@ module Tapioca
           return if symbol_ignored?(name) && !instance_methods && !singleton_methods
 
           [
-            initialize_method || "",
+            initialize_method,
             instance_methods,
             singleton_methods,
-          ].select { |b| b && b.strip != "" }.join("\n\n")
+          ].select { |b| b && !b.strip.empty? }.join("\n\n")
         end
 
         sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(T.nilable(String)) }
