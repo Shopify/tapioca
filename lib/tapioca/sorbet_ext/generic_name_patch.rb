@@ -5,6 +5,12 @@ require "tapioca/sorbet_ext/name_patch"
 
 module T
   module Generic
+    # This module intercepts calls to generic type instantiation and type variable definitions.
+    # Tapioca stores the data from those calls in a `GenericTypeRegistry` which can then be used
+    # for looking up the original call details when we are trying to do code generation.
+    #
+    # We are interested in the data of the `[]`, `type_member` and `type_template` calls which
+    # are all needed to generate good generic information at runtime.
     module TypeStoragePatch
       def [](*types)
         Tapioca::GenericTypeRegistry.register_type(self, types)
@@ -24,6 +30,11 @@ module T
 
   module Types
     class Simple
+      # This module intercepts calls to the `name` method for
+      # simple types, so that it can ask the name to the type if
+      # the type is generic, since, by this point, we've created
+      # a clone of that type with the `name` method returning the
+      # appropriate name for that specific concrete type.
       module GenericNamePatch
         def name
           if T::Generic === @raw_type
