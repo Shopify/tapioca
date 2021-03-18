@@ -24,8 +24,8 @@ module Tapioca
       extend T::Sig
       sig do
         params(
-          type_variable_type: T.untyped,
-          variance: T.untyped,
+          type_variable_type: Symbol,
+          variance: Symbol,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
@@ -40,7 +40,8 @@ module Tapioca
 
         parameters = parts.join(", ")
 
-        @str = T.let("#{type_variable_type}(#{parameters})", String)
+        @str = T.let(type_variable_type.to_s, String)
+        @str += "(#{parameters})" unless parameters.empty?
       end
 
       sig { returns(String) }
@@ -76,11 +77,8 @@ module Tapioca
       sig { params(constant: T.untyped, types: T.untyped).returns(Module) }
       def register_type(constant, types)
         # Build the name of the instantiated generic type,
-        # something like `Foo[X, Y, Z]`
-        type_list = types.map do |type|
-          next type.name if T::Types::Base === type
-          name_of(type)
-        end.join(", ")
+        # something like `"Foo[X, Y, Z]"`
+        type_list = types.map { |type| T::Utils.coerce(type).name }.join(", ")
         name = "#{name_of(constant)}[#{type_list}]"
 
         # Create a clone of the constant with an overridden `name`

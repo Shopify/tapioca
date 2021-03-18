@@ -2329,7 +2329,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           A = type_template(:in)
           B = type_template(:out)
-          C = type_template()
+          C = type_template
           D = type_member(fixed: Integer)
           E = type_member(fixed: Integer, upper: T::Array[Numeric])
           F = type_member(fixed: Integer, lower: T.any(Complex, T::Hash[Symbol, T::Array[Integer]]), upper: T.nilable(Numeric))
@@ -2339,7 +2339,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
             A = type_template(:in)
             B = type_template(:out)
-            C = type_template()
+            C = type_template
             D = type_member(fixed: Integer)
             E = type_member(fixed: Integer, upper: Numeric)
             F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
