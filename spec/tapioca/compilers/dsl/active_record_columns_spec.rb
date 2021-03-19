@@ -678,7 +678,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("generates a weak type if custom type is generic") do
+        it("discovers custom type even if it is generic") do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -712,13 +712,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             end
           RUBY
 
-          expected = indented(<<~RBI, 4)
-            sig { returns(T.nilable(T.untyped)) }
+          expected = indented(<<~RUBY, 4)
+            sig { returns(T.nilable(ValueType[Integer])) }
             def cost; end
 
-            sig { params(value: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
+            sig { params(value: T.nilable(ValueType[Integer])).returns(T.nilable(ValueType[Integer])) }
             def cost=(value); end
-          RBI
+          RUBY
 
           assert_includes(rbi_for(:Post), expected)
         end

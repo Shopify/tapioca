@@ -371,7 +371,6 @@ module Tapioca
           return unless signature
 
           return_type = signature.return_type
-          return if T::Types::Simple === return_type && T::Generic === return_type.raw_type
           return if return_type == T::Private::Types::Void || return_type == T::Private::Types::NotTyped
 
           return_type.to_s
@@ -382,10 +381,11 @@ module Tapioca
           signature = T::Private::Methods.signature_for_method(column_type.method(method))
           return unless signature
 
-          arg_type = signature.arg_types.first.last
-          return if T::Types::Simple === arg_type && T::Generic === arg_type.raw_type
+          # Arg types is an array [name, type] entries, so we desctructure the type of
+          # first argument to get the first argument type
+          _, first_argument_type = signature.arg_types.first
 
-          arg_type.to_s
+          first_argument_type.to_s
         end
 
         sig { params(type: String).returns(String) }

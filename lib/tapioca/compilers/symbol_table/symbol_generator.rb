@@ -74,9 +74,15 @@ module Tapioca
           compile(symbol, constant)
         end
 
-        sig { params(symbol: String, inherit: T::Boolean).returns(BasicObject).checked(:never) }
-        def resolve_constant(symbol, inherit: false)
-          Object.const_get(symbol, inherit)
+        sig do
+          params(
+            symbol: String,
+            inherit: T::Boolean,
+            namespace: Module
+          ).returns(BasicObject).checked(:never)
+        end
+        def resolve_constant(symbol, inherit: false, namespace: Object)
+          namespace.const_get(symbol, inherit)
         rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
           nil
         end
@@ -142,9 +148,11 @@ module Tapioca
         def compile_object(name, value)
           return if symbol_ignored?(name)
           klass = class_of(value)
-          return if name_of(klass)&.start_with?("T::Types::", "T::Private::")
+          klass_name = name_of(klass)
 
-          type_name = public_module?(klass) && name_of(klass) || "T.untyped"
+          return if klass_name&.start_with?("T::Types::", "T::Private::")
+
+          type_name = public_module?(klass) && klass_name || "T.untyped"
           indented("#{name} = T.let(T.unsafe(nil), #{type_name})")
         end
 
@@ -181,16 +189,17 @@ module Tapioca
 
             [
               compile_module_helpers(constant),
+              compile_type_variables(constant),
               compile_mixins(constant),
               compile_mixes_in_class_methods(constant),
               compile_props(constant),
               compile_enums(constant),
               methods,
-            ].select { |b| b != "" }.join("\n\n")
+            ].select { |b| b && !b.empty? }.join("\n\n")
           end
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_module_helpers(constant)
           abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
 
@@ -199,12 +208,14 @@ module Tapioca
           helpers << indented("final!") if T::Private::Final.final_module?(constant)
           helpers << indented("sealed!") if T::Private::Sealed.sealed_module?(constant)
 
+          return if helpers.empty?
+
           helpers.join("\n")
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_props(constant)
-          return "" unless T::Props::ClassMethods === constant
+          return unless T::Props::ClassMethods === constant
 
           constant.props.map do |name, prop|
             method = "prop"
@@ -219,9 +230,9 @@ module Tapioca
           end.join("\n")
         end
 
-        sig { params(constant: Module).returns(String) }
+        sig { params(constant: Module).returns(T.nilable(String)) }
         def compile_enums(constant)
-          return "" unless T::Enum > constant
+          return unless T::Enum > constant
 
           enums = T.unsafe(constant).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s
@@ -250,9 +261,69 @@ module Tapioca
             compile(symbol, subconstant)
           end.compact
 
-          return "" if output.empty?
+          return if output.empty?
 
           "\n" + output.join("\n\n")
+        end
+
+        sig { params(constant: Module).returns(T.nilable(String)) }
+        def compile_type_variables(constant)
+          type_variables = compile_type_variable_declarations(constant)
+          singleton_class_type_variables = compile_type_variable_declarations(singleton_class_of(constant))
+
+          return if !type_variables && !singleton_class_type_variables
+
+          type_variables += "\n" if type_variables
+          singleton_class_type_variables += "\n" if singleton_class_type_variables
+
+          [
+            type_variables,
+            singleton_class_type_variables,
+          ].compact.join("\n").rstrip
+        end
+
+        sig { params(constant: Module).returns(T.nilable(String)) }
+        def compile_type_variable_declarations(constant)
+          with_indentation_for_constant(constant) do
+            # Try to find the type variables defined on this constant, bail if we can't
+            type_variables = GenericTypeRegistry.lookup_type_variables(constant)
+            return unless type_variables
+
+            # Create a map of subconstants (via their object ids) to their names.
+            # We need this later when we want to lookup the name of the registered type
+            # variable via the value of the type variable constant.
+            subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
+              [
+                object_id_of(resolve_constant(constant_name.to_s, namespace: constant)),
+                constant_name,
+              ]
+            end.to_h
+
+            # Map each type variable to its string representation.
+            #
+            # Each entry of `type_variables` maps an object_id to a String,
+            # and the order they are inserted into the hash is the order they should be
+            # defined in the source code.
+            #
+            # By looping over these entries and then getting the actual constant name
+            # from the `subconstant_to_name_lookup` we defined above, gives us all the
+            # information we need to serialize type variable definitions.
+            type_variable_declarations = type_variables.map do |type_variable_id, serialized_type_variable|
+              constant_name = subconstant_to_name_lookup[type_variable_id]
+              # Here, we know that constant_value will be an instance of
+              # T::Types::CustomTypeVariable, which knows how to serialize
+              # itself to a type_member/type_template
+              indented("#{constant_name} = #{serialized_type_variable}")
+            end.compact
+
+            return if type_variable_declarations.empty?
+
+            [
+              indented("extend T::Generic"),
+              "",
+              *type_variable_declarations,
+            ].compact.join("\n")
+          end
         end
 
         sig { params(constant: Class).returns(String) }
@@ -431,29 +502,19 @@ module Tapioca
           instance_methods = compile_directly_owned_methods(name, constant)
           singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant))
 
-          return if symbol_ignored?(name) && instance_methods.empty? && singleton_methods.empty?
+          return if symbol_ignored?(name) && !instance_methods && !singleton_methods
 
           [
-            initialize_method || "",
+            initialize_method,
             instance_methods,
             singleton_methods,
-          ].select { |b| b.strip != "" }.join("\n\n")
+          ].select { |b| b && !b.strip.empty? }.join("\n\n")
         end
 
-        sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(String) }
+        sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(T.nilable(String)) }
         def compile_directly_owned_methods(module_name, mod, for_visibility = [:public, :protected, :private])
-          indent_step = 0
-          preamble = nil
-          postamble = nil
-
-          if mod.singleton_class?
-            indent_step = 1
-            preamble = indented("class << self")
-            postamble = indented("end")
-          end
-
-          methods = with_indentation(indent_step) do
-            method_names_by_visibility(mod)
+          with_indentation_for_constant(mod) do
+            methods = method_names_by_visibility(mod)
               .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
               .flat_map do |visibility, method_list|
                 compiled = method_list.sort!.map do |name|
@@ -470,16 +531,11 @@ module Tapioca
                 compiled
               end
               .compact
-              .join("\n")
+
+            return if methods.empty?
+
+            methods.join("\n")
           end
-
-          return "" if methods.strip == ""
-
-          [
-            preamble,
-            methods,
-            postamble,
-          ].compact.join("\n")
         end
 
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
@@ -657,6 +713,33 @@ module Tapioca
           yield
         ensure
           @indent -= 2 * step
+        end
+
+        sig do
+          params(
+            constant: Module,
+            blk: T.proc
+              .returns(T.nilable(String))
+          )
+            .returns(T.nilable(String))
+        end
+        def with_indentation_for_constant(constant, &blk)
+          step = if constant.singleton_class?
+            1
+          else
+            0
+          end
+
+          result = with_indentation(step, &blk)
+
+          return result unless result
+          return result unless constant.singleton_class?
+
+          [
+            indented("class << self"),
+            result,
+            indented("end"),
+          ].compact.join("\n")
         end
 
         sig { params(str: String).returns(String) }
@@ -864,7 +947,7 @@ module Tapioca
           constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
 
-        sig { params(object: Object).returns(T::Boolean).checked(:never) }
+        sig { params(object: BasicObject).returns(Integer).checked(:never) }
         def object_id_of(object)
           Object.instance_method(:object_id).bind(object).call
         end

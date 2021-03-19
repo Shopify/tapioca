@@ -4,6 +4,8 @@
 require "tapioca"
 require "tapioca/loader"
 require "tapioca/constant_locator"
+require "tapioca/generic_type_registry"
+require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/config"
 require "tapioca/config_builder"
 require "tapioca/generator"
