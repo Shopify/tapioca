@@ -301,19 +301,19 @@ module Tapioca
 
             # Map each type variable to its string representation.
             #
-            # Each entry of `type_variables` maps an object_id to a TypeVariableSerializer,
+            # Each entry of `type_variables` maps an object_id to a String,
             # and the order they are inserted into the hash is the order they should be
             # defined in the source code.
             #
             # By looping over these entries and then getting the actual constant name
             # from the `subconstant_to_name_lookup` we defined above, gives us all the
             # information we need to serialize type variable definitions.
-            type_variable_declarations = type_variables.map do |type_variable_id, type_variable_serializer|
+            type_variable_declarations = type_variables.map do |type_variable_id, serialized_type_variable|
               constant_name = subconstant_to_name_lookup[type_variable_id]
               # Here, we know that constant_value will be an instance of
               # T::Types::CustomTypeVariable, which knows how to serialize
               # itself to a type_member/type_template
-              indented("#{constant_name} = #{type_variable_serializer}")
+              indented("#{constant_name} = #{serialized_type_variable}")
             end.compact
 
             return if type_variable_declarations.empty?
