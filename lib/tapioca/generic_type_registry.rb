@@ -64,27 +64,27 @@ module Tapioca
       sig do
         params(
           constant: T.untyped,
-          type_template: T::Types::TypeVariable,
+          type_member: T::Types::TypeVariable,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
-        ).returns(T::Types::TypeVariable)
+        ).void
       end
-      def register_type_template(constant, type_template, fixed, lower, upper)
-        register_type_variable(constant, :type_template, type_template, fixed, lower, upper)
+      def register_type_member(constant, type_member, fixed, lower, upper)
+        register_type_variable(constant, :type_member, type_member, fixed, lower, upper)
       end
 
       sig do
         params(
           constant: T.untyped,
-          type_member: T::Types::TypeVariable,
+          type_template: T::Types::TypeVariable,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
-        ).returns(T::Types::TypeVariable)
+        ).void
       end
-      def register_type_member(constant, type_member, fixed, lower, upper)
-        register_type_variable(constant, :type_member, type_member, fixed, lower, upper)
+      def register_type_template(constant, type_template, fixed, lower, upper)
+        register_type_variable(constant, :type_template, type_template, fixed, lower, upper)
       end
 
       sig { params(constant: Module).returns(T.nilable(T::Hash[Integer, String])) }
@@ -111,7 +111,7 @@ module Tapioca
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
-        ).returns(T::Types::TypeVariable)
+        ).void
       end
       # rubocop:disable Metrics/ParameterLists
       def register_type_variable(constant, type_variable_type, type_variable, fixed, lower, upper)
@@ -125,8 +125,6 @@ module Tapioca
           lower,
           upper
         )
-
-        type_variable
       end
 
       sig { params(constant: Module).returns(T::Hash[Integer, String]) }

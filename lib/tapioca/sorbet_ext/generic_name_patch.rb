@@ -13,15 +13,27 @@ module T
     # are all needed to generate good generic information at runtime.
     module TypeStoragePatch
       def [](*types)
-        Tapioca::GenericTypeRegistry.register_type(self, types)
+        # `T::Generic#[]` just returns `self`, so let's call and store it.
+        constant = super
+        # `register_type` method builds and returns an instantiated clone of the generic type
+        # so, we just return that from this method as well.
+        Tapioca::GenericTypeRegistry.register_type(constant, types)
       end
 
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        Tapioca::GenericTypeRegistry.register_type_member(self, super, fixed, lower, upper)
+        # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
+        # We use that when registering the type member and then later return it from this method.
+        type_member = super
+        Tapioca::GenericTypeRegistry.register_type_member(self, type_member, fixed, lower, upper)
+        type_member
       end
 
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
-        Tapioca::GenericTypeRegistry.register_type_template(self, super, fixed, lower, upper)
+        # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
+        # We use that when registering the type template and then later return it from this method.
+        type_template = super
+        Tapioca::GenericTypeRegistry.register_type_template(self, type_template, fixed, lower, upper)
+        type_template
       end
     end
 
