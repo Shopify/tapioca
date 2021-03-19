@@ -5,9 +5,9 @@ require "tapioca/sorbet_ext/name_patch"
 
 module T
   module Generic
-    # This module intercepts calls to generic type instantiation and type variable definitions.
+    # This module intercepts calls to generic type instantiations and type variable definitions.
     # Tapioca stores the data from those calls in a `GenericTypeRegistry` which can then be used
-    # for looking up the original call details when we are trying to do code generation.
+    # to look up the original call details when we are trying to do code generation.
     #
     # We are interested in the data of the `[]`, `type_member` and `type_template` calls which
     # are all needed to generate good generic information at runtime.

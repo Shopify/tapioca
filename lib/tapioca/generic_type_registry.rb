@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  # This class responsible for storing and looking up information related to generic types.
+  # This class is responsible for storing and looking up information related to generic types.
   #
   # The class stores 2 different kinds of data, in two separate lookup tables:
   #   1. a lookup of generic type instances by name: `@generic_instances`
@@ -13,7 +13,7 @@ module Tapioca
   # to see if it declares any generic type variables. This becomes a simple lookup in the
   # `@type_variables` hash table with the given constant.
   #
-  # If there are no entries, then we can cheaply know that we can skip generic type
+  # If there is no entry, then we can cheaply know that we can skip generic type
   # information generation for this type.
   #
   # On the other hand, if we get a result, then the result will be a hash of type
@@ -63,8 +63,8 @@ module Tapioca
     class << self
       extend T::Sig
 
-      # This method is responsible building the name of the instantiated concrete type
-      # and cloning the given constannt so that we can return a type that is the same
+      # This method is responsible for building the name of the instantiated concrete type
+      # and cloning the given constant so that we can return a type that is the same
       # as the current type but is a different instance and has a different name method.
       #
       # We cache those cloned instances by their name in `@generic_instances`, so that
