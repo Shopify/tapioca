@@ -73,7 +73,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     exec_command = [
       "bundle",
       "exec",
-      "bin/tapioca",
+      "tapioca",
       command,
       *flags,
       *args,
@@ -122,11 +122,13 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
   describe("#init") do
     it 'must create proper files' do
+      FileUtils.rm_f(repo_path / "bin/tapioca")
       output = execute("init")
 
       assert_equal(<<-OUTPUT, output)
       create  sorbet/config
       create  sorbet/tapioca/require.rb
+      create  bin/tapioca
       OUTPUT
 
       assert_path_exists(repo_path / "sorbet/config")
@@ -147,7 +149,9 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
     it 'must not overwrite files' do
       FileUtils.mkdir_p(repo_path / "sorbet/tapioca")
+      FileUtils.mkdir_p(repo_path / "bin")
       FileUtils.touch([
+        repo_path / "bin/tapioca",
         repo_path / "sorbet/config",
         repo_path / "sorbet/tapioca/require.rb",
       ])
@@ -157,6 +161,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(<<-OUTPUT, output)
         skip  sorbet/config
         skip  sorbet/tapioca/require.rb
+       force  bin/tapioca
       OUTPUT
 
       assert_empty(File.read(repo_path / "sorbet/config"))
