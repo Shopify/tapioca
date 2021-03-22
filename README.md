@@ -1,3 +1,5 @@
+> :warning: **Note**: This software is currently under active development. The API and interface should be considered unstable until a v1.0.0 release.
+
 # Tapioca
 
 ![Build Status](https://github.com/Shopify/tapioca/workflows/CI/badge.svg)
@@ -14,7 +16,7 @@ For gems that have a normal default `require` and load all of their constants th
 
 For example, suppose you are using the class `BetterHtml::Parser` exported from the `better_html` gem. Just doing a `require "better_html"` (which is the default require) does not load that type:
 
-```ruby
+```shell
 $ bundle exec pry
 [1] pry(main)> require 'better_html'
 => true
@@ -110,7 +112,7 @@ This will generate DSL RBIs for specified constants (or for all handled constant
 - `--prerequire [file]`: A file to be required before `Bundler.require` is called.
 - `--postrequire [file]`: A file to be required after `Bundler.require` is called.
 - `--out [directory]`: The output directory for generated RBI files, default to `sorbet/rbi/gems`.
-- `--generate-command [command]`: The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
+- `--generate-command [command]`: **[DEPRECATED]** The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
 - `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
 ## Contributing
