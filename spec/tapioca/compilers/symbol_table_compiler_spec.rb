@@ -2201,31 +2201,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module Quux
           extend(T::Sig)
           extend(T::Helpers)
-          extend(T::Generic)
-
-          A = type_template(:in)
-          B = type_template(:out)
-          C = type_template
-
-          D = type_member(fixed: Integer)
-          E = type_member(fixed: Integer, upper: T::Array[Numeric])
-          F = type_member(
-            fixed: Integer,
-            lower: T.any(Complex, T::Hash[Symbol, T::Array[Integer]]),
-            upper: T.nilable(Numeric)
-          )
-
-          class << self
-            extend(T::Generic)
-
-            A = type_template(:in)
-            B = type_template(:out)
-            C = type_template
-
-            D = type_member(fixed: Integer)
-            E = type_member(fixed: Integer, upper: Numeric)
-            F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
-          end
 
           interface!
 
@@ -2263,6 +2238,52 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           class Foo; include Adt; end
           class Bar; include Adt; end
+        end
+      RUBY
+
+      add_ruby_file("generic.rb", <<~RUBY)
+        module Generics
+          class ComplexGenericType
+            extend(T::Generic)
+
+            A = type_template(:in)
+            B = type_template(:out)
+            C = type_template
+
+            D = type_member(fixed: Integer)
+            E = type_member(fixed: Integer, upper: T::Array[Numeric])
+            F = type_member(
+              fixed: Integer,
+              lower: T.any(Complex, T::Hash[Symbol, T::Array[Integer]]),
+              upper: T.nilable(Numeric)
+            )
+
+            class << self
+              extend(T::Generic)
+
+              A = type_template(:in)
+              B = type_template(:out)
+              C = type_template
+
+              D = type_member(fixed: Integer)
+              E = type_member(fixed: Integer, upper: Numeric)
+              F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+            end
+          end
+
+          class SimpleGenericType
+            extend T::Sig
+            extend T::Generic
+
+            Elem = type_member
+
+            sig { params(foo: Elem).void }
+            def initialize(foo)
+              @foo = foo
+            end
+
+            NullGenericType = SimpleGenericType[Integer].new(0)
+          end
         end
       RUBY
 
@@ -2322,9 +2343,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        module Quux
-          interface!
+        module Generics
+        end
 
+        class Generics::ComplexGenericType
           extend T::Generic
 
           A = type_template(:in)
@@ -2344,6 +2366,21 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             E = type_member(fixed: Integer, upper: Numeric)
             F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
           end
+        end
+
+        class Generics::SimpleGenericType
+          extend T::Generic
+
+          Elem = type_member
+
+          sig { params(foo: T.untyped).void }
+          def initialize(foo); end
+        end
+
+        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), T.untyped)
+
+        module Quux
+          interface!
 
           sig { abstract.returns(Integer) }
           def something; end
