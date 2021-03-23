@@ -51,14 +51,12 @@ module Tapioca
         type_list = types.map { |type| T::Utils.coerce(type).name }.join(", ")
         name = "#{name_of(constant)}[#{type_list}]"
 
-        # Create a clone of the constant with an overridden `name`
+        # Create a generic type with an overridden `name`
         # method that returns the name we constructed above.
         #
-        # Also, we try to memoize the clone based on the name, so that
-        # we don't have to keep recreating clones all the time.
-        @generic_instances[name] ||= constant.clone.tap do |clone|
-          clone.define_singleton_method(:name) { name }
-        end
+        # Also, we try to memoize the generic type based on the name, so that
+        # we don't have to keep recreating them all the time.
+        @generic_instances[name] ||= create_generic_type(constant, name)
       end
 
       sig do
@@ -93,6 +91,31 @@ module Tapioca
       end
 
       private
+
+      sig { params(constant: Module, name: String).returns(Module) }
+      def create_generic_type(constant, name)
+        generic_type = case constant
+        when Class
+          # For classes, we want to create a subclass, so that an instance of
+          # the generic class `Foo[Bar]` is still a `Foo`. That is:
+          # `Foo[Bar].new.is_a?(Foo)` should be true, which isn't the case
+          # if we just clone the class. But subclassing works just fine.
+          Class.new(constant)
+        else
+          # This can only be a module and it is fine to just clone modules
+          # since they can't have instances and will not have `is_a?` relationships.
+          # Moreover, we never `include`/`extend` any generic modules into the
+          # ancestor tree, so this doesn't become a problem with checking the
+          # instance of a class being `is_a?` of a module type.
+          constant.clone
+        end
+
+        # Let's set the `name` method to return the proper generic name
+        generic_type.define_singleton_method(:name) { name }
+
+        # Return the generic type we created
+        generic_type
+      end
 
       # This method is called from intercepted calls to `type_member` and `type_template`.
       # We get passed all the arguments to those methods, as well as the `T::Types::TypeVariable`
