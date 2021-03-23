@@ -114,9 +114,15 @@ module Tapioca
       end
 
       def generate_binstub
+        bin_stub_exists = File.exist?("bin/tapioca")
         installer = Bundler::Installer.new(Bundler.root, Bundler.definition)
         spec = Bundler.definition.specs.find { |s| s.name == "tapioca" }
         installer.generate_bundler_executable_stubs(spec, { force: true })
+        if bin_stub_exists
+          shell.say_status(:force, "bin/tapioca", :yellow)
+        else
+          shell.say_status(:create, "bin/tapioca", :green)
+        end
       end
 
       no_commands do
