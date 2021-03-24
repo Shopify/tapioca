@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    tapioca (0.4.18)
+    tapioca (0.4.19)
       bundler (>= 1.17.3)
       parlour (>= 2.1.0)
       pry (>= 0.12.2)
@@ -187,7 +187,7 @@ GEM
     smart_properties (1.15.0)
     sorbet (0.5.6352)
       sorbet-static (= 0.5.6352)
-    sorbet-runtime (0.5.6352)
+    sorbet-runtime (0.5.6353)
     sorbet-static (0.5.6352-universal-darwin-14)
     sorbet-static (0.5.6352-universal-darwin-15)
     sorbet-static (0.5.6352-universal-darwin-16)
