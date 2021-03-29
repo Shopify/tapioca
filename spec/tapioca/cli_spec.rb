@@ -501,6 +501,26 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
+    it 'can generates RBI files silently' do
+      output = execute("dsl", "--silent")
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+
+        Done
+        All operations performed in working directory.
+        Please review changes and commit them.
+      OUTPUT
+
+      assert_path_exists("#{outdir}/baz/role.rbi")
+      assert_path_exists("#{outdir}/post.rbi")
+      assert_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
     it 'removes stale RBI files' do
       FileUtils.mkdir_p("#{outdir}/to_be_deleted")
       FileUtils.touch("#{outdir}/to_be_deleted/foo.rbi")

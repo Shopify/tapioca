@@ -66,9 +66,13 @@ module Tapioca
         type: :boolean,
         default: false,
         desc: "Verifies RBIs are up-to-date"
+      option :silent,
+        aliases: ["-s"],
+        type: :boolean,
+        desc: "Silences file creation output"
       def dsl(*constants)
         Tapioca.silence_warnings do
-          generator.build_dsl(constants, should_verify: options[:verify])
+          generator.build_dsl(constants, should_verify: options[:verify], silent: options[:silent])
         end
       end
 
