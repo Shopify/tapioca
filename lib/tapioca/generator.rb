@@ -146,7 +146,12 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        filename = compile_dsl_rbi(constant, contents, outpath: Pathname.new(outpath), silent: silent)
+        filename = compile_dsl_rbi(
+          constant,
+          contents,
+          outpath: Pathname.new(outpath),
+          silent: should_verify || silent
+        )
         rbi_files_to_purge.delete(filename) if filename
       end
       say("")
