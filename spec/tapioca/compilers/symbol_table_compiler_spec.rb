@@ -2404,6 +2404,34 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("can compile sealed generics") do
+      add_ruby_file("sealed_generic.rb", <<~RUBY)
+        class Foo
+          extend T::Sig
+          extend T::Helpers
+          extend T::Generic
+
+          sealed!
+
+          Elem = type_member
+        end
+
+        Foo[Integer] # this should not trigger an error
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sealed!
+
+          extend T::Generic
+
+          Elem = type_member
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles structs with default values") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct

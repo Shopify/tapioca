@@ -100,7 +100,7 @@ module Tapioca
           # the generic class `Foo[Bar]` is still a `Foo`. That is:
           # `Foo[Bar].new.is_a?(Foo)` should be true, which isn't the case
           # if we just clone the class. But subclassing works just fine.
-          Class.new(constant)
+          create_sealed_safe_subclass(constant)
         else
           # This can only be a module and it is fine to just clone modules
           # since they can't have instances and will not have `is_a?` relationships.
@@ -148,6 +148,32 @@ module Tapioca
           lower,
           upper
         )
+      end
+
+      sig { params(constant: Class).returns(Class) }
+      def create_sealed_safe_subclass(constant)
+        # If the constant is not sealed let's just bail early.
+        # We just return a subclass of the constant.
+        return Class.new(constant) unless T::Private::Sealed.sealed_module?(constant)
+
+        # Since sealed classes can normally not be subclassed, we need to trick
+        # sealed classes into thinking that the generic type we are
+        # creating by subclassing is actually safe for sealed types.
+        #
+        # Get the filename the sealed class was declared in
+        decl_file = constant.instance_variable_get(:@sorbet_sealed_module_decl_file)
+        begin
+          # Clear the current declaration filename on the class
+          constant.remove_instance_variable(:@sorbet_sealed_module_decl_file)
+          # Make this file be the declaration filename so that Sorbet runtime
+          # does not shout at us for an invalid subclassing.
+          T.cast(constant, T::Helpers).sealed!
+          # return a subclass
+          Class.new(constant)
+        ensure
+          # Reinstate the original declaration filename
+          constant.instance_variable_set(:@sorbet_sealed_module_decl_file, decl_file)
+        end
       end
 
       sig { params(constant: Module).returns(T::Hash[Integer, String]) }
