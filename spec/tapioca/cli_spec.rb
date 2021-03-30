@@ -619,7 +619,9 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
           assert_includes(output, <<~OUTPUT)
             RBI files are out-of-date, please run `bin/tapioca dsl` to update.
-            Reason: New file(s) introduced.
+            Reason:
+              File(s) added:
+              - #{outdir}/image.rbi
           OUTPUT
           assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
         end
@@ -660,8 +662,9 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
           assert_includes(output, <<~OUTPUT)
             RBI files are out-of-date, please run `bin/tapioca dsl` to update.
-            Reason: File(s) updated:
-              - sorbet/rbi/dsl/image.rbi
+            Reason:
+              File(s) changed:
+              - #{outdir}/image.rbi
           OUTPUT
           assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
         end
