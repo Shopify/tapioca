@@ -501,8 +501,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'can generates RBI files silently' do
-      output = execute("dsl", "--silent")
+    it 'can generates RBI files quietly' do
+      output = execute("dsl", "--quiet")
 
       assert_equal(<<~OUTPUT, output)
         Loading Rails application... Done

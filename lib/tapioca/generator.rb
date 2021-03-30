@@ -120,10 +120,10 @@ module Tapioca
       params(
         requested_constants: T::Array[String],
         should_verify: T::Boolean,
-        silent: T::Boolean
+        quiet: T::Boolean
       ).void
     end
-    def build_dsl(requested_constants, should_verify: false, silent: false)
+    def build_dsl(requested_constants, should_verify: false, quiet: false)
       load_application(eager_load: requested_constants.empty?)
       load_dsl_generators
 
@@ -150,7 +150,7 @@ module Tapioca
           constant,
           contents,
           outpath: Pathname.new(outpath),
-          silent: should_verify || silent
+          quiet: should_verify || quiet
         )
         rbi_files_to_purge.delete(filename) if filename
       end
@@ -513,10 +513,10 @@ module Tapioca
     end
 
     sig do
-      params(constant: Module, contents: String, outpath: Pathname, silent: T::Boolean)
+      params(constant: Module, contents: String, outpath: Pathname, quiet: T::Boolean)
         .returns(T.nilable(Pathname))
     end
-    def compile_dsl_rbi(constant, contents, outpath: config.outpath, silent: false)
+    def compile_dsl_rbi(constant, contents, outpath: config.outpath, quiet: false)
       return if contents.nil?
 
       constant_name = Module.instance_method(:name).bind(constant).call
@@ -533,7 +533,7 @@ module Tapioca
       FileUtils.mkdir_p(File.dirname(filename))
       File.write(filename, out)
 
-      unless silent
+      unless quiet
         say("Wrote: ", [:green])
         say(filename)
       end
