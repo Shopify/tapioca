@@ -134,7 +134,7 @@ module Tapioca
       end
       say("")
 
-      outpath = should_verify ? Dir.mktmpdir : config.outpath
+      outpath = should_verify ? Pathname.new(Dir.mktmpdir) : config.outpath
       rbi_files_to_purge = existing_rbi_filenames(requested_constants)
 
       compiler = Compilers::DslCompiler.new(
@@ -145,19 +145,27 @@ module Tapioca
         }
       )
 
+      constant_lookup = {}
+
       compiler.run do |constant, contents|
+        constant_name = Module.instance_method(:name).bind(constant).call
+
         filename = compile_dsl_rbi(
-          constant,
+          constant_name,
           contents,
-          outpath: Pathname.new(outpath),
+          outpath: outpath,
           quiet: should_verify || quiet
         )
-        rbi_files_to_purge.delete(filename) if filename
+
+        if filename
+          rbi_files_to_purge.delete(filename)
+          constant_lookup[filename.relative_path_from(outpath)] = constant_name
+        end
       end
       say("")
 
       if should_verify
-        perform_dsl_verification(outpath)
+        perform_dsl_verification(outpath, constant_lookup)
       else
         purge_stale_dsl_rbi_files(rbi_files_to_purge)
 
@@ -513,20 +521,19 @@ module Tapioca
     end
 
     sig do
-      params(constant: Module, contents: String, outpath: Pathname, quiet: T::Boolean)
+      params(constant_name: String, contents: String, outpath: Pathname, quiet: T::Boolean)
         .returns(T.nilable(Pathname))
     end
-    def compile_dsl_rbi(constant, contents, outpath: config.outpath, quiet: false)
+    def compile_dsl_rbi(constant_name, contents, outpath: config.outpath, quiet: false)
       return if contents.nil?
 
-      constant_name = Module.instance_method(:name).bind(constant).call
       rbi_name = constant_name.underscore + ".rbi"
       filename = outpath / rbi_name
 
       out = String.new
       out << rbi_header(
         "#{Config::DEFAULT_COMMAND} dsl #{constant_name}",
-        reason: "dynamic methods in `#{constant.name}`"
+        reason: "dynamic methods in `#{constant_name}`"
       )
       out << contents
 
@@ -541,23 +548,23 @@ module Tapioca
       filename
     end
 
-    sig { params(tmp_dir: Pathname).returns(T::Array[String]) }
+    sig { params(tmp_dir: Pathname).returns(T::Hash[String, Symbol]) }
     def verify_dsl_rbi(tmp_dir:)
-      errors = []
+      diff = {}
 
       existing_rbis = rbi_files_in(config.outpath)
       new_rbis = rbi_files_in(tmp_dir)
 
       added_files = (new_rbis - existing_rbis)
 
-      unless added_files.empty?
-        errors << build_error_for_files(:added, added_files)
+      added_files.each do |file|
+        diff[file] = :added
       end
 
       removed_files = (existing_rbis - new_rbis)
 
-      unless removed_files.empty?
-        errors << build_error_for_files(:removed, removed_files)
+      removed_files.each do |file|
+        diff[file] = :removed
       end
 
       common_files = (existing_rbis & new_rbis)
@@ -566,14 +573,14 @@ module Tapioca
         filename unless FileUtils.identical?(config.outpath / filename, tmp_dir / filename)
       end.compact
 
-      unless changed_files.empty?
-        errors << build_error_for_files(:changed, changed_files)
+      changed_files.each do |file|
+        diff[file] = :changed
       end
 
-      errors
+      diff
     end
 
-    sig { params(cause: Symbol, files: T::Array[Pathname]).returns(String) }
+    sig { params(cause: Symbol, files: T::Array[String]).returns(String) }
     def build_error_for_files(cause, files)
       filenames = files.map do |file|
         config.outpath / file
@@ -589,18 +596,25 @@ module Tapioca
       end.sort
     end
 
-    sig { params(dir: String).void }
-    def perform_dsl_verification(dir)
-      errors = verify_dsl_rbi(tmp_dir: Pathname.new(dir))
+    sig { params(dir: Pathname, constant_lookup: T::Hash[String, String]).void }
+    def perform_dsl_verification(dir, constant_lookup)
+      diff = verify_dsl_rbi(tmp_dir: dir)
 
-      if errors.empty?
+      if diff.empty?
         say("Nothing to do, all RBIs are up-to-date.")
       else
-        say("RBI files are out-of-date, please run `#{Config::DEFAULT_COMMAND} dsl` to update.")
+        constants = T.unsafe(constant_lookup).values_at(*diff.keys).join(" ")
+
+        say("RBI files are out-of-date, please run:")
+        say("  `#{Config::DEFAULT_COMMAND} dsl #{constants}`")
+
+        say("")
+
         say("Reason:", [:red])
-        errors.each do |error|
-          say(error)
+        diff.group_by(&:last).sort.each do |cause, diff_for_cause|
+          say(build_error_for_files(cause, diff_for_cause.map(&:first)))
         end
+
         exit(1)
       end
     ensure
