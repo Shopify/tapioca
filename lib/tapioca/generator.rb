@@ -529,37 +529,67 @@ module Tapioca
       filename
     end
 
-    sig { params(tmp_dir: Pathname).returns(T.nilable(String)) }
+    sig { params(tmp_dir: Pathname).returns(T::Array[String]) }
     def verify_dsl_rbi(tmp_dir:)
-      existing_rbis = existing_rbi_filenames([]).sort
-      new_rbis = existing_rbi_filenames([], path: tmp_dir).grep_v(/gem|shim/).sort
+      errors = []
 
-      return "New file(s) introduced." if existing_rbis.length != new_rbis.length
+      existing_rbis = rbi_files_in(config.outpath)
+      new_rbis = rbi_files_in(tmp_dir)
 
-      desynced_files = []
+      added_files = (new_rbis - existing_rbis)
 
-      (0..existing_rbis.length - 1).each do |i|
-        desynced_files << new_rbis[i] unless FileUtils.identical?(existing_rbis[i], new_rbis[i])
+      unless added_files.empty?
+        errors << build_error_for_files(:added, added_files)
       end
 
-      unless desynced_files.empty?
-        filenames = desynced_files.map { |f| f.to_s.sub!(tmp_dir.to_s, "sorbet/rbi/dsl") }.join("\n  - ")
+      removed_files = (existing_rbis - new_rbis)
 
-        return "File(s) updated:\n  - #{filenames}"
+      unless removed_files.empty?
+        errors << build_error_for_files(:removed, removed_files)
       end
 
-      nil
+      common_files = (existing_rbis & new_rbis)
+
+      changed_files = common_files.map do |filename|
+        filename unless FileUtils.identical?(config.outpath / filename, tmp_dir / filename)
+      end.compact
+
+      unless changed_files.empty?
+        errors << build_error_for_files(:changed, changed_files)
+      end
+
+      errors
+    end
+
+    sig { params(cause: Symbol, files: T::Array[Pathname]).returns(String) }
+    def build_error_for_files(cause, files)
+      filenames = files.map do |file|
+        config.outpath / file
+      end.join("\n  - ")
+
+      "  File(s) #{cause}:\n  - #{filenames}"
+    end
+
+    sig { params(path: Pathname).returns(T::Array[Pathname]) }
+    def rbi_files_in(path)
+      Pathname.glob(path / "**/*.rbi").map do |file|
+        file.relative_path_from(path)
+      end.sort
     end
 
     sig { params(dir: String).void }
     def perform_dsl_verification(dir)
-      if (error = verify_dsl_rbi(tmp_dir: Pathname.new(dir)))
-        say("RBI files are out-of-date, please run `#{Config::DEFAULT_COMMAND} dsl` to update.")
-        say("Reason: ", [:red])
-        say(error)
-        exit(1)
-      else
+      errors = verify_dsl_rbi(tmp_dir: Pathname.new(dir))
+
+      if errors.empty?
         say("Nothing to do, all RBIs are up-to-date.")
+      else
+        say("RBI files are out-of-date, please run `#{Config::DEFAULT_COMMAND} dsl` to update.")
+        say("Reason:", [:red])
+        errors.each do |error|
+          say(error)
+        end
+        exit(1)
       end
     ensure
       FileUtils.remove_entry(dir)
