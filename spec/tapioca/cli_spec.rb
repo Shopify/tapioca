@@ -637,8 +637,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         it 'advises of new file(s) and returns exit_status 1' do
           output = execute("dsl", "--verify")
 
-          assert_includes(output, <<~OUTPUT)
-            RBI files are out-of-date, please run `bin/tapioca dsl` to update.
+          assert_equal(output, <<~OUTPUT)
+            Loading Rails application... Done
+            Loading DSL generator classes... Done
+            Checking for out-of-date RBIs...
+
+
+            RBI files are out-of-date, please run:
+              `bin/tapioca dsl Image`
+
             Reason:
               File(s) added:
               - #{outdir}/image.rbi
@@ -680,8 +687,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
         it 'advises of modified file(s) and returns exit status 1' do
           output = execute("dsl", "--verify")
 
-          assert_includes(output, <<~OUTPUT)
-            RBI files are out-of-date, please run `bin/tapioca dsl` to update.
+          assert_equal(output, <<~OUTPUT)
+            Loading Rails application... Done
+            Loading DSL generator classes... Done
+            Checking for out-of-date RBIs...
+
+
+            RBI files are out-of-date, please run:
+              `bin/tapioca dsl Image`
+
             Reason:
               File(s) changed:
               - #{outdir}/image.rbi
