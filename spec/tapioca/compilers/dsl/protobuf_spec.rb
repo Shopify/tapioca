@@ -28,7 +28,10 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      assert_equal(["Cart"], gathered_constants)
+      assert_equal(
+        ["Cart", "Google::Protobuf::Map", "Google::Protobuf::RepeatedField"],
+        gathered_constants
+      )
     end
   end
 
@@ -55,6 +58,9 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
           sig { params(value: Integer).returns(Integer) }
           def customer_id=(value); end
+
+          sig { params(customer_id: Integer, shop_id: Integer).void }
+          def initialize(customer_id: nil, shop_id: nil); end
 
           sig { returns(Integer) }
           def shop_id; end
@@ -88,6 +94,9 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
           sig { params(value: String).returns(String) }
           def events=(value); end
+
+          sig { params(events: String).void }
+          def initialize(events: nil); end
         end
       RBI
 
@@ -118,6 +127,9 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
           sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
           def cart_item_index=(value); end
+
+          sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
+          def initialize(cart_item_index: nil); end
         end
       RBI
 
@@ -149,6 +161,9 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class Cart
+          sig { params(value_type: Cart::VALUE_TYPE).void }
+          def initialize(value_type: nil); end
+
           sig { returns(Cart::VALUE_TYPE) }
           def value_type; end
 
@@ -185,11 +200,92 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class Cart
+          sig { params(value_type: Cart::MYVALUETYPE).void }
+          def initialize(value_type: nil); end
+
           sig { returns(Cart::MYVALUETYPE) }
           def value_type; end
 
           sig { params(value: Cart::MYVALUETYPE).returns(Cart::MYVALUETYPE) }
           def value_type=(value); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Cart))
+    end
+
+    it("generates methods in RBI files for repeated fields in Protobufs") do
+      add_ruby_file("protobuf.rb", <<~RUBY)
+        require 'google/protobuf/wrappers_pb'
+
+        Google::Protobuf::DescriptorPool.generated_pool.build do
+          add_file("cart.proto", :syntax => :proto3) do
+            add_message "MyCart" do
+              repeated :customer_ids, :int32, 1
+              repeated :indices, :message, 2, "google.protobuf.UInt64Value"
+            end
+          end
+        end
+
+        Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+        class Cart
+          sig { returns(Google::Protobuf::RepeatedField[Integer]) }
+          def customer_ids; end
+
+          sig { params(value: Google::Protobuf::RepeatedField[Integer]).returns(Google::Protobuf::RepeatedField[Integer]) }
+          def customer_ids=(value); end
+
+          sig { returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+          def indices; end
+
+          sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+          def indices=(value); end
+
+          sig { params(customer_ids: T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer]), indices: T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value])).void }
+          def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Cart))
+    end
+
+    it("generates methods in RBI files for map fields in Protobufs") do
+      add_ruby_file("protobuf.rb", <<~RUBY)
+        require 'google/protobuf/wrappers_pb'
+
+        Google::Protobuf::DescriptorPool.generated_pool.build do
+          add_file("cart.proto", :syntax => :proto3) do
+            add_message "MyCart" do
+              map :customers, :string, :int32, 1
+              map :stores, :string, :message, 2, "google.protobuf.UInt64Value"
+            end
+          end
+        end
+
+        Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+        class Cart
+          sig { returns(Google::Protobuf::Map[String, Integer]) }
+          def customers; end
+
+          sig { params(value: Google::Protobuf::Map[String, Integer]).returns(Google::Protobuf::Map[String, Integer]) }
+          def customers=(value); end
+
+          sig { params(customers: T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer]), stores: T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value])).void }
+          def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
+
+          sig { returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+          def stores; end
+
+          sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]).returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+          def stores=(value); end
         end
       RBI
 
