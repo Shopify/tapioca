@@ -1,6 +1,3 @@
-# https://services.shopify.io/services/tapioca/production
-owners:
-  - Shopify/sorbet
 classification: library
 slack_channels:
-  - help-ruby-typing
+- help-ruby-typing
