@@ -145,8 +145,6 @@ module Tapioca
         }
       )
 
-      constant_lookup = {}
-
       compiler.run do |constant, contents|
         constant_name = Module.instance_method(:name).bind(constant).call
 
@@ -159,13 +157,12 @@ module Tapioca
 
         if filename
           rbi_files_to_purge.delete(filename)
-          constant_lookup[filename.relative_path_from(outpath)] = constant_name
         end
       end
       say("")
 
       if should_verify
-        perform_dsl_verification(outpath, constant_lookup)
+        perform_dsl_verification(outpath)
       else
         purge_stale_dsl_rbi_files(rbi_files_to_purge)
 
@@ -596,17 +593,15 @@ module Tapioca
       end.sort
     end
 
-    sig { params(dir: Pathname, constant_lookup: T::Hash[String, String]).void }
-    def perform_dsl_verification(dir, constant_lookup)
+    sig { params(dir: Pathname).void }
+    def perform_dsl_verification(dir)
       diff = verify_dsl_rbi(tmp_dir: dir)
 
       if diff.empty?
         say("Nothing to do, all RBIs are up-to-date.")
       else
-        constants = T.unsafe(constant_lookup).values_at(*diff.keys).join(" ")
-
         say("RBI files are out-of-date, please run:")
-        say("  `#{Config::DEFAULT_COMMAND} dsl #{constants}`")
+        say("  `#{Config::DEFAULT_COMMAND} dsl`")
 
         say("")
 

@@ -644,7 +644,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
 
             RBI files are out-of-date, please run:
-              `bin/tapioca dsl Image`
+              `bin/tapioca dsl`
 
             Reason:
               File(s) added:
@@ -694,7 +694,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
 
             RBI files are out-of-date, please run:
-              `bin/tapioca dsl Image`
+              `bin/tapioca dsl`
 
             Reason:
               File(s) changed:
