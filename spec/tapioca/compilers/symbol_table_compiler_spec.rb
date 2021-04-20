@@ -72,6 +72,28 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         Bar::Arr = T.let(T.unsafe(nil), Array)
+        Bar::Foo = T.type_alias { T.any(String, Symbol) }
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("compiles complex type aliases") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        module Bar
+          module A
+            class B; end
+
+            Foo = ::T.type_alias { T.any(String, Symbol, A, B) }
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Bar; end
+        module Bar::A; end
+        class Bar::A::B; end
+        Bar::A::Foo = T.type_alias { T.any(Bar::A, Bar::A::B, String, Symbol) }
       RBI
 
       assert_equal(output, compile)

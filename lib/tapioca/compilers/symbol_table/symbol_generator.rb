@@ -139,6 +139,11 @@ module Tapioca
           klass = class_of(value)
           klass_name = name_of(klass)
 
+          if klass_name == "T::Private::Types::TypeAlias"
+            tree << RBI::Const.new(name, "T.type_alias { #{T.unsafe(value).aliased_type} }")
+            return
+          end
+
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
           type_name = public_module?(klass) && klass_name || "T.untyped"
