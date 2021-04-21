@@ -100,7 +100,7 @@ module Tapioca
           # the generic class `Foo[Bar]` is still a `Foo`. That is:
           # `Foo[Bar].new.is_a?(Foo)` should be true, which isn't the case
           # if we just clone the class. But subclassing works just fine.
-          create_sealed_safe_subclass(constant)
+          create_safe_subclass(constant)
         else
           # This can only be a module and it is fine to just clone modules
           # since they can't have instances and will not have `is_a?` relationships.
@@ -151,28 +151,31 @@ module Tapioca
       end
 
       sig { params(constant: Class).returns(Class) }
-      def create_sealed_safe_subclass(constant)
-        # If the constant is not sealed let's just bail early.
-        # We just return a subclass of the constant.
-        return Class.new(constant) unless T::Private::Sealed.sealed_module?(constant)
+      def create_safe_subclass(constant)
+        # Lookup the "inherited" class method
+        inherited_method = constant.method(:inherited)
+        # and the module that defines it
+        owner = inherited_method.owner
 
-        # Since sealed classes can normally not be subclassed, we need to trick
-        # sealed classes into thinking that the generic type we are
-        # creating by subclassing is actually safe for sealed types.
-        #
-        # Get the filename the sealed class was declared in
-        decl_file = constant.instance_variable_get(:@sorbet_sealed_module_decl_file)
+        # If no one has overriden the inherited method yet, just subclass
+        return Class.new(constant) if Class == owner
+
         begin
-          # Clear the current declaration filename on the class
-          constant.remove_instance_variable(:@sorbet_sealed_module_decl_file)
-          # Make this file be the declaration filename so that Sorbet runtime
-          # does not shout at us for an invalid subclassing.
-          T.cast(constant, T::Helpers).sealed!
+          # Otherwise, some inherited method could be preventing us
+          # from creating subclasses, so let's override it and rescue
+          owner.send(:define_method, :inherited) do |s|
+            begin
+              inherited_method.call(s)
+            rescue
+              # Ignoring errors
+            end
+          end
+
           # return a subclass
           Class.new(constant)
         ensure
-          # Reinstate the original declaration filename
-          constant.instance_variable_set(:@sorbet_sealed_module_decl_file, decl_file)
+          # Reinstate the original inherited method back.
+          owner.send(:define_method, :inherited, inherited_method)
         end
       end
 

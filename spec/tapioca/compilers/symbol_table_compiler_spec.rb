@@ -2432,6 +2432,67 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("can compile typed struct generics") do
+      add_ruby_file("tstruct_generic.rb", <<~RUBY)
+        class Foo < T::Struct
+          extend T::Generic
+
+          Elem = type_member
+
+          const :foo, Elem
+        end
+
+        Foo[Integer] # this should not trigger an error
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo < ::T::Struct
+          extend T::Generic
+
+          Elem = type_member
+
+          const :foo, T.untyped
+
+          class << self
+            def inherited(s); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("can compile generics that prohibit subclasses") do
+      add_ruby_file("non_subclassable_generic.rb", <<~RUBY)
+        class Foo
+          extend T::Generic
+
+          Elem = type_member
+
+          def self.inherited(s)
+            super(s)
+            raise "Cannot subclass Foo"
+          end
+        end
+
+        Foo[Integer] # this should not trigger an error
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          extend T::Generic
+
+          Elem = type_member
+
+          class << self
+            def inherited(s); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles structs with default values") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct
