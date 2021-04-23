@@ -12,10 +12,14 @@ module Tapioca
       module Foo
         PI = 3.1415
 
-        def self.bar(a = 1, b: 2, **opts)
+        def self.foo(a = 1, b: 2, **opts)
           number = opts[:number] || 0
           39 + a + b + number
         end
+      end
+
+      module Reopened
+        E = 2.718281828459045
       end
     RB
 
@@ -28,11 +32,13 @@ module Tapioca
 
       module Foo
         class << self
-          def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+          def foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
         end
       end
 
       Foo::PI = T.let(T.unsafe(nil), Float)
+      module Reopened; end
+      Reopened::E = T.let(T.unsafe(nil), Float)
     RBI
 
     BAR_RB = <<~RB
@@ -43,6 +49,11 @@ module Tapioca
           number = opts[:number] || 0
           39 + a + b + number
         end
+      end
+
+      module Reopened
+        PI = Math::PI
+        TAU = 2 * PI
       end
     RB
 
@@ -60,6 +71,9 @@ module Tapioca
       end
 
       Bar::PI = T.let(T.unsafe(nil), Float)
+      module Reopened; end
+      Reopened::PI = T.let(T.unsafe(nil), Float)
+      Reopened::TAU = T.let(T.unsafe(nil), Float)
     RBI
 
     BAZ_RB = <<~RB
@@ -282,7 +296,7 @@ module Tapioca
             write("rbi/foo.rbi", <<~RBI)
               module Foo
                 sig { params(a: String, b: Integer, opts: T.untyped).void }
-                def self.bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+                def self.foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
               end
             RBI
 
@@ -293,7 +307,7 @@ module Tapioca
             RBI
 
             write("rbi/foo/bar/baz.rbi", <<~RBI)
-              module Foo:: Bar
+              module Foo::Bar
                 def bar; end
               end
             RBI
@@ -318,7 +332,7 @@ module Tapioca
 
               class << self
                 sig { params(a: String, b: Integer, opts: T.untyped).void }
-                def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+                def foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
               end
             end
 
@@ -327,6 +341,8 @@ module Tapioca
             end
 
             Foo::PI = T.let(T.unsafe(nil), Float)
+            module Reopened; end
+            Reopened::E = T.let(T.unsafe(nil), Float)
           RBI
 
           assert_empty_stderr(result)
@@ -435,7 +451,7 @@ module Tapioca
             write("rbi/foo.rbi", <<~RBI)
               module Foo
                 class << self
-                  def bar; end
+                  def foo; end
                 end
               end
             RBI
@@ -483,7 +499,7 @@ module Tapioca
         it "must perform postrequire properly" do
           foo = mock_gem("foo", "0.0.1") do
             write("lib/foo.rb", FOO_RB)
-            write("lib/foo/secret.rb", "class Foo::Secret; end")
+            write("lib/foo/secret.rb", "class Secret; end")
           end
 
           @project.require_mock_gem(foo)
@@ -501,7 +517,7 @@ module Tapioca
 
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
             #{FOO_RBI.rstrip}
-            class Foo::Secret; end
+            class Secret; end
           RBI
 
           assert_empty_stderr(result)
@@ -511,7 +527,7 @@ module Tapioca
         it "loads gems that are marked `require: false`" do
           foo = mock_gem("foo", "0.0.1") do
             write("lib/foo.rb", FOO_RB)
-            write("lib/foo/secret.rb", "class Foo::Secret; end")
+            write("lib/foo/secret.rb", "class Secret; end")
           end
 
           bar = mock_gem("bar", "1.0.0") do
@@ -543,7 +559,7 @@ module Tapioca
           refute_project_file_exist("sorbet/rbi/gems/bar@1.0.0.rbi")
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
             #{FOO_RBI.rstrip}
-            class Foo::Secret; end
+            class Secret; end
           RBI
 
           assert_empty_stderr(result)
