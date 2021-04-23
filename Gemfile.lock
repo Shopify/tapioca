@@ -136,7 +136,7 @@ GEM
     pry-byebug (3.7.0)
       byebug (~> 11.0)
       pry (~> 0.10)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-protection (2.1.0)
       rack
     rack-test (1.1.0)
