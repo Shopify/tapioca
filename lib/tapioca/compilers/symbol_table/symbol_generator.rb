@@ -567,10 +567,25 @@ module Tapioca
         def compile_method(symbol_name, constant, method)
           return unless method
           return unless method.owner == constant
-          return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
 
-          signature = signature_of(method)
-          method = T.let(signature.method, UnboundMethod) if signature
+          begin
+            signature = signature_of(method)
+            method = T.let(signature.method, UnboundMethod) if signature
+
+            case method_in_gem?(method)
+            when nil
+              # This means that this is a C-method. Thus, we want to
+              # skip it only if the constant is an ignored one, since
+              # that probably means that we've hit a C-method for a
+              # core type.
+              return if symbol_ignored?(symbol_name)
+            when false
+              # Do not process this method, if it is not defined by the current gem
+              return
+            end
+          rescue SignatureBlockError
+            signature = nil
+          end
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
@@ -747,12 +762,12 @@ module Tapioca
           " " * @indent + str
         end
 
-        sig { params(method: UnboundMethod).returns(T::Boolean) }
+        sig { params(method: UnboundMethod).returns(T.nilable(T::Boolean)) }
         def method_in_gem?(method)
-          source_location = method.source_location&.first
-          return false if source_location.nil?
+          source_location, _ = method.source_location
+          return nil unless source_location
 
-          gem.contains_path?(source_location)
+          source_location == "(eval)" || gem.contains_path?(source_location)
         end
 
         sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
@@ -935,11 +950,13 @@ module Tapioca
           Class.instance_method(:superclass).bind(constant).call
         end
 
+        SignatureBlockError = Class.new(StandardError)
+
         sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
         def signature_of(method)
           T::Private::Methods.signature_for_method(method)
         rescue LoadError, StandardError
-          nil
+          raise SignatureBlockError
         end
 
         sig { params(constant: T::Types::Base).returns(String) }

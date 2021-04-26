@@ -2306,16 +2306,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           prop :bar, String
           const :baz, T::Hash[String, T.untyped]
           prop :quux, T.untyped, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         class Baz
           abstract!
-
-          def initialize(*args, &blk); end
 
           sig { abstract.void }
           def do_it; end
@@ -2452,10 +2446,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           Elem = type_member
 
           const :foo, T.untyped
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -2530,10 +2520,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           prop :l, T::Array[Foo], default: T.unsafe(nil)
           prop :m, T::Hash[Foo, Foo], default: T.unsafe(nil)
           prop :n, Foo, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
