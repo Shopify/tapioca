@@ -2231,10 +2231,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Foo
           sig { params(a: Integer, b: String).returns(Integer) }
           def bar(a, b:); end
+
           sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
           def baz(a); end
+
           sig { params(a: Integer, b: String).void }
           def foo(a, b:); end
+
           sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.void).void }
           def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
 
@@ -2291,11 +2294,15 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           sig { returns(String) }
           def bar; end
+
           sig { params(baz: T::Hash[String, Object]).returns(T::Hash[String, Object]) }
           def baz=(baz); end
+
           sig { returns(T::Array[Integer]) }
           def foo; end
+
           def foo=(_arg0); end
+
           sig { override.returns(Integer) }
           def something; end
         end
@@ -2463,8 +2470,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           def bar(*args, &blk); end
+
           sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
           def baz(a); end
+
           def foo(*args, &blk); end
         end
       RBI
@@ -2502,8 +2511,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           class << self
             sig { returns(T.attached_class) }
             def a; end
+
             sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
             def b; end
+
             sig { returns(Foo::FooAttachedClass) }
             def c; end
           end
