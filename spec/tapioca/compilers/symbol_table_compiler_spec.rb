@@ -96,16 +96,16 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Object < ::BasicObject
-          include(::Kernel)
+          include ::Kernel
 
           def hello; end
         end
       RBI
 
       compiled = compile
-        .gsub(/^\s+include\(::Minitest::Expectations\)\s/, "")
-        .gsub(/^\s+include\(::JSON::Ext::Generator::GeneratorMethods::Object\)\s/, "")
-        .gsub(/^\s+include\(::PP::ObjectMixin\)\s/, "")
+        .gsub(/^\s+include ::Minitest::Expectations\s/, "")
+        .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
+        .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
       assert_equal(output, compiled)
     end
@@ -134,12 +134,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Bar
-          include(::ModuleA)
-          include(::ModuleB)
-          include(::ModuleC)
-          extend(::ModuleC)
-          extend(::ModuleB)
-          extend(::ModuleA)
+          include ::ModuleA
+          include ::ModuleB
+          include ::ModuleC
+
+          extend ::ModuleC
+          extend ::ModuleB
+          extend ::ModuleA
         end
 
         module ModuleA; end
@@ -215,18 +216,19 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Hash
-          include(::Enumerable)
-          include(::JSON::Ext::Generator::GeneratorMethods::Hash)
+          include ::Enumerable
+          include ::JSON::Ext::Generator::GeneratorMethods::Hash
 
           def to_bar; end
         end
 
         class String
-          include(::Comparable)
-          include(::JSON::Ext::Generator::GeneratorMethods::String)
-          include(::Colorize::InstanceMethods)
-          extend(::JSON::Ext::Generator::GeneratorMethods::String::Extend)
-          extend(::Colorize::ClassMethods)
+          include ::Comparable
+          include ::JSON::Ext::Generator::GeneratorMethods::String
+          include ::Colorize::InstanceMethods
+
+          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
+          extend ::Colorize::ClassMethods
 
           def to_foo(base = T.unsafe(nil)); end
         end
@@ -742,9 +744,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Bar < ::Baz
-          include(::Tutu)
-          include(::Foo)
-          extend(::Toto)
+          include ::Tutu
+          include ::Foo
+
+          extend ::Toto
         end
 
         class Baz
@@ -869,8 +872,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Bar
-          include(::Foo)
-          include(::Baz)
+          include ::Foo
+          include ::Baz
 
           class << self
             def abc; end
@@ -1538,10 +1541,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module BarConcern
-          mixes_in_class_methods(::BarConcern::Something)
+          mixes_in_class_methods ::BarConcern::Something
 
           class << self
-
             private
 
             def included(base); end
@@ -1553,10 +1555,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module Baz
-          extend(::SomeOtherConcern)
+          include ::FooConcern
+          include ::BarConcern
 
-          include(::FooConcern)
-          include(::BarConcern)
+          extend ::SomeOtherConcern
         end
 
         module Concern
@@ -1564,9 +1566,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module FooConcern
-          extend(::Concern)
+          extend ::Concern
 
-          mixes_in_class_methods(::FooConcern::CustomClassMethods)
+          mixes_in_class_methods ::FooConcern::CustomClassMethods
 
           def a_normal_method; end
         end
@@ -1676,11 +1678,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module ActiveModel; end
 
         module ActiveModel::Validations
-          extend(::ActiveSupport::Concern)
+          include ::ActiveModel::Validations::HelperMethods
 
-          include(::ActiveModel::Validations::HelperMethods)
+          extend ::ActiveSupport::Concern
 
-          mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
+          mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
         end
 
         module ActiveModel::Validations::ClassMethods; end
@@ -1923,7 +1925,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          extend(::Foo::Bar)
+          extend ::Foo::Bar
         end
 
         module Foo::Bar
@@ -2193,11 +2195,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Adt::Bar
-          include(::Adt)
+          include ::Adt
         end
 
         class Adt::Foo
-          include(::Adt)
+          include ::Adt
         end
 
         class Bar < ::T::Struct
@@ -2285,7 +2287,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Quux::Concrete
-          include(::Quux)
+          include ::Quux
 
           sig { returns(String) }
           def bar; end

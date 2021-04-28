@@ -48,8 +48,9 @@ module Contents
     module Baz; end
 
     class Baz::Role
-      include(::SmartProperties)
-      extend(::SmartProperties::ClassMethods)
+      include ::SmartProperties
+
+      extend ::SmartProperties::ClassMethods
     end
 
     class Baz::Test
