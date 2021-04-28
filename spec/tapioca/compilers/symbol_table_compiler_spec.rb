@@ -62,9 +62,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Bar
-          interface!
-
           extend T::Generic
+
+          interface!
 
           Elem = type_template(:in, fixed: Integer)
           K = type_member(upper: Numeric)
@@ -2319,9 +2319,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          sealed!
-
           extend T::Generic
+
+          sealed!
 
           Elem = type_member
         end
