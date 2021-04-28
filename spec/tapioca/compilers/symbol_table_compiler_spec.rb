@@ -2203,9 +2203,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Bar < ::T::Struct
-          const :foo, Integer
           prop :bar, String
           const :baz, T::Hash[String, T.untyped]
+          const :foo, Integer
           prop :quux, T.untyped, default: T.unsafe(nil)
 
           class << self
@@ -2223,9 +2223,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Buzz
-          const :foo, Integer
           prop :bar, String
           const :baz, T.proc.params(arg0: String).void
+          const :foo, Integer
         end
 
         class Foo
