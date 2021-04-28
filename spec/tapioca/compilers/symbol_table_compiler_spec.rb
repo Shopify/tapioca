@@ -35,11 +35,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar
-        end
-
-        class Foo
-        end
+        class Bar; end
+        class Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -145,14 +142,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           extend(::ModuleA)
         end
 
-        module ModuleA
-        end
-
-        module ModuleB
-        end
-
-        module ModuleC
-        end
+        module ModuleA; end
+        module ModuleB; end
+        module ModuleC; end
       RBI
 
       assert_equal(output, compile)
@@ -184,8 +176,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class SymbolTableCompilerTest
-        end
+        class SymbolTableCompilerTest; end
       RBI
 
       assert_equal(output, compile)
@@ -292,15 +283,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module A
-        end
-
+        module A; end
         <% if ruby_version(">= 2.4.0") %>
         A::ABC = T.let(T.unsafe(nil), Integer)
         <% else %>
         A::ABC = T.let(T.unsafe(nil), Fixnum)
         <% end %>
-
         A::DEF = T.let(T.unsafe(nil), String)
       RBI
 
@@ -371,8 +359,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
 
         module Foo::Bar
           def num(a); end
@@ -393,8 +380,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
 
         class Foo::Bar
           def num(a); end
@@ -417,11 +403,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
-
-        module Foo::Bar
-        end
+        module Foo; end
+        module Foo::Bar; end
 
         class Foo::Bar::Baz
           def num(a); end
@@ -444,11 +427,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
-
-        class Foo::Bar
-        end
+        module Foo; end
+        class Foo::Bar; end
 
         class Foo::Bar::Baz
           def num(a); end
@@ -472,8 +452,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar < ::Baz
-        end
+        class Bar < ::Baz; end
 
         class Baz
           def toto; end
@@ -494,14 +473,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
-
-        class Foo::Bar < ::Foo::Baz
-        end
-
-        class Foo::Baz
-        end
+        module Foo; end
+        class Foo::Bar < ::Foo::Baz; end
+        class Foo::Baz; end
       RBI
 
       assert_equal(output, compile)
@@ -526,14 +500,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         HTTPClient = WebMockHTTPClient
-
-        class WebAgent
-        end
-
+        class WebAgent; end
         WebAgent::CookieManager = HTTPClient::CookieManager
-
-        class WebMockHTTPClient
-        end
+        class WebMockHTTPClient; end
       RBI
 
       assert_equal(output, compile)
@@ -564,21 +533,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class MockClient
-        end
-
-        module MockModule
-        end
-
+        class MockClient; end
+        module MockModule; end
         MyClient = MockClient
-
         MyModule = MockModule
-
-        module SomeModule
-        end
-
+        module SomeModule; end
         SomeModule::OriginalClient = Class.new
-
         SomeModule::OriginalModule = Module.new
       RBI
 
@@ -599,14 +559,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Baz
-        end
-
-        module Foo
-        end
-
-        class Foo::Bar < ::Baz
-        end
+        class Baz; end
+        module Foo; end
+        class Foo::Bar < ::Baz; end
       RBI
 
       assert_equal(output, compile)
@@ -628,14 +583,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Toto
-        end
-
-        module Toto::Foo
-        end
-
-        class Toto::Foo::Bar
-        end
+        module Toto; end
+        module Toto::Foo; end
+        class Toto::Foo::Bar; end
       RBI
 
       assert_equal(output, compile)
@@ -705,8 +655,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = <<~RBI
-        module Foo
-        end
+        module Foo; end
 
         module Foo::Bar
           class << self
@@ -748,8 +697,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        class Foo::Bar < ::Numeric
-        end
+        class Foo::Bar < ::Numeric; end
       RBI
 
       assert_equal(output, compile)
@@ -847,28 +795,21 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class C1
-        end
+        class C1; end
 
         class C2
           def foo; end
         end
 
-        class C3
-        end
-
-        module M1
-        end
+        class C3; end
+        module M1; end
 
         module M2
           def foo; end
         end
 
-        module M3
-        end
-
-        class S1 < ::Struct
-        end
+        module M3; end
+        class S1 < ::Struct; end
 
         class S2 < ::Struct
           def foo; end
@@ -898,8 +839,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        class S4 < ::Struct
-        end
+        class S4 < ::Struct; end
       RBI
 
       assert_equal(output, compile)
@@ -937,11 +877,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        module Baz
-        end
-
-        module Foo
-        end
+        module Baz; end
+        module Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -979,8 +916,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar
-        end
+        class Bar; end
       RBI
 
       assert_equal(output, compile)
@@ -997,8 +933,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar
-        end
+        class Bar; end
       RBI
 
       assert_equal(output, compile)
@@ -1138,8 +1073,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Toto
-        end
+        class Toto; end
       RBI
 
       assert_equal(output, compile)
@@ -1172,8 +1106,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -1214,8 +1147,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -1345,8 +1277,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar
-        end
+        class Bar; end
       RBI
 
       assert_equal(output, compile)
@@ -1418,11 +1349,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        class Baz::Bar
-        end
-
-        class Baz::Toto < ::Baz::Bar
-        end
+        class Baz::Bar; end
+        class Baz::Toto < ::Baz::Bar; end
       RBI
 
       assert_equal(output, compile)
@@ -1437,17 +1365,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Toto
-        end
-
+        module Toto; end
         Toto::A = T.let(T.unsafe(nil), String)
-
         Toto::B = T.let(T.unsafe(nil), String)
-
         Toto::C = T.let(T.unsafe(nil), String)
-
         Toto::D = T.let(T.unsafe(nil), Array)
-
         Toto::NUMS = T.let(T.unsafe(nil), Array)
       RBI
 
@@ -1484,9 +1406,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Toto
-        end
-
+        module Toto; end
         Toto::A = T.let(T.unsafe(nil), Range)
       RBI
 
@@ -1509,8 +1429,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -1532,8 +1451,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module Foo
-        end
+        module Foo; end
       RBI
 
       assert_equal(output, compile)
@@ -1551,14 +1469,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module BasicObjectTest
-        end
-
-        class BasicObjectTest::B < ::BasicObject
-        end
-
+        module BasicObjectTest; end
+        class BasicObjectTest::B < ::BasicObject; end
         BasicObjectTest::Basic = T.let(T.unsafe(nil), BasicObjectTest::B)
-
         BasicObjectTest::VeryBasic = T.let(T.unsafe(nil), BasicObject)
       RBI
 
@@ -1760,8 +1673,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module ActiveModel
-        end
+        module ActiveModel; end
 
         module ActiveModel::Validations
           extend(::ActiveSupport::Concern)
@@ -1771,14 +1683,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           mixes_in_class_methods(::ActiveModel::Validations::ClassMethods)
         end
 
-        module ActiveModel::Validations::ClassMethods
-        end
-
-        module ActiveModel::Validations::HelperMethods
-        end
-
-        module ActiveSupport
-        end
+        module ActiveModel::Validations::ClassMethods; end
+        module ActiveModel::Validations::HelperMethods; end
+        module ActiveSupport; end
 
         module ActiveSupport::Concern
           def included(base = T.unsafe(nil), &block); end
@@ -1846,11 +1753,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module ActiveSupport
-        end
-
-        class ActiveSupport::Deprecation
-        end
+        module ActiveSupport; end
+        class ActiveSupport::Deprecation; end
 
         class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::ActiveSupport::Deprecation::DeprecationProxy
           def initialize(old_const, new_const); end
@@ -1942,11 +1846,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        module ActiveSupport
-        end
-
-        class ActiveSupport::Deprecation
-        end
+        module ActiveSupport; end
+        class ActiveSupport::Deprecation; end
 
         class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
           def initialize(old_const, new_const); end
@@ -2026,7 +1927,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module Foo::Bar
-
           private
 
           def singleton_class(klass); end
@@ -2046,11 +1946,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Foo
         <% if ruby_version(">= 2.7.0") %>
+        class Foo
           def foo(*_arg0, &_arg1); end
-        <% end %>
         end
+        <% else %>
+        class Foo; end
+        <% end %>
       RBI
 
       assert_equal(output, compile)
@@ -2081,8 +1983,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        class Bar
-        end
+        class Bar; end
 
         class Bar::Baz < ::T::Enum
           enums do
@@ -2098,9 +1999,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        class Foo::C
-        end
-
+        class Foo::C; end
         Foo::CONSTANT = T.let(T.unsafe(nil), Integer)
       RBI
 
@@ -2343,8 +2242,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        module Generics
-        end
+        module Generics; end
 
         class Generics::ComplexGenericType
           extend T::Generic
@@ -2609,8 +2507,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           end
         end
 
-        class Foo::FooAttachedClass
-        end
+        class Foo::FooAttachedClass; end
       RBI
 
       assert_equal(output, compile)
