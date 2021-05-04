@@ -45,12 +45,12 @@ module Contents
 
     # typed: true
 
-    module Baz
-    end
+    module Baz; end
 
     class Baz::Role
-      include(::SmartProperties)
-      extend(::SmartProperties::ClassMethods)
+      include ::SmartProperties
+
+      extend ::SmartProperties::ClassMethods
     end
 
     class Baz::Test
@@ -736,10 +736,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
       assert_path_exists("#{outdir}/foo@0.0.1.rbi")
       assert_equal(template(<<~CONTENTS), File.read("#{outdir}/foo@0.0.1.rbi"))
-        #{Contents::FOO_RBI}
-        class Foo::Secret
-        end
-
+        #{Contents::FOO_RBI.rstrip}
+        class Foo::Secret; end
         <% if ruby_version(">= 2.4.0") %>
         Foo::Secret::VALUE = T.let(T.unsafe(nil), Integer)
         <% else %>

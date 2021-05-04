@@ -27,12 +27,13 @@ module Tapioca
 
         sig { returns(String) }
         def generate
-          symbols
-            .sort
-            .map { |symbol| generate_from_symbol(symbol) }
-            .compact
-            .join("\n\n")
-            .concat("\n")
+          rbi = RBI::Tree.new
+          symbols.sort.each { |symbol| generate_from_symbol(rbi, symbol) }
+          rbi.nest_singleton_methods!
+          rbi.nest_non_public_methods!
+          rbi.group_nodes!
+          rbi.sort_nodes!
+          rbi.string
         end
 
         private
@@ -65,13 +66,13 @@ module Tapioca
           Set.new
         end
 
-        sig { params(symbol: String).returns(T.nilable(String)) }
-        def generate_from_symbol(symbol)
+        sig { params(tree: RBI::Tree, symbol: String).void }
+        def generate_from_symbol(tree, symbol)
           constant = resolve_constant(symbol)
 
           return unless constant
 
-          compile(symbol, constant)
+          compile(tree, symbol, constant)
         end
 
         sig do
@@ -87,12 +88,8 @@ module Tapioca
           nil
         end
 
-        sig do
-          params(name: T.nilable(String), constant: BasicObject)
-            .returns(T.nilable(String))
-            .checked(:never)
-        end
-        def compile(name, constant)
+        sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
+        def compile(tree, name, constant)
           return unless constant
           return unless name
           return if name.strip.empty?
@@ -104,29 +101,25 @@ module Tapioca
           return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
           mark_seen(name)
-          compile_constant(name, constant)
+          compile_constant(tree, name, constant)
         end
 
-        sig do
-          params(name: String, constant: BasicObject)
-            .returns(T.nilable(String))
-            .checked(:never)
-        end
-        def compile_constant(name, constant)
+        sig { params(tree: RBI::Tree, name: String, constant: BasicObject).void.checked(:never) }
+        def compile_constant(tree, name, constant)
           case constant
           when Module
             if name_of(constant) != name
-              compile_alias(name, constant)
+              compile_alias(tree, name, constant)
             else
-              compile_module(name, constant)
+              compile_module(tree, name, constant)
             end
           else
-            compile_object(name, constant)
+            compile_object(tree, name, constant)
           end
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_alias(name, constant)
+        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+        def compile_alias(tree, name, constant)
           return if symbol_ignored?(name)
 
           target = name_of(constant)
@@ -137,15 +130,11 @@ module Tapioca
 
           return if IGNORED_SYMBOLS.include?(name)
 
-          indented("#{name} = #{target}")
+          tree << RBI::Const.new(name, target)
         end
 
-        sig do
-          params(name: String, value: BasicObject)
-            .returns(T.nilable(String))
-            .checked(:never)
-        end
-        def compile_object(name, value)
+        sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
+        def compile_object(tree, name, value)
           return if symbol_ignored?(name)
           klass = class_of(value)
           klass_name = name_of(klass)
@@ -153,103 +142,80 @@ module Tapioca
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
           type_name = public_module?(klass) && klass_name || "T.untyped"
-          indented("#{name} = T.let(T.unsafe(nil), #{type_name})")
+          tree << RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_module(name, constant)
+        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+        def compile_module(tree, name, constant)
           return unless public_module?(constant)
           return unless defined_in_gem?(constant, strict: false)
 
-          header =
+          scope =
             if constant.is_a?(Class)
-              indented("class #{name}#{compile_superclass(constant)}")
+              superclass = compile_superclass(constant)
+              RBI::Class.new(name, superclass_name: superclass)
             else
-              indented("module #{name}")
+              RBI::Module.new(name)
             end
 
-          body = compile_body(name, constant)
+          compile_body(scope, name, constant)
 
-          return if symbol_ignored?(name) && body.nil?
+          return if symbol_ignored?(name) && scope.empty?
 
-          [
-            header,
-            body,
-            indented("end"),
-            compile_subconstants(name, constant),
-          ].select { |b| !b.nil? && b.strip != "" }.join("\n")
+          tree << scope
+          compile_subconstants(tree, name, constant)
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_body(name, constant)
-          with_indentation do
-            methods = compile_methods(name, constant)
-
-            return if symbol_ignored?(name) && methods.nil?
-
-            [
-              compile_module_helpers(constant),
-              compile_type_variables(constant),
-              compile_mixins(constant),
-              compile_mixes_in_class_methods(constant),
-              compile_props(constant),
-              compile_enums(constant),
-              methods,
-            ].select { |b| b && !b.empty? }.join("\n\n")
-          end
+        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+        def compile_body(tree, name, constant)
+          compile_methods(tree, name, constant)
+          compile_module_helpers(tree, constant)
+          compile_type_variables(tree, constant)
+          compile_mixins(tree, constant)
+          compile_mixes_in_class_methods(tree, constant)
+          compile_props(tree, constant)
+          compile_enums(tree, constant)
         end
 
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def compile_module_helpers(constant)
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_module_helpers(tree, constant)
           abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
 
-          helpers = []
-          helpers << indented("#{abstract_type}!") if abstract_type
-          helpers << indented("final!") if T::Private::Final.final_module?(constant)
-          helpers << indented("sealed!") if T::Private::Sealed.sealed_module?(constant)
-
-          return if helpers.empty?
-
-          helpers.join("\n")
+          tree << RBI::Helper.new(abstract_type.to_s) if abstract_type
+          tree << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)
+          tree << RBI::Helper.new("sealed") if T::Private::Sealed.sealed_module?(constant)
         end
 
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def compile_props(constant)
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_props(tree, constant)
           return unless T::Props::ClassMethods === constant
 
           constant.props.map do |name, prop|
-            method = "prop"
-            method = "const" if prop.fetch(:immutable, false)
             type = prop.fetch(:type_object, "T.untyped").to_s.gsub(".returns(<VOID>)", ".void")
 
-            if prop.key?(:default)
-              indented("#{method} :#{name}, #{type}, default: T.unsafe(nil)")
+            default = prop.key?(:default) ? "T.unsafe(nil)" : nil
+            tree << if prop.fetch(:immutable, false)
+              RBI::TStructConst.new(name.to_s, type, default: default)
             else
-              indented("#{method} :#{name}, #{type}")
+              RBI::TStructProp.new(name.to_s, type, default: default)
             end
-          end.join("\n")
+          end
         end
 
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def compile_enums(constant)
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_enums(tree, constant)
           return unless T::Enum > constant
 
           enums = T.unsafe(constant).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s
           end
 
-          content = [
-            indented('enums do'),
-            *enums.map { |e| indented("  #{e} = new") }.join("\n"),
-            indented('end'),
-          ]
-
-          content.join("\n")
+          tree << RBI::TEnumBlock.new(enums)
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_subconstants(name, constant)
-          output = constants_of(constant).sort.uniq.map do |constant_name|
+        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+        def compile_subconstants(tree, name, constant)
+          constants_of(constant).sort.uniq.map do |constant_name|
             symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
             subconstant = resolve_constant(symbol)
 
@@ -258,75 +224,58 @@ module Tapioca
             next if (Object == constant || BasicObject == constant) && Module === subconstant
             next unless subconstant
 
-            compile(symbol, subconstant)
-          end.compact
-
-          return if output.empty?
-
-          "\n" + output.join("\n\n")
-        end
-
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def compile_type_variables(constant)
-          type_variables = compile_type_variable_declarations(constant)
-          singleton_class_type_variables = compile_type_variable_declarations(singleton_class_of(constant))
-
-          return if !type_variables && !singleton_class_type_variables
-
-          type_variables += "\n" if type_variables
-          singleton_class_type_variables += "\n" if singleton_class_type_variables
-
-          [
-            type_variables,
-            singleton_class_type_variables,
-          ].compact.join("\n").rstrip
-        end
-
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def compile_type_variable_declarations(constant)
-          with_indentation_for_constant(constant) do
-            # Try to find the type variables defined on this constant, bail if we can't
-            type_variables = GenericTypeRegistry.lookup_type_variables(constant)
-            return unless type_variables
-
-            # Create a map of subconstants (via their object ids) to their names.
-            # We need this later when we want to lookup the name of the registered type
-            # variable via the value of the type variable constant.
-            subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
-              [
-                object_id_of(resolve_constant(constant_name.to_s, namespace: constant)),
-                constant_name,
-              ]
-            end.to_h
-
-            # Map each type variable to its string representation.
-            #
-            # Each entry of `type_variables` maps an object_id to a String,
-            # and the order they are inserted into the hash is the order they should be
-            # defined in the source code.
-            #
-            # By looping over these entries and then getting the actual constant name
-            # from the `subconstant_to_name_lookup` we defined above, gives us all the
-            # information we need to serialize type variable definitions.
-            type_variable_declarations = type_variables.map do |type_variable_id, serialized_type_variable|
-              constant_name = subconstant_to_name_lookup[type_variable_id]
-              # Here, we know that constant_value will be an instance of
-              # T::Types::CustomTypeVariable, which knows how to serialize
-              # itself to a type_member/type_template
-              indented("#{constant_name} = #{serialized_type_variable}")
-            end.compact
-
-            return if type_variable_declarations.empty?
-
-            [
-              indented("extend T::Generic"),
-              "",
-              *type_variable_declarations,
-            ].compact.join("\n")
+            compile(tree, symbol, subconstant)
           end
         end
 
-        sig { params(constant: Class).returns(String) }
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_type_variables(tree, constant)
+          compile_type_variable_declarations(tree, constant)
+
+          sclass = RBI::SingletonClass.new
+          compile_type_variable_declarations(sclass, singleton_class_of(constant))
+          tree << sclass if sclass.nodes.length > 1
+        end
+
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_type_variable_declarations(tree, constant)
+          # Try to find the type variables defined on this constant, bail if we can't
+          type_variables = GenericTypeRegistry.lookup_type_variables(constant)
+          return unless type_variables
+
+          # Create a map of subconstants (via their object ids) to their names.
+          # We need this later when we want to lookup the name of the registered type
+          # variable via the value of the type variable constant.
+          subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
+            [
+              object_id_of(resolve_constant(constant_name.to_s, namespace: constant)),
+              constant_name,
+            ]
+          end.to_h
+
+          # Map each type variable to its string representation.
+          #
+          # Each entry of `type_variables` maps an object_id to a String,
+          # and the order they are inserted into the hash is the order they should be
+          # defined in the source code.
+          #
+          # By looping over these entries and then getting the actual constant name
+          # from the `subconstant_to_name_lookup` we defined above, gives us all the
+          # information we need to serialize type variable definitions.
+          type_variable_declarations = type_variables.map do |type_variable_id, serialized_type_variable|
+            constant_name = subconstant_to_name_lookup[type_variable_id]
+            # Here, we know that constant_value will be an instance of
+            # T::Types::CustomTypeVariable, which knows how to serialize
+            # itself to a type_member/type_template
+            tree << RBI::TypeMember.new(constant_name.to_s, serialized_type_variable)
+          end
+
+          return if type_variable_declarations.empty?
+
+          tree << RBI::Extend.new("T::Generic")
+        end
+
+        sig { params(constant: Class).returns(T.nilable(String)) }
         def compile_superclass(constant)
           superclass = T.let(nil, T.nilable(Class)) # rubocop:disable Lint/UselessAssignment
 
@@ -371,17 +320,17 @@ module Tapioca
             break
           end
 
-          return "" if superclass == ::Object || superclass == ::Delegator
-          return "" if superclass.nil?
+          return if superclass == ::Object || superclass == ::Delegator
+          return if superclass.nil?
 
           name = name_of(superclass)
-          return "" if name.nil? || name.empty?
+          return if name.nil? || name.empty?
 
-          " < ::#{name}"
+          "::#{name}"
         end
 
-        sig { params(constant: Module).returns(String) }
-        def compile_mixins(constant)
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_mixins(tree, constant)
           singleton_class = singleton_class_of(constant)
 
           interesting_ancestors = interesting_ancestors_of(constant)
@@ -393,7 +342,7 @@ module Tapioca
             !public_module?(mod) || Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          prepends = prepend
+          prepend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
@@ -401,31 +350,32 @@ module Tapioca
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              indented("include(#{qualified_name_of(mod)})")
+              qname = qualified_name_of(mod)
+              tree << RBI::Include.new(T.must(qname))
             end
 
-          includes = include
+          include
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
-              indented("include(#{qualified_name_of(mod)})")
+              qname = qualified_name_of(mod)
+              tree << RBI::Include.new(T.must(qname))
             end
 
-          extends = extend
+          extend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
-              indented("extend(#{qualified_name_of(mod)})")
+              qname = qualified_name_of(mod)
+              tree << RBI::Extend.new(T.must(qname))
             end
-
-          (prepends + includes + extends).join("\n")
         end
 
-        sig { params(constant: Module).returns(String) }
-        def compile_mixes_in_class_methods(constant)
-          return "" if constant.is_a?(Class)
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_mixes_in_class_methods(tree, constant)
+          return if constant.is_a?(Class)
 
           mixins_from_modules = {}
 
@@ -457,11 +407,12 @@ module Tapioca
           dynamic_extends_from_dynamic_includes = mixins_from_modules.values.flatten
           dynamic_extends = all_dynamic_extends - dynamic_extends_from_dynamic_includes
 
-          result = all_dynamic_includes
+          all_dynamic_includes
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .select(&method(:public_module?))
             .map do |mod|
-              indented("include(#{qualified_name_of(mod)})")
+              qname = qualified_name_of(mod)
+              tree << RBI::Include.new(T.must(qname))
             end.join("\n")
 
           ancestors = singleton_class_of(constant).ancestors
@@ -478,64 +429,54 @@ module Tapioca
             end
           end
 
-          return result if mixed_in_module.nil?
+          return if mixed_in_module.nil?
 
           qualified_name = qualified_name_of(mixed_in_module)
-          return result if qualified_name == ""
+          return if qualified_name.nil? || qualified_name == ""
 
-          [
-            result,
-            indented("mixes_in_class_methods(#{qualified_name})"),
-          ].select { |b| b != "" }.join("\n\n")
+          tree << RBI::MixesInClassMethods.new(qualified_name)
         rescue
-          ""
+          nil # silence errors
         end
 
-        sig { params(name: String, constant: Module).returns(T.nilable(String)) }
-        def compile_methods(name, constant)
-          initialize_method = compile_method(
+        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+        def compile_methods(tree, name, constant)
+          compile_method(
+            tree,
             name,
             constant,
             initialize_method_for(constant)
           )
 
-          instance_methods = compile_directly_owned_methods(name, constant)
-          singleton_methods = compile_directly_owned_methods(name, singleton_class_of(constant))
-
-          return if symbol_ignored?(name) && !instance_methods && !singleton_methods
-
-          [
-            initialize_method,
-            instance_methods,
-            singleton_methods,
-          ].select { |b| b && !b.strip.empty? }.join("\n\n")
+          compile_directly_owned_methods(tree, name, constant)
+          compile_directly_owned_methods(tree, name, singleton_class_of(constant))
         end
 
-        sig { params(module_name: String, mod: Module, for_visibility: T::Array[Symbol]).returns(T.nilable(String)) }
-        def compile_directly_owned_methods(module_name, mod, for_visibility = [:public, :protected, :private])
-          with_indentation_for_constant(mod) do
-            methods = method_names_by_visibility(mod)
-              .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
-              .flat_map do |visibility, method_list|
-                compiled = method_list.sort!.map do |name|
-                  next if name == :initialize
-                  compile_method(module_name, mod, mod.instance_method(name))
+        sig do
+          params(
+            tree: RBI::Tree,
+            module_name: String,
+            mod: Module,
+            for_visibility: T::Array[Symbol]
+          ).void
+        end
+        def compile_directly_owned_methods(tree, module_name, mod, for_visibility = [:public, :protected, :private])
+          method_names_by_visibility(mod)
+            .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
+            .each do |visibility, method_list|
+              method_list.sort!.map do |name|
+                next if name == :initialize
+                vis = case visibility
+                when :protected
+                  RBI::Visibility::Protected
+                when :private
+                  RBI::Visibility::Private
+                else
+                  RBI::Visibility::Public
                 end
-                compiled.compact!
-
-                unless compiled.empty? || visibility == :public
-                  # add visibility badge
-                  compiled.unshift('', indented(visibility.to_s), '')
-                end
-
-                compiled
+                compile_method(tree, module_name, mod, mod.instance_method(name), vis)
               end
-              .compact
-
-            return if methods.empty?
-
-            methods.join("\n")
-          end
+            end
         end
 
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
@@ -559,12 +500,14 @@ module Tapioca
 
         sig do
           params(
+            tree: RBI::Tree,
             symbol_name: String,
             constant: Module,
-            method: T.nilable(UnboundMethod)
-          ).returns(T.nilable(String))
+            method: T.nilable(UnboundMethod),
+            visibility: RBI::Visibility
+          ).void
         end
-        def compile_method(symbol_name, constant, method)
+        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Visibility::Public)
           return unless method
           return unless method.owner == constant
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
@@ -611,37 +554,34 @@ module Tapioca
             [type, name]
           end
 
-          parameter_list = sanitized_parameters.map do |type, name|
+          rbi_method = RBI::Method.new(method_name, is_singleton: constant.singleton_class?, visibility: visibility)
+          rbi_method.sigs << compile_signature(signature, sanitized_parameters) if signature
+
+          sanitized_parameters.each do |type, name|
             case type
             when :req
-              name
+              rbi_method << RBI::Param.new(name)
             when :opt
-              "#{name} = T.unsafe(nil)"
+              rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
             when :rest
-              "*#{name}"
+              rbi_method << RBI::RestParam.new(name)
             when :keyreq
-              "#{name}:"
+              rbi_method << RBI::KwParam.new(name)
             when :key
-              "#{name}: T.unsafe(nil)"
+              rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
             when :keyrest
-              "**#{name}"
+              rbi_method << RBI::KwRestParam.new(name)
             when :block
-              "&#{name}"
+              rbi_method << RBI::BlockParam.new(name)
             end
-          end.join(', ')
+          end
 
-          parameter_list = "(#{parameter_list})" if parameter_list != ""
-          signature_str = indented(compile_signature(signature, sanitized_parameters)) if signature
-
-          [
-            signature_str,
-            indented("def #{method_name}#{parameter_list}; end"),
-          ].compact.join("\n")
+          tree << rbi_method
         end
 
         TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
-        sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(String) }
+        sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
         def compile_signature(signature, parameters)
           parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
           parameter_types.merge!(signature.kwarg_types)
@@ -649,41 +589,39 @@ module Tapioca
           parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest
           parameter_types[signature.block_name] = signature.block_type if signature.block_name
 
-          params = parameters.map do |_, name|
-            type = parameter_types[name.to_sym]
-            "#{name}: #{type}"
-          end.join(", ")
+          sig = RBI::Sig.new
 
-          returns = type_of(signature.return_type)
+          parameters.each do |_, name|
+            type = parameter_types[name.to_sym].to_s
+              .gsub(".returns(<VOID>)", ".void")
+              .gsub("<NOT-TYPED>", "T.untyped")
+              .gsub(".params()", "")
 
-          type_parameters = (params + returns).scan(TYPE_PARAMETER_MATCHER).flatten.uniq.map { |p| ":#{p}" }.join(", ")
-          type_parameters = ".type_parameters(#{type_parameters})" unless type_parameters.empty?
-
-          mode = case signature.mode
-          when "abstract"
-            ".abstract"
-          when "override"
-            ".override"
-          when "overridable_override"
-            ".overridable.override"
-          when "overridable"
-            ".overridable"
-          else
-            ""
+            sig << RBI::SigParam.new(name, type)
           end
 
-          signature_body = +""
-          signature_body << mode
-          signature_body << type_parameters
-          signature_body << ".params(#{params})" unless params.empty?
-          signature_body << ".returns(#{returns})"
-          signature_body = signature_body
-            .gsub(".returns(<VOID>)", ".void")
+          sig.return_type = type_of(signature.return_type)
+            .gsub("<VOID>", "void")
             .gsub("<NOT-TYPED>", "T.untyped")
             .gsub(".params()", "")
-            .gsub(TYPE_PARAMETER_MATCHER, "T.type_parameter(:\\1)")[1..-1]
 
-          "sig { #{signature_body} }"
+          parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
+            sig.type_params << k
+          end
+
+          case signature.mode
+          when "abstract"
+            sig.is_abstract = true
+          when "override"
+            sig.is_override = true
+          when "overridable_override"
+            sig.is_overridable = true
+            sig.is_override = true
+          when "overridable"
+            sig.is_overridable = true
+          end
+
+          sig
         end
 
         sig { params(symbol_name: String).returns(T::Boolean) }
@@ -697,54 +635,6 @@ module Tapioca
         def valid_method_name?(name)
           return true if SPECIAL_METHOD_NAMES.include?(name)
           !!name.match(/^[[:word:]]+[?!=]?$/)
-        end
-
-        sig do
-          type_parameters(:U)
-            .params(
-              step: Integer,
-              _blk: T.proc
-                .returns(T.type_parameter(:U))
-            )
-            .returns(T.type_parameter(:U))
-        end
-        def with_indentation(step = 1, &_blk)
-          @indent += 2 * step
-          yield
-        ensure
-          @indent -= 2 * step
-        end
-
-        sig do
-          params(
-            constant: Module,
-            blk: T.proc
-              .returns(T.nilable(String))
-          )
-            .returns(T.nilable(String))
-        end
-        def with_indentation_for_constant(constant, &blk)
-          step = if constant.singleton_class?
-            1
-          else
-            0
-          end
-
-          result = with_indentation(step, &blk)
-
-          return result unless result
-          return result unless constant.singleton_class?
-
-          [
-            indented("class << self"),
-            result,
-            indented("end"),
-          ].compact.join("\n")
-        end
-
-        sig { params(str: String).returns(String) }
-        def indented(str)
-          " " * @indent + str
         end
 
         sig { params(method: UnboundMethod).returns(T::Boolean) }
@@ -912,7 +802,7 @@ module Tapioca
           begin
             target = Kernel.instance_method(:send).bind(constant).call(:target)
           rescue NoMethodError
-            return nil
+            return
           end
 
           raw_name_of(target)
