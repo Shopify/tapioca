@@ -5,8 +5,9 @@ require "fileutils"
 
 module ContentHelper
   extend T::Sig
+  extend T::Helpers
 
-  include Kernel
+  requires_ancestor Kernel
 
   sig { void }
   def teardown
