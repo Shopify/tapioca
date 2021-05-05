@@ -49,7 +49,6 @@ module Contents
 
     class Baz::Role
       include ::SmartProperties
-
       extend ::SmartProperties::ClassMethods
     end
 

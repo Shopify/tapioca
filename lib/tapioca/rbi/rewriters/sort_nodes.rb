@@ -24,13 +24,12 @@ module Tapioca
         def node_rank(node)
           case node
           when Group                then kind_rank(node.kind)
-          when Include              then 0
-          when Extend               then 1
-          when Helper               then 2
-          when TypeMember           then 3
-          when MixesInClassMethods  then 4
-          when TStructField         then 5
-          when TEnumBlock           then 6
+          when Include, Extend      then 0
+          when Helper               then 1
+          when TypeMember           then 2
+          when MixesInClassMethods  then 3
+          when TStructField         then 4
+          when TEnumBlock           then 5
           when Method
             if node.name == "initialize"
               7
@@ -46,16 +45,15 @@ module Tapioca
         sig { params(kind: Group::Kind).returns(Integer) }
         def kind_rank(kind)
           case kind
-          when Group::Kind::Includes      then 0
-          when Group::Kind::Extends       then 1
-          when Group::Kind::Helpers       then 2
-          when Group::Kind::TypeMembers   then 3
-          when Group::Kind::Mixes         then 4
-          when Group::Kind::TStructFields then 5
-          when Group::Kind::TEnums        then 6
-          when Group::Kind::Inits         then 7
-          when Group::Kind::Methods       then 8
-          when Group::Kind::Consts        then 9
+          when Group::Kind::Mixins              then 0
+          when Group::Kind::Helpers             then 1
+          when Group::Kind::TypeMembers         then 2
+          when Group::Kind::MixesInClassMethods then 3
+          when Group::Kind::TStructFields       then 4
+          when Group::Kind::TEnums              then 5
+          when Group::Kind::Inits               then 6
+          when Group::Kind::Methods             then 7
+          when Group::Kind::Consts              then 8
           else
             T.absurd(kind)
           end

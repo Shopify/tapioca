@@ -48,16 +48,14 @@ module Tapioca
       sig { returns(Group::Kind) }
       def group_kind
         case self
-        when Include
-          Group::Kind::Includes
-        when Extend
-          Group::Kind::Extends
+        when Include, Extend
+          Group::Kind::Mixins
         when Helper
           Group::Kind::Helpers
         when TypeMember
           Group::Kind::TypeMembers
         when MixesInClassMethods
-          Group::Kind::Mixes
+          Group::Kind::MixesInClassMethods
         when TStructField
           Group::Kind::TStructFields
         when TEnumBlock
@@ -92,16 +90,15 @@ module Tapioca
 
       class Kind < T::Enum
         enums do
-          Includes      = new
-          Extends       = new
-          Helpers       = new
-          TypeMembers   = new
-          Mixes         = new
-          TStructFields = new
-          TEnums        = new
-          Inits         = new
-          Methods       = new
-          Consts        = new
+          Mixins              = new
+          Helpers             = new
+          TypeMembers         = new
+          MixesInClassMethods = new
+          TStructFields       = new
+          TEnums              = new
+          Inits               = new
+          Methods             = new
+          Consts              = new
         end
       end
     end

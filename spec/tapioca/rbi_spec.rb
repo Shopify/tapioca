@@ -431,8 +431,8 @@ module Tapioca
           rbi << RBI::Class.new("S2")
           rbi << RBI::Method.new("m1")
           rbi << RBI::Method.new("m2", is_singleton: true)
-          rbi << RBI::Include.new("I")
           rbi << RBI::Extend.new("E")
+          rbi << RBI::Include.new("I")
           rbi << RBI::MixesInClassMethods.new("MICM")
           rbi << RBI::Helper.new("h")
           rbi << RBI::TStructConst.new("SC", "Type")
@@ -444,9 +444,8 @@ module Tapioca
           rbi.sort_nodes!
 
           assert_equal(<<~RBI, rbi.string)
-            include I
-
             extend E
+            include I
 
             h!
 
@@ -523,8 +522,8 @@ module Tapioca
           rbi << RBI::Class.new("S2")
           rbi << RBI::Method.new("m1")
           rbi << RBI::Method.new("m2", is_singleton: true)
-          rbi << RBI::Include.new("I")
           rbi << RBI::Extend.new("E")
+          rbi << RBI::Include.new("I")
           rbi << RBI::MixesInClassMethods.new("MICM")
           rbi << RBI::Helper.new("h")
           rbi << RBI::TStructConst.new("SC", "Type")
@@ -536,9 +535,8 @@ module Tapioca
           rbi.sort_nodes!
 
           assert_equal(<<~RBI, rbi.string)
-            include I
-
             extend E
+            include I
 
             h!
 
@@ -572,9 +570,8 @@ module Tapioca
 
           assert_equal(<<~RBI, rbi.string)
             include I2
-            include I1
-
             extend E2
+            include I1
             extend E1
 
             mixes_in_class_methods M2
@@ -626,7 +623,6 @@ module Tapioca
           assert_equal(<<~RBI, rbi.string)
             module Scope
               include I
-
               extend E
 
               h!
@@ -683,9 +679,8 @@ module Tapioca
 
           assert_equal(<<~RBI, rbi.string)
             include I2
-            include I1
-
             extend E2
+            include I1
             extend E1
 
             h1!
@@ -806,9 +801,8 @@ module Tapioca
           assert_equal(<<~RBI, rbi.string)
             class Scope1
               include I2
-              include I1
-
               extend E2
+              include I1
               extend E1
 
               h1!
@@ -840,9 +834,8 @@ module Tapioca
 
             class Scope2
               include I2
-              include I1
-
               extend E2
+              include I1
               extend E1
 
               h1!
@@ -869,9 +862,8 @@ module Tapioca
 
               class Scope2.1
                 include I2
-                include I1
-
                 extend E2
+                include I1
                 extend E1
 
                 h1!
