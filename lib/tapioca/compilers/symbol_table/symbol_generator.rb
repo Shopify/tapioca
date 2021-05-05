@@ -592,18 +592,12 @@ module Tapioca
           sig = RBI::Sig.new
 
           parameters.each do |_, name|
-            type = parameter_types[name.to_sym].to_s
-              .gsub(".returns(<VOID>)", ".void")
-              .gsub("<NOT-TYPED>", "T.untyped")
-              .gsub(".params()", "")
-
+            type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
             sig << RBI::SigParam.new(name, type)
           end
 
-          sig.return_type = type_of(signature.return_type)
-            .gsub("<VOID>", "void")
-            .gsub("<NOT-TYPED>", "T.untyped")
-            .gsub(".params()", "")
+          return_type = type_of(signature.return_type)
+          sig.return_type = sanitize_signature_types(return_type)
 
           parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
             sig.type_params << k
@@ -830,6 +824,15 @@ module Tapioca
           T::Private::Methods.signature_for_method(method)
         rescue LoadError, StandardError
           nil
+        end
+
+        sig { params(sig_string: String).returns(String) }
+        def sanitize_signature_types(sig_string)
+          sig_string
+            .gsub(".returns(<VOID>)", ".void")
+            .gsub("<VOID>", "void")
+            .gsub("<NOT-TYPED>", "T.untyped")
+            .gsub(".params()", "")
         end
 
         sig { params(constant: T::Types::Base).returns(String) }

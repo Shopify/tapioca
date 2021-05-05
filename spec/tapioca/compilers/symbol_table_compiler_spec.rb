@@ -2050,6 +2050,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def many_kinds_of_args(*a, b, c, d:, e: 42, **f, &blk)
           end
 
+          sig { returns(T.proc.params(x: String).void) }
+          attr_reader :some_attribute
+
           class << self
             extend(T::Sig)
 
@@ -2235,6 +2238,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.void).void }
           def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
+
+          sig { returns(T.proc.params(x: String).void) }
+          def some_attribute; end
 
           class << self
             sig { void }
