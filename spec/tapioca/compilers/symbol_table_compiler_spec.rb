@@ -137,7 +137,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           include ::ModuleA
           include ::ModuleB
           include ::ModuleC
-
           extend ::ModuleC
           extend ::ModuleB
           extend ::ModuleA
@@ -226,7 +225,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           include ::Comparable
           include ::JSON::Ext::Generator::GeneratorMethods::String
           include ::Colorize::InstanceMethods
-
           extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
           extend ::Colorize::ClassMethods
 
@@ -746,7 +744,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Bar < ::Baz
           include ::Tutu
           include ::Foo
-
           extend ::Toto
         end
 
@@ -1555,10 +1552,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module Baz
+          extend ::SomeOtherConcern
           include ::FooConcern
           include ::BarConcern
-
-          extend ::SomeOtherConcern
         end
 
         module Concern
@@ -1678,9 +1674,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module ActiveModel; end
 
         module ActiveModel::Validations
-          include ::ActiveModel::Validations::HelperMethods
-
           extend ::ActiveSupport::Concern
+          include ::ActiveModel::Validations::HelperMethods
 
           mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
         end
@@ -2055,6 +2050,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def many_kinds_of_args(*a, b, c, d:, e: 42, **f, &blk)
           end
 
+          sig { returns(T.proc.params(x: String).void) }
+          attr_reader :some_attribute
+
           class << self
             extend(T::Sig)
 
@@ -2240,6 +2238,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.void).void }
           def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
+
+          sig { returns(T.proc.params(x: String).void) }
+          def some_attribute; end
 
           class << self
             sig { void }
