@@ -90,11 +90,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
       RUBY
 
-      output = template(<<~RBI)
+      basic_object_output = template(<<~RBI)
         class BasicObject
           def hello; end
         end
+      RBI
 
+      object_output = template(<<~RBI)
         class Object < ::BasicObject
           include ::Kernel
 
@@ -107,7 +109,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
         .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
-      assert_equal(output, compiled)
+      assert_includes(compiled, basic_object_output)
+      assert_includes(compiled, object_output)
     end
 
     it("compiles mixins in the correct order") do
