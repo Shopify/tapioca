@@ -42,7 +42,7 @@ module Tapioca
         private
 
         def add_to_symbol_queue(name)
-          @symbol_queue << name unless symbols.include?(name)
+          @symbol_queue << name unless symbols.include?(name) || symbol_ignored?(name)
         end
 
         sig { returns(T::Set[String]) }
