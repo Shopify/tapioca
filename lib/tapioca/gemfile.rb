@@ -108,8 +108,14 @@ module Tapioca
 
       sig { returns(T::Array[Pathname]) }
       def files
-        @spec.full_require_paths.flat_map do |path|
-          Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
+        if default_gem?
+          @spec.files.map do |file|
+            ruby_lib_dir.join(file)
+          end
+        else
+          @spec.full_require_paths.flat_map do |path|
+            Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
+          end
         end
       end
 
@@ -125,10 +131,24 @@ module Tapioca
 
       sig { params(path: String).returns(T::Boolean) }
       def contains_path?(path)
-        to_realpath(path).start_with?(full_gem_path) || has_parent_gemspec?(path)
+        if default_gem?
+          files.any? { |file| file.to_s == to_realpath(path) }
+        else
+          to_realpath(path).start_with?(full_gem_path) || has_parent_gemspec?(path)
+        end
       end
 
       private
+
+      sig { returns(T::Boolean) }
+      def default_gem?
+        @spec.respond_to?(:default_gem?) && @spec.default_gem?
+      end
+
+      sig { returns(Pathname) }
+      def ruby_lib_dir
+        Pathname.new(RbConfig::CONFIG["rubylibdir"])
+      end
 
       sig { returns(String) }
       def version_string
