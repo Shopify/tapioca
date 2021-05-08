@@ -309,7 +309,9 @@ module Tapioca
             # B = A
             # A.superclass.name #=> "B"
             # B #=> A
-            superclass_name = T.must(name_of(superclass))
+            superclass_name = name_of(superclass)
+            next unless superclass_name
+
             resolved_superclass = resolve_constant(superclass_name)
             next unless Module === resolved_superclass
             next if name_of(resolved_superclass) == constant_name
