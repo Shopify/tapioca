@@ -3,6 +3,7 @@
 
 require 'pathname'
 require 'thor'
+require "tapioca/core_ext/string"
 
 module Tapioca
   class Generator < ::Thor::Shell::Color
@@ -285,7 +286,7 @@ module Tapioca
     def constantize(constant_names)
       constant_map = constant_names.map do |name|
         begin
-          [name, name.constantize]
+          [name, Object.const_get(name)]
         rescue NameError
           [name, nil]
         end

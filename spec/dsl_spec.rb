@@ -6,6 +6,7 @@ require "minitest/spec"
 require "content_helper"
 require "template_helper"
 require "isolation_helper"
+require "tapioca/core_ext/string"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
@@ -45,18 +46,7 @@ class DslSpec < Minitest::Spec
 
   sig { returns(String) }
   def target_class_file
-    underscore(target_class_name)
-  end
-
-  sig { params(camel_cased_word: String).returns(String) }
-  def underscore(camel_cased_word)
-    return camel_cased_word unless /[A-Z-]|::/.match?(camel_cased_word)
-    word = camel_cased_word.to_s.gsub("::", "/")
-    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-    word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-    word.tr!("-", "_")
-    word.downcase!
-    word
+    target_class_name.underscore
   end
 
   sig { params(str: String, indent: Integer).returns(String) }
