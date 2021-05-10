@@ -1418,6 +1418,18 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("handles weak maps properly") do
+      add_ruby_file("weak_map.rb", <<~RUBY)
+        Foo = ObjectSpace::WeakMap.new
+      RUBY
+
+      output = template(<<~RBI)
+        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("doesn't output prepend for modules unrechable via constants") do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
