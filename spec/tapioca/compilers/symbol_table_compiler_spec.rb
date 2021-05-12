@@ -112,11 +112,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
       RUBY
 
-      output = template(<<~RBI)
+      basic_object_output = template(<<~RBI)
         class BasicObject
           def hello; end
         end
+      RBI
 
+      object_output = template(<<~RBI)
         class Object < ::BasicObject
           include ::Kernel
 
@@ -129,7 +131,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
         .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
-      assert_equal(output, compiled)
+      assert_includes(compiled, basic_object_output)
+      assert_includes(compiled, object_output)
     end
 
     it("compiles mixins in the correct order") do
@@ -606,8 +609,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module Toto; end
+        class Toto::Baz; end
         module Toto::Foo; end
-        class Toto::Foo::Bar; end
+        class Toto::Foo::Bar < ::Toto::Baz; end
       RBI
 
       assert_equal(output, compile)
@@ -720,6 +724,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Foo::Bar < ::Numeric; end
+        Foo::Baz = Foo::Bar
       RBI
 
       assert_equal(output, compile)
@@ -1430,6 +1435,18 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         module Toto; end
         Toto::A = T.let(T.unsafe(nil), Range)
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("handles weak maps properly") do
+      add_ruby_file("weak_map.rb", <<~RUBY)
+        Foo = ObjectSpace::WeakMap.new
+      RUBY
+
+      output = template(<<~RBI)
+        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
       RBI
 
       assert_equal(output, compile)

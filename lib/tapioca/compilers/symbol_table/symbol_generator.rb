@@ -23,12 +23,15 @@ module Tapioca
           @indent = indent
           @seen = Set.new
           @alias_namespace ||= Set.new
+          @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
         end
 
         sig { returns(String) }
         def generate
           rbi = RBI::Tree.new
-          symbols.sort.each { |symbol| generate_from_symbol(rbi, symbol) }
+
+          generate_from_symbol(rbi, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+
           rbi.nest_singleton_methods!
           rbi.nest_non_public_methods!
           rbi.group_nodes!
@@ -38,10 +41,16 @@ module Tapioca
 
         private
 
+        def add_to_symbol_queue(name)
+          @symbol_queue << name unless symbols.include?(name) || symbol_ignored?(name)
+        end
+
         sig { returns(T::Set[String]) }
         def symbols
-          symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(gem.files)
-          symbols.union(engine_symbols(symbols))
+          @symbols ||= begin
+            symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(gem.files)
+            symbols.union(engine_symbols(symbols))
+          end
         end
 
         sig { params(symbols: T::Set[String]).returns(T::Set[String]) }
@@ -97,7 +106,6 @@ module Tapioca
           return if name.downcase == name
           return if alias_namespaced?(name)
           return if seen?(name)
-          return unless parent_declares_constant?(name)
           return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
           mark_seen(name)
@@ -146,13 +154,15 @@ module Tapioca
 
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
-          type_name = public_module?(klass) && klass_name || "T.untyped"
+          type_name = klass_name || "T.untyped"
+          # TODO: Do this in a more generic and clean way.
+          type_name = "#{type_name}[T.untyped]" if type_name == "ObjectSpace::WeakMap"
+
           tree << RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         end
 
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_module(tree, name, constant)
-          return unless public_module?(constant)
           return unless defined_in_gem?(constant, strict: false)
 
           scope =
@@ -288,15 +298,6 @@ module Tapioca
             constant_name = name_of(constant)
             constant = superclass
 
-            # Some classes have superclasses that are private constants
-            # so if we generate code with that superclass, the output
-            # will not be compilable (since private constants are not
-            # publicly visible).
-            #
-            # So we skip superclasses that are not public and walk up the
-            # chain.
-            next unless public_module?(superclass)
-
             # Some types have "themselves" as their superclass
             # which can happen via:
             #
@@ -316,7 +317,9 @@ module Tapioca
             # B = A
             # A.superclass.name #=> "B"
             # B #=> A
-            superclass_name = T.must(name_of(superclass))
+            superclass_name = name_of(superclass)
+            next unless superclass_name
+
             resolved_superclass = resolve_constant(superclass_name)
             next unless Module === resolved_superclass
             next if name_of(resolved_superclass) == constant_name
@@ -331,6 +334,8 @@ module Tapioca
           name = name_of(superclass)
           return if name.nil? || name.empty?
 
+          add_to_symbol_queue(name)
+
           "::#{name}"
         end
 
@@ -344,14 +349,15 @@ module Tapioca
           prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
           include = interesting_ancestors.drop(prepend.size + 1)
           extend  = interesting_singleton_class_ancestors.reject do |mod|
-            !public_module?(mod) || Module != class_of(mod) || are_equal?(mod, singleton_class)
+            Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
           prepend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
@@ -362,8 +368,9 @@ module Tapioca
           include
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
             end
@@ -371,8 +378,9 @@ module Tapioca
           extend
             .reverse
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Extend.new(T.must(qname))
             end
@@ -414,8 +422,9 @@ module Tapioca
 
           all_dynamic_includes
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select(&method(:public_module?))
             .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
               qname = qualified_name_of(mod)
               tree << RBI::Include.new(T.must(qname))
             end.join("\n")
@@ -429,9 +438,7 @@ module Tapioca
           mixed_in_module = if extends_as_concern && Module === class_methods_module
             class_methods_module
           else
-            dynamic_extends.find do |mod|
-              mod != constant && public_module?(mod)
-            end
+            dynamic_extends.find { |mod| mod != constant }
           end
 
           return if mixed_in_module.nil?
@@ -598,11 +605,13 @@ module Tapioca
 
           parameters.each do |_, name|
             type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
+            add_to_symbol_queue(type)
             sig << RBI::SigParam.new(name, type)
           end
 
           return_type = type_of(signature.return_type)
           sig.return_type = sanitize_signature_types(return_type)
+          add_to_symbol_queue(sig.return_type)
 
           parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
             sig.type_params << k
@@ -691,33 +700,6 @@ module Tapioca
           constant.instance_method(:initialize)
         rescue
           nil
-        end
-
-        def parent_declares_constant?(name)
-          name_parts = name.split("::")
-
-          parent_name = name_parts[0...-1].join("::")
-          parent_name = parent_name[2..-1] if parent_name.start_with?("::")
-          parent_name = 'Object' if parent_name == ""
-          parent = T.cast(resolve_constant(parent_name), T.nilable(Module))
-
-          return false unless parent
-
-          constants_of(parent).include?(name_parts.last.to_sym)
-        end
-
-        sig { params(constant: Module).returns(T::Boolean) }
-        def public_module?(constant)
-          constant_name = name_of(constant)
-          return false unless constant_name
-          return false if constant_name.start_with?('T::Private')
-
-          begin
-            # can't use !! here because the constant might override ! and mess with us
-            Module === eval(constant_name) # rubocop:disable Security/Eval
-          rescue NameError
-            false
-          end
         end
 
         sig { params(constant: BasicObject).returns(Class).checked(:never) }
