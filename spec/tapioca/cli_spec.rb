@@ -642,8 +642,9 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             Checking for out-of-date RBIs...
 
 
-            RBI files are out-of-date, please run:
+            RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
+            Once it is complete, be sure to commit and push any changes
 
             Reason:
               File(s) added:
@@ -692,8 +693,9 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             Checking for out-of-date RBIs...
 
 
-            RBI files are out-of-date, please run:
+            RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
+            Once it is complete, be sure to commit and push any changes
 
             Reason:
               File(s) changed:
