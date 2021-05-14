@@ -176,7 +176,7 @@ module Tapioca
 
       sig { returns(T::Boolean) }
       def gem_in_bundle_path?
-        full_gem_path.start_with?(Bundler.bundle_path.to_s)
+        full_gem_path.start_with?(Bundler.bundle_path.to_s, Bundler.app_cache.to_s)
       end
     end
   end
