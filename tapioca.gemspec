@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("parlour", ">= 2.1.0")
   spec.add_dependency("spoom")
   spec.add_dependency("thor", ">= 0.19.2")
+  spec.add_dependency("unparser")
 
   spec.required_ruby_version = ">= 2.5"
 end
