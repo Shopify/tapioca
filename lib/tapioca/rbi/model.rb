@@ -153,6 +153,45 @@ module Tapioca
       end
     end
 
+    # Attributes
+
+    class Attr < NodeWithComments
+      extend T::Sig
+      extend T::Helpers
+
+      abstract!
+
+      sig { returns(T::Array[Symbol]) }
+      attr_reader :names
+
+      sig { returns(Visibility) }
+      attr_accessor :visibility
+
+      sig { returns(T::Array[Sig]) }
+      attr_reader :sigs
+
+      sig do
+        params(
+          name: Symbol,
+          names: Symbol,
+          visibility: Visibility,
+          sigs: T::Array[Sig],
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment]
+        ).void
+      end
+      def initialize(name, *names, visibility: Visibility::Public, sigs: [], loc: nil, comments: [])
+        super(loc: loc, comments: comments)
+        @names = T.let([name, *names], T::Array[Symbol])
+        @visibility = visibility
+        @sigs = sigs
+      end
+    end
+
+    class AttrAccessor < Attr; end
+    class AttrReader < Attr; end
+    class AttrWriter < Attr; end
+
     # Methods and args
 
     class Method < NodeWithComments

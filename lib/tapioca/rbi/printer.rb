@@ -184,6 +184,43 @@ module Tapioca
       end
     end
 
+    class Attr
+      extend T::Sig
+
+      sig { override.params(v: Printer).void }
+      def accept_printer(v)
+        previous_node = v.previous_node
+        v.printn if previous_node && (!previous_node.oneline? || !oneline?)
+
+        v.visit_all(comments)
+        sigs.each { |sig| v.visit(sig) }
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.printt
+        unless v.in_visibility_group || visibility == Visibility::Public
+          v.print(visibility.visibility.to_s)
+          v.print(" ")
+        end
+        case self
+        when AttrAccessor
+          v.print("attr_accessor")
+        when AttrReader
+          v.print("attr_reader")
+        when AttrWriter
+          v.print("attr_writer")
+        end
+        unless names.empty?
+          v.print(" ")
+          v.print(names.map { |name| ":#{name}" }.join(", "))
+        end
+        v.printn
+      end
+
+      sig { override.returns(T::Boolean) }
+      def oneline?
+        comments.empty? && sigs.empty?
+      end
+    end
+
     class Method
       extend T::Sig
 
