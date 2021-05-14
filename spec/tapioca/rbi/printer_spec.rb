@@ -225,6 +225,218 @@ module Tapioca
         end
       end
 
+      describe("can build RBI nodes with comments") do
+        it("builds nodes with comments") do
+          comments_single = [RBI::Comment.new("This is a single line comment")]
+
+          comments_multi = [
+            RBI::Comment.new("This is a"),
+            RBI::Comment.new("Multiline Comment"),
+          ]
+
+          rbi = RBI::Tree.new
+          rbi << RBI::Module.new("Foo", comments: comments_single)
+          rbi << RBI::Class.new("Bar", comments: comments_multi)
+          rbi << RBI::SingletonClass.new(comments: comments_single)
+          rbi << RBI::Const.new("Foo", "42", comments: comments_multi)
+          rbi << RBI::Include.new("A", comments: comments_single)
+          rbi << RBI::Extend.new("A", comments: comments_multi)
+
+          struct = RBI::TStruct.new("Foo", comments: comments_single)
+          struct << RBI::TStructConst.new("a", "A", comments: comments_multi)
+          struct << RBI::TStructProp.new("c", "C", comments: comments_single)
+          rbi << struct
+
+          enum = RBI::TEnum.new("Foo", comments: comments_multi)
+          enum << TEnumBlock.new(["A", "B"], comments: comments_single)
+          rbi << enum
+
+          rbi << RBI::Helper.new("foo", comments: comments_multi)
+          rbi << RBI::MixesInClassMethods.new("A", comments: comments_single)
+          rbi << RBI::TypeMember.new("A", "type_member", comments: comments_multi)
+          rbi << RBI::TypeMember.new("B", "type_template", comments: comments_single)
+
+          assert_equal(<<~RBI, rbi.string)
+            # This is a single line comment
+            module Foo; end
+
+            # This is a
+            # Multiline Comment
+            class Bar; end
+
+            # This is a single line comment
+            class << self; end
+
+            # This is a
+            # Multiline Comment
+            Foo = 42
+
+            # This is a single line comment
+            include A
+
+            # This is a
+            # Multiline Comment
+            extend A
+
+            # This is a single line comment
+            class Foo < ::T::Struct
+              # This is a
+              # Multiline Comment
+              const :a, A
+
+              # This is a single line comment
+              prop :c, C
+            end
+
+            # This is a
+            # Multiline Comment
+            class Foo < ::T::Enum
+              # This is a single line comment
+              enums do
+                A = new
+                B = new
+              end
+            end
+
+            # This is a
+            # Multiline Comment
+            foo!
+
+            # This is a single line comment
+            mixes_in_class_methods A
+
+            # This is a
+            # Multiline Comment
+            A = type_member
+
+            # This is a single line comment
+            B = type_template
+          RBI
+        end
+
+        it("builds methods with signatures and comments") do
+          comments_single = [RBI::Comment.new("This is a single line comment")]
+
+          comments_multi = [
+            RBI::Comment.new("This is a"),
+            RBI::Comment.new("Multiline Comment"),
+          ]
+
+          rbi = RBI::Tree.new
+          rbi << RBI::Method.new("foo", comments: comments_multi)
+
+          method = RBI::Method.new("foo", comments: comments_single)
+          method.sigs << RBI::Sig.new
+          rbi << method
+
+          sig1 = RBI::Sig.new
+          sig2 = RBI::Sig.new(return_type: "R")
+          sig2 << RBI::SigParam.new("a", "A")
+          sig2 << RBI::SigParam.new("b", "T.nilable(B)")
+          sig2 << RBI::SigParam.new("b", "T.proc.void")
+
+          method = RBI::Method.new("bar", comments: comments_multi)
+          method.sigs << sig1
+          method.sigs << sig2
+          rbi << method
+
+          assert_equal(<<~RBI, rbi.string)
+            # This is a
+            # Multiline Comment
+            def foo; end
+
+            # This is a single line comment
+            sig { void }
+            def foo; end
+
+            # This is a
+            # Multiline Comment
+            sig { void }
+            sig { params(a: A, b: T.nilable(B), b: T.proc.void).returns(R) }
+            def bar; end
+          RBI
+        end
+
+        it("builds tree header comments") do
+          rbi = RBI::Tree.new(comments: [
+            RBI::Comment.new("typed: true"),
+            RBI::Comment.new("frozen_string_literal: false"),
+          ])
+          rbi << RBI::Module.new("Foo", comments: [RBI::Comment.new("Foo comment")])
+
+          assert_equal(<<~RBI, rbi.string)
+            # typed: true
+            # frozen_string_literal: false
+
+            # Foo comment
+            module Foo; end
+          RBI
+        end
+
+        it("prints params inline comments") do
+          comments = [RBI::Comment.new("comment")]
+
+          method = RBI::Method.new("foo", comments: comments)
+          method << RBI::Param.new("a", comments: comments)
+          method << RBI::OptParam.new("b", "42", comments: comments)
+          method << RBI::RestParam.new("c", comments: comments)
+          method << RBI::KwParam.new("d", comments: comments)
+          method << RBI::KwOptParam.new("e", "'bar'", comments: comments)
+          method << RBI::KwRestParam.new("f", comments: comments)
+          method << RBI::BlockParam.new("g", comments: comments)
+
+          assert_equal(<<~RBI, method.string)
+            # comment
+            def foo(
+              a, # comment
+              b = 42, # comment
+              *c, # comment
+              d:, # comment
+              e: 'bar', # comment
+              **f, # comment
+              &g # comment
+            ); end
+          RBI
+        end
+
+        it("prints params multiline comments") do
+          comments = [
+            RBI::Comment.new("comment 1"),
+            RBI::Comment.new("comment 2"),
+          ]
+
+          method = RBI::Method.new("foo", comments: comments)
+          method << RBI::Param.new("a", comments: comments)
+          method << RBI::OptParam.new("b", "42", comments: comments)
+          method << RBI::RestParam.new("c", comments: comments)
+          method << RBI::KwParam.new("d", comments: comments)
+          method << RBI::KwOptParam.new("e", "'bar'", comments: comments)
+          method << RBI::KwRestParam.new("f", comments: comments)
+          method << RBI::BlockParam.new("g", comments: comments)
+
+          assert_equal(<<~RBI, method.string)
+            # comment 1
+            # comment 2
+            def foo(
+              a, # comment 1
+                 # comment 2
+              b = 42, # comment 1
+                      # comment 2
+              *c, # comment 1
+                  # comment 2
+              d:, # comment 1
+                  # comment 2
+              e: 'bar', # comment 1
+                        # comment 2
+              **f, # comment 1
+                   # comment 2
+              &g # comment 1
+                 # comment 2
+            ); end
+          RBI
+        end
+      end
+
       describe("can nest singleton methods") do
         it("nests singleton methods in trees") do
           rbi = RBI::Tree.new
