@@ -969,6 +969,75 @@ module Tapioca
           RBI
         end
       end
+
+      describe("supports options") do
+        it("shows nodes locations") do
+          loc = RBI::Loc.new(file: "file.rbi", begin_line: 1, end_line: 2, begin_column: 3, end_column: 4)
+
+          rbi = RBI::Tree.new(loc: loc)
+          rbi << RBI::Module.new("S1", loc: loc)
+          rbi << RBI::Class.new("S2", loc: loc)
+          rbi << RBI::SingletonClass.new(loc: loc)
+          rbi << RBI::TEnum.new("TE", loc: loc)
+          rbi << RBI::TStruct.new("TS", loc: loc)
+          rbi << RBI::Const.new("C", "42", loc: loc)
+          rbi << RBI::Extend.new("E", loc: loc)
+          rbi << RBI::Include.new("I", loc: loc)
+          rbi << RBI::MixesInClassMethods.new("MICM", loc: loc)
+          rbi << RBI::Helper.new("abstract", loc: loc)
+          rbi << RBI::TStructConst.new("SC", "Type", loc: loc)
+          rbi << RBI::TStructProp.new("SP", "Type", loc: loc)
+          rbi << RBI::Method.new("m1", loc: loc)
+
+          assert_equal(<<~RBI, rbi.string(print_locs: true))
+            # file.rbi:1:3-2:4
+            module S1; end
+            # file.rbi:1:3-2:4
+            class S2; end
+            # file.rbi:1:3-2:4
+            class << self; end
+            # file.rbi:1:3-2:4
+            class TE < ::T::Enum; end
+            # file.rbi:1:3-2:4
+            class TS < ::T::Struct; end
+            # file.rbi:1:3-2:4
+            C = 42
+            # file.rbi:1:3-2:4
+            extend E
+            # file.rbi:1:3-2:4
+            include I
+            # file.rbi:1:3-2:4
+            mixes_in_class_methods MICM
+            # file.rbi:1:3-2:4
+            abstract!
+            # file.rbi:1:3-2:4
+            const :SC, Type
+            # file.rbi:1:3-2:4
+            prop :SP, Type
+            # file.rbi:1:3-2:4
+            def m1; end
+          RBI
+        end
+
+        it("shows sigs locations") do
+          loc = RBI::Loc.new(file: "file.rbi", begin_line: 1, end_line: 2, begin_column: 3, end_column: 4)
+
+          sig1 = RBI::Sig.new(loc: loc)
+          sig2 = RBI::Sig.new(loc: loc)
+
+          rbi = RBI::Tree.new(loc: loc)
+          rbi << RBI::Method.new("m1", sigs: [sig1, sig2], loc: loc)
+
+          assert_equal(<<~RBI, rbi.string(print_locs: true))
+            # file.rbi:1:3-2:4
+            sig { void }
+            # file.rbi:1:3-2:4
+            sig { void }
+            # file.rbi:1:3-2:4
+            def m1; end
+          RBI
+        end
+      end
     end
   end
 end

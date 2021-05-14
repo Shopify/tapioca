@@ -7,16 +7,17 @@ module Tapioca
       extend T::Sig
 
       sig { returns(T::Boolean) }
-      attr_accessor :in_visibility_group
+      attr_accessor :print_locs, :in_visibility_group
 
       sig { returns(T.nilable(Node)) }
       attr_reader :previous_node
 
-      sig { params(out: T.any(IO, StringIO), indent: Integer).void }
-      def initialize(out: $stdout, indent: 0)
+      sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
+      def initialize(out: $stdout, indent: 0, print_locs: false)
         super()
         @out = out
         @current_indent = indent
+        @print_locs = print_locs
         @in_visibility_group = T.let(false, T::Boolean)
         @previous_node = T.let(nil, T.nilable(Node))
       end
@@ -84,16 +85,16 @@ module Tapioca
       sig { abstract.params(v: Printer).void }
       def accept_printer(v); end
 
-      sig { params(out: T.any(IO, StringIO), indent: Integer).void }
-      def print(out: $stdout, indent: 0)
-        p = Printer.new(out: out, indent: indent)
+      sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
+      def print(out: $stdout, indent: 0, print_locs: false)
+        p = Printer.new(out: out, indent: indent, print_locs: print_locs)
         p.visit(self)
       end
 
-      sig { params(indent: Integer).returns(String) }
-      def string(indent: 0)
+      sig { params(indent: Integer, print_locs: T::Boolean).returns(String) }
+      def string(indent: 0, print_locs: false)
         out = StringIO.new
-        print(out: out, indent: indent)
+        print(out: out, indent: indent, print_locs: print_locs)
         out.string
       end
 
@@ -125,6 +126,7 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
         case self
         when Module
           v.printt("module #{name}")
@@ -155,6 +157,7 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl("#{name} = #{value}")
       end
     end
@@ -168,6 +171,7 @@ module Tapioca
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
         v.visit_all(sigs)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printt
         unless v.in_visibility_group || visibility == Visibility::Public
           v.print(visibility.visibility.to_s)
@@ -262,6 +266,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         case self
         when Include
           v.printt("include")
@@ -279,6 +284,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl(visibility.to_s)
       end
     end
@@ -288,6 +294,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printt("sig { ")
         v.print("abstract.") if is_abstract
         v.print("override.") if is_override
@@ -331,6 +338,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         case self
         when TStructProp
           v.printt("prop")
@@ -349,6 +357,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl("enums do")
         v.indent
         names.each do |name|
@@ -367,6 +376,7 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl("#{name} = #{value}")
       end
     end
@@ -376,6 +386,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl("#{name}!")
       end
     end

@@ -12,9 +12,13 @@ module Tapioca
       sig { returns(T.nilable(Tree)) }
       attr_accessor :parent_tree
 
-      sig { void }
-      def initialize
+      sig { returns(T.nilable(Loc)) }
+      attr_accessor :loc
+
+      sig { params(loc: T.nilable(Loc)).void }
+      def initialize(loc: nil)
         @parent_tree = nil
+        @loc = loc
       end
 
       sig { void }
@@ -32,9 +36,9 @@ module Tapioca
       sig { returns(T::Array[Node]) }
       attr_reader :nodes
 
-      sig { void }
-      def initialize
-        super()
+      sig { params(loc: T.nilable(Loc)).void }
+      def initialize(loc: nil)
+        super(loc: loc)
         @nodes = T.let([], T::Array[Node])
       end
 
@@ -64,9 +68,9 @@ module Tapioca
       sig { returns(String) }
       attr_accessor :name
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super()
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(loc: loc)
         @name = name
       end
     end
@@ -80,9 +84,9 @@ module Tapioca
       sig { returns(T.nilable(String)) }
       attr_accessor :superclass_name
 
-      sig { params(name: String, superclass_name: T.nilable(String)).void }
-      def initialize(name, superclass_name: nil)
-        super()
+      sig { params(name: String, superclass_name: T.nilable(String), loc: T.nilable(Loc)).void }
+      def initialize(name, superclass_name: nil, loc: nil)
+        super(loc: loc)
         @name = name
         @superclass_name = superclass_name
       end
@@ -91,9 +95,9 @@ module Tapioca
     class SingletonClass < Scope
       extend T::Sig
 
-      sig { void }
-      def initialize
-        super()
+      sig { params(loc: T.nilable(Loc)).void }
+      def initialize(loc: nil)
+        super(loc: loc)
       end
     end
 
@@ -105,9 +109,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name, :value
 
-      sig { params(name: String, value: String).void }
-      def initialize(name, value)
-        super()
+      sig { params(name: String, value: String, loc: T.nilable(Loc)).void }
+      def initialize(name, value, loc: nil)
+        super(loc: loc)
         @name = name
         @value = value
       end
@@ -139,11 +143,12 @@ module Tapioca
           params: T::Array[Param],
           is_singleton: T::Boolean,
           visibility: Visibility,
-          sigs: T::Array[Sig]
+          sigs: T::Array[Sig],
+          loc: T.nilable(Loc)
         ).void
       end
-      def initialize(name, params: [], is_singleton: false, visibility: Visibility::Public, sigs: [])
-        super()
+      def initialize(name, params: [], is_singleton: false, visibility: Visibility::Public, sigs: [], loc: nil)
+        super(loc: loc)
         @name = name
         @params = params
         @is_singleton = is_singleton
@@ -163,9 +168,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super()
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(loc: loc)
         @name = name
       end
     end
@@ -176,9 +181,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :value
 
-      sig { params(name: String, value: String).void }
-      def initialize(name, value)
-        super(name)
+      sig { params(name: String, value: String, loc: T.nilable(Loc)).void }
+      def initialize(name, value, loc: nil)
+        super(name, loc: loc)
         @value = value
       end
     end
@@ -200,9 +205,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super()
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(loc: loc)
         @name = name
       end
     end
@@ -221,9 +226,9 @@ module Tapioca
       sig { returns(Symbol) }
       attr_reader :visibility
 
-      sig { params(visibility: Symbol).void }
-      def initialize(visibility)
-        super()
+      sig { params(visibility: Symbol, loc: T.nilable(Loc)).void }
+      def initialize(visibility, loc: nil)
+        super(loc: loc)
         @visibility = visibility
       end
 
@@ -261,7 +266,8 @@ module Tapioca
           is_abstract: T::Boolean,
           is_override: T::Boolean,
           is_overridable: T::Boolean,
-          type_params: T::Array[String]
+          type_params: T::Array[String],
+          loc: T.nilable(Loc)
         ).void
       end
       def initialize(
@@ -270,9 +276,10 @@ module Tapioca
         is_abstract: false,
         is_override: false,
         is_overridable: false,
-        type_params: []
+        type_params: [],
+        loc: nil
       )
-        super()
+        super(loc: loc)
         @params = params
         @return_type = return_type
         @is_abstract = is_abstract
@@ -293,9 +300,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name, :type
 
-      sig { params(name: String, type: String).void }
-      def initialize(name, type)
-        super()
+      sig { params(name: String, type: String, loc: T.nilable(Loc)).void }
+      def initialize(name, type, loc: nil)
+        super(loc: loc)
         @name = name
         @type = type
       end
@@ -306,9 +313,9 @@ module Tapioca
     class TStruct < Class
       extend T::Sig
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super(name, superclass_name: "::T::Struct")
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(name, superclass_name: "::T::Struct", loc: loc)
       end
     end
 
@@ -328,11 +335,12 @@ module Tapioca
         params(
           name: String,
           type: String,
-          default: T.nilable(String)
+          default: T.nilable(String),
+          loc: T.nilable(Loc)
         ).void
       end
-      def initialize(name, type, default: nil)
-        super()
+      def initialize(name, type, default: nil, loc: nil)
+        super(loc: loc)
         @name = name
         @type = type
         @default = default
@@ -347,9 +355,9 @@ module Tapioca
     class TEnum < Class
       extend T::Sig
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super(name, superclass_name: "::T::Enum")
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(name, superclass_name: "::T::Enum", loc: loc)
       end
     end
 
@@ -359,9 +367,9 @@ module Tapioca
       sig { returns(T::Array[String]) }
       attr_reader :names
 
-      sig { params(names: T::Array[String]).void }
-      def initialize(names = [])
-        super()
+      sig { params(names: T::Array[String], loc: T.nilable(Loc)).void }
+      def initialize(names = [], loc: nil)
+        super(loc: loc)
         @names = names
       end
 
@@ -379,9 +387,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name
 
-      sig { params(name: String).void }
-      def initialize(name)
-        super()
+      sig { params(name: String, loc: T.nilable(Loc)).void }
+      def initialize(name, loc: nil)
+        super(loc: loc)
         @name = name
       end
     end
@@ -392,9 +400,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :name, :value
 
-      sig { params(name: String, value: String).void }
-      def initialize(name, value)
-        super()
+      sig { params(name: String, value: String, loc: T.nilable(Loc)).void }
+      def initialize(name, value, loc: nil)
+        super(loc: loc)
         @name = name
         @value = value
       end
