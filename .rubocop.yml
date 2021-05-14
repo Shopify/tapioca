@@ -9,7 +9,7 @@ require:
 AllCops:
   TargetRubyVersion: 2.4
   Exclude:
-  - 'vendor/**/*'
+  - "vendor/**/*"
   - "spec/support/repo/bin/tapioca"
 
 Style/CaseEquality:
@@ -17,7 +17,7 @@ Style/CaseEquality:
 
 Style/ClassAndModuleChildren:
   Exclude:
-  - spec/tapioca/**/*
+  - "spec/tapioca/**/*"
 
 Sorbet:
   Enabled: true
