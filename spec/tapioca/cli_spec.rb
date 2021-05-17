@@ -979,9 +979,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     end
 
     it "must add missing RBIs" do
-      %w{
-        foo@0.0.1.rbi
-      }.each do |rbi|
+      ["foo@0.0.1.rbi"].each do |rbi|
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 
@@ -1004,11 +1002,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     end
 
     it "must move outdated RBIs" do
-      %w{
-        foo@0.0.1.rbi
-        bar@0.0.1.rbi
-        baz@0.0.1.rbi
-      }.each do |rbi|
+      ["foo@0.0.1.rbi", "bar@0.0.1.rbi", "baz@0.0.1.rbi"].each do |rbi|
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 

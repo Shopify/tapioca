@@ -49,7 +49,7 @@ module Tapioca
             method = constant.instance_method(:perform)
             parameters = compile_method_parameters_to_parlour(method)
 
-            %w[perform_later perform_now].each do |name|
+            ["perform_later", "perform_now"].each do |name|
               create_method(
                 job,
                 name,
