@@ -200,7 +200,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
-                default: "Google::Protobuf::Map.new(#{default_args.join(', ')})"
+                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
             else
               elem_type = type_of(descriptor)
@@ -213,7 +213,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
-                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(', ')})"
+                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
             end
           else
