@@ -33,14 +33,12 @@ module IsolationHelper
         begin
           if this.error?
             this.failures.map! do |e|
-              begin
-                Marshal.dump(e)
-                e
-              rescue TypeError
-                ex = Exception.new(e.message)
-                ex.set_backtrace(e.backtrace)
-                Minitest::UnexpectedError.new(ex)
-              end
+              Marshal.dump(e)
+              e
+            rescue TypeError
+              ex = Exception.new(e.message)
+              ex.set_backtrace(e.backtrace)
+              Minitest::UnexpectedError.new(ex)
             end
           end
           test_result = defined?(Minitest::Result) ? Minitest::Result.from(self) : this.dup

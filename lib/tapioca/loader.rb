@@ -130,22 +130,18 @@ module Tapioca
 
         engine.config.eager_load_paths.each do |load_path|
           Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-            begin
-              require(file)
-            rescue LoadError, StandardError
-              errored_files << file
-            end
+            require(file)
+          rescue LoadError, StandardError
+            errored_files << file
           end
         end
 
         # Try files that have errored one more time
         # It might have been a load order problem
         errored_files.each do |file|
-          begin
-            require(file)
-          rescue LoadError, StandardError
-            nil
-          end
+          require(file)
+        rescue LoadError, StandardError
+          nil
         end
       end
     end
