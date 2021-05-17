@@ -184,9 +184,13 @@ module Tapioca
     end
 
     class RestParam < Param; end
+
     class KwParam < Param; end
+
     class KwOptParam < OptParam; end
+
     class KwRestParam < Param; end
+
     class BlockParam < Param; end
 
     # Mixins
@@ -208,6 +212,7 @@ module Tapioca
     end
 
     class Include < Mixin; end
+
     class Extend < Mixin; end
 
     # Visibility
@@ -340,6 +345,7 @@ module Tapioca
     end
 
     class TStructProp < TStructField; end
+
     class TStructConst < TStructField; end
 
     # Sorbet's T::Enum
