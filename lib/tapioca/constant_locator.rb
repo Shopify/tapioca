@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'set'
+require "set"
 
 module Tapioca
   # Registers a TracePoint immediately upon load to track points at which

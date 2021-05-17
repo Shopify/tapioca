@@ -1,8 +1,8 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'json'
-require 'tempfile'
+require "json"
+require "tempfile"
 
 module Tapioca
   module Compilers
@@ -25,7 +25,7 @@ module Tapioca
 
           sig { params(paths: T::Array[String]).returns(T::Set[String]) }
           def load_symbols(paths)
-            output = T.cast(Tempfile.create('sorbet') do |file|
+            output = T.cast(Tempfile.create("sorbet") do |file|
               file.write(Array(paths).join("\n"))
               file.flush
 

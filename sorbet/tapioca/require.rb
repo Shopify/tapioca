@@ -15,5 +15,5 @@ require "activemodel-serializers-xml"
 require "google/protobuf"
 require "money"
 require "rubocop"
-require 'rake/testtask'
-require 'sidekiq'
+require "rake/testtask"
+require "sidekiq"

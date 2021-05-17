@@ -1,9 +1,9 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'smart_properties'
-require 'active_support/all'
-require 'baz'
+require "smart_properties"
+require "active_support/all"
+require "baz"
 
 # Fake as much of Rails as we can
 module Rails

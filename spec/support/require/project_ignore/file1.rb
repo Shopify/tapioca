@@ -1,4 +1,4 @@
 # typed: strict
 # frozen_string_literal: true
-require 'a'
-require 'libc'
+require "a"
+require "libc"

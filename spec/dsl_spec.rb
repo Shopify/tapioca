@@ -41,7 +41,7 @@ class DslSpec < Minitest::Spec
   def target_class_name
     # Get the name of the class under test from the name of the
     # test class
-    T.must(spec_test_class.name).gsub(/Spec$/, '')
+    T.must(spec_test_class.name).gsub(/Spec$/, "")
   end
 
   sig { returns(String) }

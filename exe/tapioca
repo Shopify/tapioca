@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'sorbet-runtime'
+require "sorbet-runtime"
 
 begin
   T::Configuration.default_checked_level = :never

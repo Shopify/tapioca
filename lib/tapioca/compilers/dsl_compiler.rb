@@ -61,7 +61,7 @@ module Tapioca
         generators = requested_generators.map(&:downcase)
 
         proc do |klass|
-          generator = klass.name&.sub(/^Tapioca::Compilers::Dsl::/, '')&.downcase
+          generator = klass.name&.sub(/^Tapioca::Compilers::Dsl::/, "")&.downcase
           generators.include?(generator)
         end
       end

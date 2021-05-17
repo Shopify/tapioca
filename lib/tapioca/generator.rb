@@ -1,8 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
-require 'pathname'
-require 'thor'
+require "pathname"
+require "thor"
 require "tapioca/core_ext/string"
 
 module Tapioca
@@ -225,7 +225,7 @@ module Tapioca
       say(" Done", :green)
       unless bundle.missing_specs.empty?
         say("  completed with missing specs: ")
-        say(bundle.missing_specs.join(', '), :yellow)
+        say(bundle.missing_specs.join(", "), :yellow)
       end
       puts
     end
@@ -321,7 +321,7 @@ module Tapioca
     sig { returns(T::Hash[String, String]) }
     def existing_rbis
       @existing_rbis ||= Pathname.glob((config.outpath / "*@*.rbi").to_s)
-        .map { |f| T.cast(f.basename(".*").to_s.split('@', 2), [String, String]) }
+        .map { |f| T.cast(f.basename(".*").to_s.split("@", 2), [String, String]) }
         .to_h
     end
 

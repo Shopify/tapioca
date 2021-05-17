@@ -4,7 +4,7 @@ source("https://rubygems.org")
 
 gemspec
 
-gem 'rubocop-shopify', require: false
+gem "rubocop-shopify", require: false
 
 group(:deployment, :development) do
   gem("rake")
@@ -26,8 +26,8 @@ group(:development, :test) do
   gem("activerecord-typedstore", "~> 1.3", require: false)
   gem("sqlite3")
   gem("identity_cache", "~> 1.0", require: false)
-  gem('cityhash', git: 'https://github.com/csfrancis/cityhash.git',
-                  ref: '3cfc7d01f333c01811d5e834f1495eaa29f87c36', require: false)
+  gem("cityhash", git: "https://github.com/csfrancis/cityhash.git",
+                  ref: "3cfc7d01f333c01811d5e834f1495eaa29f87c36", require: false)
   gem("activemodel-serializers-xml", "~> 1.0", require: false)
   gem("activeresource", "~> 5.1", require: false)
   gem("google-protobuf", "~>3.12.0", require: false)
