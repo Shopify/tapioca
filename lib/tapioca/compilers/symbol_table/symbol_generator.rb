@@ -389,7 +389,7 @@ module Tapioca
           mixins_from_modules = {}
 
           Class.new do
-            # rubocop:disable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            # rubocop:disable Style/MissingRespondToMissing
             def method_missing(symbol, *args)
             end
 
@@ -406,7 +406,7 @@ module Tapioca
               def method_missing(symbol, *args)
               end
             end
-            # rubocop:enable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            # rubocop:enable Style/MissingRespondToMissing
           end.include(constant)
 
           all_dynamic_extends = mixins_from_modules.delete(constant)
