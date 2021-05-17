@@ -19,7 +19,7 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
       # Output diff before raising error
       sh("git status --porcelain manual")
 
-      warn <<~WARNING
+      warn(<<~WARNING)
         The manual directory is out of sync.
         Run `bin/docs` (or `dev docs`) and commit the results.
       WARNING
