@@ -309,11 +309,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module A; end
-        <% if ruby_version(">= 2.4.0") %>
         A::ABC = T.let(T.unsafe(nil), Integer)
-        <% else %>
-        A::ABC = T.let(T.unsafe(nil), Fixnum)
-        <% end %>
         A::DEF = T.let(T.unsafe(nil), String)
       RBI
 

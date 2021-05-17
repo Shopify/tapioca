@@ -737,11 +737,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(template(<<~CONTENTS), File.read("#{outdir}/foo@0.0.1.rbi"))
         #{Contents::FOO_RBI.rstrip}
         class Foo::Secret; end
-        <% if ruby_version(">= 2.4.0") %>
         Foo::Secret::VALUE = T.let(T.unsafe(nil), Integer)
-        <% else %>
-        Foo::Secret::VALUE = T.let(T.unsafe(nil), Fixnum)
-        <% end %>
       CONTENTS
 
       refute_path_exists("#{outdir}/bar@0.3.0.rbi")

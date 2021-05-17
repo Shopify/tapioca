@@ -31,10 +31,10 @@ group(:development, :test) do
   gem("activemodel-serializers-xml", "~> 1.0", require: false)
   gem("activeresource", "~> 5.1", require: false)
   gem("google-protobuf", "~>3.12.0", require: false)
-  # Fix version to 0.14.1 since it is the last version to support Ruby 2.4
+  gem("sidekiq", require: false)
+  gem("nokogiri", require: false)
+  # Fix version to 0.14.1 since it is the last version to support Ruby 2.5
   gem("shopify-money", "= 0.14.1", require: false)
-  gem("sidekiq", "~>5.0", require: false) # Version 6 dropped support for Ruby 2.4
-  gem("nokogiri", "1.10.10", require: false) # Lock to last supported for Ruby 2.4
 end
 
 gem "rubocop-sorbet", ">= 0.4.1"
