@@ -631,7 +631,10 @@ module Tapioca
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        SPECIAL_METHOD_NAMES = ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"]
+        SPECIAL_METHOD_NAMES = [
+          "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<",
+          "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"
+        ]
 
         sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)
