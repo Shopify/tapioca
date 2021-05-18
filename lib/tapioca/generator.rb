@@ -601,9 +601,9 @@ module Tapioca
       if diff.empty?
         say("Nothing to do, all RBIs are up-to-date.")
       else
-        say("RBI files are out-of-date. In your development environment, please run:", [:green, :bold])
+        say("RBI files are out-of-date. In your development environment, please run:", :green)
         say("  `#{Config::DEFAULT_COMMAND} dsl`", [:green, :bold])
-        say("Once it is complete, be sure to commit and push any changes", [:green, :bold])
+        say("Once it is complete, be sure to commit and push any changes", :green)
 
         say("")
 
