@@ -811,7 +811,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       skip "failure is to be investigated later"
       output = execute("generate")
 
-      assert_includes(output, <<~OUTPUT.strip) if ruby_version(">= 2.5")
+      assert_includes(output, <<~OUTPUT.strip)
         Requiring all gems to prepare for compiling...  Done
           completed with missing specs: mini_portile2
       OUTPUT

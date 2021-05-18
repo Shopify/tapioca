@@ -840,9 +840,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           class << self
             def [](*_arg0); end
-        <% if ruby_version(">= 2.5.0") %>
             def inspect; end
-        <% end %>
             def members; end
             def new(*_arg0); end
           end
@@ -854,9 +852,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           class << self
             def [](*_arg0); end
-        <% if ruby_version(">= 2.5.0") %>
             def inspect; end
-        <% end %>
             def members; end
             def new(*_arg0); end
           end

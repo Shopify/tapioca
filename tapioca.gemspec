@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency("spoom")
   spec.add_dependency("thor", ">= 0.19.2")
 
-  spec.required_ruby_version = ">= 2.5"
+  spec.required_ruby_version = ">= 2.6"
 end
