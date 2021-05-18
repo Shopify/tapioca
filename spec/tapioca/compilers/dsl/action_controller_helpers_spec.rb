@@ -82,6 +82,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         # typed: strong
         class UserController
           module HelperMethods
+            include ::ActionController::Base::HelperMethods
           end
 
           class HelperProxy < ::ActionView::Base
@@ -119,6 +120,8 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         # typed: strong
         class UserController
           module HelperMethods
+            include ::ActionController::Base::HelperMethods
+
             sig { returns(T.untyped) }
             def current_user_name; end
 
@@ -161,6 +164,8 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         # typed: strong
         class UserController
           module HelperMethods
+            include ::ActionController::Base::HelperMethods
+
             sig { params(user: T.untyped).returns(T.untyped) }
             def greet(user); end
 
@@ -203,6 +208,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
         # typed: strong
         class UserController
           module HelperMethods
+            include ::ActionController::Base::HelperMethods
             include ::GreetHelper
           end
 
