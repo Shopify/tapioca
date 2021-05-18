@@ -37,3 +37,6 @@ group(:development, :test) do
 end
 
 gem "rubocop-sorbet", ">= 0.4.1"
+gem("rubocop-minitest")
+gem("rubocop-rails")
+gem("rubocop-rake")
