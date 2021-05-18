@@ -415,6 +415,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
               def author_previously_changed?; end
 
               sig { returns(T.nilable(::String)) }
+              def author_previously_was; end
+
+              sig { returns(T.nilable(::String)) }
               def author_was; end
 
               sig { void }
