@@ -290,11 +290,11 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
         # typed: false
 
-        require 'active_support/all'
-        require 'baz'
-        require 'foo/secret'
-        require 'foo/will_fail'
-        require 'smart_properties'
+        require "active_support/all"
+        require "baz"
+        require "foo/secret"
+        require "foo/will_fail"
+        require "smart_properties"
       CONTENTS
     end
 
@@ -321,7 +321,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
         # typed: false
 
-        require 'foo/secret'
+        require "foo/secret"
       CONTENTS
     end
   end

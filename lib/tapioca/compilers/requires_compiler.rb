@@ -22,7 +22,7 @@ module Tapioca
             name_in_project?(files, req)
           end
         end.sort.uniq.map do |name|
-          "require '#{name}'\n"
+          "require \"#{name}\"\n"
         end.join
       end
 
