@@ -2320,7 +2320,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def initialize(foo); end
         end
 
-        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), T.untyped)
+        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[Integer])
 
         module Quux
           interface!
@@ -2371,6 +2371,48 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           extend T::Generic
 
           sealed!
+
+          Elem = type_member
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("can compile generic constant types") do
+      add_ruby_file("optional.rb", <<~RUBY)
+        class Foo
+          extend T::Generic
+
+          Elem = type_member
+        end
+
+        FOO = Foo.new
+
+        class Bar
+          extend T::Generic
+
+          Key = type_member
+          Value = type_member
+        end
+
+        BAR = Bar.new
+      RUBY
+
+      output = template(<<~RBI)
+        BAR = T.let(T.unsafe(nil), Bar[T.untyped, T.untyped])
+
+        class Bar
+          extend T::Generic
+
+          Key = type_member
+          Value = type_member
+        end
+
+        FOO = T.let(T.unsafe(nil), Foo[T.untyped])
+
+        class Foo
+          extend T::Generic
 
           Elem = type_member
         end
