@@ -2351,6 +2351,27 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles fixed hashes in params properly") do
+      add_ruby_file("sigs_with_fixed_hash_with_symbols_and_string.rb", <<~RUBY)
+        class Foo
+          extend T::Sig
+
+          sig { params(params: { "foo" => Integer, bar: String, :"foo bar" => Class }).void }
+          def foo(params)
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(params: {"foo" => Integer, bar: String, :"foo bar" => Class}).void }
+          def foo(params); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("can compile sealed generics") do
       add_ruby_file("sealed_generic.rb", <<~RUBY)
         class Foo
