@@ -62,10 +62,10 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class NotifyJob
-          sig { params(user_id: T.untyped).returns(NotifyJob) }
+          sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
           def self.perform_later(user_id); end
 
-          sig { params(user_id: T.untyped).returns(NotifyJob) }
+          sig { params(user_id: T.untyped).returns(T.untyped) }
           def self.perform_now(user_id); end
         end
       RBI
@@ -87,10 +87,10 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class NotifyJob
-          sig { params(user_id: Integer).returns(NotifyJob) }
+          sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
           def self.perform_later(user_id); end
 
-          sig { params(user_id: Integer).returns(NotifyJob) }
+          sig { params(user_id: Integer).void }
           def self.perform_now(user_id); end
         end
       RBI
