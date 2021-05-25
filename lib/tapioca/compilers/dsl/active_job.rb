@@ -19,6 +19,7 @@ module Tapioca
       #
       # ~~~rb
       # class NotifyUserJob < ActiveJob::Base
+      #   sig { params(user: User).returns(Mail) }
       #   def perform(user)
       #     # ...
       #   end
@@ -31,10 +32,10 @@ module Tapioca
       # # notify_user_job.rbi
       # # typed: true
       # class NotifyUserJob
-      #   sig { params(user: T.untyped).returns(NotifyUserJob) }
+      #   sig { params(user: User).returns(T.any(NotifyUserJob, FalseClass)) }
       #   def self.perform_later(user); end
       #
-      #   sig { params(user: T.untyped).returns(NotifyUserJob) }
+      #   sig { params(user: User).returns(Mail) }
       #   def self.perform_now(user); end
       # end
       # ~~~
@@ -48,16 +49,23 @@ module Tapioca
 
             method = constant.instance_method(:perform)
             parameters = compile_method_parameters_to_parlour(method)
+            return_type = compile_method_return_type_to_parlour(method)
 
-            %w[perform_later perform_now].each do |name|
-              create_method(
-                job,
-                name,
-                parameters: parameters,
-                return_type: constant.name,
-                class_method: true
-              )
-            end
+            create_method(
+              job,
+              "perform_later",
+              parameters: parameters,
+              return_type: "T.any(#{constant.name}, FalseClass)",
+              class_method: true
+            )
+
+            create_method(
+              job,
+              "perform_now",
+              parameters: parameters,
+              return_type: return_type,
+              class_method: true
+            )
           end
         end
 

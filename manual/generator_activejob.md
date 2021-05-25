@@ -7,6 +7,7 @@ For example, with the following `ActiveJob` subclass:
 
 ~~~rb
 class NotifyUserJob < ActiveJob::Base
+  sig { params(user: User).returns(Mail) }
   def perform(user)
     # ...
   end
@@ -19,10 +20,10 @@ this generator will produce the RBI file `notify_user_job.rbi` with the followin
 # notify_user_job.rbi
 # typed: true
 class NotifyUserJob
-  sig { params(user: T.untyped).returns(NotifyUserJob) }
+  sig { params(user: User).returns(T.any(NotifyUserJob, FalseClass)) }
   def self.perform_later(user); end
 
-  sig { params(user: T.untyped).returns(NotifyUserJob) }
+  sig { params(user: User).returns(Mail) }
   def self.perform_now(user); end
 end
 ~~~
