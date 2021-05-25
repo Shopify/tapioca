@@ -3440,6 +3440,8 @@ end
 
 class Bundler::StubSpecification
   def self.from_stub(stub); end
+  def default_gem?; end
+  def files; end
 end
 
 class Bundler::SudoNotPermittedError

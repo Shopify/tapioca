@@ -11,11 +11,31 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
   include TemplateHelper
   include IsolationHelper
 
+  class GemStub < T::Struct
+    extend T::Sig
+
+    const :name, String
+    const :version, String
+    const :platform, T.nilable(String)
+    const :full_gem_path, String
+    const :full_require_paths, T::Array[String]
+
+    sig { returns(T::Boolean) }
+    def default_gem?
+      false
+    end
+  end
+
   describe("compile") do
     sig { returns(String) }
     def compile
-      stub = Struct.new(:name, :version, :platform, :full_gem_path, :full_require_paths)
-        .new("the-dep", "1.1.2", nil, tmp_path, [tmp_path("lib")])
+      stub = GemStub.new(
+        name: "the-dep",
+        version: "1.1.2",
+        platform: nil,
+        full_gem_path: tmp_path,
+        full_require_paths: [tmp_path("lib")]
+      )
 
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::Gem.new(spec)
