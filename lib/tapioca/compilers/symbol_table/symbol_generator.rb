@@ -145,7 +145,15 @@ module Tapioca
         def compile_object(tree, name, value)
           return if symbol_ignored?(name)
           klass = class_of(value)
-          klass_name = name_of(klass)
+
+          klass_name = if klass == ObjectSpace::WeakMap
+            # WeakMap is an implicit generic with one type variable
+            "ObjectSpace::WeakMap[T.untyped]"
+          elsif T::Generic === klass
+            generic_name_of(klass)
+          else
+            name_of(klass)
+          end
 
           if klass_name == "T::Private::Types::TypeAlias"
             tree << RBI::Const.new(name, "T.type_alias { #{T.unsafe(value).aliased_type} }")
@@ -155,8 +163,6 @@ module Tapioca
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
           type_name = klass_name || "T.untyped"
-          # TODO: Do this in a more generic and clean way.
-          type_name = "#{type_name}[T.untyped]" if type_name == "ObjectSpace::WeakMap"
 
           tree << RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         end
@@ -772,6 +778,19 @@ module Tapioca
           return unless are_equal?(constant, resolve_constant(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
+        end
+
+        sig { params(constant: T.all(Module, T::Generic)).returns(String) }
+        def generic_name_of(constant)
+          type_name = T.must(constant.name)
+          return type_name if type_name =~ /\[.*\]$/
+
+          type_variables = Tapioca::GenericTypeRegistry.lookup_type_variables(constant)
+          return type_name unless type_variables
+
+          type_variable_names = type_variables.map { "T.untyped" }.join(", ")
+
+          "#{type_name}[#{type_variable_names}]"
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
