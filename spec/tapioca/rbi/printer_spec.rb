@@ -103,6 +103,7 @@ module Tapioca
           sig3 = RBI::Sig.new(is_abstract: true)
           sig3.is_override = true
           sig3.is_overridable = true
+          sig3.checked = :never
 
           sig4 = RBI::Sig.new(return_type: "T.type_parameter(:V)")
           sig4.type_params << "U"
@@ -118,7 +119,7 @@ module Tapioca
           assert_equal(<<~RBI, method.string)
             sig { void }
             sig { params(a: A, b: T.nilable(B), b: T.proc.void).returns(R) }
-            sig { abstract.override.overridable.void }
+            sig { abstract.override.overridable.void.checked(:never) }
             sig { type_parameters(:U, :V).params(a: T.type_parameter(:U)).returns(T.type_parameter(:V)) }
             def foo; end
           RBI

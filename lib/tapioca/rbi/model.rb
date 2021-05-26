@@ -304,6 +304,9 @@ module Tapioca
       sig { returns(T::Array[String]) }
       attr_reader :type_params
 
+      sig { returns(T.nilable(Symbol)) }
+      attr_accessor :checked
+
       sig do
         params(
           params: T::Array[SigParam],
@@ -312,6 +315,7 @@ module Tapioca
           is_override: T::Boolean,
           is_overridable: T::Boolean,
           type_params: T::Array[String],
+          checked: T.nilable(Symbol),
           loc: T.nilable(Loc)
         ).void
       end
@@ -322,6 +326,7 @@ module Tapioca
         is_override: false,
         is_overridable: false,
         type_params: [],
+        checked: nil,
         loc: nil
       )
         super(loc: loc)
@@ -331,6 +336,7 @@ module Tapioca
         @is_override = is_override
         @is_overridable = is_overridable
         @type_params = type_params
+        @checked = checked
       end
 
       sig { params(param: SigParam).void }
