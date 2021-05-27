@@ -448,6 +448,9 @@ module Tapioca
         else
           v.print("void")
         end
+        if checked
+          v.print(".checked(:#{checked})")
+        end
         v.printn(" }")
       end
     end
