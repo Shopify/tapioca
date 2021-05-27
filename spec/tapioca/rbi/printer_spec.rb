@@ -127,12 +127,12 @@ module Tapioca
         it("builds mixins") do
           scope = RBI::Class.new("Foo")
           scope << RBI::Include.new("A")
-          scope << RBI::Extend.new("A")
+          scope << RBI::Extend.new("A", "B")
 
           assert_equal(<<~RBI, scope.string)
             class Foo
               include A
-              extend A
+              extend A, B
             end
           RBI
         end
