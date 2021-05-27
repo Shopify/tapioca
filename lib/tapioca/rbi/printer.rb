@@ -7,16 +7,17 @@ module Tapioca
       extend T::Sig
 
       sig { returns(T::Boolean) }
-      attr_accessor :in_visibility_group
+      attr_accessor :print_locs, :in_visibility_group
 
       sig { returns(T.nilable(Node)) }
       attr_reader :previous_node
 
-      sig { params(out: T.any(IO, StringIO), indent: Integer).void }
-      def initialize(out: $stdout, indent: 0)
+      sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
+      def initialize(out: $stdout, indent: 0, print_locs: false)
         super()
         @out = out
         @current_indent = indent
+        @print_locs = print_locs
         @in_visibility_group = T.let(false, T::Boolean)
         @previous_node = T.let(nil, T.nilable(Node))
       end
@@ -84,16 +85,16 @@ module Tapioca
       sig { abstract.params(v: Printer).void }
       def accept_printer(v); end
 
-      sig { params(out: T.any(IO, StringIO), indent: Integer).void }
-      def print(out: $stdout, indent: 0)
-        p = Printer.new(out: out, indent: indent)
+      sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
+      def print(out: $stdout, indent: 0, print_locs: false)
+        p = Printer.new(out: out, indent: indent, print_locs: print_locs)
         p.visit(self)
       end
 
-      sig { params(indent: Integer).returns(String) }
-      def string(indent: 0)
+      sig { params(indent: Integer, print_locs: T::Boolean).returns(String) }
+      def string(indent: 0, print_locs: false)
         out = StringIO.new
-        print(out: out, indent: indent)
+        print(out: out, indent: indent, print_locs: print_locs)
         out.string
       end
 
@@ -103,17 +104,37 @@ module Tapioca
       end
     end
 
+    class NodeWithComments
+      extend T::Sig
+
+      sig { override.returns(T::Boolean) }
+      def oneline?
+        comments.empty?
+      end
+    end
+
+    class Comment
+      extend T::Sig
+
+      sig { override.params(v: Printer).void }
+      def accept_printer(v)
+        v.printl("# #{text.strip}")
+      end
+    end
+
     class Tree
       extend T::Sig
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.visit_all(comments)
+        v.printn if !comments.empty? && !empty?
         v.visit_all(nodes)
       end
 
       sig { override.returns(T::Boolean) }
       def oneline?
-        empty?
+        comments.empty? && empty?
       end
     end
 
@@ -125,6 +146,8 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         case self
         when Module
           v.printt("module #{name}")
@@ -155,6 +178,8 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         v.printl("#{name} = #{value}")
       end
     end
@@ -167,7 +192,9 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.visit_all(comments)
         v.visit_all(sigs)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printt
         unless v.in_visibility_group || visibility == Visibility::Public
           v.print(visibility.visibility.to_s)
@@ -178,9 +205,29 @@ module Tapioca
         v.print(name)
         unless params.empty?
           v.print("(")
-          params.each_with_index do |param, index|
-            v.print(", ") if index > 0
-            v.visit(param)
+          if inline_params?
+            params.each_with_index do |param, index|
+              v.print(", ") if index > 0
+              v.visit(param)
+            end
+          else
+            v.printn
+            v.indent
+            params.each_with_index do |param, pindex|
+              v.printt
+              v.visit(param)
+              v.print(",") if pindex < params.size - 1
+              param.comments.each_with_index do |comment, cindex|
+                if cindex > 0
+                  param.print_comment_leading_space(v)
+                else
+                  v.print(" ")
+                end
+                v.print("# #{comment.text.strip}")
+              end
+              v.printn
+            end
+            v.dedent
           end
           v.print(")")
         end
@@ -190,7 +237,12 @@ module Tapioca
 
       sig { override.returns(T::Boolean) }
       def oneline?
-        sigs.empty?
+        comments.empty? && sigs.empty? && inline_params?
+      end
+
+      sig { returns(T::Boolean) }
+      def inline_params?
+        params.all? { |p| p.comments.empty? }
       end
     end
 
@@ -201,6 +253,13 @@ module Tapioca
       def accept_printer(v)
         v.print(name.to_s)
       end
+
+      sig { params(v: Printer).void }
+      def print_comment_leading_space(v)
+        v.printn
+        v.printt
+        v.print(" " * (name.size + 2))
+      end
     end
 
     class OptParam
@@ -209,6 +268,12 @@ module Tapioca
       sig { override.params(v: Printer).void }
       def accept_printer(v)
         v.print("#{name} = #{value}")
+      end
+
+      sig { override.params(v: Printer).void }
+      def print_comment_leading_space(v)
+        super
+        v.print(" " * (value.size + 3))
       end
     end
 
@@ -219,6 +284,12 @@ module Tapioca
       def accept_printer(v)
         v.print("*#{name}")
       end
+
+      sig { override.params(v: Printer).void }
+      def print_comment_leading_space(v)
+        super
+        v.print(" ")
+      end
     end
 
     class KwParam
@@ -227,6 +298,12 @@ module Tapioca
       sig { override.params(v: Printer).void }
       def accept_printer(v)
         v.print("#{name}:")
+      end
+
+      sig { override.params(v: Printer).void }
+      def print_comment_leading_space(v)
+        super
+        v.print(" ")
       end
     end
 
@@ -237,6 +314,14 @@ module Tapioca
       def accept_printer(v)
         v.print("#{name}: #{value}")
       end
+
+      sig { override.params(v: Printer).void }
+      def print_comment_leading_space(v)
+        v.printn
+        v.printt
+        v.print(" " * (name.size + 2))
+        v.print(" " * (value.size + 2))
+      end
     end
 
     class KwRestParam
@@ -245,6 +330,12 @@ module Tapioca
       sig { override.params(v: Printer).void }
       def accept_printer(v)
         v.print("**#{name}")
+      end
+
+      sig { override.params(v: Printer).void }
+      def print_comment_leading_space(v)
+        super
+        v.print("  ")
       end
     end
 
@@ -262,6 +353,11 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        previous_node = v.previous_node
+        v.printn if previous_node && (!previous_node.oneline? || !oneline?)
+
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         case self
         when Include
           v.printt("include")
@@ -279,6 +375,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printl(visibility.to_s)
       end
     end
@@ -288,6 +385,7 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
         v.printt("sig { ")
         v.print("abstract.") if is_abstract
         v.print("override.") if is_override
@@ -331,6 +429,11 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        previous_node = v.previous_node
+        v.printn if previous_node && (!previous_node.oneline? || !oneline?)
+
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         case self
         when TStructProp
           v.printt("prop")
@@ -349,6 +452,8 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         v.printl("enums do")
         v.indent
         names.each do |name|
@@ -367,6 +472,8 @@ module Tapioca
         previous_node = v.previous_node
         v.printn if previous_node && (!previous_node.oneline? || !oneline?)
 
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         v.printl("#{name} = #{value}")
       end
     end
@@ -376,6 +483,11 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
+        previous_node = v.previous_node
+        v.printn if previous_node && (!previous_node.oneline? || !oneline?)
+
+        v.printl("# #{loc}") if loc && v.print_locs
+        v.visit_all(comments)
         v.printl("#{name}!")
       end
     end
