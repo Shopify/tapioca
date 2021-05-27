@@ -58,6 +58,21 @@ module Tapioca
           RBI
         end
 
+        it("builds attributes") do
+          rbi = RBI::Tree.new
+          rbi << RBI::AttrReader.new(:m1)
+          rbi << RBI::AttrWriter.new(:m2, :m3, visibility: Visibility::Public)
+          rbi << RBI::AttrAccessor.new(:m4, visibility: Visibility::Private)
+          rbi << RBI::AttrReader.new(:m5, visibility: Visibility::Protected)
+
+          assert_equal(<<~RBI, rbi.string)
+            attr_reader :m1
+            attr_writer :m2, :m3
+            private attr_accessor :m4
+            protected attr_reader :m5
+          RBI
+        end
+
         it("builds methods") do
           rbi = RBI::Tree.new
           rbi << RBI::Method.new("m1")
@@ -89,6 +104,38 @@ module Tapioca
 
           assert_equal(<<~RBI, method.string)
             def foo(a, b = 42, *c, d:, e: 'bar', **f, &g); end
+          RBI
+        end
+
+        it("builds attributes with signatures") do
+          sig1 = RBI::Sig.new
+
+          sig2 = RBI::Sig.new(return_type: "R")
+          sig2 << RBI::SigParam.new("a", "A")
+          sig2 << RBI::SigParam.new("b", "T.nilable(B)")
+          sig2 << RBI::SigParam.new("b", "T.proc.void")
+
+          sig3 = RBI::Sig.new(is_abstract: true)
+          sig3.is_override = true
+          sig3.is_overridable = true
+
+          sig4 = RBI::Sig.new(return_type: "T.type_parameter(:V)")
+          sig4.type_params << "U"
+          sig4.type_params << "V"
+          sig4 << RBI::SigParam.new("a", "T.type_parameter(:U)")
+
+          attr = RBI::AttrAccessor.new(:foo, :bar)
+          attr.sigs << sig1
+          attr.sigs << sig2
+          attr.sigs << sig3
+          attr.sigs << sig4
+
+          assert_equal(<<~RBI, attr.string)
+            sig { void }
+            sig { params(a: A, b: T.nilable(B), b: T.proc.void).returns(R) }
+            sig { abstract.override.overridable.void }
+            sig { type_parameters(:U, :V).params(a: T.type_parameter(:U)).returns(T.type_parameter(:V)) }
+            attr_accessor :foo, :bar
           RBI
         end
 
