@@ -288,11 +288,77 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class Post
+          sig { returns(T::Boolean) }
+          def enabled; end
+
+          sig { params(enabled: T::Boolean).returns(T::Boolean) }
+          def enabled=(enabled); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for smart property that accepts boolean and has lambda as default") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post
+          include SmartProperties
+          property :enabled, accepts: [true, false], default: -> {}
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+        class Post
           sig { returns(T.nilable(T::Boolean)) }
           def enabled; end
 
           sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
           def enabled=(enabled); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for smart property that accepts String and has a non-nil default") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post
+          include SmartProperties
+          property :title, accepts: String, default: "here"
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+        class Post
+          sig { returns(::String) }
+          def title; end
+
+          sig { params(title: ::String).returns(::String) }
+          def title=(title); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for smart property that accepts String and has a nil default") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post
+          include SmartProperties
+          property :title, accepts: String, default: nil
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+        class Post
+          sig { returns(T.nilable(::String)) }
+          def title; end
+
+          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+          def title=(title); end
         end
       RBI
 
