@@ -247,13 +247,13 @@ module Tapioca
 
       abstract!
 
-      sig { returns(String) }
-      attr_reader :name
+      sig { returns(T::Array[String]) }
+      attr_reader :names
 
-      sig { params(name: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(name, loc: nil, comments: [])
+      sig { params(name: String, names: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
+      def initialize(name, *names, loc: nil, comments: [])
         super(loc: loc, comments: comments)
-        @name = name
+        @names = T.let([name, *names], T::Array[String])
       end
     end
 
