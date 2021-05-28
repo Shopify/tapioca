@@ -14,11 +14,9 @@ Rake::TestTask.new do |t|
 end
 
 task(:spec) do
-  begin
-    Rake::Task[:test].execute
-  rescue RuntimeError
-    exit(1)
-  end
+  Rake::Task[:test].execute
+rescue RuntimeError
+  exit(1)
 end
 
 task(default: :spec)

@@ -285,11 +285,9 @@ module Tapioca
     sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
     def constantize(constant_names)
       constant_map = constant_names.map do |name|
-        begin
-          [name, Object.const_get(name)]
-        rescue NameError
-          [name, nil]
-        end
+        [name, Object.const_get(name)]
+                     rescue NameError
+                       [name, nil]
       end.to_h
 
       unprocessable_constants = constant_map.select { |_, v| v.nil? }

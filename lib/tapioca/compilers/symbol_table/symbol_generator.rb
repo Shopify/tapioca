@@ -404,14 +404,12 @@ module Tapioca
             end
 
             define_singleton_method(:include) do |mod|
-              begin
-                before = singleton_class.ancestors
-                super(mod).tap do
-                  mixins_from_modules[mod] = singleton_class.ancestors - before
-                end
-              rescue Exception # rubocop:disable Lint/RescueException
-                # this is a best effort, bail if we can't perform this
+              before = singleton_class.ancestors
+              super(mod).tap do
+                mixins_from_modules[mod] = singleton_class.ancestors - before
               end
+            rescue Exception # rubocop:disable Lint/RescueException
+              # this is a best effort, bail if we can't perform this
             end
 
             class << self
