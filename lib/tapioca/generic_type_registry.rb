@@ -164,11 +164,9 @@ module Tapioca
           # Otherwise, some inherited method could be preventing us
           # from creating subclasses, so let's override it and rescue
           owner.send(:define_method, :inherited) do |s|
-            begin
-              inherited_method.call(s)
-            rescue
-              # Ignoring errors
-            end
+            inherited_method.call(s)
+          rescue
+            # Ignoring errors
           end
 
           # return a subclass
