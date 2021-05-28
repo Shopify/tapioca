@@ -34,5 +34,5 @@ group(:development, :test) do
   # Fix version to 0.14.1 since it is the last version to support Ruby 2.4
   gem("shopify-money", "= 0.14.1", require: false)
   gem("sidekiq", "~> 5.0", require: false) # Version 6 dropped support for Ruby 2.4
-  gem("nokogiri", "1.10.10", require: false) # Lock to last supported for Ruby 2.4
+  gem("nokogiri", "1.11.6", require: false) # Lock to last supported for Ruby 2.4
 end
