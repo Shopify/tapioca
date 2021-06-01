@@ -137,10 +137,10 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
       assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
       assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
-        # typed: false
+        # typed: true
         # frozen_string_literal: true
 
-        # Add your extra requires here
+        # Add your extra requires here (`tapioca require` can be used to boostrap this list)
       CONTENTS
 
       assert_path_exists(repo_path / "bin/tapioca")
@@ -266,10 +266,10 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
       assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
       assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
-        # typed: false
+        # typed: true
         # frozen_string_literal: true
 
-        # Add your extra requires here
+        # Add your extra requires here (`tapioca require` can be used to boostrap this list)
       CONTENTS
     end
 
