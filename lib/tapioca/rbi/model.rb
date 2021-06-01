@@ -468,6 +468,11 @@ module Tapioca
       def empty?
         names.empty?
       end
+
+      sig { params(name: String).void }
+      def <<(name)
+        @names << name
+      end
     end
 
     # Sorbet's misc.
