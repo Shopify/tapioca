@@ -35,7 +35,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
   end
 
   describe("#decorate") do
-    it("generates empty RBI file if there is no perform method") do
+    it("generates an empty RBI file if there is no perform method") do
       add_ruby_file("job.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
         end
@@ -43,8 +43,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-        class NotifyJob
-        end
+
       RBI
 
       assert_equal(expected, rbi_for(:NotifyJob))
