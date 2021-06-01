@@ -44,9 +44,9 @@ module Tapioca
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActiveJob::Base)).void }
         def decorate(root, constant)
-          root.path(constant) do |job|
-            next unless constant.instance_methods(false).include?(:perform)
+          return unless constant.instance_methods(false).include?(:perform)
 
+          root.path(constant) do |job|
             method = constant.instance_method(:perform)
             parameters = compile_method_parameters_to_parlour(method)
             return_type = compile_method_return_type_to_parlour(method)
