@@ -109,10 +109,10 @@ module Tapioca
       def create_post_require
         create_file(Config::DEFAULT_POSTREQUIRE, skip: true) do
           <<~CONTENT
-            # typed: false
+            # typed: true
             # frozen_string_literal: true
 
-            # Add your extra requires here
+            # Add your extra requires here (`tapioca require` can be used to boostrap this list)
           CONTENT
         end
       end
