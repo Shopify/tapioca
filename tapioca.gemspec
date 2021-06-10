@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
     Rakefile
   )
 
-  spec.metadata['allowed_push_host'] = "https://rubygems.org"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.add_dependency("bundler", ">= 1.17.3")
   spec.add_dependency("pry", ">= 0.12.2")

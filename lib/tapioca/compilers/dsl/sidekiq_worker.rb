@@ -58,17 +58,17 @@ module Tapioca
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
             at_params = [
-              Parlour::RbiGenerator::Parameter.new('interval', type: 'T.any(DateTime, Time)'),
+              Parlour::RbiGenerator::Parameter.new("interval", type: "T.any(DateTime, Time)"),
               *async_params,
             ]
             in_params = [
-              Parlour::RbiGenerator::Parameter.new('interval', type: 'Numeric'),
+              Parlour::RbiGenerator::Parameter.new("interval", type: "Numeric"),
               *async_params,
             ]
 
-            create_method(worker, 'perform_async', parameters: async_params, return_type: 'String', class_method: true)
-            create_method(worker, 'perform_at', parameters: at_params, return_type: 'String', class_method: true)
-            create_method(worker, 'perform_in', parameters: in_params, return_type: 'String', class_method: true)
+            create_method(worker, "perform_async", parameters: async_params, return_type: "String", class_method: true)
+            create_method(worker, "perform_at", parameters: at_params, return_type: "String", class_method: true)
+            create_method(worker, "perform_in", parameters: in_params, return_type: "String", class_method: true)
           end
         end
 

@@ -41,8 +41,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         require "active_record"
 
         ::ActiveRecord::Base.establish_connection(
-          adapter: 'sqlite3',
-          database: ':memory:'
+          adapter: "sqlite3",
+          database: ":memory:"
         )
       end
 

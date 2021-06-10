@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module Tapioca
   module Compilers
@@ -102,7 +102,7 @@ module Tapioca
           return unless constant
           return unless name
           return if name.strip.empty?
-          return if name.start_with?('#<')
+          return if name.start_with?("#<")
           return if name.downcase == name
           return if alias_namespaced?(name)
           return if seen?(name)
@@ -511,7 +511,7 @@ module Tapioca
           constant
             .props
             .keys
-            .include?(method_name.gsub(/=$/, '').to_sym)
+            .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
         sig do

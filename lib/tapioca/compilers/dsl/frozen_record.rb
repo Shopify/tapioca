@@ -77,8 +77,8 @@ module Tapioca
 
             record.create_module(module_name) do |mod|
               attributes.each do |attribute|
-                create_method(mod, "#{attribute}?", return_type: 'T::Boolean')
-                create_method(mod, attribute.to_s, return_type: 'T.untyped')
+                create_method(mod, "#{attribute}?", return_type: "T::Boolean")
+                create_method(mod, attribute.to_s, return_type: "T.untyped")
               end
             end
 

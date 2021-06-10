@@ -82,7 +82,7 @@ module Tapioca
 
           # Define the helpers method
           root.path(constant) do |controller|
-            create_method(controller, 'helpers', return_type: helper_proxy_name)
+            create_method(controller, "helpers", return_type: helper_proxy_name)
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|

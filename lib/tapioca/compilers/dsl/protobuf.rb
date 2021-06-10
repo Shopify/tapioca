@@ -186,8 +186,8 @@ module Tapioca
             # how Google names map entries.
             # https://github.com/protocolbuffers/protobuf/blob/f82e26/ruby/ext/google/protobuf_c/defs.c#L1963-L1966
             if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}")
-              key = descriptor.subtype.lookup('key')
-              value = descriptor.subtype.lookup('value')
+              key = descriptor.subtype.lookup("key")
+              value = descriptor.subtype.lookup("value")
 
               key_type = type_of(key)
               value_type = type_of(value)
