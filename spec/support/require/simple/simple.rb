@@ -4,7 +4,6 @@
 # rubocop:disable Layout/ExtraSpacing
 # rubocop:disable Layout/SpaceBeforeFirstArg
 # rubocop:disable Lint/ParenthesesAsGroupedExpression
-# rubocop:disable Style/RedundantParentheses/
 require 'a'
 require "b"
 require ("c")
