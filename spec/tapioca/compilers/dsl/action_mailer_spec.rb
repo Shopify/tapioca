@@ -123,9 +123,12 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
           sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_admin(*_arg0, &_arg1); end
 
-        <% end %>
+          sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
+          def self.notify_customer(*_arg0, &_arg1); end
+        <% else %>
           sig { params(args: T.untyped, block: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(*args, &block); end
+        <% end %>
         end
       RBI
 
