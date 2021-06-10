@@ -7,31 +7,31 @@ module Tapioca
       include(Thor::Actions)
 
       class_option :prerequire,
-                    aliases: ["--pre", "-b"],
-                    banner: "file",
-                    desc: "A file to be required before Bundler.require is called"
+        aliases: ["--pre", "-b"],
+        banner: "file",
+        desc: "A file to be required before Bundler.require is called"
       class_option :postrequire,
-                    aliases: ["--post", "-a"],
-                    banner: "file",
-                    desc: "A file to be required after Bundler.require is called"
+        aliases: ["--post", "-a"],
+        banner: "file",
+        desc: "A file to be required after Bundler.require is called"
       class_option :outdir,
-                    aliases: ["--out", "-o"],
-                    banner: "directory",
-                    desc: "The output directory for generated RBI files"
+        aliases: ["--out", "-o"],
+        banner: "directory",
+        desc: "The output directory for generated RBI files"
       class_option :generate_command,
-                    aliases: ["--cmd", "-c"],
-                    banner: "command",
-                    desc: "The command to run to regenerate RBI files"
+        aliases: ["--cmd", "-c"],
+        banner: "command",
+        desc: "The command to run to regenerate RBI files"
       class_option :exclude,
-                    aliases: ["-x"],
-                    type: :array,
-                    banner: "gem [gem ...]",
-                    desc: "Excludes the given gem(s) from RBI generation"
+        aliases: ["-x"],
+        type: :array,
+        banner: "gem [gem ...]",
+        desc: "Excludes the given gem(s) from RBI generation"
       class_option :typed_overrides,
-                    aliases: ["--typed", "-t"],
-                    type: :hash,
-                    banner: "gem:level [gem:level ...]",
-                    desc: "Overrides for typed sigils for generated gem RBIs"
+        aliases: ["--typed", "-t"],
+        type: :hash,
+        banner: "gem:level [gem:level ...]",
+        desc: "Overrides for typed sigils for generated gem RBIs"
 
       map T.unsafe(%w[--version -v] => :__print_version)
 
