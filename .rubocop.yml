@@ -29,8 +29,6 @@ Sorbet/TrueSigil:
   Enabled: true
   Include:
   - "**/*.rb"
-  Exclude:
-  - "spec/support/gems/baz/lib/baz.rb"
 
 Sorbet/ConstantsFromStrings:
   Enabled: false
