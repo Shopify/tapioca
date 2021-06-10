@@ -283,8 +283,8 @@ module Tapioca
     def constantize(constant_names)
       constant_map = constant_names.map do |name|
         [name, Object.const_get(name)]
-                     rescue NameError
-                       [name, nil]
+      rescue NameError
+        [name, nil]
       end.to_h
 
       unprocessable_constants = constant_map.select { |_, v| v.nil? }
