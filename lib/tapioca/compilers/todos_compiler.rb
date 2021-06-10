@@ -13,7 +13,7 @@ module Tapioca
       def compile
         list_todos.each_line.map do |line|
           next if line.include?("<") || line.include?("class_of")
-          "module #{line.strip.gsub('T.untyped::', '')}; end"
+          "module #{line.strip.gsub("T.untyped::", "")}; end"
         end.compact.join("\n")
       end
 

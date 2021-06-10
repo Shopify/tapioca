@@ -13,7 +13,7 @@ module T
           end
         end
 
-        "{#{entries.join(', ')}}"
+        "{#{entries.join(", ")}}"
       end
     end
   end
