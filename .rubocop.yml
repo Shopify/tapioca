@@ -8,6 +8,8 @@ require:
 
 AllCops:
   TargetRubyVersion: 2.6
+  NewCops: enable
+  SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
   - "spec/support/repo/bin/tapioca"
