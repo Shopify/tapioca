@@ -28,6 +28,13 @@ module Tapioca
         tree.nodes.delete(self)
         self.parent_tree = nil
       end
+
+      sig { returns(T.nilable(Scope)) }
+      def parent_scope
+        parent = T.let(parent_tree, T.nilable(Tree))
+        parent = parent.parent_tree until parent.is_a?(Scope) || parent.nil?
+        parent
+      end
     end
 
     class Comment < Node
@@ -89,6 +96,14 @@ module Tapioca
       extend T::Helpers
 
       abstract!
+
+      sig { abstract.returns(String) }
+      def fully_qualified_name; end
+
+      sig { override.returns(String) }
+      def to_s
+        fully_qualified_name
+      end
     end
 
     class Module < Scope
@@ -101,6 +116,12 @@ module Tapioca
       def initialize(name, loc: nil, comments: [])
         super(loc: loc, comments: comments)
         @name = name
+      end
+
+      sig { override.returns(String) }
+      def fully_qualified_name
+        return name if name.start_with?("::")
+        "#{parent_scope&.fully_qualified_name}::#{name}"
       end
     end
 
@@ -126,6 +147,12 @@ module Tapioca
         @name = name
         @superclass_name = superclass_name
       end
+
+      sig { override.returns(String) }
+      def fully_qualified_name
+        return name if name.start_with?("::")
+        "#{parent_scope&.fully_qualified_name}::#{name}"
+      end
     end
 
     class SingletonClass < Scope
@@ -134,6 +161,11 @@ module Tapioca
       sig { params(loc: T.nilable(Loc), comments: T::Array[Comment]).void }
       def initialize(loc: nil, comments: [])
         super(loc: loc, comments: comments)
+      end
+
+      sig { override.returns(String) }
+      def fully_qualified_name
+        "#{parent_scope&.fully_qualified_name}::<self>"
       end
     end
 
@@ -150,6 +182,17 @@ module Tapioca
         super(loc: loc, comments: comments)
         @name = name
         @value = value
+      end
+
+      sig { returns(String) }
+      def fully_qualified_name
+        return name if name.start_with?("::")
+        "#{parent_scope&.fully_qualified_name}::#{name}"
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        fully_qualified_name
       end
     end
 
@@ -186,13 +229,58 @@ module Tapioca
         @visibility = visibility
         @sigs = sigs
       end
+
+      sig { abstract.returns(T::Array[String]) }
+      def fully_qualified_names; end
     end
 
-    class AttrAccessor < Attr; end
+    class AttrAccessor < Attr
+      extend T::Sig
 
-    class AttrReader < Attr; end
+      sig { override.returns(T::Array[String]) }
+      def fully_qualified_names
+        parent_name = parent_scope&.fully_qualified_name
+        names.flat_map { |name| ["#{parent_name}##{name}", "#{parent_name}##{name}="] }
+      end
 
-    class AttrWriter < Attr; end
+      sig { override.returns(String) }
+      def to_s
+        symbols = names.map { |name| ":#{name}" }.join(", ")
+        "#{parent_scope&.fully_qualified_name}.attr_accessor(#{symbols})"
+      end
+    end
+
+    class AttrReader < Attr
+      extend T::Sig
+
+      sig { override.returns(T::Array[String]) }
+      def fully_qualified_names
+        parent_name = parent_scope&.fully_qualified_name
+        names.map { |name| "#{parent_name}##{name}" }
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        symbols = names.map { |name| ":#{name}" }.join(", ")
+        "#{parent_scope&.fully_qualified_name}.attr_reader(#{symbols})"
+      end
+    end
+
+    class AttrWriter < Attr
+      extend T::Sig
+
+      sig { override.returns(T::Array[String]) }
+      def fully_qualified_names
+        parent_name = parent_scope&.fully_qualified_name
+        names.map { |name| "#{parent_name}##{name}=" }
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        symbols = names.map { |name| ":#{name}" }.join(", ")
+        "#{parent_scope&.fully_qualified_name}.attr_writer(#{symbols})"
+      end
+    end
 
     # Methods and args
 
@@ -246,6 +334,20 @@ module Tapioca
       def <<(param)
         @params << param
       end
+
+      sig { returns(String) }
+      def fully_qualified_name
+        if is_singleton
+          "#{parent_scope&.fully_qualified_name}::#{name}"
+        else
+          "#{parent_scope&.fully_qualified_name}##{name}"
+        end
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        "#{fully_qualified_name}(#{params.join(", ")})"
+      end
     end
 
     class Param < NodeWithComments
@@ -258,6 +360,11 @@ module Tapioca
       def initialize(name, loc: nil, comments: [])
         super(loc: loc, comments: comments)
         @name = name
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        name
       end
     end
 
@@ -274,15 +381,50 @@ module Tapioca
       end
     end
 
-    class RestParam < Param; end
+    class RestParam < Param
+      extend T::Sig
 
-    class KwParam < Param; end
+      sig { override.returns(String) }
+      def to_s
+        "*#{name}"
+      end
+    end
 
-    class KwOptParam < OptParam; end
+    class KwParam < Param
+      extend T::Sig
 
-    class KwRestParam < Param; end
+      sig { override.returns(String) }
+      def to_s
+        "#{name}:"
+      end
+    end
 
-    class BlockParam < Param; end
+    class KwOptParam < OptParam
+      extend T::Sig
+
+      sig { override.returns(String) }
+      def to_s
+        "#{name}:"
+      end
+    end
+
+    class KwRestParam < Param
+      extend T::Sig
+
+      sig { override.returns(String) }
+      def to_s
+        "**#{name}:"
+      end
+    end
+
+    class BlockParam < Param
+      extend T::Sig
+
+      sig { override.returns(String) }
+      def to_s
+        "&#{name}"
+      end
+    end
 
     # Mixins
 
@@ -302,9 +444,23 @@ module Tapioca
       end
     end
 
-    class Include < Mixin; end
+    class Include < Mixin
+      extend T::Sig
 
-    class Extend < Mixin; end
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.include(#{names.join(", ")})"
+      end
+    end
+
+    class Extend < Mixin
+      extend T::Sig
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.extend(#{names.join(", ")})"
+      end
+    end
 
     # Visibility
 
@@ -443,11 +599,40 @@ module Tapioca
         @type = type
         @default = default
       end
+
+      sig { abstract.returns(T::Array[String]) }
+      def fully_qualified_names; end
     end
 
-    class TStructProp < TStructField; end
+    class TStructConst < TStructField
+      extend T::Sig
 
-    class TStructConst < TStructField; end
+      sig { override.returns(T::Array[String]) }
+      def fully_qualified_names
+        parent_name = parent_scope&.fully_qualified_name
+        ["#{parent_name}##{name}"]
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.const(:#{name})"
+      end
+    end
+
+    class TStructProp < TStructField
+      extend T::Sig
+
+      sig { override.returns(T::Array[String]) }
+      def fully_qualified_names
+        parent_name = parent_scope&.fully_qualified_name
+        ["#{parent_name}##{name}", "#{parent_name}##{name}="]
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.prop(:#{name})"
+      end
+    end
 
     # Sorbet's T::Enum
 
@@ -481,6 +666,11 @@ module Tapioca
       def <<(name)
         @names << name
       end
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.enums"
+      end
     end
 
     # Sorbet's misc.
@@ -496,6 +686,11 @@ module Tapioca
         super(loc: loc, comments: comments)
         @name = name
       end
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.#{name}!"
+      end
     end
 
     class TypeMember < NodeWithComments
@@ -510,8 +705,26 @@ module Tapioca
         @name = name
         @value = value
       end
+
+      sig { returns(String) }
+      def fully_qualified_name
+        return name if name.start_with?("::")
+        "#{parent_scope&.fully_qualified_name}::#{name}"
+      end
+
+      sig { override.returns(String) }
+      def to_s
+        fully_qualified_name
+      end
     end
 
-    class MixesInClassMethods < Mixin; end
+    class MixesInClassMethods < Mixin
+      extend T::Sig
+
+      sig { override.returns(String) }
+      def to_s
+        "#{parent_scope&.fully_qualified_name}.mixes_in_class_methods(#{names.join(", ")})"
+      end
+    end
   end
 end
