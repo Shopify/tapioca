@@ -1,8 +1,8 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'pathname'
-require 'shellwords'
+require "pathname"
+require "shellwords"
 
 module Tapioca
   module Compilers
@@ -20,7 +20,7 @@ module Tapioca
               sorbet_path,
               "--quiet",
               *args,
-            ].join(' '),
+            ].join(" "),
             err: "/dev/null"
           ).read
         end

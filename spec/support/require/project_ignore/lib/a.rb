@@ -1,3 +1,3 @@
 # typed: strict
 # frozen_string_literal: true
-require 'liba'
+require "liba"

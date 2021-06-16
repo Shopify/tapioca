@@ -41,8 +41,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         require "active_record"
 
         ::ActiveRecord::Base.establish_connection(
-          adapter: 'sqlite3',
-          database: ':memory:'
+          adapter: "sqlite3",
+          database: ":memory:"
         )
       end
 
@@ -413,6 +413,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
               sig { returns(T::Boolean) }
               def author_previously_changed?; end
+
+              sig { returns(T.nilable(::String)) }
+              def author_previously_was; end
 
               sig { returns(T.nilable(::String)) }
               def author_was; end

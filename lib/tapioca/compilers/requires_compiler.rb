@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require 'spoom'
+require "spoom"
 
 module Tapioca
   module Compilers
@@ -87,7 +87,7 @@ module Tapioca
       sig { params(files: T::Enumerable[String], name: String).returns(T::Boolean) }
       def name_in_project?(files, name)
         files.any? do |file|
-          File.basename(file, '.rb') == name
+          File.basename(file, ".rb") == name
         end
       end
     end

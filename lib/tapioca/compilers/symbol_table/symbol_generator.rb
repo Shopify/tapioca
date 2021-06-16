@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module Tapioca
   module Compilers
@@ -9,11 +9,7 @@ module Tapioca
       class SymbolGenerator
         extend(T::Sig)
 
-        IGNORED_SYMBOLS = %w{
-          YAML
-          MiniTest
-          Mutex
-        }
+        IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"]
 
         attr_reader(:gem, :indent)
 
@@ -102,7 +98,7 @@ module Tapioca
           return unless constant
           return unless name
           return if name.strip.empty?
-          return if name.start_with?('#<')
+          return if name.start_with?("#<")
           return if name.downcase == name
           return if alias_namespaced?(name)
           return if seen?(name)
@@ -399,7 +395,7 @@ module Tapioca
           mixins_from_modules = {}
 
           Class.new do
-            # rubocop:disable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            # rubocop:disable Style/MissingRespondToMissing
             def method_missing(symbol, *args)
             end
 
@@ -416,7 +412,7 @@ module Tapioca
               def method_missing(symbol, *args)
               end
             end
-            # rubocop:enable Style/MethodMissingSuper, Style/MissingRespondToMissing
+            # rubocop:enable Style/MissingRespondToMissing
           end.include(constant)
 
           all_dynamic_extends = mixins_from_modules.delete(constant)
@@ -511,7 +507,7 @@ module Tapioca
           constant
             .props
             .keys
-            .include?(method_name.gsub(/=$/, '').to_sym)
+            .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
         sig do
@@ -641,7 +637,8 @@ module Tapioca
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        SPECIAL_METHOD_NAMES = %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `]
+        SPECIAL_METHOD_NAMES = ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<",
+                                "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"]
 
         sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)

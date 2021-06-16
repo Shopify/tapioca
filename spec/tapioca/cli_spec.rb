@@ -80,7 +80,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
 
     Bundler.with_unbundled_env do
       process = IO.popen(
-        exec_command.join(' '),
+        exec_command.join(" "),
         chdir: repo_path,
         err: [:child, :out],
       )
@@ -108,19 +108,19 @@ class Tapioca::CliSpec < Minitest::HooksSpec
   end
 
   describe("#version") do
-    it 'must display the version when passing --version' do
+    it "must display the version when passing --version" do
       output = execute("--version")
       assert_equal("Tapioca v#{Tapioca::VERSION}", output&.strip)
     end
 
-    it 'must display the version when passing -v' do
+    it "must display the version when passing -v" do
       output = execute("-v")
       assert_equal("Tapioca v#{Tapioca::VERSION}", output&.strip)
     end
   end
 
   describe("#init") do
-    it 'must create proper files' do
+    it "must create proper files" do
       FileUtils.rm_f(repo_path / "bin/tapioca")
       output = execute("init")
 
@@ -146,7 +146,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_path_exists(repo_path / "bin/tapioca")
     end
 
-    it 'must not overwrite files' do
+    it "must not overwrite files" do
       FileUtils.mkdir_p(repo_path / "sorbet/tapioca")
       FileUtils.mkdir_p(repo_path / "bin")
       FileUtils.touch([
@@ -173,7 +173,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       execute("init")
     end
 
-    it 'does nothing if all constant are already resolved' do
+    it "does nothing if all constant are already resolved" do
       output = execute("todo")
 
       assert_equal(<<~OUTPUT, output)
@@ -183,7 +183,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists(repo_path / "sorbet/rbi/todo.rbi")
     end
 
-    it 'creates a list of all unresolved constants' do
+    it "creates a list of all unresolved constants" do
       File.write(repo_path / "file.rb", <<~RUBY)
         class Foo < ::Undef1
           def foo
@@ -220,7 +220,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'deletes the todo.rbi file when everything is resolved' do
+    it "deletes the todo.rbi file when everything is resolved" do
       FileUtils.mkdir_p(repo_path / "sorbet/rbi")
       File.write(repo_path / "sorbet/rbi/todo.rbi", <<-RBI)
         # DO NOT EDIT MANUALLY
@@ -250,7 +250,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       execute("init")
     end
 
-    it 'does nothing if there is nothing to require' do
+    it "does nothing if there is nothing to require" do
       File.write(repo_path / "sorbet/config", <<~CONFIG)
         .
         --ignore=postrequire.rb
@@ -273,7 +273,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'creates a list of all requires from all Ruby files passed to Sorbet' do
+    it "creates a list of all requires from all Ruby files passed to Sorbet" do
       output = execute("require")
 
       assert_equal(<<~OUTPUT, output)
@@ -295,7 +295,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'takes into account sorbet ignored paths' do
+    it "takes into account sorbet ignored paths" do
       File.write(repo_path / "sorbet/config", <<~CONFIG)
         .
         --ignore=postrequire_faulty.rb
@@ -321,7 +321,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
   end
 
   describe("#dsl") do
-    it 'does not generate anything if there are no matching constants' do
+    it "does not generate anything if there are no matching constants" do
       output = execute("dsl", "User")
 
       assert_equal(<<~OUTPUT, output)
@@ -339,7 +339,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'generates RBI files for only required constants' do
+    it "generates RBI files for only required constants" do
       output = execute("dsl", "Post")
 
       assert_equal(<<~OUTPUT, output)
@@ -375,7 +375,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'errors for unprocessable required constants' do
+    it "errors for unprocessable required constants" do
       output = execute("dsl", ["NonExistent::Foo", "NonExistent::Bar", "NonExistent::Baz"])
 
       assert_equal(<<~OUTPUT, output)
@@ -394,7 +394,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'removes RBI files for unprocessable required constants' do
+    it "removes RBI files for unprocessable required constants" do
       FileUtils.mkdir_p("#{outdir}/non_existent")
       FileUtils.touch("#{outdir}/non_existent/foo.rbi")
       FileUtils.touch("#{outdir}/non_existent/baz.rbi")
@@ -422,7 +422,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'generates RBI files for all processable constants' do
+    it "generates RBI files for all processable constants" do
       output = execute("dsl")
 
       assert_equal(<<~OUTPUT, output)
@@ -494,7 +494,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'can generates RBI files quietly' do
+    it "can generates RBI files quietly" do
       output = execute("dsl", "--quiet")
 
       assert_equal(<<~OUTPUT, output)
@@ -514,7 +514,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'removes stale RBI files' do
+    it "removes stale RBI files" do
       FileUtils.mkdir_p("#{outdir}/to_be_deleted")
       FileUtils.touch("#{outdir}/to_be_deleted/foo.rbi")
       FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
@@ -551,7 +551,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'removes stale RBI files of requested constants' do
+    it "removes stale RBI files of requested constants" do
       FileUtils.touch("#{outdir}/user.rbi")
 
       output = execute("dsl", ["Post", "User"])
@@ -575,7 +575,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it 'does not generate anything if there are no matching generators' do
+    it "does not generate anything if there are no matching generators" do
       output = execute("dsl", "", generators: "foo")
 
       assert_equal(<<~OUTPUT, output)
@@ -598,7 +598,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           execute("dsl")
         end
 
-        it 'does nothing and returns exit_status 0' do
+        it "does nothing and returns exit_status 0" do
           output = execute("dsl", "--verify")
 
           assert_includes(output, <<~OUTPUT)
@@ -627,7 +627,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           FileUtils.rm_f(repo_path / "lib" / "image.rb")
         end
 
-        it 'advises of new file(s) and returns exit_status 1' do
+        it "advises of new file(s) and returns exit_status 1" do
           output = execute("dsl", "--verify")
 
           assert_equal(output, <<~OUTPUT)
@@ -678,7 +678,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
           FileUtils.rm_f(repo_path / "lib" / "image.rb")
         end
 
-        it 'advises of modified file(s) and returns exit status 1' do
+        it "advises of modified file(s) and returns exit status 1" do
           output = execute("dsl", "--verify")
 
           assert_equal(output, <<~OUTPUT)
@@ -706,7 +706,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       execute("init")
     end
 
-    it 'must generate a single gem RBI' do
+    it "must generate a single gem RBI" do
       output = execute("generate", "foo")
 
       assert_includes(output, <<~OUTPUT)
@@ -721,7 +721,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'must perform postrequire properly' do
+    it "must perform postrequire properly" do
       output = execute("generate", "foo", postrequire: repo_path / "postrequire.rb")
 
       assert_includes(output, <<~OUTPUT)
@@ -744,7 +744,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'explains what went wrong when it can\'t load the postrequire properly' do
+    it "explains what went wrong when it can't load the postrequire properly" do
       output = execute("generate", "foo", postrequire: repo_path / "postrequire_faulty.rb")
 
       output.sub!(%r{/.*/postrequire_faulty\.rb}, "/postrequire_faulty.rb")
@@ -758,7 +758,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       OUTPUT
     end
 
-    it 'must generate multiple gem RBIs' do
+    it "must generate multiple gem RBIs" do
       output = execute("generate", ["foo", "bar"])
 
       assert_includes(output, <<~OUTPUT)
@@ -780,7 +780,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'must generate RBIs for all gems in the Gemfile' do
+    it "must generate RBIs for all gems in the Gemfile" do
       output = execute("generate")
 
       assert_includes(output, <<~OUTPUT)
@@ -807,7 +807,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(Contents::BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
     end
 
-    it 'must not generate RBIs for missing gem specs' do
+    it "must not generate RBIs for missing gem specs" do
       skip "failure is to be investigated later"
       output = execute("generate")
 
@@ -822,7 +822,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       OUTPUT
     end
 
-    it 'must generate git gem RBIs with source revision numbers' do
+    it "must generate git gem RBIs with source revision numbers" do
       output = execute("generate", "ast")
 
       assert_includes(output, <<~OUTPUT)
@@ -833,7 +833,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_path_exists("#{outdir}/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
     end
 
-    it 'must respect exclude option' do
+    it "must respect exclude option" do
       output = execute("generate", "", exclude: "foo bar")
 
       refute_includes(output, <<~OUTPUT)
@@ -858,7 +858,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_equal(Contents::BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
     end
 
-    it 'does not crash when the extras gem is loaded' do
+    it "does not crash when the extras gem is loaded" do
       File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/shell"')
       output = execute("generate", "foo")
 
@@ -879,7 +879,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       execute("init")
     end
 
-    it 'must perform no operations if everything is up-to-date' do
+    it "must perform no operations if everything is up-to-date" do
       execute("generate")
 
       output = execute("sync")
@@ -904,7 +904,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'generate an empty RBI file' do
+    it "generate an empty RBI file" do
       output = execute("sync")
 
       assert_includes(output, "++ Adding: #{outdir}/qux@0.5.0.rbi\n")
@@ -925,7 +925,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       CONTENTS
     end
 
-    it 'must respect exclude option' do
+    it "must respect exclude option" do
       execute("generate")
 
       output = execute("sync", "", exclude: "foo bar")
@@ -952,7 +952,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'must remove outdated RBIs' do
+    it "must remove outdated RBIs" do
       execute("generate")
       FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
 
@@ -974,10 +974,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/outdated@5.0.0.rbi")
     end
 
-    it 'must add missing RBIs' do
-      %w{
-        foo@0.0.1.rbi
-      }.each do |rbi|
+    it "must add missing RBIs" do
+      ["foo@0.0.1.rbi"].each do |rbi|
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 
@@ -999,12 +997,8 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       assert_path_exists("#{outdir}/baz@0.0.2.rbi")
     end
 
-    it 'must move outdated RBIs' do
-      %w{
-        foo@0.0.1.rbi
-        bar@0.0.1.rbi
-        baz@0.0.1.rbi
-      }.each do |rbi|
+    it "must move outdated RBIs" do
+      ["foo@0.0.1.rbi", "bar@0.0.1.rbi", "baz@0.0.1.rbi"].each do |rbi|
         FileUtils.touch("#{outdir}/#{rbi}")
       end
 

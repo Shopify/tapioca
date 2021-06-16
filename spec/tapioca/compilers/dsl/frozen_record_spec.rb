@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
   before(:each) do

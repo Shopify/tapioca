@@ -172,7 +172,7 @@ module Tapioca
           if value_types.size == 1
             value_types.first
           else
-            "T.any(#{value_types.join(', ')})"
+            "T.any(#{value_types.join(", ")})"
           end
         end
 

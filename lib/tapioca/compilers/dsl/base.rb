@@ -42,7 +42,8 @@ module Tapioca
         private
 
         SPECIAL_METHOD_NAMES = T.let(
-          %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `].freeze,
+          ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<", "<=", "=>", ">", ">=",
+           "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"].freeze,
           T::Array[String]
         )
 
@@ -103,13 +104,13 @@ module Tapioca
             when :req
               ::Parlour::RbiGenerator::Parameter.new(name, type: method_type)
             when :opt
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type, default: 'T.unsafe(nil)')
+              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type, default: "T.unsafe(nil)")
             when :rest
               ::Parlour::RbiGenerator::Parameter.new("*#{name}", type: method_type)
             when :keyreq
               ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type)
             when :key
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type, default: 'T.unsafe(nil)')
+              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type, default: "T.unsafe(nil)")
             when :keyrest
               ::Parlour::RbiGenerator::Parameter.new("**#{name}", type: method_type)
             when :block
@@ -127,7 +128,7 @@ module Tapioca
         end
         def compile_method_return_type_to_parlour(method_def)
           signature = T::Private::Methods.signature_for_method(method_def)
-          return_type = signature.nil? ? 'T.untyped' : signature.return_type.to_s
+          return_type = signature.nil? ? "T.untyped" : signature.return_type.to_s
           # Map <VOID> to `nil` since `nil` means a `void` return for Parlour
           return_type = nil if return_type == "<VOID>"
           # Map <NOT-TYPED> to `T.untyped`
@@ -145,7 +146,7 @@ module Tapioca
         def parameters_types_from_signature(method_def, signature)
           params = T.let([], T::Array[String])
 
-          return method_def.parameters.map { 'T.untyped' } unless signature
+          return method_def.parameters.map { "T.untyped" } unless signature
 
           # parameters types
           signature.arg_types.each { |arg_type| params << arg_type[1].to_s }
@@ -158,7 +159,7 @@ module Tapioca
 
           # special case `.void` in a proc
           unless signature.block_name.nil?
-            params << signature.block_type.to_s.gsub('returns(<VOID>)', 'void')
+            params << signature.block_type.to_s.gsub("returns(<VOID>)", "void")
           end
 
           params

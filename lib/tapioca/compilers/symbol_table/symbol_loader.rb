@@ -1,8 +1,8 @@
 # typed: true
 # frozen_string_literal: true
 
-require 'json'
-require 'tempfile'
+require "json"
+require "tempfile"
 
 module Tapioca
   module Compilers
@@ -25,7 +25,7 @@ module Tapioca
 
           sig { params(paths: T::Array[String]).returns(T::Set[String]) }
           def load_symbols(paths)
-            output = T.cast(Tempfile.create('sorbet') do |file|
+            output = T.cast(Tempfile.create("sorbet") do |file|
               file.write(Array(paths).join("\n"))
               file.flush
 
@@ -69,7 +69,7 @@ module Tapioca
               # TODO: CLASS is removed since v0.4.4730 of Sorbet
               # but keeping here for backward compatibility. Remove
               # once the minimum version is moved past that.
-              next unless %w[CLASS CLASS_OR_MODULE STATIC_FIELD].include?(kind)
+              next unless ["CLASS", "CLASS_OR_MODULE", "STATIC_FIELD"].include?(kind)
               next if name =~ /[<>()$]/
               next if name =~ /^[0-9]+$/
               next if name == "T::Helpers"

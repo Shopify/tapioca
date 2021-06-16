@@ -403,7 +403,7 @@ module Tapioca
         when MixesInClassMethods
           v.printt("mixes_in_class_methods")
         end
-        v.printn(" #{names.join(', ')}")
+        v.printn(" #{names.join(", ")}")
       end
     end
 

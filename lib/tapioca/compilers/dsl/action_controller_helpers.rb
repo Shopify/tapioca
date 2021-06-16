@@ -76,22 +76,33 @@ module Tapioca
             .void
         end
         def decorate(root, constant)
+          helpers_module = constant._helpers
+          proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
+
           helper_proxy_name = "HelperProxy"
           helper_methods_name = "HelperMethods"
-          proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
 
           # Define the helpers method
           root.path(constant) do |controller|
-            create_method(controller, 'helpers', return_type: helper_proxy_name)
+            create_method(controller, "helpers", return_type: helper_proxy_name)
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
-              helpers_module = constant._helpers
+              # If the controller has no helper defined, then it just inherits
+              # the Action Controlller base helper methods module, so we should
+              # just add that as an include and stop doing more processing.
+              if helpers_module.name == "ActionController::Base::HelperMethods"
+                next helper_methods.create_include("::#{helpers_module.name}")
+              end
 
+              # Find all the included helper modules and generate an include
+              # for each of those helper modules
               gather_includes(helpers_module).each do |ancestor|
                 helper_methods.create_include(ancestor)
               end
 
+              # Generate a method definition in the helper module for each
+              # helper method defined via the `helper_method` call in the controller.
               helpers_module.instance_methods(false).each do |method_name|
                 method = if proxied_helper_methods.include?(method_name)
                   constant.instance_method(method_name)

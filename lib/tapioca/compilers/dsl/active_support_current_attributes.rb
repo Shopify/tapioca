@@ -5,6 +5,8 @@ require "parlour"
 
 begin
   require "active_support"
+  # The following is needed due to https://github.com/rails/rails/pull/41610
+  require "active_support/core_ext/module/delegation"
 rescue LoadError
   return
 end

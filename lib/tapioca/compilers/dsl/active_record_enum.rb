@@ -93,7 +93,7 @@ module Tapioca
           value_type = if value_type.length == 1
             value_type.first
           else
-            "T.any(#{value_type.join(', ')})"
+            "T.any(#{value_type.join(", ")})"
           end
 
           "T::Hash[T.any(String, Symbol), #{value_type}]"

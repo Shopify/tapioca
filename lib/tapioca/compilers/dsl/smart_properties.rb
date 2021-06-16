@@ -151,7 +151,7 @@ module Tapioca
             "T::Boolean"
           elsif Array(accepter).all? { |a| a.is_a?(Module) }
             accepters = Array(accepter)
-            types = accepters.map { |mod| name_of(mod) }.join(', ')
+            types = accepters.map { |mod| name_of(mod) }.join(", ")
             types = "T.any(#{types})" if accepters.size > 1
             types
           else
