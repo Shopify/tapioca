@@ -33,7 +33,7 @@ module Tapioca
         banner: "gem:level [gem:level ...]",
         desc: "Overrides for typed sigils for generated gem RBIs"
 
-      map T.unsafe(%w[--version -v] => :__print_version)
+      map T.unsafe(["--version", "-v"] => :__print_version)
 
       desc "init", "initializes folder structure"
       def init

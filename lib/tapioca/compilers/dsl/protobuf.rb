@@ -194,7 +194,7 @@ module Tapioca
               type = "Google::Protobuf::Map[#{key_type}, #{value_type}]"
 
               default_args = [key.type.inspect, value.type.inspect]
-              default_args << value_type if %i[enum message].include?(value.type)
+              default_args << value_type if [:enum, :message].include?(value.type)
 
               Field.new(
                 name: descriptor.name,
@@ -207,7 +207,7 @@ module Tapioca
               type = "Google::Protobuf::RepeatedField[#{elem_type}]"
 
               default_args = [descriptor.type.inspect]
-              default_args << elem_type if %i[enum message].include?(descriptor.type)
+              default_args << elem_type if [:enum, :message].include?(descriptor.type)
 
               Field.new(
                 name: descriptor.name,

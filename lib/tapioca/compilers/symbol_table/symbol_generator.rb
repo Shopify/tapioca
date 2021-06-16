@@ -9,11 +9,7 @@ module Tapioca
       class SymbolGenerator
         extend(T::Sig)
 
-        IGNORED_SYMBOLS = %w{
-          YAML
-          MiniTest
-          Mutex
-        }
+        IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"]
 
         attr_reader(:gem, :indent)
 
@@ -641,7 +637,8 @@ module Tapioca
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        SPECIAL_METHOD_NAMES = %w[! ~ +@ ** -@ * / % + - << >> & | ^ < <= => > >= == === != =~ !~ <=> [] []= `]
+        SPECIAL_METHOD_NAMES = ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<",
+                                "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"]
 
         sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)
