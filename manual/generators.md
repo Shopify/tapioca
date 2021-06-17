@@ -12,6 +12,7 @@ In the following section you will find all available DSL generators:
 * [ActiveRecordScope](generator_activerecordscope.md)
 * [ActiveRecordTypedStore](generator_activerecordtypedstore.md)
 * [ActiveResource](generator_activeresource.md)
+* [ActiveSupportConcern](generator_activesupportconcern.md)
 * [ActiveSupportCurrentAttributes](generator_activesupportcurrentattributes.md)
 * [FrozenRecord](generator_frozenrecord.md)
 * [IdentityCache](generator_identitycache.md)
