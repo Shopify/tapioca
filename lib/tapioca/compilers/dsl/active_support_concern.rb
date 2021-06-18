@@ -1,11 +1,15 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/compilers/sorbet"
+
 begin
   require "active_support"
 rescue LoadError
   return
 end
+
+return unless Tapioca::Compilers::Sorbet.supports?(:mixes_in_class_methods_multiple_args)
 
 module Tapioca
   module Compilers
