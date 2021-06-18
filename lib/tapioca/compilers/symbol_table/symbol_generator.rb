@@ -388,47 +388,80 @@ module Tapioca
             end
         end
 
-        sig { params(tree: RBI::Tree, constant: Module).void }
-        def compile_mixes_in_class_methods(tree, constant)
-          return if constant.is_a?(Class)
-
-          mixins_from_modules = {}
+        sig { params(constant: Module).returns([T::Array[Module], T::Array[Module]]) }
+        def collect_dynamic_mixins_of(constant)
+          mixins_from_modules = {}.compare_by_identity
 
           Class.new do
-            # rubocop:disable Style/MissingRespondToMissing
-            def method_missing(symbol, *args)
-            end
-
+            # Override the `self.include` method
             define_singleton_method(:include) do |mod|
+              # Take a snapshot of the list of singleton class ancestors
+              # before the actual include
               before = singleton_class.ancestors
-              super(mod).tap do
-                mixins_from_modules[mod] = singleton_class.ancestors - before
-              end
+              # Call the actual `include` method with the supplied module
+              include_result = super(mod)
+              # Take a snapshot of the list of singleton class ancestors
+              # after the actual include
+              after = singleton_class.ancestors
+              # The difference is the modules that are added to the list
+              # of ancestors of the singleton class. Those are all the
+              # modules that were `extend`ed due to the `include` call.
+              #
+              # We record those modules on our lookup table keyed by
+              # the included module with the values being all the modules
+              # that that module pulls into the singleton class.
+              #
+              # We need to reverse the order, since the extend order should
+              # be the inverse of the ancestor order. That is, earlier
+              # extended modules would be later in the ancestor chain.
+              mixins_from_modules[mod] = (after - before).reverse!
+
+              include_result
             rescue Exception # rubocop:disable Lint/RescueException
               # this is a best effort, bail if we can't perform this
             end
 
+            # rubocop:disable Style/MissingRespondToMissing
+            def method_missing(symbol, *args)
+              # We need this here so that we can handle any random instance
+              # method calls on the fake including class that may be done by
+              # the included module during the `self.included` hook.
+            end
+
             class << self
               def method_missing(symbol, *args)
+                # Similarly, we need this here so that we can handle any
+                # random class method calls on the fake including class
+                # that may be done by the included module during the
+                # `self.included` hook.
               end
             end
             # rubocop:enable Style/MissingRespondToMissing
           end.include(constant)
 
-          all_dynamic_extends = mixins_from_modules.delete(constant)
-          all_dynamic_includes = mixins_from_modules.keys
-          dynamic_extends_from_dynamic_includes = mixins_from_modules.values.flatten
-          dynamic_extends = all_dynamic_extends - dynamic_extends_from_dynamic_includes
+          [
+            # The value that corresponds to the original included constant
+            # is the list of all dynamically extended modules because of that
+            # constant. We grab that value by deleting the key for the original
+            # constant.
+            T.must(mixins_from_modules.delete(constant)),
+            # Since we deleted the original constant from the list of keys, all
+            # the keys that remain are the ones that are dynamically included modules
+            # during the include of the original constant.
+            mixins_from_modules.keys,
+          ]
+        end
 
-          all_dynamic_includes
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .map do |mod|
-              add_to_symbol_queue(name_of(mod))
+        sig { params(constant: Module, dynamic_extends: T::Array[Module]).returns(T::Array[Module]) }
+        def collect_mixed_in_class_methods(constant, dynamic_extends)
+          if Tapioca::Compilers::Sorbet.supports?(:mixes_in_class_methods_multiple_args)
+            # If we can generate multiple mixes_in_class_methods, then
+            # we want to use all dynamic extends that are not the constant itself
+            return dynamic_extends.select { |mod| mod != constant }
+          end
 
-              qname = qualified_name_of(mod)
-              tree << RBI::Include.new(T.must(qname))
-            end.join("\n")
-
+          # For older Sorbet version, we do an explicit check for an AS::Concern
+          # related ClassMethods module.
           ancestors = singleton_class_of(constant).ancestors
           extends_as_concern = ancestors.any? do |mod|
             qualified_name_of(mod) == "::ActiveSupport::Concern"
@@ -436,17 +469,45 @@ module Tapioca
           class_methods_module = resolve_constant("#{name_of(constant)}::ClassMethods")
 
           mixed_in_module = if extends_as_concern && Module === class_methods_module
+            # If this module is a concern and the ClassMethods module exists
+            # then, we prefer to generate a mixes_in_class_methods call for
+            # that module only, since we only have a single shot.
             class_methods_module
           else
+            # Otherwise, we use the first dynamic extend module that is not
+            # the constant itself. We don't have a better heuristic in the
+            # absence of being able to supply multiple arguments.
             dynamic_extends.find { |mod| mod != constant }
           end
 
-          return if mixed_in_module.nil?
+          Array(mixed_in_module)
+        end
 
-          qualified_name = qualified_name_of(mixed_in_module)
-          return if qualified_name.nil? || qualified_name == ""
+        sig { params(tree: RBI::Tree, constant: Module).void }
+        def compile_mixes_in_class_methods(tree, constant)
+          return if constant.is_a?(Class)
 
-          tree << RBI::MixesInClassMethods.new(qualified_name)
+          dynamic_extends, dynamic_includes = collect_dynamic_mixins_of(constant)
+
+          dynamic_includes
+            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .map do |mod|
+              add_to_symbol_queue(name_of(mod))
+
+              qname = qualified_name_of(mod)
+              tree << RBI::Include.new(T.must(qname))
+            end
+
+          mixed_in_class_methods = collect_mixed_in_class_methods(constant, dynamic_extends)
+          return if mixed_in_class_methods.empty?
+
+          mixed_in_class_methods.each do |mod|
+            add_to_symbol_queue(name_of(mod))
+
+            qualified_name = qualified_name_of(mod)
+            next if qualified_name.nil? || qualified_name.empty?
+            tree << RBI::MixesInClassMethods.new(qualified_name)
+          end
         rescue
           nil # silence errors
         end

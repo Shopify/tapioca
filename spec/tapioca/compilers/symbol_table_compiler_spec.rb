@@ -1576,8 +1576,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
       RUBY
 
-      add_ruby_file("some_other_concern.rb", <<~RUBY)
-        module SomeOtherConcern
+      add_ruby_file("module_with_included_method.rb", <<~RUBY)
+        module ModuleWithIncludedMethod
           def included(base)
             base.include(FooConcern)
             base.include(BarConcern)
@@ -1587,7 +1587,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       add_ruby_file("baz.rb", <<~RUBY)
         module Baz
-          extend SomeOtherConcern
+          extend ModuleWithIncludedMethod
         end
       RUBY
 
@@ -1607,9 +1607,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module Baz
-          extend ::SomeOtherConcern
+          extend ::ModuleWithIncludedMethod
           include ::FooConcern
           include ::BarConcern
+
+          mixes_in_class_methods ::FooConcern::CustomClassMethods
+          mixes_in_class_methods ::BarConcern::Something
         end
 
         module Concern
@@ -1628,7 +1631,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def wow_a_class_method; end
         end
 
-        module SomeOtherConcern
+        module ModuleWithIncludedMethod
           def included(base); end
         end
       RBI
@@ -1689,59 +1692,61 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSuport::Concern") do
-      add_ruby_file("active_support/concern.rb", <<~RUBY)
-        module ActiveSupport
-          module Concern
-            def included(base = nil, &block)
-              if base.nil?
-                @_included_block = block
-              else
-                base.extend(const_get(:ClassMethods)) if const_defined?(:ClassMethods)
-                base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
-                super
-              end
-            end
+    it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSupport::Concern") do
+      add_ruby_file("validations.rb", <<~RUBY)
+        require "active_support/concern"
+
+        module Validations
+          extend ActiveSupport::Concern
+
+          module HelperMethods
+          end
+          private_constant :HelperMethods
+
+          module ClassMethods
+          end
+
+          included do
+            extend  HelperMethods
+            include HelperMethods
           end
         end
       RUBY
 
-      add_ruby_file("active_model/validations.rb", <<~RUBY)
-        module ActiveModel
-          module Validations
-            module HelperMethods
-            end
+      add_ruby_file("super_validations.rb", <<~RUBY)
+        require "active_support/concern"
 
-            module ClassMethods
-            end
+        module SuperValidations
+          extend ActiveSupport::Concern
+          include Validations
 
-            extend ActiveSupport::Concern
-
-            included do
-              extend  HelperMethods
-              include HelperMethods
-            end
-          end
+          class_methods {}
         end
       RUBY
 
       output = template(<<~RBI)
-        module ActiveModel; end
-
-        module ActiveModel::Validations
+        module SuperValidations
           extend ::ActiveSupport::Concern
-          include ::ActiveModel::Validations::HelperMethods
+          include ::Validations::HelperMethods
+          include ::Validations
 
-          mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
+          mixes_in_class_methods ::Validations::ClassMethods
+          mixes_in_class_methods ::Validations::HelperMethods
+          mixes_in_class_methods ::SuperValidations::ClassMethods
         end
 
-        module ActiveModel::Validations::ClassMethods; end
-        module ActiveModel::Validations::HelperMethods; end
-        module ActiveSupport; end
+        module SuperValidations::ClassMethods; end
 
-        module ActiveSupport::Concern
-          def included(base = T.unsafe(nil), &block); end
+        module Validations
+          extend ::ActiveSupport::Concern
+          include ::Validations::HelperMethods
+
+          mixes_in_class_methods ::Validations::ClassMethods
+          mixes_in_class_methods ::Validations::HelperMethods
         end
+
+        module Validations::ClassMethods; end
+        module Validations::HelperMethods; end
       RBI
 
       assert_equal(output, compile)
