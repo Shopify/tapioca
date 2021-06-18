@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "pathname"
@@ -7,8 +7,19 @@ require "shellwords"
 module Tapioca
   module Compilers
     module Sorbet
-      SORBET = Pathname.new(Gem::Specification.find_by_name("sorbet-static").full_gem_path) / "libexec" / "sorbet"
+      SORBET_GEM_SPEC = T.let(
+        Gem::Specification.find_by_name("sorbet-static"),
+        Gem::Specification
+      )
+      SORBET = T.let(
+        Pathname.new(SORBET_GEM_SPEC.full_gem_path) / "libexec" / "sorbet",
+        Pathname
+      )
       EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
+
+      FEATURE_REQUIREMENTS = T.let({
+        mixes_in_class_methods_multiple_args: Gem::Requirement.new("> 0.5.6200"),
+      }.freeze, T::Hash[Symbol, Gem::Requirement])
 
       class << self
         extend(T::Sig)
@@ -30,6 +41,16 @@ module Tapioca
           sorbet_path = ENV.fetch(EXE_PATH_ENV_VAR, SORBET)
           sorbet_path = SORBET if sorbet_path.empty?
           sorbet_path.to_s.shellescape
+        end
+
+        sig { params(feature: Symbol, version: T.nilable(Gem::Version)).returns(T::Boolean) }
+        def supports?(feature, version: nil)
+          version = SORBET_GEM_SPEC.version unless version
+          requirement = FEATURE_REQUIREMENTS[feature]
+
+          raise "Invalid Sorbet feature #{feature}" unless requirement
+
+          requirement.satisfied_by?(version)
         end
       end
     end
