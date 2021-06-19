@@ -1023,6 +1023,83 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/bar@0.0.1.rbi")
       refute_path_exists("#{outdir}/baz@0.0.1.rbi")
     end
+
+    describe("verify") do
+      before do
+        execute("sync")
+      end
+
+      describe("with no changes") do
+        it "does nothing and returns exit_status 0" do
+          output = execute("sync", "--verify")
+
+          assert_equal(output, <<~OUTPUT)
+            Checking for out-of-date RBIs...
+
+            Nothing to do, all RBIs are up-to-date.
+          OUTPUT
+          assert_includes($?.to_s, "exit 0") # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
+
+      describe("with excluded files") do
+        it "advises of removed file(s) and returns exit_status 1" do
+          output = execute("sync", "--verify", exclude: "foo bar")
+
+          assert_equal(output, <<~OUTPUT)
+            Checking for out-of-date RBIs...
+
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca sync`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) removed:
+              - #{outdir}/bar@0.3.0.rbi
+              - #{outdir}/foo@0.0.1.rbi
+          OUTPUT
+          assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
+
+          # Does not actually modify anything
+          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
+          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
+        end
+      end
+
+      describe("with added/removed/changed files") do
+        before do
+          FileUtils.rm("#{outdir}/foo@0.0.1.rbi")
+          FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
+          FileUtils.mv("#{outdir}/bar@0.3.0.rbi", "#{outdir}/bar@0.2.0.rbi")
+        end
+
+        it "advises of added/removed/changed file(s) and returns exit_status 1" do
+          output = execute("sync", "--verify")
+
+          assert_equal(output, <<~OUTPUT)
+            Checking for out-of-date RBIs...
+
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca sync`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) added:
+              - #{outdir}/foo@0.0.1.rbi
+              File(s) changed:
+              - #{outdir}/bar@0.3.0.rbi
+              File(s) removed:
+              - #{outdir}/outdated@5.0.0.rbi
+          OUTPUT
+          assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
+
+          # Does not actually modify anything
+          refute_path_exists("#{outdir}/foo@0.0.1.rbi")
+          assert_path_exists("#{outdir}/outdated@5.0.0.rbi")
+          assert_path_exists("#{outdir}/bar@0.2.0.rbi")
+        end
+      end
+    end
   end
 
   describe("deprecations") do
