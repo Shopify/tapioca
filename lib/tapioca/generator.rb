@@ -171,8 +171,15 @@ module Tapioca
       end
     end
 
-    sig { void }
-    def sync_rbis_with_gemfile
+    sig { params(should_verify: T::Boolean).void }
+    def sync_rbis_with_gemfile(should_verify: false)
+      if should_verify
+        say("Checking for out-of-date RBIs...")
+        say("")
+        perform_sync_verification
+        return
+      end
+
       anything_done = [
         perform_removals,
         perform_additions,
@@ -622,6 +629,42 @@ module Tapioca
           remove(filename)
         end
         say("")
+      end
+    end
+
+    sig { void }
+    def perform_sync_verification
+      diff = {}
+
+      removed_rbis.each do |gem_name|
+        filename = existing_rbi(gem_name)
+        diff[filename] = :removed
+      end
+
+      added_rbis.each do |gem_name|
+        filename = expected_rbi(gem_name)
+        if gem_rbi_exists?(gem_name)
+          diff[filename] = :changed
+        else
+          diff[filename] = :added
+        end
+      end
+
+      if diff.empty?
+        say("Nothing to do, all RBIs are up-to-date.")
+      else
+        say("RBI files are out-of-date. In your development environment, please run:", :green)
+        say("  `#{Config::DEFAULT_COMMAND} sync`", [:green, :bold])
+        say("Once it is complete, be sure to commit and push any changes", :green)
+
+        say("")
+
+        say("Reason:", [:red])
+        diff.group_by(&:last).sort.each do |cause, diff_for_cause|
+          say(build_error_for_files(cause, diff_for_cause.map(&:first)))
+        end
+
+        exit(1)
       end
     end
   end
