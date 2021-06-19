@@ -643,11 +643,7 @@ module Tapioca
 
       added_rbis.each do |gem_name|
         filename = expected_rbi(gem_name)
-        if gem_rbi_exists?(gem_name)
-          diff[filename] = :changed
-        else
-          diff[filename] = :added
-        end
+        diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
       end
 
       if diff.empty?
