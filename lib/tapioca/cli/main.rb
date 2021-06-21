@@ -84,9 +84,13 @@ module Tapioca
       end
 
       desc "sync", "sync RBIs to Gemfile"
+      option :verify,
+        type: :boolean,
+        default: false,
+        desc: "Verifies RBIs are up-to-date"
       def sync
         Tapioca.silence_warnings do
-          generator.sync_rbis_with_gemfile
+          generator.sync_rbis_with_gemfile(should_verify: options[:verify])
         end
       end
 
