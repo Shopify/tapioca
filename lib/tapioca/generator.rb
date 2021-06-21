@@ -600,22 +600,7 @@ module Tapioca
     def perform_dsl_verification(dir)
       diff = verify_dsl_rbi(tmp_dir: dir)
 
-      if diff.empty?
-        say("Nothing to do, all RBIs are up-to-date.")
-      else
-        say("RBI files are out-of-date. In your development environment, please run:", :green)
-        say("  `#{Config::DEFAULT_COMMAND} dsl`", [:green, :bold])
-        say("Once it is complete, be sure to commit and push any changes", :green)
-
-        say("")
-
-        say("Reason:", [:red])
-        diff.group_by(&:last).sort.each do |cause, diff_for_cause|
-          say(build_error_for_files(cause, diff_for_cause.map(&:first)))
-        end
-
-        exit(1)
-      end
+      report_diff_and_exit_if_out_of_date(diff, 'dsl')
     ensure
       FileUtils.remove_entry(dir)
     end
@@ -646,11 +631,16 @@ module Tapioca
         diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
       end
 
+      report_diff_and_exit_if_out_of_date(diff, 'sync')
+    end
+
+    sig { params(diff: T::Hash[String, Symbol], command: String).void }
+    def report_diff_and_exit_if_out_of_date(diff, command)
       if diff.empty?
         say("Nothing to do, all RBIs are up-to-date.")
       else
         say("RBI files are out-of-date. In your development environment, please run:", :green)
-        say("  `#{Config::DEFAULT_COMMAND} sync`", [:green, :bold])
+        say("  `#{Config::DEFAULT_COMMAND} #{command}`", [:green, :bold])
         say("Once it is complete, be sure to commit and push any changes", :green)
 
         say("")
