@@ -600,7 +600,7 @@ module Tapioca
     def perform_dsl_verification(dir)
       diff = verify_dsl_rbi(tmp_dir: dir)
 
-      report_diff_and_exit_if_out_of_date(diff, 'dsl')
+      report_diff_and_exit_if_out_of_date(diff, "dsl")
     ensure
       FileUtils.remove_entry(dir)
     end
@@ -631,7 +631,7 @@ module Tapioca
         diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
       end
 
-      report_diff_and_exit_if_out_of_date(diff, 'sync')
+      report_diff_and_exit_if_out_of_date(diff, "sync")
     end
 
     sig { params(diff: T::Hash[String, Symbol], command: String).void }
