@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_job"
 rescue LoadError
@@ -42,25 +40,23 @@ module Tapioca
       class ActiveJob < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActiveJob::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveJob::Base)).void }
         def decorate(root, constant)
           return unless constant.instance_methods(false).include?(:perform)
 
-          root.path(constant) do |job|
+          root.create_path(constant) do |job|
             method = constant.instance_method(:perform)
-            parameters = compile_method_parameters_to_parlour(method)
-            return_type = compile_method_return_type_to_parlour(method)
+            parameters = compile_method_parameters_to_rbi(method)
+            return_type = compile_method_return_type_to_rbi(method)
 
-            create_method(
-              job,
+            job.create_method(
               "perform_later",
               parameters: parameters,
               return_type: "T.any(#{constant.name}, FalseClass)",
               class_method: true
             )
 
-            create_method(
-              job,
+            job.create_method(
               "perform_now",
               parameters: parameters,
               return_type: return_type,

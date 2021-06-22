@@ -43,7 +43,6 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:NotifyJob))
@@ -60,6 +59,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifyJob
           sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
           def self.perform_later(user_id); end
@@ -85,6 +85,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifyJob
           sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
           def self.perform_later(user_id); end
