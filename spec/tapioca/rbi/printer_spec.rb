@@ -45,6 +45,40 @@ module Tapioca
           RBI
         end
 
+        it("builds nested scopes from blocks") do
+          rbi = RBI::Tree.new do |tree|
+            tree << RBI::Module.new("Foo") do |mod|
+              mod << RBI::Class.new("Bar") do |klass1|
+                klass1 << RBI::Class.new("Baz", superclass_name: "Bar") do |klass2|
+                  klass2 << RBI::TStruct.new("Struct") do |klass3|
+                    klass3 << RBI::TEnum.new("Enum") do |klass4|
+                      klass4 << RBI::SingletonClass.new do |klass5|
+                        klass5 << RBI::Method.new("foo")
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+
+          assert_equal(<<~RBI, rbi.string)
+            module Foo
+              class Bar
+                class Baz < Bar
+                  class Struct < ::T::Struct
+                    class Enum < ::T::Enum
+                      class << self
+                        def foo; end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          RBI
+        end
+
         it("builds constants") do
           rbi = RBI::Tree.new
           rbi << RBI::Const.new("Foo", "42")
