@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 # Add your extra requires here
-require "parlour"
 require "smart_properties"
 require "frozen_record"
 require "state_machines"
