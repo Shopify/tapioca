@@ -72,10 +72,17 @@ module Tapioca
       sig { returns(T::Array[Node]) }
       attr_reader :nodes
 
-      sig { params(loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(loc: nil, comments: [])
+      sig do
+        params(
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(tree: Tree).void)
+        ).void
+      end
+      def initialize(loc: nil, comments: [], &block)
         super(loc: loc, comments: comments)
         @nodes = T.let([], T::Array[Node])
+        block&.call(self)
       end
 
       sig { params(node: Node).void }
@@ -112,10 +119,18 @@ module Tapioca
       sig { returns(String) }
       attr_accessor :name
 
-      sig { params(name: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(name, loc: nil, comments: [])
-        super(loc: loc, comments: comments)
+      sig do
+        params(
+          name: String,
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(mod: Module).void)
+        ).void
+      end
+      def initialize(name, loc: nil, comments: [], &block)
+        super(loc: loc, comments: comments) {}
         @name = name
+        block&.call(self)
       end
 
       sig { override.returns(String) }
@@ -139,13 +154,15 @@ module Tapioca
           name: String,
           superclass_name: T.nilable(String),
           loc: T.nilable(Loc),
-          comments: T::Array[Comment]
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(klass: Class).void)
         ).void
       end
-      def initialize(name, superclass_name: nil, loc: nil, comments: [])
-        super(loc: loc, comments: comments)
+      def initialize(name, superclass_name: nil, loc: nil, comments: [], &block)
+        super(loc: loc, comments: comments) {}
         @name = name
         @superclass_name = superclass_name
+        block&.call(self)
       end
 
       sig { override.returns(String) }
@@ -158,9 +175,16 @@ module Tapioca
     class SingletonClass < Scope
       extend T::Sig
 
-      sig { params(loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(loc: nil, comments: [])
-        super(loc: loc, comments: comments)
+      sig do
+        params(
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(klass: SingletonClass).void)
+        ).void
+      end
+      def initialize(loc: nil, comments: [], &block)
+        super(loc: loc, comments: comments) {}
+        block&.call(self)
       end
 
       sig { override.returns(String) }
@@ -566,9 +590,17 @@ module Tapioca
     class TStruct < Class
       extend T::Sig
 
-      sig { params(name: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(name, loc: nil, comments: [])
-        super(name, superclass_name: "::T::Struct", loc: loc, comments: comments)
+      sig do
+        params(
+          name: String,
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(klass: TStruct).void)
+        ).void
+      end
+      def initialize(name, loc: nil, comments: [], &block)
+        super(name, superclass_name: "::T::Struct", loc: loc, comments: comments) {}
+        block&.call(self)
       end
     end
 
@@ -639,9 +671,17 @@ module Tapioca
     class TEnum < Class
       extend T::Sig
 
-      sig { params(name: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
-      def initialize(name, loc: nil, comments: [])
-        super(name, superclass_name: "::T::Enum", loc: loc, comments: comments)
+      sig do
+        params(
+          name: String,
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(klass: TEnum).void)
+        ).void
+      end
+      def initialize(name, loc: nil, comments: [], &block)
+        super(name, superclass_name: "::T::Enum", loc: loc, comments: comments) {}
+        block&.call(self)
       end
     end
 
