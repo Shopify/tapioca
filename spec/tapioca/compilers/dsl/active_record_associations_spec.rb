@@ -56,7 +56,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:Post))
@@ -95,6 +94,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
@@ -158,6 +158,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
@@ -205,6 +206,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
@@ -252,6 +254,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
@@ -312,6 +315,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
@@ -366,6 +370,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           include GeneratedAssociationMethods
 
