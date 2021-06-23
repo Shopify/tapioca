@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "action_mailer"
 rescue LoadError
@@ -38,14 +36,13 @@ module Tapioca
       class ActionMailer < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActionMailer::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionMailer::Base)).void }
         def decorate(root, constant)
-          root.path(constant) do |mailer|
+          root.create_path(constant) do |mailer|
             constant.action_methods.to_a.each do |mailer_method|
               method_def = constant.instance_method(mailer_method)
-              parameters = compile_method_parameters_to_parlour(method_def)
-              create_method(
-                mailer,
+              parameters = compile_method_parameters_to_rbi(method_def)
+              mailer.create_method(
                 mailer_method,
                 parameters: parameters,
                 return_type: "::ActionMailer::MessageDelivery",
