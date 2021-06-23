@@ -48,6 +48,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Vehicle
           include StateMachineInstanceHelperModule
           extend StateMachineClassHelperModule
