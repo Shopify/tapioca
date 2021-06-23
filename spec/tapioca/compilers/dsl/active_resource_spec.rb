@@ -37,6 +37,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(Integer) }
           def id; end
@@ -63,6 +64,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(Integer) }
           def id; end
@@ -108,6 +110,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(Integer) }
           def month; end
@@ -143,6 +146,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def id; end
