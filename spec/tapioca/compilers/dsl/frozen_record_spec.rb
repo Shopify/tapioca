@@ -39,7 +39,6 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:Student))
@@ -63,6 +62,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Student
           include FrozenRecordAttributeMethods
 
