@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_resource"
 rescue LoadError
@@ -63,16 +61,11 @@ module Tapioca
       class ActiveResource < Base
         extend T::Sig
 
-        sig do
-          override.params(
-            root: Parlour::RbiGenerator::Namespace,
-            constant: T.class_of(::ActiveResource::Base)
-          ).void
-        end
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveResource::Base)).void }
         def decorate(root, constant)
           return if constant.schema.blank?
 
-          root.path(constant) do |resource|
+          root.create_path(constant) do |resource|
             constant.schema.each do |attribute, type|
               create_schema_methods(resource, attribute, type)
             end
@@ -104,36 +97,15 @@ module Tapioca
           TYPES.fetch(attr_type, "T.untyped")
         end
 
-        sig do
-          params(
-            klass: Parlour::RbiGenerator::Namespace,
-            attribute: String,
-            type: String
-          ).void
-        end
+        sig { params(klass: RBI::Scope, attribute: String, type: String).void }
         def create_schema_methods(klass, attribute, type)
           return_type = type_for(type.to_sym)
 
-          create_method(
-            klass,
-            attribute,
-            return_type: return_type
-          )
-
-          create_method(
-            klass,
-            "#{attribute}?",
-            return_type: "T::Boolean"
-          )
-
-          create_method(
-            klass,
-            "#{attribute}=",
-            parameters: [
-              Parlour::RbiGenerator::Parameter.new("value", type: return_type),
-            ],
-            return_type: return_type
-          )
+          klass.create_method(attribute, return_type: return_type)
+          klass.create_method("#{attribute}?", return_type: "T::Boolean")
+          klass.create_method("#{attribute}=", parameters: [
+            create_param("value", type: return_type),
+          ], return_type: return_type)
         end
       end
     end
