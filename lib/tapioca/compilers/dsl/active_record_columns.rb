@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_record"
 rescue LoadError
@@ -99,11 +97,11 @@ module Tapioca
       class ActiveRecordColumns < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(ActiveRecord::Base)).void }
         def decorate(root, constant)
           return unless constant.table_exists?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             module_name = "GeneratedAttributeMethods"
 
             model.create_module(module_name) do |mod|
@@ -136,27 +134,24 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             name: String,
             methods_to_add: T.nilable(T::Array[String]),
-            return_type: T.nilable(String),
+            return_type: String,
             parameters: T::Array[[String, String]]
           ).void
         end
-        def add_method(klass, name, methods_to_add, return_type: nil, parameters: [])
-          create_method(
-            klass,
+        def add_method(klass, name, methods_to_add, return_type: "void", parameters: [])
+          klass.create_method(
             name,
-            parameters: parameters.map do |param, type|
-              Parlour::RbiGenerator::Parameter.new(param, type: type)
-            end,
+            parameters: parameters.map { |param, type| create_param(param, type: type) },
             return_type: return_type
           ) if methods_to_add.nil? || methods_to_add.include?(name)
         end
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(ActiveRecord::Base),
             column_name: String,
             attribute_name: String,
