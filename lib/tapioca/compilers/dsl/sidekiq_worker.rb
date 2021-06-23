@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "sidekiq"
 rescue LoadError
@@ -45,30 +43,30 @@ module Tapioca
       class SidekiqWorker < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::Sidekiq::Worker)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::Sidekiq::Worker)).void }
         def decorate(root, constant)
           return unless constant.instance_methods.include?(:perform)
 
-          root.path(constant) do |worker|
+          root.create_path(constant) do |worker|
             method_def = constant.instance_method(:perform)
 
-            async_params = compile_method_parameters_to_parlour(method_def)
+            async_params = compile_method_parameters_to_rbi(method_def)
 
             # `perform_at` and is just an alias for `perform_in` so both methods technically
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
             at_params = [
-              Parlour::RbiGenerator::Parameter.new("interval", type: "T.any(DateTime, Time)"),
+              create_param("interval", type: "T.any(DateTime, Time)"),
               *async_params,
             ]
             in_params = [
-              Parlour::RbiGenerator::Parameter.new("interval", type: "Numeric"),
+              create_param("interval", type: "Numeric"),
               *async_params,
             ]
 
-            create_method(worker, "perform_async", parameters: async_params, return_type: "String", class_method: true)
-            create_method(worker, "perform_at", parameters: at_params, return_type: "String", class_method: true)
-            create_method(worker, "perform_in", parameters: in_params, return_type: "String", class_method: true)
+            worker.create_method("perform_async", parameters: async_params, return_type: "String", class_method: true)
+            worker.create_method("perform_at", parameters: at_params, return_type: "String", class_method: true)
+            worker.create_method("perform_in", parameters: in_params, return_type: "String", class_method: true)
           end
         end
 
