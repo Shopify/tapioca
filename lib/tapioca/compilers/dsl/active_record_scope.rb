@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_record"
 rescue LoadError
@@ -47,7 +45,7 @@ module Tapioca
 
         sig do
           override.params(
-            root: Parlour::RbiGenerator::Namespace,
+            root: RBI::Tree,
             constant: T.class_of(::ActiveRecord::Base)
           ).void
         end
@@ -55,7 +53,7 @@ module Tapioca
           scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
           return if scope_method_names.empty?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             module_name = "GeneratedRelationMethods"
 
             model.create_module(module_name) do |mod|
@@ -78,19 +76,18 @@ module Tapioca
         sig do
           params(
             scope_method: String,
-            mod: Parlour::RbiGenerator::Namespace,
+            mod: RBI::Scope,
           ).void
         end
         def generate_scope_method(scope_method, mod)
           # This return type should actually be Model::ActiveRecord_Relation
           return_type = "T.untyped"
 
-          create_method(
-            mod,
+          mod.create_method(
             scope_method,
             parameters: [
-              Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-              Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+              create_rest_param("args", type: "T.untyped"),
+              create_block_param("blk", type: "T.untyped"),
             ],
             return_type: return_type,
           )

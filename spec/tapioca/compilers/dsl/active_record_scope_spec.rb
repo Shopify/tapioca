@@ -35,7 +35,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:Post))
@@ -50,6 +49,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           extend GeneratedRelationMethods
 
@@ -73,6 +73,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           extend GeneratedRelationMethods
 
