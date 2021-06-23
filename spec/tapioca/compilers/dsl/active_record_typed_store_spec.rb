@@ -54,7 +54,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(rbi_for(:Post), expected)
@@ -75,6 +74,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(String)) }
           def reviewer; end
@@ -146,6 +146,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T::Boolean) }
           def reviewed; end
@@ -194,6 +195,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(Date)) }
           def review_date; end
@@ -265,6 +267,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(DateTime)) }
           def review_date; end
@@ -287,6 +290,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(Time)) }
           def review_time; end
@@ -309,6 +313,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(BigDecimal)) }
           def rate; end
@@ -331,6 +336,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def kind; end
@@ -353,6 +359,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(Integer)) }
           def rate; end
@@ -375,6 +382,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(Float)) }
           def rate; end
