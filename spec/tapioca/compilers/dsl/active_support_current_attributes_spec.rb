@@ -31,7 +31,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:Current))
@@ -46,6 +45,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Current
           sig { returns(T.untyped) }
           def self.account; end
@@ -96,6 +96,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Current
           sig { returns(T.untyped) }
           def self.account; end
