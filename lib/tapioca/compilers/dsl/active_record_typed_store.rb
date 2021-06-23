@@ -1,7 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
 require "tapioca/core_ext/class"
 
 begin
@@ -92,7 +91,7 @@ module Tapioca
         sig do
           override
             .params(
-              root: Parlour::RbiGenerator::Namespace,
+              root: RBI::Tree,
               constant: T.class_of(::ActiveRecord::Base)
             )
             .void
@@ -101,7 +100,7 @@ module Tapioca
           stores = constant.typed_stores
           return if stores.values.flat_map(&:accessors).empty?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             stores.values.each do |store_data|
               store_data.accessors.each do |accessor|
                 field = store_data.fields[accessor]
@@ -142,7 +141,7 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             name: String,
             type: String
           )
@@ -151,7 +150,7 @@ module Tapioca
         def generate_methods(klass, name, type)
           klass.create_method(
             "#{name}=",
-            parameters: [Parlour::RbiGenerator::Parameter.new(name, type: type)],
+            parameters: [create_param(name, type: type)],
             return_type: type
           )
           klass.create_method(name, return_type: type)
