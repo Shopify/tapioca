@@ -158,7 +158,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
 
       expected = <<~RUBY
         # typed: strong
-
       RUBY
 
       assert_equal(expected, rbi_for(:Bar))
@@ -180,7 +179,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
 
       expected = <<~RUBY
         # typed: strong
-
       RUBY
 
       assert_equal(expected, rbi_for(:Foo))
@@ -210,8 +208,9 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
 
       expected = <<~RUBY
         # typed: strong
+
         module Bar
-          mixes_in_class_methods(::Foo::ClassMethods)
+          mixes_in_class_methods ::Foo::ClassMethods
         end
       RUBY
 
@@ -262,16 +261,20 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
 
       expected_bar = <<~RUBY
         # typed: strong
+
         module Bar
-          mixes_in_class_methods(::Foo::ClassMethods)
+          mixes_in_class_methods ::Foo::ClassMethods
         end
       RUBY
       assert_equal(expected_bar, rbi_for(:Bar))
 
       expected_qux = <<~RUBY
         # typed: strong
+
         module Qux
-          mixes_in_class_methods(::Baz::ClassMethods, ::Foo::ClassMethods, ::Bar::ClassMethods)
+          mixes_in_class_methods ::Baz::ClassMethods
+          mixes_in_class_methods ::Foo::ClassMethods
+          mixes_in_class_methods ::Bar::ClassMethods
         end
       RUBY
 
@@ -297,11 +300,8 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
   end
 
   def arguments_to_micm_in_effective_order(rbi)
-    rbi.scan(/\(([^)]+)\)/)
+    rbi.scan(/mixes_in_class_methods (.*)$/)
       .flatten
-      .first
-      .gsub(/\s+/, "")
-      .split(",")
       .reverse
       .map { |i| i.sub(/::/, "") }
   end
