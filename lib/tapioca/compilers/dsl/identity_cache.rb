@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "parlour"
+require "tapioca/column_type_helper"
 
 begin
   require "rails/railtie"
@@ -64,6 +65,7 @@ module Tapioca
       # ~~~
       class IdentityCache < Base
         extend T::Sig
+        include ColumnTypeHelper
 
         COLLECTION_TYPE = T.let(
           ->(type) { "T::Array[::#{type}]" },
@@ -168,7 +170,7 @@ module Tapioca
           is_cache_index = field.instance_variable_defined?(:@attribute_proc)
 
           # Both `cache_index` and `cache_attribute` generate aliased methods
-          create_aliased_fetch_by_methods(klass, field_length, suffix)
+          create_aliased_fetch_by_methods(klass, constant, field.alias_name.to_s, field_length, suffix)
 
           # If the method used was `cache_index` a few extra methods are created
           if is_cache_index
@@ -218,34 +220,36 @@ module Tapioca
         sig do
           params(
             klass: Parlour::RbiGenerator::Namespace,
+            constant: T.class_of(::ActiveRecord::Base),
+            alias_name: String,
             length: Integer,
             suffix: String,
           ).void
         end
-        def create_aliased_fetch_by_methods(klass, length, suffix)
-          single_return_type = suffix.start_with?("id") ? "T.nilable(::Integer)" : "T.untyped"
-          multi_return_type = suffix.start_with?("id") ? "T::Array[::Integer]" : "T.untyped"
+        def create_aliased_fetch_by_methods(klass, constant, alias_name, length, suffix)
+          type, _ = type_for(constant, alias_name)
+          multi_type = type.delete_prefix("T.nilable(").delete_suffix(")")
 
           if length == 1
             klass.create_method(
               "fetch_#{suffix}",
               class_method: true,
               parameters: [Parlour::RbiGenerator::Parameter.new("key", type: "T.untyped")],
-              return_type: single_return_type
+              return_type: type
             )
 
             klass.create_method(
               "fetch_multi_#{suffix}",
               class_method: true,
               parameters: [Parlour::RbiGenerator::Parameter.new("keys", type: "T.untyped")],
-              return_type: multi_return_type
+              return_type: "T::Array[#{multi_type}]"
             )
           else
             klass.create_method(
               "fetch_#{suffix}",
               class_method: true,
               parameters: [Parlour::RbiGenerator::Parameter.new("key_values", type: "T.untyped")],
-              return_type: single_return_type
+              return_type: type
             )
           end
         end

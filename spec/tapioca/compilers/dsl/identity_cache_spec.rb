@@ -40,7 +40,27 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
   end
 
   describe("#decorate") do
+    before(:each) do
+      require "active_record"
+
+      ::ActiveRecord::Base.establish_connection(
+        adapter: "sqlite3",
+        database: ":memory:"
+      )
+    end
+
     it("generates RBI file for classes with multiple cache_indexes") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.integer :blog_id
+              t.string :title
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
@@ -82,6 +102,17 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.integer :blog_id
+              t.string :title
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
@@ -126,6 +157,17 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates methods for combined cache_indexes") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.string :title
+              t.datetime :review_date
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
@@ -164,6 +206,19 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates methods for classes with cache_has_manys index") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+            end
+
+            create_table :users do |t|
+              t.belongs_to :post
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
@@ -192,6 +247,19 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates methods for classes with cache_has_one index") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+            end
+
+            create_table :users do |t|
+              t.belongs_to :post
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
@@ -220,6 +288,19 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.belongs_to :user
+            end
+
+            create_table :users do |t|
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
@@ -245,6 +326,16 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("takes cache aliases into account when generating methods") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.string :author
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
@@ -256,10 +347,10 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       expected = <<~RBI
         # typed: strong
         class Post
-          sig { params(key: T.untyped).returns(T.untyped) }
+          sig { params(key: T.untyped).returns(T.nilable(::String)) }
           def self.fetch_author_by_id(key); end
 
-          sig { params(keys: T.untyped).returns(T.untyped) }
+          sig { params(keys: T.untyped).returns(T::Array[::String]) }
           def self.fetch_multi_author_by_id(keys); end
         end
       RBI
@@ -268,6 +359,19 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.belongs_to :user
+            end
+
+            create_table :users do |t|
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("user.rb", <<~RUBY)
         class User < ActiveRecord::Base
         end
