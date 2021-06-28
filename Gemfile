@@ -33,4 +33,5 @@ group(:development, :test) do
   gem("shopify-money", require: false)
   gem("sidekiq", require: false)
   gem("nokogiri", require: false)
+  gem("config", require: false)
 end
