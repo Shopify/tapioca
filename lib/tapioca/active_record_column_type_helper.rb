@@ -1,21 +1,19 @@
 # typed: strict
 # frozen_string_literal: true
 
-module ColumnTypeHelper
+class ActiveRecordColumnTypeHelper
   extend T::Sig
 
-  private
-
-  sig do
-    params(
-      constant: T.class_of(ActiveRecord::Base),
-      column_name: String
-    ).returns([String, String])
+  sig { params(constant: T.class_of(ActiveRecord::Base)).void }
+  def initialize(constant)
+    @constant = constant
   end
-  def type_for(constant, column_name)
-    return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(constant)
 
-    column_type = constant.attribute_types[column_name]
+  sig { params(column_name: String).returns([String, String]) }
+  def type_for(column_name)
+    return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(@constant)
+
+    column_type = @constant.attribute_types[column_name]
 
     getter_type =
       case column_type
@@ -41,14 +39,14 @@ module ColumnTypeHelper
         handle_unknown_type(column_type)
       end
 
-    column = constant.columns_hash[column_name]
+    column = @constant.columns_hash[column_name]
     setter_type = getter_type
 
     if column&.null
       return ["T.nilable(#{getter_type})", "T.nilable(#{setter_type})"]
     end
 
-    if column_name == constant.primary_key ||
+    if column_name == @constant.primary_key ||
         column_name == "created_at" ||
         column_name == "updated_at"
       getter_type = "T.nilable(#{getter_type})"
@@ -56,6 +54,8 @@ module ColumnTypeHelper
 
     [getter_type, setter_type]
   end
+
+  private
 
   sig { params(constant: Module).returns(T::Boolean) }
   def do_not_generate_strong_types?(constant)

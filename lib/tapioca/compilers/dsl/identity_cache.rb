@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "parlour"
-require "tapioca/column_type_helper"
 
 begin
   require "rails/railtie"
@@ -65,7 +64,6 @@ module Tapioca
       # ~~~
       class IdentityCache < Base
         extend T::Sig
-        include ColumnTypeHelper
 
         COLLECTION_TYPE = T.let(
           ->(type) { "T::Array[::#{type}]" },
@@ -233,7 +231,7 @@ module Tapioca
           ).void
         end
         def create_aliased_fetch_by_methods(field, klass, constant)
-          type, _ = type_for(constant, field.alias_name.to_s)
+          type, _ = ActiveRecordColumnTypeHelper.new(constant).type_for(field.alias_name.to_s)
           multi_type = type.delete_prefix("T.nilable(").delete_suffix(")")
           length = field.key_fields.length
           suffix = field.send(:fetch_method_suffix)

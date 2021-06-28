@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "parlour"
-require "tapioca/column_type_helper"
 
 begin
   require "active_record"
@@ -99,7 +98,6 @@ module Tapioca
       # ~~~
       class ActiveRecordColumns < Base
         extend T::Sig
-        include ColumnTypeHelper
 
         sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
         def decorate(root, constant)
@@ -166,7 +164,7 @@ module Tapioca
           ).void
         end
         def add_methods_for_attribute(klass, constant, column_name, attribute_name = column_name, methods_to_add = nil)
-          getter_type, setter_type = type_for(constant, column_name)
+          getter_type, setter_type = ActiveRecordColumnTypeHelper.new(constant).type_for(column_name)
 
           # Added by ActiveRecord::AttributeMethods::Read
           #
