@@ -164,55 +164,64 @@ module Tapioca
             .void
         end
         def create_fetch_by_methods(field, klass, constant)
-          field_length = field.key_fields.length
-          fields_name = field.key_fields.join("_and_")
           is_cache_index = field.instance_variable_defined?(:@attribute_proc)
 
           # Both `cache_index` and `cache_attribute` generate aliased methods
           create_aliased_fetch_by_methods(field, klass, constant)
 
           # If the method used was `cache_index` a few extra methods are created
-          if is_cache_index
-            name = "fetch_by_#{fields_name}"
-            parameters = field.key_fields.map do |arg|
-              Parlour::RbiGenerator::Parameter.new(arg.to_s, type: "T.untyped")
-            end
-            parameters << Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped")
+          create_index_fetch_by_methods(field, klass, constant) if is_cache_index
+        end
 
-            if field.unique
-              klass.create_method(
-                "#{name}!",
-                class_method: true,
-                parameters: parameters,
-                return_type: "::#{constant}"
-              )
+        sig do
+          params(
+            field: T.untyped,
+            klass: Parlour::RbiGenerator::Namespace,
+            constant: T.class_of(::ActiveRecord::Base),
+          ).void
+        end
+        def create_index_fetch_by_methods(field, klass, constant)
+          field_length = field.key_fields.length
+          fields_name = field.key_fields.join("_and_")
+          name = "fetch_by_#{fields_name}"
+          parameters = field.key_fields.map do |arg|
+            Parlour::RbiGenerator::Parameter.new(arg.to_s, type: "T.untyped")
+          end
+          parameters << Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped")
 
-              klass.create_method(
-                name,
-                class_method: true,
-                parameters: parameters,
-                return_type: "T.nilable(::#{constant})"
-              )
-            else
-              klass.create_method(
-                name,
-                class_method: true,
-                parameters: parameters,
-                return_type: COLLECTION_TYPE.call(constant)
-              )
-            end
+          if field.unique
+            klass.create_method(
+              "#{name}!",
+              class_method: true,
+              parameters: parameters,
+              return_type: "::#{constant}"
+            )
 
-            if field_length == 1
-              klass.create_method(
-                "fetch_multi_by_#{fields_name}",
-                class_method: true,
-                parameters: [
-                  Parlour::RbiGenerator::Parameter.new("index_values", type: "T.untyped"),
-                  Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped"),
-                ],
-                return_type: COLLECTION_TYPE.call(constant)
-              )
-            end
+            klass.create_method(
+              name,
+              class_method: true,
+              parameters: parameters,
+              return_type: "T.nilable(::#{constant})"
+            )
+          else
+            klass.create_method(
+              name,
+              class_method: true,
+              parameters: parameters,
+              return_type: COLLECTION_TYPE.call(constant)
+            )
+          end
+
+          if field_length == 1
+            klass.create_method(
+              "fetch_multi_by_#{fields_name}",
+              class_method: true,
+              parameters: [
+                Parlour::RbiGenerator::Parameter.new("index_values", type: "T.untyped"),
+                Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped"),
+              ],
+              return_type: COLLECTION_TYPE.call(constant)
+            )
           end
         end
 
