@@ -151,24 +151,65 @@ module Tapioca
 
         v.printl("# #{loc}") if loc && v.print_locs
         v.visit_all(comments)
-        case self
-        when Module
-          v.printt("module #{name}")
-        when Class
-          v.printt("class #{name}")
-          superclass = superclass_name
-          v.print(" < #{superclass}") if superclass
-        when SingletonClass
-          v.printt("class << self")
-        end
-        if empty?
-          v.printn("; end")
-        else
-          v.printn
+
+        print_header(v)
+        print_body(v)
+      end
+
+      sig { abstract.params(v: Printer).void }
+      def print_header(v); end
+
+      sig { params(v: Printer).void }
+      def print_body(v)
+        unless empty?
           v.indent
           v.visit_all(nodes)
           v.dedent
           v.printl("end")
+        end
+      end
+    end
+
+    class Module
+      extend T::Sig
+
+      sig { override.params(v: Printer).void }
+      def print_header(v)
+        v.printt("module #{name}")
+        if empty?
+          v.printn("; end")
+        else
+          v.printn
+        end
+      end
+    end
+
+    class Class
+      extend T::Sig
+
+      sig { override.params(v: Printer).void }
+      def print_header(v)
+        v.printt("class #{name}")
+        superclass = superclass_name
+        v.print(" < #{superclass}") if superclass
+        if empty?
+          v.printn("; end")
+        else
+          v.printn
+        end
+      end
+    end
+
+    class SingletonClass
+      extend T::Sig
+
+      sig { override.params(v: Printer).void }
+      def print_header(v)
+        v.printt("class << self")
+        if empty?
+          v.printn("; end")
+        else
+          v.printn
         end
       end
     end

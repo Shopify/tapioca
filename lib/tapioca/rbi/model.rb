@@ -29,6 +29,17 @@ module Tapioca
         self.parent_tree = nil
       end
 
+      sig { params(node: Node).void }
+      def replace(node)
+        tree = parent_tree
+        raise unless tree
+        index = tree.nodes.index(self)
+        raise unless index
+        tree.nodes[index] = node
+        node.parent_tree = tree
+        self.parent_tree = nil
+      end
+
       sig { returns(T.nilable(Scope)) }
       def parent_scope
         parent = T.let(parent_tree, T.nilable(Tree))
