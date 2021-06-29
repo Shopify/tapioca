@@ -235,7 +235,7 @@ module Tapioca
       abstract!
 
       sig { returns(T::Array[Symbol]) }
-      attr_reader :names
+      attr_accessor :names
 
       sig { returns(Visibility) }
       attr_accessor :visibility
@@ -511,7 +511,7 @@ module Tapioca
       abstract!
 
       sig { returns(T::Array[String]) }
-      attr_reader :names
+      attr_accessor :names
 
       sig { params(name: String, names: String, loc: T.nilable(Loc), comments: T::Array[Comment]).void }
       def initialize(name, *names, loc: nil, comments: [])
