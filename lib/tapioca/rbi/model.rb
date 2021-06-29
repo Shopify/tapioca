@@ -48,6 +48,12 @@ module Tapioca
         super(loc: loc)
         @text = text
       end
+
+      sig { params(other: Object).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.is_a?(Comment)
+        text == other.text
+      end
     end
 
     class NodeWithComments < Node
@@ -390,6 +396,12 @@ module Tapioca
       def to_s
         name
       end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(Param)
+        name == T.cast(other, Param).name
+      end
     end
 
     class OptParam < Param
@@ -403,10 +415,24 @@ module Tapioca
         super(name, loc: loc, comments: comments)
         @value = value
       end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(OptParam)
+        other = T.cast(other, OptParam)
+        return false unless name == other.name
+        value == other.value
+      end
     end
 
     class RestParam < Param
       extend T::Sig
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(RestParam)
+        name == T.cast(other, RestParam).name
+      end
 
       sig { override.returns(String) }
       def to_s
@@ -421,6 +447,12 @@ module Tapioca
       def to_s
         "#{name}:"
       end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(KwParam)
+        name == T.cast(other, KwParam).name
+      end
     end
 
     class KwOptParam < OptParam
@@ -429,6 +461,14 @@ module Tapioca
       sig { override.returns(String) }
       def to_s
         "#{name}:"
+      end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(KwOptParam)
+        other = T.cast(other, KwOptParam)
+        return false unless name == other.name
+        value == other.value
       end
     end
 
@@ -439,6 +479,12 @@ module Tapioca
       def to_s
         "**#{name}:"
       end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(KwRestParam)
+        name == T.cast(other, KwRestParam).name
+      end
     end
 
     class BlockParam < Param
@@ -447,6 +493,12 @@ module Tapioca
       sig { override.returns(String) }
       def to_s
         "&#{name}"
+      end
+
+      sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.instance_of?(BlockParam)
+        name == T.cast(other, BlockParam).name
       end
     end
 
@@ -503,9 +555,9 @@ module Tapioca
         @visibility = visibility
       end
 
-      sig { returns(T::Boolean) }
-      def public?
-        visibility == :public
+      sig { params(other: Visibility).returns(T::Boolean) }
+      def ==(other)
+        visibility == other.visibility
       end
 
       Public = T.let(Visibility.new(:public), Visibility)
@@ -569,6 +621,14 @@ module Tapioca
       def <<(param)
         @params << param
       end
+
+      sig { params(other: Object).returns(T::Boolean) }
+      def ==(other)
+        return false unless other.is_a?(Sig)
+        params == other.params && return_type == other.return_type && is_abstract == other.is_abstract &&
+          is_override == other.is_override && is_overridable == other.is_overridable &&
+          type_params == other.type_params && checked == other.checked
+      end
     end
 
     class SigParam < Node
@@ -582,6 +642,11 @@ module Tapioca
         super(loc: loc)
         @name = name
         @type = type
+      end
+
+      sig { params(other: Object).returns(T::Boolean) }
+      def ==(other)
+        other.is_a?(SigParam) && name == other.name && type == other.type
       end
     end
 
