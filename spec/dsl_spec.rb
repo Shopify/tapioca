@@ -59,7 +59,7 @@ class DslSpec < Minitest::Spec
 
   sig { returns(T::Array[String]) }
   def gathered_constants
-    T.unsafe(self).subject.processable_constants.map(&:to_s).sort
+    T.unsafe(self).subject.processable_constants.map(&:name).sort
   end
 
   sig do
@@ -68,8 +68,13 @@ class DslSpec < Minitest::Spec
     ).returns(String)
   end
   def rbi_for(constant_name)
+    # Sometimes gather_constants registers temp constants, so
+    # let's call it once to ensure all constants are in place.
+    T.unsafe(self).subject.processable_constants
+
     parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
-    T.unsafe(self).subject.decorate(parlour.root, Object.const_get(constant_name))
+    constant = Object.const_get(constant_name)
+    T.unsafe(self).subject.decorate(parlour.root, constant)
     parlour.rbi
   end
 end
