@@ -455,6 +455,22 @@ module Tapioca
           RBI
         end
 
+        it("builds empty comments") do
+          tree = RBI::Tree.new(comments: [
+            RBI::Comment.new("typed: true"),
+            RBI::Comment.new(""),
+            RBI::Comment.new("Some intro comment"),
+            RBI::Comment.new("Some other comment"),
+          ])
+
+          assert_equal(<<~RBI, tree.string)
+            # typed: true
+            #
+            # Some intro comment
+            # Some other comment
+          RBI
+        end
+
         it("prints params inline comments") do
           comments = [RBI::Comment.new("comment")]
 

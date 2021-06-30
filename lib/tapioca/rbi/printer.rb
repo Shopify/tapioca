@@ -118,7 +118,10 @@ module Tapioca
 
       sig { override.params(v: Printer).void }
       def accept_printer(v)
-        v.printl("# #{text.strip}")
+        text = self.text.strip
+        v.printt("#")
+        v.print(" #{text}") unless text.empty?
+        v.printn
       end
     end
 
