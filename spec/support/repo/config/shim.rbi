@@ -4,9 +4,6 @@
 class ::ActionController::Base
 end
 
-class ::Parlour::RbiGenerator::Namespace
-end
-
 module Sidekiq::Worker
 end
 
@@ -14,4 +11,7 @@ module SmartProperties
 end
 
 class ::Tapioca::Compilers::Dsl::Base
+end
+
+class ::Tapioca::RBI::Tree
 end
