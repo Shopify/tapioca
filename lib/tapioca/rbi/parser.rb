@@ -36,7 +36,7 @@ module Tapioca
 
       sig { params(path: String).returns(Tree) }
       def parse_file(path)
-        parse(File.read(path), file: path)
+        parse(::File.read(path), file: path)
       rescue ::Parser::SyntaxError => e
         raise Error, e.message
       end
