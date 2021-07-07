@@ -71,6 +71,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_by_blog_id(blog_id, includes: nil); end
@@ -123,6 +124,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_by_blog_id(blog_id, includes: nil); end
@@ -178,6 +180,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
           def self.fetch_by_title(title, includes: nil); end
@@ -234,6 +237,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T::Array[T.untyped]) }
           def fetch_user_ids; end
@@ -275,6 +279,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::User)) }
           def fetch_user; end
@@ -316,6 +321,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def fetch_user; end
@@ -346,6 +352,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { params(key: T.untyped).returns(T.nilable(::String)) }
           def self.fetch_author_by_id(key); end
@@ -387,6 +394,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::User)) }
           def fetch_user; end
