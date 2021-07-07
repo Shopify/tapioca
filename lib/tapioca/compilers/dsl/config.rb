@@ -49,7 +49,7 @@ module Tapioca
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
+        sig { override.params(root: RBI::Tree, constant: Module).void }
         def decorate(root, constant)
           # The constant we are given is the specialized config options type
           option_class_name = constant.name
@@ -67,7 +67,7 @@ module Tapioca
 
           root.create_constant(config_constant_name, value: "T.let(T.unsafe(nil), #{option_class_name})")
 
-          root.create_class(option_class_name, superclass: "::Config::Options") do |mod|
+          root.create_class(option_class_name, superclass_name: "::Config::Options") do |mod|
             # We need this to be generic only becuase `Config::Options` is an
             # enumerable and, thus, needs to redeclare the `Elem` type member.
             #
@@ -75,24 +75,20 @@ module Tapioca
             # enumerates the entries, we don't make any assumptions about their
             # types.
             mod.create_extend("T::Generic")
-            mod.create_constant("Elem", value: "type_member(fixed: T.untyped)")
+            mod.create_type_member("Elem", value: "type_member(fixed: T.untyped)")
 
             method_names.each do |method_name|
               # Create getter method
-              create_method(
-                mod,
+              mod.create_method(
                 method_name.to_s,
-                returns: "T.untyped"
+                return_type: "T.untyped"
               )
 
               # Create setter method
-              create_method(
-                mod,
+              mod.create_method(
                 "#{method_name}=",
-                parameters: [
-                  Parlour::RbiGenerator::Parameter.new("value", type: "T.untyped"),
-                ],
-                returns: "T.untyped"
+                parameters: [create_param("value", type: "T.untyped")],
+                return_type: "T.untyped"
               )
             end
           end

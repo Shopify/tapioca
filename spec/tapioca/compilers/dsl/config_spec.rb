@@ -36,10 +36,12 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         Settings = T.let(T.unsafe(nil), SettingsConfigOptions)
 
         class SettingsConfigOptions < ::Config::Options
           extend T::Generic
+
           Elem = type_member(fixed: T.untyped)
 
           sig { returns(T.untyped) }
@@ -72,10 +74,12 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         Foo = T.let(T.unsafe(nil), FooConfigOptions)
 
         class FooConfigOptions < ::Config::Options
           extend T::Generic
+
           Elem = type_member(fixed: T.untyped)
 
           sig { returns(T.untyped) }
@@ -111,10 +115,12 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         Settings = T.let(T.unsafe(nil), SettingsConfigOptions)
 
         class SettingsConfigOptions < ::Config::Options
           extend T::Generic
+
           Elem = type_member(fixed: T.untyped)
 
           sig { returns(T.untyped) }
