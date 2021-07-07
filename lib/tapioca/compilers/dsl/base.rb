@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
+require "tapioca/rbi"
 
 module Tapioca
   module Compilers
@@ -29,112 +29,17 @@ module Tapioca
           abstract
             .type_parameters(:T)
             .params(
-              root: Parlour::RbiGenerator::Namespace,
+              tree: RBI::Tree,
               constant: T.type_parameter(:T)
             )
             .void
         end
-        def decorate(root, constant); end
+        def decorate(tree, constant); end
 
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
 
         private
-
-        SPECIAL_METHOD_NAMES = T.let(
-          ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<", "<=", "=>", ">", ">=",
-           "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"].freeze,
-          T::Array[String]
-        )
-
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_method_name?(name)
-          return true if SPECIAL_METHOD_NAMES.include?(name)
-          !!name.match(/^[a-zA-Z_][[:word:]]*[?!=]?$/)
-        end
-
-        sig do
-          params(
-            namespace: Parlour::RbiGenerator::Namespace,
-            name: String,
-            options: T::Hash[T.untyped, T.untyped]
-          ).void
-        end
-        def create_method(namespace, name, options = {})
-          return unless valid_method_name?(name)
-          T.unsafe(namespace).create_method(name, **options)
-        end
-
-        # Create a Parlour method inside `namespace` from its Ruby definition
-        sig do
-          params(
-            namespace: Parlour::RbiGenerator::Namespace,
-            method_def: T.any(Method, UnboundMethod),
-            class_method: T::Boolean
-          ).void
-        end
-        def create_method_from_def(namespace, method_def, class_method: false)
-          create_method(
-            namespace,
-            method_def.name.to_s,
-            parameters: compile_method_parameters_to_parlour(method_def),
-            return_type: compile_method_return_type_to_parlour(method_def),
-            class_method: class_method
-          )
-        end
-
-        # Compile a Ruby method parameters into Parlour parameters
-        sig do
-          params(method_def: T.any(Method, UnboundMethod))
-            .returns(T::Array[Parlour::RbiGenerator::Parameter])
-        end
-        def compile_method_parameters_to_parlour(method_def)
-          signature = T::Private::Methods.signature_for_method(method_def)
-          method_def = signature.nil? ? method_def : signature.method
-          method_types = parameters_types_from_signature(method_def, signature)
-
-          method_def.parameters.each_with_index.map do |(type, name), index|
-            fallback_arg_name = "_arg#{index}"
-
-            name ||= fallback_arg_name
-            name = name.to_s.gsub(/&|\*/, fallback_arg_name) # avoid incorrect names from `delegate`
-            method_type = method_types[index]
-
-            case type
-            when :req
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type)
-            when :opt
-              ::Parlour::RbiGenerator::Parameter.new(name, type: method_type, default: "T.unsafe(nil)")
-            when :rest
-              ::Parlour::RbiGenerator::Parameter.new("*#{name}", type: method_type)
-            when :keyreq
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type)
-            when :key
-              ::Parlour::RbiGenerator::Parameter.new("#{name}:", type: method_type, default: "T.unsafe(nil)")
-            when :keyrest
-              ::Parlour::RbiGenerator::Parameter.new("**#{name}", type: method_type)
-            when :block
-              ::Parlour::RbiGenerator::Parameter.new("&#{name}", type: method_type)
-            else
-              raise "Unknown type `#{type}`."
-            end
-          end
-        end
-
-        # Compile a Ruby method return type into a Parlour type
-        sig do
-          params(method_def: T.any(Method, UnboundMethod))
-            .returns(T.nilable(String))
-        end
-        def compile_method_return_type_to_parlour(method_def)
-          signature = T::Private::Methods.signature_for_method(method_def)
-          return_type = signature.nil? ? "T.untyped" : signature.return_type.to_s
-          # Map <VOID> to `nil` since `nil` means a `void` return for Parlour
-          return_type = nil if return_type == "<VOID>"
-          # Map <NOT-TYPED> to `T.untyped`
-          return_type = "T.untyped" if return_type == "<NOT-TYPED>"
-          return_type
-        end
 
         # Get the types of each parameter from a method signature
         sig do
@@ -163,6 +68,100 @@ module Tapioca
           end
 
           params
+        end
+
+        sig { params(scope: RBI::Scope, method_def: T.any(Method, UnboundMethod), class_method: T::Boolean).void }
+        def create_method_from_def(scope, method_def, class_method: false)
+          scope.create_method(
+            method_def.name.to_s,
+            parameters: compile_method_parameters_to_rbi(method_def),
+            return_type: compile_method_return_type_to_rbi(method_def),
+            class_method: class_method
+          )
+        end
+
+        sig { params(name: String, type: String).returns(RBI::TypedParam) }
+        def create_param(name, type:)
+          create_typed_param(RBI::Param.new(name), type)
+        end
+
+        sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }
+        def create_opt_param(name, type:, default:)
+          create_typed_param(RBI::OptParam.new(name, default), type)
+        end
+
+        sig { params(name: String, type: String).returns(RBI::TypedParam) }
+        def create_rest_param(name, type:)
+          create_typed_param(RBI::RestParam.new(name), type)
+        end
+
+        sig { params(name: String, type: String).returns(RBI::TypedParam) }
+        def create_kw_param(name, type:)
+          create_typed_param(RBI::KwParam.new(name), type)
+        end
+
+        sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }
+        def create_kw_opt_param(name, type:, default:)
+          create_typed_param(RBI::KwOptParam.new(name, default), type)
+        end
+
+        sig { params(name: String, type: String).returns(RBI::TypedParam) }
+        def create_kw_rest_param(name, type:)
+          create_typed_param(RBI::KwRestParam.new(name), type)
+        end
+
+        sig { params(name: String, type: String).returns(RBI::TypedParam) }
+        def create_block_param(name, type:)
+          create_typed_param(RBI::BlockParam.new(name), type)
+        end
+
+        sig { params(param: RBI::Param, type: String).returns(RBI::TypedParam) }
+        def create_typed_param(param, type)
+          RBI::TypedParam.new(param: param, type: type)
+        end
+
+        sig { params(method_def: T.any(Method, UnboundMethod)).returns(T::Array[RBI::TypedParam]) }
+        def compile_method_parameters_to_rbi(method_def)
+          signature = T::Private::Methods.signature_for_method(method_def)
+          method_def = signature.nil? ? method_def : signature.method
+          method_types = parameters_types_from_signature(method_def, signature)
+
+          method_def.parameters.each_with_index.map do |(type, name), index|
+            fallback_arg_name = "_arg#{index}"
+
+            name ||= fallback_arg_name
+            name = name.to_s.gsub(/&|\*/, fallback_arg_name) # avoid incorrect names from `delegate`
+            method_type = T.must(method_types[index])
+
+            case type
+            when :req
+              create_param(name, type: method_type)
+            when :opt
+              create_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            when :rest
+              create_rest_param(name, type: method_type)
+            when :keyreq
+              create_kw_param(name, type: method_type)
+            when :key
+              create_kw_opt_param(name, type: method_type, default: "T.unsafe(nil)")
+            when :keyrest
+              create_kw_rest_param(name, type: method_type)
+            when :block
+              create_block_param(name, type: method_type)
+            else
+              raise "Unknown type `#{type}`."
+            end
+          end
+        end
+
+        sig { params(method_def: T.any(Method, UnboundMethod)).returns(String) }
+        def compile_method_return_type_to_rbi(method_def)
+          signature = T::Private::Methods.signature_for_method(method_def)
+          return_type = signature.nil? ? "T.untyped" : signature.return_type.to_s
+          return_type = "void" if return_type == "<VOID>"
+          # Map <NOT-TYPED> to `T.untyped`
+          return_type = "T.untyped" if return_type == "<NOT-TYPED>"
+          return_type
         end
       end
     end
