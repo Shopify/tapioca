@@ -72,9 +72,14 @@ class DslSpec < Minitest::Spec
     # let's call it once to ensure all constants are in place.
     T.unsafe(self).subject.processable_constants
 
-    parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+    file = Tapioca::RBI::File.new(strictness: "strong")
+
     constant = Object.const_get(constant_name)
-    T.unsafe(self).subject.decorate(parlour.root, constant)
-    parlour.rbi
+    T.unsafe(self).subject.decorate(file.root, constant)
+
+    file.root.nest_non_public_methods!
+    file.root.group_nodes!
+    file.root.sort_nodes!
+    file.string
   end
 end
