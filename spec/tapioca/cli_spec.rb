@@ -625,6 +625,30 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
+    it "must respect exclude_generators option" do
+      output = execute("dsl", "", exclude_generators: "SidekiqWorker")
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Wrote: #{outdir}/baz/role.rbi
+        Wrote: #{outdir}/namespace/comment.rbi
+        Wrote: #{outdir}/post.rbi
+
+        Done
+        All operations performed in working directory.
+        Please review changes and commit them.
+      OUTPUT
+
+      assert_path_exists("#{outdir}/baz/role.rbi")
+      refute_path_exists("#{outdir}/job.rbi")
+      assert_path_exists("#{outdir}/post.rbi")
+      assert_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
     describe("verify") do
       describe("with no changes") do
         before do
@@ -638,6 +662,32 @@ class Tapioca::CliSpec < Minitest::HooksSpec
             Nothing to do, all RBIs are up-to-date.
           OUTPUT
           assert_includes($?.to_s, "exit 0") # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
+
+      describe("with excluded files") do
+        before do
+          execute("dsl")
+        end
+
+        it "advises of removed file(s) and returns exit_status 1" do
+          output = execute("dsl", "--verify", exclude_generators: "SidekiqWorker")
+
+          assert_equal(output, <<~OUTPUT)
+            Loading Rails application... Done
+            Loading DSL generator classes... Done
+            Checking for out-of-date RBIs...
+
+
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca dsl`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) removed:
+              - #{outdir}/job.rbi
+          OUTPUT
+          assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
         end
       end
 
