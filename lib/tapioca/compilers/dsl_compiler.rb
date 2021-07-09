@@ -55,7 +55,12 @@ module Tapioca
 
       private
 
-      sig { params(requested_generators: T::Array[String], excluded_generators: T::Array[String]).returns(T.proc.params(klass: Class).returns(T::Boolean)) }
+      sig do
+        params(
+          requested_generators: T::Array[String],
+          excluded_generators: T::Array[String]
+        ).returns(T.proc.params(klass: Class).returns(T::Boolean))
+      end
       def generator_filter(requested_generators, excluded_generators)
         requested_generators = requested_generators.map(&:downcase)
         excluded_generators = excluded_generators.map(&:downcase)
@@ -68,7 +73,12 @@ module Tapioca
         end
       end
 
-      sig { params(requested_generators: T::Array[String], excluded_generators: T::Array[String]).returns(T::Enumerable[Dsl::Base]) }
+      sig do
+        params(
+          requested_generators: T::Array[String],
+          excluded_generators: T::Array[String]
+        ).returns(T::Enumerable[Dsl::Base])
+      end
       def gather_generators(requested_generators, excluded_generators)
         generator_filter = generator_filter(requested_generators, excluded_generators)
 
