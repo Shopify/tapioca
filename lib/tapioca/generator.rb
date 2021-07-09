@@ -138,6 +138,7 @@ module Tapioca
       compiler = Compilers::DslCompiler.new(
         requested_constants: constantize(requested_constants),
         requested_generators: config.generators,
+        excluded_generators: config.exclude_generators,
         error_handler: ->(error) {
           say_error(error, :bold, :red)
         }

@@ -21,12 +21,13 @@ module Tapioca
         params(
           requested_constants: T::Array[Module],
           requested_generators: T::Array[String],
+          excluded_generators: T::Array[String],
           error_handler: T.nilable(T.proc.params(error: String).void)
         ).void
       end
-      def initialize(requested_constants:, requested_generators: [], error_handler: nil)
+      def initialize(requested_constants:, requested_generators: [], excluded_generators: [], error_handler: nil)
         @generators = T.let(
-          gather_generators(requested_generators),
+          gather_generators(requested_generators, excluded_generators),
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
@@ -54,21 +55,22 @@ module Tapioca
 
       private
 
-      sig { params(requested_generators: T::Array[String]).returns(T.proc.params(klass: Class).returns(T::Boolean)) }
-      def generator_filter(requested_generators)
-        return ->(_klass) { true } if requested_generators.empty?
-
-        generators = requested_generators.map(&:downcase)
+      sig { params(requested_generators: T::Array[String], excluded_generators: T::Array[String]).returns(T.proc.params(klass: Class).returns(T::Boolean)) }
+      def generator_filter(requested_generators, excluded_generators)
+        requested_generators = requested_generators.map(&:downcase)
+        excluded_generators = excluded_generators.map(&:downcase)
 
         proc do |klass|
           generator = klass.name&.sub(/^Tapioca::Compilers::Dsl::/, "")&.downcase
-          generators.include?(generator)
+
+          (requested_generators.empty? || requested_generators.include?(generator)) &&
+            !excluded_generators.include?(generator)
         end
       end
 
-      sig { params(requested_generators: T::Array[String]).returns(T::Enumerable[Dsl::Base]) }
-      def gather_generators(requested_generators)
-        generator_filter = generator_filter(requested_generators)
+      sig { params(requested_generators: T::Array[String], excluded_generators: T::Array[String]).returns(T::Enumerable[Dsl::Base]) }
+      def gather_generators(requested_generators, excluded_generators)
+        generator_filter = generator_filter(requested_generators, excluded_generators)
 
         T.cast(Dsl::Base.descendants.select(&generator_filter).map(&:new), T::Enumerable[Dsl::Base])
       end
