@@ -14,8 +14,9 @@ gem("psych")
 # ensure that we don't fail.
 gem("extras")
 # Needed for DSL generation tests. The simplest
-# gem that we have a DSL generator for.
+# gems that we have a DSL generator for.
 gem("smart_properties")
+gem("sidekiq")
 gem("activesupport")
 # Needed to test Git gems
 gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
