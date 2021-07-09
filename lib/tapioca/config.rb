@@ -9,6 +9,7 @@ module Tapioca
     const(:prerequire, T.nilable(String))
     const(:postrequire, String)
     const(:exclude, T::Array[String])
+    const(:exclude_generators, T::Array[String])
     const(:typed_overrides, T::Hash[String, String])
     const(:todos_path, String)
     const(:generators, T::Array[String])
