@@ -20,8 +20,8 @@ module Tapioca
       sig do
         params(
           requested_constants: T::Array[Module],
-          requested_generators: T::Array[String],
-          excluded_generators: T::Array[String],
+          requested_generators: T::Array[T.class_of(Dsl::Base)],
+          excluded_generators: T::Array[T.class_of(Dsl::Base)],
           error_handler: T.nilable(T.proc.params(error: String).void)
         ).void
       end
@@ -57,32 +57,17 @@ module Tapioca
 
       sig do
         params(
-          requested_generators: T::Array[String],
-          excluded_generators: T::Array[String]
-        ).returns(T.proc.params(klass: Class).returns(T::Boolean))
-      end
-      def generator_filter(requested_generators, excluded_generators)
-        requested_generators = requested_generators.map(&:downcase)
-        excluded_generators = excluded_generators.map(&:downcase)
-
-        proc do |klass|
-          generator = klass.name&.sub(/^Tapioca::Compilers::Dsl::/, "")&.downcase
-
-          (requested_generators.empty? || requested_generators.include?(generator)) &&
-            !excluded_generators.include?(generator)
-        end
-      end
-
-      sig do
-        params(
-          requested_generators: T::Array[String],
-          excluded_generators: T::Array[String]
+          requested_generators: T::Array[T.class_of(Dsl::Base)],
+          excluded_generators: T::Array[T.class_of(Dsl::Base)]
         ).returns(T::Enumerable[Dsl::Base])
       end
       def gather_generators(requested_generators, excluded_generators)
-        generator_filter = generator_filter(requested_generators, excluded_generators)
+        generator_klasses = Dsl::Base.descendants.select do |klass|
+          (requested_generators.empty? || requested_generators.include?(klass)) &&
+            !excluded_generators.include?(klass)
+        end
 
-        T.cast(Dsl::Base.descendants.select(&generator_filter).map(&:new), T::Enumerable[Dsl::Base])
+        T.cast(generator_klasses.map(&:new), T::Enumerable[Dsl::Base])
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }

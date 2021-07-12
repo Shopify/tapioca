@@ -606,16 +606,15 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
-    it "does not generate anything if there are no matching generators" do
-      output = execute("dsl", "", generators: "foo")
+    it "errors if there are no matching generators" do
+      output = execute("dsl", "", generators: "NonexistentGenerator")
 
       assert_equal(<<~OUTPUT, output)
         Loading Rails application... Done
         Loading DSL generator classes... Done
         Compiling DSL RBI files...
 
-        No classes/modules can be matched for RBI generation.
-        Please check that the requested classes/modules include processable DSL methods.
+        Error: Cannot find generator 'NonexistentGenerator'
       OUTPUT
 
       refute_path_exists("#{outdir}/baz/role.rbi")
@@ -646,6 +645,24 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/job.rbi")
       assert_path_exists("#{outdir}/post.rbi")
       assert_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
+    it "errors if there are no matching exclude_generators" do
+      output = execute("dsl", "", exclude_generators: "NonexistentGenerator")
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Error: Cannot find generator 'NonexistentGenerator'
+      OUTPUT
+
+      refute_path_exists("#{outdir}/baz/role.rbi")
+      refute_path_exists("#{outdir}/job.rbi")
+      refute_path_exists("#{outdir}/post.rbi")
+      refute_path_exists("#{outdir}/namespace/comment.rbi")
       refute_path_exists("#{outdir}/user.rbi")
     end
 

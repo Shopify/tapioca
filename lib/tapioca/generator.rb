@@ -137,8 +137,8 @@ module Tapioca
 
       compiler = Compilers::DslCompiler.new(
         requested_constants: constantize(requested_constants),
-        requested_generators: config.generators,
-        excluded_generators: config.exclude_generators,
+        requested_generators: constantize_generators(config.generators),
+        excluded_generators: constantize_generators(config.exclude_generators),
         error_handler: ->(error) {
           say_error(error, :bold, :red)
         }
@@ -306,6 +306,26 @@ module Tapioca
       end
 
       constant_map.values
+    end
+
+    sig { params(generator_names: T::Array[String]).returns(T::Array[T.class_of(Compilers::Dsl::Base)]) }
+    def constantize_generators(generator_names)
+      generator_map = generator_names.map do |name|
+        [name, Object.const_get("Tapioca::Compilers::Dsl::#{name}")]
+      rescue NameError
+        [name, nil]
+      end.to_h
+
+      unprocessable_generators = generator_map.select { |_, v| v.nil? }
+      unless unprocessable_generators.empty?
+        unprocessable_generators.each do |name, _|
+          say("Error: Cannot find generator '#{name}'", :red)
+        end
+
+        exit(1)
+      end
+
+      generator_map.values
     end
 
     sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
