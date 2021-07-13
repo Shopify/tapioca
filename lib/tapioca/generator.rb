@@ -311,9 +311,15 @@ module Tapioca
     sig { params(generator_names: T::Array[String]).returns(T::Array[T.class_of(Compilers::Dsl::Base)]) }
     def constantize_generators(generator_names)
       generator_map = generator_names.map do |name|
-        [name, Object.const_get("Tapioca::Compilers::Dsl::#{name}")]
-      rescue NameError
-        [name, nil]
+        # Try to find built-in tapioca generator first, then globally defined generator. The
+        # explicit `break` ensures the class is returned, not the `potential_name`.
+        generator_klass = ["Tapioca::Compilers::Dsl::#{name}", name].find do |potential_name|
+          break Object.const_get(potential_name)
+        rescue NameError
+          # Skip if we can't find generator by the potential name
+        end
+
+        [name, generator_klass]
       end.to_h
 
       unprocessable_generators = generator_map.select { |_, v| v.nil? }

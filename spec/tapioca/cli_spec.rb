@@ -606,6 +606,28 @@ class Tapioca::CliSpec < Minitest::HooksSpec
       refute_path_exists("#{outdir}/user.rbi")
     end
 
+    it "must respect generators option" do
+      output = execute("dsl", "", generators: "SidekiqWorker Foo::Generator")
+
+      assert_equal(<<~OUTPUT, output)
+        Loading Rails application... Done
+        Loading DSL generator classes... Done
+        Compiling DSL RBI files...
+
+        Wrote: #{outdir}/job.rbi
+
+        Done
+        All operations performed in working directory.
+        Please review changes and commit them.
+      OUTPUT
+
+      refute_path_exists("#{outdir}/baz/role.rbi")
+      assert_path_exists("#{outdir}/job.rbi")
+      refute_path_exists("#{outdir}/post.rbi")
+      refute_path_exists("#{outdir}/namespace/comment.rbi")
+      refute_path_exists("#{outdir}/user.rbi")
+    end
+
     it "errors if there are no matching generators" do
       output = execute("dsl", "", generators: "NonexistentGenerator")
 
@@ -625,7 +647,7 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     end
 
     it "must respect exclude_generators option" do
-      output = execute("dsl", "", exclude_generators: "SidekiqWorker")
+      output = execute("dsl", "", exclude_generators: "SidekiqWorker Foo::Generator")
 
       assert_equal(<<~OUTPUT, output)
         Loading Rails application... Done
