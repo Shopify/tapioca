@@ -77,7 +77,7 @@ module Tapioca
       end
     end
 
-    desc "generate [gem...]", "generate RBIs from gems"
+    desc "generate [gem...]", "DEPRECATED: generate RBIs from gems"
     option :prerequire,
       aliases: ["--pre", "-b"],
       banner: "file",
@@ -97,12 +97,24 @@ module Tapioca
       banner: "gem:level [gem:level ...]",
       desc: "Overrides for typed sigils for generated gem RBIs"
     def generate(*gems)
+      deprecation_message = <<~MSG
+        DEPRECATION: The `generate` command will be removed in a future release.
+
+        Start using the `gem` command with gem names or the `--all` flag instead.
+      MSG
+
+      say(deprecation_message, :red)
+      say("")
+
       Tapioca.silence_warnings do
         generator.build_gem_rbis(gems)
       end
+
+      say("")
+      say(deprecation_message, :red)
     end
 
-    desc "sync", "sync RBIs to Gemfile"
+    desc "sync", "DEPRECATED: sync RBIs to Gemfile"
     option :prerequire,
       aliases: ["--pre", "-b"],
       banner: "file",
@@ -126,9 +138,21 @@ module Tapioca
       default: false,
       desc: "Verifies RBIs are up-to-date"
     def sync
+      deprecation_message = <<~MSG
+        DEPRECATION: The `sync` command will be removed in a future release.
+
+        Start using the `gem` command with no arguments instead.
+      MSG
+
+      say(deprecation_message, :red)
+      say("")
+
       Tapioca.silence_warnings do
         generator.sync_rbis_with_gemfile(should_verify: options[:verify])
       end
+
+      say("")
+      say(deprecation_message, :red)
     end
 
     desc "--version, -v", "show version"
