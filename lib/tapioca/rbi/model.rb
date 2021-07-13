@@ -172,6 +172,43 @@ module Tapioca
       end
     end
 
+    class Struct < Scope
+      extend T::Sig
+
+      sig { returns(String) }
+      attr_accessor :name
+
+      sig { returns(T::Array[String]) }
+      attr_accessor :members
+
+      sig { returns(T::Boolean) }
+      attr_accessor :keyword_init
+
+      sig do
+        params(
+          name: String,
+          members: T::Array[String],
+          keyword_init: T::Boolean,
+          loc: T.nilable(Loc),
+          comments: T::Array[Comment],
+          block: T.nilable(T.proc.params(struct: Struct).void)
+        ).void
+      end
+      def initialize(name, members: [], keyword_init: false, loc: nil, comments: [], &block)
+        super(loc: loc, comments: comments) {}
+        @name = name
+        @members = members
+        @keyword_init = keyword_init
+        block&.call(self)
+      end
+
+      sig { override.returns(String) }
+      def fully_qualified_name
+        return name if name.start_with?("::")
+        "#{parent_scope&.fully_qualified_name}::#{name}"
+      end
+    end
+
     class SingletonClass < Scope
       extend T::Sig
 

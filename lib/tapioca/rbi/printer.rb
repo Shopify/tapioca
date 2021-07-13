@@ -155,6 +155,12 @@ module Tapioca
           v.printt("class #{name}")
           superclass = superclass_name
           v.print(" < #{superclass}") if superclass
+        when Struct
+          parameters = members.dup
+          parameters << "keyword_init: true" if keyword_init
+          parameters = parameters.join(", ")
+
+          v.printt("#{name} = Struct.new(#{parameters}) do")
         when SingletonClass
           v.printt("class << self")
         end
