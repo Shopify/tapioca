@@ -77,6 +77,51 @@ module Tapioca
       end
     end
 
+    desc "gem [gem...]", "generate RBIs from gems"
+    option :all,
+      type: :boolean,
+      default: false,
+      desc: "Regenerate RBI files for all gems"
+    option :prerequire,
+      aliases: ["--pre", "-b"],
+      banner: "file",
+      desc: "A file to be required before Bundler.require is called"
+    option :postrequire,
+      aliases: ["--post", "-a"],
+      banner: "file",
+      desc: "A file to be required after Bundler.require is called"
+    option :exclude,
+      aliases: ["-x"],
+      type: :array,
+      banner: "gem [gem ...]",
+      desc: "Excludes the given gem(s) from RBI generation"
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Overrides for typed sigils for generated gem RBIs"
+    option :verify,
+      type: :boolean,
+      default: false,
+      desc: "Verifies RBIs are up-to-date"
+    def gem(*gems)
+      Tapioca.silence_warnings do
+        all = options[:all]
+        verify = options[:verify]
+
+        unless gems.empty?
+          raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
+          raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
+        end
+
+        if gems.empty? && !all
+          generator.sync_rbis_with_gemfile(should_verify: verify)
+        else
+          generator.build_gem_rbis(all ? [] : gems)
+        end
+      end
+    end
+
     desc "generate [gem...]", "DEPRECATED: generate RBIs from gems"
     option :prerequire,
       aliases: ["--pre", "-b"],
