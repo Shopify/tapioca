@@ -99,32 +99,32 @@ module Tapioca
             ::D: -:15:0-15:17
           IDX
         end
-      end
 
-      it("indexes multiple trees") do
-        tree1 = RBI::Parser.parse_string(<<~RBI)
-          class A
-            module B
-              module ::C; end
+        it("indexes multiple trees") do
+          tree1 = RBI::Parser.parse_string(<<~RBI)
+            class A
+              module B
+                module ::C; end
+              end
             end
-          end
-        RBI
+          RBI
 
-        tree2 = RBI::Parser.parse_string(<<~RBI)
-          class A
-            module B
-              module ::C; end
+          tree2 = RBI::Parser.parse_string(<<~RBI)
+            class A
+              module B
+                module ::C; end
+              end
             end
-          end
-        RBI
+          RBI
 
-        index = Index.index(tree1, tree2)
-        index_string = index_string(index)
-        assert_equal(<<~IDX, index_string)
-          ::A: -:1:0-5:3, -:1:0-5:3
-          ::A::B: -:2:2-4:5, -:2:2-4:5
-          ::C: -:3:4-3:19, -:3:4-3:19
-        IDX
+          index = Index.index(tree1, tree2)
+          index_string = index_string(index)
+          assert_equal(<<~IDX, index_string)
+            ::A: -:1:0-5:3, -:1:0-5:3
+            ::A::B: -:2:2-4:5, -:2:2-4:5
+            ::C: -:3:4-3:19, -:3:4-3:19
+          IDX
+        end
       end
 
       sig { params(index: RBI::Index).returns(String) }
