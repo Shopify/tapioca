@@ -7,6 +7,26 @@ module Tapioca
   module RBI
     class PrinterSpec < Minitest::HooksSpec
       describe("build rbi") do
+        it("builds files without strictness") do
+          file = RBI::File.new
+          file.root << RBI::Module.new("Foo")
+
+          assert_equal(<<~RBI, file.string)
+            module Foo; end
+          RBI
+        end
+
+        it("builds files with strictness") do
+          file = RBI::File.new(strictness: "true")
+          file.root << RBI::Module.new("Foo")
+
+          assert_equal(<<~RBI, file.string)
+            # typed: true
+
+            module Foo; end
+          RBI
+        end
+
         it("builds modules and classes") do
           rbi = RBI::Tree.new
           rbi << RBI::Module.new("Foo")
@@ -308,6 +328,42 @@ module Tapioca
       end
 
       describe("can build RBI nodes with comments") do
+        it("builds files with comments but no strictness") do
+          comments = [
+            RBI::Comment.new("This is a"),
+            RBI::Comment.new("Multiline Comment"),
+          ]
+
+          file = RBI::File.new(comments: comments)
+          file.root << RBI::Module.new("Foo")
+
+          assert_equal(<<~RBI, file.string)
+            # This is a
+            # Multiline Comment
+
+            module Foo; end
+          RBI
+        end
+
+        it("builds files with comments and strictness") do
+          comments = [
+            RBI::Comment.new("This is a"),
+            RBI::Comment.new("Multiline Comment"),
+          ]
+
+          file = RBI::File.new(strictness: "true", comments: comments)
+          file.root << RBI::Module.new("Foo")
+
+          assert_equal(<<~RBI, file.string)
+            # typed: true
+
+            # This is a
+            # Multiline Comment
+
+            module Foo; end
+          RBI
+        end
+
         it("builds nodes with comments") do
           comments_single = [RBI::Comment.new("This is a single line comment")]
 

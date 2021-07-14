@@ -61,6 +61,11 @@ module Tapioca
         printn(string)
       end
 
+      sig { params(file: File).void }
+      def visit_file(file)
+        file.accept_printer(self)
+      end
+
       sig { override.params(node: T.nilable(Node)).void }
       def visit(node)
         return unless node
@@ -76,6 +81,40 @@ module Tapioca
           @previous_node = node
         end
         @previous_node = previous_node
+      end
+    end
+
+    class File
+      extend T::Sig
+
+      sig { params(v: Printer).void }
+      def accept_printer(v)
+        strictness = self.strictness
+        if strictness
+          v.printl("# typed: #{strictness}")
+        end
+        unless comments.empty?
+          v.printn if strictness
+          v.visit_all(comments)
+        end
+
+        unless root.empty?
+          v.printn if strictness || !comments.empty?
+          v.visit(root)
+        end
+      end
+
+      sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
+      def print(out: $stdout, indent: 0, print_locs: false)
+        p = Printer.new(out: out, indent: indent, print_locs: print_locs)
+        p.visit_file(self)
+      end
+
+      sig { params(indent: Integer, print_locs: T::Boolean).returns(String) }
+      def string(indent: 0, print_locs: false)
+        out = StringIO.new
+        print(out: out, indent: indent, print_locs: print_locs)
+        out.string
       end
     end
 

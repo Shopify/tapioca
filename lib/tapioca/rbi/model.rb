@@ -114,6 +114,31 @@ module Tapioca
       end
     end
 
+    class File
+      extend T::Sig
+
+      sig { returns(Tree) }
+      attr_reader :root
+
+      sig { returns(T.nilable(String)) }
+      attr_reader :strictness
+
+      sig { returns(T::Array[Comment]) }
+      attr_accessor :comments
+
+      sig { params(strictness: T.nilable(String), comments: T::Array[Comment]).void }
+      def initialize(strictness: nil, comments: [])
+        @root = T.let(Tree.new, Tree)
+        @strictness = strictness
+        @comments = comments
+      end
+
+      sig { params(node: Node).void }
+      def <<(node)
+        @root << node
+      end
+    end
+
     # Scopes
 
     class Scope < Tree
