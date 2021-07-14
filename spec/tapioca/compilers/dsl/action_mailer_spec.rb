@@ -56,8 +56,8 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-        class NotifierMailer
-        end
+
+        class NotifierMailer; end
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
@@ -74,6 +74,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifierMailer
           sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
@@ -96,6 +97,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifierMailer
           sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
@@ -118,6 +120,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
       expected = template(<<~RBI)
         # typed: strong
+
         class NotifierMailer
         <% if ruby_version(">= 2.7.0") %>
           sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
@@ -154,6 +157,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifierMailer
           sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end

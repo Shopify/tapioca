@@ -7,7 +7,7 @@ module Foo
 
     sig do
       override
-        .params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActionController::Base))
+        .params(root: Tapioca::RBI::Tree, constant: T.class_of(::ActionController::Base))
         .void
     end
     def decorate(root, constant)

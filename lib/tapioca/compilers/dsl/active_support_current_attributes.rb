@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_support"
   # The following is needed due to https://github.com/rails/rails/pull/41610
@@ -67,7 +65,7 @@ module Tapioca
         sig do
           override
             .params(
-              root: Parlour::RbiGenerator::Namespace,
+              root: RBI::Tree,
               constant: T.class_of(::ActiveSupport::CurrentAttributes)
             )
             .void
@@ -77,7 +75,7 @@ module Tapioca
           instance_methods = instance_methods_for(constant) - dynamic_methods
           return if dynamic_methods.empty? && instance_methods.empty?
 
-          root.path(constant) do |current_attributes|
+          root.create_path(constant) do |current_attributes|
             dynamic_methods.each do |method|
               method = method.to_s
               # We want to generate each method both on the class
@@ -112,11 +110,16 @@ module Tapioca
           constant.instance_methods(false)
         end
 
-        sig { params(klass: Parlour::RbiGenerator::Namespace, method: String, class_method: T::Boolean).void }
+        sig { params(klass: RBI::Scope, method: String, class_method: T::Boolean).void }
         def generate_method(klass, method, class_method:)
           if method.end_with?("=")
-            parameter = Parlour::RbiGenerator::Parameter.new("value", type: "T.untyped")
-            klass.create_method(method, class_method: class_method, parameters: [parameter], return_type: "T.untyped")
+            parameter = create_param("value", type: "T.untyped")
+            klass.create_method(
+              method,
+              class_method: class_method,
+              parameters: [parameter],
+              return_type: "T.untyped"
+            )
           else
             klass.create_method(method, class_method: class_method, return_type: "T.untyped")
           end

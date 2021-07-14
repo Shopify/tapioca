@@ -52,15 +52,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
+          sig { params(customer_id: Integer, shop_id: Integer).void }
+          def initialize(customer_id: nil, shop_id: nil); end
+
           sig { returns(Integer) }
           def customer_id; end
 
           sig { params(value: Integer).returns(Integer) }
           def customer_id=(value); end
-
-          sig { params(customer_id: Integer, shop_id: Integer).void }
-          def initialize(customer_id: nil, shop_id: nil); end
 
           sig { returns(Integer) }
           def shop_id; end
@@ -88,15 +89,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
+          sig { params(events: String).void }
+          def initialize(events: nil); end
+
           sig { returns(String) }
           def events; end
 
           sig { params(value: String).returns(String) }
           def events=(value); end
-
-          sig { params(events: String).void }
-          def initialize(events: nil); end
         end
       RBI
 
@@ -121,15 +123,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
+          sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
+          def initialize(cart_item_index: nil); end
+
           sig { returns(Google::Protobuf::UInt64Value) }
           def cart_item_index; end
 
           sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
           def cart_item_index=(value); end
-
-          sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
-          def initialize(cart_item_index: nil); end
         end
       RBI
 
@@ -160,6 +163,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
           sig { params(value_type: Cart::VALUE_TYPE).void }
           def initialize(value_type: nil); end
@@ -199,6 +203,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
           sig { params(value_type: Cart::MYVALUETYPE).void }
           def initialize(value_type: nil); end
@@ -232,7 +237,11 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
+          sig { params(customer_ids: T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer]), indices: T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value])).void }
+          def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
+
           sig { returns(Google::Protobuf::RepeatedField[Integer]) }
           def customer_ids; end
 
@@ -244,9 +253,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
           sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
           def indices=(value); end
-
-          sig { params(customer_ids: T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer]), indices: T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value])).void }
-          def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
         end
       RBI
 
@@ -271,15 +277,16 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Cart
+          sig { params(customers: T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer]), stores: T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value])).void }
+          def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
+
           sig { returns(Google::Protobuf::Map[String, Integer]) }
           def customers; end
 
           sig { params(value: Google::Protobuf::Map[String, Integer]).returns(Google::Protobuf::Map[String, Integer]) }
           def customers=(value); end
-
-          sig { params(customers: T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer]), stores: T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value])).void }
-          def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
 
           sig { returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
           def stores; end

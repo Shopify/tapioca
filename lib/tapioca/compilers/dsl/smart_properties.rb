@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "smart_properties"
 rescue LoadError
@@ -65,14 +63,7 @@ module Tapioca
       class SmartProperties < Base
         extend T::Sig
 
-        sig do
-          override
-            .params(
-              root: Parlour::RbiGenerator::Namespace,
-              constant: T.class_of(::SmartProperties)
-            )
-            .void
-        end
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::SmartProperties)).void }
         def decorate(root, constant)
           properties = T.let(
             T.unsafe(constant).properties,
@@ -82,7 +73,7 @@ module Tapioca
 
           instance_methods = constant.instance_methods(false).map(&:to_s).to_set
 
-          root.path(constant) do |k|
+          root.create_path(constant) do |k|
             properties.values.each do |property|
               generate_methods_for_property(k, property) do |method_name|
                 !instance_methods.include?(method_name.to_sym)
@@ -105,7 +96,7 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             property: ::SmartProperties::Property,
             block: T.proc.params(arg: String).returns(T::Boolean)
           ).void
@@ -119,7 +110,7 @@ module Tapioca
 
             klass.create_method(
               method_name,
-              parameters: [Parlour::RbiGenerator::Parameter.new(name, type: type)],
+              parameters: [create_param(name, type: type)],
               return_type: type
             ) if block.call(method_name)
           end

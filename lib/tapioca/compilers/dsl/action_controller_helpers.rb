@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "action_controller"
 rescue LoadError
@@ -72,7 +70,7 @@ module Tapioca
 
         sig do
           override
-            .params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActionController::Base))
+            .params(root: RBI::Tree, constant: T.class_of(::ActionController::Base))
             .void
         end
         def decorate(root, constant)
@@ -83,8 +81,8 @@ module Tapioca
           helper_methods_name = "HelperMethods"
 
           # Define the helpers method
-          root.path(constant) do |controller|
-            create_method(controller, "helpers", return_type: helper_proxy_name)
+          root.create_path(constant) do |controller|
+            controller.create_method("helpers", return_type: helper_proxy_name)
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
@@ -114,7 +112,7 @@ module Tapioca
             end
 
             # Create helper proxy class
-            controller.create_class(helper_proxy_name, superclass: "::ActionView::Base") do |proxy|
+            controller.create_class(helper_proxy_name, superclass_name: "::ActionView::Base") do |proxy|
               proxy.create_include(helper_methods_name)
             end
           end

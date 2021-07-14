@@ -1,7 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
 require "tapioca/core_ext/class"
 
 begin
@@ -121,16 +120,19 @@ module Tapioca
       class StateMachines < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: ::StateMachines::ClassMethods).void }
+        sig { override.params(root: RBI::Tree, constant: ::StateMachines::ClassMethods).void }
         def decorate(root, constant)
           return if constant.state_machines.empty?
 
-          root.path(constant) do |klass|
+          root.create_path(T.unsafe(constant)) do |klass|
             instance_module_name = "StateMachineInstanceHelperModule"
             class_module_name = "StateMachineClassHelperModule"
 
-            instance_module = klass.create_module(instance_module_name)
-            class_module = klass.create_module(class_module_name)
+            instance_module = RBI::Module.new(instance_module_name)
+            klass << instance_module
+
+            class_module = RBI::Module.new(class_module_name)
+            klass << class_module
 
             constant.state_machines.each_value do |machine|
               state_type = state_type_for(machine)
@@ -176,50 +178,44 @@ module Tapioca
           end
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace).void }
+        sig { params(instance_module: RBI::Module).void }
         def define_activerecord_methods(instance_module)
-          create_method(
-            instance_module,
+          instance_module.create_method(
             "changed_for_autosave?",
             return_type: "T::Boolean"
           )
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_state_methods(instance_module, machine)
           machine.states.each do |state|
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "#{state.qualified_name}?",
               return_type: "T::Boolean"
             )
           end
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_event_methods(instance_module, machine)
           machine.events.each do |event|
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "can_#{event.qualified_name}?",
               return_type: "T::Boolean"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "#{event.qualified_name}_transition",
-              parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+              parameters: [create_rest_param("args", type: "T.untyped")],
               return_type: "T.nilable(::StateMachines::Transition)"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               event.qualified_name.to_s,
-              parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+              parameters: [create_rest_param("args", type: "T.untyped")],
               return_type: "T::Boolean"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "#{event.qualified_name}!",
-              parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+              parameters: [create_rest_param("args", type: "T.untyped")],
               return_type: "T::Boolean"
             )
           end
@@ -227,106 +223,95 @@ module Tapioca
 
         sig do
           params(
-            instance_module: Parlour::RbiGenerator::Namespace,
+            instance_module: RBI::Module,
             machine: ::StateMachines::Machine,
             state_type: String
           ).void
         end
         def define_state_accessor(instance_module, machine, state_type)
           attribute = machine.attribute.to_s
-          create_method(
-            instance_module,
+          instance_module.create_method(
             attribute,
             return_type: state_type
           )
-          create_method(
-            instance_module,
+          instance_module.create_method(
             "#{attribute}=",
-            parameters: [Parlour::RbiGenerator::Parameter.new("value", type: state_type)],
+            parameters: [create_param("value", type: state_type)],
             return_type: state_type
           )
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_state_predicate(instance_module, machine)
-          create_method(
-            instance_module,
+          instance_module.create_method(
             "#{machine.name}?",
-            parameters: [Parlour::RbiGenerator::Parameter.new("state", type: "T.any(String, Symbol)")],
+            parameters: [create_param("state", type: "T.any(String, Symbol)")],
             return_type: "T::Boolean"
           )
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_event_helpers(instance_module, machine)
           events_attribute = machine.attribute(:events).to_s
           transitions_attribute = machine.attribute(:transitions).to_s
           event_attribute = machine.attribute(:event).to_s
           event_transition_attribute = machine.attribute(:event_transition).to_s
 
-          create_method(
-            instance_module,
+          instance_module.create_method(
             events_attribute,
-            parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+            parameters: [create_rest_param("args", type: "T.untyped")],
             return_type: "T::Array[T.any(String, Symbol)]"
           )
-          create_method(
-            instance_module,
+          instance_module.create_method(
             transitions_attribute,
-            parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+            parameters: [create_rest_param("args", type: "T.untyped")],
             return_type: "T::Array[::StateMachines::Transition]"
           )
-          create_method(
-            instance_module,
+          instance_module.create_method(
             "fire_#{event_attribute}",
             parameters: [
-              Parlour::RbiGenerator::Parameter.new("event", type: "T.any(String, Symbol)"),
-              Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
+              create_param("event", type: "T.any(String, Symbol)"),
+              create_rest_param("args", type: "T.untyped"),
             ],
             return_type: "T::Boolean"
           )
           if machine.action
-            create_method(
-              instance_module,
+            instance_module.create_method(
               event_attribute,
               return_type: "T.nilable(Symbol)"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "#{event_attribute}=",
-              parameters: [Parlour::RbiGenerator::Parameter.new("value", type: "T.any(String, Symbol)")],
+              parameters: [create_param("value", type: "T.any(String, Symbol)")],
               return_type: "T.any(String, Symbol)"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               event_transition_attribute,
               return_type: "T.nilable(::StateMachines::Transition)"
             )
-            create_method(
-              instance_module,
+            instance_module.create_method(
               "#{event_transition_attribute}=",
-              parameters: [Parlour::RbiGenerator::Parameter.new("value", type: "::StateMachines::Transition")],
+              parameters: [create_param("value", type: "::StateMachines::Transition")],
               return_type: "::StateMachines::Transition"
             )
           end
         end
 
-        sig { params(instance_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_path_helpers(instance_module, machine)
           paths_attribute = machine.attribute(:paths).to_s
 
-          create_method(
-            instance_module,
+          instance_module.create_method(
             paths_attribute,
-            parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+            parameters: [create_rest_param("args", type: "T.untyped")],
             return_type: "T::Array[::StateMachines::Transition]"
           )
         end
 
         sig do
           params(
-            instance_module: Parlour::RbiGenerator::Namespace,
-            class_module: Parlour::RbiGenerator::Namespace,
+            instance_module: RBI::Module,
+            class_module: RBI::Module,
             machine: ::StateMachines::Machine
           ).void
         end
@@ -334,31 +319,27 @@ module Tapioca
           name_attribute = machine.attribute(:name).to_s
           event_name_attribute = machine.attribute(:event_name).to_s
 
-          create_method(
-            class_module,
+          class_module.create_method(
             "human_#{name_attribute}",
-            parameters: [Parlour::RbiGenerator::Parameter.new("state", type: "T.any(String, Symbol)")],
+            parameters: [create_param("state", type: "T.any(String, Symbol)")],
             return_type: "String"
           )
-          create_method(
-            class_module,
+          class_module.create_method(
             "human_#{event_name_attribute}",
-            parameters: [Parlour::RbiGenerator::Parameter.new("event", type: "T.any(String, Symbol)")],
+            parameters: [create_param("event", type: "T.any(String, Symbol)")],
             return_type: "String"
           )
-          create_method(
-            instance_module,
+          instance_module.create_method(
             name_attribute,
             return_type: "T.any(String, Symbol)"
           )
-          create_method(
-            instance_module,
+          instance_module.create_method(
             "human_#{name_attribute}",
             return_type: "String"
           )
         end
 
-        sig { params(class_module: Parlour::RbiGenerator::Namespace, machine: ::StateMachines::Machine).void }
+        sig { params(class_module: RBI::Module, machine: ::StateMachines::Machine).void }
         def define_scopes(class_module, machine)
           helper_modules = machine.instance_variable_get(:@helper_modules)
           class_methods = helper_modules[:class].instance_methods(false)
@@ -366,10 +347,9 @@ module Tapioca
           class_methods
             .select { |method| method.to_s.start_with?("with_", "without_") }
             .each do |method|
-              create_method(
-                class_module,
+              class_module.create_method(
                 method.to_s,
-                parameters: [Parlour::RbiGenerator::Parameter.new("*states", type: "T.any(String, Symbol)")],
+                parameters: [create_rest_param("states", type: "T.any(String, Symbol)")],
                 return_type: "T.untyped"
               )
             end

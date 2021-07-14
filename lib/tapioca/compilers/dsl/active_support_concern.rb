@@ -48,7 +48,7 @@ module Tapioca
       class ActiveSupportConcern < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
+        sig { override.params(root: RBI::Tree, constant: Module).void }
         def decorate(root, constant)
           dependencies = linearized_dependencies_of(constant)
 
@@ -61,10 +61,10 @@ module Tapioca
 
           return if mixed_in_class_methods.empty?
 
-          root.path(constant) do |mod|
-            mixin_module_list = mixed_in_class_methods.join(", ")
-
-            mod.create_arbitrary(code: "mixes_in_class_methods(#{mixin_module_list})")
+          root.create_path(constant) do |mod|
+            mixed_in_class_methods.each do |mix|
+              mod.create_mixes_in_class_methods(mix)
+            end
           end
         end
 

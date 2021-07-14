@@ -36,8 +36,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -52,9 +56,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def archived?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-          def self.statuses; end
         end
       RBI
 
@@ -71,8 +72,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), String]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -87,9 +92,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def archived?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), String]) }
-          def self.statuses; end
         end
       RBI
 
@@ -105,8 +107,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -127,9 +133,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def inactive?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
-          def self.statuses; end
         end
       RBI
 
@@ -146,8 +149,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.comments_statuses; end
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -174,12 +184,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def on?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-          def self.comments_statuses; end
-
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-          def self.statuses; end
         end
       RBI
 
@@ -196,8 +200,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String, Array)]) }
+          def self.comments_statuses; end
+
+          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -242,12 +253,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def topic?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String, Array)]) }
-          def self.comments_statuses; end
-
-          sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
-          def self.statuses; end
         end
       RBI
 
@@ -263,8 +268,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -279,9 +288,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def archived_status?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-          def self.statuses; end
         end
       RBI
 
@@ -297,8 +303,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Conversation
           include EnumMethodsModule
+
+          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+          def self.statuses; end
 
           module EnumMethodsModule
             sig { void }
@@ -313,9 +323,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
             sig { returns(T::Boolean) }
             def comments_archived?; end
           end
-
-          sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
-          def self.statuses; end
         end
       RBI
 

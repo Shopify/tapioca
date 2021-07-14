@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "frozen_record"
 rescue LoadError
@@ -67,18 +65,18 @@ module Tapioca
       class FrozenRecord < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::FrozenRecord::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::FrozenRecord::Base)).void }
         def decorate(root, constant)
           attributes = constant.attributes
           return if attributes.empty?
 
-          root.path(constant) do |record|
+          root.create_path(constant) do |record|
             module_name = "FrozenRecordAttributeMethods"
 
             record.create_module(module_name) do |mod|
               attributes.each do |attribute|
-                create_method(mod, "#{attribute}?", return_type: "T::Boolean")
-                create_method(mod, attribute.to_s, return_type: "T.untyped")
+                mod.create_method("#{attribute}?", return_type: "T::Boolean")
+                mod.create_method(attribute.to_s, return_type: "T.untyped")
               end
             end
 

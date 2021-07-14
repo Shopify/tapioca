@@ -1,6 +1,5 @@
 # typed: strict
 # frozen_string_literal: true
-require "parlour"
 
 begin
   require "google/protobuf"
@@ -62,67 +61,18 @@ module Tapioca
       # end
       # ~~~
       class Protobuf < Base
-        # Parlour doesn't support type members out of the box, so adding the
-        # ability to do that here. This should be upstreamed.
-        class TypeMember < Parlour::RbiGenerator::RbiObject
-          extend T::Sig
-
-          sig { params(other: Object).returns(T::Boolean) }
-          def ==(other)
-            TypeMember === other && name == other.name
-          end
-
-          sig do
-            override
-              .params(indent_level: Integer, options: Parlour::RbiGenerator::Options)
-              .returns(T::Array[String])
-          end
-          def generate_rbi(indent_level, options)
-            [options.indented(indent_level, "#{name} = type_member")]
-          end
-
-          sig do
-            override
-              .params(others: T::Array[Parlour::RbiGenerator::RbiObject])
-              .returns(T::Boolean)
-          end
-          def mergeable?(others)
-            others.all? { |other| self == other }
-          end
-
-          sig { override.params(others: T::Array[Parlour::RbiGenerator::RbiObject]).void }
-          def merge_into_self(others); end
-
-          sig { override.returns(String) }
-          def describe
-            "Type Member (#{name})"
-          end
-        end
-
         class Field < T::Struct
           prop :name, String
           prop :type, String
           prop :init_type, String
           prop :default, String
-
-          extend T::Sig
-
-          sig { returns(Parlour::RbiGenerator::Parameter) }
-          def to_init
-            Parlour::RbiGenerator::Parameter.new("#{name}:", type: init_type, default: default)
-          end
         end
 
         extend T::Sig
 
-        sig do
-          override.params(
-            root: Parlour::RbiGenerator::Namespace,
-            constant: Module
-          ).void
-        end
+        sig { override.params(root: RBI::Tree, constant: Module).void }
         def decorate(root, constant)
-          root.path(constant) do |klass|
+          root.create_path(constant) do |klass|
             if constant == Google::Protobuf::RepeatedField
               create_type_members(klass, "Elem")
             elsif constant == Google::Protobuf::Map
@@ -132,7 +82,11 @@ module Tapioca
               fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
               fields.sort_by!(&:name)
 
-              create_method(klass, "initialize", parameters: fields.map!(&:to_init))
+              parameters = fields.map do |field|
+                create_kw_opt_param(field.name, type: field.init_type, default: field.default)
+              end
+
+              klass.create_method("initialize", parameters: parameters, return_type: "void")
             end
           end
         end
@@ -146,12 +100,12 @@ module Tapioca
 
         private
 
-        sig { params(klass: Parlour::RbiGenerator::Namespace, names: String).void }
+        sig { params(klass: RBI::Scope, names: String).void }
         def create_type_members(klass, *names)
           klass.create_extend("T::Generic")
 
           names.each do |name|
-            klass.children << TypeMember.new(klass.generator, name)
+            klass.create_type_member(name)
           end
         end
 
@@ -230,25 +184,21 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             desc: Google::Protobuf::FieldDescriptor,
           ).returns(Field)
         end
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
 
-          create_method(
-            klass,
+          klass.create_method(
             field.name,
             return_type: field.type
           )
 
-          create_method(
-            klass,
+          klass.create_method(
             "#{field.name}=",
-            parameters: [
-              Parlour::RbiGenerator::Parameter.new("value", type: field.type),
-            ],
+            parameters: [create_param("value", type: field.type)],
             return_type: field.type
           )
 

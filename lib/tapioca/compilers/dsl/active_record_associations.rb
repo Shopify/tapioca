@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_record"
 rescue LoadError
@@ -106,11 +104,11 @@ module Tapioca
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
         end
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(ActiveRecord::Base)).void }
         def decorate(root, constant)
           return if constant.reflections.empty?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             module_name = "GeneratedAssociationMethods"
 
             model.create_module(module_name) do |mod|
@@ -129,21 +127,18 @@ module Tapioca
 
         private
 
-        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        sig { params(mod: RBI::Scope, constant: T.class_of(ActiveRecord::Base)).void }
         def populate_nested_attribute_writers(mod, constant)
           constant.nested_attributes_options.keys.each do |association_name|
-            create_method(
-              mod,
+            mod.create_method(
               "#{association_name}_attributes=",
-              parameters: [
-                Parlour::RbiGenerator::Parameter.new("attributes", type: "T.untyped"),
-              ],
+              parameters: [create_param("attributes", type: "T.untyped")],
               return_type: "T.untyped"
             )
           end
         end
 
-        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: T.class_of(ActiveRecord::Base)).void }
+        sig { params(mod: RBI::Scope, constant: T.class_of(ActiveRecord::Base)).void }
         def populate_associations(mod, constant)
           constant.reflections.each do |association_name, reflection|
             if reflection.collection?
@@ -156,7 +151,7 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(ActiveRecord::Base),
             association_name: T.any(String, Symbol),
             reflection: ReflectionType
@@ -166,49 +161,41 @@ module Tapioca
           association_class = type_for(constant, reflection)
           association_type = "T.nilable(#{association_class})"
 
-          create_method(
-            klass,
+          klass.create_method(
             association_name.to_s,
             return_type: association_type,
           )
-          create_method(
-            klass,
+          klass.create_method(
             "#{association_name}=",
-            parameters: [
-              Parlour::RbiGenerator::Parameter.new("value", type: association_type),
-            ],
-            return_type: nil
+            parameters: [create_param("value", type: association_type)],
+            return_type: "void"
           )
-          create_method(
-            klass,
+          klass.create_method(
             "reload_#{association_name}",
             return_type: association_type,
           )
           unless reflection.polymorphic?
-            create_method(
-              klass,
+            klass.create_method(
               "build_#{association_name}",
               parameters: [
-                Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-                Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("blk", type: "T.untyped"),
               ],
               return_type: association_class
             )
-            create_method(
-              klass,
+            klass.create_method(
               "create_#{association_name}",
               parameters: [
-                Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-                Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("blk", type: "T.untyped"),
               ],
               return_type: association_class
             )
-            create_method(
-              klass,
+            klass.create_method(
               "create_#{association_name}!",
               parameters: [
-                Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-                Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("blk", type: "T.untyped"),
               ],
               return_type: association_class
             )
@@ -217,7 +204,7 @@ module Tapioca
 
         sig do
           params(
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(ActiveRecord::Base),
             association_name: T.any(String, Symbol),
             reflection: ReflectionType
@@ -227,30 +214,22 @@ module Tapioca
           association_class = type_for(constant, reflection)
           relation_class = relation_type_for(constant, reflection)
 
-          create_method(
-            klass,
+          klass.create_method(
             association_name.to_s,
             return_type: relation_class,
           )
-          create_method(
-            klass,
+          klass.create_method(
             "#{association_name}=",
-            parameters: [
-              Parlour::RbiGenerator::Parameter.new("value", type: "T::Enumerable[#{association_class}]"),
-            ],
-            return_type: nil,
+            parameters: [create_param("value", type: "T::Enumerable[#{association_class}]")],
+            return_type: "void",
           )
-          create_method(
-            klass,
+          klass.create_method(
             "#{association_name.to_s.singularize}_ids",
             return_type: "T::Array[T.untyped]"
           )
-          create_method(
-            klass,
+          klass.create_method(
             "#{association_name.to_s.singularize}_ids=",
-            parameters: [
-              Parlour::RbiGenerator::Parameter.new("ids", type: "T::Array[T.untyped]"),
-            ],
+            parameters: [create_param("ids", type: "T::Array[T.untyped]")],
             return_type: "T::Array[T.untyped]"
           )
         end
