@@ -62,6 +62,7 @@ module Tapioca
       "postrequire" => Config::DEFAULT_POSTREQUIRE,
       "outdir" => nil,
       "exclude" => [],
+      "exclude_generators" => [],
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
       "todos_path" => Config::DEFAULT_TODOSPATH,
       "generators" => [],

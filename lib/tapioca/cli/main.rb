@@ -62,6 +62,10 @@ module Tapioca
         aliases: ["--gen", "-g"],
         banner: "generator [generator ...]",
         desc: "Only run supplied DSL generators"
+      option :exclude_generators,
+        type: :array,
+        banner: "generator [generator ...]",
+        desc: "Exclude supplied DSL generators"
       option :verify,
         type: :boolean,
         default: false,
