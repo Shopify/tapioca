@@ -66,6 +66,7 @@ module Tapioca
       "typed_overrides" => Config::DEFAULT_OVERRIDES,
       "todos_path" => Config::DEFAULT_TODOSPATH,
       "generators" => [],
+      "file_header" => true,
     }.freeze, T::Hash[String, T.untyped])
   end
 end

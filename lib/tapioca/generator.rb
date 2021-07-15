@@ -512,7 +512,13 @@ module Tapioca
         # typed: #{strictness}
       SIGIL
 
-      [statement, sigil].compact.join("\n").strip.concat("\n\n")
+      if config.file_header
+        [statement, sigil].compact.join("\n").strip.concat("\n\n")
+      elsif sigil
+        sigil.strip.concat("\n\n")
+      else
+        ""
+      end
     end
 
     sig { params(gem: Gemfile::Gem).void }

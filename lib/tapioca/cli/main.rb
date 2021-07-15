@@ -32,6 +32,10 @@ module Tapioca
         type: :hash,
         banner: "gem:level [gem:level ...]",
         desc: "Overrides for typed sigils for generated gem RBIs"
+      class_option :file_header,
+        type: :boolean,
+        default: true,
+        desc: "Add a \"This file is generated\" header on top of each generated RBI file"
 
       map T.unsafe(["--version", "-v"] => :__print_version)
 

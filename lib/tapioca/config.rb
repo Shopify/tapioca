@@ -13,6 +13,7 @@ module Tapioca
     const(:typed_overrides, T::Hash[String, String])
     const(:todos_path, String)
     const(:generators, T::Array[String])
+    const(:file_header, T::Boolean, default: true)
 
     sig { returns(Pathname) }
     def outpath
