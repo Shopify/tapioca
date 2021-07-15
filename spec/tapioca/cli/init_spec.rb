@@ -10,10 +10,10 @@ module Tapioca
         FileUtils.rm_f(repo_path / "bin/tapioca")
         output = execute("init")
 
-        assert_equal(<<-OUTPUT, output)
-      create  sorbet/config
-      create  sorbet/tapioca/require.rb
-      create  bin/tapioca
+        assert_output(<<~OUTPUT, output)
+          create  sorbet/config
+          create  sorbet/tapioca/require.rb
+          create  bin/tapioca
         OUTPUT
 
         assert_path_exists(repo_path / "sorbet/config")
@@ -43,15 +43,21 @@ module Tapioca
 
         output = execute("init")
 
-        assert_equal(<<-OUTPUT, output)
-        skip  sorbet/config
-        skip  sorbet/tapioca/require.rb
-       force  bin/tapioca
+        assert_output(<<~OUTPUT, output)
+          skip  sorbet/config
+          skip  sorbet/tapioca/require.rb
+          force  bin/tapioca
         OUTPUT
 
         assert_empty(File.read(repo_path / "sorbet/config"))
         assert_empty(File.read(repo_path / "sorbet/tapioca/require.rb"))
       end
+    end
+
+    private
+
+    def assert_output(expected, output)
+      assert_equal(expected, output.lines.map(&:lstrip).join)
     end
   end
 end
