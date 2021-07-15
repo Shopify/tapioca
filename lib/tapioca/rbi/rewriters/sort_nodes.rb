@@ -12,6 +12,8 @@ module Tapioca
           return unless node.is_a?(Tree)
           visit_all(node.nodes)
           node.nodes.sort! do |a, b|
+            return 0 if a.is_a?(Mixin) || b.is_a?(Mixin)
+
             res = node_rank(a) <=> node_rank(b)
             res = node_name(a) <=> node_name(b) if res == 0
             res || 0
