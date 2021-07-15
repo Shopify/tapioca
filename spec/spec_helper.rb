@@ -10,6 +10,7 @@ require "minitest/reporters"
 require "content_helper"
 require "template_helper"
 require "isolation_helper"
+require "cli_spec"
 require "dsl_spec"
 
 Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))

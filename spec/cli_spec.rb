@@ -37,7 +37,7 @@ module Tapioca
     end
 
     before(:all) do
-      @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
+      @repo_path = (Pathname.new(__dir__) / "support" / "repo").expand_path
       Bundler.with_unbundled_env do
         IO.popen(["bundle", "install", "--quiet"], chdir: @repo_path).read
         IO.popen(["bundle", "lock", "--add-platform=ruby"], chdir: @repo_path).read

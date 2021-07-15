@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require_relative "../cli_spec"
+require "cli_spec"
 
 module Tapioca
   class SyncSpec < CliSpec
