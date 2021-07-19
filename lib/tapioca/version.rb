@@ -2,5 +2,5 @@
 # frozen_string_literal: true
 
 module Tapioca
-  VERSION = "0.4.23"
+  VERSION = "0.4.24"
 end
