@@ -2571,6 +2571,73 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("never sorts mixins") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module ActiveSupport
+          module Rescuable
+            module ClassMethods; end
+          end
+
+          module Callbacks
+            module ClassMethods; end
+          end
+
+          module DescendantsTracker; end
+        end
+
+        module ActionMailbox
+          module Routing
+            module ClassMethods; end
+          end
+
+          module Callbacks
+            module ClassMethods; end
+          end
+        end
+
+        class ActionMailbox::Base
+          include ::ActiveSupport::Rescuable
+          include ::ActionMailbox::Routing
+          include ::ActiveSupport::Callbacks
+          include ::ActionMailbox::Callbacks
+          extend ::ActiveSupport::Rescuable::ClassMethods
+          extend ::ActionMailbox::Routing::ClassMethods
+          extend ::ActiveSupport::Callbacks::ClassMethods
+          extend ::ActiveSupport::DescendantsTracker
+          extend ::ActionMailbox::Callbacks::ClassMethods
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module ActionMailbox; end
+
+        class ActionMailbox::Base
+          include ::ActiveSupport::Rescuable
+          include ::ActionMailbox::Routing
+          include ::ActiveSupport::Callbacks
+          include ::ActionMailbox::Callbacks
+          extend ::ActiveSupport::Rescuable::ClassMethods
+          extend ::ActionMailbox::Routing::ClassMethods
+          extend ::ActiveSupport::Callbacks::ClassMethods
+          extend ::ActiveSupport::DescendantsTracker
+          extend ::ActionMailbox::Callbacks::ClassMethods
+        end
+
+        module ActionMailbox::Callbacks; end
+        module ActionMailbox::Callbacks::ClassMethods; end
+        module ActionMailbox::Routing; end
+        module ActionMailbox::Routing::ClassMethods; end
+        module ActiveSupport; end
+        module ActiveSupport::Callbacks; end
+        module ActiveSupport::Callbacks::ClassMethods; end
+        module ActiveSupport::DescendantsTracker; end
+        module ActiveSupport::Rescuable; end
+        module ActiveSupport::Rescuable::ClassMethods; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("skips signatures if they raise") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
