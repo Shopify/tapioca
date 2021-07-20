@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "active_record"
 rescue LoadError
@@ -60,11 +58,11 @@ module Tapioca
       class ActiveRecordEnum < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActiveRecord::Base)).void }
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveRecord::Base)).void }
         def decorate(root, constant)
           return if constant.defined_enums.empty?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             module_name = "EnumMethodsModule"
 
             model.create_module(module_name) do |mod|
@@ -75,7 +73,7 @@ module Tapioca
 
             constant.defined_enums.each do |name, enum_map|
               type = type_for_enum(enum_map)
-              create_method(model, name.pluralize, class_method: true, return_type: type)
+              model.create_method(name.pluralize, class_method: true, return_type: type)
             end
           end
         end
@@ -99,15 +97,15 @@ module Tapioca
           "T::Hash[T.any(String, Symbol), #{value_type}]"
         end
 
-        sig { params(constant: T.class_of(::ActiveRecord::Base), klass: Parlour::RbiGenerator::Namespace).void }
+        sig { params(constant: T.class_of(::ActiveRecord::Base), klass: RBI::Scope).void }
         def generate_instance_methods(constant, klass)
           methods = constant.send(:_enum_methods_module).instance_methods
 
           methods.each do |method|
             method = method.to_s
-            return_type = "T::Boolean" if method.end_with?("?")
+            return_type = method.end_with?("?") ? "T::Boolean" : "void"
 
-            create_method(klass, method, return_type: return_type)
+            klass.create_method(method, return_type: return_type)
           end
         end
       end

@@ -35,8 +35,10 @@ module Tapioca
           when Method
             if node.name == "initialize"
               7
-            else
+            elsif !node.is_singleton
               8
+            else
+              9
             end
           when Scope, Const then 9
           else

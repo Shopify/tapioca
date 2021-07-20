@@ -158,9 +158,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         module GeneratedUrlHelpersModule
-          include ::ActionDispatch::Routing::PolymorphicRoutes
           include ::ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
         end
       RBI
 
@@ -178,9 +179,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         module GeneratedPathHelpersModule
-          include ::ActionDispatch::Routing::PolymorphicRoutes
           include ::ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
 
           sig { params(args: T.untyped).returns(String) }
           def edit_index_path(*args); end
@@ -207,9 +209,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         module GeneratedUrlHelpersModule
-          include ::ActionDispatch::Routing::PolymorphicRoutes
           include ::ActionDispatch::Routing::UrlFor
+          include ::ActionDispatch::Routing::PolymorphicRoutes
 
           sig { params(args: T.untyped).returns(String) }
           def edit_index_url(*args); end
@@ -233,11 +236,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-        module ActionDispatch
-          class IntegrationTest
-            include GeneratedPathHelpersModule
-            include GeneratedUrlHelpersModule
-          end
+
+        class ActionDispatch::IntegrationTest
+          include GeneratedUrlHelpersModule
+          include GeneratedPathHelpersModule
         end
       RBI
 
@@ -252,11 +254,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-        module ActionView
-          module Helpers
-            include GeneratedPathHelpersModule
-            include GeneratedUrlHelpersModule
-          end
+
+        module ActionView::Helpers
+          include GeneratedUrlHelpersModule
+          include GeneratedPathHelpersModule
         end
       RBI
 
@@ -277,9 +278,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class MyClass
-          include GeneratedPathHelpersModule
           include GeneratedUrlHelpersModule
+          include GeneratedPathHelpersModule
         end
       RBI
 
@@ -300,9 +302,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class MyClass
-          extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
+          extend GeneratedPathHelpersModule
         end
       RBI
 
@@ -324,11 +327,12 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class MyClass
-          include GeneratedPathHelpersModule
           include GeneratedUrlHelpersModule
-          extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
+          include GeneratedPathHelpersModule
+          extend GeneratedPathHelpersModule
         end
       RBI
 
@@ -351,9 +355,10 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class MyClass
-          extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
+          extend GeneratedPathHelpersModule
         end
       RBI
 
@@ -377,11 +382,12 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class MyClass
-          include GeneratedPathHelpersModule
           include GeneratedUrlHelpersModule
-          extend GeneratedPathHelpersModule
           extend GeneratedUrlHelpersModule
+          include GeneratedPathHelpersModule
+          extend GeneratedPathHelpersModule
         end
       RBI
 

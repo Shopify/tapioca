@@ -64,6 +64,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
           expected = <<~RBI
             # typed: strong
+
             class Post
               include GeneratedAttributeMethods
 
@@ -799,6 +800,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
           expected = <<~RBI
             # typed: strong
+
             class Post
               include GeneratedAttributeMethods
 
@@ -884,6 +886,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
           expected = <<~RBI
             # typed: strong
+
             class Post
               include GeneratedAttributeMethods
 

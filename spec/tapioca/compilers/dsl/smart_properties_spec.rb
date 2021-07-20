@@ -51,7 +51,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:Post))
@@ -67,6 +66,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::String)) }
           def title; end
@@ -89,6 +89,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(::String) }
           def description; end
@@ -111,6 +112,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def title; end
@@ -133,6 +135,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(T::Array[T.untyped])) }
           def categories; end
@@ -155,6 +158,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(T::Boolean)) }
           def published; end
@@ -177,6 +181,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(T.any(::String, ::Integer))) }
           def status; end
@@ -199,6 +204,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def status; end
@@ -221,6 +227,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::Integer)) }
           def status; end
@@ -243,6 +250,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def status; end
@@ -265,6 +273,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::Integer)) }
           def reader_for_status; end
@@ -287,6 +296,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T::Boolean) }
           def enabled; end
@@ -309,6 +319,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(T::Boolean)) }
           def enabled; end
@@ -331,6 +342,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(::String) }
           def title; end
@@ -353,6 +365,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::String)) }
           def title; end
@@ -375,6 +388,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.untyped) }
           def title; end
@@ -406,6 +420,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           sig { returns(T.nilable(::Post::TrackingInfoInput)) }
           def title; end
@@ -419,26 +434,25 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-        class Post
-          class TrackingInfoInput
-            sig { returns(T.nilable(::String)) }
-            def carrier_id; end
 
-            sig { params(carrier_id: T.nilable(::String)).returns(T.nilable(::String)) }
-            def carrier_id=(carrier_id); end
+        class Post::TrackingInfoInput
+          sig { returns(T.nilable(::String)) }
+          def carrier_id; end
 
-            sig { returns(::String) }
-            def number; end
+          sig { params(carrier_id: T.nilable(::String)).returns(T.nilable(::String)) }
+          def carrier_id=(carrier_id); end
 
-            sig { params(number: ::String).returns(::String) }
-            def number=(number); end
+          sig { returns(::String) }
+          def number; end
 
-            sig { returns(T.nilable(::String)) }
-            def url; end
+          sig { params(number: ::String).returns(::String) }
+          def number=(number); end
 
-            sig { params(url: T.nilable(::String)).returns(T.nilable(::String)) }
-            def url=(url); end
-          end
+          sig { returns(T.nilable(::String)) }
+          def url; end
+
+          sig { params(url: T.nilable(::String)).returns(T.nilable(::String)) }
+          def url=(url); end
         end
       RBI
 

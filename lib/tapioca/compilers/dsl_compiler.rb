@@ -79,32 +79,19 @@ module Tapioca
 
       sig { params(constant: Module).returns(T.nilable(String)) }
       def rbi_for_constant(constant)
-        parlour = Parlour::RbiGenerator.new(sort_namespaces: true)
+        file = Tapioca::RBI::File.new(strictness: "true")
 
         generators.each do |generator|
           next unless generator.handles?(constant)
-          generator.decorate(parlour.root, constant)
+          generator.decorate(file.root, constant)
         end
 
-        return if parlour.root.children.empty?
+        return if file.root.empty?
 
-        resolve_conflicts(parlour)
-
-        parlour.rbi("true").strip
-      end
-
-      sig { params(parlour: Parlour::RbiGenerator).void }
-      def resolve_conflicts(parlour)
-        Parlour::ConflictResolver.new.resolve_conflicts(parlour.root) do |msg, candidates|
-          error = StringIO.new
-          error.puts "=== Error ==="
-          error.puts msg
-          error.puts "# Candidates"
-          candidates.each_with_index do |candidate, index|
-            error.puts "  #{index}. #{candidate.describe}"
-          end
-          report_error(error.string)
-        end
+        file.root.nest_non_public_methods!
+        file.root.group_nodes!
+        file.root.sort_nodes!
+        file.string
       end
 
       sig { params(error: String).returns(T.noreturn) }

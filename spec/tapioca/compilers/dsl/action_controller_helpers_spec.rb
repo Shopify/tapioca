@@ -80,7 +80,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class UserController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
           module HelperMethods
             include ::ActionController::Base::HelperMethods
           end
@@ -88,9 +92,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           class HelperProxy < ::ActionView::Base
             include HelperMethods
           end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
         end
       RBI
 
@@ -118,7 +119,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class UserController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
           module HelperMethods
             include ::ActionController::Base::HelperMethods
 
@@ -132,9 +137,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           class HelperProxy < ::ActionView::Base
             include HelperMethods
           end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
         end
       RBI
 
@@ -162,7 +164,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class UserController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
           module HelperMethods
             include ::ActionController::Base::HelperMethods
 
@@ -176,9 +182,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           class HelperProxy < ::ActionView::Base
             include HelperMethods
           end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
         end
       RBI
 
@@ -206,7 +209,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class UserController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
           module HelperMethods
             include ::ActionController::Base::HelperMethods
             include ::GreetHelper
@@ -215,9 +222,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
           class HelperProxy < ::ActionView::Base
             include HelperMethods
           end
-
-          sig { returns(HelperProxy) }
-          def helpers; end
         end
       RBI
 

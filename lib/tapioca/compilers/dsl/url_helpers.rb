@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "rails"
   require "action_controller"
@@ -89,13 +87,13 @@ module Tapioca
       class UrlHelpers < Base
         extend T::Sig
 
-        sig { override.params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
+        sig { override.params(root: RBI::Tree, constant: Module).void }
         def decorate(root, constant)
           case constant
           when GeneratedPathHelpersModule.singleton_class, GeneratedUrlHelpersModule.singleton_class
             generate_module_for(root, constant)
           else
-            root.path(constant) do |mod|
+            root.create_path(constant) do |mod|
               create_mixins_for(mod, constant, GeneratedUrlHelpersModule)
               create_mixins_for(mod, constant, GeneratedPathHelpersModule)
             end
@@ -127,7 +125,7 @@ module Tapioca
 
         private
 
-        sig { params(root: Parlour::RbiGenerator::Namespace, constant: Module).void }
+        sig { params(root: RBI::Tree, constant: Module).void }
         def generate_module_for(root, constant)
           root.create_module(T.must(constant.name)) do |mod|
             mod.create_include("::ActionDispatch::Routing::UrlFor")
@@ -136,14 +134,14 @@ module Tapioca
             constant.instance_methods(false).each do |method|
               mod.create_method(
                 method.to_s,
-                parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+                parameters: [create_rest_param("args", type: "T.untyped")],
                 return_type: "String"
               )
             end
           end
         end
 
-        sig { params(mod: Parlour::RbiGenerator::Namespace, constant: Module, helper_module: Module).void }
+        sig { params(mod: RBI::Scope, constant: Module, helper_module: Module).void }
         def create_mixins_for(mod, constant, helper_module)
           include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
           extend_helper = constant.singleton_class.ancestors.include?(helper_module)

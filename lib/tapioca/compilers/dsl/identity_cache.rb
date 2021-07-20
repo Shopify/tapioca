@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "parlour"
-
 begin
   require "rails/railtie"
   require "identity_cache"
@@ -70,20 +68,13 @@ module Tapioca
           T.proc.params(type: Module).returns(String)
         )
 
-        sig do
-          override
-            .params(
-              root: Parlour::RbiGenerator::Namespace,
-              constant: T.class_of(::ActiveRecord::Base)
-            )
-            .void
-        end
+        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveRecord::Base)).void }
         def decorate(root, constant)
           caches = constant.send(:all_cached_associations)
           cache_indexes = constant.send(:cache_indexes)
           return if caches.empty? && cache_indexes.empty?
 
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             cache_manys = constant.send(:cached_has_manys)
             cache_ones = constant.send(:cached_has_ones)
             cache_belongs = constant.send(:cached_belongs_tos)
@@ -119,8 +110,7 @@ module Tapioca
           params(
             field: T.untyped,
             returns_collection: T::Boolean
-          )
-            .returns(String)
+          ).returns(String)
         end
         def type_for_field(field, returns_collection:)
           cache_type = field.reflection.compute_class(field.reflection.class_name)
@@ -136,10 +126,9 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             returns_collection: T::Boolean
-          )
-            .void
+          ).void
         end
         def create_fetch_field_methods(field, klass, returns_collection:)
           name = field.cached_accessor_name.to_s
@@ -156,10 +145,9 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(::ActiveRecord::Base),
-          )
-            .void
+          ).void
         end
         def create_fetch_by_methods(field, klass, constant)
           is_cache_index = field.instance_variable_defined?(:@attribute_proc)
@@ -174,7 +162,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(::ActiveRecord::Base),
           ).void
         end
@@ -183,9 +171,9 @@ module Tapioca
           fields_name = field.key_fields.join("_and_")
           name = "fetch_by_#{fields_name}"
           parameters = field.key_fields.map do |arg|
-            Parlour::RbiGenerator::Parameter.new(arg.to_s, type: "T.untyped")
+            create_param(arg.to_s, type: "T.untyped")
           end
-          parameters << Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped")
+          parameters << create_kw_opt_param("includes", default: "nil", type: "T.untyped")
 
           if field.unique
             klass.create_method(
@@ -215,8 +203,8 @@ module Tapioca
               "fetch_multi_by_#{fields_name}",
               class_method: true,
               parameters: [
-                Parlour::RbiGenerator::Parameter.new("index_values", type: "T.untyped"),
-                Parlour::RbiGenerator::Parameter.new("includes:", default: "nil", type: "T.untyped"),
+                create_param("index_values", type: "T.untyped"),
+                create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
               ],
               return_type: COLLECTION_TYPE.call(constant)
             )
@@ -226,7 +214,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: Parlour::RbiGenerator::Namespace,
+            klass: RBI::Scope,
             constant: T.class_of(::ActiveRecord::Base),
           ).void
         end
@@ -240,21 +228,21 @@ module Tapioca
             klass.create_method(
               "fetch_#{suffix}",
               class_method: true,
-              parameters: [Parlour::RbiGenerator::Parameter.new("key", type: "T.untyped")],
+              parameters: [create_param("key", type: "T.untyped")],
               return_type: type
             )
 
             klass.create_method(
               "fetch_multi_#{suffix}",
               class_method: true,
-              parameters: [Parlour::RbiGenerator::Parameter.new("keys", type: "T.untyped")],
+              parameters: [create_param("keys", type: "T.untyped")],
               return_type: "T::Array[#{multi_type}]"
             )
           else
             klass.create_method(
               "fetch_#{suffix}",
               class_method: true,
-              parameters: [Parlour::RbiGenerator::Parameter.new("key_values", type: "T.untyped")],
+              parameters: [create_param("key_values", type: "T.untyped")],
               return_type: type
             )
           end

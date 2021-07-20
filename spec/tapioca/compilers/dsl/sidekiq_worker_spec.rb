@@ -36,7 +36,6 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
-
       RBI
 
       assert_equal(expected, rbi_for(:NotifierWorker))
@@ -54,6 +53,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifierWorker
           sig { params(customer_id: T.untyped).returns(String) }
           def self.perform_async(customer_id); end
@@ -83,6 +83,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class NotifierWorker
           sig { params(customer_id: Integer).returns(String) }
           def self.perform_async(customer_id); end
