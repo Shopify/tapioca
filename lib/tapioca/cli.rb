@@ -115,6 +115,7 @@ module Tapioca
         <<~CONTENT
           --dir
           .
+          --ignore=vendor
         CONTENT
       end
     end

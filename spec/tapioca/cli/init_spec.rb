@@ -20,6 +20,7 @@ module Tapioca
         assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/config"))
           --dir
           .
+          --ignore=vendor
         CONTENTS
         assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
         assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
