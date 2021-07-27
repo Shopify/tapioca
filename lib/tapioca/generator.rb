@@ -118,10 +118,11 @@ module Tapioca
       params(
         requested_constants: T::Array[String],
         should_verify: T::Boolean,
-        quiet: T::Boolean
+        quiet: T::Boolean,
+        verbose: T::Boolean
       ).void
     end
-    def build_dsl(requested_constants, should_verify: false, quiet: false)
+    def build_dsl(requested_constants, should_verify: false, quiet: false, verbose: false)
       load_application(eager_load: requested_constants.empty?)
       load_dsl_generators
 
@@ -147,6 +148,10 @@ module Tapioca
       compiler.run do |constant, contents|
         constant_name = Module.instance_method(:name).bind(constant).call
 
+        if verbose
+          say("Processing: ", [:yellow])
+          say(constant_name)
+        end
         filename = compile_dsl_rbi(
           constant_name,
           contents,

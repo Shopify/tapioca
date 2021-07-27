@@ -79,9 +79,14 @@ module Tapioca
       aliases: ["-q"],
       type: :boolean,
       desc: "Supresses file creation output"
+    option :verbose,
+      aliases: ["-V"],
+      type: :boolean,
+      desc: "Verbose output for debugging purposes"
     def dsl(*constants)
       Tapioca.silence_warnings do
-        generator.build_dsl(constants, should_verify: options[:verify], quiet: options[:quiet])
+        generator.build_dsl(constants, should_verify: options[:verify], quiet: options[:quiet],
+verbose: options[:verbose])
       end
     end
 
