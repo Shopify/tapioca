@@ -148,15 +148,16 @@ module Tapioca
       compiler.run do |constant, contents|
         constant_name = Module.instance_method(:name).bind(constant).call
 
-        if verbose
+        if verbose && !quiet
           say("Processing: ", [:yellow])
           say(constant_name)
         end
+
         filename = compile_dsl_rbi(
           constant_name,
           contents,
           outpath: outpath,
-          quiet: should_verify || quiet
+          quiet: should_verify || quiet && !verbose
         )
 
         if filename
