@@ -250,7 +250,7 @@ GEM
     sorbet-static (0.5.6526-universal-darwin-19)
     sorbet-static (0.5.6526-universal-darwin-20)
     sorbet-static (0.5.6526-x86_64-linux)
-    spoom (1.1.1)
+    spoom (1.1.2)
       colorize
       sorbet (>= 0.5.6347)
       sorbet-runtime
