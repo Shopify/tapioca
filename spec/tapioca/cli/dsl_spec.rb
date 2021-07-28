@@ -204,6 +204,35 @@ module Tapioca
         CONTENTS
       end
 
+      it "generates RBI files with verbose output" do
+        output = execute("dsl", "--verbose")
+
+        assert_equal(<<~OUTPUT, output)
+          Loading Rails application... Done
+          Loading DSL generator classes... Done
+          Compiling DSL RBI files...
+
+          Processing: Baz::Role
+          Wrote: #{outdir}/baz/role.rbi
+          Processing: Job
+          Wrote: #{outdir}/job.rbi
+          Processing: Namespace::Comment
+          Wrote: #{outdir}/namespace/comment.rbi
+          Processing: Post
+          Wrote: #{outdir}/post.rbi
+
+          Done
+          All operations performed in working directory.
+          Please review changes and commit them.
+        OUTPUT
+
+        assert_path_exists("#{outdir}/baz/role.rbi")
+        assert_path_exists("#{outdir}/job.rbi")
+        assert_path_exists("#{outdir}/post.rbi")
+        assert_path_exists("#{outdir}/namespace/comment.rbi")
+        refute_path_exists("#{outdir}/user.rbi")
+      end
+
       it "can generates RBI files quietly" do
         output = execute("dsl", "--quiet")
 

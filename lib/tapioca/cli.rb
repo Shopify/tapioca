@@ -37,6 +37,11 @@ module Tapioca
       type: :boolean,
       default: true,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file"
+    class_option :verbose,
+      aliases: ["-V"],
+      type: :boolean,
+      default: false,
+      desc: "Verbose output for debugging purposes"
 
     map T.unsafe(["--version", "-v"] => :__print_version)
 
@@ -81,7 +86,12 @@ module Tapioca
       desc: "Supresses file creation output"
     def dsl(*constants)
       Tapioca.silence_warnings do
-        generator.build_dsl(constants, should_verify: options[:verify], quiet: options[:quiet])
+        generator.build_dsl(
+          constants,
+          should_verify: options[:verify],
+          quiet: options[:quiet],
+          verbose: options[:verbose]
+        )
       end
     end
 
