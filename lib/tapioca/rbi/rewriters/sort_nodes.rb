@@ -11,11 +11,11 @@ module Tapioca
         def visit(node)
           return unless node.is_a?(Tree)
           visit_all(node.nodes)
+          original_order = node.nodes.map.with_index.to_h
           node.nodes.sort! do |a, b|
-            return 0 if a.is_a?(Mixin) || b.is_a?(Mixin)
-
             res = node_rank(a) <=> node_rank(b)
             res = node_name(a) <=> node_name(b) if res == 0
+            res = (original_order[a] || 0) <=> (original_order[b] || 0) if res == 0
             res || 0
           end
         end
@@ -25,29 +25,29 @@ module Tapioca
         sig { params(node: Node).returns(Integer) }
         def node_rank(node)
           case node
-          when Group                then kind_rank(node.kind)
-          when Include, Extend      then 0
-          when Helper               then 1
-          when TypeMember           then 2
-          when MixesInClassMethods  then 3
-          when TStructField         then 4
-          when TEnumBlock           then 5
+          when Group                then group_rank(node.kind)
+          when Include, Extend      then 10
+          when Helper               then 20
+          when TypeMember           then 30
+          when MixesInClassMethods  then 40
+          when TStructField         then 50
+          when TEnumBlock           then 60
           when Method
             if node.name == "initialize"
-              7
+              71
             elsif !node.is_singleton
-              8
+              72
             else
-              9
+              73
             end
-          when Scope, Const then 9
+          when Scope, Const then 80
           else
-            10
+            100
           end
         end
 
         sig { params(kind: Group::Kind).returns(Integer) }
-        def kind_rank(kind)
+        def group_rank(kind)
           case kind
           when Group::Kind::Mixins              then 0
           when Group::Kind::Helpers             then 1
