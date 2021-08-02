@@ -7,14 +7,6 @@ module Tapioca
   class Cli < Thor
     include(Thor::Actions)
 
-    class_option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called"
-    class_option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called"
     class_option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
@@ -23,16 +15,6 @@ module Tapioca
       aliases: ["--cmd", "-c"],
       banner: "command",
       desc: "The command to run to regenerate RBI files"
-    class_option :exclude,
-      aliases: ["-x"],
-      type: :array,
-      banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
-    class_option :typed_overrides,
-      aliases: ["--typed", "-t"],
-      type: :hash,
-      banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
     class_option :file_header,
       type: :boolean,
       default: true,
@@ -96,6 +78,24 @@ module Tapioca
     end
 
     desc "generate [gem...]", "generate RBIs from gems"
+    option :prerequire,
+      aliases: ["--pre", "-b"],
+      banner: "file",
+      desc: "A file to be required before Bundler.require is called"
+    option :postrequire,
+      aliases: ["--post", "-a"],
+      banner: "file",
+      desc: "A file to be required after Bundler.require is called"
+    option :exclude,
+      aliases: ["-x"],
+      type: :array,
+      banner: "gem [gem ...]",
+      desc: "Excludes the given gem(s) from RBI generation"
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Overrides for typed sigils for generated gem RBIs"
     def generate(*gems)
       Tapioca.silence_warnings do
         generator.build_gem_rbis(gems)
@@ -103,6 +103,24 @@ module Tapioca
     end
 
     desc "sync", "sync RBIs to Gemfile"
+    option :prerequire,
+      aliases: ["--pre", "-b"],
+      banner: "file",
+      desc: "A file to be required before Bundler.require is called"
+    option :postrequire,
+      aliases: ["--post", "-a"],
+      banner: "file",
+      desc: "A file to be required after Bundler.require is called"
+    option :exclude,
+      aliases: ["-x"],
+      type: :array,
+      banner: "gem [gem ...]",
+      desc: "Excludes the given gem(s) from RBI generation"
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Overrides for typed sigils for generated gem RBIs"
     option :verify,
       type: :boolean,
       default: false,
