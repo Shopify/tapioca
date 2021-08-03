@@ -2242,7 +2242,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
               @foo = foo
             end
 
-            sig { params(foo: Template).void }
+            sig { params(foo: Template).returns(Template) }
             def something(foo); end
 
             NullGenericType = SimpleGenericType[Integer].new(0)
@@ -2345,7 +2345,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           sig { params(foo: Elem).void }
           def initialize(foo); end
 
-          sig { params(foo: Template).void }
+          sig { params(foo: Template).returns(Template) }
           def something(foo); end
         end
 

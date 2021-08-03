@@ -663,6 +663,7 @@ module Tapioca
           parameter_types[signature.block_name] = signature.block_type if signature.block_name
 
           sig = RBI::Sig.new
+          owner = signature.method.owner
 
           parameters.each do |_, name|
             # If the type used in a signature is generic, then invoking to_s on it will always
@@ -671,7 +672,6 @@ module Tapioca
             parameter_type = if parameter_types[name.to_sym].is_a?(T::Types::TypeMember) ||
               parameter_types[name.to_sym].is_a?(T::Types::TypeTemplate)
 
-              owner = signature.method.owner
               owner.constants.find { |c| owner.const_get(c) == parameter_types[name.to_sym] }
             else
               parameter_types[name.to_sym]
@@ -682,7 +682,15 @@ module Tapioca
             sig << RBI::SigParam.new(name, type)
           end
 
-          return_type = type_of(signature.return_type)
+          sig_return_type = if signature.return_type.is_a?(T::Types::TypeMember) ||
+            signature.return_type.is_a?(T::Types::TypeTemplate)
+
+            owner.constants.find { |c| owner.const_get(c) == signature.return_type }
+          else
+            signature.return_type
+          end
+
+          return_type = type_of(sig_return_type.to_s)
           sig.return_type = sanitize_signature_types(return_type)
           add_to_symbol_queue(sig.return_type)
 
@@ -909,9 +917,9 @@ module Tapioca
             .gsub(".params()", "")
         end
 
-        sig { params(constant: T::Types::Base).returns(String) }
-        def type_of(constant)
-          constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+        sig { params(constant_name: String).returns(String) }
+        def type_of(constant_name)
+          constant_name.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
 
         sig { params(object: BasicObject).returns(Integer).checked(:never) }
