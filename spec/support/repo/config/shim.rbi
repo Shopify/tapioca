@@ -13,5 +13,5 @@ end
 class ::Tapioca::Compilers::Dsl::Base
 end
 
-class ::Tapioca::RBI::Tree
+class ::RBI::Tree
 end
