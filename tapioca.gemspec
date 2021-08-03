@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("bundler", ">= 1.17.3")
   spec.add_dependency("pry", ">= 0.12.2")
+  spec.add_dependency("rbi")
   spec.add_dependency("sorbet-static", ">= 0.4.4471")
   spec.add_dependency("sorbet-runtime")
   spec.add_dependency("spoom")
