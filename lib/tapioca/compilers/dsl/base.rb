@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/rbi"
+require "tapioca/rbi_ext/model"
 
 module Tapioca
   module Compilers
