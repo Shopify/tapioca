@@ -2234,12 +2234,16 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             extend T::Sig
             extend T::Generic
 
+            Template = type_template
             Elem = type_member
 
             sig { params(foo: Elem).void }
             def initialize(foo)
               @foo = foo
             end
+
+            sig { params(foo: Template).void }
+            def something(foo); end
 
             NullGenericType = SimpleGenericType[Integer].new(0)
           end
@@ -2335,10 +2339,14 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Generics::SimpleGenericType
           extend T::Generic
 
+          Template = type_template
           Elem = type_member
 
-          sig { params(foo: T.untyped).void }
+          sig { params(foo: Elem).void }
           def initialize(foo); end
+
+          sig { params(foo: Template).void }
+          def something(foo); end
         end
 
         Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[Integer])

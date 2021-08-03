@@ -665,7 +665,19 @@ module Tapioca
           sig = RBI::Sig.new
 
           parameters.each do |_, name|
-            type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
+            # If the type used in a signature is generic, then invoking to_s on it will always
+            # return T.untyped. To get the actual name of the generic constant for compiling the signature
+            # we need to find the right constant first
+            parameter_type = if parameter_types[name.to_sym].is_a?(T::Types::TypeMember) ||
+              parameter_types[name.to_sym].is_a?(T::Types::TypeTemplate)
+
+              owner = signature.method.owner
+              owner.constants.find { |c| owner.const_get(c) == parameter_types[name.to_sym] }
+            else
+              parameter_types[name.to_sym]
+            end
+
+            type = sanitize_signature_types(parameter_type.to_s)
             add_to_symbol_queue(type)
             sig << RBI::SigParam.new(name, type)
           end
