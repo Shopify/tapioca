@@ -23,7 +23,7 @@ module T
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        type_member = super
+        type_member = Tapioca::TypeMember.new(super)
         Tapioca::GenericTypeRegistry.register_type_member(self, type_member, fixed, lower, upper)
         type_member
       end
@@ -31,7 +31,7 @@ module T
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        type_template = super
+        type_template = Tapioca::TypeTemplate.new(super)
         Tapioca::GenericTypeRegistry.register_type_template(self, type_template, fixed, lower, upper)
         type_template
       end
@@ -61,6 +61,44 @@ module T
       end
 
       prepend GenericNamePatch
+    end
+  end
+end
+
+module Tapioca
+  class TypeMember < T::Types::TypeMember
+    extend T::Sig
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :name
+
+    sig { params(member: T::Types::TypeMember).void }
+    def initialize(member)
+      @member = member
+      super(member.variance)
+    end
+
+    sig { returns(String) }
+    def to_s
+      name.to_s
+    end
+  end
+
+  class TypeTemplate < T::Types::TypeTemplate
+    extend T::Sig
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :name
+
+    sig { params(template: T::Types::TypeTemplate).void }
+    def initialize(template)
+      @member = template
+      super(template.variance)
+    end
+
+    sig { returns(String) }
+    def to_s
+      name.to_s
     end
   end
 end

@@ -20,14 +20,15 @@ module Tapioca
   # variable to type variable serializers. This allows us to associate type variables
   # to the constant names that represent them, easily.
   module GenericTypeRegistry
+    TypeVariable = T.type_alias { T.any(TypeMember, TypeTemplate) }
     @generic_instances = T.let(
       {},
       T::Hash[String, Module]
     )
 
     @type_variables = T.let(
-      {},
-      T::Hash[Integer, T::Hash[Integer, String]]
+      {}.compare_by_identity,
+      T::Hash[Module, T::Hash[TypeVariable, String]]
     )
 
     class << self
@@ -62,7 +63,7 @@ module Tapioca
       sig do
         params(
           constant: T.untyped,
-          type_member: T::Types::TypeVariable,
+          type_member: TypeVariable,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
@@ -75,7 +76,7 @@ module Tapioca
       sig do
         params(
           constant: T.untyped,
-          type_template: T::Types::TypeVariable,
+          type_template: TypeVariable,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
@@ -85,9 +86,9 @@ module Tapioca
         register_type_variable(constant, :type_template, type_template, fixed, lower, upper)
       end
 
-      sig { params(constant: Module).returns(T.nilable(T::Hash[Integer, String])) }
+      sig { params(constant: Module).returns(T.nilable(T::Hash[TypeVariable, String])) }
       def lookup_type_variables(constant)
-        @type_variables[object_id_of(constant)]
+        @type_variables[constant]
       end
 
       private
@@ -130,7 +131,7 @@ module Tapioca
         params(
           constant: T.untyped,
           type_variable_type: T.enum([:type_member, :type_template]),
-          type_variable: T::Types::TypeVariable,
+          type_variable: TypeVariable,
           fixed: T.untyped,
           lower: T.untyped,
           upper: T.untyped
@@ -141,7 +142,7 @@ module Tapioca
         # rubocop:enable Metrics/ParameterLists
         type_variables = lookup_or_initialize_type_variables(constant)
 
-        type_variables[object_id_of(type_variable)] = serialize_type_variable(
+        type_variables[type_variable] = serialize_type_variable(
           type_variable_type,
           type_variable.variance,
           fixed,
@@ -177,9 +178,9 @@ module Tapioca
         end
       end
 
-      sig { params(constant: Module).returns(T::Hash[Integer, String]) }
+      sig { params(constant: Module).returns(T::Hash[TypeVariable, String]) }
       def lookup_or_initialize_type_variables(constant)
-        @type_variables[object_id_of(constant)] ||= {}
+        @type_variables[constant] ||= {}.compare_by_identity
       end
 
       sig do
@@ -209,11 +210,6 @@ module Tapioca
       sig { params(constant: Module).returns(T.nilable(String)) }
       def name_of(constant)
         Module.instance_method(:name).bind(constant).call
-      end
-
-      sig { params(object: BasicObject).returns(Integer) }
-      def object_id_of(object)
-        Object.instance_method(:object_id).bind(object).call
       end
     end
   end

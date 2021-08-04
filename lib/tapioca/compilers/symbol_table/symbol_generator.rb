@@ -140,7 +140,9 @@ module Tapioca
         sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
         def compile_object(tree, name, value)
           return if symbol_ignored?(name)
+
           klass = class_of(value)
+          return if klass == TypeMember || klass == TypeTemplate
 
           klass_name = if klass == ObjectSpace::WeakMap
             # WeakMap is an implicit generic with one type variable
@@ -185,9 +187,10 @@ module Tapioca
 
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_body(tree, name, constant)
+          # Compiling type variables must happen first to populate generic names
+          compile_type_variables(tree, constant)
           compile_methods(tree, name, constant)
           compile_module_helpers(tree, constant)
-          compile_type_variables(tree, constant)
           compile_mixins(tree, constant)
           compile_mixes_in_class_methods(tree, constant)
           compile_props(tree, constant)
@@ -263,12 +266,10 @@ module Tapioca
           # Create a map of subconstants (via their object ids) to their names.
           # We need this later when we want to lookup the name of the registered type
           # variable via the value of the type variable constant.
-          subconstant_to_name_lookup = constants_of(constant).map do |constant_name|
-            [
-              object_id_of(resolve_constant(constant_name.to_s, namespace: constant)),
-              constant_name,
-            ]
-          end.to_h
+          subconstant_to_name_lookup = constants_of(constant)
+            .each_with_object({}.compare_by_identity) do |constant_name, table|
+            table[resolve_constant(constant_name.to_s, namespace: constant)] = constant_name
+          end
 
           # Map each type variable to its string representation.
           #
@@ -279,12 +280,15 @@ module Tapioca
           # By looping over these entries and then getting the actual constant name
           # from the `subconstant_to_name_lookup` we defined above, gives us all the
           # information we need to serialize type variable definitions.
-          type_variable_declarations = type_variables.map do |type_variable_id, serialized_type_variable|
-            constant_name = subconstant_to_name_lookup[type_variable_id]
+          type_variable_declarations = type_variables.map do |type_variable, serialized_type_variable|
+            constant_name = subconstant_to_name_lookup[type_variable]
+
+            string_constant_name = constant_name.to_s
+            type_variable.name = string_constant_name
             # Here, we know that constant_value will be an instance of
             # T::Types::CustomTypeVariable, which knows how to serialize
             # itself to a type_member/type_template
-            tree << RBI::TypeMember.new(constant_name.to_s, serialized_type_variable)
+            tree << RBI::TypeMember.new(string_constant_name, serialized_type_variable)
           end
 
           return if type_variable_declarations.empty?
@@ -663,34 +667,14 @@ module Tapioca
           parameter_types[signature.block_name] = signature.block_type if signature.block_name
 
           sig = RBI::Sig.new
-          owner = signature.method.owner
 
           parameters.each do |_, name|
-            # If the type used in a signature is generic, then invoking to_s on it will always
-            # return T.untyped. To get the actual name of the generic constant for compiling the signature
-            # we need to find the right constant first
-            parameter_type = if parameter_types[name.to_sym].is_a?(T::Types::TypeMember) ||
-              parameter_types[name.to_sym].is_a?(T::Types::TypeTemplate)
-
-              owner.constants.find { |c| owner.const_get(c) == parameter_types[name.to_sym] }
-            else
-              parameter_types[name.to_sym]
-            end
-
-            type = sanitize_signature_types(parameter_type.to_s)
+            type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
             add_to_symbol_queue(type)
             sig << RBI::SigParam.new(name, type)
           end
 
-          sig_return_type = if signature.return_type.is_a?(T::Types::TypeMember) ||
-            signature.return_type.is_a?(T::Types::TypeTemplate)
-
-            owner.constants.find { |c| owner.const_get(c) == signature.return_type }
-          else
-            signature.return_type
-          end
-
-          return_type = type_of(sig_return_type.to_s)
+          return_type = type_of(signature.return_type)
           sig.return_type = sanitize_signature_types(return_type)
           add_to_symbol_queue(sig.return_type)
 
@@ -917,9 +901,9 @@ module Tapioca
             .gsub(".params()", "")
         end
 
-        sig { params(constant_name: String).returns(String) }
-        def type_of(constant_name)
-          constant_name.gsub(/\bAttachedClass\b/, "T.attached_class")
+        sig { params(constant: T::Types::Base).returns(String) }
+        def type_of(constant)
+          constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
         end
 
         sig { params(object: BasicObject).returns(Integer).checked(:never) }

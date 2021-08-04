@@ -2490,7 +2490,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           Elem = type_member
 
-          const :foo, T.untyped
+          const :foo, Elem
 
           class << self
             def inherited(s); end
