@@ -63,6 +63,24 @@ module Tapioca
         execute("init")
       end
 
+      it "must show a deprecation warning at top and at bottom" do
+        output = execute("generate")
+
+        assert_includes(output, <<~OUTPUT)
+          DEPRECATION: The `generate` command will be removed in a future release.
+
+          Start using the `gem` command with gem names or the `--all` flag instead.
+
+        OUTPUT
+
+        assert_includes(output, <<~OUTPUT)
+
+          DEPRECATION: The `generate` command will be removed in a future release.
+
+          Start using the `gem` command with gem names or the `--all` flag instead.
+        OUTPUT
+      end
+
       it "must generate a single gem RBI" do
         output = execute("generate", "foo")
 
