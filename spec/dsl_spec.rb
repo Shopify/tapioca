@@ -72,7 +72,7 @@ class DslSpec < Minitest::Spec
     # let's call it once to ensure all constants are in place.
     T.unsafe(self).subject.processable_constants
 
-    file = Tapioca::RBI::File.new(strictness: "strong")
+    file = RBI::File.new(strictness: "strong")
 
     constant = Object.const_get(constant_name)
     T.unsafe(self).subject.decorate(file.root, constant)

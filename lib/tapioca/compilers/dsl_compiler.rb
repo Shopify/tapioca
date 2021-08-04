@@ -79,7 +79,7 @@ module Tapioca
 
       sig { params(constant: Module).returns(T.nilable(String)) }
       def rbi_for_constant(constant)
-        file = Tapioca::RBI::File.new(strictness: "true")
+        file = RBI::File.new(strictness: "true")
 
         generators.each do |generator|
           next unless generator.handles?(constant)

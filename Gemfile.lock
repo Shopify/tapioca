@@ -11,6 +11,7 @@ PATH
     tapioca (0.4.23)
       bundler (>= 1.17.3)
       pry (>= 0.12.2)
+      rbi
       sorbet-runtime
       sorbet-static (>= 0.4.4471)
       spoom
@@ -214,6 +215,12 @@ GEM
       thor (~> 1.0)
     rainbow (3.0.0)
     rake (13.0.3)
+    rbi (0.0.2)
+      ast
+      parser
+      rake (~> 13.0)
+      sorbet-runtime
+      unparser
     redis (4.2.5)
     regexp_parser (2.1.1)
     rexml (3.2.5)
