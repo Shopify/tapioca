@@ -18,5 +18,5 @@ module Tapioca
 end
 
 require "tapioca/compilers/dsl/base"
-require "tapioca/active_record_column_type_helper"
+require "tapioca/helpers/active_record_column_type_helper"
 require "tapioca/version"
