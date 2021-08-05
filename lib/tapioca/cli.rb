@@ -109,6 +109,8 @@ module Tapioca
         all = options[:all]
         verify = options[:verify]
 
+        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
+
         unless gems.empty?
           raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
           raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify

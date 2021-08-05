@@ -75,6 +75,14 @@ module Tapioca
             Option '--all' must be provided without any other arguments
           OUTPUT
         end
+
+        it "must show an error if both --all and --verify are supplied" do
+          output = execute("gem", ["--all", "--verify"])
+
+          assert_equal(<<~OUTPUT, output)
+            Options '--all' and '--verify' are mutually exclusive
+          OUTPUT
+        end
       end
 
       describe("generate") do
