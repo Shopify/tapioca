@@ -268,7 +268,7 @@ module Tapioca
           # variable via the value of the type variable constant.
           subconstant_to_name_lookup = constants_of(constant)
             .each_with_object({}.compare_by_identity) do |constant_name, table|
-            table[resolve_constant(constant_name.to_s, namespace: constant)] = constant_name
+            table[resolve_constant(constant_name.to_s, namespace: constant)] = constant_name.to_s
           end
 
           # Map each type variable to its string representation.
@@ -282,13 +282,11 @@ module Tapioca
           # information we need to serialize type variable definitions.
           type_variable_declarations = type_variables.map do |type_variable, serialized_type_variable|
             constant_name = subconstant_to_name_lookup[type_variable]
-
-            string_constant_name = constant_name.to_s
-            type_variable.name = string_constant_name
+            type_variable.name = constant_name
             # Here, we know that constant_value will be an instance of
             # T::Types::CustomTypeVariable, which knows how to serialize
             # itself to a type_member/type_template
-            tree << RBI::TypeMember.new(string_constant_name, serialized_type_variable)
+            tree << RBI::TypeMember.new(constant_name, serialized_type_variable)
           end
 
           return if type_variable_declarations.empty?

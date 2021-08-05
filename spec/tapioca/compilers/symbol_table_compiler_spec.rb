@@ -2245,6 +2245,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             sig { params(foo: Template).returns(Template) }
             def something(foo); end
 
+            sig { params(foo: T::Hash[T::Array[Template], T::Set[Elem]]).void }
+            def complex(foo); end
+
             NullGenericType = SimpleGenericType[Integer].new(0)
           end
         end
@@ -2344,6 +2347,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           sig { params(foo: Elem).void }
           def initialize(foo); end
+
+          sig { params(foo: T::Hash[T::Array[Template], T::Set[Elem]]).void }
+          def complex(foo); end
 
           sig { params(foo: Template).returns(Template) }
           def something(foo); end
