@@ -69,7 +69,7 @@ module Tapioca
         assert_includes(output, <<~OUTPUT)
           DEPRECATION: The `generate` command will be removed in a future release.
 
-          Start using the `gem` command with gem names or the `--all` flag instead.
+          Start using `bin/tapioca gem --all` instead.
 
         OUTPUT
 
@@ -77,7 +77,25 @@ module Tapioca
 
           DEPRECATION: The `generate` command will be removed in a future release.
 
-          Start using the `gem` command with gem names or the `--all` flag instead.
+          Start using `bin/tapioca gem --all` instead.
+        OUTPUT
+      end
+
+      it "must show a deprecation warning with supplied gem names" do
+        output = execute("generate", ["foo", "bar", "baz"])
+
+        assert_includes(output, <<~OUTPUT)
+          DEPRECATION: The `generate` command will be removed in a future release.
+
+          Start using `bin/tapioca gem foo bar baz` instead.
+
+        OUTPUT
+
+        assert_includes(output, <<~OUTPUT)
+
+          DEPRECATION: The `generate` command will be removed in a future release.
+
+          Start using `bin/tapioca gem foo bar baz` instead.
         OUTPUT
       end
 

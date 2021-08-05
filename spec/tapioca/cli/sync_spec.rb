@@ -16,7 +16,7 @@ module Tapioca
         assert_includes(output, <<~OUTPUT)
           DEPRECATION: The `sync` command will be removed in a future release.
 
-          Start using the `gem` command with no arguments instead.
+          Start using `bin/tapioca gem` instead.
 
         OUTPUT
 
@@ -24,7 +24,7 @@ module Tapioca
 
           DEPRECATION: The `sync` command will be removed in a future release.
 
-          Start using the `gem` command with no arguments instead.
+          Start using `bin/tapioca gem` instead.
         OUTPUT
       end
 

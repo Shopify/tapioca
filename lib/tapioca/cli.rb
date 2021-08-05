@@ -142,10 +142,15 @@ module Tapioca
       banner: "gem:level [gem:level ...]",
       desc: "Overrides for typed sigils for generated gem RBIs"
     def generate(*gems)
+      gem_names = if gems.empty?
+        "--all"
+      else
+        gems.join(" ")
+      end
       deprecation_message = <<~MSG
         DEPRECATION: The `generate` command will be removed in a future release.
 
-        Start using the `gem` command with gem names or the `--all` flag instead.
+        Start using `bin/tapioca gem #{gem_names}` instead.
       MSG
 
       say(deprecation_message, :red)
@@ -186,7 +191,7 @@ module Tapioca
       deprecation_message = <<~MSG
         DEPRECATION: The `sync` command will be removed in a future release.
 
-        Start using the `gem` command with no arguments instead.
+        Start using `bin/tapioca gem` instead.
       MSG
 
       say(deprecation_message, :red)
