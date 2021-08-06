@@ -10,6 +10,24 @@ module Tapioca
         execute("init")
       end
 
+      it "must show a deprecation warning at top and at bottom" do
+        output = execute("sync")
+
+        assert_includes(output, <<~OUTPUT)
+          DEPRECATION: The `sync` command will be removed in a future release.
+
+          Start using `bin/tapioca gem` instead.
+
+        OUTPUT
+
+        assert_includes(output, <<~OUTPUT)
+
+          DEPRECATION: The `sync` command will be removed in a future release.
+
+          Start using `bin/tapioca gem` instead.
+        OUTPUT
+      end
+
       it "must perform no operations if everything is up-to-date" do
         execute("generate")
 
@@ -176,7 +194,7 @@ module Tapioca
           it "does nothing and returns exit_status 0" do
             output = execute("sync", "--verify")
 
-            assert_equal(output, <<~OUTPUT)
+            assert_includes(output, <<~OUTPUT)
               Checking for out-of-date RBIs...
 
               Nothing to do, all RBIs are up-to-date.
@@ -189,7 +207,7 @@ module Tapioca
           it "advises of removed file(s) and returns exit_status 1" do
             output = execute("sync", "--verify", exclude: "foo bar")
 
-            assert_equal(output, <<~OUTPUT)
+            assert_includes(output, <<~OUTPUT)
               Checking for out-of-date RBIs...
 
               RBI files are out-of-date. In your development environment, please run:
@@ -219,7 +237,7 @@ module Tapioca
           it "advises of added/removed/changed file(s) and returns exit_status 1" do
             output = execute("sync", "--verify")
 
-            assert_equal(output, <<~OUTPUT)
+            assert_includes(output, <<~OUTPUT)
               Checking for out-of-date RBIs...
 
               RBI files are out-of-date. In your development environment, please run:
