@@ -28,12 +28,8 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
     it("ignores SmartProperty classes without a name") do
       add_ruby_file("content.rb", <<~RUBY)
-        class Post
+        post = Class.new do
           include ::SmartProperties
-
-          def self.name
-            nil
-          end
         end
       RUBY
 
