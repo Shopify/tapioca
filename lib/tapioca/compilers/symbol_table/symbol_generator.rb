@@ -833,7 +833,7 @@ module Tapioca
           # We are dealing with a ActiveSupport::Deprecation::DeprecatedConstantProxy
           # so try to get the name of the target class
           begin
-            target = Kernel.instance_method(:send).bind(constant).call(:target)
+            target = constant.__send__(:target)
           rescue NoMethodError
             return
           end
