@@ -243,7 +243,7 @@ module Tapioca
         def type_for(constant, reflection)
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
 
-          "::#{reflection.klass.name}"
+          T.must(qualified_name_of(reflection.klass))
         end
 
         sig do

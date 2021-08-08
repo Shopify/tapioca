@@ -171,7 +171,7 @@ module Tapioca
         sig { params(method_def: T.any(Method, UnboundMethod)).returns(String) }
         def compile_method_return_type_to_rbi(method_def)
           signature = T::Private::Methods.signature_for_method(method_def)
-          return_type = signature.nil? ? "T.untyped" : signature.return_type.to_s
+          return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
           return_type = "void" if return_type == "<VOID>"
           # Map <NOT-TYPED> to `T.untyped`
           return_type = "T.untyped" if return_type == "<NOT-TYPED>"

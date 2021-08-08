@@ -9,7 +9,7 @@ module RBI
 
     sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).void }
     def create_path(constant, &block)
-      constant_name = T.let(::Module.instance_method(:name).bind(constant).call, T.nilable(String))
+      constant_name = Tapioca::Reflection.name_of(constant)
       raise "given constant does not have a name" unless constant_name
 
       instance = ::Module.const_get(constant_name)

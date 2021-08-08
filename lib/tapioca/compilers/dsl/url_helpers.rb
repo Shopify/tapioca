@@ -111,7 +111,7 @@ module Tapioca
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
           constants = all_modules.select do |mod|
-            next unless Module.instance_method(:name).bind(mod).call
+            next unless name_of(mod)
 
             includes_helper?(mod, GeneratedUrlHelpersModule) ||
               includes_helper?(mod, GeneratedPathHelpersModule) ||
