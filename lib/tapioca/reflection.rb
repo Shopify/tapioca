@@ -101,9 +101,9 @@ module Tapioca
       nil
     end
 
-    sig { params(constant: Module).returns(String) }
-    def type_of(constant)
-      constant.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+    sig { params(type: T::Types::Base).returns(String) }
+    def name_of_type(type)
+      type.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
     end
   end
 end

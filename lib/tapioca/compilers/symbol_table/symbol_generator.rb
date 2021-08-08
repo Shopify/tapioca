@@ -673,7 +673,7 @@ module Tapioca
             sig << RBI::SigParam.new(name, type)
           end
 
-          return_type = type_of(signature.return_type)
+          return_type = name_of_type(signature.return_type)
           sig.return_type = sanitize_signature_types(return_type)
           add_to_symbol_queue(sig.return_type)
 
