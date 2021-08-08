@@ -1,12 +1,10 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/reflection/bind_call_reflection"
-require "tapioca/reflection/pre_bind_call_reflection"
-
 module Tapioca
   module Reflection
     extend T::Sig
+    extend self
 
     CLASS_METHOD = T.let(Kernel.instance_method(:class), UnboundMethod)
     CONSTANTS_METHOD = T.let(Module.instance_method(:constants), UnboundMethod)
