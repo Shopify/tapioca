@@ -31,9 +31,9 @@ module Tapioca
       # # typed: true
       # class Post
       #  def photo; end
-      #  def photo=; end
+      #  def photo=(attachable); end
       #  def blogs; end
-      #  def blogs=; end
+      #  def blogs=(attachable); end
       # end
       # ~~~
       class ActiveStorage < Base
@@ -46,7 +46,7 @@ module Tapioca
         def decorate(root, constant)
           return if constant.reflect_on_all_attachments.empty?
 
-          root.create_path(constant) do |scope|
+          root.create_path(T.cast(constant, Module)) do |scope|
             constant.reflect_on_all_attachments.each do |reflection|
               type = type_of(reflection)
               name = reflection.name.to_s
@@ -75,10 +75,10 @@ module Tapioca
             ::ActiveStorage::Reflection::HasManyAttachedReflection)).returns(String)
         end
         def type_of(reflection)
-          case reflection.macro
-          when :has_one_attached
+          case reflection
+          when ::ActiveStorage::Reflection::HasOneAttachedReflection
             "ActiveStorage::Attached::One"
-          when :has_many_attached
+          when ::ActiveStorage::Reflection::HasManyAttachedReflection
             "ActiveStorage::Attached::Many"
           end
         end

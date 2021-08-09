@@ -19,8 +19,8 @@ this generator will produce the RBI file `post.rbi` with the following content:
 # typed: true
 class Post
  def photo; end
- def photo=; end
+ def photo=(attachable); end
  def blogs; end
- def blogs=; end
+ def blogs=(attachable); end
 end
 ~~~
