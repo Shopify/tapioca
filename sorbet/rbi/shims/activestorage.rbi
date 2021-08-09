@@ -4,6 +4,6 @@
 # so replicating that behaviour here.
 
 class ActiveRecord::Base
-  include(::ActiveStorage::Attached::Model)
-  class_attribute :attachment_reflections, instance_writer: false, default: {}
+  # include(::ActiveStorage::Attached::Model)
+  # class_attribute :attachment_reflections, instance_writer: false, default: {}
 end

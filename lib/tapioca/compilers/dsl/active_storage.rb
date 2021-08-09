@@ -4,7 +4,7 @@
 begin
   require "active_record"
   require "active_storage"
-  require "active_storage/attached"
+  require "active_storage/reflection"
 rescue LoadError
   return
 end
@@ -39,26 +39,48 @@ module Tapioca
       class ActiveStorage < Base
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveRecord::Base)).void }
+        sig do
+          override.params(root: RBI::Tree,
+            constant: ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods).void
+        end
         def decorate(root, constant)
-          return if constant.reflections.empty?
+          return if constant.reflect_on_all_attachments.empty?
 
           root.create_path(constant) do |scope|
-            constant.attachment_reflections.each do |field_name, _value|
-              getter_sig = RBI::Sig.new(
-                return_type: "T.any(ActiveStorage::Attached::One, ActiveStorage::Atached::Many)"
-              )
-              scope << RBI::Method.new(field_name, sigs: [getter_sig])
-              setter_sig = RBI::Sig.new(params: [RBI::SigParam.new(field_name,
-                "T.any(ActiveStorage::Attached::One, ActiveStorage::Attached::Many")])
-              scope << RBI::Method.new("#{field_name}=", params: [RBI::Param.new("attachable")], sigs: [setter_sig])
+            constant.reflect_on_all_attachments.each do |reflection|
+              type = type_of(reflection)
+              name = reflection.name.to_s
+
+              getter_sig = RBI::Sig.new(return_type: type)
+              setter_sig = RBI::Sig.new(params: [RBI::SigParam.new("attachable", type)])
+
+              scope << RBI::Method.new(name, sigs: [getter_sig])
+              scope << RBI::Method.new("#{name}=", params: [RBI::Param.new("attachable")],
+            sigs: [setter_sig])
             end
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ActiveRecord::Base.descendants.reject(&:abstract_class?)
+          ActiveRecord::Base.descendants
+            .reject(&:abstract_class?)
+            .grep(::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)
+        end
+
+        private
+
+        sig do
+          params(reflection: T.any(::ActiveStorage::Reflection::HasOneAttachedReflection,
+            ::ActiveStorage::Reflection::HasManyAttachedReflection)).returns(String)
+        end
+        def type_of(reflection)
+          case reflection.macro
+          when :has_one_attached
+            "ActiveStorage::Attached::One"
+          when :has_many_attached
+            "ActiveStorage::Attached::Many"
+          end
         end
       end
     end
