@@ -9,15 +9,14 @@ module Tapioca
   # correspondence between classes/modules and files, as this information isn't
   # available in the ruby runtime without extra accounting.
   module ConstantLocator
-    @class_files = {}
+    extend Reflection
 
-    NAME = Module.instance_method(:name)
-    private_constant :NAME
+    @class_files = {}
 
     # Immediately activated upon load. Observes class/module definition.
     TracePoint.trace(:class) do |tp|
       unless tp.self.singleton_class?
-        key = NAME.bind(tp.self).call
+        key = name_of(tp.self)
         @class_files[key] ||= Set.new
         @class_files[key] << tp.path
       end
@@ -26,11 +25,10 @@ module Tapioca
     # Returns the files in which this class or module was opened. Doesn't know
     # about situations where the class was opened prior to +require+ing,
     # or where metaprogramming was used via +eval+, etc.
-    def files_for(klass)
-      name = String === klass ? klass : NAME.bind(klass).call
+    def self.files_for(klass)
+      name = String === klass ? klass : name_of(klass)
       files = @class_files[name]
       files || Set.new
     end
-    module_function :files_for
   end
 end

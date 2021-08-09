@@ -50,7 +50,7 @@ module Tapioca
         # Build the name of the instantiated generic type,
         # something like `"Foo[X, Y, Z]"`
         type_list = types.map { |type| T::Utils.coerce(type).name }.join(", ")
-        name = "#{name_of(constant)}[#{type_list}]"
+        name = "#{Reflection.name_of(constant)}[#{type_list}]"
 
         # Create a generic type with an overridden `name`
         # method that returns the name we constructed above.
@@ -143,11 +143,6 @@ module Tapioca
       sig { params(constant: Module).returns(T::Hash[TypeVariable, String]) }
       def lookup_or_initialize_type_variables(constant)
         @type_variables[constant] ||= {}.compare_by_identity
-      end
-
-      sig { params(constant: Module).returns(T.nilable(String)) }
-      def name_of(constant)
-        Module.instance_method(:name).bind(constant).call
       end
     end
   end

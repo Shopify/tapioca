@@ -84,11 +84,10 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          classes = T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class])
-          classes.select do |c|
+          all_classes.select do |c|
             c < ::SmartProperties
           end.reject do |c|
-            c.name.nil? || c == ::SmartProperties::Validations::Ancestor
+            name_of(c).nil? || c == ::SmartProperties::Validations::Ancestor
           end
         end
 
@@ -142,7 +141,7 @@ module Tapioca
             "T::Boolean"
           elsif Array(accepter).all? { |a| a.is_a?(Module) }
             accepters = Array(accepter)
-            types = accepters.map { |mod| name_of(mod) }.join(", ")
+            types = accepters.map { |mod| T.must(qualified_name_of(mod)) }.join(", ")
             types = "T.any(#{types})" if accepters.size > 1
             types
           else
@@ -155,12 +154,6 @@ module Tapioca
           type = "T.nilable(#{type})" if property_nilable
 
           type
-        end
-
-        sig { params(type: Module).returns(String) }
-        def name_of(type)
-          name = Module.instance_method(:name).bind(type).call
-          name.start_with?("::") ? name : "::#{name}"
         end
       end
     end

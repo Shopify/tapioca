@@ -146,7 +146,7 @@ module Tapioca
       )
 
       compiler.run do |constant, contents|
-        constant_name = Module.instance_method(:name).bind(constant).call
+        constant_name = T.must(Reflection.name_of(constant))
 
         if verbose && !quiet
           say("Processing: ", [:yellow])

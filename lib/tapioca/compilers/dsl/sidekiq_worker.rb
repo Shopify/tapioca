@@ -72,8 +72,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          classes = T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class])
-          classes.select { |c| c < Sidekiq::Worker }
+          all_classes.select { |c| c < Sidekiq::Worker }
         end
       end
     end

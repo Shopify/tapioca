@@ -55,7 +55,7 @@ module Tapioca
           mixed_in_class_methods = dependencies
             .uniq # Deduplicate
             .map do |concern| # Map to class methods module name, if exists
-              "::#{name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods)
+              "#{qualified_name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods)
             end
             .compact # Remove non-existent records
 
@@ -70,10 +70,8 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          modules = T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module])
-
           # Find all Modules that are:
-          modules.select do |mod|
+          all_modules.select do |mod|
             # named (i.e. not anonymous)
             name_of(mod) &&
               # not singleton classes
@@ -86,11 +84,6 @@ module Tapioca
         end
 
         private
-
-        sig { params(type: Module).returns(T.nilable(String)) }
-        def name_of(type)
-          Module.instance_method(:name).bind(type).call
-        end
 
         sig { params(concern: Module).returns(T::Array[Module]) }
         def dependencies_of(concern)
