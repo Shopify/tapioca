@@ -62,10 +62,10 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(ActiveStorage::Attached::One) }
+          sig { returns(T.untyped) }
           def photo; end
 
-          sig { params(attachable: ActiveStorage::Attached::One).void }
+          sig { params(attachable: T.untyped).void }
           def photo=(attachable); end
         end
       RBI
@@ -84,10 +84,10 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(ActiveStorage::Attached::Many) }
+          sig { returns(T.untyped) }
           def photos; end
 
-          sig { params(attachable: ActiveStorage::Attached::Many).void }
+          sig { params(attachable: T.untyped).void }
           def photos=(attachable); end
         end
       RBI

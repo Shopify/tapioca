@@ -41,14 +41,14 @@ module Tapioca
 
         sig do
           override.params(root: RBI::Tree,
-            constant: ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods).void
+            constant: T.all(Module, ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)).void
         end
         def decorate(root, constant)
           return if constant.reflect_on_all_attachments.empty?
 
-          root.create_path(T.cast(constant, Module)) do |scope|
+          root.create_path(constant) do |scope|
             constant.reflect_on_all_attachments.each do |reflection|
-              type = type_of(reflection)
+              type = "T.untyped"
               name = reflection.name.to_s
 
               getter_sig = RBI::Sig.new(return_type: type)
@@ -66,21 +66,6 @@ module Tapioca
           ActiveRecord::Base.descendants
             .reject(&:abstract_class?)
             .grep(::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)
-        end
-
-        private
-
-        sig do
-          params(reflection: T.any(::ActiveStorage::Reflection::HasOneAttachedReflection,
-            ::ActiveStorage::Reflection::HasManyAttachedReflection)).returns(String)
-        end
-        def type_of(reflection)
-          case reflection
-          when ::ActiveStorage::Reflection::HasOneAttachedReflection
-            "ActiveStorage::Attached::One"
-          when ::ActiveStorage::Reflection::HasManyAttachedReflection
-            "ActiveStorage::Attached::Many"
-          end
         end
       end
     end
