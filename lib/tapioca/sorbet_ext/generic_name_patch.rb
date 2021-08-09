@@ -23,16 +23,16 @@ module T
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        type_member = super
-        Tapioca::GenericTypeRegistry.register_type_member(self, type_member, fixed, lower, upper)
+        type_member = Tapioca::TypeMember.new(variance, fixed, lower, upper)
+        Tapioca::GenericTypeRegistry.register_type_variable(self, type_member)
         type_member
       end
 
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        type_template = super
-        Tapioca::GenericTypeRegistry.register_type_template(self, type_template, fixed, lower, upper)
+        type_template = Tapioca::TypeTemplate.new(variance, fixed, lower, upper)
+        Tapioca::GenericTypeRegistry.register_type_variable(self, type_template)
         type_template
       end
     end
@@ -61,6 +61,74 @@ module T
       end
 
       prepend GenericNamePatch
+    end
+  end
+end
+
+module Tapioca
+  class TypeMember < T::Types::TypeMember
+    extend T::Sig
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :name
+
+    sig { returns(T.untyped) }
+    attr_reader :fixed, :lower, :upper
+
+    sig { params(variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void }
+    def initialize(variance, fixed, lower, upper)
+      super(variance)
+      @fixed = fixed
+      @lower = lower
+      @upper = upper
+    end
+
+    sig { returns(String) }
+    def serialize
+      parts = []
+      parts << ":#{@variance}" unless @variance == :invariant
+      parts << "fixed: #{@fixed}" if @fixed
+      parts << "lower: #{@lower}" unless @lower == T.untyped
+      parts << "upper: #{@upper}" unless @upper == BasicObject
+
+      parameters = parts.join(", ")
+
+      serialized = +"type_member"
+      serialized << "(#{parameters})" unless parameters.empty?
+      serialized
+    end
+  end
+
+  class TypeTemplate < T::Types::TypeTemplate
+    extend T::Sig
+
+    sig { returns(T.nilable(String)) }
+    attr_accessor :name
+
+    sig { returns(T.untyped) }
+    attr_reader :fixed, :lower, :upper
+
+    sig { params(variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void }
+    def initialize(variance, fixed, lower, upper)
+      super(variance)
+      @fixed = fixed
+      @lower = lower
+      @upper = upper
+    end
+
+    sig { returns(String) }
+    def serialize
+      parts = []
+      parts << ":#{@variance}" unless @variance == :invariant
+      parts << "fixed: #{@fixed}" if @fixed
+      parts << "lower: #{@lower}" unless @lower == T.untyped
+      parts << "upper: #{@upper}" unless @upper == BasicObject
+
+      parameters = parts.join(", ")
+
+      serialized = +"type_template"
+      serialized << "(#{parameters})" unless parameters.empty?
+      serialized
     end
   end
 end
