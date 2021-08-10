@@ -8,7 +8,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
     add_ruby_file("require.rb", <<~RUBY)
       require "active_record"
       require "active_storage/attached"
-      require 'active_storage/reflection'
+      require "active_storage/reflection"
       ActiveRecord::Base.include(ActiveStorage::Attached::Model)
       ActiveRecord::Base.include(ActiveStorage::Reflection::ActiveRecordExtensions)
       ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)

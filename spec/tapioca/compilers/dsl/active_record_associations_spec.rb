@@ -396,4 +396,92 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
   end
+
+  describe("#decorate_active_storage") do
+    before(:each) do
+      require "active_record"
+      require "active_storage/attached"
+      require "active_storage/reflection"
+      ActiveRecord::Base.include(ActiveStorage::Attached::Model)
+      ActiveRecord::Base.include(ActiveStorage::Reflection::ActiveRecordExtensions)
+      ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)
+      ActiveRecord::Base.establish_connection(
+        adapter: "sqlite3",
+        database: ":memory:"
+      )
+    end
+
+    it("generates RBI file for has_one_attached ActiveStorage association") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          has_one_attached :photo
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          include GeneratedAssociationMethods
+
+          module GeneratedAssociationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def build_photo_attachment(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def build_photo_blob(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_attachment(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_attachment!(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_blob(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_blob!(*args, &blk); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def photo_attachment; end
+
+            sig { params(value: T.nilable(T.untyped)).void }
+            def photo_attachment=(value); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def photo_blob; end
+
+            sig { params(value: T.nilable(T.untyped)).void }
+            def photo_blob=(value); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def reload_photo_attachment; end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def reload_photo_blob; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for has_many_attached ActiveStorage association") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          has_many_attached :photos
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+  end
 end
