@@ -16,11 +16,19 @@ end
 this generator will produce the RBI file `post.rbi` with the following content:
 
 ~~~rbi
-# typed: true
+# typed: strong
+
 class Post
- def photo; end
- def photo=(attachable); end
- def blogs; end
- def blogs=(attachable); end
+  sig { returns(ActiveStorage::Attached::Many) }
+  def blogs; end
+
+  sig { params(attachable: T.untyped).void }
+  def blogs=(attachable); end
+
+  sig { returns(ActiveStorage::Attached::One) }
+  def photo; end
+
+  sig { params(attachable: T.untyped).void }
+  def photo=(attachable); end
 end
 ~~~

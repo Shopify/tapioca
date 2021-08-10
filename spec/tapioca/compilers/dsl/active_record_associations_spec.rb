@@ -399,16 +399,25 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
   describe("#decorate_active_storage") do
     before(:each) do
-      require "active_record"
-      require "active_storage/attached"
-      require "active_storage/reflection"
-      ActiveRecord::Base.include(ActiveStorage::Attached::Model)
-      ActiveRecord::Base.include(ActiveStorage::Reflection::ActiveRecordExtensions)
-      ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)
-      ActiveRecord::Base.establish_connection(
-        adapter: "sqlite3",
-        database: ":memory:"
-      )
+      T.bind(self, Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec)
+      add_ruby_file("application.rb", <<~RUBY)
+        ENV["DATABASE_URL"] = "sqlite3::memory:"
+
+        require "active_storage/engine"
+
+        class Dummy < Rails::Application
+          config.eager_load = true
+          config.active_storage.service = :local
+          config.active_storage.service_configurations = {
+            local: {
+              service: "Disk",
+              root: Rails.root.join("storage")
+            }
+          }
+          config.logger = Logger.new('/dev/null')
+        end
+        Rails.application.initialize!
+      RUBY
     end
 
     it("generates RBI file for has_one_attached ActiveStorage association") do
@@ -478,6 +487,33 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         # typed: strong
 
         class Post
+          include GeneratedAssociationMethods
+
+          module GeneratedAssociationMethods
+            sig { returns(T::Array[T.untyped]) }
+            def photos_attachment_ids; end
+
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def photos_attachment_ids=(ids); end
+
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[ActiveStorage::Attachment]) }
+            def photos_attachments; end
+
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def photos_attachments=(value); end
+
+            sig { returns(T::Array[T.untyped]) }
+            def photos_blob_ids; end
+
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def photos_blob_ids=(ids); end
+
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[ActiveStorage::Blob]) }
+            def photos_blobs; end
+
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def photos_blobs=(value); end
+          end
         end
       RBI
 

@@ -28,12 +28,20 @@ module Tapioca
       # this generator will produce the RBI file `post.rbi` with the following content:
       #
       # ~~~rbi
-      # # typed: true
+      # # typed: strong
+      #
       # class Post
-      #  def photo; end
-      #  def photo=(attachable); end
-      #  def blogs; end
-      #  def blogs=(attachable); end
+      #   sig { returns(ActiveStorage::Attached::Many) }
+      #   def blogs; end
+      #
+      #   sig { params(attachable: T.untyped).void }
+      #   def blogs=(attachable); end
+      #
+      #   sig { returns(ActiveStorage::Attached::One) }
+      #   def photo; end
+      #
+      #   sig { params(attachable: T.untyped).void }
+      #   def photo=(attachable); end
       # end
       # ~~~
       class ActiveStorage < Base
@@ -48,16 +56,31 @@ module Tapioca
 
           root.create_path(constant) do |scope|
             constant.reflect_on_all_attachments.each do |reflection|
-              type = "T.untyped"
+              type = type_of(reflection)
               name = reflection.name.to_s
-
-              getter_sig = RBI::Sig.new(return_type: type)
-              setter_sig = RBI::Sig.new(params: [RBI::SigParam.new("attachable", type)])
-
-              scope << RBI::Method.new(name, sigs: [getter_sig])
-              scope << RBI::Method.new("#{name}=", params: [RBI::Param.new("attachable")],
-            sigs: [setter_sig])
+              scope.create_method(
+                name,
+                return_type: type
+              )
+              scope.create_method(
+                "#{name}=",
+                parameters: [create_param("attachable", type: "T.untyped")],
+                return_type: "void"
+              )
             end
+          end
+        end
+
+        sig do
+          params(reflection: T.any(::ActiveStorage::Reflection::HasOneAttachedReflection,
+            ::ActiveStorage::Reflection::HasManyAttachedReflection)).returns(String)
+        end
+        def type_of(reflection)
+          case reflection
+          when ::ActiveStorage::Reflection::HasOneAttachedReflection
+            "ActiveStorage::Attached::One"
+          when ::ActiveStorage::Reflection::HasManyAttachedReflection
+            "ActiveStorage::Attached::Many"
           end
         end
 
