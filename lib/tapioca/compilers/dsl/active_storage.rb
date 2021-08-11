@@ -65,22 +65,9 @@ module Tapioca
               scope.create_method(
                 "#{name}=",
                 parameters: [create_param("attachable", type: "T.untyped")],
-                return_type: "void"
+                return_type: "T.untyped"
               )
             end
-          end
-        end
-
-        sig do
-          params(reflection: T.any(::ActiveStorage::Reflection::HasOneAttachedReflection,
-            ::ActiveStorage::Reflection::HasManyAttachedReflection)).returns(String)
-        end
-        def type_of(reflection)
-          case reflection
-          when ::ActiveStorage::Reflection::HasOneAttachedReflection
-            "ActiveStorage::Attached::One"
-          when ::ActiveStorage::Reflection::HasManyAttachedReflection
-            "ActiveStorage::Attached::Many"
           end
         end
 
@@ -89,6 +76,22 @@ module Tapioca
           ActiveRecord::Base.descendants
             .reject(&:abstract_class?)
             .grep(::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)
+        end
+
+        private
+
+        sig do
+          params(reflection: ActiveRecord::Reflection::MacroReflection).returns(String)
+        end
+        def type_of(reflection)
+          case reflection
+          when ::ActiveStorage::Reflection::HasOneAttachedReflection
+            "ActiveStorage::Attached::One"
+          when ::ActiveStorage::Reflection::HasManyAttachedReflection
+            "ActiveStorage::Attached::Many"
+          else
+            "T.untyped"
+          end
         end
       end
     end

@@ -65,7 +65,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
           sig { returns(ActiveStorage::Attached::One) }
           def photo; end
 
-          sig { params(attachable: T.untyped).void }
+          sig { params(attachable: T.untyped).returns(T.untyped) }
           def photo=(attachable); end
         end
       RBI
@@ -87,7 +87,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
           sig { returns(ActiveStorage::Attached::Many) }
           def photos; end
 
-          sig { params(attachable: T.untyped).void }
+          sig { params(attachable: T.untyped).returns(T.untyped) }
           def photos=(attachable); end
         end
       RBI
