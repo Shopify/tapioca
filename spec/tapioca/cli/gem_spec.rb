@@ -299,7 +299,7 @@ module Tapioca
             # typed: true
 
             # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/blob/master/README.md#manual-gem-requires
+            # see https://github.com/Shopify/tapioca/blob/main/README.md#manual-gem-requires
 
           CONTENTS
         end
@@ -311,7 +311,7 @@ module Tapioca
             # typed: true
 
             # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/blob/master/README.md#manual-gem-requires
+            # see https://github.com/Shopify/tapioca/blob/main/README.md#manual-gem-requires
 
           CONTENTS
         end
