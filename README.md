@@ -12,7 +12,31 @@ When you run `tapioca sync` in a project, `tapioca` loads all the gems that are 
 
 ## Manual gem requires
 
-See "[Manual Gem Requires](https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires)" in our wiki for more information.
+For gems that have a normal default `require` and load all of their constants through such a require, everything works seamlessly. However, for gems that are marked as `require: false` in the Gemfile, or for gems that export optionally loaded types via different requires, where a single require does not load the whole gem code into memory, `tapioca` will not be able to load some of the types into memory and, thus, won't be able to generate complete RBIs for them. For this reason, we need to keep a small external file named `sorbet/tapioca/require.rb` that is executed after all the gems in the Gemfile have been required and before generation of gem RBIs have started. This file is responsible for adding the requires for additional files from gems, which are not covered by the default require.
+
+For example, suppose you are using the class `BetterHtml::Parser` exported from the `better_html` gem. Just doing a `require "better_html"` (which is the default require) does not load that type:
+
+```shell
+$ bundle exec pry
+[1] pry(main)> require 'better_html'
+=> true
+[2] pry(main)> BetterHtml
+=> BetterHtml
+[3] pry(main)> BetterHtml::Parser
+NameError: uninitialized constant BetterHtml::Parser
+from (pry):3:in `__pry__`
+[4] pry(main)> require 'better_html/parser'
+=> true
+[5] pry(main)> BetterHtml::Parser
+=> BetterHtml::Parser
+```
+
+In order to make sure that `tapioca` can reflect on that type, we need to add the line `require "better_html/parser"` to the `sorbet/tapioca/require.rb` file. This will make sure `BetterHtml::Parser` is loaded into memory and a type annotation is generated for it in the `better_html.rbi` file. If this extra `require` line is not added to `sorbet/tapioca/require.rb` file, then the definition for that type will be missing from the RBI file.
+
+If you ever run into a case, where you add a gem or update the version of a gem and run `tapioca sync` but don't have some types you expect in the generated gem RBI files, you will need to make sure you have added the necessary requires to the `sorbet/tapioca/require.rb` file.
+
+You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
+in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
 
 ## How does tapioca compare to "srb rbi gems" ?
 
