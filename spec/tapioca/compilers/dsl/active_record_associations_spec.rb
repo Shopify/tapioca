@@ -396,4 +396,128 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
   end
+
+  describe("#decorate_active_storage") do
+    before(:each) do
+      T.bind(self, Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec)
+      add_ruby_file("application.rb", <<~RUBY)
+        ENV["DATABASE_URL"] = "sqlite3::memory:"
+
+        require "active_storage/engine"
+
+        class Dummy < Rails::Application
+          config.eager_load = true
+          config.active_storage.service = :local
+          config.active_storage.service_configurations = {
+            local: {
+              service: "Disk",
+              root: Rails.root.join("storage")
+            }
+          }
+          config.logger = Logger.new('/dev/null')
+        end
+        Rails.application.initialize!
+      RUBY
+    end
+
+    it("generates RBI file for has_one_attached ActiveStorage association") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          has_one_attached :photo
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          include GeneratedAssociationMethods
+
+          module GeneratedAssociationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def build_photo_attachment(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def build_photo_blob(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_attachment(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_attachment!(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_blob(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def create_photo_blob!(*args, &blk); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def photo_attachment; end
+
+            sig { params(value: T.nilable(T.untyped)).void }
+            def photo_attachment=(value); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def photo_blob; end
+
+            sig { params(value: T.nilable(T.untyped)).void }
+            def photo_blob=(value); end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def reload_photo_attachment; end
+
+            sig { returns(T.nilable(T.untyped)) }
+            def reload_photo_blob; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for has_many_attached ActiveStorage association") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          has_many_attached :photos
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          include GeneratedAssociationMethods
+
+          module GeneratedAssociationMethods
+            sig { returns(T::Array[T.untyped]) }
+            def photos_attachment_ids; end
+
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def photos_attachment_ids=(ids); end
+
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[ActiveStorage::Attachment]) }
+            def photos_attachments; end
+
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def photos_attachments=(value); end
+
+            sig { returns(T::Array[T.untyped]) }
+            def photos_blob_ids; end
+
+            sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+            def photos_blob_ids=(ids); end
+
+            sig { returns(::ActiveRecord::Associations::CollectionProxy[ActiveStorage::Blob]) }
+            def photos_blobs; end
+
+            sig { params(value: T::Enumerable[T.untyped]).void }
+            def photos_blobs=(value); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+  end
 end
