@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 begin
-  require "active_record"
   require "active_storage"
   require "active_storage/reflection"
 rescue LoadError
@@ -34,13 +33,13 @@ module Tapioca
       #   sig { returns(ActiveStorage::Attached::Many) }
       #   def blogs; end
       #
-      #   sig { params(attachable: T.untyped).void }
+      #   sig { params(attachable: T.untyped).returns(T.untyped) }
       #   def blogs=(attachable); end
       #
       #   sig { returns(ActiveStorage::Attached::One) }
       #   def photo; end
       #
-      #   sig { params(attachable: T.untyped).void }
+      #   sig { params(attachable: T.untyped).returns(T.untyped) }
       #   def photo=(attachable); end
       # end
       # ~~~
