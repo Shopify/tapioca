@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "tapioca/wrapped_module"
 
 module Tapioca
   module Compilers
