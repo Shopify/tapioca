@@ -741,7 +741,7 @@ module Tapioca
 
         sig { params(constant: Module).returns(T::Array[String]) }
         def get_file_candidates(constant)
-          wrapped_module = Pry::WrappedModule.new(constant)
+          wrapped_module = Tapioca::WrappedModule.new(constant)
 
           wrapped_module.candidates.map(&:file).to_a.compact
         rescue ArgumentError, NameError
