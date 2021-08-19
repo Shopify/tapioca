@@ -12,13 +12,15 @@ jobs:
       fail-fast: false
       matrix:
         ruby: [ 2.6, 2.7, 3.0 ]
-    name: Test Ruby ${{ matrix.ruby }}
+        bundler: [ 2.2.22, 2.2.25 ]
+    name: Test Ruby ${{ matrix.ruby }}, Bundler ${{ matrix.bundler }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler: ${{ matrix.bundler }}
           bundler-cache: true
       - name: Run type check
         run: bin/typecheck
@@ -27,4 +29,4 @@ jobs:
       - name: Verify documentation
         run: bin/docs
       - name: Run tests
-        run: bin/test
+        run: bundle _${{ matrix.bundler }}_ exec rake
