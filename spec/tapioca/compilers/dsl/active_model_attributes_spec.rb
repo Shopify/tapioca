@@ -20,6 +20,17 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RUBY
       assert_equal(["ShopWithAttributes"], gathered_constants)
     end
+
+    it("does not gather Active Record models") do
+      add_ruby_file("post.rb", <<~RUBY)
+        require "active_record"
+
+        class Post < ActiveRecord::Base
+        end
+      RUBY
+
+      assert_equal([], gathered_constants)
+    end
   end
 
   describe("#decorate") do
