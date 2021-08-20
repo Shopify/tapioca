@@ -58,13 +58,33 @@ module Tapioca
 
         private
 
+        HANDLED_METHOD_TARGETS = T.let(["attribute", "attribute="], T::Array[String])
+
         sig { params(constant: ::ActiveModel::Attributes::ClassMethods).returns(T::Array[[::String, ::String]]) }
         def attribute_methods_for(constant)
           constant.attribute_method_matchers.flat_map do |matcher|
             constant.attribute_types.map do |name, value|
+              next unless handle_method_matcher?(matcher)
+
               [matcher.method_name(name), type_for(value)]
-            end
+            end.compact
           end
+        end
+
+        sig do
+          params(matcher: ::ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher)
+            .returns(T::Boolean)
+        end
+        def handle_method_matcher?(matcher)
+          target = if matcher.respond_to?(:method_missing_target)
+            # Pre-Rails 6.0, the field is named "method_missing_target"
+            T.unsafe(matcher).method_missing_target
+          else
+            # Rails 6.0+ has renamed the field to "target"
+            matcher.target
+          end
+
+          HANDLED_METHOD_TARGETS.include?(target.to_s)
         end
 
         sig { params(attribute_type_value: ::ActiveModel::Type::Value).returns(::String) }

@@ -61,6 +61,31 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       assert_equal(expected, rbi_for(:Shop))
     end
 
+    it("only generates method for Active Model attributes and no other") do
+      add_ruby_file("shop.rb", <<~RUBY)
+        class Shop
+          include ActiveModel::Attributes
+          include ActiveModel::Dirty
+
+          attribute :name
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Shop
+          sig { returns(T.untyped) }
+          def name; end
+
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def name=(value); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Shop))
+    end
+
     it("generates method sigs with param types when type set on attribute") do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
