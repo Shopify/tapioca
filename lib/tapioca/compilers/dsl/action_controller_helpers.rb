@@ -103,11 +103,16 @@ module Tapioca
               # helper method defined via the `helper_method` call in the controller.
               helpers_module.instance_methods(false).each do |method_name|
                 method = if proxied_helper_methods.include?(method_name)
-                  constant.instance_method(method_name)
+                  helper_method_proxy_target(constant, method_name)
                 else
                   helpers_module.instance_method(method_name)
                 end
-                create_method_from_def(helper_methods, method)
+
+                if method
+                  create_method_from_def(helper_methods, method)
+                else
+                  create_unknown_proxy_method(helper_methods, method_name)
+                end
               end
             end
 
@@ -124,6 +129,32 @@ module Tapioca
         end
 
         private
+
+        sig do
+          params(
+            constant: T.class_of(::ActionController::Base),
+            method_name: Symbol
+          ).returns(T.nilable(UnboundMethod))
+        end
+        def helper_method_proxy_target(constant, method_name)
+          # Lookup the proxy target method only if it is defined as a public/protected or private method.
+          if constant.method_defined?(method_name) || constant.private_method_defined?(method_name)
+            constant.instance_method(method_name)
+          end
+        end
+
+        sig { params(helper_methods: RBI::Scope, method_name: Symbol).void }
+        def create_unknown_proxy_method(helper_methods, method_name)
+          helper_methods.create_method(
+            method_name.to_s,
+            parameters: [
+              create_rest_param("args", type: "T.untyped"),
+              create_kw_rest_param("kwargs", type: "T.untyped"),
+              create_block_param("blk", type: "T.untyped"),
+            ],
+            return_type: "T.untyped"
+          )
+        end
 
         sig { params(mod: Module).returns(T::Array[String]) }
         def gather_includes(mod)
