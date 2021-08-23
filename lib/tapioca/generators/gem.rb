@@ -176,10 +176,10 @@ module Tapioca
 
       sig { params(gem: Gemfile::Gem, generated_content: String).returns(String) }
       def merge_with_copied_rbi(gem, generated_content)
-        return generated_content unless gem.contains_path?("#{gem.full_gem_path}/rbi")
+        return generated_content unless File.directory?("#{gem.full_gem_path}/rbi")
         generated_rbi = RBI::Parser.parse_string(generated_content)
         copied_rbi = copy_gem_rbi(gem)
-        final_rbi = RBI::Rewriters::Merge.merge_trees(generated_rbi, copied_rbi)
+        final_rbi = RBI::Rewriters::Merge.merge_trees(generated_rbi, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
         final_rbi.string
       end
 
@@ -188,7 +188,8 @@ module Tapioca
         rbi = RBI::Tree.new
         Dir.foreach("#{gem.full_gem_path}/rbi") do |file|
           next unless File.extname(file) == ".rbi"
-          rbi = RBI::Parser.parse_file("#{gem.full_gem_path}/rbi/#{file}") # .merge command did not work
+          gem_rbi = RBI::Parser.parse_file("#{gem.full_gem_path}/rbi/#{file}")
+          rbi = RBI::Rewriters::Merge.merge_trees(rbi, gem_rbi, keep: RBI::Rewriters::Merge::Keep::NONE)
         end
         rbi
       end
