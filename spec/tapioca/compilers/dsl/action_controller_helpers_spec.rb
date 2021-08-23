@@ -98,6 +98,82 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(expected, rbi_for(:UserController))
     end
 
+    it("generates helper module and helper proxy class if helper_method target does not exist") do
+      add_ruby_file("controller.rb", <<~RUBY)
+        class BaseController < ActionController::Base
+          extend T::Sig
+
+          helper_method :current_user_name
+          helper_method "notify_user"
+        end
+
+        class UserController < BaseController
+          def current_user_name
+            # ...
+          end
+
+          # Make the following method private to make sure that
+          # we handle private methods properly wrt their existence.
+          private
+
+          sig { params(user_id: Integer).void }
+          def notify_user(user_id)
+            # ...
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class BaseController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
+          module HelperMethods
+            include ::ActionController::Base::HelperMethods
+
+            sig { params(args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def current_user_name(*args, **kwargs, &blk); end
+
+            sig { params(args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def notify_user(*args, **kwargs, &blk); end
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:BaseController))
+
+      expected = <<~RBI
+        # typed: strong
+
+        class UserController
+          sig { returns(HelperProxy) }
+          def helpers; end
+
+          module HelperMethods
+            include ::ActionController::Base::HelperMethods
+
+            sig { returns(T.untyped) }
+            def current_user_name; end
+
+            sig { params(user_id: Integer).void }
+            def notify_user(user_id); end
+          end
+
+          class HelperProxy < ::ActionView::Base
+            include HelperMethods
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:UserController))
+    end
+
     it("generates helper module and helper proxy class when defining helper using helper_method") do
       add_ruby_file("controller.rb", <<~RUBY)
         class UserController < ActionController::Base
