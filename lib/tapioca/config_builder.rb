@@ -33,7 +33,7 @@ module Tapioca
       sig { params(command: Symbol).returns(T::Hash[String, T.untyped]) }
       def default_options(command)
         default_outdir = case command
-        when :sync, :generate
+        when :sync, :generate, :gem
           Config::DEFAULT_GEMDIR
         when :dsl
           Config::DEFAULT_DSLDIR
