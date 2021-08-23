@@ -53,19 +53,26 @@ module Tapioca
 
     sig { returns([T::Array[Gem], T::Array[String]]) }
     def load_dependencies
-      deps = definition.locked_gems.dependencies.values
-
-      missing_specs = T::Array[String].new
-
-      dependencies = definition
-        .resolve
-        .materialize(deps, missing_specs)
+      materialized_dependencies, missing_specs = materialize_deps
+      dependencies = materialized_dependencies
         .map { |spec| Gem.new(spec) }
         .reject { |gem| gem.ignore?(dir) }
         .uniq(&:rbi_file_name)
         .sort_by(&:rbi_file_name)
-
       [dependencies, missing_specs]
+    end
+
+    sig { returns([T::Array[::Gem::Specification], T::Array[String]]) }
+    def materialize_deps
+      deps = definition.locked_gems.dependencies.values
+      missing_specs = T::Array[String].new
+      materialized_dependencies = if definition.resolve.method(:materialize).arity == 1 # Support bundler >= v2.2.25
+        definition.resolve.materialize(deps)
+          .tap { |md| missing_specs = T.cast(md.missing_specs, T::Array[String]) }
+      else
+        definition.resolve.materialize(deps, missing_specs)
+      end
+      [materialized_dependencies, missing_specs]
     end
 
     sig { returns(Bundler::Runtime) }
