@@ -10,10 +10,11 @@ module Tapioca
     attr_reader :outdir
     attr_reader :repo_path
 
-    def execute(command, args = [], flags = {})
-      flags = {
-        outdir: outdir,
-      }.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
+    def execute(command, args = [], use_default_outdir: false, **flags)
+      default_flags = {}
+      default_flags[:outdir] = outdir unless use_default_outdir
+
+      flags = default_flags.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
       exec_command = [
         "bundle",

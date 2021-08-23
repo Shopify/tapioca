@@ -114,6 +114,21 @@ module Tapioca
         refute_path_exists("#{outdir}/baz@0.0.2.rbi")
       end
 
+      it "must generate gem RBI in correct output directory" do
+        output = execute("gem", "foo", use_default_outdir: true)
+
+        assert_includes(output, <<~OUTPUT)
+          Processing 'foo' gem:
+            Compiling foo, this may take a few seconds...   Done
+        OUTPUT
+
+        assert_path_exists("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
+        assert_equal(FOO_RBI, File.read("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi"))
+
+        refute_path_exists("#{repo_path}/sorbet/rbi/gems/bar@0.3.0.rbi")
+        refute_path_exists("#{repo_path}/sorbet/rbi/gems/baz@0.0.2.rbi")
+      end
+
       it "must perform postrequire properly" do
         output = execute("generate", "foo", postrequire: repo_path / "postrequire.rb")
 
