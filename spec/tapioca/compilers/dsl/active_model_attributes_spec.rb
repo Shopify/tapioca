@@ -20,6 +20,17 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RUBY
       assert_equal(["ShopWithAttributes"], gathered_constants)
     end
+
+    it("does not gather Active Record models") do
+      add_ruby_file("post.rb", <<~RUBY)
+        require "active_record"
+
+        class Post < ActiveRecord::Base
+        end
+      RUBY
+
+      assert_equal([], gathered_constants)
+    end
   end
 
   describe("#decorate") do
@@ -41,6 +52,31 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
           include ActiveModel::Attributes
+
+          attribute :name
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Shop
+          sig { returns(T.untyped) }
+          def name; end
+
+          sig { params(value: T.untyped).returns(T.untyped) }
+          def name=(value); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Shop))
+    end
+
+    it("only generates method for Active Model attributes and no other") do
+      add_ruby_file("shop.rb", <<~RUBY)
+        class Shop
+          include ActiveModel::Attributes
+          include ActiveModel::Dirty
 
           attribute :name
         end
