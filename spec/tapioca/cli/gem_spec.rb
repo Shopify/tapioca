@@ -37,10 +37,10 @@ module Tapioca
 
         class Test
           sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-          def fizz(a = T.unsafe(nil), b = T.unsafe(nil)); end
+          def baz(a = T.unsafe(nil), b = T.unsafe(nil)); end
 
           sig { params(a: T.nilable(Integer), b: T.nilable(Integer)).void }
-          def baz(a = T.unsafe(nil), b = T.unsafe(nil)); end
+          def fizz(a = T.unsafe(nil), b = T.unsafe(nil)); end
         end
       end
 
@@ -160,7 +160,9 @@ module Tapioca
 
           assert_includes(output, <<~OUTPUT)
             Processing 'fizz' gem:
-              Compiling fizz, this may take a few seconds...   Done
+              Compiling fizz, this may take a few seconds...#{"     "}
+            Conflicting definitions for `::Fizz::<self>#baz(a, b)`
+              Done
           OUTPUT
 
           assert_path_exists("#{outdir}/fizz@0.4.0.rbi")
@@ -286,7 +288,7 @@ module Tapioca
         end
 
         it "must respect exclude option" do
-          output = execute("gem", "--all", exclude: "foo bar")
+          output = execute("gem", "--all", exclude: "foo bar fizz")
 
           refute_includes(output, <<~OUTPUT)
             Processing 'bar' gem:
@@ -303,8 +305,14 @@ module Tapioca
               Compiling foo, this may take a few seconds...   Done
           OUTPUT
 
+          refute_includes(output, <<~OUTPUT)
+            Processing 'foo' gem:
+              Compiling foo, this may take a few seconds...   Done
+          OUTPUT
+
           refute_path_exists("#{outdir}/foo@0.0.1.rbi")
           refute_path_exists("#{outdir}/bar@0.3.0.rbi")
+          refute_path_exists("#{outdir}/fizz@0.4.0.rbi")
           assert_path_exists("#{outdir}/baz@0.0.2.rbi")
 
           assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))

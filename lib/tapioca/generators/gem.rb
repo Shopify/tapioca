@@ -177,8 +177,10 @@ module Tapioca
       sig { params(gem: Gemfile::Gem, generated_content: String).returns(String) }
       def merge_with_copied_rbi(gem, generated_content)
         return generated_content unless File.directory?("#{gem.full_gem_path}/rbi")
+
         generated_rbi = RBI::Parser.parse_string(generated_content)
         copied_rbi = copy_gem_rbi(gem)
+        display_conflict_warnings(generated_rbi, copied_rbi)
         final_rbi = RBI::Rewriters::Merge.merge_trees(generated_rbi, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
         final_rbi.string
       end
@@ -186,12 +188,22 @@ module Tapioca
       sig { params(gem: Gemfile::Gem).returns(RBI::Tree) }
       def copy_gem_rbi(gem)
         rbi = RBI::Tree.new
-        Dir.foreach("#{gem.full_gem_path}/rbi") do |file|
-          next unless File.extname(file) == ".rbi"
-          gem_rbi = RBI::Parser.parse_file("#{gem.full_gem_path}/rbi/#{file}")
+        Dir.glob("#{gem.full_gem_path}/rbi/*.rbi").each do |file|
+          gem_rbi = RBI::Parser.parse_file(file)
+          display_conflict_warnings(rbi, gem_rbi)
           rbi = RBI::Rewriters::Merge.merge_trees(rbi, gem_rbi, keep: RBI::Rewriters::Merge::Keep::NONE)
         end
         rbi
+      end
+
+      sig { params(generated_rbi: RBI::Tree, copied_rbi: RBI::Tree).void }
+      def display_conflict_warnings(generated_rbi, copied_rbi)
+        rewriter = RBI::Rewriters::Merge.new
+        rewriter.merge(generated_rbi)
+        conflicts = rewriter.merge(copied_rbi)
+        indent do
+          say("\n#{conflicts.join("\n")}") unless conflicts.empty?
+        end
       end
 
       sig { void }
