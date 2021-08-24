@@ -544,11 +544,11 @@ module Tapioca
                 next if name == :initialize
                 vis = case visibility
                 when :protected
-                  RBI::Visibility::Protected
+                  RBI::Protected.new
                 when :private
-                  RBI::Visibility::Private
+                  RBI::Private.new
                 else
-                  RBI::Visibility::Public
+                  RBI::Public.new
                 end
                 compile_method(tree, module_name, mod, mod.instance_method(name), vis)
               end
@@ -583,7 +583,7 @@ module Tapioca
             visibility: RBI::Visibility
           ).void
         end
-        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Visibility::Public)
+        def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method.owner == constant
           return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
