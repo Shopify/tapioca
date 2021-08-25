@@ -29,4 +29,6 @@ jobs:
       - name: Verify documentation
         run: bin/docs
       - name: Run tests
-        run: bundle _${{ matrix.bundler }}_ exec rake
+        env:
+          BUNDLER_VERSION: ${{matrix.bundler}} 
+        run: bin/test

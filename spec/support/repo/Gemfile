@@ -15,10 +15,13 @@ gem("psych")
 gem("extras")
 # Needed for DSL generation tests. The simplest
 # gems that we have a DSL generator for.
-gem("smart_properties")
-gem("sidekiq")
-gem("activesupport")
+gem("smart_properties", "1.15.0")
+gem("sidekiq", "6.2.1")
+gem("activesupport", "6.1.3.2")
 # Needed to test Git gems
 gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
+
 # Needed to test missing gems
-gem("nokogiri")
+platform :truffleruby do
+  gem "minitest-excludes"
+end

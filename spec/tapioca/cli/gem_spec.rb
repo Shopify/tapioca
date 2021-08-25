@@ -192,18 +192,13 @@ module Tapioca
         end
 
         it "must not generate RBIs for missing gem specs" do
-          skip "failure is to be investigated later"
           output = execute("gem")
 
-          assert_includes(output, <<~OUTPUT.strip)
-            Requiring all gems to prepare for compiling...  Done
-              completed with missing specs: mini_portile2
-          OUTPUT
+          missing_spec = "    completed with missing specs:   minitest-excludes (2.0.1)"
+          assert_includes(output, missing_spec)
 
-          refute_includes(output, <<~OUTPUT.strip)
-            Processing 'mini_portile2' gem:
-              Compiling mini_portile2, this may take a few seconds...   Done
-          OUTPUT
+          compiling_spec = "  Compiling minitest-excludes, this may take a few seconds"
+          refute_includes(output, compiling_spec)
         end
 
         it "must generate git gem RBIs with source revision numbers" do
