@@ -598,7 +598,7 @@ module Tapioca
         end
 
         sig { params(constant: Module, method_name: String).returns(T::Boolean) }
-        def struct_method?(constant, method_name)
+        def typed_struct_method?(constant, method_name)
           return false unless T::Props::ClassMethods === constant
 
           constant
@@ -626,7 +626,7 @@ module Tapioca
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
-          return if struct_method?(constant, method_name)
+          return if typed_struct_method?(constant, method_name)
           return if method_name.start_with?("__t_props_generated_")
 
           parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
