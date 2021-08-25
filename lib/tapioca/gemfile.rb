@@ -152,6 +152,32 @@ module Tapioca
         files.each { |path| YARD.parse(path.to_s, [], Logger::Severity::FATAL) }
       end
 
+      sig { returns(T::Array[String]) }
+      def exported_rbi_files
+        Dir.glob("#{full_gem_path}/rbi/*.rbi")
+      end
+
+      sig { returns(T::Boolean) }
+      def has_exported_rbi_files?
+        File.directory?("#{full_gem_path}/rbi")
+      end
+
+      sig { params(block: T.proc.params(arg: T::Array[RBI::Rewriters::Merge::Conflict]).void).returns(RBI::Tree) }
+      def exported_rbi_tree(&block)
+        rbi = RBI::Tree.new
+        rewriter = RBI::Rewriters::Merge.new
+        conflicts = []
+        exported_rbi_files.each do |file|
+          gem_rbi = RBI::Parser.parse_file(file)
+          rbi = RBI::Rewriters::Merge.merge_trees(rbi, gem_rbi, keep: RBI::Rewriters::Merge::Keep::NONE)
+          conflict = rewriter.merge(gem_rbi)
+          conflicts << conflict unless conflict.blank?
+        end
+        block.call(conflicts)
+        rbi.nest_singleton_methods!
+        rbi
+      end
+
       private
 
       sig { returns(T::Boolean) }

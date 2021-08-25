@@ -148,6 +148,7 @@ module Tapioca
         strictness = @typed_overrides[gem.name] || "true"
         rbi = RBI::File.new
         compiler.compile(gem, rbi, 0, @doc)
+        merge_with_exported_rbi(gem, rbi)
         rbi_body_content = rbi.transformed_string
         content = String.new
         content << rbi_header(
@@ -174,26 +175,16 @@ module Tapioca
         end
       end
 
-      sig { params(gem: Gemfile::Gem, generated_content: String).returns(String) }
-      def merge_with_copied_rbi(gem, generated_content)
-        return generated_content unless File.directory?("#{gem.full_gem_path}/rbi")
+      sig { params(gem: Gemfile::GemSpec, rbi: RBI::File).void }
+      def merge_with_exported_rbi(gem, rbi)
+        return unless gem.has_exported_rbi_files?
 
-        generated_rbi = RBI::Parser.parse_string(generated_content)
-        copied_rbi = copy_gem_rbi(gem)
-        display_conflict_warnings(generated_rbi, copied_rbi)
-        final_rbi = RBI::Rewriters::Merge.merge_trees(generated_rbi, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
-        final_rbi.string
-      end
-
-      sig { params(gem: Gemfile::Gem).returns(RBI::Tree) }
-      def copy_gem_rbi(gem)
-        rbi = RBI::Tree.new
-        Dir.glob("#{gem.full_gem_path}/rbi/*.rbi").each do |file|
-          gem_rbi = RBI::Parser.parse_file(file)
-          display_conflict_warnings(rbi, gem_rbi)
-          rbi = RBI::Rewriters::Merge.merge_trees(rbi, gem_rbi, keep: RBI::Rewriters::Merge::Keep::NONE)
+        copied_rbi = gem.exported_rbi_tree do |conflicts|
+          say("\n #{conflicts.join("\n")}", :yellow)
         end
-        rbi
+
+        display_conflict_warnings(rbi.root, copied_rbi)
+        RBI::Rewriters::Merge.merge_trees(rbi.root, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
       end
 
       sig { params(generated_rbi: RBI::Tree, copied_rbi: RBI::Tree).void }
@@ -201,9 +192,7 @@ module Tapioca
         rewriter = RBI::Rewriters::Merge.new
         rewriter.merge(generated_rbi)
         conflicts = rewriter.merge(copied_rbi)
-        indent do
-          say("\n#{conflicts.join("\n")}") unless conflicts.empty?
-        end
+        say(conflicts.join("\n"), :yellow) unless conflicts.empty?
       end
 
       sig { void }

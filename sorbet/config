@@ -2,4 +2,5 @@
 .
 --ignore=/vendor
 --ignore=/spec/support/gems/fizz
+--ignore=/spec/support/gems/bar
 --enable-experimental-requires-ancestor
