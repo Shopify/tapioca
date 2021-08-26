@@ -814,17 +814,61 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles Structs, Classes, and Modules") do
+    it("compiles Structs") do
       add_ruby_file("structs.rb", <<~RUBY)
         class S1 < Struct.new(:foo)
         end
+
         S2 = Struct.new(:foo) do
           def foo
           end
+
+          def bar
+          end
         end
+
         S3 = Struct.new(:foo)
+
         class S4 < Struct.new("Foo", :foo)
         end
+      RUBY
+
+      output = template(<<~RBI)
+        S1 = ::Struct.new(:foo)
+
+        S2 = ::Struct.new(:foo) do
+          def bar; end
+          def foo; end
+          def foo=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        S3 = ::Struct.new(:foo) do
+          def foo; end
+          def foo=(_); end
+
+          class << self
+            def [](*_arg0); end
+            def inspect; end
+            def members; end
+            def new(*_arg0); end
+          end
+        end
+
+        S4 = ::Struct.new(:foo)
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("compiles Classes, and Modules") do
+      add_ruby_file("modules.rb", <<~RUBY)
         class C1 < Class.new
         end
         C2 = Class.new do
@@ -856,33 +900,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         module M3; end
-        class S1 < ::Struct; end
-
-        class S2 < ::Struct
-          def foo; end
-          def foo=(_); end
-
-          class << self
-            def [](*_arg0); end
-            def inspect; end
-            def members; end
-            def new(*_arg0); end
-          end
-        end
-
-        class S3 < ::Struct
-          def foo; end
-          def foo=(_); end
-
-          class << self
-            def [](*_arg0); end
-            def inspect; end
-            def members; end
-            def new(*_arg0); end
-          end
-        end
-
-        class S4 < ::Struct; end
       RBI
 
       assert_equal(output, compile)
