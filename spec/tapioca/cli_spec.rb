@@ -94,7 +94,6 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     @repo_path = (Pathname.new(__dir__) / ".." / "support" / "repo").expand_path
     Bundler.with_unbundled_env do
       IO.popen(["bundle", "install", "--quiet"], chdir: @repo_path).read
-      IO.popen(["bundle", "lock", "--add-platform=ruby"], chdir: @repo_path).read
     end
   end
 
@@ -814,18 +813,13 @@ class Tapioca::CliSpec < Minitest::HooksSpec
     end
 
     it 'must not generate RBIs for missing gem specs' do
-      skip "failure is to be investigated later"
       output = execute("generate")
 
-      assert_includes(output, <<~OUTPUT.strip) if ruby_version(">= 2.5")
-        Requiring all gems to prepare for compiling...  Done
-          completed with missing specs: mini_portile2
-      OUTPUT
+      missing_spec = "  completed with missing specs: minitest-excludes (2.0.1)"
+      assert_includes(output, missing_spec)
 
-      refute_includes(output, <<~OUTPUT.strip)
-        Processing 'mini_portile2' gem:
-          Compiling mini_portile2, this may take a few seconds...   Done
-      OUTPUT
+      compiling_spec = "  Compiling minitest-excludes, this may take a few seconds"
+      refute_includes(output, compiling_spec)
     end
 
     it 'must generate git gem RBIs with source revision numbers' do

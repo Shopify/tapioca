@@ -2,8 +2,6 @@
 
 source("https://rubygems.org")
 
-nokogiri_installable = Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.5")
-
 gem("foo", path: "../gems/foo")
 gem("bar", path: "../gems/bar")
 gem("baz", path: "../gems/baz")
@@ -16,10 +14,13 @@ gem("psych")
 # ensure that we don't fail.
 gem("extras")
 # Needed for DSL generation tests. The simplest
-# gem that we have a DSL generator for.
-gem("smart_properties")
-gem("activesupport")
+# gems that we have a DSL generator for.
+gem("smart_properties", "1.15.0")
+gem("activesupport", "5.2.6")
 # Needed to test Git gems
 gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
+
 # Needed to test missing gems
-gem("nokogiri", ">= 1.11.1") if nokogiri_installable
+platform :truffleruby do
+  gem "minitest-excludes"
+end
