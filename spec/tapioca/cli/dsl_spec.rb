@@ -204,6 +204,35 @@ module Tapioca
         CONTENTS
       end
 
+      it "generates RBI files in the correct output directory" do
+        output = execute("dsl", "--verbose", use_default_outdir: true)
+
+        assert_equal(<<~OUTPUT, output)
+          Loading Rails application... Done
+          Loading DSL generator classes... Done
+          Compiling DSL RBI files...
+
+          Processing: Baz::Role
+          Wrote: sorbet/rbi/dsl/baz/role.rbi
+          Processing: Job
+          Wrote: sorbet/rbi/dsl/job.rbi
+          Processing: Namespace::Comment
+          Wrote: sorbet/rbi/dsl/namespace/comment.rbi
+          Processing: Post
+          Wrote: sorbet/rbi/dsl/post.rbi
+
+          Done
+          All operations performed in working directory.
+          Please review changes and commit them.
+        OUTPUT
+
+        assert_path_exists("#{repo_path}/sorbet/rbi/dsl/baz/role.rbi")
+        assert_path_exists("#{repo_path}/sorbet/rbi/dsl/job.rbi")
+        assert_path_exists("#{repo_path}/sorbet/rbi/dsl/post.rbi")
+        assert_path_exists("#{repo_path}/sorbet/rbi/dsl/namespace/comment.rbi")
+        refute_path_exists("#{repo_path}/sorbet/rbi/dsl/user.rbi")
+      end
+
       it "generates RBI files with verbose output" do
         output = execute("dsl", "--verbose")
 

@@ -53,6 +53,26 @@ module Tapioca
         assert_path_exists("#{outdir}/baz@0.0.2.rbi")
       end
 
+      it "must create RBI files in the correct output directory" do
+        output = execute("sync", use_default_outdir: true)
+
+        assert_includes(output, "++ Adding: sorbet/rbi/gems/foo@0.0.1.rbi\n")
+        assert_includes(output, "++ Adding: sorbet/rbi/gems/bar@0.3.0.rbi\n")
+        assert_includes(output, "++ Adding: sorbet/rbi/gems/baz@0.0.2.rbi\n")
+        refute_includes(output, "-- Removing:")
+        refute_includes(output, "-> Moving:")
+
+        assert_includes(output, <<~OUTPUT)
+          Removing RBI files of gems that have been removed:
+
+            Nothing to do.
+        OUTPUT
+
+        assert_path_exists("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
+        assert_path_exists("#{repo_path}/sorbet/rbi/gems/bar@0.3.0.rbi")
+        assert_path_exists("#{repo_path}/sorbet/rbi/gems/baz@0.0.2.rbi")
+      end
+
       it "generate an empty RBI file" do
         output = execute("sync")
 
