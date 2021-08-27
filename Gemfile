@@ -34,4 +34,5 @@ group(:development, :test) do
   gem("sidekiq", require: false)
   gem("nokogiri", require: false)
   gem("config", require: false)
+  gem("aasm", require: false)
 end
