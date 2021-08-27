@@ -6,6 +6,7 @@ require "minitest/autorun"
 require "minitest/spec"
 require "minitest/hooks/default"
 require "minitest/reporters"
+require "byebug"
 
 require "content_helper"
 require "template_helper"
