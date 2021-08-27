@@ -165,7 +165,6 @@ module Tapioca
           say("Done (empty output)", :yellow)
         else
           content << rbi_body_content
-          content = merge_with_copied_rbi(gem, content)
           say("Done", :green)
         end
         create_file(filename, content)
