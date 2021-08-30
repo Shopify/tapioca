@@ -7,7 +7,6 @@ module Tapioca
   class Loader
     extend(T::Sig)
 
-
     sig { params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void }
     def load_bundle(gemfile, initialize_file, require_file)
       require_helper(initialize_file)
