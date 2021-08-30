@@ -447,6 +447,31 @@ module Tapioca
         refute_path_exists("#{outdir}/user.rbi")
       end
 
+      it "aborts if there are pending migrations" do
+        timestamp = Time.now.strftime("%Y%m%d%H%M")
+        migration_path = File.expand_path("../../support/repo/db/migrate/#{timestamp}_create_articles.rb", __dir__)
+        File.write(migration_path, <<~RUBY)
+          class CreateArticles < ActiveRecord::Migration[6.1]
+            def change
+              create_table(:articles) do |t|
+                t.timestamps
+              end
+            end
+          end
+        RUBY
+
+        expected_output = <<~OUTPUT
+          Run `bin/rails db:migrate` to update your database then try again.
+          You have 1 pending migration:
+          #{timestamp}_create_articles.rb
+        OUTPUT
+
+        output = execute("dsl")
+        assert_match(expected_output, output)
+
+        File.delete(migration_path)
+      end
+
       describe("verify") do
         describe("with no changes") do
           before do
