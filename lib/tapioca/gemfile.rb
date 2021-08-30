@@ -20,7 +20,7 @@ module Tapioca
     sig { returns(Bundler::Definition) }
     attr_reader(:definition)
 
-    sig { returns(T::Array[Gem]) }
+    sig { returns(T::Array[GemSpec]) }
     attr_reader(:dependencies)
 
     sig { returns(T::Array[String]) }
@@ -32,11 +32,11 @@ module Tapioca
       @lockfile = T.let(File.new(Bundler.default_lockfile), File)
       @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
       dependencies, missing_specs = load_dependencies
-      @dependencies = T.let(dependencies, T::Array[Gem])
+      @dependencies = T.let(dependencies, T::Array[GemSpec])
       @missing_specs = T.let(missing_specs, T::Array[String])
     end
 
-    sig { params(gem_name: String).returns(T.nilable(Gem)) }
+    sig { params(gem_name: String).returns(T.nilable(GemSpec)) }
     def gem(gem_name)
       dependencies.detect { |dep| dep.name == gem_name }
     end
@@ -51,11 +51,11 @@ module Tapioca
     sig { returns(File) }
     attr_reader(:gemfile, :lockfile)
 
-    sig { returns([T::Array[Gem], T::Array[String]]) }
+    sig { returns([T::Array[GemSpec], T::Array[String]]) }
     def load_dependencies
       materialized_dependencies, missing_specs = materialize_deps
       dependencies = materialized_dependencies
-        .map { |spec| Gem.new(spec) }
+        .map { |spec| GemSpec.new(spec) }
         .reject { |gem| gem.ignore?(dir) }
         .uniq(&:rbi_file_name)
         .sort_by(&:rbi_file_name)
@@ -92,7 +92,7 @@ module Tapioca
       File.expand_path(gemfile.path + "/..")
     end
 
-    class Gem
+    class GemSpec
       extend(T::Sig)
 
       IGNORED_GEMS = T.let(["sorbet", "sorbet-static", "sorbet-runtime"].freeze, T::Array[String])

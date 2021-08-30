@@ -491,7 +491,7 @@ module Tapioca
 
     sig do
       params(gem_names: T::Array[String])
-        .returns(T::Array[Gemfile::Gem])
+        .returns(T::Array[Gemfile::GemSpec])
     end
     def gems_to_generate(gem_names)
       return bundle.dependencies if gem_names.empty?
@@ -527,7 +527,7 @@ module Tapioca
       end
     end
 
-    sig { params(gem: Gemfile::Gem).void }
+    sig { params(gem: Gemfile::GemSpec).void }
     def compile_gem_rbi(gem)
       compiler = Compilers::SymbolTableCompiler.new
       gem_name = set_color(gem.name, :yellow, :bold)
