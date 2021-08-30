@@ -62,7 +62,7 @@ module Tapioca
       [dependencies, missing_specs]
     end
 
-    sig { returns([T::Array[Spec], T::Array[String]]) }
+    sig { returns([T::Enumerable[Spec], T::Array[String]]) }
     def materialize_deps
       deps = definition.locked_gems.dependencies.values
       missing_specs = T::Array[String].new
