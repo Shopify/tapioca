@@ -65,7 +65,7 @@ module Tapioca
 
         COLLECTION_TYPE = T.let(
           ->(type) { "T::Array[::#{type}]" },
-          T.proc.params(type: Module).returns(String)
+          T.proc.params(type: T.any(Module, String)).returns(String)
         )
 
         sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveRecord::Base)).void }
@@ -203,7 +203,7 @@ module Tapioca
               "fetch_multi_by_#{fields_name}",
               class_method: true,
               parameters: [
-                create_param("index_values", type: "T.untyped"),
+                create_param("index_values", type: "T::Enumerable[T.untyped]"),
                 create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
               ],
               return_type: COLLECTION_TYPE.call(constant)
@@ -220,30 +220,27 @@ module Tapioca
         end
         def create_aliased_fetch_by_methods(field, klass, constant)
           type, _ = ActiveRecordColumnTypeHelper.new(constant).type_for(field.alias_name.to_s)
-          multi_type = type.delete_prefix("T.nilable(").delete_suffix(")")
+          multi_type = type.delete_prefix("T.nilable(").delete_suffix(")").delete_prefix("::")
           length = field.key_fields.length
           suffix = field.send(:fetch_method_suffix)
 
-          if length == 1
-            klass.create_method(
-              "fetch_#{suffix}",
-              class_method: true,
-              parameters: [create_param("key", type: "T.untyped")],
-              return_type: type
-            )
+          parameters = field.key_fields.map do |arg|
+            create_param(arg.to_s, type: "T.untyped")
+          end
 
+          klass.create_method(
+            "fetch_#{suffix}",
+            class_method: true,
+            parameters: parameters,
+            return_type: type
+          )
+
+          if length == 1
             klass.create_method(
               "fetch_multi_#{suffix}",
               class_method: true,
-              parameters: [create_param("keys", type: "T.untyped")],
-              return_type: "T::Array[#{multi_type}]"
-            )
-          else
-            klass.create_method(
-              "fetch_#{suffix}",
-              class_method: true,
-              parameters: [create_param("key_values", type: "T.untyped")],
-              return_type: type
+              parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
+              return_type: COLLECTION_TYPE.call(multi_type)
             )
           end
         end
