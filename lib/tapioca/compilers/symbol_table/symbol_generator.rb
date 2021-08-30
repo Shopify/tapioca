@@ -304,6 +304,19 @@ module Tapioca
 
         sig { params(constant: Class).returns(T::Boolean) }
         def struct_definition?(constant)
+          # Make sure this is constant defined by `Struct.new` and not just
+          # by subclassing `Struct`.
+          #
+          # class Foo < Struct
+          # end
+          #
+          # ends up not defining a struct definition, but subclasses `Struct`
+          # instead. Only instances of `Foo` will be struct definitions themselves.
+          #
+          # What separates just subclassing `Struct` and a struct definition is
+          # the existence of the `members` method on the constant.
+          return false unless constant.methods.include?(:members)
+
           superclass = superclass_of(constant)
           return false unless superclass
 

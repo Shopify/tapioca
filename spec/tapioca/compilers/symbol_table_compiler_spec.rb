@@ -831,9 +831,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         class S4 < Struct.new("Foo", :foo)
         end
+
+        class NotAStructDefinition < Struct
+        end
       RUBY
 
       output = template(<<~RBI)
+        class NotAStructDefinition < ::Struct; end
         S1 = ::Struct.new(:foo)
 
         S2 = ::Struct.new(:foo) do
