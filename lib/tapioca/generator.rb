@@ -216,7 +216,7 @@ module Tapioca
 
     sig { returns(Loader) }
     def loader
-      @loader ||= Loader.new(bundle)
+      @loader ||= Loader.new
     end
 
     sig { returns(Compilers::SymbolTableCompiler) }
@@ -228,7 +228,7 @@ module Tapioca
     def require_gem_file
       say("Requiring all gems to prepare for compiling... ")
       begin
-        loader.load_bundle(config.prerequire, config.postrequire)
+        loader.load_bundle(bundle, config.prerequire, config.postrequire)
       rescue LoadError => e
         explain_failed_require(config.postrequire, e)
         exit(1)

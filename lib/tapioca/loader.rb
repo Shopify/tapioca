@@ -7,19 +7,15 @@ module Tapioca
   class Loader
     extend(T::Sig)
 
-    sig { params(gemfile: Tapioca::Gemfile).void }
-    def initialize(gemfile)
-      @gemfile = T.let(gemfile, Tapioca::Gemfile)
-    end
 
-    sig { params(initialize_file: T.nilable(String), require_file: T.nilable(String)).void }
-    def load_bundle(initialize_file, require_file)
+    sig { params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void }
+    def load_bundle(gemfile, initialize_file, require_file)
       require_helper(initialize_file)
 
       load_rails
       load_rake
 
-      require_bundle
+      gemfile.require
 
       require_helper(require_file)
 
@@ -46,9 +42,6 @@ module Tapioca
 
     private
 
-    sig { returns(Tapioca::Gemfile) }
-    attr_reader :gemfile
-
     sig { params(file: T.nilable(String)).void }
     def require_helper(file)
       return unless file
@@ -56,11 +49,6 @@ module Tapioca
       return unless File.exist?(file)
 
       require(file)
-    end
-
-    sig { void }
-    def require_bundle
-      gemfile.require
     end
 
     sig { returns(T::Array[T.untyped]) }
