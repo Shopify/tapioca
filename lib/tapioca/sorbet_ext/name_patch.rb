@@ -6,7 +6,22 @@ module T
     class Simple
       module NamePatch
         def name
-          @name ||= ::Tapioca::Reflection.name_of(@raw_type).freeze
+          @qualified_name ||= qualified_name_of(@raw_type).freeze
+        end
+
+        private
+
+        NAME_METHOD = Module.instance_method(:name)
+
+        def qualified_name_of(constant)
+          name = NAME_METHOD.bind(constant).call
+          return if name.nil?
+
+          if name.start_with?("::")
+            name
+          else
+            "::#{name}"
+          end
         end
       end
 
