@@ -99,7 +99,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
         # typed: strong
 
         class NotifierMailer
-          sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
+          sig { params(customer_id: ::Integer).returns(::ActionMailer::MessageDelivery) }
           def self.notify_customer(customer_id); end
         end
       RBI

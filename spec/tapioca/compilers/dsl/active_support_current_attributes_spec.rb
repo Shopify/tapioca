@@ -110,7 +110,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
           sig { params(value: T.untyped).returns(T.untyped) }
           def self.account=(value); end
 
-          sig { params(user_id: Integer).void }
+          sig { params(user_id: ::Integer).void }
           def self.authenticate(user_id); end
 
           sig { returns(T.untyped) }

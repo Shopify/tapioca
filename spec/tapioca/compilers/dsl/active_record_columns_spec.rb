@@ -575,10 +575,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           expected = indented(<<~RBI, 4)
-            sig { returns(T.nilable(CustomType)) }
+            sig { returns(T.nilable(::CustomType)) }
             def cost; end
 
-            sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
+            sig { params(value: T.nilable(::CustomType)).returns(T.nilable(::CustomType)) }
             def cost=(value); end
           RBI
 
@@ -624,10 +624,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           expected = indented(<<~RBI, 4)
-            sig { returns(T.nilable(T.any(CustomType, Numeric))) }
+            sig { returns(T.nilable(T.any(::CustomType, ::Numeric))) }
             def cost; end
 
-            sig { params(value: T.nilable(T.any(CustomType, Numeric))).returns(T.nilable(T.any(CustomType, Numeric))) }
+            sig { params(value: T.nilable(T.any(::CustomType, ::Numeric))).returns(T.nilable(T.any(::CustomType, ::Numeric))) }
             def cost=(value); end
           RBI
 
@@ -672,10 +672,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           expected = indented(<<~RBI, 4)
-            sig { returns(T.nilable(CustomType)) }
+            sig { returns(T.nilable(::CustomType)) }
             def cost; end
 
-            sig { params(value: T.nilable(CustomType)).returns(T.nilable(CustomType)) }
+            sig { params(value: T.nilable(::CustomType)).returns(T.nilable(::CustomType)) }
             def cost=(value); end
           RBI
 
@@ -717,10 +717,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           expected = indented(<<~RUBY, 4)
-            sig { returns(T.nilable(ValueType[Integer])) }
+            sig { returns(T.nilable(ValueType[::Integer])) }
             def cost; end
 
-            sig { params(value: T.nilable(ValueType[Integer])).returns(T.nilable(ValueType[Integer])) }
+            sig { params(value: T.nilable(ValueType[::Integer])).returns(T.nilable(ValueType[::Integer])) }
             def cost=(value); end
           RUBY
 

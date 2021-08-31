@@ -85,13 +85,13 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
         # typed: strong
 
         class NotifierWorker
-          sig { params(customer_id: Integer).returns(String) }
+          sig { params(customer_id: ::Integer).returns(String) }
           def self.perform_async(customer_id); end
 
-          sig { params(interval: T.any(DateTime, Time), customer_id: Integer).returns(String) }
+          sig { params(interval: T.any(DateTime, Time), customer_id: ::Integer).returns(String) }
           def self.perform_at(interval, customer_id); end
 
-          sig { params(interval: Numeric, customer_id: Integer).returns(String) }
+          sig { params(interval: Numeric, customer_id: ::Integer).returns(String) }
           def self.perform_in(interval, customer_id); end
         end
       RBI
