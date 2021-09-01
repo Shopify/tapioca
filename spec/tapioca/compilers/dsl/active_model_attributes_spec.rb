@@ -114,34 +114,34 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
         # typed: strong
 
         class Shop
-          sig { returns(::DateTime) }
+          sig { returns(T.nilable(::DateTime)) }
           def created_at; end
 
-          sig { params(value: ::DateTime).returns(::DateTime) }
+          sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
           def created_at=(value); end
 
-          sig { returns(::Integer) }
+          sig { returns(T.nilable(::Integer)) }
           def id; end
 
-          sig { params(value: ::Integer).returns(::Integer) }
+          sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
           def id=(value); end
 
-          sig { returns(::Float) }
+          sig { returns(T.nilable(::Float)) }
           def latitude; end
 
-          sig { params(value: ::Float).returns(::Float) }
+          sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
           def latitude=(value); end
 
-          sig { returns(::String) }
+          sig { returns(T.nilable(::String)) }
           def name; end
 
-          sig { params(value: ::String).returns(::String) }
+          sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
           def name=(value); end
 
-          sig { returns(T::Boolean) }
+          sig { returns(T.nilable(T::Boolean)) }
           def test_shop; end
 
-          sig { params(value: T::Boolean).returns(T::Boolean) }
+          sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
           def test_shop=(value); end
         end
       RBI
