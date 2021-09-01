@@ -38,7 +38,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       )
 
       spec = Bundler::StubSpecification.from_stub(stub)
-      gem = Tapioca::Gemfile::Gem.new(spec)
+      gem = Tapioca::Gemfile::GemSpec.new(spec)
 
       Tapioca::Compilers::SymbolTableCompiler.new.compile(gem)
     end
