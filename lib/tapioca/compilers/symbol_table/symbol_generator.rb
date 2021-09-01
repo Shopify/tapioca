@@ -38,7 +38,11 @@ module Tapioca
 
         private
 
+        sig { params(name: T.nilable(String)).void }
         def add_to_symbol_queue(name)
+          return unless name
+
+          name = name.delete_prefix("::")
           @symbol_queue << name unless symbols.include?(name) || symbol_ignored?(name)
         end
 

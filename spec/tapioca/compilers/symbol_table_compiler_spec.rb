@@ -2712,8 +2712,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        ::Foo::FooAttachedClass = Foo::FooAttachedClass
-
         class Foo
           class << self
             sig { returns(T.attached_class) }
