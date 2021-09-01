@@ -54,11 +54,17 @@ module Tapioca
           # typed: true
 
           class Post
+            include GeneratedBar
+            include GeneratedFoo
+
             sig { returns(T.nilable(::String)) }
             def title; end
 
             sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
             def title=(title); end
+
+            module GeneratedBar; end
+            module GeneratedFoo; end
           end
         CONTENTS
       end
@@ -179,11 +185,17 @@ module Tapioca
           # typed: true
 
           class Post
+            include GeneratedBar
+            include GeneratedFoo
+
             sig { returns(T.nilable(::String)) }
             def title; end
 
             sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
             def title=(title); end
+
+            module GeneratedBar; end
+            module GeneratedFoo; end
           end
         CONTENTS
 
@@ -290,11 +302,17 @@ module Tapioca
           # typed: true
 
           class Post
+            include GeneratedBar
+            include GeneratedFoo
+
             sig { returns(T.nilable(::String)) }
             def title; end
 
             sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
             def title=(title); end
+
+            module GeneratedBar; end
+            module GeneratedFoo; end
           end
         CONTENTS
       end
