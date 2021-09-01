@@ -14,7 +14,7 @@ When you run `tapioca sync` in a project, `tapioca` loads all the gems that are 
 
 The RBI files that Tapioca generates **should not be added** on top of those that Sorbet has already generated for you. Tapioca needs to run afresh. Tapioca also supercedes the need for gems like `sorbet-rails` or `sorbet-typed`. 
 
-In order to start using Sorbet you will need to remove these gems redo all of your automatically generated RBI files. [Full instructions on how  migrate are in the wiki](https://github.com/Shopify/tapioca/wiki/Migrating-to-Tapioca). 
+In order to start using Tapioca you will need to remove these gems redo all of your automatically generated RBI files. [Full instructions on how  migrate are in the wiki](https://github.com/Shopify/tapioca/wiki/Migrating-to-Tapioca). 
 
 ## Manual gem requires
 
