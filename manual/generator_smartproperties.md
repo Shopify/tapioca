@@ -41,10 +41,10 @@ class Post
   sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
   def published=(published); end
 
-  sig { returns(T::Boolean) }
+  sig { returns(T.nilable(T::Boolean)) }
   def enabled; end
 
-  sig { params(enabled: T::Boolean).returns(T::Boolean) }
+  sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
   def enabled=(enabled); end
 end
 ~~~

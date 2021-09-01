@@ -294,10 +294,10 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T::Boolean) }
+          sig { returns(T.nilable(T::Boolean)) }
           def enabled; end
 
-          sig { params(enabled: T::Boolean).returns(T::Boolean) }
+          sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
           def enabled=(enabled); end
         end
       RBI
@@ -340,10 +340,10 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(::String) }
+          sig { returns(T.nilable(::String)) }
           def title; end
 
-          sig { params(title: ::String).returns(::String) }
+          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
           def title=(title); end
         end
       RBI

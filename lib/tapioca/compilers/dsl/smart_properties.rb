@@ -53,10 +53,10 @@ module Tapioca
       #   sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
       #   def published=(published); end
       #
-      #   sig { returns(T::Boolean) }
+      #   sig { returns(T.nilable(T::Boolean)) }
       #   def enabled; end
       #
-      #   sig { params(enabled: T::Boolean).returns(T::Boolean) }
+      #   sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
       #   def enabled=(enabled); end
       # end
       # ~~~
@@ -124,10 +124,9 @@ module Tapioca
 
         sig { params(property: ::SmartProperties::Property).returns(String) }
         def type_for(property)
-          converter, accepter, default, required = property.to_h.fetch_values(
+          converter, accepter, required = property.to_h.fetch_values(
             :converter,
             :accepter,
-            :default,
             :required,
           )
 
@@ -148,10 +147,11 @@ module Tapioca
             "T.untyped"
           end
 
-          not_required = Proc === required || !required
-          nilable_default = Proc === default || default.nil?
-          property_nilable = type != "T.untyped" && not_required && nilable_default
-          type = "T.nilable(#{type})" if property_nilable
+          # Early return for "T.untyped", nothing more to do.
+          return type if type == "T.untyped"
+
+          might_be_optional = Proc === required || !required
+          type = "T.nilable(#{type})" if might_be_optional
 
           type
         end
