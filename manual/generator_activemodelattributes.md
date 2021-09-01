@@ -19,10 +19,10 @@ this generator will produce an RBI file with the following content:
 
 class Shop
 
-  sig { returns(::String) }
+  sig { returns(T.nilable(::String)) }
   def name; end
 
-  sig { params(name: ::String).returns(::String) }
+  sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
   def name=(name); end
 end
 ~~~

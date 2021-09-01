@@ -29,10 +29,10 @@ module Tapioca
       #
       # class Shop
       #
-      #   sig { returns(::String) }
+      #   sig { returns(T.nilable(::String)) }
       #   def name; end
       #
-      #   sig { params(name: ::String).returns(::String) }
+      #   sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
       #   def name=(name); end
       # end
       # ~~~
@@ -89,7 +89,7 @@ module Tapioca
 
         sig { params(attribute_type_value: ::ActiveModel::Type::Value).returns(::String) }
         def type_for(attribute_type_value)
-          case attribute_type_value
+          type = case attribute_type_value
           when ActiveModel::Type::Boolean
             "T::Boolean"
           when ActiveModel::Type::Date
@@ -105,8 +105,11 @@ module Tapioca
           when ActiveModel::Type::String
             "::String"
           else
-            "T.untyped"
+            # we don't want untyped to be wrapped by T.nilable, so just return early
+            return "T.untyped"
           end
+
+          "T.nilable(#{type})"
         end
 
         sig { params(klass: RBI::Scope, method: String, type: String).void }
