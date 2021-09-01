@@ -14,7 +14,7 @@ module Tapioca
 
         attr_reader(:gem, :indent)
 
-        sig { params(gem: Gemfile::Gem, indent: Integer).void }
+        sig { params(gem: Gemfile::GemSpec, indent: Integer).void }
         def initialize(gem, indent = 0)
           @gem = gem
           @indent = indent

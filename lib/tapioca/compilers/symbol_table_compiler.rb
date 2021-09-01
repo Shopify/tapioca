@@ -8,7 +8,7 @@ module Tapioca
 
       sig do
         params(
-          gem: Gemfile::Gem,
+          gem: Gemfile::GemSpec,
           indent: Integer
         ).returns(String)
       end
