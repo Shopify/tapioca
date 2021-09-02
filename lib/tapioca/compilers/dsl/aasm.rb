@@ -58,7 +58,7 @@ module Tapioca
           # Using T.unsafe here because at this point we know that the object
           # includes AASM
           aasm = T.unsafe(constant).aasm
-          return unless aasm
+          return if !aasm || aasm.states.empty?
 
           root.create_path(constant) do |model|
             # Create all of the constants and methods for each state
