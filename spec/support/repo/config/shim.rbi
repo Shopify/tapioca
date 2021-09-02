@@ -15,3 +15,7 @@ end
 
 class ::RBI::Tree
 end
+
+module Rake
+  module DSL; end
+end

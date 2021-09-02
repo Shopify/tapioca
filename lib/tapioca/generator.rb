@@ -3,6 +3,7 @@
 
 require "pathname"
 require "thor"
+require "rake"
 require "tapioca/core_ext/string"
 
 module Tapioca
@@ -124,6 +125,7 @@ module Tapioca
     end
     def build_dsl(requested_constants, should_verify: false, quiet: false, verbose: false)
       load_application(eager_load: requested_constants.empty?)
+      abort_if_pending_migrations!
       load_dsl_generators
 
       if should_verify
@@ -691,6 +693,14 @@ module Tapioca
 
         exit(1)
       end
+    end
+
+    sig { void }
+    def abort_if_pending_migrations!
+      return unless File.exist?("config/application.rb")
+
+      Rails.application.load_tasks
+      Rake::Task["db:abort_if_pending_migrations"].invoke if Rake::Task.task_defined?("db:abort_if_pending_migrations")
     end
   end
 end

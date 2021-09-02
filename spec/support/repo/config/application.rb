@@ -10,6 +10,8 @@ require "baz"
 module Rails
   class Application
     attr_reader :config
+
+    def load_tasks; end
   end
 
   def self.application
