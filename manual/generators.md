@@ -3,6 +3,7 @@
 In the following section you will find all available DSL generators:
 
 <!-- START_GENERATOR_LIST -->
+* [AASM](generator_aasm.md)
 * [ActionControllerHelpers](generator_actioncontrollerhelpers.md)
 * [ActionMailer](generator_actionmailer.md)
 * [ActiveJob](generator_activejob.md)
