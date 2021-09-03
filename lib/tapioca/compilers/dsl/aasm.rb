@@ -49,15 +49,9 @@ module Tapioca
             T::Array[String]
           )
 
-        sig { override.params(root: RBI::Tree, constant: Module).void }
+        sig { override.params(root: RBI::Tree, constant: T.all(::AASM::ClassMethods, Class)).void }
         def decorate(root, constant)
-          # Make sure the thing that's being passed in here actually included
-          # AASM
-          return unless constant.respond_to?(:aasm)
-
-          # Using T.unsafe here because at this point we know that the object
-          # includes AASM
-          aasm = T.unsafe(constant).aasm
+          aasm = constant.aasm
           return if !aasm || aasm.states.empty?
 
           root.create_path(constant) do |model|

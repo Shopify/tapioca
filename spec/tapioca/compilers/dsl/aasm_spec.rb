@@ -22,19 +22,6 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
   end
 
   describe("#decorate") do
-    it("generates empty RBI file if this is no state machine") do
-      add_ruby_file("content.rb", <<~RUBY)
-        class StateMachine
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-      RBI
-
-      assert_equal(expected, rbi_for(:StateMachine))
-    end
-
     it "generates empty RBI when AASM is included but no AASM call has been made" do
       add_ruby_file("content.rb", <<~RUBY)
         class StateMachine
