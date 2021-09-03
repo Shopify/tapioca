@@ -42,8 +42,8 @@ module Tapioca
     end
 
     sig { void }
-    def require
-      T.unsafe(runtime).setup(*groups).require(*groups)
+    def require_bundle
+      T.unsafe(runtime).require(*groups)
     end
 
     private
