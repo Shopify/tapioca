@@ -11,10 +11,10 @@ module Tapioca
     def load_bundle(gemfile, initialize_file, require_file)
       require_helper(initialize_file)
 
+      gemfile.require
+
       load_rails_application
       load_rake
-
-      gemfile.require
 
       require_helper(require_file)
 
