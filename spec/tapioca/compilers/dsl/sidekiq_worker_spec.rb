@@ -27,7 +27,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
   end
 
   describe("#decorate") do
-    it("generates empty RBI file if there are no perform") do
+    it("generates empty RBI file if there is no perform method") do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -41,7 +41,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierWorker))
     end
 
-    it("generates correct RBI file for subclass with methods") do
+    it("generates correct RBI file for class with perform method") do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -69,7 +69,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierWorker))
     end
 
-    it("generates correct RBI file for subclass with method signatures") do
+    it("generates correct RBI file for class with perform method with signature") do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -97,6 +97,100 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierWorker))
+    end
+
+    it("generates correct RBI file for subclass of a sidekiq worker without perform method") do
+      add_ruby_file("mailer.rb", <<~RUBY)
+        class NotifierWorker
+          include Sidekiq::Worker
+          def perform(customer_id)
+            # ...
+          end
+        end
+
+        class SecondaryWorker < NotifierWorker
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class SecondaryWorker
+          sig { params(customer_id: T.untyped).returns(String) }
+          def self.perform_async(customer_id); end
+
+          sig { params(interval: T.any(DateTime, Time), customer_id: T.untyped).returns(String) }
+          def self.perform_at(interval, customer_id); end
+
+          sig { params(interval: Numeric, customer_id: T.untyped).returns(String) }
+          def self.perform_in(interval, customer_id); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:SecondaryWorker))
+    end
+
+    it("generates correct RBI file for subclass of a sidekiq worker with overridden methods") do
+      add_ruby_file("mailer.rb", <<~RUBY)
+        class NotifierWorker
+          include Sidekiq::Worker
+          def perform(customer_id)
+            # ...
+          end
+        end
+
+        class SecondaryWorker < NotifierWorker
+          def perform(customer_id, other_id)
+          end
+
+          def self.perform_at(interval, other_id)
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class SecondaryWorker
+          sig { params(customer_id: T.untyped, other_id: T.untyped).returns(String) }
+          def self.perform_async(customer_id, other_id); end
+
+          sig { params(interval: Numeric, customer_id: T.untyped, other_id: T.untyped).returns(String) }
+          def self.perform_in(interval, customer_id, other_id); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:SecondaryWorker))
+    end
+
+    it("generates no method definitions for methods that are already explicitly overridden") do
+      add_ruby_file("job_thing.rb", <<~RUBY)
+        class JobThing
+          include Sidekiq::Worker
+
+          def perform(foo)
+          end
+
+          def self.perform_at(baz)
+          end
+
+          def JobThing.perform_in(bat)
+          end
+
+          class << self
+            def perform_async(bar)
+            end
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class JobThing; end
+      RBI
+
+      assert_equal(expected, rbi_for(:JobThing))
     end
   end
 end

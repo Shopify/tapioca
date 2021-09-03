@@ -64,15 +64,31 @@ module Tapioca
               *async_params,
             ]
 
-            worker.create_method("perform_async", parameters: async_params, return_type: "String", class_method: true)
-            worker.create_method("perform_at", parameters: at_params, return_type: "String", class_method: true)
-            worker.create_method("perform_in", parameters: in_params, return_type: "String", class_method: true)
+            generate_perform_method(constant, worker, "perform_async", async_params)
+            generate_perform_method(constant, worker, "perform_at", at_params)
+            generate_perform_method(constant, worker, "perform_in", in_params)
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           all_classes.select { |c| c < Sidekiq::Worker }
+        end
+
+        private
+
+        sig do
+          params(
+            constant: T.class_of(::Sidekiq::Worker),
+            worker: RBI::Scope,
+            method_name: String,
+            parameters: T::Array[RBI::TypedParam]
+          ).void
+        end
+        def generate_perform_method(constant, worker, method_name, parameters)
+          if constant.method(method_name.to_sym).owner == Sidekiq::Worker::ClassMethods
+            worker.create_method(method_name, parameters: parameters, return_type: "String", class_method: true)
+          end
         end
       end
     end
