@@ -273,7 +273,7 @@ module Tapioca
     def load_application(eager_load:)
       say("Loading Rails application... ")
 
-      loader.load_rails(
+      loader.load_rails_application(
         environment_load: true,
         eager_load: eager_load
       )

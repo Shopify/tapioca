@@ -11,7 +11,7 @@ module Tapioca
     def load_bundle(gemfile, initialize_file, require_file)
       require_helper(initialize_file)
 
-      load_rails
+      load_rails_application
       load_rake
 
       gemfile.require
@@ -22,7 +22,7 @@ module Tapioca
     end
 
     sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
-    def load_rails(environment_load: false, eager_load: false)
+    def load_rails_application(environment_load: false, eager_load: false)
       return unless File.exist?("config/application.rb")
 
       safe_require("rails")
