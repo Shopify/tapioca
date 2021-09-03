@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/core_ext/class"
-
 begin
   require "activerecord-typedstore"
 rescue LoadError
@@ -115,7 +113,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ::ActiveRecord::Base.descendants.select do |klass|
+          descendants_of(::ActiveRecord::Base).select do |klass|
             klass.include?(ActiveRecord::TypedStore::Behavior)
           end
         end

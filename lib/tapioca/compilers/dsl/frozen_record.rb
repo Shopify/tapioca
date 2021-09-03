@@ -86,7 +86,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ::FrozenRecord::Base.descendants.reject(&:abstract_class?)
+          descendants_of(::FrozenRecord::Base).reject(&:abstract_class?)
         end
       end
     end

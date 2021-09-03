@@ -62,12 +62,12 @@ module Tapioca
         ).returns(T::Enumerable[Dsl::Base])
       end
       def gather_generators(requested_generators, excluded_generators)
-        generator_klasses = Dsl::Base.descendants.select do |klass|
+        generator_klasses = ::Tapioca::Reflection.descendants_of(Dsl::Base).select do |klass|
           (requested_generators.empty? || requested_generators.include?(klass)) &&
             !excluded_generators.include?(klass)
         end.sort_by { |klass| T.must(klass.name) }
 
-        T.cast(generator_klasses.map(&:new), T::Enumerable[Dsl::Base])
+        generator_klasses.map(&:new)
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }

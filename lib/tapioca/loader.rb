@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/core_ext/class"
-
 module Tapioca
   class Loader
     extend(T::Sig)
@@ -50,6 +48,7 @@ module Tapioca
     def rails_engines
       return [] unless Object.const_defined?("Rails::Engine")
 
+      # We can use `Class#descendants` here, since we know Rails is loaded
       Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
     end
 

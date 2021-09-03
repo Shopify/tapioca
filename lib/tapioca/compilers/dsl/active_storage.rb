@@ -72,7 +72,7 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          ActiveRecord::Base.descendants
+          descendants_of(::ActiveRecord::Base)
             .reject(&:abstract_class?)
             .grep(::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)
         end

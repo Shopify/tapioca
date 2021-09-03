@@ -54,8 +54,8 @@ module Tapioca
         def engine_symbols(symbols)
           return Set.new unless Object.const_defined?("Rails::Engine")
 
-          engine = Object.const_get("Rails::Engine")
-            .descendants.reject(&:abstract_railtie?)
+          engine = descendants_of(Object.const_get("Rails::Engine"))
+            .reject(&:abstract_railtie?)
             .find do |klass|
               name = name_of(klass)
               !name.nil? && symbols.include?(name)
