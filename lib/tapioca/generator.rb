@@ -4,7 +4,6 @@
 require "pathname"
 require "thor"
 require "rake"
-require "tapioca/core_ext/string"
 
 module Tapioca
   class Generator < ::Thor::Shell::Color
@@ -372,7 +371,7 @@ module Tapioca
 
     sig { params(constant_name: String).returns(Pathname) }
     def dsl_rbi_filename(constant_name)
-      config.outpath / "#{constant_name.underscore}.rbi"
+      config.outpath / "#{underscore(constant_name)}.rbi"
     end
 
     sig { params(gem_name: String, version: String).returns(Pathname) }
@@ -568,7 +567,7 @@ module Tapioca
     def compile_dsl_rbi(constant_name, contents, outpath: config.outpath, quiet: false)
       return if contents.nil?
 
-      rbi_name = constant_name.underscore + ".rbi"
+      rbi_name = underscore(constant_name) + ".rbi"
       filename = outpath / rbi_name
 
       out = String.new
@@ -701,6 +700,18 @@ module Tapioca
 
       Rails.application.load_tasks
       Rake::Task["db:abort_if_pending_migrations"].invoke if Rake::Task.task_defined?("db:abort_if_pending_migrations")
+    end
+
+    sig { params(class_name: String).returns(String) }
+    def underscore(class_name)
+      return class_name unless /[A-Z-]|::/.match?(class_name)
+
+      word = class_name.to_s.gsub("::", "/")
+      word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+      word.tr!("-", "_")
+      word.downcase!
+      word
     end
   end
 end
