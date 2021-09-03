@@ -27,8 +27,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
   end
 
   describe("compile") do
-    sig { returns(String) }
-    def compile
+    sig { params(include_docs: T::Boolean).returns(String) }
+    def compile(include_docs = false)
       stub = GemStub.new(
         name: "the-dep",
         version: "1.1.2",
@@ -40,7 +40,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem)
+      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, 0, include_docs)
     end
 
     it("compiles DelegateClass") do
@@ -2732,7 +2732,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
     end
 
     it("handles class attributes created inside included blocks") do
-      require "byebug"
       require "active_support/concern"
 
       add_ruby_file("foo.rb", <<~RUBY)
@@ -2792,6 +2791,214 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RBI
 
       assert_equal(output, compile)
+    end
+
+    it("includes comment documentation from sources when doc is true") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # frozen_string_literal: true
+
+        # Namespace
+        #
+        # Here you'll find some super useful code
+        module Namespace
+          # Foo
+          #
+          # The Foo class is in the core of our application
+          class Foo
+            extend T::Sig
+
+            # This secret constant unlocks the magic behind Foo
+            CONSTANT = "SECRET"
+
+            # Method bar
+            #
+            # This method does something really important
+            #
+            # @param a [String]
+            # @return [void]
+            sig { params(a: String).void }
+            def bar(a); end
+
+            # Method no_sig
+            #
+            # This method does not have a signature
+            #
+            # @param a [String]
+            # @return [void]
+            def no_sig(a); end
+
+            sig { void }
+            def no_yard_docs; end
+
+            # Method only_docs
+            #
+            # This method only has documentation
+            def only_docs(a); end
+
+            # Method baz
+            #
+            # This is a singleton method
+            #
+            # @param t [Integer]
+            # @return [void]
+            sig { params(t: Integer).void }
+            def self.baz(t); end
+
+            class << self
+              extend T::Sig
+              # Method something
+              #
+              # This is another singleton method
+              #
+              # @return [void]
+              sig { void }
+              def something; end
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        # Namespace
+        #
+        # Here you'll find some super useful code
+        module Namespace; end
+
+        # Foo
+        #
+        # The Foo class is in the core of our application
+        class Namespace::Foo
+          # Method bar
+          #
+          # This method does something really important
+          sig { params(a: String).void }
+          def bar(a); end
+
+          # Method no_sig
+          #
+          # This method does not have a signature
+          def no_sig(a); end
+
+          sig { void }
+          def no_yard_docs; end
+
+          # Method only_docs
+          #
+          # This method only has documentation
+          def only_docs(a); end
+
+          class << self
+            # Method baz
+            #
+            # This is a singleton method
+            sig { params(t: Integer).void }
+            def baz(t); end
+
+            # Method something
+            #
+            # This is another singleton method
+            sig { void }
+            def something; end
+          end
+        end
+
+        # This secret constant unlocks the magic behind Foo
+        Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
+      RBI
+
+      assert_equal(output, compile(true))
+    end
+
+    it("doesn't include YARD docs by default") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # Namespace
+        #
+        # Here you'll find some super useful code
+        module Namespace
+          # Foo
+          #
+          # The Foo class is in the core of our application
+          class Foo
+            extend T::Sig
+
+            # This secret constant unlocks the magic behind Foo
+            CONSTANT = "SECRET"
+
+            # Method bar
+            #
+            # This method does something really important
+            #
+            # @param a [String]
+            # @return [void]
+            sig { params(a: String).void }
+            def bar(a); end
+
+            # Method no_sig
+            #
+            # This method does not have a signature
+            #
+            # @param a [String]
+            # @return [void]
+            def no_sig(a); end
+
+            sig { void }
+            def no_yard_docs; end
+
+            # Method only_docs
+            #
+            # This method only has documentation
+            def only_docs(a); end
+
+            # Method baz
+            #
+            # This is a singleton method
+            #
+            # @param t [Integer]
+            # @return [void]
+            sig { params(t: Integer).void }
+            def self.baz(t); end
+
+            class << self
+              extend T::Sig
+              # Method something
+              #
+              # This is another singleton method
+              #
+              # @return [void]
+              sig { void }
+              def something; end
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Namespace; end
+
+        class Namespace::Foo
+          sig { params(a: String).void }
+          def bar(a); end
+
+          def no_sig(a); end
+
+          sig { void }
+          def no_yard_docs; end
+
+          def only_docs(a); end
+
+          class << self
+            sig { params(t: Integer).void }
+            def baz(t); end
+
+            sig { void }
+            def something; end
+          end
+        end
+
+        Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
+      RBI
+
+      assert_equal(output, compile(false))
     end
   end
 end

@@ -20,7 +20,8 @@ module Tapioca
           typed_overrides: T::Hash[String, String],
           default_command: String,
           outpath: Pathname,
-          file_header: T::Boolean
+          file_header: T::Boolean,
+          doc: T::Boolean,
         ).void
       end
       def initialize(
@@ -31,7 +32,8 @@ module Tapioca
         typed_overrides:,
         default_command:,
         outpath:,
-        file_header:
+        file_header:,
+        doc:
       )
         @gem_names = gem_names
         @gem_excludes = gem_excludes
@@ -47,6 +49,7 @@ module Tapioca
         @bundle = T.let(nil, T.nilable(Gemfile))
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
+        @doc = T.let(doc, T::Boolean)
       end
 
       sig { override.void }
@@ -141,7 +144,7 @@ module Tapioca
         say("Compiling #{gem_name}, this may take a few seconds... ")
 
         strictness = @typed_overrides[gem.name] || "true"
-        rbi_body_content = compiler.compile(gem)
+        rbi_body_content = compiler.compile(gem, 0, @doc)
         content = String.new
         content << rbi_header(
           "#{@default_command} gem #{gem.name}",

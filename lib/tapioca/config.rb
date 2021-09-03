@@ -14,6 +14,7 @@ module Tapioca
     const(:todos_path, String)
     const(:generators, T::Array[String])
     const(:file_header, T::Boolean, default: true)
+    const(:doc, T::Boolean, default: false)
 
     sig { returns(Pathname) }
     def outpath

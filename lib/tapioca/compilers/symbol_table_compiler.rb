@@ -9,14 +9,16 @@ module Tapioca
       sig do
         params(
           gem: Gemfile::GemSpec,
-          indent: Integer
+          indent: Integer,
+          include_docs: T::Boolean
         ).returns(String)
       end
       def compile(
         gem,
-        indent = 0
+        indent = 0,
+        include_docs = false
       )
-        Tapioca::Compilers::SymbolTable::SymbolGenerator.new(gem, indent).generate
+        Tapioca::Compilers::SymbolTable::SymbolGenerator.new(gem, indent, include_docs).generate
       end
     end
   end

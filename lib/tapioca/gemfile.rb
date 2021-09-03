@@ -2,6 +2,8 @@
 # frozen_string_literal: true
 
 require "bundler"
+require "logger"
+require "yard-sorbet"
 
 module Tapioca
   class Gemfile
@@ -143,6 +145,11 @@ module Tapioca
         else
           to_realpath(path).start_with?(full_gem_path) || has_parent_gemspec?(path)
         end
+      end
+
+      sig { void }
+      def parse_yard_docs
+        files.each { |path| YARD.parse(path.to_s, [], Logger::Severity::FATAL) }
       end
 
       private
