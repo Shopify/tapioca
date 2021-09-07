@@ -12,10 +12,35 @@ As yet, no gem exports type information in a consumable format and it would be a
 
 When you run `tapioca sync` in a project, `tapioca` loads all the gems that are in your dependency list from the Gemfile into memory. It then performs runtime introspection on the loaded types to understand their structure and generates an appropriate RBI file for each gem with a versioned filename.
 
-Tapioca helps simplify your setup too. Gems such as `sorbet-typed`, `sorbet-rails` are ways to provide accurate typing information for DSLs and gems. However, Tapioca aims to provide the complete tooling to generating RBIs for gems and DSLs, and does not require being combined with other gems, such as `sorbet-rails`, which can be removed from your gemfile.
+Tapioca helps simplify your setup too. Gems such as `sorbet-typed`, `sorbet-rails` are *localized* solutions that provide typing information for DSLs and gems. However, Tapioca aims to provide the *complete tooling* to generating RBIs for gems and DSLs. Tapioca does not require being combined with other gems, such as `sorbet-rails`, which can be removed from your gemfile.
 
 
-## Installing Tapioca in a project with no existing RBI files (i.e. a fresh Sorbet project)
+### How does tapioca compare to "srb rbi gems" ?
+
+[Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
+
+# Installing Tapioca
+
+## 1. Preparing an existing Sorbet-installation for Tapioca
+
+***If you are not yet using Sorbet then skip straight to [step 2](#install_tapioca_and_generate_rbi files)***
+
+The RBI files that Tapioca generates **should not be added** on top of those that Sorbet has already generated for you. Tapioca needs to run afresh. Tapioca also supercedes the need for gems like `sorbet-rails` or `sorbet-typed`. In order to start using Tapioca you will need to remove these gems and regenerate all of your automatically generated RBI files.
+
+### Remove any current RBIs
+
+The easiest way to remove existing RBI files is by removing the entire `sorbet/rbi` folder.
+
+**Note**: if your application has shims (hand written RBI files), keep them saved somewhere in case you need to restore some of them. Chances are, fewer shims will be needed after transitioning to Tapioca. Additionally, don't forget to keep your `sorbet/config` file too. 
+
+### Remove any other solutions
+
+Remove `sorbet-rails` or other such alternative solutions from the `Gemfile`. As mentioned, Tapioca is meant to be used on its own. 
+
+If the previously used alternatives had their own configuration files, you should remove them as well.
+
+## 2. Install Tapioca and generate RBI files
+*Star there in a fresh sorbet installation.*
 
 ### Add Tapioca to your application's `Gemfile`
 
@@ -24,108 +49,83 @@ group :development do
   gem 'tapioca', require: false
 end
 ```
-and run `bundle install`
+Then run `bundle install`
 
-### Initialize the folder structure
+### Generate the RBI files for gems
 
-Command: `tapioca init`
+````bash
+# Generate sorbet/config and sorbet/tapioca/require.rb if required
+# (they won't be touched if they already exist)
+bundle exec tapioca init
 
-This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
+# Generate RBI files for gems
+# (Generate only for specific gems using `tapioca gem [gem...]`)
+bundle exec tapioca gem
 
-### Generate gems RBIs
+# Generate the list of all unresolved constants
+# This will generate the file `sorbet/rbi/todo.rbi`
+# defining all unresolved constants as empty modules
+bundle exec tapioca todo
 
-Command: `tapioca gem [gem...]`
+````
 
-This will generate RBIs for the specified gems and place them in the RBI directory.
+### Iterate RBI generation to ensure all gems are covered
 
-or:
+The first step may result in some typechecking errors due to missing definitions. Let's pick them up and dela with them:
 
-Command: `tapioca gem`
+````bash
+# Check whether any gems are missed by running typechecking
+bundle exec srb tc
 
-This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
+# If you notice missing definitions for gems, nudge Tapioca to
+# look for them by running:
+bin/tapioca require
 
-### Generate the list of all unresolved constants
+# If this doesn't add the requisite gems, add them manually to:
+# sorbet/tapioca/require.rb
+# repeat as necessary
+````
 
-Command: `tapioca todo`
+Still having problems with gems not being included? Check the section on [manual gem requires](#manual-gem-requires).
 
-This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
-### Generate DSL RBI files
+### Generate RBIs for Runtime DSLs
 
-Command: `tapioca dsl [constant...]`
+Methods such as Rails' `belongs_to` will dynamically generate a set of helper-methods
+at runtime. Left to its own devices, Sorbet won't see them and will fall over. However Tapioca can figure
+out and generate their RBIs:
 
-This will generate DSL RBIs for specified constants (or for all handled constants, if a constant name is not supplied). You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
+````bash
+# Generate runtime definitions
+bin/tapioca dsl
+````
 
-## Installing Tapioca into a project that already uses Sorbet (and has RBI files)
+While generating RBI files you might realize that some shims have become obsolete or incorrect. Make sure to edit or remove existing shims that are causing errors. You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
 
-The RBI files that Tapioca generates **should not be added** on top of those that Sorbet has already generated for you. Tapioca needs to run afresh. Tapioca also supercedes the need for gems like `sorbet-rails` or `sorbet-typed`. In order to start using Tapioca you will need to remove these gems and regenerate all of your automatically generated RBI files. 
+### Run Tapioca todo (optional)
 
-### 1. Remove current RBIs
+(If there are still errors for missing definitions, you may want to try bringing back any shims you saved for later)
 
-Tapioca does not require other solutions to work. Therefore all gem and DSL RBIs should be generated with it and not an alternative solution. The easiest way to adapt is to start over by removing the entire `sorbet/rbi` folder.
-
-**Note**: if your application has shims (hand written RBI files), keep them saved somewhere in case you need to restore some of them. Chances are, less shims will be needed after transitioning to Tapioca.
-
-Additionally, don't forget to keep your `sorbet/config` file too.
-
-If the previously used alternatives had their own configuration files, remove them as well.
-
-### 2. Remove other solutions
-
-As mentioned, Tapioca is meant to be used on its own. Remove `sorbet-rails` or other such alternative solutions from the `Gemfile`.
-
-### 3. Add Tapioca
-
-```rb
-group :development do
-  gem "tapioca"
-end
+```bash
+# Skip any remaining errors by generate a file with 
+# empty definitions (to be fixed later on)
+bin/tapioca todo
 ```
-and run `bundle install`
 
-### 4. Run Tapioca init
+### Bump strictness on files
 
-Re-initialize the `sorbet` folder structure with `bundle exec tapioca init`. You still need to run this step if you kept the shims around.
 
-### 5. Run Tapioca generate
+After generating the RBIs, some files might actually be ready to move from `typed: false` to `typed: true`. If doing so produces no erorrs then [Spoom](https://github.com/Shopify/spoom) can automatically bump files to `true`.
 
-This step is the iterative process to generate the RBIs necessary for your application's gems. This part may vary depending on your setup.
-
-1. Run `bin/tapioca gem`. This generates RBIs for the gems in your application
-2. Try to run the type checker (`bundle exec srb tc`)
-3. If you notice that definitions are missing for gems, you might need to add the gem for which those definitions belong to in `sorbet/tapioca/require.rb`. Before manually adding requires, try running `bin/tapioca require` so that Tapioca can figure out the requires. If this still does not work, proceed to write manual requires
-4. After requiring the gems inside that file, go back to 1. until there are no more errors coming from gems
-
-### 6. Run Tapioca DSL
-
-With all the gem RBIs in place, now Tapioca can generate DSL RBIs. DSL RBIs are definitions that only exist in runtime. For example,
-```rb
-class Post < ApplicationRecord
-  # Belongs to will create a few methods in this class
-  # to be able to access the associated author. Sorbet
-  # does not know about them, since they only exist during
-  # runtime. Tapioca can generate the definitions in RBIs
-  # for methods like this one.
-  belongs_to :author
-end
+```bash
+# Automatically increase files to the highest level of type-strictness
+# they will now support
+bundle exec spoom bump
 ```
-Run `bin/tapioca dsl` to generate the runtime definitions for your application.
 
-While going through steps 5. and 6., you might realize that some shims have become obsolete or incorrect. Make sure to edit or remove existing shims that are causing errors.
 
-### 7. Run Tapioca todo
 
-After steps 5. and 6., if there are still errors for missing definitions, you may want to try bringing back the shims you saved for later.
-
-If the previous shims do not satisfy all errors, you can also skip fixing them for later with the todo command. Running `bin/tapioca todo` will generate a file with empty definitions, and allows developers to track which definitions are still missing. This is optional, you might want to actually write the complete signatures in shims.
-
-### 8. Bump strictness on files
-
-After all the RBIs are generated and no type errors are occurring, some files might actually be ready to move from `typed: false` to `typed: true`. [Spoom](https://github.com/Shopify/spoom) can automatically bump files to `true` if doing so produces no new typing errors.
-
-To bump all possible files to `true`, simply run `bundle exec spoom bump`.
-
-### Things that do not need to happen
+## Things that do not need to happen
 
 Here are some things that do not need to be run for the migration (or ever in some cases).
 
@@ -134,10 +134,6 @@ Here are some things that do not need to be run for the migration (or ever in so
 3. `bundle exec srb rbi suggest-typed`: not necessary at all, ever. Prefer `bundle exec spoom bump`
 
 Done! Your application should be all set and type checking should pass.
-
-## How does tapioca compare to "srb rbi gems" ?
-
-[Please see the detailed answer on our wiki](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F)
 
 
 ## Tapioca commands
