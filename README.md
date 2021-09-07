@@ -23,7 +23,7 @@ Tapioca helps simplify your setup too. Gems such as `sorbet-typed`, `sorbet-rail
 
 ## 1. Preparing an existing Sorbet-installation for Tapioca
 
-***If you are not yet using Sorbet then skip straight to [step 2](#install_tapioca_and_generate_rbi files)***
+***If you are not yet using Sorbet then skip straight to [step 2](#install_tapioca_and_generate_rbi_files)***
 
 The RBI files that Tapioca generates **should not be added** on top of those that Sorbet has already generated for you. Tapioca needs to run afresh. Tapioca also supercedes the need for gems like `sorbet-rails` or `sorbet-typed`. In order to start using Tapioca you will need to remove these gems and regenerate all of your automatically generated RBI files.
 
