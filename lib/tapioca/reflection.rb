@@ -105,5 +105,27 @@ module Tapioca
     def name_of_type(type)
       type.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
     end
+
+    # Returns an array with all classes that are < than the supplied class.
+    #
+    #   class C; end
+    #   descendants_of(C) # => []
+    #
+    #   class B < C; end
+    #   descendants_of(C) # => [B]
+    #
+    #   class A < B; end
+    #   descendants_of(C) # => [B, A]
+    #
+    #   class D < C; end
+    #   descendants_of(C) # => [B, A, D]
+    sig { type_parameters(:U).params(klass: T.type_parameter(:U)).returns(T::Array[T.type_parameter(:U)]) }
+    def descendants_of(klass)
+      result = ObjectSpace.each_object(klass.singleton_class).reject do |k|
+        T.cast(k, Module).singleton_class? || T.unsafe(k) == klass
+      end
+
+      T.unsafe(result)
+    end
   end
 end

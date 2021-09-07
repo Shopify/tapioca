@@ -6,7 +6,6 @@ require "minitest/spec"
 require "content_helper"
 require "template_helper"
 require "isolation_helper"
-require "tapioca/core_ext/string"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
@@ -46,7 +45,19 @@ class DslSpec < Minitest::Spec
 
   sig { returns(String) }
   def target_class_file
-    target_class_name.underscore
+    underscore(target_class_name)
+  end
+
+  sig { params(class_name: String).returns(String) }
+  def underscore(class_name)
+    return class_name unless /[A-Z-]|::/.match?(class_name)
+
+    word = class_name.to_s.gsub("::", "/")
+    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
   end
 
   sig { params(str: String, indent: Integer).returns(String) }

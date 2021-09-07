@@ -2,7 +2,6 @@
 
 require "yard"
 require "tapioca"
-require "tapioca/core_ext/class"
 
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
   task.files = ["lib/tapioca/compilers/dsl/**/*.rb"]
