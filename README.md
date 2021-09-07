@@ -6,7 +6,7 @@
 
 Tapioca is a library used to generate RBI (Ruby interface) files for use with [Sorbet](https://sorbet.org). RBI files provide the structure (classes, modules, methods, parameters) of the gem/library to Sorbet to assist with typechecking.
 
-### Why use Tapioca
+### Why use Tapioca?
 
 As yet, no gem exports type information in a consumable format and it would be a huge effort to manually maintain such an interface file for all the gems that your codebase depends on. Thus, there is a need for an automated way to generate the appropriate RBI file for a given gem. The `tapioca` gem, developed at Shopify, is able to do exactly that to almost 99% accuracy. It can generate the definitions for all statically defined types and most of the runtime defined types exported from Ruby gems (non-Ruby gems are not handled yet).
 
@@ -17,7 +17,7 @@ Tapioca helps simplify your setup too. Gems such as `sorbet-typed`, `sorbet-rail
 
 ## Installing Tapioca in a project with no existing RBI files (i.e. a fresh Sorbet project)
 
-### 1. Add this line to your application's `Gemfile`
+### Add Tapioca to your application's `Gemfile`
 
 ```ruby
 group :development do
@@ -26,31 +26,31 @@ end
 ```
 and run `bundle install`
 
-### 2, Initialize folder structure
+### Initialize the folder structure
 
 Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
-### 3. Generate for gems
+### Generate gems RBIs
 
-Command: `tapioca generate [gems...]`
+Command: `tapioca gem [gem...]`
 
 This will generate RBIs for the specified gems and place them in the RBI directory.
 
-### 4. Generate for all gems in Gemfile
+or:
 
-Command: `tapioca sync`
+Command: `tapioca gem`
 
 This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
 
-### 5. Generate the list of all unresolved constants
+### Generate the list of all unresolved constants
 
 Command: `tapioca todo`
 
 This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
-### 6. Generate DSL RBI files
+### Generate DSL RBI files
 
 Command: `tapioca dsl [constant...]`
 
@@ -91,7 +91,7 @@ Re-initialize the `sorbet` folder structure with `bundle exec tapioca init`. You
 
 This step is the iterative process to generate the RBIs necessary for your application's gems. This part may vary depending on your setup.
 
-1. Run `bin/tapioca generate`. This generates RBIs for the gems in your application
+1. Run `bin/tapioca gem`. This generates RBIs for the gems in your application
 2. Try to run the type checker (`bundle exec srb tc`)
 3. If you notice that definitions are missing for gems, you might need to add the gem for which those definitions belong to in `sorbet/tapioca/require.rb`. Before manually adding requires, try running `bin/tapioca require` so that Tapioca can figure out the requires. If this still does not work, proceed to write manual requires
 4. After requiring the gems inside that file, go back to 1. until there are no more errors coming from gems
