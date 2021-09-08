@@ -11,6 +11,7 @@ In the following section you will find all available DSL generators:
 * [ActiveRecordAssociations](generator_activerecordassociations.md)
 * [ActiveRecordColumns](generator_activerecordcolumns.md)
 * [ActiveRecordEnum](generator_activerecordenum.md)
+* [ActiveRecordFixtures](generator_activerecordfixtures.md)
 * [ActiveRecordScope](generator_activerecordscope.md)
 * [ActiveRecordTypedStore](generator_activerecordtypedstore.md)
 * [ActiveResource](generator_activeresource.md)
