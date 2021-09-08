@@ -51,6 +51,7 @@ module Tapioca
           require "baz"
           require "foo/secret"
           require "foo/will_fail"
+          require "rake"
           require "sidekiq"
           require "smart_properties"
         CONTENTS

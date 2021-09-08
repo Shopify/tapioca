@@ -3,7 +3,6 @@
 
 require "pathname"
 require "thor"
-require "rake"
 
 module Tapioca
   class Generator < ::Thor::Shell::Color
@@ -697,6 +696,7 @@ module Tapioca
     sig { void }
     def abort_if_pending_migrations!
       return unless File.exist?("config/application.rb")
+      return unless defined?(::Rake)
 
       Rails.application.load_tasks
       Rake::Task["db:abort_if_pending_migrations"].invoke if Rake::Task.task_defined?("db:abort_if_pending_migrations")
