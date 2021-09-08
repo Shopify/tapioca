@@ -1,6 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
+require "rake"
 require "sidekiq"
 require "smart_properties"
 require "active_support/all"
