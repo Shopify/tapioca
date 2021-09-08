@@ -1,6 +1,6 @@
 name: CI
 
-on: push
+on: [push, pull_request]
 
 env:
   SRB_SKIP_GEM_RBIS: true
