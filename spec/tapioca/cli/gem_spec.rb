@@ -157,6 +157,17 @@ module Tapioca
           OUTPUT
         end
 
+        it "must not include `rbi` definitions into `tapioca` RBI" do
+          output = execute("gem")
+
+          assert_includes(output, <<~OUTPUT)
+            Compiling tapioca, this may take a few seconds...   Done
+          OUTPUT
+
+          tapioca_rbi_file = T.must(Dir.glob("#{outdir}/tapioca@*.rbi").first)
+          refute_includes(File.read(tapioca_rbi_file), "class RBI::Module")
+        end
+
         it "must generate multiple gem RBIs" do
           output = execute("gem", ["foo", "bar"])
 

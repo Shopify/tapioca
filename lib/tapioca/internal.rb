@@ -3,7 +3,6 @@
 
 require "tapioca"
 require "tapioca/loader"
-require "tapioca/constant_locator"
 require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/sorbet_ext/fixed_hash_patch"
 require "tapioca/generic_type_registry"
