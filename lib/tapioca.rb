@@ -17,5 +17,6 @@ module Tapioca
   class Error < StandardError; end
 end
 
+require "tapioca/constant_locator"
 require "tapioca/compilers/dsl/base"
 require "tapioca/version"
