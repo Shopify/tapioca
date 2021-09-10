@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "byebug"
+
 require "tapioca/internal"
 require "minitest/autorun"
 require "minitest/spec"
