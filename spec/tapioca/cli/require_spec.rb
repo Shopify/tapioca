@@ -39,7 +39,7 @@ module Tapioca
         assert_equal(<<~OUTPUT, output)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
-          Please review changes and commit them, then run `bin/tapioca sync`.
+          Please review changes and commit them, then run `bin/tapioca gem`.
         OUTPUT
 
         assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
@@ -69,7 +69,7 @@ module Tapioca
         assert_equal(<<~OUTPUT, output)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
-          Please review changes and commit them, then run `bin/tapioca sync`.
+          Please review changes and commit them, then run `bin/tapioca gem`.
         OUTPUT
 
         assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
