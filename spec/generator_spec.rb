@@ -17,14 +17,22 @@ module Tapioca
     end
 
     around(:each) do |&blk|
-      FileUtils.rm_rf(T.unsafe(self).repo_path / "sorbet") if Dir.exist?(T.unsafe(self).repo_path / "sorbet")
-      FileUtils.rm(T.unsafe(self).repo_path / "Gemfile.lock") if File.exist?(T.unsafe(self).repo_path / "Gemfile.lock")
+      FileUtils.rm_rf(@repo_path / "sorbet") if Dir.exist?(@repo_path / "sorbet")
+      FileUtils.rm(@repo_path / "Gemfile.lock") if File.exist?(@repo_path / "Gemfile.lock")
       Dir.mktmpdir do |outdir|
         @outdir = outdir
         super(&blk)
       end
-      FileUtils.rm_rf(T.unsafe(self).repo_path / "sorbet") if Dir.exist?(T.unsafe(self).repo_path / "sorbet")
-      FileUtils.rm(T.unsafe(self).repo_path / "Gemfile.lock") if File.exist?(T.unsafe(self).repo_path / "Gemfile.lock")
+      FileUtils.rm_rf(@repo_path / "sorbet") if Dir.exist?(@repo_path / "sorbet")
+      FileUtils.rm(@repo_path / "Gemfile.lock") if File.exist?(@repo_path / "Gemfile.lock")
+    end
+
+    DEFAULT_OUTDIR = T.let("sorbet/rbi/dsl", String)
+
+    sig { returns(Pathname) }
+    def outpath
+      @outpath = T.let(@outpath, T.nilable(Pathname))
+      @outpath ||= Pathname.new(DEFAULT_OUTDIR)
     end
   end
 end

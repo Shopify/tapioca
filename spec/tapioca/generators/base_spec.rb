@@ -8,10 +8,15 @@ require "tapioca/generators/base"
 module Tapioca
   module Generators
     class BaseSpec < GeneratorSpec
+      class TestGenerator < Base
+        def generate; end
+
+        def error_handler(error); end
+      end
+
       describe "#rbi_header" do
-        it "displays when config.file_header is true" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+        it "displays when file_header is true" do
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.rbi_header("bin/tapioca dsl")
           expected = <<~RUBY
             # DO NOT EDIT MANUALLY
@@ -22,17 +27,15 @@ module Tapioca
           assert_equal(expected, result)
         end
 
-        it "doesn't display when config.file_header is false" do
-          config = ConfigBuilder.from_options(:dsl, { "file_header" => false })
-          generator = Tapioca::Generators::Base.new(config)
-          result = generator.rbi_header("bin/tapioca dsl")
+        it "doesn't display when file_header is false" do
+          generator = TestGenerator.new(outpath: outpath)
+          result = generator.rbi_header("bin/tapioca dsl", file_header: false)
           expected = ""
           assert_equal(expected, result)
         end
 
         it "displays the correct information when reason is set" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.rbi_header("bin/tapioca dsl", reason: "foo")
           expected = <<~RUBY
             # DO NOT EDIT MANUALLY
@@ -44,8 +47,7 @@ module Tapioca
         end
 
         it "displays the correct information when strictness is set" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.rbi_header("bin/tapioca dsl", strictness: "true")
           expected = <<~RUBY
             # DO NOT EDIT MANUALLY
@@ -59,8 +61,7 @@ module Tapioca
         end
 
         it "displays the correct information when reason and strictness are set" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.rbi_header("bin/tapioca dsl", reason: "foo", strictness: "true")
           expected = <<~RUBY
             # DO NOT EDIT MANUALLY
@@ -77,19 +78,17 @@ module Tapioca
       describe "#dsl_rbi_filename" do
         it "provides the correct filename for single-word constant names" do
           constant = "Constant"
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.dsl_rbi_filename(constant)
-          expected = config.outpath / "constant.rbi"
+          expected = generator.outpath / "constant.rbi"
           assert_equal(expected, result)
         end
 
         it "provides the correct filename for multi-word constant names" do
           constant = "ThisIsMyTestConstant"
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.dsl_rbi_filename(constant)
-          expected = config.outpath / "this_is_my_test_constant.rbi"
+          expected = generator.outpath / "this_is_my_test_constant.rbi"
           assert_equal(expected, result)
         end
       end
@@ -98,8 +97,7 @@ module Tapioca
         it "returns an empty array when constants aren't found" do
           skip
           constants = ["Foo", "Bar", "Baz"]
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.constantize(constants)
           expected = []
           assert_equal(expected, result)
@@ -108,10 +106,13 @@ module Tapioca
         it "returns an array of filepaths when constants are found" do
           skip
           constants = ["Foo", "Bar", "Baz"]
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.constantize(constants)
-          expected = [config.outpath / "foo.rbi", config.outpath / "bar.rbi", config.outpath / "baz.rbi"]
+          expected = [
+            generator.outpath / "foo.rbi",
+            generator.outpath / "bar.rbi",
+            generator.outpath / "baz.rbi",
+          ]
           assert_equal(expected, result)
         end
       end
@@ -125,16 +126,14 @@ module Tapioca
         end
 
         it "returns all RBI filenames if no constant is requested" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.existing_rbi_filenames([])
           expected = [].to_set # TODO: This should be populated with all RBIs so we should have some
           assert_equal(expected, result)
         end
 
         it "returns only the specified RBI if the constant is requested" do
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.existing_rbi_filenames(["Foo"])
           expected = [Pathname.new("sorbet/rbi/dsl/foo.rbi")].to_set
           assert_equal(expected, result)
@@ -145,8 +144,7 @@ module Tapioca
         it "does nothing when filename doesn't exist" do
           fake_filename = repo_path / "foo.rb"
           refute_path_exists(fake_filename)
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           generator.remove(fake_filename)
           refute_path_exists(fake_filename)
         end
@@ -158,8 +156,7 @@ module Tapioca
             module Disposable; end
           RUBY
           assert_path_exists(filename)
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           generator.remove(filename)
           refute_path_exists(filename)
         end
@@ -168,8 +165,7 @@ module Tapioca
       describe "#underscore" do
         it "works for singular classes" do
           klass = "FooBar"
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.underscore(klass)
           expected = "foo_bar"
           assert_equal(expected, result)
@@ -177,8 +173,7 @@ module Tapioca
 
         it "works for nested classes" do
           klass = "FooBar::Baz"
-          config = ConfigBuilder.from_options(:dsl, {})
-          generator = Tapioca::Generators::Base.new(config)
+          generator = TestGenerator.new(outpath: outpath)
           result = generator.underscore(klass)
           expected = "foo_bar/baz"
           assert_equal(expected, result)
