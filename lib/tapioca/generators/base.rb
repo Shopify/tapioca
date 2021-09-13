@@ -3,7 +3,7 @@
 
 module Tapioca
   module Generators
-    class BaseGenerator
+    class Base
       extend(T::Sig)
       extend(T::Helpers)
 
