@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "active_support/all"
-
 module Tapioca
   module Generators
     class BaseGenerator
@@ -66,7 +64,7 @@ module Tapioca
 
       sig { params(constant_name: String).returns(Pathname) }
       def dsl_rbi_filename(constant_name)
-        config.outpath / "#{constant_name.underscore}.rbi"
+        config.outpath / "#{underscore(constant_name)}.rbi"
       end
 
       sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
@@ -104,6 +102,18 @@ module Tapioca
       def remove(filename)
         return unless filename.exist?
         filename.unlink
+      end
+
+      sig { params(class_name: String).returns(String) }
+      def underscore(class_name)
+        return class_name unless /[A-Z-]|::/.match?(class_name)
+
+        word = class_name.to_s.gsub("::", "/")
+        word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+        word.tr!("-", "_")
+        word.downcase!
+        word
       end
     end
   end

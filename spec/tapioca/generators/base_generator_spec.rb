@@ -165,6 +165,26 @@ module Tapioca
           refute_path_exists(filename)
         end
       end
+
+      describe "#underscore" do
+        it "works for singular classes" do
+          klass = "FooBar"
+          config = ConfigBuilder.from_options(:dsl, {})
+          generator = Tapioca::Generators::BaseGenerator.new(config)
+          result = generator.underscore(klass)
+          expected = "foo_bar"
+          assert_equal(expected, result)
+        end
+
+        it "works for nested classes" do
+          klass = "FooBar::Baz"
+          config = ConfigBuilder.from_options(:dsl, {})
+          generator = Tapioca::Generators::BaseGenerator.new(config)
+          result = generator.underscore(klass)
+          expected = "foo_bar/baz"
+          assert_equal(expected, result)
+        end
+      end
     end
   end
 end
