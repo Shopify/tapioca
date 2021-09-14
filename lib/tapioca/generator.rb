@@ -73,7 +73,7 @@ module Tapioca
       say("Done", :green)
 
       say("All requires from this application have been written to #{name}.", [:green, :bold])
-      cmd = set_color("#{Config::DEFAULT_COMMAND} sync", :yellow, :bold)
+      cmd = set_color("#{Config::DEFAULT_COMMAND} gem", :yellow, :bold)
       say("Please review changes and commit them, then run `#{cmd}`.", [:green, :bold])
     end
 
@@ -537,7 +537,7 @@ module Tapioca
       rbi_body_content = compiler.compile(gem)
       content = String.new
       content << rbi_header(
-        "#{Config::DEFAULT_COMMAND} sync",
+        "#{Config::DEFAULT_COMMAND} gem #{gem.name}",
         reason: "types exported from the `#{gem.name}` gem",
         strictness: strictness
       )
@@ -670,7 +670,7 @@ module Tapioca
         diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
       end
 
-      report_diff_and_exit_if_out_of_date(diff, "sync")
+      report_diff_and_exit_if_out_of_date(diff, "gem")
     end
 
     sig { params(diff: T::Hash[String, Symbol], command: String).void }
