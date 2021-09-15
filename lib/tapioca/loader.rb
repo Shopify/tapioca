@@ -14,9 +14,9 @@ module Tapioca
     def load_bundle(initialize_file, require_file)
       require_helper(initialize_file)
 
-      gemfile.require_bundle
-
       load_rails_application
+
+      gemfile.require_bundle
 
       require_helper(require_file)
 

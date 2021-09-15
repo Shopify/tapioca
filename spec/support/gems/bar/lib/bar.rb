@@ -9,3 +9,9 @@ module Bar
     39 + a + b + number
   end
 end
+
+# Used to check we load the Rails application before the gems
+#
+# We try to access the `Rails::Application` constant defined in the `config/application.rb` of the support repo.
+# If the application is not loaded before the gems, this call will fail.
+puts Rails::Application
