@@ -53,7 +53,7 @@ Then run `bundle install`
 
 ### Generate the RBI files for gems
 
-````bash
+```bash
 # Generate sorbet/config and sorbet/tapioca/require.rb if required
 # (they won't be touched if they already exist)
 bundle exec tapioca init
