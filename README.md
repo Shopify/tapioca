@@ -68,13 +68,13 @@ bundle exec tapioca gem
 # defining all unresolved constants as empty modules
 bundle exec tapioca todo
 
-````
+```
 
 ### Iterate RBI generation to ensure all gems are covered
 
 The first step may result in some typechecking errors due to missing definitions. Let's pick them up and dela with them:
 
-````bash
+```bash
 # Check whether any gems are missed by running typechecking
 bundle exec srb tc
 
@@ -85,7 +85,7 @@ bin/tapioca require
 # If this doesn't add the requisite gems, add them manually to:
 # sorbet/tapioca/require.rb
 # repeat as necessary
-````
+```
 
 Still having problems with gems not being included? Check the section on [manual gem requires](#manual-gem-requires).
 
@@ -96,10 +96,10 @@ Methods such as Rails' `belongs_to` will dynamically generate a set of helper-me
 at runtime. Left to its own devices, Sorbet won't see them and will fall over. However Tapioca can figure
 out and generate their RBIs:
 
-````bash
+```bash
 # Generate runtime definitions
 bin/tapioca dsl
-````
+```
 
 While generating RBI files you might realize that some shims have become obsolete or incorrect. Make sure to edit or remove existing shims that are causing errors. You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
 
