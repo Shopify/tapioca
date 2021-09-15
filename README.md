@@ -40,7 +40,7 @@ Remove `sorbet-rails` or other such alternative solutions from the `Gemfile`. As
 If the previously used alternatives had their own configuration files, you should remove them as well.
 
 ## 2. Install Tapioca and generate RBI files
-*Star there in a fresh sorbet installation.*
+*Start here if you have a fresh sorbet installation.*
 
 ### Add Tapioca to your application's `Gemfile`
 
