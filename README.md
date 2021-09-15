@@ -59,8 +59,7 @@ Then run `bundle install`
 bundle exec tapioca init
 
 # Generate RBI files for gems
-# (Generate only for specific gems using `tapioca gem 
-gem...]`)
+# (Generate only for specific gems using `tapioca gem gem...]`)
 bundle exec tapioca gem
 
 # Generate the list of all unresolved constants
