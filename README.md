@@ -102,6 +102,8 @@ bin/tapioca dsl
 
 While generating RBI files you might realize that some shims have become obsolete or incorrect. Make sure to edit or remove existing shims that are causing errors. You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
 
+(Note - there are still a few rough patches around this WRT Rails - [please see this interim fix](https://github.com/Shopify/tapioca/issues/179#issuecomment-738948320))
+
 ### Run Tapioca todo (optional)
 
 (If there are still errors for missing definitions, you may want to try bringing back any shims you saved for later)
