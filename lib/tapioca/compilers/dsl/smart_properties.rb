@@ -73,9 +73,14 @@ module Tapioca
 
           instance_methods = constant.instance_methods(false).map(&:to_s).to_set
 
+          const_name = T.must(constant.name)
+          source_location = Object.const_source_location(const_name)&.join(":")
+          loc = RBI::Comment.new("file://#{source_location}") if source_location
+          comments = [loc]
+
           root.create_path(constant) do |k|
             properties.values.each do |property|
-              generate_methods_for_property(k, property) do |method_name|
+              generate_methods_for_property(k, property, comments: comments) do |method_name|
                 !instance_methods.include?(method_name.to_sym)
               end
             end
@@ -97,10 +102,12 @@ module Tapioca
           params(
             klass: RBI::Scope,
             property: ::SmartProperties::Property,
+            comments: T::Array[RBI::Comment],
             block: T.proc.params(arg: String).returns(T::Boolean)
           ).void
         end
-        def generate_methods_for_property(klass, property, &block)
+        # file://../service.yml
+        def generate_methods_for_property(klass, property, comments: [], &block)
           type = type_for(property)
 
           if property.writable?
@@ -110,11 +117,12 @@ module Tapioca
             klass.create_method(
               method_name,
               parameters: [create_param(name, type: type)],
-              return_type: type
+              return_type: type,
+              comments: comments
             ) if block.call(method_name)
           end
 
-          klass.create_method(property.reader.to_s, return_type: type) if block.call(property.reader.to_s)
+          klass.create_method(property.reader.to_s, return_type: type, comments: comments) if block.call(property.reader.to_s)
         end
 
         BOOLEANS = T.let([

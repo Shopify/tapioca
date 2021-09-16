@@ -59,6 +59,7 @@ module Tapioca
         .reject { |gem| gem.ignore?(dir) }
         .uniq(&:rbi_file_name)
         .sort_by(&:rbi_file_name)
+        .each { |g| puts g.spec.metadata["homepage_uri"]; g}
       [dependencies, missing_specs]
     end
 
@@ -96,6 +97,9 @@ module Tapioca
       extend(T::Sig)
 
       IGNORED_GEMS = T.let(["sorbet", "sorbet-static", "sorbet-runtime"].freeze, T::Array[String])
+
+      sig { returns(T.untyped) }
+      attr_reader :spec
 
       sig { returns(String) }
       attr_reader :full_gem_path, :version
