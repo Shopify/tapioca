@@ -84,10 +84,10 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          all_classes.select do |c|
-            c < ::SmartProperties
-          end.reject do |c|
-            name_of(c).nil? || c == ::SmartProperties::Validations::Ancestor
+          all_modules.select do |c|
+            name_of(c) &&
+              c != ::SmartProperties::Validations::Ancestor &&
+              c < ::SmartProperties && ::SmartProperties::ClassMethods === c
           end
         end
 

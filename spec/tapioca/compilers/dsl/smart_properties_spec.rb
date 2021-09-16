@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_empty(gathered_constants)
     end
 
-    it("gathers only SmartProperty classes") do
+    it("gathers only SmartProperty classes and modules") do
       add_ruby_file("content.rb", <<~RUBY)
         class Post
           include ::SmartProperties
@@ -21,14 +21,25 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
 
         class Comment
         end
+
+        module Viewable
+          include ::SmartProperties
+        end
+
+        module Editable
+        end
       RUBY
 
-      assert_equal(["Post", "User"], gathered_constants)
+      assert_equal(["Post", "User", "Viewable"], gathered_constants)
     end
 
-    it("ignores SmartProperty classes without a name") do
+    it("ignores SmartProperty classes and modules without a name") do
       add_ruby_file("content.rb", <<~RUBY)
         post = Class.new do
+          include ::SmartProperties
+        end
+
+        viewable = Module.new do
           include ::SmartProperties
         end
       RUBY
@@ -52,7 +63,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for simple smart property") do
+    it("generates RBI file for simple smart property class") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -73,6 +84,29 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates RBI file for simple smart property module") do
+      add_ruby_file("viewable.rb", <<~RUBY)
+        module Viewable
+          include SmartProperties
+          property :title, accepts: String
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        module Viewable
+          sig { returns(T.nilable(::String)) }
+          def title; end
+
+          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+          def title=(title); end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Viewable))
     end
 
     it("generates RBI file for required smart property") do
