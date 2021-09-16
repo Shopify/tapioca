@@ -246,7 +246,7 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
-    smart_properties (1.15.0)
+    smart_properties (1.16.2)
     sorbet (0.5.9125)
       sorbet-static (= 0.5.9125)
     sorbet-runtime (0.5.9125)
