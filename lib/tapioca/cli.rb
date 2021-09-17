@@ -44,6 +44,8 @@ module Tapioca
     desc "todo", "generate the list of unresolved constants"
     def todo
       Tapioca.silence_warnings do
+        config = ConfigBuilder.from_options(:todo, options)
+        generator = Tapioca::Generators::Todo.new(config)
         generator.build_todos
       end
     end
@@ -68,6 +70,8 @@ module Tapioca
       desc: "Supresses file creation output"
     def dsl(*constants)
       Tapioca.silence_warnings do
+        config = ConfigBuilder.from_options(:dsl, options)
+        generator = Tapioca::Generators::Dsl.new(config)
         generator.build_dsl(
           constants,
           should_verify: options[:verify],
@@ -106,6 +110,9 @@ module Tapioca
       desc: "Verifies RBIs are up-to-date"
     def gem(*gems)
       Tapioca.silence_warnings do
+        config = ConfigBuilder.from_options(:gem, options)
+        generator = Tapioca::Generators::Gem.new(config)
+
         all = options[:all]
         verify = options[:verify]
 
@@ -253,9 +260,7 @@ module Tapioca
 
       def generator
         current_command = T.must(current_command_chain.first)
-        @generator ||= Generator.new(
-          ConfigBuilder.from_options(current_command, options)
-        )
+        @generator ||= Generator.new(ConfigBuilder.from_options(current_command, options))
       end
     end
   end

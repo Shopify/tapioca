@@ -35,6 +35,8 @@ module Tapioca
     DEFAULT_GEMDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
     DEFAULT_TODOSPATH = T.let("#{DEFAULT_RBIDIR}/todo.rbi", String)
 
+    DSL_COMPILERS_PATH = T.let("#{__dir__}/compilers/dsl", String)
+
     DEFAULT_OVERRIDES = T.let({
       # ActiveSupport overrides some core methods with different signatures
       # so we generate a typed: false RBI for it to suppress errors
