@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-# NOTE: Temporary measure to get pairity with existing behaviour. Thor should be abstracted out so Generators
+# NOTE: Temporary measure to get parity with existing behaviour. Thor should be abstracted out so Generators
 # do NOT need to know about the CLI interface.
 require "thor"
 
