@@ -13,14 +13,6 @@ module Tapioca
         super(config)
       end
 
-      sig { override.void }
-      def generate
-      end
-
-      sig { override.params(error: Error).void }
-      def handle_error(error)
-      end
-
       sig { params(gem_names: T::Array[String]).void }
       def build_gem_rbis(gem_names)
         require_gem_file

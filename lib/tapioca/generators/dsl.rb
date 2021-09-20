@@ -10,14 +10,6 @@ module Tapioca
         super(config)
       end
 
-      sig { override.void }
-      def generate
-      end
-
-      sig { override.params(error: Error).void }
-      def handle_error(error)
-      end
-
       sig do
         params(
           requested_constants: T::Array[String],

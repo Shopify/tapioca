@@ -4,15 +4,6 @@
 module Tapioca
   module Generators
     class Todo < Base
-      sig { override.void }
-      def generate
-        build_todos
-      end
-
-      sig { override.params(error: Error).void }
-      def handle_error(error)
-      end
-
       sig { void }
       def build_todos
         todos_path = config.todos_path
