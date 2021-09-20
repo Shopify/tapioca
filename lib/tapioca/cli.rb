@@ -37,6 +37,8 @@ module Tapioca
     desc "require", "generate the list of files to be required by tapioca"
     def require
       Tapioca.silence_warnings do
+        config = ConfigBuilder.from_options(:require, options)
+        generator = Tapioca::Generators::Require.new(config)
         generator.build_requires
       end
     end
@@ -260,7 +262,8 @@ module Tapioca
 
       def generator
         current_command = T.must(current_command_chain.first)
-        @generator ||= Generator.new(ConfigBuilder.from_options(current_command, options))
+        config = ConfigBuilder.from_options(current_command, options)
+        @generator ||= Generator.new(config)
       end
     end
   end
