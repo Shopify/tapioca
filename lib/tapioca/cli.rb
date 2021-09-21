@@ -48,8 +48,15 @@ module Tapioca
 
     desc "todo", "generate the list of unresolved constants"
     def todo
+      current_command = T.must(current_command_chain.first)
+      config = ConfigBuilder.from_options(current_command, options)
+      generator = Generators::Todo.new(
+        todos_path: config.todos_path,
+        file_header: config.file_header,
+        default_command: Config::DEFAULT_COMMAND
+      )
       Tapioca.silence_warnings do
-        generator.build_todos
+        generator.generate
       end
     end
 
