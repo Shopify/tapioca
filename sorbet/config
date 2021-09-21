@@ -1,6 +1,6 @@
 --dir
 .
 --ignore=/vendor
---ignore=/spec/support/gems/fizz
---ignore=/spec/support/gems/bar
+--ignore=/spec/support/gems/fizz/rbi
+--ignore=/spec/support/gems/bar/rbi
 --enable-experimental-requires-ancestor
