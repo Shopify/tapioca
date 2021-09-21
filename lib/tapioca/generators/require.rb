@@ -31,8 +31,7 @@ module Tapioca
         # it with the new one found in the client code and remove the old ones.
         File.delete(@requires_path) if File.exist?(@requires_path)
 
-        content = String.new
-        content << "# typed: true\n"
+        content = +"# typed: true\n"
         content << "# frozen_string_literal: true\n\n"
         content << rb_string
 
