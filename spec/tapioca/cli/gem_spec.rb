@@ -153,6 +153,14 @@ module Tapioca
           conflict_spec = "Conflicting definitions for `::Bar::Test#foo(a, b)`"
           assert_includes(output, conflict_spec)
 
+          conflict_message = "Found at:"
+          conflict_first = "support/gems/bar/rbi/first.rbi:9:4-9:54"
+          conflict_second = "support/gems/bar/rbi/second.rbi:9:4-9:35"
+
+          [conflict_message, conflict_first, conflict_second].each do |message|
+            assert_includes(output, message)
+          end
+
           assert_path_exists("#{outdir}/bar@0.3.0.rbi")
           assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
         end

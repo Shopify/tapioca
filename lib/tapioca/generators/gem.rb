@@ -181,7 +181,12 @@ module Tapioca
         rbi_merge_result = gem.exported_rbi_tree
         copied_rbi = rbi_merge_result.tree
 
-        say("\n #{rbi_merge_result.conflicts.join("\n")}", :yellow)
+        rbi_merge_result.conflicts.each do |conflict|
+          say("\n\n  #{conflict}", :yellow)
+          say("  Found at:", :yellow)
+          say("    #{conflict.left.loc}", :yellow)
+          say("    #{conflict.right.loc}", :yellow)
+        end
 
         display_conflict_warnings(rbi.root, copied_rbi)
 
