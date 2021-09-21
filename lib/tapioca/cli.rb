@@ -36,8 +36,13 @@ module Tapioca
 
     desc "require", "generate the list of files to be required by tapioca"
     def require
+      generator = Generators::Require.new(
+        requires_path: ConfigBuilder.from_options(:require, options).postrequire,
+        sorbet_config_path: Config::SORBET_CONFIG,
+        default_command: Config::DEFAULT_COMMAND
+      )
       Tapioca.silence_warnings do
-        generator.build_requires
+        generator.generate
       end
     end
 
