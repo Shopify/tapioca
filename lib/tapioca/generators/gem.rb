@@ -178,11 +178,13 @@ module Tapioca
       def merge_with_exported_rbi(gem, rbi)
         return unless gem.has_exported_rbi_files?
 
-        copied_rbi = gem.exported_rbi_tree do |conflicts|
-          say("\n #{conflicts.join("\n")}", :yellow)
-        end
+        rbi_merge_result = gem.exported_rbi_tree
+        copied_rbi = rbi_merge_result.tree
+
+        say("\n #{rbi_merge_result.conflicts.join("\n")}", :yellow)
 
         display_conflict_warnings(rbi.root, copied_rbi)
+
         RBI::Rewriters::Merge.merge_trees(rbi.root, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
       end
 

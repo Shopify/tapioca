@@ -162,20 +162,18 @@ module Tapioca
         !exported_rbi_files.empty?
       end
 
-      sig { params(block: T.proc.params(arg: T::Array[RBI::Rewriters::Merge::Conflict]).void).returns(RBI::Tree) }
-      def exported_rbi_tree(&block)
-        rbi = RBI::Tree.new
-        rewriter = RBI::Rewriters::Merge.new
-        conflicts = []
+      sig { returns(RBI::MergeResult) }
+      def exported_rbi_tree
+        rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
+        all_conflicts = T.let([], T::Array[RBI::Rewriters::Merge::Conflict])
+
         exported_rbi_files.each do |file|
           gem_rbi = RBI::Parser.parse_file(file)
-          rbi = RBI::Rewriters::Merge.merge_trees(rbi, gem_rbi, keep: RBI::Rewriters::Merge::Keep::NONE)
-          conflict = rewriter.merge(gem_rbi)
-          conflicts << conflict unless conflict.blank?
+          file_conflicts = rewriter.merge(gem_rbi)
+          all_conflicts = all_conflicts.concat(file_conflicts)
         end
-        block.call(conflicts)
-        rbi.nest_singleton_methods!
-        rbi
+
+        RBI::MergeResult.new(tree: rewriter.tree, conflicts: all_conflicts)
       end
 
       private

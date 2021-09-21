@@ -137,4 +137,9 @@ module RBI
     const :param, RBI::Param
     const :type, String
   end
+
+  class MergeResult < T::Struct
+    const :tree, RBI::Tree
+    const :conflicts, T::Array[RBI::Rewriters::Merge::Conflict]
+  end
 end
