@@ -159,7 +159,7 @@ module Tapioca
 
       sig { returns(T::Boolean) }
       def has_exported_rbi_files?
-        File.directory?("#{full_gem_path}/rbi")
+        !exported_rbi_files.empty?
       end
 
       sig { params(block: T.proc.params(arg: T::Array[RBI::Rewriters::Merge::Conflict]).void).returns(RBI::Tree) }
