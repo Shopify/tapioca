@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "pathname"
@@ -10,17 +10,22 @@ module Tapioca
         extend(T::Sig)
         include(Reflection)
 
-        IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"]
+        IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
 
-        attr_reader(:gem, :indent)
+        sig { returns(Gemfile::GemSpec) }
+        attr_reader :gem
+
+        sig { returns(Integer) }
+        attr_reader :indent
 
         sig { params(gem: Gemfile::GemSpec, indent: Integer).void }
         def initialize(gem, indent = 0)
           @gem = gem
           @indent = indent
-          @seen = Set.new
-          @alias_namespace ||= Set.new
+          @seen = T.let(Set.new, T::Set[String])
+          @alias_namespace = T.let(Set.new, T::Set[String])
           @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
+          @symbols = T.let(nil, T.nilable(T::Set[String]))
         end
 
         sig { returns(String) }
@@ -38,8 +43,9 @@ module Tapioca
 
         private
 
+        sig { params(name: T.nilable(String)).void }
         def add_to_symbol_queue(name)
-          @symbol_queue << name unless symbols.include?(name) || symbol_ignored?(name)
+          @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_ignored?(name)
         end
 
         sig { returns(T::Set[String]) }
@@ -425,6 +431,7 @@ module Tapioca
             end
 
             # rubocop:disable Style/MissingRespondToMissing
+            T::Sig::WithoutRuntime.sig { params(symbol: Symbol, args: T.untyped).returns(T.untyped) }
             def method_missing(symbol, *args)
               # We need this here so that we can handle any random instance
               # method calls on the fake including class that may be done by
@@ -432,6 +439,9 @@ module Tapioca
             end
 
             class << self
+              extend T::Sig
+
+              T::Sig::WithoutRuntime.sig { params(symbol: Symbol, args: T.untyped).returns(T.untyped) }
               def method_missing(symbol, *args)
                 # Similarly, we need this here so that we can handle any
                 # random class method calls on the fake including class
@@ -447,7 +457,7 @@ module Tapioca
             # is the list of all dynamically extended modules because of that
             # constant. We grab that value by deleting the key for the original
             # constant.
-            T.must(mixins_from_modules.delete(constant)),
+            mixins_from_modules.delete(constant),
             # Since we deleted the original constant from the list of keys, all
             # the keys that remain are the ones that are dynamically included modules
             # during the include of the original constant.
@@ -710,8 +720,10 @@ module Tapioca
           SymbolLoader.ignore_symbol?(symbol_name)
         end
 
-        SPECIAL_METHOD_NAMES = ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<",
-                                "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"]
+        SPECIAL_METHOD_NAMES = T.let([
+          "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
+          "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`"
+        ], T::Array[String])
 
         sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)
@@ -770,6 +782,7 @@ module Tapioca
           @seen.include?(name)
         end
 
+        sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
         def initialize_method_for(constant)
           constant.instance_method(:initialize)
         rescue
