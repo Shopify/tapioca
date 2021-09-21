@@ -18,3 +18,5 @@ require "tapioca/compilers/symbol_table/symbol_generator"
 require "tapioca/compilers/symbol_table/symbol_loader"
 require "tapioca/compilers/todos_compiler"
 require "tapioca/compilers/dsl_compiler"
+
+require "tapioca/generators/require"
