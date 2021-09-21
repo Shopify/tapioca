@@ -79,13 +79,23 @@ module Tapioca
       type: :boolean,
       desc: "Supresses file creation output"
     def dsl(*constants)
+      current_command = T.must(current_command_chain.first)
+      config = ConfigBuilder.from_options(current_command, options)
+      generator = Generators::Dsl.new(
+        requested_constants: constants,
+        outpath: config.outpath,
+        generators: config.generators,
+        exclude_generators: config.exclude_generators,
+        file_header: config.file_header,
+        compiler_path: Config::DEFAULT_COMPILER_PATH,
+        tapioca_path: Config::TAPIOCA_PATH,
+        default_command: Config::DEFAULT_COMMAND,
+        should_verify: options[:verify],
+        quiet: options[:quiet],
+        verbose: options[:verbose]
+      )
       Tapioca.silence_warnings do
-        generator.build_dsl(
-          constants,
-          should_verify: options[:verify],
-          quiet: options[:quiet],
-          verbose: options[:verbose]
-        )
+        generator.generate
       end
     end
 
