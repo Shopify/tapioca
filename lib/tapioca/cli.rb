@@ -87,7 +87,7 @@ module Tapioca
         generators: config.generators,
         exclude_generators: config.exclude_generators,
         file_header: config.file_header,
-        compiler_path: Config::DEFAULT_COMPILER_PATH,
+        compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
         tapioca_path: Config::TAPIOCA_PATH,
         default_command: Config::DEFAULT_COMMAND,
         should_verify: options[:verify],

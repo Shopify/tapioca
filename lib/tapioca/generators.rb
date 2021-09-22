@@ -1,6 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-Dir["#{__dir__}/generators/*.rb"].each do |generator|
-  require generator
-end
+require_relative "generators/dsl"
+require_relative "generators/require"
+require_relative "generators/todo"

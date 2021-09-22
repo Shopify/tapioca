@@ -29,7 +29,6 @@ module Tapioca
     TAPIOCA_CONFIG = T.let("#{TAPIOCA_PATH}/config.yml", String)
 
     DEFAULT_COMMAND = T.let("bin/tapioca", String)
-    DEFAULT_COMPILER_PATH = T.let("#{__dir__}/compilers/dsl", String)
     DEFAULT_POSTREQUIRE = T.let("#{TAPIOCA_PATH}/require.rb", String)
     DEFAULT_RBIDIR = T.let("#{SORBET_PATH}/rbi", String)
     DEFAULT_DSLDIR = T.let("#{DEFAULT_RBIDIR}/dsl", String)
