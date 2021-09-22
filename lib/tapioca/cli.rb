@@ -130,6 +130,18 @@ module Tapioca
       Tapioca.silence_warnings do
         all = options[:all]
         verify = options[:verify]
+        current_command = T.must(current_command_chain.first)
+        config = ConfigBuilder.from_options(current_command, options)
+        generator = Generators::Gem.new(
+          gem_names: all ? [] : gems,
+          gem_excludes: config.exclude,
+          prerequire: config.prerequire,
+          postrequire: config.postrequire,
+          typed_overrides: config.typed_overrides,
+          default_command: Config::DEFAULT_COMMAND,
+          outpath: config.outpath,
+          file_header: config.file_header
+        )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
@@ -139,9 +151,9 @@ module Tapioca
         end
 
         if gems.empty? && !all
-          generator.sync_rbis_with_gemfile(should_verify: verify)
+          generator.sync(should_verify: verify)
         else
-          generator.build_gem_rbis(all ? [] : gems)
+          generator.generate
         end
       end
     end

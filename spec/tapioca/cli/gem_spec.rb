@@ -278,9 +278,10 @@ module Tapioca
           File.delete(repo_path / "sorbet/tapioca/require.rb")
         end
       end
+
       describe("sync") do
         it "must perform no operations if everything is up-to-date" do
-          execute("generate")
+          execute("gem")
 
           output = execute("gem")
 
@@ -338,7 +339,7 @@ module Tapioca
         end
 
         it "must respect exclude option" do
-          execute("generate")
+          execute("gem")
 
           output = execute("gem", "", exclude: "foo bar")
 
@@ -365,7 +366,7 @@ module Tapioca
         end
 
         it "must remove outdated RBIs" do
-          execute("generate")
+          execute("gem")
           FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
 
           output = execute("gem")
