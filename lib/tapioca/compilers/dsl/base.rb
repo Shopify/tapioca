@@ -6,6 +6,8 @@ require "tapioca/rbi_ext/model"
 module Tapioca
   module Compilers
     module Dsl
+      COMPILERS_PATH = T.let(File.expand_path("..", __FILE__).to_s, String)
+
       class Base
         extend T::Sig
         extend T::Helpers
