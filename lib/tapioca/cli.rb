@@ -158,89 +158,6 @@ module Tapioca
       end
     end
 
-    desc "generate [gem...]", "DEPRECATED: generate RBIs from gems"
-    option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called"
-    option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called"
-    option :exclude,
-      aliases: ["-x"],
-      type: :array,
-      banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
-    option :typed_overrides,
-      aliases: ["--typed", "-t"],
-      type: :hash,
-      banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
-    def generate(*gems)
-      gem_names = if gems.empty?
-        "--all"
-      else
-        gems.join(" ")
-      end
-      deprecation_message = <<~MSG
-        DEPRECATION: The `generate` command will be removed in a future release.
-
-        Start using `bin/tapioca gem #{gem_names}` instead.
-      MSG
-
-      say(deprecation_message, :red)
-      say("")
-
-      Tapioca.silence_warnings do
-        generator.build_gem_rbis(gems)
-      end
-
-      say("")
-      say(deprecation_message, :red)
-    end
-
-    desc "sync", "DEPRECATED: sync RBIs to Gemfile"
-    option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called"
-    option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called"
-    option :exclude,
-      aliases: ["-x"],
-      type: :array,
-      banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
-    option :typed_overrides,
-      aliases: ["--typed", "-t"],
-      type: :hash,
-      banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
-    option :verify,
-      type: :boolean,
-      default: false,
-      desc: "Verifies RBIs are up-to-date"
-    def sync
-      deprecation_message = <<~MSG
-        DEPRECATION: The `sync` command will be removed in a future release.
-
-        Start using `bin/tapioca gem` instead.
-      MSG
-
-      say(deprecation_message, :red)
-      say("")
-
-      Tapioca.silence_warnings do
-        generator.sync_rbis_with_gemfile(should_verify: options[:verify])
-      end
-
-      say("")
-      say(deprecation_message, :red)
-    end
-
     desc "--version, -v", "show version"
     def __print_version
       puts "Tapioca v#{Tapioca::VERSION}"
@@ -283,13 +200,6 @@ module Tapioca
     no_commands do
       def self.exit_on_failure?
         true
-      end
-
-      def generator
-        current_command = T.must(current_command_chain.first)
-        @generator ||= Generator.new(
-          ConfigBuilder.from_options(current_command, options)
-        )
       end
     end
   end
