@@ -130,6 +130,18 @@ module Tapioca
       Tapioca.silence_warnings do
         all = options[:all]
         verify = options[:verify]
+        current_command = T.must(current_command_chain.first)
+        config = ConfigBuilder.from_options(current_command, options)
+        generator = Generators::Gem.new(
+          gem_names: all ? [] : gems,
+          gem_excludes: config.exclude,
+          prerequire: config.prerequire,
+          postrequire: config.postrequire,
+          typed_overrides: config.typed_overrides,
+          default_command: Config::DEFAULT_COMMAND,
+          outpath: config.outpath,
+          file_header: config.file_header
+        )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
@@ -139,94 +151,11 @@ module Tapioca
         end
 
         if gems.empty? && !all
-          generator.sync_rbis_with_gemfile(should_verify: verify)
+          generator.sync(should_verify: verify)
         else
-          generator.build_gem_rbis(all ? [] : gems)
+          generator.generate
         end
       end
-    end
-
-    desc "generate [gem...]", "DEPRECATED: generate RBIs from gems"
-    option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called"
-    option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called"
-    option :exclude,
-      aliases: ["-x"],
-      type: :array,
-      banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
-    option :typed_overrides,
-      aliases: ["--typed", "-t"],
-      type: :hash,
-      banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
-    def generate(*gems)
-      gem_names = if gems.empty?
-        "--all"
-      else
-        gems.join(" ")
-      end
-      deprecation_message = <<~MSG
-        DEPRECATION: The `generate` command will be removed in a future release.
-
-        Start using `bin/tapioca gem #{gem_names}` instead.
-      MSG
-
-      say(deprecation_message, :red)
-      say("")
-
-      Tapioca.silence_warnings do
-        generator.build_gem_rbis(gems)
-      end
-
-      say("")
-      say(deprecation_message, :red)
-    end
-
-    desc "sync", "DEPRECATED: sync RBIs to Gemfile"
-    option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called"
-    option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called"
-    option :exclude,
-      aliases: ["-x"],
-      type: :array,
-      banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
-    option :typed_overrides,
-      aliases: ["--typed", "-t"],
-      type: :hash,
-      banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
-    option :verify,
-      type: :boolean,
-      default: false,
-      desc: "Verifies RBIs are up-to-date"
-    def sync
-      deprecation_message = <<~MSG
-        DEPRECATION: The `sync` command will be removed in a future release.
-
-        Start using `bin/tapioca gem` instead.
-      MSG
-
-      say(deprecation_message, :red)
-      say("")
-
-      Tapioca.silence_warnings do
-        generator.sync_rbis_with_gemfile(should_verify: options[:verify])
-      end
-
-      say("")
-      say(deprecation_message, :red)
     end
 
     desc "--version, -v", "show version"
@@ -271,13 +200,6 @@ module Tapioca
     no_commands do
       def self.exit_on_failure?
         true
-      end
-
-      def generator
-        current_command = T.must(current_command_chain.first)
-        @generator ||= Generator.new(
-          ConfigBuilder.from_options(current_command, options)
-        )
       end
     end
   end
