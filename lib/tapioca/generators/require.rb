@@ -3,19 +3,16 @@
 
 module Tapioca
   module Generators
-    class Require
-      extend T::Sig
-
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted
-
+    class Require < Base
       sig { params(requires_path: String, sorbet_config_path: String, default_command: String).void }
       def initialize(requires_path:, sorbet_config_path:, default_command:)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
-        @default_command = default_command
+
+        super(default_command: default_command)
       end
 
-      sig { void }
+      sig { override.void }
       def generate
         compiler = Compilers::RequiresCompiler.new(@sorbet_config_path)
         name = set_color(@requires_path, :yellow, :bold)

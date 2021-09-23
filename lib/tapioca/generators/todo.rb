@@ -3,19 +3,16 @@
 
 module Tapioca
   module Generators
-    class Todo
-      extend T::Sig
-
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted.
-
+    class Todo < Base
       sig { params(todos_path: String, file_header: T::Boolean, default_command: String).void }
       def initialize(todos_path:, file_header:, default_command:)
         @todos_path = todos_path
         @file_header = file_header
-        @default_command = default_command
+
+        super(default_command: default_command)
       end
 
-      sig { void }
+      sig { override.void }
       def generate
         compiler = Compilers::TodosCompiler.new
         name = set_color(@todos_path, :yellow, :bold)

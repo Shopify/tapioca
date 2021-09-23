@@ -3,11 +3,7 @@
 
 module Tapioca
   module Generators
-    class Dsl
-      extend T::Sig
-
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted.
-
+    class Dsl < Base
       sig do
         params(
           requested_constants: T::Array[String],
@@ -43,14 +39,16 @@ module Tapioca
         @file_header = file_header
         @compiler_path = compiler_path
         @tapioca_path = tapioca_path
-        @default_command = default_command
-        @loader = T.let(nil, T.nilable(Loader))
         @should_verify = should_verify
         @quiet = quiet
         @verbose = verbose
+
+        super(default_command: default_command)
+
+        @loader = T.let(nil, T.nilable(Loader))
       end
 
-      sig { void }
+      sig { override.void }
       def generate
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
