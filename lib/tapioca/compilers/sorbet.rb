@@ -18,7 +18,6 @@ module Tapioca
       EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
       FEATURE_REQUIREMENTS = T.let({
-        mixes_in_class_methods_multiple_args: Gem::Requirement.new("> 0.5.6200"),
       }.freeze, T::Hash[Symbol, Gem::Requirement])
 
       class << self
