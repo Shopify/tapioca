@@ -346,21 +346,6 @@ module Tapioca
         say("++ Adding: #{filename}")
       end
 
-      sig do
-        params(
-          message: String,
-          color: T.any(Symbol, T::Array[Symbol]),
-        ).void
-      end
-      def say_error(message = "", *color)
-        force_new_line = (message.to_s !~ /( |\t)\Z/)
-        buffer = shell.send(:prepare_message, *T.unsafe([message, *T.unsafe(color)]))
-        buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
-
-        $stderr.print(buffer)
-        $stderr.flush
-      end
-
       sig { returns(T::Hash[String, String]) }
       def existing_rbis
         @existing_rbis ||= Pathname.glob((@outpath / "*@*.rbi").to_s)
