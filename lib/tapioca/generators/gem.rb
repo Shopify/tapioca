@@ -3,11 +3,7 @@
 
 module Tapioca
   module Generators
-    class Gem
-      extend T::Sig
-
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted.
-
+    class Gem < Base
       # NOTE: This was previously _private_ which it actually wasn't, but should be extracted
       # to a module
       EMPTY_RBI_COMMENT = <<~CONTENT
@@ -42,9 +38,10 @@ module Tapioca
         @prerequire = prerequire
         @postrequire = postrequire
         @typed_overrides = typed_overrides
-        @default_command = default_command
         @outpath = outpath
         @file_header = file_header
+
+        super(default_command: default_command)
 
         @loader = T.let(nil, T.nilable(Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))
@@ -52,7 +49,7 @@ module Tapioca
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
       end
 
-      sig { void }
+      sig { override.void }
       def generate
         require_gem_file
 
@@ -347,21 +344,6 @@ module Tapioca
       sig { params(filename: Pathname).void }
       def add(filename)
         say("++ Adding: #{filename}")
-      end
-
-      sig do
-        params(
-          message: String,
-          color: T.any(Symbol, T::Array[Symbol]),
-        ).void
-      end
-      def say_error(message = "", *color)
-        force_new_line = (message.to_s !~ /( |\t)\Z/)
-        buffer = shell.send(:prepare_message, *T.unsafe([message, *T.unsafe(color)]))
-        buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
-
-        $stderr.print(buffer)
-        $stderr.flush
       end
 
       sig { returns(T::Hash[String, String]) }

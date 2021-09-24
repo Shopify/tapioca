@@ -3,11 +3,7 @@
 
 module Tapioca
   module Generators
-    class Dsl
-      extend T::Sig
-
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted.
-
+    class Dsl < Base
       sig do
         params(
           requested_constants: T::Array[String],
@@ -43,14 +39,16 @@ module Tapioca
         @file_header = file_header
         @compiler_path = compiler_path
         @tapioca_path = tapioca_path
-        @default_command = default_command
-        @loader = T.let(nil, T.nilable(Loader))
         @should_verify = should_verify
         @quiet = quiet
         @verbose = verbose
+
+        super(default_command: default_command)
+
+        @loader = T.let(nil, T.nilable(Loader))
       end
 
-      sig { void }
+      sig { override.void }
       def generate
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
@@ -205,24 +203,6 @@ module Tapioca
         end
 
         generator_map.values
-      end
-
-      sig do
-        params(
-          message: String,
-          color: T.any(Symbol, T::Array[Symbol]),
-        ).void
-      end
-      def say_error(message = "", *color)
-        force_new_line = (message.to_s !~ /( |\t)\Z/)
-        # NOTE: This is a hack. We're no longer subclassing from Thor::Shell::Color
-        # so we no longer have access to the prepare_message call.
-        # We should update this to remove this.
-        buffer = shell.send(:prepare_message, *T.unsafe([message, *T.unsafe(color)]))
-        buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
-
-        $stderr.print(buffer)
-        $stderr.flush
       end
 
       sig do
