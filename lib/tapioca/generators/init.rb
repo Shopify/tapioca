@@ -72,12 +72,12 @@ module Tapioca
 
       sig { returns(Bundler::Installer) }
       def installer
-        @installer = Bundler::Installer.new(Bundler.root, Bundler.definition)
+        @installer ||= Bundler::Installer.new(Bundler.root, Bundler.definition)
       end
 
       sig { returns(Bundler::StubSpecification) }
       def spec
-        @spec = Bundler.definition.specs.find { |s| s.name == "tapioca" }
+        @spec ||= Bundler.definition.specs.find { |s| s.name == "tapioca" }
       end
     end
   end
