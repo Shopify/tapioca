@@ -16,7 +16,6 @@ PATH
       sorbet-static (>= 0.4.4471)
       spoom
       thor (>= 0.19.2)
-      unparser
 
 GEM
   remote: https://rubygems.org/
