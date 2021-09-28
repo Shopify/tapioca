@@ -126,8 +126,7 @@ class DynamicMixinCompiler
 
   sig { returns(T::Boolean) }
   def empty_attributes?
-    @class_attribute_readers.empty? && @class_attribute_writers.empty? && @class_attribute_predicates.empty? &&
-      @instance_attribute_readers.empty? && @instance_attribute_writers.empty? && @instance_attribute_predicates.empty?
+    @class_attribute_readers.empty? && @class_attribute_writers.empty?
   end
 
   sig { params(tree: RBI::Tree).void }
