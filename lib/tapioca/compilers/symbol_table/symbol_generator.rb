@@ -772,7 +772,10 @@ module Tapioca
           yard_docs = YARD::Registry.at(name)
           return [] unless yard_docs
 
-          yard_docs.docstring.lines
+          docstring = yard_docs.docstring
+          return [] if /(copyright|license)/i.match?(docstring)
+
+          docstring.lines
             .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
             .map! { |line| RBI::Comment.new(line) }
         end
