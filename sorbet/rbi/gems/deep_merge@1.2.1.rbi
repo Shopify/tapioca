@@ -7,7 +7,81 @@
 module DeepMerge
   class << self
     def clear_or_nil(obj); end
+
+    # Deep Merge core documentation.
+    # deep_merge! method permits merging of arbitrary child elements. The two top level
+    # elements must be hashes. These hashes can contain unlimited (to stack limit) levels
+    # of child elements. These child elements to not have to be of the same types.
+    # Where child elements are of the same type, deep_merge will attempt to merge them together.
+    # Where child elements are not of the same type, deep_merge will skip or optionally overwrite
+    # the destination element with the contents of the source element at that level.
+    # So if you have two hashes like this:
+    # source = {:x => [1,2,3], :y => 2}
+    # dest =   {:x => [4,5,'6'], :y => [7,8,9]}
+    # dest.deep_merge!(source)
+    # Results: {:x => [1,2,3,4,5,'6'], :y => 2}
+    # By default, "deep_merge!" will overwrite any unmergeables and merge everything else.
+    # To avoid this, use "deep_merge" (no bang/exclamation mark)
+    #
+    # Options:
+    # Options are specified in the last parameter passed, which should be in hash format:
+    # hash.deep_merge!({:x => [1,2]}, {:knockout_prefix => '--'})
+    # :preserve_unmergeables  DEFAULT: false
+    # Set to true to skip any unmergeable elements from source
+    # :knockout_prefix        DEFAULT: nil
+    # Set to string value to signify prefix which deletes elements from existing element
+    # :overwrite_arrays       DEFAULT: false
+    # Set to true if you want to avoid merging arrays
+    # :sort_merged_arrays     DEFAULT: false
+    # Set to true to sort all arrays that are merged together
+    # :unpack_arrays          DEFAULT: nil
+    # Set to string value to run "Array::join" then "String::split" against all arrays
+    # :merge_hash_arrays      DEFAULT: false
+    # Set to true to merge hashes within arrays
+    # :keep_array_duplicates  DEFAULT: false
+    # Set to true to preserve duplicate array entries
+    # :merge_debug            DEFAULT: false
+    # Set to true to get console output of merge process for debugging
+    #
+    # Selected Options Details:
+    # :knockout_prefix => The purpose of this is to provide a way to remove elements
+    # from existing Hash by specifying them in a special way in incoming hash
+    # source = {:x => ['--1', '2']}
+    # dest   = {:x => ['1', '3']}
+    # dest.ko_deep_merge!(source)
+    # Results: {:x => ['2','3']}
+    # Additionally, if the knockout_prefix is passed alone as a string, it will cause
+    # the entire element to be removed:
+    # source = {:x => '--'}
+    # dest   = {:x => [1,2,3]}
+    # dest.ko_deep_merge!(source)
+    # Results: {:x => ""}
+    # :unpack_arrays => The purpose of this is to permit compound elements to be passed
+    # in as strings and to be converted into discrete array elements
+    # irsource = {:x => ['1,2,3', '4']}
+    # dest   = {:x => ['5','6','7,8']}
+    # dest.deep_merge!(source, {:unpack_arrays => ','})
+    # Results: {:x => ['1','2','3','4','5','6','7','8'}
+    # Why: If receiving data from an HTML form, this makes it easy for a checkbox
+    # to pass multiple values from within a single HTML element
+    #
+    # :merge_hash_arrays => merge hashes within arrays
+    # source = {:x => [{:y => 1}]}
+    # dest   = {:x => [{:z => 2}]}
+    # dest.deep_merge!(source, {:merge_hash_arrays => true})
+    # Results: {:x => [{:y => 1, :z => 2}]}
+    #
+    # :keep_array_duplicates => merges arrays within hashes but keeps duplicate elements
+    # source = {:x => {:y => [1,2,2,2,3]}}
+    # dest   = {:x => {:y => [4,5,6]}}
+    # dest.deep_merge!(source, {:keep_array_duplicates => true})
+    # Results: {:x => {:y => [1,2,2,2,3,4,5,6]}}
+    #
+    # There are many tests for this library - and you can learn more about the features
+    # and usages of deep_merge! by just browsing the test examples
     def deep_merge!(source, dest, options = T.unsafe(nil)); end
+
+    # allows deep_merge! to uniformly handle overwriting of unmergeable entities
     def overwrite_unmergeables(source, dest, options); end
   end
 end
@@ -15,8 +89,13 @@ end
 DeepMerge::DEFAULT_FIELD_KNOCKOUT_PREFIX = T.let(T.unsafe(nil), String)
 
 module DeepMerge::DeepMergeHash
+  # deep_merge will merge and skip any unmergeables in destination hash
   def deep_merge(source, options = T.unsafe(nil)); end
+
+  # deep_merge! will merge and overwrite any unmergeables in destination hash
   def deep_merge!(source, options = T.unsafe(nil)); end
+
+  # ko_hash_merge! will merge and knockout elements prefixed with DEFAULT_FIELD_KNOCKOUT_PREFIX
   def ko_deep_merge!(source, options = T.unsafe(nil)); end
 end
 

@@ -4,31 +4,60 @@
 
 # typed: true
 
+# Library namespace
 module Unparser
   class << self
+    # Construct a parser buffer from string
     def buffer(source, identification = T.unsafe(nil)); end
+
+    # Parse string into AST
     def parse(source); end
+
+    # Parse string into either syntax error or AST
     def parse_either(source); end
+
+    # Parse string into AST, with comments
     def parse_with_comments(source); end
+
+    # Parser instance that produces AST unparser understands
     def parser; end
+
+    # Unparse an AST (and, optionally, comments) into a string
     def unparse(node, comment_array = T.unsafe(nil)); end
+
+    # Unparse capturing errors
+    #
+    # This is mostly useful for writing testing tools against unparser.
     def unparse_either(node); end
+
+    # Unparse with validation
     def unparse_validate(node, comment_array = T.unsafe(nil)); end
   end
 end
 
+# Namespace for AST processing tools
 module Unparser::AST
   class << self
+    # Return local variables that get assigned in scope
     def local_variable_assignments(node); end
+
+    # Return local variables read
     def local_variable_reads(node); end
+
+    # Test for local variable inherited scope reset
     def not_close_scope?(node); end
+
+    # Test for local variable scope reset
     def not_reset_scope?(node); end
   end
 end
 
+# Nodes that assign a local variable
 Unparser::AST::ASSIGN_NODES = T.let(T.unsafe(nil), Set)
+
 Unparser::AST::CLOSE_NODES = T.let(T.unsafe(nil), Array)
 
+# AST enumerator
 class Unparser::AST::Enumerator
   include ::Enumerable
   include ::Unparser::Equalizer::Methods
@@ -37,16 +66,25 @@ class Unparser::AST::Enumerator
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Return each node
   def each(&block); end
+
+  # Return nodes selected by type
   def type(type); end
+
+  # Return nodes selected by types
   def types(types); end
 
   class << self
+    # Return new instance
     def new(node, controller = T.unsafe(nil)); end
 
     private
 
+    # Return frozne set of objects
     def set(enumerable); end
+
+    # Return nodes of type
     def type(node, type); end
   end
 end
@@ -54,6 +92,7 @@ end
 Unparser::AST::FIRST_CHILD = T.let(T.unsafe(nil), Proc)
 Unparser::AST::INHERIT_NODES = T.let(T.unsafe(nil), Array)
 
+# Calculated local variable scope for a given node
 class Unparser::AST::LocalVariableScope
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -62,10 +101,16 @@ class Unparser::AST::LocalVariableScope
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Initialize object
   def initialize(node); end
 
+  # Test if local variable was first at given assignment
   def first_assignment?(node); end
+
+  # Test if local variables where first assigned in body and read by conditional
   def first_assignment_in?(left, right); end
+
+  # Test if local variable is defined for given node
   def local_variable_defined_for_node?(node, name); end
 
   private
@@ -73,11 +118,14 @@ class Unparser::AST::LocalVariableScope
   def match(needle); end
 end
 
+# Local variable scope enumerator
 class Unparser::AST::LocalVariableScopeEnumerator
   include ::Enumerable
 
+  # Initialize object
   def initialize; end
 
+  # Enumerate local variable scope scope
   def each(node, &block); end
 
   private
@@ -92,6 +140,7 @@ class Unparser::AST::LocalVariableScopeEnumerator
   def visit(node, &block); end
 
   class << self
+    # Enumerate each node with its local variable scope
     def each(node, &block); end
   end
 end
@@ -99,37 +148,58 @@ end
 Unparser::AST::RESET_NODES = T.let(T.unsafe(nil), Array)
 Unparser::AST::TAUTOLOGY = T.let(T.unsafe(nil), Proc)
 
+# Controlled AST walker walking the AST in deeth first search with pre order
 class Unparser::AST::Walker
   include ::Unparser::Equalizer::Methods
 
+  # Call walker with node
   def call(node); end
 
   class << self
+    # Call ast walker
     def call(node, controller = T.unsafe(nil), &block); end
   end
 end
 
+# Module to allow class and methods to be abstract
+#
+# Original code before vendoring and reduction from: https://github.com/dkubb/abstract_type.
 module Unparser::AbstractType
   mixes_in_class_methods ::Unparser::AbstractType::AbstractMethodDeclarations
 
   class << self
     private
 
+    # Define the new method on the abstract type
+    #
+    # Ensures that the instance cannot be of the abstract type
+    # and must be a descendant.
     def create_new_method(abstract_class); end
+
+    # Hook called when module is included
     def included(descendant); end
   end
 end
 
 module Unparser::AbstractType::AbstractMethodDeclarations
+  # Create abstract instance methods
   def abstract_method(*names); end
+
+  # Create abstract singleton methods
   def abstract_singleton_method(*names); end
 
   private
 
+  # Create abstract instance method
   def create_abstract_instance_method(name); end
+
+  # Create abstract singleton method
   def create_abstract_singleton_method(name); end
 end
 
+# Allows objects to be made immutable
+#
+# Original code before vendoring and reduction from: https://github.com/dkubb/adamantium.
 module Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
 
@@ -139,16 +209,22 @@ module Unparser::Adamantium
   class << self
     private
 
+    # ModuleMethods
     def included(descendant); end
   end
 end
 
+# Methods mixed in to adamantium classes
 module Unparser::Adamantium::ClassMethods
+  # Instantiate a new frozen object
   def new(*_arg0); end
 end
 
 module Unparser::Adamantium::InstanceMethods
+  # A noop #dup for immutable objects
   def dup; end
+
+  # Freeze the object
   def freeze; end
 
   private
@@ -156,15 +232,21 @@ module Unparser::Adamantium::InstanceMethods
   def memoized_method_cache; end
 end
 
+# Storage for memoized methods
 class Unparser::Adamantium::Memory
+  # Initialize the memory storage for memoized methods
   def initialize(values); end
 
+  # Fetch the value from memory, or evaluate if it does not exist
   def fetch(name); end
 end
 
+# Build the memoized method
 class Unparser::Adamantium::MethodBuilder
+  # Initialize an object to build a memoized method
   def initialize(descendant, method_name); end
 
+  # Build a new memoized method
   def call; end
 
   private
@@ -176,17 +258,27 @@ class Unparser::Adamantium::MethodBuilder
   def visibility; end
 end
 
+# Raised when a block is passed to a memoized method
 class Unparser::Adamantium::MethodBuilder::BlockNotAllowedError < ::ArgumentError
+  # Initialize a block not allowed exception
   def initialize(descendant, method); end
 end
 
+# Raised when the method arity is invalid
 class Unparser::Adamantium::MethodBuilder::InvalidArityError < ::ArgumentError
+  # Initialize an invalid arity exception
   def initialize(descendant, method, arity); end
 end
 
+# Methods mixed in to adamantium modules
 module Unparser::Adamantium::ModuleMethods
+  # Memoize a list of methods
   def memoize(*methods); end
+
+  # Test if method is memoized
   def memoized?(method_name); end
+
+  # Return unmemoized instance method
   def unmemoized_instance_method(method_name); end
 
   private
@@ -195,6 +287,7 @@ module Unparser::Adamantium::ModuleMethods
   def memoized_methods; end
 end
 
+# Original code before vendoring and reduction from: https://github.com/mbj/anima.
 class Unparser::Anima < ::Module
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -202,22 +295,41 @@ class Unparser::Anima < ::Module
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Initialize object
+  #
   def initialize(*names); end
 
+  # Return new anima with attributes added
   def add(*names); end
+
+  # Return attribute names
   def attribute_names(&block); end
+
+  # Return names
   def attributes; end
+
+  # Return attributes hash for instance
   def attributes_hash(object); end
+
+  # Initialize instance
   def initialize_instance(object, attribute_hash); end
+
+  # Return new anima with attributes removed
   def remove(*names); end
 
   private
 
+  # Fail unless keys in +attribute_hash+ matches #attribute_names
   def assert_known_attributes(klass, attribute_hash); end
+
+  # Infect the instance with anima
   def included(descendant); end
+
+  # Return new instance
   def new(attributes); end
 end
 
+# An attribute
 class Unparser::Anima::Attribute
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -225,40 +337,80 @@ class Unparser::Anima::Attribute
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Initialize attribute
   def initialize(name); end
 
+  # Get attribute value from object
   def get(object); end
+
+  # Return instance variable name
   def instance_variable_name; end
+
+  # Load attribute
   def load(object, attributes); end
+
+  # Return attribute name
   def name; end
+
+  # Set attribute value in object
   def set(object, value); end
 end
 
+# Abstract base class for anima errors
 class Unparser::Anima::Error < ::RuntimeError
+  # Initialize object
   def initialize(klass, missing, unknown); end
 end
 
 Unparser::Anima::Error::FORMAT = T.let(T.unsafe(nil), String)
 
+# Static instance methods for anima infected classes
 module Unparser::Anima::InstanceMethods
+  # Initialize an anima infected object
+  #
   def initialize(attributes); end
 
+  # Return a hash representation of an anima infected object
   def to_h; end
+
+  # Return updated instance
   def with(attributes); end
 end
 
+# Buffer used to emit into
 class Unparser::Buffer
+  # Initialize object
   def initialize; end
 
+  # Append string
   def append(string); end
+
+  # Append a string without an indentation prefix
   def append_without_prefix(string); end
+
+  # Capture the content written to the buffer within the block
   def capture_content; end
+
+  # Return content of buffer
   def content; end
+
+  # Test for a fresh line
   def fresh_line?; end
+
+  # Increase indent
   def indent; end
+
+  # Write newline
   def nl; end
+
   def root_indent; end
+
+  # Decrease indent
   def unindent; end
+
+  # Write raw fragment to buffer
+  #
+  # Does not do indentation logic.
   def write(fragment); end
 
   private
@@ -269,14 +421,21 @@ end
 Unparser::Buffer::INDENT_SPACE = T.let(T.unsafe(nil), String)
 Unparser::Buffer::NL = T.let(T.unsafe(nil), String)
 
+# Unparser specific AST builder defaulting to modern AST format
 class Unparser::Builder < ::Parser::Builders::Default
   def initialize; end
 end
 
+# Unparser CLI implementation
 class Unparser::CLI
+  # Initialize object
   def initialize(arguments); end
 
+  # Add options
+  #
   def add_options(builder); end
+
+  # Return exit status
   def exit_status; end
 
   private
@@ -286,6 +445,7 @@ class Unparser::CLI
   def targets(file_name); end
 
   class << self
+    # Run CLI
     def run(*arguments); end
   end
 end
@@ -302,20 +462,29 @@ class Unparser::CLI::Target
   end
 end
 
+# Path target
 class Unparser::CLI::Target::Path < ::Unparser::CLI::Target
   include ::Unparser::Equalizer::Methods
 
+  # Literal for this target
   def literal_validation; end
+
+  # Validation for this target
   def validation; end
 end
 
+# String target
 class Unparser::CLI::Target::String
   include ::Unparser::Equalizer::Methods
 
+  # Literal for this target
   def literal_validation; end
+
+  # Validation for this target
   def validation; end
 end
 
+# Class to colorize strings
 class Unparser::Color
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -323,6 +492,7 @@ class Unparser::Color
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Format text with color
   def format(text); end
 end
 
@@ -330,13 +500,28 @@ Unparser::Color::GREEN = T.let(T.unsafe(nil), Unparser::Color)
 Unparser::Color::NONE = T.let(T.unsafe(nil), T.untyped)
 Unparser::Color::RED = T.let(T.unsafe(nil), Unparser::Color)
 
+# Holds the comments that remain to be emitted
 class Unparser::Comments
+  # Initialize object
   def initialize(comments); end
 
+  # Consume part or all of the node
   def consume(node, source_part = T.unsafe(nil)); end
+
+  # Proxy to singleton
+  #
+  # NOTICE:
+  # Delegating to stateless helpers is a pattern I saw many times in our code.
+  # Maybe we should make another helper module? include SingletonDelegator.new(:source_range) ?
   def source_range(*arguments); end
+
+  # Take all remaining comments
   def take_all; end
+
+  # Take comments appear in the source before the specified part of the node
   def take_before(node, source_part); end
+
+  # Take end-of-line comments
   def take_eol_comments; end
 
   private
@@ -346,10 +531,18 @@ class Unparser::Comments
   def unshift_documents(comments); end
 
   class << self
+    # Return source location part
+    #
+    # FIXME: This method should not be needed. It does to much inline signalling.
+    #
+    # :reek:ManualDispatch
     def source_range(node, part); end
   end
 end
 
+# A mixin to define a composition
+#
+# Original code before vendoring and reduction from: https://github.com/mbj/concord.
 class Unparser::Concord < ::Module
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -357,26 +550,43 @@ class Unparser::Concord < ::Module
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Initialize object
+  #
   def initialize(*names); end
 
+  # Return names
   def names; end
 
   private
 
+  # Define equalizer
   def define_equalizer; end
+
+  # Define initialize method
   def define_initialize; end
+
+  # Define readers
   def define_readers; end
+
+  # Return instance variable names
   def instance_variable_names; end
 end
 
+# The maximum number of objects the hosting class is composed of
 Unparser::Concord::MAX_NR_OF_OBJECTS = T.let(T.unsafe(nil), Integer)
 
+# Mixin for public attribute readers
 class Unparser::Concord::Public < ::Unparser::Concord
+  # Hook called when module is included
   def included(descendant); end
 end
 
+# All unparser constants maybe included in other libraries.
 module Unparser::Constants; end
+
+# All binary operators of the ruby language
 Unparser::Constants::BINARY_OPERATORS = T.let(T.unsafe(nil), Set)
+
 Unparser::Constants::KEYWORDS = T.let(T.unsafe(nil), Set)
 Unparser::Constants::K_ALIAS = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_AND = T.let(T.unsafe(nil), String)
@@ -387,7 +597,10 @@ Unparser::Constants::K_CLASS = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_DEF = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_DEFINE = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_DEFINED = T.let(T.unsafe(nil), String)
+
+# Keywords
 Unparser::Constants::K_DO = T.let(T.unsafe(nil), String)
+
 Unparser::Constants::K_EEND = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_ELSE = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_ELSIF = T.let(T.unsafe(nil), String)
@@ -420,8 +633,11 @@ Unparser::Constants::K_UNTIL = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_WHEN = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_WHILE = T.let(T.unsafe(nil), String)
 Unparser::Constants::K_YIELD = T.let(T.unsafe(nil), String)
+
+# All unary operators of the ruby language
 Unparser::Constants::UNARY_OPERATORS = T.let(T.unsafe(nil), Set)
 
+# DSL to help defining emitters
 module Unparser::DSL
   private
 
@@ -431,6 +647,7 @@ module Unparser::DSL
   def define_remaining_children(names); end
 end
 
+# Class to create diffs from source code
 class Unparser::Diff
   include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
@@ -438,7 +655,10 @@ class Unparser::Diff
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Colorized unified source diff between old and new
   def colorized_diff(&block); end
+
+  # Unified source diff between old and new
   def diff(&block); end
 
   private
@@ -449,11 +669,14 @@ class Unparser::Diff
   def minimized_hunk; end
 
   class << self
+    # Build new object from source strings
     def build(old, new); end
 
     private
 
     def colorize_line(line); end
+
+    # Break up source into lines
     def lines(source); end
   end
 end
@@ -464,6 +687,7 @@ Unparser::Diff::NEWLINE = T.let(T.unsafe(nil), String)
 Unparser::EMPTY_ARRAY = T.let(T.unsafe(nil), Array)
 Unparser::EMPTY_STRING = T.let(T.unsafe(nil), String)
 
+# RequireBLock
 class Unparser::Either
   include ::Unparser::RequireBlock
   include ::Unparser::Equalizer::Methods
@@ -472,32 +696,60 @@ class Unparser::Either
   extend ::Unparser::Adamantium::ModuleMethods
   extend ::Unparser::Adamantium::ClassMethods
 
+  # Test for left constructor
   def left?; end
+
+  # Test for right constructor
   def right?; end
 
   class << self
+    # Execute block and wrap error in left
     def wrap_error(*exceptions); end
   end
 end
 
 class Unparser::Either::Left < ::Unparser::Either
+  # Evaluate applicative block
   def bind(&block); end
+
+  # Evaluate left side of branch
   def either(left, _right); end
+
+  # Evaluate functor block
   def fmap(&block); end
+
+  # Unwrap value from left
   def from_left; end
+
+  # Unwrap value from right
   def from_right; end
+
+  # Map over left value
   def lmap; end
 end
 
+# Left
 class Unparser::Either::Right < ::Unparser::Either
+  # Evaluate applicative block
   def bind; end
+
+  # Evaluate right side of branch
   def either(_left, right); end
+
+  # Evaluate functor block
   def fmap; end
+
+  # Unwrap value from left
   def from_left; end
+
+  # Unwrap value from right
   def from_right; end
+
+  # Map over left value
   def lmap(&block); end
 end
 
+# Emitter base class
 class Unparser::Emitter
   include ::Unparser::NodeHelpers
   include ::Unparser::Generation
@@ -514,23 +766,34 @@ class Unparser::Emitter
 
   def buffer; end
   def comments; end
+
+  # Dispatch node write as statement
   def dispatch(*_arg0); end
+
   def emit_mlhs; end
   def local_variable_scope; end
   def node; end
+
+  # LocalVariableRoot
   def node_type; end
 
   class << self
     def anima; end
+
+    # Return emitter
+    #
     def emitter(buffer:, comments:, node:, local_variable_scope:); end
+
     def new(*args, &block); end
 
     private
 
+    # Register emitter for type
     def handle(*types); end
   end
 end
 
+# Emitter for alias nodes
 class Unparser::Emitter::Alias < ::Unparser::Emitter
   private
 
@@ -540,6 +803,7 @@ class Unparser::Emitter::Alias < ::Unparser::Emitter
   def target; end
 end
 
+# Arguments emitter
 class Unparser::Emitter::Args < ::Unparser::Emitter
   def emit_block_arguments; end
   def emit_def_arguments; end
@@ -552,6 +816,7 @@ class Unparser::Emitter::Args < ::Unparser::Emitter
   def shadowargs(&block); end
 end
 
+# Argument emitter
 class Unparser::Emitter::Argument < ::Unparser::Emitter
   private
 
@@ -560,6 +825,7 @@ class Unparser::Emitter::Argument < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Array literal emitter
 class Unparser::Emitter::Array < ::Unparser::Emitter
   def emit_heredoc_reminders; end
 
@@ -569,6 +835,7 @@ class Unparser::Emitter::Array < ::Unparser::Emitter
   def emitters(&block); end
 end
 
+# Emitter for array patterns
 class Unparser::Emitter::ArrayPattern < ::Unparser::Emitter
   private
 
@@ -576,6 +843,7 @@ class Unparser::Emitter::ArrayPattern < ::Unparser::Emitter
   def emit_member(node); end
 end
 
+# Base class for assignment emitters
 class Unparser::Emitter::Assignment < ::Unparser::Emitter
   def emit_heredoc_reminders; end
   def emit_left(*_arg0); end
@@ -589,6 +857,7 @@ end
 
 Unparser::Emitter::Assignment::BINARY_OPERATOR = T.let(T.unsafe(nil), Array)
 
+# Constant assignment emitter
 class Unparser::Emitter::Assignment::Constant < ::Unparser::Emitter::Assignment
   private
 
@@ -599,6 +868,7 @@ class Unparser::Emitter::Assignment::Constant < ::Unparser::Emitter::Assignment
   def right; end
 end
 
+# Variable assignment emitter
 class Unparser::Emitter::Assignment::Variable < ::Unparser::Emitter::Assignment
   private
 
@@ -608,6 +878,7 @@ class Unparser::Emitter::Assignment::Variable < ::Unparser::Emitter::Assignment
   def right; end
 end
 
+# Emitter for begin nodes
 class Unparser::Emitter::Begin < ::Unparser::Emitter
   def emit_heredoc_reminders; end
 
@@ -618,6 +889,7 @@ class Unparser::Emitter::Begin < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Non send binary operator / keyword emitter
 class Unparser::Emitter::Binary < ::Unparser::Emitter
   private
 
@@ -625,6 +897,7 @@ class Unparser::Emitter::Binary < ::Unparser::Emitter
   def writer(&block); end
 end
 
+# Base class for and and or op-assign
 class Unparser::Emitter::BinaryAssign < ::Unparser::Emitter
   def emit_heredoc_reminders; end
 
@@ -638,6 +911,7 @@ end
 
 Unparser::Emitter::BinaryAssign::MAP = T.let(T.unsafe(nil), Hash)
 
+# Block emitter
 class Unparser::Emitter::Block < ::Unparser::Emitter
   private
 
@@ -657,6 +931,7 @@ class Unparser::Emitter::Block < ::Unparser::Emitter
   def write_open; end
 end
 
+# Block pass node emitter
 class Unparser::Emitter::BlockPass < ::Unparser::Emitter
   private
 
@@ -665,12 +940,15 @@ class Unparser::Emitter::BlockPass < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for toplevel constant reference nodes
 class Unparser::Emitter::CBase < ::Unparser::Emitter
   private
 
+  # Perform dispatch
   def dispatch; end
 end
 
+# Emitter for case nodes
 class Unparser::Emitter::Case < ::Unparser::Emitter
   private
 
@@ -683,6 +961,7 @@ class Unparser::Emitter::Case < ::Unparser::Emitter
   def whens(&block); end
 end
 
+# Emitter for case guards
 class Unparser::Emitter::CaseGuard < ::Unparser::Emitter
   private
 
@@ -693,6 +972,7 @@ end
 
 Unparser::Emitter::CaseGuard::MAP = T.let(T.unsafe(nil), Hash)
 
+# Emitter for case matches
 class Unparser::Emitter::CaseMatch < ::Unparser::Emitter
   private
 
@@ -704,6 +984,7 @@ class Unparser::Emitter::CaseMatch < ::Unparser::Emitter
   def target; end
 end
 
+# Emitter for class nodes
 class Unparser::Emitter::Class < ::Unparser::Emitter
   include ::Unparser::Emitter::LocalVariableRoot
 
@@ -719,6 +1000,7 @@ class Unparser::Emitter::Class < ::Unparser::Emitter
   def superclass; end
 end
 
+# Emitter for constant access
 class Unparser::Emitter::Const < ::Unparser::Emitter
   private
 
@@ -729,6 +1011,7 @@ class Unparser::Emitter::Const < ::Unparser::Emitter
   def scope; end
 end
 
+# Emitter for const pattern node
 class Unparser::Emitter::ConstPattern < ::Unparser::Emitter
   private
 
@@ -738,6 +1021,7 @@ class Unparser::Emitter::ConstPattern < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Dynamic string emitter
 class Unparser::Emitter::DStr < ::Unparser::Emitter
   def emit_heredoc_reminders; end
 
@@ -746,6 +1030,7 @@ class Unparser::Emitter::DStr < ::Unparser::Emitter
   def dispatch; end
 end
 
+# Dynamic symbol literal emitter
 class Unparser::Emitter::DSym < ::Unparser::Emitter
   private
 
@@ -754,6 +1039,7 @@ class Unparser::Emitter::DSym < ::Unparser::Emitter
   def emit_str_child(value); end
 end
 
+# Emitter for def node
 class Unparser::Emitter::Def < ::Unparser::Emitter
   include ::Unparser::Emitter::LocalVariableRoot
 
@@ -767,6 +1053,7 @@ class Unparser::Emitter::Def < ::Unparser::Emitter
   def emit_name(*_arg0); end
 end
 
+# Instance def emitter
 class Unparser::Emitter::Def::Instance < ::Unparser::Emitter::Def
   private
 
@@ -777,6 +1064,7 @@ class Unparser::Emitter::Def::Instance < ::Unparser::Emitter::Def
   def remaining_children; end
 end
 
+# Emitter for defines on singleton
 class Unparser::Emitter::Def::Singleton < ::Unparser::Emitter::Def
   private
 
@@ -789,6 +1077,7 @@ class Unparser::Emitter::Def::Singleton < ::Unparser::Emitter::Def
   def subject_without_parens?; end
 end
 
+# Emitter for defined? nodes
 class Unparser::Emitter::Defined < ::Unparser::Emitter
   private
 
@@ -797,6 +1086,7 @@ class Unparser::Emitter::Defined < ::Unparser::Emitter
   def subject; end
 end
 
+# Emitter for flip flops
 class Unparser::Emitter::FlipFlop < ::Unparser::Emitter
   def symbol_name; end
 
@@ -811,6 +1101,7 @@ end
 Unparser::Emitter::FlipFlop::MAP = T.let(T.unsafe(nil), Hash)
 Unparser::Emitter::FlipFlop::SYMBOLS = T.let(T.unsafe(nil), Hash)
 
+# Emiter for float literals
 class Unparser::Emitter::Float < ::Unparser::Emitter
   private
 
@@ -822,6 +1113,7 @@ end
 Unparser::Emitter::Float::INFINITY = T.let(T.unsafe(nil), Float)
 Unparser::Emitter::Float::NEG_INFINITY = T.let(T.unsafe(nil), Float)
 
+# Emitter control flow modifiers
 class Unparser::Emitter::FlowModifier < ::Unparser::Emitter
   def emit_heredoc_reminders; end
 
@@ -833,6 +1125,7 @@ end
 
 Unparser::Emitter::FlowModifier::MAP = T.let(T.unsafe(nil), Hash)
 
+# Emitter for for nodes
 class Unparser::Emitter::For < ::Unparser::Emitter
   private
 
@@ -844,6 +1137,7 @@ class Unparser::Emitter::For < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for Hash literals
 class Unparser::Emitter::Hash < ::Unparser::Emitter
   def emit_heredoc_reminders; end
   def emit_last_argument_hash; end
@@ -855,6 +1149,7 @@ class Unparser::Emitter::Hash < ::Unparser::Emitter
   def emit_heredoc_reminder_member(node); end
 end
 
+# Emitter for hash patterns
 class Unparser::Emitter::HashPattern < ::Unparser::Emitter
   def emit_const_pattern; end
 
@@ -868,6 +1163,7 @@ class Unparser::Emitter::HashPattern < ::Unparser::Emitter
   def write_symbol_body(symbol); end
 end
 
+# Base class for pre and postexe emitters
 class Unparser::Emitter::Hookexe < ::Unparser::Emitter
   private
 
@@ -878,6 +1174,7 @@ end
 
 Unparser::Emitter::Hookexe::MAP = T.let(T.unsafe(nil), Hash)
 
+# Emitter if nodes
 class Unparser::Emitter::If < ::Unparser::Emitter
   def emit_ternary; end
 
@@ -898,6 +1195,7 @@ class Unparser::Emitter::If < ::Unparser::Emitter
   def unless?; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::InMatch < ::Unparser::Emitter
   private
 
@@ -907,6 +1205,7 @@ class Unparser::Emitter::InMatch < ::Unparser::Emitter
   def target; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::InPattern < ::Unparser::Emitter
   private
 
@@ -918,6 +1217,7 @@ class Unparser::Emitter::InPattern < ::Unparser::Emitter
   def unless_guard; end
 end
 
+# Emitter for send to index references
 class Unparser::Emitter::Index < ::Unparser::Emitter
   private
 
@@ -925,6 +1225,7 @@ class Unparser::Emitter::Index < ::Unparser::Emitter
   def emit_receiver; end
 end
 
+# Emitter for assign to index nodes
 class Unparser::Emitter::Index::Assign < ::Unparser::Emitter::Index
   def dispatch; end
   def emit_heredoc_reminders; end
@@ -945,6 +1246,7 @@ class Unparser::Emitter::Index::Reference < ::Unparser::Emitter::Index
   def indices(&block); end
 end
 
+# Emitter for explicit begins
 class Unparser::Emitter::KWBegin < ::Unparser::Emitter
   private
 
@@ -952,6 +1254,7 @@ class Unparser::Emitter::KWBegin < ::Unparser::Emitter
   def emit_multiple_body; end
 end
 
+# Optional keyword argument emitter
 class Unparser::Emitter::KeywordOptional < ::Unparser::Emitter
   private
 
@@ -961,6 +1264,7 @@ class Unparser::Emitter::KeywordOptional < ::Unparser::Emitter
   def value; end
 end
 
+# Emitter for splats
 class Unparser::Emitter::KwSplat < ::Unparser::Emitter
   private
 
@@ -969,6 +1273,7 @@ class Unparser::Emitter::KwSplat < ::Unparser::Emitter
   def subject; end
 end
 
+# Keyword argument emitter
 class Unparser::Emitter::Kwarg < ::Unparser::Emitter
   private
 
@@ -981,6 +1286,7 @@ class Unparser::Emitter::Kwargs < ::Unparser::Emitter
   def dispatch; end
 end
 
+# Emitter for lambda nodes
 class Unparser::Emitter::Lambda < ::Unparser::Emitter
   private
 
@@ -988,6 +1294,7 @@ class Unparser::Emitter::Lambda < ::Unparser::Emitter
 end
 
 module Unparser::Emitter::LocalVariableRoot
+  # Return local variable root
   def local_variable_scope; end
 
   class << self
@@ -995,6 +1302,7 @@ module Unparser::Emitter::LocalVariableRoot
   end
 end
 
+# Emitter for multiple assignment nodes
 class Unparser::Emitter::MASGN < ::Unparser::Emitter
   private
 
@@ -1004,6 +1312,7 @@ class Unparser::Emitter::MASGN < ::Unparser::Emitter
   def target; end
 end
 
+# Emitter for multiple assignment left hand side
 class Unparser::Emitter::MLHS < ::Unparser::Emitter
   private
 
@@ -1013,8 +1322,11 @@ class Unparser::Emitter::MLHS < ::Unparser::Emitter
 end
 
 Unparser::Emitter::MLHS::NO_COMMA = T.let(T.unsafe(nil), Array)
+
+# Base class for special match node emitters
 class Unparser::Emitter::Match < ::Unparser::Emitter; end
 
+# Emitter for match current line
 class Unparser::Emitter::Match::CurrentLine < ::Unparser::Emitter::Match
   private
 
@@ -1023,6 +1335,7 @@ class Unparser::Emitter::Match::CurrentLine < ::Unparser::Emitter::Match
   def remaining_children; end
 end
 
+# Emitter for match with local variable assignment
 class Unparser::Emitter::Match::Lvasgn < ::Unparser::Emitter::Match
   private
 
@@ -1032,6 +1345,7 @@ class Unparser::Emitter::Match::Lvasgn < ::Unparser::Emitter::Match
   def remaining_children; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::MatchAlt < ::Unparser::Emitter
   private
 
@@ -1041,6 +1355,7 @@ class Unparser::Emitter::MatchAlt < ::Unparser::Emitter
   def right; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::MatchAs < ::Unparser::Emitter
   private
 
@@ -1050,6 +1365,7 @@ class Unparser::Emitter::MatchAs < ::Unparser::Emitter
   def right; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::MatchPattern < ::Unparser::Emitter
   private
 
@@ -1059,6 +1375,7 @@ class Unparser::Emitter::MatchPattern < ::Unparser::Emitter
   def target; end
 end
 
+# Emiter for match rest nodes
 class Unparser::Emitter::MatchRest < ::Unparser::Emitter
   def emit_array_pattern; end
   def emit_hash_pattern; end
@@ -1070,6 +1387,7 @@ class Unparser::Emitter::MatchRest < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for in pattern nodes
 class Unparser::Emitter::MatchVar < ::Unparser::Emitter
   private
 
@@ -1078,6 +1396,7 @@ class Unparser::Emitter::MatchVar < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for module nodes
 class Unparser::Emitter::Module < ::Unparser::Emitter
   include ::Unparser::Emitter::LocalVariableRoot
 
@@ -1091,6 +1410,7 @@ class Unparser::Emitter::Module < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for block and kwrestarg arguments
 class Unparser::Emitter::Morearg < ::Unparser::Emitter
   private
 
@@ -1102,6 +1422,7 @@ end
 Unparser::Emitter::Morearg::MAP = T.let(T.unsafe(nil), Hash)
 Unparser::Emitter::NO_INDENT = T.let(T.unsafe(nil), Array)
 
+# Emitter for nth_ref nodes (regexp captures)
 class Unparser::Emitter::NthRef < ::Unparser::Emitter
   private
 
@@ -1112,6 +1433,7 @@ end
 
 Unparser::Emitter::NthRef::PREFIX = T.let(T.unsafe(nil), String)
 
+# Emitter for op assign
 class Unparser::Emitter::OpAssign < ::Unparser::Emitter
   private
 
@@ -1123,6 +1445,7 @@ class Unparser::Emitter::OpAssign < ::Unparser::Emitter
   def value; end
 end
 
+# Optional argument emitter
 class Unparser::Emitter::Optarg < ::Unparser::Emitter
   private
 
@@ -1132,6 +1455,7 @@ class Unparser::Emitter::Optarg < ::Unparser::Emitter
   def value; end
 end
 
+# Emitter for key value pairs in hash literals or kwargs
 class Unparser::Emitter::Pair < ::Unparser::Emitter
   private
 
@@ -1144,6 +1468,7 @@ end
 
 Unparser::Emitter::Pair::BAREWORD = T.let(T.unsafe(nil), Regexp)
 
+# Emitter for pin nodes
 class Unparser::Emitter::Pin < ::Unparser::Emitter
   private
 
@@ -1152,6 +1477,7 @@ class Unparser::Emitter::Pin < ::Unparser::Emitter
   def target; end
 end
 
+# Emitter for postconditions
 class Unparser::Emitter::Post < ::Unparser::Emitter
   private
 
@@ -1163,6 +1489,7 @@ end
 
 Unparser::Emitter::Post::MAP = T.let(T.unsafe(nil), Hash)
 
+# Base class for primitive emitters
 class Unparser::Emitter::Primitive < ::Unparser::Emitter
   private
 
@@ -1170,6 +1497,7 @@ class Unparser::Emitter::Primitive < ::Unparser::Emitter
   def value; end
 end
 
+# Emitter for complex literals
 class Unparser::Emitter::Primitive::Complex < ::Unparser::Emitter::Primitive
   private
 
@@ -1181,18 +1509,21 @@ end
 Unparser::Emitter::Primitive::Complex::MAP = T.let(T.unsafe(nil), Hash)
 Unparser::Emitter::Primitive::Complex::RATIONAL_FORMAT = T.let(T.unsafe(nil), String)
 
+# Emitter for primitives based on Object#inspect
 class Unparser::Emitter::Primitive::Inspect < ::Unparser::Emitter::Primitive
   private
 
   def dispatch; end
 end
 
+# Emiter for numeric literals
 class Unparser::Emitter::Primitive::Numeric < ::Unparser::Emitter::Primitive
   private
 
   def dispatch; end
 end
 
+# Emitter for rational literals
 class Unparser::Emitter::Primitive::Rational < ::Unparser::Emitter::Primitive
   private
 
@@ -1202,6 +1533,7 @@ end
 
 Unparser::Emitter::Primitive::Rational::RATIONAL_FORMAT = T.let(T.unsafe(nil), String)
 
+# Progarg emitter
 class Unparser::Emitter::Procarg < ::Unparser::Emitter
   private
 
@@ -1210,8 +1542,11 @@ class Unparser::Emitter::Procarg < ::Unparser::Emitter
 end
 
 Unparser::Emitter::Procarg::PARENS = T.let(T.unsafe(nil), Array)
+
+# Registry for node emitters
 Unparser::Emitter::REGISTRY = T.let(T.unsafe(nil), Hash)
 
+# Range emitters
 class Unparser::Emitter::Range < ::Unparser::Emitter
   def symbol_name; end
 
@@ -1226,6 +1561,7 @@ end
 Unparser::Emitter::Range::SYMBOLS = T.let(T.unsafe(nil), Hash)
 Unparser::Emitter::Range::TOKENS = T.let(T.unsafe(nil), Hash)
 
+# Emitter for regexp literals
 class Unparser::Emitter::Regexp < ::Unparser::Emitter
   private
 
@@ -1235,6 +1571,7 @@ class Unparser::Emitter::Regexp < ::Unparser::Emitter
   def emit_options; end
 end
 
+# Emitter for while and until nodes
 class Unparser::Emitter::Repetition < ::Unparser::Emitter
   private
 
@@ -1250,12 +1587,14 @@ end
 
 Unparser::Emitter::Repetition::MAP = T.let(T.unsafe(nil), Hash)
 
+# Emitter for rescue nodes
 class Unparser::Emitter::Rescue < ::Unparser::Emitter
   private
 
   def dispatch; end
 end
 
+# Rest argument emitter
 class Unparser::Emitter::Restarg < ::Unparser::Emitter
   private
 
@@ -1264,6 +1603,7 @@ class Unparser::Emitter::Restarg < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Root emitter a special case
 class Unparser::Emitter::Root < ::Unparser::Emitter
   include ::Unparser::Emitter::LocalVariableRoot
 
@@ -1273,6 +1613,7 @@ end
 
 Unparser::Emitter::Root::END_NL = T.let(T.unsafe(nil), Array)
 
+# Emitter for sclass nodes
 class Unparser::Emitter::SClass < ::Unparser::Emitter
   private
 
@@ -1282,6 +1623,7 @@ class Unparser::Emitter::SClass < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for send
 class Unparser::Emitter::Send < ::Unparser::Emitter
   def emit_heredoc_reminders; end
   def emit_mlhs; end
@@ -1292,6 +1634,7 @@ class Unparser::Emitter::Send < ::Unparser::Emitter
   def writer(&block); end
 end
 
+# Emitter for simple nodes that generate a single token
 class Unparser::Emitter::Simple < ::Unparser::Emitter
   private
 
@@ -1300,6 +1643,7 @@ end
 
 Unparser::Emitter::Simple::MAP = T.let(T.unsafe(nil), Hash)
 
+# Emitter for splats
 class Unparser::Emitter::Splat < ::Unparser::Emitter
   def emit_mlhs; end
 
@@ -1311,18 +1655,21 @@ class Unparser::Emitter::Splat < ::Unparser::Emitter
   def subject_emitter(&block); end
 end
 
+# Emitter for super nodes
 class Unparser::Emitter::Super < ::Unparser::Emitter
   private
 
   def dispatch; end
 end
 
+# Emitter for undef nodes
 class Unparser::Emitter::Undef < ::Unparser::Emitter
   private
 
   def dispatch; end
 end
 
+# Emitter for various variable accesses
 class Unparser::Emitter::Variable < ::Unparser::Emitter
   private
 
@@ -1331,6 +1678,7 @@ class Unparser::Emitter::Variable < ::Unparser::Emitter
   def remaining_children; end
 end
 
+# Emitter for when nodes
 class Unparser::Emitter::When < ::Unparser::Emitter
   private
 
@@ -1339,6 +1687,7 @@ class Unparser::Emitter::When < ::Unparser::Emitter
   def emit_captures; end
 end
 
+# Dynamic execute string literal emitter
 class Unparser::Emitter::XStr < ::Unparser::Emitter
   private
 
@@ -1351,13 +1700,22 @@ class Unparser::Emitter::XStr < ::Unparser::Emitter
   def heredoc?; end
 end
 
+# Emitter for yield node
 class Unparser::Emitter::Yield < ::Unparser::Emitter
   private
 
   def dispatch; end
 end
 
+# Define equality, equivalence and inspection methods
+#
+# Original code before vendoring and reduction from: https://github.com/dkubb/equalizer.
 class Unparser::Equalizer < ::Module
+  # Initialize an Equalizer with the given keys
+  #
+  # Will use the keys with which it is initialized to define #cmp?,
+  # #hash, and #inspect
+  #
   def initialize(*keys); end
 
   private
@@ -1369,8 +1727,12 @@ class Unparser::Equalizer < ::Module
   def included(descendant); end
 end
 
+# The comparison methods
 module Unparser::Equalizer::Methods
+  # Compare the object with other object for equivalency
   def ==(other); end
+
+  # Compare the object with other object for equality
   def eql?(other); end
 end
 
@@ -1415,9 +1777,11 @@ end
 
 Unparser::Generation::EXTRA_NL = T.let(T.unsafe(nil), Array)
 
+# Error raised when unparser encounters an invalid AST
 class Unparser::InvalidNodeError < ::RuntimeError
   def initialize(message, node); end
 
+  # Returns the value of attribute node.
   def node; end
 end
 
@@ -1466,9 +1830,14 @@ Unparser::NodeDetails::Send::ASSIGN_SUFFIX = T.let(T.unsafe(nil), String)
 Unparser::NodeDetails::Send::NON_ASSIGN_RANGE = T.let(T.unsafe(nil), Range)
 
 module Unparser::NodeHelpers
+  # Helper for building nodes
   def n(type, children = T.unsafe(nil)); end
+
   def n?(type, node); end
+
+  # Helper for building nodes
   def s(type, *children); end
+
   def unwrap_single_begin(node); end
 
   private
@@ -1504,11 +1873,13 @@ end
 module Unparser::RequireBlock
   private
 
+  # Raise error unless block is provided
   def require_block; end
 end
 
 class Unparser::UnknownNodeError < ::ArgumentError; end
 
+# Validation of unparser results
 class Unparser::Validation
   include ::Unparser::Anima::InstanceMethods
   include ::Unparser::Equalizer::Methods
@@ -1522,7 +1893,11 @@ class Unparser::Validation
   def identification; end
   def original_node; end
   def original_source; end
+
+  # Return error report
   def report(&block); end
+
+  # Test if source could be unparsed successfully
   def success?; end
 
   private
@@ -1533,8 +1908,14 @@ class Unparser::Validation
 
   class << self
     def anima; end
+
+    # Create validator from node
     def from_node(original_node); end
+
+    # Create validator from file
     def from_path(path); end
+
+    # Create validator from string
     def from_string(original_source); end
 
     private
@@ -1664,6 +2045,7 @@ Unparser::Writer::DynamicString::FLAT_INTERPOLATION = T.let(T.unsafe(nil), Set)
 Unparser::Writer::DynamicString::PATTERNS_2 = T.let(T.unsafe(nil), Array)
 Unparser::Writer::DynamicString::PATTERNS_3 = T.let(T.unsafe(nil), Array)
 
+# Writer for rescue bodies
 class Unparser::Writer::Resbody
   include ::Unparser::NodeHelpers
   include ::Unparser::Generation
@@ -1727,6 +2109,7 @@ class Unparser::Writer::Rescue
   end
 end
 
+# Writer for send
 class Unparser::Writer::Send
   include ::Unparser::NodeHelpers
   include ::Unparser::Generation
@@ -1773,6 +2156,7 @@ class Unparser::Writer::Send
   end
 end
 
+# Writer for send as attribute assignment
 class Unparser::Writer::Send::AttributeAssignment < ::Unparser::Writer::Send
   def dispatch; end
   def emit_send_mlhs; end
@@ -1787,6 +2171,7 @@ class Unparser::Writer::Send::AttributeAssignment < ::Unparser::Writer::Send
   def selector; end
 end
 
+# Writer for binary sends
 class Unparser::Writer::Send::Binary < ::Unparser::Writer::Send
   def dispatch; end
 
@@ -1800,6 +2185,7 @@ Unparser::Writer::Send::INDEX_ASSIGN = T.let(T.unsafe(nil), Symbol)
 Unparser::Writer::Send::INDEX_REFERENCE = T.let(T.unsafe(nil), Symbol)
 Unparser::Writer::Send::OPERATORS = T.let(T.unsafe(nil), Hash)
 
+# Writer for "regular" receiver.selector(arguments...) case
 class Unparser::Writer::Send::Regular < ::Unparser::Writer::Send
   def dispatch; end
   def emit_arguments_without_heredoc_body; end
@@ -1807,6 +2193,7 @@ class Unparser::Writer::Send::Regular < ::Unparser::Writer::Send
   def emit_send_mlhs; end
 end
 
+# Writer for unary sends
 class Unparser::Writer::Send::Unary < ::Unparser::Writer::Send
   def dispatch; end
 end

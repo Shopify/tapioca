@@ -70,13 +70,19 @@ class ActiveRecord::TypedStore::DSL
   def accessors; end
   def any(name, **options); end
   def boolean(name, **options); end
+
+  # Returns the value of attribute coder.
   def coder; end
+
   def date(name, **options); end
   def date_time(name, **options); end
   def datetime(name, **options); end
   def decimal(name, **options); end
   def default_coder(attribute_name); end
+
+  # Returns the value of attribute fields.
   def fields; end
+
   def float(name, **options); end
   def integer(name, **options); end
   def keys(*_arg0, &_arg1); end
@@ -94,15 +100,32 @@ end
 class ActiveRecord::TypedStore::Field
   def initialize(name, type, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute accessor.
   def accessor; end
+
+  # Returns the value of attribute array.
   def array; end
+
+  # Returns the value of attribute blank.
   def blank; end
+
   def cast(value); end
+
+  # Returns the value of attribute default.
   def default; end
+
   def has_default?; end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Returns the value of attribute null.
   def null; end
+
+  # Returns the value of attribute type.
   def type; end
+
+  # Returns the value of attribute type_sym.
   def type_sym; end
 
   private
@@ -155,6 +178,8 @@ class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferent
   class << self
     def create(fields); end
     def defaults_hash; end
+
+    # Returns the value of attribute fields.
     def fields; end
   end
 end

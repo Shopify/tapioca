@@ -37,6 +37,60 @@ module ActionMailbox
   end
 end
 
+# The base class for all application mailboxes. Not intended to be inherited from directly. Inherit from
+# +ApplicationMailbox+ instead, as that's where the app-specific routing is configured. This routing
+# is specified in the following ways:
+#
+# class ApplicationMailbox < ActionMailbox::Base
+# # Any of the recipients of the mail (whether to, cc, bcc) are matched against the regexp.
+# routing /^replies@/i => :replies
+#
+# # Any of the recipients of the mail (whether to, cc, bcc) needs to be an exact match for the string.
+# routing "help@example.com" => :help
+#
+# # Any callable (proc, lambda, etc) object is passed the inbound_email record and is a match if true.
+# routing ->(inbound_email) { inbound_email.mail.to.size > 2 } => :multiple_recipients
+#
+# # Any object responding to #match? is called with the inbound_email record as an argument. Match if true.
+# routing CustomAddress.new => :custom
+#
+# # Any inbound_email that has not been already matched will be sent to the BackstopMailbox.
+# routing :all => :backstop
+# end
+#
+# Application mailboxes need to overwrite the +#process+ method, which is invoked by the framework after
+# callbacks have been run. The callbacks available are: +before_processing+, +after_processing+, and
+# +around_processing+. The primary use case is ensure certain preconditions to processing are fulfilled
+# using +before_processing+ callbacks.
+#
+# If a precondition fails to be met, you can halt the processing using the +#bounced!+ method,
+# which will silently prevent any further processing, but not actually send out any bounce notice. You
+# can also pair this behavior with the invocation of an Action Mailer class responsible for sending out
+# an actual bounce email. This is done using the +#bounce_with+ method, which takes the mail object returned
+# by an Action Mailer method, like so:
+#
+# class ForwardsMailbox < ApplicationMailbox
+# before_processing :ensure_sender_is_a_user
+#
+# private
+# def ensure_sender_is_a_user
+# unless User.exist?(email_address: mail.from)
+# bounce_with UserRequiredMailer.missing(inbound_email)
+# end
+# end
+# end
+#
+# During the processing of the inbound email, the status will be tracked. Before processing begins,
+# the email will normally have the +pending+ status. Once processing begins, just before callbacks
+# and the +#process+ method is called, the status is changed to +processing+. If processing is allowed to
+# complete, the status is changed to +delivered+. If a bounce is triggered, then +bounced+. If an unhandled
+# exception is bubbled up, then +failed+.
+#
+# Exceptions can be handled at the class level using the familiar +Rescuable+ approach:
+#
+# class ForwardsMailbox < ApplicationMailbox
+# rescue_from(ApplicationSpecificVerificationError) { bounced! }
+# end
 class ActionMailbox::Base
   include ::ActiveSupport::Rescuable
   include ::ActionMailbox::Routing
@@ -54,11 +108,17 @@ class ActionMailbox::Base
   def __callbacks?; end
   def _process_callbacks; end
   def _run_process_callbacks(&block); end
+
+  # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
   def bounce_with(message); end
+
   def bounced!(*_arg0, &_arg1); end
   def delivered!(*_arg0, &_arg1); end
   def finished_processing?; end
+
+  # Returns the value of attribute inbound_email.
   def inbound_email; end
+
   def logger(*_arg0, &_arg1); end
   def mail(*_arg0, &_arg1); end
   def perform_processing; end
@@ -103,6 +163,7 @@ class ActionMailbox::BaseController < ::ActionController::Base
   end
 end
 
+# Defines the callbacks related to processing.
 module ActionMailbox::Callbacks
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -210,6 +271,8 @@ end
 module ActionMailbox::Record::GeneratedAssociationMethods; end
 module ActionMailbox::Record::GeneratedAttributeMethods; end
 
+# Encapsulates the routes that live on the ApplicationMailbox and performs the actual routing when
+# an inbound_email is received.
 class ActionMailbox::Router
   def initialize; end
 
@@ -220,6 +283,7 @@ class ActionMailbox::Router
 
   private
 
+  # Returns the value of attribute routes.
   def routes; end
 end
 
@@ -238,6 +302,7 @@ end
 
 class ActionMailbox::Router::RoutingError < ::StandardError; end
 
+# See +ActionMailbox::Base+ for how to specify routing.
 module ActionMailbox::Routing
   extend ::ActiveSupport::Concern
 
@@ -263,11 +328,76 @@ class ActionMailbox::TestCase < ::ActiveSupport::TestCase
 end
 
 module ActionMailbox::TestHelper
+  # Create an +InboundEmail+ record using an eml fixture in the format of message/rfc822
+  # referenced with +fixture_name+ located in +test/fixtures/files/fixture_name+.
   def create_inbound_email_from_fixture(fixture_name, status: T.unsafe(nil)); end
+
+  # Creates an +InboundEmail+ by specifying through options or a block.
+  #
+  # ==== Options
+  #
+  # * <tt>:status</tt> - The +status+ to set for the created +InboundEmail+.
+  # For possible statuses, see {its documentation}[rdoc-ref:ActionMailbox::InboundEmail].
+  #
+  # ==== Creating a simple email
+  #
+  # When you only need to set basic fields like +from+, +to+, +subject+, and
+  # +body+, you can pass them directly as options.
+  #
+  # create_inbound_email_from_mail(from: "david@loudthinking.com", subject: "Hello!")
+  #
+  # ==== Creating a multi-part email
+  #
+  # When you need to create a more intricate email, like a multi-part email
+  # that contains both a plaintext version and an HTML version, you can pass a
+  # block.
+  #
+  # create_inbound_email_from_mail do
+  # to "David Heinemeier Hansson <david@loudthinking.com>"
+  # from "Bilbo Baggins <bilbo@bagend.com>"
+  # subject "Come down to the Shire!"
+  #
+  # text_part do
+  # body "Please join us for a party at Bag End"
+  # end
+  #
+  # html_part do
+  # body "<h1>Please join us for a party at Bag End</h1>"
+  # end
+  # end
+  #
+  # As with +Mail.new+, you can also use a block parameter to define the parts
+  # of the message:
+  #
+  # create_inbound_email_from_mail do |mail|
+  # mail.to "David Heinemeier Hansson <david@loudthinking.com>"
+  # mail.from "Bilbo Baggins <bilbo@bagend.com>"
+  # mail.subject "Come down to the Shire!"
+  #
+  # mail.text_part do |part|
+  # part.body "Please join us for a party at Bag End"
+  # end
+  #
+  # mail.html_part do |part|
+  # part.body "<h1>Please join us for a party at Bag End</h1>"
+  # end
+  # end
   def create_inbound_email_from_mail(status: T.unsafe(nil), **mail_options, &block); end
+
+  # Create an +InboundEmail+ using the raw rfc822 +source+ as text.
   def create_inbound_email_from_source(source, status: T.unsafe(nil)); end
+
+  # Create an +InboundEmail+ from fixture using the same arguments as +create_inbound_email_from_fixture+
+  # and immediately route it to processing.
   def receive_inbound_email_from_fixture(*args); end
+
+  # Create an +InboundEmail+ using the same options or block as
+  # {create_inbound_email_from_mail}[rdoc-ref:#create_inbound_email_from_mail],
+  # then immediately route it for processing.
   def receive_inbound_email_from_mail(**kwargs, &block); end
+
+  # Create an +InboundEmail+ using the same arguments as +create_inbound_email_from_source+ and immediately route it
+  # to processing.
   def receive_inbound_email_from_source(*args); end
 end
 

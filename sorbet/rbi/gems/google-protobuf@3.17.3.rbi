@@ -4,6 +4,8 @@
 
 # typed: true
 
+# We define these before requiring the platform-specific modules.
+# That way the module init can grab references to these.
 module Google; end
 
 module Google::Protobuf
@@ -161,6 +163,7 @@ module Google::Protobuf::MessageExts
   def to_proto; end
 
   class << self
+    # this is only called in jruby; mri loades the ClassMethods differently
     def included(klass); end
   end
 end
@@ -220,7 +223,10 @@ class Google::Protobuf::RepeatedField
   def drop_while(*args, &block); end
   def dup; end
   def each; end
+
+  # array aliases into enumerable
   def each_index(*_arg0); end
+
   def empty?; end
   def eql?(*args, &block); end
   def fetch(*args, &block); end
@@ -290,6 +296,9 @@ class Google::Protobuf::RepeatedField
   end
 end
 
+# propagates changes made by user of enumerator back to the original repeated field.
+# This only applies in cases where the calling function which created the enumerator,
+# such as #sort!, modifies itself rather than a new array, such as #sort
 class Google::Protobuf::RepeatedField::ProxyingEnumerator < ::Struct
   def each(*args, &block); end
 end
