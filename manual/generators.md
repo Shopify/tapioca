@@ -18,6 +18,7 @@ In the following section you will find all available DSL generators:
 * [ActiveStorage](generator_activestorage.md)
 * [ActiveSupportConcern](generator_activesupportconcern.md)
 * [ActiveSupportCurrentAttributes](generator_activesupportcurrentattributes.md)
+* [ClassAttributes](generator_classattributes.md)
 * [Config](generator_config.md)
 * [FrozenRecord](generator_frozenrecord.md)
 * [IdentityCache](generator_identitycache.md)
