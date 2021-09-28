@@ -24,18 +24,6 @@ class Tapioca::Compilers::SorbetSpec < Minitest::Spec
     end
   end
 
-  it("returns false for feature check for old versions of Sorbet") do
-    version = Gem::Version.new("0.5.5000")
-
-    refute(Tapioca::Compilers::Sorbet.supports?(:mixes_in_class_methods_multiple_args, version: version))
-  end
-
-  it("returns true for feature check for new versions of Sorbet") do
-    version = Gem::Version.new("0.5.7000")
-
-    assert(Tapioca::Compilers::Sorbet.supports?(:mixes_in_class_methods_multiple_args, version: version))
-  end
-
   it("raises for an unknown feature check") do
     assert_raises do
       Tapioca::Compilers::Sorbet.supports?(:unknown_feature_name)

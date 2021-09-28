@@ -30,7 +30,8 @@ module Tapioca
 
     sig { params(constant: Module).returns(T.nilable(String)) }
     def name_of(constant)
-      NAME_METHOD.bind(constant).call
+      name = NAME_METHOD.bind(constant).call
+      name&.start_with?("#<") ? nil : name
     end
 
     sig { params(constant: Module).returns(Class) }

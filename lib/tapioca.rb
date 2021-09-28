@@ -20,5 +20,6 @@ end
 require "tapioca/reflection"
 require "tapioca/constant_locator"
 require "tapioca/compilers/dsl/base"
+require "tapioca/compilers/dynamic_mixin_compiler"
 require "tapioca/helpers/active_record_column_type_helper"
 require "tapioca/version"

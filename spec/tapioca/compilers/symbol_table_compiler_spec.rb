@@ -2730,5 +2730,68 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it("handles class attributes created inside included blocks") do
+      require "byebug"
+      require "active_support/concern"
+
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Taggeable
+          extend ActiveSupport::Concern
+
+          included do
+            class_attribute :tag, :description, :body
+            class_attribute :name, instance_reader: false
+            class_attribute :no_check, instance_predicate: false
+            class_attribute :secret, instance_accessor: false, instance_reader: false, instance_writer: false, instance_predicate: false
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Taggeable
+          extend ::ActiveSupport::Concern
+          include GeneratedInstanceMethods
+
+          mixes_in_class_methods GeneratedClassMethods
+
+          module GeneratedClassMethods
+            def body; end
+            def body=(value); end
+            def body?; end
+            def description; end
+            def description=(value); end
+            def description?; end
+            def name; end
+            def name=(value); end
+            def name?; end
+            def no_check; end
+            def no_check=(value); end
+            def secret; end
+            def secret=(value); end
+            def tag; end
+            def tag=(value); end
+            def tag?; end
+          end
+
+          module GeneratedInstanceMethods
+            def body; end
+            def body=(value); end
+            def body?; end
+            def description; end
+            def description=(value); end
+            def description?; end
+            def name=(value); end
+            def no_check; end
+            def no_check=(value); end
+            def tag; end
+            def tag=(value); end
+            def tag?; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end
