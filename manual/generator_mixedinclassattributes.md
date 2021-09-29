@@ -1,6 +1,6 @@
-## ClassAttributes
+## MixedInClassAttributes
 
-`Tapioca::Compilers::Dsl::ClassAttributes` generates RBI files for modules that dynamically use
+`Tapioca::Compilers::Dsl::MixedInClassAttributes` generates RBI files for modules that dynamically use
 `class_attribute` on classes.
 
 For example, given the following concern

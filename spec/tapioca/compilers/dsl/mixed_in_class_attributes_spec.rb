@@ -3,7 +3,7 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ClassAttributesSpec < DslSpec
+class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   before do
     require "active_support/core_ext/class/attribute"
     require "active_support/concern"
@@ -27,6 +27,17 @@ class Tapioca::Compilers::Dsl::ClassAttributesSpec < DslSpec
       assert_includes(gathered_constants, "ManualIncluded")
       assert_includes(gathered_constants, "Concern")
       refute_includes(gathered_constants, "SomeOtherModule")
+    end
+
+    it("gathers modules with private included hooks") do
+      add_ruby_file("file.rb", <<~RUBY)
+        module PrivateIncluded
+          def self.included(base); end
+          private_class_method :included
+        end
+      RUBY
+
+      assert_includes(gathered_constants, "PrivateIncluded")
     end
   end
 

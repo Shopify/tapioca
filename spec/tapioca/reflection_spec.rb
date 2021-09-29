@@ -50,6 +50,10 @@ module Tapioca
     def self.private_instance_methods
       [:foo, :bar, :baz]
     end
+
+    def self.method(_name)
+      :lies
+    end
   end
 
   class ReflectionSpec < Minitest::Spec
@@ -65,6 +69,7 @@ module Tapioca
         assert_equal([:foo, :bar, :baz], LyingFoo.public_instance_methods)
         assert_equal([:foo, :bar, :baz], LyingFoo.protected_instance_methods)
         assert_equal([:foo, :bar, :baz], LyingFoo.private_instance_methods)
+        assert_equal(:lies, LyingFoo.method(:class))
 
         refute_equal(LyingFoo, foo.class)
         assert_equal(1, foo.__id__)
@@ -83,6 +88,10 @@ module Tapioca
         refute_equal([:foo, :bar, :baz], Reflection.public_instance_methods_of(LyingFoo))
         refute_equal([:foo, :bar, :baz], Reflection.protected_instance_methods_of(LyingFoo))
         refute_equal([:foo, :bar, :baz], Reflection.private_instance_methods_of(LyingFoo))
+
+        method = Reflection.method_of(LyingFoo, :class)
+        assert_equal(:class, method.name)
+        assert_instance_of(Method, method)
 
         assert_equal(LyingFoo, Reflection.class_of(foo))
         refute_equal(1, Reflection.object_id_of(foo))

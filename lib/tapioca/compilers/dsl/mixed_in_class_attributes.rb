@@ -10,7 +10,7 @@ end
 module Tapioca
   module Compilers
     module Dsl
-      # `Tapioca::Compilers::Dsl::ClassAttributes` generates RBI files for modules that dynamically use
+      # `Tapioca::Compilers::Dsl::MixedInClassAttributes` generates RBI files for modules that dynamically use
       # `class_attribute` on classes.
       #
       # For example, given the following concern
@@ -48,7 +48,7 @@ module Tapioca
       #   end
       # end
       # ~~~
-      class ClassAttributes < Base
+      class MixedInClassAttributes < Base
         extend T::Sig
 
         sig { override.params(root: RBI::Tree, constant: Module).void }
@@ -63,9 +63,9 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          # Select all non-anonymous modules that might have included hooks with `class_attribute` invocations inside
+          # Select all non-anonymous modules that have overridden Module.included
           all_modules.select do |mod|
-            name_of(mod) && (mod.methods.include?(:included) || mod.singleton_class < ActiveSupport::Concern)
+            name_of(mod) && Tapioca::Reflection.method_of(mod, :included).owner != Module
           end
         end
       end
