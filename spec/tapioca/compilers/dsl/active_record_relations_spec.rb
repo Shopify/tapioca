@@ -35,18 +35,19 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
       expected = <<~RUBY
         # typed: strong
+
         class Post
           extend CommonRelationMethods
           extend GeneratedRelationMethods
 
           module CommonRelationMethods
-            sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
+            sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
             def any?(&block); end
 
             sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def average(column_name); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def build(attributes = nil, &block); end
 
             sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.untyped) }
@@ -55,28 +56,28 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.untyped).returns(T.untyped) }
             def count(column_name = nil); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create(attributes = nil, &block); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create!(attributes = nil, &block); end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create_or_find_by(attributes, &block); end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create_or_find_by!(attributes, &block); end
 
-            sig { returns(T::Array[Post]) }
+            sig { returns(T::Array[::Post]) }
             def destroy_all; end
 
             sig { params(conditions: T.untyped).returns(T::Boolean) }
             def exists?(conditions = :none); end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def fifth; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def fifth!; end
 
             sig { params(args: T.untyped).returns(T.untyped) }
@@ -85,76 +86,85 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped).returns(T.untyped) }
             def find(*args); end
 
-            sig { params(args: T.untyped).returns(T.nilable(Post)) }
+            sig { params(args: T.untyped).returns(T.nilable(::Post)) }
             def find_by(*args); end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def find_or_create_by(attributes, &block); end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def find_or_create_by!(attributes, &block); end
 
-            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def find_or_initialize_by(attributes, &block); end
 
             sig { params(limit: T.untyped).returns(T.untyped) }
             def first(limit = nil); end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def first!; end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def forty_two; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def forty_two!; end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def fourth; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def fourth!; end
 
             sig { returns(Array) }
             def ids; end
 
+            sig { params(record: T.untyped).returns(T::Boolean) }
+            def include?(record); end
+
             sig { params(limit: T.untyped).returns(T.untyped) }
             def last(limit = nil); end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def last!; end
 
-            sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
+            sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
             def many?(&block); end
 
             sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def maximum(column_name); end
 
+            sig { params(record: T.untyped).returns(T::Boolean) }
+            def member?(record); end
+
             sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def minimum(column_name); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: Post).void)).returns(Post) }
+            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def new(attributes = nil, &block); end
 
-            sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
+            sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
             def none?(&block); end
 
-            sig { params(block: T.nilable(T.proc.params(record: Post).returns(T.untyped))).returns(T::Boolean) }
+            sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
             def one?(&block); end
+
+            sig { params(column_names: T.untyped).returns(T.untyped) }
+            def pick(*column_names); end
 
             sig { params(column_names: T.untyped).returns(T.untyped) }
             def pluck(*column_names); end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def second; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def second!; end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def second_to_last; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def second_to_last!; end
 
             sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
@@ -163,25 +173,31 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(limit: T.untyped).returns(T.untyped) }
             def take(limit = nil); end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def take!; end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def third; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def third!; end
 
-            sig { returns(T.nilable(Post)) }
+            sig { returns(T.nilable(::Post)) }
             def third_to_last; end
 
-            sig { returns(Post) }
+            sig { returns(::Post) }
             def third_to_last!; end
           end
 
           module GeneratedAssociationRelationMethods
             sig { returns(PrivateAssociationRelation) }
             def all; end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def and(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def annotate(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def create_with(*args, &blk); end
@@ -197,6 +213,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def extending(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def extract_associated(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def from(*args, &blk); end
@@ -241,6 +260,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def only(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def optimizer_hints(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def or(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -259,6 +281,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def reorder(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def reselect(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def reverse_order(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -266,6 +291,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def select(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def strict_loading(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def uniq!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def unscope(*args, &blk); end
@@ -277,6 +308,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           module GeneratedRelationMethods
             sig { returns(PrivateRelation) }
             def all; end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def and(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def annotate(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def create_with(*args, &blk); end
@@ -292,6 +329,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def extending(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def extract_associated(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def from(*args, &blk); end
@@ -336,6 +376,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def only(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def optimizer_hints(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def or(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -354,6 +397,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def reorder(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def reselect(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def reverse_order(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -361,6 +407,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def select(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def strict_loading(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def uniq!(*args, &blk); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def unscope(*args, &blk); end
@@ -372,64 +424,103 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
-            Elem = type_member(fixed: Post)
 
-            sig { returns(T::Array[Post]) }
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert!(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert_all(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert_all!(attributes, returning: nil, unique_by: nil); end
+
+            sig { returns(T::Array[::Post]) }
             def to_ary; end
+
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def upsert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def upsert_all(attributes, returning: nil, unique_by: nil); end
+
+            Elem = type_member(fixed: ::Post)
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
-            Elem = type_member(fixed: Post)
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def <<(*records); end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def append(*records); end
 
             sig { returns(PrivateCollectionProxy) }
             def clear; end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def concat(*records); end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(T::Array[Post]) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
             def delete(*records); end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(T::Array[Post]) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
             def destroy(*records); end
 
-            sig { returns(T::Array[Post]) }
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert!(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert_all(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def insert_all!(attributes, returning: nil, unique_by: nil); end
+
+            sig { returns(T::Array[::Post]) }
             def load_target; end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def prepend(*records); end
 
-            sig { params(records: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def push(*records); end
 
-            sig { params(other_array: T.any(Post, T::Array[Post], T::Array[PrivateCollectionProxy])).void }
+            sig { params(other_array: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).void }
             def replace(other_array); end
 
             sig { returns(PrivateAssociationRelation) }
             def scope; end
 
-            sig { returns(T::Array[Post]) }
+            sig { returns(T::Array[::Post]) }
             def target; end
 
-            sig { returns(T::Array[Post]) }
+            sig { returns(T::Array[::Post]) }
             def to_ary; end
+
+            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def upsert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
+            def upsert_all(attributes, returning: nil, unique_by: nil); end
+
+            Elem = type_member(fixed: ::Post)
           end
 
           class PrivateRelation < ::ActiveRecord::Relation
             include CommonRelationMethods
             include GeneratedRelationMethods
-            Elem = type_member(fixed: Post)
 
-            sig { returns(T::Array[Post]) }
+            sig { returns(T::Array[::Post]) }
             def to_ary; end
+
+            Elem = type_member(fixed: ::Post)
           end
         end
       RUBY

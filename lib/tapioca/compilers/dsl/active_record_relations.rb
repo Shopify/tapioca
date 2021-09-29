@@ -1,8 +1,5 @@
 # typed: strict
 # frozen_string_literal: true
-
-require "parlour"
-
 begin
   require "active_record"
 rescue LoadError
@@ -17,11 +14,11 @@ module Tapioca
 
         sig do
           override
-            .params(root: ::Parlour::RbiGenerator::Namespace, constant: T.class_of(::ActiveRecord::Base))
+            .params(root: RBI::Tree, constant: T.class_of(::ActiveRecord::Base))
             .void
         end
         def decorate(root, constant)
-          root.path(constant) do |model|
+          root.create_path(constant) do |model|
             RelationGenerator.new(self, model, constant).generate
           end
         end
@@ -33,18 +30,13 @@ module Tapioca
 
         class RelationGenerator
           extend T::Sig
-
-          MethodDefinition = T.type_alias do
-            {
-              params: T.nilable(T::Array[Parlour::RbiGenerator::Parameter]),
-              return_type: T.nilable(String),
-            }
-          end
+          include ParamHelper
+          include Reflection
 
           sig do
             params(
               compiler: Base,
-              model: Parlour::RbiGenerator::Namespace,
+              model: RBI::Scope,
               constant: T.class_of(::ActiveRecord::Base)
             ).void
           end
@@ -52,6 +44,7 @@ module Tapioca
             @compiler = compiler
             @model = model
             @constant = constant
+            @constant_name = T.let(T.must(qualified_name_of(constant)), String)
             @relation_methods_module_name = T.let("GeneratedRelationMethods", String)
             @association_relation_methods_module_name = T.let("GeneratedAssociationRelationMethods", String)
             @common_relation_methods_module_name = T.let("CommonRelationMethods", String)
@@ -60,15 +53,15 @@ module Tapioca
             @associations_collection_proxy_class_name = T.let("PrivateCollectionProxy", String)
             @relation_methods_module = T.let(
               model.create_module(@relation_methods_module_name),
-              Parlour::RbiGenerator::ModuleNamespace
+              RBI::Scope
             )
             @association_relation_methods_module = T.let(
               model.create_module(@association_relation_methods_module_name),
-              Parlour::RbiGenerator::ModuleNamespace
+              RBI::Scope
             )
             @common_relation_methods_module = T.let(
               model.create_module(@common_relation_methods_module_name),
-              Parlour::RbiGenerator::ModuleNamespace
+              RBI::Scope
             )
           end
 
@@ -81,7 +74,7 @@ module Tapioca
 
           private
 
-          sig { returns(Parlour::RbiGenerator::Namespace) }
+          sig { returns(RBI::Scope) }
           attr_reader :model
 
           sig { void }
@@ -99,12 +92,12 @@ module Tapioca
             superclass = "::ActiveRecord::Relation"
 
             # The relation subclass includes the generated relation module
-            model.create_class(@relation_class_name, superclass: superclass) do |klass|
+            model.create_class(@relation_class_name, superclass_name: superclass) do |klass|
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@relation_methods_module_name)
-              klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
+              klass.create_constant("Elem", value: "type_member(fixed: #{@constant_name})")
 
-              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
+              klass.create_method("to_ary", parameters: [], return_type: "T::Array[#{@constant_name}]")
             end
           end
 
@@ -113,12 +106,12 @@ module Tapioca
             superclass = "::ActiveRecord::AssociationRelation"
 
             # Association subclasses include the generated association relation module
-            model.create_class(@association_relation_class_name, superclass: superclass) do |klass|
+            model.create_class(@association_relation_class_name, superclass_name: superclass) do |klass|
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@association_relation_methods_module_name)
-              klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
+              klass.create_constant("Elem", value: "type_member(fixed: #{@constant_name})")
 
-              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
+              klass.create_method("to_ary", parameters: [], return_type: "T::Array[#{@constant_name}]")
               create_association_relation_methods(klass)
             end
           end
@@ -128,18 +121,18 @@ module Tapioca
             superclass = "::ActiveRecord::Associations::CollectionProxy"
 
             # The relation subclass includes the generated association relation module
-            model.create_class(@associations_collection_proxy_class_name, superclass: superclass) do |klass|
+            model.create_class(@associations_collection_proxy_class_name, superclass_name: superclass) do |klass|
               klass.create_include(@common_relation_methods_module_name)
               klass.create_include(@association_relation_methods_module_name)
-              klass.create_constant("Elem", value: "type_member(fixed: #{@constant})")
+              klass.create_constant("Elem", value: "type_member(fixed: #{@constant_name})")
 
-              create_method(klass, "to_ary", parameters: [], return_type: "T::Array[#{@constant}]")
+              klass.create_method("to_ary", parameters: [], return_type: "T::Array[#{@constant_name}]")
               create_association_relation_methods(klass)
               create_collection_proxy_methods(klass)
             end
           end
 
-          sig { params(klass: Parlour::RbiGenerator::ClassNamespace).void }
+          sig { params(klass: RBI::Scope).void }
           def create_association_relation_methods(klass)
             association_methods = ::ActiveRecord::AssociationRelation.instance_methods -
               ::ActiveRecord::Relation.instance_methods
@@ -147,32 +140,40 @@ module Tapioca
             association_methods.each do |method_name|
               case method_name
               when :insert_all, :insert_all!, :upsert_all
-                create_method(
-                  klass,
-                  method_name,
+                klass.create_method(
+                  method_name.to_s,
                   parameters: [
-                    Parlour::RbiGenerator::Parameter.new("attributes", type: "T::Array[Hash]"),
-                    Parlour::RbiGenerator::Parameter.new("returning:", type: "T::Array[Symbol]", default: "nil"),
-                    Parlour::RbiGenerator::Parameter.new(
-                      "unique_by:",
-                      type: "T.any(T::Array[Symbol], Symbol)",
-                      default: "nil"
-                    ),
+                    create_param("attributes", type: "T::Array[Hash]"),
+                    create_kw_opt_param("returning", type: "T::Array[Symbol]", default: "nil"),
+                    create_kw_opt_param("unique_by", type: "T.any(T::Array[Symbol], Symbol)", default: "nil"),
+                  ],
+                  return_type: "ActiveRecord::Result"
+                )
+              when :insert_all!
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("attributes", type: "T::Array[Hash]"),
+                    create_kw_opt_param("returning", type: "T::Array[Symbol]", default: "nil"),
                   ],
                   return_type: "ActiveRecord::Result"
                 )
               when :insert, :insert!, :upsert
-                create_method(
-                  klass,
-                  method_name,
+                klass.create_method(
+                  method_name.to_s,
                   parameters: [
-                    Parlour::RbiGenerator::Parameter.new("attributes", type: "Hash"),
-                    Parlour::RbiGenerator::Parameter.new("returning:", type: "T::Array[Symbol]", default: "nil"),
-                    Parlour::RbiGenerator::Parameter.new(
-                      "unique_by:",
-                      type: "T.any(T::Array[Symbol], Symbol)",
-                      default: "nil"
-                    ),
+                    create_param("attributes", type: "Hash"),
+                    create_kw_opt_param("returning", type: "T::Array[Symbol]", default: "nil"),
+                    create_kw_opt_param("unique_by", type: "T.any(T::Array[Symbol], Symbol)", default: "nil"),
+                  ],
+                  return_type: "ActiveRecord::Result"
+                )
+              when :insert, :insert!, :upsert
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("attributes", type: "Hash"),
+                    create_kw_opt_param("returning", type: "T::Array[Symbol]", default: "nil"),
                   ],
                   return_type: "ActiveRecord::Result"
                 )
@@ -182,11 +183,11 @@ module Tapioca
             end
           end
 
-          sig { params(klass: Parlour::RbiGenerator::ClassNamespace).void }
+          sig { params(klass: RBI::Scope).void }
           def create_collection_proxy_methods(klass)
             const_collection = "T.any(" + [
-              @constant.to_s,
-              "T::Array[#{@constant}]",
+              @constant_name,
+              "T::Array[#{@constant_name}]",
               "T::Array[#{@associations_collection_proxy_class_name}]",
             ].join(", ") + ")"
 
@@ -196,55 +197,54 @@ module Tapioca
             collection_proxy_methods.each do |method_name|
               case method_name
               when :<<, :append, :concat, :prepend, :push
-                create_method(
-                  klass,
-                  method_name,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_rest_param("records", type: const_collection),
+                  ],
                   return_type: @associations_collection_proxy_class_name
                 )
               when :clear
-                create_method(
-                  klass,
+                klass.create_method(
                   "clear",
                   parameters: [],
                   return_type: @associations_collection_proxy_class_name
                 )
               when :delete, :destroy
-                create_method(
-                  klass,
-                  method_name,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("*records", type: const_collection)],
-                  return_type: "T::Array[#{@constant}]"
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_rest_param("records", type: const_collection),
+                  ],
+                  return_type: "T::Array[#{@constant_name}]"
                 )
               when :load_target
-                create_method(
-                  klass,
-                  method_name,
+                klass.create_method(
+                  method_name.to_s,
                   parameters: [],
-                  return_type: "T::Array[#{@constant}]"
+                  return_type: "T::Array[#{@constant_name}]"
                 )
               when :replace
-                create_method(
-                  klass,
-                  method_name,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("other_array", type: const_collection)],
-                  return_type: nil
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("other_array", type: const_collection),
+                  ],
+                  return_type: "void"
                 )
               when :reset_scope
                 # skip
               when :scope
-                create_method(
-                  klass,
-                  method_name,
+                klass.create_method(
+                  method_name.to_s,
                   parameters: [],
                   return_type: @association_relation_class_name
                 )
               when :target
-                create_method(
-                  klass,
-                  method_name,
+                klass.create_method(
+                  method_name.to_s,
                   parameters: [],
-                  return_type: "T::Array[#{@constant}]"
+                  return_type: "T::Array[#{@constant_name}]"
                 )
               end
             end
@@ -256,8 +256,8 @@ module Tapioca
             create_relation_method(
               "not",
               parameters: [
-                Parlour::RbiGenerator::Parameter.new("opts", type: "T.untyped"),
-                Parlour::RbiGenerator::Parameter.new("*rest", type: "T.untyped"),
+                create_param("opts", type: "T.untyped"),
+                create_rest_param("rest", type: "T.untyped"),
               ]
             )
 
@@ -266,13 +266,7 @@ module Tapioca
             # Grab all Spawn methods
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
-            query_methods -= %i(
-              arel
-              build_subquery
-              construct_join_dependency
-              extensions
-              spawn
-            )
+            query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
             # Remove the methods that ...
             query_methods = query_methods
               .grep_v(/_clause$/) # end with "_clause"
@@ -284,8 +278,8 @@ module Tapioca
               create_relation_method(
                 method_name,
                 parameters: [
-                  Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped"),
-                  Parlour::RbiGenerator::Parameter.new("&blk", type: "T.untyped"),
+                  create_rest_param("args", type: "T.untyped"),
+                  create_block_param("blk", type: "T.untyped"),
                 ]
               )
             end
@@ -293,38 +287,48 @@ module Tapioca
 
           sig { void }
           def create_common_methods
-            create_common_method("destroy_all", return_type: "T::Array[#{@constant}]")
+            create_common_method("destroy_all", return_type: "T::Array[#{@constant_name}]")
 
             ActiveRecord::FinderMethods.instance_methods(false).each do |method_name|
               case method_name
               when :exists?
                 create_common_method(
                   "exists?",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("conditions", type: "T.untyped", default: ":none")],
+                  parameters: [
+                    create_opt_param("conditions", type: "T.untyped", default: ":none"),
+                  ],
                   return_type: "T::Boolean"
                 )
-              when :include?
+              when :include?, :member?
                 create_common_method(
-                  "include?",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("record", type: "T.untyped")],
+                  method_name,
+                  parameters: [
+                    create_param("record", type: "T.untyped"),
+                  ],
                   return_type: "T::Boolean"
                 )
               when :find, :find_by!
                 create_common_method(
                   "find",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
                   return_type: "T.untyped"
                 )
               when :find_by
                 create_common_method(
                   "find_by",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("*args", type: "T.untyped")],
-                  return_type: "T.nilable(#{@constant})"
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
+                  return_type: "T.nilable(#{@constant_name})"
                 )
               when :first, :last, :take
                 create_common_method(
                   method_name,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("limit", type: "T.untyped", default: "nil")],
+                  parameters: [
+                    create_opt_param("limit", type: "T.untyped", default: "nil"),
+                  ],
                   return_type: "T.untyped"
                 )
               when :raise_record_not_found_exception!
@@ -332,7 +336,7 @@ module Tapioca
               else
                 create_common_method(
                   method_name,
-                  return_type: method_name.to_s.end_with?("!") ? @constant.to_s : "T.nilable(#{@constant})"
+                  return_type: method_name.to_s.end_with?("!") ? @constant_name : "T.nilable(#{@constant_name})"
                 )
               end
             end
@@ -342,22 +346,26 @@ module Tapioca
               when :average, :maximum, :minimum
                 create_common_method(
                   method_name,
-                  parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)")],
+                  parameters: [
+                    create_param("column_name", type: "T.any(String, Symbol)"),
+                  ],
                   return_type: "T.untyped"
                 )
               when :calculate
                 create_common_method(
                   "calculate",
                   parameters: [
-                    Parlour::RbiGenerator::Parameter.new("operation", type: "Symbol"),
-                    Parlour::RbiGenerator::Parameter.new("column_name", type: "T.any(String, Symbol)"),
+                    create_param("operation", type: "Symbol"),
+                    create_param("column_name", type: "T.any(String, Symbol)"),
                   ],
                   return_type: "T.untyped"
                 )
               when :count
                 create_common_method(
                   "count",
-                  parameters: [Parlour::RbiGenerator::Parameter.new("column_name", type: "T.untyped", default: "nil")],
+                  parameters: [
+                    create_opt_param("column_name", type: "T.untyped", default: "nil"),
+                  ],
                   return_type: "T.untyped"
                 )
               when :ids
@@ -366,7 +374,7 @@ module Tapioca
                 create_common_method(
                   method_name,
                   parameters: [
-                    Parlour::RbiGenerator::Parameter.new("*column_names", type: "T.untyped"),
+                    create_rest_param("column_names", type: "T.untyped"),
                   ],
                   return_type: "T.untyped"
                 )
@@ -374,119 +382,77 @@ module Tapioca
                 create_common_method(
                   "sum",
                   parameters: [
-                    Parlour::RbiGenerator::Parameter.new(
-                      "column_name",
-                      type: "T.nilable(T.any(String, Symbol))",
-                      default: "nil"
-                    ),
-                    Parlour::RbiGenerator::Parameter.new(
-                      "&block",
-                      type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"
-                    ),
+                    create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
+                    create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                   ],
                   return_type: "T.untyped"
                 )
               end
             end
 
-            enumerable_query_methods = %i[any? many? none? one?]
+            enumerable_query_methods = [:any?, :many?, :none?, :one?]
             enumerable_query_methods.each do |method_name|
+              block_type = "T.nilable(T.proc.params(record: #{@constant_name}).returns(T.untyped))"
               create_common_method(
                 method_name,
                 parameters: [
-                  Parlour::RbiGenerator::Parameter.new(
-                    "&block",
-                    type: "T.nilable(T.proc.params(record: #{@constant}).returns(T.untyped))"
-                  ),
+                  create_block_param("block", type: block_type),
                 ],
                 return_type: "T::Boolean"
               )
             end
 
-            find_or_create_methods = %i[
-              find_or_create_by find_or_create_by! find_or_initialize_by create_or_find_by create_or_find_by!
-            ]
+            find_or_create_methods = [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by,
+                                      :create_or_find_by, :create_or_find_by!]
 
             find_or_create_methods.each do |method_name|
+              block_type = "T.nilable(T.proc.params(object: #{@constant_name}).void)"
               create_common_method(
                 method_name,
                 parameters: [
-                  Parlour::RbiGenerator::Parameter.new("attributes", type: "T.untyped"),
-                  Parlour::RbiGenerator::Parameter.new(
-                    "&block",
-                    type: "T.nilable(T.proc.params(object: #{@constant}).void)"
-                  ),
+                  create_param("attributes", type: "T.untyped"),
+                  create_block_param("block", type: block_type),
                 ],
-                return_type: @constant.to_s
+                return_type: @constant_name
               )
             end
 
-            %i[new build create create!].each do |method_name|
+            [:new, :build, :create, :create!].each do |method_name|
               create_common_method(
                 method_name,
                 parameters: [
-                  Parlour::RbiGenerator::Parameter.new(
-                    "attributes",
-                    type: "T.nilable(T.any(::Hash, T::Array[::Hash]))",
-                    default: "nil"
-                  ),
-                  Parlour::RbiGenerator::Parameter.new(
-                    "&block",
-                    type: "T.nilable(T.proc.params(object: #{@constant}).void)",
-                  ),
+                  create_opt_param("attributes", type: "T.nilable(T.any(::Hash, T::Array[::Hash]))", default: "nil"),
+                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{@constant_name}).void)"),
                 ],
-                return_type: @constant.to_s
+                return_type: @constant_name
               )
             end
           end
 
           sig do
             params(
-              mod: Parlour::RbiGenerator::Namespace,
               name: T.any(Symbol, String),
-              parameters: T::Array[Parlour::RbiGenerator::Parameter],
-              return_type: T.nilable(String),
-              type_parameters: T.nilable(T::Array[Symbol]),
-            ).void
-          end
-          def create_method(mod, name, parameters:, return_type:, type_parameters: nil)
-            @compiler.send(
-              :create_method,
-              mod,
-              name.to_s,
-              type_parameters: type_parameters,
-              parameters: parameters,
-              return_type: return_type
-            )
-          end
-
-          sig do
-            params(
-              name: T.any(Symbol, String),
-              parameters: T::Array[Parlour::RbiGenerator::Parameter],
+              parameters: T::Array[RBI::TypedParam],
               return_type: T.nilable(String)
             ).void
           end
           def create_common_method(name, parameters: [], return_type: nil)
-            create_method(
-              @common_relation_methods_module,
-              name,
+            @common_relation_methods_module.create_method(
+              name.to_s,
               parameters: parameters,
-              return_type: return_type
+              return_type: return_type || "void"
             )
           end
 
-          sig { params(name: T.any(Symbol, String), parameters: T::Array[Parlour::RbiGenerator::Parameter]).void }
+          sig { params(name: T.any(Symbol, String), parameters: T::Array[RBI::TypedParam]).void }
           def create_relation_method(name, parameters: [])
-            create_method(
-              @relation_methods_module,
-              name,
+            @relation_methods_module.create_method(
+              name.to_s,
               parameters: parameters,
               return_type: @relation_class_name
             )
-            create_method(
-              @association_relation_methods_module,
-              name,
+            @association_relation_methods_module.create_method(
+              name.to_s,
               parameters: parameters,
               return_type: @association_relation_class_name
             )
