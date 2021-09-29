@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/rbi_ext/model"
+require "tapioca/compilers/dsl/param_helper"
 
 module Tapioca
   module Compilers
@@ -96,45 +97,7 @@ module Tapioca
           )
         end
 
-        sig { params(name: String, type: String).returns(RBI::TypedParam) }
-        def create_param(name, type:)
-          create_typed_param(RBI::Param.new(name), type)
-        end
-
-        sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }
-        def create_opt_param(name, type:, default:)
-          create_typed_param(RBI::OptParam.new(name, default), type)
-        end
-
-        sig { params(name: String, type: String).returns(RBI::TypedParam) }
-        def create_rest_param(name, type:)
-          create_typed_param(RBI::RestParam.new(name), type)
-        end
-
-        sig { params(name: String, type: String).returns(RBI::TypedParam) }
-        def create_kw_param(name, type:)
-          create_typed_param(RBI::KwParam.new(name), type)
-        end
-
-        sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }
-        def create_kw_opt_param(name, type:, default:)
-          create_typed_param(RBI::KwOptParam.new(name, default), type)
-        end
-
-        sig { params(name: String, type: String).returns(RBI::TypedParam) }
-        def create_kw_rest_param(name, type:)
-          create_typed_param(RBI::KwRestParam.new(name), type)
-        end
-
-        sig { params(name: String, type: String).returns(RBI::TypedParam) }
-        def create_block_param(name, type:)
-          create_typed_param(RBI::BlockParam.new(name), type)
-        end
-
-        sig { params(param: RBI::Param, type: String).returns(RBI::TypedParam) }
-        def create_typed_param(param, type)
-          RBI::TypedParam.new(param: param, type: type)
-        end
+        include ParamHelper
 
         sig { params(method_def: T.any(Method, UnboundMethod)).returns(T::Array[RBI::TypedParam]) }
         def compile_method_parameters_to_rbi(method_def)
