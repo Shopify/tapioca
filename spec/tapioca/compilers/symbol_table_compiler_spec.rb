@@ -40,7 +40,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, 0, include_docs)
+      rbi = Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, 0, include_docs)
+      rbi.nest_singleton_methods!
+      rbi.nest_non_public_methods!
+      rbi.group_nodes!
+      rbi.sort_nodes!
+      rbi.string
     end
 
     it("compiles DelegateClass") do

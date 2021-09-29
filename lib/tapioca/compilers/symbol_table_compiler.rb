@@ -11,7 +11,7 @@ module Tapioca
           gem: Gemfile::GemSpec,
           indent: Integer,
           include_docs: T::Boolean
-        ).returns(String)
+        ).returns(RBI::Tree)
       end
       def compile(
         gem,

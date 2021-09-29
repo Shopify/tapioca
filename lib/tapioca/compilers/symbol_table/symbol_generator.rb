@@ -41,17 +41,13 @@ module Tapioca
           gem.parse_yard_docs if include_doc
         end
 
-        sig { returns(String) }
+        sig { returns(RBI::Tree) }
         def generate
           rbi = RBI::Tree.new
 
           generate_from_symbol(rbi, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
 
-          rbi.nest_singleton_methods!
-          rbi.nest_non_public_methods!
-          rbi.group_nodes!
-          rbi.sort_nodes!
-          rbi.string
+          rbi
         end
 
         private

@@ -146,7 +146,9 @@ module Tapioca
         say("Compiling #{gem_name}, this may take a few seconds... ")
 
         strictness = @typed_overrides[gem.name] || "true"
-        rbi_body_content = compiler.compile(gem, 0, @doc)
+        rbi = compiler.compile(gem, 0, @doc)
+        rbi.nest_singleton_methods!
+        rbi_body_content = transform_rbi(rbi)
         content = String.new
         content << rbi_header(
           "#{@default_command} gem #{gem.name}",
@@ -378,6 +380,15 @@ module Tapioca
         end.join("\n  - ")
 
         "  File(s) #{cause}:\n  - #{filenames}"
+      end
+
+      sig { params(rbi: RBI::Tree).returns(String) }
+      def transform_rbi(rbi)
+        rbi.nest_singleton_methods!
+        rbi.nest_non_public_methods!
+        rbi.group_nodes!
+        rbi.sort_nodes!
+        rbi.string
       end
     end
   end
