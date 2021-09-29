@@ -14,9 +14,18 @@ end
 
 module Parser::AST; end
 
+# {Parser::AST::Node} contains information about a single AST node and its
+# child nodes. It extends the basic [AST::Node](http://rdoc.info/gems/ast/AST/Node)
+# class provided by gem [ast](http://rdoc.info/gems/ast).
 class Parser::AST::Node < ::AST::Node
+  # Assigns various properties to this AST node. Currently only the
+  # location can be set.
   def assign_properties(properties); end
+
+  # Source map for this Node.
   def loc; end
+
+  # Source map for this Node.
   def location; end
 end
 
@@ -136,6 +145,7 @@ class Parser::AST::Processor < ::AST::Processor
   def process_variable_node(node); end
 end
 
+# Base class for version-specific parsers.
 class Parser::Base < ::Racc::Parser
   def initialize(builder = T.unsafe(nil)); end
 
@@ -145,13 +155,37 @@ class Parser::Base < ::Racc::Parser
   def diagnostics; end
   def lexer; end
   def max_numparam_stack; end
+
+  # Parses a source buffer and returns the AST, or `nil` in case of a non fatal error.
   def parse(source_buffer); end
+
+  # Parses a source buffer and returns the AST and the source code comments.
   def parse_with_comments(source_buffer); end
+
   def pattern_hash_keys; end
   def pattern_variables; end
+
+  # Resets the state of the parser.
   def reset; end
+
   def source_buffer; end
   def static_env; end
+
+  # Parses a source buffer and returns the AST, the source code comments,
+  # and the tokens emitted by the lexer. In case of a fatal error, a {SyntaxError}
+  # is raised, unless `recover` is true. In case of an error
+  # (non-fatal or recovered), `nil` is returned instead of the AST, and
+  # comments as well as tokens are only returned up to the location of
+  # the error.
+  #
+  # Currently, token stream format returned by #tokenize is not documented,
+  # but is considered part of a public API and only changed according
+  # to Semantic Versioning.
+  #
+  # However, note that the exact token composition of various constructs
+  # might vary. For example, a string `"foo"` is represented equally well
+  # by `:tSTRING_BEG " :tSTRING_CONTENT foo :tSTRING_END "` and
+  # `:tSTRING "foo"`; such details must not be relied upon.
   def tokenize(source_buffer, recover = T.unsafe(nil)); end
 
   private
@@ -163,9 +197,25 @@ class Parser::Base < ::Racc::Parser
 
   class << self
     def default_parser; end
+
+    # Parses a string of Ruby code and returns the AST. If the source
+    # cannot be parsed, {SyntaxError} is raised and a diagnostic is
+    # printed to `stderr`.
     def parse(string, file = T.unsafe(nil), line = T.unsafe(nil)); end
+
+    # Parses Ruby source code by reading it from a file. If the source
+    # cannot be parsed, {SyntaxError} is raised and a diagnostic is
+    # printed to `stderr`.
     def parse_file(filename); end
+
+    # Parses Ruby source code by reading it from a file and returns the AST and
+    # comments. If the source cannot be parsed, {SyntaxError} is raised and a
+    # diagnostic is printed to `stderr`.
     def parse_file_with_comments(filename); end
+
+    # Parses a string of Ruby code and returns the AST and comments. If the
+    # source cannot be parsed, {SyntaxError} is raised and a diagnostic is
+    # printed to `stderr`.
     def parse_with_comments(string, file = T.unsafe(nil), line = T.unsafe(nil)); end
 
     private
@@ -400,8 +450,21 @@ class Parser::Builders::Default
   end
 end
 
+# {Parser::ClobberingError} is raised when {Parser::Source::Rewriter}
+# detects a clobbering rewrite action. This class inherits {RuntimeError}
+# rather than {StandardError} for backward compatibility.
 class Parser::ClobberingError < ::RuntimeError; end
 
+# Context of parsing that is represented by a stack of scopes.
+#
+# Supported states:
+# + :class - in the class body (class A; end)
+# + :module - in the module body (module M; end)
+# + :sclass - in the singleton class body (class << obj; end)
+# + :def - in the method body (def m; end)
+# + :defs - in the singleton method body (def self.m; end)
+# + :block - in the block body (tap {})
+# + :lambda - in the lambda body (-> {})
 class Parser::Context
   def initialize; end
 
@@ -417,9 +480,18 @@ class Parser::Context
   def pop; end
   def push(state); end
   def reset; end
+
+  # Returns the value of attribute stack.
   def stack; end
 end
 
+# Stack that holds names of current arguments,
+# i.e. while parsing
+# def m1(a = (def m2(b = def m3(c = 1); end); end)); end
+# ^
+# stack is [:a, :b, :c]
+#
+# Emulates `p->cur_arg` in MRI's parse.y
 class Parser::CurrentArgStack
   def initialize; end
 
@@ -443,17 +515,30 @@ class Parser::Diagnostic
   def initialize(level, reason, arguments, location, highlights = T.unsafe(nil)); end
 
   def arguments; end
+
+  # Supplementary error-related source ranges.
   def highlights; end
+
   def level; end
+
+  # Main error-related source range.
   def location; end
+
   def message; end
   def reason; end
+
+  # Renders the diagnostic message as a clang-like diagnostic.
   def render; end
 
   private
 
+  # If necessary, shrink a `Range` so as to include only the first line.
   def first_line_only(range); end
+
+  # If necessary, shrink a `Range` so as to include only the last line.
   def last_line_only(range); end
+
+  # Renders one source line in clang diagnostic style, with highlights.
   def render_line(range, ellipsis = T.unsafe(nil), range_end = T.unsafe(nil)); end
 end
 
@@ -474,46 +559,177 @@ class Parser::Diagnostic::Engine
   def raise?(diagnostic); end
 end
 
+# Collection of the available diagnostic levels.
 Parser::Diagnostic::LEVELS = T.let(T.unsafe(nil), Array)
 
+# line 3 "lib/parser/lexer.rl"
+#
+# === BEFORE YOU START ===
+#
+# Read the Ruby Hacking Guide chapter 11, available in English at
+# http://whitequark.org/blog/2013/04/01/ruby-hacking-guide-ch-11-finite-state-lexer/
+#
+# Remember two things about Ragel scanners:
+#
+# 1) Longest match wins.
+#
+# 2) If two matches have the same length, the first
+# in source code wins.
+#
+# General rules of making Ragel and Bison happy:
+#
+# * `p` (position) and `@te` contain the index of the character
+# they're pointing to ("current"), plus one. `@ts` contains the index
+# of the corresponding character. The code for extracting matched token is:
+#
+# @source_buffer.slice(@ts...@te)
+#
+# * If your input is `foooooooobar` and the rule is:
+#
+# 'f' 'o'+
+#
+# the result will be:
+#
+# foooooooobar
+# ^ ts=0   ^ p=te=9
+#
+# * A Ragel lexer action should not emit more than one token, unless
+# you know what you are doing.
+#
+# * All Ragel commands (fnext, fgoto, ...) end with a semicolon.
+#
+# * If an action emits the token and transitions to another state, use
+# these Ragel commands:
+#
+# emit($whatever)
+# fnext $next_state; fbreak;
+#
+# If you perform `fgoto` in an action which does not emit a token nor
+# rewinds the stream pointer, the parser's side-effectful,
+# context-sensitive lookahead actions will break in a hard to detect
+# and debug way.
+#
+# * If an action does not emit a token:
+#
+# fgoto $next_state;
+#
+# * If an action features lookbehind, i.e. matches characters with the
+# intent of passing them to another action:
+#
+# p = @ts - 1
+# fgoto $next_state;
+#
+# or, if the lookbehind consists of a single character:
+#
+# fhold; fgoto $next_state;
+#
+# * Ragel merges actions. So, if you have `e_lparen = '(' %act` and
+# `c_lparen = '('` and a lexer action `e_lparen | c_lparen`, the result
+# _will_ invoke the action `act`.
+#
+# e_something stands for "something with **e**mbedded action".
+#
+# * EOF is explicit and is matched by `c_eof`. If you want to introspect
+# the state of the lexer, add this rule to the state:
+#
+# c_eof => do_eof;
+#
+# * If you proceed past EOF, the lexer will complain:
+#
+# NoMethodError: undefined method `ord' for nil:NilClass
 class Parser::Lexer
   def initialize(version); end
 
+  # Return next token: [type, value].
   def advance; end
+
+  # Returns the value of attribute cmdarg.
   def cmdarg; end
+
+  # Sets the attribute cmdarg
   def cmdarg=(_arg0); end
+
+  # Returns the value of attribute cmdarg_stack.
   def cmdarg_stack; end
+
+  # Returns the value of attribute command_start.
   def command_start; end
+
+  # Sets the attribute command_start
   def command_start=(_arg0); end
+
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Sets the attribute comments
   def comments=(_arg0); end
+
+  # Returns the value of attribute cond.
   def cond; end
+
+  # Sets the attribute cond
   def cond=(_arg0); end
+
+  # Returns the value of attribute cond_stack.
   def cond_stack; end
+
+  # Returns the value of attribute context.
   def context; end
+
+  # Sets the attribute context
   def context=(_arg0); end
+
   def dedent_level; end
+
+  # Returns the value of attribute diagnostics.
   def diagnostics; end
+
+  # Sets the attribute diagnostics
   def diagnostics=(_arg0); end
+
   def encoding; end
+
+  # Returns the value of attribute force_utf32.
   def force_utf32; end
+
+  # Sets the attribute force_utf32
   def force_utf32=(_arg0); end
+
+  # Returns the value of attribute in_kwarg.
   def in_kwarg; end
+
+  # Sets the attribute in_kwarg
   def in_kwarg=(_arg0); end
+
+  # Returns the value of attribute lambda_stack.
   def lambda_stack; end
+
+  # Returns the value of attribute paren_nest.
   def paren_nest; end
+
   def pop_cmdarg; end
   def pop_cond; end
   def push_cmdarg; end
   def push_cond; end
   def reset(reset_state = T.unsafe(nil)); end
+
+  # Returns the value of attribute source_buffer.
   def source_buffer; end
+
   def source_buffer=(source_buffer); end
   def state; end
   def state=(state); end
+
+  # Returns the value of attribute static_env.
   def static_env; end
+
+  # Sets the attribute static_env
   def static_env=(_arg0); end
+
+  # Returns the value of attribute tokens.
   def tokens; end
+
+  # Sets the attribute tokens
   def tokens=(_arg0); end
 
   protected
@@ -529,85 +745,226 @@ class Parser::Lexer
   def literal; end
   def next_state_for_literal(literal); end
   def pop_literal; end
+
+  # === LITERAL STACK ===
   def push_literal(*args); end
+
   def range(s = T.unsafe(nil), e = T.unsafe(nil)); end
   def stack_pop; end
   def tok(s = T.unsafe(nil), e = T.unsafe(nil)); end
   def version?(*versions); end
 
   class << self
+    # Returns the value of attribute lex_en_expr_arg.
     def lex_en_expr_arg; end
+
+    # Sets the attribute lex_en_expr_arg
     def lex_en_expr_arg=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_beg.
     def lex_en_expr_beg; end
+
+    # Sets the attribute lex_en_expr_beg
     def lex_en_expr_beg=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_cmdarg.
     def lex_en_expr_cmdarg; end
+
+    # Sets the attribute lex_en_expr_cmdarg
     def lex_en_expr_cmdarg=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_dot.
     def lex_en_expr_dot; end
+
+    # Sets the attribute lex_en_expr_dot
     def lex_en_expr_dot=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_end.
     def lex_en_expr_end; end
+
+    # Sets the attribute lex_en_expr_end
     def lex_en_expr_end=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_endarg.
     def lex_en_expr_endarg; end
+
+    # Sets the attribute lex_en_expr_endarg
     def lex_en_expr_endarg=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_endfn.
     def lex_en_expr_endfn; end
+
+    # Sets the attribute lex_en_expr_endfn
     def lex_en_expr_endfn=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_fname.
     def lex_en_expr_fname; end
+
+    # Sets the attribute lex_en_expr_fname
     def lex_en_expr_fname=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_labelarg.
     def lex_en_expr_labelarg; end
+
+    # Sets the attribute lex_en_expr_labelarg
     def lex_en_expr_labelarg=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_mid.
     def lex_en_expr_mid; end
+
+    # Sets the attribute lex_en_expr_mid
     def lex_en_expr_mid=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_value.
     def lex_en_expr_value; end
+
+    # Sets the attribute lex_en_expr_value
     def lex_en_expr_value=(_arg0); end
+
+    # Returns the value of attribute lex_en_expr_variable.
     def lex_en_expr_variable; end
+
+    # Sets the attribute lex_en_expr_variable
     def lex_en_expr_variable=(_arg0); end
+
+    # Returns the value of attribute lex_en_interp_backslash_delimited.
     def lex_en_interp_backslash_delimited; end
+
+    # Sets the attribute lex_en_interp_backslash_delimited
     def lex_en_interp_backslash_delimited=(_arg0); end
+
+    # Returns the value of attribute lex_en_interp_backslash_delimited_words.
     def lex_en_interp_backslash_delimited_words; end
+
+    # Sets the attribute lex_en_interp_backslash_delimited_words
     def lex_en_interp_backslash_delimited_words=(_arg0); end
+
+    # Returns the value of attribute lex_en_interp_string.
     def lex_en_interp_string; end
+
+    # Sets the attribute lex_en_interp_string
     def lex_en_interp_string=(_arg0); end
+
+    # Returns the value of attribute lex_en_interp_words.
     def lex_en_interp_words; end
+
+    # Sets the attribute lex_en_interp_words
     def lex_en_interp_words=(_arg0); end
+
+    # Returns the value of attribute lex_en_leading_dot.
     def lex_en_leading_dot; end
+
+    # Sets the attribute lex_en_leading_dot
     def lex_en_leading_dot=(_arg0); end
+
+    # Returns the value of attribute lex_en_line_begin.
     def lex_en_line_begin; end
+
+    # Sets the attribute lex_en_line_begin
     def lex_en_line_begin=(_arg0); end
+
+    # Returns the value of attribute lex_en_line_comment.
     def lex_en_line_comment; end
+
+    # Sets the attribute lex_en_line_comment
     def lex_en_line_comment=(_arg0); end
+
+    # Returns the value of attribute lex_en_plain_backslash_delimited.
     def lex_en_plain_backslash_delimited; end
+
+    # Sets the attribute lex_en_plain_backslash_delimited
     def lex_en_plain_backslash_delimited=(_arg0); end
+
+    # Returns the value of attribute lex_en_plain_backslash_delimited_words.
     def lex_en_plain_backslash_delimited_words; end
+
+    # Sets the attribute lex_en_plain_backslash_delimited_words
     def lex_en_plain_backslash_delimited_words=(_arg0); end
+
+    # Returns the value of attribute lex_en_plain_string.
     def lex_en_plain_string; end
+
+    # Sets the attribute lex_en_plain_string
     def lex_en_plain_string=(_arg0); end
+
+    # Returns the value of attribute lex_en_plain_words.
     def lex_en_plain_words; end
+
+    # Sets the attribute lex_en_plain_words
     def lex_en_plain_words=(_arg0); end
+
+    # Returns the value of attribute lex_en_regexp_modifiers.
     def lex_en_regexp_modifiers; end
+
+    # Sets the attribute lex_en_regexp_modifiers
     def lex_en_regexp_modifiers=(_arg0); end
+
+    # Returns the value of attribute lex_error.
     def lex_error; end
+
+    # Sets the attribute lex_error
     def lex_error=(_arg0); end
+
+    # Returns the value of attribute lex_start.
     def lex_start; end
+
+    # Sets the attribute lex_start
     def lex_start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _lex_eof_trans.
     def _lex_eof_trans; end
+
+    # Sets the attribute _lex_eof_trans
     def _lex_eof_trans=(_arg0); end
+
+    # Returns the value of attribute _lex_from_state_actions.
     def _lex_from_state_actions; end
+
+    # Sets the attribute _lex_from_state_actions
     def _lex_from_state_actions=(_arg0); end
+
+    # Returns the value of attribute _lex_index_offsets.
     def _lex_index_offsets; end
+
+    # Sets the attribute _lex_index_offsets
     def _lex_index_offsets=(_arg0); end
+
+    # Returns the value of attribute _lex_indicies.
     def _lex_indicies; end
+
+    # Sets the attribute _lex_indicies
     def _lex_indicies=(_arg0); end
+
+    # Returns the value of attribute _lex_key_spans.
     def _lex_key_spans; end
+
+    # Sets the attribute _lex_key_spans
     def _lex_key_spans=(_arg0); end
+
+    # Returns the value of attribute _lex_to_state_actions.
     def _lex_to_state_actions; end
+
+    # Sets the attribute _lex_to_state_actions
     def _lex_to_state_actions=(_arg0); end
+
+    # Returns the value of attribute _lex_trans_actions.
     def _lex_trans_actions; end
+
+    # Sets the attribute _lex_trans_actions
     def _lex_trans_actions=(_arg0); end
+
+    # Returns the value of attribute _lex_trans_keys.
     def _lex_trans_keys; end
+
+    # Sets the attribute _lex_trans_keys
     def _lex_trans_keys=(_arg0); end
+
+    # Returns the value of attribute _lex_trans_targs.
     def _lex_trans_targs; end
+
+    # Sets the attribute _lex_trans_targs
     def _lex_trans_targs=(_arg0); end
   end
 end
@@ -620,7 +977,10 @@ class Parser::Lexer::Dedenter
 end
 
 Parser::Lexer::Dedenter::TAB_WIDTH = T.let(T.unsafe(nil), Integer)
+
+# %
 Parser::Lexer::ESCAPES = T.let(T.unsafe(nil), Hash)
+
 Parser::Lexer::KEYWORDS = T.let(T.unsafe(nil), Hash)
 Parser::Lexer::KEYWORDS_BEGIN = T.let(T.unsafe(nil), Hash)
 Parser::Lexer::LEX_STATES = T.let(T.unsafe(nil), Hash)
@@ -663,7 +1023,10 @@ end
 
 Parser::Lexer::Literal::DELIMITERS = T.let(T.unsafe(nil), Hash)
 Parser::Lexer::Literal::TYPES = T.let(T.unsafe(nil), Hash)
+
+# Mapping of strings to parser tokens.
 Parser::Lexer::PUNCTUATION = T.let(T.unsafe(nil), Hash)
+
 Parser::Lexer::PUNCTUATION_BEGIN = T.let(T.unsafe(nil), Hash)
 Parser::Lexer::REGEXP_META_CHARACTERS = T.let(T.unsafe(nil), Regexp)
 
@@ -680,8 +1043,10 @@ class Parser::Lexer::StackState
   def to_s; end
 end
 
+# Diagnostic messages (errors, warnings and notices) that can be generated.
 Parser::MESSAGES = T.let(T.unsafe(nil), Hash)
 
+# Holds p->max_numparam from parse.y
 class Parser::MaxNumparamStack
   def initialize; end
 
@@ -704,31 +1069,60 @@ Parser::MaxNumparamStack::ORDINARY_PARAMS = T.let(T.unsafe(nil), Integer)
 
 module Parser::Messages
   class << self
+    # Formats the message, returns a raw template if there's nothing to interpolate
+    #
+    # Code like `format("", {})` gives a warning, and so this method tries interpolating
+    # only if `arguments` hash is not empty.
     def compile(reason, arguments); end
   end
 end
 
+# Parser metadata
 module Parser::Meta; end
+
+# All node types that parser can produce. Not all parser versions
+# will be able to produce every possible node.
 Parser::Meta::NODE_TYPES = T.let(T.unsafe(nil), Set)
 
+# {Parser::Rewriter} is deprecated. Use {Parser::TreeRewriter} instead.
+# It has a backwards compatible API and uses {Parser::Source::TreeRewriter}
+# instead of {Parser::Source::Rewriter}.
+# Please check the documentation for {Parser::Source::Rewriter} for details.
 class Parser::Rewriter < ::Parser::AST::Processor
   extend ::Parser::Deprecation
 
   def initialize(*_arg0); end
 
+  # Returns `true` if the specified node is an assignment node, returns false
+  # otherwise.
   def assignment?(node); end
+
+  # Inserts new code after the given source range.
   def insert_after(range, content); end
+
+  # Inserts new code before the given source range.
   def insert_before(range, content); end
+
+  # Removes the source range.
   def remove(range); end
+
+  # Replaces the code of the source range `range` with `content`.
   def replace(range, content); end
+
+  # Rewrites the AST/source buffer and returns a String containing the new
+  # version.
   def rewrite(source_buffer, ast); end
+
+  # Wraps the given source range with the given values.
   def wrap(range, before, after); end
 end
 
 Parser::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
 class Parser::Ruby30 < ::Parser::Base
+  # reduce 0 omitted
   def _reduce_1(val, _values, result); end
+
   def _reduce_10(val, _values, result); end
   def _reduce_100(val, _values, result); end
   def _reduce_101(val, _values, result); end
@@ -754,22 +1148,36 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_12(val, _values, result); end
   def _reduce_120(val, _values, result); end
   def _reduce_121(val, _values, result); end
+
+  # reduce 122 omitted
   def _reduce_123(val, _values, result); end
+
   def _reduce_124(val, _values, result); end
   def _reduce_125(val, _values, result); end
   def _reduce_13(val, _values, result); end
+
+  # reduce 130 omitted
   def _reduce_131(val, _values, result); end
+
+  # reduce 132 omitted
   def _reduce_133(val, _values, result); end
+
   def _reduce_134(val, _values, result); end
   def _reduce_135(val, _values, result); end
   def _reduce_14(val, _values, result); end
   def _reduce_15(val, _values, result); end
   def _reduce_16(val, _values, result); end
+
+  # reduce 17 omitted
   def _reduce_18(val, _values, result); end
+
   def _reduce_19(val, _values, result); end
   def _reduce_2(val, _values, result); end
   def _reduce_20(val, _values, result); end
+
+  # reduce 206 omitted
   def _reduce_207(val, _values, result); end
+
   def _reduce_208(val, _values, result); end
   def _reduce_209(val, _values, result); end
   def _reduce_21(val, _values, result); end
@@ -800,7 +1208,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_232(val, _values, result); end
   def _reduce_233(val, _values, result); end
   def _reduce_234(val, _values, result); end
+
+  # reduce 235 omitted
   def _reduce_236(val, _values, result); end
+
   def _reduce_237(val, _values, result); end
   def _reduce_238(val, _values, result); end
   def _reduce_239(val, _values, result); end
@@ -819,19 +1230,33 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_250(val, _values, result); end
   def _reduce_251(val, _values, result); end
   def _reduce_252(val, _values, result); end
+
+  # reduce 257 omitted
   def _reduce_258(val, _values, result); end
+
   def _reduce_259(val, _values, result); end
   def _reduce_26(val, _values, result); end
+
+  # reduce 262 omitted
   def _reduce_263(val, _values, result); end
+
   def _reduce_264(val, _values, result); end
+
+  # reduce 265 omitted
   def _reduce_266(val, _values, result); end
+
   def _reduce_267(val, _values, result); end
   def _reduce_268(val, _values, result); end
   def _reduce_269(val, _values, result); end
   def _reduce_27(val, _values, result); end
   def _reduce_270(val, _values, result); end
+
+  # reduce 271 omitted
   def _reduce_272(val, _values, result); end
+
+  # reduce 274 omitted
   def _reduce_275(val, _values, result); end
+
   def _reduce_276(val, _values, result); end
   def _reduce_277(val, _values, result); end
   def _reduce_278(val, _values, result); end
@@ -850,12 +1275,18 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_29(val, _values, result); end
   def _reduce_290(val, _values, result); end
   def _reduce_291(val, _values, result); end
+
+  # reduce 292 omitted
   def _reduce_293(val, _values, result); end
+
   def _reduce_294(val, _values, result); end
   def _reduce_295(val, _values, result); end
   def _reduce_3(val, _values, result); end
   def _reduce_30(val, _values, result); end
+
+  # reduce 305 omitted
   def _reduce_306(val, _values, result); end
+
   def _reduce_307(val, _values, result); end
   def _reduce_308(val, _values, result); end
   def _reduce_309(val, _values, result); end
@@ -869,15 +1300,23 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_317(val, _values, result); end
   def _reduce_318(val, _values, result); end
   def _reduce_319(val, _values, result); end
+
+  # reduce 31 omitted
   def _reduce_32(val, _values, result); end
+
   def _reduce_320(val, _values, result); end
   def _reduce_321(val, _values, result); end
   def _reduce_322(val, _values, result); end
   def _reduce_323(val, _values, result); end
   def _reduce_324(val, _values, result); end
   def _reduce_325(val, _values, result); end
+
+  # reduce 326 omitted
   def _reduce_327(val, _values, result); end
+
+  # reduce 328 omitted
   def _reduce_329(val, _values, result); end
+
   def _reduce_33(val, _values, result); end
   def _reduce_330(val, _values, result); end
   def _reduce_331(val, _values, result); end
@@ -900,34 +1339,60 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_347(val, _values, result); end
   def _reduce_348(val, _values, result); end
   def _reduce_35(val, _values, result); end
+
+  # reduce 349 omitted
   def _reduce_350(val, _values, result); end
+
+  # reduce 352 omitted
   def _reduce_353(val, _values, result); end
+
+  # reduce 356 omitted
   def _reduce_357(val, _values, result); end
+
+  # reduce 358 omitted
   def _reduce_359(val, _values, result); end
+
+  # reduce 361 omitted
   def _reduce_362(val, _values, result); end
+
   def _reduce_363(val, _values, result); end
   def _reduce_364(val, _values, result); end
   def _reduce_365(val, _values, result); end
+
+  # reduce 366 omitted
   def _reduce_367(val, _values, result); end
+
   def _reduce_368(val, _values, result); end
   def _reduce_369(val, _values, result); end
+
+  # reduce 36 omitted
   def _reduce_37(val, _values, result); end
+
   def _reduce_370(val, _values, result); end
   def _reduce_371(val, _values, result); end
   def _reduce_372(val, _values, result); end
+
+  # reduce 374 omitted
   def _reduce_375(val, _values, result); end
+
   def _reduce_376(val, _values, result); end
   def _reduce_377(val, _values, result); end
   def _reduce_378(val, _values, result); end
   def _reduce_379(val, _values, result); end
   def _reduce_38(val, _values, result); end
   def _reduce_380(val, _values, result); end
+
+  # reduce 381 omitted
   def _reduce_382(val, _values, result); end
+
   def _reduce_383(val, _values, result); end
   def _reduce_384(val, _values, result); end
   def _reduce_385(val, _values, result); end
   def _reduce_386(val, _values, result); end
+
+  # reduce 387 omitted
   def _reduce_388(val, _values, result); end
+
   def _reduce_389(val, _values, result); end
   def _reduce_39(val, _values, result); end
   def _reduce_390(val, _values, result); end
@@ -936,7 +1401,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_393(val, _values, result); end
   def _reduce_394(val, _values, result); end
   def _reduce_395(val, _values, result); end
+
+  # reduce 396 omitted
   def _reduce_397(val, _values, result); end
+
   def _reduce_398(val, _values, result); end
   def _reduce_399(val, _values, result); end
   def _reduce_4(val, _values, result); end
@@ -947,7 +1415,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_403(val, _values, result); end
   def _reduce_404(val, _values, result); end
   def _reduce_405(val, _values, result); end
+
+  # reduce 406 omitted
   def _reduce_407(val, _values, result); end
+
   def _reduce_408(val, _values, result); end
   def _reduce_409(val, _values, result); end
   def _reduce_41(val, _values, result); end
@@ -986,24 +1457,45 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_44(val, _values, result); end
   def _reduce_440(val, _values, result); end
   def _reduce_441(val, _values, result); end
+
+  # reduce 442 omitted
   def _reduce_443(val, _values, result); end
+
   def _reduce_444(val, _values, result); end
   def _reduce_445(val, _values, result); end
   def _reduce_446(val, _values, result); end
+
+  # reduce 447 omitted
   def _reduce_448(val, _values, result); end
+
   def _reduce_449(val, _values, result); end
   def _reduce_450(val, _values, result); end
+
+  # reduce 451 omitted
   def _reduce_452(val, _values, result); end
+
   def _reduce_453(val, _values, result); end
   def _reduce_454(val, _values, result); end
   def _reduce_455(val, _values, result); end
   def _reduce_456(val, _values, result); end
+
+  # reduce 457 omitted
   def _reduce_458(val, _values, result); end
+
+  # reduce 45 omitted
   def _reduce_46(val, _values, result); end
+
+  # reduce 459 omitted
   def _reduce_460(val, _values, result); end
+
+  # reduce 461 omitted
   def _reduce_462(val, _values, result); end
+
   def _reduce_463(val, _values, result); end
+
+  # reduce 464 omitted
   def _reduce_465(val, _values, result); end
+
   def _reduce_466(val, _values, result); end
   def _reduce_467(val, _values, result); end
   def _reduce_468(val, _values, result); end
@@ -1026,8 +1518,13 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_485(val, _values, result); end
   def _reduce_486(val, _values, result); end
   def _reduce_487(val, _values, result); end
+
+  # reduce 488 omitted
   def _reduce_489(val, _values, result); end
+
+  # reduce 48 omitted
   def _reduce_49(val, _values, result); end
+
   def _reduce_490(val, _values, result); end
   def _reduce_491(val, _values, result); end
   def _reduce_492(val, _values, result); end
@@ -1036,7 +1533,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_495(val, _values, result); end
   def _reduce_496(val, _values, result); end
   def _reduce_497(val, _values, result); end
+
+  # reduce 498 omitted
   def _reduce_499(val, _values, result); end
+
   def _reduce_5(val, _values, result); end
   def _reduce_50(val, _values, result); end
   def _reduce_500(val, _values, result); end
@@ -1052,16 +1552,27 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_51(val, _values, result); end
   def _reduce_510(val, _values, result); end
   def _reduce_511(val, _values, result); end
+
+  # reduce 514 omitted
   def _reduce_515(val, _values, result); end
+
   def _reduce_516(val, _values, result); end
   def _reduce_517(val, _values, result); end
   def _reduce_518(val, _values, result); end
   def _reduce_52(val, _values, result); end
+
+  # reduce 521 omitted
   def _reduce_522(val, _values, result); end
+
   def _reduce_523(val, _values, result); end
   def _reduce_53(val, _values, result); end
+
+  # reduce 531 omitted
   def _reduce_532(val, _values, result); end
+
+  # reduce 533 omitted
   def _reduce_534(val, _values, result); end
+
   def _reduce_535(val, _values, result); end
   def _reduce_536(val, _values, result); end
   def _reduce_537(val, _values, result); end
@@ -1070,10 +1581,18 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_54(val, _values, result); end
   def _reduce_540(val, _values, result); end
   def _reduce_541(val, _values, result); end
+
+  # reduce 543 omitted
   def _reduce_544(val, _values, result); end
+
+  # reduce 545 omitted
   def _reduce_546(val, _values, result); end
+
   def _reduce_55(val, _values, result); end
+
+  # reduce 549 omitted
   def _reduce_550(val, _values, result); end
+
   def _reduce_551(val, _values, result); end
   def _reduce_552(val, _values, result); end
   def _reduce_553(val, _values, result); end
@@ -1109,9 +1628,15 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_582(val, _values, result); end
   def _reduce_583(val, _values, result); end
   def _reduce_584(val, _values, result); end
+
+  # reduce 587 omitted
   def _reduce_588(val, _values, result); end
+
   def _reduce_589(val, _values, result); end
+
+  # reduce 58 omitted
   def _reduce_59(val, _values, result); end
+
   def _reduce_590(val, _values, result); end
   def _reduce_591(val, _values, result); end
   def _reduce_592(val, _values, result); end
@@ -1142,12 +1667,18 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_614(val, _values, result); end
   def _reduce_615(val, _values, result); end
   def _reduce_616(val, _values, result); end
+
+  # reduce 617 omitted
   def _reduce_618(val, _values, result); end
+
   def _reduce_619(val, _values, result); end
   def _reduce_62(val, _values, result); end
   def _reduce_620(val, _values, result); end
   def _reduce_621(val, _values, result); end
+
+  # reduce 622 omitted
   def _reduce_623(val, _values, result); end
+
   def _reduce_624(val, _values, result); end
   def _reduce_625(val, _values, result); end
   def _reduce_626(val, _values, result); end
@@ -1177,7 +1708,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_648(val, _values, result); end
   def _reduce_649(val, _values, result); end
   def _reduce_650(val, _values, result); end
+
+  # reduce 651 omitted
   def _reduce_652(val, _values, result); end
+
   def _reduce_653(val, _values, result); end
   def _reduce_654(val, _values, result); end
   def _reduce_655(val, _values, result); end
@@ -1192,7 +1726,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_664(val, _values, result); end
   def _reduce_665(val, _values, result); end
   def _reduce_666(val, _values, result); end
+
+  # reduce 668 omitted
   def _reduce_669(val, _values, result); end
+
   def _reduce_670(val, _values, result); end
   def _reduce_671(val, _values, result); end
   def _reduce_672(val, _values, result); end
@@ -1201,16 +1738,30 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_675(val, _values, result); end
   def _reduce_676(val, _values, result); end
   def _reduce_677(val, _values, result); end
+
+  # reduce 67 omitted
   def _reduce_68(val, _values, result); end
+
+  # reduce 679 omitted
   def _reduce_680(val, _values, result); end
+
   def _reduce_681(val, _values, result); end
+
+  # reduce 683 omitted
   def _reduce_684(val, _values, result); end
+
   def _reduce_685(val, _values, result); end
   def _reduce_686(val, _values, result); end
+
+  # reduce 687 omitted
   def _reduce_688(val, _values, result); end
+
   def _reduce_689(val, _values, result); end
   def _reduce_69(val, _values, result); end
+
+  # reduce 690 omitted
   def _reduce_691(val, _values, result); end
+
   def _reduce_692(val, _values, result); end
   def _reduce_693(val, _values, result); end
   def _reduce_694(val, _values, result); end
@@ -1218,14 +1769,27 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_696(val, _values, result); end
   def _reduce_7(val, _values, result); end
   def _reduce_70(val, _values, result); end
+
+  # reduce 708 omitted
   def _reduce_709(val, _values, result); end
+
   def _reduce_710(val, _values, result); end
+
+  # reduce 714 omitted
   def _reduce_715(val, _values, result); end
+
   def _reduce_716(val, _values, result); end
   def _reduce_717(val, _values, result); end
+
+  # reduce 71 omitted
   def _reduce_72(val, _values, result); end
+
+  # reduce 720 omitted
   def _reduce_721(val, _values, result); end
+
+  # reduce 724 omitted
   def _reduce_725(val, _values, result); end
+
   def _reduce_73(val, _values, result); end
   def _reduce_74(val, _values, result); end
   def _reduce_75(val, _values, result); end
@@ -1240,9 +1804,15 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_84(val, _values, result); end
   def _reduce_85(val, _values, result); end
   def _reduce_86(val, _values, result); end
+
+  # reduce 87 omitted
   def _reduce_88(val, _values, result); end
+
   def _reduce_89(val, _values, result); end
+
+  # reduce 8 omitted
   def _reduce_9(val, _values, result); end
+
   def _reduce_90(val, _values, result); end
   def _reduce_91(val, _values, result); end
   def _reduce_92(val, _values, result); end
@@ -1250,7 +1820,10 @@ class Parser::Ruby30 < ::Parser::Base
   def _reduce_94(val, _values, result); end
   def _reduce_95(val, _values, result); end
   def _reduce_96(val, _values, result); end
+
+  # reduce 97 omitted
   def _reduce_98(val, _values, result); end
+
   def _reduce_99(val, _values, result); end
   def _reduce_none(val, _values, result); end
   def default_encoding; end
@@ -1262,25 +1835,60 @@ Parser::Ruby30::Racc_arg = T.let(T.unsafe(nil), Array)
 Parser::Ruby30::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 module Parser::Source; end
 
+# A buffer with source code. {Buffer} contains the source code itself,
+# associated location information (name and first line), and takes care
+# of encoding.
+#
+# A source buffer is immutable once populated.
 class Parser::Source::Buffer
   def initialize(name, first_line = T.unsafe(nil), source: T.unsafe(nil)); end
 
+  # Convert a character index into the source to a column number.
   def column_for_position(position); end
+
+  # Convert a character index into the source to a `[line, column]` tuple.
   def decompose_position(position); end
+
+  # First line of the buffer, 1 by default.
   def first_line; end
+
   def freeze; end
   def inspect; end
+
+  # Number of last line in the buffer
   def last_line; end
+
+  # Convert a character index into the source to a line number.
   def line_for_position(position); end
+
+  # Extract line `lineno` as a new `Range`, taking `first_line` into account.
   def line_range(lineno); end
+
+  # Buffer name. If the buffer was created from a file, the name corresponds
+  # to relative path to the file.
   def name; end
+
+  # Populate this buffer from a string without encoding autodetection.
   def raw_source=(input); end
+
+  # Populate this buffer from correspondingly named file.
   def read; end
+
   def slice(range); end
+
+  # Source code contained in this buffer.
   def source; end
+
+  # Populate this buffer from a string with encoding autodetection.
+  # `input` is mutated if not frozen.
   def source=(input); end
+
+  # Extract line `lineno` from source, taking `first_line` into account.
   def source_line(lineno); end
+
+  # Return an `Array` of source code lines.
   def source_lines; end
+
   def source_range; end
 
   private
@@ -1290,28 +1898,62 @@ class Parser::Source::Buffer
   def line_index_for_position(position); end
 
   class << self
+    # Try to recognize encoding of `string` as Ruby would, i.e. by looking for
+    # magic encoding comment or UTF-8 BOM. `string` can be in any encoding.
     def recognize_encoding(string); end
+
+    # Recognize encoding of `input` and process it so it could be lexed.
+    #
+    # * If `input` does not contain BOM or magic encoding comment, it is
+    # kept in the original encoding.
+    # * If the detected encoding is binary, `input` is kept in binary.
+    # * Otherwise, `input` is re-encoded into UTF-8 and returned as a
+    # new string.
+    #
+    # This method mutates the encoding of `input`, but not its content.
     def reencode_string(input); end
   end
 end
 
 Parser::Source::Buffer::ENCODING_RE = T.let(T.unsafe(nil), Regexp)
 
+# A comment in the source code.
 class Parser::Source::Comment
   def initialize(range); end
 
+  # Compares comments. Two comments are equal if they
+  # correspond to the same source range.
   def ==(other); end
+
   def document?; end
   def inline?; end
   def inspect; end
   def loc; end
   def location; end
   def text; end
+
+  # Type of this comment.
+  #
+  # * Inline comments correspond to `:inline`:
+  #
+  # # whatever
+  #
+  # * Block comments correspond to `:document`:
+  #
+  # =begin
+  # hi i am a document
+  # =end
   def type; end
 
   class << self
+    # Associate `comments` with `ast` nodes by their corresponding node.
     def associate(ast, comments); end
+
+    # Associate `comments` with `ast` nodes using identity.
     def associate_by_identity(ast, comments); end
+
+    # Associate `comments` with `ast` nodes by their location in the
+    # source.
     def associate_locations(ast, comments); end
   end
 end
@@ -1343,19 +1985,84 @@ end
 Parser::Source::Comment::Associator::MAGIC_COMMENT_RE = T.let(T.unsafe(nil), Regexp)
 Parser::Source::Comment::Associator::POSTFIX_TYPES = T.let(T.unsafe(nil), Set)
 
+# {Map} relates AST nodes to the source code they were parsed from.
+# More specifically, a {Map} or its subclass contains a set of ranges:
+#
+# * `expression`: smallest range which includes all source corresponding
+# to the node and all `expression` ranges of its children.
+# * other ranges (`begin`, `end`, `operator`, ...): node-specific ranges
+# pointing to various interesting tokens corresponding to the node.
+#
+# Note that the {Map::Heredoc} map is the only one whose `expression` does
+# not include other ranges. It only covers the heredoc marker (`<<HERE`),
+# not the here document itself.
+#
+# All ranges except `expression` are defined by {Map} subclasses.
+#
+# Ranges (except `expression`) can be `nil` if the corresponding token is
+# not present in source. For example, a hash may not have opening/closing
+# braces, and so would its source map.
+#
+# p Parser::CurrentRuby.parse('[1 => 2]').children[0].loc
+# # => <Parser::Source::Map::Collection:0x007f5492b547d8
+# #  @end=nil, @begin=nil,
+# #  @expression=#<Source::Range (string) 1...7>>
+#
+# The {file:doc/AST_FORMAT.md} document describes how ranges associated to source
+# code tokens. For example, the entry
+#
+# (array (int 1) (int 2))
+#
+# "[1, 2]"
+# ^ begin
+# ^ end
+# ~~~~~~ expression
+#
+# means that if `node` is an {Parser::AST::Node} `(array (int 1) (int 2))`,
+# then `node.loc` responds to `begin`, `end` and `expression`, and
+# `node.loc.begin` returns a range pointing at the opening bracket, and so on.
+#
+# If you want to write code polymorphic by the source map (i.e. accepting
+# several subclasses of {Map}), use `respond_to?` instead of `is_a?` to
+# check whether the map features the range you need. Concrete {Map}
+# subclasses may not be preserved between versions, but their interfaces
+# will be kept compatible.
+#
+# You can visualize the source maps with `ruby-parse -E` command-line tool.
 class Parser::Source::Map
   def initialize(expression); end
 
+  # Compares source maps.
   def ==(other); end
+
+  # A shortcut for `self.expression.column`.
   def column; end
+
   def expression; end
+
+  # A shortcut for `self.expression.line`.
   def first_line; end
+
+  # A shortcut for `self.expression.last_column`.
   def last_column; end
+
+  # A shortcut for `self.expression.last_line`.
   def last_line; end
+
+  # A shortcut for `self.expression.line`.
   def line; end
+
+  # The node that is described by this map. Nodes and maps have 1:1 correspondence.
   def node; end
+
   def node=(node); end
+
+  # Converts this source map to a hash with keys corresponding to
+  # ranges. For example, if called on an instance of {Collection},
+  # which adds the `begin` and `end` ranges, the resulting hash
+  # will contain keys `:expression`, `:begin` and `:end`.
   def to_hash; end
+
   def with_expression(expression_l); end
 
   protected
@@ -1509,37 +2216,84 @@ class Parser::Source::Map::Variable < ::Parser::Source::Map
   def update_operator(operator_l); end
 end
 
+# A range of characters in a particular source buffer.
+#
+# The range is always exclusive, i.e. a range with `begin_pos` of 3 and
+# `end_pos` of 5 will contain the following characters:
+#
+# example
+# ^^
 class Parser::Source::Range
   include ::Comparable
   include ::RuboCop::AST::Ext::Range
 
   def initialize(source_buffer, begin_pos, end_pos); end
 
+  # Compare ranges, first by begin_pos, then by end_pos.
   def <=>(other); end
+
+  # by the given amount(s)
   def adjust(begin_pos: T.unsafe(nil), end_pos: T.unsafe(nil)); end
+
   def begin; end
   def begin_pos; end
   def column; end
   def column_range; end
+
+  # Return `other.contains?(self)`
+  #
+  # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   def contained?(other); end
+
+  # Returns true iff this range contains (strictly) `other`.
+  #
+  # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   def contains?(other); end
+
+  # Returns true iff both ranges intersect and also have different elements from one another.
+  #
+  # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   def crossing?(other); end
+
+  # Return `true` iff this range and `other` are disjoint.
+  #
+  # Two ranges must be one and only one of ==, disjoint?, contains?, contained? or crossing?
   def disjoint?(other); end
+
+  # Checks if a range is empty; if it contains no characters
   def empty?; end
+
   def end; end
   def end_pos; end
   def eql?(_arg0); end
+
+  # Line number of the beginning of this range. By default, the first line
+  # of a buffer is 1; as such, line numbers are most commonly one-based.
   def first_line; end
+
+  # Support for Ranges be used in as Hash indices and in Sets.
   def hash; end
+
   def inspect; end
   def intersect(other); end
+
+  # `is?` provides a concise way to compare the source corresponding to this range.
+  # For example, `r.source == '(' || r.source == 'begin'` is equivalent to
+  # `r.is?('(', 'begin')`.
   def is?(*what); end
+
   def join(other); end
   def last_column; end
   def last_line; end
   def length; end
+
+  # Line number of the beginning of this range. By default, the first line
+  # of a buffer is 1; as such, line numbers are most commonly one-based.
   def line; end
+
+  # Return `true` iff this range is not disjoint from `other`.
   def overlaps?(other); end
+
   def resize(new_size); end
   def size; end
   def source; end
@@ -1547,25 +2301,80 @@ class Parser::Source::Range
   def source_line; end
   def to_a; end
   def to_range; end
+
+  # Composes a GNU/Clang-style string representation of the beginning of this
+  # range.
+  #
+  # For example, for the following range in file `foo.rb`,
+  #
+  # def foo
+  # ^^^
+  #
+  # `to_s` will return `foo.rb:1:5`.
+  # Note that the column index is one-based.
   def to_s; end
+
+  # to the given value(s).
   def with(begin_pos: T.unsafe(nil), end_pos: T.unsafe(nil)); end
 end
 
+# {Rewriter} is deprecated. Use {TreeRewriter} instead.
+#
+# TreeRewriter has simplified semantics, and customizable policies
+# with regards to clobbering. Please read the documentation.
+#
+# Keep in mind:
+# - Rewriter was discarding the `end_pos` of the given range for `insert_before`,
+# and the `begin_pos` for `insert_after`. These are meaningful in TreeRewriter.
+# - TreeRewriter's wrap/insert_before/insert_after are multiple by default, while
+# Rewriter would raise clobbering errors if the non '_multi' version was called.
+# - The TreeRewriter policy closest to Rewriter's behavior is:
+# different_replacements: :raise,
+# swallowed_insertions: :raise,
+# crossing_deletions: :accept
 class Parser::Source::Rewriter
   extend ::Parser::Deprecation
 
   def initialize(source_buffer); end
 
   def diagnostics; end
+
+  # Inserts new code after the given source range.
   def insert_after(range, content); end
+
+  # Inserts new code after the given source range by allowing other
+  # insertions at the same position.
+  # Note that an insertion with latter invocation comes _after_ earlier
+  # insertion at the same position in the rewritten source.
   def insert_after_multi(range, content); end
+
+  # Inserts new code before the given source range.
   def insert_before(range, content); end
+
+  # Inserts new code before the given source range by allowing other
+  # insertions at the same position.
+  # Note that an insertion with latter invocation comes _before_ earlier
+  # insertion at the same position in the rewritten source.
   def insert_before_multi(range, content); end
+
+  # Applies all scheduled changes to the `source_buffer` and returns
+  # modified source as a new string.
   def process; end
+
+  # Removes the source range.
   def remove(range); end
+
+  # Replaces the code of the source range `range` with `content`.
   def replace(range, content); end
+
   def source_buffer; end
+
+  # Provides a protected block where a sequence of multiple rewrite actions
+  # are handled atomically. If any of the actions failed by clobbering,
+  # all the actions are rolled back.
   def transaction; end
+
+  # Inserts new code before and after the given source range.
   def wrap(range, before, after); end
 
   private
@@ -1580,7 +2389,44 @@ class Parser::Source::Rewriter
   def adjacent_insertions?(range); end
   def adjacent_position_mask(range); end
   def adjacent_updates?(range); end
+
+  # Schedule a code update. If it overlaps with another update, check
+  # whether they conflict, and raise a clobbering error if they do.
+  # (As a special case, zero-length ranges at the same position are
+  # considered to "overlap".) Otherwise, merge them.
+  #
+  # Updates which are adjacent to each other, but do not overlap, are also
+  # merged.
+  #
+  # RULES:
+  #
+  # - Insertion ("replacing" a zero-length range):
+  # - Two insertions at the same point conflict. This is true even
+  # if the earlier insertion has already been merged with an adjacent
+  # update, and even if they are both inserting the same text.
+  # - An insertion never conflicts with a replace or remove operation
+  # on its right or left side, which does not overlap it (in other
+  # words, which does not update BOTH its right and left sides).
+  # - An insertion always conflicts with a remove operation which spans
+  # both its sides.
+  # - An insertion conflicts with a replace operation which spans both its
+  # sides, unless the replacement text is longer than the replaced text
+  # by the size of the insertion (or more), and the portion of
+  # replacement text immediately after the insertion position is
+  # identical to the inserted text.
+  #
+  # - Removal operations never conflict with each other.
+  #
+  # - Replacement operations:
+  # - Take the portion of each replacement text which falls within:
+  # - The other operation's replaced region
+  # - The other operation's replacement text, if it extends past the
+  # end of its own replaced region (in other words, if the replacement
+  # text is longer than the text it replaces)
+  # - If and only if the taken texts are identical for both operations,
+  # they do not conflict.
   def append(action); end
+
   def can_merge?(action, existing); end
   def clobbered_insertion?(insertion); end
   def clobbered_position_mask(range); end
@@ -1611,29 +2457,162 @@ end
 
 Parser::Source::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
+# {TreeRewriter} performs the heavy lifting in the source rewriting process.
+# It schedules code updates to be performed in the correct order.
+#
+# For simple cases, the resulting source will be obvious.
+#
+# Examples for more complex cases follow. Assume these examples are acting on
+# the source `'puts(:hello, :world)`. The methods #wrap, #remove, etc.
+# receive a Range as first argument; for clarity, examples below use english
+# sentences and a string of raw code instead.
+#
+# ## Overlapping ranges:
+#
+# Any two rewriting actions on overlapping ranges will fail and raise
+# a `ClobberingError`, unless they are both deletions (covered next).
+#
+# * wrap ':hello, ' with '(' and ')'
+# * wrap ', :world' with '(' and ')'
+# => CloberringError
+#
+# ## Overlapping deletions:
+#
+# * remove ':hello, '
+# * remove ', :world'
+#
+# The overlapping ranges are merged and `':hello, :world'` will be removed.
+# This policy can be changed. `:crossing_deletions` defaults to `:accept`
+# but can be set to `:warn` or `:raise`.
+#
+# ## Multiple actions at the same end points:
+#
+# Results will always be independent on the order they were given.
+# Exception: rewriting actions done on exactly the same range (covered next).
+#
+# Example:
+# * replace ', ' by ' => '
+# * wrap ':hello, :world' with '{' and '}'
+# * replace ':world' with ':everybody'
+# * wrap ':world' with '[', ']'
+#
+# The resulting string will be `'puts({:hello => [:everybody]})'`
+# and this result is independent on the order the instructions were given in.
+#
+# Note that if the two "replace" were given as a single replacement of ', :world'
+# for ' => :everybody', the result would be a `ClobberingError` because of the wrap
+# in square brackets.
+#
+# ## Multiple wraps on same range:
+# * wrap ':hello' with '(' and ')'
+# * wrap ':hello' with '[' and ']'
+#
+# The wraps are combined in order given and results would be `'puts([(:hello)], :world)'`.
+#
+# ## Multiple replacements on same range:
+# * replace ':hello' by ':hi', then
+# * replace ':hello' by ':hey'
+#
+# The replacements are made in the order given, so the latter replacement
+# supersedes the former and ':hello' will be replaced by ':hey'.
+#
+# This policy can be changed. `:different_replacements` defaults to `:accept`
+# but can be set to `:warn` or `:raise`.
+#
+# ## Swallowed insertions:
+# wrap 'world' by '__', '__'
+# replace ':hello, :world' with ':hi'
+#
+# A containing replacement will swallow the contained rewriting actions
+# and `':hello, :world'` will be replaced by `':hi'`.
+#
+# This policy can be changed for swallowed insertions. `:swallowed_insertions`
+# defaults to `:accept` but can be set to `:warn` or `:raise`
+#
+# ## Implementation
+# The updates are organized in a tree, according to the ranges they act on
+# (where children are strictly contained by their parent), hence the name.
 class Parser::Source::TreeRewriter
   extend ::Parser::Deprecation
 
   def initialize(source_buffer, crossing_deletions: T.unsafe(nil), different_replacements: T.unsafe(nil), swallowed_insertions: T.unsafe(nil)); end
 
+  # Returns a representation of the rewriter as nested insertions (:wrap) and replacements.
+  #
+  # rewriter.as_actions # =>[ [:wrap, 1...10, '(', ')'],
+  # [:wrap, 2...6, '', '!'],  # aka "insert_after"
+  # [:replace, 2...4, 'foo'],
+  # [:replace, 5...6, ''],  # aka "removal"
+  # ],
+  #
+  # Contrary to `as_replacements`, this representation is sufficient to recreate exactly
+  # the rewriter.
   def as_nested_actions; end
+
+  # Returns a representation of the rewriter as an ordered list of replacements.
+  #
+  # rewriter.as_replacements # => [ [1...1, '('],
+  # [2...4, 'foo'],
+  # [5...6, ''],
+  # [6...6, '!'],
+  # [10...10, ')'],
+  # ]
+  #
+  # This representation is sufficient to recreate the result of `process` but it is
+  # not sufficient to recreate completely the rewriter for further merging/actions.
+  # See `as_nested_actions`
   def as_replacements; end
+
   def diagnostics; end
+
+  # Returns true iff no (non trivial) update has been recorded
   def empty?; end
+
+  # For special cases where one needs to merge a rewriter attached to a different source_buffer
+  # or that needs to be offset. Policies of the receiver are used.
   def import!(foreign_rewriter, offset: T.unsafe(nil)); end
+
   def in_transaction?; end
+
+  # Shortcut for `wrap(range, nil, content)`
   def insert_after(range, content); end
+
   def insert_after_multi(range, text); end
+
+  # Shortcut for `wrap(range, content, nil)`
   def insert_before(range, content); end
+
   def insert_before_multi(range, text); end
   def inspect; end
+
+  # Returns a new rewriter that consists of the updates of the received
+  # and the given argument. Policies of the receiver are used.
   def merge(with); end
+
+  # Merges the updates of argument with the receiver.
+  # Policies of the receiver are used.
+  # This action is atomic in that it won't change the receiver
+  # unless it succeeds.
   def merge!(with); end
+
+  # Applies all scheduled changes to the `source_buffer` and returns
+  # modified source as a new string.
   def process; end
+
+  # Shortcut for `replace(range, '')`
   def remove(range); end
+
+  # Replaces the code of the source range `range` with `content`.
   def replace(range, content); end
+
   def source_buffer; end
+
+  # Provides a protected block where a sequence of multiple rewrite actions
+  # are handled atomically. If any of the actions failed by clobbering,
+  # all the actions are rolled back. Transactions can be nested.
   def transaction; end
+
+  # Inserts the given strings before and after the given range.
   def wrap(range, insert_before, insert_after); end
 
   protected
@@ -1702,19 +2681,78 @@ end
 
 Parser::StaticEnvironment::FORWARD_ARGS = T.let(T.unsafe(nil), Symbol)
 
+# {Parser::SyntaxError} is raised whenever parser detects a syntax error,
+# similar to the standard SyntaxError class.
 class Parser::SyntaxError < ::StandardError
   def initialize(diagnostic); end
 
   def diagnostic; end
 end
 
+# {Parser::TreeRewriter} offers a basic API that makes it easy to rewrite
+# existing ASTs. It's built on top of {Parser::AST::Processor} and
+# {Parser::Source::TreeRewriter}
+#
+# For example, assume you want to remove `do` tokens from a while statement.
+# You can do this as following:
+#
+# require 'parser/current'
+#
+# class RemoveDo < Parser::TreeRewriter
+# def on_while(node)
+# # Check if the statement starts with "do"
+# if node.location.begin.is?('do')
+# remove(node.location.begin)
+# end
+# end
+# end
+#
+# code = <<-EOF
+# while true do
+# puts 'hello'
+# end
+# EOF
+#
+# ast           = Parser::CurrentRuby.parse code
+# buffer        = Parser::Source::Buffer.new('(example)', source: code)
+# rewriter      = RemoveDo.new
+#
+# # Rewrite the AST, returns a String with the new form.
+# puts rewriter.rewrite(buffer, ast)
+#
+# This would result in the following Ruby code:
+#
+# while true
+# puts 'hello'
+# end
+#
+# Keep in mind that {Parser::TreeRewriter} does not take care of indentation when
+# inserting/replacing code so you'll have to do this yourself.
+#
+# See also [a blog entry](http://whitequark.org/blog/2013/04/26/lets-play-with-ruby-code/)
+# describing rewriters in greater detail.
 class Parser::TreeRewriter < ::Parser::AST::Processor
+  # Returns `true` if the specified node is an assignment node, returns false
+  # otherwise.
   def assignment?(node); end
+
+  # Inserts new code after the given source range.
   def insert_after(range, content); end
+
+  # Inserts new code before the given source range.
   def insert_before(range, content); end
+
+  # Removes the source range.
   def remove(range); end
+
+  # Replaces the code of the source range `range` with `content`.
   def replace(range, content); end
+
+  # Rewrites the AST/source buffer and returns a String containing the new
+  # version.
   def rewrite(source_buffer, ast, **policy); end
+
+  # Wraps the given source range with the given values.
   def wrap(range, before, after); end
 end
 

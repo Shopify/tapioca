@@ -4,21 +4,43 @@
 
 # typed: true
 
+# ANSI namespace module contains all the ANSI related classes.
 module ANSI
   extend ::ANSI::Constants
   extend ::ANSI::Code
 end
 
+# Table of codes used throughout the system.
 ANSI::CHART = T.let(T.unsafe(nil), Hash)
 
+# ANSI Codes
+#
+# Ansi::Code module makes it very easy to use ANSI codes.
+# These are especially nice for beautifying shell output.
+#
+# Ansi::Code.red + "Hello" + Ansi::Code.blue + "World"
+# => "\e[31mHello\e[34mWorld"
+#
+# Ansi::Code.red{ "Hello" } + Ansi::Code.blue{ "World" }
+# => "\e[31mHello\e[0m\e[34mWorld\e[0m"
+#
+# IMPORTANT! Do not mixin Ansi::Code, instead use {ANSI::Mixin}.
+#
+# See {ANSI::CHART} for list of all supported codes.
 module ANSI::Code
   include ::ANSI::Constants
   extend ::ANSI::Constants
   extend ::ANSI::Code
 
+  # Return ANSI code given a list of symbolic names.
   def [](*codes); end
+
+  # Apply ANSI codes to a first argument or block value.
   def ansi(*codes); end
+
+  # Move cursor left a specified number of spaces.
   def back(spaces = T.unsafe(nil)); end
+
   def black_on_black(string = T.unsafe(nil)); end
   def black_on_blue(string = T.unsafe(nil)); end
   def black_on_cyan(string = T.unsafe(nil)); end
@@ -35,8 +57,15 @@ module ANSI::Code
   def blue_on_red(string = T.unsafe(nil)); end
   def blue_on_white(string = T.unsafe(nil)); end
   def blue_on_yellow(string = T.unsafe(nil)); end
+
+  # Look-up code from chart, or if Integer simply pass through.
+  # Also resolves :random and :on_random.
   def code(*codes); end
+
+  # Apply ANSI codes to a first argument or block value.
+  # Alternate term for #ansi.
   def color(*codes); end
+
   def cyan_on_black(string = T.unsafe(nil)); end
   def cyan_on_blue(string = T.unsafe(nil)); end
   def cyan_on_cyan(string = T.unsafe(nil)); end
@@ -45,9 +74,17 @@ module ANSI::Code
   def cyan_on_red(string = T.unsafe(nil)); end
   def cyan_on_white(string = T.unsafe(nil)); end
   def cyan_on_yellow(string = T.unsafe(nil)); end
+
+  # Like +move+ but returns to original position after
+  # yielding the block.
   def display(line, column = T.unsafe(nil)); end
+
+  # Move cursor down a specified number of spaces.
   def down(spaces = T.unsafe(nil)); end
+
+  # Move cursor right a specified number of spaces.
   def forward(spaces = T.unsafe(nil)); end
+
   def green_on_black(string = T.unsafe(nil)); end
   def green_on_blue(string = T.unsafe(nil)); end
   def green_on_cyan(string = T.unsafe(nil)); end
@@ -56,8 +93,13 @@ module ANSI::Code
   def green_on_red(string = T.unsafe(nil)); end
   def green_on_white(string = T.unsafe(nil)); end
   def green_on_yellow(string = T.unsafe(nil)); end
+
+  # Creates an xterm-256 color code from a CSS-style color string.
   def hex_code(string, background = T.unsafe(nil)); end
+
+  # Move cursor left a specified number of spaces.
   def left(spaces = T.unsafe(nil)); end
+
   def magenta_on_black(string = T.unsafe(nil)); end
   def magenta_on_blue(string = T.unsafe(nil)); end
   def magenta_on_cyan(string = T.unsafe(nil)); end
@@ -66,9 +108,16 @@ module ANSI::Code
   def magenta_on_red(string = T.unsafe(nil)); end
   def magenta_on_white(string = T.unsafe(nil)); end
   def magenta_on_yellow(string = T.unsafe(nil)); end
+
+  # Use method missing to dispatch ANSI code methods.
   def method_missing(code, *args, &blk); end
+
+  # Move cursor to line and column.
   def move(line, column = T.unsafe(nil)); end
+
+  # Provides a random primary ANSI color.
   def random(background = T.unsafe(nil)); end
+
   def red_on_black(string = T.unsafe(nil)); end
   def red_on_blue(string = T.unsafe(nil)); end
   def red_on_cyan(string = T.unsafe(nil)); end
@@ -77,15 +126,41 @@ module ANSI::Code
   def red_on_red(string = T.unsafe(nil)); end
   def red_on_white(string = T.unsafe(nil)); end
   def red_on_yellow(string = T.unsafe(nil)); end
+
+  # Creates an XTerm 256 color escape code from RGB value(s). The
+  # RGB value can be three arguments red, green and blue respectively
+  # each from 0 to 255, or the RGB value can be a single CSS-style
+  # hex string.
   def rgb(*args); end
+
+  # Given red, green and blue values between 0 and 255, this method
+  # returns the closest XTerm 256 color value.
   def rgb_256(r, g, b); end
+
+  # Creates an xterm-256 color from rgb value.
   def rgb_code(red, green, blue, background = T.unsafe(nil)); end
+
+  # Move cursor right a specified number of spaces.
   def right(spaces = T.unsafe(nil)); end
+
+  # Apply ANSI codes to a first argument or block value.
+  # Alias for #ansi method.
   def style(*codes); end
+
+  # Remove ANSI codes from string or block value.
   def unansi(string = T.unsafe(nil)); end
+
+  # Remove ANSI codes from string or block value.
+  # Alias for unansi.
   def uncolor(string = T.unsafe(nil)); end
+
+  # Remove ANSI codes from string or block value.
+  # Alias for #unansi method.
   def unstyle(string = T.unsafe(nil)); end
+
+  # Move cursor up a specified number of spaces.
   def up(spaces = T.unsafe(nil)); end
+
   def white_on_black(string = T.unsafe(nil)); end
   def white_on_blue(string = T.unsafe(nil)); end
   def white_on_cyan(string = T.unsafe(nil)); end
@@ -104,14 +179,29 @@ module ANSI::Code
   def yellow_on_yellow(string = T.unsafe(nil)); end
 
   class << self
+    # List of primary colors.
     def colors; end
+
+    # List of primary styles.
     def styles; end
   end
 end
 
+# ANSI clear code.
 ANSI::Code::ENDCODE = T.let(T.unsafe(nil), String)
+
+# Regexp for matching most ANSI codes.
 ANSI::Code::PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# Converts {CHART} and {SPECIAL_CHART} entries into constants.
+# So for example, the CHART entry for :red becomes:
+#
+# ANSI::Constants::RED  #=> "\e[31m"
+#
+# The ANSI Constants are include into ANSI::Code and can be included
+# any where will they would be of use.
 module ANSI::Constants; end
+
 ANSI::Constants::BLACK = T.let(T.unsafe(nil), String)
 ANSI::Constants::BLINK = T.let(T.unsafe(nil), String)
 ANSI::Constants::BLINK_OFF = T.let(T.unsafe(nil), String)

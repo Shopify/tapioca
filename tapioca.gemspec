@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("sorbet-runtime")
   spec.add_dependency("spoom")
   spec.add_dependency("thor", ">= 0.19.2")
+  spec.add_dependency("yard-sorbet")
 
   spec.required_ruby_version = ">= 2.6"
 end

@@ -11,6 +11,16 @@ module Tapioca
         include(Reflection)
 
         IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
+        IGNORED_COMMENTS = T.let([
+          ":doc:",
+          ":nodoc:",
+          "typed:",
+          "frozen_string_literal:",
+          "encoding:",
+          "warn_indent:",
+          "shareable_constant_value:",
+          "rubocop:",
+        ], T::Array[String])
 
         sig { returns(Gemfile::GemSpec) }
         attr_reader :gem
@@ -18,14 +28,17 @@ module Tapioca
         sig { returns(Integer) }
         attr_reader :indent
 
-        sig { params(gem: Gemfile::GemSpec, indent: Integer).void }
-        def initialize(gem, indent = 0)
+        sig { params(gem: Gemfile::GemSpec, indent: Integer, include_doc: T::Boolean).void }
+        def initialize(gem, indent = 0, include_doc = false)
           @gem = gem
           @indent = indent
           @seen = T.let(Set.new, T::Set[String])
           @alias_namespace = T.let(Set.new, T::Set[String])
           @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
           @symbols = T.let(nil, T.nilable(T::Set[String]))
+          @include_doc = include_doc
+
+          gem.parse_yard_docs if include_doc
         end
 
         sig { returns(String) }
@@ -160,28 +173,33 @@ module Tapioca
             name_of(klass)
           end
 
+          comments = documentation_comments(name)
+
           if klass_name == "T::Private::Types::TypeAlias"
-            tree << RBI::Const.new(name, "T.type_alias { #{T.unsafe(value).aliased_type} }")
+            constant = RBI::Const.new(name, "T.type_alias { #{T.unsafe(value).aliased_type} }", comments: comments)
+            tree << constant
             return
           end
 
           return if klass_name&.start_with?("T::Types::", "T::Private::")
 
           type_name = klass_name || "T.untyped"
+          constant = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})", comments: comments)
 
-          tree << RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
+          tree << constant
         end
 
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_module(tree, name, constant)
           return unless defined_in_gem?(constant, strict: false)
 
+          comments = documentation_comments(name)
           scope =
             if constant.is_a?(Class)
               superclass = compile_superclass(constant)
-              RBI::Class.new(name, superclass_name: superclass)
+              RBI::Class.new(name, superclass_name: superclass, comments: comments)
             else
-              RBI::Module.new(name)
+              RBI::Module.new(name, comments: comments)
             end
 
           compile_body(scope, name, constant)
@@ -525,7 +543,15 @@ module Tapioca
             [type, name]
           end
 
-          rbi_method = RBI::Method.new(method_name, is_singleton: constant.singleton_class?, visibility: visibility)
+          separator = constant.singleton_class? ? "." : "#"
+          comments = documentation_comments("#{symbol_name}#{separator}#{method_name}")
+          rbi_method = RBI::Method.new(
+            method_name,
+            is_singleton: constant.singleton_class?,
+            visibility: visibility,
+            comments: comments
+          )
+
           rbi_method.sigs << compile_signature(signature, sanitized_parameters) if signature
 
           sanitized_parameters.each do |type, name|
@@ -737,6 +763,21 @@ module Tapioca
           end
 
           name_of(target)
+        end
+
+        sig { params(name: String).returns(T::Array[RBI::Comment]) }
+        def documentation_comments(name)
+          return [] unless @include_doc
+
+          yard_docs = YARD::Registry.at(name)
+          return [] unless yard_docs
+
+          docstring = yard_docs.docstring
+          return [] if /(copyright|license)/i.match?(docstring)
+
+          docstring.lines
+            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
+            .map! { |line| RBI::Comment.new(line) }
         end
       end
     end

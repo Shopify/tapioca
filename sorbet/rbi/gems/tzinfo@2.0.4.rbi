@@ -4,67 +4,190 @@
 
 # typed: true
 
+# The top level module for TZInfo.
 module TZInfo; end
 
+# Defines transitions that occur on the zero-based nth day of the year.
+#
+# Day 0 is 1 January.
+#
+# Leap days are counted. Day 59 will be 29 February on a leap year and 1 March
+# on a non-leap year. Day 365 will be 31 December on a leap year and 1 January
+# the following year on a non-leap year.
 class TZInfo::AbsoluteDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRule
+  # Initializes a new {AbsoluteDayOfYearTransitionRule}.
   def initialize(day, transition_at = T.unsafe(nil)); end
 
+  # Determines if this {AbsoluteDayOfYearTransitionRule} is equal to another
+  # instance.
   def ==(r); end
+
+  # Determines if this {AbsoluteDayOfYearTransitionRule} is equal to another
+  # instance.
   def eql?(r); end
+
   def is_always_first_day_of_year?; end
   def is_always_last_day_of_year?; end
 
   protected
 
+  # Returns a `Time` representing midnight local time on the day specified by
+  # the rule for the given offset and year.
   def get_day(offset, year); end
+
   def hash_args; end
 end
 
+# {AmbiguousTime} is raised to indicate that a specified local time has more
+# than one possible equivalent UTC time. Such ambiguities arise when the
+# clocks are set back in a time zone, most commonly during the repeated hour
+# when transitioning from daylight savings time to standard time.
+#
+# {AmbiguousTime} is raised by {Timezone#local_datetime},
+# {Timezone#local_time}, {Timezone#local_timestamp}, {Timezone#local_to_utc}
+# and {Timezone#period_for_local} when using an ambiguous time and not
+# specifying how to resolve the ambiguity.
 class TZInfo::AmbiguousTime < ::StandardError; end
 
+# A set of rules that define when transitions occur in time zones with
+# annually occurring daylight savings time.
 class TZInfo::AnnualRules
+  # Initializes a new {AnnualRules} instance.
   def initialize(std_offset, dst_offset, dst_start_rule, dst_end_rule); end
 
   def dst_end_rule; end
   def dst_offset; end
   def dst_start_rule; end
   def std_offset; end
+
+  # Returns the transitions between standard and daylight savings time for a
+  # given year. The results are ordered by time of occurrence (earliest to
+  # latest).
   def transitions(year); end
 
   private
 
+  # Applies a given rule between offsets on a year.
   def apply_rule(rule, from_offset, to_offset, year); end
 end
 
+# A thread-safe version of {StringDeduper}.
 class TZInfo::ConcurrentStringDeduper < ::TZInfo::StringDeduper
   protected
 
   def create_hash(&block); end
 end
 
+# The {Country} class represents an ISO 3166-1 country. It can be used to
+# obtain a list of time zones observed by a country. For example:
+#
+# united_states = Country.get('US')
+# united_states.zone_identifiers
+# united_states.zones
+# united_states.zone_info
+#
+# The {Country} class is thread-safe. It is safe to use class and instance
+# methods of {Country} in concurrently executing threads. Instances of
+# {Country} can be shared across thread boundaries.
+#
+# Country information available through TZInfo is intended as an aid for
+# users, to help them select time zone data appropriate for their practical
+# needs. It is not intended to take or endorse any position on legal or
+# territorial claims.
 class TZInfo::Country
   include ::Comparable
 
+  # Initializes a new {Country} based upon a {DataSources::CountryInfo}
+  # instance.
+  #
+  # {Country} instances should not normally be constructed directly. Use
+  # the {Country.get} method to obtain instances instead.
   def initialize(info); end
 
+  # Compares this {Country} with another based on their {code}.
   def <=>(c); end
+
+  # Matches `regexp` against the {code} of this {Country}.
   def =~(regexp); end
+
+  # Returns a serialized representation of this {Country}. This method is
+  # called when using `Marshal.dump` with an instance of {Country}.
   def _dump(limit); end
+
   def code; end
   def eql?(c); end
   def hash; end
   def inspect; end
   def name; end
   def to_s; end
+
+  # Returns an `Array` containing the identifier for each time zone observed
+  # by the country. These are in an order that
+  #
+  # 1. makes some geographical sense, and
+  # 2. puts the most populous zones first, where that does not contradict 1.
+  #
+  # Returned zone identifiers may refer to cities and regions outside of the
+  # country. This will occur if the zone covers multiple countries. Any zones
+  # referring to a city or region in a different country will be listed after
+  # those relating to this country.
   def zone_identifiers; end
+
+  # Returns a frozen `Array` containing a {CountryTimezone} instance for each
+  # time zone observed by the country. These are in an order that
+  #
+  # 1. makes some geographical sense, and
+  # 2. puts the most populous zones first, where that does not contradict 1.
+  #
+  # The {CountryTimezone} instances can be used to obtain the location and
+  # descriptions of the observed time zones.
+  #
+  # Identifiers and descriptions of the time zones returned may refer to
+  # cities and regions outside of the country. This will occur if the time
+  # zone covers multiple countries. Any zones referring to a city or region in
+  # a different country will be listed after those relating to this country.
   def zone_info; end
+
+  # Returns an `Array` containing the identifier for each time zone observed
+  # by the country. These are in an order that
+  #
+  # 1. makes some geographical sense, and
+  # 2. puts the most populous zones first, where that does not contradict 1.
+  #
+  # Returned zone identifiers may refer to cities and regions outside of the
+  # country. This will occur if the zone covers multiple countries. Any zones
+  # referring to a city or region in a different country will be listed after
+  # those relating to this country.
   def zone_names; end
+
+  # Returns An `Array` containing a {Timezone} instance for each time zone
+  # observed by the country. These are in an order that
+  #
+  # 1. makes some geographical sense, and
+  # 2. puts the most populous zones first, where that does not contradict 1.
+  #
+  # The identifiers of the time zones returned may refer to cities and regions
+  # outside of the country. This will occur if the time zone covers multiple
+  # countries. Any zones referring to a city or region in a different country
+  # will be listed after those relating to this country.
+  #
+  # The results are actually instances of {TimezoneProxy} in order to defer
+  # loading of the time zone transition data until it is first needed.
   def zones; end
 
   class << self
+    # Loads a {Country} from the serialized representation returned by {_dump}.
+    # This is method is called when using `Marshal.load` or `Marshal.restore`
+    # to restore a serialized {Country}.
     def _load(data); end
+
     def all; end
     def all_codes; end
+
+    # Gets a {Country} by its ISO 3166-1 alpha-2 code.
+    #
+    # The {Country.all_codes} method can be used to obtain a list of valid ISO
+    # 3166-1 alpha-2 codes.
     def get(code); end
 
     private
@@ -75,61 +198,238 @@ end
 
 TZInfo::CountryIndexDefinition = TZInfo::Format1::CountryIndexDefinition
 
+# Information about a time zone used by a {Country}.
 class TZInfo::CountryTimezone
+  # Creates a new {CountryTimezone}.
+  #
+  # The passed in identifier and description instances will be frozen.
+  #
+  # {CountryTimezone} instances should normally only be constructed
+  # by implementations of {DataSource}.
   def initialize(identifier, latitude, longitude, description = T.unsafe(nil)); end
 
+  # Tests if the given object is equal to the current instance (has the same
+  # identifier, latitude, longitude and description).
   def ==(ct); end
+
+  # A description of this time zone in relation to the country, e.g. "Eastern
+  # Time". This is usually `nil` for countries that have a single time zone.
   def description; end
+
   def description_or_friendly_identifier; end
+
+  # Tests if the given object is equal to the current instance (has the same
+  # identifier, latitude, longitude and description).
   def eql?(ct); end
+
+  # {longitude} and {description}.
   def hash; end
+
   def identifier; end
+
+  # The latitude of this time zone in degrees. Positive numbers are degrees
+  # north and negative numbers are degrees south.
+  #
+  # Note that depending on the data source, the position given by {#latitude}
+  # and {#longitude} may not be within the country.
   def latitude; end
+
+  # The longitude of this time zone in degrees. Positive numbers are degrees
+  # east and negative numbers are degrees west.
+  #
+  # Note that depending on the data source, the position given by {#latitude}
+  # and {#longitude} may not be within the country.
   def longitude; end
+
+  # Returns the associated {Timezone}.
+  #
+  # The result is actually an instance of {TimezoneProxy} in order to defer
+  # loading of the time zone transition data until it is first needed.
   def timezone; end
 end
 
+# TZInfo can be used with different data sources for time zone and country
+# data. Each source of data is implemented as a subclass of {DataSource}.
+#
+# To choose a data source and override the default selection, use the
+# {DataSource.set} method.
 class TZInfo::DataSource
+  # Initializes a new {DataSource} instance. Typically only called via
+  # subclasses of {DataSource}.
   def initialize; end
 
+  # Returns a frozen `Array` of all the available ISO 3166-1 alpha-2 country
+  # codes. The identifiers are sorted according to `String#<=>`.
   def country_codes; end
+
+  # Returns a frozen `Array` of all the available time zone identifiers for
+  # data time zones (i.e. those that actually contain definitions). The
+  # identifiers are sorted according to `String#<=>`.
   def data_timezone_identifiers; end
+
   def get_country_info(code); end
+
+  # Returns a {DataSources::TimezoneInfo} instance for the given identifier.
+  # The result will derive from either {DataSources::DataTimezoneInfo} for
+  # time zones that define their own data or {DataSources::LinkedTimezoneInfo}
+  # for links or aliases to other time zones.
+  #
+  # {get_timezone_info} calls {load_timezone_info} to create the
+  # {DataSources::TimezoneInfo} instance. The returned instance is cached and
+  # returned in subsequent calls to {get_timezone_info} for the identifier.
   def get_timezone_info(identifier); end
+
   def inspect; end
+
+  # Returns a frozen `Array` of all the available time zone identifiers that
+  # are links to other time zones. The identifiers are sorted according to
+  # `String#<=>`.
   def linked_timezone_identifiers; end
+
   def timezone_identifiers; end
   def to_s; end
 
   protected
 
   def load_country_info(code); end
+
+  # Returns a {DataSources::TimezoneInfo} instance for the given time zone
+  # identifier. The result should derive from either
+  # {DataSources::DataTimezoneInfo} for time zones that define their own data
+  # or {DataSources::LinkedTimezoneInfo} for links to or aliases for other
+  # time zones.
   def load_timezone_info(identifier); end
+
+  # Looks up a given code in the given hash of code to
+  # {DataSources::CountryInfo} mappings. If the code is found the
+  # {DataSources::CountryInfo} is returned. Otherwise an {InvalidCountryCode}
+  # exception is raised.
   def lookup_country_info(hash, code, encoding = T.unsafe(nil)); end
+
   def timezone_identifier_encoding; end
+
+  # Checks that the given identifier is a valid time zone identifier (can be
+  # found in the {timezone_identifiers} `Array`). If the identifier is valid,
+  # the `String` instance representing that identifier from
+  # `timezone_identifiers` is returned. Otherwise an
+  # {InvalidTimezoneIdentifier} exception is raised.
   def validate_timezone_identifier(identifier); end
 
   private
 
+  # Combines {data_timezone_identifiers} and {linked_timezone_identifiers}
+  # to create an `Array` containing all valid time zone identifiers. If
+  # {linked_timezone_identifiers} is empty, the {data_timezone_identifiers}
+  # instance is returned.
+  #
+  # The returned `Array` is frozen. The identifiers are sorted according to
+  # `String#<=>`.
   def build_timezone_identifiers; end
+
+  # If the given `identifier` is contained within the {timezone_identifiers}
+  # `Array`, the `String` instance representing that identifier from
+  # {timezone_identifiers} is returned. Otherwise, `nil` is returned.
+  #
+  # :nocov_array_bsearch:
   def find_timezone_identifier(identifier); end
+
+  # Raises {InvalidDataSource} to indicate that a method has not been
+  # overridden by a particular data source implementation.
   def raise_invalid_data_source(method_name); end
+
+  # Tries an operation using `string` directly. If the operation fails, the
+  # string is copied and encoded with `encoding` and the operation is tried
+  # again.
+  #
+  # fails and `string` is already encoded with `encoding`.
   def try_with_encoding(string, encoding); end
 
   class << self
     def get; end
+
+    # Sets the currently selected data source for time zone and country data.
+    #
+    # This should usually be set to one of the two standard data source types:
+    #
+    # * `:ruby` - read data from the Ruby modules included in the TZInfo::Data
+    # library (tzinfo-data gem).
+    # * `:zoneinfo` - read data from the zoneinfo files included with most
+    # Unix-like operating systems (e.g. in /usr/share/zoneinfo).
+    #
+    # To set TZInfo to use one of the standard data source types, call
+    # `TZInfo::DataSource.set`` in one of the following ways:
+    #
+    # TZInfo::DataSource.set(:ruby)
+    # TZInfo::DataSource.set(:zoneinfo)
+    # TZInfo::DataSource.set(:zoneinfo, zoneinfo_dir)
+    # TZInfo::DataSource.set(:zoneinfo, zoneinfo_dir, iso3166_tab_file)
+    #
+    # `DataSource.set(:zoneinfo)` will automatically search for the zoneinfo
+    # directory by checking the paths specified in
+    # {DataSources::ZoneinfoDataSource.search_path}.
+    # {DataSources::ZoneinfoDirectoryNotFound} will be raised if no valid
+    # zoneinfo directory could be found.
+    #
+    # `DataSource.set(:zoneinfo, zoneinfo_dir)` uses the specified
+    # `zoneinfo_dir` directory as the data source. If the directory is not a
+    # valid zoneinfo directory, a {DataSources::InvalidZoneinfoDirectory}
+    # exception will be raised.
+    #
+    # `DataSource.set(:zoneinfo, zoneinfo_dir, iso3166_tab_file)` uses the
+    # specified `zoneinfo_dir` directory as the data source, but loads the
+    # `iso3166.tab` file from the path given by `iso3166_tab_file`. If the
+    # directory is not a valid zoneinfo directory, a
+    # {DataSources::InvalidZoneinfoDirectory} exception will be raised.
+    #
+    # Custom data sources can be created by subclassing TZInfo::DataSource and
+    # implementing the following methods:
+    #
+    # * {load_timezone_info}
+    # * {data_timezone_identifiers}
+    # * {linked_timezone_identifiers}
+    # * {load_country_info}
+    # * {country_codes}
+    #
+    # To have TZInfo use the custom data source, call {DataSource.set},
+    # passing an instance of the custom data source implementation as follows:
+    #
+    # TZInfo::DataSource.set(CustomDataSource.new)
+    #
+    # Calling {DataSource.set} will only affect instances of {Timezone} and
+    # {Country} obtained with {Timezone.get} and {Country.get} subsequent to
+    # the {DataSource.set} call. Existing {Timezone} and {Country} instances
+    # will be unaffected.
+    #
+    # If {DataSource.set} is not called, TZInfo will by default attempt to use
+    # TZInfo::Data as the data source. If TZInfo::Data is not available (i.e.
+    # if `require 'tzinfo/data'` fails), then TZInfo will search for a
+    # zoneinfo directory instead (using the search path specified by
+    # {DataSources::ZoneinfoDataSource.search_path}).
     def set(data_source_or_type, *args); end
 
     private
 
+    # Creates a {DataSource} instance for use as the default. Used if no
+    # preference has been specified manually.
     def create_default_data_source; end
   end
 end
 
+# {DataSourceNotFound} is raised if no data source could be found (i.e. if
+# `'tzinfo/data'` cannot be found on the load path and no valid zoneinfo
+# directory can be found on the system).
 class TZInfo::DataSourceNotFound < ::StandardError; end
+
+# {DataSource} implementations and classes used by {DataSource}
+# implementations.
 module TZInfo::DataSources; end
 
+# Represents a data time zone defined by a constantly observed offset.
 class TZInfo::DataSources::ConstantOffsetDataTimezoneInfo < ::TZInfo::DataSources::DataTimezoneInfo
+  # Initializes a new {ConstantOffsetDataTimezoneInfo}.
+  #
+  # The passed in `identifier` instance will be frozen. A reference to the
+  # passed in {TimezoneOffset} will be retained.
   def initialize(identifier, constant_offset); end
 
   def constant_offset; end
@@ -142,7 +442,11 @@ class TZInfo::DataSources::ConstantOffsetDataTimezoneInfo < ::TZInfo::DataSource
   def constant_period; end
 end
 
+# Represents a country and references to its time zones as returned by a
+# {DataSource}.
 class TZInfo::DataSources::CountryInfo
+  # Initializes a new {CountryInfo}. The passed in `code`, `name` and
+  # `zones` instances will be frozen.
   def initialize(code, name, zones); end
 
   def code; end
@@ -151,66 +455,169 @@ class TZInfo::DataSources::CountryInfo
   def zones; end
 end
 
+# The base class for time zones defined as either a series of transitions
+# ({TransitionsDataTimezoneInfo}) or a constantly observed offset
+# ({ConstantOffsetDataTimezoneInfo}).
 class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInfo
   def create_timezone; end
   def period_for(timestamp); end
+
+  # Returns an `Array` containing the {TimezonePeriod TimezonePeriods} that
+  # could be observed at the local time specified by `local_timestamp`. The
+  # results are are ordered by increasing UTC start date. An empty `Array`
+  # is returned if no periods are found for the given local time.
   def periods_for_local(local_timestamp); end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the time zone changes.
+  #
+  # Transitions are returned up to a given {Timestamp} (`to_timestamp`).
+  #
+  # A from {Timestamp} may also be supplied using the `from_timestamp`
+  # parameter. If `from_timestamp` is specified, only transitions from that
+  # time onwards will be returned.
+  #
+  # Comparisons with `to_timestamp` are exclusive. Comparisons with
+  # `from_timestamp` are inclusive. If a transition falls precisely on
+  # `to_timestamp`, it will be excluded. If a transition falls on
+  # `from_timestamp`, it will be included.
+  #
+  # Transitions returned are ordered by when they occur, from earliest to
+  # latest.
   def transitions_up_to(to_timestamp, from_timestamp = T.unsafe(nil)); end
 
   private
 
+  # Raises a {NotImplementedError} to indicate that the base class is
+  # incorrectly being used directly.
+  #
+  # raise [NotImplementedError] always.
   def raise_not_implemented(method_name); end
 end
 
+# An {InvalidPosixTimeZone} exception is raised if an invalid POSIX-style
+# time zone string is encountered.
 class TZInfo::DataSources::InvalidPosixTimeZone < ::StandardError; end
+
+# An {InvalidZoneinfoDirectory} exception is raised if {ZoneinfoDataSource}
+# is initialized with a specific zoneinfo path that is not a valid zoneinfo
+# directory. A valid zoneinfo directory is one that contains time zone
+# files, a country code index file named iso3166.tab and a time zone index
+# file named zone1970.tab or zone.tab.
 class TZInfo::DataSources::InvalidZoneinfoDirectory < ::StandardError; end
+
+# An {InvalidZoneinfoFile} exception is raised if an attempt is made to load
+# an invalid zoneinfo file.
 class TZInfo::DataSources::InvalidZoneinfoFile < ::StandardError; end
 
+# Represents a time zone that is defined as a link to or alias of another
+# zone.
 class TZInfo::DataSources::LinkedTimezoneInfo < ::TZInfo::DataSources::TimezoneInfo
+  # Initializes a new {LinkedTimezoneInfo}. The passed in `identifier` and
+  # `link_to_identifier` instances will be frozen.
+  #
+  # `nil`.
   def initialize(identifier, link_to_identifier); end
 
   def create_timezone; end
+
+  # (that this zone links to or is an alias for).
   def link_to_identifier; end
 end
 
+# A parser for POSIX-style TZ strings used in zoneinfo files and specified
+# by tzfile.5 and tzset.3.
 class TZInfo::DataSources::PosixTimeZoneParser
+  # Initializes a new {PosixTimeZoneParser}.
   def initialize(string_deduper); end
 
+  # Parses a POSIX-style TZ string.
   def parse(tz_string); end
 
   private
 
+  # Scans for a pattern and raises an exception if the pattern does not
+  # match the input.
   def check_scan(s, pattern); end
+
+  # Returns an offset in seconds from hh:mm:ss values. The value can be
+  # negative. -02:33:12 would represent 2 hours, 33 minutes and 12 seconds
+  # ahead of UTC.
   def get_offset_from_hms(h, m, s); end
+
+  # Returns the seconds from midnight from hh:mm:ss values. Hours can exceed
+  # 24 for a time on the following day. Hours can be negative to subtract
+  # hours from midnight on the given day. -02:33:12 represents 22:33:12 on
+  # the prior day.
   def get_seconds_after_midnight_from_hms(h, m, s); end
+
+  # Parses a rule.
   def parse_rule(s, type); end
 end
 
+# A DataSource implementation that loads data from the set of Ruby modules
+# included in the tzinfo-data gem.
+#
+# TZInfo will use {RubyDataSource} by default if the tzinfo-data gem
+# is available on the load path. It can also be selected by calling
+# {DataSource.set} as follows:
+#
+# TZInfo::DataSource.set(:ruby)
 class TZInfo::DataSources::RubyDataSource < ::TZInfo::DataSource
+  # Initializes a new {RubyDataSource} instance.
   def initialize; end
 
+  # Returns a frozen `Array` of all the available ISO 3166-1 alpha-2 country
+  # codes. The identifiers are sorted according to `String#<=>`.
   def country_codes; end
+
+  # Returns a frozen `Array` of all the available time zone identifiers for
+  # data time zones (i.e. those that actually contain definitions). The
+  # identifiers are sorted according to `String#<=>`.
   def data_timezone_identifiers; end
+
   def inspect; end
+
+  # Returns a frozen `Array` of all the available time zone identifiers that
+  # are links to other time zones. The identifiers are sorted according to
+  # `String#<=>`.
   def linked_timezone_identifiers; end
+
   def to_s; end
 
   protected
 
   def load_country_info(code); end
+
+  # Returns a {TimezoneInfo} instance for the given time zone identifier.
+  # The result will either be a {ConstantOffsetDataTimezoneInfo}, a
+  # {TransitionsDataTimezoneInfo} or a {LinkedTimezoneInfo} depending on the
+  # type of time zone.
   def load_timezone_info(identifier); end
 
   private
 
+  # Requires a file from tzinfo/data.
   def require_data(*file); end
+
+  # Requires a zone definition by its identifier (split on /).
   def require_definition(identifier); end
+
+  # Requires an index by its name.
   def require_index(name); end
+
   def version_info; end
 end
 
+# A {TZInfoDataNotFound} exception is raised if the tzinfo-data gem could
+# not be found (i.e. `require 'tzinfo/data'` failed) when selecting the Ruby
+# data source.
 class TZInfo::DataSources::TZInfoDataNotFound < ::StandardError; end
 
+# Represents a time zone defined by a data source.
 class TZInfo::DataSources::TimezoneInfo
+  # Initializes a new TimezoneInfo. The passed in `identifier` instance will
+  # be frozen.
   def initialize(identifier); end
 
   def create_timezone; end
@@ -219,131 +626,480 @@ class TZInfo::DataSources::TimezoneInfo
 
   private
 
+  # Raises a {NotImplementedError}.
   def raise_not_implemented(method_name); end
 end
 
+# Represents a data time zone defined by a list of transitions that change
+# the locally observed time.
 class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::DataTimezoneInfo
+  # Initializes a new {TransitionsDataTimezoneInfo}.
+  #
+  # The passed in `identifier` instance will be frozen. A reference to the
+  # passed in `Array` will be retained.
+  #
+  # The `transitions` `Array` must be sorted in order of ascending
+  # timestamp. Each transition must have a
+  # {TimezoneTransition#timestamp_value timestamp_value} that is greater
+  # than the {TimezoneTransition#timestamp_value timestamp_value} of the
+  # prior transition.
   def initialize(identifier, transitions); end
 
   def period_for(timestamp); end
+
+  # Returns an `Array` containing the {TimezonePeriod TimezonePeriods} that
+  # could be observed at the local time specified by `local_timestamp`. The
+  # results are are ordered by increasing UTC start date. An empty `Array`
+  # is returned if no periods are found for the given local time.
   def periods_for_local(local_timestamp); end
+
   def transitions; end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the time zone changes.
+  #
+  # Transitions are returned up to a given {Timestamp} (`to_timestamp`).
+  #
+  # A from {Timestamp} may also be supplied using the `from_timestamp`
+  # parameter. If `from_timestamp` is specified, only transitions from that
+  # time onwards will be returned.
+  #
+  # Comparisons with `to_timestamp` are exclusive. Comparisons with
+  # `from_timestamp` are inclusive. If a transition falls precisely on
+  # `to_timestamp`, it will be excluded. If a transition falls on
+  # `from_timestamp`, it will be included.
+  #
+  # Transitions returned are ordered by when they occur, from earliest to
+  # latest.
   def transitions_up_to(to_timestamp, from_timestamp = T.unsafe(nil)); end
 
   private
 
+  # Performs a binary search on {transitions} to find the index of the
+  # earliest transition satisfying a condition.
+  #
+  # :nocov_array_bsearch_index:
   def find_minimum_transition(&block); end
+
+  # Determines if a transition occurs at or after a given {Timestamp},
+  # taking the {Timestamp#sub_second sub_second} into consideration.
   def transition_on_or_after_timestamp?(transition, timestamp); end
 end
 
+# A DataSource implementation that loads data from a 'zoneinfo' directory
+# containing compiled "TZif" version 3 (or earlier) files in addition to
+# iso3166.tab and zone1970.tab or zone.tab index files.
+#
+# To have TZInfo load the system zoneinfo files, call
+# {TZInfo::DataSource.set} as follows:
+#
+# TZInfo::DataSource.set(:zoneinfo)
+#
+# To load zoneinfo files from a particular directory, pass the directory to
+# {TZInfo::DataSource.set}:
+#
+# TZInfo::DataSource.set(:zoneinfo, directory)
+#
+# To load zoneinfo files from a particular directory, but load the
+# iso3166.tab index file from a separate location, pass the directory and
+# path to the iso3166.tab file to {TZInfo::DataSource.set}:
+#
+# TZInfo::DataSource.set(:zoneinfo, directory, iso3166_path)
+#
+# Please note that versions of the 'zic' tool (used to build zoneinfo files)
+# that were released prior to February 2006 created zoneinfo files that used
+# 32-bit integers for transition timestamps. Later versions of zic produce
+# zoneinfo files that use 64-bit integers. If you have 32-bit zoneinfo files
+# on your system, then any queries falling outside of the range 1901-12-13
+# 20:45:52 to 2038-01-19 03:14:07 may be inaccurate.
+#
+# Most modern platforms include 64-bit zoneinfo files. However, Mac OS X (up
+# to at least 10.8.4) still uses 32-bit zoneinfo files.
+#
+# To check whether your zoneinfo files contain 32-bit or 64-bit transition
+# data, you can run the following code (substituting the identifier of the
+# zone you want to test for `zone_identifier`):
+#
+# TZInfo::DataSource.set(:zoneinfo)
+# dir = TZInfo::DataSource.get.zoneinfo_dir
+# File.open(File.join(dir, zone_identifier), 'r') {|f| f.read(5) }
+#
+# If the last line returns `"TZif\\x00"`, then you have a 32-bit zoneinfo
+# file. If it returns `"TZif2"` or `"TZif3"` then you have a 64-bit zoneinfo
+# file.
+#
+# It is also worth noting that as of the 2017c release of the IANA Time Zone
+# Database, 64-bit zoneinfo files only include future transitions up to
+# 2038-01-19 03:14:07. Any queries falling after this time may be
+# inaccurate.
 class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
+  # Initializes a new {ZoneinfoDataSource}.
+  #
+  # If `zoneinfo_dir` is specified, it will be checked and used as the
+  # source of zoneinfo files.
+  #
+  # The directory must contain a file named iso3166.tab and a file named
+  # either zone1970.tab or zone.tab. These may either be included in the
+  # root of the directory or in a 'tab' sub-directory and named country.tab
+  # and zone_sun.tab respectively (as is the case on Solaris).
+  #
+  # Additionally, the path to iso3166.tab can be overridden using the
+  # `alternate_iso3166_tab_path` parameter.
+  #
+  # If `zoneinfo_dir` is not specified or `nil`, the paths referenced in
+  # {search_path} are searched in order to find a valid zoneinfo directory
+  # (one that contains zone1970.tab or zone.tab and iso3166.tab files as
+  # above).
+  #
+  # The paths referenced in {alternate_iso3166_tab_search_path} are also
+  # searched to find an iso3166.tab file if one of the searched zoneinfo
+  # directories doesn't contain an iso3166.tab file.
   def initialize(zoneinfo_dir = T.unsafe(nil), alternate_iso3166_tab_path = T.unsafe(nil)); end
 
+  # Returns a frozen `Array` of all the available ISO 3166-1 alpha-2 country
+  # codes. The identifiers are sorted according to `String#<=>`.
   def country_codes; end
+
+  # Returns a frozen `Array` of all the available time zone identifiers. The
+  # identifiers are sorted according to `String#<=>`.
   def data_timezone_identifiers; end
+
   def inspect; end
+
+  # Returns an empty `Array`. There is no information about linked/aliased
+  # time zones in the zoneinfo files. When using {ZoneinfoDataSource}, every
+  # time zone will be returned as a {DataTimezone}.
   def linked_timezone_identifiers; end
+
   def to_s; end
   def zoneinfo_dir; end
 
   protected
 
   def load_country_info(code); end
+
+  # Returns a {TimezoneInfo} instance for the given time zone identifier.
+  # The result will either be a {ConstantOffsetDataTimezoneInfo} or a
+  # {TransitionsDataTimezoneInfo}.
   def load_timezone_info(identifier); end
 
   private
 
+  # Converts degrees, minutes and seconds to a Rational.
   def dms_to_rational(sign, degrees, minutes, seconds = T.unsafe(nil)); end
+
+  # Recursively enumerate a directory of time zones.
   def enum_timezones(dir, exclude = T.unsafe(nil), &block); end
+
+  # Finds a zoneinfo directory using {search_path} and
+  # {alternate_iso3166_tab_search_path}.
   def find_zoneinfo_dir; end
+
+  # Uses the iso3166.tab and zone1970.tab or zone.tab files to return a Hash
+  # mapping country codes to CountryInfo instances.
   def load_countries(iso3166_tab_path, zone_tab_path); end
+
+  # Scans @zoneinfo_dir and returns an `Array` of available time zone
+  # identifiers. The result is sorted according to `String#<=>`.
   def load_timezone_identifiers; end
+
+  # Attempts to resolve the path to a tab file given its standard names and
+  # tab sub-directory name (as used on Solaris).
   def resolve_tab_path(zoneinfo_path, standard_names, tab_name); end
+
+  # Validates a zoneinfo directory and returns the paths to the iso3166.tab
+  # and zone1970.tab or zone.tab files if valid. If the directory is not
+  # valid, returns `nil`.
+  #
+  # The path to the iso3166.tab file may be overridden by passing in a path.
+  # This is treated as either absolute or relative to the current working
+  # directory.
   def validate_zoneinfo_dir(path, iso3166_tab_path = T.unsafe(nil)); end
 
   class << self
+    # An `Array` of paths that will be checked to find an alternate
+    # iso3166.tab file if one was not included in the zoneinfo directory
+    # (for example, on FreeBSD and OpenBSD systems).
+    #
+    # Paths are checked in the order they appear in the `Array`.
+    #
+    # The default value is `['/usr/share/misc/iso3166.tab',
+    # '/usr/share/misc/iso3166']`.
     def alternate_iso3166_tab_search_path; end
+
+    # Sets the paths to check to locate an alternate iso3166.tab file if one
+    # was not included in the zoneinfo directory.
+    #
+    # Can be set to an `Array` of paths or a `String` containing paths
+    # separated with `File::PATH_SEPARATOR`.
+    #
+    # Paths are checked in the order they appear in the array.
+    #
+    # Set to `nil` to revert to the default paths.
     def alternate_iso3166_tab_search_path=(alternate_iso3166_tab_search_path); end
+
+    # An `Array` of directories that will be checked to find the system
+    # zoneinfo directory.
+    #
+    # Directories are checked in the order they appear in the `Array`.
+    #
+    # The default value is `['/usr/share/zoneinfo',
+    # '/usr/share/lib/zoneinfo', '/etc/zoneinfo']`.
     def search_path; end
+
+    # Sets the directories to be checked when locating the system zoneinfo
+    # directory.
+    #
+    # Can be set to an `Array` of directories or a `String` containing
+    # directories separated with `File::PATH_SEPARATOR`.
+    #
+    # Directories are checked in the order they appear in the `Array` or
+    # `String`.
+    #
+    # Set to `nil` to revert to the default paths.
     def search_path=(search_path); end
 
     private
 
+    # Processes a path for use as the {search_path} or
+    # {alternate_iso3166_tab_search_path}.
     def process_search_path(path, default); end
   end
 end
 
+# The default value of {ZoneinfoDataSource.alternate_iso3166_tab_search_path}.
 TZInfo::DataSources::ZoneinfoDataSource::DEFAULT_ALTERNATE_ISO3166_TAB_SEARCH_PATH = T.let(T.unsafe(nil), Array)
+
+# The default value of {ZoneinfoDataSource.search_path}.
 TZInfo::DataSources::ZoneinfoDataSource::DEFAULT_SEARCH_PATH = T.let(T.unsafe(nil), Array)
+
+# A {ZoneinfoDirectoryNotFound} exception is raised if no valid zoneinfo
+# directory could be found when checking the paths listed in
+# {ZoneinfoDataSource.search_path}. A valid zoneinfo directory is one that
+# contains time zone files, a country code index file named iso3166.tab and
+# a time zone index file named zone1970.tab or zone.tab.
 class TZInfo::DataSources::ZoneinfoDirectoryNotFound < ::StandardError; end
 
+# Reads compiled zoneinfo TZif (\0, 2 or 3) files.
 class TZInfo::DataSources::ZoneinfoReader
+  # Initializes a new {ZoneinfoReader}.
   def initialize(posix_tz_parser, string_deduper); end
 
+  # Reads a zoneinfo structure from the given path. Returns either a
+  # {TimezoneOffset} that is constantly observed or an `Array`
+  # {TimezoneTransition}s.
   def read(file_path); end
 
   private
 
+  # Apply the rules from the TZ string when there were defined
+  # transitions. Checks for a matching offset with the last transition.
+  # Redefines the last transition if required and if the rules don't
+  # specific a constant offset, generates transitions until 100 years into
+  # the future (at the time of loading zoneinfo_reader.rb).
   def apply_rules_with_transitions(file, transitions, offsets, rules); end
+
+  # Apply the rules from the TZ string when there were no defined
+  # transitions. Checks for a matching offset. Returns the rules-based
+  # constant offset or generates transitions from 1970 until 100 years into
+  # the future (at the time of loading zoneinfo_reader.rb).
   def apply_rules_without_transitions(file, first_offset, rules); end
+
+  # Reads the given number of bytes from the given file and checks that the
+  # correct number of bytes could be read.
   def check_read(file, bytes); end
+
+  # Zoneinfo files don't include the offset from standard time (std_offset)
+  # for DST periods. Derive the base offset (base_utc_offset) where DST is
+  # observed from either the previous or next non-DST period.
   def derive_offsets(transitions, offsets); end
+
+  # Finds an offset that is equivalent to the one specified in the given
+  # `Array`. Matching is performed with {TimezoneOffset#==}.
   def find_existing_offset(offsets, offset); end
+
+  # Translates an unsigned 32-bit integer (as returned by unpack) to signed
+  # 32-bit.
   def make_signed_int32(long); end
+
+  # Translates a pair of unsigned 32-bit integers (as returned by unpack,
+  # most significant first) to a signed 64-bit integer.
   def make_signed_int64(high, low); end
+
+  # Determines if the offset from a transition matches the offset from a
+  # rule. This is a looser match than equality, not requiring that the
+  # base_utc_offset and std_offset both match (which have to be derived for
+  # transitions, but are known for rules.
   def offset_matches_rule?(offset, rule_offset); end
+
+  # Parses a zoneinfo file and returns either a {TimezoneOffset} that is
+  # constantly observed or an `Array` of {TimezoneTransition}s.
   def parse(file); end
+
+  # Returns a new AnnualRules instance with standard and daylight savings
+  # offsets replaced with equivalents from an array. This reduces the memory
+  # requirement for loaded time zones by reusing offsets for rule-generated
+  # transitions.
   def replace_with_existing_offsets(offsets, annual_rules); end
+
+  # Validates the offset indicated to be observed by the rules before the
+  # first generated transition against the offset of the last defined
+  # transition.
+  #
+  # Fix the last defined transition if it differ on just base/std offsets
+  # (which are derived). Raise an error if the observed UTC offset or
+  # abbreviations differ.
   def validate_and_fix_last_defined_transition_offset(file, last_defined, first_rule_offset); end
 end
 
+# The year to generate transitions up to.
 TZInfo::DataSources::ZoneinfoReader::GENERATE_UP_TO = T.let(T.unsafe(nil), Integer)
 
+# Represents time zones that are defined by rules that set out when
+# transitions occur.
 class TZInfo::DataTimezone < ::TZInfo::InfoTimezone
+  # Returns the canonical {Timezone} instance for this {DataTimezone}.
+  #
+  # For a {DataTimezone}, this is always `self`.
   def canonical_zone; end
+
+  # Returns the {TimezonePeriod} that is valid at a given time.
+  #
+  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
+  # `time` parameter is taken into consideration.
   def period_for(time); end
+
+  # Returns the set of {TimezonePeriod}s that are valid for the given
+  # local time as an `Array`.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`).
+  #
+  # This will typically return an `Array` containing a single
+  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
+  # local time is ambiguous (for example, when daylight savings time ends). An
+  # empty `Array` will be returned when the local time is not valid (for
+  # example, when daylight savings time begins).
+  #
+  # To obtain just a single {TimezonePeriod} in all cases, use
+  # {period_for_local} instead and specify how ambiguities should be resolved.
   def periods_for_local(local_time); end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the timezone changes.
+  #
+  # Transitions are returned up to a given time (`to`).
+  #
+  # A from time may also be supplied using the `from` parameter. If from is
+  # not `nil`, only transitions from that time onwards will be returned.
+  #
+  # Comparisons with `to` are exclusive. Comparisons with `from` are
+  # inclusive. If a transition falls precisely on `to`, it will be excluded.
+  # If a transition falls on `from`, it will be included.
   def transitions_up_to(to, from = T.unsafe(nil)); end
 end
 
+# A subclass of `DateTime` used to represent local times. {DateTimeWithOffset}
+# holds a reference to the related {TimezoneOffset} and overrides various
+# methods to return results appropriate for the {TimezoneOffset}. Certain
+# operations will clear the associated {TimezoneOffset} (if the
+# {TimezoneOffset} would not necessarily be valid for the result). Once the
+# {TimezoneOffset} has been cleared, {DateTimeWithOffset} behaves identically
+# to `DateTime`.
+#
+# Arithmetic performed on {DateTimeWithOffset} instances is _not_ time
+# zone-aware. Regardless of whether transitions in the time zone are crossed,
+# results of arithmetic operations will always maintain the same offset from
+# UTC (`offset`). The associated {TimezoneOffset} will aways be cleared.
 class TZInfo::DateTimeWithOffset < ::DateTime
   include ::TZInfo::WithOffset
 
+  # An overridden version of `DateTime#downto` that clears the associated
+  # {TimezoneOffset} of the returned or yielded instances.
   def downto(min); end
+
+  # An overridden version of `DateTime#england` that preserves the associated
+  # {TimezoneOffset}.
   def england; end
+
+  # An overridden version of `DateTime#gregorian` that preserves the
+  # associated {TimezoneOffset}.
   def gregorian; end
+
+  # An overridden version of `DateTime#italy` that preserves the associated
+  # {TimezoneOffset}.
   def italy; end
+
+  # An overridden version of `DateTime#julian` that preserves the associated
+  # {TimezoneOffset}.
   def julian; end
+
+  # An overridden version of `DateTime#new_start` that preserves the
+  # associated {TimezoneOffset}.
   def new_start(start = T.unsafe(nil)); end
+
+  # Sets the associated {TimezoneOffset}.
   def set_timezone_offset(timezone_offset); end
+
+  # An overridden version of `DateTime#step` that clears the associated
+  # {TimezoneOffset} of the returned or yielded instances.
   def step(limit, step = T.unsafe(nil)); end
+
   def timezone_offset; end
+
+  # An overridden version of `DateTime#to_time` that, if there is an
+  # associated {TimezoneOffset}, returns a {DateTimeWithOffset} with that
+  # offset.
   def to_time; end
+
+  # An overridden version of `DateTime#upto` that clears the associated
+  # {TimezoneOffset} of the returned or yielded instances.
   def upto(max); end
 
   protected
 
+  # Clears the associated {TimezoneOffset}.
   def clear_timezone_offset; end
 end
 
+# A rule that transitions on the nth occurrence of a particular day of week
+# of a calendar month.
 class TZInfo::DayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
+  # Initializes a new {DayOfMonthTransitionRule}.
   def initialize(month, week, day_of_week, transition_at = T.unsafe(nil)); end
 
+  # Determines if this {DayOfMonthTransitionRule} is equal to another
+  # instance.
   def ==(r); end
+
+  # Determines if this {DayOfMonthTransitionRule} is equal to another
+  # instance.
   def eql?(r); end
 
   protected
 
+  # Returns a `Time` representing midnight local time on the day specified by
+  # the rule for the given offset and year.
   def get_day(offset, year); end
+
   def hash_args; end
   def offset_start; end
 end
 
+# A base class for rules that transition on a particular day of week of a
+# given week (subclasses specify which week of the month).
 class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
+  # Initializes a new {DayOfWeekTransitionRule}.
   def initialize(month, day_of_week, transition_at); end
 
+  # Determines if this {DayOfWeekTransitionRule} is equal to another
+  # instance.
   def ==(r); end
+
+  # Determines if this {DayOfWeekTransitionRule} is equal to another
+  # instance.
   def eql?(r); end
+
   def is_always_first_day_of_year?; end
   def is_always_last_day_of_year?; end
 
@@ -354,10 +1110,16 @@ class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
   def month; end
 end
 
+# A base class for transition rules that activate based on an integer day of
+# the year.
 class TZInfo::DayOfYearTransitionRule < ::TZInfo::TransitionRule
+  # Initializes a new {DayOfYearTransitionRule}.
   def initialize(day, transition_at); end
 
+  # Determines if this {DayOfYearTransitionRule} is equal to another instance.
   def ==(r); end
+
+  # Determines if this {DayOfYearTransitionRule} is equal to another instance.
   def eql?(r); end
 
   protected
@@ -366,151 +1128,261 @@ class TZInfo::DayOfYearTransitionRule < ::TZInfo::TransitionRule
   def seconds; end
 end
 
+# Modules and classes used by the format 1 version of TZInfo::Data.
 module TZInfo::Format1; end
 
+# Instances of {Format1::CountryDefiner} are yielded to the format 1 version
+# of `TZInfo::Data::Indexes::Countries` by {CountryIndexDefinition} to allow
+# the zones of a country to be specified.
 class TZInfo::Format1::CountryDefiner < ::TZInfo::Format2::CountryDefiner
+  # Initializes a new {CountryDefiner}.
   def initialize(identifier_deduper, description_deduper); end
 end
 
+# The format 1 TZInfo::Data country index file includes
+# {Format1::CountryIndexDefinition}, which provides a
+# {CountryIndexDefinition::ClassMethods#country country} method used to
+# define each country in the index.
 module TZInfo::Format1::CountryIndexDefinition
   mixes_in_class_methods ::TZInfo::Format1::CountryIndexDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee and initializes class instance
+    # variables.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format1::CountryIndexDefinition::ClassMethods
   def countries; end
 
   private
 
+  # Defines a country with an ISO 3166-1 alpha-2 country code and name.
   def country(code, name); end
 end
 
+# Instances of {Format1::TimezoneDefiner} are yielded to TZInfo::Data
+# format 1 modules by {TimezoneDefinition} to allow the offsets and
+# transitions of the time zone to be specified.
 class TZInfo::Format1::TimezoneDefiner < ::TZInfo::Format2::TimezoneDefiner
+  # Defines an offset.
   def offset(id, utc_offset, std_offset, abbreviation); end
+
+  # Defines a transition to a given offset.
+  #
+  # Transitions must be defined in increasing time order.
   def transition(year, month, offset_id, timestamp_value, datetime_numerator = T.unsafe(nil), datetime_denominator = T.unsafe(nil)); end
 end
 
+# {Format1::TimezoneDefinition} is included into format 1 time zone
+# definition modules and provides the methods for defining time zones.
 module TZInfo::Format1::TimezoneDefinition
   mixes_in_class_methods ::TZInfo::Format2::TimezoneDefinition::ClassMethods
   mixes_in_class_methods ::TZInfo::Format1::TimezoneDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format1::TimezoneDefinition::ClassMethods
   private
 
+  # {Format2::TimezoneDefinition::ClassMethods#timezone}.
   def timezone_definer_class; end
 end
 
+# The format 1 TZInfo::Data time zone index file includes
+# {Format1::TimezoneIndexDefinition}, which provides methods used to define
+# time zones in the index.
 module TZInfo::Format1::TimezoneIndexDefinition
   mixes_in_class_methods ::TZInfo::Format1::TimezoneIndexDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee and initializes class instance
+    # variables.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format1::TimezoneIndexDefinition::ClassMethods
   def data_timezones; end
   def linked_timezones; end
 
   private
 
+  # Adds a linked time zone to the index.
   def linked_timezone(identifier); end
+
+  # Adds a data time zone to the index.
   def timezone(identifier); end
 end
 
+# Modules and classes used by the format 2 version of TZInfo::Data.
 module TZInfo::Format2; end
 
+# Instances of {Format2::CountryDefiner} are yielded to the format 2 version
+# of `TZInfo::Data::Indexes::Countries` by {CountryIndexDefiner} to allow
+# the zones of a country to be specified.
 class TZInfo::Format2::CountryDefiner
+  # Initializes a new {CountryDefiner}.
   def initialize(shared_timezones, identifier_deduper, description_deduper); end
 
   def timezone(identifier_or_reference, latitude_numerator = T.unsafe(nil), latitude_denominator = T.unsafe(nil), longitude_numerator = T.unsafe(nil), longitude_denominator = T.unsafe(nil), description = T.unsafe(nil)); end
   def timezones; end
 end
 
+# Instances of {Format2::CountryIndexDefiner} are yielded to the format 2
+# version of `TZInfo::Data::Indexes::Countries` by {CountryIndexDefinition}
+# to allow countries and their time zones to be specified.
 class TZInfo::Format2::CountryIndexDefiner
+  # Initializes a new {CountryIndexDefiner}.
   def initialize(identifier_deduper, description_deduper); end
 
   def countries; end
+
+  # Defines a country.
   def country(code, name); end
+
+  # Defines a time zone shared by many countries with an reference for
+  # subsequent use in country definitions. The latitude and longitude are
+  # given as the numerator and denominator of a `Rational`.
   def timezone(reference, identifier, latitude_numerator, latitude_denominator, longitude_numerator, longitude_denominator, description = T.unsafe(nil)); end
 end
 
+# The format 2 country index file includes
+# {Format2::CountryIndexDefinition}, which provides a
+# {CountryIndexDefinition::ClassMethods#country_index country_index} method
+# used to define the country index.
 module TZInfo::Format2::CountryIndexDefinition
   mixes_in_class_methods ::TZInfo::Format2::CountryIndexDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee and initializes class instance
+    # variables.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format2::CountryIndexDefinition::ClassMethods
   def countries; end
 
   private
 
+  # Defines the index.
   def country_index; end
 end
 
+# Instances of {TimezoneDefiner} are yielded to TZInfo::Data modules by
+# {TimezoneDefinition} to allow the offsets and transitions of the time zone
+# to be specified.
 class TZInfo::Format2::TimezoneDefiner
+  # Initializes a new TimezoneDefiner.
   def initialize(string_deduper); end
 
+  # Returns the first offset to be defined or `nil` if no offsets have been
+  # defined. The first offset is observed before the time of the first
+  # transition.
   def first_offset; end
+
+  # Defines an offset.
   def offset(id, base_utc_offset, std_offset, abbreviation); end
+
+  # Defines the rules that will be used for handling instants after the last
+  # transition.
+  #
+  # This method is currently just a placeholder for forward compatibility
+  # that accepts and ignores any arguments passed.
+  #
+  # Support for subsequent rules will be added in a future version of TZInfo
+  # and the rules will be included in format 2 releases of TZInfo::Data.
   def subsequent_rules(*args); end
+
+  # Defines a transition to a given offset.
+  #
+  # Transitions must be defined in increasing time order.
   def transition(offset_id, timestamp_value); end
+
   def transitions; end
 end
 
+# {Format2::TimezoneDefinition} is included into format 2 time zone
+# definition modules and provides methods for defining time zones.
 module TZInfo::Format2::TimezoneDefinition
   mixes_in_class_methods ::TZInfo::Format2::TimezoneDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format2::TimezoneDefinition::ClassMethods
   def get; end
 
   private
 
+  # Defines a linked time zone.
   def linked_timezone(identifier, link_to_identifier); end
+
+  # Defines a data time zone.
   def timezone(identifier); end
+
   def timezone_definer_class; end
 end
 
+# Instances of {TimezoneIndexDefiner} are yielded by
+# {TimezoneIndexDefinition} to allow the time zone index to be defined.
 class TZInfo::Format2::TimezoneIndexDefiner
+  # Initializes a new TimezoneDefiner.
   def initialize(string_deduper); end
 
+  # Adds a data time zone to the index.
   def data_timezone(identifier); end
+
   def data_timezones; end
+
+  # Adds a linked time zone to the index.
   def linked_timezone(identifier); end
+
   def linked_timezones; end
 end
 
+# The format 2 time zone index file includes {TimezoneIndexDefinition},
+# which provides the {TimezoneIndexDefinition::ClassMethods#timezone_index
+# timezone_index} method used to define the index.
 module TZInfo::Format2::TimezoneIndexDefinition
   mixes_in_class_methods ::TZInfo::Format2::TimezoneIndexDefinition::ClassMethods
 
   class << self
+    # Adds class methods to the includee and initializes class instance
+    # variables.
     def append_features(base); end
   end
 end
 
+# Class methods for inclusion.
 module TZInfo::Format2::TimezoneIndexDefinition::ClassMethods
   def data_timezones; end
   def linked_timezones; end
+
+  # Defines the index.
   def timezone_index; end
 end
 
+# A {Timezone} based on a {DataSources::TimezoneInfo}.
 class TZInfo::InfoTimezone < ::TZInfo::Timezone
+  # Initializes a new {InfoTimezone}.
+  #
+  # {InfoTimezone} instances should not normally be created directly. Use
+  # the {Timezone.get} method to obtain {Timezone} instances.
   def initialize(info); end
 
   def identifier; end
@@ -520,66 +1392,156 @@ class TZInfo::InfoTimezone < ::TZInfo::Timezone
   def info; end
 end
 
+# {InvalidCountryCode} is raised by {Country#get} if the code given is not a
+# valid ISO 3166-1 alpha-2 code.
 class TZInfo::InvalidCountryCode < ::StandardError; end
+
+# {InvalidDataSource} is raised if the selected {DataSource} doesn't implement
+# one of the required methods.
 class TZInfo::InvalidDataSource < ::StandardError; end
+
+# {InvalidTimezoneIdentifier} is raised by {Timezone.get} if the identifier
+# given is not valid.
 class TZInfo::InvalidTimezoneIdentifier < ::StandardError; end
 
+# Defines transitions that occur on the one-based nth Julian day of the year.
+#
+# Leap days are not counted. Day 1 is 1 January. Day 60 is always 1 March.
+# Day 365 is always 31 December.
 class TZInfo::JulianDayOfYearTransitionRule < ::TZInfo::DayOfYearTransitionRule
+  # Initializes a new {JulianDayOfYearTransitionRule}.
   def initialize(day, transition_at = T.unsafe(nil)); end
 
+  # Determines if this {JulianDayOfYearTransitionRule} is equal to another
+  # instance.
   def ==(r); end
+
+  # Determines if this {JulianDayOfYearTransitionRule} is equal to another
+  # instance.
   def eql?(r); end
+
   def is_always_first_day_of_year?; end
   def is_always_last_day_of_year?; end
 
   protected
 
+  # Returns a `Time` representing midnight local time on the day specified by
+  # the rule for the given offset and year.
   def get_day(offset, year); end
+
   def hash_args; end
 end
 
+# The 60 days in seconds.
 TZInfo::JulianDayOfYearTransitionRule::LEAP = T.let(T.unsafe(nil), Integer)
+
+# The length of a non-leap year in seconds.
 TZInfo::JulianDayOfYearTransitionRule::YEAR = T.let(T.unsafe(nil), Integer)
 
+# A rule that transitions on the last occurrence of a particular day of week
+# of a calendar month.
 class TZInfo::LastDayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
+  # Initializes a new {LastDayOfMonthTransitionRule}.
   def initialize(month, day_of_week, transition_at = T.unsafe(nil)); end
 
+  # Determines if this {LastDayOfMonthTransitionRule} is equal to another
+  # instance.
   def ==(r); end
+
+  # Determines if this {LastDayOfMonthTransitionRule} is equal to another
+  # instance.
   def eql?(r); end
 
   protected
 
+  # Returns a `Time` representing midnight local time on the day specified by
+  # the rule for the given offset and year.
   def get_day(offset, year); end
 end
 
+# Represents time zones that are defined as a link to or alias for another
+# time zone.
 class TZInfo::LinkedTimezone < ::TZInfo::InfoTimezone
+  # Initializes a new {LinkedTimezone}.
+  #
+  # {LinkedTimezone} instances should not normally be created directly. Use
+  # the {Timezone.get} method to obtain {Timezone} instances.
   def initialize(info); end
 
+  # Returns the canonical {Timezone} instance for this {LinkedTimezone}.
+  #
+  # For a {LinkedTimezone}, this is the canonical zone of the link target.
   def canonical_zone; end
+
+  # Returns the {TimezonePeriod} that is valid at a given time.
+  #
+  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
+  # `time` parameter is taken into consideration.
   def period_for(time); end
+
+  # Returns the set of {TimezonePeriod}s that are valid for the given
+  # local time as an `Array`.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`).
+  #
+  # This will typically return an `Array` containing a single
+  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
+  # local time is ambiguous (for example, when daylight savings time ends). An
+  # empty `Array` will be returned when the local time is not valid (for
+  # example, when daylight savings time begins).
+  #
+  # To obtain just a single {TimezonePeriod} in all cases, use
+  # {period_for_local} instead and specify how ambiguities should be resolved.
   def periods_for_local(local_time); end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the timezone changes.
+  #
+  # Transitions are returned up to a given time (`to`).
+  #
+  # A from time may also be supplied using the `from` parameter. If from is
+  # not `nil`, only transitions from that time onwards will be returned.
+  #
+  # Comparisons with `to` are exclusive. Comparisons with `from` are
+  # inclusive. If a transition falls precisely on `to`, it will be excluded.
+  # If a transition falls on `from`, it will be included.
   def transitions_up_to(to, from = T.unsafe(nil)); end
 end
 
+# Represents the infinite period of time in a time zone that constantly
+# observes the same offset from UTC (has an unbounded start and end).
 class TZInfo::OffsetTimezonePeriod < ::TZInfo::TimezonePeriod
+  # Initializes an {OffsetTimezonePeriod}.
   def initialize(offset); end
 
+  # Determines if this {OffsetTimezonePeriod} is equal to another instance.
   def ==(p); end
+
   def end_transition; end
+
+  # Determines if this {OffsetTimezonePeriod} is equal to another instance.
   def eql?(p); end
+
   def hash; end
   def start_transition; end
 end
 
+# {PeriodNotFound} is raised to indicate that no {TimezonePeriod} matching a
+# given time could be found.
 class TZInfo::PeriodNotFound < ::StandardError; end
 
+# Maintains a pool of `String` instances. The {#dedupe} method will return
+# either a pooled copy of a given `String` or add the instance to the pool.
 class TZInfo::StringDeduper
+  # Initializes a new {StringDeduper}.
   def initialize; end
 
   def dedupe(string); end
 
   protected
 
+  # Creates a `Hash` to store pooled `String` instances.
   def create_hash(&block); end
 
   class << self
@@ -587,43 +1549,121 @@ class TZInfo::StringDeduper
   end
 end
 
+# A subclass of `Time` used to represent local times. {TimeWithOffset} holds a
+# reference to the related {TimezoneOffset} and overrides various methods to
+# return results appropriate for the {TimezoneOffset}. Certain operations will
+# clear the associated {TimezoneOffset} (if the {TimezoneOffset} would not
+# necessarily be valid for the result). Once the {TimezoneOffset} has been
+# cleared, {TimeWithOffset} behaves identically to `Time`.
+#
+# Arithmetic performed on {TimeWithOffset} instances is _not_ time zone-aware.
+# Regardless of whether transitions in the time zone are crossed, results of
+# arithmetic operations will always maintain the same offset from UTC
+# (`utc_offset`). The associated {TimezoneOffset} will aways be cleared.
 class TZInfo::TimeWithOffset < ::Time
   include ::TZInfo::WithOffset
 
+  # An overridden version of `Time#dst?` that, if there is an associated
+  # {TimezoneOffset}, returns the result of calling {TimezoneOffset#dst? dst?}
+  # on that offset.
   def dst?; end
+
+  # An overridden version of `Time#getlocal` that clears the associated
+  # {TimezoneOffset} if the base implementation of `getlocal` returns a
+  # {TimeWithOffset}.
   def getlocal(*args); end
+
+  # An overridden version of `Time#gmtime` that clears the associated
+  # {TimezoneOffset}.
   def gmtime; end
+
+  # An overridden version of `Time#dst?` that, if there is an associated
+  # {TimezoneOffset}, returns the result of calling {TimezoneOffset#dst? dst?}
+  # on that offset.
   def isdst; end
+
+  # An overridden version of `Time#localtime` that clears the associated
+  # {TimezoneOffset}.
   def localtime(*args); end
+
+  # An overridden version of `Time#round` that, if there is an associated
+  # {TimezoneOffset}, returns a {TimeWithOffset} preserving that offset.
   def round(ndigits = T.unsafe(nil)); end
+
+  # Marks this {TimeWithOffset} as a local time with the UTC offset of a given
+  # {TimezoneOffset} and sets the associated {TimezoneOffset}.
   def set_timezone_offset(timezone_offset); end
+
   def timezone_offset; end
+
+  # An overridden version of `Time#to_a`. The `isdst` (index 8) and `zone`
+  # (index 9) elements of the array are set according to the associated
+  # {TimezoneOffset}.
   def to_a; end
+
+  # An overridden version of `Time#to_datetime` that, if there is an
+  # associated {TimezoneOffset}, returns a {DateTimeWithOffset} with that
+  # offset.
   def to_datetime; end
+
+  # An overridden version of `Time#utc` that clears the associated
+  # {TimezoneOffset}.
   def utc; end
+
+  # An overridden version of `Time#zone` that, if there is an associated
+  # {TimezoneOffset}, returns the {TimezoneOffset#abbreviation abbreviation}
+  # of that offset.
   def zone; end
 
   protected
 
+  # Clears the associated {TimezoneOffset}.
   def clear_timezone_offset; end
 end
 
+# A time represented as an `Integer` number of seconds since 1970-01-01
+# 00:00:00 UTC (ignoring leap seconds), the fraction through the second
+# (sub_second as a `Rational`) and an optional UTC offset. Like Ruby's `Time`
+# class, {Timestamp} can distinguish between a local time with a zero offset
+# and a time specified explicitly as UTC.
 class TZInfo::Timestamp
   include ::Comparable
 
+  # Initializes a new {Timestamp}.
   def initialize(value, sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
 
+  # Compares this {Timestamp} with another.
+  #
+  # {Timestamp} instances without a defined UTC offset are not comparable with
+  # {Timestamp} instances that have a defined UTC offset.
   def <=>(t); end
+
+  # Adds a number of seconds to the {Timestamp} value, setting the UTC offset
+  # of the result.
   def add_and_set_utc_offset(seconds, utc_offset); end
+
   def eql?(_arg0); end
   def hash; end
   def inspect; end
+
+  # Formats this {Timestamp} according to the directives in the given format
+  # string.
   def strftime(format); end
+
   def sub_second; end
+
+  # Converts this {Timestamp} to a `DateTime`.
   def to_datetime; end
+
+  # Converts this {Timestamp} to an `Integer` number of seconds since
+  # 1970-01-01 00:00:00 UTC (ignoring leap seconds).
   def to_i; end
+
   def to_s; end
+
+  # Converts this {Timestamp} to a `Time`.
   def to_time; end
+
   def utc; end
   def utc?; end
   def utc_offset; end
@@ -631,102 +1671,681 @@ class TZInfo::Timestamp
 
   protected
 
+  # Constructs a new instance of a `DateTime` or `DateTime`-like class with
+  # the same {value}, {sub_second} and {utc_offset} as this {Timestamp}.
   def new_datetime(klass = T.unsafe(nil)); end
+
+  # Creates a new instance of a `Time` or `Time`-like class matching the
+  # {value} and {sub_second} of this {Timestamp}, but not setting the offset.
   def new_time(klass = T.unsafe(nil)); end
 
   private
 
+  # Initializes a new {Timestamp} without validating the parameters. This
+  # method is used internally within {Timestamp} to avoid the overhead of
+  # checking parameters.
   def initialize!(value, sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
+
+  # Converts the {sub_second} value to a `String` suitable for appending to
+  # the `String` representation of a {Timestamp}.
   def sub_second_to_s; end
+
+  # Converts the value and sub-seconds to a `String`, adding on the given
+  # offset.
   def value_and_sub_second_to_s(offset = T.unsafe(nil)); end
 
   class << self
+    # Returns a new {Timestamp} representing the (Gregorian calendar) date and
+    # time specified by the supplied parameters.
+    #
+    # If `utc_offset` is `nil`, `:utc` or 0, the date and time parameters will
+    # be interpreted as representing a UTC date and time. Otherwise the date
+    # and time parameters will be interpreted as a local date and time with
+    # the given offset.
     def create(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
+
+    # When used without a block, returns a {Timestamp} representation of a
+    # given `Time`, `DateTime` or {Timestamp}.
+    #
+    # When called with a block, the {Timestamp} representation of `value` is
+    # passed to the block. The block must then return a {Timestamp}, which
+    # will be converted back to the type of the initial value. If the initial
+    # value was a {Timestamp}, the block result will just be returned.
+    #
+    # The UTC offset of `value` can either be preserved (the {Timestamp}
+    # representation will have the same UTC offset as `value`), ignored (the
+    # {Timestamp} representation will have no defined UTC offset), or treated
+    # as though it were UTC (the {Timestamp} representation will have a
+    # {utc_offset} of 0 and {utc?} will return `true`).
     def for(value, offset = T.unsafe(nil)); end
+
+    # Creates a new UTC {Timestamp}.
     def utc(value, sub_second = T.unsafe(nil)); end
 
     private
 
+    # Creates a {Timestamp} that represents a given `DateTime`, optionally
+    # ignoring the offset.
     def for_datetime(datetime, ignore_offset, target_utc_offset); end
+
+    # Creates a {Timestamp} that represents a given `Time`, optionally
+    # ignoring the offset.
     def for_time(time, ignore_offset, target_utc_offset); end
+
+    # Creates a {Timestamp} that represents a given `Time`-like object,
+    # optionally ignoring the offset (if the `time_like` responds to
+    # `utc_offset`).
     def for_time_like(time_like, ignore_offset, target_utc_offset); end
+
+    # Returns a {Timestamp} that represents another {Timestamp}, optionally
+    # ignoring the offset. If the result would be identical to `value`, the
+    # same instance is returned. If the passed in value is an instance of a
+    # subclass of {Timestamp}, then a new {Timestamp} will always be returned.
     def for_timestamp(timestamp, ignore_offset, target_utc_offset); end
+
+    # Determines if an object is like a `Time` (for the purposes of converting
+    # to a {Timestamp} with {for}), responding to `to_i` and `subsec`.
     def is_time_like?(value); end
+
+    # Constructs a new instance of `self` (i.e. {Timestamp} or a subclass of
+    # {Timestamp}) without validating the parameters. This method is used
+    # internally within {Timestamp} to avoid the overhead of checking
+    # parameters.
     def new!(value, sub_second = T.unsafe(nil), utc_offset = T.unsafe(nil)); end
   end
 end
 
+# The Unix epoch (1970-01-01 00:00:00 UTC) as a chronological Julian day
+# number.
 TZInfo::Timestamp::JD_EPOCH = T.let(T.unsafe(nil), Integer)
 
+# A subclass of {Timestamp} used to represent local times.
+# {TimestampWithOffset} holds a reference to the related {TimezoneOffset} and
+# overrides various methods to return results appropriate for the
+# {TimezoneOffset}. Certain operations will clear the associated
+# {TimezoneOffset} (if the {TimezoneOffset} would not necessarily be valid for
+# the result). Once the {TimezoneOffset} has been cleared,
+# {TimestampWithOffset} behaves identically to {Timestamp}.
 class TZInfo::TimestampWithOffset < ::TZInfo::Timestamp
   include ::TZInfo::WithOffset
 
+  # Sets the associated {TimezoneOffset} of this {TimestampWithOffset}.
   def set_timezone_offset(timezone_offset); end
+
   def timezone_offset; end
+
+  # An overridden version of {Timestamp#to_datetime}, if there is an
+  # associated {TimezoneOffset}, returns a {DateTimeWithOffset} with that
+  # offset.
   def to_datetime; end
+
+  # An overridden version of {Timestamp#to_time} that, if there is an
+  # associated {TimezoneOffset}, returns a {TimeWithOffset} with that offset.
   def to_time; end
 
   class << self
+    # Creates a new {TimestampWithOffset} from a given {Timestamp} and
+    # {TimezoneOffset}.
+    #
+    # time of `timestamp`.
     def set_timezone_offset(timestamp, timezone_offset); end
   end
 end
 
+# The {Timezone} class represents a time zone. It provides a factory method,
+# {get}, to retrieve {Timezone} instances by their identifier.
+#
+# The {Timezone#to_local} method can be used to convert `Time` and `DateTime`
+# instances to the local time for the zone. For example:
+#
+# tz = TZInfo::Timezone.get('America/New_York')
+# local_time = tz.to_local(Time.utc(2005,8,29,15,35,0))
+# local_datetime = tz.to_local(DateTime.new(2005,8,29,15,35,0))
+#
+# Local `Time` and `DateTime` instances returned by `Timezone` have the
+# correct local offset.
+#
+# The {Timezone#local_to_utc} method can by used to convert local `Time` and
+# `DateTime` instances to UTC. {Timezone#local_to_utc} ignores the UTC offset
+# of the supplied value and treats if it is a local time for the zone. For
+# example:
+#
+# tz = TZInfo::Timezone.get('America/New_York')
+# utc_time = tz.local_to_utc(Time.new(2005,8,29,11,35,0))
+# utc_datetime = tz.local_to_utc(DateTime.new(2005,8,29,11,35,0))
+#
+# Each time zone is treated as sequence of periods of time ({TimezonePeriod})
+# that observe the same offset ({TimezoneOffset}). Transitions
+# ({TimezoneTransition}) denote the end of one period and the start of the
+# next. The {Timezone} class has methods that allow the periods, offsets and
+# transitions of a time zone to be interrogated.
+#
+# All methods that take `Time` objects as parameters can be used with
+# arbitrary `Time`-like objects that respond to both `to_i` and `subsec` and
+# optionally `utc_offset`.
+#
+# The {Timezone} class is thread-safe. It is safe to use class and instance
+# methods of {Timezone} in concurrently executing threads. Instances of
+# {Timezone} can be shared across thread boundaries.
+#
+# The IANA Time Zone Database maintainers recommend that time zone identifiers
+# are not made visible to end-users (see [Names of
+# timezones](https://data.iana.org/time-zones/theory.html#naming)). The
+# {Country} class can be used to obtain lists of time zones by country,
+# including user-friendly descriptions and approximate locations.
 class TZInfo::Timezone
   include ::Comparable
 
+  # Compares this {Timezone} with another based on the {identifier}.
   def <=>(tz); end
+
+  # Matches `regexp` against the {identifier} of this {Timezone}.
   def =~(regexp); end
+
+  # Returns a serialized representation of this {Timezone}. This method is
+  # called when using `Marshal.dump` with an instance of {Timezone}.
   def _dump(limit); end
+
   def abbr(time = T.unsafe(nil)); end
   def abbreviation(time = T.unsafe(nil)); end
+
+  # Returns the base offset from UTC in seconds at the given time. This does
+  # not include any adjustment made for daylight savings time and will
+  # typically remain constant throughout the year.
+  #
+  # To obtain the observed offset from UTC, including the effect of daylight
+  # savings time, use {observed_utc_offset} instead.
+  #
+  # If you require accurate {base_utc_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of
+  # {base_utc_offset} has to be derived from changes to the observed UTC
+  # offset and DST status since it is not included in zoneinfo files.
   def base_utc_offset(time = T.unsafe(nil)); end
+
+  # Returns the canonical identifier of this time zone.
+  #
+  # This is a shortcut for calling `canonical_zone.identifier`. Please refer
+  # to the {canonical_zone} documentation for further information.
   def canonical_identifier; end
+
+  # Returns the canonical {Timezone} instance for this {Timezone}.
+  #
+  # The IANA Time Zone database contains two types of definition: Zones and
+  # Links. Zones are defined by rules that set out when transitions occur.
+  # Links are just references to fully defined Zone, creating an alias for
+  # that Zone.
+  #
+  # Links are commonly used where a time zone has been renamed in a release of
+  # the Time Zone database. For example, the US/Eastern Zone was renamed as
+  # America/New_York. A US/Eastern Link was added in its place, linking to
+  # (and creating an alias for) America/New_York.
+  #
+  # Links are also used for time zones that are currently identical to a full
+  # Zone, but that are administered separately. For example, Europe/Vatican is
+  # a Link to (and alias for) Europe/Rome.
+  #
+  # For a full Zone (implemented by {DataTimezone}), {canonical_zone} returns
+  # self.
+  #
+  # For a Link (implemented by {LinkedTimezone}), {canonical_zone} returns a
+  # {Timezone} instance representing the full Zone that the link targets.
+  #
+  # TZInfo can be used with different data sources (see the documentation for
+  # {TZInfo::DataSource}). Some DataSource implementations may not support
+  # distinguishing between full Zones and Links and will treat all time zones
+  # as full Zones. In this case, {canonical_zone} will always return `self`.
+  #
+  # There are two built-in DataSource implementations.
+  # {DataSources::RubyDataSource} (which will be used if the tzinfo-data gem
+  # is available) supports Link zones. {DataSources::ZoneinfoDataSource}
+  # returns Link zones as if they were full Zones. If the {canonical_zone} or
+  # {canonical_identifier} methods are needed, the tzinfo-data gem should be
+  # installed.
+  #
+  # The {TZInfo::DataSource.get} method can be used to check which DataSource
+  # implementation is being used.
   def canonical_zone; end
+
   def current_period; end
+
+  # Returns the current local time and {TimezonePeriod} for the time zone as
+  # an `Array`. The first element is the time as a {TimeWithOffset}. The
+  # second element is the period.
   def current_period_and_time; end
+
+  # Returns the current local time and {TimezonePeriod} for the time zone as
+  # an `Array`. The first element is the time as a {TimeWithOffset}. The
+  # second element is the period.
   def current_time_and_period; end
+
   def dst?(time = T.unsafe(nil)); end
   def eql?(tz); end
+
+  # Returns {identifier}, modified to make it more readable. Set
+  # `skip_first_part` to omit the first part of the identifier (typically a
+  # region name) where there is more than one part.
+  #
+  # For example:
+  #
+  # TZInfo::Timezone.get('Europe/Paris').friendly_identifier(false)         #=> "Europe - Paris"
+  # TZInfo::Timezone.get('Europe/Paris').friendly_identifier(true)          #=> "Paris"
+  # TZInfo::Timezone.get('America/Indiana/Knox').friendly_identifier(false) #=> "America - Knox, Indiana"
+  # TZInfo::Timezone.get('America/Indiana/Knox').friendly_identifier(true)  #=> "Knox, Indiana"
   def friendly_identifier(skip_first_part = T.unsafe(nil)); end
+
   def hash; end
   def identifier; end
   def inspect; end
+
+  # Creates a `DateTime` object based on the given (Gregorian calendar) date
+  # and time parameters. The parameters are interpreted as a local time in the
+  # time zone. The result has the appropriate `offset` and
+  # {DateTimeWithOffset#timezone_offset timezone_offset}.
+  #
+  # _Warning:_ There are time values that are not valid as local times in a
+  # time zone (for example, during the transition from standard time to
+  # daylight savings time). There are also time values that are ambiguous,
+  # occurring more than once with different offsets to UTC (for example,
+  # during the transition from daylight savings time to standard time).
+  #
+  # In the first case (an invalid local time), a {PeriodNotFound} exception
+  # will be raised.
+  #
+  # In the second case (more than one occurrence), an {AmbiguousTime}
+  # exception will be raised unless the optional `dst` parameter or block
+  # handles the ambiguity.
+  #
+  # If the ambiguity is due to a transition from daylight savings time to
+  # standard time, the `dst` parameter can be used to select whether the
+  # daylight savings time or local time is used. For example, the following
+  # code would raise an {AmbiguousTime} exception:
+  #
+  # tz = TZInfo::Timezone.get('America/New_York')
+  # tz.local_datetime(2004,10,31,1,30,0,0)
+  #
+  # Specifying `dst = true` would return a `Time` with a UTC offset of -4
+  # hours and abbreviation EDT (Eastern Daylight Time). Specifying `dst =
+  # false` would return a `Time` with a UTC offset of -5 hours and
+  # abbreviation EST (Eastern Standard Time).
+  #
+  # The `dst` parameter will not be able to resolve an ambiguity resulting
+  # from the clocks being set back without changing from daylight savings time
+  # to standard time. In this case, if a block is specified, it will be called
+  # to resolve the ambiguity. The block must take a single parameter - an
+  # `Array` of {TimezonePeriod}s that need to be resolved. The block can
+  # select and return a single {TimezonePeriod} or return `nil` or an empty
+  # `Array` to cause an {AmbiguousTime} exception to be raised.
+  #
+  # The default value of the `dst` parameter can be specified using
+  # {Timezone.default_dst=}.
+  #
+  # values, interpreted as a local time in the time zone.
   def local_datetime(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
+
+  # Creates a `Time` object based on the given (Gregorian calendar) date and
+  # time parameters. The parameters are interpreted as a local time in the
+  # time zone. The result has the appropriate `utc_offset`, `zone` and
+  # {TimeWithOffset#timezone_offset timezone_offset}.
+  #
+  # _Warning:_ There are time values that are not valid as local times in a
+  # time zone (for example, during the transition from standard time to
+  # daylight savings time). There are also time values that are ambiguous,
+  # occurring more than once with different offsets to UTC (for example,
+  # during the transition from daylight savings time to standard time).
+  #
+  # In the first case (an invalid local time), a {PeriodNotFound} exception
+  # will be raised.
+  #
+  # In the second case (more than one occurrence), an {AmbiguousTime}
+  # exception will be raised unless the optional `dst` parameter or block
+  # handles the ambiguity.
+  #
+  # If the ambiguity is due to a transition from daylight savings time to
+  # standard time, the `dst` parameter can be used to select whether the
+  # daylight savings time or local time is used. For example, the following
+  # code would raise an {AmbiguousTime} exception:
+  #
+  # tz = TZInfo::Timezone.get('America/New_York')
+  # tz.local_time(2004,10,31,1,30,0,0)
+  #
+  # Specifying `dst = true` would return a `Time` with a UTC offset of -4
+  # hours and abbreviation EDT (Eastern Daylight Time). Specifying `dst =
+  # false` would return a `Time` with a UTC offset of -5 hours and
+  # abbreviation EST (Eastern Standard Time).
+  #
+  # The `dst` parameter will not be able to resolve an ambiguity resulting
+  # from the clocks being set back without changing from daylight savings time
+  # to standard time. In this case, if a block is specified, it will be called
+  # to resolve the ambiguity. The block must take a single parameter - an
+  # `Array` of {TimezonePeriod}s that need to be resolved. The block can
+  # select and return a single {TimezonePeriod} or return `nil` or an empty
+  # `Array` to cause an {AmbiguousTime} exception to be raised.
+  #
+  # The default value of the `dst` parameter can be specified using
+  # {Timezone.default_dst=}.
   def local_time(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
+
+  # Creates a {Timestamp} object based on the given (Gregorian calendar) date
+  # and time parameters. The parameters are interpreted as a local time in the
+  # time zone. The result has the appropriate {Timestamp#utc_offset
+  # utc_offset} and {TimestampWithOffset#timezone_offset timezone_offset}.
+  #
+  # _Warning:_ There are time values that are not valid as local times in a
+  # time zone (for example, during the transition from standard time to
+  # daylight savings time). There are also time values that are ambiguous,
+  # occurring more than once with different offsets to UTC (for example,
+  # during the transition from daylight savings time to standard time).
+  #
+  # In the first case (an invalid local time), a {PeriodNotFound} exception
+  # will be raised.
+  #
+  # In the second case (more than one occurrence), an {AmbiguousTime}
+  # exception will be raised unless the optional `dst` parameter or block
+  # handles the ambiguity.
+  #
+  # If the ambiguity is due to a transition from daylight savings time to
+  # standard time, the `dst` parameter can be used to select whether the
+  # daylight savings time or local time is used. For example, the following
+  # code would raise an {AmbiguousTime} exception:
+  #
+  # tz = TZInfo::Timezone.get('America/New_York')
+  # tz.local_timestamp(2004,10,31,1,30,0,0)
+  #
+  # Specifying `dst = true` would return a `Time` with a UTC offset of -4
+  # hours and abbreviation EDT (Eastern Daylight Time). Specifying `dst =
+  # false` would return a `Time` with a UTC offset of -5 hours and
+  # abbreviation EST (Eastern Standard Time).
+  #
+  # The `dst` parameter will not be able to resolve an ambiguity resulting
+  # from the clocks being set back without changing from daylight savings time
+  # to standard time. In this case, if a block is specified, it will be called
+  # to resolve the ambiguity. The block must take a single parameter - an
+  # `Array` of {TimezonePeriod}s that need to be resolved. The block can
+  # select and return a single {TimezonePeriod} or return `nil` or an empty
+  # `Array` to cause an {AmbiguousTime} exception to be raised.
+  #
+  # The default value of the `dst` parameter can be specified using
+  # {Timezone.default_dst=}.
   def local_timestamp(year, month = T.unsafe(nil), day = T.unsafe(nil), hour = T.unsafe(nil), minute = T.unsafe(nil), second = T.unsafe(nil), sub_second = T.unsafe(nil), dst = T.unsafe(nil), &block); end
+
+  # Converts a local time for the time zone to UTC.
+  #
+  # The result will either be a `Time`, `DateTime` or {Timestamp} according to
+  # the type of the `local_time` parameter.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`).
+  #
+  # _Warning:_ There are local times that have no equivalent UTC times (for
+  # example, during the transition from standard time to daylight savings
+  # time). There are also local times that have more than one UTC equivalent
+  # (for example, during the transition from daylight savings time to standard
+  # time).
+  #
+  # In the first case (no equivalent UTC time), a {PeriodNotFound} exception
+  # will be raised.
+  #
+  # In the second case (more than one equivalent UTC time), an {AmbiguousTime}
+  # exception will be raised unless the optional `dst` parameter or block
+  # handles the ambiguity.
+  #
+  # If the ambiguity is due to a transition from daylight savings time to
+  # standard time, the `dst` parameter can be used to select whether the
+  # daylight savings time or local time is used. For example, the following
+  # code would raise an {AmbiguousTime} exception:
+  #
+  # tz = TZInfo::Timezone.get('America/New_York')
+  # tz.period_for_local(Time.new(2004,10,31,1,30,0))
+  #
+  # Specifying `dst = true` would select the daylight savings period from
+  # April to October 2004. Specifying `dst = false` would return the
+  # standard time period from October 2004 to April 2005.
+  #
+  # The `dst` parameter will not be able to resolve an ambiguity resulting
+  # from the clocks being set back without changing from daylight savings time
+  # to standard time. In this case, if a block is specified, it will be called
+  # to resolve the ambiguity. The block must take a single parameter - an
+  # `Array` of {TimezonePeriod}s that need to be resolved. The block can
+  # select and return a single {TimezonePeriod} or return `nil` or an empty
+  # `Array` to cause an {AmbiguousTime} exception to be raised.
+  #
+  # The default value of the `dst` parameter can be specified using
+  # {Timezone.default_dst=}.
   def local_to_utc(local_time, dst = T.unsafe(nil)); end
+
   def name; end
   def now; end
+
+  # Returns the observed offset from UTC in seconds at the given time. This
+  # includes adjustments made for daylight savings time.
   def observed_utc_offset(time = T.unsafe(nil)); end
+
+  # Returns the unique offsets used by the time zone up to a given time (`to`)
+  # as an `Array` of {TimezoneOffset} instances.
+  #
+  # A from time may also be supplied using the `from` parameter. If from is
+  # not `nil`, only offsets used from that time onwards will be returned.
+  #
+  # Comparisons with `to` are exclusive. Comparisons with `from` are
+  # inclusive.
   def offsets_up_to(to, from = T.unsafe(nil)); end
+
+  # Returns the {TimezonePeriod} that is valid at a given time.
+  #
+  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
+  # `time` parameter is taken into consideration.
   def period_for(time); end
+
+  # Returns the {TimezonePeriod} that is valid at the given local time.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`). Use the {period_for}
+  # method instead if the the UTC offset of the time needs to be taken into
+  # consideration.
+  #
+  # _Warning:_ There are local times that have no equivalent UTC times (for
+  # example, during the transition from standard time to daylight savings
+  # time). There are also local times that have more than one UTC equivalent
+  # (for example, during the transition from daylight savings time to standard
+  # time).
+  #
+  # In the first case (no equivalent UTC time), a {PeriodNotFound} exception
+  # will be raised.
+  #
+  # In the second case (more than one equivalent UTC time), an {AmbiguousTime}
+  # exception will be raised unless the optional `dst` parameter or block
+  # handles the ambiguity.
+  #
+  # If the ambiguity is due to a transition from daylight savings time to
+  # standard time, the `dst` parameter can be used to select whether the
+  # daylight savings time or local time is used. For example, the following
+  # code would raise an {AmbiguousTime} exception:
+  #
+  # tz = TZInfo::Timezone.get('America/New_York')
+  # tz.period_for_local(Time.new(2004,10,31,1,30,0))
+  #
+  # Specifying `dst = true` would select the daylight savings period from
+  # April to October 2004. Specifying `dst = false` would return the
+  # standard time period from October 2004 to April 2005.
+  #
+  # The `dst` parameter will not be able to resolve an ambiguity resulting
+  # from the clocks being set back without changing from daylight savings time
+  # to standard time. In this case, if a block is specified, it will be called
+  # to resolve the ambiguity. The block must take a single parameter - an
+  # `Array` of {TimezonePeriod}s that need to be resolved. The block can
+  # select and return a single {TimezonePeriod} or return `nil` or an empty
+  # `Array` to cause an {AmbiguousTime} exception to be raised.
+  #
+  # The default value of the `dst` parameter can be specified using
+  # {Timezone.default_dst=}.
   def period_for_local(local_time, dst = T.unsafe(nil)); end
+
+  # Returns the {TimezonePeriod} that is valid at a given time.
+  #
+  # The UTC offset of the `utc_time` parameter is ignored (it is treated as a
+  # UTC time). Use the {period_for} method instead if the UTC offset of the
+  # time needs to be taken into consideration.
   def period_for_utc(utc_time); end
+
+  # Returns the set of {TimezonePeriod}s that are valid for the given
+  # local time as an `Array`.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`).
+  #
+  # This will typically return an `Array` containing a single
+  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
+  # local time is ambiguous (for example, when daylight savings time ends). An
+  # empty `Array` will be returned when the local time is not valid (for
+  # example, when daylight savings time begins).
+  #
+  # To obtain just a single {TimezonePeriod} in all cases, use
+  # {period_for_local} instead and specify how ambiguities should be resolved.
   def periods_for_local(local_time); end
+
+  # Converts a time to local time for the time zone and returns a `String`
+  # representation of the local time according to the given format.
+  #
+  # `Timezone#strftime` first expands any occurrences of `%Z` in the format
+  # string to the time zone abbreviation for the local time (for example, EST
+  # or EDT). Depending on the type of `time` parameter, the result of the
+  # expansion is then passed to either `Time#strftime`, `DateTime#strftime` or
+  # `Timestamp#strftime` to handle any other format directives.
+  #
+  # This method is equivalent to the following:
+  #
+  # time_zone.to_local(time).strftime(format)
   def strftime(format, time = T.unsafe(nil)); end
+
+  # Converts a time to the local time for the time zone.
+  #
+  # The result will be of type {TimeWithOffset} (if passed a `Time`),
+  # {DateTimeWithOffset} (if passed a `DateTime`) or {TimestampWithOffset} (if
+  # passed a {Timestamp}). {TimeWithOffset}, {DateTimeWithOffset} and
+  # {TimestampWithOffset} are subclasses of `Time`, `DateTime` and {Timestamp}
+  # that provide additional information about the local result.
+  #
+  # Unlike {utc_to_local}, {to_local} takes the UTC offset of the given time
+  # into consideration.
   def to_local(time); end
+
   def to_s; end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the timezone changes.
+  #
+  # Transitions are returned up to a given time (`to`).
+  #
+  # A from time may also be supplied using the `from` parameter. If from is
+  # not `nil`, only transitions from that time onwards will be returned.
+  #
+  # Comparisons with `to` are exclusive. Comparisons with `from` are
+  # inclusive. If a transition falls precisely on `to`, it will be excluded.
+  # If a transition falls on `from`, it will be included.
   def transitions_up_to(to, from = T.unsafe(nil)); end
+
+  # Returns the observed offset from UTC in seconds at the given time. This
+  # includes adjustments made for daylight savings time.
   def utc_offset(time = T.unsafe(nil)); end
+
+  # Converts a time in UTC to the local time for the time zone.
+  #
+  # The result will be of type {TimeWithOffset} (if passed a `Time`),
+  # {DateTimeWithOffset} (if passed a `DateTime`) or {TimestampWithOffset} (if
+  # passed a {Timestamp}). {TimeWithOffset}, {DateTimeWithOffset} and
+  # {TimestampWithOffset} are subclasses of `Time`, `DateTime` and {Timestamp}
+  # that provide additional information about the local result.
+  #
+  # The UTC offset of the `utc_time` parameter is ignored (it is treated as a
+  # UTC time). Use the {to_local} method instead if the the UTC offset of the
+  # time needs to be taken into consideration.
   def utc_to_local(utc_time); end
 
   private
 
+  # Raises an {UnknownTimezone} exception.
   def raise_unknown_timezone; end
 
   class << self
+    # Loads a {Timezone} from the serialized representation returned by {_dump}.
+    # This is method is called when using `Marshal.load` or `Marshal.restore`
+    # to restore a serialized {Timezone}.
     def _load(data); end
+
+    # Returns an `Array` of all the available time zones.
+    #
+    # {TimezoneProxy} instances are returned to avoid the overhead of loading
+    # time zone data until it is first needed.
     def all; end
+
+    # Returns an `Array` of the identifiers of all the time zones that are
+    # observed by at least one {Country}. This is not the complete set of time
+    # zone identifiers as some are not country specific (e.g. `'Etc/GMT'`).
+    #
+    # {TimezoneProxy} instances are returned to avoid the overhead of loading
+    # time zone data until it is first needed.
+    #
+    # zones that are observed by at least one {Country}.
     def all_country_zone_identifiers; end
+
+    # Returns an `Array` of all the time zones that are observed by at least
+    # one {Country}. This is not the complete set of time zones as some are
+    # not country specific (e.g. `'Etc/GMT'`).
+    #
+    # {TimezoneProxy} instances are returned to avoid the overhead of loading
+    # time zone data until it is first needed.
     def all_country_zones; end
+
+    # time zones that are defined by offsets and transitions.
     def all_data_zone_identifiers; end
+
+    # Returns an `Array` of all the available time zones that are
+    # defined by offsets and transitions.
+    #
+    # {TimezoneProxy} instances are returned to avoid the overhead of loading
+    # time zone data until it is first needed.
     def all_data_zones; end
+
     def all_identifiers; end
+
+    # time zones that are defined as links to / aliases for other time zones.
     def all_linked_zone_identifiers; end
+
+    # Returns an `Array` of all the available time zones that are
+    # defined as links to / aliases for other time zones.
+    #
+    # {TimezoneProxy} instances are returned to avoid the overhead of loading
+    # time zone data until it is first needed.
     def all_linked_zones; end
+
+    # Returns the default value of the optional `dst` parameter of the
+    # {local_time}, {local_datetime} and {local_timestamp}, {local_to_utc}
+    # and {period_for_local} methods (`nil`, `true` or `false`).
+    #
+    # {default_dst} defaults to `nil` unless changed with {default_dst=}.
     def default_dst; end
+
+    # Sets the default value of the optional `dst` parameter of the
+    # {local_datetime}, {local_time}, {local_timestamp}, {local_to_utc} and
+    # {period_for_local} methods. Can be set to `nil`, `true` or `false`.
     def default_dst=(value); end
+
+    # Returns a time zone by its IANA Time Zone Database identifier (e.g.
+    # `"Europe/London"` or `"America/Chicago"`). Call {all_identifiers} for a
+    # list of all the valid identifiers.
+    #
+    # The {get} method will return a subclass of {Timezone}, either a
+    # {DataTimezone} (for a time zone defined by rules that set out when
+    # transitions occur) or a {LinkedTimezone} (for a time zone that is just a
+    # link to or alias for a another time zone).
     def get(identifier); end
+
+    # Returns a proxy for the time zone with the given identifier. This allows
+    # loading of the time zone data to be deferred until it is first needed.
+    #
+    # The identifier will not be validated. If an invalid identifier is
+    # specified, no exception will be raised until the proxy is used.
     def get_proxy(identifier); end
 
     private
@@ -739,90 +2358,391 @@ end
 TZInfo::TimezoneDefinition = TZInfo::Format1::TimezoneDefinition
 TZInfo::TimezoneIndexDefinition = TZInfo::Format1::TimezoneIndexDefinition
 
+# Represents an offset from UTC observed by a time zone.
 class TZInfo::TimezoneOffset
+  # Initializes a new {TimezoneOffset}.
+  #
+  # {TimezoneOffset} instances should not normally be constructed manually.
+  #
+  # The passed in `abbreviation` instance will be frozen.
   def initialize(base_utc_offset, std_offset, abbreviation); end
 
+  # Determines if this {TimezoneOffset} is equal to another instance.
   def ==(toi); end
+
+  # The abbreviation that identifies this offset. For example GMT
+  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
   def abbr; end
+
+  # The abbreviation that identifies this offset. For example GMT
+  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
   def abbreviation; end
+
+  # Returns the base offset from UTC in seconds (`observed_utc_offset -
+  # std_offset`). This does not include any adjustment made for daylight
+  # savings time and will typically remain constant throughout the year.
+  #
+  # To obtain the currently observed offset from UTC, including the effect of
+  # daylight savings time, use {observed_utc_offset} instead.
+  #
+  # If you require accurate {base_utc_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of
+  # {base_utc_offset} has to be derived from changes to the observed UTC
+  # offset and DST status since it is not included in zoneinfo files.
   def base_utc_offset; end
+
+  # Determines if daylight savings is in effect (i.e. if {std_offset} is
+  # non-zero).
   def dst?; end
+
+  # Determines if this {TimezoneOffset} is equal to another instance.
   def eql?(toi); end
+
   def hash; end
   def inspect; end
+
+  # Returns the observed offset from UTC in seconds (`base_utc_offset +
+  # std_offset`). This includes adjustments made for daylight savings time.
   def observed_utc_offset; end
+
+  # Returns the offset from the time zone's standard time in seconds
+  # (`observed_utc_offset - base_utc_offset`). Zero when daylight savings time
+  # is not in effect. Non-zero (usually 3600 = 1 hour) if daylight savings is
+  # being observed.
+  #
+  # If you require accurate {std_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of {std_offset}
+  # has to be derived from changes to the observed UTC offset and DST status
+  # since it is not included in zoneinfo files.
   def std_offset; end
+
+  # Returns the base offset from UTC in seconds (`observed_utc_offset -
+  # std_offset`). This does not include any adjustment made for daylight
+  # savings time and will typically remain constant throughout the year.
+  #
+  # To obtain the currently observed offset from UTC, including the effect of
+  # daylight savings time, use {observed_utc_offset} instead.
+  #
+  # If you require accurate {base_utc_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of
+  # {base_utc_offset} has to be derived from changes to the observed UTC
+  # offset and DST status since it is not included in zoneinfo files.
   def utc_offset; end
+
+  # Returns the observed offset from UTC in seconds (`base_utc_offset +
+  # std_offset`). This includes adjustments made for daylight savings time.
   def utc_total_offset; end
 end
 
+# {TimezonePeriod} represents a period of time for a time zone where the same
+# offset from UTC applies. It provides access to the observed offset, time
+# zone abbreviation, start time and end time.
+#
+# The period of time can be unbounded at the start, end, or both the start
+# and end.
 class TZInfo::TimezonePeriod
+  # Initializes a {TimezonePeriod}.
   def initialize(offset); end
 
+  # The abbreviation that identifies this offset. For example GMT
+  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
   def abbr; end
+
+  # The abbreviation that identifies this offset. For example GMT
+  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
   def abbreviation; end
+
+  # Returns the base offset from UTC in seconds (`observed_utc_offset -
+  # std_offset`). This does not include any adjustment made for daylight
+  # savings time and will typically remain constant throughout the year.
+  #
+  # To obtain the currently observed offset from UTC, including the effect of
+  # daylight savings time, use {observed_utc_offset} instead.
+  #
+  # If you require accurate {base_utc_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of
+  # {base_utc_offset} has to be derived from changes to the observed UTC
+  # offset and DST status since it is not included in zoneinfo files.
   def base_utc_offset; end
+
+  # Determines if daylight savings is in effect (i.e. if {std_offset} is
+  # non-zero).
   def dst?; end
+
   def end_transition; end
+
+  # Returns the UTC end time of the period or `nil` if the end of the period
+  # is unbounded.
+  #
+  # The result is returned as a {Timestamp}. To obtain the end time as a
+  # `Time` or `DateTime`, call either {Timestamp#to_time to_time} or
+  # {Timestamp#to_datetime to_datetime} on the result.
   def ends_at; end
+
+  # Returns the local end time of the period or `nil` if the end of the period
+  # is unbounded.
+  #
+  # The result is returned as a {TimestampWithOffset}. To obtain the end time
+  # as a `Time` or `DateTime`, call either {TimestampWithOffset#to_time
+  # to_time} or {TimestampWithOffset#to_datetime to_datetime} on the result.
   def local_ends_at; end
+
+  # Returns the local start time of the period or `nil` if the start of the
+  # period is unbounded.
+  #
+  # The result is returned as a {TimestampWithOffset}. To obtain the start
+  # time as a `Time` or `DateTime`, call either {TimestampWithOffset#to_time
+  # to_time} or {TimestampWithOffset#to_datetime to_datetime} on the result.
   def local_starts_at; end
+
+  # Returns the observed offset from UTC in seconds (`base_utc_offset +
+  # std_offset`). This includes adjustments made for daylight savings time.
   def observed_utc_offset; end
+
   def offset; end
   def start_transition; end
+
+  # Returns the UTC start time of the period or `nil` if the start of the
+  # period is unbounded.
+  #
+  # The result is returned as a {Timestamp}. To obtain the start time as a
+  # `Time` or `DateTime`, call either {Timestamp#to_time to_time} or
+  # {Timestamp#to_datetime to_datetime} on the result.
   def starts_at; end
+
+  # Returns the offset from the time zone's standard time in seconds
+  # (`observed_utc_offset - base_utc_offset`). Zero when daylight savings time
+  # is not in effect. Non-zero (usually 3600 = 1 hour) if daylight savings is
+  # being observed.
+  #
+  # If you require accurate {std_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of {std_offset}
+  # has to be derived from changes to the observed UTC offset and DST status
+  # since it is not included in zoneinfo files.
   def std_offset; end
+
+  # Returns the base offset from UTC in seconds (`observed_utc_offset -
+  # std_offset`). This does not include any adjustment made for daylight
+  # savings time and will typically remain constant throughout the year.
+  #
+  # To obtain the currently observed offset from UTC, including the effect of
+  # daylight savings time, use {observed_utc_offset} instead.
+  #
+  # If you require accurate {base_utc_offset} values, you should install the
+  # tzinfo-data gem and set {DataSources::RubyDataSource} as the {DataSource}.
+  # When using {DataSources::ZoneinfoDataSource}, the value of
+  # {base_utc_offset} has to be derived from changes to the observed UTC
+  # offset and DST status since it is not included in zoneinfo files.
   def utc_offset; end
+
+  # Returns the observed offset from UTC in seconds (`base_utc_offset +
+  # std_offset`). This includes adjustments made for daylight savings time.
   def utc_total_offset; end
+
+  # The abbreviation that identifies this offset. For example GMT
+  # (Greenwich Mean Time) or BST (British Summer Time) for Europe/London.
   def zone_identifier; end
 
   private
 
+  # Raises a {NotImplementedError} to indicate that subclasses should override
+  # a method.
   def raise_not_implemented(method_name); end
+
   def timestamp(transition); end
   def timestamp_with_offset(transition); end
 end
 
+# A proxy class standing in for a {Timezone} with a given identifier.
+# {TimezoneProxy} inherits from {Timezone} and can be treated identically to
+# {Timezone} instances loaded with {Timezone.get}.
+#
+# {TimezoneProxy} instances are used to avoid the performance overhead of
+# loading time zone data into memory, for example, by {Timezone.all}.
+#
+# The first time an attempt is made to access the data for the time zone, the
+# real {Timezone} will be loaded is loaded. If the proxy's identifier was not
+# valid, then an exception will be raised at this point.
 class TZInfo::TimezoneProxy < ::TZInfo::Timezone
+  # Initializes a new {TimezoneProxy}.
+  #
+  # The `identifier` parameter is not checked when initializing the proxy. It
+  # will be validated when the real {Timezone} instance is loaded.
   def initialize(identifier); end
 
+  # Returns a serialized representation of this {TimezoneProxy}. This method
+  # is called when using `Marshal.dump` with an instance of {TimezoneProxy}.
   def _dump(limit); end
+
+  # Returns the canonical {Timezone} instance for this {Timezone}.
+  #
+  # The IANA Time Zone database contains two types of definition: Zones and
+  # Links. Zones are defined by rules that set out when transitions occur.
+  # Links are just references to fully defined Zone, creating an alias for
+  # that Zone.
+  #
+  # Links are commonly used where a time zone has been renamed in a release of
+  # the Time Zone database. For example, the US/Eastern Zone was renamed as
+  # America/New_York. A US/Eastern Link was added in its place, linking to
+  # (and creating an alias for) America/New_York.
+  #
+  # Links are also used for time zones that are currently identical to a full
+  # Zone, but that are administered separately. For example, Europe/Vatican is
+  # a Link to (and alias for) Europe/Rome.
+  #
+  # For a full Zone (implemented by {DataTimezone}), {canonical_zone} returns
+  # self.
+  #
+  # For a Link (implemented by {LinkedTimezone}), {canonical_zone} returns a
+  # {Timezone} instance representing the full Zone that the link targets.
+  #
+  # TZInfo can be used with different data sources (see the documentation for
+  # {TZInfo::DataSource}). Some DataSource implementations may not support
+  # distinguishing between full Zones and Links and will treat all time zones
+  # as full Zones. In this case, {canonical_zone} will always return `self`.
+  #
+  # There are two built-in DataSource implementations.
+  # {DataSources::RubyDataSource} (which will be used if the tzinfo-data gem
+  # is available) supports Link zones. {DataSources::ZoneinfoDataSource}
+  # returns Link zones as if they were full Zones. If the {canonical_zone} or
+  # {canonical_identifier} methods are needed, the tzinfo-data gem should be
+  # installed.
+  #
+  # The {TZInfo::DataSource.get} method can be used to check which DataSource
+  # implementation is being used.
   def canonical_zone; end
+
   def identifier; end
+
+  # Returns the {TimezonePeriod} that is valid at a given time.
+  #
+  # Unlike {period_for_local} and {period_for_utc}, the UTC offset of the
+  # `time` parameter is taken into consideration.
   def period_for(time); end
+
+  # Returns the set of {TimezonePeriod}s that are valid for the given
+  # local time as an `Array`.
+  #
+  # The UTC offset of the `local_time` parameter is ignored (it is treated as
+  # a time in the time zone represented by `self`).
+  #
+  # This will typically return an `Array` containing a single
+  # {TimezonePeriod}. More than one {TimezonePeriod} will be returned when the
+  # local time is ambiguous (for example, when daylight savings time ends). An
+  # empty `Array` will be returned when the local time is not valid (for
+  # example, when daylight savings time begins).
+  #
+  # To obtain just a single {TimezonePeriod} in all cases, use
+  # {period_for_local} instead and specify how ambiguities should be resolved.
   def periods_for_local(local_time); end
+
+  # Returns an `Array` of {TimezoneTransition} instances representing the
+  # times where the UTC offset of the timezone changes.
+  #
+  # Transitions are returned up to a given time (`to`).
+  #
+  # A from time may also be supplied using the `from` parameter. If from is
+  # not `nil`, only transitions from that time onwards will be returned.
+  #
+  # Comparisons with `to` are exclusive. Comparisons with `from` are
+  # inclusive. If a transition falls precisely on `to`, it will be excluded.
+  # If a transition falls on `from`, it will be included.
   def transitions_up_to(to, from = T.unsafe(nil)); end
 
   private
 
+  # Returns the real {Timezone} instance being proxied.
+  #
+  # The real {Timezone} is loaded using {Timezone.get} on the first access.
   def real_timezone; end
 
   class << self
+    # Loads a {TimezoneProxy} from the serialized representation returned by
+    # {_dump}. This is method is called when using `Marshal.load` or
+    # `Marshal.restore` to restore a serialized {Timezone}.
     def _load(data); end
   end
 end
 
+# Represents a transition from one observed UTC offset ({TimezoneOffset} to
+# another for a time zone.
 class TZInfo::TimezoneTransition
+  # Initializes a new {TimezoneTransition}.
+  #
+  # {TimezoneTransition} instances should not normally be constructed
+  # manually.
   def initialize(offset, previous_offset, timestamp_value); end
 
+  # Determines if this {TimezoneTransition} is equal to another instance.
   def ==(tti); end
+
+  # Returns a {Timestamp} instance representing the UTC time when this
+  # transition occurs.
+  #
+  # To obtain the result as a `Time` or `DateTime`, call either
+  # {Timestamp#to_time to_time} or {Timestamp#to_datetime to_datetime} on the
+  # {Timestamp} instance that is returned.
   def at; end
+
+  # Determines if this {TimezoneTransition} is equal to another instance.
   def eql?(tti); end
+
   def hash; end
+
+  # Returns a {TimestampWithOffset} instance representing the local time when
+  # this transition causes the previous observance to end (calculated from
+  # {at} using {previous_offset}).
+  #
+  # To obtain the result as a `Time` or `DateTime`, call either
+  # {TimestampWithOffset#to_time to_time} or {TimestampWithOffset#to_datetime
+  # to_datetime} on the {TimestampWithOffset} instance that is returned.
   def local_end_at; end
+
+  # Returns a {TimestampWithOffset} instance representing the local time when
+  # this transition causes the next observance to start (calculated from {at}
+  # using {offset}).
+  #
+  # To obtain the result as a `Time` or `DateTime`, call either
+  # {TimestampWithOffset#to_time to_time} or {TimestampWithOffset#to_datetime
+  # to_datetime} on the {TimestampWithOffset} instance that is returned.
   def local_start_at; end
+
   def offset; end
   def previous_offset; end
+
+  # When this transition occurs as an `Integer` number of seconds since
+  # 1970-01-01 00:00:00 UTC ignoring leap seconds (i.e. each day is treated as
+  # if it were 86,400 seconds long). Equivalent to the result of calling the
+  # {Timestamp#value value} method on the {Timestamp} returned by {at}.
   def timestamp_value; end
 end
 
+# Base class for rules definining the transition between standard and daylight
+# savings time.
 class TZInfo::TransitionRule
+  # Initializes a new {TransitionRule}.
   def initialize(transition_at); end
 
+  # Determines if this {TransitionRule} is equal to another instance.
   def ==(r); end
+
+  # Calculates the time of the transition from a given offset on a given year.
   def at(offset, year); end
+
+  # Determines if this {TransitionRule} is equal to another instance.
   def eql?(r); end
+
   def hash; end
+
+  # Returns the number of seconds after midnight local time on the day
+  # identified by the rule at which the transition occurs. Can be negative to
+  # denote a time on the prior day. Can be greater than or equal to 86,400 to
+  # denote a time of the following day.
   def transition_at; end
 
   protected
@@ -830,29 +2750,76 @@ class TZInfo::TransitionRule
   def hash_args; end
 end
 
+# Represents a period of time in a time zone where the same offset from UTC
+# applies. The period of time is bounded at at least one end, either having a
+# start transition, end transition or both start and end transitions.
 class TZInfo::TransitionsTimezonePeriod < ::TZInfo::TimezonePeriod
+  # Initializes a {TransitionsTimezonePeriod}.
+  #
+  # At least one of `start_transition` and `end_transition` must be specified.
   def initialize(start_transition, end_transition); end
 
+  # Determines if this {TransitionsTimezonePeriod} is equal to another
+  # instance.
   def ==(p); end
+
   def end_transition; end
+
+  # Determines if this {TransitionsTimezonePeriod} is equal to another
+  # instance.
   def eql?(p); end
+
   def hash; end
   def inspect; end
   def start_transition; end
 end
 
+# An implementation of {StringDeduper} using the `String#-@` method where
+# that method performs deduplication (Ruby 2.5 and later).
+#
+# Note that this is slightly different to the plain {StringDeduper}
+# implementation. In this implementation, frozen literal strings are already
+# in the pool and are candidates for being returned, even when passed
+# another equal frozen non-literal string. {StringDeduper} will always
+# return frozen strings.
+#
+# There are also differences in encoding handling. This implementation will
+# treat strings with different encodings as different strings.
+# {StringDeduper} will treat strings with the compatible encodings as the
+# same string.
 class TZInfo::UnaryMinusGlobalStringDeduper
   def dedupe(string); end
 end
 
+# {UnknownTimezone} is raised when calling methods on an instance of
+# {Timezone} that was created directly. To obtain {Timezone} instances the
+# {Timezone.get} method should be used instead.
 class TZInfo::UnknownTimezone < ::StandardError; end
+
+# Object#untaint is deprecated in Ruby >= 2.7 and will be removed in 3.2.
+# UntaintExt adds a refinement to make Object#untaint a no-op and avoid the
+# warning.
 module TZInfo::UntaintExt; end
+
+# The TZInfo version number.
 TZInfo::VERSION = T.let(T.unsafe(nil), String)
 
+# The {WithOffset} module is included in {TimeWithOffset},
+# {DateTimeWithOffset} and {TimestampWithOffset}. It provides an override for
+# the {strftime} method that handles expanding the `%Z` directive according to
+# the {TimezoneOffset#abbreviation abbreviation} of the {TimezoneOffset}
+# associated with a local time.
 module TZInfo::WithOffset
+  # Overrides the `Time`, `DateTime` or {Timestamp} version of `strftime`,
+  # replacing `%Z` with the {TimezoneOffset#abbreviation abbreviation} of the
+  # associated {TimezoneOffset}. If there is no associated offset, `%Z` is
+  # expanded by the base class instead.
+  #
+  # All the format directives handled by the base class are supported.
   def strftime(format); end
 
   protected
 
+  # Performs a calculation if there is an associated {TimezoneOffset}.
   def if_timezone_offset(result = T.unsafe(nil)); end
 end

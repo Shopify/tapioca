@@ -8,6 +8,7 @@ class Redis
   include ::MonitorMixin
   include ::ActiveSupport::Cache::ConnectionPoolLike
 
+  # Create a new client instance
   def initialize(options = T.unsafe(nil)); end
 
   def _bpop(cmd, args, &blk); end
@@ -15,209 +16,668 @@ class Redis
   def _eval(cmd, args); end
   def _exists(*keys); end
   def _scan(command, cursor, args, match: T.unsafe(nil), count: T.unsafe(nil), &block); end
+
+  # Append a value to a key.
   def append(key, value); end
+
+  # Sends `ASKING` command to random node and returns its reply.
   def asking; end
+
+  # Authenticate to the server.
   def auth(password); end
+
+  # Asynchronously rewrite the append-only file.
   def bgrewriteaof; end
+
+  # Asynchronously save the dataset to disk.
   def bgsave; end
+
+  # Count the number of set bits in a range of the string value stored at key.
   def bitcount(key, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Perform a bitwise operation between strings and store the resulting string in a key.
   def bitop(operation, destkey, *keys); end
+
+  # Return the position of the first bit set to 1 or 0 in a string.
   def bitpos(key, bit, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Remove and get the first element in a list, or block until one is available.
   def blpop(*args); end
+
+  # Remove and get the last element in a list, or block until one is available.
   def brpop(*args); end
+
+  # Pop a value from a list, push it to another list and return it; or block
+  # until one is available.
   def brpoplpush(source, destination, deprecated_timeout = T.unsafe(nil), timeout: T.unsafe(nil)); end
+
+  # Removes and returns up to count members with the highest scores in the sorted set stored at keys,
+  # or block until one is available.
   def bzpopmax(*args); end
+
+  # Removes and returns up to count members with the lowest scores in the sorted set stored at keys,
+  # or block until one is available.
   def bzpopmin(*args); end
+
+  # Sends a command to Redis and returns its reply.
+  #
+  # Replies are converted to Ruby objects according to the RESP protocol, so
+  # you can expect a Ruby array, integer or nil when Redis sends one. Higher
+  # level transformations, such as converting an array of pairs into a Ruby
+  # hash, are up to consumers.
+  #
+  # Redis error replies are raised as Ruby exceptions.
   def call(*command); end
+
+  # Manage client connections.
   def client(subcommand = T.unsafe(nil), *args); end
+
+  # Disconnect the client as quickly and silently as possible.
   def close; end
+
+  # Sends `CLUSTER *` command to random node and returns its reply.
   def cluster(subcommand, *args); end
+
+  # Sends all commands in the queue.
+  #
+  # See http://redis.io/topics/pipelining for more details.
   def commit; end
+
+  # Get or set server configuration parameters.
   def config(action, *args); end
+
+  # Test whether or not the client is connected
   def connected?; end
+
   def connection; end
+
+  # Return the number of keys in the selected database.
   def dbsize; end
+
   def debug(*args); end
+
+  # Decrement the integer value of a key by one.
   def decr(key); end
+
+  # Decrement the integer value of a key by the given number.
   def decrby(key, decrement); end
+
+  # Delete one or more keys.
   def del(*keys); end
+
+  # Discard all commands issued after MULTI.
+  #
+  # Only call this method when `#multi` was called **without** a block.
   def discard; end
+
+  # Disconnect the client as quickly and silently as possible.
   def disconnect!; end
+
+  # Return a serialized version of the value stored at a key.
   def dump(key); end
+
   def dup; end
+
+  # Echo the given string.
   def echo(value); end
+
+  # Evaluate Lua script.
   def eval(*args); end
+
+  # Evaluate Lua script by its SHA.
   def evalsha(*args); end
+
+  # Execute all commands issued after MULTI.
+  #
+  # Only call this method when `#multi` was called **without** a block.
   def exec; end
+
+  # Determine how many of the keys exists.
   def exists(*keys); end
+
+  # Determine if any of the keys exists.
   def exists?(*keys); end
+
+  # Set a key's time to live in seconds.
   def expire(key, seconds); end
+
+  # Set the expiration for a key as a UNIX timestamp.
   def expireat(key, unix_time); end
+
+  # Remove all keys from all databases.
   def flushall(options = T.unsafe(nil)); end
+
+  # Remove all keys from the current database.
   def flushdb(options = T.unsafe(nil)); end
+
+  # Adds the specified geospatial items (latitude, longitude, name) to the specified key
   def geoadd(key, *member); end
+
+  # Returns the distance between two members of a geospatial index
   def geodist(key, member1, member2, unit = T.unsafe(nil)); end
+
+  # Returns geohash string representing position for specified members of the specified key.
   def geohash(key, member); end
+
+  # Returns longitude and latitude of members of a geospatial index
   def geopos(key, member); end
+
+  # Query a sorted set representing a geospatial index to fetch members matching a
+  # given maximum distance from a point
   def georadius(*args, **geoptions); end
+
+  # Query a sorted set representing a geospatial index to fetch members matching a
+  # given maximum distance from an already existing member
   def georadiusbymember(*args, **geoptions); end
+
+  # Get the value of a key.
   def get(key); end
+
+  # Returns the bit value at offset in the string value stored at key.
   def getbit(key, offset); end
+
+  # Get a substring of the string stored at a key.
   def getrange(key, start, stop); end
+
+  # Set the string value of a key and return its old value.
   def getset(key, value); end
+
+  # Delete one or more hash fields.
   def hdel(key, *fields); end
+
+  # Determine if a hash field exists.
   def hexists(key, field); end
+
+  # Get the value of a hash field.
   def hget(key, field); end
+
+  # Get all the fields and values in a hash.
   def hgetall(key); end
+
+  # Increment the integer value of a hash field by the given integer number.
   def hincrby(key, field, increment); end
+
+  # Increment the numeric value of a hash field by the given float number.
   def hincrbyfloat(key, field, increment); end
+
+  # Get all the fields in a hash.
   def hkeys(key); end
+
+  # Get the number of fields in a hash.
   def hlen(key); end
+
+  # Get the values of all the given hash fields.
   def hmget(key, *fields, &blk); end
+
+  # Set one or more hash values.
   def hmset(key, *attrs); end
+
+  # Scan a hash
   def hscan(key, cursor, **options); end
+
+  # Scan a hash
   def hscan_each(key, **options, &block); end
+
+  # Set one or more hash values.
   def hset(key, *attrs); end
+
+  # Set the value of a hash field, only if the field does not exist.
   def hsetnx(key, field, value); end
+
+  # Get all the values in a hash.
   def hvals(key); end
+
   def id; end
+
+  # Increment the integer value of a key by one.
   def incr(key); end
+
+  # Increment the integer value of a key by the given integer number.
   def incrby(key, increment); end
+
+  # Increment the numeric value of a key by the given float number.
   def incrbyfloat(key, increment); end
+
+  # Get information and statistics about the server.
   def info(cmd = T.unsafe(nil)); end
+
   def inspect; end
+
+  # Find all keys matching the given pattern.
   def keys(pattern = T.unsafe(nil)); end
+
+  # Get the UNIX time stamp of the last successful save to disk.
   def lastsave; end
+
+  # Get an element from a list by its index.
   def lindex(key, index); end
+
+  # Insert an element before or after another element in a list.
   def linsert(key, where, pivot, value); end
+
+  # Get the length of a list.
   def llen(key); end
+
+  # Remove and get the first element in a list.
   def lpop(key); end
+
+  # Prepend one or more values to a list, creating the list if it doesn't exist
   def lpush(key, value); end
+
+  # Prepend a value to a list, only if the list exists.
   def lpushx(key, value); end
+
+  # Get a range of elements from a list.
   def lrange(key, start, stop); end
+
+  # Remove elements from a list.
   def lrem(key, count, value); end
+
+  # Set the value of an element in a list by its index.
   def lset(key, index, value); end
+
+  # Trim a list to the specified range.
   def ltrim(key, start, stop); end
+
+  # Get the values of all the given hash fields.
   def mapped_hmget(key, *fields); end
+
+  # Set one or more hash values.
   def mapped_hmset(key, hash); end
+
+  # Get the values of all the given keys.
   def mapped_mget(*keys); end
+
+  # Set one or more values.
   def mapped_mset(hash); end
+
+  # Set one or more values, only if none of the keys exist.
   def mapped_msetnx(hash); end
+
   def method_missing(command, *args); end
+
+  # Get the values of all the given keys.
   def mget(*keys, &blk); end
+
+  # Transfer a key from the connected instance to another instance.
   def migrate(key, options); end
+
+  # Listen for all requests received by the server in real time.
+  #
+  # There is no way to interrupt this command.
   def monitor(&block); end
+
+  # Move a key to another database.
   def move(key, db); end
+
+  # Set one or more values.
   def mset(*args); end
+
+  # Set one or more values, only if none of the keys exist.
   def msetnx(*args); end
+
+  # Mark the start of a transaction block.
+  #
+  # Passing a block is optional.
   def multi; end
+
   def object(*args); end
+
+  # Remove the expiration from a key.
   def persist(key); end
+
+  # Set a key's time to live in milliseconds.
   def pexpire(key, milliseconds); end
+
+  # Set the expiration for a key as number of milliseconds from UNIX Epoch.
   def pexpireat(key, ms_unix_time); end
+
+  # Add one or more members to a HyperLogLog structure.
   def pfadd(key, member); end
+
+  # Get the approximate cardinality of members added to HyperLogLog structure.
+  #
+  # If called with multiple keys, returns the approximate cardinality of the
+  # union of the HyperLogLogs contained in the keys.
   def pfcount(*keys); end
+
+  # Merge multiple HyperLogLog values into an unique value that will approximate the cardinality of the union of
+  # the observed Sets of the source HyperLogLog structures.
   def pfmerge(dest_key, *source_key); end
+
+  # Ping the server.
   def ping(message = T.unsafe(nil)); end
+
   def pipelined; end
+
+  # Set the time to live in milliseconds of a key.
   def psetex(key, ttl, value); end
+
+  # Listen for messages published to channels matching the given patterns.
   def psubscribe(*channels, &block); end
+
+  # Listen for messages published to channels matching the given patterns.
+  # Throw a timeout error if there is no messages for a timeout period.
   def psubscribe_with_timeout(timeout, *channels, &block); end
+
+  # Get the time to live (in milliseconds) for a key.
+  #
+  # In Redis 2.6 or older the command returns -1 if the key does not exist or if
+  # the key exist but has no associated expire.
+  #
+  # Starting with Redis 2.8 the return value in case of error changed:
+  #
+  # - The command returns -2 if the key does not exist.
+  # - The command returns -1 if the key exists but has no associated expire.
   def pttl(key); end
+
+  # Post a message to a channel.
   def publish(channel, message); end
+
+  # Inspect the state of the Pub/Sub subsystem.
+  # Possible subcommands: channels, numsub, numpat.
   def pubsub(subcommand, *args); end
+
+  # Stop listening for messages posted to channels matching the given patterns.
   def punsubscribe(*channels); end
+
+  # Queues a command for pipelining.
+  #
+  # Commands in the queue are executed with the Redis#commit method.
+  #
+  # See http://redis.io/topics/pipelining for more details.
   def queue(*command); end
+
+  # Close the connection.
   def quit; end
+
+  # Return a random key from the keyspace.
   def randomkey; end
+
+  # Rename a key. If the new key already exists it is overwritten.
   def rename(old_name, new_name); end
+
+  # Rename a key, only if the new key does not exist.
   def renamenx(old_name, new_name); end
+
+  # Create a key using the serialized value, previously obtained using DUMP.
   def restore(key, ttl, serialized_value, replace: T.unsafe(nil)); end
+
+  # Remove and get the last element in a list.
   def rpop(key); end
+
+  # Remove the last element in a list, append it to another list and return it.
   def rpoplpush(source, destination); end
+
+  # Append one or more values to a list, creating the list if it doesn't exist
   def rpush(key, value); end
+
+  # Append a value to a list, only if the list exists.
   def rpushx(key, value); end
+
+  # Add one or more members to a set.
   def sadd(key, member); end
+
+  # Synchronously save the dataset to disk.
   def save; end
+
+  # Scan the keyspace
   def scan(cursor, **options); end
+
+  # Scan the keyspace
   def scan_each(**options, &block); end
+
+  # Get the number of members in a set.
   def scard(key); end
+
+  # Control remote script registry.
   def script(subcommand, *args); end
+
+  # Subtract multiple sets.
   def sdiff(*keys); end
+
+  # Subtract multiple sets and store the resulting set in a key.
   def sdiffstore(destination, *keys); end
+
+  # Change the selected database for the current connection.
   def select(db); end
+
+  # Interact with the sentinel command (masters, master, slaves, failover)
   def sentinel(subcommand, *args); end
+
+  # Set the string value of a key.
   def set(key, value, ex: T.unsafe(nil), px: T.unsafe(nil), nx: T.unsafe(nil), xx: T.unsafe(nil), keepttl: T.unsafe(nil)); end
+
+  # Sets or clears the bit at offset in the string value stored at key.
   def setbit(key, offset, value); end
+
+  # Set the time to live in seconds of a key.
   def setex(key, ttl, value); end
+
+  # Set the value of a key, only if the key does not exist.
   def setnx(key, value); end
+
+  # Overwrite part of a string at key starting at the specified offset.
   def setrange(key, offset, value); end
+
+  # Synchronously save the dataset to disk and then shut down the server.
   def shutdown; end
+
+  # Intersect multiple sets.
   def sinter(*keys); end
+
+  # Intersect multiple sets and store the resulting set in a key.
   def sinterstore(destination, *keys); end
+
+  # Determine if a given value is a member of a set.
   def sismember(key, member); end
+
+  # Make the server a slave of another instance, or promote it as master.
   def slaveof(host, port); end
+
+  # Interact with the slowlog (get, len, reset)
   def slowlog(subcommand, length = T.unsafe(nil)); end
+
+  # Get all the members in a set.
   def smembers(key); end
+
+  # Move a member from one set to another.
   def smove(source, destination, member); end
+
+  # Sort the elements in a list, set or sorted set.
   def sort(key, by: T.unsafe(nil), limit: T.unsafe(nil), get: T.unsafe(nil), order: T.unsafe(nil), store: T.unsafe(nil)); end
+
+  # Remove and return one or more random member from a set.
   def spop(key, count = T.unsafe(nil)); end
+
+  # Get one or more random members from a set.
   def srandmember(key, count = T.unsafe(nil)); end
+
+  # Remove one or more members from a set.
   def srem(key, member); end
+
+  # Scan a set
   def sscan(key, cursor, **options); end
+
+  # Scan a set
   def sscan_each(key, **options, &block); end
+
+  # Get the length of the value stored in a key.
   def strlen(key); end
+
+  # Listen for messages published to the given channels.
   def subscribe(*channels, &block); end
+
+  # Listen for messages published to the given channels. Throw a timeout error
+  # if there is no messages for a timeout period.
   def subscribe_with_timeout(timeout, *channels, &block); end
+
   def subscribed?; end
+
+  # Add multiple sets.
   def sunion(*keys); end
+
+  # Add multiple sets and store the resulting set in a key.
   def sunionstore(destination, *keys); end
+
+  # Internal command used for replication.
   def sync; end
+
   def synchronize; end
+
+  # Return the server time.
   def time; end
+
+  # Get the time to live (in seconds) for a key.
+  #
+  # In Redis 2.6 or older the command returns -1 if the key does not exist or if
+  # the key exist but has no associated expire.
+  #
+  # Starting with Redis 2.8 the return value in case of error changed:
+  #
+  # - The command returns -2 if the key does not exist.
+  # - The command returns -1 if the key exists but has no associated expire.
   def ttl(key); end
+
+  # Determine the type stored at key.
   def type(key); end
+
+  # Unlink one or more keys.
   def unlink(*keys); end
+
+  # Stop listening for messages posted to the given channels.
   def unsubscribe(*channels); end
+
+  # Forget about all watched keys.
   def unwatch; end
+
+  # Watch the given keys to determine execution of the MULTI/EXEC block.
+  #
+  # Using a block is optional, but is necessary for thread-safety.
+  #
+  # An `#unwatch` is automatically issued if an exception is raised within the
+  # block that is a subclass of StandardError and is not a ConnectionError.
   def watch(*keys); end
+
+  # Run code with the client reconnecting
   def with_reconnect(val = T.unsafe(nil), &blk); end
+
+  # Run code without the client reconnecting
   def without_reconnect(&blk); end
+
+  # Removes one or multiple entries from the pending entries list of a stream consumer group.
   def xack(key, group, *ids); end
+
+  # Add new entry to the stream.
   def xadd(key, entry, approximate: T.unsafe(nil), maxlen: T.unsafe(nil), id: T.unsafe(nil)); end
+
+  # Changes the ownership of a pending entry
   def xclaim(key, group, consumer, min_idle_time, *ids, **opts); end
+
+  # Delete entries by entry ids.
   def xdel(key, *ids); end
+
+  # Manages the consumer group of the stream.
   def xgroup(subcommand, key, group, id_or_consumer = T.unsafe(nil), mkstream: T.unsafe(nil)); end
+
+  # Returns the stream information each subcommand.
   def xinfo(subcommand, key, group = T.unsafe(nil)); end
+
+  # Returns the number of entries inside a stream.
   def xlen(key); end
+
+  # Fetches not acknowledging pending entries
   def xpending(key, group, *args); end
+
+  # Fetches entries of the stream in ascending order.
   def xrange(key, start = T.unsafe(nil), range_end = T.unsafe(nil), count: T.unsafe(nil)); end
+
+  # Fetches entries from one or multiple streams. Optionally blocking.
   def xread(keys, ids, count: T.unsafe(nil), block: T.unsafe(nil)); end
+
+  # Fetches a subset of the entries from one or multiple streams related with the consumer group.
+  # Optionally blocking.
   def xreadgroup(group, consumer, keys, ids, count: T.unsafe(nil), block: T.unsafe(nil), noack: T.unsafe(nil)); end
+
+  # Fetches entries of the stream in descending order.
   def xrevrange(key, range_end = T.unsafe(nil), start = T.unsafe(nil), count: T.unsafe(nil)); end
+
+  # Trims older entries of the stream if needed.
   def xtrim(key, maxlen, approximate: T.unsafe(nil)); end
+
+  # Add one or more members to a sorted set, or update the score for members
+  # that already exist.
   def zadd(key, *args, nx: T.unsafe(nil), xx: T.unsafe(nil), ch: T.unsafe(nil), incr: T.unsafe(nil)); end
+
+  # Get the number of members in a sorted set.
   def zcard(key); end
+
+  # Count the members in a sorted set with scores within the given values.
   def zcount(key, min, max); end
+
+  # Increment the score of a member in a sorted set.
   def zincrby(key, increment, member); end
+
+  # Intersect multiple sorted sets and store the resulting sorted set in a new
+  # key.
   def zinterstore(destination, keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil)); end
+
+  # Count the members, with the same score in a sorted set, within the given lexicographical range.
   def zlexcount(key, min, max); end
+
+  # Removes and returns up to count members with the highest scores in the sorted set stored at key.
   def zpopmax(key, count = T.unsafe(nil)); end
+
+  # Removes and returns up to count members with the lowest scores in the sorted set stored at key.
   def zpopmin(key, count = T.unsafe(nil)); end
+
+  # Return a range of members in a sorted set, by index.
   def zrange(key, start, stop, withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
+
+  # Return a range of members with the same score in a sorted set, by lexicographical ordering
   def zrangebylex(key, min, max, limit: T.unsafe(nil)); end
+
+  # Return a range of members in a sorted set, by score.
   def zrangebyscore(key, min, max, withscores: T.unsafe(nil), with_scores: T.unsafe(nil), limit: T.unsafe(nil)); end
+
+  # Determine the index of a member in a sorted set.
   def zrank(key, member); end
+
+  # Remove one or more members from a sorted set.
   def zrem(key, member); end
+
+  # Remove all members in a sorted set within the given indexes.
   def zremrangebyrank(key, start, stop); end
+
+  # Remove all members in a sorted set within the given scores.
   def zremrangebyscore(key, min, max); end
+
+  # Return a range of members in a sorted set, by index, with scores ordered
+  # from high to low.
   def zrevrange(key, start, stop, withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
+
+  # Return a range of members with the same score in a sorted set, by reversed lexicographical ordering.
+  # Apart from the reversed ordering, #zrevrangebylex is similar to #zrangebylex.
   def zrevrangebylex(key, max, min, limit: T.unsafe(nil)); end
+
+  # Return a range of members in a sorted set, by score, with scores ordered
+  # from high to low.
   def zrevrangebyscore(key, max, min, withscores: T.unsafe(nil), with_scores: T.unsafe(nil), limit: T.unsafe(nil)); end
+
+  # Determine the index of a member in a sorted set, with scores ordered from
+  # high to low.
   def zrevrank(key, member); end
+
+  # Scan a sorted set
   def zscan(key, cursor, **options); end
+
+  # Scan a sorted set
   def zscan_each(key, **options, &block); end
+
+  # Get the score associated with the given member in a sorted set.
   def zscore(key, member); end
+
+  # Add multiple sorted sets and store the resulting sorted set in a new key.
   def zunionstore(destination, keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil)); end
 
   private
@@ -228,16 +688,31 @@ class Redis
 
   class << self
     def current; end
+
+    # Sets the attribute current
     def current=(_arg0); end
+
+    # Returns the value of attribute exists_returns_integer.
     def exists_returns_integer; end
+
     def exists_returns_integer=(value); end
   end
 end
 
+# Base error for connection related errors.
 class Redis::BaseConnectionError < ::Redis::BaseError; end
+
+# Base error for all redis-rb errors.
 class Redis::BaseError < ::RuntimeError; end
+
+# Commands returning 1 for true and 0 for false may be executed in a pipeline
+# where the method call will return nil. Propagate the nil instead of falsely
+# returning false.
 Redis::Boolify = T.let(T.unsafe(nil), Proc)
+
 Redis::BoolifySet = T.let(T.unsafe(nil), Proc)
+
+# Raised when connection to a Redis server cannot be made.
 class Redis::CannotConnectError < ::Redis::BaseConnectionError; end
 
 class Redis::Client
@@ -250,11 +725,17 @@ class Redis::Client
   def call_with_timeout(command, timeout, &blk); end
   def call_without_timeout(command, &blk); end
   def close; end
+
+  # Returns the value of attribute command_map.
   def command_map; end
+
   def connect; end
   def connect_timeout; end
   def connected?; end
+
+  # Returns the value of attribute connection.
   def connection; end
+
   def db; end
   def db=(db); end
   def disconnect; end
@@ -264,9 +745,16 @@ class Redis::Client
   def inherit_socket?; end
   def io; end
   def location; end
+
+  # Returns the value of attribute logger.
   def logger; end
+
+  # Sets the attribute logger
   def logger=(_arg0); end
+
+  # Returns the value of attribute options.
   def options; end
+
   def password; end
   def path; end
   def port; end
@@ -308,6 +796,7 @@ class Redis::Client::Connector::Sentinel < ::Redis::Client::Connector
   def sentinel_detect; end
 end
 
+# Defaults are also used for converting string keys to symbols.
 Redis::Client::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 class Redis::Cluster
@@ -320,8 +809,13 @@ class Redis::Cluster
   def call_without_timeout(command, &block); end
   def connected?; end
   def connection_info; end
+
+  # db feature is disabled in cluster mode
   def db; end
+
+  # db feature is disabled in cluster mode
   def db=(_db); end
+
   def disconnect; end
   def id; end
   def process(commands, &block); end
@@ -349,10 +843,12 @@ class Redis::Cluster
   def update_cluster_info!(node_key = T.unsafe(nil)); end
 end
 
+# Raised when cluster client can't select node.
 class Redis::Cluster::AmbiguousNodeError < ::Redis::BaseError
   def initialize(command); end
 end
 
+# Keep details about Redis commands for Redis Cluster Client.
 class Redis::Cluster::Command
   def initialize(details); end
 
@@ -369,12 +865,15 @@ class Redis::Cluster::Command
   def pick_details(details); end
 end
 
+# Raised when error occurs on any node of cluster.
 class Redis::Cluster::CommandErrorCollection < ::Redis::BaseError
   def initialize(errors, error_message = T.unsafe(nil)); end
 
+  # Returns the value of attribute errors.
   def errors; end
 end
 
+# Load details about Redis commands for Redis Cluster Client
 module Redis::Cluster::CommandLoader
   private
 
@@ -390,6 +889,7 @@ module Redis::Cluster::CommandLoader
   end
 end
 
+# Raised when commands in pipelining include cross slot keys.
 class Redis::Cluster::CrossSlotPipeliningError < ::Redis::BaseError
   def initialize(keys); end
 end
@@ -397,9 +897,11 @@ end
 module Redis::Cluster::KeySlotConverter
   private
 
+  # Convert key into slot.
   def convert(key); end
 
   class << self
+    # Convert key into slot.
     def convert(key); end
   end
 end
@@ -407,6 +909,7 @@ end
 Redis::Cluster::KeySlotConverter::HASH_SLOTS = T.let(T.unsafe(nil), Integer)
 Redis::Cluster::KeySlotConverter::XMODEM_CRC16_LOOKUP = T.let(T.unsafe(nil), Array)
 
+# Keep client list of node for Redis Cluster Client
 class Redis::Cluster::Node
   include ::Enumerable
 
@@ -432,6 +935,9 @@ end
 Redis::Cluster::Node::ROLE_SLAVE = T.let(T.unsafe(nil), String)
 class Redis::Cluster::Node::ReloadNeeded < ::StandardError; end
 
+# Node key's format is `<ip>:<port>`.
+# It is different from node id.
+# Node id is internal identifying code in Redis Cluster.
 module Redis::Cluster::NodeKey
   private
 
@@ -450,6 +956,7 @@ end
 
 Redis::Cluster::NodeKey::DELIMITER = T.let(T.unsafe(nil), String)
 
+# Load and hashify node info for Redis Cluster Client
 module Redis::Cluster::NodeLoader
   private
 
@@ -465,6 +972,7 @@ module Redis::Cluster::NodeLoader
   end
 end
 
+# Keep options for Redis Cluster Client
 class Redis::Cluster::Option
   def initialize(options); end
 
@@ -475,7 +983,11 @@ class Redis::Cluster::Option
 
   private
 
+  # Redis cluster node returns only host and port information.
+  # So we should complement additional information such as:
+  # scheme, password and so on.
   def add_common_node_option_if_needed(options, node_opts, key); end
+
   def build_node_options(addrs); end
   def parse_node_addr(addr); end
   def parse_node_option(addr); end
@@ -486,10 +998,13 @@ Redis::Cluster::Option::DEFAULT_SCHEME = T.let(T.unsafe(nil), String)
 Redis::Cluster::Option::SECURE_SCHEME = T.let(T.unsafe(nil), String)
 Redis::Cluster::Option::VALID_SCHEMES = T.let(T.unsafe(nil), Array)
 
+# Raised when client connected to redis as cluster mode
+# and some cluster subcommands were called.
 class Redis::Cluster::OrchestrationCommandNotSupported < ::Redis::BaseError
   def initialize(command, subcommand = T.unsafe(nil)); end
 end
 
+# Keep slot and node key map for Redis Cluster Client
 class Redis::Cluster::Slot
   def initialize(available_slots, node_flags = T.unsafe(nil), with_replica = T.unsafe(nil)); end
 
@@ -500,7 +1015,9 @@ class Redis::Cluster::Slot
 
   private
 
+  # available_slots is mapping of node_key to list of slot ranges
   def build_slot_node_key_map(available_slots); end
+
   def master?(node_key); end
   def replica_disabled?; end
   def slave?(node_key); end
@@ -508,6 +1025,7 @@ end
 
 Redis::Cluster::Slot::ROLE_SLAVE = T.let(T.unsafe(nil), String)
 
+# Load and hashify slot info for Redis Cluster Client
 module Redis::Cluster::SlotLoader
   private
 
@@ -527,10 +1045,15 @@ module Redis::Cluster::SlotLoader
   end
 end
 
+# Raised by the client when command execution returns an error reply.
 class Redis::CommandError < ::Redis::BaseError; end
 
 module Redis::Connection
   class << self
+    # Store a list of loaded connection drivers in the Connection module.
+    # Redis::Client uses the last required driver by default, and will be aware
+    # of the loaded connection drivers if the user chooses to override the
+    # default connection driver.
     def drivers; end
   end
 end
@@ -618,6 +1141,7 @@ class Redis::Connection::UNIXSocket < ::Socket
   end
 end
 
+# Raised when connection to a Redis server is lost.
 class Redis::ConnectionError < ::Redis::BaseConnectionError; end
 
 class Redis::Distributed
@@ -630,152 +1154,444 @@ class Redis::Distributed
   def _bpop(cmd, args); end
   def _eval(cmd, args); end
   def add_node(options); end
+
+  # Append a value to a key.
   def append(key, value); end
+
+  # Asynchronously save the dataset to disk.
   def bgsave; end
+
+  # Count the number of set bits in a range of the string value stored at key.
   def bitcount(key, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Perform a bitwise operation between strings and store the resulting string in a key.
   def bitop(operation, destkey, *keys); end
+
+  # Return the position of the first bit set to 1 or 0 in a string.
   def bitpos(key, bit, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Remove and get the first element in a list, or block until one is
+  # available.
   def blpop(*args); end
+
+  # Remove and get the last element in a list, or block until one is
+  # available.
   def brpop(*args); end
+
+  # Pop a value from a list, push it to another list and return it; or block
+  # until one is available.
   def brpoplpush(source, destination, deprecated_timeout = T.unsafe(nil), **options); end
+
+  # Return the number of keys in the selected database.
   def dbsize; end
+
+  # Decrement the integer value of a key by one.
   def decr(key); end
+
+  # Decrement the integer value of a key by the given number.
   def decrby(key, decrement); end
+
+  # Delete a key.
   def del(*args); end
+
+  # Discard all commands issued after MULTI.
   def discard; end
+
+  # Return a serialized version of the value stored at a key.
   def dump(key); end
+
   def dup; end
+
+  # Echo the given string.
   def echo(value); end
+
+  # Evaluate Lua script.
   def eval(*args); end
+
+  # Evaluate Lua script by its SHA.
   def evalsha(*args); end
+
+  # Execute all commands issued after MULTI.
   def exec; end
+
+  # Determine if a key exists.
   def exists(*args); end
+
+  # Determine if any of the keys exists.
   def exists?(*args); end
+
+  # Set a key's time to live in seconds.
   def expire(key, seconds); end
+
+  # Set the expiration for a key as a UNIX timestamp.
   def expireat(key, unix_time); end
+
+  # Remove all keys from all databases.
   def flushall; end
+
+  # Remove all keys from the current database.
   def flushdb; end
+
+  # Get the value of a key.
   def get(key); end
+
+  # Returns the bit value at offset in the string value stored at key.
   def getbit(key, offset); end
+
+  # Get a substring of the string stored at a key.
   def getrange(key, start, stop); end
+
+  # Set the string value of a key and return its old value.
   def getset(key, value); end
+
+  # Delete one or more hash fields.
   def hdel(key, *fields); end
+
+  # Determine if a hash field exists.
   def hexists(key, field); end
+
+  # Get the value of a hash field.
   def hget(key, field); end
+
+  # Get all the fields and values in a hash.
   def hgetall(key); end
+
+  # Increment the integer value of a hash field by the given integer number.
   def hincrby(key, field, increment); end
+
+  # Increment the numeric value of a hash field by the given float number.
   def hincrbyfloat(key, field, increment); end
+
+  # Get all the fields in a hash.
   def hkeys(key); end
+
+  # Get the number of fields in a hash.
   def hlen(key); end
+
+  # Get the values of all the given hash fields.
   def hmget(key, *fields); end
+
+  # Set multiple hash fields to multiple values.
   def hmset(key, *attrs); end
+
+  # Set multiple hash fields to multiple values.
   def hset(key, *attrs); end
+
+  # Set the value of a hash field, only if the field does not exist.
   def hsetnx(key, field, value); end
+
+  # Get all the values in a hash.
   def hvals(key); end
+
+  # Increment the integer value of a key by one.
   def incr(key); end
+
+  # Increment the integer value of a key by the given integer number.
   def incrby(key, increment); end
+
+  # Increment the numeric value of a key by the given float number.
   def incrbyfloat(key, increment); end
+
+  # Get information and statistics about the server.
   def info(cmd = T.unsafe(nil)); end
+
   def inspect; end
+
+  # Find all keys matching the given pattern.
   def keys(glob = T.unsafe(nil)); end
+
+  # Get the UNIX time stamp of the last successful save to disk.
   def lastsave; end
+
+  # Get an element from a list by its index.
   def lindex(key, index); end
+
+  # Insert an element before or after another element in a list.
   def linsert(key, where, pivot, value); end
+
+  # Get the length of a list.
   def llen(key); end
+
+  # Remove and get the first element in a list.
   def lpop(key); end
+
+  # Prepend one or more values to a list.
   def lpush(key, value); end
+
+  # Prepend a value to a list, only if the list exists.
   def lpushx(key, value); end
+
+  # Get a range of elements from a list.
   def lrange(key, start, stop); end
+
+  # Remove elements from a list.
   def lrem(key, count, value); end
+
+  # Set the value of an element in a list by its index.
   def lset(key, index, value); end
+
+  # Trim a list to the specified range.
   def ltrim(key, start, stop); end
+
   def mapped_hmget(key, *fields); end
   def mapped_hmset(key, hash); end
+
+  # Get the values of all the given keys as a Hash.
   def mapped_mget(*keys); end
+
   def mapped_mset(_hash); end
   def mapped_msetnx(_hash); end
+
+  # Get the values of all the given keys as an Array.
   def mget(*keys); end
+
+  # Transfer a key from the connected instance to another instance.
   def migrate(_key, _options); end
+
+  # Listen for all requests received by the server in real time.
   def monitor; end
+
+  # Move a key to another database.
   def move(key, db); end
+
+  # Set multiple keys to multiple values.
   def mset(*_args); end
+
+  # Set multiple keys to multiple values, only if none of the keys exist.
   def msetnx(*_args); end
+
+  # Mark the start of a transaction block.
   def multi(&block); end
+
   def node_for(key); end
   def nodes; end
+
+  # Remove the expiration from a key.
   def persist(key); end
+
+  # Set a key's time to live in milliseconds.
   def pexpire(key, milliseconds); end
+
+  # Set the expiration for a key as number of milliseconds from UNIX Epoch.
   def pexpireat(key, ms_unix_time); end
+
+  # Add one or more members to a HyperLogLog structure.
   def pfadd(key, member); end
+
+  # Get the approximate cardinality of members added to HyperLogLog structure.
   def pfcount(*keys); end
+
+  # Merge multiple HyperLogLog values into an unique value that will approximate the cardinality of the union of
+  # the observed Sets of the source HyperLogLog structures.
   def pfmerge(dest_key, *source_key); end
+
+  # Ping the server.
   def ping; end
+
   def pipelined; end
+
+  # Set the time to live in milliseconds of a key.
   def psetex(key, ttl, value); end
+
+  # Listen for messages published to channels matching the given patterns.
   def psubscribe(*channels, &block); end
+
+  # Get the time to live (in milliseconds) for a key.
   def pttl(key); end
+
+  # Post a message to a channel.
   def publish(channel, message); end
+
+  # Stop listening for messages posted to channels matching the given
+  # patterns.
   def punsubscribe(*channels); end
+
+  # Close the connection.
   def quit; end
+
+  # Return a random key from the keyspace.
   def randomkey; end
+
+  # Rename a key.
   def rename(old_name, new_name); end
+
+  # Rename a key, only if the new key does not exist.
   def renamenx(old_name, new_name); end
+
+  # Create a key using the serialized value, previously obtained using DUMP.
   def restore(key, ttl, serialized_value, **options); end
+
+  # Returns the value of attribute ring.
   def ring; end
+
+  # Remove and get the last element in a list.
   def rpop(key); end
+
+  # Remove the last element in a list, append it to another list and return
+  # it.
   def rpoplpush(source, destination); end
+
+  # Append one or more values to a list.
   def rpush(key, value); end
+
+  # Append a value to a list, only if the list exists.
   def rpushx(key, value); end
+
+  # Add one or more members to a set.
   def sadd(key, member); end
+
+  # Synchronously save the dataset to disk.
   def save; end
+
+  # Get the number of members in a set.
   def scard(key); end
+
+  # Control remote script registry.
   def script(subcommand, *args); end
+
+  # Subtract multiple sets.
   def sdiff(*keys); end
+
+  # Subtract multiple sets and store the resulting set in a key.
   def sdiffstore(destination, *keys); end
+
+  # Change the selected database for the current connection.
   def select(db); end
+
+  # Set the string value of a key.
   def set(key, value, **options); end
+
+  # Sets or clears the bit at offset in the string value stored at key.
   def setbit(key, offset, value); end
+
+  # Set the time to live in seconds of a key.
   def setex(key, ttl, value); end
+
+  # Set the value of a key, only if the key does not exist.
   def setnx(key, value); end
+
+  # Overwrite part of a string at key starting at the specified offset.
   def setrange(key, offset, value); end
+
+  # Intersect multiple sets.
   def sinter(*keys); end
+
+  # Intersect multiple sets and store the resulting set in a key.
   def sinterstore(destination, *keys); end
+
+  # Determine if a given value is a member of a set.
   def sismember(key, member); end
+
+  # Get all the members in a set.
   def smembers(key); end
+
+  # Move a member from one set to another.
   def smove(source, destination, member); end
+
+  # Sort the elements in a list, set or sorted set.
   def sort(key, **options); end
+
+  # Remove and return a random member from a set.
   def spop(key, count = T.unsafe(nil)); end
+
+  # Get a random member from a set.
   def srandmember(key, count = T.unsafe(nil)); end
+
+  # Remove one or more members from a set.
   def srem(key, member); end
+
+  # Scan a set
   def sscan(key, cursor, **options); end
+
+  # Scan a set and return an enumerator
   def sscan_each(key, **options, &block); end
+
+  # Get the length of the value stored in a key.
   def strlen(key); end
+
+  # Listen for messages published to the given channels.
   def subscribe(channel, *channels, &block); end
+
   def subscribed?; end
+
+  # Add multiple sets.
   def sunion(*keys); end
+
+  # Add multiple sets and store the resulting set in a key.
   def sunionstore(destination, *keys); end
+
+  # Get server time: an UNIX timestamp and the elapsed microseconds in the current second.
   def time; end
+
+  # Get the time to live (in seconds) for a key.
   def ttl(key); end
+
+  # Determine the type stored at key.
   def type(key); end
+
+  # Unlink keys.
   def unlink(*args); end
+
+  # Stop listening for messages posted to the given channels.
   def unsubscribe(*channels); end
+
+  # Forget about all watched keys.
   def unwatch; end
+
+  # Watch the given keys to determine execution of the MULTI/EXEC block.
   def watch(*keys, &block); end
+
+  # Add one or more members to a sorted set, or update the score for members
+  # that already exist.
   def zadd(key, *args); end
+
+  # Get the number of members in a sorted set.
   def zcard(key); end
+
+  # Get the number of members in a particular score range.
   def zcount(key, min, max); end
+
+  # Increment the score of a member in a sorted set.
   def zincrby(key, increment, member); end
+
+  # Intersect multiple sorted sets and store the resulting sorted set in a new
+  # key.
   def zinterstore(destination, keys, **options); end
+
+  # Return a range of members in a sorted set, by index.
   def zrange(key, start, stop, **options); end
+
+  # Return a range of members in a sorted set, by score.
   def zrangebyscore(key, min, max, **options); end
+
+  # Determine the index of a member in a sorted set.
   def zrank(key, member); end
+
+  # Remove one or more members from a sorted set.
   def zrem(key, member); end
+
+  # Remove all members in a sorted set within the given indexes.
   def zremrangebyrank(key, start, stop); end
+
+  # Remove all members in a sorted set within the given scores.
   def zremrangebyscore(key, min, max); end
+
+  # Return a range of members in a sorted set, by index, with scores ordered
+  # from high to low.
   def zrevrange(key, start, stop, **options); end
+
+  # Return a range of members in a sorted set, by score, with scores ordered
+  # from high to low.
   def zrevrangebyscore(key, max, min, **options); end
+
+  # Determine the index of a member in a sorted set, with scores ordered from
+  # high to low.
   def zrevrank(key, member); end
+
+  # Get the score associated with the given member in a sorted set.
   def zscore(key, member); end
+
+  # Add multiple sorted sets and store the resulting sorted set in a new key.
   def zunionstore(destination, keys, **options); end
 
   protected
@@ -805,7 +1621,10 @@ class Redis::Future < ::BasicObject
   def class; end
   def inspect; end
   def is_a?(other); end
+
+  # Returns the value of attribute timeout.
   def timeout; end
+
   def value; end
 end
 
@@ -816,24 +1635,43 @@ class Redis::FutureNotReady < ::RuntimeError
 end
 
 class Redis::HashRing
+  # nodes is a list of objects that have a proper to_s representation.
+  # replicas indicates how many virtual points should be used pr. node,
+  # replicas are required to improve the distribution.
   def initialize(nodes = T.unsafe(nil), replicas = T.unsafe(nil)); end
 
+  # Adds a `node` to the hash ring (including a number of replicas).
   def add_node(node); end
+
+  # get the node in the hash ring for this key
   def get_node(key); end
+
   def get_node_pos(key); end
   def iter_nodes(key); end
+
+  # Returns the value of attribute nodes.
   def nodes; end
+
   def remove_node(node); end
+
+  # Returns the value of attribute replicas.
   def replicas; end
+
+  # Returns the value of attribute ring.
   def ring; end
+
+  # Returns the value of attribute sorted_keys.
   def sorted_keys; end
 
   class << self
+    # Find the closest index in HashRing with value <= the given value
     def binary_search(ary, value); end
   end
 end
 
+# this is the default in libmemcached
 Redis::HashRing::POINTS_PER_SERVER = T.let(T.unsafe(nil), Integer)
+
 Redis::Hashify = T.let(T.unsafe(nil), Proc)
 Redis::HashifyClusterNodeInfo = T.let(T.unsafe(nil), Proc)
 Redis::HashifyClusterNodes = T.let(T.unsafe(nil), Proc)
@@ -844,8 +1682,13 @@ Redis::HashifyStreamEntries = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreamPendingDetails = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreamPendings = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreams = T.let(T.unsafe(nil), Proc)
+
+# Raised when the connection was inherited by a child process.
 class Redis::InheritedError < ::Redis::BaseConnectionError; end
+
+# Raised when client options are invalid.
 class Redis::InvalidClientOptionError < ::Redis::BaseError; end
+
 Redis::Noop = T.let(T.unsafe(nil), Proc)
 
 class Redis::Pipeline
@@ -854,13 +1697,24 @@ class Redis::Pipeline
   def call(command, timeout: T.unsafe(nil), &block); end
   def call_pipeline(pipeline); end
   def call_with_timeout(command, timeout, &block); end
+
+  # Returns the value of attribute client.
   def client; end
+
   def commands; end
+
+  # Returns the value of attribute db.
   def db; end
+
+  # Sets the attribute db
   def db=(_arg0); end
+
   def empty?; end
   def finish(replies, &blk); end
+
+  # Returns the value of attribute futures.
   def futures; end
+
   def shutdown?; end
   def timeout; end
   def timeouts; end
@@ -876,6 +1730,7 @@ class Redis::Pipeline::Multi < ::Redis::Pipeline
   def timeouts; end
 end
 
+# Raised by the connection when a protocol error occurs.
 class Redis::ProtocolError < ::Redis::BaseError
   def initialize(reply_type); end
 end
@@ -899,7 +1754,9 @@ end
 class Redis::Subscription
   def initialize; end
 
+  # Returns the value of attribute callbacks.
   def callbacks; end
+
   def message(&block); end
   def pmessage(&block); end
   def psubscribe(&block); end
@@ -908,5 +1765,7 @@ class Redis::Subscription
   def unsubscribe(&block); end
 end
 
+# Raised when performing I/O times out.
 class Redis::TimeoutError < ::Redis::BaseConnectionError; end
+
 Redis::VERSION = T.let(T.unsafe(nil), String)

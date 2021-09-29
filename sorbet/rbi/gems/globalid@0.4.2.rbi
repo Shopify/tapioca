@@ -20,10 +20,14 @@ class GlobalID
   def params(*_arg0, &_arg1); end
   def to_param; end
   def to_s(*_arg0, &_arg1); end
+
+  # Returns the value of attribute uri.
   def uri; end
 
   class << self
+    # Returns the value of attribute app.
     def app; end
+
     def app=(app); end
     def create(model, options = T.unsafe(nil)); end
     def eager_load!; end
@@ -33,6 +37,8 @@ class GlobalID
     private
 
     def parse_encoded_gid(gid, options); end
+
+    # We removed the base64 padding character = during #to_param, now we're adding it back so decoding will work
     def repad_gid(gid); end
   end
 end
@@ -50,10 +56,83 @@ end
 
 module GlobalID::Locator
   class << self
+    # Takes either a GlobalID or a string that can be turned into a GlobalID
+    #
+    # Options:
+    # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
+    # allowed to be located.  Passing one or more classes limits instances of returned
+    # classes to those classes or their subclasses.  Passing one or more modules in limits
+    # instances of returned classes to those including that module.  If no classes or
+    # modules match, +nil+ is returned.
     def locate(gid, options = T.unsafe(nil)); end
+
+    # Takes an array of GlobalIDs or strings that can be turned into a GlobalIDs.
+    # All GlobalIDs must belong to the same app, as they will be located using
+    # the same locator using its locate_many method.
+    #
+    # By default the GlobalIDs will be located using Model.find(array_of_ids), so the
+    # models must respond to that finder signature.
+    #
+    # This approach will efficiently call only one #find (or #where(id: id), when using ignore_missing)
+    # per model class, but still interpolate the results to match the order in which the gids were passed.
+    #
+    # Options:
+    # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
+    # allowed to be located.  Passing one or more classes limits instances of returned
+    # classes to those classes or their subclasses.  Passing one or more modules in limits
+    # instances of returned classes to those including that module.  If no classes or
+    # modules match, +nil+ is returned.
+    # * <tt>:ignore_missing</tt> - By default, locate_many will call #find on the model to locate the
+    # ids extracted from the GIDs. In Active Record (and other data stores following the same pattern),
+    # #find will raise an exception if a named ID can't be found. When you set this option to true,
+    # we will use #where(id: ids) instead, which does not raise on missing records.
     def locate_many(gids, options = T.unsafe(nil)); end
+
+    # Takes an array of SignedGlobalIDs or strings that can be turned into a SignedGlobalIDs.
+    # The SignedGlobalIDs are located using Model.find(array_of_ids), so the models must respond to
+    # that finder signature.
+    #
+    # This approach will efficiently call only one #find per model class, but still interpolate
+    # the results to match the order in which the gids were passed.
+    #
+    # Options:
+    # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
+    # allowed to be located.  Passing one or more classes limits instances of returned
+    # classes to those classes or their subclasses.  Passing one or more modules in limits
+    # instances of returned classes to those including that module.  If no classes or
+    # modules match, +nil+ is returned.
     def locate_many_signed(sgids, options = T.unsafe(nil)); end
+
+    # Takes either a SignedGlobalID or a string that can be turned into a SignedGlobalID
+    #
+    # Options:
+    # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
+    # allowed to be located.  Passing one or more classes limits instances of returned
+    # classes to those classes or their subclasses.  Passing one or more modules in limits
+    # instances of returned classes to those including that module.  If no classes or
+    # modules match, +nil+ is returned.
     def locate_signed(sgid, options = T.unsafe(nil)); end
+
+    # Tie a locator to an app.
+    # Useful when different apps collaborate and reference each others' Global IDs.
+    #
+    # The locator can be either a block or a class.
+    #
+    # Using a block:
+    #
+    # GlobalID::Locator.use :foo do |gid|
+    # FooRemote.const_get(gid.model_name).find(gid.model_id)
+    # end
+    #
+    # Using a class:
+    #
+    # GlobalID::Locator.use :bar, BarLocator.new
+    #
+    # class BarLocator
+    # def locate(gid)
+    # @search_client.search name: gid.model_name, id: gid.model_id
+    # end
+    # end
     def use(app, locator = T.unsafe(nil), &locator_block); end
 
     private
@@ -105,11 +184,18 @@ class SignedGlobalID < ::GlobalID
   def initialize(gid, options = T.unsafe(nil)); end
 
   def ==(other); end
+
+  # Returns the value of attribute expires_at.
   def expires_at; end
+
+  # Returns the value of attribute purpose.
   def purpose; end
+
   def to_h; end
   def to_param; end
   def to_s; end
+
+  # Returns the value of attribute verifier.
   def verifier; end
 
   private
@@ -118,12 +204,23 @@ class SignedGlobalID < ::GlobalID
   def pick_expiration(options); end
 
   class << self
+    # Returns the value of attribute expires_in.
     def expires_in; end
+
+    # Sets the attribute expires_in
     def expires_in=(_arg0); end
+
     def parse(sgid, options = T.unsafe(nil)); end
     def pick_purpose(options); end
+
+    # Grab the verifier from options and fall back to SignedGlobalID.verifier.
+    # Raise ArgumentError if neither is available.
     def pick_verifier(options); end
+
+    # Returns the value of attribute verifier.
     def verifier; end
+
+    # Sets the attribute verifier
     def verifier=(_arg0); end
 
     private
@@ -140,17 +237,48 @@ module URI
 end
 
 class URI::GID < ::URI::Generic
+  # URI::GID encodes an app unique reference to a specific model as an URI.
+  # It has the components: app name, model class name, model id and params.
+  # All components except params are required.
+  #
+  # The URI format looks like "gid://app/model_name/model_id".
+  #
+  # Simple metadata can be stored in params. Useful if your app has multiple databases,
+  # for instance, and you need to find out which one to look up the model in.
+  #
+  # Params will be encoded as query parameters like so
+  # "gid://app/model_name/model_id?key=value&another_key=another_value".
+  #
+  # Params won't be typecast, they're always strings.
+  # For convenience params can be accessed using both strings and symbol keys.
+  #
+  # Multi value params aren't supported. Any params encoding multiple values under
+  # the same key will return only the last value. For example, when decoding
+  # params like "key=first_value&key=last_value" key will only be last_value.
+  #
+  # Read the documentation for +parse+, +create+ and +build+ for more.
   def app; end
+
+  # Returns the value of attribute model_id.
   def model_id; end
+
+  # Returns the value of attribute model_name.
   def model_name; end
+
+  # Returns the value of attribute params.
   def params; end
+
   def to_s; end
 
   protected
 
+  # Ruby 2.2 uses #query= instead of #set_query
   def query=(query); end
+
   def set_params(params); end
   def set_path(path); end
+
+  # Ruby 2.1 or less uses #set_query to assign the query
   def set_query(query); end
 
   private
@@ -164,15 +292,55 @@ class URI::GID < ::URI::Generic
   def validate_model_id(model_id, model_name); end
 
   class << self
+    # Create a new URI::GID from components with argument check.
+    #
+    # The allowed components are app, model_name, model_id and params, which can be
+    # either a hash or an array.
+    #
+    # Using a hash:
+    #
+    # URI::GID.build(app: 'bcx', model_name: 'Person', model_id: '1', params: { key: 'value' })
+    #
+    # Using an array, the arguments must be in order [app, model_name, model_id, params]:
+    #
+    # URI::GID.build(['bcx', 'Person', '1', key: 'value'])
     def build(args); end
+
+    # Shorthand to build a URI::GID from an app, a model and optional params.
+    #
+    # URI::GID.create('bcx', Person.find(5), database: 'superhumans')
     def create(app, model, params = T.unsafe(nil)); end
+
+    # Create a new URI::GID by parsing a gid string with argument check.
+    #
+    # URI::GID.parse 'gid://bcx/Person/1?key=value'
+    #
+    # This differs from URI() and URI.parse which do not check arguments.
+    #
+    # URI('gid://bcx')             # => URI::GID instance
+    # URI.parse('gid://bcx')       # => URI::GID instance
+    # URI::GID.parse('gid://bcx/') # => raises URI::InvalidComponentError
     def parse(uri); end
+
+    # Validates +app+'s as URI hostnames containing only alphanumeric characters
+    # and hyphens. An ArgumentError is raised if +app+ is invalid.
+    #
+    # URI::GID.validate_app('bcx')     # => 'bcx'
+    # URI::GID.validate_app('foo-bar') # => 'foo-bar'
+    #
+    # URI::GID.validate_app(nil)       # => ArgumentError
+    # URI::GID.validate_app('foo/bar') # => ArgumentError
     def validate_app(app); end
   end
 end
 
 URI::GID::COMPONENT = T.let(T.unsafe(nil), Array)
+
+# Raised when creating a Global ID for a model without an id
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
+
+# Extracts model_name and model_id from the URI path.
 URI::GID::PATH_REGEXP = T.let(T.unsafe(nil), Regexp)
+
 URI::Parser = URI::RFC2396_Parser
 URI::REGEXP = URI::RFC2396_REGEXP

@@ -33,10 +33,21 @@ class Rack::MockSession
   def after_request(&block); end
   def clear_cookies; end
   def cookie_jar; end
+
+  # Sets the attribute cookie_jar
   def cookie_jar=(_arg0); end
+
+  # Returns the value of attribute default_host.
   def default_host; end
+
+  # Return the last request issued in the session. Raises an error if no
+  # requests have been sent yet.
   def last_request; end
+
+  # Return the last response received in the session. Raises an error if
+  # no requests have been sent yet.
   def last_response; end
+
   def request(uri, env); end
   def set_cookie(cookie, uri = T.unsafe(nil)); end
 end
@@ -94,23 +105,47 @@ end
 class Rack::Test::Cookie
   include ::Rack::Utils
 
+  # :api: private
   def initialize(raw, uri = T.unsafe(nil), default_host = T.unsafe(nil)); end
 
+  # :api: private
   def <=>(other); end
+
+  # :api: private
   def domain; end
+
+  # :api: private
   def empty?; end
+
+  # :api: private
   def expired?; end
+
+  # :api: private
   def expires; end
+
   def http_only?; end
+
+  # :api: private
   def matches?(uri); end
+
+  # :api: private
   def name; end
+
+  # :api: private
   def path; end
+
+  # :api: private
   def raw; end
+
   def replaces?(other); end
   def secure?; end
   def to_h; end
   def to_hash; end
+
+  # :api: private
   def valid?(uri); end
+
+  # :api: private
   def value; end
 
   protected
@@ -119,13 +154,17 @@ class Rack::Test::Cookie
 end
 
 class Rack::Test::CookieJar
+  # :api: private
   def initialize(cookies = T.unsafe(nil), default_host = T.unsafe(nil)); end
 
   def <<(new_cookie); end
   def [](name); end
   def []=(name, value); end
   def delete(name); end
+
+  # :api: private
   def for(uri); end
+
   def get_cookie(name); end
   def merge(raw_cookies, uri = T.unsafe(nil)); end
   def to_hash; end
@@ -137,9 +176,26 @@ end
 
 Rack::Test::CookieJar::DELIMITER = T.let(T.unsafe(nil), String)
 Rack::Test::DEFAULT_HOST = T.let(T.unsafe(nil), String)
+
+# The common base class for exceptions raised by Rack::Test
 class Rack::Test::Error < ::StandardError; end
+
 Rack::Test::MULTIPART_BOUNDARY = T.let(T.unsafe(nil), String)
 
+# This module serves as the primary integration point for using Rack::Test
+# in a testing environment. It depends on an app method being defined in the
+# same context, and provides the Rack::Test API methods (see Rack::Test::Session
+# for their documentation).
+#
+# Example:
+#
+# class HomepageTest < Test::Unit::TestCase
+# include Rack::Test::Methods
+#
+# def app
+# MyApp.new
+# end
+# end
 module Rack::Test::Methods
   extend ::Forwardable
 
@@ -181,31 +237,132 @@ class Rack::Test::MockDigestRequest
   def response(password); end
 end
 
+# This class represents a series of requests issued to a Rack app, sharing
+# a single cookie jar
+#
+# Rack::Test::Session's methods are most often called through Rack::Test::Methods,
+# which will automatically build a session when it's first used.
 class Rack::Test::Session
   include ::Rack::Utils
   include ::Rack::Test::Utils
   extend ::Forwardable
 
+  # Creates a Rack::Test::Session for a given Rack app or Rack::MockSession.
+  #
+  # Note: Generally, you won't need to initialize a Rack::Test::Session directly.
+  # Instead, you should include Rack::Test::Methods into your testing context.
+  # (See README.rdoc for an example)
   def initialize(mock_session); end
 
+  # Set the username and password for HTTP Basic authorization, to be
+  # included in subsequent requests in the HTTP_AUTHORIZATION header.
+  #
+  # Example:
+  # basic_authorize "bryan", "secret"
   def authorize(username, password); end
+
+  # Set the username and password for HTTP Basic authorization, to be
+  # included in subsequent requests in the HTTP_AUTHORIZATION header.
+  #
+  # Example:
+  # basic_authorize "bryan", "secret"
   def basic_authorize(username, password); end
+
   def clear_cookies(*args, &block); end
+
+  # Issue a request using the given verb for the given URI. See #get
+  #
+  # Example:
+  # custom_request "LINK", "/"
   def custom_request(verb, uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a DELETE request for the given URI. See #get
+  #
+  # Example:
+  # delete "/"
   def delete(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Set the username and password for HTTP Digest authorization, to be
+  # included in subsequent requests in the HTTP_AUTHORIZATION header.
+  #
+  # Example:
+  # digest_authorize "bryan", "secret"
   def digest_authorize(username, password); end
+
+  # Set an env var to be included on all subsequent requests through the
+  # session. Use a value of nil to remove a previously configured env.
+  #
+  # Example:
+  # env "rack.session", {:csrf => 'token'}
   def env(name, value); end
+
+  # Rack::Test will not follow any redirects automatically. This method
+  # will follow the redirect returned (including setting the Referer header
+  # on the new request) in the last response. If the last response was not
+  # a redirect, an error will be raised.
   def follow_redirect!; end
+
+  # Issue a GET request for the given URI with the given params and Rack
+  # environment. Stores the issues request object in #last_request and
+  # the app's response in #last_response. Yield #last_response to a block
+  # if given.
+  #
+  # Example:
+  # get "/"
   def get(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a HEAD request for the given URI. See #get
+  #
+  # Example:
+  # head "/"
   def head(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Set a header to be included on all subsequent requests through the
+  # session. Use a value of nil to remove a previously configured header.
+  #
+  # In accordance with the Rack spec, headers will be included in the Rack
+  # environment hash in HTTP_USER_AGENT form.
+  #
+  # Example:
+  # header "User-Agent", "Firefox"
   def header(name, value); end
+
   def last_request(*args, &block); end
   def last_response(*args, &block); end
+
+  # Issue an OPTIONS request for the given URI. See #get
+  #
+  # Example:
+  # options "/"
   def options(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a PATCH request for the given URI. See #get
+  #
+  # Example:
+  # patch "/"
   def patch(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a POST request for the given URI. See #get
+  #
+  # Example:
+  # post "/signup", "name" => "Bryan"
   def post(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a PUT request for the given URI. See #get
+  #
+  # Example:
+  # put "/"
   def put(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
+
+  # Issue a request to the Rack app for the given URI and optional Rack
+  # environment. Stores the issues request object in #last_request and
+  # the app's response in #last_response. Yield #last_response to a block
+  # if given.
+  #
+  # Example:
+  # request "/"
   def request(uri, env = T.unsafe(nil), &block); end
+
   def set_cookie(*args, &block); end
 
   private
@@ -221,15 +378,30 @@ class Rack::Test::Session
   def retry_with_digest_auth?(env); end
 end
 
+# Wraps a Tempfile with a content type. Including one or more UploadedFile's
+# in the params causes Rack::Test to build and issue a multipart request.
+#
+# Example:
+# post "/photos", "file" => Rack::Test::UploadedFile.new("me.jpg", "image/jpeg")
 class Rack::Test::UploadedFile
+  # Creates a new UploadedFile instance.
   def initialize(content, content_type = T.unsafe(nil), binary = T.unsafe(nil), original_filename: T.unsafe(nil)); end
 
+  # The content type of the "uploaded" file
   def content_type; end
+
+  # The content type of the "uploaded" file
   def content_type=(_arg0); end
+
   def local_path; end
   def method_missing(method_name, *args, &block); end
+
+  # The filename, *not* including the path, of the "uploaded" file
   def original_filename; end
+
   def path; end
+
+  # The tempfile
   def tempfile; end
 
   private

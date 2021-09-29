@@ -76,8 +76,13 @@ class ActionText::Attachables::ContentAttachment
   def _validators?; end
   def attachable_plain_text_representation(caption); end
   def model_name(*_arg0, &_arg1); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
   def name=(_arg0); end
+
   def to_partial_path; end
   def to_trix_content_attachment_partial_path; end
   def validation_context; end
@@ -115,11 +120,20 @@ class ActionText::Attachables::RemoteImage
   def initialize(attributes = T.unsafe(nil)); end
 
   def attachable_plain_text_representation(caption); end
+
+  # Returns the value of attribute content_type.
   def content_type; end
+
+  # Returns the value of attribute height.
   def height; end
+
   def model_name(*_arg0, &_arg1); end
   def to_partial_path; end
+
+  # Returns the value of attribute url.
   def url; end
+
+  # Returns the value of attribute width.
   def width; end
 
   class << self
@@ -141,12 +155,17 @@ class ActionText::Attachment
 
   def initialize(node, attachable); end
 
+  # Returns the value of attribute attachable.
   def attachable; end
+
   def caption; end
   def full_attributes; end
   def inspect; end
   def method_missing(method, *args, &block); end
+
+  # Returns the value of attribute node.
   def node; end
+
   def to_html; end
   def to_param(*_arg0, &_arg1); end
   def to_plain_text; end
@@ -206,7 +225,10 @@ class ActionText::AttachmentGallery
   def attachments; end
   def inspect; end
   def model_name(*_arg0, &_arg1); end
+
+  # Returns the value of attribute node.
   def node; end
+
   def size; end
   def validation_context; end
 
@@ -299,7 +321,10 @@ class ActionText::Content
   def attachments; end
   def blank?(*_arg0, &_arg1); end
   def empty?(*_arg0, &_arg1); end
+
+  # Returns the value of attribute fragment.
   def fragment; end
+
   def gallery_attachments; end
   def html_safe(*_arg0, &_arg1); end
   def inspect; end
@@ -368,7 +393,10 @@ class ActionText::Fragment
 
   def find_all(selector); end
   def replace(selector); end
+
+  # Returns the value of attribute source.
   def source; end
+
   def to_html; end
   def to_plain_text; end
   def to_s; end
@@ -494,7 +522,10 @@ class ActionText::TrixAttachment
   def initialize(node); end
 
   def attributes; end
+
+  # Returns the value of attribute node.
   def node; end
+
   def to_html; end
   def to_s; end
 

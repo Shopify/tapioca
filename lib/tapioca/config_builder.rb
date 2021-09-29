@@ -67,6 +67,7 @@ module Tapioca
       "todos_path" => Config::DEFAULT_TODOSPATH,
       "generators" => [],
       "file_header" => true,
+      "doc" => false,
     }.freeze, T::Hash[String, T.untyped])
   end
 end

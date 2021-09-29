@@ -6,8 +6,12 @@
 
 module FrozenRecord
   class << self
+    # Returns the value of attribute deprecated_yaml_erb_backend.
     def deprecated_yaml_erb_backend; end
+
+    # Sets the attribute deprecated_yaml_erb_backend
     def deprecated_yaml_erb_backend=(_arg0); end
+
     def eager_load!; end
   end
 end
@@ -24,7 +28,10 @@ end
 module FrozenRecord::Backends::Yaml
   extend ::FrozenRecord::Backends::Yaml
 
+  # Transforms the model name into a valid filename.
   def filename(model_name); end
+
+  # Reads file in `file_path` and return records.
   def load(file_path); end
 
   private
@@ -66,8 +73,12 @@ class FrozenRecord::Base
   def attribute_method?(attribute_name); end
 
   class << self
+    # Returns the value of attribute abstract_class.
     def abstract_class; end
+
+    # Sets the attribute abstract_class
     def abstract_class=(_arg0); end
+
     def abstract_class?; end
     def add_index(attribute, unique: T.unsafe(nil)); end
     def all; end
@@ -172,7 +183,9 @@ module FrozenRecord::Compact
 end
 
 module FrozenRecord::Compact::ClassMethods
+  # Returns the value of attribute _attributes_cache.
   def _attributes_cache; end
+
   def define_method_attribute(attr, **_arg1); end
   def load_records(force: T.unsafe(nil)); end
 
@@ -184,11 +197,16 @@ end
 class FrozenRecord::Index
   def initialize(model, attribute, unique: T.unsafe(nil)); end
 
+  # Returns the value of attribute attribute.
   def attribute; end
+
   def build(records); end
   def lookup(value); end
   def lookup_multi(values); end
+
+  # Returns the value of attribute model.
   def model; end
+
   def query(matcher); end
   def reset; end
   def unique?; end
@@ -282,6 +300,8 @@ class FrozenRecord::Scope::Matcher
   def hash; end
   def match?(other); end
   def ranged?; end
+
+  # Returns the value of attribute value.
   def value; end
 
   class << self

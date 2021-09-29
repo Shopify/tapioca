@@ -6,31 +6,200 @@
 
 module Mail
   class << self
+    # Receive all emails from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def all(*args, &block); end
+
     def connection(&block); end
+
+    # Sets the default delivery method and retriever method for all new Mail objects.
+    # The delivery_method and retriever_method default to :smtp and :pop3, with defaults
+    # set.
+    #
+    # So sending a new email, if you have an SMTP server running on localhost is
+    # as easy as:
+    #
+    # Mail.deliver do
+    # to      'mikel@test.lindsaar.net'
+    # from    'bob@test.lindsaar.net'
+    # subject 'hi there!'
+    # body    'this is a body'
+    # end
+    #
+    # If you do not specify anything, you will get the following equivalent code set in
+    # every new mail object:
+    #
+    # Mail.defaults do
+    # delivery_method :smtp, { :address              => "localhost",
+    # :port                 => 25,
+    # :domain               => 'localhost.localdomain',
+    # :user_name            => nil,
+    # :password             => nil,
+    # :authentication       => nil,
+    # :enable_starttls_auto => true  }
+    #
+    # retriever_method :pop3, { :address             => "localhost",
+    # :port                => 995,
+    # :user_name           => nil,
+    # :password            => nil,
+    # :enable_ssl          => true }
+    # end
+    #
+    # Mail.delivery_method.new  #=> Mail::SMTP instance
+    # Mail.retriever_method.new #=> Mail::POP3 instance
+    #
+    # Each mail object inherits the default set in Mail.delivery_method, however, on
+    # a per email basis, you can override the method:
+    #
+    # mail.delivery_method :smtp
+    #
+    # Or you can override the method and pass in settings:
+    #
+    # mail.delivery_method :smtp, :address => 'some.host'
     def defaults(&block); end
+
+    # Delete all emails from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def delete_all(*args, &block); end
+
+    # Send an email using the default configuration.  You do need to set a default
+    # configuration first before you use self.deliver, if you don't, an appropriate
+    # error will be raised telling you to.
+    #
+    # If you do not specify a delivery type, SMTP will be used.
+    #
+    # Mail.deliver do
+    # to 'mikel@test.lindsaar.net'
+    # from 'ada@test.lindsaar.net'
+    # subject 'This is a test email'
+    # body 'Not much to say here'
+    # end
+    #
+    # You can also do:
+    #
+    # mail = Mail.read('email.eml')
+    # mail.deliver!
+    #
+    # And your email object will be created and sent.
     def deliver(*args, &block); end
+
+    # Returns the delivery method selected, defaults to an instance of Mail::SMTP
     def delivery_method; end
+
+    # This runs through the autoload list and explictly requires them for you.
+    # Useful when running mail in a threaded process.
+    #
+    # Usage:
+    #
+    # require 'mail'
+    # Mail.eager_autoload!
     def eager_autoload!; end
+
+    # Find emails from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def find(*args, &block); end
+
+    # Finds and then deletes retrieved emails from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def find_and_delete(*args, &block); end
+
+    # Receive the first email(s) from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def first(*args, &block); end
+
     def from_source(source); end
     def inform_interceptors(mail); end
     def inform_observers(mail); end
+
+    # Receive the first email(s) from the default retriever
+    # See Mail::Retriever for a complete documentation.
     def last(*args, &block); end
+
+    # Allows you to create a new Mail::Message object.
+    #
+    # You can make an email via passing a string or passing a block.
+    #
+    # For example, the following two examples will create the same email
+    # message:
+    #
+    # Creating via a string:
+    #
+    # string = "To: mikel@test.lindsaar.net\r\n"
+    # string << "From: bob@test.lindsaar.net\r\n"
+    # string << "Subject: This is an email\r\n"
+    # string << "\r\n"
+    # string << "This is the body"
+    # Mail.new(string)
+    #
+    # Or creating via a block:
+    #
+    # message = Mail.new do
+    # to 'mikel@test.lindsaar.net'
+    # from 'bob@test.lindsaar.net'
+    # subject 'This is an email'
+    # body 'This is the body'
+    # end
+    #
+    # Or creating via a hash (or hash like object):
+    #
+    # message = Mail.new({:to => 'mikel@test.lindsaar.net',
+    # 'from' => 'bob@test.lindsaar.net',
+    # :subject => 'This is an email',
+    # :body => 'This is the body' })
+    #
+    # Note, the hash keys can be strings or symbols, the passed in object
+    # does not need to be a hash, it just needs to respond to :each_pair
+    # and yield each key value pair.
+    #
+    # As a side note, you can also create a new email through creating
+    # a Mail::Message object directly and then passing in values via string,
+    # symbol or direct method calls.  See Mail::Message for more information.
+    #
+    # mail = Mail.new
+    # mail.to = 'mikel@test.lindsaar.net'
+    # mail[:from] = 'bob@test.lindsaar.net'
+    # mail['subject'] = 'This is an email'
+    # mail.body = 'This is the body'
     def new(*args, &block); end
+
     def random_tag; end
+
+    # Reads in an email message from a path and instantiates it as a new Mail::Message
     def read(filename); end
+
+    # Instantiates a new Mail::Message using a string
     def read_from_string(mail_as_string); end
+
     def register_autoload(name, path); end
+
+    # You can register an object to be given every mail object that will be sent,
+    # before it is sent.  So if you want to add special headers or modify any
+    # email that gets sent through the Mail library, you can do so.
+    #
+    # Your object needs to respond to a single method #delivering_email(mail)
+    # which receives the email that is about to be sent.  Make your modifications
+    # directly to this object.
     def register_interceptor(interceptor); end
+
+    # You can register an object to be informed of every email that is sent through
+    # this method.
+    #
+    # Your object needs to respond to a single method #delivered_email(mail)
+    # which receives the email that is sent.
     def register_observer(observer); end
+
+    # Returns the retriever method selected, defaults to an instance of Mail::POP3
     def retriever_method; end
+
     def something_random; end
     def uniq; end
+
+    # Unregister the given interceptor, allowing mail to resume operations
+    # without it.
     def unregister_interceptor(interceptor); end
+
+    # Unregister the given observer, allowing mail to resume operations
+    # without it.
     def unregister_observer(observer); end
   end
 end
@@ -39,23 +208,113 @@ class Mail::Address
   include ::Mail::Constants
   include ::Mail::Utilities
 
+  # Mail::Address handles all email addresses in Mail.  It takes an email address string
+  # and parses it, breaking it down into its component parts and allowing you to get the
+  # address, comments, display name, name, local part, domain part and fully formatted
+  # address.
+  #
+  # Mail::Address requires a correctly formatted email address per RFC2822 or RFC822.  It
+  # handles all obsolete versions including obsolete domain routing on the local part.
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.format       #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
+  # a.address      #=> 'mikel@test.lindsaar.net'
+  # a.display_name #=> 'Mikel Lindsaar'
+  # a.local        #=> 'mikel'
+  # a.domain       #=> 'test.lindsaar.net'
+  # a.comments     #=> ['My email address']
+  # a.to_s         #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
   def initialize(value = T.unsafe(nil)); end
 
   def ==(other_address); end
+
+  # Returns the address that is in the address itself.  That is, the
+  # local@domain string, without any angle brackets or the like.
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.address #=> 'mikel@test.lindsaar.net'
   def address(output_type = T.unsafe(nil)); end
+
+  # Provides a way to assign an address to an already made Mail::Address object.
+  #
+  # a = Address.new
+  # a.address = 'Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>'
+  # a.address #=> 'mikel@test.lindsaar.net'
   def address=(value); end
+
+  # Returns an array of comments that are in the email, or nil if there
+  # are no comments
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.comments #=> ['My email address']
+  #
+  # b = Address.new('Mikel Lindsaar <mikel@test.lindsaar.net>')
+  # b.comments #=> nil
   def comments; end
+
   def decoded; end
+
+  # Returns the display name of the email address passed in.
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.display_name #=> 'Mikel Lindsaar'
   def display_name(output_type = T.unsafe(nil)); end
+
+  # Provides a way to assign a display name to an already made Mail::Address object.
+  #
+  # a = Address.new
+  # a.address = 'mikel@test.lindsaar.net'
+  # a.display_name = 'Mikel Lindsaar'
+  # a.format #=> 'Mikel Lindsaar <mikel@test.lindsaar.net>'
   def display_name=(str); end
+
+  # Returns the domain part (the right hand side of the @ sign in the email address) of
+  # the address
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.domain #=> 'test.lindsaar.net'
   def domain(output_type = T.unsafe(nil)); end
+
   def encoded; end
+
+  # Returns a correctly formatted address for the email going out.  If given
+  # an incorrectly formatted address as input, Mail::Address will do its best
+  # to format it correctly.  This includes quoting display names as needed and
+  # putting the address in angle brackets etc.
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.format #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
   def format(output_type = T.unsafe(nil)); end
+
   def group; end
+
+  # Shows the Address object basic details, including the Address
+  # a = Address.new('Mikel (My email) <mikel@test.lindsaar.net>')
+  # a.inspect #=> "#<Mail::Address:14184910 Address: |Mikel <mikel@test.lindsaar.net> (My email)| >"
   def inspect; end
+
+  # Returns the local part (the left hand side of the @ sign in the email address) of
+  # the address
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.local #=> 'mikel'
   def local(output_type = T.unsafe(nil)); end
+
+  # Sometimes an address will not have a display name, but might have the name
+  # as a comment field after the address.  This returns that name if it exists.
+  #
+  # a = Address.new('mikel@test.lindsaar.net (Mikel Lindsaar)')
+  # a.name #=> 'Mikel Lindsaar'
   def name; end
+
+  # Returns the raw input of the passed in string, this is before it is passed
+  # by the parser.
   def raw; end
+
+  # Returns the format of the address, or returns nothing
+  #
+  # a = Address.new('Mikel Lindsaar (My email address) <mikel@test.lindsaar.net>')
+  # a.format #=> 'Mikel Lindsaar <mikel@test.lindsaar.net> (My email address)'
   def to_s; end
 
   private
@@ -82,19 +341,50 @@ class Mail::AddressContainer < ::Array
 end
 
 class Mail::AddressList
+  # Mail::AddressList is the class that parses To, From and other address fields from
+  # emails passed into Mail.
+  #
+  # AddressList provides a way to query the groups and mailbox lists of the passed in
+  # string.
+  #
+  # It can supply all addresses in an array, or return each address as an address object.
+  #
+  # Mail::AddressList requires a correctly formatted group or mailbox list per RFC2822 or
+  # RFC822.  It also handles all obsolete versions in those RFCs.
+  #
+  # list = 'ada@test.lindsaar.net, My Group: mikel@test.lindsaar.net, Bob <bob@test.lindsaar.net>;'
+  # a = AddressList.new(list)
+  # a.addresses    #=> [#<Mail::Address:14943130 Address: |ada@test.lindsaar.net...
+  # a.group_names  #=> ["My Group"]
   def initialize(string); end
 
+  # Returns the value of attribute addresses.
   def addresses; end
+
   def addresses_grouped_by_group; end
+
+  # Returns the value of attribute group_names.
   def group_names; end
 end
 
 class Mail::AttachmentsList < ::Array
   def initialize(parts_list); end
 
+  # Returns the attachment by filename or at index.
+  #
+  # mail.attachments['test.png'] = File.read('test.png')
+  # mail.attachments['test.jpg'] = File.read('test.jpg')
+  #
+  # mail.attachments['test.png'].filename #=> 'test.png'
+  # mail.attachments[1].filename          #=> 'test.jpg'
   def [](index_value); end
+
   def []=(name, value); end
+
+  # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we
+  # set it to binary, otherwise as set to plain text
   def guess_encoding; end
+
   def inline; end
   def set_mime_type(filename); end
 end
@@ -105,7 +395,10 @@ class Mail::BccField < ::Mail::StructuredField
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   def decoded; end
+
+  # Bcc field should not be :encoded by default
   def encoded; end
+
   def include_in_headers; end
   def include_in_headers=(include_in_headers); end
 end
@@ -113,35 +406,142 @@ end
 Mail::BccField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::BccField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
+# = Body
+#
+# The body is where the text of the email is stored.  Mail treats the body
+# as a single object.  The body itself has no information about boundaries
+# used in the MIME standard, it just looks at its content as either a single
+# block of text, or (if it is a multipart message) as an array of blocks of text.
+#
+# A body has to be told to split itself up into a multipart message by calling
+# #split with the correct boundary.  This is because the body object has no way
+# of knowing what the correct boundary is for itself (there could be many
+# boundaries in a body in the case of a nested MIME text).
+#
+# Once split is called, Mail::Body will slice itself up on this boundary,
+# assigning anything that appears before the first part to the preamble, and
+# anything that appears after the closing boundary to the epilogue, then
+# each part gets initialized into a Mail::Part object.
+#
+# The boundary that is used to split up the Body is also stored in the Body
+# object for use on encoding itself back out to a string.  You can
+# overwrite this if it needs to be changed.
+#
+# On encoding, the body will return the preamble, then each part joined by
+# the boundary, followed by a closing boundary string and then the epilogue.
 class Mail::Body
   def initialize(string = T.unsafe(nil)); end
 
   def <<(val); end
+
+  # Matches this body with another body.  Also matches the decoded value of this
+  # body with a string.
+  #
+  # Examples:
+  #
+  # body = Mail::Body.new('The body')
+  # body == body #=> true
+  #
+  # body = Mail::Body.new('The body')
+  # body == 'The body' #=> true
+  #
+  # body = Mail::Body.new("VGhlIGJvZHk=\n")
+  # body.encoding = 'base64'
+  # body == "The body" #=> true
   def ==(other); end
+
+  # Accepts a string and performs a regular expression against the decoded text
+  #
+  # Examples:
+  #
+  # body = Mail::Body.new('The body')
+  # body =~ /The/ #=> 0
+  #
+  # body = Mail::Body.new("VGhlIGJvZHk=\n")
+  # body.encoding = 'base64'
+  # body =~ /The/ #=> 0
   def =~(regexp); end
+
   def ascii_only?; end
+
+  # Returns the boundary used by the body
   def boundary; end
+
+  # Allows you to change the boundary of this Body object
   def boundary=(val); end
+
   def charset; end
   def charset=(val); end
   def decoded; end
   def default_encoding; end
   def empty?; end
+
+  # Returns a body encoded using transfer_encoding.  Multipart always uses an
+  # identiy encoding (i.e. no encoding).
+  # Calling this directly is not a good idea, but supported for compatibility
+  # TODO: Validate that preamble and epilogue are valid for requested encoding
   def encoded(transfer_encoding = T.unsafe(nil)); end
+
   def encoding(val = T.unsafe(nil)); end
   def encoding=(val); end
+
+  # Returns the epilogue (any text that is after the last MIME boundary)
   def epilogue; end
+
+  # Sets the epilogue to a string (adds text after the last MIME boundary)
   def epilogue=(val); end
+
+  # Accepts anything that responds to #to_s and checks if it's a substring of the decoded text
+  #
+  # Examples:
+  #
+  # body = Mail::Body.new('The body')
+  # body.include?('The') #=> true
+  #
+  # body = Mail::Body.new("VGhlIGJvZHk=\n")
+  # body.encoding = 'base64'
+  # body.include?('The') #=> true
   def include?(other); end
+
+  # Accepts a string and performs a regular expression against the decoded text
+  #
+  # Examples:
+  #
+  # body = Mail::Body.new('The body')
+  # body.match(/The/) #=> #<MatchData "The">
+  #
+  # body = Mail::Body.new("VGhlIGJvZHk=\n")
+  # body.encoding = 'base64'
+  # body.match(/The/) #=> #<MatchData "The">
   def match(regexp); end
+
+  # Returns true if there are parts defined in the body
   def multipart?; end
+
   def negotiate_best_encoding(message_encoding, allowed_encodings = T.unsafe(nil)); end
   def parts; end
+
+  # Returns the preamble (any text that is before the first MIME boundary)
   def preamble; end
+
+  # Sets the preamble to a string (adds text before the first MIME boundary)
   def preamble=(val); end
+
+  # Returns the raw source that the body was initialized with, without
+  # any tampering
   def raw_source; end
+
+  # Allows you to set the sort order of the parts, overriding the default sort order.
+  # Defaults to 'text/plain', then 'text/enriched', then 'text/html', then 'multipart/alternative'
+  # with any other content type coming after.
   def set_sort_order(order); end
+
+  # Allows you to sort the parts according to the default sort order, or the sort order you
+  # set with :set_sort_order.
+  #
+  # sort_parts! is also called from :encode, so there is no need for you to call this explicitly
   def sort_parts!; end
+
   def split!(boundary); end
   def to_s; end
 
@@ -149,7 +549,10 @@ class Mail::Body
 
   def crlf_boundary; end
   def end_boundary; end
+
+  # split parts by boundary, ignore first part if empty, append final part when closing boundary was missing
   def extract_parts; end
+
   def set_charset; end
 end
 
@@ -185,19 +588,43 @@ Mail::CommentsField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
 module Mail::CommonAddress
   def <<(val); end
+
+  # Returns the address string of all the addresses in the address list
   def addresses; end
+
+  # Returns the actual address objects in the address list
   def addrs; end
+
   def charset; end
+
+  # Returns a list of decoded group addresses
   def decoded_group_addresses; end
+
   def default; end
+
+  # Returns the display name of all the addresses in the address list
   def display_names; end
+
+  # Allows you to iterate through each address object in the address_list
   def each; end
+
   def encode_if_needed(val); end
+
+  # Returns a list of encoded group addresses
   def encoded_group_addresses; end
+
+  # Returns the formatted string of all the addresses in the address list
   def formatted; end
+
+  # Returns the addresses that are part of groups
   def group_addresses; end
+
+  # Returns the name of all the groups in a string
   def group_names; end
+
+  # Returns a hash of group name => address strings for the address list
   def groups; end
+
   def parse(val = T.unsafe(nil)); end
   def value=(val); end
 
@@ -207,11 +634,15 @@ module Mail::CommonAddress
   def do_decode; end
   def do_encode(field_name); end
   def get_group_addresses(group_list); end
+
+  # Pass through UTF-8 addresses
   def utf8_if_needed(val); end
 end
 
 module Mail::CommonDate
+  # Returns a date time object of the parsed date
   def date_time; end
+
   def default; end
   def parse(val = T.unsafe(nil)); end
 
@@ -255,6 +686,11 @@ module Mail::CommonMessageId
   def formated_message_ids(join); end
 end
 
+# The Configuration class is a Singleton used to hold the default
+# configuration for all Mail objects.
+#
+# Each new mail object gets a copy of these values at initialization
+# which can be overwritten on a per mail object basis.
 class Mail::Configuration
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
@@ -299,7 +735,10 @@ Mail::Constants::QP_SAFE = T.let(T.unsafe(nil), Regexp)
 Mail::Constants::QP_UNSAFE = T.let(T.unsafe(nil), Regexp)
 Mail::Constants::Q_VALUES = T.let(T.unsafe(nil), Array)
 Mail::Constants::SPACE = T.let(T.unsafe(nil), String)
+
+# + obs-text
 Mail::Constants::TEXT = T.let(T.unsafe(nil), Regexp)
+
 Mail::Constants::TOKEN_UNSAFE = T.let(T.unsafe(nil), Regexp)
 Mail::Constants::UNDERSCORE = T.let(T.unsafe(nil), String)
 Mail::Constants::WSP = T.let(T.unsafe(nil), Regexp)
@@ -314,7 +753,10 @@ Mail::ContentDescriptionField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::ContentDispositionElement
   def initialize(string); end
 
+  # Returns the value of attribute disposition_type.
   def disposition_type; end
+
+  # Returns the value of attribute parameters.
   def parameters; end
 
   private
@@ -328,7 +770,10 @@ class Mail::ContentDispositionField < ::Mail::StructuredField
   def decoded; end
   def disposition_type; end
   def element; end
+
+  # TODO: Fix this up
   def encoded; end
+
   def filename; end
   def parameters; end
   def parse(val = T.unsafe(nil)); end
@@ -343,7 +788,10 @@ class Mail::ContentIdField < ::Mail::StructuredField
   def content_id; end
   def decoded; end
   def element; end
+
+  # TODO: Fix this up
   def encoded; end
+
   def name; end
   def parse(val = T.unsafe(nil)); end
   def to_s; end
@@ -359,7 +807,9 @@ Mail::ContentIdField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::ContentLocationElement
   def initialize(string); end
 
+  # Returns the value of attribute location.
   def location; end
+
   def to_s(*args); end
 end
 
@@ -368,7 +818,10 @@ class Mail::ContentLocationField < ::Mail::StructuredField
 
   def decoded; end
   def element; end
+
+  # TODO: Fix this up
   def encoded; end
+
   def location; end
   def parse(val = T.unsafe(nil)); end
 end
@@ -379,6 +832,7 @@ Mail::ContentLocationField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::ContentTransferEncodingElement
   def initialize(string); end
 
+  # Returns the value of attribute encoding.
   def encoding; end
 end
 
@@ -387,7 +841,10 @@ class Mail::ContentTransferEncodingField < ::Mail::StructuredField
 
   def decoded; end
   def element; end
+
+  # TODO: Fix this up
   def encoded; end
+
   def encoding; end
   def parse(val = T.unsafe(nil)); end
 end
@@ -398,8 +855,13 @@ Mail::ContentTransferEncodingField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::ContentTypeElement
   def initialize(string); end
 
+  # Returns the value of attribute main_type.
   def main_type; end
+
+  # Returns the value of attribute parameters.
   def parameters; end
+
+  # Returns the value of attribute sub_type.
   def sub_type; end
 
   private
@@ -415,7 +877,10 @@ class Mail::ContentTypeField < ::Mail::StructuredField
   def decoded; end
   def default; end
   def element; end
+
+  # TODO: Fix this up
   def encoded; end
+
   def filename; end
   def main_type; end
   def parameters; end
@@ -429,6 +894,9 @@ class Mail::ContentTypeField < ::Mail::StructuredField
 
   def get_mime_type(val); end
   def method_missing(name, *args, &block); end
+
+  # Various special cases from random emails found that I am not going to change
+  # the parser for
   def sanatize(val); end
 
   class << self
@@ -455,7 +923,10 @@ Mail::DateField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::DateTimeElement
   def initialize(string); end
 
+  # Returns the value of attribute date_string.
   def date_string; end
+
+  # Returns the value of attribute time_string.
   def time_string; end
 end
 
@@ -466,36 +937,153 @@ module Mail::Encodings
 
   class << self
     def address_encode(address, charset = T.unsafe(nil)); end
+
+    # Decodes a Base64 string from the "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=" format
+    #
+    # Example:
+    #
+    # Encodings.b_value_decode("=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?=")
+    # #=> 'This is あ string'
     def b_value_decode(str); end
+
+    # Encode a string with Base64 Encoding and returns it ready to be inserted
+    # as a value for a field, that is, in the =?<charset>?B?<string>?= format
+    #
+    # Example:
+    #
+    # Encodings.b_value_encode('This is あ string', 'UTF-8')
+    # #=> "=?UTF-8?B?VGhpcyBpcyDjgYIgc3RyaW5n?="
     def b_value_encode(string, encoding = T.unsafe(nil)); end
+
+    # Split header line into proper encoded and unencoded parts.
+    #
+    # String has to be of the format =?<encoding>?[QB]?<string>?=
+    #
+    # Omit unencoded space after an encoded-word.
     def collapse_adjacent_encodings(str); end
+
+    # Decodes or encodes a string as needed for either Base64 or QP encoding types in
+    # the =?<encoding>?[QB]?<string>?=" format.
+    #
+    # The output type needs to be :decode to decode the input string or :encode to
+    # encode the input string.  The character set used for encoding will either be
+    # the value of $KCODE for Ruby < 1.9 or the encoding on the string passed in.
+    #
+    # On encoding, will only send out Base64 encoded strings.
     def decode_encode(str, output_type); end
+
+    # Is the encoding we want defined?
+    #
+    # Example:
+    #
+    # Encodings.defined?(:base64) #=> true
     def defined?(name); end
+
+    # Partition the string into bounded-size chunks without splitting
+    # multibyte characters.
     def each_base64_chunk_byterange(str, max_bytesize_per_base64_chunk, &block); end
+
+    # Partition the string into bounded-size chunks without splitting
+    # multibyte characters.
     def each_chunk_byterange(str, max_bytesize_per_chunk); end
+
     def encode_non_usascii(address, charset); end
     def find_encoding(str); end
     def get_all; end
+
+    # Gets a defined encoding type, QuotedPrintable or Base64 for now.
+    #
+    # Each encoding needs to be defined as a Mail::Encodings::ClassName for
+    # this to work, allows us to add other encodings in the future.
+    #
+    # Example:
+    #
+    # Encodings.get_encoding(:base64) #=> Mail::Encodings::Base64
     def get_encoding(name); end
+
     def get_name(name); end
+
+    # Decodes a parameter value using URI Escaping.
+    #
+    # Example:
+    #
+    # Mail::Encodings.param_decode("This%20is%20fun", 'us-ascii') #=> "This is fun"
+    #
+    # str = Mail::Encodings.param_decode("This%20is%20fun", 'iso-8559-1')
+    # str.encoding #=> 'ISO-8859-1'      ## Only on Ruby 1.9
+    # str #=> "This is fun"
     def param_decode(str, encoding); end
+
+    # Encodes a parameter value using URI Escaping, note the language field 'en' can
+    # be set using Mail::Configuration, like so:
+    #
+    # Mail.defaults do
+    # param_encode_language 'jp'
+    # end
+    #
+    # The character set used for encoding will either be the value of $KCODE for
+    # Ruby < 1.9 or the encoding on the string passed in.
+    #
+    # Example:
+    #
+    # Mail::Encodings.param_encode("This is fun") #=> "us-ascii'en'This%20is%20fun"
     def param_encode(str); end
+
+    # Decodes a Quoted-Printable string from the "=?UTF-8?Q?This_is_=E3=81=82_string?=" format
+    #
+    # Example:
+    #
+    # Encodings.q_value_decode("=?UTF-8?Q?This_is_=E3=81=82_string?=")
+    # #=> 'This is あ string'
     def q_value_decode(str); end
+
+    # Encode a string with Quoted-Printable Encoding and returns it ready to be inserted
+    # as a value for a field, that is, in the =?<charset>?Q?<string>?= format
+    #
+    # Example:
+    #
+    # Encodings.q_value_encode('This is あ string', 'UTF-8')
+    # #=> "=?UTF-8?Q?This_is_=E3=81=82_string?="
     def q_value_encode(encoded_str, encoding = T.unsafe(nil)); end
+
+    # Register transfer encoding
+    #
+    # Example
+    #
+    # Encodings.register "base64", Mail::Encodings::Base64
     def register(name, cls); end
+
     def transcode_charset(str, from_charset, to_charset = T.unsafe(nil)); end
+
+    # Takes an encoded string of the format =?<encoding>?[QB]?<string>?=
     def unquote_and_convert_to(str, to_encoding); end
+
+    # Decodes a given string as Base64 or Quoted Printable, depending on what
+    # type it is.
+    #
+    # String has to be of the format =?<encoding>?[QB]?<string>?=
     def value_decode(str); end
+
+    # Gets the encoding type (Q or B) from the string.
     def value_encoding_from_string(str); end
+
     def with_ascii_kcode; end
   end
 end
 
+# Base64 encoding handles binary content at the cost of 4 output bytes
+# per input byte.
 class Mail::Encodings::Base64 < ::Mail::Encodings::SevenBit
   class << self
     def can_encode?(enc); end
+
+    # Ruby Base64 inserts newlines automatically, so it doesn't exceed
+    # SMTP line length limits.
     def compatible_input?(str); end
+
+    # 3 bytes in -> 4 bytes out
     def cost(str); end
+
     def decode(str); end
     def encode(str); end
   end
@@ -509,6 +1097,7 @@ Mail::Encodings::Binary::PRIORITY = T.let(T.unsafe(nil), Integer)
 
 class Mail::Encodings::EightBit < ::Mail::Encodings::Binary
   class << self
+    # Per RFC 2821 4.5.3.1, SMTP lines may not be longer than 1000 octets including the <CRLF>.
     def compatible_input?(str); end
   end
 end
@@ -516,9 +1105,13 @@ end
 Mail::Encodings::EightBit::NAME = T.let(T.unsafe(nil), String)
 Mail::Encodings::EightBit::PRIORITY = T.let(T.unsafe(nil), Integer)
 
+# Identity encodings do no encoding/decoding and have a fixed cost:
+# 1 byte in -> 1 byte out.
 class Mail::Encodings::Identity < ::Mail::Encodings::TransferEncoding
   class << self
+    # 1 output byte per input byte.
     def cost(str); end
+
     def decode(str); end
     def encode(str); end
   end
@@ -527,9 +1120,16 @@ end
 class Mail::Encodings::QuotedPrintable < ::Mail::Encodings::SevenBit
   class << self
     def can_encode?(enc); end
+
+    # QP inserts newlines automatically and cannot violate the SMTP spec.
     def compatible_input?(str); end
+
     def cost(str); end
+
+    # Decode the string from Quoted-Printable. Cope with hard line breaks
+    # that were incorrectly encoded as hex instead of literal CRLF.
     def decode(str); end
+
     def encode(str); end
   end
 end
@@ -537,6 +1137,7 @@ end
 Mail::Encodings::QuotedPrintable::NAME = T.let(T.unsafe(nil), String)
 Mail::Encodings::QuotedPrintable::PRIORITY = T.let(T.unsafe(nil), Integer)
 
+# 7bit and 8bit are equivalent. 7bit encoding is for text only.
 class Mail::Encodings::SevenBit < ::Mail::Encodings::EightBit
   class << self
     def decode(str); end
@@ -549,8 +1150,15 @@ Mail::Encodings::SevenBit::PRIORITY = T.let(T.unsafe(nil), Integer)
 
 class Mail::Encodings::TransferEncoding
   class << self
+    # Override in subclasses to indicate that they can encode text
+    # that couldn't be directly transported, e.g. Base64 has 7bit output,
+    # but it can encode binary.
     def can_encode?(enc); end
+
+    # And encoding's superclass can always transport it since the
+    # class hierarchy is arranged e.g. Base64 < 7bit < 8bit < Binary.
     def can_transport?(enc); end
+
     def compatible_input?(str); end
     def cost(str); end
     def lowest_cost(str, encodings); end
@@ -583,12 +1191,57 @@ end
 class Mail::EnvelopeFromElement
   def initialize(string); end
 
+  # Returns the value of attribute address.
   def address; end
+
+  # Returns the value of attribute date_time.
   def date_time; end
+
+  # RFC 4155:
+  # a timestamp indicating the UTC date and time when the message
+  # was originally received, conformant with the syntax of the
+  # traditional UNIX 'ctime' output sans timezone (note that the
+  # use of UTC precludes the need for a timezone indicator);
   def formatted_date_time; end
+
   def to_s; end
 end
 
+# A delivery method implementation which sends via exim.
+#
+# To use this, first find out where the exim binary is on your computer,
+# if you are on a mac or unix box, it is usually in /usr/sbin/exim, this will
+# be your exim location.
+#
+# Mail.defaults do
+# delivery_method :exim
+# end
+#
+# Or if your exim binary is not at '/usr/sbin/exim'
+#
+# Mail.defaults do
+# delivery_method :exim, :location => '/absolute/path/to/your/exim'
+# end
+#
+# Then just deliver the email as normal:
+#
+# Mail.deliver do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing exim'
+# body 'testing exim'
+# end
+#
+# Or by calling deliver on a Mail message
+#
+# mail = Mail.new do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing exim'
+# body 'testing exim'
+# end
+#
+# mail.deliver!
 class Mail::Exim < ::Mail::Sendmail
   class << self
     def call(path, arguments, destinations, encoded_message); end
@@ -597,11 +1250,40 @@ end
 
 Mail::Exim::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
+# Provides a single class to call to create a new structured or unstructured
+# field.  Works out per RFC what field of field it is being given and returns
+# the correct field of class back on new.
+#
+# ===Per RFC 2822
+#
+# 2.2. Header Fields
+#
+# Header fields are lines composed of a field name, followed by a colon
+# (":"), followed by a field body, and terminated by CRLF.  A field
+# name MUST be composed of printable US-ASCII characters (i.e.,
+# characters that have values between 33 and 126, inclusive), except
+# colon.  A field body may be composed of any US-ASCII characters,
+# except for CR and LF.  However, a field body may contain CRLF when
+# used in header "folding" and  "unfolding" as described in section
+# 2.2.3.  All field bodies MUST conform to the syntax described in
+# sections 3 and 4 of this standard.
 class Mail::Field
   include ::Mail::Constants
   include ::Mail::Utilities
   include ::Comparable
 
+  # Create a field by name and optional value:
+  #
+  # Mail::Field.new("field-name", "value")
+  # # => #<Mail::Field …>
+  #
+  # Values that aren't strings or arrays are coerced to Strings with `#to_s`.
+  #
+  # Mail::Field.new("field-name", 1234)
+  # # => #<Mail::Field …>
+  #
+  # Mail::Field.new('content-type', ['text', 'plain', {:charset => 'UTF-8'}])
+  # # => #<Mail::Field …>
   def initialize(name, value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   def <=>(other); end
@@ -615,7 +1297,10 @@ class Mail::Field
   def responsible_for?(val); end
   def same(other); end
   def to_s; end
+
+  # Returns the value of attribute unparsed_value.
   def unparsed_value; end
+
   def update(name, value); end
   def value; end
   def value=(val); end
@@ -626,10 +1311,24 @@ class Mail::Field
   def field_class_for(name); end
   def new_field(name, value, charset); end
   def respond_to_missing?(method_name, include_private); end
+
+  # 2.2.3. Long Header Fields
+  #
+  # The process of moving from this folded multiple-line representation
+  # of a header field to its single line representation is called
+  # "unfolding". Unfolding is accomplished by simply removing any CRLF
+  # that is immediately followed by WSP.  Each header field should be
+  # treated in its unfolded form for further syntactic and semantic
+  # evaluation.
   def unfold(string); end
 
   class << self
+    # Parse a field from a raw header line:
+    #
+    # Mail::Field.parse("field-name: field data")
+    # # => #<Mail::Field …>
     def parse(field, charset = T.unsafe(nil)); end
+
     def split(raw_field); end
   end
 end
@@ -638,6 +1337,8 @@ Mail::Field::FIELDS_MAP = T.let(T.unsafe(nil), Hash)
 Mail::Field::FIELD_NAME_MAP = T.let(T.unsafe(nil), Hash)
 Mail::Field::FIELD_ORDER = T.let(T.unsafe(nil), Array)
 Mail::Field::FIELD_ORDER_LOOKUP = T.let(T.unsafe(nil), Hash)
+
+# Generic Field Exception
 class Mail::Field::FieldError < ::StandardError; end
 
 class Mail::Field::IncompleteParseError < ::Mail::Field::ParseError
@@ -650,6 +1351,8 @@ class Mail::Field::NilParseError < ::Mail::Field::ParseError
   def initialize(element); end
 end
 
+# Raised when a parsing error has occurred (ie, a StructuredField has tried
+# to parse a field that is invalid or improperly written)
 class Mail::Field::ParseError < ::Mail::Field::FieldError
   def initialize(element, value, reason); end
 
@@ -666,17 +1369,36 @@ class Mail::Field::ParseError < ::Mail::Field::FieldError
 end
 
 Mail::Field::STRUCTURED_FIELDS = T.let(T.unsafe(nil), Array)
+
+# Raised when attempting to set a structured field's contents to an invalid syntax
 class Mail::Field::SyntaxError < ::Mail::Field::FieldError; end
 
+# Field List class provides an enhanced array that keeps a list of
+# email fields in order.  And allows you to insert new fields without
+# having to worry about the order they will appear in.
 class Mail::FieldList < ::Array
   def <<(new_field); end
 end
 
+# FileDelivery class delivers emails into multiple files based on the destination
+# address.  Each file is appended to if it already exists.
+#
+# So if you have an email going to fred@test, bob@test, joe@anothertest, and you
+# set your location path to /path/to/mails then FileDelivery will create the directory
+# if it does not exist, and put one copy of the email in three files, called
+# by their message id
+#
+# Make sure the path you specify with :location is writable by the Ruby process
+# running Mail.
 class Mail::FileDelivery
   def initialize(values); end
 
   def deliver!(mail); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 end
 
@@ -692,59 +1414,230 @@ end
 Mail::FromField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::FromField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
+# Provides access to a header object.
+#
+# ===Per RFC2822
+#
+# 2.2. Header Fields
+#
+# Header fields are lines composed of a field name, followed by a colon
+# (":"), followed by a field body, and terminated by CRLF.  A field
+# name MUST be composed of printable US-ASCII characters (i.e.,
+# characters that have values between 33 and 126, inclusive), except
+# colon.  A field body may be composed of any US-ASCII characters,
+# except for CR and LF.  However, a field body may contain CRLF when
+# used in header "folding" and  "unfolding" as described in section
+# 2.2.3.  All field bodies MUST conform to the syntax described in
+# sections 3 and 4 of this standard.
 class Mail::Header
   include ::Mail::Constants
   include ::Mail::Utilities
   include ::Enumerable
 
+  # Creates a new header object.
+  #
+  # Accepts raw text or nothing.  If given raw text will attempt to parse
+  # it and split it into the various fields, instantiating each field as
+  # it goes.
+  #
+  # If it finds a field that should be a structured field (such as content
+  # type), but it fails to parse it, it will simply make it an unstructured
+  # field and leave it alone.  This will mean that the data is preserved but
+  # no automatic processing of that field will happen.  If you find one of
+  # these cases, please make a patch and send it in, or at the least, send
+  # me the example so we can fix it.
   def initialize(header_text = T.unsafe(nil), charset = T.unsafe(nil)); end
 
+  # 3.6. Field definitions
+  #
+  # The following table indicates limits on the number of times each
+  # field may occur in a message header as well as any special
+  # limitations on the use of those fields.  An asterisk next to a value
+  # in the minimum or maximum column indicates that a special restriction
+  # appears in the Notes column.
+  #
+  # <snip table from 3.6>
+  #
+  # As per RFC, many fields can appear more than once, we will return a string
+  # of the value if there is only one header, or if there is more than one
+  # matching header, will return an array of values in order that they appear
+  # in the header ordered from top to bottom.
+  #
+  # Example:
+  #
+  # h = Header.new
+  # h.fields = ['To: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
+  # h['To']          #=> 'mikel@me.com'
+  # h['X-Mail-SPAM'] #=> ['15', '20']
   def [](name); end
+
+  # Sets the FIRST matching field in the header to passed value, or deletes
+  # the FIRST field matched from the header if passed nil
+  #
+  # Example:
+  #
+  # h = Header.new
+  # h.fields = ['To: mikel@me.com', 'X-Mail-SPAM: 15', 'X-Mail-SPAM: 20']
+  # h['To'] = 'bob@you.com'
+  # h['To']    #=> 'bob@you.com'
+  # h['X-Mail-SPAM'] = '10000'
+  # h['X-Mail-SPAM'] # => ['15', '20', '10000']
+  # h['X-Mail-SPAM'] = nil
+  # h['X-Mail-SPAM'] # => nil
   def []=(name, value); end
+
   def charset; end
   def charset=(val); end
   def decoded; end
   def encoded; end
   def errors; end
   def field_summary; end
+
+  # Returns an array of all the fields in the header in order that they
+  # were read in.
   def fields; end
+
+  # 3.6. Field definitions
+  #
+  # It is important to note that the header fields are not guaranteed to
+  # be in a particular order.  They may appear in any order, and they
+  # have been known to be reordered occasionally when transported over
+  # the Internet.  However, for the purposes of this standard, header
+  # fields SHOULD NOT be reordered when a message is transported or
+  # transformed.  More importantly, the trace header fields and resent
+  # header fields MUST NOT be reordered, and SHOULD be kept in blocks
+  # prepended to the message.  See sections 3.6.6 and 3.6.7 for more
+  # information.
+  #
+  # Populates the fields container with Field objects in the order it
+  # receives them in.
+  #
+  # Acceps an array of field string values, for example:
+  #
+  # h = Header.new
+  # h.fields = ['From: mikel@me.com', 'To: bob@you.com']
   def fields=(unfolded_fields); end
+
+  # Returns true if the header has a Content-ID defined (empty or not)
   def has_content_id?; end
+
+  # Returns true if the header has a Date defined (empty or not)
   def has_date?; end
+
+  # Returns true if the header has a Message-ID defined (empty or not)
   def has_message_id?; end
+
+  # Returns true if the header has a MIME version defined (empty or not)
   def has_mime_version?; end
+
+  # The preserved raw source of the header as you passed it in, untouched
+  # for your Regexing glory.
   def raw_source; end
+
   def to_s; end
 
   private
 
+  # Enumerable support; yield each field in order to the block if there is one,
+  # or return an Enumerator for them if there isn't.
   def each(&block); end
+
   def initialize_copy(original); end
   def limited_field?(name); end
   def raw_source=(val); end
   def select_field_for(name); end
+
+  # Splits an unfolded and line break cleaned header into individual field
+  # strings.
   def split_header; end
 
   class << self
+    # Large amount of headers in Email might create extra high CPU load
+    # Use this parameter to limit number of headers that will be parsed by
+    # mail library.
+    # Default: 1000
     def maximum_amount; end
+
     def maximum_amount=(value); end
   end
 end
 
 Mail::Header::LIMITED_FIELDS = T.let(T.unsafe(nil), Array)
 
+# The IMAP retriever allows to get the last, first or all emails from a IMAP server.
+# Each email retrieved (RFC2822) is given as an instance of +Message+.
+#
+# While being retrieved, emails can be yielded if a block is given.
+#
+# === Example of retrieving Emails from GMail:
+#
+# Mail.defaults do
+# retriever_method :imap, { :address             => "imap.googlemail.com",
+# :port                => 993,
+# :user_name           => '<username>',
+# :password            => '<password>',
+# :enable_ssl          => true }
+# end
+#
+# Mail.all    #=> Returns an array of all emails
+# Mail.first  #=> Returns the first unread email
+# Mail.last   #=> Returns the last unread email
+#
+# You can also pass options into Mail.find to locate an email in your imap mailbox
+# with the following options:
+#
+# mailbox: name of the mailbox used for email retrieval. The default is 'INBOX'.
+# what:    last or first emails. The default is :first.
+# order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+# count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+# instance of Message, not an array of Message instances.
+# keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
+# or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+# The default is 'ALL'
+#
+# Mail.find(:what => :first, :count => 10, :order => :asc, :keys=>'ALL')
+# #=> Returns the first 10 emails in ascending order
 class Mail::IMAP < ::Mail::Retriever
   def initialize(values); end
 
+  # Returns the connection object of the retrievable (IMAP or POP3)
   def connection(&block); end
+
+  # Delete all emails from a IMAP mailbox
   def delete_all(mailbox = T.unsafe(nil)); end
+
+  # Find emails in a IMAP mailbox. Without any options, the 10 last received emails are returned.
+  #
+  # Possible options:
+  # mailbox: mailbox to search the email(s) in. The default is 'INBOX'.
+  # what:    last or first emails. The default is :first.
+  # order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  # count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+  # instance of Message, not an array of Message instances.
+  # read_only: will ensure that no writes are made to the inbox during the session.  Specifically, if this is
+  # set to true, the code will use the EXAMINE command to retrieve the mail.  If set to false, which
+  # is the default, a SELECT command will be used to retrieve the mail
+  # This is helpful when you don't want your messages to be set to read automatically. Default is false.
+  # delete_after_find: flag for whether to delete each retreived email after find. Default
+  # is false. Use #find_and_delete if you would like this to default to true.
+  # keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
+  # or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+  # The default is 'ALL'
+  # search_charset: charset to pass to IMAP server search. Omitted by default. Example: 'UTF-8' or 'ASCII'.
   def find(options = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 
   private
 
+  # Start an IMAP session and ensures that it will be closed in any case.
   def start(config = T.unsafe(nil), &block); end
+
+  # Set default options
   def validate_options(options); end
 end
 
@@ -763,28 +1656,108 @@ Mail::InReplyToField::FIELD_NAME = T.let(T.unsafe(nil), String)
 class Mail::IndifferentHash < ::Hash
   def initialize(constructor = T.unsafe(nil)); end
 
+  # Assigns a new value to the hash:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash[:key] = "value"
   def []=(key, value); end
+
   def default(key = T.unsafe(nil)); end
+
+  # Removes a specified key from the hash.
   def delete(key); end
+
+  # Returns an exact copy of the hash.
   def dup; end
+
+  # Fetches the value for the specified key, same as doing hash[key]
   def fetch(key, *extras); end
+
+  # Checks the hash for a key matching the argument passed in:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash["key"] = "value"
+  # hash.key? :key  # => true
+  # hash.key? "key" # => true
   def has_key?(key); end
+
+  # Checks the hash for a key matching the argument passed in:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash["key"] = "value"
+  # hash.key? :key  # => true
+  # hash.key? "key" # => true
   def include?(key); end
+
+  # Checks the hash for a key matching the argument passed in:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash["key"] = "value"
+  # hash.key? :key  # => true
+  # hash.key? "key" # => true
   def key?(key); end
+
+  # Checks the hash for a key matching the argument passed in:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash["key"] = "value"
+  # hash.key? :key  # => true
+  # hash.key? "key" # => true
   def member?(key); end
+
+  # Merges the instantized and the specified hashes together, giving precedence to the values from the second hash
+  # Does not overwrite the existing hash.
   def merge(hash); end
+
+  # Updates the instantized hash with values from the second:
+  #
+  # hash_1 = HashWithIndifferentAccess.new
+  # hash_1[:key] = "value"
+  #
+  # hash_2 = HashWithIndifferentAccess.new
+  # hash_2[:key] = "New Value!"
+  #
+  # hash_1.update(hash_2) # => {"key"=>"New Value!"}
   def merge!(other_hash); end
+
   def regular_update(*_arg0); end
   def regular_writer(_arg0, _arg1); end
+
+  # Performs the opposite of merge, with the keys and values from the first hash taking precedence over the second.
+  # This overloaded definition prevents returning a regular hash, if reverse_merge is called on a HashWithDifferentAccess.
   def reverse_merge(other_hash); end
+
   def reverse_merge!(other_hash); end
+
+  # Assigns a new value to the hash:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash[:key] = "value"
   def store(key, value); end
+
   def stringify_keys; end
   def stringify_keys!; end
   def symbolize_keys; end
   def to_hash; end
   def to_options!; end
+
+  # Updates the instantized hash with values from the second:
+  #
+  # hash_1 = HashWithIndifferentAccess.new
+  # hash_1[:key] = "value"
+  #
+  # hash_2 = HashWithIndifferentAccess.new
+  # hash_2[:key] = "New Value!"
+  #
+  # hash_1.update(hash_2) # => {"key"=>"New Value!"}
   def update(other_hash); end
+
+  # Returns an array of the values at the specified indices:
+  #
+  # hash = HashWithIndifferentAccess.new
+  # hash[:a] = "x"
+  # hash[:b] = "y"
+  # hash.values_at("a", "b") # => ["x", "y"]
   def values_at(*indices); end
 
   protected
@@ -817,8 +1790,14 @@ class Mail::LoggerDelivery
   def initialize(settings); end
 
   def deliver!(mail); end
+
+  # Returns the value of attribute logger.
   def logger; end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Returns the value of attribute severity.
   def severity; end
 
   private
@@ -841,6 +1820,8 @@ class Mail::Matchers::AttachmentFilenameMatcher
   def initialize(filename); end
 
   def ===(other); end
+
+  # Returns the value of attribute filename.
   def filename; end
 end
 
@@ -884,46 +1865,430 @@ class Mail::Matchers::HasSentEmailMatcher
   def matches_on_text_part_body?(delivery); end
 end
 
+# The Message class provides a single point of access to all things to do with an
+# email message.
+#
+# You create a new email message by calling the Mail::Message.new method, or just
+# Mail.new
+#
+# A Message object by default has the following objects inside it:
+#
+# * A Header object which contains all information and settings of the header of the email
+# * Body object which contains all parts of the email that are not part of the header, this
+# includes any attachments, body text, MIME parts etc.
+#
+# ==Per RFC2822
+#
+# 2.1. General Description
+#
+# At the most basic level, a message is a series of characters.  A
+# message that is conformant with this standard is comprised of
+# characters with values in the range 1 through 127 and interpreted as
+# US-ASCII characters [ASCII].  For brevity, this document sometimes
+# refers to this range of characters as simply "US-ASCII characters".
+#
+# Note: This standard specifies that messages are made up of characters
+# in the US-ASCII range of 1 through 127.  There are other documents,
+# specifically the MIME document series [RFC2045, RFC2046, RFC2047,
+# RFC2048, RFC2049], that extend this standard to allow for values
+# outside of that range.  Discussion of those mechanisms is not within
+# the scope of this standard.
+#
+# Messages are divided into lines of characters.  A line is a series of
+# characters that is delimited with the two characters carriage-return
+# and line-feed; that is, the carriage return (CR) character (ASCII
+# value 13) followed immediately by the line feed (LF) character (ASCII
+# value 10).  (The carriage-return/line-feed pair is usually written in
+# this document as "CRLF".)
+#
+# A message consists of header fields (collectively called "the header
+# of the message") followed, optionally, by a body.  The header is a
+# sequence of lines of characters with special syntax as defined in
+# this standard. The body is simply a sequence of characters that
+# follows the header and is separated from the header by an empty line
+# (i.e., a line with nothing preceding the CRLF).
 class Mail::Message
   include ::Mail::Constants
   include ::Mail::Utilities
 
+  # ==Making an email
+  #
+  # You can make an new mail object via a block, passing a string, file or direct assignment.
+  #
+  # ===Making an email via a block
+  #
+  # mail = Mail.new do |m|
+  # m.from 'mikel@test.lindsaar.net'
+  # m.to 'you@test.lindsaar.net'
+  # m.subject 'This is a test email'
+  # m.body File.read('body.txt')
+  # end
+  #
+  # mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
+  #
+  # If may also pass a block with no arguments, in which case it will
+  # be evaluated in the scope of the new message instance:
+  #
+  # mail = Mail.new do
+  # from 'mikel@test.lindsaar.net'
+  # # …
+  # end
+  #
+  # ===Making an email via passing a string
+  #
+  # mail = Mail.new("To: mikel@test.lindsaar.net\r\nSubject: Hello\r\n\r\nHi there!")
+  # mail.body.to_s #=> 'Hi there!'
+  # mail.subject   #=> 'Hello'
+  # mail.to        #=> 'mikel@test.lindsaar.net'
+  #
+  # ===Making an email from a file
+  #
+  # mail = Mail.read('path/to/file.eml')
+  # mail.body.to_s #=> 'Hi there!'
+  # mail.subject   #=> 'Hello'
+  # mail.to        #=> 'mikel@test.lindsaar.net'
+  #
+  # ===Making an email via assignment
+  #
+  # You can assign values to a mail object via four approaches:
+  #
+  # * Message#field_name=(value)
+  # * Message#field_name(value)
+  # * Message#['field_name']=(value)
+  # * Message#[:field_name]=(value)
+  #
+  # Examples:
+  #
+  # mail = Mail.new
+  # mail['from'] = 'mikel@test.lindsaar.net'
+  # mail[:to]    = 'you@test.lindsaar.net'
+  # mail.subject 'This is a test email'
+  # mail.body    = 'This is a body'
+  #
+  # mail.to_s #=> "From: mikel@test.lindsaar.net\r\nTo: you@...
   def initialize(*args, &block); end
 
+  # Provides the operator needed for sort et al.
+  #
+  # Compares this mail object with another mail object, this is done by date, so an
+  # email that is older than another will appear first.
+  #
+  # Example:
+  #
+  # mail1 = Mail.new do
+  # date(Time.now)
+  # end
+  # mail2 = Mail.new do
+  # date(Time.now - 86400) # 1 day older
+  # end
+  # [mail2, mail1].sort #=> [mail2, mail1]
   def <=>(other); end
+
+  # Two emails are the same if they have the same fields and body contents. One
+  # gotcha here is that Mail will insert Message-IDs when calling encoded, so doing
+  # mail1.encoded == mail2.encoded is most probably not going to return what you think
+  # as the assigned Message-IDs by Mail (if not already defined as the same) will ensure
+  # that the two objects are unique, and this comparison will ALWAYS return false.
+  #
+  # So the == operator has been defined like so:  Two messages are the same if they have
+  # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
+  # different Message-ID value, then they are false.
+  #
+  # So, in practice the == operator works like this:
+  #
+  # m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+  # m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+  # m1 == m2 #=> true
+  #
+  # m1 = Mail.new("Subject: Hello\r\n\r\nHello")
+  # m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m1 == m2 #=> true
+  #
+  # m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m2 = Mail.new("Subject: Hello\r\n\r\nHello")
+  # m1 == m2 #=> true
+  #
+  # m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m2 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m1 == m2 #=> true
+  #
+  # m1 = Mail.new("Message-ID: <1234@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
+  # m1 == m2 #=> false
   def ==(other); end
+
+  # Allows you to read an arbitrary header
+  #
+  # Example:
+  #
+  # mail['foo'] = '1234'
+  # mail['foo'].to_s #=> '1234'
   def [](name); end
+
+  # Allows you to add an arbitrary header
+  #
+  # Example:
+  #
+  # mail['foo'] = '1234'
+  # mail['foo'].to_s #=> '1234'
   def []=(name, value); end
+
   def action; end
+
+  # Adds a content type and charset if the body is US-ASCII
+  #
+  # Otherwise raises a warning
   def add_charset; end
+
+  # Adds a content transfer encoding
   def add_content_transfer_encoding; end
+
+  # Adds a content type and charset if the body is US-ASCII
+  #
+  # Otherwise raises a warning
   def add_content_type; end
+
+  # Creates a new empty Date field and inserts it in the correct order
+  # into the Header.  The DateField object will automatically generate
+  # DateTime.now's date if you try and encode it or output it to_s without
+  # specifying a date yourself.
+  #
+  # It will preserve any date you specify if you do.
   def add_date(date_val = T.unsafe(nil)); end
+
+  # Adds a file to the message.  You have two options with this method, you can
+  # just pass in the absolute path to the file you want and Mail will read the file,
+  # get the filename from the path you pass in and guess the MIME media type, or you
+  # can pass in the filename as a string, and pass in the file content as a blob.
+  #
+  # Example:
+  #
+  # m = Mail.new
+  # m.add_file('/path/to/filename.png')
+  #
+  # m = Mail.new
+  # m.add_file(:filename => 'filename.png', :content => File.read('/path/to/file.jpg'))
+  #
+  # Note also that if you add a file to an existing message, Mail will convert that message
+  # to a MIME multipart email, moving whatever plain text body you had into its own text
+  # plain part.
+  #
+  # Example:
+  #
+  # m = Mail.new do
+  # body 'this is some text'
+  # end
+  # m.multipart? #=> false
+  # m.add_file('/path/to/filename.png')
+  # m.multipart? #=> true
+  # m.parts.first.content_type.content_type #=> 'text/plain'
+  # m.parts.last.content_type.content_type #=> 'image/png'
+  #
+  # See also #attachments
   def add_file(values); end
+
+  # Creates a new empty Message-ID field and inserts it in the correct order
+  # into the Header.  The MessageIdField object will automatically generate
+  # a unique message ID if you try and encode it or output it to_s without
+  # specifying a message id.
+  #
+  # It will preserve the message ID you specify if you do.
   def add_message_id(msg_id_val = T.unsafe(nil)); end
+
+  # Creates a new empty Mime Version field and inserts it in the correct order
+  # into the Header.  The MimeVersion object will automatically generate
+  # set itself to '1.0' if you try and encode it or output it to_s without
+  # specifying a version yourself.
+  #
+  # It will preserve any date you specify if you do.
   def add_mime_version(ver_val = T.unsafe(nil)); end
+
+  # Adds a part to the parts list or creates the part list
   def add_part(part); end
+
   def add_transfer_encoding; end
   def all_parts; end
+
+  # Returns the attachment data if there is any
   def attachment; end
+
+  # Returns true if this part is an attachment,
+  # false otherwise.
   def attachment?; end
+
+  # Returns an AttachmentsList object, which holds all of the attachments in
+  # the receiver object (either the entire email or a part within) and all
+  # of its descendants.
+  #
+  # It also allows you to add attachments to the mail object directly, like so:
+  #
+  # mail.attachments['filename.jpg'] = File.read('/path/to/filename.jpg')
+  #
+  # If you do this, then Mail will take the file name and work out the MIME media type
+  # set the Content-Type, Content-Disposition, Content-Transfer-Encoding and
+  # base64 encode the contents of the attachment all for you.
+  #
+  # You can also specify overrides if you want by passing a hash instead of a string:
+  #
+  # mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+  # :content => File.read('/path/to/filename.jpg')}
+  #
+  # If you want to use a different encoding than Base64, you can pass an encoding in,
+  # but then it is up to you to pass in the content pre-encoded, and don't expect
+  # Mail to know how to decode this data:
+  #
+  # file_content = SpecialEncode(File.read('/path/to/filename.jpg'))
+  # mail.attachments['filename.jpg'] = {:mime_type => 'application/x-gzip',
+  # :encoding => 'SpecialEncoding',
+  # :content => file_content }
+  #
+  # You can also search for specific attachments:
+  #
+  # # By Filename
+  # mail.attachments['filename.jpg']   #=> Mail::Part object or nil
+  #
+  # # or by index
+  # mail.attachments[0]                #=> Mail::Part (first attachment)
   def attachments; end
+
+  # Returns the Bcc value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.bcc #=> ['mikel@test.lindsaar.net']
+  # mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.bcc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.bcc #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.bcc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.bcc << 'ada@test.lindsaar.net'
+  # mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def bcc(val = T.unsafe(nil)); end
+
+  # Sets the Bcc value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.bcc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.bcc #=> ['mikel@test.lindsaar.net']
+  # mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def bcc=(val); end
+
   def bcc_addresses; end
+
+  # Returns an array of addresses (the encoded value) in the Bcc field,
+  # if no Bcc field, returns an empty array
   def bcc_addrs; end
+
+  # Returns the body of the message object. Or, if passed
+  # a parameter sets the value.
+  #
+  # Example:
+  #
+  # mail = Mail::Message.new('To: mikel\r\n\r\nThis is the body')
+  # mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
+  #
+  # mail.body 'This is another body'
+  # mail.body #=> #<Mail::Body:0x13919c @raw_source="This is anothe...
   def body(value = T.unsafe(nil)); end
+
+  # Sets the body object of the message object.
+  #
+  # Example:
+  #
+  # mail.body = 'This is the body'
+  # mail.body #=> #<Mail::Body:0x13919c @raw_source="This is the bo...
+  #
+  # You can also reset the body of an Message object by setting body to nil
+  #
+  # Example:
+  #
+  # mail.body = 'this is the body'
+  # mail.body.encoded #=> 'this is the body'
+  # mail.body = nil
+  # mail.body.encoded #=> ''
+  #
+  # If you try and set the body of an email that is a multipart email, then instead
+  # of deleting all the parts of your email, mail will add a text/plain part to
+  # your email:
+  #
+  # mail.add_file 'somefilename.png'
+  # mail.parts.length #=> 1
+  # mail.body = "This is a body"
+  # mail.parts.length #=> 2
+  # mail.parts.last.content_type.content_type #=> 'This is a body'
   def body=(value); end
+
   def body_encoding(value = T.unsafe(nil)); end
   def body_encoding=(value); end
   def bounced?; end
+
+  # Returns the current boundary for this message part
   def boundary; end
+
+  # Returns the Cc value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.cc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.cc #=> ['mikel@test.lindsaar.net']
+  # mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.cc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.cc #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.cc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.cc << 'ada@test.lindsaar.net'
+  # mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def cc(val = T.unsafe(nil)); end
+
+  # Sets the Cc value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.cc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.cc #=> ['mikel@test.lindsaar.net']
+  # mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def cc=(val); end
+
   def cc_addresses; end
+
+  # Returns an array of addresses (the encoded value) in the Cc field,
+  # if no Cc field, returns an empty array
   def cc_addrs; end
+
+  # Returns the character set defined in the content type field
   def charset; end
+
+  # Sets the charset to the supplied value.
   def charset=(value); end
+
   def comments(val = T.unsafe(nil)); end
   def comments=(val); end
   def content_description(val = T.unsafe(nil)); end
@@ -938,79 +2303,505 @@ class Mail::Message
   def content_transfer_encoding=(val); end
   def content_type(val = T.unsafe(nil)); end
   def content_type=(val); end
+
+  # Returns the content type parameters
   def content_type_parameters; end
+
   def convert_to_multipart; end
   def date(val = T.unsafe(nil)); end
   def date=(val); end
   def decode_body; end
   def decoded; end
+
+  # Returns the default value of the field requested as a symbol.
+  #
+  # Each header field has a :default method which returns the most common use case for
+  # that field, for example, the date field types will return a DateTime object when
+  # sent :default, the subject, or unstructured fields will return a decoded string of
+  # their value, the address field types will return a single addr_spec or an array of
+  # addr_specs if there is more than one.
   def default(sym, val = T.unsafe(nil)); end
+
+  # Delivers a mail object.
+  #
+  # Examples:
+  #
+  # mail = Mail.read('file.eml')
+  # mail.deliver
   def deliver; end
+
+  # This method bypasses checking perform_deliveries and raise_delivery_errors,
+  # so use with caution.
+  #
+  # It still however fires off the interceptors and calls the observers callbacks if they are defined.
+  #
+  # Returns self
   def deliver!; end
+
+  # If you assign a delivery handler, mail will call :deliver_mail on the
+  # object you assign to delivery_handler, it will pass itself as the
+  # single argument.
+  #
+  # If you define a delivery_handler, then you are responsible for the
+  # following actions in the delivery cycle:
+  #
+  # * Appending the mail object to Mail.deliveries as you see fit.
+  # * Checking the mail.perform_deliveries flag to decide if you should
+  # actually call :deliver! the mail object or not.
+  # * Checking the mail.raise_delivery_errors flag to decide if you
+  # should raise delivery errors if they occur.
+  # * Actually calling :deliver! (with the bang) on the mail object to
+  # get it to deliver itself.
+  #
+  # A simplest implementation of a delivery_handler would be
+  #
+  # class MyObject
+  #
+  # def initialize
+  # @mail = Mail.new('To: mikel@test.lindsaar.net')
+  # @mail.delivery_handler = self
+  # end
+  #
+  # attr_accessor :mail
+  #
+  # def deliver_mail(mail)
+  # yield
+  # end
+  # end
+  #
+  # Then doing:
+  #
+  # obj = MyObject.new
+  # obj.mail.deliver
+  #
+  # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
+  # which then can just yield and let Mail do its own private do_delivery
+  # method.
   def delivery_handler; end
+
+  # If you assign a delivery handler, mail will call :deliver_mail on the
+  # object you assign to delivery_handler, it will pass itself as the
+  # single argument.
+  #
+  # If you define a delivery_handler, then you are responsible for the
+  # following actions in the delivery cycle:
+  #
+  # * Appending the mail object to Mail.deliveries as you see fit.
+  # * Checking the mail.perform_deliveries flag to decide if you should
+  # actually call :deliver! the mail object or not.
+  # * Checking the mail.raise_delivery_errors flag to decide if you
+  # should raise delivery errors if they occur.
+  # * Actually calling :deliver! (with the bang) on the mail object to
+  # get it to deliver itself.
+  #
+  # A simplest implementation of a delivery_handler would be
+  #
+  # class MyObject
+  #
+  # def initialize
+  # @mail = Mail.new('To: mikel@test.lindsaar.net')
+  # @mail.delivery_handler = self
+  # end
+  #
+  # attr_accessor :mail
+  #
+  # def deliver_mail(mail)
+  # yield
+  # end
+  # end
+  #
+  # Then doing:
+  #
+  # obj = MyObject.new
+  # obj.mail.deliver
+  #
+  # Would cause Mail to call obj.deliver_mail passing itself as a parameter,
+  # which then can just yield and let Mail do its own private do_delivery
+  # method.
   def delivery_handler=(_arg0); end
+
   def delivery_method(method = T.unsafe(nil), settings = T.unsafe(nil)); end
+
+  # returns the part in a multipart/report email that has the content-type delivery-status
   def delivery_status_part; end
+
+  # Returns true if the message is a multipart/report; report-type=delivery-status;
   def delivery_status_report?; end
+
+  # Returns the list of addresses this message should be sent to by
+  # collecting the addresses off the to, cc and bcc fields.
+  #
+  # Example:
+  #
+  # mail.to = 'mikel@test.lindsaar.net'
+  # mail.cc = 'sam@test.lindsaar.net'
+  # mail.bcc = 'bob@test.lindsaar.net'
+  # mail.destinations.length #=> 3
+  # mail.destinations.first #=> 'mikel@test.lindsaar.net'
   def destinations; end
+
   def diagnostic_code; end
   def encode!; end
+
+  # Outputs an encoded string representation of the mail message including
+  # all headers, attachments, etc.  This is an encoded email in US-ASCII,
+  # so it is able to be directly sent to an email server.
   def encoded; end
+
   def envelope_date; end
   def envelope_from; end
   def error_status; end
+
+  # Returns a list of parser errors on the header, each field that had an error
+  # will be reparsed as an unstructured field to preserve the data inside, but
+  # will not be used for further processing.
+  #
+  # It returns a nested array of [field_name, value, original_error_message]
+  # per error found.
+  #
+  # Example:
+  #
+  # message = Mail.new("Content-Transfer-Encoding: weirdo\r\n")
+  # message.errors.size #=> 1
+  # message.errors.first[0] #=> "Content-Transfer-Encoding"
+  # message.errors.first[1] #=> "weirdo"
+  # message.errors.first[3] #=> <The original error message exception>
+  #
+  # This is a good first defence on detecting spam by the way.  Some spammers send
+  # invalid emails to try and get email parsers to give up parsing them.
   def errors; end
+
+  # Returns the filename of the attachment
   def filename; end
+
   def final_recipient; end
   def find_first_mime_type(mt); end
+
+  # Returns the From value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.from #=> ['mikel@test.lindsaar.net']
+  # mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.from 'Mikel <mikel@test.lindsaar.net>'
+  # mail.from #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.from 'Mikel <mikel@test.lindsaar.net>'
+  # mail.from << 'ada@test.lindsaar.net'
+  # mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def from(val = T.unsafe(nil)); end
+
+  # Sets the From value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.from #=> ['mikel@test.lindsaar.net']
+  # mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def from=(val); end
+
   def from_address; end
+
+  # Returns an array of addresses (the encoded value) in the From field,
+  # if no From field, returns an empty array
   def from_addrs; end
+
   def has_attachments?; end
   def has_charset?; end
   def has_content_transfer_encoding?; end
   def has_content_type?; end
+
+  # Returns true if the message has a Date field, the field may or may
+  # not have a value, but the field exists or not.
   def has_date?; end
+
+  # Returns true if the message has a message ID field, the field may or may
+  # not have a value, but the field exists or not.
   def has_message_id?; end
+
+  # Returns true if the message has a Mime-Version field, the field may or may
+  # not have a value, but the field exists or not.
   def has_mime_version?; end
+
   def has_transfer_encoding?; end
+
+  # Returns the header object of the message object. Or, if passed
+  # a parameter sets the value.
+  #
+  # Example:
+  #
+  # mail = Mail::Message.new('To: mikel\r\nFrom: you')
+  # mail.header #=> #<Mail::Header:0x13ce14 @raw_source="To: mikel\r\nFr...
+  #
+  # mail.header #=> nil
+  # mail.header 'To: mikel\r\nFrom: you'
+  # mail.header #=> #<Mail::Header:0x13ce14 @raw_source="To: mikel\r\nFr...
   def header(value = T.unsafe(nil)); end
+
+  # Sets the header of the message object.
+  #
+  # Example:
+  #
+  # mail.header = 'To: mikel@test.lindsaar.net\r\nFrom: Bob@bob.com'
+  # mail.header #=> <#Mail::Header
   def header=(value); end
+
+  # Returns an FieldList of all the fields in the header in the order that
+  # they appear in the header
   def header_fields; end
+
+  # Provides a way to set custom headers, by passing in a hash
   def headers(hash = T.unsafe(nil)); end
+
+  # Accessor for html_part
   def html_part(&block); end
+
+  # Helper to add a html part to a multipart/alternative email.  If this and
+  # text_part are both defined in a message, then it will be a multipart/alternative
+  # message and set itself that way.
   def html_part=(msg); end
+
   def in_reply_to(val = T.unsafe(nil)); end
   def in_reply_to=(val); end
   def inform_interceptors; end
   def inform_observers; end
   def inspect; end
+
+  # Returns whether message will be marked for deletion.
+  # If so, the message will be deleted at session close (i.e. after #find
+  # exits), but only if also using the #find_and_delete method, or by
+  # calling #find with :delete_after_find set to true.
+  #
+  # Side-note: Just to be clear, this method will return true even if
+  # the message hasn't yet been marked for delete on the mail server.
+  # However, if this method returns true, it *will be* marked on the
+  # server after each block yields back to #find or #find_and_delete.
   def is_marked_for_delete?; end
+
   def keywords(val = T.unsafe(nil)); end
   def keywords=(val); end
+
+  # Returns the main content type
   def main_type; end
+
+  # Sets whether this message should be deleted at session close (i.e.
+  # after #find). Message will only be deleted if messages are retrieved
+  # using the #find_and_delete method, or by calling #find with
+  # :delete_after_find set to true.
   def mark_for_delete=(value = T.unsafe(nil)); end
+
   def message_content_type; end
+
+  # Returns the Message-ID of the mail object.  Note, per RFC 2822 the Message ID
+  # consists of what is INSIDE the < > usually seen in the mail header, so this method
+  # will return only what is inside.
+  #
+  # Example:
+  #
+  # mail.message_id = '<1234@message.id>'
+  # mail.message_id #=> '1234@message.id'
+  #
+  # Also allows you to set the Message-ID by passing a string as a parameter
+  #
+  # mail.message_id '<1234@message.id>'
+  # mail.message_id #=> '1234@message.id'
   def message_id(val = T.unsafe(nil)); end
+
+  # Sets the Message-ID. Note, per RFC 2822 the Message ID consists of what is INSIDE
+  # the < > usually seen in the mail header, so this method will return only what is inside.
+  #
+  # mail.message_id = '<1234@message.id>'
+  # mail.message_id #=> '1234@message.id'
   def message_id=(val); end
+
+  # Method Missing in this implementation allows you to set any of the
+  # standard fields directly as you would the "to", "subject" etc.
+  #
+  # Those fields used most often (to, subject et al) are given their
+  # own method for ease of documentation and also to avoid the hook
+  # call to method missing.
+  #
+  # This will only catch the known fields listed in:
+  #
+  # Mail::Field::KNOWN_FIELDS
+  #
+  # as per RFC 2822, any ruby string or method name could pretty much
+  # be a field name, so we don't want to just catch ANYTHING sent to
+  # a message object and interpret it as a header.
+  #
+  # This method provides all three types of header call to set, read
+  # and explicitly set with the = operator
+  #
+  # Examples:
+  #
+  # mail.comments = 'These are some comments'
+  # mail.comments #=> 'These are some comments'
+  #
+  # mail.comments 'These are other comments'
+  # mail.comments #=> 'These are other comments'
+  #
+  #
+  # mail.date = 'Tue, 1 Jul 2003 10:52:37 +0200'
+  # mail.date.to_s #=> 'Tue, 1 Jul 2003 10:52:37 +0200'
+  #
+  # mail.date 'Tue, 1 Jul 2003 10:52:37 +0200'
+  # mail.date.to_s #=> 'Tue, 1 Jul 2003 10:52:37 +0200'
+  #
+  #
+  # mail.resent_msg_id = '<1234@resent_msg_id.lindsaar.net>'
+  # mail.resent_msg_id #=> '<1234@resent_msg_id.lindsaar.net>'
+  #
+  # mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
+  # mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
   def method_missing(name, *args, &block); end
+
+  # Returns the content type parameters
   def mime_parameters; end
+
+  # Returns the MIME media type of part we are on, this is taken from the content-type header
   def mime_type; end
+
+  # Returns the MIME version of the email as a string
+  #
+  # Example:
+  #
+  # mail.mime_version = '1.0'
+  # mail.mime_version #=> '1.0'
+  #
+  # Also allows you to set the MIME version by passing a string as a parameter.
+  #
+  # Example:
+  #
+  # mail.mime_version '1.0'
+  # mail.mime_version #=> '1.0'
   def mime_version(val = T.unsafe(nil)); end
+
+  # Sets the MIME version of the email by accepting a string
+  #
+  # Example:
+  #
+  # mail.mime_version = '1.0'
+  # mail.mime_version #=> '1.0'
   def mime_version=(val); end
+
+  # Returns true if the message is multipart
   def multipart?; end
+
+  # Returns true if the message is a multipart/report
   def multipart_report?; end
+
+  # Allows you to add a part in block form to an existing mail message object
+  #
+  # Example:
+  #
+  # mail = Mail.new do
+  # part :content_type => "multipart/alternative", :content_disposition => "inline" do |p|
+  # p.part :content_type => "text/plain", :body => "test text\nline #2"
+  # p.part :content_type => "text/html", :body => "<b>test</b> HTML<br/>\nline #2"
+  # end
+  # end
   def part(params = T.unsafe(nil)); end
+
+  # Returns a parts list object of all the parts in the message
   def parts; end
+
+  # If set to false, mail will go through the motions of doing a delivery,
+  # but not actually call the delivery method or append the mail object to
+  # the Mail.deliveries collection.  Useful for testing.
+  #
+  # Mail.deliveries.size #=> 0
+  # mail.delivery_method :smtp
+  # mail.perform_deliveries = false
+  # mail.deliver                        # Mail::SMTP not called here
+  # Mail.deliveries.size #=> 0
+  #
+  # If you want to test and query the Mail.deliveries collection to see what
+  # mail you sent, you should set perform_deliveries to true and use
+  # the :test mail delivery_method:
+  #
+  # Mail.deliveries.size #=> 0
+  # mail.delivery_method :test
+  # mail.perform_deliveries = true
+  # mail.deliver
+  # Mail.deliveries.size #=> 1
+  #
+  # This setting is ignored by mail (though still available as a flag) if you
+  # define a delivery_handler
   def perform_deliveries; end
+
+  # If set to false, mail will go through the motions of doing a delivery,
+  # but not actually call the delivery method or append the mail object to
+  # the Mail.deliveries collection.  Useful for testing.
+  #
+  # Mail.deliveries.size #=> 0
+  # mail.delivery_method :smtp
+  # mail.perform_deliveries = false
+  # mail.deliver                        # Mail::SMTP not called here
+  # Mail.deliveries.size #=> 0
+  #
+  # If you want to test and query the Mail.deliveries collection to see what
+  # mail you sent, you should set perform_deliveries to true and use
+  # the :test mail delivery_method:
+  #
+  # Mail.deliveries.size #=> 0
+  # mail.delivery_method :test
+  # mail.perform_deliveries = true
+  # mail.deliver
+  # Mail.deliveries.size #=> 1
+  #
+  # This setting is ignored by mail (though still available as a flag) if you
+  # define a delivery_handler
   def perform_deliveries=(_arg0); end
+
+  # If set to false, mail will silently catch and ignore any exceptions
+  # raised through attempting to deliver an email.
+  #
+  # This setting is ignored by mail (though still available as a flag) if you
+  # define a delivery_handler
   def raise_delivery_errors; end
+
+  # If set to false, mail will silently catch and ignore any exceptions
+  # raised through attempting to deliver an email.
+  #
+  # This setting is ignored by mail (though still available as a flag) if you
+  # define a delivery_handler
   def raise_delivery_errors=(_arg0); end
+
+  # The raw_envelope is the From mikel@test.lindsaar.net Mon May  2 16:07:05 2009
+  # type field that you can see at the top of any email that has come
+  # from a mailbox
   def raw_envelope; end
+
+  # Provides access to the raw source of the message as it was when it
+  # was instantiated. This is set at initialization and so is untouched
+  # by the parsers or decoder / encoders
+  #
+  # Example:
+  #
+  # mail = Mail.new('This is an invalid email message')
+  # mail.raw_source #=> "This is an invalid email message"
   def raw_source; end
+
   def read; end
+
+  # Encodes the message, calls encode on all its parts, gets an email message
+  # ready to send
   def ready_to_send!; end
+
   def received(val = T.unsafe(nil)); end
   def received=(val); end
   def recipients; end
@@ -1020,43 +2811,399 @@ class Mail::Message
   def register_for_delivery_notification(observer); end
   def remote_mta; end
   def reply(*args, &block); end
+
+  # Returns the Reply-To value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net']
+  # mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.reply_to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.reply_to << 'ada@test.lindsaar.net'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def reply_to(val = T.unsafe(nil)); end
+
+  # Sets the Reply-To value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.reply_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net']
+  # mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def reply_to=(val); end
+
+  # Returns the Resent-Bcc value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net']
+  # mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.resent_bcc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_bcc << 'ada@test.lindsaar.net'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_bcc(val = T.unsafe(nil)); end
+
+  # Sets the Resent-Bcc value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net']
+  # mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_bcc=(val); end
+
+  # Returns the Resent-Cc value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net']
+  # mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.resent_cc 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_cc << 'ada@test.lindsaar.net'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_cc(val = T.unsafe(nil)); end
+
+  # Sets the Resent-Cc value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net']
+  # mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_cc=(val); end
+
   def resent_date(val = T.unsafe(nil)); end
   def resent_date=(val); end
+
+  # Returns the Resent-From value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_from #=> ['mikel@test.lindsaar.net']
+  # mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.resent_from ['Mikel <mikel@test.lindsaar.net>']
+  # mail.resent_from #=> 'mikel@test.lindsaar.net'
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.resent_from 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_from << 'ada@test.lindsaar.net'
+  # mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_from(val = T.unsafe(nil)); end
+
+  # Sets the Resent-From value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.resent_from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_from #=> ['mikel@test.lindsaar.net']
+  # mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_from=(val); end
+
   def resent_message_id(val = T.unsafe(nil)); end
   def resent_message_id=(val); end
+
+  # Returns the Resent-Sender value of the mail object, as a single string of an address
+  # spec.  A sender per RFC 2822 must be a single address, so you can not append to
+  # this address.
+  #
+  # Example:
+  #
+  # mail.resent_sender = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_sender #=> 'mikel@test.lindsaar.net'
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.resent_sender 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_sender #=> 'mikel@test.lindsaar.net'
   def resent_sender(val = T.unsafe(nil)); end
+
+  # Sets the Resent-Sender value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.resent_sender = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_sender #=> 'mikel@test.lindsaar.net'
   def resent_sender=(val); end
+
+  # Returns the Resent-To value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net']
+  # mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.resent_to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_to << 'ada@test.lindsaar.net'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_to(val = T.unsafe(nil)); end
+
+  # Sets the Resent-To value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.resent_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net']
+  # mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def resent_to=(val); end
+
   def retryable?; end
+
+  # Returns the return path of the mail object, or sets it if you pass a string
   def return_path(val = T.unsafe(nil)); end
+
+  # Sets the return path of the object
   def return_path=(val); end
+
+  # Returns the Sender value of the mail object, as a single string of an address
+  # spec.  A sender per RFC 2822 must be a single address.
+  #
+  # Example:
+  #
+  # mail.sender = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.sender #=> 'mikel@test.lindsaar.net'
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.sender 'Mikel <mikel@test.lindsaar.net>'
+  # mail.sender #=> 'mikel@test.lindsaar.net'
   def sender(val = T.unsafe(nil)); end
+
+  # Sets the Sender value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.sender = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.sender #=> 'mikel@test.lindsaar.net'
   def sender=(val); end
+
+  # Sets the envelope from for the email
   def set_envelope(val); end
+
+  # Skips the deletion of this message. All other messages
+  # flagged for delete still will be deleted at session close (i.e. when
+  # #find exits). Only has an effect if you're using #find_and_delete
+  # or #find with :delete_after_find set to true.
   def skip_deletion; end
+
+  # Returns the SMTP Envelope From value of the mail object, as a single
+  # string of an address spec.
+  #
+  # Defaults to Return-Path, Sender, or the first From address.
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_from 'Mikel <mikel@test.lindsaar.net>'
+  # mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
   def smtp_envelope_from(val = T.unsafe(nil)); end
+
+  # Sets the From address on the SMTP Envelope.
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_from = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
   def smtp_envelope_from=(val); end
+
+  # Returns the SMTP Envelope To value of the mail object.
+  #
+  # Defaults to #destinations: To, Cc, and Bcc addresses.
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.smtp_envelope_to #=> 'mikel@test.lindsaar.net'
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_to ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
+  # mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
   def smtp_envelope_to(val = T.unsafe(nil)); end
+
+  # Sets the To addresses on the SMTP Envelope.
+  #
+  # Example:
+  #
+  # mail.smtp_envelope_to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.smtp_envelope_to #=> 'mikel@test.lindsaar.net'
+  #
+  # mail.smtp_envelope_to = ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
+  # mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
   def smtp_envelope_to=(val); end
+
+  # Returns the sub content type
   def sub_type; end
+
+  # Returns the decoded value of the subject field, as a single string.
+  #
+  # Example:
+  #
+  # mail.subject = "G'Day mate"
+  # mail.subject #=> "G'Day mate"
+  # mail.subject = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+  # mail.subject #=> "This is あ string"
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.subject "G'Day mate"
+  # mail.subject #=> "G'Day mate"
   def subject(val = T.unsafe(nil)); end
+
+  # Sets the Subject value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.subject = '=?UTF-8?Q?This_is_=E3=81=82_string?='
+  # mail.subject #=> "This is あ string"
   def subject=(val); end
+
   def text?; end
+
+  # Accessor for text_part
   def text_part(&block); end
+
+  # Helper to add a text part to a multipart/alternative email.  If this and
+  # html_part are both defined in a message, then it will be a multipart/alternative
+  # message and set itself that way.
   def text_part=(msg); end
+
+  # Returns the To value of the mail object as an array of strings of
+  # address specs.
+  #
+  # Example:
+  #
+  # mail.to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.to #=> ['mikel@test.lindsaar.net']
+  # mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
+  #
+  # Also allows you to set the value by passing a value as a parameter
+  #
+  # Example:
+  #
+  # mail.to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.to #=> ['mikel@test.lindsaar.net']
+  #
+  # Additionally, you can append new addresses to the returned Array like
+  # object.
+  #
+  # Example:
+  #
+  # mail.to 'Mikel <mikel@test.lindsaar.net>'
+  # mail.to << 'ada@test.lindsaar.net'
+  # mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def to(val = T.unsafe(nil)); end
+
+  # Sets the To value of the mail object, pass in a string of the field
+  #
+  # Example:
+  #
+  # mail.to = 'Mikel <mikel@test.lindsaar.net>'
+  # mail.to #=> ['mikel@test.lindsaar.net']
+  # mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
+  # mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   def to=(val); end
+
   def to_addresses; end
+
+  # Returns an array of addresses (the encoded value) in the To field,
+  # if no To field, returns an empty array
   def to_addrs; end
+
   def to_s; end
   def to_yaml(opts = T.unsafe(nil)); end
   def transfer_encoding; end
@@ -1074,15 +3221,30 @@ class Mail::Message
   def add_required_fields; end
   def add_required_message_fields; end
   def allowed_encodings; end
+
+  # see comments to body=. We take data and process it lazily
   def body_lazy(value); end
+
   def decode_body_as_text; end
   def do_delivery; end
+
+  # Returns the filename of the attachment (if it exists) or returns nil
   def find_attachment; end
+
   def identify_and_set_transfer_encoding; end
   def init_with_hash(hash); end
   def init_with_string(string); end
   def initialize_copy(original); end
+
+  # 2.1. General Description
+  # A message consists of header fields (collectively called "the header
+  # of the message") followed, optionally, by a body.  The header is a
+  # sequence of lines of characters with special syntax as defined in
+  # this standard. The body is simply a sequence of characters that
+  # follows the header and is separated from the header by an empty line
+  # (i.e., a line with nothing preceding the CRLF).
   def parse_message; end
+
   def process_body_raw; end
   def raw_source=(value); end
   def separate_parts; end
@@ -1121,6 +3283,8 @@ class Mail::MessageIdsElement
   def initialize(string); end
 
   def message_id; end
+
+  # Returns the value of attribute message_ids.
   def message_ids; end
 
   private
@@ -1131,7 +3295,10 @@ end
 class Mail::MimeVersionElement
   def initialize(string); end
 
+  # Returns the value of attribute major.
   def major; end
+
+  # Returns the value of attribute minor.
   def minor; end
 end
 
@@ -1152,50 +3319,267 @@ Mail::MimeVersionField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
 module Mail::Multibyte
   class << self
+    # Removes all invalid characters from the string.
+    #
+    # Note: this method is a no-op in Ruby 1.9
     def clean(string); end
+
+    # == Multibyte proxy
+    #
+    # +mb_chars+ is a multibyte safe proxy for string methods.
+    #
+    # In Ruby 1.8 and older it creates and returns an instance of the Mail::Multibyte::Chars class which
+    # encapsulates the original string. A Unicode safe version of all the String methods are defined on this proxy
+    # class. If the proxy class doesn't respond to a certain method, it's forwarded to the encapsuled string.
+    #
+    # name = 'Claus Müller'
+    # name.reverse # => "rell??M sualC"
+    # name.length  # => 13
+    #
+    # name.mb_chars.reverse.to_s # => "rellüM sualC"
+    # name.mb_chars.length       # => 12
+    #
+    # In Ruby 1.9 and newer +mb_chars+ returns +self+ because String is (mostly) encoding aware. This means that
+    # it becomes easy to run one version of your code on multiple Ruby versions.
+    #
+    # == Method chaining
+    #
+    # All the methods on the Chars proxy which normally return a string will return a Chars object. This allows
+    # method chaining on the result of any of these methods.
+    #
+    # name.mb_chars.reverse.length # => 12
+    #
+    # == Interoperability and configuration
+    #
+    # The Chars object tries to be as interchangeable with String objects as possible: sorting and comparing between
+    # String and Char work like expected. The bang! methods change the internal string representation in the Chars
+    # object. Interoperability problems can be resolved easily with a +to_s+ call.
+    #
+    # For more information about the methods defined on the Chars proxy see Mail::Multibyte::Chars. For
+    # information about how to change the default Multibyte behaviour see Mail::Multibyte.
     def mb_chars(str); end
+
+    # The proxy class returned when calling mb_chars. You can use this accessor to configure your own proxy
+    # class so you can support other encodings. See the Mail::Multibyte::Chars implementation for
+    # an example how to do this.
+    #
+    # Example:
+    # Mail::Multibyte.proxy_class = CharsForUTF32
     def proxy_class; end
+
+    # The proxy class returned when calling mb_chars. You can use this accessor to configure your own proxy
+    # class so you can support other encodings. See the Mail::Multibyte::Chars implementation for
+    # an example how to do this.
+    #
+    # Example:
+    # Mail::Multibyte.proxy_class = CharsForUTF32
     def proxy_class=(_arg0); end
+
+    # Returns a regular expression that matches valid characters in the current encoding
     def valid_character; end
+
+    # Verifies the encoding of a string
     def verify(string); end
+
+    # Verifies the encoding of the string and raises an exception when it's not valid
     def verify!(string); end
   end
 end
 
+# Chars enables you to work transparently with UTF-8 encoding in the Ruby String class without having extensive
+# knowledge about the encoding. A Chars object accepts a string upon initialization and proxies String methods in an
+# encoding safe manner. All the normal String methods are also implemented on the proxy.
+#
+# String methods are proxied through the Chars object, and can be accessed through the +mb_chars+ method. Methods
+# which would normally return a String object now return a Chars object so methods can be chained.
+#
+# "The Perfect String  ".mb_chars.downcase.strip.normalize # => "the perfect string"
+#
+# Chars objects are perfectly interchangeable with String objects as long as no explicit class checks are made.
+# If certain methods do explicitly check the class, call +to_s+ before you pass chars objects to them.
+#
+# bad.explicit_checking_method "T".mb_chars.downcase.to_s
+#
+# The default Chars implementation assumes that the encoding of the string is UTF-8, if you want to handle different
+# encodings you can write your own multibyte string handler and configure it through
+# Mail::Multibyte.proxy_class.
+#
+# class CharsForUTF32
+# def size
+# @wrapped_string.size / 4
+# end
+#
+# def self.accepts?(string)
+# string.length % 4 == 0
+# end
+# end
+#
+# Mail::Multibyte.proxy_class = CharsForUTF32
 class Mail::Multibyte::Chars
   include ::Comparable
 
   def initialize(string); end
 
+  # Returns -1, 0, or 1, depending on whether the Chars object is to be sorted before,
+  # equal or after the object on the right side of the operation. It accepts any object
+  # that implements +to_s+:
+  #
+  # 'é'.mb_chars <=> 'ü'.mb_chars # => -1
+  #
+  # See <tt>String#<=></tt> for more details.
   def <=>(other); end
+
+  # Like <tt>String#=~</tt> only it returns the character offset (in codepoints) instead of the byte offset.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('Café périferôl') =~ /ô/ # => 12
   def =~(other); end
+
+  # Implements Unicode-aware slice with codepoints. Slicing on one point returns the codepoints for that
+  # character.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('こんにちは').slice(2..3).to_s # => "にち"
   def [](*args); end
+
+  # Like <tt>String#[]=</tt>, except instead of byte offsets you specify character offsets.
+  #
+  # Example:
+  #
+  # s = "Müller"
+  # s.mb_chars[2] = "e" # Replace character with offset 2
+  # s
+  # # => "Müeler"
+  #
+  # s = "Müller"
+  # s.mb_chars[1, 2] = "ö" # Replace 2 characters at character offset 1
+  # s
+  # # => "Möler"
   def []=(*args); end
+
+  # Enable more predictable duck-typing on String-like classes. See Object#acts_like?.
   def acts_like_string?; end
+
+  # Converts the first character to uppercase and the remainder to lowercase.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('über').capitalize.to_s # => "Über"
   def capitalize; end
+
   def capitalize!(*args); end
+
+  # Performs composition on all the characters.
+  #
+  # Example:
+  # 'é'.length                       # => 3
+  # Mail::Multibyte.mb_chars('é').compose.to_s.length # => 2
   def compose; end
+
+  # Performs canonical decomposition on all the characters.
+  #
+  # Example:
+  # 'é'.length                         # => 2
+  # Mail::Multibyte.mb_chars('é').decompose.to_s.length # => 3
   def decompose; end
+
+  # Convert characters in the string to lowercase.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('VĚDA A VÝZKUM').downcase.to_s # => "věda a výzkum"
   def downcase; end
+
   def downcase!(*args); end
+
+  # Returns the number of grapheme clusters in the string.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('क्षि').length   # => 4
+  # Mail::Multibyte.mb_chars('क्षि').g_length # => 3
   def g_length; end
+
+  # Limit the byte size of the string to a number of bytes without breaking characters. Usable
+  # when the storage for a string is limited for some reason.
+  #
+  # Example:
+  # s = 'こんにちは'
+  # s.mb_chars.limit(7) # => "こに"
   def limit(limit); end
+
+  # Forward all undefined methods to the wrapped string.
   def method_missing(method, *args, &block); end
+
+  # Returns the KC normalization of the string by default. NFKC is considered the best normalization form for
+  # passing strings to databases and validations.
+  #
+  # * <tt>form</tt> - The form you want to normalize in. Should be one of the following:
+  # <tt>:c</tt>, <tt>:kc</tt>, <tt>:d</tt>, or <tt>:kd</tt>. Default is
+  # Mail::Multibyte::Unicode.default_normalization_form
   def normalize(form = T.unsafe(nil)); end
+
+  # Returns +true+ if _obj_ responds to the given method. Private methods are included in the search
+  # only if the optional second parameter evaluates to +true+.
   def respond_to?(method, include_private = T.unsafe(nil)); end
+
+  # Reverses all characters in the string.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('Café').reverse.to_s # => 'éfaC'
   def reverse; end
+
   def reverse!(*args); end
+
+  # Implements Unicode-aware slice with codepoints. Slicing on one point returns the codepoints for that
+  # character.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('こんにちは').slice(2..3).to_s # => "にち"
   def slice(*args); end
+
   def slice!(*args); end
+
+  # Works just like <tt>String#split</tt>, with the exception that the items in the resulting list are Chars
+  # instances instead of String. This makes chaining methods easier.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('Café périferôl').split(/é/).map { |part| part.upcase.to_s } # => ["CAF", " P", "RIFERÔL"]
   def split(*args); end
+
+  # Replaces all ISO-8859-1 or CP1252 characters by their UTF-8 equivalent resulting in a valid UTF-8 string.
+  #
+  # Passing +true+ will forcibly tidy all bytes, assuming that the string's encoding is entirely CP1252 or ISO-8859-1.
   def tidy_bytes(force = T.unsafe(nil)); end
+
   def tidy_bytes!(*args); end
+
+  # Capitalizes the first letter of every word, when possible.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars("ÉL QUE SE ENTERÓ").titleize    # => "Él Que Se Enteró"
+  # Mail::Multibyte.mb_chars("日本語").titleize                 # => "日本語"
   def titlecase; end
+
+  # Capitalizes the first letter of every word, when possible.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars("ÉL QUE SE ENTERÓ").titleize    # => "Él Que Se Enteró"
+  # Mail::Multibyte.mb_chars("日本語").titleize                 # => "日本語"
   def titleize; end
+
+  # Returns the value of attribute wrapped_string.
   def to_s; end
+
+  # Returns the value of attribute wrapped_string.
   def to_str; end
+
+  # Convert characters in the string to uppercase.
+  #
+  # Example:
+  # Mail::Multibyte.mb_chars('Laurent, où sont les tests ?').upcase.to_s # => "LAURENT, OÙ SONT LES TESTS ?"
   def upcase; end
+
   def upcase!(*args); end
+
+  # Returns the value of attribute wrapped_string.
   def wrapped_string; end
 
   protected
@@ -1206,26 +3590,81 @@ class Mail::Multibyte::Chars
   def translate_offset(byte_offset); end
 
   class << self
+    # Returns +true+ when the proxy class can handle the string. Returns +false+ otherwise.
     def consumes?(string); end
   end
 end
 
+# Raised when a problem with the encoding was found.
 class Mail::Multibyte::EncodingError < ::StandardError; end
 
 module Mail::Multibyte::Unicode
   extend ::Mail::Multibyte::Unicode
 
   def apply_mapping(string, mapping); end
+
+  # Compose decomposed characters to the composed form.
   def compose_codepoints(codepoints); end
+
+  # Decompose composed characters to the decomposed form.
   def decompose_codepoints(type, codepoints); end
+
+  # The default normalization used for operations that require normalization. It can be set to any of the
+  # normalizations in NORMALIZATION_FORMS.
+  #
+  # Example:
+  # Mail::Multibyte::Unicode.default_normalization_form = :c
   def default_normalization_form; end
+
+  # The default normalization used for operations that require normalization. It can be set to any of the
+  # normalizations in NORMALIZATION_FORMS.
+  #
+  # Example:
+  # Mail::Multibyte::Unicode.default_normalization_form = :c
   def default_normalization_form=(_arg0); end
+
+  # Reverse operation of g_unpack.
+  #
+  # Example:
+  # Unicode.g_pack(Unicode.g_unpack('क्षि')) # => 'क्षि'
   def g_pack(unpacked); end
+
+  # Unpack the string at grapheme boundaries. Returns a list of character lists.
+  #
+  # Example:
+  # Unicode.g_unpack('क्षि') # => [[2325, 2381], [2359], [2367]]
+  # Unicode.g_unpack('Café') # => [[67], [97], [102], [233]]
   def g_unpack(string); end
+
+  # Detect whether the codepoint is in a certain character class. Returns +true+ when it's in the specified
+  # character class and +false+ otherwise. Valid character classes are: <tt>:cr</tt>, <tt>:lf</tt>, <tt>:l</tt>,
+  # <tt>:v</tt>, <tt>:lv</tt>, <tt>:lvt</tt> and <tt>:t</tt>.
+  #
+  # Primarily used by the grapheme cluster support.
   def in_char_class?(codepoint, classes); end
+
+  # Returns the KC normalization of the string by default. NFKC is considered the best normalization form for
+  # passing strings to databases and validations.
+  #
+  # * <tt>string</tt> - The string to perform normalization on.
+  # * <tt>form</tt> - The form you want to normalize in. Should be one of the following:
+  # <tt>:c</tt>, <tt>:kc</tt>, <tt>:d</tt>, or <tt>:kd</tt>. Default is
+  # Mail::Multibyte.default_normalization_form
   def normalize(string, form = T.unsafe(nil)); end
+
+  # Re-order codepoints so the string becomes canonical.
   def reorder_characters(codepoints); end
+
+  # Replaces all ISO-8859-1 or CP1252 characters by their UTF-8 equivalent resulting in a valid UTF-8 string.
+  #
+  # Passing +true+ will forcibly tidy all bytes, assuming that the string's encoding is entirely CP1252 or ISO-8859-1.
   def tidy_bytes(string, force = T.unsafe(nil)); end
+
+  # Unpack the string at codepoints boundaries. Raises an EncodingError when the encoding of the string isn't
+  # valid UTF-8.
+  #
+  # Example:
+  # Unicode.u_unpack('Café') # => [67, 97, 102, 233]
   def u_unpack(string); end
 
   private
@@ -1234,25 +3673,52 @@ module Mail::Multibyte::Unicode
   def tidy_byte(byte); end
 
   class << self
+    # Returns a regular expression pattern that matches the passed Unicode codepoints
     def codepoints_to_pattern(array_of_codepoints); end
   end
 end
 
+# Holds data about a codepoint in the Unicode database.
 class Mail::Multibyte::Unicode::Codepoint
+  # Initializing Codepoint object with default values
   def initialize; end
 
+  # Returns the value of attribute code.
   def code; end
+
+  # Sets the attribute code
   def code=(_arg0); end
+
+  # Returns the value of attribute combining_class.
   def combining_class; end
+
+  # Sets the attribute combining_class
   def combining_class=(_arg0); end
+
+  # Returns the value of attribute decomp_mapping.
   def decomp_mapping; end
+
+  # Sets the attribute decomp_mapping
   def decomp_mapping=(_arg0); end
+
+  # Returns the value of attribute decomp_type.
   def decomp_type; end
+
+  # Sets the attribute decomp_type
   def decomp_type=(_arg0); end
+
+  # Returns the value of attribute lowercase_mapping.
   def lowercase_mapping; end
+
+  # Sets the attribute lowercase_mapping
   def lowercase_mapping=(_arg0); end
+
   def swapcase_mapping; end
+
+  # Returns the value of attribute uppercase_mapping.
   def uppercase_mapping; end
+
+  # Sets the attribute uppercase_mapping
   def uppercase_mapping=(_arg0); end
 end
 
@@ -1261,19 +3727,31 @@ Mail::Multibyte::Unicode::HANGUL_JAMO_LAST = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_LBASE = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_LCOUNT = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_NCOUNT = T.let(T.unsafe(nil), Integer)
+
+# Hangul character boundaries and properties
 Mail::Multibyte::Unicode::HANGUL_SBASE = T.let(T.unsafe(nil), Integer)
+
 Mail::Multibyte::Unicode::HANGUL_SCOUNT = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_SLAST = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_TBASE = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_TCOUNT = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_VBASE = T.let(T.unsafe(nil), Integer)
 Mail::Multibyte::Unicode::HANGUL_VCOUNT = T.let(T.unsafe(nil), Integer)
+
+# BOM (byte order mark) can also be seen as whitespace, it's a non-rendering character used to distinguish
+# between little and big endian. This is not an issue in utf-8, so it must be ignored.
 Mail::Multibyte::Unicode::LEADERS_AND_TRAILERS = T.let(T.unsafe(nil), Array)
+
 Mail::Multibyte::Unicode::LEADERS_PAT = T.let(T.unsafe(nil), Regexp)
+
+# A list of all available normalization forms. See http://www.unicode.org/reports/tr15/tr15-29.html for more
+# information about normalization.
 Mail::Multibyte::Unicode::NORMALIZATION_FORMS = T.let(T.unsafe(nil), Array)
+
 Mail::Multibyte::Unicode::TRAILERS_PAT = T.let(T.unsafe(nil), Regexp)
 Mail::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 
+# Holds static data from the Unicode database
 class Mail::Multibyte::Unicode::UnicodeDatabase
   def initialize; end
 
@@ -1287,16 +3765,25 @@ class Mail::Multibyte::Unicode::UnicodeDatabase
   def composition_map=(_arg0); end
   def cp1252; end
   def cp1252=(_arg0); end
+
+  # Loads the Unicode database and returns all the internal objects of UnicodeDatabase.
   def load; end
 
   class << self
+    # Returns the directory in which the data files are stored
     def dirname; end
+
+    # Returns the filename for the data file for this version
     def filename; end
   end
 end
 
 Mail::Multibyte::Unicode::UnicodeDatabase::ATTRIBUTES = T.let(T.unsafe(nil), Array)
+
+# All the unicode whitespace
 Mail::Multibyte::Unicode::WHITESPACE = T.let(T.unsafe(nil), Array)
+
+# Regular expressions that describe valid byte sequences for a character
 Mail::Multibyte::VALID_CHARACTER = T.let(T.unsafe(nil), Hash)
 
 class Mail::OptionalField < ::Mail::UnstructuredField
@@ -1305,21 +3792,78 @@ class Mail::OptionalField < ::Mail::UnstructuredField
   def do_encode; end
 end
 
+# The Pop3 retriever allows to get the last, first or all emails from a POP3 server.
+# Each email retrieved (RFC2822) is given as an instance of +Message+.
+#
+# While being retrieved, emails can be yielded if a block is given.
+#
+# === Example of retrieving Emails from GMail:
+#
+# Mail.defaults do
+# retriever_method :pop3, { :address             => "pop.gmail.com",
+# :port                => 995,
+# :user_name           => '<username>',
+# :password            => '<password>',
+# :enable_ssl          => true }
+# end
+#
+# Mail.all    #=> Returns an array of all emails
+# Mail.first  #=> Returns the first unread email
+# Mail.last   #=> Returns the last unread email
+#
+# You can also pass options into Mail.find to locate an email in your pop mailbox
+# with the following options:
+#
+# what:  last or first emails. The default is :first.
+# order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+# count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+# instance of Message, not an array of Message instances.
+#
+# Mail.find(:what => :first, :count => 10, :order => :asc)
+# #=> Returns the first 10 emails in ascending order
 class Mail::POP3 < ::Mail::Retriever
   def initialize(values); end
 
+  # Returns the connection object of the retrievable (IMAP or POP3)
   def connection(&block); end
+
+  # Delete all emails from a POP3 server
   def delete_all; end
+
+  # Find emails in a POP3 mailbox. Without any options, the 5 last received emails are returned.
+  #
+  # Possible options:
+  # what:  last or first emails. The default is :first.
+  # order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  # count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+  # instance of Message, not an array of Message instances.
+  # delete_after_find: flag for whether to delete each retreived email after find. Default
+  # is false. Use #find_and_delete if you would like this to default to true.
   def find(options = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 
   private
 
+  # Start a POP3 session and ensure that it will be closed in any case. Any messages
+  # marked for deletion via #find_and_delete or with the :delete_after_find option
+  # will be deleted when the session is closed.
   def start(config = T.unsafe(nil), &block); end
+
+  # Set default options
   def validate_options(options); end
 end
 
+# ParameterHash is an intelligent Hash that allows you to add
+# parameter values including the MIME extension paramaters that
+# have the name*0="blah", name*1="bleh" keys, and will just return
+# a single key called name="blahbleh" and do any required un-encoding
+# to make that happen
+# Parameters are defined in RFC2045, split keys are in RFC2231
 class Mail::ParameterHash < ::Mail::IndifferentHash
   include ::Mail::Constants
   include ::Mail::Utilities
@@ -1329,6 +3873,7 @@ class Mail::ParameterHash < ::Mail::IndifferentHash
   def encoded; end
 end
 
+# Extends each field parser with utility methods.
 module Mail::ParserTools
   def chars(data, from_bytes, to_bytes); end
 end
@@ -1339,43 +3884,101 @@ module Mail::Parsers::AddressListsParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
+  # Returns the value of attribute addresses
   def addresses; end
+
+  # Sets the attribute addresses
   def addresses=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute group_names
   def group_names; end
+
+  # Sets the attribute group_names
   def group_names=(_); end
 
   class << self
@@ -1387,21 +3990,52 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
 end
 
 class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
+  # Returns the value of attribute comments
   def comments; end
+
+  # Sets the attribute comments
   def comments=(_); end
+
+  # Returns the value of attribute display_name
   def display_name; end
+
+  # Sets the attribute display_name
   def display_name=(_); end
+
+  # Returns the value of attribute domain
   def domain; end
+
+  # Sets the attribute domain
   def domain=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute group
   def group; end
+
+  # Sets the attribute group
   def group=(_); end
+
+  # Returns the value of attribute local
   def local; end
+
+  # Sets the attribute local
   def local=(_); end
+
+  # Returns the value of attribute obs_domain_list
   def obs_domain_list; end
+
+  # Sets the attribute obs_domain_list
   def obs_domain_list=(_); end
+
+  # Returns the value of attribute raw
   def raw; end
+
+  # Sets the attribute raw
   def raw=(_); end
 
   class << self
@@ -1416,43 +4050,101 @@ module Mail::Parsers::ContentDispositionParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Struct
+  # Returns the value of attribute disposition_type
   def disposition_type; end
+
+  # Sets the attribute disposition_type
   def disposition_type=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute parameters
   def parameters; end
+
+  # Sets the attribute parameters
   def parameters=(_); end
 
   class << self
@@ -1467,41 +4159,95 @@ module Mail::Parsers::ContentLocationParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute location
   def location; end
+
+  # Sets the attribute location
   def location=(_); end
 
   class << self
@@ -1516,41 +4262,95 @@ module Mail::Parsers::ContentTransferEncodingParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruct < ::Struct
+  # Returns the value of attribute encoding
   def encoding; end
+
+  # Sets the attribute encoding
   def encoding=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
 
   class << self
@@ -1565,45 +4365,107 @@ module Mail::Parsers::ContentTypeParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute main_type
   def main_type; end
+
+  # Sets the attribute main_type
   def main_type=(_); end
+
+  # Returns the value of attribute parameters
   def parameters; end
+
+  # Sets the attribute parameters
   def parameters=(_); end
+
+  # Returns the value of attribute sub_type
   def sub_type; end
+
+  # Sets the attribute sub_type
   def sub_type=(_); end
 
   class << self
@@ -1618,43 +4480,101 @@ module Mail::Parsers::DateTimeParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
+  # Returns the value of attribute date_string
   def date_string; end
+
+  # Sets the attribute date_string
   def date_string=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute time_string
   def time_string; end
+
+  # Sets the attribute time_string
   def time_string=(_); end
 
   class << self
@@ -1669,43 +4589,101 @@ module Mail::Parsers::EnvelopeFromParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
+  # Returns the value of attribute address
   def address; end
+
+  # Sets the attribute address
   def address=(_); end
+
+  # Returns the value of attribute ctime_date
   def ctime_date; end
+
+  # Sets the attribute ctime_date
   def ctime_date=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
 
   class << self
@@ -1720,41 +4698,95 @@ module Mail::Parsers::MessageIdsParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute message_ids
   def message_ids; end
+
+  # Sets the attribute message_ids
   def message_ids=(_); end
 
   class << self
@@ -1769,43 +4801,101 @@ module Mail::Parsers::MimeVersionParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute major
   def major; end
+
+  # Sets the attribute major
   def major=(_); end
+
+  # Returns the value of attribute minor
   def minor; end
+
+  # Sets the attribute minor
   def minor=(_); end
 
   class << self
@@ -1820,41 +4910,95 @@ class Mail::Parsers::PhraseListsParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute phrases
   def phrases; end
+
+  # Sets the attribute phrases
   def phrases=(_); end
 
   class << self
@@ -1869,45 +5013,107 @@ module Mail::Parsers::ReceivedParser
   extend ::Mail::ParserTools
 
   class << self
+    # Returns the value of attribute en_comment_tail.
     def en_comment_tail; end
+
+    # Sets the attribute en_comment_tail
     def en_comment_tail=(_arg0); end
+
+    # Returns the value of attribute en_main.
     def en_main; end
+
+    # Sets the attribute en_main
     def en_main=(_arg0); end
+
+    # Returns the value of attribute error.
     def error; end
+
+    # Sets the attribute error
     def error=(_arg0); end
+
+    # Returns the value of attribute first_final.
     def first_final; end
+
+    # Sets the attribute first_final
     def first_final=(_arg0); end
+
     def parse(data); end
+
+    # Returns the value of attribute start.
     def start; end
+
+    # Sets the attribute start
     def start=(_arg0); end
 
     private
 
+    # Returns the value of attribute _eof_actions.
     def _eof_actions; end
+
+    # Sets the attribute _eof_actions
     def _eof_actions=(_arg0); end
+
+    # Returns the value of attribute _index_offsets.
     def _index_offsets; end
+
+    # Sets the attribute _index_offsets
     def _index_offsets=(_arg0); end
+
+    # Returns the value of attribute _indicies.
     def _indicies; end
+
+    # Sets the attribute _indicies
     def _indicies=(_arg0); end
+
+    # Returns the value of attribute _key_spans.
     def _key_spans; end
+
+    # Sets the attribute _key_spans
     def _key_spans=(_arg0); end
+
+    # Returns the value of attribute _trans_actions.
     def _trans_actions; end
+
+    # Sets the attribute _trans_actions
     def _trans_actions=(_arg0); end
+
+    # Returns the value of attribute _trans_keys.
     def _trans_keys; end
+
+    # Sets the attribute _trans_keys
     def _trans_keys=(_arg0); end
+
+    # Returns the value of attribute _trans_targs.
     def _trans_targs; end
+
+    # Sets the attribute _trans_targs
     def _trans_targs=(_arg0); end
   end
 end
 
 class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
+  # Returns the value of attribute date
   def date; end
+
+  # Sets the attribute date
   def date=(_); end
+
+  # Returns the value of attribute error
   def error; end
+
+  # Sets the attribute error
   def error=(_); end
+
+  # Returns the value of attribute info
   def info; end
+
+  # Sets the attribute info
   def info=(_); end
+
+  # Returns the value of attribute time
   def time; end
+
+  # Sets the attribute time
   def time=(_); end
 
   class << self
@@ -1919,8 +5125,18 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
 end
 
 class Mail::Part < ::Mail::Message
+  # Either returns the action if the message has just a single report, or an
+  # array of all the actions, one for each report
   def action; end
+
+  # Creates a new empty Content-ID field and inserts it in the correct order
+  # into the Header.  The ContentIdField object will automatically generate
+  # a unique content ID if you try and encode it or output it to_s without
+  # specifying a content id.
+  #
+  # It will preserve the content ID you specify if you do.
   def add_content_id(content_id_val = T.unsafe(nil)); end
+
   def add_required_fields; end
   def add_required_message_fields; end
   def bounced?; end
@@ -1930,7 +5146,11 @@ class Mail::Part < ::Mail::Message
   def diagnostic_code; end
   def error_status; end
   def final_recipient; end
+
+  # Returns true if the part has a content ID field, the field may or may
+  # not have a value, but the field exists or not.
   def has_content_id?; end
+
   def inline?; end
   def inline_content_id; end
   def remote_mta; end
@@ -1941,6 +5161,8 @@ class Mail::Part < ::Mail::Message
 
   def get_return_values(key); end
   def parse_delivery_status_report; end
+
+  # A part may not have a header.... so, just init a body if no header
   def parse_message; end
 end
 
@@ -1950,10 +5172,18 @@ class Mail::PartsList
   def attachments; end
   def collect; end
   def collect!; end
+
+  # The #encode_with and #to_yaml methods are just implemented
+  # for the sake of backward compatibility ; the delegator does
+  # not correctly delegate these calls to the delegated object
   def encode_with(coder); end
+
   def map; end
   def map!; end
+
+  # Returns the value of attribute parts.
   def parts; end
+
   def sort; end
   def sort!(order); end
   def to_yaml(options = T.unsafe(nil)); end
@@ -1966,6 +5196,7 @@ end
 class Mail::PhraseList
   def initialize(string); end
 
+  # Returns the value of attribute phrases.
   def phrases; end
 end
 
@@ -1977,8 +5208,12 @@ class Mail::ReceivedElement
 
   def initialize(string); end
 
+  # Returns the value of attribute date_time.
   def date_time; end
+
+  # Returns the value of attribute info.
   def info; end
+
   def to_s(*args); end
 end
 
@@ -2109,9 +5344,36 @@ Mail::ResentToField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::ResentToField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
 class Mail::Retriever
+  # Get all emails.
+  #
+  # Possible options:
+  # order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   def all(options = T.unsafe(nil), &block); end
+
+  # Find emails in the mailbox, and then deletes them. Without any options, the
+  # five last received emails are returned.
+  #
+  # Possible options:
+  # what:  last or first emails. The default is :first.
+  # order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  # count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+  # instance of Message, not an array of Message instances.
+  # delete_after_find: flag for whether to delete each retreived email after find. Default
+  # is true. Call #find if you would like this to default to false.
   def find_and_delete(options = T.unsafe(nil), &block); end
+
+  # Get the oldest received email(s)
+  #
+  # Possible options:
+  # count: number of emails to retrieve. The default value is 1.
+  # order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   def first(options = T.unsafe(nil), &block); end
+
+  # Get the most recent received email(s)
+  #
+  # Possible options:
+  # count: number of emails to retrieve. The default value is 1.
+  # order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
   def last(options = T.unsafe(nil), &block); end
 end
 
@@ -2134,20 +5396,40 @@ class Mail::Ruby19
     def b_value_decode(str); end
     def b_value_encode(str, encoding = T.unsafe(nil)); end
     def bracket(str); end
+
+    # Returns the value of attribute charset_encoder.
     def charset_encoder; end
+
+    # Sets the attribute charset_encoder
     def charset_encoder=(_arg0); end
+
     def decode_base64(str); end
     def decode_utf7(utf7); end
     def encode_base64(str); end
+
+    # From Ruby stdlib Net::IMAP
     def encode_utf7(string); end
+
     def escape_bracket(str); end
+
+    # Escapes any parenthesis in a string that are unescaped this uses
+    # a Ruby 1.9.1 regexp feature of negative look behind
     def escape_paren(str); end
+
     def get_constant(klass, string); end
     def has_constant?(klass, string); end
     def param_decode(str, encoding); end
     def param_encode(str); end
     def paren(str); end
+
+    # Pick a Ruby encoding corresponding to the message charset. Most
+    # charsets have a Ruby encoding, but some need manual aliasing here.
+    #
+    # TODO: add this as a test somewhere:
+    # Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
+    # Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     def pick_encoding(charset); end
+
     def q_value_decode(str); end
     def q_value_encode(str, encoding = T.unsafe(nil)); end
     def string_byteslice(str, *args); end
@@ -2175,33 +5457,159 @@ end
 
 Mail::RubyVer = Mail::Ruby19
 
+# == Sending Email with SMTP
+#
+# Mail allows you to send emails using SMTP.  This is done by wrapping Net::SMTP in
+# an easy to use manner.
+#
+# === Sending via SMTP server on Localhost
+#
+# Sending locally (to a postfix or sendmail server running on localhost) requires
+# no special setup.  Just to Mail.deliver &block or message.deliver! and it will
+# be sent in this method.
+#
+# === Sending via MobileMe
+#
+# Mail.defaults do
+# delivery_method :smtp, { :address              => "smtp.me.com",
+# :port                 => 587,
+# :domain               => 'your.host.name',
+# :user_name            => '<username>',
+# :password             => '<password>',
+# :authentication       => 'plain',
+# :enable_starttls_auto => true  }
+# end
+#
+# === Sending via GMail
+#
+# Mail.defaults do
+# delivery_method :smtp, { :address              => "smtp.gmail.com",
+# :port                 => 587,
+# :domain               => 'your.host.name',
+# :user_name            => '<username>',
+# :password             => '<password>',
+# :authentication       => 'plain',
+# :enable_starttls_auto => true  }
+# end
+#
+# === Certificate verification
+#
+# When using TLS, some mail servers provide certificates that are self-signed
+# or whose names do not exactly match the hostname given in the address.
+# OpenSSL will reject these by default. The best remedy is to use the correct
+# hostname or update the certificate authorities trusted by your ruby. If
+# that isn't possible, you can control this behavior with
+# an :openssl_verify_mode setting. Its value may be either an OpenSSL
+# verify mode constant (OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER),
+# or a string containing the name of an OpenSSL verify mode (none, peer).
+#
+# === Others
+#
+# Feel free to send me other examples that were tricky
+#
+# === Delivering the email
+#
+# Once you have the settings right, sending the email is done by:
+#
+# Mail.deliver do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# Or by calling deliver on a Mail message
+#
+# mail = Mail.new do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# mail.deliver!
 class Mail::SMTP
   def initialize(values); end
 
   def deliver!(mail); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 
   private
 
   def build_smtp_session; end
+
+  # Allow SSL context to be configured via settings, for Ruby >= 1.9
+  # Just returns openssl verify mode for Ruby 1.8.x
   def ssl_context; end
+
   def start_smtp_session(&block); end
 end
 
 Mail::SMTP::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
+# == Sending Email with SMTP
+#
+# Mail allows you to send emails using an open SMTP connection.  This is done by
+# passing a created Net::SMTP object.  This way we can get better performance to
+# our local mail server by reducing the number of connections at any one time.
+#
+# === Sending via SMTP server on Localhost
+#
+# To send mail open a connection with Net::Smtp using any options you like
+# === Delivering the email
+#
+# Once you have the settings right, sending the email is done by:
+#
+# smtp_conn = Net::SMTP.start(settings[:address], settings[:port])
+# Mail.defaults do
+# delivery_method :smtp_connection, { :connection => smtp_conn }
+# end
+#
+# Mail.deliver do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# Or by calling deliver on a Mail message
+#
+# mail = Mail.new do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# mail.deliver!
 class Mail::SMTPConnection
   def initialize(values); end
 
+  # Send the message via SMTP.
+  # The from and to attributes are optional. If not set, they are retrieve from the Message.
   def deliver!(mail); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
+
+  # Returns the value of attribute smtp.
   def smtp; end
+
+  # Sets the attribute smtp
   def smtp=(_arg0); end
 
   private
 
+  # This is Net::SMTP's job, but before Ruby 2.x it does not dot-stuff
+  # an unterminated last line: https://bugs.ruby-lang.org/issues/9627
   def dot_stuff(message); end
 end
 
@@ -2220,22 +5628,85 @@ end
 Mail::SenderField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::SenderField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
+# A delivery method implementation which sends via sendmail.
+#
+# To use this, first find out where the sendmail binary is on your computer,
+# if you are on a mac or unix box, it is usually in /usr/sbin/sendmail, this will
+# be your sendmail location.
+#
+# Mail.defaults do
+# delivery_method :sendmail
+# end
+#
+# Or if your sendmail binary is not at '/usr/sbin/sendmail'
+#
+# Mail.defaults do
+# delivery_method :sendmail, :location => '/absolute/path/to/your/sendmail'
+# end
+#
+# Then just deliver the email as normal:
+#
+# Mail.deliver do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# Or by calling deliver on a Mail message
+#
+# mail = Mail.new do
+# to 'mikel@test.lindsaar.net'
+# from 'ada@test.lindsaar.net'
+# subject 'testing sendmail'
+# body 'testing sendmail'
+# end
+#
+# mail.deliver!
 class Mail::Sendmail
   def initialize(values); end
 
   def deliver!(mail); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 
   class << self
     def call(path, arguments, destinations, encoded_message); end
     def popen(command, &block); end
+
+    # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
+    # with the following modifications:
+    #
+    # - Wraps in double quotes
+    # - Allows '+' to accept email addresses with them
+    # - Allows '~' as it is not unescaped in double quotes
     def shellquote(address); end
   end
 end
 
 Mail::Sendmail::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
+# Provides access to a structured header field
+#
+# ===Per RFC 2822:
+# 2.2.2. Structured Header Field Bodies
+#
+# Some field bodies in this standard have specific syntactical
+# structure more restrictive than the unstructured field bodies
+# described above. These are referred to as "structured" field bodies.
+# Structured field bodies are sequences of specific lexical tokens as
+# described in sections 3 and 4 of this standard.  Many of these tokens
+# are allowed (according to their syntax) to be introduced or end with
+# comments (as described in section 3.2.3) as well as the space (SP,
+# ASCII value 32) and horizontal tab (HTAB, ASCII value 9) characters
+# (together known as the white space characters, WSP), and those WSP
+# characters are subject to header "folding" and "unfolding" as
+# described in section 2.2.3.  Semantic analysis of structured field
+# bodies is given along with their syntax.
 class Mail::StructuredField
   include ::Mail::Constants
   include ::Mail::CommonField
@@ -2256,15 +5727,37 @@ end
 Mail::SubjectField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::SubjectField::FIELD_NAME = T.let(T.unsafe(nil), String)
 
+# The TestMailer is a bare bones mailer that does nothing.  It is useful
+# when you are testing.
+#
+# It also provides a template of the minimum methods you require to implement
+# if you want to make a custom mailer for Mail
 class Mail::TestMailer
   def initialize(values); end
 
   def deliver!(mail); end
+
+  # Returns the value of attribute settings.
   def settings; end
+
+  # Sets the attribute settings
   def settings=(_arg0); end
 
   class << self
+    # Provides a store of all the emails sent with the TestMailer so you can check them.
     def deliveries; end
+
+    # Allows you to over write the default deliveries store from an array to some
+    # other object.  If you just want to clear the store,
+    # call TestMailer.deliveries.clear.
+    #
+    # If you place another object here, please make sure it responds to:
+    #
+    # * << (message)
+    # * clear
+    # * length
+    # * size
+    # * and other common Array methods
     def deliveries=(val); end
   end
 end
@@ -2291,8 +5784,22 @@ end
 
 Mail::ToField::CAPITALIZED_FIELD = T.let(T.unsafe(nil), String)
 Mail::ToField::FIELD_NAME = T.let(T.unsafe(nil), String)
+
+# Raised when attempting to decode an unknown encoding type
 class Mail::UnknownEncodingType < ::StandardError; end
 
+# Provides access to an unstructured header field
+#
+# ===Per RFC 2822:
+# 2.2.1. Unstructured Header Field Bodies
+#
+# Some field bodies in this standard are defined simply as
+# "unstructured" (which is specified below as any US-ASCII characters,
+# except for CR and LF) with no further restrictions.  These are
+# referred to as unstructured field bodies.  Semantically, unstructured
+# field bodies are simply to be treated as a single line of characters
+# with no further processing (except for header "folding" and
+# "unfolding" as described in section 2.2.3).
 class Mail::UnstructuredField
   include ::Mail::Constants
   include ::Mail::CommonField
@@ -2300,12 +5807,20 @@ class Mail::UnstructuredField
 
   def initialize(name, value, charset = T.unsafe(nil)); end
 
+  # Returns the value of attribute charset.
   def charset; end
+
+  # Sets the attribute charset
   def charset=(_arg0); end
+
   def decoded; end
   def default; end
   def encoded; end
+
+  # Returns the value of attribute errors.
   def errors; end
+
+  # An unstructured field does not parse
   def parse; end
 
   private
@@ -2316,48 +5831,236 @@ class Mail::UnstructuredField
   def encode_crlf(value); end
   def fold(prepend = T.unsafe(nil)); end
   def normalized_encoding; end
+
+  # 6.2. Display of 'encoded-word's
+  #
+  # When displaying a particular header field that contains multiple
+  # 'encoded-word's, any 'linear-white-space' that separates a pair of
+  # adjacent 'encoded-word's is ignored.  (This is to allow the use of
+  # multiple 'encoded-word's to represent long strings of unencoded text,
+  # without having to separate 'encoded-word's where spaces occur in the
+  # unencoded text.)
   def wrap_lines(name, folded_lines); end
+
+  # 2.2.3. Long Header Fields
+  #
+  # Each header field is logically a single line of characters comprising
+  # the field name, the colon, and the field body.  For convenience
+  # however, and to deal with the 998/78 character limitations per line,
+  # the field body portion of a header field can be split into a multiple
+  # line representation; this is called "folding".  The general rule is
+  # that wherever this standard allows for folding white space (not
+  # simply WSP characters), a CRLF may be inserted before any WSP.  For
+  # example, the header field:
+  #
+  # Subject: This is a test
+  #
+  # can be represented as:
+  #
+  # Subject: This
+  # is a test
+  #
+  # Note: Though structured field bodies are defined in such a way that
+  # folding can take place between many of the lexical tokens (and even
+  # within some of the lexical tokens), folding SHOULD be limited to
+  # placing the CRLF at higher-level syntactic breaks.  For instance, if
+  # a field body is defined as comma-separated values, it is recommended
+  # that folding occur after the comma separating the structured items in
+  # preference to other places where the field could be folded, even if
+  # it is allowed elsewhere.
   def wrapped_value; end
 end
 
 module Mail::Utilities
   include ::Mail::Constants
 
+  # Returns true if the string supplied is free from characters not allowed as an ATOM
   def atom_safe?(str); end
+
+  # Wraps a string in angle brackets and escapes any that are in the string itself
+  #
+  # Example:
+  #
+  # bracket( 'This is a string' ) #=> '<This is a string>'
   def bracket(str); end
+
+  # Capitalizes a string that is joined by hyphens correctly.
+  #
+  # Example:
+  #
+  # string = 'resent-from-field'
+  # capitalize_field( string ) #=> 'Resent-From-Field'
   def capitalize_field(str); end
+
+  # Takes an underscored word and turns it into a class name
+  #
+  # Example:
+  #
+  # constantize("hello") #=> "Hello"
+  # constantize("hello-there") #=> "HelloThere"
+  # constantize("hello-there-mate") #=> "HelloThereMate"
   def constantize(str); end
+
+  # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
+  # a field name.
+  #
+  # Example:
+  #
+  # string = :resent_from_field
+  # dasherize( string ) #=> 'resent-from-field'
   def dasherize(str); end
+
+  # Wraps supplied string in double quotes and applies \-escaping as necessary,
+  # unless it is already wrapped.
+  #
+  # Example:
+  #
+  # string = 'This is a string'
+  # dquote(string) #=> '"This is a string"'
+  #
+  # string = 'This is "a string"'
+  # dquote(string #=> '"This is \"a string\"'
   def dquote(str); end
+
+  # Escape parenthesies in a string
+  #
+  # Example:
+  #
+  # str = 'This is (a) string'
+  # escape_paren( str ) #=> 'This is \(a\) string'
   def escape_paren(str); end
+
   def map_lines(str, &block); end
   def map_with_index(enum, &block); end
+
+  # Matches two objects with their to_s values case insensitively
+  #
+  # Example:
+  #
+  # obj2 = "This_is_An_object"
+  # obj1 = :this_IS_an_object
+  # match_to_s( obj1, obj2 ) #=> true
   def match_to_s(obj1, obj2); end
+
+  # Wraps a string in parenthesis and escapes any that are in the string itself.
+  #
+  # Example:
+  #
+  # paren( 'This is a string' ) #=> '(This is a string)'
   def paren(str); end
+
+  # If the string supplied has ATOM unsafe characters in it, will return the string quoted
+  # in double quotes, otherwise returns the string unmodified
   def quote_atom(str); end
+
+  # If the string supplied has PHRASE unsafe characters in it, will return the string quoted
+  # in double quotes, otherwise returns the string unmodified
   def quote_phrase(str); end
+
+  # If the string supplied has TOKEN unsafe characters in it, will return the string quoted
+  # in double quotes, otherwise returns the string unmodified
   def quote_token(str); end
+
+  # Returns true if the string supplied is free from characters not allowed as a TOKEN
   def token_safe?(str); end
+
+  # Unwraps a string from being wrapped in parenthesis
+  #
+  # Example:
+  #
+  # str = '<This is a string>'
+  # unbracket( str ) #=> 'This is a string'
   def unbracket(str); end
+
+  # Swaps out all hyphens (-) for underscores (_) good for stringing to symbols
+  # a field name.
+  #
+  # Example:
+  #
+  # string = :resent_from_field
+  # underscoreize ( string ) #=> 'resent_from_field'
   def underscoreize(str); end
+
+  # Unwraps a string from being wrapped in parenthesis
+  #
+  # Example:
+  #
+  # str = '(This is a string)'
+  # unparen( str ) #=> 'This is a string'
   def unparen(str); end
+
   def uri_escape(str); end
   def uri_parser; end
   def uri_unescape(str); end
 
   private
 
+  # Removes any \-escaping.
+  #
+  # Example:
+  #
+  # string = 'This is \"a string\"'
+  # unescape(string) #=> 'This is "a string"'
+  #
+  # string = '"This is \"a string\""'
+  # unescape(string) #=> '"This is "a string""'
   def unescape(str); end
+
+  # Unwraps supplied string from inside double quotes and
+  # removes any \-escaping.
+  #
+  # Example:
+  #
+  # string = '"This is a string"'
+  # unquote(string) #=> 'This is a string'
+  #
+  # string = '"This is \"a string\""'
+  # unqoute(string) #=> 'This is "a string"'
   def unquote(str); end
 
   class << self
     def binary_unsafe_to_crlf(string); end
     def binary_unsafe_to_lf(string); end
+
+    # Returns true if the object is considered blank.
+    # A blank includes things like '', '   ', nil,
+    # and arrays and hashes that have nothing in them.
+    #
+    # This logic is mostly shared with ActiveSupport's blank?
     def blank?(value); end
+
     def safe_for_line_ending_conversion?(string); end
+
+    # Convert line endings to \r\n unless the string is binary. Used for
+    # encoding 8bit and base64 Content-Transfer-Encoding and for convenience
+    # when parsing emails with \n line endings instead of the required \r\n.
     def to_crlf(string); end
+
+    # Convert line endings to \n unless the string is binary. Used for
+    # sendmail delivery and for decoding 8bit Content-Transfer-Encoding.
     def to_lf(string); end
+
+    # Removes any \-escaping.
+    #
+    # Example:
+    #
+    # string = 'This is \"a string\"'
+    # unescape(string) #=> 'This is "a string"'
+    #
+    # string = '"This is \"a string\""'
+    # unescape(string) #=> '"This is "a string""'
     def unescape(str); end
+
+    # Unwraps supplied string from inside double quotes and
+    # removes any \-escaping.
+    #
+    # Example:
+    #
+    # string = '"This is a string"'
+    # unquote(string) #=> 'This is a string'
+    #
+    # string = '"This is \"a string\""'
+    # unqoute(string) #=> 'This is "a string"'
     def unquote(str); end
   end
 end

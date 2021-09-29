@@ -6,89 +6,213 @@
 
 module RuboCop; end
 
+# ...
 module RuboCop::AST
   extend ::RuboCop::AST::RuboCopCompatibility
 end
 
+# A node extension for `alias` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `alias` nodes within RuboCop.
 class RuboCop::AST::AliasNode < ::RuboCop::AST::Node
+  # Returns the new identifier as specified by the `alias`.
   def new_identifier; end
+
+  # Returns the old identifier as specified by the `alias`.
   def old_identifier; end
 end
 
+# A node extension for `until` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `until` nodes within RuboCop.
 class RuboCop::AST::AndNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BinaryOperatorNode
   include ::RuboCop::AST::PredicateOperatorNode
 
+  # Returns the alternate operator of the `and` as a string.
+  # Returns `and` for `&&` and vice versa.
   def alternate_operator; end
+
+  # Returns the inverse keyword of the `and` node as a string.
+  # Returns `||` for `&&` and `or` for `and`.
   def inverse_operator; end
 end
 
+# A node extension for `arg`, `optarg`, `restarg`, `kwarg`, `kwoptarg`,
+# `kwrestarg`, `blockarg`, `shadowarg` and `forward_arg` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all `arg` nodes within RuboCop.
 class RuboCop::AST::ArgNode < ::RuboCop::AST::Node
+  # Checks whether the argument has a default value
   def default?; end
+
+  # Returns the default value of the argument, if any.
   def default_value; end
+
+  # Returns the name of an argument.
   def name; end
 end
 
+# A node extension for `args` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `args` nodes within RuboCop.
 class RuboCop::AST::ArgsNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::CollectionNode
 
+  # Yield each argument from the collection.
+  # Arguments can be inside `mlhs` nodes in the case of destructuring, so this
+  # flattens the collection to just `arg`, `optarg`, `restarg`, `kwarg`,
+  # `kwoptarg`, `kwrestarg`, `blockarg`, `forward_arg` and `shadowarg`.
   def argument_list; end
+
+  # It returns true if arguments are empty and delimiters do not exist.
+  # @example:
+  # # true
+  # def x; end
+  # x { }
+  # -> {}
+  #
+  # # false
+  # def x(); end
+  # def x a; end
+  # x { || }
+  # -> () {}
+  # -> a {}
   def empty_and_without_delimiters?; end
 end
 
+# A node extension for `array` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `array` nodes within RuboCop.
 class RuboCop::AST::ArrayNode < ::RuboCop::AST::Node
+  # Checks whether the `array` literal is delimited by either percent or
+  # square brackets
+  #
+  # brackets
   def bracketed?; end
+
   def each_value(&block); end
+
+  # Checks whether the `array` literal is delimited by percent brackets.
   def percent_literal?(type = T.unsafe(nil)); end
+
+  # Checks whether the `array` literal is delimited by square brackets.
   def square_brackets?; end
+
+  # Returns an array of all value nodes in the `array` literal.
   def values; end
 end
 
 RuboCop::AST::ArrayNode::PERCENT_LITERAL_TYPES = T.let(T.unsafe(nil), Hash)
 
+# Common functionality for primitive literal nodes: `sym`, `str`,
+# `int`, `float`, ...
 module RuboCop::AST::BasicLiteralNode
+  # Returns the value of the literal.
   def value; end
 end
 
+# Common functionality for nodes that are binary operations:
+# `or`, `and` ...
 module RuboCop::AST::BinaryOperatorNode
+  # Returns all of the conditions, including nested conditions,
+  # of the binary operation.
+  #
+  # operation and the let and right hand side of any nested binary
+  # operators
   def conditions; end
+
+  # Returns the left hand side node of the binary operation.
   def lhs; end
+
+  # Returns the right hand side node of the binary operation.
   def rhs; end
 end
 
+# A node extension for `block` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `send` nodes within RuboCop.
+#
+# A `block` node is essentially a method send with a block. Parser nests
+# the `send` node inside the `block` node.
 class RuboCop::AST::BlockNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::MethodIdentifierPredicates
 
+  # Returns a collection of all descendants of this node that are
+  # argument type nodes. See `ArgsNode#argument_list` for details.
   def argument_list; end
+
+  # The arguments of this block.
+  # Note that if the block has destructured arguments, `arguments` will
+  # return a `mlhs` node, whereas `argument_list` will return only
+  # actual argument nodes.
   def arguments; end
+
+  # Checks whether this block takes any arguments.
   def arguments?; end
+
+  # The body of this block.
   def body; end
+
+  # Checks whether the `block` literal is delimited by curly braces.
   def braces?; end
+
+  # The closing delimiter for this `block` literal.
   def closing_delimiter; end
+
+  # The delimiters for this `block` literal.
   def delimiters; end
+
+  # Checks whether the `block` literal is delimited by `do`-`end` keywords.
   def keywords?; end
+
+  # Checks whether this `block` literal belongs to a lambda.
   def lambda?; end
+
+  # The name of the dispatched method as a symbol.
   def method_name; end
+
+  # Checks whether this is a multiline block. This is overridden here
+  # because the general version in `Node` does not work for `block` nodes.
   def multiline?; end
+
+  # The opening delimiter for this `block` literal.
   def opening_delimiter; end
+
+  # The `send` node associated with this block.
   def send_node; end
+
+  # Checks whether this is a single line block. This is overridden here
+  # because the general version in `Node` does not work for `block` nodes.
   def single_line?; end
+
+  # Checks whether this node body is a void context.
   def void_context?; end
 
   private
 
+  # Numbered arguments of this `numblock`.
   def numbered_arguments; end
 end
 
 RuboCop::AST::BlockNode::VOID_CONTEXT_METHODS = T.let(T.unsafe(nil), Array)
 
+# A node extension for `break` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `break` nodes within RuboCop.
 class RuboCop::AST::BreakNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::WrappedArguments
 end
 
+# `RuboCop::AST::Builder` is an AST builder that is utilized to let `Parser`
+# generate ASTs with {RuboCop::AST::Node}.
 class RuboCop::AST::Builder < ::Parser::Builders::Default
+  # Generates {Node} from the given information.
   def n(type, children, source_map); end
+
+  # TODO: Figure out what to do about literal encoding handling...
+  # More details here https://github.com/whitequark/parser/issues/283
   def string_value(token); end
 
   private
@@ -98,33 +222,68 @@ end
 
 RuboCop::AST::Builder::NODE_MAP = T.let(T.unsafe(nil), Hash)
 
+# A node extension for `case_match` nodes. This will be used in place of
+# a plain node when the builder constructs the AST, making its methods
+# available to all `case_match` nodes within RuboCop.
 class RuboCop::AST::CaseMatchNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
 
   def each_in_pattern(&block); end
+
+  # Checks whether this case statement has an `else` branch.
   def else?; end
+
+  # Returns the else branch of the `case` statement, if any.
   def else_branch; end
+
+  # Returns an array of all the `in` pattern branches in the `case` statement.
   def in_pattern_branches; end
+
+  # Returns the keyword of the `case` statement as a string.
   def keyword; end
 end
 
+# A node extension for `case` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `case` nodes within RuboCop.
 class RuboCop::AST::CaseNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
 
+  # Returns an array of all the when branches in the `case` statement.
+  #
+  # and the else (if any). Note that these bodies could be nil.
   def branches; end
+
   def each_when(&block); end
+
+  # Checks whether this case statement has an `else` branch.
   def else?; end
+
+  # Returns the else branch of the `case` statement, if any.
   def else_branch; end
+
+  # Returns the keyword of the `case` statement as a string.
   def keyword; end
+
+  # Returns an array of all the when branches in the `case` statement.
   def when_branches; end
 end
 
+# A node extension for `class` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `class` nodes within RuboCop.
 class RuboCop::AST::ClassNode < ::RuboCop::AST::Node
+  # The body of this `class` node.
   def body; end
+
+  # The identifer for this `class` node.
   def identifier; end
+
+  # The parent class for this `class` node.
   def parent_class; end
 end
 
+# A mixin that helps give collection nodes array polymorphism.
 module RuboCop::AST::CollectionNode
   extend ::Forwardable
 
@@ -212,6 +371,7 @@ module RuboCop::AST::CollectionNode
   def pack(*args, &block); end
   def partition(*args, &block); end
   def permutation(*args, &block); end
+  def place(*args, &block); end
   def pop(*args, &block); end
   def prepend(*args, &block); end
   def product(*args, &block); end
@@ -265,36 +425,85 @@ end
 
 RuboCop::AST::CollectionNode::ARRAY_METHODS = T.let(T.unsafe(nil), Array)
 
+# Common functionality for nodes that have conditions:
+# `if`, `while`, `until`, `case`.
+# This currently doesn't include `when` nodes, because they have multiple
+# conditions, and need to be checked for that.
 module RuboCop::AST::ConditionalNode
+  # Returns the body associated with the condition. This works together with
+  # each node's custom destructuring method to select the correct part of
+  # the node.
   def body; end
+
+  # Returns the condition of the node. This works together with each node's
+  # custom destructuring method to select the correct part of the node.
   def condition; end
+
+  # Checks whether the condition of the node is written on more than
+  # one line.
   def multiline_condition?; end
+
+  # Checks whether the condition of the node is written on a single line.
   def single_line_condition?; end
 end
 
+# A node extension for `const` nodes.
 class RuboCop::AST::ConstNode < ::RuboCop::AST::Node
   def absolute?; end
+
+  # The body of this block.
   def class_name?; end
+
+  # Yield nodes for the namespace
+  #
+  # For `::Foo::Bar::BAZ` => yields:
+  # s(:cbase), then
+  # s(:const, :Foo), then
+  # s(:const, s(:const, :Foo), :Bar)
   def each_path(&block); end
+
+  # The body of this block.
   def module_name?; end
+
+  # The `send` node associated with this block.
   def namespace; end
+
   def relative?; end
   def short_name; end
 end
 
+# A node extension for `def` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `def` nodes within RuboCop.
 class RuboCop::AST::DefNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::MethodIdentifierPredicates
 
+  # Checks whether this method definition node forwards its arguments
+  # as per the feature added in Ruby 2.7.
   def argument_forwarding?; end
+
+  # An array containing the arguments of the method definition.
   def arguments; end
+
+  # The body of the method definition.
   def body; end
+
   def endless?; end
+
+  # The name of the defined method as a symbol.
   def method_name; end
+
+  # The receiver of the method definition, if any.
   def receiver; end
+
+  # Checks whether this node body is a void context.
   def void_context?; end
 end
 
+# A node extension for `defined?` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `send` nodes within RuboCop.
 class RuboCop::AST::DefinedNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::MethodIdentifierPredicates
@@ -304,11 +513,34 @@ class RuboCop::AST::DefinedNode < ::RuboCop::AST::Node
   def node_parts; end
 end
 
+# Common functionality for primitive literal nodes: `sym`, `str`,
+# `int`, `float`, ...
 module RuboCop::AST::Descendence
+  # Returns an array of child nodes.
+  # This is a shorthand for `node.each_child_node.to_a`.
   def child_nodes; end
+
+  # Returns an array of descendant nodes.
+  # This is a shorthand for `node.each_descendant.to_a`.
   def descendants; end
+
+  # Calls the given block for each child node.
+  # If no block is given, an `Enumerator` is returned.
+  #
+  # Note that this is different from `node.children.each { |child| ... }`
+  # which yields all children including non-node elements.
   def each_child_node(*types); end
+
+  # Calls the given block for each descendant node with depth first order.
+  # If no block is given, an `Enumerator` is returned.
   def each_descendant(*types, &block); end
+
+  # Calls the given block for the receiver and each descendant node in
+  # depth-first order.
+  # If no block is given, an `Enumerator` is returned.
+  #
+  # This method would be useful when you treat the receiver node as the root
+  # of a tree and want to iterate over all nodes in the tree.
   def each_node(*types, &block); end
 
   protected
@@ -316,51 +548,124 @@ module RuboCop::AST::Descendence
   def visit_descendants(types, &block); end
 end
 
+# A node extension for `dstr` nodes. This will be used
+# in place of a plain node when the builder constructs the AST, making
+# its methods available to all `dstr` nodes within RuboCop.
 class RuboCop::AST::DstrNode < ::RuboCop::AST::StrNode
   def value; end
 end
 
+# A node extension for `ensure` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `ensure` nodes within RuboCop.
 class RuboCop::AST::EnsureNode < ::RuboCop::AST::Node
+  # Returns the body of the `ensure` clause.
   def body; end
 end
 
 module RuboCop::AST::Ext; end
 
+# Extensions to Parser::AST::Range
 module RuboCop::AST::Ext::Range
+  # If `exclude_end` is `true`, then the range will be exclusive.
+  #
+  # Assume that `node` corresponds to the following array literal:
+  #
+  # [
+  # :foo,
+  # :bar
+  # ]
+  #
+  # node.loc.begin.line_span                         # => 1..1
+  # node.loc.expression.line_span(exclude_end: true) # => 1...4
   def line_span(exclude_end: T.unsafe(nil)); end
 end
 
+# Refinement to circumvent broken `Range#minmax` for infinity ranges in 2.6-
 module RuboCop::AST::Ext::RangeMinMax; end
 
+# A node extension for `float` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available to
+# all `float` nodes within RuboCop.
 class RuboCop::AST::FloatNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BasicLiteralNode
   include ::RuboCop::AST::NumericNode
 end
 
+# A node extension for `for` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `for` nodes within RuboCop.
 class RuboCop::AST::ForNode < ::RuboCop::AST::Node
+  # Returns the body of the `for` loop.
   def body; end
+
+  # Returns the collection the `for` loop is iterating over.
   def collection; end
+
+  # Checks whether the `for` node has a `do` keyword.
   def do?; end
+
+  # Returns the keyword of the `for` statement as a string.
   def keyword; end
+
+  # Returns the iteration variable of the `for` loop.
   def variable; end
+
+  # Checks whether this node body is a void context.
+  # Always `true` for `for`.
   def void_context?; end
 end
 
+# A node extension for `forward-args` nodes. This will be used in place
+# of a plain node when the builder constructs the AST, making its methods
+# available to all `forward-args` nodes within RuboCop.
+#
+# Not used with modern emitters:
+#
+# $ ruby-parse -e "def foo(...); end"
+# (def :foo
+# (args
+# (forward-arg)) nil)
+# $ ruby-parse --legacy -e "->(foo) { bar }"
+# (def :foo
+# (forward-args) nil)
+#
+# Note the extra 's' with legacy form.
+#
+# The main RuboCop runs in legacy mode; this node is only used
+# if user `AST::Builder.modernize` or `AST::Builder.emit_lambda=true`
 class RuboCop::AST::ForwardArgsNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::CollectionNode
 
+  # Node wraps itself in an array to be compatible with other
+  # enumerable argument types.
   def to_a; end
 end
 
+# Common functionality for nodes that can be used as hash elements:
+# `pair`, `kwsplat`
 module RuboCop::AST::HashElementNode
+  # Returns the delta between this element's delimiter and the argument's.
   def delimiter_delta(other); end
+
+  # Returns the key of this `hash` element.
   def key; end
+
+  # Returns the delta between this pair's key and the argument pair's.
   def key_delta(other, alignment = T.unsafe(nil)); end
+
+  # Checks whether this `hash` element is on the same line as `other`.
   def same_line?(other); end
+
+  # Returns the value of this `hash` element.
   def value; end
+
+  # Returns the delta between this element's value and the argument's.
   def value_delta(other); end
 end
 
+# A helper class for comparing the positions of different parts of a
+# `pair` node.
 class RuboCop::AST::HashElementNode::HashElementDelta
   def initialize(first, second); end
 
@@ -371,175 +676,472 @@ class RuboCop::AST::HashElementNode::HashElementDelta
   private
 
   def delta(first, second, alignment = T.unsafe(nil)); end
+
+  # Returns the value of attribute first.
   def first; end
+
   def keyword_splat?; end
+
+  # Returns the value of attribute second.
   def second; end
+
   def valid_argument_types?; end
 end
 
+# A node extension for `hash` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `hash` nodes within RuboCop.
 class RuboCop::AST::HashNode < ::RuboCop::AST::Node
+  # Checks whether the `hash` literal is delimited by curly braces.
   def braces?; end
+
+  # Calls the given block for each `key` node in the `hash` literal.
+  # If no block is given, an `Enumerator` is returned.
   def each_key(&block); end
+
+  # Calls the given block for each `pair` node in the `hash` literal.
+  # If no block is given, an `Enumerator` is returned.
   def each_pair; end
+
+  # Calls the given block for each `value` node in the `hash` literal.
+  # If no block is given, an `Enumerator` is returned.
   def each_value(&block); end
+
+  # Checks whether the `hash` node contains any `pair`- or `kwsplat` nodes.
+  #
+  # @return[Boolean] whether the `hash` is empty
   def empty?; end
+
+  # Returns an array of all the keys in the `hash` literal.
   def keys; end
+
+  # Checks whether this `hash` uses a mix of hash rocket and colon
+  # delimiters for its pairs.
   def mixed_delimiters?; end
+
+  # Returns an array of all the key value pairs in the `hash` literal.
+  #
+  # ignored.
   def pairs; end
+
+  # Checks whether any of the key value pairs in the `hash` literal are on
+  # the same line.
   def pairs_on_same_line?; end
+
+  # Returns an array of all the values in the `hash` literal.
   def values; end
 end
 
+# A node extension for `if` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `if` nodes within RuboCop.
 class RuboCop::AST::IfNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
   include ::RuboCop::AST::ModifierNode
 
+  # Returns an array of all the branches in the conditional statement.
   def branches; end
+
   def each_branch(&block); end
+
+  # Checks whether the `if` node has an `else` clause.
   def else?; end
+
+  # Returns the branch of the `if` node that gets evaluated when its
+  # condition is falsey.
   def else_branch; end
+
+  # Checks whether the `if` is an `elsif`. Parser handles these by nesting
+  # `if` nodes in the `else` branch.
   def elsif?; end
+
+  # Checks whether the `if` node has at least one `elsif` branch. Returns
+  # true if this `if` node itself is an `elsif`.
   def elsif_conditional?; end
+
+  # Checks whether this node is an `if` statement. (This is not true of
+  # ternary operators and `unless` statements.)
   def if?; end
+
+  # Returns the branch of the `if` node that gets evaluated when its
+  # condition is truthy.
   def if_branch; end
+
+  # Returns the inverse keyword of the `if` node as a string. Returns `if`
+  # for `unless` nodes and vice versa. Returns an empty string for ternary
+  # operators.
   def inverse_keyword; end
+
+  # Returns the keyword of the `if` statement as a string. Returns an empty
+  # string for ternary operators.
   def keyword; end
+
+  # Checks whether the `if` node is in a modifier form, i.e. a condition
+  # trailing behind an expression. Only `if` and `unless` nodes without
+  # other branches can be modifiers.
   def modifier_form?; end
+
+  # Chacks whether the `if` node has nested `if` nodes in any of its
+  # branches.
   def nested_conditional?; end
+
+  # Custom destructuring method. This is used to normalize the branches
+  # for `if` and `unless` nodes, to aid comparisons and conversions.
   def node_parts; end
+
+  # Checks whether the `if` node is a ternary operator.
   def ternary?; end
+
+  # Checks whether this node is an `unless` statement. (This is not true
+  # of ternary operators and `if` statements.)
   def unless?; end
 end
 
+# A node extension for `in` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `in` nodes within RuboCop.
 class RuboCop::AST::InPatternNode < ::RuboCop::AST::Node
+  # Returns the body of the `in` node.
   def body; end
+
+  # Returns the index of the `in` branch within the `case` statement.
   def branch_index; end
+
+  # Returns a node of the pattern in the `in` branch.
   def pattern; end
+
+  # Checks whether the `in` node has a `then` keyword.
   def then?; end
 end
 
+# Used for modern support only!
+# Not as thoroughly tested as legacy equivalent
+#
+# $ ruby-parse -e "foo[:bar]"
+# (index
+# (send nil :foo)
+# (sym :bar))
+# $ ruby-parse --legacy -e "foo[:bar]"
+# (send
+# (send nil :foo) :[]
+# (sym :bar))
+#
+# The main RuboCop runs in legacy mode; this node is only used
+# if user `AST::Builder.modernize` or `AST::Builder.emit_index=true`
 class RuboCop::AST::IndexNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::RestArguments
   include ::RuboCop::AST::MethodIdentifierPredicates
   include ::RuboCop::AST::MethodDispatchNode
 
+  # For similarity with legacy mode
   def assignment_method?; end
+
+  # For similarity with legacy mode
   def attribute_accessor?; end
+
+  # For similarity with legacy mode
   def method_name; end
 
   private
 
+  # An array containing the arguments of the dispatched method.
   def first_argument_index; end
 end
 
+# Used for modern support only!
+# Not as thoroughly tested as legacy equivalent
+#
+# $ ruby-parse -e "foo[:bar] = :baz"
+# (indexasgn
+# (send nil :foo)
+# (sym :bar)
+# (sym :baz))
+# $ ruby-parse --legacy -e "foo[:bar] = :baz"
+# (send
+# (send nil :foo) :[]=
+# (sym :bar)
+# (sym :baz))
+#
+# The main RuboCop runs in legacy mode; this node is only used
+# if user `AST::Builder.modernize` or `AST::Builder.emit_index=true`
 class RuboCop::AST::IndexasgnNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::RestArguments
   include ::RuboCop::AST::MethodIdentifierPredicates
   include ::RuboCop::AST::MethodDispatchNode
 
+  # For similarity with legacy mode
   def assignment_method?; end
+
+  # For similarity with legacy mode
   def attribute_accessor?; end
+
+  # For similarity with legacy mode
   def method_name; end
 
   private
 
+  # An array containing the arguments of the dispatched method.
   def first_argument_index; end
 end
 
+# A node extension for `int` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available to
+# all `int` nodes within RuboCop.
 class RuboCop::AST::IntNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BasicLiteralNode
   include ::RuboCop::AST::NumericNode
 end
 
+# A node extension for `kwsplat` nodes. This will be used in place of a
+# plain  node when the builder constructs the AST, making its methods
+# available to all `kwsplat` nodes within RuboCop.
 class RuboCop::AST::KeywordSplatNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::HashElementNode
 
+  # This is used for duck typing with `pair` nodes which also appear as
+  # `hash` elements.
   def colon?; end
+
+  # This is used for duck typing with `pair` nodes which also appear as
+  # `hash` elements.
   def hash_rocket?; end
+
+  # Custom destructuring method. This is used to normalize the branches
+  # for `pair` and `kwsplat` nodes, to add duck typing to `hash` elements.
   def node_parts; end
+
+  # Returns the operator for the `kwsplat` as a string.
   def operator; end
 end
 
 RuboCop::AST::KeywordSplatNode::DOUBLE_SPLAT = T.let(T.unsafe(nil), String)
 
+# Used for modern support only:
+# Not as thoroughly tested as legacy equivalent
+#
+# $ ruby-parse -e "->(foo) { bar }"
+# (block
+# (lambda)
+# (args
+# (arg :foo))
+# (send nil :bar))
+# $ ruby-parse --legacy -e "->(foo) { bar }"
+# (block
+# (send nil :lambda)
+# (args
+# (arg :foo))
+# (send nil :bar))
+#
+# The main RuboCop runs in legacy mode; this node is only used
+# if user `AST::Builder.modernize` or `AST::Builder.emit_lambda=true`
 class RuboCop::AST::LambdaNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::RestArguments
   include ::RuboCop::AST::MethodIdentifierPredicates
   include ::RuboCop::AST::MethodDispatchNode
 
+  # For similarity with legacy mode
   def assignment_method?; end
+
+  # For similarity with legacy mode
   def attribute_accessor?; end
+
+  # For similarity with legacy mode
   def lambda?; end
+
+  # For similarity with legacy mode
   def lambda_literal?; end
+
+  # For similarity with legacy mode
   def method_name; end
+
+  # For similarity with legacy mode
   def receiver; end
 
   private
 
+  # For similarity with legacy mode
   def first_argument_index; end
 end
 
+# Common functionality for nodes that are a kind of method dispatch:
+# `send`, `csend`, `super`, `zsuper`, `yield`, `defined?`,
+# and (modern only): `index`, `indexasgn`, `lambda`
 module RuboCop::AST::MethodDispatchNode
   include ::RuboCop::AST::MethodIdentifierPredicates
   extend ::RuboCop::AST::NodePattern::Macros
 
+  # Checks whether the dispatched method is an access modifier.
   def access_modifier?; end
+
   def adjacent_def_modifier?(param0 = T.unsafe(nil)); end
+
+  # Checks whether this node is an arithmetic operation
   def arithmetic_operation?; end
+
+  # Checks whether the dispatched method is a setter method.
   def assignment?; end
+
+  # Checks whether the dispatched method is a bare access modifier that
+  # affects all methods defined after the macro.
   def bare_access_modifier?; end
+
   def bare_access_modifier_declaration?(param0 = T.unsafe(nil)); end
+
+  # Checks whether this is a binary operation.
   def binary_operation?; end
+
+  # Whether this method dispatch has an explicit block.
   def block_literal?; end
+
+  # The `block` node associated with this method dispatch, if any.
   def block_node; end
+
+  # Checks whether the name of the dispatched method matches the argument
+  # and has an implicit receiver.
   def command?(name); end
+
+  # Checks whether the *explicit* receiver of this method dispatch is a
+  # `const` node.
   def const_receiver?; end
+
+  # Checks if this node is part of a chain of `def` or `defs` modifiers.
+  #
+  # or `nil` if it isn't a def modifier
   def def_modifier(node = T.unsafe(nil)); end
+
+  # Checks if this node is part of a chain of `def` or `defs` modifiers.
+  #
+  # See also `def_modifier` that returns the node or `nil`
   def def_modifier?(node = T.unsafe(nil)); end
+
+  # Checks whether the dispatched method uses a dot to connect the
+  # receiver and the method name.
+  #
+  # This is useful for comparison operators, which can be called either
+  # with or without a dot, i.e. `foo == bar` or `foo.== bar`.
   def dot?; end
+
+  # Checks whether the dispatched method uses a double colon to connect the
+  # receiver and the method name.
   def double_colon?; end
+
+  # Checks whether the method dispatch is the implicit form of `#call`,
+  # e.g. `foo.(bar)`.
   def implicit_call?; end
+
   def in_macro_scope?(param0 = T.unsafe(nil)); end
+
+  # Checks whether this is a lambda. Some versions of parser parses
+  # non-literal lambdas as a method send.
   def lambda?; end
+
+  # Checks whether this is a lambda literal (stabby lambda.)
   def lambda_literal?; end
+
+  # Checks whether the dispatched method is a macro method. A macro method
+  # is defined as a method that sits in a class, module, or block body and
+  # has an implicit receiver.
   def macro?; end
+
+  # The name of the dispatched method as a symbol.
   def method_name; end
+
+  # Checks whether the dispatched method is a non-bare access modifier that
+  # affects only the method it receives.
   def non_bare_access_modifier?; end
+
   def non_bare_access_modifier_declaration?(param0 = T.unsafe(nil)); end
+
+  # The receiving node of the method dispatch.
   def receiver; end
+
+  # Checks whether the dispatched method uses a safe navigation operator to
+  # connect the receiver and the method name.
   def safe_navigation?; end
+
+  # Checks whether the *explicit* receiver of this method dispatch is
+  # `self`.
   def self_receiver?; end
+
+  # Checks whether the dispatched method is a setter method.
   def setter_method?; end
+
+  # Checks whether the dispatched method is a bare `private` or `protected`
+  # access modifier that affects all methods defined after the macro.
   def special_modifier?; end
+
+  # Checks whether this is a unary operation.
   def unary_operation?; end
 end
 
 RuboCop::AST::MethodDispatchNode::ARITHMETIC_OPERATORS = T.let(T.unsafe(nil), Array)
 RuboCop::AST::MethodDispatchNode::SPECIAL_MODIFIERS = T.let(T.unsafe(nil), Array)
 
+# Common predicates for nodes that reference method identifiers:
+# `send`, `csend`, `def`, `defs`, `super`, `zsuper`
 module RuboCop::AST::MethodIdentifierPredicates
+  # Checks whether the method is an assignment method.
   def assignment_method?; end
+
+  # Checks whether the method is a bang method.
   def bang_method?; end
+
+  # Checks whether the method is a camel case method,
+  # e.g. `Integer()`.
   def camel_case_method?; end
+
+  # Checks whether the method is a comparison method.
   def comparison_method?; end
+
+  # Checks whether the *explicit* receiver of node is a `const` node.
   def const_receiver?; end
+
+  # Checks whether the method is an Enumerable method.
   def enumerable_method?; end
+
+  # Checks whether the method is an enumerator method.
   def enumerator_method?; end
+
+  # Checks whether the method name matches the argument.
   def method?(name); end
+
+  # Checks whether this is a negation method, i.e. `!` or keyword `not`.
   def negation_method?; end
+
+  # Checks whether the method is a nonmutating Array method.
   def nonmutating_array_method?; end
+
+  # Checks whether the method is a nonmutating binary operator method.
   def nonmutating_binary_operator_method?; end
+
+  # Checks whether the method is a nonmutating Hash method.
   def nonmutating_hash_method?; end
+
+  # Checks whether the method is a nonmutating operator method.
   def nonmutating_operator_method?; end
+
+  # Checks whether the method is a nonmutating String method.
   def nonmutating_string_method?; end
+
+  # Checks whether the method is a nonmutating unary operator method.
   def nonmutating_unary_operator_method?; end
+
+  # Checks whether the method is an operator method.
   def operator_method?; end
+
+  # Checks whether the method is a predicate method.
   def predicate_method?; end
+
+  # Checks whether this is a prefix bang method, e.g. `!foo`.
   def prefix_bang?; end
+
+  # Checks whether this is a prefix not method, e.g. `not foo`.
   def prefix_not?; end
+
+  # Checks whether the *explicit* receiver of this node is `self`.
   def self_receiver?; end
 end
 
@@ -551,22 +1153,42 @@ RuboCop::AST::MethodIdentifierPredicates::NONMUTATING_HASH_METHODS = T.let(T.uns
 RuboCop::AST::MethodIdentifierPredicates::NONMUTATING_OPERATOR_METHODS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::MethodIdentifierPredicates::NONMUTATING_STRING_METHODS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::MethodIdentifierPredicates::NONMUTATING_UNARY_OPERATOR_METHODS = T.let(T.unsafe(nil), Set)
+
+# http://phrogz.net/programmingruby/language.html#table_18.4
 RuboCop::AST::MethodIdentifierPredicates::OPERATOR_METHODS = T.let(T.unsafe(nil), Set)
 
+# Common functionality for nodes that can be used as modifiers:
+# `if`, `while`, `until`
 module RuboCop::AST::ModifierNode
+  # Checks whether the node is in a modifier form, i.e. a condition
+  # trailing behind an expression.
   def modifier_form?; end
 end
 
+# A node extension for `module` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `module` nodes within RuboCop.
 class RuboCop::AST::ModuleNode < ::RuboCop::AST::Node
+  # The body of this `module` node.
   def body; end
+
+  # The identifer for this `module` node.
   def identifier; end
 end
 
+# A node extension for `next` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `next` nodes within RuboCop.
 class RuboCop::AST::NextNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::WrappedArguments
 end
 
+# `RuboCop::AST::Node` is a subclass of `Parser::AST::Node`. It provides
+# access to parent nodes and an object-oriented way to traverse an AST with
+# the power of `Enumerable`.
+#
+# It has predicate methods for every node type, like this:
 class RuboCop::AST::Node < ::Parser::AST::Node
   include ::RuboCop::AST::Sexp
   include ::RuboCop::AST::Descendence
@@ -578,7 +1200,11 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def __FILE___type?; end
   def __LINE___type?; end
   def alias_type?; end
+
+  # Returns an array of ancestor nodes.
+  # This is a shorthand for `node.each_ancestor.to_a`.
   def ancestors; end
+
   def and_asgn_type?; end
   def and_type?; end
   def arg_expr_type?; end
@@ -590,7 +1216,10 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def array_pattern_with_tail_type?; end
   def array_type?; end
   def assignment?; end
+
+  # Some cops treat the shovel operator as a kind of assignment.
   def assignment_or_similar?(param0 = T.unsafe(nil)); end
+
   def back_ref_type?; end
   def basic_conditional?; end
   def basic_literal?; end
@@ -627,7 +1256,11 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def defs_type?; end
   def dstr_type?; end
   def dsym_type?; end
+
+  # Calls the given block for each ancestor node from parent to root.
+  # If no block is given, an `Enumerator` is returned.
   def each_ancestor(*types, &block); end
+
   def eflipflop_type?; end
   def empty_else_type?; end
   def empty_source?; end
@@ -674,11 +1307,21 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def lambda_or_proc?(param0 = T.unsafe(nil)); end
   def lambda_type?; end
   def last_line; end
+
+  # Use is discouraged, this is a potentially slow method and can lead
+  # to even slower algorithms
   def left_sibling; end
+
+  # Use is discouraged, this is a potentially slow method and can lead
+  # to even slower algorithms
   def left_siblings; end
+
   def line_count; end
   def literal?; end
+
+  # NOTE: `loop { }` is a normal method call and thus not a loop keyword.
   def loop_keyword?; end
+
   def lvar_type?; end
   def lvasgn_type?; end
   def masgn_type?; end
@@ -696,12 +1339,21 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def mlhs_type?; end
   def module_definition?(param0 = T.unsafe(nil)); end
   def module_type?; end
+
+  # Predicates
   def multiline?; end
+
   def mutable_literal?; end
   def new_class_or_module_block?(param0 = T.unsafe(nil)); end
   def next_type?; end
   def nil_type?; end
+
+  # Common destructuring method. This can be used to normalize
+  # destructuring for different variations of the node.
+  # Some node types override this with their own custom
+  # destructuring method.
   def node_parts; end
+
   def nonempty_line_count; end
   def not_type?; end
   def nth_ref_type?; end
@@ -717,9 +1369,15 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def or_asgn_type?; end
   def or_type?; end
   def pair_type?; end
+
+  # Returns the parent node, or `nil` if the receiver is a root node.
   def parent; end
+
   def parent?; end
+
+  # Searching the AST
   def parent_module_name; end
+
   def parenthesized_call?; end
   def pin_type?; end
   def post_condition_loop?; end
@@ -727,7 +1385,16 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def preexe_type?; end
   def proc?(param0 = T.unsafe(nil)); end
   def procarg0_type?; end
+
+  # Some expressions are evaluated for their value, some for their side
+  # effects, and some for both.
+  # If we know that expressions are useful only for their return values,
+  # and have no side effects, that means we can reorder them, change the
+  # number of times they are evaluated, or replace them with other
+  # expressions which are equivalent in value.
+  # So, is evaluation of this node free of side effects?
   def pure?; end
+
   def range_type?; end
   def rational_type?; end
   def receiver(param0 = T.unsafe(nil)); end
@@ -743,17 +1410,32 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def restarg_type?; end
   def retry_type?; end
   def return_type?; end
+
+  # Use is discouraged, this is a potentially slow method and can lead
+  # to even slower algorithms
   def right_sibling; end
+
+  # Use is discouraged, this is a potentially slow method and can lead
+  # to even slower algorithms
   def right_siblings; end
+
   def root?; end
   def sclass_type?; end
   def self_type?; end
   def send_type?; end
   def shadowarg_type?; end
   def shorthand_asgn?; end
+
+  # Returns the index of the receiver node in its siblings. (Sibling index
+  # uses zero based numbering.)
+  # Use is discouraged, this is a potentially slow method.
   def sibling_index; end
+
   def single_line?; end
+
+  # NOTE: Some rare nodes may have no source, like `s(:args)` in `foo {}`
   def source; end
+
   def source_length; end
   def source_range; end
   def special_keyword?; end
@@ -769,8 +1451,24 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   def unless_guard_type?; end
   def until_post_type?; end
   def until_type?; end
+
+  # Override `AST::Node#updated` so that `AST::Processor` does not try to
+  # mutate our ASTs. Since we keep references from children to parents and
+  # not just the other way around, we cannot update an AST and share
+  # identical subtrees. Rather, the entire AST must be copied any time any
+  # part of it is changed.
   def updated(type = T.unsafe(nil), children = T.unsafe(nil), properties = T.unsafe(nil)); end
+
+  # Some expressions are evaluated for their value, some for their side
+  # effects, and some for both
+  # If we know that an expression is useful only for its side effects, that
+  # means we can transform it in ways which preserve the side effects, but
+  # change the return value
+  # So, does the return value of this node matter? If we changed it to
+  # `(...; nil)`, might that affect anything?
+  #
   def value_used?; end
+
   def variable?; end
   def when_type?; end
   def while_post_type?; end
@@ -800,7 +1498,10 @@ RuboCop::AST::Node::ARGUMENT_TYPES = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::ASSIGNMENTS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::BASIC_CONDITIONALS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::BASIC_LITERALS = T.let(T.unsafe(nil), Set)
+
+# <=> isn't included here, because it doesn't return a boolean.
 RuboCop::AST::Node::COMPARISON_OPERATORS = T.let(T.unsafe(nil), Set)
+
 RuboCop::AST::Node::COMPOSITE_LITERALS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::CONDITIONALS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::EQUALS_ASSIGNMENTS = T.let(T.unsafe(nil), Set)
@@ -820,6 +1521,24 @@ RuboCop::AST::Node::SPECIAL_KEYWORDS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::TRUTHY_LITERALS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Node::VARIABLES = T.let(T.unsafe(nil), Set)
 
+# This class performs a pattern-matching operation on an AST node.
+#
+# Detailed syntax: /docs/modules/ROOT/pages/node_pattern.adoc
+#
+# Initialize a new `NodePattern` with `NodePattern.new(pattern_string)`, then
+# pass an AST node to `NodePattern#match`. Alternatively, use one of the class
+# macros in `NodePattern::Macros` to define your own pattern-matching method.
+#
+# If the match fails, `nil` will be returned. If the match succeeds, the
+# return value depends on whether a block was provided to `#match`, and
+# whether the pattern contained any "captures" (values which are extracted
+# from a matching AST.)
+#
+# - With block: #match yields the captures (if any) and passes the return
+# value of the block through.
+# - With no block, but one capture: the capture is returned.
+# - With no block, but multiple captures: captures are returned as an array.
+# - With no block and no captures: #match returns `true`.
 class RuboCop::AST::NodePattern
   include ::RuboCop::AST::NodePattern::MethodDefiner
   extend ::Forwardable
@@ -828,7 +1547,10 @@ class RuboCop::AST::NodePattern
 
   def ==(other); end
   def as_json(_options = T.unsafe(nil)); end
+
+  # Returns the value of attribute ast.
   def ast; end
+
   def captures(*args, &block); end
   def encode_with(coder); end
   def eql?(other); end
@@ -837,17 +1559,28 @@ class RuboCop::AST::NodePattern
   def marshal_dump; end
   def marshal_load(pattern); end
   def match(*args, **rest, &block); end
+
+  # Returns the value of attribute match_code.
   def match_code; end
+
   def named_parameters(*args, &block); end
+
+  # Returns the value of attribute pattern.
   def pattern; end
+
   def positional_parameters(*args, &block); end
   def to_s; end
 
   class << self
+    # Yields its argument and any descendants, depth-first.
     def descend(element, &block); end
   end
 end
 
+# Responsible to build the AST nodes for `NodePattern`
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Builder
   def emit_atom(type, value); end
   def emit_call(type, selector, args = T.unsafe(nil)); end
@@ -864,35 +1597,65 @@ class RuboCop::AST::NodePattern::Builder
   def union_children(pattern_lists); end
 end
 
+# A NodePattern comment, simplified version of ::Parser::Source::Comment
 class RuboCop::AST::NodePattern::Comment
   def initialize(range); end
 
+  # Compares comments. Two comments are equal if they
+  # correspond to the same source range.
   def ==(other); end
+
   def inspect; end
+
+  # Returns the value of attribute location.
   def loc; end
+
+  # Returns the value of attribute location.
   def location; end
+
   def text; end
 end
 
+# The top-level compiler holding the global state
+# Defers work to its subcompilers
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Compiler
   extend ::Forwardable
 
   def initialize; end
 
   def bind(*args, &block); end
+
+  # Returns the value of attribute binding.
   def binding; end
+
+  # Returns the value of attribute captures.
   def captures; end
+
   def compile_as_atom(node); end
   def compile_as_node_pattern(node, **options); end
   def compile_sequence(sequence, var:); end
+
+  # Enumerates `enum` while keeping track of state across
+  # union branches (captures and unification).
   def each_union(enum, &block); end
+
   def freeze; end
   def named_parameter(name); end
+
+  # Returns the value of attribute named_parameters.
   def named_parameters; end
+
   def next_capture; end
   def parser; end
   def positional_parameter(number); end
+
+  # Returns the value of attribute positional_parameters.
   def positional_parameters; end
+
+  # Utilities
   def with_temp_variables(*names, &block); end
 
   private
@@ -901,13 +1664,21 @@ class RuboCop::AST::NodePattern::Compiler
   def new_capture; end
 end
 
+# Generates code that evaluates to a value (Ruby object)
+# This value responds to `===`.
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Compiler::AtomSubcompiler < ::RuboCop::AST::NodePattern::Compiler::Subcompiler
   private
 
   def visit_const; end
   def visit_named_parameter; end
   def visit_number; end
+
+  # Assumes other types are node patterns.
   def visit_other_type; end
+
   def visit_positional_parameter; end
   def visit_regexp; end
   def visit_set; end
@@ -916,10 +1687,13 @@ class RuboCop::AST::NodePattern::Compiler::AtomSubcompiler < ::RuboCop::AST::Nod
   def visit_unify; end
 end
 
+# Holds the list of bound variable names
 class RuboCop::AST::NodePattern::Compiler::Binding
   def initialize; end
 
+  # Yields the first time a given name is bound
   def bind(name); end
+
   def union_bind(enum); end
 
   private
@@ -927,12 +1701,16 @@ class RuboCop::AST::NodePattern::Compiler::Binding
   def forbid(names); end
 end
 
+# Variant of the Compiler with tracing information for nodes
 class RuboCop::AST::NodePattern::Compiler::Debug < ::RuboCop::AST::NodePattern::Compiler
   def initialize; end
 
   def comments(*args, &block); end
   def named_parameters; end
+
+  # Returns the value of attribute node_ids.
   def node_ids; end
+
   def parser; end
   def tokens(*args, &block); end
 end
@@ -954,18 +1732,37 @@ end
 RuboCop::AST::NodePattern::Compiler::Debug::Colorizer::COLOR_SCHEME = T.let(T.unsafe(nil), Hash)
 RuboCop::AST::NodePattern::Compiler::Debug::Colorizer::Compiler = RuboCop::AST::NodePattern::Compiler::Debug
 
+# Result of a NodePattern run against a particular AST
+# Consider constructor is private
 class RuboCop::AST::NodePattern::Compiler::Debug::Colorizer::Result < ::Struct
   def color_map(color_scheme = T.unsafe(nil)); end
   def colorize(color_scheme = T.unsafe(nil)); end
+
+  # Returns the value of attribute colorizer
   def colorizer; end
+
+  # Sets the attribute colorizer
   def colorizer=(_); end
+
   def match_map; end
   def matched?(node); end
+
+  # Returns the value of attribute returned
   def returned; end
+
+  # Sets the attribute returned
   def returned=(_); end
+
+  # Returns the value of attribute ruby_ast
   def ruby_ast; end
+
+  # Sets the attribute ruby_ast
   def ruby_ast=(_); end
+
+  # Returns the value of attribute trace
   def trace; end
+
+  # Sets the attribute trace
   def trace=(_); end
 
   private
@@ -998,18 +1795,32 @@ class RuboCop::AST::NodePattern::Compiler::Debug::SequenceSubcompiler < ::RuboCo
   include ::RuboCop::AST::NodePattern::Compiler::Debug::InstrumentationSubcompiler
 end
 
+# Compiled node pattern requires a named parameter `trace`,
+# which should be an instance of this class
 class RuboCop::AST::NodePattern::Compiler::Debug::Trace
   def initialize; end
 
   def enter(node_id); end
+
+  # return nil (not visited), false (not matched) or true (matched)
   def matched?(node_id); end
+
   def success(node_id); end
 end
 
+# Compiles code that evalues to true or false
+# for a given value `var` (typically a RuboCop::AST::Node)
+# or it's `node.type` if `seq_head` is true
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Compiler::NodePatternSubcompiler < ::RuboCop::AST::NodePattern::Compiler::Subcompiler
   def initialize(compiler, var: T.unsafe(nil), access: T.unsafe(nil), seq_head: T.unsafe(nil)); end
 
+  # Returns the value of attribute access.
   def access; end
+
+  # Returns the value of attribute seq_head.
   def seq_head; end
 
   private
@@ -1018,7 +1829,10 @@ class RuboCop::AST::NodePattern::Compiler::NodePatternSubcompiler < ::RuboCop::A
   def access_node; end
   def compile_args(arg_list, first: T.unsafe(nil)); end
   def compile_guard_clause; end
+
+  # Compiling helpers
   def compile_value_match(value); end
+
   def multiple_access(kind); end
   def visit_ascend; end
   def visit_capture; end
@@ -1027,15 +1841,33 @@ class RuboCop::AST::NodePattern::Compiler::NodePatternSubcompiler < ::RuboCop::A
   def visit_intersection; end
   def visit_negation; end
   def visit_node_type; end
+
+  # Assumes other types are atoms.
   def visit_other_type; end
+
   def visit_predicate; end
   def visit_sequence; end
   def visit_unify; end
+
+  # Lists
   def visit_union; end
+
   def visit_wildcard; end
 end
 
+# Compiles terms within a sequence to code that evalues to true or false.
+# Compilation of the nodes that can match only a single term is deferred to
+# `NodePatternSubcompiler`; only nodes that can match multiple terms are
+# compiled here.
+# Assumes the given `var` is a `::RuboCop::AST::Node`
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
+#
 class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST::NodePattern::Compiler::Subcompiler
+  # Calls `compile_sequence`; the actual `compile` method
+  # will be used for the different terms of the sequence.
+  # The only case of re-entrant call to `compile` is `visit_capture`
   def initialize(compiler, sequence:, var:); end
 
   def compile_sequence; end
@@ -1045,11 +1877,15 @@ class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST:
 
   def compile_terms(children = T.unsafe(nil), last_arity = T.unsafe(nil)); end
   def cur_index; end
+
+  # yield `sync_code` iff not already in sync
   def sync; end
 
   private
 
+  # Compilation helpers
   def compile_and_advance(term); end
+
   def compile_any_order_branches(matched_var); end
   def compile_any_order_else; end
   def compile_captured_repetition(child_code, child_captures); end
@@ -1059,54 +1895,94 @@ class RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler < ::RuboCop::AST:
   def compile_index(cur = T.unsafe(nil)); end
   def compile_loop(term); end
   def compile_loop_advance(to = T.unsafe(nil)); end
+
+  # Assumes `@cur_index` is already updated
   def compile_matched(kind); end
+
   def compile_max_matched; end
   def compile_min_check; end
   def compile_remaining; end
   def compile_union_forks; end
   def empty_loop; end
   def handle_prev; end
+
+  # Modifies in place `forks`
+  # Syncs our state
   def merge_forks!(forks); end
+
+  # Modifies in place `forks` to insure that `cur_{child|index}_var` are ok
   def preserve_union_start(forks); end
+
+  # E.g. For sequence `(_  _? <_ _>)`, arities are: 1, 0..1, 2
+  # and remaining arities are: 3..4, 2..3, 2..2, 0..0
   def remaining_arities(children, last_arity); end
+
+  # returns truthy iff `@cur_index` switched to relative from end mode (i.e. < 0)
   def use_index_from_end; end
+
   def visit_any_order; end
   def visit_capture; end
+
+  # Single node patterns are all handled here
   def visit_other_type; end
+
   def visit_repetition; end
   def visit_rest; end
   def visit_union; end
+
+  # NOTE: assumes `@cur_index != :seq_head`. Node types using `within_loop` must
+  # have `def in_sequence_head; :raise; end`
   def within_loop; end
 end
 
 RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler::DELTA = T.let(T.unsafe(nil), Integer)
 RuboCop::AST::NodePattern::Compiler::SequenceSubcompiler::POSITIVE = T.let(T.unsafe(nil), Proc)
 
+# Base class for subcompilers
+# Implements visitor pattern
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Compiler::Subcompiler
   def initialize(compiler); end
 
   def compile(node); end
+
+  # Returns the value of attribute compiler.
   def compiler; end
 
   private
 
   def do_compile; end
+
+  # Returns the value of attribute node.
   def node; end
 
   class << self
     def inherited(base); end
     def method_added(method); end
+
+    # Returns the value of attribute registry.
     def registry; end
   end
 end
 
 class RuboCop::AST::NodePattern::Invalid < ::StandardError; end
 
+# Lexer class for `NodePattern`
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Lexer < ::RuboCop::AST::NodePattern::LexerRex
   def initialize(source); end
 
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Returns the value of attribute source_buffer.
   def source_buffer; end
+
+  # Returns the value of attribute tokens.
   def tokens; end
 
   private
@@ -1121,38 +1997,89 @@ end
 RuboCop::AST::NodePattern::Lexer::Error = RuboCop::AST::NodePattern::LexerRex::ScanError
 RuboCop::AST::NodePattern::Lexer::REGEXP_OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# The generated lexer RuboCop::AST::NodePattern::LexerRex
 class RuboCop::AST::NodePattern::LexerRex
+  # Yields on the current action.
   def action; end
+
+  # The file name / path
   def filename; end
+
+  # The file name / path
   def filename=(_arg0); end
+
+  # The current location in the parse.
   def location; end
+
+  # The StringScanner for this lexer.
   def match; end
+
+  # The match groups for the current scan.
   def matches; end
+
+  # Lex the next token.
   def next_token; end
+
+  # Parse the given string.
   def parse(str); end
+
+  # Read in and parse the file at +path+.
   def parse_file(path); end
+
+  # The current scanner class. Must be overridden in subclasses.
   def scanner_class; end
+
+  # The StringScanner for this lexer.
   def ss; end
+
+  # The StringScanner for this lexer.
   def ss=(_arg0); end
+
+  # The current lexical state.
   def state; end
+
+  # The current lexical state.
   def state=(_arg0); end
 end
 
 RuboCop::AST::NodePattern::LexerRex::CALL = T.let(T.unsafe(nil), Regexp)
+
+# :stopdoc:
 RuboCop::AST::NodePattern::LexerRex::CONST_NAME = T.let(T.unsafe(nil), Regexp)
+
 RuboCop::AST::NodePattern::LexerRex::IDENTIFIER = T.let(T.unsafe(nil), Regexp)
+
+# :startdoc:
+# :stopdoc:
 class RuboCop::AST::NodePattern::LexerRex::LexerError < ::StandardError; end
+
 RuboCop::AST::NodePattern::LexerRex::NODE_TYPE = T.let(T.unsafe(nil), Regexp)
 RuboCop::AST::NodePattern::LexerRex::REGEXP = T.let(T.unsafe(nil), Regexp)
 RuboCop::AST::NodePattern::LexerRex::REGEXP_BODY = T.let(T.unsafe(nil), Regexp)
 RuboCop::AST::NodePattern::LexerRex::SYMBOL_NAME = T.let(T.unsafe(nil), Regexp)
 class RuboCop::AST::NodePattern::LexerRex::ScanError < ::RuboCop::AST::NodePattern::LexerRex::LexerError; end
 
+# Helpers for defining methods based on a pattern string
 module RuboCop::AST::NodePattern::Macros
+  # Define a method which applies a pattern to an AST node
+  #
+  # The new method will return nil if the node does not match.
+  # If the node matches, and a block is provided, the new method will
+  # yield to the block (passing any captures as block arguments).
+  # If the node matches, and no block is provided, the new method will
+  # return the captures, or `true` if there were none.
   def def_node_matcher(method_name, pattern_str, **keyword_defaults); end
+
+  # Define a method which recurses over the descendants of an AST node,
+  # checking whether any of them match the provided pattern
+  #
+  # If the method name ends with '?', the new method will return `true`
+  # as soon as it finds a descendant which matches. Otherwise, it will
+  # yield all descendants which match.
   def def_node_search(method_name, pattern_str, **keyword_defaults); end
 end
 
+# Functionality to turn `match_code` into methods/lambda
 module RuboCop::AST::NodePattern::MethodDefiner
   def as_lambda; end
   def compile_as_lambda; end
@@ -1172,26 +2099,38 @@ module RuboCop::AST::NodePattern::MethodDefiner
   def emit_params(*first, forwarding: T.unsafe(nil)); end
   def emit_retval; end
   def emit_yield_capture(when_no_capture = T.unsafe(nil), yield_with: T.unsafe(nil)); end
+
+  # This method minimizes the closure for our method
   def wrapping_block(method_name, **defaults); end
 end
 
+# Base class for AST Nodes of a `NodePattern`
 class RuboCop::AST::NodePattern::Node < ::Parser::AST::Node
   include ::RuboCop::AST::Descendence
   extend ::Forwardable
 
+  # Note: `arity.end` may be `Float::INFINITY`
   def arity; end
+
   def arity_range; end
   def capture?; end
   def child; end
   def children_nodes; end
   def in_sequence_head; end
+
+  # that matches within a Set (e.g. `42`, `:sym` but not `/regexp/`)
   def matches_within_set?; end
+
   def nb_captures; end
+
+  # To be overridden by subclasses
   def rest?; end
+
   def variadic?; end
   def with(type: T.unsafe(nil), children: T.unsafe(nil), location: T.unsafe(nil)); end
 end
 
+# Node class for `<int str ...>`
 class RuboCop::AST::NodePattern::Node::AnyOrder < ::RuboCop::AST::NodePattern::Node
   include ::RuboCop::AST::NodePattern::Node::ForbidInSeqHead
 
@@ -1203,6 +2142,7 @@ end
 
 RuboCop::AST::NodePattern::Node::AnyOrder::ARITIES = T.let(T.unsafe(nil), Hash)
 
+# Node class for `$something`
 class RuboCop::AST::NodePattern::Node::Capture < ::RuboCop::AST::NodePattern::Node
   def arity(*args, &block); end
   def capture?; end
@@ -1217,14 +2157,19 @@ end
 
 RuboCop::AST::NodePattern::Node::FunctionCall = RuboCop::AST::NodePattern::Node::Predicate
 RuboCop::AST::NodePattern::Node::INT_TO_RANGE = T.let(T.unsafe(nil), Hash)
+
+# Registry
 RuboCop::AST::NodePattern::Node::MAP = T.let(T.unsafe(nil), Hash)
+
 RuboCop::AST::NodePattern::Node::MATCHES_WITHIN_SET = T.let(T.unsafe(nil), Set)
 
+# Node class for `predicate?(:arg, :list)`
 class RuboCop::AST::NodePattern::Node::Predicate < ::RuboCop::AST::NodePattern::Node
   def arg_list; end
   def method_name; end
 end
 
+# Node class for `int+`
 class RuboCop::AST::NodePattern::Node::Repetition < ::RuboCop::AST::NodePattern::Node
   include ::RuboCop::AST::NodePattern::Node::ForbidInSeqHead
 
@@ -1234,6 +2179,7 @@ end
 
 RuboCop::AST::NodePattern::Node::Repetition::ARITIES = T.let(T.unsafe(nil), Hash)
 
+# Node class for `...`
 class RuboCop::AST::NodePattern::Node::Rest < ::RuboCop::AST::NodePattern::Node
   def arity; end
   def in_sequence_head; end
@@ -1242,12 +2188,14 @@ end
 
 RuboCop::AST::NodePattern::Node::Rest::ARITY = T.let(T.unsafe(nil), Range)
 
+# Node class for `(type first second ...)`
 class RuboCop::AST::NodePattern::Node::Sequence < ::RuboCop::AST::NodePattern::Node
   include ::RuboCop::AST::NodePattern::Node::ForbidInSeqHead
 
   def initialize(type, children = T.unsafe(nil), properties = T.unsafe(nil)); end
 end
 
+# A list (potentially empty) of nodes; part of a Union
 class RuboCop::AST::NodePattern::Node::Subsequence < ::RuboCop::AST::NodePattern::Node
   include ::RuboCop::AST::NodePattern::Node::ForbidInSeqHead
 
@@ -1255,11 +2203,17 @@ class RuboCop::AST::NodePattern::Node::Subsequence < ::RuboCop::AST::NodePattern
   def in_sequence_head; end
 end
 
+# Node class for `{ ... }`
 class RuboCop::AST::NodePattern::Node::Union < ::RuboCop::AST::NodePattern::Node
   def arity; end
   def in_sequence_head; end
 end
 
+# Parser for NodePattern
+# Note: class reopened in `parser.racc`
+#
+# Doc on how this fits in the compiling process:
+# /docs/modules/ROOT/pages/node_pattern.adoc
 class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
   extend ::Forwardable
 
@@ -1267,22 +2221,36 @@ class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
 
   def _reduce_10(val, _values); end
   def _reduce_11(val, _values); end
+
+  # reduce 12 omitted
   def _reduce_13(val, _values); end
+
   def _reduce_14(val, _values); end
   def _reduce_15(val, _values); end
   def _reduce_16(val, _values); end
   def _reduce_17(val, _values); end
   def _reduce_18(val, _values); end
   def _reduce_19(val, _values); end
+
+  # reduce 1 omitted
   def _reduce_2(val, _values); end
+
   def _reduce_20(val, _values); end
   def _reduce_21(val, _values); end
   def _reduce_22(val, _values); end
+
+  # reduce 24 omitted
   def _reduce_25(val, _values); end
+
   def _reduce_26(val, _values); end
   def _reduce_3(val, _values); end
+
+  # reduce 32 omitted
   def _reduce_33(val, _values); end
+
+  # reduce 36 omitted
   def _reduce_37(val, _values); end
+
   def _reduce_38(val, _values); end
   def _reduce_39(val, _values); end
   def _reduce_4(val, _values); end
@@ -1307,11 +2275,16 @@ class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
   def emit_union(*args, &block); end
   def inspect; end
   def next_token(*args, &block); end
+
+  # (Similar API to `parser` gem)
+  # Parses a source and returns the AST.
   def parse(source); end
 
   private
 
   def enforce_unary(node); end
+
+  # Overrides Racc::Parser's method:
   def on_error(token, val, _vstack); end
 end
 
@@ -1320,12 +2293,18 @@ RuboCop::AST::NodePattern::Parser::Lexer = RuboCop::AST::NodePattern::Lexer
 RuboCop::AST::NodePattern::Parser::Racc_arg = T.let(T.unsafe(nil), Array)
 RuboCop::AST::NodePattern::Parser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
+# Overrides Parser to use `WithMeta` variants and provide additional methods
 class RuboCop::AST::NodePattern::Parser::WithMeta < ::RuboCop::AST::NodePattern::Parser
+  # Returns the value of attribute comments.
   def comments; end
+
   def do_parse; end
+
+  # Returns the value of attribute tokens.
   def tokens; end
 end
 
+# Overrides Builder to emit nodes with locations
 class RuboCop::AST::NodePattern::Parser::WithMeta::Builder < ::RuboCop::AST::NodePattern::Builder
   def emit_atom(type, token); end
   def emit_call(type, selector_t, args = T.unsafe(nil)); end
@@ -1340,15 +2319,20 @@ class RuboCop::AST::NodePattern::Parser::WithMeta::Builder < ::RuboCop::AST::Nod
   def source_map(token_or_range, begin_t: T.unsafe(nil), end_t: T.unsafe(nil), operator_t: T.unsafe(nil), selector_t: T.unsafe(nil)); end
 end
 
+# Overrides Lexer to token locations and comments
 class RuboCop::AST::NodePattern::Parser::WithMeta::Lexer < ::RuboCop::AST::NodePattern::Lexer
   def initialize(str_or_buffer); end
 
   def emit_comment; end
   def pos; end
+
+  # Returns the value of attribute source_buffer.
   def source_buffer; end
+
   def token(type, value); end
 end
 
+# Utility to assign a set of values to a constant
 module RuboCop::AST::NodePattern::Sets
   class << self
     def [](set); end
@@ -1442,27 +2426,50 @@ RuboCop::AST::NodePattern::Sets::SET____ETC_2 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_3 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::VAR = T.let(T.unsafe(nil), String)
 
+# Common functionality for primitive numeric nodes: `int`, `float`, ...
 module RuboCop::AST::NumericNode
+  # Checks whether this is literal has a sign.
   def sign?; end
 end
 
 RuboCop::AST::NumericNode::SIGN_REGEX = T.let(T.unsafe(nil), Regexp)
 
+# A node extension for `or` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `or` nodes within RuboCop.
 class RuboCop::AST::OrNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BinaryOperatorNode
   include ::RuboCop::AST::PredicateOperatorNode
 
+  # Returns the alternate operator of the `or` as a string.
+  # Returns `or` for `||` and vice versa.
   def alternate_operator; end
+
+  # Returns the inverse keyword of the `or` node as a string.
+  # Returns `and` for `or` and `&&` for `||`.
   def inverse_operator; end
 end
 
+# A node extension for `pair` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `pair` nodes within RuboCop.
 class RuboCop::AST::PairNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::HashElementNode
 
+  # Checks whether the `pair` uses a colon delimiter.
   def colon?; end
+
+  # Returns the delimiter of the `pair` as a string. Returns `=>` for a
+  # colon delimited `pair` and `:` for a hash rocket delimited `pair`.
   def delimiter(*deprecated, with_spacing: T.unsafe(nil)); end
+
+  # Checks whether the `pair` uses a hash rocket delimiter.
   def hash_rocket?; end
+
+  # Returns the inverse delimiter of the `pair` as a string.
   def inverse_delimiter(*deprecated, with_spacing: T.unsafe(nil)); end
+
+  # Checks whether the value starts on its own line.
   def value_on_new_line?; end
 end
 
@@ -1471,34 +2478,79 @@ RuboCop::AST::PairNode::HASH_ROCKET = T.let(T.unsafe(nil), String)
 RuboCop::AST::PairNode::SPACED_COLON = T.let(T.unsafe(nil), String)
 RuboCop::AST::PairNode::SPACED_HASH_ROCKET = T.let(T.unsafe(nil), String)
 
+# Requires implementing `arguments`.
+#
+# Common functionality for nodes that are parameterized:
+# `send`, `super`, `zsuper`, `def`, `defs`
+# and (modern only): `index`, `indexasgn`, `lambda`
 module RuboCop::AST::ParameterizedNode
+  # Checks whether this node has any arguments.
   def arguments?; end
+
+  # Whether the last argument of the node is a block pass,
+  # i.e. `&block`.
   def block_argument?; end
+
+  # A shorthand for getting the first argument of the node.
+  # Equivalent to `arguments.first`.
   def first_argument; end
+
+  # A shorthand for getting the last argument of the node.
+  # Equivalent to `arguments.last`.
   def last_argument; end
+
+  # Checks whether this node's arguments are wrapped in parentheses.
   def parenthesized?; end
+
+  # Checks whether any argument of the node is a splat
+  # argument, i.e. `*splat`.
   def rest_argument?; end
+
+  # Checks whether any argument of the node is a splat
+  # argument, i.e. `*splat`.
   def splat_argument?; end
 end
 
+# A specialized `ParameterizedNode`.
+# Requires implementing `first_argument_index`
+# Implements `arguments` as `children[first_argument_index..-1]`
+# and optimizes other calls
 module RuboCop::AST::ParameterizedNode::RestArguments
   include ::RuboCop::AST::ParameterizedNode
 
   def arguments; end
+
+  # Checks whether this node has any arguments.
   def arguments?; end
+
+  # A shorthand for getting the first argument of the node.
+  # Equivalent to `arguments.first`.
   def first_argument; end
+
+  # A shorthand for getting the last argument of the node.
+  # Equivalent to `arguments.last`.
   def last_argument; end
 end
 
+# A specialized `ParameterizedNode` for node that have a single child
+# containing either `nil`, an argument, or a `begin` node with all the
+# arguments
 module RuboCop::AST::ParameterizedNode::WrappedArguments
   include ::RuboCop::AST::ParameterizedNode
 
   def arguments; end
 end
 
+# Common functionality for nodes that are predicates:
+# `or`, `and` ...
 module RuboCop::AST::PredicateOperatorNode
+  # Checks whether this is a logical operator.
   def logical_operator?; end
+
+  # Returns the operator as a string.
   def operator; end
+
+  # Checks whether this is a semantic operator.
   def semantic_operator?; end
 end
 
@@ -1507,30 +2559,60 @@ RuboCop::AST::PredicateOperatorNode::LOGICAL_OR = T.let(T.unsafe(nil), String)
 RuboCop::AST::PredicateOperatorNode::SEMANTIC_AND = T.let(T.unsafe(nil), String)
 RuboCop::AST::PredicateOperatorNode::SEMANTIC_OR = T.let(T.unsafe(nil), String)
 
+# A node extension for `procarg0` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all `arg` nodes within RuboCop.
 class RuboCop::AST::Procarg0Node < ::RuboCop::AST::ArgNode
+  # Returns the name of an argument.
   def name; end
 end
 
+# ProcessedSource contains objects which are generated by Parser
+# and other information such as disabled lines for cops.
+# It also provides a convenient way to access source lines.
 class RuboCop::AST::ProcessedSource
   include ::RuboCop::Ext::ProcessedSource
 
   def initialize(source, ruby_version, path = T.unsafe(nil)); end
 
   def [](*args); end
+
+  # Returns the value of attribute ast.
   def ast; end
+
   def ast_with_comments; end
   def blank?; end
+
+  # Returns the value of attribute buffer.
   def buffer; end
+
+  # Raw source checksum for tracking infinite loops.
   def checksum; end
+
   def comment_at_line(line); end
+
+  # Consider using `each_comment_in_lines` instead
   def commented?(source_range); end
+
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Should have been called `comments_before_or_at_line`. Doubtful it has of any valid use.
   def comments_before_line(line); end
+
+  # Consider using `each_comment_in_lines` instead
   def contains_comment?(source_range); end
+
   def current_line(token); end
+
+  # Returns the value of attribute diagnostics.
   def diagnostics; end
+
   def each_comment(&block); end
+
+  # Enumerates on the comments contained with the given `line_range`
   def each_comment_in_lines(line_range); end
+
   def each_token(&block); end
   def file_path; end
   def find_comment(&block); end
@@ -1540,14 +2622,30 @@ class RuboCop::AST::ProcessedSource
   def last_token_of(range_or_node); end
   def line_indentation(line_number); end
   def line_with_comment?(line); end
+
+  # Returns the source lines, line break characters removed, excluding a
+  # possible __END__ and everything that comes after.
   def lines; end
+
+  # Returns the value of attribute parser_error.
   def parser_error; end
+
+  # Returns the value of attribute path.
   def path; end
+
   def preceding_line(token); end
+
+  # Returns the value of attribute raw_source.
   def raw_source; end
+
+  # Returns the value of attribute ruby_version.
   def ruby_version; end
+
   def start_with?(string); end
+
+  # Returns the value of attribute tokens.
   def tokens; end
+
   def tokens_within(range_or_node); end
   def valid_syntax?; end
 
@@ -1559,7 +2657,12 @@ class RuboCop::AST::ProcessedSource
   def last_token_index(range_or_node); end
   def parse(source, ruby_version); end
   def parser_class(ruby_version); end
+
+  # The tokens list is always sorted by token position, except for cases when heredoc
+  # is passed as a method argument. In this case tokens are interleaved by
+  # heredoc contents' tokens.
   def sorted_tokens; end
+
   def source_range(range_or_node); end
   def tokenize(parser); end
 
@@ -1571,11 +2674,17 @@ end
 RuboCop::AST::ProcessedSource::INVALID_LEVELS = T.let(T.unsafe(nil), Array)
 RuboCop::AST::ProcessedSource::STRING_SOURCE_NAME = T.let(T.unsafe(nil), String)
 
+# A node extension for `irange` and `erange` nodes. This will be used in
+# place of a plain node when the builder constructs the AST, making its
+# methods available to all `irange` and `erange` nodes within RuboCop.
 class RuboCop::AST::RangeNode < ::RuboCop::AST::Node
   def begin; end
   def end; end
 end
 
+# A node extension for `regexp` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `regexp` nodes within RuboCop.
 class RuboCop::AST::RegexpNode < ::RuboCop::AST::Node
   include ::RuboCop::Ext::RegexpNode
 
@@ -1587,7 +2696,10 @@ class RuboCop::AST::RegexpNode < ::RuboCop::AST::Node
   def interpolation?; end
   def multiline_mode?; end
   def no_encoding?; end
+
+  # NOTE: The 'o' option is ignored.
   def options; end
+
   def percent_r_literal?; end
   def regopt; end
   def single_interpolation?; end
@@ -1601,37 +2713,74 @@ end
 
 RuboCop::AST::RegexpNode::OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# A node extension for `resbody` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `resbody` nodes within RuboCop.
 class RuboCop::AST::ResbodyNode < ::RuboCop::AST::Node
+  # Returns the body of the `rescue` clause.
   def body; end
+
+  # Returns the index of the `resbody` branch within the exception handling statement.
   def branch_index; end
+
+  # Returns the exception variable of the `rescue` clause.
   def exception_variable; end
+
+  # Returns an array of all the exceptions in the `rescue` clause.
   def exceptions; end
 end
 
+# A node extension for `rescue` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `rescue` nodes within RuboCop.
 class RuboCop::AST::RescueNode < ::RuboCop::AST::Node
+  # Returns the body of the rescue node.
   def body; end
+
+  # Returns an array of all the rescue branches in the exception handling statement.
+  #
+  # and the else (if any). Note that these bodies could be nil.
   def branches; end
+
+  # Checks whether this exception handling statement has an `else` branch.
   def else?; end
+
+  # Returns the else branch of the exception handling statement, if any.
   def else_branch; end
+
+  # Returns an array of all the rescue branches in the exception handling statement.
   def resbody_branches; end
 end
 
+# A node extension for `return` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `return` nodes within RuboCop.
 class RuboCop::AST::ReturnNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::WrappedArguments
 end
 
+# Responsible for compatibility with main gem
 module RuboCop::AST::RuboCopCompatibility
   def rubocop_loaded; end
 end
 
 RuboCop::AST::RuboCopCompatibility::INCOMPATIBLE_COPS = T.let(T.unsafe(nil), Hash)
 
+# A node extension for `sclass` nodes. This will be used in place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `sclass` nodes within RuboCop.
 class RuboCop::AST::SelfClassNode < ::RuboCop::AST::Node
+  # The body of this `sclass` node.
   def body; end
+
+  # The identifer for this `sclass` node. (Always `self`.)
   def identifier; end
 end
 
+# A node extension for `send` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `send` nodes within RuboCop.
 class RuboCop::AST::SendNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::ParameterizedNode::RestArguments
@@ -1645,36 +2794,55 @@ class RuboCop::AST::SendNode < ::RuboCop::AST::Node
   def first_argument_index; end
 end
 
+# This module provides a shorthand method to create a {Node} like
+# `Parser::AST::Sexp`.
 module RuboCop::AST::Sexp
+  # Creates a {Node} with type `type` and children `children`.
   def s(type, *children); end
 end
 
+# A node extension for `str`, `dstr`, and `xstr` nodes. This will be used
+# in place of a plain node when the builder constructs the AST, making
+# its methods available to all `str` nodes within RuboCop.
 class RuboCop::AST::StrNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BasicLiteralNode
 
   def heredoc?; end
 end
 
+# A node extension for `super`- and `zsuper` nodes. This will be used in
+# place of a plain node when the builder constructs the AST, making its
+# methods available to all `super`- and `zsuper` nodes within RuboCop.
 class RuboCop::AST::SuperNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::MethodIdentifierPredicates
   include ::RuboCop::AST::MethodDispatchNode
 
   def arguments; end
+
+  # Custom destructuring method. This can be used to normalize
+  # destructuring for different variations of the node.
   def node_parts; end
 end
 
+# A node extension for `sym` nodes. This will be used in  place of a
+# plain node when the builder constructs the AST, making its methods
+# available to all `sym` nodes within RuboCop.
 class RuboCop::AST::SymbolNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::BasicLiteralNode
 end
 
+# A basic wrapper around Parser's tokens.
 class RuboCop::AST::Token
   def initialize(pos, type, text); end
 
   def begin_pos; end
   def column; end
   def comma?; end
+
+  # Type Predicates
   def comment?; end
+
   def end?; end
   def end_pos; end
   def equal_sign?; end
@@ -1685,16 +2853,28 @@ class RuboCop::AST::Token
   def left_parens?; end
   def left_ref_bracket?; end
   def line; end
+
+  # Returns the value of attribute pos.
   def pos; end
+
   def rescue_modifier?; end
   def right_bracket?; end
   def right_curly_brace?; end
   def right_parens?; end
   def semicolon?; end
+
+  # Checks if there is whitespace after token
   def space_after?; end
+
+  # Checks if there is whitespace before token
   def space_before?; end
+
+  # Returns the value of attribute text.
   def text; end
+
   def to_s; end
+
+  # Returns the value of attribute type.
   def type; end
 
   class << self
@@ -1702,6 +2882,10 @@ class RuboCop::AST::Token
   end
 end
 
+# Provides methods for traversing an AST.
+# Does not transform an AST; for that, use Parser::AST::Processor.
+# Override methods to perform custom processing. Remember to call `super`
+# if you want to recursively process descendant nodes.
 module RuboCop::AST::Traversal
   extend ::RuboCop::AST::Traversal::CallbackCompiler
 
@@ -1844,45 +3028,83 @@ end
 
 RuboCop::AST::Traversal::CallbackCompiler::SEND = T.let(T.unsafe(nil), String)
 RuboCop::AST::Traversal::CallbackCompiler::TEMPLATE = T.let(T.unsafe(nil), Hash)
+
+# Only for debugging.
 class RuboCop::AST::Traversal::DebugError < ::RuntimeError; end
+
 RuboCop::AST::Traversal::NO_CHILD_NODES = T.let(T.unsafe(nil), Set)
 RuboCop::AST::Traversal::TYPE_TO_METHOD = T.let(T.unsafe(nil), Hash)
 
+# A node extension for `until` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `until` nodes within RuboCop.
 class RuboCop::AST::UntilNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
   include ::RuboCop::AST::ModifierNode
 
+  # Checks whether the `until` node has a `do` keyword.
   def do?; end
+
+  # Returns the inverse keyword of the `until` node as a string.
+  # Returns `while` for `until` nodes and vice versa.
   def inverse_keyword; end
+
+  # Returns the keyword of the `until` statement as a string.
   def keyword; end
 end
 
 module RuboCop::AST::Version; end
 RuboCop::AST::Version::STRING = T.let(T.unsafe(nil), String)
 
+# A node extension for `when` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `when` nodes within RuboCop.
 class RuboCop::AST::WhenNode < ::RuboCop::AST::Node
+  # Returns the body of the `when` node.
   def body; end
+
+  # Returns the index of the `when` branch within the `case` statement.
   def branch_index; end
+
+  # Returns an array of all the conditions in the `when` branch.
   def conditions; end
+
   def each_condition(&block); end
+
+  # Checks whether the `when` node has a `then` keyword.
   def then?; end
 end
 
+# A node extension for `while` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `while` nodes within RuboCop.
 class RuboCop::AST::WhileNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
   include ::RuboCop::AST::ModifierNode
 
+  # Checks whether the `until` node has a `do` keyword.
   def do?; end
+
+  # Returns the inverse keyword of the `while` node as a string.
+  # Returns `until` for `while` nodes and vice versa.
   def inverse_keyword; end
+
+  # Returns the keyword of the `while` statement as a string.
   def keyword; end
 end
 
+# A node extension for `yield` nodes. This will be used in place of a plain
+# node when the builder constructs the AST, making its methods available
+# to all `yield` nodes within RuboCop.
 class RuboCop::AST::YieldNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ParameterizedNode
   include ::RuboCop::AST::MethodIdentifierPredicates
   include ::RuboCop::AST::MethodDispatchNode
 
   def arguments; end
+
+  # Custom destructuring method. This can be used to normalize
+  # destructuring for different variations of the node.
   def node_parts; end
 end
 

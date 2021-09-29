@@ -14,9 +14,16 @@ end
 
 module MiniMime::Configuration
   class << self
+    # Returns the value of attribute content_type_db_path.
     def content_type_db_path; end
+
+    # Sets the attribute content_type_db_path
     def content_type_db_path=(_arg0); end
+
+    # Returns the value of attribute ext_db_path.
     def ext_db_path; end
+
+    # Sets the attribute ext_db_path
     def ext_db_path=(_arg0); end
   end
 end
@@ -47,7 +54,10 @@ class MiniMime::Db::RandomAccessDb
   def initialize(path, sort_order); end
 
   def lookup(val); end
+
+  # lifted from marcandre/backports
   def lookup_uncached(val); end
+
   def resolve(row); end
 end
 
@@ -58,11 +68,23 @@ class MiniMime::Info
 
   def [](idx); end
   def binary?; end
+
+  # Returns the value of attribute content_type.
   def content_type; end
+
+  # Sets the attribute content_type
   def content_type=(_arg0); end
+
+  # Returns the value of attribute encoding.
   def encoding; end
+
+  # Sets the attribute encoding
   def encoding=(_arg0); end
+
+  # Returns the value of attribute extension.
   def extension; end
+
+  # Sets the attribute extension
   def extension=(_arg0); end
 end
 

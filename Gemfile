@@ -11,7 +11,6 @@ gem("pry-byebug")
 gem("rubocop-shopify", require: false)
 gem("rubocop-sorbet", ">= 0.4.1")
 gem("sorbet")
-gem("yard", "~> 0.9.25")
 
 group(:deployment, :development) do
   gem("rake")

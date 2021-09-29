@@ -8,14 +8,27 @@ class Array
   include ::Enumerable
   include ::JSON::Ext::Generator::GeneratorMethods::Array
 
+  # Places values before or after another object (by value) in
+  # an array. This is used in tandem with the before and after
+  # methods of the {Insertion} class.
   def place(*values); end
 end
 
 class File < ::IO
   class << self
+    # Cleans a path by removing extraneous '..', '.' and '/' characters
     def cleanpath(path, rel_root = T.unsafe(nil)); end
+
+    # Forces opening a file (for writing) by first creating the file's directory
     def open!(file, *args, &block); end
+
+    # Reads a file with binary encoding
     def read_binary(file); end
+
+    # Turns a path +to+ into a relative path from starting
+    # point +from+. The argument +from+ is assumed to be
+    # a filename. To treat it as a directory, make sure it
+    # ends in +File::SEPARATOR+ ('/' on UNIX filesystems).
     def relative_path(from, to); end
   end
 end
@@ -23,8 +36,10 @@ end
 File::RELATIVE_PARENTDIR = T.let(T.unsafe(nil), String)
 File::RELATIVE_SAMEDIR = T.let(T.unsafe(nil), String)
 
+# :stopdoc:
 module Gem
   class << self
+    # Returns the Gem::SourceIndex of specifications that are in the Gem.path
     def source_index; end
   end
 end
@@ -35,41 +50,127 @@ Gem::KERNEL_WARN_IGNORES_INTERNAL_ENTRIES = T.let(T.unsafe(nil), TrueClass)
 Gem::RbConfigPriorities = T.let(T.unsafe(nil), Array)
 Gem::RubyGemsVersion = T.let(T.unsafe(nil), String)
 
+# The SourceIndex object indexes all the gems available from a
+# particular source (e.g. a list of gem directories, or a remote
+# source).  A SourceIndex maps a gem full name to a gem
+# specification.
+#
+# NOTE:: The class used to be named Cache, but that became
+# confusing when cached source fetchers where introduced. The
+# constant Gem::Cache is an alias for this class to allow old
+# YAMLized source index objects to load properly.
 class Gem::SourceIndex
   include ::Enumerable
 
+  # Constructs a source index instance from the provided specifications, which
+  # is a Hash of gem full names and Gem::Specifications.
+  # --
+  # TODO merge @gems and @prerelease_gems and provide a separate method
+  # #prerelease_gems
   def initialize(specifications = T.unsafe(nil)); end
 
   def ==(other); end
+
+  # Add a gem specification to the source index.
   def add_spec(gem_spec, name = T.unsafe(nil)); end
+
+  # Add gem specifications to the source index.
   def add_specs(*gem_specs); end
+
+  # TODO: remove method
   def all_gems; end
+
   def dump; end
+
+  # Iterate over the specifications in the source index.
   def each(&block); end
+
+  # Find a gem by an exact match on the short name.
   def find_name(gem_name, requirement = T.unsafe(nil)); end
+
+  # The signature for the given gem specification.
   def gem_signature(gem_full_name); end
+
   def gems; end
+
+  # The signature for the source index.  Changes in the signature indicate a
+  # change in the index.
   def index_signature; end
+
+  # Returns an Array specifications for the latest released versions
+  # of each gem in this index.
   def latest_specs(include_prerelease = T.unsafe(nil)); end
+
   def length; end
+
+  # Reconstruct the source index from the specifications in +spec_dirs+.
   def load_gems_in(*spec_dirs); end
+
+  # Returns an Array of Gem::Specifications that are not up to date.
   def outdated; end
+
   def prerelease_gems; end
+
+  # An array including only the prerelease gemspecs
   def prerelease_specs; end
+
+  # Replaces the gems in the source index from specifications in the
+  # directories this source index was created from.  Raises an exception if
+  # this source index wasn't created from a directory (via from_gems_in or
+  # from_installed_gems, or having spec_dirs set).
   def refresh!; end
+
   def released_gems; end
+
+  # An array including only the released gemspecs
   def released_specs; end
+
+  # Remove a gem specification named +full_name+.
   def remove_spec(full_name); end
+
+  # Search for a gem by Gem::Dependency +gem_pattern+.  If +only_platform+
+  # is true, only gems matching Gem::Platform.local will be returned.  An
+  # Array of matching Gem::Specification objects is returned.
+  #
+  # For backwards compatibility, a String or Regexp pattern may be passed as
+  # +gem_pattern+, and a Gem::Requirement for +platform_only+.  This
+  # behavior is deprecated and will be removed.
   def search(gem_pattern, platform_only = T.unsafe(nil)); end
+
   def size; end
+
+  # Directories to use to refresh this SourceIndex when calling refresh!
   def spec_dirs; end
+
+  # Directories to use to refresh this SourceIndex when calling refresh!
   def spec_dirs=(_arg0); end
+
+  # The gem specification given a full gem spec name.
   def specification(full_name); end
 
   class << self
+    # Creates a new SourceIndex from the ruby format gem specifications in
+    # +spec_dirs+.
     def from_gems_in(*spec_dirs); end
+
+    # Factory method to construct a source index instance for a given
+    # path.
+    #
+    # deprecated::
+    # If supplied, from_installed_gems will act just like
+    # +from_gems_in+.  This argument is deprecated and is provided
+    # just for backwards compatibility, and should not generally
+    # be used.
+    #
+    # return::
+    # SourceIndex instance
     def from_installed_gems(*deprecated); end
+
+    # Returns a list of directories from Gem.path that contain specifications.
     def installed_spec_directories; end
+
+    # Loads a ruby-format specification from +file_name+ and returns the
+    # loaded spec.
     def load_specification(file_name); end
   end
 end
@@ -77,16 +178,85 @@ end
 Gem::UNTAINT = T.let(T.unsafe(nil), Proc)
 Gem::UnsatisfiableDepedencyError = Gem::UnsatisfiableDependencyError
 
+class IRB::SLex
+  def initialize; end
+
+  def create(token, preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
+  def def_rule(token, preproc = T.unsafe(nil), postproc = T.unsafe(nil), &block); end
+  def def_rules(*tokens, &block); end
+  def inspect; end
+  def match(token); end
+
+  # need a check?
+  def postproc(token); end
+
+  def preproc(token, proc); end
+  def search(token); end
+end
+
+IRB::SLex::DOUT = T.let(T.unsafe(nil), IRB::Notifier::CompositeNotifier)
+IRB::SLex::D_DEBUG = T.let(T.unsafe(nil), IRB::Notifier::LeveledNotifier)
+IRB::SLex::D_DETAIL = T.let(T.unsafe(nil), IRB::Notifier::LeveledNotifier)
+IRB::SLex::D_WARN = T.let(T.unsafe(nil), IRB::Notifier::LeveledNotifier)
+
+# ----------------------------------------------------------------------
+#
+# class Node -
+#
+# ----------------------------------------------------------------------
+class IRB::SLex::Node
+  # if postproc is nil, this node is an abstract node.
+  # if postproc is non-nil, this node is a real node.
+  def initialize(preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
+
+  def create_subnode(chrs, preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
+
+  # chrs: String
+  # character array
+  # io must have getc()/ungetc(); and ungetc() must be
+  # able to be called arbitrary number of times.
+  def match(chrs, op = T.unsafe(nil)); end
+
+  def match_io(io, op = T.unsafe(nil)); end
+
+  # Returns the value of attribute postproc.
+  def postproc; end
+
+  # Sets the attribute postproc
+  def postproc=(_arg0); end
+
+  # Returns the value of attribute preproc.
+  def preproc; end
+
+  # Sets the attribute preproc
+  def preproc=(_arg0); end
+
+  def search(chrs, opt = T.unsafe(nil)); end
+end
+
+# The Insertion class inserts a value before or after another
+# value in a list.
 class Insertion
+  # Creates an insertion object on a list with a value to be
+  # inserted. To finalize the insertion, call {#before} or
+  # {#after} on the object.
   def initialize(list, value); end
 
+  # Inserts the value after +val+.
   def after(val, recursive = T.unsafe(nil)); end
+
+  # Alias for {#after} with +recursive+ set to true
   def after_any(val); end
+
+  # Inserts the value before +val+
   def before(val, recursive = T.unsafe(nil)); end
+
+  # Alias for {#before} with +recursive+ set to true
   def before_any(val); end
 
   private
 
+  # This method performs the actual insertion
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
@@ -94,6 +264,7 @@ class Module
   include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
 
+  # Returns the class name of a full module namespace path
   def class_name; end
 end
 
@@ -102,6 +273,10 @@ Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
+# Allows Writing of '100'.to_money for +String+ types
+# Excess characters will be discarded
+# '100'.to_money => #<Money @cents=10000>
+# '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
   include ::Colorize::InstanceMethods
@@ -109,22 +284,45 @@ class String
   extend ::Colorize::ClassMethods
   extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
+  # Splits text into tokens the way a shell would, handling quoted
+  # text as a single token. Use '\"' and "\'" to escape quotes and
+  # '\\' to escape a backslash.
   def shell_split; end
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 
+# A subclass of Hash where all keys are converted into Symbols, and
+# optionally, all String values are converted into Symbols.
 class SymbolHash < ::Hash
+  # Creates a new SymbolHash object
   def initialize(symbolize_value = T.unsafe(nil)); end
 
+  # Accessed a symbolized key
   def [](key); end
+
+  # Assigns a value to a symbolized key
   def []=(key, value); end
+
+  # Deleted a key and value associated with it
   def delete(key); end
+
+  # Tests if a symbolized key exists
   def has_key?(key); end
+
+  # Tests if a symbolized key exists
   def key?(key); end
+
+  # Merges the contents of another hash into a new SymbolHash object
   def merge(hash); end
+
+  # Updates the object with the contents of another Hash object.
+  # This method modifies the original SymbolHash object
   def merge!(hash); end
+
+  # Updates the object with the contents of another Hash object.
+  # This method modifies the original SymbolHash object
   def update(hash); end
 
   class << self
@@ -132,11 +330,23 @@ class SymbolHash < ::Hash
   end
 end
 
+# Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
+# upon gem installation.
+#
+# This file is automatically required by RubyGems 1.9 and newer.
 module YARD
   class << self
+    # Loads gems that match the name 'yard-*' (recommended) or 'yard_*' except
+    # those listed in +~/.yard/ignored_plugins+. This is called immediately
+    # after YARD is loaded to allow plugin support.
     def load_plugins; end
+
+    # An alias to {Parser::SourceParser}'s parsing method
     def parse(*args); end
+
+    # An alias to {Parser::SourceParser}'s parsing method
     def parse_string(*args); end
+
     def ruby18?; end
     def ruby19?; end
     def ruby2?; end
@@ -144,26 +354,55 @@ module YARD
   end
 end
 
+# Namespace for command-line interface components
 module YARD::CLI; end
 
+# Abstract base class for CLI utilities. Provides some helper methods for
+# the option parser
 class YARD::CLI::Command
   def description; end
 
   protected
 
+  # Adds a set of common options to the tail of the OptionParser
   def common_options(opts); end
+
+  # Loads a Ruby script. If <tt>Config.options[:safe_mode]</tt> is enabled,
+  # this method will do nothing.
   def load_script(file); end
+
+  # Parses the option and gracefully handles invalid switches
   def parse_options(opts, args); end
+
+  # Callback when an unrecognize option is parsed
   def unrecognized_option(err); end
 
   class << self
+    # Helper method to run the utility on an instance.
     def run(*args); end
   end
 end
 
+# This class parses a command name out of the +yard+ CLI command and calls
+# that command in the form:
+#
+# $ yard command_name [options]
+#
+# If no command or arguments are specified, or if the arguments immediately
+# begin with a +--opt+ (not +--help+), the {default_command} will be used
+# (which itself defaults to +:doc+).
+#
+# == Adding a Command
+#
+# To add a custom command via plugin, create a mapping in {commands} from
+# the Symbolic command name to the {Command} class that implements the
+# command. To implement a command, see the documentation for the {Command}
+# class.
 class YARD::CLI::CommandParser
   def initialize; end
 
+  # Runs the {Command} object matching the command name of the first
+  # argument.
   def run(*args); end
 
   private
@@ -176,10 +415,13 @@ class YARD::CLI::CommandParser
     def commands=(_arg0); end
     def default_command; end
     def default_command=(_arg0); end
+
+    # Convenience method to create a new CommandParser and call {#run}
     def run(*args); end
   end
 end
 
+# CLI command to view or edit configuration options
 class YARD::CLI::Config < ::YARD::CLI::Command
   def initialize; end
 
@@ -209,6 +451,8 @@ class YARD::CLI::Config < ::YARD::CLI::Command
   def view_item; end
 end
 
+# CLI command to return the objects that were added/removed from 2 versions
+# of a project (library, gem, working copy).
 class YARD::CLI::Diff < ::YARD::CLI::Command
   def initialize; end
 
@@ -231,14 +475,21 @@ class YARD::CLI::Diff < ::YARD::CLI::Command
   def require_rubygems; end
 end
 
+# Display one object
 class YARD::CLI::Display < ::YARD::CLI::Yardoc
   def initialize(*args); end
 
   def description; end
   def format_objects; end
   def output_options(opts); end
+
+  # Parses commandline options.
   def parse_arguments(*args); end
+
+  # Runs the commandline utility, parsing arguments and displaying an object
+  # from the {Registry}.
   def run(*args); end
+
   def wrap_layout(contents); end
 end
 
@@ -246,29 +497,50 @@ class YARD::CLI::Gems < ::YARD::CLI::Command
   def initialize; end
 
   def description; end
+
+  # Runs the commandline utility, parsing arguments and generating
+  # YARD indexes for gems.
   def run(*args); end
 
   private
 
   def add_gems(gems); end
+
+  # Builds .yardoc files for all non-existing gems
   def build_gems; end
+
+  # Parses options
   def optparse(*args); end
 end
 
+# A command-line utility to generate Graphviz graphs from
+# a set of objects
 class YARD::CLI::Graph < ::YARD::CLI::YardoptsCommand
+  # Creates a new instance of the command-line utility
   def initialize; end
 
   def description; end
+
+  # The set of objects to include in the graph.
   def objects; end
+
+  # The options parsed out of the commandline.
+  # Default options are:
+  # :format => :dot
   def options; end
+
+  # Runs the command-line utility.
   def run(*args); end
 
   private
 
+  # Parses commandline options.
   def optparse(*args); end
+
   def unrecognized_option(err); end
 end
 
+# Options to pass to the {Graph} CLI.
 class YARD::CLI::GraphOptions < ::YARD::Templates::TemplateOptions
   def contents; end
   def contents=(_arg0); end
@@ -280,11 +552,16 @@ class YARD::CLI::GraphOptions < ::YARD::Templates::TemplateOptions
   def full=(_arg0); end
 end
 
+# Handles help for commands
 class YARD::CLI::Help < ::YARD::CLI::Command
   def description; end
   def run(*args); end
 end
 
+# CLI command to support internationalization (a.k.a. i18n).
+# I18n feature is based on gettext technology.
+# This command generates .pot file from docstring and extra
+# documentation.
 class YARD::CLI::I18n < ::YARD::CLI::Yardoc
   def initialize; end
 
@@ -297,17 +574,27 @@ class YARD::CLI::I18n < ::YARD::CLI::Yardoc
   def generate_pot(relative_base_path); end
 end
 
+# Lists all constant and method names in the codebase. Uses {Yardoc} --list.
 class YARD::CLI::List < ::YARD::CLI::Command
   def description; end
+
+  # Runs the commandline utility, parsing arguments and displaying a
+  # list of objects
   def run(*args); end
 end
 
+# Lists all markup types
 class YARD::CLI::MarkupTypes < ::YARD::CLI::Command
   def description; end
+
+  # Runs the commandline utility, parsing arguments and displaying a
+  # list of markup types
   def run(*args); end
 end
 
+# A local documentation server
 class YARD::CLI::Server < ::YARD::CLI::Command
+  # Creates a new instance of the Server command line utility
   def initialize; end
 
   def adapter; end
@@ -346,64 +633,135 @@ class YARD::CLI::Stats < ::YARD::CLI::Yardoc
 
   def all_objects; end
   def description; end
+
+  # Prints a statistic to standard out. This method is optimized for
+  # getting Integer values, though it allows any data to be printed.
   def output(name, data, undoc = T.unsafe(nil)); end
+
   def parse; end
   def parse=(_arg0); end
+
+  # Prints statistics for different object types
+  #
+  # To add statistics for a specific type, add a method +#stats_for_TYPE+
+  # to this class that calls {#output}.
   def print_statistics; end
+
+  # Prints list of undocumented objects
   def print_undocumented_objects; end
+
+  # Runs the commandline utility, parsing arguments and generating
+  # output if set.
   def run(*args); end
+
+  # Statistics for attributes
   def stats_for_attributes; end
+
+  # Statistics for classes
   def stats_for_classes; end
+
+  # Statistics for constants
   def stats_for_constants; end
+
+  # Statistics for files
   def stats_for_files; end
+
+  # Statistics for methods
   def stats_for_methods; end
+
+  # Statistics for modules
   def stats_for_modules; end
 
   private
 
   def general_options(opts); end
+
+  # Parses commandline options.
   def optparse(*args); end
+
   def type_statistics(type); end
 end
 
+# Maintains the order in which +stats_for_+ statistics methods should be
+# printed.
 YARD::CLI::Stats::STATS_ORDER = T.let(T.unsafe(nil), Array)
 
+# A tool to view documentation in the console like `ri`
 class YARD::CLI::YRI < ::YARD::CLI::Command
   def initialize; end
 
   def description; end
+
+  # Runs the command-line utility.
   def run(*args); end
 
   protected
 
+  # Caches the .yardoc file where an object can be found in the {CACHE_FILE}
   def cache_object(name, path); end
+
+  # Locates an object by name starting in the cached paths and then
+  # searching through any search paths.
   def find_object(name); end
+
   def print_object(object); end
+
+  # Prints the command usage
   def print_usage; end
 
   private
 
+  # Adds paths in {SEARCH_PATHS_FILE}
   def add_default_paths; end
+
+  # Adds all RubyGems yardoc files to search paths
   def add_gem_paths; end
+
+  # Loads {CACHE_FILE}
   def load_cache; end
+
+  # Parses commandline options.
   def optparse(*args); end
+
+  # Tries to load the object with name. If successful, caches the object
+  # with the cache_path
   def try_load_object(name, cache_path); end
 
   class << self
+    # Helper method to run the utility on an instance.
     def run(*args); end
   end
 end
 
+# The location in {YARD::CONFIG_DIR} where the YRI cache file is loaded
+# from.
 YARD::CLI::YRI::CACHE_FILE = T.let(T.unsafe(nil), String)
+
+# Default search paths that should be loaded dynamically into YRI. These paths
+# take precedence over all other paths ({SEARCH_PATHS_FILE} and RubyGems
+# paths). To add a path, call:
+#
+# DEFAULT_SEARCH_PATHS.push("/path/to/.yardoc")
 YARD::CLI::YRI::DEFAULT_SEARCH_PATHS = T.let(T.unsafe(nil), Array)
+
+# A file containing all paths, delimited by newlines, to search for
+# yardoc databases.
 YARD::CLI::YRI::SEARCH_PATHS_FILE = T.let(T.unsafe(nil), String)
 
 class YARD::CLI::Yardoc < ::YARD::CLI::YardoptsCommand
+  # Creates a new instance of the commandline utility
   def initialize; end
 
+  # The list of all objects to process. Override this method to change
+  # which objects YARD should generate documentation for.
   def all_objects; end
+
+  # Keep track of which APIs are to be shown
   def apis; end
+
+  # Keep track of which APIs are to be shown
   def apis=(_arg0); end
+
   def assets; end
   def assets=(_arg0); end
   def description; end
@@ -417,44 +775,92 @@ class YARD::CLI::Yardoc < ::YARD::CLI::YardoptsCommand
   def generate=(_arg0); end
   def has_markup; end
   def has_markup=(_arg0); end
+
+  # Keep track of which APIs are to be hidden
   def hidden_apis; end
+
+  # Keep track of which APIs are to be hidden
   def hidden_apis=(_arg0); end
+
   def hidden_tags; end
   def hidden_tags=(_arg0); end
   def list; end
   def list=(_arg0); end
   def options; end
+
+  # Parses commandline arguments
   def parse_arguments(*args); end
+
+  # Runs the commandline utility, parsing arguments and generating
+  # output if set.
   def run(*args); end
+
   def save_yardoc; end
   def save_yardoc=(_arg0); end
   def statistics; end
   def statistics=(_arg0); end
   def use_cache; end
   def use_cache=(_arg0); end
+
+  # Keep track of which visibilities are to be shown
   def visibilities; end
+
+  # Keep track of which visibilities are to be shown
   def visibilities=(_arg0); end
 
   private
 
+  # Adds verifier rule for APIs
   def add_api_verifier; end
+
+  # Adds a set of extra documentation files to be processed
   def add_extra_files(*files); end
+
   def add_tag(tag_data, factory_method = T.unsafe(nil)); end
+
+  # Adds verifier rule for visibilities
   def add_visibility_verifier; end
+
+  # Applies the specified locale to collected objects
   def apply_locale; end
+
+  # Copies any assets to the output directory
   def copy_assets; end
+
   def extra_file_valid?(file, check_exists = T.unsafe(nil)); end
+
+  # Adds general options
   def general_options(opts); end
+
+  # Parses commandline options.
   def optparse(*args); end
+
+  # Adds output options
   def output_options(opts); end
+
+  # Parses the file arguments into Ruby files and extra files, which are
+  # separated by a '-' element.
   def parse_files(*files); end
+
+  # Prints a list of all objects
   def print_list; end
+
+  # Generates output for objects
   def run_generate(checksums); end
+
+  # Runs a list of objects against the {Verifier} object passed into the
+  # template and returns the subset of verified objects.
   def run_verifier(list); end
+
+  # Adds tag options
   def tag_options(opts); end
+
+  # Verifies that the markup options are valid before parsing any code.
+  # Failing early is better than failing late.
   def verify_markup_options; end
 end
 
+# Default options used in +yard doc+ command.
 class YARD::CLI::YardocOptions < ::YARD::Templates::TemplateOptions
   def file; end
   def file=(_arg0); end
@@ -482,12 +888,20 @@ class YARD::CLI::YardocOptions < ::YARD::Templates::TemplateOptions
   def verifier=(_arg0); end
 end
 
+# Abstract base class for command that reads .yardopts file
 class YARD::CLI::YardoptsCommand < ::YARD::CLI::Command
+  # Creates a new command that reads .yardopts
   def initialize; end
 
+  # The options file name (defaults to {DEFAULT_YARDOPTS_FILE})
   def options_file; end
+
+  # The options file name (defaults to {DEFAULT_YARDOPTS_FILE})
   def options_file=(_arg0); end
+
+  # Parses commandline arguments
   def parse_arguments(*args); end
+
   def use_document_file; end
   def use_document_file=(_arg0); end
   def use_yardopts_file; end
@@ -495,153 +909,378 @@ class YARD::CLI::YardoptsCommand < ::YARD::CLI::Command
 
   protected
 
+  # Adds --[no-]yardopts / --[no-]document
   def yardopts_options(opts); end
 
   private
 
   def parse_rdoc_document_file(file = T.unsafe(nil)); end
   def parse_yardopts(file = T.unsafe(nil)); end
+
+  # Parses out the yardopts/document options
   def parse_yardopts_options(*args); end
+
+  # Reads a .document file in the directory to get source file globs
   def support_rdoc_document_file!(file = T.unsafe(nil)); end
+
+  # Parses the .yardopts file for default yard options
   def yardopts(file = T.unsafe(nil)); end
 end
 
+# The configuration filename to load extra options from
 YARD::CLI::YardoptsCommand::DEFAULT_YARDOPTS_FILE = T.let(T.unsafe(nil), String)
+
 YARD::CONFIG_DIR = T.let(T.unsafe(nil), String)
-module YARD::CodeObjects; end
+
+# A "code object" is defined as any entity in the Ruby language.
+# Classes, modules, methods, class variables and constants are the
+# major objects, but DSL languages can create their own by inheriting
+# from {CodeObjects::Base}.
+module YARD::CodeObjects
+  extend ::YARD::CodeObjects::NamespaceMapper
+end
+
+# All builtin Ruby classes and modules.
 YARD::CodeObjects::BUILTIN_ALL = T.let(T.unsafe(nil), Array)
+
+# All builtin Ruby classes for inheritance tree.
 YARD::CodeObjects::BUILTIN_CLASSES = T.let(T.unsafe(nil), Array)
+
+# All builtin Ruby exception classes for inheritance tree.
 YARD::CodeObjects::BUILTIN_EXCEPTIONS = T.let(T.unsafe(nil), Array)
+
+# Hash of {BUILTIN_EXCEPTIONS} as keys and true as value (for O(1) lookups)
 YARD::CodeObjects::BUILTIN_EXCEPTIONS_HASH = T.let(T.unsafe(nil), Hash)
+
+# All builtin Ruby modules for mixin handling.
 YARD::CodeObjects::BUILTIN_MODULES = T.let(T.unsafe(nil), Array)
 
+# +Base+ is the superclass of all code objects recognized by YARD. A code
+# object is any entity in the Ruby language (class, method, module). A
+# DSL might subclass +Base+ to create a new custom object representing
+# a new entity type.
+#
+# == Registry Integration
+# Any created object associated with a namespace is immediately registered
+# with the registry. This allows the Registry to act as an identity map
+# to ensure that no object is represented by more than one Ruby object
+# in memory. A unique {#path} is essential for this identity map to work
+# correctly.
+#
+# == Custom Attributes
+# Code objects allow arbitrary custom attributes to be set using the
+# {#[]=} assignment method.
+#
+# == Namespaces
+# There is a special type of object called a "namespace". These are subclasses
+# of the {NamespaceObject} and represent Ruby entities that can have
+# objects defined within them. Classically these are modules and classes,
+# though a DSL might create a custom {NamespaceObject} to describe a
+# specific set of objects.
+#
+# == Separators
+# Custom classes with different separator tokens should define their own
+# separators using the {NamespaceMapper.register_separator} method. The
+# standard Ruby separators have already been defined ('::', '#', '.', etc).
 class YARD::CodeObjects::Base
+  # Creates a new code object
   def initialize(namespace, name, *_arg2); end
 
+  # Tests if another object is equal to this, including a proxy
   def ==(other); end
+
+  # Accesses a custom attribute on the object
   def [](key); end
+
+  # Sets a custom attribute on the object
   def []=(key, value); end
+
+  # Associates a file with a code object, optionally adding the line where it was defined.
+  # By convention, '<stdin>' should be used to associate code that comes form standard input.
   def add_file(file, line = T.unsafe(nil), has_comments = T.unsafe(nil)); end
+
+  # Add tags to the {#docstring}
   def add_tag(*tags); end
+
+  # The non-localized documentation string associated with the object
   def base_docstring; end
+
+  # Copies all data in this object to another code object, except for
+  # uniquely identifying information (path, namespace, name, scope).
   def copy_to(other); end
+
+  # The documentation string associated with the object
   def docstring(locale = T.unsafe(nil)); end
+
+  # Attaches a docstring to a code object by parsing the comments attached to the statement
+  # and filling the {#tags} and {#docstring} methods with the parsed information.
   def docstring=(comments); end
+
+  # Marks whether or not the method is conditionally defined at runtime
   def dynamic; end
+
+  # Marks whether or not the method is conditionally defined at runtime
   def dynamic=(_arg0); end
+
+  # Is the object defined conditionally at runtime?
   def dynamic?; end
+
+  # Tests if another object is equal to this, including a proxy
   def eql?(other); end
+
+  # Tests if another object is equal to this, including a proxy
   def equal?(other); end
+
+  # Returns the filename the object was first parsed at, taking
+  # definitions with docstrings first.
   def file; end
+
+  # The files the object was defined in. To add a file, use {#add_file}.
   def files; end
+
+  # Renders the object using the {Templates::Engine templating system}.
   def format(options = T.unsafe(nil)); end
+
   def group; end
   def group=(_arg0); end
+
+  # Tests if the {#docstring} has a tag
   def has_tag?(name); end
+
   def hash; end
+
+  # Inspects the object, returning the type and path
   def inspect; end
+
+  # Returns the line the object was first parsed at (or nil)
   def line; end
+
   def method_missing(meth, *args, &block); end
+
+  # The name of the object
   def name(prefix = T.unsafe(nil)); end
+
+  # The namespace the object is defined in. If the object is in the
+  # top level namespace, this is {Registry.root}
   def namespace; end
+
+  # Sets the namespace the object is defined in.
   def namespace=(obj); end
+
+  # The namespace the object is defined in. If the object is in the
+  # top level namespace, this is {Registry.root}
   def parent; end
+
+  # Sets the namespace the object is defined in.
   def parent=(obj); end
+
+  # Represents the unique path of the object. The default implementation
+  # joins the path of {#namespace} with {#name} via the value of {#sep}.
+  # Custom code objects should ensure that the path is unique to the code
+  # object by either overriding {#sep} or this method.
   def path; end
+
   def relative_path(other); end
   def root?; end
+
+  # Override this method with a custom component separator. For instance,
+  # {MethodObject} implements sep as '#' or '.' (depending on if the
+  # method is instance or class respectively). {#path} depends on this
+  # value to generate the full path in the form: namespace.path + sep + name
   def sep; end
+
+  # The one line signature representing an object. For a method, this will
+  # be of the form "def meth(arguments...)". This is usually the first
+  # source line.
   def signature; end
+
+  # The one line signature representing an object. For a method, this will
+  # be of the form "def meth(arguments...)". This is usually the first
+  # source line.
   def signature=(_arg0); end
+
+  # The source code associated with the object
   def source; end
+
+  # Attaches source code to a code object with an optional file location
   def source=(statement); end
+
+  # Language of the source code associated with the object. Defaults to
+  # +:ruby+.
   def source_type; end
+
+  # Language of the source code associated with the object. Defaults to
+  # +:ruby+.
   def source_type=(_arg0); end
+
+  # Gets a tag from the {#docstring}
   def tag(name); end
+
+  # Gets a list of tags from the {#docstring}
   def tags(name = T.unsafe(nil)); end
+
   def title; end
   def to_ary; end
+
+  # Represents the unique path of the object. The default implementation
+  # joins the path of {#namespace} with {#name} via the value of {#sep}.
+  # Custom code objects should ensure that the path is unique to the code
+  # object by either overriding {#sep} or this method.
   def to_s; end
+
+  # Default type is the lowercase class name without the "Object" suffix.
+  # Override this method to provide a custom object type
   def type; end
+
   def visibility; end
   def visibility=(v); end
 
   protected
 
+  # Override this method if your code object subclass does not allow
+  # copying of certain attributes.
   def copyable_attributes; end
 
   private
 
+  # Formats source code by removing leading indentation
   def format_source(source); end
+
   def translate_docstring(locale); end
 
   class << self
+    # Compares the class with subclasses
     def ===(other); end
+
+    # Allocates a new code object
     def new(namespace, name, *args, &block); end
   end
 end
 
+# Regular expression to match constant name
 YARD::CodeObjects::CONSTANTMATCH = T.let(T.unsafe(nil), Regexp)
+
+# Regular expression to match the beginning of a constant
 YARD::CodeObjects::CONSTANTSTART = T.let(T.unsafe(nil), Regexp)
+
+# Class method separator
 YARD::CodeObjects::CSEP = T.let(T.unsafe(nil), String)
+
+# Regex-quoted class method separator
 YARD::CodeObjects::CSEPQ = T.let(T.unsafe(nil), String)
 
+# A ClassObject represents a Ruby class in source code. It is a {ModuleObject}
+# with extra inheritance semantics through the superclass.
 class YARD::CodeObjects::ClassObject < ::YARD::CodeObjects::NamespaceObject
+  # Creates a new class object in +namespace+ with +name+
   def initialize(namespace, name, *args, &block); end
 
+  # Returns the list of constants matching the options hash.
   def constants(opts = T.unsafe(nil)); end
+
+  # Returns the inheritance tree of the object including self.
   def inheritance_tree(include_mods = T.unsafe(nil)); end
+
+  # Returns only the constants that were inherited.
   def inherited_constants; end
+
+  # Returns only the methods that were inherited.
   def inherited_meths(opts = T.unsafe(nil)); end
+
+  # Whether or not the class is a Ruby Exception
   def is_exception?; end
+
+  # Returns the list of methods matching the options hash. Returns
+  # all methods if hash is empty.
   def meths(opts = T.unsafe(nil)); end
+
+  # The {ClassObject} that this class object inherits from in Ruby source.
   def superclass; end
+
+  # Sets the superclass of the object
   def superclass=(object); end
 end
 
+# Represents a class variable inside a namespace. The path is expressed
+# in the form "A::B::@@classvariable"
 class YARD::CodeObjects::ClassVariableObject < ::YARD::CodeObjects::Base
   def value; end
   def value=(_arg0); end
 end
 
+# A list of code objects. This array acts like a set (no unique items)
+# but also disallows any {Proxy} objects from being added.
 class YARD::CodeObjects::CodeObjectList < ::Array
+  # Creates a new object list associated with a namespace
   def initialize(owner = T.unsafe(nil)); end
 
+  # Adds a new value to the list
   def <<(value); end
+
+  # Adds a new value to the list
   def push(value); end
 end
 
+# A +ConstantObject+ represents a Ruby constant (not a module or class).
+# To access the constant's (source code) value, use {#value}.
 class YARD::CodeObjects::ConstantObject < ::YARD::CodeObjects::Base
+  # The source code representing the constant's value
   def value; end
+
   def value=(value); end
 end
 
+# Represents an instance method of a module that was mixed into the class
+# scope of another namespace.
 class YARD::CodeObjects::ExtendedMethodObject
+  # Sets up a delegate for {MethodObject} obj.
   def initialize(obj); end
 
+  # Sends all methods to the {MethodObject} assigned in {#initialize}
   def method_missing(sym, *args, &block); end
+
   def scope; end
 end
 
+# An ExtraFileObject represents an extra documentation file (README or other
+# file). It is not strictly a CodeObject (does not inherit from `Base`) although
+# it implements `path`, `name` and `type`, and therefore should be structurally
+# compatible with most CodeObject interfaces.
 class YARD::CodeObjects::ExtraFileObject
+  # Creates a new extra file object.
   def initialize(filename, contents = T.unsafe(nil)); end
 
   def ==(other); end
   def attributes; end
+
+  # Sets the attribute attributes
   def attributes=(_arg0); end
+
   def contents; end
   def contents=(contents); end
   def eql?(other); end
   def equal?(other); end
+
+  # Returns the value of attribute filename.
   def filename; end
+
+  # Sets the attribute filename
   def filename=(_arg0); end
+
   def hash; end
   def inspect; end
   def locale; end
   def locale=(locale); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
   def name=(_arg0); end
+
+  # Returns the value of attribute name.
   def path; end
+
   def title; end
   def to_s; end
   def type; end
@@ -653,55 +1292,158 @@ class YARD::CodeObjects::ExtraFileObject
   def translate(data); end
 end
 
+# Instance method separator
 YARD::CodeObjects::ISEP = T.let(T.unsafe(nil), String)
+
+# Regex-quoted instance method separator
 YARD::CodeObjects::ISEPQ = T.let(T.unsafe(nil), String)
+
+# Regular expression to match a fully qualified method def (self.foo, Class.foo).
 YARD::CodeObjects::METHODMATCH = T.let(T.unsafe(nil), Regexp)
+
+# Regular expression to match a method name
 YARD::CodeObjects::METHODNAMEMATCH = T.let(T.unsafe(nil), Regexp)
 
+# A MacroObject represents a docstring defined through +@!macro NAME+ and can be
+# reused by specifying the tag +@!macro NAME+. You can also provide the
+# +attached+ type flag to the macro definition to have it attached to the
+# specific DSL method so it will be implicitly reused.
+#
+# Macros are fully described in the {file:docs/Tags.md#macro Tags Overview}
+# document.
 class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
   def attached?; end
+
+  # Expands the macro using
   def expand(call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
+
   def macro_data; end
   def macro_data=(_arg0); end
   def method_object; end
   def method_object=(_arg0); end
+
+  # Overrides {Base#path} so the macro path is ".macro.MACRONAME"
   def path; end
+
+  # Overrides the separator to be '.'
   def sep; end
 
   class << self
+    # Applies a macro on a docstring by creating any macro data inside of
+    # the docstring first. Equivalent to calling {find_or_create} and {apply_macro}
+    # on the new macro object.
     def apply(docstring, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil), _method_object = T.unsafe(nil)); end
+
+    # Applies a macro to a docstring, interpolating the macro's data on the
+    # docstring and appending any extra local docstring data that was in
+    # the original +docstring+ object.
     def apply_macro(macro, docstring, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
+
+    # Creates a new macro and fills in the relevant properties.
     def create(macro_name, data, method_object = T.unsafe(nil)); end
+
+    # Parses a given docstring and determines if the macro is "new" or
+    # not. If the macro has $variable names or if it has a @!macro tag
+    # with the [new] or [attached] flag, it is considered new.
+    #
+    # If a new macro is found, the macro is created and registered. Otherwise
+    # the macro name is searched and returned. If a macro is not found,
+    # nil is returned.
     def create_docstring(macro_name, data, method_object = T.unsafe(nil)); end
+
+    # Expands +macro_data+ using the interpolation parameters.
+    #
+    # Interpolation rules:
+    # * $0, $1, $2, ... = the Nth parameter in +call_params+
+    # * $* = the full statement source (excluding block)
+    # * Also supports $!{N-M} ranges, as well as negative indexes on N or M
+    # * Use \$ to escape the variable name in a macro.
     def expand(macro_data, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
+
+    # Finds a macro using +macro_name+
     def find(macro_name); end
+
+    # Parses a given docstring and determines if the macro is "new" or
+    # not. If the macro has $variable names or if it has a @!macro tag
+    # with the [new] or [attached] flag, it is considered new.
+    #
+    # If a new macro is found, the macro is created and registered. Otherwise
+    # the macro name is searched and returned. If a macro is not found,
+    # nil is returned.
     def find_or_create(macro_name, data, method_object = T.unsafe(nil)); end
   end
 end
 
 YARD::CodeObjects::MacroObject::MACRO_MATCH = T.let(T.unsafe(nil), Regexp)
 
+# Represents a Ruby method in source
 class YARD::CodeObjects::MethodObject < ::YARD::CodeObjects::Base
+  # Creates a new method object in +namespace+ with +name+ and an instance
+  # or class +scope+
+  #
+  # If scope is +:module+, this object is instantiated as a public
+  # method in +:class+ scope, but also creates a new (empty) method
+  # as a private +:instance+ method on the same class or module.
   def initialize(namespace, name, scope = T.unsafe(nil), &block); end
 
+  # Returns all alias names of the object
   def aliases; end
+
+  # Returns the read/writer info for the attribute if it is one
   def attr_info; end
+
   def constructor?; end
+
+  # Whether the object is explicitly defined in source or whether it was
+  # inferred by a handler. For instance, attribute methods are generally
+  # inferred and therefore not explicitly defined in source.
   def explicit; end
+
+  # Whether the object is explicitly defined in source or whether it was
+  # inferred by a handler. For instance, attribute methods are generally
+  # inferred and therefore not explicitly defined in source.
   def explicit=(_arg0); end
+
+  # Tests if the object is defined as an alias of another method
   def is_alias?; end
+
+  # Tests if the object is defined as an attribute in the namespace
   def is_attribute?; end
+
+  # Tests boolean {#explicit} value.
   def is_explicit?; end
+
   def module_function?; end
+
+  # Returns the name of the object.
   def name(prefix = T.unsafe(nil)); end
+
   def overridden_method; end
+
+  # Returns the list of parameters parsed out of the method signature
+  # with their default values.
   def parameters; end
+
+  # Returns the list of parameters parsed out of the method signature
+  # with their default values.
   def parameters=(_arg0); end
+
+  # Override path handling for instance methods in the root namespace
+  # (they should still have a separator as a prefix).
   def path; end
+
   def reader?; end
+
+  # The scope of the method (+:class+ or +:instance+)
   def scope; end
+
+  # Changes the scope of an object from :instance or :class
   def scope=(v); end
+
+  # Override separator to differentiate between class and instance
+  # methods.
   def sep; end
+
   def writer?; end
 
   protected
@@ -709,88 +1451,201 @@ class YARD::CodeObjects::MethodObject < ::YARD::CodeObjects::Base
   def copyable_attributes; end
 end
 
+# Represents a Ruby module.
 class YARD::CodeObjects::ModuleObject < ::YARD::CodeObjects::NamespaceObject
+  # Returns the inheritance tree of mixins.
   def inheritance_tree(include_mods = T.unsafe(nil)); end
 end
 
+# Regular expression to match namespaces (const A or complex path A::B)
 YARD::CodeObjects::NAMESPACEMATCH = T.let(T.unsafe(nil), Regexp)
+
+# Namespace separator
 YARD::CodeObjects::NSEP = T.let(T.unsafe(nil), String)
+
+# Regex-quoted namespace separator
 YARD::CodeObjects::NSEPQ = T.let(T.unsafe(nil), String)
 
+# This module controls registration and accessing of namespace separators
+# for {Registry} lookup.
 module YARD::CodeObjects::NamespaceMapper
+  # Clears the map of separators.
   def clear_separators; end
+
+  # Gets or sets the default separator value to use when no
+  # separator for the namespace can be determined.
   def default_separator(value = T.unsafe(nil)); end
+
+  # Registers a separator with an optional set of valid types that
+  # must follow the separator lexically.
+  #
+  # Calls all callbacks defined by {NamespaceMapper.on_invalidate} after
+  # the separator is registered.
   def register_separator(sep, *valid_types); end
+
   def separators; end
   def separators_for_type(type); end
   def separators_match; end
   def types_for_separator(sep); end
+
+  # Unregisters a separator by a type.
   def unregister_separator_by_type(type); end
 
   class << self
     def default_separator; end
     def default_separator=(_arg0); end
+
+    # Invalidates all separators
     def invalidate; end
+
     def map; end
     def map_match; end
+
+    # Adds a callback that triggers when a new separator is registered or
+    # the cache is cleared by invalidation.
     def on_invalidate(&block); end
+
     def rev_map; end
   end
 end
 
+# A "namespace" is any object that can store other objects within itself.
+# The two main Ruby objects that can act as namespaces are modules
+# ({ModuleObject}) and classes ({ClassObject}).
 class YARD::CodeObjects::NamespaceObject < ::YARD::CodeObjects::Base
+  # Creates a new namespace object inside +namespace+ with +name+.
   def initialize(namespace, name, *args, &block); end
 
+  # A hash containing two keys, :class and :instance, each containing
+  # a hash of objects and their alias names.
   def aliases; end
+
+  # A hash containing two keys, class and instance, each containing
+  # the attribute name with a { :read, :write } hash for the read and
+  # write objects respectively.
   def attributes; end
+
+  # Looks for a child that matches the attributes specified by +opts+.
   def child(opts = T.unsafe(nil)); end
+
+  # The list of objects defined in this namespace
   def children; end
+
+  # Only the class attributes
   def class_attributes; end
+
+  # Class mixins
   def class_mixins; end
+
+  # Returns all constants in the namespace
   def constants(opts = T.unsafe(nil)); end
+
+  # Returns class variables defined in this namespace.
   def cvars; end
+
   def groups; end
   def groups=(_arg0); end
+
+  # Returns constants included from any mixins
   def included_constants; end
+
+  # Returns methods included from any mixins that match the attributes
+  # specified by +opts+. If no options are specified, returns all included
+  # methods.
   def included_meths(opts = T.unsafe(nil)); end
+
+  # Only the instance attributes
   def instance_attributes; end
+
+  # Instance mixins
   def instance_mixins; end
+
+  # Returns all methods that match the attributes specified by +opts+. If
+  # no options are provided, returns all methods.
   def meths(opts = T.unsafe(nil)); end
+
+  # Returns for specific scopes. If no scopes are provided, returns all mixins.
   def mixins(*scopes); end
 end
 
 YARD::CodeObjects::PROXY_MATCH = T.let(T.unsafe(nil), Regexp)
 
+# The Proxy class is a way to lazily resolve code objects in
+# cases where the object may not yet exist. A proxy simply stores
+# an unresolved path until a method is called on the object, at which
+# point it does a lookup using {Registry.resolve}. If the object is
+# not found, a warning is raised and {ProxyMethodError} might be raised.
 class YARD::CodeObjects::Proxy
+  # Creates a new Proxy
   def initialize(namespace, name, type = T.unsafe(nil)); end
 
   def <=>(other); end
   def ==(other); end
   def ===(other); end
+
+  # Returns the class name of the object the proxy is mimicking, if
+  # resolved. Otherwise returns +Proxy+.
   def class; end
+
   def equal?(other); end
   def hash; end
+
+  # Returns a text representation of the Proxy
   def inspect; end
+
   def instance_of?(klass); end
   def is_a?(klass); end
   def kind_of?(klass); end
+
+  # Dispatches the method to the resolved object.
   def method_missing(meth, *args, &block); end
+
+  # The name of the object
   def name(prefix = T.unsafe(nil)); end
+
+  # Returns the value of attribute namespace.
   def namespace; end
+
+  # Returns the value of attribute namespace.
   def parent; end
+
+  # If the proxy resolves to an object, returns its path, otherwise
+  # guesses at the correct path using the original namespace and name.
   def path; end
+
   def respond_to?(meth, include_private = T.unsafe(nil)); end
+
+  # This class is never a root object
   def root?; end
+
+  # If the proxy resolves to an object, returns its path, otherwise
+  # guesses at the correct path using the original namespace and name.
   def title; end
+
+  # If the proxy resolves to an object, returns its path, otherwise
+  # guesses at the correct path using the original namespace and name.
   def to_s; end
+
+  # If the proxy resolves to an object, returns its path, otherwise
+  # guesses at the correct path using the original namespace and name.
   def to_str; end
+
+  # Returns the type of the proxy. If it cannot be resolved at the
+  # time of the call, it will either return the inferred proxy type
+  # (see {#type=}) or +:proxy+
   def type; end
+
+  # Allows a parser to infer the type of the proxy by its path.
   def type=(type); end
 
   private
 
   def proxy_path; end
   def to_ary; end
+
+  # Attempts to find the object that this unresolved object
+  # references by checking if any objects by this name are
+  # registered all the way up the namespace tree.
   def to_obj; end
 
   class << self
@@ -798,8 +1653,11 @@ class YARD::CodeObjects::Proxy
   end
 end
 
+# A special type of +NoMethodError+ when raised from a {Proxy}
 class YARD::CodeObjects::ProxyMethodError < ::NoMethodError; end
 
+# Represents the root namespace object (the invisible Ruby module that
+# holds all top level modules, class and other objects).
 class YARD::CodeObjects::RootObject < ::YARD::CodeObjects::ModuleObject
   def equal?(other); end
   def hash; end
@@ -809,46 +1667,206 @@ class YARD::CodeObjects::RootObject < ::YARD::CodeObjects::ModuleObject
   def title; end
 end
 
+# This class maintains all system-wide configuration for YARD and handles
+# the loading of plugins. To access options call {options}, and to load
+# a plugin use {load_plugin}. All other public methods are used by YARD
+# during load time.
+#
+# == User Configuration Files
+#
+# Persistent user configuration files can be stored in the file
+# +~/.yard/config+, which is read when YARD first loads. The file should
+# be formatted as YAML, and should contain a map of keys and values.
+#
+# Although you can specify any key-value mapping in the configuration file,
+# YARD defines special keys specified in {DEFAULT_CONFIG_OPTIONS}.
+#
+# An example of a configuration file is listed below:
+#
+# !!!yaml
+# load_plugins: true # Auto-load plugins when YARD starts
+# ignored_plugins:
+# - yard-broken
+# - broken2 # yard- prefix not necessary
+# autoload_plugins:
+# - yard-rspec
+#
+# == Automatic Loading of Plugins
+#
+# YARD 0.6.2 will no longer automatically load all plugins by default. This
+# option can be reset by setting 'load_plugins' to true in the configuration
+# file. In addition, you can specify a set of specific plugins to load on
+# load through the 'autoload_plugins' list setting. This setting is
+# independent of the 'load_plugins' value and will always be processed.
+#
+# == Ignored Plugins File
+#
+# YARD 0.5 and below used a +~/.yard/ignored_plugins+ file to specify
+# plugins to be ignored at load time. Ignored plugins in 0.6.2 and above
+# should now be specified in the main configuration file, though YARD
+# will support the +ignored_plugins+ file until 0.7.x.
+#
+# == Safe Mode
+#
+# YARD supports running in safe-mode. By doing this, it will avoid executing
+# any user code such as require files or queries. Plugins will still be
+# loaded with safe mode on, because plugins are properly namespaced with
+# a 'yard-' prefix, must be installed as a gem, and therefore cannot be
+# touched by the user. To specify safe mode, use the +safe_mode+ key.
+#
+# == Plugin Specific Configuration
+#
+# Additional settings can be defined within the configuration file
+# specifically to provide configuration for a plugin. A plugin that utilizes
+# the YARD configuration is strongly encouraged to utilize namespacing of
+# their configuration content.
+#
+# !!!yaml
+# load_plugins: true # Auto-load plugins when YARD starts
+# ignored_plugins:
+# - yard-broken
+# - broken2 # yard- prefix not necessary
+# autoload_plugins:
+# - yard-rspec
+# # Plugin Specific Configuration
+# yard-sample-plugin:
+# show-results-inline: true
+#
+# As the configuration is available system wide, it can be
+# accessed within the plugin code.
+#
+#
+# if YARD::Config.options['yard-sample-plugin'] and
+# YARD::Config.options['yard-sample-plugin']['show-results-inline']
+# # ... perform the action that places the results inline ...
+# else
+# # ... do the default behavior of not showing the results inline ...
+# end
+#
+# When accessing the configuration, be aware that this file is user managed
+# so configuration keys and values may not be present. Make no assumptions and
+# instead ensure that you check for the existence of keys before proceeding to
+# retrieve values.
 class YARD::Config
   class << self
+    # Legacy support for {IGNORED_PLUGINS}
     def add_ignored_plugins_file; end
+
     def arguments; end
+
+    # Loads settings from {CONFIG_FILE}. This method is called by YARD at
+    # load time and should not be called by the user.
     def load; end
+
+    # Load plugins set in :autoload_plugins
     def load_autoload_plugins; end
+
+    # Load plugins from {arguments}
     def load_commandline_plugins; end
+
+    # Check for command-line safe_mode switch in {arguments}
     def load_commandline_safemode; end
+
+    # Load gem plugins if :load_plugins is true
     def load_gem_plugins; end
+
+    # Loads an individual plugin by name. It is not necessary to include the
+    # +yard-+ plugin prefix here.
     def load_plugin(name); end
+
+    # Print a warning if the plugin failed to load
     def load_plugin_failed(name, exception); end
+
+    # Loads gems that match the name 'yard-*' (recommended) or 'yard_*' except
+    # those listed in +~/.yard/ignored_plugins+. This is called immediately
+    # after YARD is loaded to allow plugin support.
     def load_plugins; end
+
+    # The system-wide configuration options for YARD
     def options; end
+
+    # The system-wide configuration options for YARD
     def options=(_arg0); end
+
+    # Loads the YAML configuration file into memory
     def read_config_file; end
+
+    # Saves settings to {CONFIG_FILE}.
     def save; end
+
+    # Sanitizes and normalizes a plugin name to include the 'yard-' prefix.
     def translate_plugin_name(name); end
+
+    # Translates plugin names to add yard- prefix.
     def translate_plugin_names; end
+
+    # Temporarily loads .yardopts file into @yardopts
     def with_yardopts; end
   end
 end
 
+# The location where YARD stores user-specific settings
 YARD::Config::CONFIG_DIR = T.let(T.unsafe(nil), String)
+
+# The main configuration YAML file.
 YARD::Config::CONFIG_FILE = T.let(T.unsafe(nil), String)
+
+# Default configuration options
 YARD::Config::DEFAULT_CONFIG_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# File listing all ignored plugins
 YARD::Config::IGNORED_PLUGINS = T.let(T.unsafe(nil), String)
+
+# The prefix used for YARD plugins. Name your gem with this prefix
+# to allow it to be used as a plugin.
 YARD::Config::YARD_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
 
+# A documentation string, or "docstring" for short, encapsulates the
+# comments and metadata, or "tags", of an object. Meta-data is expressed
+# in the form +@tag VALUE+, where VALUE can span over multiple lines as
+# long as they are indented. The following +@example+ tag shows how tags
+# can be indented:
+#
+# # @example My example
+# #   a = "hello world"
+# #   a.reverse
+# # @version 1.0
+#
+# Tags can be nested in a documentation string, though the {Tags::Tag}
+# itself is responsible for parsing the inner tags.
 class YARD::Docstring < ::String
+  # Creates a new docstring with the raw contents attached to an optional
+  # object. Parsing will be done by the {DocstringParser} class.
   def initialize(content = T.unsafe(nil), object = T.unsafe(nil)); end
 
+  # Adds another {Docstring}, copying over tags.
   def +(other); end
+
+  # Adds a tag or reftag object to the tag list. If you want to parse
+  # tag data based on the {Tags::DefaultFactory} tag factory, use
+  # {DocstringParser} instead.
   def add_tag(*tags); end
+
   def all; end
+
+  # Replaces the docstring with new raw content. Called by {#all=}.
   def all=(content, parse = T.unsafe(nil)); end
+
+  # Returns true if the docstring has no content that is visible to a template.
   def blank?(only_visible_tags = T.unsafe(nil)); end
+
+  # Deletes all tags where the block returns true
   def delete_tag_if(&block); end
+
+  # Delete all tags with +name+
   def delete_tags(name); end
+
+  # Deep-copies a docstring
   def dup; end
+
+  # Returns true if at least one tag by the name +name+ was declared
   def has_tag?(name); end
+
   def hash_flag; end
   def hash_flag=(v); end
   def line; end
@@ -857,36 +1875,89 @@ class YARD::Docstring < ::String
   def object; end
   def object=(_arg0); end
   def ref_tags; end
+
+  # Replaces the docstring with new raw content. Called by {#all=}.
   def replace(content, parse = T.unsafe(nil)); end
+
+  # Resolves unresolved other docstring reference if there is
+  # unresolved reference. Does nothing if there is no unresolved
+  # reference.
+  #
+  # Normally, you don't need to call this method
+  # explicitly. Resolving unresolved reference is done implicitly.
   def resolve_reference; end
+
+  # Gets the first line of a docstring to the period or the first paragraph.
   def summary; end
+
+  # Convenience method to return the first tag
+  # object in the list of tag objects of that name
   def tag(name); end
+
+  # Returns a list of tags specified by +name+ or all tags if +name+ is not specified.
   def tags(name = T.unsafe(nil)); end
+
+  # Reformats and returns a raw representation of the tag data using the
+  # current tag and docstring data, not the original text.
   def to_raw; end
+
   def to_s; end
 
   private
 
+  # Maps valid reference tags
   def convert_ref_tags; end
+
+  # Parses out comments split by newlines into a new code object
   def parse_comments(comments); end
+
+  # A stable sort_by method.
   def stable_sort_by(list); end
 
   class << self
     def default_parser; end
     def default_parser=(_arg0); end
+
+    # Creates a new docstring without performing any parsing through
+    # a {DocstringParser}. This method is called by +DocstringParser+
+    # when creating the new docstring object.
     def new!(text, tags = T.unsafe(nil), object = T.unsafe(nil), raw_data = T.unsafe(nil), ref_object = T.unsafe(nil)); end
+
+    # Creates a parser object using the current {default_parser}.
+    # Equivalent to:
+    # Docstring.default_parser.new(*args)
     def parser(*args); end
   end
 end
 
+# Matches a tag at the start of a comment line
 YARD::Docstring::META_MATCH = T.let(T.unsafe(nil), Regexp)
 
+# Parses text and creates a {Docstring} object to represent documentation
+# for a {CodeObjects::Base}. To create a new docstring, you should initialize
+# the parser and call {#parse} followed by {#to_docstring}.
+#
+# == Subclassing Notes
+#
+# The DocstringParser can be subclassed and subtituted during parsing by
+# setting the {Docstring.default_parser} attribute with the name of the
+# subclass. This allows developers to change the way docstrings are
+# parsed, allowing for completely different docstring syntaxes.
 class YARD::DocstringParser
+  # Creates a new parser to parse docstring data
   def initialize(library = T.unsafe(nil)); end
 
+  # Creates a new directive using the registered {#library}
   def create_directive(tag_name, tag_buf); end
+
+  # Creates a {Tags::RefTag}
   def create_ref_tag(tag_name, name, object_name); end
+
+  # Creates a tag from the {Tags::DefaultFactory tag factory}.
+  #
+  # To add an already created tag object, append it to {#tags}.
   def create_tag(tag_name, tag_buf = T.unsafe(nil)); end
+
   def directives; end
   def directives=(_arg0); end
   def handler; end
@@ -895,16 +1966,29 @@ class YARD::DocstringParser
   def library=(_arg0); end
   def object; end
   def object=(_arg0); end
+
+  # Parses all content and returns itself.
   def parse(content, object = T.unsafe(nil), handler = T.unsafe(nil)); end
+
+  # Parses a given block of text.
   def parse_content(content); end
+
+  # Call post processing callbacks on parser.
+  # This is called implicitly by parser. Use this when
+  # manually configuring a {Docstring} object.
   def post_process; end
+
   def raw_text; end
   def raw_text=(_arg0); end
   def reference; end
   def reference=(_arg0); end
   def state; end
   def state=(_arg0); end
+
+  # Backward compatibility to detect old tags that should be specified
+  # as directives in 0.8 and onward.
   def tag_is_directive?(tag_name); end
+
   def tags; end
   def tags=(_arg0); end
   def text; end
@@ -913,17 +1997,27 @@ class YARD::DocstringParser
 
   private
 
+  # Calls all {after_parse} callbacks
   def call_after_parse_callbacks; end
+
+  # Calls the {Tags::Directive#after_parse} callback on all the
+  # created directives.
   def call_directives_after_parse; end
+
   def detect_reference(content); end
   def namespace; end
 
   class << self
+    # Creates a callback that is called after a docstring is successfully
+    # parsed. Use this method to perform sanity checks on a docstring's
+    # tag data, or add any extra tags automatically to a docstring.
     def after_parse(&block); end
+
     def after_parse_callbacks; end
   end
 end
 
+# The regular expression to match the tag syntax
 YARD::DocstringParser::META_MATCH = T.let(T.unsafe(nil), Regexp)
 
 module YARD::GemIndex
@@ -940,60 +2034,288 @@ module YARD::GemIndex
   end
 end
 
+# Handlers are called during the data processing part of YARD's
+# parsing phase. This allows YARD as well as any custom extension to
+# analyze source and generate {CodeObjects} to be stored for later use.
 module YARD::Handlers; end
 
+# Handlers are pluggable semantic parsers for YARD's code generation
+# phase. They allow developers to control what information gets
+# generated by YARD, giving them the ability to, for instance, document
+# any Ruby DSLs that a customized framework may use. A good example
+# of this would be the ability to document and generate meta data for
+# the 'describe' declaration of the RSpec testing framework by simply
+# adding a handler for such a keyword. Similarly, any Ruby API that
+# takes advantage of class level declarations could add these to the
+# documentation in a very explicit format by treating them as first-
+# class objects in any outputted documentation.
+#
+# == Overview of a Typical Handler Scenario
+#
+# Generally, a handler class will declare a set of statements which
+# it will handle using the {handles} class declaration. It will then
+# implement the {#process} method to do the work. The processing would
+# usually involve the manipulation of the {#namespace}, {#owner}
+# {CodeObjects::Base code objects} or the creation of new ones, in
+# which case they should be registered by {#register}, a method that
+# sets some basic attributes for the new objects.
+#
+# Handlers are usually simple and take up to a page of code to process
+# and register a new object or add new attributes to the current +namespace+.
+#
+# == Setting up a Handler for Use
+#
+# A Handler is automatically registered when it is subclassed from the
+# base class. The only other thing that needs to be done is to specify
+# which statement the handler will process. This is done with the +handles+
+# declaration, taking either a {Parser::Ruby::Legacy::RubyToken}, {String} or `Regexp`.
+# Here is a simple example which processes module statements.
+#
+# class MyModuleHandler < YARD::Handlers::Base
+# handles TkMODULE
+#
+# def process
+# # do something
+# end
+# end
+#
+# == Processing Handler Data
+#
+# The goal of a specific handler is really up to the developer, and as
+# such there is no real guideline on how to process the data. However,
+# it is important to know where the data is coming from to be able to use
+# it.
+#
+# === +statement+ Attribute
+#
+# The +statement+ attribute pertains to the {Parser::Ruby::Legacy::Statement} object
+# containing a set of tokens parsed in by the parser. This is the main set
+# of data to be analyzed and processed. The comments attached to the statement
+# can be accessed by the {Parser::Ruby::Legacy::Statement#comments} method, but generally
+# the data to be processed will live in the +tokens+ attribute. This list
+# can be converted to a +String+ using +#to_s+ to parse the data with
+# regular expressions (or other text processing mechanisms), if needed.
+#
+# === +namespace+ Attribute
+#
+# The +namespace+ attribute is a {CodeObjects::NamespaceObject namespace object}
+# which represents the current namespace that the parser is in. For instance:
+#
+# module SomeModule
+# class MyClass
+# def mymethod; end
+# end
+# end
+#
+# If a handler was to parse the 'class MyClass' statement, it would
+# be necessary to know that it belonged inside the SomeModule module.
+# This is the value that +namespace+ would return when processing such
+# a statement. If the class was then entered and another handler was
+# called on the method, the +namespace+ would be set to the 'MyClass'
+# code object.
+#
+# === +owner+ Attribute
+#
+# The +owner+ attribute is similar to the +namespace+ attribute in that
+# it also follows the scope of the code during parsing. However, a namespace
+# object is loosely defined as a module or class and YARD has the ability
+# to parse beyond module and class blocks (inside methods, for instance),
+# so the +owner+ attribute would not be limited to modules and classes.
+#
+# To put this into context, the example from above will be used. If a method
+# handler was added to the mix and decided to parse inside the method body,
+# the +owner+ would be set to the method object but the namespace would remain
+# set to the class. This would allow the developer to process any method
+# definitions set inside a method (def x; def y; 2 end end) by adding them
+# to the correct namespace (the class, not the method).
+#
+# In summary, the distinction between +namespace+ and +owner+ can be thought
+# of as the difference between first-class Ruby objects (namespaces) and
+# second-class Ruby objects (methods).
+#
+# === +visibility+ and +scope+ Attributes
+#
+# Mainly needed for parsing methods, the +visibility+ and +scope+ attributes
+# refer to the public/protected/private and class/instance values (respectively)
+# of the current parsing position.
+#
+# == Parsing Blocks in Statements
+#
+# In addition to parsing a statement and creating new objects, some
+# handlers may wish to continue parsing the code inside the statement's
+# block (if there is one). In this context, a block means the inside
+# of any statement, be it class definition, module definition, if
+# statement or classic 'Ruby block'.
+#
+# For example, a class statement would be "class MyClass" and the block
+# would be a list of statements including the method definitions inside
+# the class. For a class handler, the programmer would execute the
+# {#parse_block} method to continue parsing code inside the block, with
+# the +namespace+ now pointing to the class object the handler created.
+#
+# YARD has the ability to continue into any block: class, module, method,
+# even if statements. For this reason, the block parsing method must be
+# invoked explicitly out of efficiency sake.
 class YARD::Handlers::Base
   include ::YARD::CodeObjects
   include ::YARD::Parser
 
   def initialize(source_parser, stmt); end
 
+  # Aborts a handler by raising {Handlers::HandlerAborted}.
+  # An exception will only be logged in debugging mode for
+  # this kind of handler exit.
   def abort!; end
+
   def call_params; end
   def caller_method; end
+
+  # Ensures that a specific +object+ has been parsed and loaded into the
+  # registry. This is necessary when adding data to a namespace, for instance,
+  # since the namespace may not have been processed yet (it can be located
+  # in a file that has not been handled).
+  #
+  # Calling this method defers the handler until all other files have been
+  # processed. If the object gets resolved, the rest of the handler continues,
+  # otherwise an exception is raised.
   def ensure_loaded!(object, max_retries = T.unsafe(nil)); end
+
+  # Returns the value of attribute extra_state.
   def extra_state; end
+
+  # Returns the value of attribute globals.
   def globals; end
+
+  # Returns the value of attribute namespace.
   def namespace; end
+
+  # Sets the attribute namespace
   def namespace=(v); end
+
+  # Returns the value of attribute owner.
   def owner; end
+
+  # Sets the attribute owner
   def owner=(v); end
+
+  # Parses the semantic "block" contained in the statement node.
   def parse_block(*_arg0); end
+
   def parser; end
+
+  # The main handler method called by the parser on a statement
+  # that matches the {handles} declaration.
+  #
+  # Subclasses should override this method to provide the handling
+  # functionality for the class.
   def process; end
+
+  # Executes a given block with specific state values for {#owner},
+  # {#namespace} and {#scope}.
   def push_state(opts = T.unsafe(nil)); end
+
+  # Do some post processing on a list of code objects.
+  # Adds basic attributes to the list of objects like
+  # the filename, line number, {CodeObjects::Base#dynamic},
+  # source code and {CodeObjects::Base#docstring},
+  # but only if they don't exist.
   def register(*objects); end
+
+  # Registers any docstring found for the object and expands macros
   def register_docstring(object, docstring = T.unsafe(nil), stmt = T.unsafe(nil)); end
+
+  # Registers the object as dynamic if the object is defined inside
+  # a method or block (owner != namespace)
   def register_dynamic(object); end
+
+  # Ensures that the object's namespace is loaded before attaching it
+  # to the namespace.
   def register_ensure_loaded(object); end
+
+  # Registers the file/line of the declaration with the object
   def register_file_info(object, file = T.unsafe(nil), line = T.unsafe(nil), comments = T.unsafe(nil)); end
+
+  # Registers the object as being inside a specific group
   def register_group(object, group = T.unsafe(nil)); end
+
+  # Registers the same method information on the module function, if
+  # the object was defined as a module function.
   def register_module_function(object); end
+
   def register_source(object, source = T.unsafe(nil), type = T.unsafe(nil)); end
+
+  # Registers any transitive tags from the namespace on the object
   def register_transitive_tags(object); end
+
+  # Registers visibility on a method object. If the object does not
+  # respond to setting visibility, nothing is done.
   def register_visibility(object, visibility = T.unsafe(nil)); end
+
+  # Returns the value of attribute scope.
   def scope; end
+
+  # Sets the attribute scope
   def scope=(v); end
+
   def statement; end
+
+  # Returns the value of attribute visibility.
   def visibility; end
+
+  # Sets the attribute visibility
   def visibility=(v); end
 
   class << self
+    # Clear all registered subclasses. Testing purposes only
     def clear_subclasses; end
+
     def handlers; end
+
+    # Declares the statement type which will be processed
+    # by this handler.
+    #
+    # A match need not be unique to a handler. Multiple
+    # handlers can process the same statement. However,
+    # in this case, care should be taken to make sure that
+    # {#parse_block} would only be executed by one of
+    # the handlers, otherwise the same code will be parsed
+    # multiple times and slow YARD down.
     def handles(*matches); end
+
+    # This class is implemented by {Ruby::Base} and {Ruby::Legacy::Base}.
+    # To implement a base handler class for another language, implement
+    # this method to return true if the handler should process the given
+    # statement object. Use {handlers} to enumerate the matchers declared
+    # for the handler class.
     def handles?(statement); end
+
+    # Declares that a handler should only be called when inside a filename
+    # by its basename or a regex match for the full path.
     def in_file(filename); end
+
     def inherited(subclass); end
     def matches_file?(filename); end
+
+    # Declares that the handler should only be called when inside a
+    # {CodeObjects::NamespaceObject}, not a method body.
     def namespace_only; end
+
     def namespace_only?; end
+
+    # Generates a +process+ method, equivalent to +def process; ... end+.
+    # Blocks defined with this syntax will be wrapped inside an anonymous
+    # module so that the handler class can be extended with mixins that
+    # override the +process+ method without alias chaining.
     def process(&block); end
+
+    # Returns all registered handler subclasses.
     def subclasses; end
   end
 end
 
+# CRuby Handlers
 module YARD::Handlers::C; end
+
 class YARD::Handlers::C::AliasHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::AliasHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 class YARD::Handlers::C::AttributeHandler < ::YARD::Handlers::C::Base; end
@@ -1027,7 +2349,9 @@ class YARD::Handlers::C::Base < ::YARD::Handlers::Base
   end
 end
 
+# Generated by update_error_map.rb (Copy+past results)
 YARD::Handlers::C::Base::ERROR_CLASS_NAMES = T.let(T.unsafe(nil), Hash)
+
 class YARD::Handlers::C::ClassHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::ClassHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
 YARD::Handlers::C::ClassHandler::MATCH2 = T.let(T.unsafe(nil), Regexp)
@@ -1053,7 +2377,9 @@ module YARD::Handlers::C::HandlerMethods
   def record_parameters(object, symbol, src); end
 end
 
+# Handles the Init_Libname() method
 class YARD::Handlers::C::InitHandler < ::YARD::Handlers::C::Base; end
+
 YARD::Handlers::C::InitHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 class YARD::Handlers::C::MethodHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::MethodHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
@@ -1065,6 +2391,7 @@ class YARD::Handlers::C::ModuleHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::ModuleHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
 YARD::Handlers::C::ModuleHandler::MATCH2 = T.let(T.unsafe(nil), Regexp)
 
+# Parses comments
 class YARD::Handlers::C::OverrideCommentHandler < ::YARD::Handlers::C::Base
   def register_docstring(object, docstring = T.unsafe(nil), stmt = T.unsafe(nil)); end
   def register_file_info(object, file = T.unsafe(nil), line = T.unsafe(nil), comments = T.unsafe(nil)); end
@@ -1074,41 +2401,103 @@ class YARD::Handlers::C::PathHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::PathHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 class YARD::Handlers::C::StructHandler < ::YARD::Handlers::C::Base; end
 YARD::Handlers::C::StructHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# Keeps track of function bodies for symbol lookup during Ruby method declarations
 class YARD::Handlers::C::SymbolHandler < ::YARD::Handlers::C::Base; end
+
 YARD::Handlers::C::SymbolHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# Shared logic between C and Ruby handlers.
 module YARD::Handlers::Common; end
 
+# Shared functionality between Ruby and C method handlers.
 module YARD::Handlers::Common::MethodHandler
   def add_predicate_return_tag(obj); end
 end
 
+# Raise this error when a handler should exit before completing.
+# The exception will be silenced, allowing the next handler(s) in the
+# queue to be executed.
 class YARD::Handlers::HandlerAborted < ::RuntimeError; end
 
+# Raised during processing phase when a handler needs to perform
+# an operation on an object's namespace but the namespace could
+# not be resolved.
 class YARD::Handlers::NamespaceMissingError < ::YARD::Parser::UndocumentableError
   def initialize(object); end
 
+  # The object the error occurred on
   def object; end
+
+  # The object the error occurred on
   def object=(_arg0); end
 end
 
+# Iterates over all statements in a file and delegates them to the
+# {Handlers::Base} objects that are registered to handle the statement.
+#
+# This class is passed to each handler and keeps overall processing state.
+# For example, if the {#visibility} is set in a handler, all following
+# statements will have access to this state. This allows "public",
+# "protected" and "private" statements to be handled in classes and modules.
+# In addition, the {#namespace} can be set during parsing to control
+# where objects are being created from. You can also access extra stateful
+# properties that any handler can set during the duration of the post
+# processing of a file from {#extra_state}. If you need to access state
+# across different files, look at {#globals}.
 class YARD::Handlers::Processor
+  # Creates a new Processor for a +file+.
   def initialize(parser); end
 
+  # Share state across different handlers inside of a file.
+  # This attribute is similar to {#visibility}, {#scope}, {#namespace}
+  # and {#owner}, in that they all maintain state across all handlers
+  # for the entire source file. Use this attribute to store any data
+  # your handler might need to save during the parsing of a file. If
+  # you need to save state across files, see {#globals}.
   def extra_state; end
+
+  # Share state across different handlers inside of a file.
+  # This attribute is similar to {#visibility}, {#scope}, {#namespace}
+  # and {#owner}, in that they all maintain state across all handlers
+  # for the entire source file. Use this attribute to store any data
+  # your handler might need to save during the parsing of a file. If
+  # you need to save state across files, see {#globals}.
   def extra_state=(_arg0); end
+
   def file; end
   def file=(_arg0); end
+
+  # Searches for all handlers in {Base.subclasses} that match the +statement+
   def find_handlers(statement); end
+
+  # Handlers can share state for the entire post processing stage through
+  # this attribute. Note that post processing stage spans multiple files.
+  # To share state only within a single file, use {#extra_state}
   def globals; end
+
+  # Handlers can share state for the entire post processing stage through
+  # this attribute. Note that post processing stage spans multiple files.
+  # To share state only within a single file, use {#extra_state}
   def globals=(_arg0); end
+
   def namespace; end
   def namespace=(_arg0); end
   def owner; end
   def owner=(_arg0); end
+
+  # Continue parsing the remainder of the files in the +globals.ordered_parser+
+  # object. After the remainder of files are parsed, processing will continue
+  # on the current file.
   def parse_remaining_files; end
+
   def parser_type; end
   def parser_type=(_arg0); end
+
+  # Processes a list of statements by finding handlers to process each
+  # one.
   def process(statements); end
+
   def scope; end
   def scope=(_arg0); end
   def visibility; end
@@ -1116,26 +2505,45 @@ class YARD::Handlers::Processor
 
   private
 
+  # Returns the handler base class
   def handler_base_class; end
+
+  # The module holding the handlers to be loaded
   def handler_base_namespace; end
+
   def handles?(handler, statement); end
+
+  # Loads handlers from {#handler_base_namespace}. This ensures that
+  # Ruby1.9 handlers are never loaded into 1.8; also lowers the amount
+  # of modules that are loaded
   def load_handlers; end
 
   class << self
     def namespace_for_handler; end
+
+    # Registers a new namespace for handlers of the given type.
     def register_handler_namespace(type, ns); end
   end
 end
 
+# All Ruby handlers
 module YARD::Handlers::Ruby; end
+
+# Handles alias and alias_method calls
 class YARD::Handlers::Ruby::AliasHandler < ::YARD::Handlers::Ruby::Base; end
 
+# Handles +attr_*+ statements in modules/classes
 class YARD::Handlers::Ruby::AttributeHandler < ::YARD::Handlers::Ruby::Base
   protected
 
+  # Strips out any non-essential arguments from the attr statement.
   def validated_attribute_names(params); end
 end
 
+# This is the base handler class for the new-style (1.9) Ruby parser.
+# All handlers that subclass this base class will be used when the
+# new-style parser is used. For implementing legacy handlers, see
+# {Legacy::Base}.
 class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::Ruby
   extend ::YARD::Parser::Ruby
@@ -1146,44 +2554,77 @@ class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
 
   class << self
     def handles?(node); end
+
+    # Matcher for handling a node with a specific meta-type. An {AstNode}
+    # has a {AstNode#type} to define its type but can also be associated
+    # with a set of types. For instance, +:if+ and +:unless+ are both
+    # of the meta-type +:condition+.
+    #
+    # A meta-type is any method on the {AstNode} class ending in "?",
+    # though you should not include the "?" suffix in your declaration.
+    # Some examples are: "condition", "call", "literal", "kw", "token",
+    # "ref".
     def meta_type(type); end
+
+    # Matcher for handling any type of method call. Method calls can
+    # be expressed by many {AstNode} types depending on the syntax
+    # with which it is called, so YARD allows you to use this matcher
+    # to simplify matching a method call.
     def method_call(name = T.unsafe(nil)); end
   end
 end
 
+# Matches if/unless conditions inside classes and attempts to process only
+# one branch (by evaluating the condition if possible).
 class YARD::Handlers::Ruby::ClassConditionHandler < ::YARD::Handlers::Ruby::Base
   protected
 
+  # Parses the condition part of the if/unless statement
   def parse_condition; end
+
   def parse_else_block; end
   def parse_then_block; end
 end
 
+# Handles class declarations
 class YARD::Handlers::Ruby::ClassHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
+  include ::YARDSorbet::Handlers::StructClassHandler
 
   private
 
   def create_struct_superclass(superclass, superclass_def); end
+
+  # Extract the parameters from the Struct.new AST node, returning them as a list
+  # of strings
   def extract_parameters(superclass); end
+
   def parse_struct_superclass(klass, superclass); end
   def parse_superclass(superclass); end
   def struct_superclass_name(superclass); end
 end
 
+# Handles a class variable (@@variable)
 class YARD::Handlers::Ruby::ClassVariableHandler < ::YARD::Handlers::Ruby::Base; end
+
+# Handles any lone comment statement in a Ruby file
 class YARD::Handlers::Ruby::CommentHandler < ::YARD::Handlers::Ruby::Base; end
 
+# Handles any constant assignment
 class YARD::Handlers::Ruby::ConstantHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
 
   private
 
+  # Extract the parameters from the Struct.new AST node, returning them as a list
+  # of strings
   def extract_parameters(superclass); end
+
   def process_constant(statement); end
   def process_structclass(statement); end
 end
 
+# Handles automatic detection of dsl-style methods
 class YARD::Handlers::Ruby::DSLHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::DSLHandlerMethods
 end
@@ -1206,6 +2647,7 @@ end
 
 YARD::Handlers::Ruby::DSLHandlerMethods::IGNORE_METHODS = T.let(T.unsafe(nil), Hash)
 
+# Helper methods to assist with processing decorators.
 module YARD::Handlers::Ruby::DecoratorHandlerMethods
   def process_decorator(*nodes, &block); end
 
@@ -1214,8 +2656,10 @@ module YARD::Handlers::Ruby::DecoratorHandlerMethods
   def process_decorator_parameter(node, opts = T.unsafe(nil), &block); end
 end
 
+# Handles 'raise' calls inside methods
 class YARD::Handlers::Ruby::ExceptionHandler < ::YARD::Handlers::Ruby::Base; end
 
+# Handles 'extend' call to include modules into the class scope of another
 class YARD::Handlers::Ruby::ExtendHandler < ::YARD::Handlers::Ruby::MixinHandler
   def scope; end
 
@@ -1224,9 +2668,13 @@ class YARD::Handlers::Ruby::ExtendHandler < ::YARD::Handlers::Ruby::MixinHandler
   def process_mixin(mixin); end
 end
 
+# To implement a custom handler matcher, subclass this class and implement
+# {#matches?} to return whether a node matches the handler.
 class YARD::Handlers::Ruby::HandlesExtension
+  # Creates a new extension with a specific matcher value +name+
   def initialize(name); end
 
+  # Tests if the node matches the handler
   def matches?(node); end
 
   protected
@@ -1234,21 +2682,55 @@ class YARD::Handlers::Ruby::HandlesExtension
   def name; end
 end
 
+# Handlers for old Ruby 1.8 parser
 module YARD::Handlers::Ruby::Legacy; end
+
+# Handles alias and alias_method calls
 class YARD::Handlers::Ruby::Legacy::AliasHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
+
+# Handles +attr_*+ statements in modules/classes
 class YARD::Handlers::Ruby::Legacy::AttributeHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
+# This is the base handler for the legacy parser. To implement a legacy
+# handler, subclass this class.
 class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::Ruby::Legacy::RubyToken
 
   def call_params; end
   def caller_method; end
+
+  # Parses a statement's block with a set of state values. If the
+  # statement has no block, nothing happens. A description of state
+  # values can be found at {Handlers::Base#push_state}
   def parse_block(opts = T.unsafe(nil)); end
 
   private
 
+  # Extracts method information for macro expansion only
   def extract_method_details; end
+
+  # The string value of a token. For example, the return value for the symbol :sym
+  # would be :sym. The return value for a string +"foo #{ bar}"+ would be the literal
+  # +"foo #{ bar}"+ without any interpolation. The return value of the identifier
+  # 'test' would be the same value: 'test'. Here is a list of common types and
+  # their return values:
   def tokval(token, *accepted_types); end
+
+  # Returns a list of symbols or string values from a statement.
+  # The list must be a valid comma delimited list, and values
+  # will only be returned to the end of the list only.
+  #
+  # Example:
+  # attr_accessor :a, 'b', :c, :d => ['a', 'b', 'c', 'd']
+  # attr_accessor 'a', UNACCEPTED_TYPE, 'c' => ['a', 'c']
+  #
+  # The tokval list of a {Parser::Ruby::Legacy::TokenList} of the above
+  # code would be the {#tokval} value of :a, 'b',
+  # :c and :d.
+  #
+  # It should also be noted that this function stops immediately at
+  # any ruby keyword encountered:
+  # "attr_accessor :a, :b, :c if x == 5"  => ['a', 'b', 'c']
   def tokval_list(tokenlist, *accepted_types); end
 
   class << self
@@ -1256,30 +2738,45 @@ class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   end
 end
 
+# Matches if/unless conditions inside classes and attempts to process only
+# one branch (by evaluating the condition if possible).
 class YARD::Handlers::Ruby::Legacy::ClassConditionHandler < ::YARD::Handlers::Ruby::Legacy::Base
   protected
 
+  # Parses the condition part of the if/unless statement
   def parse_condition; end
+
   def parse_else_block; end
   def parse_then_block; end
 end
 
+# Handles class declarations
 class YARD::Handlers::Ruby::Legacy::ClassHandler < ::YARD::Handlers::Ruby::Legacy::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
 
   private
 
   def create_struct_superclass(superclass, superclass_def); end
+
+  # Extracts the parameter list from the Struct.new declaration and returns it
+  # formatted as a list of member names. Expects the user will have used symbols
+  # to define the struct member names
   def extract_parameters(superstring); end
+
   def parse_struct_subclass(klass, superclass_def); end
   def parse_superclass(superclass); end
   def struct_superclass_name(superclass); end
 end
 
+# Handles a class variable (@@variable)
 class YARD::Handlers::Ruby::Legacy::ClassVariableHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
+
 YARD::Handlers::Ruby::Legacy::ClassVariableHandler::HANDLER_MATCH = T.let(T.unsafe(nil), Regexp)
+
+# Handles any lone comment statement in a Ruby file
 class YARD::Handlers::Ruby::Legacy::CommentHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
+# Handles any constant assignment
 class YARD::Handlers::Ruby::Legacy::ConstantHandler < ::YARD::Handlers::Ruby::Legacy::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
 
@@ -1291,12 +2788,15 @@ end
 
 YARD::Handlers::Ruby::Legacy::ConstantHandler::HANDLER_MATCH = T.let(T.unsafe(nil), Regexp)
 
+# Handles automatic detection of dsl-style methods
 class YARD::Handlers::Ruby::Legacy::DSLHandler < ::YARD::Handlers::Ruby::Legacy::Base
   include ::YARD::Handlers::Ruby::DSLHandlerMethods
 end
 
+# Handles 'raise' calls inside methods
 class YARD::Handlers::Ruby::Legacy::ExceptionHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
+# Handles 'extend' call to include modules into the class scope of another
 class YARD::Handlers::Ruby::Legacy::ExtendHandler < ::YARD::Handlers::Ruby::Legacy::MixinHandler
   def scope; end
 
@@ -1305,44 +2805,58 @@ class YARD::Handlers::Ruby::Legacy::ExtendHandler < ::YARD::Handlers::Ruby::Lega
   def process_mixin(mixin); end
 end
 
+# Handles a method definition
 class YARD::Handlers::Ruby::Legacy::MethodHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
+# Handles the 'include' statement to mixin a module in the instance scope
 class YARD::Handlers::Ruby::Legacy::MixinHandler < ::YARD::Handlers::Ruby::Legacy::Base
   private
 
   def process_mixin(mixin); end
 end
 
+# Handles module_function calls to turn methods into public class methods.
+# Also creates a private instance copy of the method.
 class YARD::Handlers::Ruby::Legacy::ModuleFunctionHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
+
+# Handles the declaration of a module
 class YARD::Handlers::Ruby::Legacy::ModuleHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
+# Sets visibility of a class method to private.
 class YARD::Handlers::Ruby::Legacy::PrivateClassMethodHandler < ::YARD::Handlers::Ruby::Legacy::Base
   private
 
   def privatize_class_method(name); end
 end
 
+# Sets visibility of a constant (class, module, const)
 class YARD::Handlers::Ruby::Legacy::PrivateConstantHandler < ::YARD::Handlers::Ruby::Legacy::Base
   private
 
   def privatize_constant(name); end
 end
 
+# Handles 'private', 'protected', and 'public' calls.
 class YARD::Handlers::Ruby::Legacy::VisibilityHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
+
+# Handles 'yield' calls
 class YARD::Handlers::Ruby::Legacy::YieldHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
 class YARD::Handlers::Ruby::MethodCallWrapper < ::YARD::Handlers::Ruby::HandlesExtension
   def matches?(node); end
 end
 
+# Handles a conditional inside a method
 class YARD::Handlers::Ruby::MethodConditionHandler < ::YARD::Handlers::Ruby::Base; end
 
+# Handles a method definition
 class YARD::Handlers::Ruby::MethodHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Common::MethodHandler
 
   def format_args; end
 end
 
+# Handles the 'include' statement to mixin a module in the instance scope
 class YARD::Handlers::Ruby::MixinHandler < ::YARD::Handlers::Ruby::Base
   protected
 
@@ -1350,35 +2864,72 @@ class YARD::Handlers::Ruby::MixinHandler < ::YARD::Handlers::Ruby::Base
   def recipient(mixin); end
 end
 
+# Handles module_function calls to turn methods into public class methods.
+# Also creates a private instance copy of the method.
 class YARD::Handlers::Ruby::ModuleFunctionHandler < ::YARD::Handlers::Ruby::Base; end
+
+# Handles the declaration of a module
 class YARD::Handlers::Ruby::ModuleHandler < ::YARD::Handlers::Ruby::Base; end
 
+# Sets visibility of a class method to private.
 class YARD::Handlers::Ruby::PrivateClassMethodHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::DecoratorHandlerMethods
 end
 
+# Sets visibility of a constant (class, module, const)
 class YARD::Handlers::Ruby::PrivateConstantHandler < ::YARD::Handlers::Ruby::Base
   private
 
   def privatize_constant(node); end
 end
 
+# Sets visibility of a class method to public.
 class YARD::Handlers::Ruby::PublicClassMethodHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::DecoratorHandlerMethods
 end
 
+# Helper methods to parse @attr_* tags on a class.
 module YARD::Handlers::Ruby::StructHandlerMethods
   include ::YARD::CodeObjects
 
+  # Creates the auto-generated docstring for the getter method of a struct's
+  # member. This is used so the generated documentation will look just like that
+  # of an attribute defined using attr_accessor.
   def add_reader_tags(klass, new_method, member); end
+
+  # Creates the auto-generated docstring for the setter method of a struct's
+  # member. This is used so the generated documentation will look just like that
+  # of an attribute defined using attr_accessor.
   def add_writer_tags(klass, new_method, member); end
+
+  # Creates the given member methods and attaches them to the given ClassObject.
   def create_attributes(klass, members); end
+
+  # Creates and registers a class object with the given name and superclass name.
+  # Returns it for further use.
   def create_class(classname, superclass); end
+
+  # Determines whether to create an attribute method based on the class's
+  # tags.
   def create_member_method?(klass, member, type = T.unsafe(nil)); end
+
+  # Creates the getter (reader) method and attaches it to the class as an attribute.
+  # Also sets up the docstring to prettify the documentation output.
   def create_reader(klass, member); end
+
+  # Creates the setter (writer) method and attaches it to the class as an attribute.
+  # Also sets up the docstring to prettify the documentation output.
   def create_writer(klass, member); end
+
+  # Extracts the user's defined @member tag for a given class and its member. Returns
+  # nil if the user did not define a @member tag for this struct entry.
   def member_tag_for_member(klass, member, type = T.unsafe(nil)); end
+
+  # Retrieves all members defined in @attr* tags
   def members_from_tags(klass); end
+
+  # Gets the return type for the member in a nicely formatted string. Used
+  # to be injected into auto-generated docstrings.
   def return_type_from_tag(member_tag); end
 end
 
@@ -1386,17 +2937,26 @@ class YARD::Handlers::Ruby::TestNodeWrapper < ::YARD::Handlers::Ruby::HandlesExt
   def matches?(node); end
 end
 
+# Handles 'private', 'protected', and 'public' calls.
 class YARD::Handlers::Ruby::VisibilityHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::DecoratorHandlerMethods
 end
 
+# Handles 'yield' calls
 class YARD::Handlers::Ruby::YieldHandler < ::YARD::Handlers::Ruby::Base; end
+
+# Namespace for internationalization (i18n)
 module YARD::I18n; end
 
+# +Locale+ is a unit of translation. It has {#name} and a set of
+# messages.
 class YARD::I18n::Locale
+  # Creates a locale for +name+ locale.
   def initialize(name); end
 
+  # Loads translation messages from +locale_directory+/{#name}.po.
   def load(locale_directory); end
+
   def name; end
   def translate(message); end
 
@@ -1406,25 +2966,45 @@ class YARD::I18n::Locale
   end
 end
 
+# +Message+ is a translation target message. It has message ID as
+# {#id} and some properties {#locations} and {#comments}.
 class YARD::I18n::Message
+  # Creates a trasnlate target message for message ID +id+.
   def initialize(id); end
 
   def ==(other); end
+
+  # Adds a comment for the message.
   def add_comment(comment); end
+
+  # Adds location information for the message.
   def add_location(path, line); end
+
   def comments; end
   def id; end
+
+  # path and line number where the message is appeared.
   def locations; end
 end
 
+# Acts as a container for {Message} objects.
 class YARD::I18n::Messages
   include ::Enumerable
 
+  # Creates a new container.
   def initialize; end
 
+  # Checks if this messages list is equal to another messages list.
   def ==(other); end
+
   def [](id); end
+
+  # Enumerates each {Message} in the container.
   def each(&block); end
+
+  # Registers a {Message}, the mssage ID of which is +id+. If
+  # corresponding +Message+ is already registered, the previously
+  # registered object is returned.
   def register(id); end
 
   protected
@@ -1432,12 +3012,76 @@ class YARD::I18n::Messages
   def messages; end
 end
 
+# The +PotGenerator+ generates POT format string from
+# {CodeObjects::Base} and {CodeObjects::ExtraFileObject}.
+#
+# == POT and PO
+#
+# POT is an acronym for "Portable Object Template". POT is a
+# template file to create PO file. The extension for POT is
+# ".pot". PO file is an acronym for "Portable Object". PO file has
+# many parts of message ID (msgid) that is translation target
+# message and message string (msgstr) that is translated message
+# of message ID. If you want to translate "Hello" in English into
+# "Bonjour" in French, "Hello" is the msgid ID and "Bonjour" is
+# msgstr. The extension for PO is ".po".
+#
+# == How to extract msgids
+#
+# The +PotGenerator+ has two parse methods:
+#
+# * {#parse_objects} for {CodeObjects::Base}
+# * {#parse_files} for {CodeObjects::ExtraFileObject}
+#
+# {#parse_objects} extracts msgids from docstring and tags of
+# {CodeObjects::Base} objects. The docstring of
+# {CodeObjects::Base} object is parsed and a paragraph is
+# extracted as a msgid. Tag name and tag text are extracted as
+# msgids from a tag.
+#
+# {#parse_files} extracts msgids from
+# {CodeObjects::ExtraFileObject} objects. The file content of
+# {CodeObjects::ExtraFileObject} object is parsed and a paragraph
+# is extracted as a msgid.
+#
+# == Usage
+#
+# To create a .pot file by +PotGenerator+, instantiate a
+# +PotGenerator+ with a relative working directory path from a
+# directory path that has created .pot file, parse
+# {CodeObjects::Base} objects and {CodeObjects::ExtraFileObject}
+# objects, generate a POT and write the generated POT to a .pot
+# file. The relative working directory path is ".." when the
+# working directory path is "."  and the POT is wrote into
+# "po/yard.pot".
 class YARD::I18n::PotGenerator
+  # Creates a POT generator that uses +relative_base_path+ to
+  # generate locations for a msgid. +relative_base_path+ is
+  # prepended to all locations.
   def initialize(relative_base_path); end
 
+  # Generates POT from +@messages+.
+  #
+  # One PO file entry is generated from a +Message+ in
+  # +@messages+.
+  #
+  # Locations of the +Message+ are used to generate the reference
+  # line that is started with "#: ". +relative_base_path+ passed
+  # when the generater is created is prepended to each path in location.
+  #
+  # Comments of the +Message+ are used to generate the
+  # translator-comment line that is started with "# ".
   def generate; end
+
+  # Extracted messages.
   def messages; end
+
+  # Parses {CodeObjects::ExtraFileObject} objects and stores
+  # extracted msgids into {#messages}.
   def parse_files(files); end
+
+  # Parses {CodeObjects::Base} objects and stores extracted msgids
+  # into {#messages}
   def parse_objects(objects); end
 
   private
@@ -1455,10 +3099,16 @@ class YARD::I18n::PotGenerator
   def register_message(id); end
 end
 
+# Provides some convenient features for translating a text.
 class YARD::I18n::Text
+  # Creates a text object that has translation related features for
+  # the input text.
   def initialize(input, options = T.unsafe(nil)); end
 
+  # Extracts translation target messages from +@input+.
   def extract_messages; end
+
+  # Translates into +locale+.
   def translate(locale); end
 
   private
@@ -1470,79 +3120,200 @@ class YARD::I18n::Text
   def parse(&block); end
 end
 
+# Handles console logging for info, warnings and errors.
+# Uses the stdlib Logger class in Ruby for all the backend logic.
 class YARD::Logger < ::Logger
+  # Creates a new logger
   def initialize(pipe, *args); end
 
+  # Displays an unformatted line to the logger output stream.
   def <<(msg = T.unsafe(nil)); end
+
+  # Prints the backtrace +exc+ to the logger as error data.
   def backtrace(exc, level_meth = T.unsafe(nil)); end
+
+  # Captures the duration of a block of code for benchmark analysis. Also
+  # calls {#progress} on the message to display it to the user.
   def capture(msg, nontty_log = T.unsafe(nil)); end
+
+  # Clears the progress indicator in the TTY display.
   def clear_progress; end
+
+  # Changes the debug level to DEBUG if $DEBUG is set
+  # and writes a debugging message.
   def debug(*args); end
+
+  # Sets the logger level for the duration of the block
   def enter_level(new_level = T.unsafe(nil)); end
+
   def io; end
   def io=(pipe); end
+
+  # Displays an unformatted line to the logger output stream.
   def print(msg = T.unsafe(nil)); end
+
+  # Displays a progress indicator for a given message. This progress report
+  # is only displayed on TTY displays, otherwise the message is passed to
+  # the +nontty_log+ level.
   def progress(msg, nontty_log = T.unsafe(nil)); end
+
+  # Displays an unformatted line to the logger output stream, adding
+  # a newline.
   def puts(msg = T.unsafe(nil)); end
+
   def show_backtraces; end
+
+  # Sets the attribute show_backtraces
   def show_backtraces=(_arg0); end
+
   def show_progress; end
+
+  # Sets the attribute show_progress
   def show_progress=(_arg0); end
+
+  # Remembers when a warning occurs and writes a warning message.
   def warn(*args); end
+
+  # Warns that the Ruby environment does not support continuations. Applies
+  # to JRuby, Rubinius and MacRuby. This warning will only display once
+  # per Ruby process.
   def warn_no_continuations; end
+
+  # Returns the value of attribute warned.
   def warned; end
+
+  # Sets the attribute warned
   def warned=(_arg0); end
 
   private
 
+  # Override this internal Logger method to clear line
   def add(*args); end
+
   def clear_line; end
+
+  # Log format (from Logger implementation). Used by Logger internally
   def format_log(sev, _time, _prog, msg); end
+
   def print_no_newline(msg); end
 
   class << self
+    # The logger instance
     def instance(pipe = T.unsafe(nil)); end
   end
 end
 
+# The list of characters displayed beside the progress bar to indicate
+# "movement".
 YARD::Logger::PROGRESS_INDICATORS = T.let(T.unsafe(nil), Array)
 
+# Generalized options class for passing around large amounts of options between objects.
+#
+# The options class exists for better visibility and documentability of options being
+# passed through to other objects. Because YARD has parser and template architectures
+# that are heavily reliant on options, it is necessary to make these option keys easily
+# visible and understood by developers. Since the options class is more than just a
+# basic Hash, the subclass can provide aliasing and convenience methods to simplify
+# option property access, and, if needed, support backward-compatibility for deprecated
+# key names.
+#
+# == Hash and OpenStruct-like Access
+#
+# Although the options class allows for Hash-like access (<tt>opts[:key]</tt>), the recommended
+# mechanism for accessing an option key will be via standard method calls on attributes
+#
+# The options class can also act as an open ended key value storage structure (like a
+# Hash or OpenStruct), and allows for setting and getting of unregistered option keys.
+# This methodology is not recommended, however, and is only supported for backward
+# compatibility inside YARD. Whenever possible, developers should define all keys used
+# by an options class.
+#
+# == Declaring Default Values
+#
+# Note that the options class can contain default value definitions for certain options,
+# but to initialize these defaults, {#reset_defaults} must be called manually after
+# initialization; the options object is always created empty until defaults are applied.
 class YARD::Options
   def ==(other); end
+
+  # Delegates calls with Hash syntax to actual method with key name
   def [](key); end
+
+  # Delegates setter calls with Hash syntax to the attribute setter with the key name
   def []=(key, value); end
+
+  # Deletes an option value for +key+
   def delete(key); end
+
+  # Yields over every option key and value
   def each; end
+
+  # Inspects the object
   def inspect; end
+
+  # Creates a new options object and sets options hash or object value
+  # onto that object.
   def merge(opts); end
+
+  # Handles setting and accessing of unregistered keys similar
+  # to an OpenStruct object.
   def method_missing(meth, *args, &block); end
+
+  # Resets all values to their defaults.
   def reset_defaults; end
+
   def to_hash; end
+
+  # Updates values from an options hash or options object on this object.
+  # All keys passed should be key names defined by attributes on the class.
   def update(opts); end
 
   class << self
+    # Defines an attribute named +key+ and sets a default value for it
     def default_attr(key, default); end
   end
 end
 
+# The parser namespace holds all parsing engines used by YARD.
+# Currently only Ruby and C (Ruby) parsers are implemented.
 module YARD::Parser; end
 
+# Represents the abstract base parser class that parses source code in
+# a specific way. A parser should implement {#parse}, {#tokenize} and
+# {#enumerator}.
+#
+# == Registering a Custom Parser
+# To register a parser, see {SourceParser.register_parser_type}
 class YARD::Parser::Base
+  # This default constructor does nothing. The subclass is responsible for
+  # storing the source contents and filename if they are required.
   def initialize(source, filename); end
 
+  # This method should be implemented to return a list of semantic tokens
+  # representing the source code to be post-processed. Otherwise the method
+  # should return nil.
   def enumerator; end
+
+  # This method should be implemented to parse the source and return itself.
   def parse; end
+
+  # This method should be implemented to tokenize given source
   def tokenize; end
 
   class << self
+    # Convenience method to create a new parser and {#parse}
     def parse(source, filename = T.unsafe(nil)); end
   end
 end
 
+# CRuby Parsing components
 module YARD::Parser::C; end
 
 class YARD::Parser::C::BodyStatement < ::YARD::Parser::C::Statement
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Sets the attribute comments
   def comments=(_arg0); end
 end
 
@@ -1581,11 +3352,23 @@ class YARD::Parser::C::Comment < ::YARD::Parser::C::Statement
   def initialize(source, file = T.unsafe(nil), line = T.unsafe(nil)); end
 
   def comments; end
+
+  # Returns the value of attribute overrides.
   def overrides; end
+
+  # Sets the attribute overrides
   def overrides=(_arg0); end
+
+  # Returns the value of attribute statement.
   def statement; end
+
+  # Sets the attribute statement
   def statement=(_arg0); end
+
+  # Returns the value of attribute type.
   def type; end
+
+  # Sets the attribute type
   def type=(_arg0); end
 end
 
@@ -1605,78 +3388,164 @@ end
 class YARD::Parser::C::Statement
   def initialize(source, file = T.unsafe(nil), line = T.unsafe(nil)); end
 
+  # Returns the value of attribute comments_hash_flag.
   def comments_hash_flag; end
+
+  # Sets the attribute comments_hash_flag
   def comments_hash_flag=(_arg0); end
+
   def comments_range; end
+
+  # Returns the value of attribute file.
   def file; end
+
+  # Sets the attribute file
   def file=(_arg0); end
+
   def first_line; end
   def group; end
   def group=(_arg0); end
+
+  # Returns the value of attribute line.
   def line; end
+
+  # Sets the attribute line
   def line=(_arg0); end
+
   def line_range; end
   def show; end
   def signature; end
+
+  # Returns the value of attribute source.
   def source; end
+
+  # Sets the attribute source
   def source=(_arg0); end
 end
 
 class YARD::Parser::C::ToplevelStatement < ::YARD::Parser::C::Statement
+  # Returns the value of attribute block.
   def block; end
+
+  # Sets the attribute block
   def block=(_arg0); end
+
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Sets the attribute comments
   def comments=(_arg0); end
+
+  # Returns the value of attribute declaration.
   def declaration; end
+
+  # Sets the attribute declaration
   def declaration=(_arg0); end
 end
 
+# Responsible for parsing a list of files in order. The
+# {#parse} method of this class can be called from the
+# {SourceParser#globals} globals state list to re-enter
+# parsing for the remainder of files in the list recursively.
 class YARD::Parser::OrderedParser
+  # Creates a new OrderedParser with the global state and a list
+  # of files to parse.
   def initialize(global_state, files); end
 
   def files; end
   def files=(_arg0); end
+
+  # Parses the remainder of the {#files} list.
   def parse; end
 end
 
+# Raised when the parser sees a Ruby syntax error
 class YARD::Parser::ParserSyntaxError < ::YARD::Parser::UndocumentableError; end
 
+# Ruby parsing components.
 module YARD::Parser::Ruby
+  # Builds and s-expression by creating {AstNode} objects with
+  # the type provided by the first argument.
   def s(*args); end
 end
 
+# An AST node is characterized by a type and a list of children. It
+# is most easily represented by the s-expression {#s} such as:
+# # AST for "if true; 5 end":
+# s(s(:if, s(:var_ref, s(:kw, "true")), s(s(:int, "5")), nil))
+#
+# The node type is not considered part of the list, only its children.
+# So +ast[0]+ does not refer to the type, but rather the first child
+# (or object). Items that are not +AstNode+ objects can be part of the
+# list, like Strings or Symbols representing names. To return only
+# the AstNode children of the node, use {#children}.
 class YARD::Parser::Ruby::AstNode < ::Array
+  # Creates a new AST node
   def initialize(type, arr, opts = T.unsafe(nil)); end
 
   def ==(other); end
   def block?; end
   def call?; end
   def children; end
+
+  # Returns the value of attribute docstring.
   def comments; end
+
+  # Returns the value of attribute docstring_hash_flag.
   def comments_hash_flag; end
+
+  # Returns the value of attribute docstring_range.
   def comments_range; end
+
   def condition?; end
   def def?; end
+
+  # Returns the value of attribute docstring.
   def docstring; end
+
+  # Sets the attribute docstring
   def docstring=(_arg0); end
+
+  # Returns the value of attribute docstring_hash_flag.
   def docstring_hash_flag; end
+
+  # Sets the attribute docstring_hash_flag
   def docstring_hash_flag=(_arg0); end
+
+  # Returns the value of attribute docstring_range.
   def docstring_range; end
+
+  # Sets the attribute docstring_range
   def docstring_range=(_arg0); end
+
   def file; end
+
+  # Sets the attribute file
   def file=(_arg0); end
+
   def first_line; end
   def full_source; end
+
+  # Sets the attribute full_source
   def full_source=(_arg0); end
+
   def group; end
   def group=(_arg0); end
   def has_line?; end
   def inspect; end
+
+  # Searches through the node and all descendants and returns the
+  # first node with a type matching any of +node_types+, otherwise
+  # returns the original node (self).
   def jump(*node_types); end
+
   def kw?; end
   def line; end
   def line_range; end
+
+  # Sets the attribute line_range
   def line_range=(_arg0); end
+
   def literal?; end
   def loop?; end
   def parent; end
@@ -1685,25 +3554,42 @@ class YARD::Parser::Ruby::AstNode < ::Array
   def ref?; end
   def show; end
   def source; end
+
+  # Sets the attribute source
   def source=(_arg0); end
+
   def source_range; end
+
+  # Sets the attribute source_range
   def source_range=(_arg0); end
+
+  # Returns the value of attribute source.
   def to_s; end
+
   def token?; end
+
+  # Traverses the object and yields each node (including descendants) in order.
   def traverse; end
+
   def type; end
   def type=(_arg0); end
+
+  # Resets node state in tree
   def unfreeze; end
 
   private
 
+  # Resets line information
   def reset_line_info; end
 
   class << self
+    # Finds the node subclass that should be instantiated for a specific
+    # node type
     def node_class_for(type); end
   end
 end
 
+# List of all known keywords
 YARD::Parser::Ruby::AstNode::KEYWORDS = T.let(T.unsafe(nil), Hash)
 
 class YARD::Parser::Ruby::ClassNode < ::YARD::Parser::Ruby::KeywordNode
@@ -1712,6 +3598,7 @@ class YARD::Parser::Ruby::ClassNode < ::YARD::Parser::Ruby::KeywordNode
   def superclass; end
 end
 
+# Represents a lone comment block in source
 class YARD::Parser::Ruby::CommentNode < ::YARD::Parser::Ruby::AstNode
   def comments; end
   def docstring; end
@@ -1735,8 +3622,10 @@ class YARD::Parser::Ruby::KeywordNode < ::YARD::Parser::Ruby::AstNode
   def kw?; end
 end
 
+# Handles Ruby parsing in Ruby 1.8.
 module YARD::Parser::Ruby::Legacy; end
 
+# Lexical analyzer for Ruby source
 class YARD::Parser::Ruby::Legacy::RubyLex
   include ::YARD::Parser::Ruby::Legacy::RubyToken
   include ::IRB
@@ -1744,9 +3633,16 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   def initialize(content); end
 
   def char_no; end
+
+  # Returns the value of attribute continue.
   def continue; end
+
+  # Returns the value of attribute exception_on_syntax_error.
   def exception_on_syntax_error; end
+
+  # Sets the attribute exception_on_syntax_error
   def exception_on_syntax_error=(_arg0); end
+
   def get_read; end
   def getc; end
   def getc_of_rests; end
@@ -1758,20 +3654,38 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   def identify_number(start); end
   def identify_quotation(initial_char); end
   def identify_string(ltype, quoted = T.unsafe(nil), opener = T.unsafe(nil), initial_char = T.unsafe(nil)); end
+
+  # Returns the value of attribute indent.
   def indent; end
+
   def lex; end
   def lex_init; end
   def lex_int2; end
+
+  # Returns the value of attribute lex_state.
   def lex_state; end
+
+  # io functions
   def line_no; end
+
   def peek(i = T.unsafe(nil)); end
   def peek_equal?(str); end
+
+  # Returns the value of attribute read_auto_clean_up.
   def read_auto_clean_up; end
+
+  # Sets the attribute read_auto_clean_up
   def read_auto_clean_up=(_arg0); end
+
   def read_escape; end
   def skip_inner_expression; end
+
+  # Returns the value of attribute skip_space.
   def skip_space; end
+
+  # Sets the attribute skip_space
   def skip_space=(_arg0); end
+
   def token; end
   def ungetc(c = T.unsafe(nil)); end
 
@@ -1780,8 +3694,35 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   end
 end
 
+# , "when"
 YARD::Parser::Ruby::Legacy::RubyLex::ACCEPTS_COLON = T.let(T.unsafe(nil), Array)
 
+# Read an input stream character by character. We allow for unlimited
+# ungetting of characters just read.
+#
+# We simplify the implementation greatly by reading the entire input
+# into a buffer initially, and then simply traversing it using
+# pointers.
+#
+# We also have to allow for the <i>here document diversion</i>. This
+# little gem comes about when the lexer encounters a here
+# document. At this point we effectively need to split the input
+# stream into two parts: one to read the body of the here document,
+# the other to read the rest of the input line where the here
+# document was initially encountered. For example, we might have
+#
+# do_something(<<-A, <<-B)
+# stuff
+# for
+# A
+# stuff
+# for
+# B
+#
+# When the lexer encounters the <<A, it reads until the end of the
+# line, and keeps it around for later. It then reads the body of the
+# here document.  Once complete, it needs to read the rest of the
+# original line, but then skip the here document body.
 class YARD::Parser::Ruby::Legacy::RubyLex::BufferedReader
   def initialize(content); end
 
@@ -1790,19 +3731,25 @@ class YARD::Parser::Ruby::Legacy::RubyLex::BufferedReader
   def get_read; end
   def getc; end
   def getc_already_read; end
+
+  # Returns the value of attribute line_num.
   def line_num; end
+
   def peek(at); end
   def peek_equal(str); end
   def ungetc(_ch); end
 end
 
+# , "when"
 YARD::Parser::Ruby::Legacy::RubyLex::DEINDENT_CLAUSE = T.let(T.unsafe(nil), Array)
+
 YARD::Parser::Ruby::Legacy::RubyLex::DLtype2Token = T.let(T.unsafe(nil), Hash)
 YARD::Parser::Ruby::Legacy::RubyLex::ENINDENT_CLAUSE = T.let(T.unsafe(nil), Array)
 YARD::Parser::Ruby::Legacy::RubyLex::Ltype2Token = T.let(T.unsafe(nil), Hash)
 YARD::Parser::Ruby::Legacy::RubyLex::PERCENT_LTYPE = T.let(T.unsafe(nil), Hash)
 YARD::Parser::Ruby::Legacy::RubyLex::PERCENT_PAREN = T.let(T.unsafe(nil), Hash)
 
+# Legacy Ruby parser
 class YARD::Parser::Ruby::Legacy::RubyParser < ::YARD::Parser::Base
   def initialize(source, _filename); end
 
@@ -1813,6 +3760,7 @@ class YARD::Parser::Ruby::Legacy::RubyParser < ::YARD::Parser::Base
   def tokenize; end
 end
 
+# Legacy lexical tokenizer module.
 module YARD::Parser::Ruby::Legacy::RubyToken
   def Token(token, value = T.unsafe(nil)); end
   def set_token_position(line, char); end
@@ -1905,6 +3853,7 @@ end
 
 class YARD::Parser::Ruby::Legacy::RubyToken::TkBREAK < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 
+# Represents a block
 class YARD::Parser::Ruby::Legacy::RubyToken::TkBlockContents < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
   def text; end
 end
@@ -2011,13 +3960,17 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkIN < ::YARD::Parser::Ruby::Legacy
 class YARD::Parser::Ruby::Legacy::RubyToken::TkINTEGER < ::YARD::Parser::Ruby::Legacy::RubyToken::TkVal; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkIVAR < ::YARD::Parser::Ruby::Legacy::RubyToken::TkId; end
 
+# Represents a Ruby identifier
 class YARD::Parser::Ruby::Legacy::RubyToken::TkId < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
   def initialize(line_no, char_no, name); end
 
+  # Returns the value of attribute name.
   def name; end
 end
 
+# Represents a Ruby keyword
 class YARD::Parser::Ruby::Legacy::RubyToken::TkKW < ::YARD::Parser::Ruby::Legacy::RubyToken::TkId; end
+
 class YARD::Parser::Ruby::Legacy::RubyToken::TkLABEL < ::YARD::Parser::Ruby::Legacy::RubyToken::TkVal; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkLBRACE < ::YARD::Parser::Ruby::Legacy::RubyToken::Token; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkLBRACK < ::YARD::Parser::Ruby::Legacy::RubyToken::Token; end
@@ -2095,12 +4048,14 @@ end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkNTH_REF < ::YARD::Parser::Ruby::Legacy::RubyToken::TkId; end
 
 class YARD::Parser::Ruby::Legacy::RubyToken::TkNode < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
+  # Returns the value of attribute node.
   def node; end
 end
 
 class YARD::Parser::Ruby::Legacy::RubyToken::TkOPASGN < ::YARD::Parser::Ruby::Legacy::RubyToken::TkOp
   def initialize(line_no, char_no, op); end
 
+  # Returns the value of attribute op.
   def op; end
 end
 
@@ -2149,7 +4104,10 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkRSHFT < ::YARD::Parser::Ruby::Leg
   end
 end
 
+# { reading => token_class }
+# { reading => [token_class, *opt] }
 YARD::Parser::Ruby::Legacy::RubyToken::TkReading2Token = T.let(T.unsafe(nil), Hash)
+
 class YARD::Parser::Ruby::Legacy::RubyToken::TkSELF < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkSEMICOLON < ::YARD::Parser::Ruby::Legacy::RubyToken::Token; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkSPACE < ::YARD::Parser::Ruby::Legacy::RubyToken::TkWhitespace; end
@@ -2159,6 +4117,7 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkSUPER < ::YARD::Parser::Ruby::Leg
 class YARD::Parser::Ruby::Legacy::RubyToken::TkSYMBEG < ::YARD::Parser::Ruby::Legacy::RubyToken::TkId; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkSYMBOL < ::YARD::Parser::Ruby::Legacy::RubyToken::TkVal; end
 
+# Represents an end statement
 class YARD::Parser::Ruby::Legacy::RubyToken::TkStatementEnd < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
   def text; end
 end
@@ -2188,9 +4147,11 @@ end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkUnknownChar < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
   def initialize(line_no, char_no, _id); end
 
+  # Returns the value of attribute name.
   def name; end
 end
 
+# Represents a Ruby value
 class YARD::Parser::Ruby::Legacy::RubyToken::TkVal < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
   def initialize(line_no, char_no, value = T.unsafe(nil)); end
 end
@@ -2198,7 +4159,10 @@ end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkWHEN < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkWHILE < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkWHILE_MOD < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
+
+# Represents whitespace
 class YARD::Parser::Ruby::Legacy::RubyToken::TkWhitespace < ::YARD::Parser::Ruby::Legacy::RubyToken::Token; end
+
 class YARD::Parser::Ruby::Legacy::RubyToken::TkXSTRING < ::YARD::Parser::Ruby::Legacy::RubyToken::TkVal; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TkYIELD < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 class YARD::Parser::Ruby::Legacy::RubyToken::Tk__FILE__ < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
@@ -2206,14 +4170,19 @@ class YARD::Parser::Ruby::Legacy::RubyToken::Tk__LINE__ < ::YARD::Parser::Ruby::
 class YARD::Parser::Ruby::Legacy::RubyToken::TklBEGIN < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 class YARD::Parser::Ruby::Legacy::RubyToken::TklEND < ::YARD::Parser::Ruby::Legacy::RubyToken::TkKW; end
 
+# Represents a token in the Ruby lexer
 class YARD::Parser::Ruby::Legacy::RubyToken::Token
+  # Creates a new Token object
   def initialize(line_no, char_no); end
 
   def char_no; end
   def lex_state; end
   def lex_state=(_arg0); end
   def line_no; end
+
+  # Chainable way to sets the text attribute
   def set_text(text); end
+
   def text; end
 end
 
@@ -2223,12 +4192,24 @@ YARD::Parser::Ruby::Legacy::RubyToken::TokenDefinitions = T.let(T.unsafe(nil), A
 class YARD::Parser::Ruby::Legacy::Statement
   def initialize(tokens, block = T.unsafe(nil), comments = T.unsafe(nil)); end
 
+  # Returns the value of attribute block.
   def block; end
+
+  # Returns the value of attribute comments.
   def comments; end
+
+  # Returns the value of attribute comments_hash_flag.
   def comments_hash_flag; end
+
+  # Sets the attribute comments_hash_flag
   def comments_hash_flag=(_arg0); end
+
+  # Returns the value of attribute comments_range.
   def comments_range; end
+
+  # Sets the attribute comments_range
   def comments_range=(_arg0); end
+
   def first_line; end
   def group; end
   def group=(_arg0); end
@@ -2239,6 +4220,8 @@ class YARD::Parser::Ruby::Legacy::Statement
   def signature; end
   def source(include_block = T.unsafe(nil)); end
   def to_s(include_block = T.unsafe(nil)); end
+
+  # Returns the value of attribute tokens.
   def tokens; end
 
   private
@@ -2249,30 +4232,66 @@ end
 class YARD::Parser::Ruby::Legacy::StatementList < ::Array
   include ::YARD::Parser::Ruby::Legacy::RubyToken
 
+  # Creates a new statement list
   def initialize(content); end
 
+  # Returns the value of attribute encoding_line.
   def encoding_line; end
+
+  # Sets the attribute encoding_line
   def encoding_line=(_arg0); end
+
+  # Returns the value of attribute shebang_line.
   def shebang_line; end
+
+  # Sets the attribute shebang_line
   def shebang_line=(_arg0); end
 
   private
 
+  # Handles the balancing of parentheses and blocks
   def balances?(tk); end
+
+  # Returns the next statement in the token stream
   def next_statement; end
+
   def parse_statements; end
+
+  # Returns the next token in the stream that's not a space
   def peek_no_space; end
+
+  # Processes a token in a block
   def process_block_token(tk); end
+
+  # Processes a complex block-opening token;
+  # that is, a block opener such as +while+ or +for+
+  # that is followed by an expression
   def process_complex_block_opener(tk); end
+
+  # Processes a comment token that comes before a statement
   def process_initial_comment(tk); end
+
+  # Processes a simple block-opening token;
+  # that is, a block opener such as +begin+ or +do+
+  # that isn't followed by an expression
   def process_simple_block_opener(tk); end
+
+  # Processes a token that closes a statement
   def process_statement_end(tk); end
+
+  # Processes a single token
   def process_token(tk); end
+
+  # Adds a token to the current statement,
+  # unless it's a newline, semicolon, or comment
   def push_token(tk); end
+
   def sanitize_block; end
   def sanitize_statement_end; end
 end
 
+# The following list of tokens will require a block to be opened
+# if used at the beginning of a statement.
 YARD::Parser::Ruby::Legacy::StatementList::OPEN_BLOCK_TOKENS = T.let(T.unsafe(nil), Array)
 
 class YARD::Parser::Ruby::Legacy::TokenList < ::Array
@@ -2350,6 +4369,7 @@ class YARD::Parser::Ruby::ReferenceNode < ::YARD::Parser::Ruby::AstNode
   def ref?; end
 end
 
+# Internal parser class
 class YARD::Parser::Ruby::RipperParser < ::Ripper
   def initialize(source, filename, *args); end
 
@@ -2574,23 +4594,39 @@ YARD::Parser::Ruby::RipperParser::AST_TOKENS = T.let(T.unsafe(nil), Array)
 YARD::Parser::Ruby::RipperParser::MAPPINGS = T.let(T.unsafe(nil), Hash)
 YARD::Parser::Ruby::RipperParser::REV_MAPPINGS = T.let(T.unsafe(nil), Hash)
 
+# Ruby 1.9 parser
 class YARD::Parser::Ruby::RubyParser < ::YARD::Parser::Base
   def initialize(source, filename); end
 
+  # Ruby 1.9 parser
   def encoding_line; end
+
+  # Ruby 1.9 parser
   def enumerator; end
+
+  # Ruby 1.9 parser
   def frozen_string_line; end
+
   def parse; end
+
+  # Ruby 1.9 parser
   def shebang_line; end
+
   def tokenize; end
 end
 
+# Supports {#each} enumeration over a source's tokens, yielding
+# the token and a possible {CodeObjects::Base} associated with the
+# constant or identifier token.
 class YARD::Parser::Ruby::TokenResolver
   include ::Enumerable
   include ::YARD::CodeObjects::NamespaceMapper
 
+  # Creates a token resolver for given source.
   def initialize(source, namespace = T.unsafe(nil)); end
 
+  # Iterates over each token, yielding the token and a possible code
+  # object that is associated with the token.
   def each; end
 
   protected
@@ -2616,6 +4652,14 @@ class YARD::Parser::Ruby::TokenResolver
   end
 end
 
+# Responsible for parsing a source file into the namespace. Parsing
+# also invokes handlers to process the parsed statements and generate
+# any code objects that may be recognized.
+#
+# == Custom Parsers
+# SourceParser allows custom parsers to be registered and called when
+# a certain filetype is recognized. To register a parser and hook it
+# up to a set of file extensions, call {register_parser_type}
 class YARD::Parser::SourceParser
   def initialize(parser_type = T.unsafe(nil), globals1 = T.unsafe(nil), globals2 = T.unsafe(nil)); end
 
@@ -2623,111 +4667,286 @@ class YARD::Parser::SourceParser
   def file; end
   def file=(_arg0); end
   def globals; end
+
+  # The main parser method. This should not be called directly. Instead,
+  # use the class methods {parse} and {parse_string}.
   def parse(content = T.unsafe(nil)); end
+
   def parser_type; end
+
+  # Tokenizes but does not parse the block of code using the current {#parser_type}
   def tokenize(content); end
 
   private
 
+  # Searches for encoding line and forces encoding
   def convert_encoding(content); end
+
   def parser_class; end
   def parser_type=(value); end
+
+  # Guesses the parser type to use depending on the file extension.
   def parser_type_for_filename(filename); end
+
+  # Runs a {Handlers::Processor} object to post process the parsed statements.
   def post_process; end
 
   class << self
+    # Registers a callback to be called after an individual file is parsed.
+    # The block passed to this method will be called on subsequent parse
+    # calls.
+    #
+    # To register a callback that is called after the entire list of files
+    # is processed, see {after_parse_list}.
     def after_parse_file(&block); end
+
     def after_parse_file_callbacks; end
+
+    # Registers a callback to be called after a list of files is parsed
+    # via {parse}. The block passed to this method will be called on
+    # subsequent parse calls.
     def after_parse_list(&block); end
+
     def after_parse_list_callbacks; end
+
+    # Registers a callback to be called before an individual file is parsed.
+    # The block passed to this method will be called on subsequent parse
+    # calls.
+    #
+    # To register a callback that is called before the entire list of files
+    # is processed, see {before_parse_list}.
     def before_parse_file(&block); end
+
     def before_parse_file_callbacks; end
+
+    # Registers a callback to be called before a list of files is parsed
+    # via {parse}. The block passed to this method will be called on
+    # subsequent parse calls.
     def before_parse_list(&block); end
+
     def before_parse_list_callbacks; end
+
+    # Parses a path or set of paths
     def parse(paths = T.unsafe(nil), excluded = T.unsafe(nil), level = T.unsafe(nil)); end
+
+    # Parses a string +content+
     def parse_string(content, ptype = T.unsafe(nil)); end
+
     def parser_type; end
     def parser_type=(value); end
     def parser_type_extensions; end
     def parser_type_extensions=(value); end
+
+    # Finds a parser type that is registered for the extension. If no
+    # type is found, the default Ruby type is returned.
     def parser_type_for_extension(extension); end
+
     def parser_types; end
     def parser_types=(value); end
+
+    # Registers a new parser type.
     def register_parser_type(type, parser_klass, extensions = T.unsafe(nil)); end
+
+    # Tokenizes but does not parse the block of code
     def tokenize(content, ptype = T.unsafe(nil)); end
+
+    # Returns the validated parser type. Basically, enforces that :ruby
+    # type is never set if the Ripper library is not available
     def validated_parser_type(type); end
 
     private
 
+    # Parses a list of files in a queue.
     def parse_in_order(*files); end
   end
 end
 
+# The default glob of files to be parsed.
 YARD::Parser::SourceParser::DEFAULT_PATH_GLOB = T.let(T.unsafe(nil), Array)
+
+# Byte order marks for various encodings
 YARD::Parser::SourceParser::ENCODING_BYTE_ORDER_MARKS = T.let(T.unsafe(nil), Hash)
+
 YARD::Parser::SourceParser::ENCODING_LINE = T.let(T.unsafe(nil), Regexp)
 YARD::Parser::SourceParser::FROZEN_STRING_LINE = T.let(T.unsafe(nil), Regexp)
 YARD::Parser::SourceParser::SHEBANG_LINE = T.let(T.unsafe(nil), Regexp)
+
+# Raised when an object is recognized but cannot be documented. This
+# generally occurs when the Ruby syntax used to declare an object is
+# too dynamic in nature.
 class YARD::Parser::UndocumentableError < ::RuntimeError; end
+
+# The root path for YARD source libraries
 YARD::ROOT = T.let(T.unsafe(nil), String)
+
+# Holds Rake tasks used by YARD
 module YARD::Rake; end
 
+# The rake task to run {CLI::Yardoc} and generate documentation.
 class YARD::Rake::YardocTask < ::Rake::TaskLib
+  # Creates a new task with name +name+.
   def initialize(name = T.unsafe(nil)); end
 
+  # Runs a +Proc+ after the task
   def after; end
+
+  # Runs a +Proc+ after the task
   def after=(_arg0); end
+
+  # Runs a +Proc+ before the task
   def before; end
+
+  # Runs a +Proc+ before the task
   def before=(_arg0); end
+
+  # The Ruby source files (and any extra documentation files separated by '-')
+  # to process.
   def files; end
+
+  # The Ruby source files (and any extra documentation files separated by '-')
+  # to process.
   def files=(_arg0); end
+
+  # The name of the task
   def name; end
+
+  # The name of the task
   def name=(_arg0); end
+
+  # Options to pass to {CLI::Yardoc}
   def options; end
+
+  # Options to pass to {CLI::Yardoc}
   def options=(_arg0); end
+
+  # Options to pass to {CLI::Stats}
   def stats_options; end
+
+  # Options to pass to {CLI::Stats}
   def stats_options=(_arg0); end
+
   def verifier; end
   def verifier=(_arg0); end
 
   protected
 
+  # Defines the rake task
   def define; end
 end
 
+# The +Registry+ is the centralized data store for all {CodeObjects} created
+# during parsing. The storage is a key value store with the object's path
+# (see {CodeObjects::Base#path}) as the key and the object itself as the value.
+# Object paths must be unique to be stored in the Registry. All lookups for
+# objects are done on the singleton Registry instance using the {Registry.at}
+# or {Registry.resolve} methods.
+#
+# == Saving / Loading a Registry
+# The registry is saved to a "yardoc file" (actually a directory), which can
+# be loaded back to perform any lookups. See {Registry.load!} and
+# {Registry.save} for information on saving and loading of a yardoc file.
+#
+# == Threading Notes
+# The registry class is a singleton class that is accessed directly in many
+# places across YARD. To mitigate threading issues, YARD (0.6.5+) makes
+# the Registry thread local. This means all access to a registry for a specific
+# object set must occur in the originating thread.
 module YARD::Registry
   extend ::Enumerable
 
   class << self
+    # Returns the object at a specific path.
     def [](path); end
+
+    # Returns all objects in the registry that match one of the types provided
+    # in the +types+ list (if +types+ is provided).
     def all(*types); end
+
+    # Returns the object at a specific path.
     def at(path); end
+
     def checksum_for(data); end
     def checksums; end
+
+    # Clears the registry
     def clear; end
+
+    # Deletes an object from the registry
     def delete(object); end
+
+    # Deletes the yardoc file from disk
     def delete_from_disk; end
+
+    # Iterates over {all} with no arguments
     def each(&block); end
+
+    # The registry singleton instance.
     def instance; end
+
+    # Loads the registry and/or parses a list of files
     def load(files = T.unsafe(nil), reparse = T.unsafe(nil)); end
+
+    # Loads a yardoc file and forces all objects cached on disk into
+    # memory. Equivalent to calling {load_yardoc} followed by {load_all}
     def load!(file = T.unsafe(nil)); end
+
+    # Forces all objects cached on disk into memory
     def load_all; end
+
+    # Loads a yardoc file directly
     def load_yardoc(file = T.unsafe(nil)); end
+
     def locale(name); end
+
+    # Creates a pessmistic transactional lock on the database for writing.
+    # Use with {YARD.parse} to ensure the database is not written multiple
+    # times.
     def lock_for_writing(file = T.unsafe(nil), &block); end
+
     def locked_for_writing?(file = T.unsafe(nil)); end
+
+    # Returns the paths of all of the objects in the registry.
     def paths(reload = T.unsafe(nil)); end
+
+    # Gets/sets the directory that has LANG.po files
     def po_dir; end
+
+    # Gets/sets the directory that has LANG.po files
     def po_dir=(dir); end
+
+    # The assumed types of a list of paths. This method is used by CodeObjects::Base
     def proxy_types; end
+
+    # Registers a new object with the registry
     def register(object); end
+
+    # Attempts to find an object by name starting at +namespace+, performing
+    # a lookup similar to Ruby's method of resolving a constant in a namespace.
     def resolve(namespace, name, inheritance = T.unsafe(nil), proxy_fallback = T.unsafe(nil), type = T.unsafe(nil)); end
+
+    # The root namespace object.
     def root; end
+
+    # Saves the registry to +file+
     def save(merge = T.unsafe(nil), file = T.unsafe(nil)); end
+
+    # Whether or not the Registry storage should load everything into a
+    # single object database (for disk efficiency), or spread them out
+    # (for load time efficiency).
     def single_object_db; end
+
+    # Whether or not the Registry storage should load everything into a
+    # single object database (for disk efficiency), or spread them out
+    # (for load time efficiency).
     def single_object_db=(v); end
+
+    # Gets/sets the yardoc filename
     def yardoc_file; end
+
+    # Gets/sets the yardoc filename
     def yardoc_file=(v); end
+
+    # Returns the .yardoc file associated with a gem.
     def yardoc_file_for_gem(gem, ver_require = T.unsafe(nil), for_writing = T.unsafe(nil)); end
 
     private
@@ -2735,7 +4954,10 @@ module YARD::Registry
     def global_yardoc_file(spec, for_writing = T.unsafe(nil)); end
     def local_yardoc_file(spec, for_writing = T.unsafe(nil)); end
     def old_global_yardoc_file(spec, for_writing = T.unsafe(nil)); end
+
+    # Attempts to resolve a name in a namespace
     def partial_resolve(namespace, name, type = T.unsafe(nil)); end
+
     def thread_local_resolver; end
     def thread_local_store; end
     def thread_local_store=(value); end
@@ -2746,47 +4968,102 @@ YARD::Registry::DEFAULT_PO_DIR = T.let(T.unsafe(nil), String)
 YARD::Registry::DEFAULT_YARDOC_FILE = T.let(T.unsafe(nil), String)
 YARD::Registry::LOCAL_YARDOC_INDEX = T.let(T.unsafe(nil), String)
 
+# Handles all logic for complex lexical and inherited object resolution.
+# Used by {Registry.resolve}, so there is no need to use this class
+# directly.
 class YARD::RegistryResolver
   include ::YARD::CodeObjects::NamespaceMapper
 
+  # Creates a new resolver object for a registry.
   def initialize(registry = T.unsafe(nil)); end
 
+  # Performs a lookup on a given path in the registry. Resolution will occur
+  # in a similar way to standard Ruby identifier resolution, doing lexical
+  # lookup, as well as (optionally) through the inheritance chain. A proxy
+  # object can be returned if the lookup fails for future resolution. The
+  # proxy will be type hinted with the +type+ used in the original lookup.
   def lookup_by_path(path, opts = T.unsafe(nil)); end
 
   private
 
+  # Collects and returns all inherited namespaces for a given object
   def collect_namespaces(object); end
+
+  # Performs a lexical lookup from a namespace for a path and a type hint.
   def lookup_path_direct(namespace, path, type); end
+
+  # Performs a lookup through the inheritance chain on a path with a type hint.
   def lookup_path_inherited(namespace, path, type); end
+
   def split_on_separators_match; end
   def starts_with_default_separator_match; end
   def starts_with_separator_match; end
+
+  # return [Boolean] if the obj's type matches the provided type.
   def validate(obj, type); end
 end
 
+# The data store for the {Registry}.
 class YARD::RegistryStore
   def initialize; end
 
+  # Gets a {CodeObjects::Base} from the store
   def [](key); end
+
+  # Associates an object with a path
   def []=(key, value); end
+
+  # Returns the value of attribute checksums.
   def checksums; end
+
+  # Deletes an object at a given path
   def delete(key); end
+
+  # Deletes the .yardoc database on disk
   def destroy(force = T.unsafe(nil)); end
+
+  # Returns the value of attribute file.
   def file; end
+
+  # Gets a {CodeObjects::Base} from the store
   def get(key); end
+
+  # Gets all path names from the store. Loads the entire database
+  # if +reload+ is +true+
   def keys(reload = T.unsafe(nil)); end
+
   def load(file = T.unsafe(nil)); end
+
+  # Loads the .yardoc file and loads all cached objects into memory
+  # automatically.
   def load!(file = T.unsafe(nil)); end
+
+  # Loads all cached objects into memory
   def load_all; end
+
   def locale(name); end
+
+  # Creates a pessmistic transactional lock on the database for writing.
+  # Use with {YARD.parse} to ensure the database is not written multiple
+  # times.
   def lock_for_writing(file = T.unsafe(nil), &block); end
+
   def locked_for_writing?(file = T.unsafe(nil)); end
   def paths_for_type(type, reload = T.unsafe(nil)); end
   def proxy_types; end
+
+  # Associates an object with a path
   def put(key, value); end
+
   def root; end
+
+  # Saves the database to disk
   def save(merge = T.unsafe(nil), file = T.unsafe(nil)); end
+
+  # Gets all code objects from the store. Loads the entire database
+  # if +reload+ is +true+
   def values(reload = T.unsafe(nil)); end
+
   def values_for_type(type, reload = T.unsafe(nil)); end
 
   protected
@@ -2812,50 +5089,104 @@ class YARD::RegistryStore
   def write_proxy_types; end
 end
 
+# Namespace for components that serialize to various endpoints
 module YARD::Serializers; end
 
+# The abstract base serializer. Serializers allow templates to be
+# rendered to various endpoints. For instance, a {FileSystemSerializer}
+# would allow template contents to be written to the filesystem
+#
+# To implement a custom serializer, override the following methods:
+# * {#serialize}
+# * {#serialized_path}
+#
+# Optionally, a serializer can implement before and after filters:
+# * {#before_serialize}
+# * {#after_serialize}
 class YARD::Serializers::Base
+  # Creates a new serializer with options
   def initialize(opts = T.unsafe(nil)); end
 
+  # Called after serialization.
   def after_serialize(data); end
+
+  # Called before serialization.
   def before_serialize; end
+
+  # Returns whether an object has been serialized
   def exists?(object); end
+
+  # All serializer options are saved so they can be passed to other serializers.
   def options; end
+
+  # Serializes an object.
   def serialize(object, data); end
+
+  # The serialized path of an object
   def serialized_path(object); end
 end
 
+# Implements a serializer that reads from and writes to the filesystem.
 class YARD::Serializers::FileSystemSerializer < ::YARD::Serializers::Base
+  # Creates a new FileSystemSerializer with options
   def initialize(opts = T.unsafe(nil)); end
 
+  # The base path to write data to.
   def basepath; end
+
   def basepath=(value); end
+
+  # Checks the disk for an object and returns whether it was serialized.
   def exists?(object); end
+
+  # The extension of the filename (defaults to +html+)
   def extension; end
+
   def extension=(value); end
+
+  # Serializes object with data to its serialized path (prefixed by the +#basepath+).
   def serialize(object, data); end
+
+  # Implements the serialized path of a code object.
   def serialized_path(object); end
 
   private
 
+  # Builds a filename mapping from object paths to filesystem path names.
+  # Needed to handle case sensitive YARD objects mapped into a case
+  # insensitive filesystem. Uses with {#mapped_name} to determine the
+  # mapping name for a given object.
   def build_filename_map; end
+
+  # Remove special chars from filenames.
+  # Windows disallows \ / : * ? " < > | but we will just remove any
+  # non alphanumeric (plus period, underscore and dash).
   def encode_path_components(*components); end
+
   def mapped_name(object); end
 end
 
+# Serializes an object to a process (like less)
 class YARD::Serializers::ProcessSerializer < ::YARD::Serializers::Base
+  # Creates a new ProcessSerializer for the shell command +cmd+
   def initialize(cmd); end
 
+  # Overrides serialize behaviour and writes data to standard input
+  # of the associated command
   def serialize(_object, data); end
 end
 
+# A serializer that writes data to standard output.
 class YARD::Serializers::StdoutSerializer < ::YARD::Serializers::Base
+  # Creates a serializer to print text to stdout
   def initialize(wrap = T.unsafe(nil)); end
 
+  # Overrides serialize behaviour to write data to standard output
   def serialize(_object, data); end
 
   private
 
+  # Wraps text to a specific column length
   def word_wrap(text, _length = T.unsafe(nil)); end
 end
 
@@ -2866,7 +5197,12 @@ class YARD::Serializers::YardocSerializer < ::YARD::Serializers::FileSystemSeria
   def complete?; end
   def complete_lock_path; end
   def deserialize(path, is_path = T.unsafe(nil)); end
+
+  # Creates a pessmistic transactional lock on the database for writing.
+  # Use with {YARD.parse} to ensure the database is not written multiple
+  # times.
   def lock_for_writing; end
+
   def locked_for_writing?; end
   def object_types_path; end
   def objects_path; end
@@ -2881,16 +5217,36 @@ class YARD::Serializers::YardocSerializer < ::YARD::Serializers::FileSystemSeria
   def internal_dump(object, first_object = T.unsafe(nil)); end
 end
 
+# Namespace for classes and modules that handle serving documentation over HTTP
+#
+# == Implementing a Custom Server
+# To customize the YARD server, see the {Adapter} and {Router} classes.
+#
+# == Rack Middleware
+# If you want to use the YARD server as a Rack middleware, see the documentation
+# in {RackMiddleware}.
 module YARD::Server
   class << self
+    # Registers a static path to be used in static asset lookup.
     def register_static_path(path); end
   end
 end
 
+# This class implements the bridge between the {Router} and the server
+# backend for a specific server type. YARD implements concrete adapters
+# for WEBrick and Rack respectively, though other adapters can be made
+# for other server architectures.
+#
+# == Subclassing Notes
+# To create a concrete adapter class, implement the {#start} method to
+# initiate the server backend.
 class YARD::Server::Adapter
+  # Creates a new adapter object
   def initialize(libs, opts = T.unsafe(nil), server_opts = T.unsafe(nil)); end
 
+  # Adds a library to the {#libraries} mapping for a given library object.
   def add_library(library); end
+
   def document_root; end
   def document_root=(_arg0); end
   def libraries; end
@@ -2901,17 +5257,51 @@ class YARD::Server::Adapter
   def router=(_arg0); end
   def server_options; end
   def server_options=(_arg0); end
+
+  # Implement this method to connect your adapter to your server.
   def start; end
 
   class << self
+    # Performs any global initialization for the adapter.
     def setup; end
+
+    # Performs any global shutdown procedures for the adapter.
     def shutdown; end
   end
 end
 
+# Commands implement specific kinds of server responses which are routed
+# to by the {Router} class. To implement a custom command, subclass {Commands::Base}.
 module YARD::Server::Commands; end
 
+# This is the base command class used to implement custom commands for
+# a server. A command will be routed to by the {Router} class and return
+# a Rack-style response.
+#
+# == Attribute Initializers
+# All attributes can be initialized via options passed into the {#initialize}
+# method. When creating a custom command, the {Adapter#options} will
+# automatically be mapped to attributes by the same name on your class.
+#
+# class MyCommand < Base
+# attr_accessor :myattr
+# end
+#
+# Adapter.new(libs, {:myattr => 'foo'}).start
+#
+# # when a request comes in, cmd.myattr == 'foo'
+#
+# == Subclassing Notes
+# To implement a custom command, override the {#run} method, not {#call}.
+# In your implementation, you should set the body and status for requests.
+# See details in the +#run+ method documentation.
+#
+# Note that if your command deals directly with libraries, you should
+# consider subclassing the more specific {LibraryCommand} class instead.
 class YARD::Server::Commands::Base
+  # Creates a new command object, setting attributes named by keys
+  # in the options hash. After initialization, the options hash
+  # is saved in {#command_options} for further inspection.
   def initialize(opts = T.unsafe(nil)); end
 
   def adapter; end
@@ -2920,7 +5310,10 @@ class YARD::Server::Commands::Base
   def body=(_arg0); end
   def caching; end
   def caching=(_arg0); end
+
+  # The main method called by a router with a request object.
   def call(request); end
+
   def command_options; end
   def command_options=(_arg0); end
   def headers; end
@@ -2929,28 +5322,46 @@ class YARD::Server::Commands::Base
   def path=(_arg0); end
   def request; end
   def request=(_arg0); end
+
+  # Subclass this method to implement a custom command. This method
+  # should set the {#status} and {#body}, and optionally modify the
+  # {#headers}. Note that +#status+ defaults to 200.
   def run; end
+
   def status; end
   def status=(_arg0); end
 
   protected
 
+  # Override this method to implement custom caching mechanisms for
   def cache(data); end
+
+  # Sets the body and headers for a 404 response. Does not modify the
+  # body if already set.
   def not_found; end
+
+  # Sets the headers and status code for a redirection to a given URL
   def redirect(url); end
+
+  # Renders a specific object if provided, or a regular template rendering
+  # if object is not provided.
   def render(object = T.unsafe(nil)); end
 
   private
 
+  # Add a conservative cache control policy to reduce load on
+  # requests served with "?1234567890" style timestamp query strings.
   def add_cache_control; end
 end
 
+# Displays a README or extra file.
 class YARD::Server::Commands::DisplayFileCommand < ::YARD::Server::Commands::LibraryCommand
   def index; end
   def index=(_arg0); end
   def run; end
 end
 
+# Displays documentation for a specific object identified by the path
 class YARD::Server::Commands::DisplayObjectCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Server::DocServerHelper
 
@@ -2963,10 +5374,15 @@ class YARD::Server::Commands::DisplayObjectCommand < ::YARD::Server::Commands::L
   def object_path; end
 end
 
+# Displays an object wrapped in frames
 class YARD::Server::Commands::FramesCommand < ::YARD::Server::Commands::DisplayObjectCommand
   def run; end
 end
 
+# This is the base command for all commands that deal directly with libraries.
+# Some commands do not, but most (like {DisplayObjectCommand}) do. If your
+# command deals with libraries directly, subclass this class instead.
+# See {Base} for notes on how to subclass a command.
 class YARD::Server::Commands::LibraryCommand < ::YARD::Server::Commands::Base
   def initialize(opts = T.unsafe(nil)); end
 
@@ -2989,7 +5405,12 @@ class YARD::Server::Commands::LibraryCommand < ::YARD::Server::Commands::Base
   def call_with_fork(request, &block); end
   def call_without_fork(request); end
   def can_fork?; end
+
+  # Hack to load a custom fulldoc template object that does
+  # not do any rendering/generation. We need this to access the
+  # generate_*_list methods.
   def fulldoc_template; end
+
   def load_yardoc; end
   def not_prepared; end
   def restore_template_info; end
@@ -3000,6 +5421,7 @@ end
 
 YARD::Server::Commands::LibraryCommand::CAN_FORK = T.let(T.unsafe(nil), TrueClass)
 
+# Returns the index of libraries served by the server.
 class YARD::Server::Commands::LibraryIndexCommand < ::YARD::Server::Commands::Base
   def options; end
   def options=(_arg0); end
@@ -3032,12 +5454,15 @@ class YARD::Server::Commands::LibraryOptions < ::YARD::CLI::YardocOptions
   def single_library; end
 end
 
+# Returns a list of objects of a specific type
 class YARD::Server::Commands::ListCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
 
   def run; end
 end
 
+# Performs a search over the objects inside of a library and returns
+# the results as HTML or plaintext
 class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
   include ::YARD::Templates::Helpers::ModuleHelper
@@ -3058,20 +5483,39 @@ class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryC
   def url_for(object); end
 end
 
+# A module that is mixed into {Templates::Template} in order to customize
+# certain template methods.
 module YARD::Server::DocServerHelper
   def abs_url(*path_components); end
   def base_path(path); end
   def mtime(file); end
   def mtime_url(file); end
   def router; end
+
+  # Modifies {Templates::Helpers::HtmlHelper#url_for} to return a URL instead
+  # of a disk location.
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
+
+  # Modifies {Templates::Helpers::HtmlHelper#url_for_file} to return a URL instead
+  # of a disk location.
   def url_for_file(filename, anchor = T.unsafe(nil)); end
+
+  # Returns the frames URL for the page
   def url_for_frameset; end
+
+  # Returns the URL for the alphabetic index page
   def url_for_index; end
+
+  # Modifies {Templates::Helpers::HtmlHelper#url_for_list} to return a URL
+  # based on the list prefix instead of a HTML filename.
   def url_for_list(type); end
+
+  # Returns the main URL, first checking a readme and then linking to the index
   def url_for_main; end
 end
 
+# A custom {Serializers::Base serializer} which returns resource URLs instead of
+# static relative paths to files on disk.
 class YARD::Server::DocServerSerializer < ::YARD::Serializers::FileSystemSerializer
   def initialize(_command = T.unsafe(nil)); end
 
@@ -3082,9 +5526,70 @@ class YARD::Server::DocServerSerializer < ::YARD::Serializers::FileSystemSeriali
   def urlencode(name); end
 end
 
+# Short circuits a request by raising an error. This exception is caught
+# by {Commands::Base#call} to immediately end a request and return a response.
 class YARD::Server::FinishRequest < ::RuntimeError; end
+
+# This exception is raised when {LibraryVersion#prepare!} fails, or discovers
+# that the library is not "prepared" to be served by
 class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
 
+# A library version encapsulates a library's documentation at a specific version.
+# Although the version is optional, this allows for creating multiple documentation
+# points for a specific library, each representing a unique version. The term
+# "library" used in other parts of the YARD::Server documentation refers to
+# objects of this class unless otherwise noted.
+#
+# A library points to a location where a {#yardoc_file} is located so that
+# its documentation may be loaded and served. Optionally, a {#source_path} is
+# given to point to a location where any extra files (and {YARD::CLI::Yardoc .yardopts})
+# should be loaded from. Both of these methods may not be known immediately,
+# since the yardoc file may not be built until later. Resolving the yardoc
+# file and source path are dependent on the specific library "source type" used.
+# Source types (known as "library source") are discussed in detail below.
+#
+# == Using with Adapters
+# A list of libraries need to be passed into adapters upon creation. In
+# most cases, you will never do this manually, but if you use a {RackMiddleware},
+# you will need to pass in this list yourself. To build this list of libraries,
+# you should create a hash of library names mapped to an *Array* of LibraryVersion
+# objects. For example:
+#
+# {'mylib' => [LibraryVersion.new('mylib', '1.0', ...),
+# LibraryVersion.new('mylib', '2.0', ...)]}
+#
+# Note that you can also use {Adapter#add_library} for convenience.
+#
+# The "array" part is required, even for just one library version.
+#
+# == Library Sources
+# The {#source} method represents the library source type, ie. where the
+# library "comes from". It might come from "disk", or it might come from a
+# "gem" (technically the disk, but a separate type nonetheless). In these
+# two cases, the yardoc file sits somewhere on your filesystem, though
+# it may also be built dynamically if it does not yet exist. This behaviour
+# is controlled through the {#prepare!} method, which prepares the yardoc file
+# given a specific library source. We will see how this works in detail in
+# the following section.
+#
+# == Implementing a Custom Library Source
+# YARD can be extended to support custom library sources in order to
+# build or retrieve a yardoc file at runtime from many different locations.
+#
+# To implement this behaviour, 3 methods can be added to the +LibraryVersion+
+# class, +#load_yardoc_from_SOURCE+, +#yardoc_file_for_SOURCE+, and
+# +#source_path_for_SOURCE+. In all cases, "SOURCE" represents the source
+# type used in {#source} when creating the library object. The
+# +#yardoc_file_for_SOURCE+ and +#source_path_for_SOURCE+ methods are called upon
+# creation and should return the location where the source code for the library
+# lives. The load method is called from {#prepare!} if there is no yardoc file
+# and should set {#yardoc_file}. Below is a full example for
+# implementing a custom library source, +:http+, which reads packaged .yardoc
+# databases from zipped archives off of an HTTP server.
+#
+# Note that only +#load_yardoc_from_SOURCE+ is required. The other two
+# methods are optional and can be set manually (via {#source_path=} and
+# {#yardoc_file=}) on the object at any time.
 class YARD::Server::LibraryVersion
   def initialize(name, version = T.unsafe(nil), yardoc = T.unsafe(nil), source = T.unsafe(nil)); end
 
@@ -3095,7 +5600,14 @@ class YARD::Server::LibraryVersion
   def hash; end
   def name; end
   def name=(_arg0); end
+
+  # Prepares a library to be displayed by the server. This callback is
+  # performed before each request on a library to ensure that it is loaded
+  # and ready to be viewed. If any steps need to be performed prior to loading,
+  # they are performed through this method (though they should be implemented
+  # through the +load_yardoc_from_SOURCE+ method).
   def prepare!; end
+
   def ready?; end
   def source; end
   def source=(_arg0); end
@@ -3109,8 +5621,16 @@ class YARD::Server::LibraryVersion
 
   protected
 
+  # Called when a library of source type "disk" is to be prepared. In this
+  # case, the {#yardoc_file} should already be set, but the library may not
+  # be prepared. Run preparation if not done.
   def load_yardoc_from_disk; end
+
+  # Called when a library of source type "gem" is to be prepared. In this
+  # case, the {#yardoc_file} needs to point to the correct location for
+  # the installed gem. The yardoc file is built if it has not been done.
   def load_yardoc_from_gem; end
+
   def source_path_for_disk; end
   def source_path_for_gem; end
   def yardoc_file_for_gem; end
@@ -3122,17 +5642,41 @@ class YARD::Server::LibraryVersion
   def serializer; end
 end
 
+# Raises an error if a resource is not found. This exception is caught by
+# {Commands::Base#call} to immediately end a request and return a 404 response
+# code. If a message is provided, the body is set to the exception message.
 class YARD::Server::NotFoundError < ::RuntimeError; end
 
+# A router class implements the logic used to recognize a request for a specific
+# URL and run specific {Commands::Base commands}.
+#
+# == Subclassing Notes
+# To create a custom router, subclass this class and pass it into the adapter
+# options through {Adapter#initialize} or by directly modifying {Adapter#router}.
+#
+# The most general customization is to change the URL prefixes recognized by
+# routing, which can be done by overriding {#docs_prefix}, {#list_prefix},
+# {#static_prefix}, and {#search_prefix}.
+#
+# == Implementing Custom Caching
+# By default, the Router class performs static disk-based caching on all
+# requests through the +#check_static_cache+. To override this behaviour,
+# or create your own caching mechanism, mixin your own custom module with
+# this method implemented as per {StaticCaching#check_static_cache}.
 class YARD::Server::Router
   include ::YARD::Server::StaticCaching
   include ::YARD::Server::Commands
 
+  # Creates a new router for a specific adapter
   def initialize(adapter); end
 
   def adapter; end
   def adapter=(_arg0); end
+
+  # Perform routing on a specific request, serving the request as a static
+  # file through {Commands::RootRequestCommand} if no route is found.
   def call(request); end
+
   def docs_prefix; end
   def list_prefix; end
   def parse_library_from_path(paths); end
@@ -3143,19 +5687,43 @@ class YARD::Server::Router
 
   protected
 
+  # Adds extra :library/:path option keys to the adapter options.
+  # Use this method when passing options to a command.
   def final_options(library, paths); end
+
+  # Performs routing algorithm to find which prefix is called, first
+  # parsing out library name/version information.
   def route(path = T.unsafe(nil)); end
+
+  # Routes requests from {#docs_prefix} and calls the appropriate command
   def route_docs(library, paths); end
+
+  # Routes for the index of a library / multiple libraries
   def route_index; end
+
+  # Routes requests from {#list_prefix} and calls the appropriate command
   def route_list(library, paths); end
+
+  # Routes requests from {#search_prefix} and calls the appropriate command
   def route_search(library, paths); end
+
   def route_static(library, paths); end
 end
 
+# Implements static caching for requests.
 module YARD::Server::StaticCaching
+  # Called by a router to return the cached object. By default, this
+  # method performs disk-based caching. To perform other forms of caching,
+  # implement your own +#check_static_cache+ method and mix the module into
+  # the Router class.
+  #
+  # Note that caching does not occur here. This method simply checks for
+  # the existence of cached data. To actually cache a response, see
+  # {Commands::Base#cache}.
   def check_static_cache; end
 end
 
+# Stubs marshal dumps and acts a delegate class for an object by path
 class YARD::StubProxy
   def initialize(path, transient = T.unsafe(nil)); end
 
@@ -3169,9 +5737,21 @@ class YARD::StubProxy
 end
 
 YARD::StubProxy::FILELEN = T.let(T.unsafe(nil), Integer)
+
+# The root path for YARD builtin templates
 YARD::TEMPLATE_ROOT = T.let(T.unsafe(nil), String)
+
+# Namespace for Tag components
 module YARD::Tags; end
 
+# Defines an attribute with a given name, using indented block data as the
+# attribute's docstring. If the type specifier is supplied with "r", "w", or
+# "rw", the attribute is made readonly, writeonly or readwrite respectively.
+# A readwrite attribute is the default, if no type is specified. The comment
+# containing this directive does not need to be attached to any source, but
+# if it is, that source code will be used as the method's source.
+#
+# To define a regular method, see {tag:!method}
 class YARD::Tags::AttributeDirective < ::YARD::Tags::MethodDirective
   def after_parse; end
 
@@ -3188,20 +5768,40 @@ class YARD::Tags::AttributeDirective < ::YARD::Tags::MethodDirective
 end
 
 class YARD::Tags::DefaultFactory
+  # Parses tag text and creates a new tag with descriptive text
   def parse_tag(tag_name, text); end
+
+  # Parses tag text and creates a new tag with a key name and descriptive text
   def parse_tag_with_name(tag_name, text); end
+
   def parse_tag_with_options(tag_name, text); end
   def parse_tag_with_title_and_text(tag_name, text); end
+
+  # Parses tag text and creates a new tag with formally declared types and
+  # descriptive text
   def parse_tag_with_types(tag_name, text); end
+
+  # Parses tag text and creates a new tag with formally declared types, a key
+  # name and descriptive text
   def parse_tag_with_types_and_name(tag_name, text); end
+
+  # Parses tag text and creates a new tag with formally declared types, a title
+  # on the first line and descriptive text
   def parse_tag_with_types_and_title(tag_name, text); end
+
   def parse_tag_with_types_name_and_default(tag_name, text); end
 
   private
 
+  # Extracts the name from raw tag text returning the name and remaining value
   def extract_name_from_text(text); end
+
   def extract_title_and_desc_from_text(text); end
+
+  # Parses a [], <>, {} or () block at the beginning of a line of text
+  # into a list of comma delimited values.
   def extract_types_and_name_from_text(text, opening_types = T.unsafe(nil), closing_types = T.unsafe(nil)); end
+
   def extract_types_and_name_from_text_unstripped(text, opening_types = T.unsafe(nil), closing_types = T.unsafe(nil)); end
 end
 
@@ -3211,16 +5811,44 @@ YARD::Tags::DefaultFactory::TYPELIST_OPENING_CHARS = T.let(T.unsafe(nil), String
 class YARD::Tags::DefaultTag < ::YARD::Tags::Tag
   def initialize(tag_name, text, types = T.unsafe(nil), name = T.unsafe(nil), defaults = T.unsafe(nil)); end
 
+  # Returns the value of attribute defaults.
   def defaults; end
 end
 
+# The base directive class. Subclass this class to create a custom
+# directive, registering it with {Library.define_directive}. Directive
+# classes are executed via the {#call} method, which perform all directive
+# processing on the object.
+#
+# If processing occurs within a handler, the {#handler} attribute is
+# available to access more information about parsing context and state.
+# Handlers are only available when parsing from {Parser::SourceParser},
+# not when parsing directly from {DocstringParser}. If the docstring is
+# attached to an object declaration, {#object} will be set and available
+# to modify the generated code object directly. Note that both of these
+# attributes may be nil, and directives should test their existence
+# before attempting to use them.
 class YARD::Tags::Directive
   def initialize(tag, parser); end
 
+  # Called after parsing all directives and tags in the docstring. Used
+  # to perform any cleanup after all directives perform their main task.
   def after_parse; end
+
+  # Called when processing the directive. Subclasses should implement
+  # this method to perform all functionality of the directive.
   def call; end
+
+  # Set this field to replace the directive definition inside of a docstring
+  # with arbitrary text. For instance, the {MacroDirective} uses this field
+  # to expand its macro data in place of the call to a +@!macro+.
   def expanded_text; end
+
+  # Set this field to replace the directive definition inside of a docstring
+  # with arbitrary text. For instance, the {MacroDirective} uses this field
+  # to expand its macro data in place of the call to a +@!macro+.
   def expanded_text=(_arg0); end
+
   def handler; end
   def object; end
   def parser=(_arg0); end
@@ -3232,52 +5860,237 @@ class YARD::Tags::Directive
   def parser; end
 end
 
+# Ends a group listing definition. Group definition automatically end
+# when class or module blocks are closed, and defining a new group overrides
+# the last group definition, but occasionally you need to end the current
+# group to return to the default listing. Use {tag:!group} to begin a
+# group listing.
 class YARD::Tags::EndGroupDirective < ::YARD::Tags::Directive
   def call; end
 end
 
+# Defines a group listing. All methods (and attributes) seen after this
+# directive are placed into a group with the given description as the
+# group name. The group listing is used by templates to organize methods
+# and attributes into respective logical groups. To end a group listing
+# use {tag:!endgroup}.
 class YARD::Tags::GroupDirective < ::YARD::Tags::Directive
   def call; end
 end
 
+# Keeps track of all the registered meta-data tags and directives.
+# Also allows for defining of custom tags and customizing the tag parsing
+# syntax.
+#
+# == Defining Custom Meta-Data Tags
+#
+# To define a custom tag, use {define_tag}. You should pass the tag
+# name and the factory method to use when creating the tag. If you do not
+# provide a factory method to use, it will default to {DefaultFactory#parse_tag}
+#
+# You can also define tag objects manually by simply implementing a "tagname_tag"
+# method that returns a {Tag} object, but they will not take advantage of tag factory
+# parsing:
+#
+# def mytag_tag(text)
+# Tag.new(:mytag, text)
+# end
+#
+# == Defining Custom Directives
+#
+# Directives can be defined by calling the {define_directive} method, taking
+# the directive name, an optional tag factory parser method (to parse the
+# data in the directive into a temporary {Tag} object) and a {Directive} subclass
+# that performs the directive processing. For more information on creating a
+# Directive subclass, see the {Directive} class documentation.
+#
+# Similar to tags, Directives can also be defined manually, in this case using
+# the method name "mydirective_directive" and returning a new {Directive} object:
+#
+# def mydirective_directive(tag, parser)
+# MyDirective.new(tag, parser)
+# end
+#
+# == Namespaced Tags
+#
+# In YARD 0.8.0+, tags can be namespaced using the '.' character. It is recommended
+# to namespace project specific tags, like +@yard.tag_name+, so that tags do not
+# collide with other plugins or new built-in tags.
+#
+# == Adding/Changing the Tag Syntax
+#
+# If you have specialized tag parsing needs you can substitute the {#factory}
+# object with your own by setting {Library.default_factory= Library.default_factory}
+# to a new class with its own parsing methods before running YARD. This is useful
+# if you want to change the syntax of existing tags (@see, @since, etc.)
 class YARD::Tags::Library
   def initialize(factory = T.unsafe(nil)); end
 
+  # Marks a class/module/method as abstract with optional
+  # implementor information.
   def abstract_tag(text); end
+
+  # Declares the API that the object belongs to. Does not display in
+  # output, but useful for performing queries (+yardoc --query+). Any text is
+  # allowable in this tag, and there are no predefined values.
   def api_tag(text); end
+
+  # Declares a readonly attribute on a Struct or class.
   def attr_reader_tag(text); end
+
+  # Declares a readwrite attribute on a Struct or class.
   def attr_tag(text); end
+
+  # Declares a writeonly attribute on a Struct or class.
   def attr_writer_tag(text); end
+
   def attribute_directive(tag, parser); end
+
+  # List the author or authors of a class, module, or method.
   def author_tag(text); end
+
+  # Marks a method/class as deprecated with an optional description.
+  # The description should be used to inform users of the recommended
+  # migration path, and/or any useful information about why the object
+  # was marked as deprecated.
   def deprecated_tag(text); end
+
+  # Creates a new directive with tag information and a docstring parser
+  # object.
   def directive_create(tag_name, tag_buf, parser); end
+
   def endgroup_directive(tag, parser); end
+
+  # Show an example snippet of code for an object. The first line
+  # is an optional title.
   def example_tag(text); end
+
+  # A factory class to handle parsing of tags, defaults to {default_factory}
   def factory; end
+
+  # A factory class to handle parsing of tags, defaults to {default_factory}
   def factory=(_arg0); end
+
   def group_directive(tag, parser); end
   def has_directive?(tag_name); end
   def has_tag?(tag_name); end
   def macro_directive(tag, parser); end
   def method_directive(tag, parser); end
+
+  # Adds an emphasized note at the top of the docstring for the object
   def note_tag(text); end
+
+  # Describe an options hash in a method. The tag takes the
+  # name of the options parameter first, followed by optional types,
+  # the option key name, a default value for the key and a
+  # description of the option. The default value should be placed within
+  # parentheses and is optional (can be omitted).
+  #
+  # Note that a +@param+ tag need not be defined for the options
+  # hash itself, though it is useful to do so for completeness.
   def option_tag(text); end
+
+  # Describe that your method can be used in various
+  # contexts with various parameters or return types. The first
+  # line should declare the new method signature, and the following
+  # indented tag data will be a new documentation string with its
+  # own tags adding metadata for such an overload.
   def overload_tag(text); end
+
+  # Documents a single method parameter (either regular or keyword) with a given name, type
+  # and optional description.
   def param_tag(text); end
+
   def parse_directive(tag, parser); end
+
+  # Declares that the _logical_ visibility of an object is private.
+  # In other words, it specifies that this method should be marked
+  # private but cannot due to Ruby's visibility restrictions. This
+  # exists for classes, modules and constants that do not obey Ruby's
+  # visibility rules. For instance, an inner class might be considered
+  # "private", though Ruby would make no such distinction.
+  #
+  # This tag is meant to be used in conjunction with the +--no-private+
+  # command-line option, and is required to actually remove these objects
+  # from documentation output. See {file:README.md} for more information on
+  # switches.
+  #
+  # If you simply want to set the API visibility of a method, you should
+  # look at the {tag:api} tag instead.
   def private_tag(text); end
+
+  # Describes that a method may raise a given exception, with
+  # an optional description of what it may mean.
   def raise_tag(text); end
+
+  # Describes the return value (and type or types) of a method.
+  # You can list multiple return tags for a method in the case
+  # where a method has distinct return cases. In this case, each
+  # case should begin with "if ...".
   def return_tag(text); end
+
+  # Sets the scope of a DSL method. Only applicable to DSL method
+  # calls. Acceptable values are 'class' or 'instance'
   def scope_directive(tag, parser); end
+
+  # "See Also" references for an object. Accepts URLs or
+  # other code objects with an optional description at the end.
+  # Note that the URL or object will be automatically linked by
+  # YARD and does not need to be formatted with markup.
   def see_tag(text); end
+
+  # Lists the version that the object was first added.
   def since_tag(text); end
+
+  # Creates a new {Tag} object with a given tag name and data
   def tag_create(tag_name, tag_buf); end
+
+  # Marks a TODO note in the object being documented.
+  # For reference, objects with TODO items can be enumerated
+  # from the command line with a simple command:
+  #
+  # !!!sh
+  # mocker$ yard list --query '@todo'
+  # lib/mocker/mocker.rb:15: Mocker
+  # lib/mocker/report/html.rb:5: Mocker::Report::Html
+  #
+  # YARD can also be used to enumerate the TODO items from
+  # a short script:
+  #
+  # !!!ruby
+  # require 'yard'
+  # YARD::Registry.load!.all.each do |o|
+  # puts o.tag(:todo).text if o.tag(:todo)
+  # end
   def todo_tag(text); end
+
+  # Lists the version of a class, module or method. This is
+  # similar to a library version, but at finer granularity.
+  # In some cases, version of specific modules, classes, methods
+  # or generalized components might change independently between
+  # releases. A version tag is used to infer the API compatibility
+  # of a specific object.
   def version_tag(text); end
+
+  # Sets the visibility of a DSL method. Only applicable to
+  # DSL method calls. Acceptable values are public, protected, or private.
   def visibility_directive(tag, parser); end
+
+  # Describes what a method might yield to a given block.
+  # The types specifier list should not list types, but names
+  # of the parameters yielded to the block. If you define
+  # parameters with +@yieldparam+, you do not need to define
+  # the parameters in the type specification of +@yield+ as
+  # well.
   def yield_tag(text); end
+
+  # Defines a parameter yielded by a block. If you define the
+  # parameters with +@yieldparam+, you do not need to define
+  # them via +@yield+ as well.
   def yieldparam_tag(text); end
+
+  # Documents the value and type that the block is expected
+  # to return to the method.
   def yieldreturn_tag(text); end
 
   private
@@ -3286,20 +6099,76 @@ class YARD::Tags::Library
   def send_to_factory(tag_name, meth, text); end
 
   class << self
+    # Replace the factory object responsible for parsing tags by setting
+    # this to an object (or class) that responds to +parse_TAGNAME+ methods
+    # where +TAGNAME+ is the name of the tag.
+    #
+    # You should set this value before performing any source parsing with
+    # YARD, otherwise your factory class will not be used.
     def default_factory; end
+
+    # Replace the factory object responsible for parsing tags by setting
+    # this to an object (or class) that responds to +parse_TAGNAME+ methods
+    # where +TAGNAME+ is the name of the tag.
+    #
+    # You should set this value before performing any source parsing with
+    # YARD, otherwise your factory class will not be used.
     def default_factory=(factory); end
+
     def define_directive(tag, tag_meth = T.unsafe(nil), directive_class = T.unsafe(nil)); end
+
+    # Convenience method to define a new tag using one of {Tag}'s factory methods, or the
+    # regular {DefaultFactory#parse_tag} factory method if none is supplied.
     def define_tag(label, tag, meth = T.unsafe(nil)); end
+
     def directive_method_name(tag_name); end
+
+    # Returns the factory method used to parse the tag text for a specific tag
     def factory_method_for(tag); end
+
+    # Returns the factory method used to parse the tag text for a specific
+    # directive
     def factory_method_for_directive(directive); end
+
     def instance; end
     def labels; end
+
+    # Sorts the labels lexically by their label name, often used when displaying
+    # the tags.
     def sorted_labels; end
+
     def tag_method_name(tag_name); end
+
+    # Sets the list of tags that should apply to any children inside the
+    # namespace they are defined in. For instance, a "@since" tag should
+    # apply to all methods inside a module it is defined in. Transitive
+    # tags can be overridden by directly defining a tag on the child object.
     def transitive_tags; end
+
+    # Sets the list of tags that should apply to any children inside the
+    # namespace they are defined in. For instance, a "@since" tag should
+    # apply to all methods inside a module it is defined in. Transitive
+    # tags can be overridden by directly defining a tag on the child object.
     def transitive_tags=(_arg0); end
+
+    # Sets the list of tags to display when rendering templates. The order of
+    # tags in the list is also significant, as it represents the order that
+    # tags are displayed in templates.
+    #
+    # You can use the {Array#place} to insert new tags to be displayed in
+    # the templates at specific positions:
+    #
+    # Library.visible_tags.place(:mytag).before(:return)
     def visible_tags; end
+
+    # Sets the list of tags to display when rendering templates. The order of
+    # tags in the list is also significant, as it represents the order that
+    # tags are displayed in templates.
+    #
+    # You can use the {Array#place} to insert new tags to be displayed in
+    # the templates at specific positions:
+    #
+    # Library.visible_tags.place(:mytag).before(:return)
     def visible_tags=(_arg0); end
 
     private
@@ -3308,6 +6177,91 @@ class YARD::Tags::Library
   end
 end
 
+# Defines a block of text to be expanded whenever the macro is called by name
+# in subsequent docstrings. The macro data can be any arbitrary text data, be
+# it regular documentation, meta-data tags or directives.
+#
+# == Defining a Macro
+#
+# A macro must first be defined in order to be used. Note that a macro is also
+# expanded upon definition if it defined on an object (the docstring of a
+# method, class, module or constant object as opposed to a free standing
+# comment). To define a macro, use the "new" or "attach" identifier in the
+# types specifier list. A macro will also automatically be created if an
+# indented macro data block is given, so the keywords are not strictly needed.
+#
+# === Anonymous Macros
+#
+# In addition to standard named macros, macros can be defined anonymously if
+# no name is given. In this case, they can not be re-used in future docstrings,
+# but they will expand in the first definition. This is useful when needing
+# to take advantage of the macro expansion variables (described below).
+#
+# == Using a Macro
+#
+# To re-use a macro in another docstring after it is defined, simply use
+# <tt>@!macro the_name</tt> with no indented block of macro data. The resulting
+# data will be expanded in place.
+#
+# == Attaching a Macro to a DSL Method
+#
+# Macros can be defined to auto-expand on DSL-style class method calls. To
+# define a macro to be auto expanded in this way, use the "attach" keyword
+# in the type specifier list ("new" is implied).
+#
+# Attached macros can also be attached directly on the class method declaration
+# that provides the DSL method to its subclasses. The syntax in either case
+# is the same.
+#
+# == Macro Expansion Variables
+#
+# In the case of using macros on DSL-style method calls, a number of expansion
+# variables can be used for interpolation inside of the macro data. The variables,
+# similar in syntax to Ruby's global variables, are as follows:
+#
+# * $0 - the method name being called
+# * $1, $2, $3, ... - the Nth argument in the method call
+# * $& - the full source line
+#
+# The following example shows what the expansion variables might hold for a given
+# DSL method call:
+#
+# property :foo, :a, :b, :c, String
+# # $0 => "property"
+# # $1 => "foo"
+# # $2 => "a"
+# # $& => "property :foo, :a, :b, :c, String"
+#
+# === Ranges
+#
+# Ranges are also acceptable with the syntax <tt>${N-M}</tt>. Negative values
+# on either N or M are valid, and refer to indexes from the end of the list.
+# Consider a DSL method that creates a method using the first argument with
+# argument names following, ending with the return type of the method. This
+# could be documented as:
+#
+# # @!macro dsl_method
+# #   @!method $1(${2--2})
+# #   @return [${-1}] the return value of $0
+# create_method_with_args :foo, :a, :b, :c, String
+#
+# As described, the method is using the signature <tt>foo(a, b, c)</tt> and the return
+# type from the last argument, +String+. When using ranges, tokens are joined
+# with commas. Note that this includes using $0:
+#
+# !!!plain
+# $0-1 # => Interpolates to "create_method_with_args, foo"
+#
+# If you want to separate them with spaces, use <tt>$1 $2 $3 $4 ...</tt>. Note that
+# if the token cannot be expanded, it will return the empty string (not an error),
+# so it would be safe to list <tt>$1 $2 ... $10</tt>, for example.
+#
+# === Escaping Interpolation
+#
+# Interpolation can be escaped by prefixing the +$+ with +\\\+, like so:
+#
+# # @!macro foo
+# #   I have \$2.00 USD.
 class YARD::Tags::MacroDirective < ::YARD::Tags::Directive
   def call; end
 
@@ -3322,6 +6276,13 @@ class YARD::Tags::MacroDirective < ::YARD::Tags::Directive
   def warn; end
 end
 
+# Defines a method object with a given method signature, using indented
+# block data as the method's docstring. The signature is similar to the
+# {tag:overload} tag. The comment containing this directive does not need
+# to be attached to any source, but if it is, that source code will be
+# used as the method's source.
+#
+# To define an attribute method, see {tag:!attribute}
 class YARD::Tags::MethodDirective < ::YARD::Tags::Directive
   def after_parse; end
   def call; end
@@ -3340,22 +6301,32 @@ YARD::Tags::MethodDirective::SCOPE_MATCH = T.let(T.unsafe(nil), Regexp)
 class YARD::Tags::OptionTag < ::YARD::Tags::Tag
   def initialize(tag_name, name, pair); end
 
+  # Returns the value of attribute pair.
   def pair; end
+
+  # Sets the attribute pair
   def pair=(_arg0); end
 end
 
 class YARD::Tags::OverloadTag < ::YARD::Tags::Tag
   def initialize(tag_name, text); end
 
+  # Returns the value of attribute docstring.
   def docstring; end
+
   def has_tag?(name); end
   def is_a?(other); end
   def kind_of?(other); end
   def method_missing(*args, &block); end
   def name(prefix = T.unsafe(nil)); end
   def object=(value); end
+
+  # Returns the value of attribute parameters.
   def parameters; end
+
+  # Returns the value of attribute signature.
   def signature; end
+
   def tag(name); end
   def tags(name = T.unsafe(nil)); end
   def type; end
@@ -3366,35 +6337,72 @@ class YARD::Tags::OverloadTag < ::YARD::Tags::Tag
   def parse_tag(text); end
 end
 
+# Parses a block of code as if it were present in the source file at that
+# location. This directive is useful if a class has dynamic meta-programmed
+# behaviour that cannot be recognized by YARD.
+#
+# You can specify the language of the code block using the types
+# specification list. By default, the code language is "ruby".
 class YARD::Tags::ParseDirective < ::YARD::Tags::Directive
   def call; end
 end
 
 module YARD::Tags::RefTag
+  # Returns the value of attribute owner.
   def owner; end
+
+  # Sets the attribute owner
   def owner=(_arg0); end
 end
 
 class YARD::Tags::RefTagList
   def initialize(tag_name, owner, name = T.unsafe(nil)); end
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
   def name=(_arg0); end
+
+  # Returns the value of attribute owner.
   def owner; end
+
+  # Sets the attribute owner
   def owner=(_arg0); end
+
+  # Returns the value of attribute tag_name.
   def tag_name; end
+
+  # Sets the attribute tag_name
   def tag_name=(_arg0); end
+
   def tags; end
 end
 
+# Modifies the current parsing scope (class or instance). If this
+# directive is defined on a docstring attached to an object definition,
+# it is applied only to that object. Otherwise, it applies the scope
+# to all future objects in the namespace.
 class YARD::Tags::ScopeDirective < ::YARD::Tags::Directive
   def call; end
 end
 
+# Represents a metadata tag value (+@tag+). Tags can have any combination of
+# {#types}, {#name} and {#text}, or none of the above.
 class YARD::Tags::Tag
+  # Creates a new tag object with a tag name and text. Optionally, formally declared types
+  # and a key name can be specified.
+  #
+  # Types are mainly for meta tags that rely on type information, such as +param+, +return+, etc.
+  #
+  # Key names are for tags that declare meta data for a specific key or name, such as +param+,
+  # +raise+, etc.
   def initialize(tag_name, text, types = T.unsafe(nil), name = T.unsafe(nil)); end
 
+  # Provides a plain English summary of the type specification, or nil
+  # if no types are provided or parseable.
   def explain_types; end
+
   def name; end
   def name=(_arg0); end
   def object; end
@@ -3403,7 +6411,11 @@ class YARD::Tags::Tag
   def tag_name=(_arg0); end
   def text; end
   def text=(_arg0); end
+
+  # Convenience method to access the first type specified. This should mainly
+  # be used for tags that only specify one type.
   def type; end
+
   def types; end
   def types=(_arg0); end
 end
@@ -3412,7 +6424,12 @@ class YARD::Tags::TagFormatError < ::RuntimeError; end
 
 class YARD::Tags::TypesExplainer
   class << self
+    # Provides a plain English summary of the type specification, or nil
+    # if no types are provided or parseable.
     def explain(*types); end
+
+    # Provides a plain English summary of the type specification, or nil
+    # if no types are provided or parseable.
     def explain!(*types); end
   end
 end
@@ -3421,7 +6438,11 @@ class YARD::Tags::TypesExplainer::CollectionType < ::YARD::Tags::TypesExplainer:
   def initialize(name, types); end
 
   def to_s(_singular = T.unsafe(nil)); end
+
+  # Returns the value of attribute types.
   def types; end
+
+  # Sets the attribute types
   def types=(_arg0); end
 end
 
@@ -3432,10 +6453,18 @@ end
 class YARD::Tags::TypesExplainer::HashCollectionType < ::YARD::Tags::TypesExplainer::Type
   def initialize(name, key_types, value_types); end
 
+  # Returns the value of attribute key_types.
   def key_types; end
+
+  # Sets the attribute key_types
   def key_types=(_arg0); end
+
   def to_s(_singular = T.unsafe(nil)); end
+
+  # Returns the value of attribute value_types.
   def value_types; end
+
+  # Sets the attribute value_types
   def value_types=(_arg0); end
 end
 
@@ -3456,8 +6485,12 @@ YARD::Tags::TypesExplainer::Parser::TOKENS = T.let(T.unsafe(nil), Hash)
 class YARD::Tags::TypesExplainer::Type
   def initialize(name); end
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
   def name=(_arg0); end
+
   def to_s(singular = T.unsafe(nil)); end
 
   private
@@ -3465,27 +6498,68 @@ class YARD::Tags::TypesExplainer::Type
   def list_join(list); end
 end
 
+# Modifies the current parsing visibility (public, protected, or private).
+# If this directive is defined on a docstring attached to an object
+# definition, it is applied only to that object. Otherwise, it applies
+# the visibility to all future objects in the namespace.
 class YARD::Tags::VisibilityDirective < ::YARD::Tags::Directive
   def call; end
 end
 
+# Namespace for templating system
 module YARD::Templates; end
 
+# This module manages all creation, handling and rendering of {Template}
+# objects.
+#
+# * To create a template object at a path, use {template}.
+# * To render a template, call {render}.
+# * To register a template path in the lookup paths, call {register_template_path}.
 module YARD::Templates::Engine
   class << self
+    # Passes a set of objects to the +:fulldoc+ template for full documentation generation.
+    # This is called by {CLI::Yardoc} to most commonly perform HTML
+    # documentation generation.
     def generate(objects, options = T.unsafe(nil)); end
+
+    # Registers a new template path in {template_paths}
     def register_template_path(path); end
+
+    # Renders a template on a {CodeObjects::Base code object} using
+    # a set of default (overridable) options. Either the +:object+
+    # or +:type+ keys must be provided.
+    #
+    # If a +:serializer+ key is provided and +:serialize+ is not set to
+    # false, the rendered contents will be serialized through the {Serializers::Base}
+    # object. See {with_serializer}.
     def render(options = T.unsafe(nil)); end
+
+    # Creates a template module representing the path. Searches on disk
+    # for the first directory named +path+ (joined by '/') within the
+    # template paths and builds a template module for. All other matching
+    # directories in other template paths will be included in the
+    # generated module as mixins (for overriding).
     def template(*path); end
+
+    # Forces creation of a template at +path+ within a +full_path+.
     def template!(path, full_paths = T.unsafe(nil)); end
+
     def template_paths; end
     def template_paths=(_arg0); end
+
+    # Serializes the results of a block with a +serializer+ object.
     def with_serializer(object, serializer); end
 
     private
 
+    # Searches through the registered {template_paths} and returns
+    # all full directories that have the +path+ within them on disk.
     def find_template_paths(from_template, path); end
+
+    # Sets default options on the options hash
     def set_default_options(options = T.unsafe(nil)); end
+
+    # The name of the module that represents a +path+
     def template_module_name(path); end
   end
 end
@@ -3497,29 +6571,67 @@ module YARD::Templates::ErbCache
   end
 end
 
+# Namespace for template helpers
 module YARD::Templates::Helpers; end
 
+# The base helper module included in all templates.
 module YARD::Templates::Helpers::BaseHelper
   def format_object_title(object); end
   def format_object_type(object); end
+
+  # Indents and formats source code
   def format_source(value); end
+
+  # Formats a list of return types for output and links each type.
   def format_types(list, brackets = T.unsafe(nil)); end
+
+  # An object that keeps track of global state throughout the entire template
+  # rendering process (including any sub-templates).
   def globals; end
+
+  # Escapes text. This is used a lot by the HtmlHelper and there should
+  # be some helper to "clean up" text for whatever, this is it.
   def h(text); end
+
+  # Links to an extra file
   def link_file(filename, title = T.unsafe(nil), anchor = T.unsafe(nil)); end
+
+  # Include a file as a docstring in output
   def link_include_file(file); end
+
+  # Includes an object's docstring into output.
   def link_include_object(obj); end
+
+  # Links to an object with an optional title
   def link_object(obj, title = T.unsafe(nil)); end
+
+  # Links to a URL
   def link_url(url, title = T.unsafe(nil), params = T.unsafe(nil)); end
+
+  # Links objects or URLs. This method will delegate to the correct +link_+
+  # method depending on the arguments passed in.
   def linkify(*args); end
+
+  # Returns the value of attribute object.
   def object; end
+
+  # Sets the attribute object
   def object=(_arg0); end
+
   def owner; end
+
+  # Runs a list of objects against the {Verifier} object passed into the
+  # template and returns the subset of verified objects.
   def run_verifier(list); end
+
+  # Returns the value of attribute serializer.
   def serializer; end
+
+  # Sets the attribute serializer
   def serializer=(_arg0); end
 end
 
+# Helpers for various object types
 module YARD::Templates::Helpers::FilterHelper
   def is_class?(object); end
   def is_method?(object); end
@@ -3527,59 +6639,149 @@ module YARD::Templates::Helpers::FilterHelper
   def is_namespace?(object); end
 end
 
+# The helper module for HTML templates.
 module YARD::Templates::Helpers::HtmlHelper
   include ::YARD::Templates::Helpers::MarkupHelper
   include ::YARD::Templates::Helpers::ModuleHelper
   include ::YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
 
   def anchor_for(object); end
+
+  # Returns the current character set. The default value can be overridden
+  # by setting the +LANG+ environment variable or by overriding this
+  # method. In Ruby 1.9 you can also modify this value by setting
+  # +Encoding.default_external+.
   def charset; end
+
+  # Formats a list of objects and links them
   def format_object_name_list(objects); end
+
+  # Formats a list of types from a tag.
   def format_types(typelist, brackets = T.unsafe(nil)); end
+
+  # Escapes HTML entities
   def h(text); end
+
+  # Converts Asciidoc to HTML
   def html_markup_asciidoc(text); end
+
+  # Converts HTML to HTML
   def html_markup_html(text); end
+
+  # Converts Markdown to HTML
   def html_markup_markdown(text); end
+
   def html_markup_none(text); end
+
+  # Converts org-mode to HTML
   def html_markup_org(text); end
+
+  # Converts plaintext to pre-formatted HTML
   def html_markup_pre(text); end
+
+  # Converts RDoc formatting (SimpleMarkup) to HTML
   def html_markup_rdoc(text); end
+
+  # Highlights Ruby source. Similar to {#html_syntax_highlight}, but
+  # this method is meant to be called from {#htmlify} when markup is
+  # set to "ruby".
   def html_markup_ruby(source); end
+
+  # Converts plaintext to regular HTML
   def html_markup_text(text); end
+
+  # Converts Textile to HTML
   def html_markup_textile(text); end
+
+  # Converts plaintext to strict Textile (hard breaks)
   def html_markup_textile_strict(text); end
+
+  # Syntax highlights +source+ in language +type+.
   def html_syntax_highlight(source, type = T.unsafe(nil)); end
+
   def html_syntax_highlight_plain(source); end
+
+  # Turns text into HTML using +markup+ style formatting.
   def htmlify(text, markup = T.unsafe(nil)); end
+
   def htmlify_line(*args); end
+
+  # Inserts an include link while respecting inlining
   def insert_include(text, markup = T.unsafe(nil)); end
+
+  # Links to an extra file
   def link_file(filename, title = T.unsafe(nil), anchor = T.unsafe(nil)); end
+
+  # Include a file as a docstring in output
   def link_include_file(file); end
+
+  # Includes an object's docstring into output.
   def link_include_object(obj); end
+
+  # Links to an object with an optional title
   def link_object(obj, title = T.unsafe(nil), anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
+
+  # Links to a URL
   def link_url(url, title = T.unsafe(nil), params = T.unsafe(nil)); end
+
   def mtime(_file); end
+
+  # Returns the URL for an object.
   def mtime_url(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
+
+  # Resolves any text in the form of +{Name}+ to the object specified by
+  # Name. Also supports link titles in the form +{Name title}+.
   def resolve_links(text); end
+
+  # Formats the signature of method +meth+.
   def signature(meth, link = T.unsafe(nil), show_extras = T.unsafe(nil), full_attr_name = T.unsafe(nil)); end
+
+  # Get the return types for a method signature.
   def signature_types(meth, link = T.unsafe(nil)); end
+
+  # Returns the URL for an object.
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
+
+  # Returns the URL for a specific file
   def url_for_file(filename, anchor = T.unsafe(nil)); end
+
+  # Returns the URL for the frameset page
   def url_for_frameset; end
+
+  # Returns the URL for the alphabetic index page
   def url_for_index; end
+
+  # Returns the URL for a list type
   def url_for_list(type); end
+
+  # Returns the URL for the main page (README or alphabetic index)
   def url_for_main; end
 
   private
 
+  # Converts a {CodeObjects::MethodObject} into an overload object
   def convert_method_to_overload(meth); end
+
+  # Parses code block's HTML attributes in order to detect the programming
+  # language of what's enclosed in that code block.
   def detect_lang_in_codeblock_attributes(pre_html_attrs, code_html_attrs); end
+
+  # Parses code blocks out of html and performs syntax highlighting
+  # on code inside of the blocks.
   def parse_codeblocks(html); end
+
+  # Parses !!!lang out of codeblock, returning the codeblock language
+  # followed by the source code.
   def parse_lang_for_codeblock(source); end
+
+  # Converts a set of hash options into HTML attributes for a tag
   def tag_attrs(opts = T.unsafe(nil)); end
+
+  # Escapes a URL
   def urlencode(text); end
 
   class << self
+    # Escapes a URL
     def urlencode(text); end
   end
 end
@@ -3587,9 +6789,11 @@ end
 YARD::Templates::Helpers::HtmlHelper::ASCIIDOC_ATTRIBUTES = T.let(T.unsafe(nil), Hash)
 YARD::Templates::Helpers::HtmlHelper::URLMATCH = T.let(T.unsafe(nil), Regexp)
 
+# Helper methods for syntax highlighting.
 module YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
   include ::YARD::Templates::Helpers::ModuleHelper
 
+  # Highlights Ruby source
   def html_syntax_highlight_ruby(source); end
 
   private
@@ -3599,6 +6803,7 @@ module YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
   def html_syntax_highlight_ruby_ripper(source); end
 end
 
+# Namespace for markup providers
 module YARD::Templates::Helpers::Markup; end
 
 class YARD::Templates::Helpers::Markup::RDocMarkdown < ::YARD::Templates::Helpers::Markup::RDocMarkup
@@ -3610,13 +6815,21 @@ end
 class YARD::Templates::Helpers::Markup::RDocMarkup
   def initialize(text); end
 
+  # Returns the value of attribute from_path.
   def from_path; end
+
+  # Sets the attribute from_path
   def from_path=(_arg0); end
+
   def to_html; end
 
   private
 
+  # Don't allow -- to turn into &#8212; element. The chances of this being
+  # some --option is far more likely than the typographical meaning.
   def fix_dash_dash(text); end
+
+  # Fixes RDoc behaviour with ++ only supporting alphanumeric text.
   def fix_typewriter(text); end
 end
 
@@ -3626,29 +6839,75 @@ class YARD::Templates::Helpers::Markup::RDocMarkupToHtml < ::RDoc::Markup::ToHtm
   def initialize; end
 
   def accept_paragraph(*args); end
+
+  # Returns the value of attribute from_path.
   def from_path; end
+
+  # Sets the attribute from_path
   def from_path=(_arg0); end
+
+  # Disable auto-link of URLs
   def handle_special_HYPERLINK(special); end
 end
 
+# Helper methods for loading and managing markup types.
 module YARD::Templates::Helpers::MarkupHelper
+  # Attempts to load the first valid markup provider in {MARKUP_PROVIDERS}.
+  # If a provider is specified, immediately try to load it.
+  #
+  # On success this sets `@markup_provider` and `@markup_class` to
+  # the provider name and library constant class/module respectively for
+  # the loaded provider.
+  #
+  # On failure this method will inform the user that no provider could be
+  # found and exit the program.
   def load_markup_provider(type = T.unsafe(nil)); end
+
+  # Gets the markup provider class/module constant for a markup type
+  # Call {#load_markup_provider} before using this method.
   def markup_class(type = T.unsafe(nil)); end
+
+  # Strips any shebang lines on the file contents that pertain to
+  # markup or preprocessing data.
   def markup_file_contents(contents); end
+
+  # Checks for a shebang or looks at the file extension to determine
+  # the markup type for the file contents. File extensions are registered
+  # for a markup type in {MARKUP_EXTENSIONS}.
+  #
+  # A shebang should be on the first line of a file and be in the form:
+  #
+  # #!markup_type
+  #
+  # Standard markup types are text, html, rdoc, markdown, textile
   def markup_for_file(contents, filename); end
+
+  # Gets the markup provider name for a markup type
+  # Call {#load_markup_provider} before using this method.
   def markup_provider(type = T.unsafe(nil)); end
 
   class << self
+    # Clears the markup provider cache information. Mainly used for testing.
     def clear_markup_cache; end
+
     def markup_cache; end
     def markup_cache=(_arg0); end
   end
 end
 
+# Returns a list of extensions for various markup types. To register
+# extensions for a type, add them to the array of extensions for the
+# type.
 YARD::Templates::Helpers::MarkupHelper::MARKUP_EXTENSIONS = T.let(T.unsafe(nil), Hash)
+
+# Contains the Regexp object that matches the shebang line of extra
+# files to detect the markup type.
 YARD::Templates::Helpers::MarkupHelper::MARKUP_FILE_SHEBANG = T.let(T.unsafe(nil), Regexp)
+
+# The default list of markup providers for each markup type
 YARD::Templates::Helpers::MarkupHelper::MARKUP_PROVIDERS = T.let(T.unsafe(nil), Hash)
 
+# Helper methods for method objects.
 module YARD::Templates::Helpers::MethodHelper
   def format_args(object); end
   def format_block(object); end
@@ -3658,10 +6917,13 @@ module YARD::Templates::Helpers::MethodHelper
   def format_return_types(object); end
 end
 
+# Helper methods for managing module objects.
 module YARD::Templates::Helpers::ModuleHelper
+  # Prunes the method listing by running the verifier and removing attributes/aliases
   def prune_method_listing(list, hide_attributes = T.unsafe(nil)); end
 end
 
+# Helper methods for text template formats.
 module YARD::Templates::Helpers::TextHelper
   def align_right(text, spacer = T.unsafe(nil), col = T.unsafe(nil)); end
   def h(text); end
@@ -3676,13 +6938,23 @@ module YARD::Templates::Helpers::TextHelper
   def resolve_links(text); end
 end
 
+# Helpers for UML template format
 module YARD::Templates::Helpers::UMLHelper
+  # Formats the path of an object for Graphviz syntax
   def format_path(object); end
+
+  # Encodes text in escaped Graphviz syntax
   def h(text); end
+
+  # Tidies data by formatting and indenting text
   def tidy(data); end
+
+  # Official UML visibility prefix syntax for an object given its visibility
   def uml_visibility(object); end
 end
 
+# Abstracts the structure for a section and its subsections into an ordered
+# list of sections and subsections.
 class YARD::Templates::Section < ::Array
   def initialize(name, *args); end
 
@@ -3714,20 +6986,60 @@ module YARD::Templates::Template
 
   def initialize(opts = T.unsafe(nil)); end
 
+  # Loads a template specified by path. If +:template+ or +:format+ is
+  # specified in the {#options} hash, they are prepended and appended
+  # to the path respectively.
   def T(*path); end
+
+  # Returns the value of attribute class.
   def class; end
+
+  # Sets the attribute class
   def class=(_arg0); end
+
   def erb(section, &block); end
+
+  # Returns the contents of a file. If +allow_inherited+ is set to +true+,
+  # use +{{{__super__}}}+ inside the file contents to insert the contents
+  # of the file from an inherited template. For instance, if +templates/b+
+  # inherits from +templates/a+ and file "test.css" exists in both directories,
+  # both file contents can be retrieved by having +templates/b/test.css+ look
+  # like:
+  #
+  # {{{__super__}}}
+  # ...
+  # body { css styles here }
+  # p.class { other styles }
   def file(basename, allow_inherited = T.unsafe(nil)); end
+
+  # Initialization called on the template. Override this in a 'setup.rb'
+  # file in the template's path to implement a template
   def init; end
+
   def inspect; end
+
+  # Returns the value of attribute options.
   def options; end
+
   def options=(value); end
+
+  # Runs a template on +sects+ using extra options. This method should
+  # not be called directly. Instead, call the class method {ClassMethods#run}
   def run(opts = T.unsafe(nil), sects = T.unsafe(nil), start_at = T.unsafe(nil), break_first = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute section.
   def section; end
+
+  # Sets the attribute section
   def section=(_arg0); end
+
+  # Sets the sections (and subsections) to be rendered for the template
   def sections(*args); end
+
+  # Calls the ERB file from the last inherited template with {#section}.erb
   def superb(sect = T.unsafe(nil), &block); end
+
+  # Yields all subsections with any extra options
   def yieldall(opts = T.unsafe(nil), &block); end
 
   protected
@@ -3745,9 +7057,27 @@ module YARD::Templates::Template
   def with_section; end
 
   class << self
+    # Extra includes are mixins that are included after a template is created. These
+    # mixins can be registered by plugins to operate on templates and override behaviour.
+    #
+    # Note that this array can be filled with modules or proc objects. If a proc object
+    # is given, the proc will be called with the {Template#options} hash containing
+    # relevant template information like the object, format, and more. The proc should
+    # return a module or nil if there is none.
     def extra_includes; end
+
+    # Extra includes are mixins that are included after a template is created. These
+    # mixins can be registered by plugins to operate on templates and override behaviour.
+    #
+    # Note that this array can be filled with modules or proc objects. If a proc object
+    # is given, the proc will be called with the {Template#options} hash containing
+    # relevant template information like the object, format, and more. The proc should
+    # return a module or nil if there is none.
     def extra_includes=(_arg0); end
+
+    # Includes the {extra_includes} modules into the template object.
     def include_extra(template, options); end
+
     def included(klass); end
   end
 end
@@ -3755,18 +7085,42 @@ end
 module YARD::Templates::Template::ClassMethods
   def initialize(path, full_paths); end
 
+  # Alias for creating a {Section} with arguments
   def S(*args); end
+
+  # Alias for creating {Engine.template}.
   def T(*path); end
+
+  # Searches for a file identified by +basename+ in the template's
+  # path as well as any mixed in template paths. Equivalent to calling
+  # {ClassMethods#find_nth_file} with index of 1.
   def find_file(basename); end
+
+  # Searches for the nth file (where n = +index+) identified
+  # by basename in the template's path and any mixed in template paths.
   def find_nth_file(basename, index = T.unsafe(nil)); end
+
+  # Returns the value of attribute full_path.
   def full_path; end
+
+  # Sets the attribute full_path
   def full_path=(_arg0); end
+
   def full_paths; end
   def is_a?(klass); end
+
+  # Creates a new template object to be rendered with {Template#run}
   def new(*args); end
+
+  # Returns the value of attribute path.
   def path; end
+
+  # Sets the attribute path
   def path=(_arg0); end
+
+  # Resets cache for {#full_paths}
   def reset_full_paths; end
+
   def run(*args); end
 
   private
@@ -3776,6 +7130,8 @@ module YARD::Templates::Template::ClassMethods
   def load_setup_rb; end
 end
 
+# An Options class containing default options for base template rendering. For
+# options specific to generation of HTML output, see {CLI::YardocOptions}.
 class YARD::Templates::TemplateOptions < ::YARD::Options
   def __globals; end
   def default_return; end
@@ -3819,14 +7175,33 @@ end
 
 YARD::VERSION = T.let(T.unsafe(nil), String)
 
+# Similar to a Proc, but runs a set of Ruby expressions using a small
+# DSL to make tag lookups easier.
+#
+# The syntax is as follows:
+# * All syntax is Ruby compatible
+# * +object+ (+o+ for short) exist to access the object being verified
+# * +@TAGNAME+ is translated into +object.tag('TAGNAME')+
+# * +@@TAGNAME+ is translated into +object.tags('TAGNAME')+
+# * +object+ can be omitted as target for method calls (it is implied)
 class YARD::Verifier
+  # Creates a verifier from a set of expressions
   def initialize(*expressions); end
 
+  # Adds a set of expressions and recompiles the verifier
   def add_expressions(*expressions); end
+
+  # Tests the expressions on the object.
   def call(object); end
+
   def expressions; end
   def expressions=(value); end
+
+  # Passes any method calls to the object from the {#call}
   def method_missing(sym, *args, &block); end
+
+  # Runs a list of objects against the verifier and returns the subset
+  # of verified objects.
   def run(list); end
 
   protected
@@ -3836,9 +7211,23 @@ class YARD::Verifier
 
   private
 
+  # Creates the +__execute+ method by evaluating the expressions
+  # as Ruby code
   def create_method_from_expressions; end
+
+  # Modifies nil to not throw NoMethodErrors. This allows
+  # syntax like object.tag(:return).text to work if the #tag
+  # call returns nil, which means users don't need to perform
+  # stringent nil checking
   def modify_nilclass; end
+
+  # Parses a single expression, handling some of the DSL syntax.
+  #
+  # The syntax "@tag" should be turned into object.tag(:tag),
+  # and "@@tag" should be turned into object.tags(:tag)
   def parse_expression(expr); end
+
+  # Returns the state of NilClass back to normal
   def unmodify_nilclass; end
 end
 

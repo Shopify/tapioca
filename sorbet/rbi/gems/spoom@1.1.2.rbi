@@ -53,12 +53,15 @@ module Spoom::Cli::Helper
   sig { params(string: String).returns(String) }
   def blue(string); end
 
+  # Is the `--color` option true?
   sig { returns(T::Boolean) }
   def color?; end
 
+  # Colorize a string if `color?`
   sig { params(string: String, color: Symbol).returns(String) }
   def colorize(string, color); end
 
+  # Return the path specified through `--path`
   sig { returns(String) }
   def exec_path; end
 
@@ -71,18 +74,26 @@ module Spoom::Cli::Helper
   sig { params(string: String).returns(String) }
   def highlight(string); end
 
+  # Enforce that `spoom` is ran inside a project with a `sorbet/config` file
+  #
+  # Display an error message and exit otherwise.
   sig { void }
   def in_sorbet_project!; end
 
+  # Is `spoom` ran inside a project with a `sorbet/config` file?
   sig { returns(T::Boolean) }
   def in_sorbet_project?; end
 
   sig { params(string: String).returns(String) }
   def red(string); end
 
+  # Print `message` on `$stdout`
   sig { params(message: String).void }
   def say(message); end
 
+  # Print `message` on `$stderr`
+  #
+  # The message is prefixed by a status (default: `Error`).
   sig { params(message: String, status: T.nilable(String), nl: T::Boolean).void }
   def say_error(message, status: T.unsafe(nil), nl: T.unsafe(nil)); end
 
@@ -96,24 +107,45 @@ module Spoom::Cli::Helper
   def yellow(string); end
 end
 
+# Color used to highlight expressions in backticks
 Spoom::Cli::Helper::HIGHLIGHT_COLOR = T.let(T.unsafe(nil), Symbol)
 
 class Spoom::Cli::LSP < ::Thor
   include ::Spoom::Cli::Helper
 
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def defs(file, line, col); end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def find(query); end
+
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def hover(file, line, col); end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def list; end
+
   def lsp_client; end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def refs(file, line, col); end
+
   def run(&block); end
   def show; end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def sigs(file, line, col); end
+
   def symbol_printer; end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def symbols(file); end
+
   def to_uri(path); end
+
+  # TODO: options, filter, limit, kind etc.. filter rbi
   def types(file, line, col); end
 end
 
@@ -129,6 +161,7 @@ class Spoom::Cli::Main < ::Thor
   def tc(*args); end
 
   class << self
+    # Utils
     def exit_on_failure?; end
   end
 end
@@ -595,6 +628,7 @@ class Spoom::Coverage::Snapshot < ::T::Struct
   end
 end
 
+# The strictness name as found in the Sorbet metrics file
 Spoom::Coverage::Snapshot::STRICTNESSES = T.let(T.unsafe(nil), Array)
 
 class Spoom::Coverage::SnapshotPrinter < ::Spoom::Printer
@@ -613,6 +647,7 @@ end
 class Spoom::Coverage::Template
   abstract!
 
+  # Create a new template from an Erb file path
   sig { params(template: String).void }
   def initialize(template:); end
 
@@ -628,25 +663,33 @@ end
 
 class Spoom::Error < ::StandardError; end
 
+# Build a file hierarchy from a set of file paths.
 class Spoom::FileTree
   sig { params(paths: T::Enumerable[String], strip_prefix: T.nilable(String)).void }
   def initialize(paths = T.unsafe(nil), strip_prefix: T.unsafe(nil)); end
 
+  # Add a `path` to the tree
+  #
+  # This will create all nodes until the root of `path`.
   sig { params(path: String).returns(Spoom::FileTree::Node) }
   def add_path(path); end
 
+  # Add all `paths` to the tree
   sig { params(paths: T::Enumerable[String]).void }
   def add_paths(paths); end
 
+  # All the nodes in this tree
   sig { returns(T::Array[Spoom::FileTree::Node]) }
   def nodes; end
 
+  # All the paths in this tree
   sig { returns(T::Array[String]) }
   def paths; end
 
   sig { params(out: T.any(IO, StringIO), show_strictness: T::Boolean, colors: T::Boolean, indent_level: Integer).void }
   def print(out: T.unsafe(nil), show_strictness: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
 
+  # All root nodes
   sig { returns(T::Array[Spoom::FileTree::Node]) }
   def roots; end
 
@@ -659,11 +702,13 @@ class Spoom::FileTree
   def collect_nodes(node, collected_nodes = T.unsafe(nil)); end
 end
 
+# A node representing either a file or a directory inside a FileTree
 class Spoom::FileTree::Node < ::T::Struct
   const :children, T::Hash[String, Spoom::FileTree::Node], default: T.unsafe(nil)
   const :name, String
   const :parent, T.nilable(Spoom::FileTree::Node)
 
+  # Full path to this node from root
   sig { returns(String) }
   def path; end
 
@@ -672,6 +717,9 @@ class Spoom::FileTree::Node < ::T::Struct
   end
 end
 
+# An internal class used to print a FileTree
+#
+# See `FileTree#print`
 class Spoom::FileTree::TreePrinter < ::Spoom::Printer
   sig { params(tree: Spoom::FileTree, out: T.any(IO, StringIO), show_strictness: T::Boolean, colors: T::Boolean, indent_level: Integer).void }
   def initialize(tree:, out: T.unsafe(nil), show_strictness: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
@@ -697,14 +745,18 @@ class Spoom::FileTree::TreePrinter < ::Spoom::Printer
   def strictness_color(strictness); end
 end
 
+# Execute git commands
 module Spoom::Git
   class << self
+    # Git commands
     sig { params(arg: String, path: String).returns([String, String, T::Boolean]) }
     def checkout(*arg, path: T.unsafe(nil)); end
 
+    # Get the commit Time for a `sha`
     sig { params(sha: String, path: String).returns(T.nilable(Time)) }
     def commit_time(sha, path: T.unsafe(nil)); end
 
+    # Get the commit epoch timestamp for a `sha`
     sig { params(sha: String, path: String).returns(T.nilable(Integer)) }
     def commit_timestamp(sha, path: T.unsafe(nil)); end
 
@@ -714,12 +766,15 @@ module Spoom::Git
     sig { params(arg: String, path: String).returns([String, String, T::Boolean]) }
     def diff(*arg, path: T.unsafe(nil)); end
 
+    # Translate a git epoch timestamp into a Time
     sig { params(timestamp: String).returns(Time) }
     def epoch_to_time(timestamp); end
 
+    # Execute a `command`
     sig { params(command: String, arg: String, path: String).returns([String, String, T::Boolean]) }
     def exec(command, *arg, path: T.unsafe(nil)); end
 
+    # Get the last commit sha
     sig { params(path: String).returns(T.nilable(String)) }
     def last_commit(path: T.unsafe(nil)); end
 
@@ -732,12 +787,15 @@ module Spoom::Git
     sig { params(arg: String, path: String).returns([String, String, T::Boolean]) }
     def show(*arg, path: T.unsafe(nil)); end
 
+    # Get the hash of the commit introducing the `sorbet/config` file
     sig { params(path: String).returns(T.nilable(String)) }
     def sorbet_intro_commit(path: T.unsafe(nil)); end
 
+    # Get the hash of the commit removing the `sorbet/config` file
     sig { params(path: String).returns(T.nilable(String)) }
     def sorbet_removal_commit(path: T.unsafe(nil)); end
 
+    # Is there uncommited changes in `path`?
     sig { params(path: String).returns(T::Boolean) }
     def workdir_clean?(path: T.unsafe(nil)); end
   end
@@ -753,7 +811,10 @@ class Spoom::LSP::Client
   def document_symbols(uri); end
   def hover(uri, line, column); end
   def next_id; end
+
+  # LSP requests
   def open(workspace_path); end
+
   def read; end
   def read_raw; end
   def references(uri, line, column, include_decl = T.unsafe(nil)); end
@@ -813,7 +874,10 @@ class Spoom::LSP::Error::BadHeaders < ::Spoom::LSP::Error; end
 class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
   def initialize(uri, diagnostics); end
 
+  # Returns the value of attribute diagnostics.
   def diagnostics; end
+
+  # Returns the value of attribute uri.
   def uri; end
 
   class << self
@@ -855,18 +919,30 @@ class Spoom::LSP::Location < ::T::Struct
   end
 end
 
+# A general message as defined by JSON-RPC.
+#
+# The language server protocol always uses `"2.0"` as the `jsonrpc` version.
 class Spoom::LSP::Message
   def initialize; end
 
   def as_json; end
+
+  # Returns the value of attribute jsonrpc.
   def jsonrpc; end
+
   def to_json(*args); end
 end
 
+# A notification message.
+#
+# A processed notification message must not send a response back. They work like events.
 class Spoom::LSP::Notification < ::Spoom::LSP::Message
   def initialize(method, params); end
 
+  # Returns the value of attribute method.
   def method; end
+
+  # Returns the value of attribute params.
   def params; end
 end
 
@@ -911,19 +987,32 @@ class Spoom::LSP::Range < ::T::Struct
   end
 end
 
+# A request message to describe a request between the client and the server.
+#
+# Every processed request must send a response back to the sender of the request.
 class Spoom::LSP::Request < ::Spoom::LSP::Message
   def initialize(id, method, params); end
 
+  # Returns the value of attribute id.
   def id; end
+
+  # Returns the value of attribute method.
   def method; end
+
+  # Returns the value of attribute params.
   def params; end
 end
 
 class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
   def initialize(code, message, data); end
 
+  # Returns the value of attribute code.
   def code; end
+
+  # Returns the value of attribute data.
   def data; end
+
+  # Returns the value of attribute message.
   def message; end
 
   class << self
@@ -956,7 +1045,10 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   sig { params(uri: String).returns(String) }
   def clean_uri(uri); end
 
+  # Returns the value of attribute prefix.
   def prefix; end
+
+  # Sets the attribute prefix
   def prefix=(_arg0); end
 
   sig { params(objects: T::Array[Spoom::LSP::PrintableSymbol]).void }
@@ -968,7 +1060,10 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   sig { params(objects: T::Array[Spoom::LSP::PrintableSymbol]).void }
   def print_objects(objects); end
 
+  # Returns the value of attribute seen.
   def seen; end
+
+  # Sets the attribute seen
   def seen=(_arg0); end
 end
 
@@ -978,12 +1073,15 @@ class Spoom::Printer
   sig { params(out: T.any(IO, StringIO), colors: T::Boolean, indent_level: Integer).void }
   def initialize(out: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
 
+  # Colorize `string` with color if `@colors`
   sig { params(string: String, color: Symbol).returns(String) }
   def colorize(string, color); end
 
+  # Decrease indent level
   sig { void }
   def dedent; end
 
+  # Increase indent level
   sig { void }
   def indent; end
 
@@ -992,18 +1090,25 @@ class Spoom::Printer
 
   def out=(_arg0); end
 
+  # Print `string` into `out`
   sig { params(string: T.nilable(String)).void }
   def print(string); end
 
+  # Print `string` colored with `color` into `out`
+  #
+  # Does not use colors unless `@colors`.
   sig { params(string: T.nilable(String), color: Symbol, colors: Symbol).void }
   def print_colored(string, color, *colors); end
 
+  # Print `string` with indent and newline
   sig { params(string: T.nilable(String)).void }
   def printl(string); end
 
+  # Print a new line into `out`
   sig { void }
   def printn; end
 
+  # Print an indent space into `out`
   sig { void }
   def printt; end
 end
@@ -1015,6 +1120,7 @@ module Spoom::Sorbet
     sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean]) }
     def srb(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
+    # List all files typechecked by Sorbet from its `config`
     sig { params(config: Spoom::Sorbet::Config, path: String).returns(T::Array[String]) }
     def srb_files(config, path: T.unsafe(nil)); end
 
@@ -1027,6 +1133,9 @@ module Spoom::Sorbet
     sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns(T.nilable(String)) }
     def srb_version(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
+    # Get `gem` version from the `Gemfile.lock` content
+    #
+    # Returns `nil` if `gem` cannot be found in the Gemfile.
     sig { params(gem: String, path: String).returns(T.nilable(String)) }
     def version_from_gemfile_lock(gem: T.unsafe(nil), path: T.unsafe(nil)); end
   end
@@ -1035,6 +1144,26 @@ end
 Spoom::Sorbet::BIN_PATH = T.let(T.unsafe(nil), String)
 Spoom::Sorbet::CONFIG_PATH = T.let(T.unsafe(nil), String)
 
+# Parse Sorbet config files
+#
+# Parses a Sorbet config file:
+#
+# ```ruby
+# config = Spoom::Sorbet::Config.parse_file("sorbet/config")
+# puts config.paths   # "."
+# ```
+#
+# Parses a Sorbet config string:
+#
+# ```ruby
+# config = Spoom::Sorbet::Config.parse_string(<<~CONFIG)
+# a
+# --file=b
+# --ignore=c
+# CONFIG
+# puts config.paths   # "a", "b"
+# puts config.ignore  # "c"
+# ```
 class Spoom::Sorbet::Config
   sig { void }
   def initialize; end
@@ -1051,6 +1180,18 @@ class Spoom::Sorbet::Config
 
   def no_stdlib=(_arg0); end
 
+  # Returns self as a string of options that can be passed to Sorbet
+  #
+  # Example:
+  # ~~~rb
+  # config = Sorbet::Config.new
+  # config.paths << "/foo"
+  # config.paths << "/bar"
+  # config.ignore << "/baz"
+  # config.allowed_extensions << ".rb"
+  #
+  # puts config.options_string # "/foo /bar --ignore /baz --allowed-extension .rb"
+  # ~~~
   sig { returns(String) }
   def options_string; end
 
@@ -1084,6 +1225,7 @@ class Spoom::Sorbet::Errors::Error
   sig { params(file: T.nilable(String), line: T.nilable(Integer), message: T.nilable(String), code: T.nilable(Integer), more: T::Array[String]).void }
   def initialize(file, line, message, code, more = T.unsafe(nil)); end
 
+  # By default errors are sorted by location
   sig { params(other: T.untyped).returns(Integer) }
   def <=>(other); end
 
@@ -1104,6 +1246,7 @@ class Spoom::Sorbet::Errors::Error
   def to_s; end
 end
 
+# Parse errors from Sorbet output
 class Spoom::Sorbet::Errors::Parser
   sig { void }
   def initialize; end
@@ -1152,27 +1295,36 @@ Spoom::Sorbet::MetricsParser::DEFAULT_PREFIX = T.let(T.unsafe(nil), String)
 
 module Spoom::Sorbet::Sigils
   class << self
+    # changes the sigil in the file at the passed path to the specified new strictness
     sig { params(path: T.any(Pathname, String), new_strictness: String).returns(T::Boolean) }
     def change_sigil_in_file(path, new_strictness); end
 
+    # changes the sigil to have a new strictness in a list of files
     sig { params(path_list: T::Array[String], new_strictness: String).returns(T::Array[String]) }
     def change_sigil_in_files(path_list, new_strictness); end
 
+    # returns a string containing the strictness of a sigil in a file at the passed path
+    # * returns nil if no sigil
     sig { params(path: T.any(Pathname, String)).returns(T.nilable(String)) }
     def file_strictness(path); end
 
+    # finds all files in the specified directory with the passed strictness
     sig { params(directory: T.any(Pathname, String), strictness: String, extension: String).returns(T::Array[String]) }
     def files_with_sigil_strictness(directory, strictness, extension: T.unsafe(nil)); end
 
+    # returns the full sigil comment string for the passed strictness
     sig { params(strictness: String).returns(String) }
     def sigil_string(strictness); end
 
+    # returns the strictness of a sigil in the passed file content string (nil if no sigil)
     sig { params(content: String).returns(T.nilable(String)) }
     def strictness_in_content(content); end
 
+    # returns a string which is the passed content but with the sigil updated to a new strictness
     sig { params(content: String, new_strictness: String).returns(String) }
     def update_sigil(content, new_strictness); end
 
+    # returns true if the passed string is a valid strictness (else false)
     sig { params(strictness: String).returns(T::Boolean) }
     def valid_strictness?(strictness); end
   end
@@ -1191,12 +1343,15 @@ class Spoom::Timeline
   sig { params(from: Time, to: Time, path: String).void }
   def initialize(from, to, path: T.unsafe(nil)); end
 
+  # Return one commit for each date in `dates`
   sig { params(dates: T::Array[Time]).returns(T::Array[String]) }
   def commits_for_dates(dates); end
 
+  # Return all months between `from` and `to`
   sig { returns(T::Array[Time]) }
   def months; end
 
+  # Return one commit for each month between `from` and `to`
   sig { returns(T::Array[String]) }
   def ticks; end
 end

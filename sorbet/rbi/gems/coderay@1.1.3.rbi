@@ -4,51 +4,340 @@
 
 # typed: true
 
+# = CodeRay Library
+#
+# CodeRay is a Ruby library for syntax highlighting.
+#
+# I try to make CodeRay easy to use and intuitive, but at the same time fully
+# featured, complete, fast and efficient.
+#
+# See README.
+#
+# It consists mainly of
+# * the main engine: CodeRay (Scanners::Scanner, Tokens, Encoders::Encoder)
+# * the plugin system: PluginHost, Plugin
+# * the scanners in CodeRay::Scanners
+# * the encoders in CodeRay::Encoders
+# * the styles in CodeRay::Styles
+#
+# Here's a fancy graphic to light up this gray docu:
+#
+# http://cycnus.de/raindark/coderay/scheme.png
+#
+# == Documentation
+#
+# See CodeRay, Encoders, Scanners, Tokens.
+#
+# == Usage
+#
+# Remember you need RubyGems to use CodeRay, unless you have it in your load
+# path. Run Ruby with -rubygems option if required.
+#
+# === Highlight Ruby code in a string as html
+#
+# require 'coderay'
+# print CodeRay.scan('puts "Hello, world!"', :ruby).html
+#
+# # prints something like this:
+# puts <span class="s">&quot;Hello, world!&quot;</span>
+#
+#
+# === Highlight C code from a file in a html div
+#
+# require 'coderay'
+# print CodeRay.scan(File.read('ruby.h'), :c).div
+# print CodeRay.scan_file('ruby.h').html.div
+#
+# You can include this div in your page. The used CSS styles can be printed with
+#
+# % coderay_stylesheet
+#
+# === Highlight without typing too much
+#
+# If you are one of the hasty (or lazy, or extremely curious) people, just run this file:
+#
+# % ruby -rubygems /path/to/coderay/coderay.rb > example.html
+#
+# and look at the file it created in your browser.
+#
+# = CodeRay Module
+#
+# The CodeRay module provides convenience methods for the engine.
+#
+# * The +lang+ and +format+ arguments select Scanner and Encoder to use. These are
+# simply lower-case symbols, like <tt>:python</tt> or <tt>:html</tt>.
+# * All methods take an optional hash as last parameter, +options+, that is send to
+# the Encoder / Scanner.
+# * Input and language are always sorted in this order: +code+, +lang+.
+# (This is in alphabetical order, if you need a mnemonic ;)
+#
+# You should be able to highlight everything you want just using these methods;
+# so there is no need to dive into CodeRay's deep class hierarchy.
+#
+# The examples in the demo directory demonstrate common cases using this interface.
+#
+# = Basic Access Ways
+#
+# Read this to get a general view what CodeRay provides.
+#
+# == Scanning
+#
+# Scanning means analysing an input string, splitting it up into Tokens.
+# Each Token knows about what type it is: string, comment, class name, etc.
+#
+# Each +lang+ (language) has its own Scanner; for example, <tt>:ruby</tt> code is
+# handled by CodeRay::Scanners::Ruby.
+#
+# CodeRay.scan:: Scan a string in a given language into Tokens.
+# This is the most common method to use.
+# CodeRay.scan_file:: Scan a file and guess the language using FileType.
+#
+# The Tokens object you get from these methods can encode itself; see Tokens.
+#
+# == Encoding
+#
+# Encoding means compiling Tokens into an output. This can be colored HTML or
+# LaTeX, a textual statistic or just the number of non-whitespace tokens.
+#
+# Each Encoder provides output in a specific +format+, so you select Encoders via
+# formats like <tt>:html</tt> or <tt>:statistic</tt>.
+#
+# CodeRay.encode:: Scan and encode a string in a given language.
+# CodeRay.encode_tokens:: Encode the given tokens.
+# CodeRay.encode_file:: Scan a file, guess the language using FileType and encode it.
+#
+# == All-in-One Encoding
+#
+# CodeRay.encode:: Highlight a string with a given input and output format.
+#
+# == Instanciating
+#
+# You can use an Encoder instance to highlight multiple inputs. This way, the setup
+# for this Encoder must only be done once.
+#
+# CodeRay.encoder:: Create an Encoder instance with format and options.
+# CodeRay.scanner:: Create an Scanner instance for lang, with '' as default code.
+#
+# To make use of CodeRay.scanner, use CodeRay::Scanner::code=.
+#
+# The scanning methods provide more flexibility; we recommend to use these.
+#
+# == Reusing Scanners and Encoders
+#
+# If you want to re-use scanners and encoders (because that is faster), see
+# CodeRay::Duo for the most convenient (and recommended) interface.
 module CodeRay
   class << self
+    # Assuming the path is a subpath of lib/coderay/
     def coderay_path(*path); end
+
+    # Encode a string.
+    #
+    # This scans +code+ with the the Scanner for +lang+ and then
+    # encodes it with the Encoder for +format+.
+    # +options+ will be passed to the Encoder.
+    #
+    # See CodeRay::Encoder.encode.
     def encode(code, lang, format, options = T.unsafe(nil)); end
+
+    # Encodes +filename+ (a path to a code file) with the Scanner for +lang+.
+    #
+    # See CodeRay.scan_file.
+    # Notice that the second argument is the output +format+, not the input language.
+    #
+    # Example:
+    # require 'coderay'
+    # page = CodeRay.encode_file 'some_c_code.c', :html
     def encode_file(filename, format, options = T.unsafe(nil)); end
+
+    # Encode pre-scanned Tokens.
+    # Use this together with CodeRay.scan:
+    #
+    # require 'coderay'
+    #
+    # # Highlight a short Ruby code example in a HTML span
+    # tokens = CodeRay.scan '1 + 2', :ruby
+    # puts CodeRay.encode_tokens(tokens, :span)
     def encode_tokens(tokens, format, options = T.unsafe(nil)); end
+
+    # Finds the Encoder class for +format+ and creates an instance, passing
+    # +options+ to it.
+    #
+    # Example:
+    # require 'coderay'
+    #
+    # stats = CodeRay.encoder(:statistic)
+    # stats.encode("puts 17 + 4\n", :ruby)
+    #
+    # puts '%d out of %d tokens have the kind :integer.' % [
+    # stats.type_stats[:integer].count,
+    # stats.real_token_count
+    # ]
+    # #-> 2 out of 4 tokens have the kind :integer.
     def encoder(format, options = T.unsafe(nil)); end
+
+    # Extract the options for the scanner from the +options+ hash.
+    #
+    # Returns an empty Hash if <tt>:scanner_options</tt> is not set.
+    #
+    # This is used if a method like CodeRay.encode has to provide options
+    # for Encoder _and_ scanner.
     def get_scanner_options(options); end
+
+    # Highlight a string into a HTML <div>.
+    #
+    # CSS styles use classes, so you have to include a stylesheet
+    # in your output.
+    #
+    # See encode.
     def highlight(code, lang, options = T.unsafe(nil), format = T.unsafe(nil)); end
+
+    # Highlight a file into a HTML <div>.
+    #
+    # CSS styles use classes, so you have to include a stylesheet
+    # in your output.
+    #
+    # See encode.
     def highlight_file(filename, options = T.unsafe(nil), format = T.unsafe(nil)); end
+
+    # Scans the given +code+ (a String) with the Scanner for +lang+.
+    #
+    # This is a simple way to use CodeRay. Example:
+    # require 'coderay'
+    # page = CodeRay.scan("puts 'Hello, world!'", :ruby).html
+    #
+    # See also demo/demo_simple.
     def scan(code, lang, options = T.unsafe(nil), &block); end
+
+    # Scans +filename+ (a path to a code file) with the Scanner for +lang+.
+    #
+    # If +lang+ is :auto or omitted, the CodeRay::FileType module is used to
+    # determine it. If it cannot find out what type it is, it uses
+    # CodeRay::Scanners::Text.
+    #
+    # Calls CodeRay.scan.
+    #
+    # Example:
+    # require 'coderay'
+    # page = CodeRay.scan_file('some_c_code.c').html
     def scan_file(filename, lang = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+    # Finds the Scanner class for +lang+ and creates an instance, passing
+    # +options+ to it.
+    #
+    # See Scanner.new.
     def scanner(lang, options = T.unsafe(nil), &block); end
   end
 end
 
 CodeRay::CODERAY_PATH = T.let(T.unsafe(nil), String)
 
+# = Duo
+#
+# A Duo is a convenient way to use CodeRay. You just create a Duo,
+# giving it a lang (language of the input code) and a format (desired
+# output format), and call Duo#highlight with the code.
+#
+# Duo makes it easy to re-use both scanner and encoder for a repetitive
+# task. It also provides a very easy interface syntax:
+#
+# require 'coderay'
+# CodeRay::Duo[:python, :div].highlight 'import this'
+#
+# Until you want to do uncommon things with CodeRay, I recommend to use
+# this method, since it takes care of everything.
 class CodeRay::Duo
+  # Create a new Duo, holding a lang and a format to highlight code.
+  #
+  # simple:
+  # CodeRay::Duo[:ruby, :html].highlight 'bla 42'
+  #
+  # with options:
+  # CodeRay::Duo[:ruby, :html, :hint => :debug].highlight '????::??'
+  #
+  # alternative syntax without options:
+  # CodeRay::Duo[:ruby => :statistic].encode 'class << self; end'
+  #
+  # alternative syntax with options:
+  # CodeRay::Duo[{ :ruby => :statistic }, :do => :something].encode 'abc'
+  #
+  # The options are forwarded to scanner and encoder
+  # (see CodeRay.get_scanner_options).
   def initialize(lang = T.unsafe(nil), format = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Tokenize and highlight the code using +scanner+ and +encoder+.
+  # Allows to use Duo like a proc object:
+  #
+  # CodeRay::Duo[:python => :yaml].call(code)
+  #
+  # or, in Ruby 1.9 and later:
+  #
+  # CodeRay::Duo[:python => :yaml].(code)
   def call(code, options = T.unsafe(nil)); end
+
+  # Tokenize and highlight the code using +scanner+ and +encoder+.
   def encode(code, options = T.unsafe(nil)); end
+
+  # The encoder of the duo. Only created once.
   def encoder; end
+
+  # Returns the value of attribute format.
   def format; end
+
+  # Sets the attribute format
   def format=(_arg0); end
+
+  # Tokenize and highlight the code using +scanner+ and +encoder+.
   def highlight(code, options = T.unsafe(nil)); end
+
+  # Returns the value of attribute lang.
   def lang; end
+
+  # Sets the attribute lang
   def lang=(_arg0); end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # Sets the attribute options
   def options=(_arg0); end
+
+  # The scanner of the duo. Only created once.
   def scanner; end
 
   class << self
+    # To allow calls like Duo[:ruby, :html].highlight.
     def [](*_arg0); end
   end
 end
 
+# This module holds the Encoder class and its subclasses.
+# For example, the HTML encoder is named CodeRay::Encoders::HTML
+# can be found in coderay/encoders/html.
+#
+# Encoders also provides methods and constants for the register
+# mechanism and the [] method that returns the Encoder class
+# belonging to the given format.
 module CodeRay::Encoders
   extend ::CodeRay::PluginHost
 end
 
+# A simple Filter that removes all tokens of the :comment kind.
+#
+# Alias: +remove_comments+
+#
+# Usage:
+# CodeRay.scan('print # foo', :ruby).comment_filter.text
+# #-> "print "
+#
+# See also: TokenKindFilter, LinesOfCode
 class CodeRay::Encoders::CommentFilter < ::CodeRay::Encoders::TokenKindFilter; end
+
 CodeRay::Encoders::CommentFilter::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# Returns the number of tokens.
+#
+# Text and block tokens are counted.
 class CodeRay::Encoders::Count < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -62,6 +351,16 @@ class CodeRay::Encoders::Count < ::CodeRay::Encoders::Encoder
   def setup(options); end
 end
 
+# = Debug Encoder
+#
+# Fast encoder producing simple debug output.
+#
+# It is readable and diff-able and is used for testing.
+#
+# You cannot fully restore the tokens information from the
+# output, because consecutive :space tokens are merged.
+#
+# See also: Scanners::Debug
 class CodeRay::Encoders::Debug < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -72,6 +371,16 @@ end
 
 CodeRay::Encoders::Debug::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# = Debug Lint Encoder
+#
+# Debug encoder with additional checks for:
+#
+# - empty tokens
+# - incorrect nesting
+#
+# It will raise an InvalidTokenStream exception when any of the above occurs.
+#
+# See also: Encoders::Debug
 class CodeRay::Encoders::DebugLint < ::CodeRay::Encoders::Debug
   def begin_group(kind); end
   def begin_line(kind); end
@@ -85,49 +394,149 @@ class CodeRay::Encoders::DebugLint < ::CodeRay::Encoders::Debug
   def setup(options); end
 end
 
+# Wraps HTML output into a DIV element, using inline styles by default.
+#
+# See Encoders::HTML for available options.
 class CodeRay::Encoders::Div < ::CodeRay::Encoders::HTML; end
+
 CodeRay::Encoders::Div::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::Div::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# = Encoder
+#
+# The Encoder base class. Together with Scanner and
+# Tokens, it forms the highlighting triad.
+#
+# Encoder instances take a Tokens object and do something with it.
+#
+# The most common Encoder is surely the HTML encoder
+# (CodeRay::Encoders::HTML). It highlights the code in a colorful
+# html page.
+# If you want the highlighted code in a div or a span instead,
+# use its subclasses Div and Span.
 class CodeRay::Encoders::Encoder
   extend ::CodeRay::Plugin
 
+  # Creates a new Encoder.
+  # +options+ is saved and used for all encode operations, as long
+  # as you don't overwrite it there by passing additional options.
+  #
+  # Encoder objects provide three encode methods:
+  # - encode simply takes a +code+ string and a +lang+
+  # - encode_tokens expects a +tokens+ object instead
+  #
+  # Each method has an optional +options+ parameter. These are
+  # added to the options you passed at creation.
   def initialize(options = T.unsafe(nil)); end
 
   def <<(token); end
+
+  # Starts a token group with the given +kind+.
   def begin_group(kind); end
+
+  # Starts a new line token group with the given +kind+.
   def begin_line(kind); end
+
+  # Encode the given +code+ using the Scanner for +lang+.
   def encode(code, lang, options = T.unsafe(nil)); end
+
+  # Encode a Tokens object.
   def encode_tokens(tokens, options = T.unsafe(nil)); end
+
+  # Ends a token group with the given +kind+.
   def end_group(kind); end
+
+  # Ends a new line token group with the given +kind+.
   def end_line(kind); end
+
+  # The default file extension for this encoder.
   def file_extension; end
+
+  # Encode the given +code+ using the Scanner for +lang+.
+  # You can use highlight instead of encode, if that seems
+  # more clear to you.
   def highlight(code, lang, options = T.unsafe(nil)); end
+
+  # The options you gave the Encoder at creating.
   def options; end
+
+  # The options you gave the Encoder at creating.
   def options=(_arg0); end
+
+  # The options you gave the Encoder at creating.
   def scanner; end
+
+  # The options you gave the Encoder at creating.
   def scanner=(_arg0); end
+
+  # Called for each text token ([text, kind]), where text is a String.
   def text_token(text, kind); end
+
+  # Called with +content+ and +kind+ of the currently scanned token.
+  # For simple scanners, it's enougth to implement this method.
+  #
+  # By default, it calls text_token, begin_group, end_group, begin_line,
+  # or end_line, depending on the +content+.
   def token(content, kind); end
+
+  # Do the encoding.
+  #
+  # The already created +tokens+ object must be used; it must be a
+  # Tokens object.
   def tokens(tokens, options = T.unsafe(nil)); end
 
   protected
 
+  # Do the encoding.
+  #
+  # The already created +tokens+ object must be used; it must be a
+  # Tokens object.
   def compile(tokens, options = T.unsafe(nil)); end
+
+  # Called with merged options after encoding starts.
+  # The return value is the result of encoding, typically @out.
   def finish(options); end
+
   def get_output(options); end
+
+  # Append data.to_s to the output. Returns the argument.
   def output(data); end
+
+  # Called with merged options before encoding starts.
+  # Sets @out to an empty string.
+  #
+  # See the HTML Encoder for an example of option caching.
   def setup(options); end
 
   class << self
+    # If FILE_EXTENSION isn't defined, this method returns the
+    # downcase class name instead.
     def const_missing(sym); end
+
+    # The default file extension for output file of this encoder class.
     def file_extension; end
   end
 end
 
+# Subclasses are to store their default options in this constant.
 CodeRay::Encoders::Encoder::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
+
 CodeRay::Encoders::Encoder::PLUGIN_HOST = CodeRay::Encoders
 
+# A Filter encoder has another Tokens instance as output.
+# It can be subclass to select, remove, or modify tokens in the stream.
+#
+# Subclasses of Filter are called "Filters" and can be chained.
+#
+# == Options
+#
+# === :tokens
+#
+# The Tokens object which will receive the output.
+#
+# Default: Tokens.new
+#
+# See also: TokenKindFilter
 class CodeRay::Encoders::Filter < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -141,10 +550,107 @@ class CodeRay::Encoders::Filter < ::CodeRay::Encoders::Encoder
   def setup(options); end
 end
 
+# = HTML Encoder
+#
+# This is CodeRay's most important highlighter:
+# It provides save, fast XHTML generation and CSS support.
+#
+# == Usage
+#
+# require 'coderay'
+# puts CodeRay.scan('Some /code/', :ruby).html  #-> a HTML page
+# puts CodeRay.scan('Some /code/', :ruby).html(:wrap => :span)
+# #-> <span class="CodeRay"><span class="co">Some</span> /code/</span>
+# puts CodeRay.scan('Some /code/', :ruby).span  #-> the same
+#
+# puts CodeRay.scan('Some code', :ruby).html(
+# :wrap => nil,
+# :line_numbers => :inline,
+# :css => :style
+# )
+#
+# == Options
+#
+# === :tab_width
+# Convert \t characters to +n+ spaces (a number or false.)
+# false will keep tab characters untouched.
+#
+# Default: 8
+#
+# === :css
+# How to include the styles; can be :class or :style.
+#
+# Default: :class
+#
+# === :wrap
+# Wrap in :page, :div, :span or nil.
+#
+# You can also use Encoders::Div and Encoders::Span.
+#
+# Default: nil
+#
+# === :title
+#
+# The title of the HTML page (works only when :wrap is set to :page.)
+#
+# Default: 'CodeRay output'
+#
+# === :break_lines
+#
+# Split multiline blocks at line breaks.
+# Forced to true if :line_numbers option is set to :inline.
+#
+# Default: false
+#
+# === :line_numbers
+# Include line numbers in :table, :inline, or nil (no line numbers)
+#
+# Default: nil
+#
+# === :line_number_anchors
+# Adds anchors and links to the line numbers. Can be false (off), true (on),
+# or a prefix string that will be prepended to the anchor name.
+#
+# The prefix must consist only of letters, digits, and underscores.
+#
+# Default: true, default prefix name: "line"
+#
+# === :line_number_start
+# Where to start with line number counting.
+#
+# Default: 1
+#
+# === :bold_every
+# Make every +n+-th number appear bold.
+#
+# Default: 10
+#
+# === :highlight_lines
+#
+# Highlights certain line numbers.
+# Can be any Enumerable, typically just an Array or Range, of numbers.
+#
+# Bolding is deactivated when :highlight_lines is set. It only makes sense
+# in combination with :line_numbers.
+#
+# Default: nil
+#
+# === :hint
+# Include some information into the output using the title attribute.
+# Can be :info (show token kind on mouse-over), :info_long (with full path)
+# or :debug (via inspect).
+#
+# Default: false
 class CodeRay::Encoders::HTML < ::CodeRay::Encoders::Encoder
+  # token groups, eg. strings
   def begin_group(kind); end
+
+  # whole lines to be highlighted, eg. a deleted line in a diff
   def begin_line(kind); end
+
+  # Returns the value of attribute css.
   def css; end
+
   def end_group(kind); end
   def end_line(kind); end
   def text_token(text, kind); end
@@ -163,6 +669,10 @@ class CodeRay::Encoders::HTML < ::CodeRay::Encoders::Encoder
 
   class << self
     def make_html_escape_hash; end
+
+    # Generate a hint about the given +kinds+ in a +hint+ style.
+    #
+    # +hint+ may be :info, :info_long or :debug.
     def token_path_to_hint(hint, kinds); end
   end
 end
@@ -171,6 +681,8 @@ class CodeRay::Encoders::HTML::CSS
   def initialize(style = T.unsafe(nil)); end
 
   def get_style_for_css_classes(css_classes); end
+
+  # Returns the value of attribute stylesheet.
   def stylesheet; end
 
   private
@@ -194,19 +706,38 @@ module CodeRay::Encoders::HTML::Numbering
   end
 end
 
+# This module is included in the output String of the HTML Encoder.
+#
+# It provides methods like wrap, div, page etc.
+#
+# Remember to use #clone instead of #dup to keep the modules the object was
+# extended with.
+#
+# TODO: Rewrite this without monkey patching.
 module CodeRay::Encoders::HTML::Output
   def apply_title!(title); end
+
+  # Returns the value of attribute css.
   def css; end
+
+  # Sets the attribute css
   def css=(_arg0); end
+
   def stylesheet(in_tag = T.unsafe(nil)); end
   def wrap!(element, *args); end
   def wrap_in!(template); end
   def wrapped_in; end
+
+  # Sets the attribute wrapped_in
   def wrapped_in=(_arg0); end
+
   def wrapped_in?(element); end
 
   class << self
+    # Raises an exception if an object that doesn't respond to to_str is extended by Output,
+    # to prevent users from misuse. Use Module#remove_method to disable.
     def extended(o); end
+
     def make_stylesheet(css, in_tag = T.unsafe(nil)); end
     def page_template_for_css(css); end
   end
@@ -217,6 +748,7 @@ CodeRay::Encoders::HTML::Output::PAGE = T.let(T.unsafe(nil), CodeRay::Encoders::
 CodeRay::Encoders::HTML::Output::SPAN = T.let(T.unsafe(nil), CodeRay::Encoders::HTML::Output::Template)
 CodeRay::Encoders::HTML::Output::TABLE = T.let(T.unsafe(nil), CodeRay::Encoders::HTML::Output::Template)
 
+# -- don't include the templates in docu
 class CodeRay::Encoders::HTML::Output::Template < ::String
   def apply(target, replacement); end
 
@@ -228,6 +760,20 @@ end
 CodeRay::Encoders::HTML::TOKEN_KIND_TO_INFO = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::HTML::TRANSPARENT_TOKEN_KINDS = T.let(T.unsafe(nil), Set)
 
+# A simple JSON Encoder.
+#
+# Example:
+# CodeRay.scan('puts "Hello world!"', :ruby).json
+# yields
+# [
+# {"type"=>"text", "text"=>"puts", "kind"=>"ident"},
+# {"type"=>"text", "text"=>" ", "kind"=>"space"},
+# {"type"=>"block", "action"=>"open", "kind"=>"string"},
+# {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
+# {"type"=>"text", "text"=>"Hello world!", "kind"=>"content"},
+# {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
+# {"type"=>"block", "action"=>"close", "kind"=>"string"},
+# ]
 class CodeRay::Encoders::JSON < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -244,6 +790,19 @@ end
 
 CodeRay::Encoders::JSON::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# Counts the LoC (Lines of Code). Returns an Integer >= 0.
+#
+# Alias: +loc+
+#
+# Everything that is not comment, markup, doctype/shebang, or an empty line,
+# is considered to be code.
+#
+# For example,
+# * HTML files not containing JavaScript have 0 LoC
+# * in a Java class without comments, LoC is the number of non-empty lines
+#
+# A Scanner class should define the token kinds that are not code in the
+# KINDS_NOT_LOC constant, which defaults to [:comment, :doctype].
 class CodeRay::Encoders::LinesOfCode < ::CodeRay::Encoders::TokenKindFilter
   protected
 
@@ -253,6 +812,16 @@ end
 
 CodeRay::Encoders::LinesOfCode::NON_EMPTY_LINE = T.let(T.unsafe(nil), Regexp)
 
+# = Lint Encoder
+#
+# Checks for:
+#
+# - empty tokens
+# - incorrect nesting
+#
+# It will raise an InvalidTokenStream exception when any of the above occurs.
+#
+# See also: Encoders::DebugLint
 class CodeRay::Encoders::Lint < ::CodeRay::Encoders::Debug
   def begin_group(kind); end
   def begin_line(kind); end
@@ -271,17 +840,33 @@ class CodeRay::Encoders::Lint::IncorrectTokenGroupNesting < ::CodeRay::Encoders:
 class CodeRay::Encoders::Lint::InvalidTokenStream < ::StandardError; end
 class CodeRay::Encoders::Lint::UnknownTokenKind < ::CodeRay::Encoders::Lint::InvalidTokenStream; end
 
+# = Null Encoder
+#
+# Does nothing and returns an empty string.
 class CodeRay::Encoders::Null < ::CodeRay::Encoders::Encoder
   def text_token(text, kind); end
 end
 
+# Wraps the output into a HTML page, using CSS classes and
+# line numbers in the table format by default.
+#
+# See Encoders::HTML for available options.
 class CodeRay::Encoders::Page < ::CodeRay::Encoders::HTML; end
+
 CodeRay::Encoders::Page::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::Page::FILE_EXTENSION = T.let(T.unsafe(nil), String)
+
+# Wraps HTML output into a SPAN element, using inline styles by default.
+#
+# See Encoders::HTML for available options.
 class CodeRay::Encoders::Span < ::CodeRay::Encoders::HTML; end
+
 CodeRay::Encoders::Span::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::Span::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# Makes a statistic for the given tokens.
+#
+# Alias: +stats+
 class CodeRay::Encoders::Statistic < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -302,9 +887,16 @@ CodeRay::Encoders::Statistic::STATS = T.let(T.unsafe(nil), String)
 CodeRay::Encoders::Statistic::TOKEN_TYPES_ROW = T.let(T.unsafe(nil), String)
 
 class CodeRay::Encoders::Statistic::TypeStats < ::Struct
+  # Returns the value of attribute count
   def count; end
+
+  # Sets the attribute count
   def count=(_); end
+
+  # Returns the value of attribute size
   def size; end
+
+  # Sets the attribute size
   def size=(_); end
 
   class << self
@@ -333,6 +925,17 @@ end
 
 CodeRay::Encoders::Terminal::TOKEN_COLORS = T.let(T.unsafe(nil), Hash)
 
+# Concats the tokens into a single string, resulting in the original
+# code string if no tokens were removed.
+#
+# Alias: +plain+, +plaintext+
+#
+# == Options
+#
+# === :separator
+# A separator string to join the tokens.
+#
+# Default: empty String
 class CodeRay::Encoders::Text < ::CodeRay::Encoders::Encoder
   def text_token(text, kind); end
 
@@ -344,11 +947,44 @@ end
 CodeRay::Encoders::Text::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::Text::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# A Filter that selects tokens based on their token kind.
+#
+# == Options
+#
+# === :exclude
+#
+# One or many symbols (in an Array) which shall be excluded.
+#
+# Default: []
+#
+# === :include
+#
+# One or many symbols (in an array) which shall be included.
+#
+# Default: :all, which means all tokens are included.
+#
+# Exclusion wins over inclusion.
+#
+# See also: CommentFilter
 class CodeRay::Encoders::TokenKindFilter < ::CodeRay::Encoders::Filter
+  # Add the token group to the output stream if +kind+ matches the
+  # conditions.
+  #
+  # If it does not, all tokens inside the group are excluded from the
+  # stream, even if their kinds match.
   def begin_group(kind); end
+
+  # See +begin_group+.
   def begin_line(kind); end
+
+  # Take care of re-enabling the delegation of tokens to the output stream
+  # if an exluded group has ended.
   def end_group(kind); end
+
+  # See +end_group+.
   def end_line(kind); end
+
+  # Add the token to the output stream if +kind+ matches the conditions.
   def text_token(text, kind); end
 
   protected
@@ -360,6 +996,9 @@ end
 
 CodeRay::Encoders::TokenKindFilter::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# = XML Encoder
+#
+# Uses REXML. Very slow.
 class CodeRay::Encoders::XML < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def end_group(kind); end
@@ -374,6 +1013,9 @@ end
 CodeRay::Encoders::XML::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Encoders::XML::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# = YAML Encoder
+#
+# Slow.
 class CodeRay::Encoders::YAML < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -389,9 +1031,34 @@ end
 
 CodeRay::Encoders::YAML::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 
+# = FileType
+#
+# A simple filetype recognizer.
+#
+# == Usage
+#
+# # determine the type of the given
+# lang = FileType[file_name]
+#
+# # return :text if the file type is unknown
+# lang = FileType.fetch file_name, :text
+#
+# # try the shebang line, too
+# lang = FileType.fetch file_name, :text, true
 module CodeRay::FileType
   class << self
+    # Try to determine the file type of the file.
+    #
+    # +filename+ is a relative or absolute path to a file.
+    #
+    # The file itself is only accessed when +read_shebang+ is set to true.
+    # That means you can get filetypes from files that don't exist.
     def [](filename, read_shebang = T.unsafe(nil)); end
+
+    # This works like Hash#fetch.
+    #
+    # If the filetype cannot be found, the +default+ value
+    # is returned.
     def fetch(filename, default = T.unsafe(nil), read_shebang = T.unsafe(nil)); end
 
     protected
@@ -405,48 +1072,180 @@ CodeRay::FileType::TypeFromName = T.let(T.unsafe(nil), Hash)
 CodeRay::FileType::TypeFromShebang = T.let(T.unsafe(nil), Regexp)
 class CodeRay::FileType::UnknownFileType < ::Exception; end
 
+# = Plugin
+#
+# Plugins have to include this module.
+#
+# IMPORTANT: Use extend for this module.
+#
+# See CodeRay::PluginHost for examples.
 module CodeRay::Plugin
   def aliases; end
+
+  # The PluginHost for this Plugin class.
   def plugin_host(host = T.unsafe(nil)); end
+
+  # Returns the value of attribute plugin_id.
   def plugin_id; end
+
+  # Register this class for the given +id+.
+  #
+  # Example:
+  # class MyPlugin < PluginHost::BaseClass
+  # register_for :my_id
+  # ...
+  # end
+  #
+  # See PluginHost.register.
   def register_for(id); end
+
+  # Returns the title of the plugin, or sets it to the
+  # optional argument +title+.
   def title(title = T.unsafe(nil)); end
 end
 
+# = PluginHost
+#
+# A simple subclass/subfolder plugin system.
+#
+# Example:
+# class Generators
+# extend PluginHost
+# plugin_path 'app/generators'
+# end
+#
+# class Generator
+# extend Plugin
+# PLUGIN_HOST = Generators
+# end
+#
+# class FancyGenerator < Generator
+# register_for :fancy
+# end
+#
+# Generators[:fancy]  #-> FancyGenerator
+# # or
+# CodeRay.require_plugin 'Generators/fancy'
+# # or
+# Generators::Fancy
 module CodeRay::PluginHost
+  # Returns the Plugin for +id+.
+  #
+  # Example:
+  # yaml_plugin = MyPluginHost[:yaml]
   def [](id, *args, &blk); end
+
+  # Returns an array of all Plugins.
+  #
+  # Note: This loads all plugins using load_all.
   def all_plugins; end
+
+  # Tries to +load+ the missing plugin by translating +const+ to the
+  # underscore form (eg. LinesOfCode becomes lines_of_code).
   def const_missing(const); end
+
+  # Define the default plugin to use when no plugin is found
+  # for a given id, or return the default plugin.
+  #
+  # See also map.
+  #
+  # class MyColorHost < PluginHost
+  # map :navy => :dark_blue
+  # default :gray
+  # end
+  #
+  # MyColorHost.default  # loads and returns the Gray plugin
   def default(id = T.unsafe(nil)); end
+
+  # Returns an array of all .rb files in the plugin path.
+  #
+  # The extension .rb is not included.
   def list; end
+
+  # Returns the Plugin for +id+.
+  #
+  # Example:
+  # yaml_plugin = MyPluginHost[:yaml]
   def load(id, *args, &blk); end
+
+  # Loads all plugins using list and load.
   def load_all; end
+
+  # Loads the map file (see map).
+  #
+  # This is done automatically when plugin_path is called.
   def load_plugin_map; end
+
+  # Map a plugin_id to another.
+  #
+  # Usage: Put this in a file plugin_path/_map.rb.
+  #
+  # class MyColorHost < PluginHost
+  # map :navy => :dark_blue,
+  # :maroon => :brown,
+  # :luna => :moon
+  # end
   def map(hash); end
+
+  # A Hash of plugion_id => Plugin pairs.
   def plugin_hash; end
+
+  # The path where the plugins can be found.
   def plugin_path(*args); end
+
+  # Every plugin must register itself for +id+ by calling register_for,
+  # which calls this method.
+  #
+  # See Plugin#register_for.
   def register(plugin, id); end
 
   protected
 
+  # Return a plugin hash that automatically loads plugins.
   def make_plugin_hash; end
+
+  # Returns the expected path to the plugin file for the given id.
   def path_to(plugin_id); end
+
+  # Converts +id+ to a valid plugin ID String, or returns +nil+.
+  #
+  # Raises +ArgumentError+ for all other objects, or if the
+  # given String includes non-alphanumeric characters (\W).
   def validate_id(id); end
 
   class << self
+    # Adds the module/class to the PLUGIN_HOSTS list.
     def extended(mod); end
   end
 end
 
 class CodeRay::PluginHost::HostNotFound < ::LoadError; end
 CodeRay::PluginHost::PLUGIN_HOSTS = T.let(T.unsafe(nil), Array)
+
+# dummy hash
 CodeRay::PluginHost::PLUGIN_HOSTS_BY_ID = T.let(T.unsafe(nil), Hash)
+
+# Raised if Encoders::[] fails because:
+# * a file could not be found
+# * the requested Plugin is not registered
 class CodeRay::PluginHost::PluginNotFound < ::LoadError; end
 
+# = Scanners
+#
+# This module holds the Scanner class and its subclasses.
+# For example, the Ruby scanner is named CodeRay::Scanners::Ruby
+# can be found in coderay/scanners/ruby.
+#
+# Scanner also provides methods and constants for the register
+# mechanism and the [] method that returns the Scanner class
+# belonging to the given lang.
+#
+# See PluginHost.
 module CodeRay::Scanners
   extend ::CodeRay::PluginHost
 end
 
+# Scanner for C.
 class CodeRay::Scanners::C < ::CodeRay::Scanners::Scanner
   protected
 
@@ -488,9 +1287,16 @@ CodeRay::Scanners::CSS::RE::Num = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::CSS::RE::Percentage = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::CSS::RE::PseudoClass = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::CSS::RE::String = T.let(T.unsafe(nil), Regexp)
+
+# TODO: buggy regexp
 CodeRay::Scanners::CSS::RE::String1 = T.let(T.unsafe(nil), Regexp)
+
+# TODO: buggy regexp
 CodeRay::Scanners::CSS::RE::String2 = T.let(T.unsafe(nil), Regexp)
+
+# differs from standard because it allows uppercase hex too
 CodeRay::Scanners::CSS::RE::Unicode = T.let(T.unsafe(nil), Regexp)
+
 CodeRay::Scanners::CSS::RE::Unit = T.let(T.unsafe(nil), Regexp)
 
 class CodeRay::Scanners::Clojure < ::CodeRay::Scanners::Scanner
@@ -552,6 +1358,9 @@ CodeRay::Scanners::Clojure::UREAL16 = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Clojure::UREAL2 = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Clojure::UREAL8 = T.let(T.unsafe(nil), Regexp)
 
+# = Debug Scanner
+#
+# Interprets the output of the Encoders::Debug encoder (basically the inverse function).
 class CodeRay::Scanners::Debug < ::CodeRay::Scanners::Scanner
   protected
 
@@ -559,6 +1368,9 @@ class CodeRay::Scanners::Debug < ::CodeRay::Scanners::Scanner
   def setup; end
 end
 
+# Scanner for the Delphi language (Object Pascal).
+#
+# Alias: +pascal+
 class CodeRay::Scanners::Delphi < ::CodeRay::Scanners::Scanner
   protected
 
@@ -570,6 +1382,9 @@ CodeRay::Scanners::Delphi::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList::
 CodeRay::Scanners::Delphi::KEYWORDS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Delphi::NAME_FOLLOWS = T.let(T.unsafe(nil), CodeRay::WordList::CaseIgnoring)
 
+# Scanner for output of the diff command.
+#
+# Alias: +patch+
 class CodeRay::Scanners::Diff < ::CodeRay::Scanners::Scanner
   protected
 
@@ -582,6 +1397,7 @@ end
 
 CodeRay::Scanners::Diff::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
+# Scanner for HTML ERB templates.
 class CodeRay::Scanners::ERB < ::CodeRay::Scanners::Scanner
   protected
 
@@ -602,12 +1418,19 @@ end
 
 CodeRay::Scanners::Go::ESCAPE = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Go::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
+
+# http://golang.org/ref/spec#Keywords
 CodeRay::Scanners::Go::KEYWORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::Go::PREDEFINED_CONSTANTS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Go::PREDEFINED_FUNCTIONS = T.let(T.unsafe(nil), Array)
+
+# http://golang.org/ref/spec#Types
 CodeRay::Scanners::Go::PREDEFINED_TYPES = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::Go::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# Scanner for Groovy.
 class CodeRay::Scanners::Groovy < ::CodeRay::Scanners::Java
   protected
 
@@ -616,12 +1439,18 @@ class CodeRay::Scanners::Groovy < ::CodeRay::Scanners::Java
 end
 
 CodeRay::Scanners::Groovy::ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+# TODO: check list of keywords
 CodeRay::Scanners::Groovy::GROOVY_KEYWORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::Groovy::GROOVY_MAGIC_VARIABLES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Groovy::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
 CodeRay::Scanners::Groovy::KEYWORDS_EXPECTING_VALUE = T.let(T.unsafe(nil), CodeRay::WordList)
 CodeRay::Scanners::Groovy::REGEXP_ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+# TODO: interpretation inside ', ", /
 CodeRay::Scanners::Groovy::STRING_CONTENT_PATTERN = T.let(T.unsafe(nil), Hash)
+
 CodeRay::Scanners::Groovy::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
 class CodeRay::Scanners::HAML < ::CodeRay::Scanners::Scanner
@@ -633,6 +1462,11 @@ end
 
 CodeRay::Scanners::HAML::KINDS_NOT_LOC = T.let(T.unsafe(nil), Array)
 
+# HTML Scanner
+#
+# Alias: +xhtml+
+#
+# See also: Scanners::XML
 class CodeRay::Scanners::HTML < ::CodeRay::Scanners::Scanner
   def reset; end
 
@@ -653,10 +1487,13 @@ CodeRay::Scanners::HTML::KINDS_NOT_LOC = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::HTML::PLAIN_STRING_CONTENT = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::HTML::TAG_END = T.let(T.unsafe(nil), Regexp)
 
+# Scanner for JSON (JavaScript Object Notation).
 class CodeRay::Scanners::JSON < ::CodeRay::Scanners::Scanner
   protected
 
+  # See http://json.org/ for a definition of the JSON lexic/grammar.
   def scan_tokens(encoder, options); end
+
   def setup; end
 end
 
@@ -665,6 +1502,7 @@ CodeRay::Scanners::JSON::KEY = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::JSON::KINDS_NOT_LOC = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::JSON::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# Scanner for Java.
 class CodeRay::Scanners::Java < ::CodeRay::Scanners::Scanner
   protected
 
@@ -678,13 +1516,19 @@ CodeRay::Scanners::Java::DIRECTIVES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Java::ESCAPE = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Java::IDENT = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Java::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
+
+# http://java.sun.com/docs/books/tutorial/java/nutsandbolts/_keywords.html
 CodeRay::Scanners::Java::KEYWORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::Java::MAGIC_VARIABLES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Java::RESERVED = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Java::STRING_CONTENT_PATTERN = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::Java::TYPES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Java::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# Scanner for JavaScript.
+#
+# Aliases: +ecmascript+, +ecma_script+, +javascript+
 class CodeRay::Scanners::JavaScript < ::CodeRay::Scanners::Scanner
   protected
 
@@ -696,28 +1540,62 @@ end
 
 CodeRay::Scanners::JavaScript::ESCAPE = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::JavaScript::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
+
+# The actual JavaScript keywords.
 CodeRay::Scanners::JavaScript::KEYWORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::JavaScript::KEYWORDS_EXPECTING_VALUE = T.let(T.unsafe(nil), CodeRay::WordList)
 CodeRay::Scanners::JavaScript::KEY_CHECK_PATTERN = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::JavaScript::MAGIC_VARIABLES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::JavaScript::PREDEFINED_CONSTANTS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::JavaScript::REGEXP_ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+# Reserved for future use.
 CodeRay::Scanners::JavaScript::RESERVED_WORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::JavaScript::STRING_CONTENT_PATTERN = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::JavaScript::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# Scanner for the Lua[http://lua.org] programming lanuage.
+#
+# The language’s complete syntax is defined in
+# {the Lua manual}[http://www.lua.org/manual/5.2/manual.html],
+# which is what this scanner tries to conform to.
 class CodeRay::Scanners::Lua < ::CodeRay::Scanners::Scanner
   protected
 
+  # CodeRay entry hook. Starts parsing.
   def scan_tokens(encoder, options); end
+
+  # Scanner initialization.
   def setup; end
 end
 
+# Automatic token kind selection for normal words.
 CodeRay::Scanners::Lua::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
+
+# Keywords used in Lua.
 CodeRay::Scanners::Lua::KEYWORDS = T.let(T.unsafe(nil), Array)
+
+# Constants set by the Lua core.
 CodeRay::Scanners::Lua::PREDEFINED_CONSTANTS = T.let(T.unsafe(nil), Array)
+
+# The expressions contained in this array are parts of Lua’s `basic'
+# library. Although it’s not entirely necessary to load that library,
+# it is highly recommended and one would have to provide own implementations
+# of some of these expressions if one does not do so. They however aren’t
+# keywords, neither are they constants, but nearly predefined, so they
+# get tagged as `predefined' rather than anything else.
+#
+# This list excludes values of form `_UPPERCASE' because the Lua manual
+# requires such identifiers to be reserved by Lua anyway and they are
+# highlighted directly accordingly, without the need for specific
+# identifiers to be listed here.
 CodeRay::Scanners::Lua::PREDEFINED_EXPRESSIONS = T.let(T.unsafe(nil), Array)
 
+# Scanner for PHP.
+#
+# Original by Stefan Walk.
 class CodeRay::Scanners::PHP < ::CodeRay::Scanners::Scanner
   protected
 
@@ -735,17 +1613,31 @@ CodeRay::Scanners::PHP::RE::PHP_END = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::PHP::RE::PHP_START = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::PHP::RE::VARIABLE = T.let(T.unsafe(nil), Regexp)
 module CodeRay::Scanners::PHP::Words; end
+
+# according to http://php.net/quickref.php on 2009-04-21;
+# all functions with _ excluded (module functions) and selected additional functions
 CodeRay::Scanners::PHP::Words::BUILTIN_FUNCTIONS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::PHP::Words::CLASSES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::PHP::Words::CONSTANTS = T.let(T.unsafe(nil), Array)
+
+# TODO: more built-in PHP functions?
 CodeRay::Scanners::PHP::Words::EXCEPTIONS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::PHP::Words::IDENT_KIND = T.let(T.unsafe(nil), CodeRay::WordList::CaseIgnoring)
+
+# according to http://www.php.net/manual/en/reserved.keywords.php
 CodeRay::Scanners::PHP::Words::KEYWORDS = T.let(T.unsafe(nil), Array)
+
 CodeRay::Scanners::PHP::Words::LANGUAGE_CONSTRUCTS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::PHP::Words::PREDEFINED = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::PHP::Words::TYPES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::PHP::Words::VARIABLE_KIND = T.let(T.unsafe(nil), CodeRay::WordList)
 
+# Scanner for Python. Supports Python 3.
+#
+# Based on pygments' PythonLexer, see
+# http://dev.pocoo.org/projects/pygments/browser/pygments/lexers/agile.py.
 class CodeRay::Scanners::Python < ::CodeRay::Scanners::Scanner
   protected
 
@@ -768,6 +1660,9 @@ CodeRay::Scanners::Python::STRING_CONTENT_REGEXP = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::Python::STRING_DELIMITER_REGEXP = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::Python::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# = Raydebug Scanner
+#
+# Highlights the output of the Encoders::Debug encoder.
 class CodeRay::Scanners::Raydebug < ::CodeRay::Scanners::Scanner
   protected
 
@@ -775,6 +1670,13 @@ class CodeRay::Scanners::Raydebug < ::CodeRay::Scanners::Scanner
   def setup; end
 end
 
+# This scanner is really complex, since Ruby _is_ a complex language!
+#
+# It tries to highlight 100% of all common code,
+# and 90% of strange codes.
+#
+# It is optimized for HTML highlighting, and is not very useful for
+# parsing or pretty printing.
 class CodeRay::Scanners::Ruby < ::CodeRay::Scanners::Scanner
   def interpreted_string_state; end
 
@@ -840,6 +1742,7 @@ end
 CodeRay::Scanners::Ruby::StringState::CLOSING_PAREN = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::Ruby::StringState::STRING_PATTERN = T.let(T.unsafe(nil), Hash)
 
+# by Josh Goebel
 class CodeRay::Scanners::SQL < ::CodeRay::Scanners::Scanner
   def scan_tokens(encoder, options); end
 end
@@ -857,6 +1760,7 @@ CodeRay::Scanners::SQL::STRING_CONTENT_PATTERN = T.let(T.unsafe(nil), Hash)
 CodeRay::Scanners::SQL::STRING_PREFIXES = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::SQL::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
 
+# A scanner for Sass.
 class CodeRay::Scanners::Sass < ::CodeRay::Scanners::CSS
   protected
 
@@ -864,43 +1768,137 @@ class CodeRay::Scanners::Sass < ::CodeRay::Scanners::CSS
   def setup; end
 end
 
+# = Scanner
+#
+# The base class for all Scanners.
+#
+# It is a subclass of Ruby's great +StringScanner+, which
+# makes it easy to access the scanning methods inside.
+#
+# It is also +Enumerable+, so you can use it like an Array of
+# Tokens:
+#
+# require 'coderay'
+#
+# c_scanner = CodeRay::Scanners[:c].new "if (*p == '{') nest++;"
+#
+# for text, kind in c_scanner
+# puts text if kind == :operator
+# end
+#
+# # prints: (*==)++;
+#
+# OK, this is a very simple example :)
+# You can also use +map+, +any?+, +find+ and even +sort_by+,
+# if you want.
 class CodeRay::Scanners::Scanner < ::StringScanner
   include ::Enumerable
   extend ::CodeRay::Plugin
 
+  # Create a new Scanner.
+  #
+  # * +code+ is the input String and is handled by the superclass
+  # StringScanner.
+  # * +options+ is a Hash with Symbols as keys.
+  # It is merged with the default options of the class (you can
+  # overwrite default options here.)
+  #
+  # Else, a Tokens object is used.
   def initialize(code = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # The string in binary encoding.
+  #
+  # To be used with #pos, which is the index of the byte the scanner
+  # will scan next.
   def binary_string; end
+
+  # The current column position of the scanner, starting with 1.
+  # See also: #line.
   def column(pos = T.unsafe(nil)); end
+
+  # Traverse the tokens.
   def each(&block); end
+
+  # the default file extension for this scanner
   def file_extension; end
+
+  # the Plugin ID for this scanner
   def lang; end
+
+  # The current line position of the scanner, starting with 1.
+  # See also: #column.
+  #
+  # Beware, this is implemented inefficiently. It should be used
+  # for debugging only.
   def line(pos = T.unsafe(nil)); end
+
+  # Sets back the scanner. Subclasses should redefine the reset_instance
+  # method instead of this one.
   def reset; end
+
+  # Returns the value of attribute state.
   def state; end
+
+  # Sets the attribute state
   def state=(_arg0); end
+
+  # Set a new string to be scanned.
   def string=(code); end
+
+  # Scan the code and returns all tokens in a Tokens object.
   def tokenize(source = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Cache the result of tokenize.
   def tokens; end
 
   protected
 
+  # Scanner error with additional status information
   def raise_inspect(message, tokens, state = T.unsafe(nil), ambit = T.unsafe(nil), backtrace = T.unsafe(nil)); end
+
   def raise_inspect_arguments(message, tokens, state, ambit); end
+
+  # Resets the scanner.
   def reset_instance; end
+
+  # Shorthand for scan_until(/\z/).
+  # This method also avoids a JRuby 1.9 mode bug.
   def scan_rest; end
+
+  # This is the central method, and commonly the only one a
+  # subclass implements.
+  #
+  # Subclasses must implement this method; it must return +tokens+
+  # and must only use Tokens#<< for storing scanned tokens!
   def scan_tokens(tokens, options); end
+
   def scanner_state_info(state); end
   def set_string_from_source(source); end
   def set_tokens_from_options(options); end
+
+  # Can be implemented by subclasses to do some initialization
+  # that has to be done once per instance.
+  #
+  # Use reset for initialization that has to be done once per
+  # scan.
   def setup; end
+
   def tokens_last(tokens, n); end
   def tokens_size(tokens); end
 
   class << self
+    # The encoding used internally by this scanner.
     def encoding(name = T.unsafe(nil)); end
+
+    # The typical filename suffix for this scanner's language.
     def file_extension(extension = T.unsafe(nil)); end
+
+    # The lang of this Scanner class, which is equal to its Plugin ID.
     def lang; end
+
+    # Normalizes the given code into a string with UNIX newlines, in the
+    # scanner's internal encoding, with invalid and undefined charachters
+    # replaced by placeholders. Always returns a new object.
     def normalize(code); end
 
     protected
@@ -911,11 +1909,17 @@ class CodeRay::Scanners::Scanner < ::StringScanner
   end
 end
 
+# The default options for all scanner classes.
+#
+# Define @default_options for subclasses.
 CodeRay::Scanners::Scanner::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
+
 CodeRay::Scanners::Scanner::KINDS_NOT_LOC = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::Scanner::PLUGIN_HOST = CodeRay::Scanners
 CodeRay::Scanners::Scanner::SCANNER_STATE_INFO = T.let(T.unsafe(nil), String)
 CodeRay::Scanners::Scanner::SCAN_ERROR_MESSAGE = T.let(T.unsafe(nil), String)
+
+# Raised if a Scanner fails while scanning
 class CodeRay::Scanners::Scanner::ScanError < ::StandardError; end
 
 class CodeRay::Scanners::Taskpaper < ::CodeRay::Scanners::Scanner
@@ -924,6 +1928,11 @@ class CodeRay::Scanners::Taskpaper < ::CodeRay::Scanners::Scanner
   def scan_tokens(encoder, options); end
 end
 
+# Scanner for plain text.
+#
+# Yields just one token of the kind :plain.
+#
+# Alias: +plaintext+, +plain+
 class CodeRay::Scanners::Text < ::CodeRay::Scanners::Scanner
   protected
 
@@ -931,8 +1940,15 @@ class CodeRay::Scanners::Text < ::CodeRay::Scanners::Scanner
 end
 
 CodeRay::Scanners::Text::KINDS_NOT_LOC = T.let(T.unsafe(nil), Array)
+
+# Scanner for XML.
+#
+# Currently this is the same scanner as Scanners::HTML.
 class CodeRay::Scanners::XML < ::CodeRay::Scanners::HTML; end
 
+# Scanner for YAML.
+#
+# Based on the YAML scanner from Syntax by Jamis Buck.
 class CodeRay::Scanners::YAML < ::CodeRay::Scanners::Scanner
   protected
 
@@ -941,64 +1957,221 @@ end
 
 CodeRay::Scanners::YAML::KINDS_NOT_LOC = T.let(T.unsafe(nil), Symbol)
 
+# This module holds the Style class and its subclasses.
+#
+# See Plugin.
 module CodeRay::Styles
   extend ::CodeRay::PluginHost
 end
 
+# A colorful theme using CSS 3 colors (with alpha channel).
 class CodeRay::Styles::Alpha < ::CodeRay::Styles::Style; end
+
 CodeRay::Styles::Alpha::CSS_MAIN_STYLES = T.let(T.unsafe(nil), String)
 CodeRay::Styles::Alpha::TOKEN_COLORS = T.let(T.unsafe(nil), String)
 
+# Base class for styles.
+#
+# Styles are used by Encoders::HTML to colorize tokens.
 class CodeRay::Styles::Style
   extend ::CodeRay::Plugin
 end
 
 CodeRay::Styles::Style::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 CodeRay::Styles::Style::PLUGIN_HOST = CodeRay::Styles
+
+# A Hash of all known token kinds and their associated CSS classes.
 CodeRay::TokenKinds = T.let(T.unsafe(nil), Hash)
 
+# The Tokens class represents a list of tokens returned from
+# a Scanner. It's actually just an Array with a few helper methods.
+#
+# A token itself is not a special object, just two elements in an Array:
+# * the _token_ _text_ (the original source of the token in a String) or
+# a _token_ _action_ (begin_group, end_group, begin_line, end_line)
+# * the _token_ _kind_ (a Symbol representing the type of the token)
+#
+# It looks like this:
+#
+# ..., '# It looks like this', :comment, ...
+# ..., '3.1415926', :float, ...
+# ..., '$^', :error, ...
+#
+# Some scanners also yield sub-tokens, represented by special
+# token actions, for example :begin_group and :end_group.
+#
+# The Ruby scanner, for example, splits "a string" into:
+#
+# [
+# :begin_group, :string,
+# '"',          :delimiter,
+# 'a string',   :content,
+# '"',          :delimiter,
+# :end_group,   :string
+# ]
+#
+# Tokens can be used to save the output of a Scanners in a simple
+# Ruby object that can be send to an Encoder later:
+#
+# tokens = CodeRay.scan('price = 2.59', :ruby).tokens
+# tokens.encode(:html)
+# tokens.html
+# CodeRay.encoder(:html).encode_tokens(tokens)
+#
+# Tokens gives you the power to handle pre-scanned code very easily:
+# You can serialize it to a JSON string and store it in a database, pass it
+# around to encode it more than once, send it to other algorithms...
 class CodeRay::Tokens < ::Array
   def begin_group(kind); end
   def begin_line(kind); end
+
+  # Return the actual number of tokens.
   def count; end
+
+  # Encode the tokens using encoder.
+  #
+  # encoder can be
+  # * a plugin name like :html oder 'statistic'
+  # * an Encoder object
+  #
+  # options are passed to the encoder.
   def encode(encoder, options = T.unsafe(nil)); end
+
   def end_group(kind); end
   def end_line(kind); end
+
+  # Redirects unknown methods to encoder calls.
+  #
+  # For example, if you call +tokens.html+, the HTML encoder
+  # is used to highlight the tokens.
   def method_missing(meth, options = T.unsafe(nil)); end
+
+  # The Scanner instance that created the tokens.
   def scanner; end
+
+  # The Scanner instance that created the tokens.
   def scanner=(_arg0); end
+
+  # Split the tokens into parts of the given +sizes+.
+  #
+  # The result will be an Array of Tokens objects. The parts have
+  # the text size specified by the parameter. In addition, each
+  # part closes all opened tokens. This is useful to insert tokens
+  # betweem them.
+  #
+  # This method is used by @Scanner#tokenize@ when called with an Array
+  # of source strings. The Diff encoder uses it for inline highlighting.
   def split_into_parts(*sizes); end
+
   def text_token(*_arg0); end
+
+  # Turn tokens into a string by concatenating them.
   def to_s; end
+
   def tokens(*_arg0); end
 end
 
+# The result of a scan operation is a TokensProxy, but should act like Tokens.
+#
+# This proxy makes it possible to use the classic CodeRay.scan.encode API
+# while still providing the benefits of direct streaming.
 class CodeRay::TokensProxy
+  # Create a new TokensProxy with the arguments of CodeRay.scan.
   def initialize(input, lang, options = T.unsafe(nil), block = T.unsafe(nil)); end
 
+  # Returns the value of attribute block.
   def block; end
+
+  # Sets the attribute block
   def block=(_arg0); end
+
+  # Overwrite Struct#each.
   def each(*args, &blk); end
+
+  # Call CodeRay.encode if +encoder+ is a Symbol;
+  # otherwise, convert the receiver to tokens and call encoder.encode_tokens.
   def encode(encoder, options = T.unsafe(nil)); end
+
+  # Returns the value of attribute input.
   def input; end
+
+  # Sets the attribute input
   def input=(_arg0); end
+
+  # Returns the value of attribute lang.
   def lang; end
+
+  # Sets the attribute lang
   def lang=(_arg0); end
+
+  # Tries to call encode;
+  # delegates to tokens otherwise.
   def method_missing(method, *args, &blk); end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # Sets the attribute options
   def options=(_arg0); end
+
+  # A (cached) scanner instance to use for the scan task.
   def scanner; end
+
+  # The (cached) result of the tokenized input; a Tokens instance.
   def tokens; end
 end
 
 CodeRay::VERSION = T.let(T.unsafe(nil), String)
 
+# = WordList
+#
+# <b>A Hash subclass designed for mapping word lists to token types.</b>
+#
+# A WordList is a Hash with some additional features.
+# It is intended to be used for keyword recognition.
+#
+# WordList is optimized to be used in Scanners,
+# typically to decide whether a given ident is a special token.
+#
+# For case insensitive words use WordList::CaseIgnoring.
+#
+# Example:
+#
+# # define word arrays
+# RESERVED_WORDS = %w[
+# asm break case continue default do else
+# ]
+#
+# PREDEFINED_TYPES = %w[
+# int long short char void
+# ]
+#
+# # make a WordList
+# IDENT_KIND = WordList.new(:ident).
+# add(RESERVED_WORDS, :reserved).
+# add(PREDEFINED_TYPES, :predefined_type)
+#
+# ...
+#
+# def scan_tokens tokens, options
+# ...
+#
+# elsif scan(/[A-Za-z_][A-Za-z_0-9]*/)
+# # use it
+# kind = IDENT_KIND[match]
+# ...
 class CodeRay::WordList < ::Hash
+  # Create a new WordList with +default+ as default value.
   def initialize(default = T.unsafe(nil)); end
 
+  # Add words to the list and associate them with +value+.
+  #
+  # Returns +self+, so you can concat add calls.
   def add(words, value = T.unsafe(nil)); end
 end
 
+# A CaseIgnoring WordList is like a WordList, only that
+# keys are compared case-insensitively (normalizing keys using +downcase+).
 class CodeRay::WordList::CaseIgnoring < ::CodeRay::WordList
   def [](key); end
   def []=(key, value); end

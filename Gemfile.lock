@@ -16,6 +16,7 @@ PATH
       sorbet-static (>= 0.5.6200)
       spoom
       thor (>= 0.19.2)
+      yard-sorbet
 
 GEM
   remote: https://rubygems.org/
@@ -283,6 +284,9 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     yard (0.9.26)
+    yard-sorbet (0.5.3)
+      sorbet-runtime (>= 0.5)
+      yard (>= 0.9)
     zeitwerk (2.4.2)
 
 PLATFORMS
@@ -314,7 +318,6 @@ DEPENDENCIES
   sqlite3
   state_machines
   tapioca!
-  yard (~> 0.9.25)
 
 BUNDLED WITH
    2.2.27

@@ -8,6 +8,13 @@
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
 class BasicObject
+  # Return a binding object for the receiver.
+  #
+  # The `self` of the binding is set to the current object, and it contains no
+  # local variables.
+  #
+  # The default definee (http://yugui.jp/articles/846) is set such that new
+  # methods defined will be added to the singleton class of the BasicObject.
   def __binding__; end
 end
 
@@ -24,7 +31,29 @@ class Object < ::BasicObject
   include ::ActiveSupport::Tryable
   include ::ActiveSupport::Dependencies::Loadable
 
+  # Return a binding object for the receiver.
+  #
+  # The `self` of the binding is set to the current object, and it contains no
+  # local variables.
+  #
+  # The default definee (http://yugui.jp/articles/846) is set such that:
+  #
+  # * If `self` is a class or module, then new methods created in the binding
+  # will be defined in that class or module (as in `class Foo; end`).
+  # * If `self` is a normal object, then new methods created in the binding will
+  # be defined on its singleton class (as in `class << self; end`).
+  # * If `self` doesn't have a  real singleton class (i.e. it is a Fixnum, Float,
+  # Symbol, nil, true, or false), then new methods will be created on the
+  # object's class (as in `self.class.class_eval{ }`)
+  #
+  # Newly created constants, including classes and modules, will also be added
+  # to the default definee.
   def __binding__; end
+
+  # Start a Pry REPL on self.
+  #
+  # If `self` is a Binding then that will be used to evaluate expressions;
+  # otherwise a new binding will be created.
   def pry(object = T.unsafe(nil), hash = T.unsafe(nil)); end
 end
 
@@ -32,116 +61,304 @@ class Pry
   extend ::Forwardable
   extend ::Pry::Forwardable
 
+  # Create a new {Pry} instance.
   def initialize(options = T.unsafe(nil)); end
 
+  # Add a sticky local to this Pry instance.
+  # A sticky local is a local that persists between all bindings in a session.
   def add_sticky_local(name, &block); end
+
+  # Returns the value of attribute backtrace.
   def backtrace; end
+
+  # Sets the attribute backtrace
   def backtrace=(_arg0); end
+
+  # Returns the value of attribute binding_stack.
   def binding_stack; end
+
+  # Sets the attribute binding_stack
   def binding_stack=(_arg0); end
+
   def color(*args, &block); end
   def color=(*args, &block); end
   def commands(*args, &block); end
   def commands=(*args, &block); end
+
+  # Generate completions.
   def complete(str); end
+
+  # Returns the value of attribute config.
   def config; end
+
+  # The currently active `Binding`.
   def current_binding; end
+
+  # The currently active `Binding`.
+  # support previous API
   def current_context; end
+
+  # Returns the value of attribute custom_completions.
   def custom_completions; end
+
+  # Sets the attribute custom_completions
   def custom_completions=(_arg0); end
+
   def editor(*args, &block); end
   def editor=(*args, &block); end
+
+  # Pass a line of input to Pry.
+  #
+  # This is the equivalent of `Binding#eval` but with extra Pry!
+  #
+  # In particular:
+  # 1. Pry commands will be executed immediately if the line matches.
+  # 2. Partial lines of input will be queued up until a complete expression has
+  # been accepted.
+  # 3. Output is written to `#output` in pretty colours, not returned.
+  #
+  # Once this method has raised an exception or returned false, this instance
+  # is no longer usable. {#exit_value} will return the session's breakout
+  # value if applicable.
   def eval(line, options = T.unsafe(nil)); end
+
+  # Returns the value of attribute eval_string.
   def eval_string; end
+
+  # Sets the attribute eval_string
   def eval_string=(_arg0); end
+
   def evaluate_ruby(code); end
   def exception_handler(*args, &block); end
   def exception_handler=(*args, &block); end
+
+  # Execute the specified hook.
+  # If executing a hook raises an exception, we log that and then continue sucessfully.
+  # To debug such errors, use the global variable $pry_hook_error, which is set as a
+  # result.
   def exec_hook(name, *args, &block); end
+
+  # Returns the value of attribute exit_value.
   def exit_value; end
+
   def extra_sticky_locals(*args, &block); end
   def extra_sticky_locals=(*args, &block); end
   def hooks(*args, &block); end
   def hooks=(*args, &block); end
+
+  # Injects a local variable into the provided binding.
   def inject_local(name, value, binding); end
+
+  # Inject all the sticky locals into the current binding.
   def inject_sticky_locals!; end
+
   def input(*args, &block); end
   def input=(*args, &block); end
   def input_ring; end
+
+  # Returns the value of attribute last_dir.
   def last_dir; end
+
+  # Sets the attribute last_dir
   def last_dir=(_arg0); end
+
+  # Returns the value of attribute last_exception.
   def last_exception; end
+
+  # Set the last exception for a session.
   def last_exception=(exception); end
+
+  # Returns the value of attribute last_file.
   def last_file; end
+
+  # Sets the attribute last_file
   def last_file=(_arg0); end
+
+  # Returns the value of attribute last_result.
   def last_result; end
+
+  # Sets the attribute last_result
   def last_result=(_arg0); end
+
   def last_result_is_exception?; end
   def memory_size; end
   def memory_size=(size); end
+
+  # Returns an output device
   def output; end
+
   def output=(*args, &block); end
   def output_ring; end
+
+  # Returns the currently configured pager
   def pager; end
+
   def pager=(*args, &block); end
+
+  # Pops the current prompt off of the prompt stack. If the prompt you are
+  # popping is the last prompt, it will not be popped. Use this to restore the
+  # previous prompt.
   def pop_prompt; end
+
   def print(*args, &block); end
   def print=(*args, &block); end
+
+  # If the given line is a valid command, process it in the context of the
+  # current `eval_string` and binding.
   def process_command(val); end
+
+  # Same as process_command, but outputs exceptions to `#output` instead of
+  # raising.
   def process_command_safely(val); end
+
+  # This is the prompt at the top of the prompt stack.
   def prompt; end
+
+  # Sets the Pry prompt.
   def prompt=(new_prompt); end
+
+  # Push a binding for the given object onto the stack. If this instance is
+  # currently stopped, mark it as usable again.
   def push_binding(object); end
+
+  # Initialize this instance by pushing its initial context into the binding
+  # stack. If no target is given, start at the top level.
   def push_initial_binding(target = T.unsafe(nil)); end
+
+  # Pushes the current prompt onto a stack that it can be restored from later.
+  # Use this if you wish to temporarily change the prompt.
   def push_prompt(new_prompt); end
+
+  # Convenience accessor for the `quiet` config key.
   def quiet?; end
+
   def raise_up(*args); end
   def raise_up!(*args); end
+
+  # Raise an exception out of Pry.
+  #
+  # See Kernel#raise for documentation of parameters.
+  # See rb_make_exception for the inbuilt implementation.
+  #
+  # This is necessary so that the raise-up command can tell the
+  # difference between an exception the user has decided to raise,
+  # and a mistake in specifying that exception.
+  #
+  # (i.e. raise-up RunThymeError.new should not be the same as
+  # raise-up NameError, "unititialized constant RunThymeError")
   def raise_up_common(force, *args); end
+
+  # Potentially deprecated. Use `Pry::REPL.new(pry, :target => target).start`
+  # (If nested sessions are going to exist, this method is fine, but a goal is
+  # to come up with an alternative to nested sessions altogether.)
   def repl(target = T.unsafe(nil)); end
+
+  # Reset the current eval string. If the user has entered part of a multiline
+  # expression, this discards that input.
   def reset_eval_string; end
+
+  # Run the specified command.
   def run_command(val); end
+
+  # Returns the appropriate prompt to use.
   def select_prompt; end
+
+  # Set the last result of an eval.
+  # This method should not need to be invoked directly.
   def set_last_result(result, code = T.unsafe(nil)); end
+
+  # Whether the print proc should be invoked.
+  # Currently only invoked if the output is not suppressed.
   def should_print?; end
+
+  # Output the result or pass to an exception handler (if result is an exception).
   def show_result(result); end
+
   def sticky_locals; end
+
+  # Returns the value of attribute suppress_output.
   def suppress_output; end
+
+  # Sets the attribute suppress_output
   def suppress_output=(_arg0); end
+
+  # Update Pry's internal state after evalling code.
+  # This method should not need to be invoked directly.
   def update_input_history(code); end
 
   private
 
+  # Force `eval_string` into the encoding of `val`. [Issue #284]
   def ensure_correct_encoding!(val); end
+
   def generate_prompt(prompt_proc, conf); end
   def handle_line(line, options); end
+
+  # the array that the prompt stack is stored in
   def prompt_stack; end
 
   class << self
+    # Convert the given object into an instance of `Pry::Code`, if it isn't
+    # already one.
     def Code(obj); end
+
+    # If the given object is a `Pry::Method`, return it unaltered. If it's
+    # anything else, return it wrapped in a `Pry::Method` instance.
     def Method(obj); end
+
+    # If the given object is a `Pry::WrappedModule`, return it unaltered. If it's
+    # anything else, return it wrapped in a `Pry::WrappedModule` instance.
     def WrappedModule(obj); end
+
     def auto_resize!; end
+
+    # Return a `Binding` object for `target` or return `target` if it is
+    # already a `Binding`.
+    # In the case where `target` is top-level then return `TOPLEVEL_BINDING`
     def binding_for(target); end
+
+    # Returns the value of attribute cli.
     def cli; end
+
+    # Sets the attribute cli
     def cli=(_arg0); end
+
     def color(*args, &block); end
     def color=(*args, &block); end
     def commands(*args, &block); end
     def commands=(*args, &block); end
+
+    # Returns the value of attribute config.
     def config; end
+
+    # Sets the attribute config
     def config=(_arg0); end
+
     def configure; end
     def critical_section; end
     def current; end
+
+    # Returns the value of attribute current_line.
     def current_line; end
+
+    # Sets the attribute current_line
     def current_line=(_arg0); end
+
+    # Returns the value of attribute custom_completions.
     def custom_completions; end
+
+    # Sets the attribute custom_completions
     def custom_completions=(_arg0); end
+
     def editor(*args, &block); end
     def editor=(*args, &block); end
+
+    # Returns the value of attribute eval_path.
     def eval_path; end
+
+    # Sets the attribute eval_path
     def eval_path=(_arg0); end
+
     def exception_handler(*args, &block); end
     def exception_handler=(*args, &block); end
     def extra_sticky_locals(*args, &block); end
@@ -152,22 +369,53 @@ class Pry
     def hooks(*args, &block); end
     def hooks=(*args, &block); end
     def in_critical_section?; end
+
+    # Basic initialization.
     def init; end
+
     def initial_session?; end
+
+    # Do basic setup for initial session including: loading pryrc, plugins,
+    # requires, and history.
     def initial_session_setup; end
+
     def input(*args, &block); end
     def input=(*args, &block); end
+
+    # Returns the value of attribute last_internal_error.
     def last_internal_error; end
+
+    # Sets the attribute last_internal_error
     def last_internal_error=(_arg0); end
+
+    # Returns the value of attribute line_buffer.
     def line_buffer; end
+
+    # Sets the attribute line_buffer
     def line_buffer=(_arg0); end
+
+    # Load the given file in the context of `Pry.toplevel_binding`
     def load_file_at_toplevel(file); end
+
+    # Execute the file through the REPL loop, non-interactively.
     def load_file_through_repl(file_name); end
+
+    # Load Readline history if required.
     def load_history; end
+
     def load_plugins(*args, &block); end
+
+    # Load RC files if appropriate This method can also be used to reload the
+    # files if they have changed.
     def load_rc_files; end
+
+    # Load any Ruby files specified with the -r flag on the command line.
     def load_requires; end
+
+    # Trap interrupts on jruby, and make them behave like MRI so we can
+    # catch them.
     def load_traps; end
+
     def load_win32console; end
     def locate_plugins(*args, &block); end
     def main; end
@@ -182,17 +430,39 @@ class Pry
     def print=(*args, &block); end
     def prompt(*args, &block); end
     def prompt=(*args, &block); end
+
+    # Returns the value of attribute quiet.
     def quiet; end
+
+    # Sets the attribute quiet
     def quiet=(_arg0); end
+
+    # Load the local RC file (./.pryrc)
     def rc_files_to_load; end
+
+    # Expand a file to its canonical name (following symlinks as appropriate)
     def real_path_to(file); end
+
+    # Set all the configurable options back to their default values
     def reset_defaults; end
+
+    # Run a Pry command from outside a session. The commands available are
+    # those referenced by `Pry.config.commands` (the default command set).
     def run_command(command_string, options = T.unsafe(nil)); end
+
+    # Start a Pry REPL.
+    # This method also loads `pryrc` as necessary the first time it is invoked.
     def start(target = T.unsafe(nil), options = T.unsafe(nil)); end
+
     def start_with_pry_byebug(target = T.unsafe(nil), options = T.unsafe(nil)); end
     def start_without_pry_byebug(target = T.unsafe(nil), options = T.unsafe(nil)); end
     def toplevel_binding; end
+
+    # Sets the attribute toplevel_binding
     def toplevel_binding=(_arg0); end
+
+    # An inspector that clips the output to `max_length` chars.
+    # In case of > `max_length` chars the `#<Object...> notation is used.
     def view_clip(obj, options = T.unsafe(nil)); end
   end
 end
@@ -212,16 +482,31 @@ Pry::BasicObject::Kernel = Kernel
 Pry::BasicObject::LoadError = LoadError
 Pry::BasicObject::Pry = Pry
 
+# A super-class for Commands that are created with a single block.
+#
+# This class ensures that the block is called with the correct number of
+# arguments and the right context.
+#
+# Create subclasses using {Pry::CommandSet#command}.
 class Pry::BlockCommand < ::Pry::Command
+  # Call the block that was registered with this command.
   def call(*args); end
+
   def help; end
 end
 
+# Manage the processing of command line options
 class Pry::CLI
   class << self
+    # Add a block responsible for processing parsed options.
     def add_option_processor(&block); end
+
+    # Add another set of CLI options (a Pry::Slop block)
     def add_options(&block); end
+
+    # Bring in options defined in plugins
     def add_plugin_options; end
+
     def input_args; end
     def input_args=(_arg0); end
     def option_processors; end
@@ -229,31 +514,90 @@ class Pry::CLI
     def options; end
     def options=(_arg0); end
     def parse_options(args = T.unsafe(nil)); end
+
+    # Clear `options` and `option_processors`
     def reset; end
+
     def start(opts); end
   end
 end
 
 class Pry::CLI::NoOptionsError < ::StandardError; end
 
+# A super-class of Commands with structure.
+#
+# This class implements the bare-minimum functionality that a command should
+# have, namely a --help switch, and then delegates actual processing to its
+# subclasses.
+#
+# Create subclasses using {Pry::CommandSet#create_command}, and override the
+# `options(opt)` method to set up an instance of Pry::Slop, and the `process`
+# method to actually run the command. If necessary, you can also override
+# `setup` which will be called before `options`, for example to require any
+# gems your command needs to run, or to set up state.
 class Pry::ClassCommand < ::Pry::Command
+  # Returns the value of attribute args.
   def args; end
+
+  # Sets the attribute args
   def args=(_arg0); end
+
+  # Set up `opts` and `args`, and then call `process`.
+  #
+  # This method will display help if necessary.
   def call(*args); end
+
+  # Generate shell completions
   def complete(search); end
+
+  # Return the help generated by Pry::Slop for this command.
   def help; end
+
+  # A method to setup Pry::Slop so it can parse the options your command expects.
+  #
+  # method, as it may be called by Pry at any time for introspection reasons.
+  # If you need to set up default values, use `setup` instead.
   def options(opt); end
+
+  # Returns the value of attribute opts.
   def opts; end
+
+  # Sets the attribute opts
   def opts=(_arg0); end
+
+  # The actual body of your command should go here.
+  #
+  # The `opts` mehod can be called to get the options that Pry::Slop has passed,
+  # and `args` gives the remaining, unparsed arguments.
+  #
+  # The return value of this method is discarded unless the command was
+  # created with `:keep_retval => true`, in which case it is returned to the
+  # repl.
   def process; end
+
+  # A method called just before `options(opt)` as part of `call`.
+  #
+  # This method can be used to set up any context your command needs to run,
+  # for example requiring gems, or setting default values for options.
   def setup; end
+
+  # Return an instance of Pry::Slop that can parse either subcommands or the
+  # options that this command accepts.
   def slop; end
+
+  # A method to setup Pry::Slop commands so it can parse the subcommands your
+  # command expects. If you need to set up default values, use `setup`
+  # instead.
   def subcommands(cmd); end
 
   class << self
     def doc; end
     def file; end
+
+    # Ensure that subclasses inherit the options, description and
+    # match from a ClassCommand super class.
     def inherited(klass); end
+
     def line; end
     def source; end
     def source_file; end
@@ -262,57 +606,138 @@ class Pry::ClassCommand < ::Pry::Command
 
     private
 
+    # The object used to extract the source for the command.
+    #
+    # This should be a `Pry::Method(block)` for a command made with `create_command`
+    # and a `Pry::WrappedModule(self)` for a command that's a standard class.
     def source_object; end
   end
 end
 
+# `Pry::Code` is a class that encapsulates lines of source code and their
+# line numbers and formats them for terminal output. It can read from a file
+# or method definition or be instantiated with a `String` or an `Array`.
+#
+# In general, the formatting methods in `Code` return a new `Code` object
+# which will format the text as specified when `#to_s` is called. This allows
+# arbitrary chaining of formatting methods without mutating the original
+# object.
 class Pry::Code
   extend ::MethodSource::CodeHelpers
 
+  # Instantiate a `Code` object containing code from the given `Array`,
+  # `String`, or `IO`. The first line will be line 1 unless specified
+  # otherwise. If you need non-contiguous line numbers, you can create an
+  # empty `Code` object and then use `#push` to insert the lines.
   def initialize(lines = T.unsafe(nil), start_line = T.unsafe(nil), code_type = T.unsafe(nil)); end
 
+  # Append the given line. +lineno+ is one more than the last existing
+  # line, unless specified otherwise.
   def <<(line); end
+
+  # Two `Code` objects are equal if they contain the same lines with the same
+  # numbers. Otherwise, call `to_s` and `chomp` and compare as Strings.
   def ==(other); end
+
+  # Remove all lines except for the +lines+ after and excluding +lineno+.
   def after(lineno, lines = T.unsafe(nil)); end
+
+  # Remove all lines except for the +lines+ on either side of and including
+  # +lineno+.
   def around(lineno, lines = T.unsafe(nil)); end
+
+  # Remove all lines except for the +lines+ up to and excluding +lineno+.
   def before(lineno, lines = T.unsafe(nil)); end
+
+  # Remove all lines that aren't in the given range, expressed either as a
+  # `Range` object or a first and last line number (inclusive). Negative
+  # indices count from the end of the array of lines.
   def between(start_line, end_line = T.unsafe(nil)); end
+
   def code_type; end
   def code_type=(_arg0); end
+
+  # Get the comment that describes the expression on the given line number.
   def comment_describing(line_number); end
+
+  # Get the multiline expression that starts on the given line number.
   def expression_at(line_number, consume = T.unsafe(nil)); end
+
+  # Remove all lines that don't match the given `pattern`.
   def grep(pattern); end
+
   def highlighted; end
+
+  # Return the number of lines stored.
   def length; end
+
   def max_lineno_width; end
+
+  # Forward any missing methods to the output of `#to_s`.
   def method_missing(method_name, *args, &block); end
+
+  # Get the (approximate) Module.nesting at the give line number.
   def nesting_at(line_number); end
+
+  # Writes a formatted representation (based on the configuration of the
+  # object) to the given output, which must respond to `#<<`.
   def print_to_output(output, color = T.unsafe(nil)); end
+
+  # Append the given line. +lineno+ is one more than the last existing
+  # line, unless specified otherwise.
   def push(line); end
+
+  # Return an unformatted String of the code.
   def raw; end
+
+  # Filter the lines using the given block.
   def reject(&block); end
+
+  # Filter the lines using the given block.
   def select(&block); end
+
+  # Take `num_lines` from `start_line`, forward or backwards.
   def take_lines(start_line, num_lines); end
+
   def to_s; end
+
+  # Format output with the specified number of spaces in front of every line,
+  # unless `spaces` is falsy.
   def with_indentation(spaces = T.unsafe(nil)); end
+
+  # Format output with line numbers next to it, unless `y_n` is falsy.
   def with_line_numbers(y_n = T.unsafe(nil)); end
+
+  # Format output with a marker next to the given +lineno+, unless +lineno+ is
+  # falsy.
   def with_marker(lineno = T.unsafe(nil)); end
 
   protected
 
+  # An abstraction of the `dup.instance_eval` pattern used throughout this
+  # class.
   def alter(&block); end
 
   private
 
+  # Check whether String responds to missing methods.
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 
   class << self
+    # Instantiate a `Code` object containing code loaded from a file or
+    # Pry's line buffer.
     def from_file(filename, code_type = T.unsafe(nil)); end
+
+    # Instantiate a `Code` object containing code extracted from a
+    # `::Method`, `UnboundMethod`, `Proc`, or `Pry::Method` object.
     def from_method(meth, start_line = T.unsafe(nil)); end
+
+    # Attempt to extract the source code for module (or class) `mod`.
     def from_module(mod, candidate_rank = T.unsafe(nil), start_line = T.unsafe(nil)); end
   end
 end
 
+# Represents a range of lines in a code listing.
 class Pry::Code::CodeRange
   def initialize(start_line, end_line = T.unsafe(nil)); end
 
@@ -323,22 +748,48 @@ class Pry::Code::CodeRange
   def end_line; end
   def find_end_index(lines); end
   def find_start_index(lines); end
+
+  # If `end_line` is equal to `nil`, then calculate it from the first
+  # parameter, `start_line`. Otherwise, leave it as it is.
   def force_set_end_line; end
+
+  # Finds indices of `start_line` and `end_line` in the given Array of
+  # +lines+.
   def indices(lines); end
+
+  # For example, if the range is 4..10, then `start_line` would be equal to
+  # 4 and `end_line` to 10.
   def set_end_line_from_range; end
+
   def start_line; end
 end
 
+# Represents a line of code (which may, in fact, contain multiple lines if
+# the entirety was eval'd as a single unit following the `edit` command).
+#
+# A line of code is a tuple, which consists of a line and a line number. A
+# `LOC` object's state (namely, the line parameter) can be changed via
+# instance methods.  `Pry::Code` heavily uses this class.
 class Pry::Code::LOC
   def initialize(line, lineno); end
 
   def ==(other); end
+
+  # Prepends the line number `lineno` to the `line`.
   def add_line_number(max_width = T.unsafe(nil), color = T.unsafe(nil)); end
+
+  # Prepends a marker "=>" or an empty marker to the +line+.
   def add_marker(marker_lineno); end
+
+  # Paints the `line` of code.
   def colorize(code_type); end
+
   def dup; end
   def handle_multiline_entries_from_edit_command(line, max_width); end
+
+  # Indents the `line` with +distance+ spaces.
   def indent(distance); end
+
   def line; end
   def lineno; end
   def tuple; end
@@ -362,34 +813,94 @@ class Pry::CodeFile
 end
 
 Pry::CodeFile::DEFAULT_EXT = T.let(T.unsafe(nil), String)
+
+# List of all supported languages.
 Pry::CodeFile::EXTENSIONS = T.let(T.unsafe(nil), Hash)
+
 Pry::CodeFile::FILES = T.let(T.unsafe(nil), Hash)
+
+# Store the current working directory. This allows show-source etc. to work if
+# your process has changed directory since boot. [Issue #675]
 Pry::CodeFile::INITIAL_PWD = T.let(T.unsafe(nil), String)
 
+# This class is responsible for taking a string (identifying a
+# command/class/method/etc) and returning the relevant type of object.
+# For example, if the user looks up "show-source" then  a
+# `Pry::Command` will be returned. Alternatively, if the user passes in "Pry#repl" then
+# a `Pry::Method` object will be returned.
+#
+# The `CodeObject.lookup` method is responsible for 1. figuring out what kind of
+# object the user wants (applying precedence rules in doing so -- i.e methods
+# get precedence over commands with the same name) and 2. Returning
+# the appropriate object. If the user fails to provide a string
+# identifer for the object (i.e they pass in `nil` or "") then the
+# object looked up will be the 'current method' or 'current class'
+# associated with the Binding.
+#
+# TODO: This class is a clusterfuck. We need a much more robust
+# concept of what a "Code Object" really is. Currently
+# commands/classes/candidates/methods and so on just share a very
+# ill-defined interface.
 class Pry::CodeObject
   include ::Pry::Helpers::OptionsHelpers
   include ::Pry::Helpers::CommandHelpers
 
   def initialize(str, pry_instance, options = T.unsafe(nil)); end
 
+  # TODO: just make it so find_command_by_match_or_listing doesn't raise?
   def command_lookup; end
+
+  # lookup variables and constants and `self` that are not modules
   def default_lookup; end
+
+  # when no paramter is given (i.e CodeObject.lookup(nil)), then we
+  # lookup the 'current object' from the binding.
   def empty_lookup; end
+
   def method_or_class_lookup; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
+  # Sets the attribute pry_instance
   def pry_instance=(_arg0); end
+
+  # Returns the value of attribute str.
   def str; end
+
+  # Sets the attribute str
   def str=(_arg0); end
+
+  # Returns the value of attribute super_level.
   def super_level; end
+
+  # Sets the attribute super_level
   def super_level=(_arg0); end
+
+  # Returns the value of attribute target.
   def target; end
+
+  # Sets the attribute target
   def target=(_arg0); end
 
   private
 
+  # Returns true if `str` looks like a method, i.e Klass#method
+  # We need to consider this case because method lookups should fall
+  # through to the `method_or_class_lookup()` method but a
+  # defined?() on a "Klass#method` string will see the `#` as a
+  # comment and only evaluate the `Klass` part.
   def looks_like_an_instance_method?(str); end
+
+  # grab the nth (`super_level`) super of `obj
   def lookup_super(obj, super_level); end
+
+  # We use this method to decide whether code is safe to eval. Method's are
+  # generally not, but everything else is.
+  # TODO: is just checking != "method" enough??
+  # TODO: see duplication of this method in Pry::WrappedModule
   def safe_to_evaluate?(str); end
+
   def sourcable_object?(obj); end
   def target_self; end
 
@@ -403,9 +914,12 @@ module Pry::CodeObject::Helpers
   def c_module?; end
   def command?; end
   def module_with_yard_docs?; end
+
+  # we need this helper as some Pry::Method objects can wrap Procs
   def real_method_object?; end
 end
 
+# PP subclass for streaming inspect output in color.
 class Pry::ColorPrinter < ::PP
   def pp(object); end
   def text(str, max_width = T.unsafe(nil)); end
@@ -421,6 +935,7 @@ class Pry::ColorPrinter < ::PP
   end
 end
 
+# N.B. using a regular expresion here so that "raise-up 'foo'" does the right thing.
 class Pry::Command
   include ::Pry::Helpers::BaseHelpers
   include ::Pry::Helpers::OptionsHelpers
@@ -429,87 +944,223 @@ class Pry::Command
   extend ::Pry::Helpers::DocumentationHelpers
   extend ::Pry::CodeObject::Helpers
 
+  # Instantiate a command, in preparation for calling it.
   def initialize(context = T.unsafe(nil)); end
 
   def _pry_; end
+
+  # Sets the attribute pry_instance
   def _pry_=(_arg0); end
+
+  # Returns the value of attribute arg_string.
   def arg_string; end
+
+  # Sets the attribute arg_string
   def arg_string=(_arg0); end
+
   def block; end
+
+  # Returns the value of attribute captures.
   def captures; end
+
+  # Sets the attribute captures
   def captures=(_arg0); end
+
+  # Display a warning if a command collides with a local/method in
+  # the current scope.
   def check_for_command_collision(command_match, arg_string); end
+
+  # The block we pass *into* a command so long as `:takes_block` is
+  # not equal to `false`
   def command_block; end
+
+  # The block we pass *into* a command so long as `:takes_block` is
+  # not equal to `false`
   def command_block=(_arg0); end
+
   def command_name; end
   def command_options; end
+
+  # Returns the value of attribute command_set.
   def command_set; end
+
+  # Sets the attribute command_set
   def command_set=(_arg0); end
+
   def commands; end
+
+  # Generate completions for this command
   def complete(_search); end
+
+  # Returns the value of attribute context.
   def context; end
+
+  # Sets the attribute context
   def context=(_arg0); end
+
   def description; end
+
+  # Returns the value of attribute eval_string.
   def eval_string; end
+
+  # Sets the attribute eval_string
   def eval_string=(_arg0); end
+
+  # Returns the value of attribute hooks.
   def hooks; end
+
+  # Sets the attribute hooks
   def hooks=(_arg0); end
+
+  # Revaluate the string (str) and perform interpolation.
   def interpolate_string(str); end
+
   def match; end
+
+  # Make those properties accessible to instances
   def name; end
+
+  # Properties of one execution of a command (passed by {Pry#run_command} as a hash of
+  # context and expanded in `#initialize`
   def output; end
+
+  # Properties of one execution of a command (passed by {Pry#run_command} as a hash of
+  # context and expanded in `#initialize`
   def output=(_arg0); end
+
+  # Process a line that Command.matches? this command.
   def process_line(line); end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
+  # Sets the attribute pry_instance
   def pry_instance=(_arg0); end
+
+  # Run a command from another command.
   def run(command_string, *args); end
+
   def source; end
   def state; end
+
+  # Returns the value of attribute target.
   def target; end
+
+  # Sets the attribute target
   def target=(_arg0); end
+
   def target_self; end
+
+  # Extract necessary information from a line that Command.matches? this
+  # command.
+  #
+  # Returns an array of four elements:
+  #
+  # ```
+  # [String] the portion of the line that matched with the Command match
+  # [String] a string of all the arguments (i.e. everything but the match)
+  # [Array]  the captures caught by the command_regex
+  # [Array]  the arguments obtained by splitting the arg_string
+  # ```
   def tokenize(val); end
+
   def void; end
 
   private
 
   def after_hooks; end
   def before_hooks; end
+
+  # Run the command with the given `args`.
+  #
+  # This is a public wrapper around `#call` which ensures all preconditions
+  # are met.
   def call_safely(*args); end
+
+  # Run the `#call` method and all the registered hooks.
   def call_with_hooks(*args); end
+
   def find_hooks(event); end
+
+  # Normalize method arguments according to its arity.
   def normalize_method_args(method, args); end
+
+  # Pass a block argument to a command.
   def pass_block(arg_string); end
+
   def use_unpatched_symbol; end
 
   class << self
+    # Define or get the command's banner
     def banner(arg = T.unsafe(nil)); end
+
     def block; end
+
+    # Sets the attribute block
     def block=(_arg0); end
+
     def command_name; end
+
+    # Define or get the command's options
     def command_options(arg = T.unsafe(nil)); end
+
+    # Sets the attribute command_options
     def command_options=(_arg0); end
+
     def command_regex; end
     def convert_to_regex(obj); end
     def default_options(match); end
+
+    # Define or get the command's description
     def description(arg = T.unsafe(nil)); end
+
+    # Sets the attribute description
     def description=(_arg0); end
+
     def doc; end
     def file; end
+
+    # The group in which the command should be displayed in "help" output.
+    # This is usually auto-generated from directory naming, but it can be
+    # manually overridden if necessary.
+    # Group should not be changed once it is initialized.
     def group(name = T.unsafe(nil)); end
+
     def inspect; end
     def line; end
     def match(arg = T.unsafe(nil)); end
+
+    # Sets the attribute match
     def match=(_arg0); end
+
+    # How well does this command match the given line?
+    #
+    # Higher scores are better because they imply that this command matches
+    # the line more closely.
+    #
+    # The score is calculated by taking the number of characters at the start
+    # of the string that are used only to identify the command, not as part of
+    # the arguments.
     def match_score(val); end
+
+    # Should this command be called for the given line?
     def matches?(val); end
+
     def name; end
+
+    # Define or get the command's options
+    # backward compatibility
     def options(arg = T.unsafe(nil)); end
+
+    # Sets the attribute command_options
     def options=(_arg0); end
+
     def source; end
     def source_file; end
     def source_line; end
     def state; end
+
+    # Create a new command with the given properties.
     def subclass(match, description, options, helpers, &block); end
   end
 end
@@ -523,9 +1174,20 @@ class Pry::Command::AmendLine < ::Pry::ClassCommand
   def delete_from_array(array, range); end
   def insert_into_array(array, range); end
   def line_count; end
+
+  # The lines (or line) that will be modified by the `amend-line`.
   def line_range; end
+
   def replace_in_array(array, range); end
+
+  # Returns the (one-indexed) start and end lines given by the user.
+  # The lines in this range will be affected by the `amend-line`.
+  # Returns `nil` if no lines were specified by the user.
   def start_and_end_line_number; end
+
+  # Takes two numbers that are 1-indexed, and returns a range (or
+  # number) that is 0-indexed. 1-indexed means the first element is
+  # indentified by 1 rather than by 0 (as is the case for Ruby arrays).
   def zero_indexed_range_from_one_indexed_numbers(start_line_number, end_line_number); end
 end
 
@@ -562,9 +1224,15 @@ class Pry::Command::Cat::ExceptionFormatter < ::Pry::Command::Cat::AbstractForma
 
   def initialize(exception, pry_instance, opts); end
 
+  # Returns the value of attribute ex.
   def ex; end
+
   def format; end
+
+  # Returns the value of attribute opts.
   def opts; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
 
   private
@@ -583,9 +1251,16 @@ class Pry::Command::Cat::FileFormatter < ::Pry::Command::Cat::AbstractFormatter
   def initialize(file_with_embedded_line, pry_instance, opts); end
 
   def file_and_line; end
+
+  # Returns the value of attribute file_with_embedded_line.
   def file_with_embedded_line; end
+
   def format; end
+
+  # Returns the value of attribute opts.
   def opts; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
 
   private
@@ -602,9 +1277,17 @@ class Pry::Command::Cat::InputExpressionFormatter < ::Pry::Command::Cat::Abstrac
   def initialize(input_expressions, opts); end
 
   def format; end
+
+  # Returns the value of attribute input_expressions.
   def input_expressions; end
+
+  # Sets the attribute input_expressions
   def input_expressions=(_arg0); end
+
+  # Returns the value of attribute opts.
   def opts; end
+
+  # Sets the attribute opts
   def opts=(_arg0); end
 
   private
@@ -646,17 +1329,47 @@ class Pry::Command::CodeCollector
 
   def initialize(args, opts, pry_instance); end
 
+  # Returns the value of attribute args.
   def args; end
+
+  # The code object
   def code_object; end
+
+  # The content (i.e code/docs) for the selected object.
+  # If the user provided a bare code object, it returns the source.
+  # If the user provided the `-i` or `-o` switches, it returns the
+  # selected input/output lines joined as a string. If the user used
+  # `-d CODE_OBJECT` it returns the docs for that code object.
   def content; end
+
+  # The name of the explicitly given file (if any).
   def file; end
+
+  # The name of the explicitly given file (if any).
   def file=(_arg0); end
+
+  # The line range passed to `--lines`, converted to a 0-indexed range.
   def line_range; end
+
+  # Name of the object argument
   def obj_name; end
+
+  # Returns the value of attribute opts.
   def opts; end
+
+  # The selected `pry_instance.input_ring` as a string, as specified by
+  # the `-i` switch.
   def pry_input_content; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
+  # The selected `pry_instance.output_ring` as a string, as specified by
+  # the `-o` switch.
   def pry_output_content; end
+
+  # Given a string and a range, return the `range` lines of that
+  # string.
   def restrict_to_lines(content, range); end
 
   private
@@ -670,10 +1383,19 @@ class Pry::Command::CodeCollector
   def pry_array_content_as_string(array, ranges); end
 
   class << self
+    # Add the `--lines`, `-o`, `-i`, `-s`, `-d` options.
     def inject_options(opt); end
+
+    # Returns the value of attribute input_expression_ranges.
     def input_expression_ranges; end
+
+    # Sets the attribute input_expression_ranges
     def input_expression_ranges=(_arg0); end
+
+    # Returns the value of attribute output_result_ranges.
     def output_result_ranges; end
+
+    # Sets the attribute output_result_ranges
     def output_result_ranges=(_arg0); end
   end
 end
@@ -711,12 +1433,25 @@ end
 class Pry::Command::Edit::ExceptionPatcher
   def initialize(pry_instance, state, exception_file_and_line); end
 
+  # Returns the value of attribute file_and_line.
   def file_and_line; end
+
+  # Sets the attribute file_and_line
   def file_and_line=(_arg0); end
+
+  # perform the patch
   def perform_patch; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
+  # Sets the attribute pry_instance
   def pry_instance=(_arg0); end
+
+  # Returns the value of attribute state.
   def state; end
+
+  # Sets the attribute state
   def state=(_arg0); end
 end
 
@@ -725,6 +1460,8 @@ module Pry::Command::Edit::FileAndLineLocator
     def from_binding(target); end
     def from_code_object(code_object, filename_argument); end
     def from_exception(exception, backtrace_level); end
+
+    # when file and line are passed as a single arg, e.g my_file.rb:30
     def from_filename_argument(filename_argument); end
   end
 end
@@ -750,16 +1487,41 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
 
   private
 
+  # Return the matched lines of method source if `-c` is given or ""
+  # if `-c` was not given
   def additional_info(header, method); end
+
+  # Search for all methods who's implementation matches the given regex
+  # within a namespace.
   def content_search(namespace); end
+
   def matched_method_lines(header, method); end
+
+  # Search for all methods with a name that matches the given regex
+  # within a namespace.
   def name_search(namespace); end
+
   def pattern; end
+
+  # pretty-print a list of matching methods.
   def print_matches(matches); end
+
+  # Print matched methods for a class
   def print_matches_for_class(klass, grouped); end
+
+  # Run the given block against every constant in the provided namespace.
   def recurse_namespace(klass, done = T.unsafe(nil), &block); end
+
+  # Gather all the methods in a namespace that pass the given block.
   def search_all_methods(namespace); end
+
+  # The class to search for methods.
+  # We only search classes, so if the search object is an
+  # instance, return its class. If no search object is given
+  # search `target_self`.
   def search_class; end
+
+  # Output the result of the search.
   def show_search_results(matches); end
 end
 
@@ -768,19 +1530,50 @@ class Pry::Command::FixIndent < ::Pry::ClassCommand
 end
 
 class Pry::Command::Help < ::Pry::ClassCommand
+  # Get a hash of available commands grouped by the "group" name.
   def command_groups; end
+
+  # Display help for an individual command.
   def display_command(command); end
+
+  # Display help for a searched item, filtered by group
   def display_filtered_commands(search); end
+
+  # Display help for a searched item, filtered first by group
+  # and if that fails, filtered by command name.
   def display_filtered_search_results(search); end
+
+  # Display the index view, with headings and short descriptions per command.
   def display_index(groups); end
+
+  # Display help for an individual command or group.
   def display_search(search); end
+
   def group_sort_key(group_name); end
+
+  # Given a group name and an array of commands,
+  # return the help string for those commands.
   def help_text_for_commands(name, commands); end
+
+  # Clean search terms to make it easier to search group names
   def normalize(key); end
+
   def process; end
+
+  # Find a subset of a hash that matches the user's search term.
+  #
+  # If there's an exact match a Hash of one element will be returned,
+  # otherwise a sub-Hash with every key that matches the search will
+  # be returned.
   def search_hash(search, hash); end
+
+  # Sort an array of commands by their `listing` name.
   def sorted_commands(commands); end
+
   def sorted_group_names(groups); end
+
+  # We only want to show commands that have descriptions, so that the
+  # easter eggs don't show up.
   def visible_commands; end
 end
 
@@ -790,8 +1583,12 @@ class Pry::Command::Hist < ::Pry::ClassCommand
 
   private
 
+  # Checks +replay_sequence+ for the presence of neighboring replay calls.
   def check_for_juxtaposed_replay(replay_sequence); end
+
+  # Finds history depending on the given switch.
   def find_history; end
+
   def process_clear; end
   def process_display; end
   def process_replay; end
@@ -799,6 +1596,7 @@ class Pry::Command::Hist < ::Pry::ClassCommand
 end
 
 class Pry::Command::ImportSet < ::Pry::ClassCommand
+  # TODO: resolve unused parameter.
   def process(_command_set_name); end
 end
 
@@ -817,7 +1615,10 @@ class Pry::Command::ListInspectors < ::Pry::ClassCommand
 end
 
 class Pry::Command::Ls < ::Pry::ClassCommand
+  # Exclude -q, -v and --grep because they,
+  # don't specify what the user wants to see.
   def no_user_opts?; end
+
   def options(opt); end
   def process; end
 
@@ -847,8 +1648,12 @@ Pry::Command::Ls::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 class Pry::Command::Ls::Formatter
   def initialize(pry_instance); end
 
+  # Sets the attribute grep
   def grep=(_arg0); end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
   def write_out; end
 
   private
@@ -857,7 +1662,11 @@ class Pry::Command::Ls::Formatter
   def correct_opts?; end
   def format_value(value); end
   def grep; end
+
+  # Add a new section to the output.
+  # Outputs nothing if the section would be empty.
   def output_section(heading, body); end
+
   def output_self; end
 end
 
@@ -871,7 +1680,12 @@ class Pry::Command::Ls::Globals < ::Pry::Command::Ls::Formatter
   def format(globals); end
 end
 
+# Taken from "puts global_variables.inspect".
 Pry::Command::Ls::Globals::BUILTIN_GLOBALS = T.let(T.unsafe(nil), Array)
+
+# `$SAFE` and `$?` are thread-local, the exception stuff only works in a
+# rescue clause, everything else is basically a local variable with a `$`
+# in its name.
 Pry::Command::Ls::Globals::PSEUDO_GLOBALS = T.let(T.unsafe(nil), Array)
 
 class Pry::Command::Ls::Grep
@@ -903,7 +1717,22 @@ end
 module Pry::Command::Ls::JRubyHacks
   private
 
+  # When removing jruby aliases, we want to keep the alias that is
+  # "least rubbish" according to this metric.
   def rubbishness(name); end
+
+  # JRuby creates lots of aliases for methods imported from java in an attempt
+  # to make life easier for ruby programmers.  (e.g. getFooBar becomes
+  # get_foo_bar and foo_bar, and maybe foo_bar? if it returns a Boolean). The
+  # full transformations are in the assignAliases method of:
+  # https://github.com/jruby/jruby/blob/master/src/org/jruby/javasupport/JavaClass.java
+  #
+  # This has the unfortunate side-effect of making the output of ls even more
+  # incredibly verbose than it normally would be for these objects; and so we
+  # filter out all but the nicest of these aliases here.
+  #
+  # TODO: This is a little bit vague, better heuristics could be used.
+  # JRuby also has a lot of scala-specific logic, which we don't copy.
   def trim_jruby_aliases(methods); end
 end
 
@@ -933,6 +1762,8 @@ class Pry::Command::Ls::LsEntity
   def initialize(opts); end
 
   def entities_table; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
 
   private
@@ -959,7 +1790,10 @@ class Pry::Command::Ls::Methods < ::Pry::Command::Ls::Formatter
 
   private
 
+  # Get a lambda that can be used with `take_while` to prevent over-eager
+  # traversal of the Object's ancestry graph.
   def below_ceiling; end
+
   def correct_opts?; end
 end
 
@@ -968,7 +1802,9 @@ module Pry::Command::Ls::MethodsHelper
 
   private
 
+  # Get all the methods that we'll want to output.
   def all_methods(instance_methods = T.unsafe(nil)); end
+
   def format(methods); end
   def resolution_order; end
 end
@@ -996,7 +1832,11 @@ class Pry::Command::Play < ::Pry::ClassCommand
   def content; end
   def content_after_options; end
   def content_at_expression; end
+
+  # The file to play from when no code object is specified.
+  # e.g `play --lines 4..10`
   def default_file; end
+
   def file_content; end
   def options(opt); end
   def perform_play; end
@@ -1061,11 +1901,27 @@ end
 class Pry::Command::ShowDoc < ::Pry::Command::ShowInfo
   include ::Pry::Helpers::DocumentationHelpers
 
+  # The docs for code_object prepared for display.
   def content_for(code_object); end
+
+  # Return docs for the code_object, adjusting for whether the code_object
+  # has yard docs available, in which case it returns those.
+  # (note we only have to check yard docs for modules since they can
+  # have multiple docs, but methods can only be doc'd once so we
+  # dont need to check them)
   def docs_for(code_object); end
+
+  # Which sections to include in the 'header', can toggle: :owner,
+  # :signature and visibility.
   def header_options; end
+
   def process; end
+
+  # process the markup (if necessary) and apply colors
   def render_doc_markup_for(code_object); end
+
+  # figure out start line of docs by back-calculating based on
+  # number of lines in the comment and the start line of the code_object
   def start_line_for(code_object); end
 end
 
@@ -1075,12 +1931,27 @@ class Pry::Command::ShowInfo < ::Pry::ClassCommand
   def initialize(*_arg0); end
 
   def code_object_header(code_object, line_num); end
+
+  # This method checks whether the `code_object` is a WrappedModule, if it
+  # is, then it returns the first candidate (monkeypatch) with accessible
+  # source (or docs). If `code_object` is not a WrappedModule (i.e a method
+  # or a command) then the `code_object` itself is just returned.
   def code_object_with_accessible_source(code_object); end
+
   def complete(input); end
   def content_and_header_for_code_object(code_object); end
   def content_and_headers_for_all_module_candidates(mod); end
+
+  # takes into account possible yard docs, and returns yard_file / yard_line
+  # Also adjusts for start line of comments (using start_line_for), which it
+  # has to infer by subtracting number of lines of comment from start line
+  # of code_object
   def file_and_line_for(code_object); end
+
+  # Generate a header (meta-data information) for all the code
+  # object types: methods, modules, commands, procs...
   def header(code_object); end
+
   def header_options; end
   def method_header(code_object, line_num); end
   def method_sections(code_object); end
@@ -1102,12 +1973,28 @@ end
 class Pry::Command::ShowSource < ::Pry::Command::ShowInfo
   include ::Pry::Helpers::DocumentationHelpers
 
+  # The source for code_object prepared for display.
   def content_for(code_object); end
+
+  # Return docs for the code_object, adjusting for whether the code_object
+  # has yard docs available, in which case it returns those.
+  # (note we only have to check yard docs for modules since they can
+  # have multiple docs, but methods can only be doc'd once so we
+  # dont need to check them)
   def docs_for(code_object); end
+
+  # Which sections to include in the 'header', can toggle: :owner,
+  # :signature and visibility.
   def header_options; end
+
   def options(opt); end
   def process; end
+
+  # process the markup (if necessary) and apply colors
   def render_doc_markup_for(code_object); end
+
+  # figure out start line of docs by back-calculating based on
+  # number of lines in the comment and the start line of the code_object
   def start_line_for(code_object); end
 end
 
@@ -1125,6 +2012,7 @@ class Pry::Command::ToggleColor < ::Pry::ClassCommand
   def process; end
 end
 
+# represents a void return value for a command
 Pry::Command::VOID_VALUE = T.let(T.unsafe(nil), Object)
 
 class Pry::Command::Version < ::Pry::ClassCommand
@@ -1137,7 +2025,10 @@ class Pry::Command::WatchExpression < ::Pry::ClassCommand
 
   private
 
+  # TODO: fix arguments.
+  # https://github.com/pry/pry/commit/b031df2f2f5850ee6e9018f33d35f3485a9b0423
   def add_expression(_arguments); end
+
   def add_hook; end
   def delete(index); end
   def eval_and_print_changed(output); end
@@ -1148,13 +2039,30 @@ end
 class Pry::Command::WatchExpression::Expression
   def initialize(pry_instance, target, source); end
 
+  # Has the value of the expression changed?
+  #
+  # We use the pretty-printed string represenation to detect differences
+  # as this avoids problems with dup (causes too many differences) and ==
+  # (causes too few)
   def changed?; end
+
   def eval!; end
+
+  # Returns the value of attribute previous_value.
   def previous_value; end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
+  # Returns the value of attribute source.
   def source; end
+
+  # Returns the value of attribute target.
   def target; end
+
   def to_s; end
+
+  # Returns the value of attribute value.
   def value; end
 
   private
@@ -1184,14 +2092,21 @@ class Pry::Command::Whereami < ::Pry::ClassCommand
   def method_code; end
   def nothing_to_do?; end
   def small_method?; end
+
+  # This either returns the `target_self`
+  # or it returns the class of `target_self` if `target_self` is not a class.
   def target_class; end
+
   def top_level?; end
   def use_line_numbers?; end
   def valid_method?; end
   def window_size; end
 
   class << self
+    # Returns the value of attribute method_size_cutoff.
     def method_size_cutoff; end
+
+    # Sets the attribute method_size_cutoff
     def method_size_cutoff=(_arg0); end
   end
 end
@@ -1210,44 +2125,97 @@ class Pry::Command::Wtf < ::Pry::ClassCommand
 end
 
 Pry::Command::Wtf::RUBY_FRAME_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# CommandErrors are caught by the REPL loop and displayed to the user. They
+# indicate an exceptional condition that's fatal to the current command.
 class Pry::CommandError < ::StandardError; end
 
+# This class is used to create sets of commands. Commands can be imported from
+# different sets, aliased, removed, etc.
 class Pry::CommandSet
   include ::Enumerable
   include ::Pry::Helpers::BaseHelpers
 
   def initialize(*imported_sets, &block); end
 
+  # Find a command that matches the given line
   def [](pattern); end
+
+  # Re-assign the command found at _pattern_ with _command_.
   def []=(pattern, command); end
+
+  # Add a command to set.
   def add_command(command); end
+
+  # Aliases a command
   def alias_command(match, action, options = T.unsafe(nil)); end
+
+  # Defines a new Pry command.
   def block_command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+  # Defines a new Pry command.
   def command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+  # Generate completions for the user's search.
   def complete(search, context = T.unsafe(nil)); end
+
+  # Defines a new Pry command class.
   def create_command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+  # Removes some commands from the set
   def delete(*searches); end
+
+  # Sets or gets the description for a command (replacing the old
+  # description). Returns current description if no description
+  # parameter provided.
   def desc(search, description = T.unsafe(nil)); end
+
   def each(&block); end
+
+  # Find a command that matches the given line
   def find_command(pattern); end
+
   def find_command_by_match_or_listing(match_or_listing); end
+
+  # Find the command that the user might be trying to refer to.
   def find_command_for_help(search); end
+
+  # Returns the value of attribute helper_module.
   def helper_module; end
+
+  # Imports all the commands from one or more sets.
   def import(*sets); end
+
+  # Imports some commands from a set
   def import_from(set, *matches); end
+
   def keys; end
   def list_commands; end
+
+  # Process the given line to see whether it needs executing as a command.
   def process_line(val, context = T.unsafe(nil)); end
+
+  # Rename a command. Accepts either match or listing for the search.
   def rename_command(new_match, search, options = T.unsafe(nil)); end
+
   def to_h; end
   def to_hash; end
+
+  # Is the given line a command invocation?
   def valid_command?(val); end
 
   private
 
+  # Defines helpers methods for this command sets.
+  # Those helpers are only defined in this command set.
   def helpers(&block); end
 end
 
+# CommandState is a data structure to hold per-command state.
+#
+# Pry commands can store arbitrary state here. This state persists between
+# subsequent command invocations. All state saved here is unique to the
+# command.
 class Pry::CommandState
   def initialize; end
 
@@ -1276,7 +2244,11 @@ class Pry::Config
   def color=(_arg0); end
   def command_completions; end
   def command_completions=(_arg0); end
+
+  # A string that must precede all commands. For example, if is is
+  # set to "%", the "cd" command must be invoked as "%cd").
   def command_prefix; end
+
   def command_prefix=(_arg0); end
   def commands; end
   def commands=(_arg0); end
@@ -1290,7 +2262,15 @@ class Pry::Config
   def default_window_size=(_arg0); end
   def disable_auto_reload; end
   def disable_auto_reload=(_arg0); end
+
+  # If it is a String, then that String is used as the shell
+  # command to invoke the editor.
+  #
+  # If it responds to #call is callable then `file`, `line`, and `reloading`
+  # are passed to it. `reloading` indicates whether Pry will be reloading code
+  # after the shell command returns. All parameters are optional.
   def editor; end
+
   def editor=(_arg0); end
   def exception_handler; end
   def exception_handler=(_arg0); end
@@ -1351,7 +2331,11 @@ class Pry::Config
   def should_load_rc=(_arg0); end
   def should_load_requires; end
   def should_load_requires=(_arg0); end
+
+  # Whether Pry should trap SIGINT and cause it to raise an Interrupt
+  # exception. This is only useful on JRuby, MRI does this for us.
   def should_trap_interrupts; end
+
   def should_trap_interrupts=(_arg0); end
   def system; end
   def system=(_arg0); end
@@ -1368,22 +2352,33 @@ class Pry::Config
   def respond_to_missing?(method_name, include_all = T.unsafe(nil)); end
 end
 
+# Attributable provides the ability to create "attribute"
+# accessors. Attribute accessors create a standard "attr_writer" and a
+# customised "attr_reader". This reader is Proc-aware (lazy).
 module Pry::Config::Attributable
   def attribute(attr_name); end
 end
 
+# LazyValue is a Proc (block) wrapper. It is meant to be used as a
+# configuration value. Subsequent `#call` calls always evaluate the given
+# block.
 class Pry::Config::LazyValue
   def initialize(&block); end
 
   def call; end
 end
 
+# MemoizedValue is a Proc (block) wrapper. It is meant to be used as a
+# configuration value. Subsequent `#call` calls return the same memoized
+# result.
 class Pry::Config::MemoizedValue
   def initialize(&block); end
 
   def call; end
 end
 
+# Value holds a value for the given attribute and decides how it should
+# be read. Procs get called, other values are returned as is.
 class Pry::Config::Value
   def initialize(value); end
 
@@ -1392,6 +2387,11 @@ end
 
 module Pry::ControlDHandler
   class << self
+    # Deal with the ^D key being pressed. Different behaviour in different
+    # cases:
+    # 1. In an expression behave like `!` command.
+    # 2. At top-level session behave like `exit` command.
+    # 3. In a nested session behave like `cd ..`.
     def default(pry_instance); end
   end
 end
@@ -1404,17 +2404,39 @@ class Pry::Editor
 
   def initialize(pry_instance); end
 
+  # Generate the string that's used to start the editor. This includes
+  # all the flags we want as well as the file and line number we
+  # want to open at.
   def build_editor_invocation_string(file, line, blocking); end
+
   def edit_tempfile_with_content(initial_content, line = T.unsafe(nil)); end
   def invoke_editor(file, line, blocking = T.unsafe(nil)); end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
 
   private
 
+  # Some editors that run outside the terminal allow you to control whether or
+  # not to block the process from which they were launched (in this case, Pry).
+  # For those editors, return the flag that produces the desired behavior.
   def blocking_flag_for_editor(blocking); end
+
+  # Get the name of the binary that Pry.config.editor points to.
+  #
+  # This is useful for deciding which flags we pass to the editor as
+  # we can just use the program's name and ignore any absolute paths.
   def editor_name; end
+
+  # Start the editor running, using the calculated invocation string
   def open_editor(editor_invocation); end
+
+  # We need JRuby specific code here cos just shelling out using
+  # system() appears to be pretty broken :/
   def open_editor_on_jruby(editor_invocation); end
+
+  # Return the syntax for a given editor for starting the editor
+  # and moving to a particular line within that file
   def start_line_syntax_for_editor(file_name, line_number); end
 
   class << self
@@ -1422,6 +2444,7 @@ class Pry::Editor
   end
 end
 
+# Env is a helper module to work with environment variables.
 module Pry::Env
   class << self
     def [](key); end
@@ -1430,6 +2453,7 @@ end
 
 module Pry::ExceptionHandler
   class << self
+    # Will only show the first line of the backtrace.
     def handle_exception(output, exception, _pry_instance); end
 
     private
@@ -1443,9 +2467,18 @@ end
 module Pry::Forwardable
   include ::Forwardable
 
+  # Since Ruby 2.4, Forwardable will print a warning when
+  # calling a method that is private on a delegate, and
+  # in the future it could be an error: https://bugs.ruby-lang.org/issues/12782#note-3
+  #
+  # That's why we revert to a custom implementation for delegating one
+  # private method to another.
   def def_private_delegators(target, *private_delegates); end
 end
 
+# When we try to get a binding for an object, we try to define a method on
+# that Object's singleton class. This doesn't work for "frozen" Object's, and
+# the exception is just a vanilla RuntimeError.
 module Pry::FrozenObjectException
   class << self
     def ===(exception); end
@@ -1465,12 +2498,26 @@ module Pry::Helpers::BaseHelpers
 
   def colorize_code(code); end
   def find_command(name, set = T.unsafe(nil)); end
+
+  # formatting
   def heading(text); end
+
   def highlight(string, regexp, highlight_color = T.unsafe(nil)); end
   def not_a_real_file?(file); end
+
+  # Acts like send but ignores any methods defined below Object or Class in the
+  # inheritance hierarchy.
+  # This is required to introspect methods on objects like Net::HTTP::Get that
+  # have overridden the `method` method.
   def safe_send(obj, method, *args, &block); end
+
   def silence_warnings; end
+
+  # Send the given text through the best available pager (if Pry.config.pager is
+  # enabled). Infers where to send the output if used as a mixin.
+  # DEPRECATED.
   def stagger_output(text, _out = T.unsafe(nil)); end
+
   def use_ansi_codes?; end
 end
 
@@ -1484,18 +2531,36 @@ module Pry::Helpers::CommandHelpers
   def get_method_or_raise(method_name, context, opts = T.unsafe(nil)); end
   def internal_binding?(context); end
   def one_index_number(line_number); end
+
+  # convert a 1-index range to a 0-indexed one
   def one_index_range(range); end
+
   def one_index_range_or_number(range_or_number); end
+
+  # Restrict a string to the given range of lines (1-indexed)
   def restrict_to_lines(content, lines); end
+
   def set_file_and_dir_locals(file_name, pry = T.unsafe(nil), ctx = T.unsafe(nil)); end
+
+  # Open a temp file and yield it to the block, closing it after
   def temp_file(ext = T.unsafe(nil)); end
+
+  # Remove any common leading whitespace from every line in `text`. This
+  # can be used to make a HEREDOC line up with the left margin, without
+  # sacrificing the indentation level of the source code.
   def unindent(dirty_text, left_padding = T.unsafe(nil)); end
 end
 
+# This class contains methods useful for extracting
+# documentation from methods and classes.
 module Pry::Helpers::DocumentationHelpers
   private
 
+  # Given a string that makes up a comment in a source-code file parse out the content
+  # that the user is intended to read. (i.e. without leading indentation, #-characters
+  # or shebangs)
   def get_comment_content(comment); end
+
   def process_comment_markup(comment); end
   def process_rdoc(comment); end
   def process_yardoc(comment); end
@@ -1504,7 +2569,11 @@ module Pry::Helpers::DocumentationHelpers
   def strip_leading_whitespace(text); end
 
   class << self
+    # Given a string that makes up a comment in a source-code file parse out the content
+    # that the user is intended to read. (i.e. without leading indentation, #-characters
+    # or shebangs)
     def get_comment_content(comment); end
+
     def process_comment_markup(comment); end
     def process_rdoc(comment); end
     def process_yardoc(comment); end
@@ -1519,15 +2588,22 @@ Pry::Helpers::DocumentationHelpers::YARD_TAGS = T.let(T.unsafe(nil), Array)
 module Pry::Helpers::OptionsHelpers
   private
 
+  # Get the method object parsed by the slop instance
   def method_object; end
+
+  # Add method options to the Pry::Slop instance
   def method_options(opt); end
 
   class << self
+    # Get the method object parsed by the slop instance
     def method_object; end
+
+    # Add method options to the Pry::Slop instance
     def method_options(opt); end
   end
 end
 
+# Contains methods for querying the platform that Pry is running on
 module Pry::Helpers::Platform
   class << self
     def jruby?; end
@@ -1546,11 +2622,17 @@ class Pry::Helpers::Table
   def initialize(items, args, pry_instance = T.unsafe(nil)); end
 
   def ==(other); end
+
+  # Returns the value of attribute column_count.
   def column_count; end
+
   def column_count=(count); end
   def columns; end
   def fits_on_line?(line_length); end
+
+  # Returns the value of attribute items.
   def items; end
+
   def items=(items); end
   def rows_to_s(style = T.unsafe(nil)); end
   def to_a; end
@@ -1564,6 +2646,8 @@ class Pry::Helpers::Table
   def _recolumn; end
 end
 
+# The methods defined on {Text} are available to custom commands via
+# {Pry::Command#text}.
 module Pry::Helpers::Text
   extend ::Pry::Helpers::Text
 
@@ -1587,7 +2671,10 @@ module Pry::Helpers::Text
   def blue_on_red(text); end
   def blue_on_white(text); end
   def blue_on_yellow(text); end
+
+  # Returns _text_ as bold text for use on a terminal.
   def bold(text); end
+
   def bright_black(text); end
   def bright_black_on_black(text); end
   def bright_black_on_blue(text); end
@@ -1688,7 +2775,11 @@ module Pry::Helpers::Text
   def cyan_on_red(text); end
   def cyan_on_white(text); end
   def cyan_on_yellow(text); end
+
+  # Returns `text` in the default foreground colour.
+  # Use this instead of "black" or "white" when you mean absence of colour.
   def default(text); end
+
   def green(text); end
   def green_on_black(text); end
   def green_on_blue(text); end
@@ -1699,7 +2790,10 @@ module Pry::Helpers::Text
   def green_on_red(text); end
   def green_on_white(text); end
   def green_on_yellow(text); end
+
+  # Returns _text_ indented by _chars_ spaces.
   def indent(text, chars); end
+
   def magenta(text); end
   def magenta_on_black(text); end
   def magenta_on_blue(text); end
@@ -1732,7 +2826,10 @@ module Pry::Helpers::Text
   def red_on_red(text); end
   def red_on_white(text); end
   def red_on_yellow(text); end
+
+  # Remove any color codes from _text_.
   def strip_color(text); end
+
   def white(text); end
   def white_on_black(text); end
   def white_on_blue(text); end
@@ -1743,7 +2840,10 @@ module Pry::Helpers::Text
   def white_on_red(text); end
   def white_on_white(text); end
   def white_on_yellow(text); end
+
+  # Returns _text_ in a numbered list, beginning at _offset_.
   def with_line_numbers(text, offset, color = T.unsafe(nil)); end
+
   def yellow(text); end
   def yellow_on_black(text); end
   def yellow_on_blue(text); end
@@ -1758,30 +2858,64 @@ end
 
 Pry::Helpers::Text::COLORS = T.let(T.unsafe(nil), Hash)
 
+# The History class is responsible for maintaining the user's input history,
+# both internally and within Readline.
 class Pry::History
   def initialize(options = T.unsafe(nil)); end
 
+  # Add a line to the input history, ignoring blank and duplicate lines.
   def <<(line); end
+
+  # Clear this session's history. This won't affect the contents of the
+  # history file.
   def clear; end
+
+  # Filter the history with the histignore options
   def filter(history); end
+
   def history_line_count; end
+
+  # Load the input history using `History.loader`.
   def load; end
+
+  # Returns the value of attribute loader.
   def loader; end
+
+  # Sets the attribute loader
   def loader=(_arg0); end
+
   def original_lines; end
+
+  # Add a line to the input history, ignoring blank and duplicate lines.
   def push(line); end
+
+  # Returns the value of attribute saver.
   def saver; end
+
+  # Sets the attribute saver
   def saver=(_arg0); end
+
   def session_line_count; end
+
+  # Return an Array containing all stored history.
   def to_a; end
 
   private
 
+  # The history file, opened for appending.
   def history_file; end
+
   def history_file_path; end
   def invalid_readline_line?(line); end
+
+  # The default loader. Yields lines from `Pry.config.history_file`.
   def read_from_file; end
+
+  # The default saver. Appends the given line to `Pry.config.history_file`.
   def save_to_file(line); end
+
+  # Check if the line match any option in the histignore
+  # [Pry.config.history_ignorelist]
   def should_ignore?(line); end
 
   class << self
@@ -1789,27 +2923,46 @@ class Pry::History
   end
 end
 
+# Implements a hooks system for Pry. A hook is a callable that is associated
+# with an event. A number of events are currently provided by Pry, these
+# include: `:when_started`, `:before_session`, `:after_session`.  A hook must
+# have a name, and is connected with an event by the `Pry::Hooks#add_hook`
+# method.
 class Pry::Hooks
   def initialize; end
 
+  # Add a new hook to be executed for the `event_name` event.
   def add_hook(event_name, hook_name, callable = T.unsafe(nil), &block); end
+
+  # Clear all hooks functions for a given event.
   def clear_event_hooks(event_name); end
+
   def delete_hook(event_name, hook_name); end
   def errors; end
+
+  # Execute the list of hooks for the `event_name` event.
   def exec_hook(event_name, *args, &block); end
+
   def get_hook(event_name, hook_name); end
+
+  # `add_hook`/`delete_hook` for that.
   def get_hooks(event_name); end
+
   def hook_count(event_name); end
   def hook_exists?(event_name, hook_name); end
   def merge(other); end
+
+  # Destructively merge the contents of two `Pry:Hooks` instances.
   def merge!(other); end
 
   protected
 
+  # Returns the value of attribute hooks.
   def hooks; end
 
   private
 
+  # Ensure that duplicates have their @hooks object.
   def initialize_copy(_orig); end
 
   class << self
@@ -1817,48 +2970,168 @@ class Pry::Hooks
   end
 end
 
+# Pry::Indent is a class that can be used to indent a number of lines
+# containing Ruby code similar as to how IRB does it (but better). The class
+# works by tokenizing a string using CodeRay and then looping over those
+# tokens. Based on the tokens in a line of code that line (or the next one)
+# will be indented or un-indented by correctly.
 class Pry::Indent
   include ::Pry::Helpers::BaseHelpers
 
   def initialize(pry_instance = T.unsafe(nil)); end
 
+  # Return a string which, when printed, will rewrite the previous line with
+  # the correct indentation. Mostly useful for fixing 'end'.
   def correct_indentation(prompt, code, overhang = T.unsafe(nil)); end
+
+  # Get the indentation for the start of the next line.
+  #
+  # This is what's used between the prompt and the cursor in pry.
   def current_prefix; end
+
+  # If the code just before an "if" or "while" token on a line looks like the
+  # end of a statement, then we want to treat that "if" as a singleline, not
+  # multiline statement.
   def end_of_statement?(last_token, last_kind); end
+
+  # Are we currently in the middle of a string literal.
+  #
+  # This is used to determine whether to re-indent a given line, we mustn't
+  # re-indent within string literals because to do so would actually change
+  # the value of the String!
   def in_string?; end
+
+  # Indents a string and returns it. This string can either be a single line
+  # or multiple ones.
   def indent(input); end
+
   def indent_level; end
+
+  # Get the change in indentation indicated by the line.
+  #
+  # By convention, you remove indent from the line containing end tokens,
+  # but add indent to the line *after* that which contains the start tokens.
+  #
+  # This method returns a pair, where the first number is the number of closings
+  # on this line (i.e. the number of indents to remove before the line) and the
+  # second is the number of openings (i.e. the number of indents to add after
+  # this line)
   def indentation_delta(tokens); end
+
+  # Return a list of strings which can be used to re-construct the Module.nesting at
+  # the current point in the file.
+  #
+  # Returns nil if the syntax of the file was not recognizable.
   def module_nesting; end
+
+  # All the open delimiters, in the order that they first appeared.
   def open_delimiters; end
+
+  # Return a string which restores the CodeRay string status to the correct value by
+  # opening HEREDOCs and strings.
   def open_delimiters_line; end
+
+  # reset internal state
   def reset; end
+
   def stack; end
+
+  # Given a string of Ruby code, use CodeRay to export the tokens.
   def tokenize(string); end
+
+  # Update the internal state about what kind of strings are open.
+  #
+  # Most of the complication here comes from the fact that HEREDOCs can be
+  # nested. For normal strings (which can't be nested) we assume that CodeRay
+  # correctly pairs open-and-close delimiters so we don't bother checking what
+  # they are.
   def track_delimiter(token); end
+
+  # Update the internal state relating to module nesting.
+  #
+  # It's responsible for adding to the @module_nesting array, which looks
+  # something like:
+  #
+  # [ ["class", "Foo"], ["module", "Bar::Baz"], ["class <<", "self"] ]
+  #
+  # A nil value in the @module_nesting array happens in two places: either
+  # when @awaiting_class is true and we're still waiting for the string to
+  # fill that space, or when a parse was rejected.
+  #
+  # At the moment this function is quite restricted about what formats it will
+  # parse, for example we disallow expressions after the class keyword. This
+  # could maybe be improved in the future.
   def track_module_nesting(token, kind); end
+
+  # Update the internal state relating to module nesting on 'end'.
+  #
+  # If the current 'end' pairs up with a class or a module then we should
+  # pop an array off of @module_nesting
   def track_module_nesting_end(token, kind = T.unsafe(nil)); end
 
   class << self
+    # Clean the indentation of a fragment of ruby.
     def indent(str); end
+
+    # Get the module nesting at the given point in the given string.
+    #
+    # NOTE If the line specified contains a method definition, then the nesting
+    # at the start of the method definition is used. Otherwise the nesting from
+    # the end of the line is used.
     def nesting_at(str, line_number); end
   end
 end
 
+# Collection of token types that should be ignored. Without this list
+# keywords such as "class" inside strings would cause the code to be
+# indented incorrectly.
+#
+# :pre_constant and :preserved_constant are the CodeRay 0.9.8 and 1.0.0
+# classifications of "true", "false", and "nil".
 Pry::Indent::IGNORE_TOKENS = T.let(T.unsafe(nil), Array)
+
+# Collection of tokens that should appear dedented even though they
+# don't affect the surrounding code.
 Pry::Indent::MIDWAY_TOKENS = T.let(T.unsafe(nil), Array)
+
+# Hash containing all the tokens that should increase the indentation
+# level. The keys of this hash are open tokens, the values the matching
+# tokens that should prevent a line from being indented if they appear on
+# the same line.
 Pry::Indent::OPEN_TOKENS = T.let(T.unsafe(nil), Hash)
+
+# Which tokens can be followed by an optional "do" keyword.
 Pry::Indent::OPTIONAL_DO_TOKENS = T.let(T.unsafe(nil), Array)
+
+# Which tokens can either be open tokens, or appear as modifiers on
+# a single-line.
 Pry::Indent::SINGLELINE_TOKENS = T.let(T.unsafe(nil), Array)
+
+# The amount of spaces to insert for each indent level.
 Pry::Indent::SPACES = T.let(T.unsafe(nil), String)
+
+# Tokens that indicate the end of a statement (i.e. that, if they appear
+# directly before an "if" indicates that that if applies to the same line,
+# not the next line)
+#
+# :reserved and :keywords are the CodeRay 0.9.8 and 1.0.0 respectively
+# classifications of "super", "next", "return", etc.
 Pry::Indent::STATEMENT_END_TOKENS = T.let(T.unsafe(nil), Array)
+
+# Raised if {#module_nesting} would not work.
 class Pry::Indent::UnparseableNestingError < ::StandardError; end
 
 class Pry::InputCompleter
   def initialize(input, pry = T.unsafe(nil)); end
 
+  # build_path seperates the input into two parts: path and input.
+  # input is the partial string that should be completed
+  # path is a proc that takes an input and builds a full path.
   def build_path(input); end
+
+  # Return a new completion proc for use by Readline.
   def call(str, options = T.unsafe(nil)); end
+
   def ignored_modules; end
   def select_message(path, receiver, message, candidates); end
 end
@@ -1878,10 +3151,17 @@ Pry::InputCompleter::TOPLEVEL_LOOKUP_REGEXP = T.let(T.unsafe(nil), Regexp)
 Pry::InputCompleter::VARIABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 Pry::InputCompleter::WORD_ESCAPE_STR = T.let(T.unsafe(nil), String)
 
+# There is one InputLock per input (such as STDIN) as two REPLs on the same
+# input makes things delirious. InputLock serializes accesses to the input so
+# that threads to not conflict with each other. The latest thread to request
+# ownership of the input wins.
 class Pry::InputLock
   def initialize; end
 
+  # Adds ourselves to the ownership list. The last one in the list may access
+  # the input through interruptible_region().
   def __with_ownership; end
+
   def enter_interruptible_region; end
   def interruptible_region; end
   def leave_interruptible_region; end
@@ -1889,9 +3169,17 @@ class Pry::InputLock
 
   class << self
     def for(input); end
+
+    # Returns the value of attribute global_lock.
     def global_lock; end
+
+    # Sets the attribute global_lock
     def global_lock=(_arg0); end
+
+    # Returns the value of attribute input_locks.
     def input_locks; end
+
+    # Sets the attribute input_locks
     def input_locks=(_arg0); end
   end
 end
@@ -1904,8 +3192,12 @@ Pry::LOCAL_RC_FILE = T.let(T.unsafe(nil), String)
 class Pry::LastException < ::BasicObject
   def initialize(exception); end
 
+  # Returns the value of attribute bt_index.
   def bt_index; end
+
+  # Sets the attribute bt_index
   def bt_index=(_arg0); end
+
   def bt_source_location_for(index); end
   def file; end
   def inc_bt_index; end
@@ -1918,6 +3210,8 @@ class Pry::LastException < ::BasicObject
   def respond_to_missing?(name, include_all = T.unsafe(nil)); end
 end
 
+# This class wraps the normal `Method` and `UnboundMethod` classes
+# to provide extra functionality useful to Pry.
 class Pry::Method
   include ::Pry::Helpers::BaseHelpers
   include ::Pry::Helpers::DocumentationHelpers
@@ -1926,6 +3220,8 @@ class Pry::Method
   extend ::Forwardable
   extend ::Pry::Forwardable
 
+  # A new instance of `Pry::Method` wrapping the given `::Method`,
+  # `UnboundMethod`, or `Proc`.
   def initialize(method, known_info = T.unsafe(nil)); end
 
   def ==(other); end
@@ -1937,29 +3233,50 @@ class Pry::Method
   def dynamically_defined?; end
   def is_a?(klass); end
   def kind_of?(klass); end
+
+  # Delegate any unknown calls to the wrapped method.
   def method_missing(method_name, *args, &block); end
+
+  # Get the name of the method as a String, regardless of the underlying
+  # Method#name type.
   def name; end
+
+  # Get the name of the method including the class on which it was defined.
   def name_with_owner; end
+
   def original_name; end
   def owner(*args, &block); end
   def parameters(*args, &block); end
   def pry_method?; end
   def receiver(*args, &block); end
+
+  # Update the live copy of the method's source.
   def redefine(source); end
+
   def respond_to?(method_name, include_all = T.unsafe(nil)); end
   def signature; end
   def singleton_method?; end
   def source; end
+
+  # Can we get the source code for this method?
   def source?; end
+
   def source_file; end
   def source_line; end
   def source_range; end
   def source_type; end
   def super(times = T.unsafe(nil)); end
   def unbound_method?; end
+
+  # Is the method undefined? (aka `Disowned`)
   def undefined?; end
+
   def visibility; end
+
+  # Get underlying object wrapped by this Pry::Method instance
   def wrapped; end
+
+  # Get the owner of the method as a Pry::Module
   def wrapped_owner; end
 
   private
@@ -1972,32 +3289,99 @@ class Pry::Method
   def super_using_ancestors(ancestors, times = T.unsafe(nil)); end
 
   class << self
+    # Get all of the instance methods of a `Class` or `Module`
     def all_from_class(klass, include_super = T.unsafe(nil)); end
+
+    # Get all of the methods on an `Object`
     def all_from_obj(obj, include_super = T.unsafe(nil)); end
+
+    # Given a `Binding`, try to extract the `::Method` it originated from and
+    # use it to instantiate a `Pry::Method`. Return `nil` if this isn't
+    # possible.
     def from_binding(binding); end
+
+    # Given a `Class` or `Module` and the name of a method, try to
+    # instantiate a `Pry::Method` containing the instance method of
+    # that name. Return `nil` if no such method exists.
     def from_class(klass, name, target = T.unsafe(nil)); end
+
+    # Given a `Class` or `Module` and the name of a method, try to
+    # instantiate a `Pry::Method` containing the instance method of
+    # that name. Return `nil` if no such method exists.
     def from_module(klass, name, target = T.unsafe(nil)); end
+
+    # Given an object and the name of a method, try to instantiate
+    # a `Pry::Method` containing the method of that name bound to
+    # that object. Return `nil` if no such method exists.
     def from_obj(obj, name, target = T.unsafe(nil)); end
+
+    # Given a string representing a method name and optionally a binding to
+    # search in, find and return the requested method wrapped in a
+    # `Pry::Method` instance.
     def from_str(name, target = T.unsafe(nil), options = T.unsafe(nil)); end
+
     def instance_method_definition?(name, definition_line); end
+
+    # Get every `Class` and `Module`, in order, that will be checked when looking
+    # for methods on instances of the given `Class` or `Module`.
+    # This does not treat singleton classes of classes specially.
     def instance_resolution_order(klass); end
+
+    # In order to support 2.0 Refinements we need to look up methods
+    # inside the relevant Binding.
     def lookup_method_via_binding(obj, method_name, method_type, target = T.unsafe(nil)); end
+
     def method_definition?(name, definition_line); end
+
+    # Get every `Class` and `Module`, in order, that will be checked when looking
+    # for an instance method to call on this object.
     def resolution_order(obj); end
+
     def singleton_class_of(obj); end
+
+    # Get the singleton classes of superclasses that could define methods on
+    # the given class object, and any modules they include.
+    # If a module is included at multiple points in the ancestry, only
+    # the lowest copy will be returned.
     def singleton_class_resolution_order(klass); end
+
     def singleton_method_definition?(name, definition_line); end
   end
 end
 
+# A Disowned Method is one that's been removed from the class on which it was defined.
+#
+# e.g.
+# class C
+# def foo
+# C.send(:undefine_method, :foo)
+# Pry::Method.from_binding(binding)
+# end
+# end
+#
+# In this case we assume that the "owner" is the singleton class of the receiver.
+#
+# This occurs mainly in Sinatra applications.
 class Pry::Method::Disowned < ::Pry::Method
+  # Create a new Disowned method.
   def initialize(receiver, method_name); end
 
+  # Raise a more useful error message instead of trying to forward to nil.
   def method_missing(method_name, *args, &block); end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Get the hypothesized owner of the method.
   def owner; end
+
+  # Returns the value of attribute receiver.
   def receiver; end
+
+  # Can we get the source for this method?
   def source?; end
+
+  # Is the method undefined? (aka `Disowned`)
   def undefined?; end
 
   private
@@ -2008,18 +3392,59 @@ end
 class Pry::Method::Patcher
   def initialize(method); end
 
+  # Returns the value of attribute method.
   def method; end
+
+  # Sets the attribute method
   def method=(_arg0); end
+
+  # perform the patch
   def patch_in_ram(source); end
 
   private
 
   def cache_key; end
+
+  # Update the definition line so that it can be eval'd directly on the Method's
+  # owner instead of from the original context.
+  #
+  # In particular this takes `def self.foo` and turns it into `def foo` so that we
+  # don't end up creating the method on the singleton class of the singleton class
+  # by accident.
+  #
+  # This is necessarily done by String manipulation because we can't find out what
+  # syntax is needed for the argument list by ruby-level introspection.
   def definition_for_owner(line); end
+
   def redefine(source); end
+
+  # Run some code ensuring that at the end target#meth_name will not have changed.
+  #
+  # When we're redefining aliased methods we will overwrite the method at the
+  # unaliased name (so that super continues to work). By wrapping that code in a
+  # transation we make that not happen, which means that alias_method_chains, etc.
+  # continue to work.
   def with_method_transaction; end
+
+  # Apply wrap_for_owner and wrap_for_nesting successively to `source`
   def wrap(source); end
+
+  # Update the new source code to have the correct Module.nesting.
+  #
+  # This method uses syntactic analysis of the original source file to determine
+  # the new nesting, so that we can tell the difference between:
+  #
+  # class A; def self.b; end; end
+  # class << A; def b; end; end
+  #
+  # The resulting code should be evaluated in the TOPLEVEL_BINDING.
   def wrap_for_nesting(source); end
+
+  # Update the source code so that when it has the right owner when eval'd.
+  #
+  # This (combined with definition_for_owner) is backup for the case that
+  # wrap_for_nesting fails, to ensure that the method will stil be defined in
+  # the correct place.
   def wrap_for_owner(source); end
 
   class << self
@@ -2027,27 +3452,73 @@ class Pry::Method::Patcher
   end
 end
 
+# This class is responsible for locating the *real* `Pry::Method`
+# object captured by a binding.
+#
+# Given a `Binding` from inside a method and a 'seed' Pry::Method object,
+# there are primarily two situations where the seed method doesn't match
+# the Binding:
+# 1. The Pry::Method is from a subclass
+# 2. The Pry::Method represents a method of the same name while the original
+# was renamed to something else. For 1. we search vertically up the
+# inheritance chain, and for 2. we search laterally along the object's
+# method table.
+#
+# When we locate the method that matches the Binding we wrap it in
+# Pry::Method and return it, or return nil if we fail.
 class Pry::Method::WeirdMethodLocator
   def initialize(method, target); end
 
   def find_method; end
   def lost_method?; end
+
+  # Returns the value of attribute method.
   def method; end
+
+  # Sets the attribute method
   def method=(_arg0); end
+
+  # Returns the value of attribute target.
   def target; end
+
+  # Sets the attribute target
   def target=(_arg0); end
 
   private
 
   def all_methods_for(obj); end
   def expanded_source_location(source_location); end
+
+  # it's possible in some cases that the method we find by this approach is
+  # a sub-method of the one we're currently in, consider:
+  #
+  # class A; def b; binding.pry; end; end
+  # class B < A; def b; super; end; end
+  #
+  # Given that we can normally find the source_range of methods, and that we
+  # know which __FILE__ and __LINE__ the binding is at, we can hope to
+  # disambiguate these cases.
+  #
+  # This obviously won't work if the source is unavaiable for some reason,
+  # or if both methods have the same __FILE__ and __LINE__.
   def find_method_in_superclass; end
+
+  # This is the case where the name of a method has changed
+  # (via alias_method) so we locate the Method object for the
+  # renamed method.
   def find_renamed_method; end
+
   def index_to_line_number(index); end
   def lines_for_file(file); end
   def normal_method?(method); end
   def pry_file?; end
+
+  # Use static analysis to locate the start of the method definition.
+  # We have the `__FILE__` and `__LINE__` from the binding and the
+  # original name of the method so we search up until we find a
+  # def/define_method, etc defining a method of the appropriate name.
   def renamed_method_source_location; end
+
   def skip_superclass_search?; end
   def target_file; end
   def target_line; end
@@ -2055,7 +3526,12 @@ class Pry::Method::WeirdMethodLocator
   def valid_file?(file); end
 
   class << self
+    # Whether the given method object matches the associated binding.
+    # If the method object does not match the binding, then it's
+    # most likely not the method captured by the binding, and we
+    # must commence a search.
     def normal_method?(method, binding); end
+
     def weird_method?(method, binding); end
   end
 end
@@ -2066,6 +3542,16 @@ class Pry::NoCommandError < ::StandardError
   def initialize(match, owner); end
 end
 
+# `ObjectPath` implements the resolution of "object paths", which are strings
+# that are similar to filesystem paths but meant for traversing Ruby objects.
+# Examples of valid object paths include:
+#
+# x
+# @foo/@bar
+# "string"/upcase
+# Pry/Method
+#
+# Object paths are mostly relevant in the context of the `cd` command.
 class Pry::ObjectPath
   def initialize(path_string, current_stack); end
 
@@ -2078,6 +3564,8 @@ class Pry::ObjectPath
 end
 
 Pry::ObjectPath::SPECIAL_TERMS = T.let(T.unsafe(nil), Array)
+
+# indicates obsolete API
 class Pry::ObsoleteError < ::StandardError; end
 
 class Pry::Output
@@ -2085,14 +3573,23 @@ class Pry::Output
 
   def <<(*objs); end
   def decolorize_maybe(str); end
+
+  # Return a screen height or the default if that fails.
   def height; end
+
   def method_missing(method_name, *args, &block); end
   def print(*objs); end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
+
   def puts(*objs); end
   def size; end
   def tty?; end
+
+  # Return a screen width or the default if that fails.
   def width; end
+
   def write(*objs); end
 
   private
@@ -2111,17 +3608,38 @@ Pry::Output::DEFAULT_SIZE = T.let(T.unsafe(nil), Array)
 class Pry::Pager
   def initialize(pry_instance); end
 
+  # Yields a pager object (`NullPager`, `SimplePager`, or `SystemPager`).
+  # All pagers accept output with `#puts`, `#print`, `#write`, and `#<<`.
   def open; end
+
+  # Send the given text through the best available pager (if
+  # `Pry.config.pager` is enabled). If you want to send text through in
+  # chunks as you generate it, use `open` to get a writable object
+  # instead.
   def page(text); end
+
+  # Returns the value of attribute pry_instance.
   def pry_instance; end
 
   private
 
+  # Return an instance of the "best" available pager class --
+  # `SystemPager` if possible, `SimplePager` if `SystemPager` isn't
+  # available, and `NullPager` if the user has disabled paging. All
+  # pagers accept output with `#puts`, `#print`, `#write`, and `#<<`. You
+  # must call `#close` when you're done writing output to a pager, and
+  # you must rescue `Pry::Pager::StopPaging`. These requirements can be
+  # avoided by using `.open` instead.
   def best_available; end
+
   def enabled?; end
+
+  # Returns the value of attribute output.
   def output; end
 end
 
+# `NullPager` is a "pager" that actually just prints all output as it
+# comes in. Used when `Pry.config.pager` is false.
 class Pry::Pager::NullPager
   def initialize(out); end
 
@@ -2137,6 +3655,15 @@ class Pry::Pager::NullPager
   def width; end
 end
 
+# `PageTracker` tracks output to determine whether it's likely to take
+# up a whole page. This doesn't need to be super precise, but we can
+# use it for `SimplePager` and to avoid invoking the system pager
+# unnecessarily.
+#
+# One simplifying assumption is that we don't need `#page?` to return
+# `true` on the basis of an incomplete line. Long lines should be
+# counted as multiple lines, but we don't have to transition from
+# `false` to `true` until we see a newline.
 class Pry::Pager::PageTracker
   def initialize(rows, cols); end
 
@@ -2146,9 +3673,13 @@ class Pry::Pager::PageTracker
 
   private
 
+  # Approximation of the printable length of a given line, without the
+  # newline and without ANSI color codes.
   def line_length(line); end
 end
 
+# `SimplePager` is a straightforward pure-Ruby pager. We use it on
+# JRuby and when we can't find a usable external pager.
 class Pry::Pager::SimplePager < ::Pry::Pager::NullPager
   def initialize(*_arg0); end
 
@@ -2157,6 +3688,10 @@ end
 
 class Pry::Pager::StopPaging < ::StandardError; end
 
+# `SystemPager` buffers output until we're pretty sure it's at least a
+# page long, then invokes an external pager and starts streaming output
+# to it. If `#close` is called before then, it just prints out the
+# buffered content.
 class Pry::Pager::SystemPager < ::Pry::Pager::NullPager
   def initialize(*_arg0); end
 
@@ -2178,8 +3713,12 @@ end
 class Pry::PluginManager
   def initialize; end
 
+  # Require all enabled plugins, disabled plugins are skipped.
   def load_plugins; end
+
+  # Find all installed Pry plugins and store them in an internal array.
   def locate_plugins; end
+
   def plugins; end
 
   private
@@ -2188,6 +3727,7 @@ class Pry::PluginManager
   def plugin_located?(plugin); end
 end
 
+# Placeholder when no associated gem found, displays warning
 class Pry::PluginManager::NoPlugin
   def initialize(name); end
 
@@ -2203,25 +3743,65 @@ Pry::PluginManager::PRY_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
 class Pry::PluginManager::Plugin
   def initialize(name, gem_name, spec, enabled); end
 
+  # Activate the plugin (require the gem - enables/loads the
+  # plugin immediately at point of call, even if plugin is
+  # disabled)
+  # Does not reload plugin if it's already active.
   def activate!; end
+
+  # Returns the value of attribute active.
   def active; end
+
+  # Sets the attribute active
   def active=(_arg0); end
+
+  # Returns the value of attribute active.
   def active?; end
+
+  # Disable a plugin. (prevents plugin from being loaded, cannot
+  # disable an already activated plugin)
   def disable!; end
+
+  # Enable a plugin. (does not load it immediately but puts on
+  # 'white list' to be loaded)
   def enable!; end
+
+  # Returns the value of attribute enabled.
   def enabled; end
+
+  # Sets the attribute enabled
   def enabled=(_arg0); end
+
+  # Returns the value of attribute enabled.
   def enabled?; end
+
+  # Returns the value of attribute gem_name.
   def gem_name; end
+
+  # Sets the attribute gem_name
   def gem_name=(_arg0); end
+
+  # Load the Command line options defined by this plugin (if they exist)
   def load_cli_options; end
+
+  # Returns the value of attribute name.
   def name; end
+
+  # Sets the attribute name
   def name=(_arg0); end
+
+  # Returns the value of attribute spec.
   def spec; end
+
+  # Sets the attribute spec
   def spec=(_arg0); end
+
   def supported?; end
 end
 
+# Prompt represents the Pry prompt, which can be used with Readline-like
+# libraries. It defines a few default prompts (default prompt, simple prompt,
+# etc) and also provides an API for adding and implementing custom prompts.
 class Pry::Prompt
   def initialize(name, description, prompt_procs); end
 
@@ -2233,8 +3813,12 @@ class Pry::Prompt
   def wait_proc; end
 
   class << self
+    # Retrieves a prompt.
     def [](name); end
+
+    # Adds a new prompt to the prompt hash.
     def add(name, description = T.unsafe(nil), separators = T.unsafe(nil)); end
+
     def all; end
   end
 end
@@ -2243,63 +3827,133 @@ class Pry::REPL
   extend ::Forwardable
   extend ::Pry::Forwardable
 
+  # Create an instance of {REPL} wrapping the given {Pry}.
   def initialize(pry, options = T.unsafe(nil)); end
 
   def input(*args, &block); end
   def output(*args, &block); end
   def pry; end
   def pry=(_arg0); end
+
+  # Start the read-eval-print loop.
   def start; end
 
   private
 
+  # Calculates correct overhang for current line. Supports vi Readline
+  # mode and its indicators such as "(ins)" or "(cmd)".
   def calculate_overhang(current_prompt, original_val, indented_val); end
+
   def coolline_available?; end
+
+  # Clean up after the repl session.
   def epilogue; end
+
+  # Manage switching of input objects on encountering `EOFError`s.
   def handle_read_errors; end
+
   def input_readline(*args); end
+
+  # If `$stdout` is not a tty, it's probably a pipe.
   def piping?; end
+
+  # Set up the repl session.
   def prologue; end
+
+  # Read a line of input from the user.
   def read; end
+
+  # Returns the next line of input to be sent to the {Pry} instance.
   def read_line(current_prompt); end
+
   def readline_available?; end
+
+  # The actual read-eval-print loop.
+  #
+  # The {REPL} instance is responsible for reading and looping, whereas the
+  # {Pry} instance is responsible for evaluating user input and printing
+  # return values and command output.
   def repl; end
+
   def set_readline_output; end
 
   class << self
+    # Instantiate a new {Pry} instance with the given options, then start a
+    # {REPL} instance wrapping it.
     def start(options); end
   end
 end
 
+# A class to manage the loading of files through the REPL loop.
+# This is an interesting trick as it processes your file as if it
+# was user input in an interactive session. As a result, all Pry
+# commands are available, and they are executed non-interactively. Furthermore
+# the session becomes interactive when the repl loop processes a
+# 'make-interactive' command in the file. The session also becomes
+# interactive when an exception is encountered, enabling you to fix
+# the error before returning to non-interactive processing with the
+# 'make-non-interactive' command.
 class Pry::REPLFileLoader
   def initialize(file_name); end
 
+  # Define a few extra commands useful for flipping back & forth
+  # between interactive/non-interactive modes
   def define_additional_commands; end
+
+  # Switch to interactive mode, i.e take input from the user
+  # and use the regular print and exception handlers.
   def interactive_mode(pry_instance); end
+
+  # Actually load the file through the REPL by setting file content
+  # as the REPL input stream.
   def load; end
+
+  # Switch to non-interactive mode. Essentially
+  # this means there is no result output
+  # and that the session becomes interactive when an exception is encountered.
   def non_interactive_mode(pry_instance, content); end
 end
 
+# As a REPL, we often want to catch any unexpected exceptions that may have
+# been raised; however we don't want to go overboard and prevent the user
+# from exiting Pry when they want to.
 module Pry::RescuableException
   class << self
     def ===(exception); end
   end
 end
 
+# Wraps the return result of process_commands, indicates if the
+# result IS a command and what kind of command (e.g void)
 class Pry::Result
   def initialize(is_command, retval = T.unsafe(nil)); end
 
+  # Is the result a command?
   def command?; end
+
+  # Returns the value of attribute retval.
   def retval; end
+
+  # Is the result a command and if it is, is it a void command?
+  # (one that does not return a value)
   def void_command?; end
 end
 
+# A ring is a thread-safe fixed-capacity array to which you can only add
+# elements. Older entries are overwritten as you add new elements, so that the
+# ring can never contain more than `max_size` elemens.
 class Pry::Ring
   def initialize(max_size); end
 
+  # Push `value` to the current index.
   def <<(value); end
+
+  # Read the value stored at `index`.
   def [](index); end
+
+  # Clear the buffer and reset count.
   def clear; end
+
   def count; end
   def max_size; end
   def size; end
@@ -2313,54 +3967,367 @@ end
 class Pry::Slop
   include ::Enumerable
 
+  # Create a new instance of Slop and optionally build options via a block.
+  #
+  # config - A Hash of configuration options.
+  # block  - An optional block used to specify options.
   def initialize(config = T.unsafe(nil), &block); end
 
+  # Fetch an options argument value.
+  #
+  # key - The Symbol or String option short or long flag.
+  #
+  # Returns the Object value for this option, or nil.
   def [](key); end
+
+  # Add a callback.
+  #
+  # label - The Symbol identifier to attach this callback.
+  #
+  # Returns nothing.
   def add_callback(label, &block); end
+
+  # Get or set the banner.
+  #
+  # banner - The String to set the banner.
+  #
+  # Returns the banner String.
   def banner(banner = T.unsafe(nil)); end
+
+  # Set the banner.
+  #
+  # banner - The String to set the banner.
   def banner=(banner); end
+
+  # Add a new command.
+  #
+  # command - The Symbol or String used to identify this command.
+  # options - A Hash of configuration options (see Slop::new)
+  #
+  # Returns a new instance of Slop mapped to this command.
   def command(command, options = T.unsafe(nil), &block); end
+
+  # The Hash of configuration options for this Slop instance.
   def config; end
+
+  # Get or set the description (used for commands).
+  #
+  # desc - The String to set the description.
+  #
+  # Returns the description String.
   def description(desc = T.unsafe(nil)); end
+
+  # Set the description (used for commands).
+  #
+  # desc - The String to set the description.
   def description=(desc); end
+
+  # Enumerable interface. Yields each Slop::Option.
   def each(&block); end
+
+  # Fetch a Slop object associated with this command.
+  #
+  # command - The String or Symbol name of the command.
+  #
+  # Examples:
+  #
+  # opts.command :foo do
+  # on :v, :verbose, 'Enable verbose mode'
+  # end
+  #
+  # # ruby run.rb foo -v
+  # opts.fetch_command(:foo).verbose? #=> true
   def fetch_command(command); end
+
+  # Fetch a Slop::Option object.
+  #
+  # key - The Symbol or String option key.
+  #
+  # Examples:
+  #
+  # opts.on(:foo, 'Something fooey', :argument => :optional)
+  # opt = opts.fetch_option(:foo)
+  # opt.class #=> Slop::Option
+  # opt.accepts_optional_argument? #=> true
+  #
+  # Returns an Option or nil if none were found.
   def fetch_option(key); end
+
+  # Fetch an options argument value.
+  #
+  # key - The Symbol or String option short or long flag.
+  #
+  # Returns the Object value for this option, or nil.
   def get(key); end
+
+  # Print a handy Slop help string.
+  #
+  # Returns the banner followed by available option help strings.
   def help; end
+
+  # Fetch a list of options which were missing from the parsed list.
+  #
+  # Examples:
+  #
+  # opts = Slop.new do
+  # on :n, :name=
+  # on :p, :password=
+  # end
+  #
+  # opts.parse %w[ --name Lee ]
+  # opts.missing #=> ['password']
+  #
+  # Returns an Array of Strings representing missing options.
   def missing; end
+
+  # Add an Option.
+  #
+  # objects - An Array with an optional Hash as the last element.
+  #
+  # Examples:
+  #
+  # on '-u', '--username=', 'Your username'
+  # on :v, :verbose, 'Enable verbose mode'
+  #
+  # Returns the created instance of Slop::Option.
   def on(*objects, &block); end
+
+  # Add an Option.
+  #
+  # objects - An Array with an optional Hash as the last element.
+  #
+  # Examples:
+  #
+  # on '-u', '--username=', 'Your username'
+  # on :v, :verbose, 'Enable verbose mode'
+  #
+  # Returns the created instance of Slop::Option.
   def opt(*objects, &block); end
+
+  # Add an Option.
+  #
+  # objects - An Array with an optional Hash as the last element.
+  #
+  # Examples:
+  #
+  # on '-u', '--username=', 'Your username'
+  # on :v, :verbose, 'Enable verbose mode'
+  #
+  # Returns the created instance of Slop::Option.
   def option(*objects, &block); end
+
+  # The Array of Slop::Option objects tied to this Slop instance.
   def options; end
+
+  # Parse a list of items, executing and gathering options along the way.
+  #
+  # items - The Array of items to extract options from (default: ARGV).
+  # block - An optional block which when used will yield non options.
+  #
+  # Returns an Array of original items.
   def parse(items = T.unsafe(nil), &block); end
+
+  # Parse a list of items, executing and gathering options along the way.
+  # unlike parse() this method will remove any options and option arguments
+  # from the original Array.
+  #
+  # items - The Array of items to extract options from (default: ARGV).
+  # block - An optional block which when used will yield non options.
+  #
+  # Returns an Array of original items with options removed.
   def parse!(items = T.unsafe(nil), &block); end
+
+  # Check for an options presence.
+  #
+  # Examples:
+  #
+  # opts.parse %w( --foo )
+  # opts.present?(:foo) #=> true
+  # opts.present?(:bar) #=> false
+  #
+  # Returns true if all of the keys are present in the parsed arguments.
   def present?(*keys); end
+
+  # Specify code to be executed when these options are parsed.
+  #
+  # callable - An object responding to a call method.
+  #
+  # yields - The instance of Slop parsing these options
+  # An Array of unparsed arguments
+  #
+  # Example:
+  #
+  # Slop.parse do
+  # on :v, :verbose
+  #
+  # run do |opts, args|
+  # puts "Arguments: #{args.inspect}" if opts.verbose?
+  # end
+  # end
   def run(callable = T.unsafe(nil), &block); end
+
+  # Add string separators between options.
+  #
+  # text - The String text to print.
   def separator(text); end
+
+  # Is strict mode enabled?
+  #
+  # Returns true if strict mode is enabled, false otherwise.
   def strict?; end
+
+  # Returns a new Hash with option flags as keys and option values as values.
+  #
+  # include_commands - If true, merge options from all sub-commands.
   def to_h(include_commands = T.unsafe(nil)); end
+
+  # Returns a new Hash with option flags as keys and option values as values.
+  #
+  # include_commands - If true, merge options from all sub-commands.
   def to_hash(include_commands = T.unsafe(nil)); end
+
+  # Print a handy Slop help string.
+  #
+  # Returns the banner followed by available option help strings.
   def to_s; end
 
   private
 
+  # Autocreate an option on the fly. See the :autocreate Slop config option.
+  #
+  # items - The Array of items we're parsing.
+  # index - The current Integer index for the item we're processing.
+  #
+  # Returns nothing.
   def autocreate(items, index); end
+
+  # Build an option from a list of objects.
+  #
+  # objects - An Array of objects used to build this option.
+  #
+  # Returns a new instance of Slop::Option.
   def build_option(objects, &block); end
+
+  # Remove any leading -- characters from a string.
+  #
+  # object - The Object we want to cast to a String and clean.
+  #
+  # Returns the newly cleaned String with leading -- characters removed.
   def clean(object); end
+
   def commands_to_help; end
+
+  # Execute a `-abc` type option where a, b and c are all options. This
+  # method is only executed if the multiple_switches argument is true.
+  #
+  # option   - The first Option object.
+  # argument - The argument to this option. (Split into multiple Options).
+  # index    - The index of the current item being processed.
+  #
+  # Returns nothing.
   def execute_multiple_switches(option, argument, index); end
+
+  # Execute an option, firing off callbacks and assigning arguments.
+  #
+  # option   - The Slop::Option object found by #process_item.
+  # argument - The argument Object to assign to this option.
+  # index    - The current Integer index of the object we're processing.
+  # item     - The optional String item we're processing.
+  #
+  # Returns nothing.
   def execute_option(option, argument, index, item = T.unsafe(nil)); end
+
+  # Extract the long flag from an item.
+  #
+  # objects - The Array of objects passed from #build_option.
+  # config  - The Hash of configuration options built in #build_option.
   def extract_long_flag(objects, config); end
+
+  # Extract an option from a flag.
+  #
+  # flag - The flag key used to extract an option.
+  #
+  # Returns an Array of [option, argument].
   def extract_option(flag); end
+
+  # Extract the short flag from an item.
+  #
+  # objects - The Array of objects passed from #build_option.
+  # config  - The Hash of configuration options built in #build_option.
   def extract_short_flag(objects, config); end
+
+  # Convenience method for present?(:option).
+  #
+  # Examples:
+  #
+  # opts.parse %( --verbose )
+  # opts.verbose? #=> true
+  # opts.other?   #=> false
+  #
+  # Returns true if this option is present. If this method does not end
+  # with a ? character it will instead call super().
   def method_missing(method, *args, &block); end
+
+  # Process a list item, figure out if it's an option, execute any
+  # callbacks, assign any option arguments, and do some sanity checks.
+  #
+  # items - The Array of items to process.
+  # index - The current Integer index of the item we want to process.
+  # block - An optional block which when passed will yield non options.
+  #
+  # Returns nothing.
   def process_item(items, index, &block); end
+
+  # Override this method so we can check if an option? method exists.
+  #
+  # Returns true if this option key exists in our list of options.
   def respond_to_missing?(method_name, include_all = T.unsafe(nil)); end
 
   class << self
+    # Build a Slop object from a option specification.
+    #
+    # This allows you to design your options via a simple String rather
+    # than programatically. Do note though that with this method, you're
+    # unable to pass any advanced options to the on() method when creating
+    # options.
+    #
+    # string - The optspec String
+    # config - A Hash of configuration options to pass to Slop.new
+    #
+    # Examples:
+    #
+    # opts = Slop.optspec(<<-SPEC)
+    # ruby foo.rb [options]
+    # ---
+    # n,name=     Your name
+    # a,age=      Your age
+    # A,auth      Sign in with auth
+    # p,passcode= Your secret pass code
+    # SPEC
+    #
+    # opts.fetch_option(:name).description #=> "Your name"
+    #
+    # Returns a new instance of Slop.
     def optspec(string, config = T.unsafe(nil)); end
+
+    # items  - The Array of items to extract options from (default: ARGV).
+    # config - The Hash of configuration options to send to Slop.new().
+    # block  - An optional block used to add options.
+    #
+    # Examples:
+    #
+    # Slop.parse(ARGV, :help => true) do
+    # on '-n', '--name', 'Your username', :argument => true
+    # end
+    #
+    # Returns a new instance of Slop.
     def parse(items = T.unsafe(nil), config = T.unsafe(nil), &block); end
+
+    # items  - The Array of items to extract options from (default: ARGV).
+    # config - The Hash of configuration options to send to Slop.new().
+    # block  - An optional block used to add options.
+    #
+    # Returns a new instance of Slop.
     def parse!(items = T.unsafe(nil), config = T.unsafe(nil), &block); end
   end
 end
@@ -2368,90 +4335,294 @@ end
 class Pry::Slop::Commands
   include ::Enumerable
 
+  # Create a new instance of Slop::Commands and optionally build
+  # Slop instances via a block. Any configuration options used in
+  # this method will be the default configuration options sent to
+  # each Slop object created.
+  #
+  # config - An optional configuration Hash.
+  # block  - Optional block used to define commands.
+  #
+  # Examples:
+  #
+  # commands = Slop::Commands.new do
+  # on :new do
+  # on '-o', '--outdir=', 'The output directory'
+  # on '-v', '--verbose', 'Enable verbose mode'
+  # end
+  #
+  # on :generate do
+  # on '--assets', 'Generate assets', :default => true
+  # end
+  #
+  # global do
+  # on '-D', '--debug', 'Enable debug mode', :default => false
+  # end
+  # end
+  #
+  # commands[:new].class #=> Slop
+  # commands.parse
   def initialize(config = T.unsafe(nil), &block); end
 
+  # Fetch the instance of Slop tied to a command.
+  #
+  # key - The String or Symbol key used to locate this command.
+  #
+  # Returns the Slop instance if this key is found, nil otherwise.
   def [](key); end
+
+  # Returns the value of attribute arguments.
   def arguments; end
+
+  # Optionally set the banner for this command help output.
+  #
+  # banner - The String text to set the banner.
+  #
+  # Returns the String banner if one is set.
   def banner(banner = T.unsafe(nil)); end
+
+  # Sets the attribute banner
   def banner=(_arg0); end
+
+  # Returns the value of attribute commands.
   def commands; end
+
+  # Returns the value of attribute config.
   def config; end
+
+  # Add a Slop instance used when no other commands exist.
+  #
+  # config - A Hash of configuration options to pass to Slop.
+  # block  - An optional block used to pass options to Slop.
+  #
+  # Returns the newly created Slop instance mapped to default.
   def default(config = T.unsafe(nil), &block); end
+
+  # Enumerable interface.
   def each(&block); end
+
+  # Fetch the instance of Slop tied to a command.
+  #
+  # key - The String or Symbol key used to locate this command.
+  #
+  # Returns the Slop instance if this key is found, nil otherwise.
   def get(key); end
+
+  # Add a global Slop instance.
+  #
+  # config - A Hash of configuration options to pass to Slop.
+  # block  - An optional block used to pass options to Slop.
+  #
+  # Returns the newly created Slop instance mapped to global.
   def global(config = T.unsafe(nil), &block); end
+
+  # Returns the help String.
   def help; end
+
+  # Returns the inspection String.
   def inspect; end
+
+  # Add a Slop instance for a specific command.
+  #
+  # command - A String or Symbol key used to identify this command.
+  # config  - A Hash of configuration options to pass to Slop.
+  # block   - An optional block used to pass options to Slop.
+  #
+  # Returns the newly created Slop instance mapped to command.
   def on(command, config = T.unsafe(nil), &block); end
+
+  # Parse a list of items.
+  #
+  # items - The Array of items to parse.
+  #
+  # Returns the original Array of items.
   def parse(items = T.unsafe(nil)); end
+
+  # Parse a list of items, removing any options or option arguments found.
+  #
+  # items - The Array of items to parse.
+  #
+  # Returns the original Array of items with options removed.
   def parse!(items = T.unsafe(nil)); end
+
+  # Check for a command presence.
+  #
+  # Examples:
+  #
+  # cmds.parse %w( foo )
+  # cmds.present?(:foo) #=> true
+  # cmds.present?(:bar) #=> false
+  #
+  # Returns true if the given key is present in the parsed arguments.
   def present?(key); end
+
+  # Returns a nested Hash with Slop options and values. See Slop#to_hash.
   def to_hash; end
+
+  # Returns the help String.
   def to_s; end
 
   private
 
+  # Returns nothing.
   def execute_arguments!(items); end
+
+  # Returns nothing.
   def execute_global_opts!(items); end
 end
 
+# Returns a default Hash of configuration options this Slop instance uses.
 Pry::Slop::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# The main Error class, all Exception classes inherit from this class.
 class Pry::Slop::Error < ::StandardError; end
+
+# Raised when an argument does not match its intended match constraint.
 class Pry::Slop::InvalidArgumentError < ::Pry::Slop::Error; end
+
+# Raised when an invalid command is found and the strict flag is enabled.
 class Pry::Slop::InvalidCommandError < ::Pry::Slop::Error; end
+
+# Raised when an invalid option is found and the strict flag is enabled.
 class Pry::Slop::InvalidOptionError < ::Pry::Slop::Error; end
+
+# Raised when an option argument is expected but none are given.
 class Pry::Slop::MissingArgumentError < ::Pry::Slop::Error; end
+
+# Raised when an option is expected/required but not present.
 class Pry::Slop::MissingOptionError < ::Pry::Slop::Error; end
 
 class Pry::Slop::Option
+  # Incapsulate internal option information, mainly used to store
+  # option specific configuration data, most of the meat of this
+  # class is found in the #value method.
+  #
+  # slop        - The instance of Slop tied to this Option.
+  # short       - The String or Symbol short flag.
+  # long        - The String or Symbol long flag.
+  # description - The String description text.
+  # config      - A Hash of configuration options.
+  # block       - An optional block used as a callback.
   def initialize(slop, short, long, description, config = T.unsafe(nil), &block); end
 
+  # Returns true if this option accepts an optional argument.
   def accepts_optional_argument?; end
+
   def argument?; end
+
+  # Returns the value of attribute argument_in_value.
   def argument_in_value; end
+
+  # Sets the attribute argument_in_value
   def argument_in_value=(_arg0); end
+
   def as?; end
   def autocreated?; end
+
+  # Call this options callback if one exists, and it responds to call().
+  #
+  # Returns nothing.
   def call(*objects); end
+
   def callback?; end
+
+  # Returns the value of attribute config.
   def config; end
+
+  # Returns the value of attribute count.
   def count; end
+
+  # Sets the attribute count
   def count=(_arg0); end
+
   def default?; end
   def delimiter?; end
+
+  # Returns the value of attribute description.
   def description; end
+
+  # Returns true if this option expects an argument.
   def expects_argument?; end
+
+  # Returns the help String for this option.
   def help; end
+
+  # Returns the String inspection text.
   def inspect; end
+
+  # Returns the String flag of this option. Preferring the long flag.
   def key; end
+
   def limit?; end
+
+  # Returns the value of attribute long.
   def long; end
+
   def match?; end
   def optional?; end
   def optional_argument?; end
   def required?; end
+
+  # Returns the value of attribute short.
   def short; end
+
   def tail?; end
+
+  # Returns the help String for this option.
   def to_s; end
+
+  # Returns the value of attribute types.
   def types; end
+
+  # Fetch the argument value for this option.
+  #
+  # Returns the Object once any type conversions have taken place.
   def value; end
+
+  # Set the new argument value for this option.
+  #
+  # We use this setter method to handle concatenating lists. That is,
+  # when an array type is specified and used more than once, values from
+  # both options will be grouped together and flattened into a single array.
   def value=(new_value); end
 
   private
 
+  # Convert an object to a Float if possible.
+  #
+  # value - The Object we want to convert to a float.
+  #
+  # Returns the Float value if possible to convert, else a zero.
   def value_to_float(value); end
+
+  # Convert an object to an Integer if possible.
+  #
+  # value - The Object we want to convert to an integer.
+  #
+  # Returns the Integer value if possible to convert, else a zero.
   def value_to_integer(value); end
+
+  # Convert an object to a Range if possible.
+  #
+  # value - The Object we want to convert to a range.
+  #
+  # Returns the Range value if one could be found, else the original object.
   def value_to_range(value); end
 end
 
+# The default Hash of configuration options this class uses.
 Pry::Slop::Option::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
+
 Pry::Slop::VERSION = T.let(T.unsafe(nil), String)
 
 class Pry::SyntaxHighlighter
   class << self
     def highlight(code, language = T.unsafe(nil)); end
     def keyword_token_color; end
+
+    # Sets comment token to blue (black by default), so it's more legible.
     def overwrite_coderay_comment_token!; end
+
     def tokenize(code, language = T.unsafe(nil)); end
   end
 end
@@ -2462,17 +4633,34 @@ module Pry::SystemCommandHandler
   end
 end
 
+# Catches SecurityErrors if $SAFE is set
 module Pry::TooSafeException
   class << self
     def ===(exception); end
   end
 end
 
+# An Exception Tag (cf. Exceptional Ruby) that instructs Pry to show the error
+# in a more user-friendly manner. This should be used when the exception
+# happens within Pry itself as a direct consequence of the user typing
+# something wrong.
+#
+# This allows us to distinguish between the user typing:
+#
+# pry(main)> def )
+# SyntaxError: unexpected )
+#
+# pry(main)> method_that_evals("def )")
+# SyntaxError: (eval):1: syntax error, unexpected ')'
+# from ./a.rb:2 in `eval'
 module Pry::UserError; end
+
 Pry::VERSION = T.let(T.unsafe(nil), String)
 
 module Pry::Warning
   class << self
+    # Prints a warning message with exact file and line location, similar to how
+    # Ruby's -W prints warnings.
     def warn(message); end
   end
 end
@@ -2483,26 +4671,78 @@ class Pry::WrappedModule
 
   def initialize(mod); end
 
+  # Return a candidate for this module of specified rank. A `rank`
+  # of 0 is equivalent to the 'primary candidate', which is the
+  # module definition with the highest number of methods. A `rank`
+  # of 1 is the module definition with the second highest number of
+  # methods, and so on. Module candidates are necessary as modules
+  # can be reopened multiple times and in multiple places in Ruby,
+  # the candidate API gives you access to the module definition
+  # representing each of those reopenings.
   def candidate(rank); end
+
   def candidates; end
+
+  # Is this strictly a class?
   def class?; end
+
+  # Returns an array of the names of the constants accessible in the wrapped
+  # module. This avoids the problem of accidentally calling the singleton
+  # method `Module.constants`.
   def constants(inherit = T.unsafe(nil)); end
+
+  # Returns documentation for the module.
+  # This documentation is for the primary candidate, if
+  # you would like documentation for other candidates use
+  # `WrappedModule#candidate` to select the candidate you're
+  # interested in.
   def doc; end
+
   def file; end
   def line; end
+
+  # Forward method invocations to the wrapped module
   def method_missing(method_name, *args, &block); end
+
+  # The prefix that would appear before methods defined on this class.
+  #
+  # i.e. the "String." or "String#" in String.new and String#initialize.
   def method_prefix; end
+
+  # Is this strictly a module? (does not match classes)
   def module?; end
+
+  # The name of the Module if it has one, otherwise #<Class:0xf00>.
   def nonblank_name; end
+
   def number_of_candidates; end
+
+  # Is this a singleton class?
   def singleton_class?; end
+
+  # Get the instance associated with this singleton class.
   def singleton_instance; end
+
+  # Returns the source for the module.
+  # This source is for the primary candidate, if
+  # you would like source for other candidates use
+  # `WrappedModule#candidate` to select the candidate you're
+  # interested in.
   def source; end
+
   def source_file; end
   def source_line; end
+
+  # Retrieve the source location of a module. Return value is in same
+  # format as Method#source_location. If the source location
+  # cannot be found this method returns `nil`.
   def source_location; end
+
   def super(times = T.unsafe(nil)); end
+
+  # Returns the value of attribute wrapped.
   def wrapped; end
+
   def yard_doc; end
   def yard_docs?; end
   def yard_file; end
@@ -2510,25 +4750,50 @@ class Pry::WrappedModule
 
   private
 
+  # Return all methods (instance methods and class methods) for a
+  # given module.
   def all_methods_for(mod); end
+
+  # We only want methods that have a non-nil `source_location`. We also
+  # skip some spooky internal methods.
   def all_relevant_methods_for(mod); end
+
+  # A helper method.
   def all_source_locations_by_popularity; end
+
+  # memoized lines for file
   def lines_for_file(file); end
+
   def method_candidates; end
+
+  # Detect methods that are defined with `def_delegator` from the Forwardable
+  # module. We want to reject these methods as they screw up module
+  # extraction since the `source_location` for such methods points at forwardable.rb
+  # TODO: make this more robust as valid user-defined files called
+  # forwardable.rb are also skipped.
   def method_defined_by_forwardable_module?(method); end
+
   def nested_module?(parent, name); end
   def primary_candidate; end
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 
   class << self
+    # Convert a string to a module.
     def from_str(mod_name, target = T.unsafe(nil)); end
 
     private
 
+    # We use this method to decide whether code is safe to eval. Method's are
+    # generally not, but everything else is.
+    # TODO: is just checking != "method" enough??
+    # TODO: see duplication of this method in Pry::CodeObject
     def safe_to_evaluate?(str, target); end
   end
 end
 
+# This class represents a single candidate for a module/class definition.
+# It provides access to the source, documentation, line and file
+# for a monkeypatch (reopening) of a class/module.
 class Pry::WrappedModule::Candidate
   include ::Pry::Helpers::DocumentationHelpers
   include ::Pry::CodeObject::Helpers
@@ -2553,12 +4818,24 @@ class Pry::WrappedModule::Candidate
   private
 
   def class_regexes; end
+
+  # Locate the first line of the module definition.
   def first_line_of_module_definition(file, line); end
+
+  # This method is used by `Candidate#source_location` as a
+  # starting point for the search for the candidate's definition.
   def first_method_source_location; end
+
   def last_method_source_location; end
   def lines_for_file(*a, &b); end
   def method_candidates(*a, &b); end
   def name(*a, &b); end
+
+  # Return the number of lines between the start of the class definition and
+  # the start of the last method. We use this value so we can quickly grab
+  # these lines from the file (without having to check each intervening line
+  # for validity, which is expensive) speeding up source extraction.
   def number_of_lines_in_first_chunk; end
+
   def yard_docs?(*a, &b); end
 end

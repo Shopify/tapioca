@@ -16,8 +16,13 @@ class WebSocket::Driver
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
   def ping(*args); end
   def pong(*args); end
+
+  # Returns the value of attribute protocol.
   def protocol; end
+
+  # Returns the value of attribute ready_state.
   def ready_state; end
+
   def set_header(name, value); end
   def start; end
   def state; end
@@ -43,11 +48,16 @@ end
 class WebSocket::Driver::Client < ::WebSocket::Driver::Hybi
   def initialize(socket, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute headers.
   def headers; end
+
   def parse(chunk); end
   def proxy(origin, options = T.unsafe(nil)); end
   def start; end
+
+  # Returns the value of attribute status.
   def status; end
+
   def version; end
 
   private
@@ -64,9 +74,16 @@ end
 WebSocket::Driver::Client::VALID_SCHEMES = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Driver::CloseEvent < ::Struct
+  # Returns the value of attribute code
   def code; end
+
+  # Sets the attribute code
   def code=(_); end
+
+  # Returns the value of attribute reason
   def reason; end
+
+  # Sets the attribute reason
   def reason=(_); end
 
   class << self
@@ -183,25 +200,64 @@ WebSocket::Driver::Hybi::ERROR_CODES = T.let(T.unsafe(nil), Array)
 WebSocket::Driver::Hybi::FIN = T.let(T.unsafe(nil), Integer)
 
 class WebSocket::Driver::Hybi::Frame
+  # Returns the value of attribute final.
   def final; end
+
+  # Sets the attribute final
   def final=(_arg0); end
+
+  # Returns the value of attribute length.
   def length; end
+
+  # Sets the attribute length
   def length=(_arg0); end
+
+  # Returns the value of attribute length_bytes.
   def length_bytes; end
+
+  # Sets the attribute length_bytes
   def length_bytes=(_arg0); end
+
+  # Returns the value of attribute masked.
   def masked; end
+
+  # Sets the attribute masked
   def masked=(_arg0); end
+
+  # Returns the value of attribute masking_key.
   def masking_key; end
+
+  # Sets the attribute masking_key
   def masking_key=(_arg0); end
+
+  # Returns the value of attribute opcode.
   def opcode; end
+
+  # Sets the attribute opcode
   def opcode=(_arg0); end
+
+  # Returns the value of attribute payload.
   def payload; end
+
+  # Sets the attribute payload
   def payload=(_arg0); end
+
+  # Returns the value of attribute rsv1.
   def rsv1; end
+
+  # Sets the attribute rsv1
   def rsv1=(_arg0); end
+
+  # Returns the value of attribute rsv2.
   def rsv2; end
+
+  # Sets the attribute rsv2
   def rsv2=(_arg0); end
+
+  # Returns the value of attribute rsv3.
   def rsv3; end
+
+  # Sets the attribute rsv3
   def rsv3=(_arg0); end
 end
 
@@ -216,15 +272,35 @@ class WebSocket::Driver::Hybi::Message
   def initialize; end
 
   def <<(frame); end
+
+  # Returns the value of attribute data.
   def data; end
+
+  # Sets the attribute data
   def data=(_arg0); end
+
+  # Returns the value of attribute opcode.
   def opcode; end
+
+  # Sets the attribute opcode
   def opcode=(_arg0); end
+
+  # Returns the value of attribute rsv1.
   def rsv1; end
+
+  # Sets the attribute rsv1
   def rsv1=(_arg0); end
+
+  # Returns the value of attribute rsv2.
   def rsv2; end
+
+  # Sets the attribute rsv2
   def rsv2=(_arg0); end
+
+  # Returns the value of attribute rsv3.
   def rsv3; end
+
+  # Sets the attribute rsv3
   def rsv3=(_arg0); end
 end
 
@@ -240,7 +316,10 @@ WebSocket::Driver::Hybi::VERSION = T.let(T.unsafe(nil), String)
 WebSocket::Driver::MAX_LENGTH = T.let(T.unsafe(nil), Integer)
 
 class WebSocket::Driver::MessageEvent < ::Struct
+  # Returns the value of attribute data
   def data; end
+
+  # Sets the attribute data
   def data=(_); end
 
   class << self
@@ -261,7 +340,10 @@ class WebSocket::Driver::OpenEvent < ::Struct
 end
 
 class WebSocket::Driver::PingEvent < ::Struct
+  # Returns the value of attribute data
   def data; end
+
+  # Sets the attribute data
   def data=(_); end
 
   class << self
@@ -273,7 +355,10 @@ class WebSocket::Driver::PingEvent < ::Struct
 end
 
 class WebSocket::Driver::PongEvent < ::Struct
+  # Returns the value of attribute data
   def data; end
+
+  # Sets the attribute data
   def data=(_); end
 
   class << self
@@ -291,10 +376,14 @@ class WebSocket::Driver::Proxy
 
   def initialize(client, origin, options); end
 
+  # Returns the value of attribute headers.
   def headers; end
+
   def parse(chunk); end
   def set_header(name, value); end
   def start; end
+
+  # Returns the value of attribute status.
   def status; end
 end
 
@@ -332,6 +421,8 @@ class WebSocket::Driver::StreamReader
 
   def each_byte; end
   def put(chunk); end
+
+  # Read bytes from the data:
   def read(length); end
 
   private
@@ -339,7 +430,9 @@ class WebSocket::Driver::StreamReader
   def prune; end
 end
 
+# Try to minimise the number of reallocations done:
 WebSocket::Driver::StreamReader::MINIMUM_AUTOMATIC_PRUNE_OFFSET = T.let(T.unsafe(nil), Integer)
+
 class WebSocket::Driver::URIError < ::ArgumentError; end
 
 module WebSocket::HTTP
@@ -353,7 +446,10 @@ module WebSocket::HTTP::Headers
 
   def complete?; end
   def error?; end
+
+  # Returns the value of attribute headers.
   def headers; end
+
   def parse(chunk); end
 
   private
@@ -365,13 +461,42 @@ module WebSocket::HTTP::Headers
 end
 
 WebSocket::HTTP::Headers::CR = T.let(T.unsafe(nil), Integer)
+
+# RFC 2616 grammar rules:
+#
+# CHAR           = <any US-ASCII character (octets 0 - 127)>
+#
+# CTL            = <any US-ASCII control character
+# (octets 0 - 31) and DEL (127)>
+#
+# SP             = <US-ASCII SP, space (32)>
+#
+# HT             = <US-ASCII HT, horizontal-tab (9)>
+#
+# token          = 1*<any CHAR except CTLs or separators>
+#
+# separators     = "(" | ")" | "<" | ">" | "@"
+# | "," | ";" | ":" | "\" | <">
+# | "/" | "[" | "]" | "?" | "="
+# | "{" | "}" | SP | HT
+#
+# Or, as redefined in RFC 7230:
+#
+# token          = 1*tchar
+#
+# tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+# / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+# / DIGIT / ALPHA
+# ; any VCHAR, except delimiters
 WebSocket::HTTP::Headers::HEADER_LINE = T.let(T.unsafe(nil), Regexp)
+
 WebSocket::HTTP::Headers::LF = T.let(T.unsafe(nil), Integer)
 WebSocket::HTTP::Headers::MAX_LINE_LENGTH = T.let(T.unsafe(nil), Integer)
 
 class WebSocket::HTTP::Request
   include ::WebSocket::HTTP::Headers
 
+  # Returns the value of attribute env.
   def env; end
 
   private
@@ -389,6 +514,8 @@ class WebSocket::HTTP::Response
 
   def [](name); end
   def body; end
+
+  # Returns the value of attribute code.
   def code; end
 
   private

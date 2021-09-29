@@ -4,15 +4,55 @@
 
 # typed: true
 
+# Generic connection pool class for sharing a limited number of objects or network connections
+# among many threads.  Note: pool elements are lazily created.
+#
+# Example usage with block (faster):
+#
+# @pool = ConnectionPool.new { Redis.new }
+# @pool.with do |redis|
+# redis.lpop('my-list') if redis.llen('my-list') > 0
+# end
+#
+# Using optional timeout override (for that single invocation)
+#
+# @pool.with(timeout: 2.0) do |redis|
+# redis.lpop('my-list') if redis.llen('my-list') > 0
+# end
+#
+# Example usage replacing an existing connection (slower):
+#
+# $redis = ConnectionPool.wrap { Redis.new }
+#
+# def do_work
+# $redis.lpop('my-list') if $redis.llen('my-list') > 0
+# end
+#
+# Accepts the following options:
+# - :size - number of connections to pool, defaults to 5
+# - :timeout - amount of time to wait for a connection if none currently available, defaults to 5 seconds
 class ConnectionPool
   def initialize(options = T.unsafe(nil), &block); end
 
+  # Number of pool entries available for checkout at this instant.
   def available; end
+
   def checkin; end
   def checkout(options = T.unsafe(nil)); end
+
+  # Reloads the ConnectionPool by passing each connection to +block+ and then
+  # removing it the pool. Subsequent checkouts will create new connections as
+  # needed.
   def reload(&block); end
+
+  # Shuts down the ConnectionPool by passing each connection to +block+ and
+  # then removing it from the pool. Attempting to checkout a connection after
+  # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   def shutdown(&block); end
+
+  # Size of this connection pool
   def size; end
+
   def then(options = T.unsafe(nil)); end
   def with(options = T.unsafe(nil)); end
 
@@ -25,24 +65,84 @@ ConnectionPool::DEFAULTS = T.let(T.unsafe(nil), Hash)
 class ConnectionPool::Error < ::RuntimeError; end
 class ConnectionPool::PoolShuttingDownError < ::ConnectionPool::Error; end
 
+# Examples:
+#
+# ts = TimedStack.new(1) { MyConnection.new }
+#
+# # fetch a connection
+# conn = ts.pop
+#
+# # return a connection
+# ts.push conn
+#
+# conn = ts.pop
+# ts.pop timeout: 5
+# #=> raises ConnectionPool::TimeoutError after 5 seconds
 class ConnectionPool::TimedStack
+  # Creates a new pool with +size+ connections that are created from the given
+  # +block+.
   def initialize(size = T.unsafe(nil), &block); end
 
+  # Returns +obj+ to the stack.  +options+ is ignored in TimedStack but may be
+  # used by subclasses that extend TimedStack.
   def <<(obj, options = T.unsafe(nil)); end
+
+  # Returns +true+ if there are no available connections.
   def empty?; end
+
+  # The number of connections available on the stack.
   def length; end
+
+  # Returns the value of attribute max.
   def max; end
+
+  # Retrieves a connection from the stack.  If a connection is available it is
+  # immediately returned.  If no connection is available within the given
+  # timeout a ConnectionPool::TimeoutError is raised.
+  #
+  # +:timeout+ is the only checked entry in +options+ and is preferred over
+  # the +timeout+ argument (which will be removed in a future release).  Other
+  # options may be used by subclasses that extend TimedStack.
   def pop(timeout = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Returns +obj+ to the stack.  +options+ is ignored in TimedStack but may be
+  # used by subclasses that extend TimedStack.
   def push(obj, options = T.unsafe(nil)); end
+
+  # Shuts down the TimedStack by passing each connection to +block+ and then
+  # removing it from the pool. Attempting to checkout a connection after
+  # shutdown will raise +ConnectionPool::PoolShuttingDownError+ unless
+  # +:reload+ is +true+.
   def shutdown(reload: T.unsafe(nil), &block); end
 
   private
 
+  # This is an extension point for TimedStack and is called with a mutex.
+  #
+  # This method must returns true if a connection is available on the stack.
   def connection_stored?(options = T.unsafe(nil)); end
+
   def current_time; end
+
+  # This is an extension point for TimedStack and is called with a mutex.
+  #
+  # This method must return a connection from the stack.
   def fetch_connection(options = T.unsafe(nil)); end
+
+  # This is an extension point for TimedStack and is called with a mutex.
+  #
+  # This method must shut down all connections on the stack.
   def shutdown_connections(options = T.unsafe(nil)); end
+
+  # This is an extension point for TimedStack and is called with a mutex.
+  #
+  # This method must return +obj+ to the stack.
   def store_connection(obj, options = T.unsafe(nil)); end
+
+  # This is an extension point for TimedStack and is called with a mutex.
+  #
+  # This method must create a connection if and only if the total number of
+  # connections allowed has not been met.
   def try_create(options = T.unsafe(nil)); end
 end
 

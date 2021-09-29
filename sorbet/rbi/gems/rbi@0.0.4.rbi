@@ -26,6 +26,7 @@ class RBI::ASTVisitor
   def parse_name(node); end
 end
 
+# Attributes
 class RBI::Attr < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
@@ -165,6 +166,20 @@ class RBI::Comment < ::RBI::Node
   def text=(_arg0); end
 end
 
+# A tree showing incompatibles nodes
+#
+# Is rendered as a merge conflict between `left` and` right`:
+# ~~~rb
+# class Foo
+# <<<<<<< left
+# def m1; end
+# def m2(a); end
+# =======
+# def m1(a); end
+# def m2; end
+# >>>>>>> right
+# end
+# ~~~
 class RBI::ConflictTree < ::RBI::Tree
   sig { params(left_name: String, right_name: String).void }
   def initialize(left_name: T.unsafe(nil), right_name: T.unsafe(nil)); end
@@ -178,6 +193,7 @@ class RBI::ConflictTree < ::RBI::Tree
   def right; end
 end
 
+# Consts
 class RBI::Const < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
@@ -302,6 +318,7 @@ class RBI::Group::Kind < ::T::Enum
   end
 end
 
+# Sorbet's misc.
 class RBI::Helper < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
@@ -362,9 +379,14 @@ class RBI::Index < ::RBI::Visitor
   end
 end
 
+# A Node that can be refered to by a unique ID inside an index
 module RBI::Indexable
   interface!
 
+  # Unique IDs that refer to this node.
+  #
+  # Some nodes can have multiple ids, for example an attribute accessor matches the ID of the
+  # getter and the setter.
   sig { abstract.returns(T::Array[String]) }
   def index_ids; end
 end
@@ -447,6 +469,7 @@ class RBI::Loc
   end
 end
 
+# Methods and args
 class RBI::Method < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
@@ -520,6 +543,7 @@ class RBI::MixesInClassMethods < ::RBI::Mixin
   def to_s; end
 end
 
+# Mixins
 class RBI::Mixin < ::RBI::NodeWithComments
   abstract!
 
@@ -566,6 +590,7 @@ class RBI::Node
   sig { abstract.params(v: RBI::Printer).void }
   def accept_printer(v); end
 
+  # Can `self` and `_other` be merged into a single definition?
   sig { params(_other: RBI::Node).returns(T::Boolean) }
   def compatible_with?(_other); end
 
@@ -580,6 +605,7 @@ class RBI::Node
 
   def loc=(_arg0); end
 
+  # Merge `self` and `other` into a single definition
   sig { params(other: RBI::Node).void }
   def merge_with(other); end
 
@@ -700,12 +726,14 @@ class RBI::Printer < ::RBI::Visitor
   def in_visibility_group; end
   def in_visibility_group=(_arg0); end
 
+  # Printing
   sig { void }
   def indent; end
 
   sig { returns(T.nilable(RBI::Node)) }
   def previous_node; end
 
+  # Print a string without indentation nor `\n` at the end.
   sig { params(string: String).void }
   def print(string); end
 
@@ -714,12 +742,15 @@ class RBI::Printer < ::RBI::Visitor
 
   def print_locs=(_arg0); end
 
+  # Print a string with indentation and `\n` at the end.
   sig { params(string: String).void }
   def printl(string); end
 
+  # Print a string without indentation but with a `\n` at the end.
   sig { params(string: T.nilable(String)).void }
   def printn(string = T.unsafe(nil)); end
 
+  # Print a string with indentation but without a `\n` at the end.
   sig { params(string: T.nilable(String)).void }
   def printt(string = T.unsafe(nil)); end
 
@@ -799,6 +830,39 @@ class RBI::Rewriters::GroupNodes < ::RBI::Visitor
   def visit(node); end
 end
 
+# Merge two RBI trees together
+#
+# Be this `Tree`:
+# ~~~rb
+# class Foo
+# attr_accessor :a
+# def m; end
+# C = 10
+# end
+# ~~~
+#
+# Merged with this one:
+# ~~~rb
+# class Foo
+# attr_reader :a
+# def m(x); end
+# C = 10
+# end
+# ~~~
+#
+# Compatible definitions are merged together while incompatible definitions are moved into a `ConflictTree`:
+# ~~~rb
+# class Foo
+# <<<<<<< left
+# attr_accessor :a
+# def m; end
+# =======
+# attr_reader :a
+# def m(x); end
+# >>>>>>> right
+# C = 10
+# end
+# ~~~
 class RBI::Rewriters::Merge
   sig { params(left_name: String, right_name: String, keep: RBI::Rewriters::Merge::Keep).void }
   def initialize(left_name: T.unsafe(nil), right_name: T.unsafe(nil), keep: T.unsafe(nil)); end
@@ -815,6 +879,7 @@ class RBI::Rewriters::Merge
   end
 end
 
+# Used for logging / error displaying purpose
 class RBI::Rewriters::Merge::Conflict < ::T::Struct
   const :left, RBI::Node
   const :left_name, String
@@ -829,6 +894,36 @@ class RBI::Rewriters::Merge::Conflict < ::T::Struct
   end
 end
 
+# Merge adjacent conflict trees
+#
+# Transform this:
+# ~~~rb
+# class Foo
+# <<<<<<< left
+# def m1; end
+# =======
+# def m1(a); end
+# >>>>>>> right
+# <<<<<<< left
+# def m2(a); end
+# =======
+# def m2; end
+# >>>>>>> right
+# end
+# ~~~
+#
+# Into this:
+# ~~~rb
+# class Foo
+# <<<<<<< left
+# def m1; end
+# def m2(a); end
+# =======
+# def m1(a); end
+# def m2; end
+# >>>>>>> right
+# end
+# ~~~
 class RBI::Rewriters::Merge::ConflictTreeMerger < ::RBI::Visitor
   sig { override.params(node: T.nilable(RBI::Node)).void }
   def visit(node); end
@@ -904,6 +999,7 @@ class RBI::Rewriters::SortNodes < ::RBI::Visitor
   def node_rank(node); end
 end
 
+# Scopes
 class RBI::Scope < ::RBI::Tree
   include ::RBI::Indexable
 
@@ -914,6 +1010,7 @@ class RBI::Scope < ::RBI::Tree
   sig { override.params(v: RBI::Printer).void }
   def accept_printer(v); end
 
+  # Duplicate `self` scope without its body
   sig { returns(T.self_type) }
   def dup_empty; end
 
@@ -933,6 +1030,18 @@ class RBI::Scope < ::RBI::Tree
   def to_s; end
 end
 
+# A conflict between two scope headers
+#
+# Is rendered as a merge conflict between `left` and` right` for scope definitions:
+# ~~~rb
+# <<<<<<< left
+# class Foo
+# =======
+# module Foo
+# >>>>>>> right
+# def m1; end
+# end
+# ~~~
 class RBI::ScopeConflict < ::RBI::Tree
   sig { params(left: RBI::Scope, right: RBI::Scope, left_name: String, right_name: String).void }
   def initialize(left:, right:, left_name: T.unsafe(nil), right_name: T.unsafe(nil)); end
@@ -949,6 +1058,7 @@ class RBI::ScopeConflict < ::RBI::Tree
   def right; end
 end
 
+# Sorbet's sigs
 class RBI::Sig < ::RBI::Node
   sig { params(params: T::Array[RBI::SigParam], return_type: T.nilable(String), is_abstract: T::Boolean, is_override: T::Boolean, is_overridable: T::Boolean, type_params: T::Array[String], checked: T.nilable(Symbol), loc: T.nilable(RBI::Loc), block: T.nilable(T.proc.params(node: RBI::Sig).void)).void }
   def initialize(params: T.unsafe(nil), return_type: T.unsafe(nil), is_abstract: T.unsafe(nil), is_override: T.unsafe(nil), is_overridable: T.unsafe(nil), type_params: T.unsafe(nil), checked: T.unsafe(nil), loc: T.unsafe(nil), &block); end
@@ -1074,6 +1184,7 @@ class RBI::Struct < ::RBI::Scope
   def print_header(v); end
 end
 
+# Sorbet's T::Enum
 class RBI::TEnum < ::RBI::Class
   sig { params(name: String, loc: T.nilable(RBI::Loc), comments: T::Array[RBI::Comment], block: T.nilable(T.proc.params(klass: RBI::TEnum).void)).void }
   def initialize(name, loc: T.unsafe(nil), comments: T.unsafe(nil), &block); end
@@ -1107,6 +1218,7 @@ class RBI::TEnumBlock < ::RBI::NodeWithComments
   def to_s; end
 end
 
+# Sorbet's T::Struct
 class RBI::TStruct < ::RBI::Class
   sig { params(name: String, loc: T.nilable(RBI::Loc), comments: T::Array[RBI::Comment], block: T.nilable(T.proc.params(klass: RBI::TStruct).void)).void }
   def initialize(name, loc: T.unsafe(nil), comments: T.unsafe(nil), &block); end
@@ -1344,6 +1456,7 @@ end
 
 RBI::VERSION = T.let(T.unsafe(nil), String)
 
+# Visibility
 class RBI::Visibility < ::RBI::NodeWithComments
   abstract!
 

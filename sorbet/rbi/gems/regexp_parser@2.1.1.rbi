@@ -12,7 +12,10 @@ class Regexp::Expression::Alternation < ::Regexp::Expression::SequenceOperation
 end
 
 Regexp::Expression::Alternation::OPERAND = Regexp::Expression::Alternative
+
+# A sequence of expressions, used by Alternation as one of its alternative.
 class Regexp::Expression::Alternative < ::Regexp::Expression::Sequence; end
+
 module Regexp::Expression::Anchor; end
 Regexp::Expression::Anchor::BOL = Regexp::Expression::Anchor::BeginningOfLine
 Regexp::Expression::Anchor::BOS = Regexp::Expression::Anchor::BeginningOfString
@@ -46,7 +49,11 @@ module Regexp::Expression::Backreference; end
 
 class Regexp::Expression::Backreference::Base < ::Regexp::Expression::Base
   def match_length; end
+
+  # Returns the value of attribute referenced_expression.
   def referenced_expression; end
+
+  # Sets the attribute referenced_expression
   def referenced_expression=(_arg0); end
 
   private
@@ -57,7 +64,10 @@ end
 class Regexp::Expression::Backreference::Name < ::Regexp::Expression::Backreference::Base
   def initialize(token, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute name.
   def name; end
+
+  # Returns the value of attribute name.
   def reference; end
 end
 
@@ -66,13 +76,17 @@ class Regexp::Expression::Backreference::NameCall < ::Regexp::Expression::Backre
 class Regexp::Expression::Backreference::NameRecursionLevel < ::Regexp::Expression::Backreference::Name
   def initialize(token, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute recursion_level.
   def recursion_level; end
 end
 
 class Regexp::Expression::Backreference::Number < ::Regexp::Expression::Backreference::Base
   def initialize(token, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute number.
   def number; end
+
+  # Returns the value of attribute number.
   def reference; end
 end
 
@@ -82,12 +96,18 @@ class Regexp::Expression::Backreference::NumberCallRelative < ::Regexp::Expressi
 class Regexp::Expression::Backreference::NumberRecursionLevel < ::Regexp::Expression::Backreference::Number
   def initialize(token, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute recursion_level.
   def recursion_level; end
 end
 
 class Regexp::Expression::Backreference::NumberRelative < ::Regexp::Expression::Backreference::Number
+  # Returns the value of attribute effective_number.
   def effective_number; end
+
+  # Sets the attribute effective_number
   def effective_number=(_arg0); end
+
+  # Returns the value of attribute effective_number.
   def reference; end
 end
 
@@ -103,8 +123,13 @@ class Regexp::Expression::Base
   def base_length; end
   def case_insensitive?; end
   def coded_offset; end
+
+  # Returns the value of attribute conditional_level.
   def conditional_level; end
+
+  # Sets the attribute conditional_level
   def conditional_level=(_arg0); end
+
   def d?; end
   def default_classes?; end
   def extended?; end
@@ -113,48 +138,224 @@ class Regexp::Expression::Base
   def greedy?; end
   def i?; end
   def ignore_case?; end
+
+  # Test if this expression has the given test_token, and optionally a given
+  # test_type.
+  #
+  # # Any expressions
+  # exp.is? :*  # always returns true
+  #
+  # # is it a :capture
+  # exp.is? :capture
+  #
+  # # is it a :character and a :set
+  # exp.is? :character, :set
+  #
+  # # is it a :meta :dot
+  # exp.is? :dot, :meta
+  #
+  # # is it a :meta or :escape :dot
+  # exp.is? :dot, [:meta, :escape]
   def is?(test_token, test_type = T.unsafe(nil)); end
+
   def lazy?; end
+
+  # Returns the value of attribute level.
   def level; end
+
+  # Sets the attribute level
   def level=(_arg0); end
+
   def m?; end
   def match(string, offset = T.unsafe(nil)); end
   def match?(string); end
   def matches?(string); end
   def multiline?; end
+
+  # Returns the value of attribute nesting_level.
   def nesting_level; end
+
+  # Sets the attribute nesting_level
   def nesting_level=(_arg0); end
+
   def offset; end
+
+  # Test if this expression matches an entry in the given scope spec.
+  #
+  # A scope spec can be one of:
+  #
+  # . An array: Interpreted as a set of tokens, tested for inclusion
+  # of the expression's token.
+  #
+  # . A hash:   Where the key is interpreted as the expression type
+  # and the value is either a symbol or an array. In this
+  # case, when the scope is a hash, one_of? calls itself to
+  # evaluate the key's value.
+  #
+  # . A symbol: matches the expression's token or type, depending on
+  # the level of the call. If one_of? is called directly with
+  # a symbol then it will always be checked against the
+  # type of the expression. If it's being called for a value
+  # from a hash, it will be checked against the token of the
+  # expression.
+  #
+  # # any expression
+  # exp.one_of?(:*) # always true
+  #
+  # # like exp.type?(:group)
+  # exp.one_of?(:group)
+  #
+  # # any expression of type meta
+  # exp.one_of?(:meta => :*)
+  #
+  # # meta dots and alternations
+  # exp.one_of?(:meta => [:dot, :alternation])
+  #
+  # # meta dots and any set tokens
+  # exp.one_of?({meta: [:dot], set: :*})
   def one_of?(scope, top = T.unsafe(nil)); end
+
+  # Returns the value of attribute options.
   def options; end
+
+  # Sets the attribute options
   def options=(_arg0); end
+
   def possessive?; end
   def quantified?; end
+
+  # Returns the value of attribute quantifier.
   def quantifier; end
+
+  # Sets the attribute quantifier
   def quantifier=(_arg0); end
+
   def quantifier_affix(expression_format); end
   def quantify(token, text, min = T.unsafe(nil), max = T.unsafe(nil), mode = T.unsafe(nil)); end
+
+  # Deprecated. Prefer `#repetitions` which has a more uniform interface.
   def quantity; end
+
   def reluctant?; end
   def repetitions; end
+
+  # Returns the value of attribute set_level.
   def set_level; end
+
+  # Sets the attribute set_level
   def set_level=(_arg0); end
+
+  # Returns the value of attribute ts.
   def starts_at; end
+
+  # %l  Level (depth) of the expression. Returns 'root' for the root
+  # expression, returns zero or higher for all others.
+  #
+  # %>  Indentation at expression's level.
+  #
+  # %x  Index of the expression at its depth. Available when using
+  # the sprintf_tree method only.
+  #
+  # %s  Start offset within the whole expression.
+  # %e  End offset within the whole expression.
+  # %S  Length of expression.
+  #
+  # %o  Coded offset and length, same as '@%s+%S'
+  #
+  # %y  Type of expression.
+  # %k  Token of expression.
+  # %i  ID, same as '%y:%k'
+  # %c  Class name
+  #
+  # %q  Quantifier info, as {m[,M]}
+  # %Q  Quantifier text
+  #
+  # %z  Quantifier min
+  # %Z  Quantifier max
+  #
+  # %t  Base text of the expression (excludes quantifier, if any)
+  # %~t Full text if the expression is terminal, otherwise %i
+  # %T  Full text of the expression (includes quantifier, if any)
+  #
+  # %b  Basic info, same as '%o %i'
+  # %m  Most info, same as '%b %q'
+  # %a  All info, same as '%m %t'
   def strfre(format = T.unsafe(nil), indent_offset = T.unsafe(nil), index = T.unsafe(nil)); end
+
+  # %l  Level (depth) of the expression. Returns 'root' for the root
+  # expression, returns zero or higher for all others.
+  #
+  # %>  Indentation at expression's level.
+  #
+  # %x  Index of the expression at its depth. Available when using
+  # the sprintf_tree method only.
+  #
+  # %s  Start offset within the whole expression.
+  # %e  End offset within the whole expression.
+  # %S  Length of expression.
+  #
+  # %o  Coded offset and length, same as '@%s+%S'
+  #
+  # %y  Type of expression.
+  # %k  Token of expression.
+  # %i  ID, same as '%y:%k'
+  # %c  Class name
+  #
+  # %q  Quantifier info, as {m[,M]}
+  # %Q  Quantifier text
+  #
+  # %z  Quantifier min
+  # %Z  Quantifier max
+  #
+  # %t  Base text of the expression (excludes quantifier, if any)
+  # %~t Full text if the expression is terminal, otherwise %i
+  # %T  Full text of the expression (includes quantifier, if any)
+  #
+  # %b  Basic info, same as '%o %i'
+  # %m  Most info, same as '%b %q'
+  # %a  All info, same as '%m %t'
   def strfregexp(format = T.unsafe(nil), indent_offset = T.unsafe(nil), index = T.unsafe(nil)); end
+
   def terminal?; end
+
+  # Returns the value of attribute text.
   def text; end
+
+  # Sets the attribute text
   def text=(_arg0); end
+
   def to_h; end
   def to_re(format = T.unsafe(nil)); end
   def to_s(format = T.unsafe(nil)); end
+
+  # Returns the value of attribute token.
   def token; end
+
+  # Sets the attribute token
   def token=(_arg0); end
+
+  # Returns the value of attribute ts.
   def ts; end
+
+  # Sets the attribute ts
   def ts=(_arg0); end
+
+  # Returns the value of attribute type.
   def type; end
+
+  # Sets the attribute type
   def type=(_arg0); end
+
+  # Test if this expression has the given test_type, which can be either
+  # a symbol or an array of symbols to check against the expression's type.
+  #
+  # # is it a :group expression
+  # exp.type? :group
+  #
+  # # is it a :set, or :meta
+  # exp.type? [:set, :meta]
   def type?(test_type); end
+
   def u?; end
   def unicode_classes?; end
   def unquantified_clone; end
@@ -171,15 +372,31 @@ class Regexp::Expression::CharacterSet < ::Regexp::Expression::Subexpression
   def initialize(token, options = T.unsafe(nil)); end
 
   def close; end
+
+  # Returns the value of attribute closed.
   def closed; end
+
+  # Sets the attribute closed
   def closed=(_arg0); end
+
+  # Returns the value of attribute closed.
   def closed?; end
+
   def match_length; end
   def negate; end
+
+  # Returns the value of attribute negative.
   def negated?; end
+
+  # Returns the value of attribute negative.
   def negative; end
+
+  # Sets the attribute negative
   def negative=(_arg0); end
+
+  # Returns the value of attribute negative.
   def negative?; end
+
   def to_s(format = T.unsafe(nil)); end
 end
 
@@ -225,8 +442,15 @@ class Regexp::Expression::Conditional::Branch < ::Regexp::Expression::Sequence; 
 
 class Regexp::Expression::Conditional::Condition < ::Regexp::Expression::Base
   def match_length; end
+
+  # Name or number of the referenced capturing group that determines state.
+  # Returns a String if reference is by name, Integer if by number.
   def reference; end
+
+  # Returns the value of attribute referenced_expression.
   def referenced_expression; end
+
+  # Sets the attribute referenced_expression
   def referenced_expression=(_arg0); end
 
   private
@@ -243,8 +467,13 @@ class Regexp::Expression::Conditional::Expression < ::Regexp::Expression::Subexp
   def condition=(exp); end
   def match_length; end
   def reference; end
+
+  # Returns the value of attribute referenced_expression.
   def referenced_expression; end
+
+  # Sets the attribute referenced_expression
   def referenced_expression=(_arg0); end
+
   def to_s(format = T.unsafe(nil)); end
 
   private
@@ -323,6 +552,8 @@ end
 
 module Regexp::Expression::Group; end
 
+# Special case. Absence group can match 0.. chars, irrespective of content.
+# TODO: in theory, they *can* exclude match lengths with `.`: `(?~.{3})`
 class Regexp::Expression::Group::Absence < ::Regexp::Expression::Group::Base
   def match_length; end
 end
@@ -337,10 +568,20 @@ end
 
 class Regexp::Expression::Group::Capture < ::Regexp::Expression::Group::Base
   def capturing?; end
+
+  # Returns the value of attribute number.
   def identifier; end
+
+  # Returns the value of attribute number.
   def number; end
+
+  # Sets the attribute number
   def number=(_arg0); end
+
+  # Returns the value of attribute number_at_level.
   def number_at_level; end
+
+  # Sets the attribute number_at_level
   def number_at_level=(_arg0); end
 end
 
@@ -352,7 +593,10 @@ end
 class Regexp::Expression::Group::Named < ::Regexp::Expression::Group::Capture
   def initialize(token, options = T.unsafe(nil)); end
 
+  # Returns the value of attribute name.
   def identifier; end
+
+  # Returns the value of attribute name.
   def name; end
 
   private
@@ -361,7 +605,10 @@ class Regexp::Expression::Group::Named < ::Regexp::Expression::Group::Capture
 end
 
 class Regexp::Expression::Group::Options < ::Regexp::Expression::Group::Base
+  # Returns the value of attribute option_changes.
   def option_changes; end
+
+  # Sets the attribute option_changes
   def option_changes=(_arg0); end
 
   private
@@ -372,7 +619,9 @@ end
 class Regexp::Expression::Group::Passive < ::Regexp::Expression::Group::Base
   def initialize(*_arg0); end
 
+  # Sets the attribute implicit
   def implicit=(_arg0); end
+
   def implicit?; end
   def to_s(format = T.unsafe(nil)); end
 end
@@ -402,15 +651,27 @@ class Regexp::Expression::Quantifier
   def eq(other); end
   def greedy?; end
   def lazy?; end
+
+  # Returns the value of attribute max.
   def max; end
+
+  # Returns the value of attribute min.
   def min; end
+
+  # Returns the value of attribute mode.
   def mode; end
+
   def possessive?; end
   def reluctant?; end
+
+  # Returns the value of attribute text.
   def text; end
+
   def to_h; end
   def to_s; end
   def to_str; end
+
+  # Returns the value of attribute token.
   def token; end
 
   private
@@ -427,6 +688,12 @@ class Regexp::Expression::Root < ::Regexp::Expression::Subexpression
   end
 end
 
+# A sequence of expressions. Differs from a Subexpressions by how it handles
+# quantifiers, as it applies them to its last element instead of itself as
+# a whole subexpression.
+#
+# Used as the base class for the Alternation alternatives, Conditional
+# branches, and CharacterSet::Intersection intersected sequences.
 class Regexp::Expression::Sequence < ::Regexp::Expression::Subexpression
   def quantify(token, text, min = T.unsafe(nil), max = T.unsafe(nil), mode = T.unsafe(nil)); end
   def starts_at; end
@@ -438,6 +705,7 @@ class Regexp::Expression::Sequence < ::Regexp::Expression::Subexpression
   end
 end
 
+# abstract class
 class Regexp::Expression::SequenceOperation < ::Regexp::Expression::Subexpression
   def <<(exp); end
   def add_sequence(active_opts = T.unsafe(nil)); end
@@ -459,12 +727,26 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   def at(*args, &block); end
   def dig(*indices); end
   def each(*args, &block); end
+
+  # Iterates over the expressions of this expression as an array, passing
+  # the expression and its index within its parent to the given block.
   def each_expression(include_self = T.unsafe(nil)); end
+
   def empty?(*args, &block); end
+
+  # Returns the value of attribute expressions.
   def expressions; end
+
+  # Sets the attribute expressions
   def expressions=(_arg0); end
+
   def fetch(*args, &block); end
+
+  # Returns a new array with the results of calling the given block once
+  # for every expression. If a block is not given, returns an array with
+  # each expression and its level index as an array.
   def flat_map(include_self = T.unsafe(nil)); end
+
   def index(*args, &block); end
   def inner_match_length; end
   def join(*args, &block); end
@@ -476,12 +758,40 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   def te; end
   def to_h; end
   def to_s(format = T.unsafe(nil)); end
+
+  # Traverses the subexpression (depth-first, pre-order) and calls the given
+  # block for each expression with three arguments; the traversal event,
+  # the expression, and the index of the expression within its parent.
+  #
+  # The event argument is passed as follows:
+  #
+  # - For subexpressions, :enter upon entering the subexpression, and
+  # :exit upon exiting it.
+  #
+  # - For terminal expressions, :visit is called once.
+  #
+  # Returns self.
   def traverse(include_self = T.unsafe(nil), &block); end
+
   def values_at(*args, &block); end
+
+  # Traverses the subexpression (depth-first, pre-order) and calls the given
+  # block for each expression with three arguments; the traversal event,
+  # the expression, and the index of the expression within its parent.
+  #
+  # The event argument is passed as follows:
+  #
+  # - For subexpressions, :enter upon entering the subexpression, and
+  # :exit upon exiting it.
+  #
+  # - For terminal expressions, :visit is called once.
+  #
+  # Returns self.
   def walk(include_self = T.unsafe(nil), &block); end
 
   private
 
+  # Override base method to clone the expressions as well.
   def initialize_copy(orig); end
 end
 
@@ -575,6 +885,10 @@ class Regexp::Expression::WhiteSpace < ::Regexp::Expression::FreeSpace
   def merge(exp); end
 end
 
+# A very thin wrapper around the scanner that breaks quantified literal runs,
+# collects emitted tokens into an array, calculates their nesting depth, and
+# normalizes tokens for the parser, and checks if they are implemented by the
+# given syntax flavor.
 class Regexp::Lexer
   def lex(input, syntax = T.unsafe(nil), options: T.unsafe(nil), &block); end
 
@@ -582,18 +896,42 @@ class Regexp::Lexer
 
   def ascend(type, token); end
   def break_codepoint_list(token); end
+
+  # called by scan to break a literal run that is longer than one character
+  # into two separate tokens when it is followed by a quantifier
   def break_literal(token); end
+
+  # Returns the value of attribute conditional_nesting.
   def conditional_nesting; end
+
+  # Sets the attribute conditional_nesting
   def conditional_nesting=(_arg0); end
+
   def descend(type, token); end
   def merge_condition(current); end
+
+  # Returns the value of attribute nesting.
   def nesting; end
+
+  # Sets the attribute nesting
   def nesting=(_arg0); end
+
+  # Returns the value of attribute set_nesting.
   def set_nesting; end
+
+  # Sets the attribute set_nesting
   def set_nesting=(_arg0); end
+
+  # Returns the value of attribute shift.
   def shift; end
+
+  # Sets the attribute shift
   def shift=(_arg0); end
+
+  # Returns the value of attribute tokens.
   def tokens; end
+
+  # Sets the attribute tokens
   def tokens=(_arg0); end
 
   class << self
@@ -622,18 +960,42 @@ class Regexp::MatchLength
 
   private
 
+  # Returns the value of attribute base_max.
   def base_max; end
+
+  # Sets the attribute base_max
   def base_max=(_arg0); end
+
+  # Returns the value of attribute base_min.
   def base_min; end
+
+  # Sets the attribute base_min
   def base_min=(_arg0); end
+
+  # Returns the value of attribute exp_class.
   def exp_class; end
+
+  # Sets the attribute exp_class
   def exp_class=(_arg0); end
+
+  # Returns the value of attribute max_rep.
   def max_rep; end
+
+  # Sets the attribute max_rep
   def max_rep=(_arg0); end
+
+  # Returns the value of attribute min_rep.
   def min_rep; end
+
+  # Sets the attribute min_rep
   def min_rep=(_arg0); end
+
+  # Returns the value of attribute reify.
   def reify; end
+
+  # Sets the attribute reify
   def reify=(_arg0); end
+
   def test_regexp; end
 
   class << self
@@ -652,17 +1014,32 @@ class Regexp::Parser
   def active_opts; end
   def anchor(token); end
   def assign_effective_number(exp); end
+
+  # Assigns referenced expressions to refering expressions, e.g. if there is
+  # an instance of Backreference::Number, its #referenced_expression is set to
+  # the instance of Group::Capture that it refers to via its number.
   def assign_referenced_expressions; end
+
   def backref(token); end
   def captured_group_count_at_level; end
+
+  # Returns the value of attribute captured_group_counts.
   def captured_group_counts; end
+
+  # Sets the attribute captured_group_counts
   def captured_group_counts=(_arg0); end
+
   def close_completed_character_set_range; end
   def close_group; end
   def close_set; end
   def conditional(token); end
+
+  # Returns the value of attribute conditional_nesting.
   def conditional_nesting; end
+
+  # Sets the attribute conditional_nesting
   def conditional_nesting=(_arg0); end
+
   def count_captured_group; end
   def decrease_nesting; end
   def escape(token); end
@@ -678,28 +1055,54 @@ class Regexp::Parser
   def negate_set; end
   def nest(exp); end
   def nest_conditional(exp); end
+
+  # Returns the value of attribute nesting.
   def nesting; end
+
+  # Sets the attribute nesting
   def nesting=(_arg0); end
+
+  # Returns the value of attribute node.
   def node; end
+
+  # Sets the attribute node
   def node=(_arg0); end
+
   def open_group(token); end
   def open_set(token); end
   def options_group(token); end
+
+  # Returns the value of attribute options_stack.
   def options_stack; end
+
+  # Sets the attribute options_stack
   def options_stack=(_arg0); end
+
   def parse_token(token); end
   def posixclass(token); end
   def property(token); end
   def quantifier(token); end
   def range(token); end
+
+  # Returns the value of attribute root.
   def root; end
+
+  # Sets the attribute root
   def root=(_arg0); end
+
   def sequence_operation(klass, token); end
   def set(token); end
+
+  # Returns the value of attribute switching_options.
   def switching_options; end
+
+  # Sets the attribute switching_options
   def switching_options=(_arg0); end
+
   def total_captured_group_count; end
   def type(token); end
+
+  # subtrees are transplanted to build Alternations, Intersections, Ranges
   def update_transplanted_subtree(exp, new_parent); end
 
   class << self
@@ -708,7 +1111,10 @@ class Regexp::Parser
 end
 
 Regexp::Parser::ENC_FLAGS = T.let(T.unsafe(nil), Array)
+
+# base class for all gem-specific errors (inherited but never raised itself)
 class Regexp::Parser::Error < ::StandardError; end
+
 Regexp::Parser::MOD_FLAGS = T.let(T.unsafe(nil), Array)
 class Regexp::Parser::ParserError < ::Regexp::Parser::Error; end
 Regexp::Parser::UPTokens = Regexp::Syntax::Token::UnicodeProperty
@@ -724,76 +1130,144 @@ end
 Regexp::Parser::VERSION = T.let(T.unsafe(nil), String)
 
 class Regexp::Scanner
+  # Emits an array with the details of the scanned pattern
   def emit(type, token, text); end
+
   def scan(input_object, options: T.unsafe(nil), &block); end
 
   private
 
+  # Appends one or more characters to the literal buffer, to be emitted later
+  # by a call to emit_literal.
   def append_literal(data, ts, te); end
+
+  # Returns the value of attribute block.
   def block; end
+
+  # Sets the attribute block
   def block=(_arg0); end
+
+  # Returns the value of attribute char_pos.
   def char_pos; end
+
+  # Sets the attribute char_pos
   def char_pos=(_arg0); end
+
+  # Returns the value of attribute conditional_stack.
   def conditional_stack; end
+
+  # Sets the attribute conditional_stack
   def conditional_stack=(_arg0); end
+
+  # Copy from ts to te from data as text
   def copy(data, ts, te); end
+
+  # Emits the literal run collected by calls to the append_literal method.
   def emit_literal; end
+
   def emit_meta_control_sequence(data, ts, te, token); end
   def emit_options(text); end
+
+  # Returns the value of attribute free_spacing.
   def free_spacing; end
+
+  # Sets the attribute free_spacing
   def free_spacing=(_arg0); end
+
   def free_spacing?(input_object, options); end
+
+  # Returns the value of attribute group_depth.
   def group_depth; end
+
+  # Sets the attribute group_depth
   def group_depth=(_arg0); end
+
   def in_group?; end
   def in_set?; end
+
+  # Returns the value of attribute literal.
   def literal; end
+
+  # Sets the attribute literal
   def literal=(_arg0); end
+
+  # Returns the value of attribute set_depth.
   def set_depth; end
+
+  # Sets the attribute set_depth
   def set_depth=(_arg0); end
+
+  # Returns the value of attribute spacing_stack.
   def spacing_stack; end
+
+  # Sets the attribute spacing_stack
   def spacing_stack=(_arg0); end
+
+  # Returns the value of attribute tokens.
   def tokens; end
+
+  # Sets the attribute tokens
   def tokens=(_arg0); end
+
+  # Centralizes and unifies the handling of validation related
+  # errors.
   def validation_error(type, what, reason); end
 
   class << self
     def long_prop_map; end
+
+    # Scans the given regular expression text, or Regexp object and collects the
+    # emitted token into an array that gets returned at the end. If a block is
+    # given, it gets called for each emitted token.
+    #
+    # This method may raise errors if a syntax error is encountered.
+    # --------------------------------------------------------------------------
     def scan(input_object, options: T.unsafe(nil), &block); end
+
     def short_prop_map; end
   end
 end
 
+# Invalid back reference. Used for name a number refs/calls.
 class Regexp::Scanner::InvalidBackrefError < ::Regexp::Scanner::ValidationError
   def initialize(what, reason); end
 end
 
+# Invalid group. Used for named groups.
 class Regexp::Scanner::InvalidGroupError < ::Regexp::Scanner::ValidationError
   def initialize(what, reason); end
 end
 
+# Invalid groupOption. Used for inline options.
 class Regexp::Scanner::InvalidGroupOption < ::Regexp::Scanner::ValidationError
   def initialize(option, text); end
 end
 
+# Invalid sequence format. Used for escape sequences, mainly.
 class Regexp::Scanner::InvalidSequenceError < ::Regexp::Scanner::ValidationError
   def initialize(what = T.unsafe(nil), where = T.unsafe(nil)); end
 end
 
+# Unexpected end of pattern
 class Regexp::Scanner::PrematureEndError < ::Regexp::Scanner::ScannerError
   def initialize(where = T.unsafe(nil)); end
 end
 
+# General scanner error (catch all)
 class Regexp::Scanner::ScannerError < ::Regexp::Parser::Error; end
 
+# The property name was not recognized by the scanner.
 class Regexp::Scanner::UnknownUnicodePropertyError < ::Regexp::Scanner::ValidationError
   def initialize(name); end
 end
 
+# Base for all scanner validation errors
 class Regexp::Scanner::ValidationError < ::Regexp::Parser::Error
   def initialize(reason); end
 end
 
+# After loading all the tokens the map is full. Extract all tokens and types
+# into the All and Types constants.
 module Regexp::Syntax
   private
 
@@ -801,7 +1275,12 @@ module Regexp::Syntax
   def const_missing(const_name); end
   def fallback_version_class(version); end
   def inherit_from_version(parent_version, new_version); end
+
+  # Loads and instantiates an instance of the syntax specification class for
+  # the given syntax version name. The special names 'any' and '*' return an
+  # instance of Syntax::Any.
   def new(name); end
+
   def specified_versions; end
   def supported?(name); end
   def version_class(version); end
@@ -813,7 +1292,12 @@ module Regexp::Syntax
     def const_missing(const_name); end
     def fallback_version_class(version); end
     def inherit_from_version(parent_version, new_version); end
+
+    # Loads and instantiates an instance of the syntax specification class for
+    # the given syntax version name. The special names 'any' and '*' return an
+    # instance of Syntax::Any.
     def new(name); end
+
     def specified_versions; end
     def supported?(name); end
     def version_class(version); end
@@ -822,6 +1306,9 @@ module Regexp::Syntax
   end
 end
 
+# A syntax that always returns true, passing all tokens as implemented. This
+# is useful during development, testing, and should be useful for some types
+# of transformations as well.
 class Regexp::Syntax::Any < ::Regexp::Syntax::Base
   def initialize; end
 
@@ -829,6 +1316,7 @@ class Regexp::Syntax::Any < ::Regexp::Syntax::Base
   def implements?(_type, _token); end
 end
 
+# A lookup map of supported types and tokens in a given syntax
 class Regexp::Syntax::Base
   include ::Regexp::Syntax::Token
 
@@ -951,7 +1439,10 @@ Regexp::Syntax::Token::Quantifier::IntervalReluctant = T.let(T.unsafe(nil), Arra
 Regexp::Syntax::Token::Quantifier::Possessive = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Quantifier::Reluctant = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Quantifier::Type = T.let(T.unsafe(nil), Symbol)
+
+# Type is the same as Backreference so keeping it here, for now.
 module Regexp::Syntax::Token::SubexpressionCall; end
+
 Regexp::Syntax::Token::SubexpressionCall::All = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::SubexpressionCall::Name = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::SubexpressionCall::Number = T.let(T.unsafe(nil), Array)
@@ -1037,6 +1528,7 @@ class Regexp::Syntax::V1_9_3 < ::Regexp::Syntax::V1_9_1
   def initialize; end
 end
 
+# use the last 1.9 release as the base
 class Regexp::Syntax::V2_0_0 < ::Regexp::Syntax::V1_9
   def initialize; end
 end
@@ -1093,11 +1585,21 @@ class Regexp::Token < ::Struct
   def length; end
   def level; end
   def level=(_); end
+
+  # Returns the value of attribute next.
   def next; end
+
+  # Sets the attribute next
   def next=(_arg0); end
+
   def offset; end
+
+  # Returns the value of attribute previous.
   def previous; end
+
+  # Sets the attribute previous
   def previous=(_arg0); end
+
   def set_level; end
   def set_level=(_); end
   def te; end

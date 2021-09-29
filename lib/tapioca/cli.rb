@@ -130,6 +130,10 @@ module Tapioca
       type: :boolean,
       default: false,
       desc: "Verifies RBIs are up-to-date"
+    option :doc,
+      type: :boolean,
+      default: false,
+      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
     def gem(*gems)
       Tapioca.silence_warnings do
         all = options[:all]
@@ -144,7 +148,8 @@ module Tapioca
           typed_overrides: config.typed_overrides,
           default_command: Config::DEFAULT_COMMAND,
           outpath: config.outpath,
-          file_header: config.file_header
+          file_header: config.file_header,
+          doc: config.doc
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify

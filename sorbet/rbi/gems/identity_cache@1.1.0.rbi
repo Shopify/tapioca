@@ -76,19 +76,48 @@ module IdentityCache
   class << self
     def append_features(base); end
     def cache; end
+
+    # Sets the cache adaptor IdentityCache will be using
+    #
+    # == Parameters
+    #
+    # +cache_adaptor+ - A ActiveSupport::Cache::Store
     def cache_backend=(cache_adaptor); end
+
     def cache_namespace; end
     def cache_namespace=(val); end
     def eager_load!; end
+
+    # Cache retrieval and miss resolver primitive; given a key it will try to
+    # retrieve the associated value from the cache otherwise it will return the
+    # value of the execution of the block.
+    #
+    # == Parameters
+    # +key+ A cache key string
     def fetch(key); end
+
+    # Same as +fetch+, except that it will try a collection of keys, using the
+    # multiget operation of the cache adaptor.
+    #
+    # == Parameters
+    # +keys+ A collection or array of key strings
     def fetch_multi(*keys); end
+
     def fetch_read_only_records; end
     def fetch_read_only_records=(val); end
     def logger; end
+
+    # Sets the attribute logger
     def logger=(_arg0); end
+
     def map_cached_nil_for(value); end
+
+    # Returns the value of attribute readonly.
     def readonly; end
+
+    # Sets the attribute readonly
     def readonly=(_arg0); end
+
     def should_fill_cache?; end
     def should_use_cache?; end
     def unmap_cached_nil_for(value); end
@@ -134,8 +163,12 @@ IdentityCache::CACHE_VERSION = T.let(T.unsafe(nil), Integer)
 class IdentityCache::CacheFetcher
   def initialize(cache_backend); end
 
+  # Returns the value of attribute cache_backend.
   def cache_backend; end
+
+  # Sets the attribute cache_backend
   def cache_backend=(_arg0); end
+
   def clear; end
   def delete(key); end
   def fetch(key); end
@@ -181,10 +214,32 @@ end
 
 IdentityCache::CacheKeyGeneration::DEFAULT_NAMESPACE = T.let(T.unsafe(nil), String)
 
+# A generic cache key loader that supports different types of
+# cache fetchers, each of which can use their own cache key
+# format and have their own cache miss resolvers.
+#
+# Here is the interface of a cache fetcher in the
+# [ruby-signature](https://github.com/ruby/ruby-signature)'s
+# format.
+#
+# ```
+# interface _CacheFetcher[DbKey, DbValue, CacheableValue]
+# def cache_key: (DbKey) -> String
+# def cache_encode: (DbValue) -> CacheableValue
+# def cache_decode: (CacheableValue) -> DbValue
+# def load_one_from_db: (DbKey) -> DbValue
+# def load_multi_from_db: (Array[DbKey]) -> Hash[DbKey, DbValue]
+# end
+# ```
 module IdentityCache::CacheKeyLoader
   class << self
+    # Load a single key for a cache fetcher.
     def load(cache_fetcher, db_key); end
+
+    # Load multiple keys for multiple cache fetchers
     def load_batch(cache_fetcher_to_db_keys_hash); end
+
+    # Load multiple keys for a cache fetcher.
     def load_multi(cache_fetcher, db_keys); end
 
     private
@@ -202,7 +257,10 @@ class IdentityCache::Cached::Association
   def initialize(name, reflection:); end
 
   def build; end
+
+  # Returns the value of attribute cached_accessor_name.
   def cached_accessor_name; end
+
   def clear(_record); end
   def embedded?; end
   def embedded_by_reference?; end
@@ -210,10 +268,18 @@ class IdentityCache::Cached::Association
   def fetch(_records); end
   def fetch_async(_load_strategy, _records); end
   def inverse_name; end
+
+  # Returns the value of attribute name.
   def name; end
+
   def read(_record); end
+
+  # Returns the value of attribute records_variable_name.
   def records_variable_name; end
+
+  # Returns the value of attribute reflection.
   def reflection; end
+
   def validate; end
   def write(_record, _value); end
 end
@@ -221,14 +287,23 @@ end
 class IdentityCache::Cached::Attribute
   def initialize(model, attribute_or_proc, alias_name, key_fields, unique); end
 
+  # Returns the value of attribute alias_name.
   def alias_name; end
+
   def attribute; end
   def cache_key(index_key); end
   def expire(record); end
   def fetch(db_key); end
+
+  # Returns the value of attribute key_fields.
   def key_fields; end
+
   def load_one_from_db(key); end
+
+  # Returns the value of attribute model.
   def model; end
+
+  # Returns the value of attribute unique.
   def unique; end
 
   private
@@ -250,7 +325,9 @@ class IdentityCache::Cached::AttributeByMulti < ::IdentityCache::Cached::Attribu
 
   private
 
+  # Attribute method overrides
   def cast_db_key(key_values); end
+
   def load_from_db_where_conditions(key_values); end
   def unhashed_values_cache_key_string(key_values); end
 end
@@ -262,13 +339,19 @@ class IdentityCache::Cached::AttributeByOne < ::IdentityCache::Cached::Attribute
   def cache_decode(db_value); end
   def cache_encode(db_value); end
   def fetch_multi(keys); end
+
+  # Returns the value of attribute key_field.
   def key_field; end
+
   def load_multi_from_db(keys); end
 
   private
 
   def cache_key_from_key_values(key_values); end
+
+  # Attribute method overrides
   def cast_db_key(key); end
+
   def load_from_db_where_conditions(key_values); end
   def unhashed_values_cache_key_string(key); end
 end
@@ -280,7 +363,10 @@ class IdentityCache::Cached::BelongsTo < ::IdentityCache::Cached::Association
   def embedded_recursively?; end
   def fetch(records); end
   def fetch_async(load_strategy, records); end
+
+  # Returns the value of attribute records_variable_name.
   def records_variable_name; end
+
   def write(owner_record, associated_record); end
 end
 
@@ -316,6 +402,8 @@ class IdentityCache::Cached::PrimaryIndex
   def fetch_multi(ids); end
   def load_multi_from_db(ids); end
   def load_one_from_db(id); end
+
+  # Returns the value of attribute model.
   def model; end
 
   private
@@ -333,7 +421,10 @@ class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::A
 
   def build; end
   def clear(record); end
+
+  # Returns the value of attribute dehydrated_variable_name.
   def dehydrated_variable_name; end
+
   def embedded_by_reference?; end
   def embedded_recursively?; end
   def fetch(records); end
@@ -362,11 +453,17 @@ class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Refer
   def initialize(name, reflection:); end
 
   def build; end
+
+  # Returns the value of attribute cached_ids_name.
   def cached_ids_name; end
+
   def clear(record); end
   def fetch(records); end
   def fetch_async(load_strategy, records); end
+
+  # Returns the value of attribute ids_variable_name.
   def ids_variable_name; end
+
   def read(record); end
   def write(record, ids); end
 
@@ -382,11 +479,17 @@ class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Refere
   def initialize(name, reflection:); end
 
   def build; end
+
+  # Returns the value of attribute cached_id_name.
   def cached_id_name; end
+
   def clear(record); end
   def fetch(records); end
   def fetch_async(load_strategy, records); end
+
+  # Returns the value of attribute id_variable_name.
   def id_variable_name; end
+
   def read(record); end
   def write(record, id); end
 
@@ -430,8 +533,73 @@ module IdentityCache::ConfigurationDSL
 end
 
 module IdentityCache::ConfigurationDSL::ClassMethods
+  # Will cache a single attribute on its own blob, it will add a
+  # fetch_attribute_by_id (or the value of the by option).
+  #
+  # == Example:
+  # class Product
+  # include IdentityCache
+  # cache_attribute :quantity, by: :name
+  # cache_attribute :quantity, by: [:name, :vendor]
+  # end
+  #
+  # == Parameters
+  # +attribute+ Symbol with the name of the attribute being cached
+  #
+  # == Options
+  #
+  # * by: Other attribute or attributes in the model to keep values indexed. Default is :id
+  # * unique: if the index would only have unique values. Default is true
   def cache_attribute(attribute, by: T.unsafe(nil), unique: T.unsafe(nil)); end
+
+  # Will cache an association to the class including IdentityCache.
+  # The embed option, if set, will make IdentityCache keep the association
+  # values in the same cache entry as the parent.
+  #
+  # Embedded associations are more effective in offloading database work,
+  # however they will increase the size of the cache entries and make the
+  # whole entry expire when any of the embedded members change.
+  #
+  # == Example:
+  # class Product
+  # include IdentityCache
+  # has_many :options
+  # has_many :orders
+  # cache_has_many :options, embed: :ids
+  # cache_has_many :orders
+  # end
+  #
+  # == Parameters
+  # +association+ Name of the association being cached as a symbol
+  #
+  # == Options
+  #
+  # * embed: If `true`, IdentityCache will embed the associated records
+  # in the cache entries for this model, as well as all the embedded
+  # associations for the associated record recursively.
+  # If `:ids` (the default), it will only embed the ids for the associated
+  # records.
   def cache_has_many(association, embed: T.unsafe(nil)); end
+
+  # Will cache an association to the class including IdentityCache.
+  # IdentityCache will keep the association values in the same cache entry
+  # as the parent.
+  #
+  # == Example:
+  # class Product
+  # cache_has_one :store, embed: true
+  # cache_has_one :vendor, embed: :id
+  # end
+  #
+  # == Parameters
+  # +association+ Symbol with the name of the association being cached
+  #
+  # == Options
+  #
+  # * embed: If `true`, IdentityCache will embed the associated record
+  # in the cache entries for this model, as well as all the embedded
+  # associations for the associated record recursively.
+  # If `:id`, it will only embed the id for the associated record.
   def cache_has_one(association, embed:); end
 
   private
@@ -468,7 +636,9 @@ class IdentityCache::ExpiryHook
 
   private
 
+  # Returns the value of attribute cached_association.
   def cached_association; end
+
   def child_class; end
   def inverse_name; end
   def only_on_foreign_key_change?; end
@@ -478,8 +648,12 @@ end
 class IdentityCache::FallbackFetcher
   def initialize(cache_backend); end
 
+  # Returns the value of attribute cache_backend.
   def cache_backend; end
+
+  # Sets the attribute cache_backend
   def cache_backend=(_arg0); end
+
   def clear; end
   def delete(key); end
   def fetch(key); end
@@ -517,6 +691,8 @@ class IdentityCache::LoadStrategy::LoadRequest
   def initialize(db_keys, callback); end
 
   def after_load(results); end
+
+  # Returns the value of attribute db_keys.
   def db_keys; end
 end
 
@@ -531,7 +707,10 @@ class IdentityCache::MemoizedCacheProxy
   def initialize(cache_adaptor = T.unsafe(nil)); end
 
   def cache_backend=(cache_adaptor); end
+
+  # Returns the value of attribute cache_fetcher.
   def cache_fetcher; end
+
   def clear; end
   def delete(key); end
   def fetch(key); end
@@ -594,8 +773,16 @@ module IdentityCache::QueryAPI
 
   mixes_in_class_methods ::IdentityCache::QueryAPI::ClassMethods
 
+  # Override the method that is used to call after_commit callbacks so that we can
+  # expire the caches before other after_commit callbacks. This way we can avoid stale
+  # cache reads that happen from the ordering of callbacks. For example, if an after_commit
+  # callback enqueues a background job, then we don't want it to be possible for the
+  # background job to run and load data from the cache before it is invalidated.
   def _run_commit_callbacks; end
+
+  # Invalidate the cache data associated with the record.
   def expire_cache; end
+
   def was_new_record?; end
 
   private
@@ -606,6 +793,8 @@ end
 module IdentityCache::QueryAPI::ClassMethods
   def all_cached_associations; end
   def cached_association(name); end
+
+  # Prefetches cached associations on a collection of records
   def prefetch_associations(includes, records); end
 
   private
@@ -707,13 +896,51 @@ module IdentityCache::WithPrimaryIndex
 end
 
 module IdentityCache::WithPrimaryIndex::ClassMethods
+  # Declares a new index in the cache for the class where IdentityCache was
+  # included.
+  #
+  # IdentityCache will add a fetch_by_field1_and_field2_and_...field for every
+  # index.
+  #
+  # == Example:
+  #
+  # class Product
+  # include IdentityCache
+  # cache_index :name, :vendor
+  # end
+  #
+  # Will add Product.fetch_by_name_and_vendor
+  #
+  # == Parameters
+  #
+  # +fields+ Array of symbols or strings representing the fields in the index
+  #
+  # == Options
+  # * unique: if the index would only have unique values. Default is false
   def cache_index(*fields, unique: T.unsafe(nil)); end
+
   def cached_primary_index; end
+
+  # Similar to ActiveRecord::Base#exists? will return true if the id can be
+  # found in the cache or in the DB.
   def exists_with_identity_cache?(id); end
+
+  # Invalidates the primary cache index for the associated record. Will not invalidate cached attributes.
   def expire_primary_key_cache_index(id); end
+
+  # Default fetcher added to the model on inclusion, it behaves like
+  # ActiveRecord::Base.find, but will raise IdentityCache::RecordNotFound
+  # if the id is not in the cache.
   def fetch(id, includes: T.unsafe(nil)); end
+
+  # Default fetcher added to the model on inclusion, it behaves like
+  # ActiveRecord::Base.where(id: id).first
   def fetch_by_id(id, includes: T.unsafe(nil)); end
+
+  # Default fetcher added to the model on inclusion, if behaves like
+  # ActiveRecord::Base.find_all_by_id
   def fetch_multi(*ids, includes: T.unsafe(nil)); end
+
   def primary_cache_index_enabled; end
 end
 
