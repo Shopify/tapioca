@@ -496,7 +496,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
             def photos_attachment_ids=(ids); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[::ActiveStorage::Attachment]) }
+            sig { returns(::ActiveStorage::Attachment::PrivateCollectionProxy) }
             def photos_attachments; end
 
             sig { params(value: T::Enumerable[T.untyped]).void }
@@ -508,7 +508,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
             def photos_blob_ids=(ids); end
 
-            sig { returns(::ActiveRecord::Associations::CollectionProxy[::ActiveStorage::Blob]) }
+            sig { returns(::ActiveStorage::Blob::PrivateCollectionProxy) }
             def photos_blobs; end
 
             sig { params(value: T::Enumerable[T.untyped]).void }

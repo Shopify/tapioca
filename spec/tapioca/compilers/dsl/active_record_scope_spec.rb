@@ -120,6 +120,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class SuperCustomPost
           extend GeneratedRelationMethods
 
@@ -165,6 +166,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
       expected = <<~RBI
         # typed: strong
+
         class Post
           extend GeneratedRelationMethods
 
@@ -213,8 +215,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def with_attached_photo(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def with_attached_photo(*args, &blk); end
           end
         end
@@ -236,8 +243,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def with_attached_photos(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def with_attached_photos(*args, &blk); end
           end
         end
