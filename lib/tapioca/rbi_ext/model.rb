@@ -86,6 +86,15 @@ module RBI
       self << method
     end
 
+    sig { returns(String) }
+    def transform_rbi
+      nest_singleton_methods!
+      nest_non_public_methods!
+      group_nodes!
+      sort_nodes!
+      string
+    end
+
     private
 
     SPECIAL_METHOD_NAMES = T.let(
