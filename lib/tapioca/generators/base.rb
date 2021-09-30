@@ -48,11 +48,12 @@ module Tapioca
         params(
           path: T.any(String, Pathname),
           content: String,
-          skip: T::Boolean
+          skip: T::Boolean,
+          verbose: T::Boolean
         ).void
       end
-      def create_file(path, content, skip: false)
-        @file_writer.create_file(path, skip: skip) { content }
+      def create_file(path, content, skip: false, verbose: true)
+        @file_writer.create_file(path, skip: skip, verbose: verbose) { content }
       end
     end
   end

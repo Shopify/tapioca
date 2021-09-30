@@ -222,13 +222,7 @@ module Tapioca
         )
         out << contents
 
-        FileUtils.mkdir_p(File.dirname(filename))
-        File.write(filename, out)
-
-        unless quiet
-          say("Wrote: ", [:green])
-          say(filename)
-        end
+        create_file(filename, out, verbose: !quiet)
 
         filename
       end
