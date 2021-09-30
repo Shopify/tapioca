@@ -4,16 +4,19 @@
 module Tapioca
   module Generators
     class Init < Base
+      class FileWriter < Thor
+        include Thor::Actions
+      end
+
       sig do
         params(
-          file_writer: Thor::Actions,
           sorbet_config: String,
           default_postrequire: String,
           default_command: String
         ).void
       end
-      def initialize(file_writer:, sorbet_config:, default_postrequire:, default_command:)
-        @file_writer = file_writer
+      def initialize(sorbet_config:, default_postrequire:, default_command:)
+        @file_writer = T.let(FileWriter.new, FileWriter)
         @sorbet_config = sorbet_config
         @default_postrequire = default_postrequire
 

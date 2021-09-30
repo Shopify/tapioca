@@ -5,8 +5,6 @@ require "thor"
 
 module Tapioca
   class Cli < Thor
-    include(Thor::Actions)
-
     class_option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
@@ -30,7 +28,6 @@ module Tapioca
     desc "init", "initializes folder structure"
     def init
       generator = Generators::Init.new(
-        file_writer: self,
         sorbet_config: Config::SORBET_CONFIG,
         default_postrequire: Config::DEFAULT_POSTREQUIRE,
         default_command: Config::DEFAULT_COMMAND
