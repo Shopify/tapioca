@@ -86,13 +86,9 @@ module RBI
       self << method
     end
 
-    sig { returns(String) }
-    def transform_rbi
-      nest_singleton_methods!
-      nest_non_public_methods!
-      group_nodes!
-      sort_nodes!
-      string
+    sig { override.returns(String) }
+    def to_s
+      transform_rbi
     end
 
     private
@@ -121,6 +117,15 @@ module RBI
       nodes_cache[node.to_s] = node
       self << node
       node
+    end
+
+    sig { returns(String) }
+    def transform_rbi
+      nest_singleton_methods!
+      nest_non_public_methods!
+      group_nodes!
+      sort_nodes!
+      string
     end
   end
 
