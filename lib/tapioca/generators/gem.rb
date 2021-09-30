@@ -162,7 +162,7 @@ module Tapioca
           content << rbi_body_content
           say("Done", :green)
         end
-        File.write(filename.to_s, content)
+        create_file(filename, content)
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove(file) unless file.basename.to_s == gem.rbi_file_name
