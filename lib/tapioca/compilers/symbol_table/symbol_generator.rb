@@ -41,12 +41,9 @@ module Tapioca
           gem.parse_yard_docs if include_doc
         end
 
-        sig { returns(RBI::Tree) }
-        def generate
-          rbi = RBI::Tree.new
-
+        sig { params(rbi: RBI::Tree).returns(RBI::Tree) }
+        def generate(rbi)
           generate_from_symbol(rbi, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
-
           rbi
         end
 

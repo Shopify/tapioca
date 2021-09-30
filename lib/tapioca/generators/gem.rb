@@ -146,7 +146,7 @@ module Tapioca
         say("Compiling #{gem_name}, this may take a few seconds... ")
 
         strictness = @typed_overrides[gem.name] || "true"
-        rbi_body_content = compiler.compile(gem, 0, @doc).transform_rbi
+        rbi_body_content = compiler.compile(gem, 0, @doc)
         content = String.new
         content << rbi_header(
           "#{@default_command} gem #{gem.name}",
