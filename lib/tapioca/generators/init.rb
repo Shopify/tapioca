@@ -4,10 +4,6 @@
 module Tapioca
   module Generators
     class Init < Base
-      class FileWriter < Thor
-        include Thor::Actions
-      end
-
       sig do
         params(
           sorbet_config: String,
@@ -16,7 +12,6 @@ module Tapioca
         ).void
       end
       def initialize(sorbet_config:, default_postrequire:, default_command:)
-        @file_writer = T.let(FileWriter.new, FileWriter)
         @sorbet_config = sorbet_config
         @default_postrequire = default_postrequire
 
@@ -41,24 +36,20 @@ module Tapioca
 
       sig { void }
       def create_config
-        @file_writer.create_file(@sorbet_config, skip: true) do
-          <<~CONTENT
-            --dir
-            .
-          CONTENT
-        end
+        create_file(@sorbet_config, <<~CONTENT, skip: true)
+          --dir
+          .
+        CONTENT
       end
 
       sig { void }
       def create_post_require
-        @file_writer.create_file(@default_postrequire, skip: true) do
-          <<~CONTENT
-            # typed: true
-            # frozen_string_literal: true
+        create_file(@default_postrequire, <<~CONTENT, skip: true)
+          # typed: true
+          # frozen_string_literal: true
 
-            # Add your extra requires here (`#{@default_command} require` can be used to boostrap this list)
-          CONTENT
-        end
+          # Add your extra requires here (`#{@default_command} require` can be used to boostrap this list)
+        CONTENT
       end
 
       sig { void }

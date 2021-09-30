@@ -10,6 +10,10 @@ module Tapioca
       extend T::Sig
       extend T::Helpers
 
+      class FileWriter < Thor
+        include Thor::Actions
+      end
+
       # TODO: Remove me when logging logic has been abstracted
       include Thor::Base
 
@@ -17,6 +21,7 @@ module Tapioca
 
       sig { params(default_command: String).void }
       def initialize(default_command:)
+        @file_writer = T.let(FileWriter.new, FileWriter)
         @default_command = default_command
       end
 
@@ -37,6 +42,17 @@ module Tapioca
 
         $stderr.print(buffer)
         $stderr.flush
+      end
+
+      sig do
+        params(
+          path: T.any(String, Pathname),
+          content: String,
+          skip: T::Boolean
+        ).void
+      end
+      def create_file(path, content, skip: false)
+        @file_writer.create_file(path, skip: skip) { content }
       end
     end
   end
