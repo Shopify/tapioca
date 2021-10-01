@@ -86,8 +86,8 @@ module RBI
       self << method
     end
 
-    sig { override.returns(String) }
-    def to_s
+    sig { returns(String) }
+    def transformed_string
       transform_rbi
     end
 
