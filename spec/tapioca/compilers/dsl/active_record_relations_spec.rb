@@ -229,6 +229,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def includes(*args, &blk); end
 
+            sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+            def insert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)).returns(ActiveRecord::Result) }
+            def insert!(attributes, returning: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+            def insert_all(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)).returns(ActiveRecord::Result) }
+            def insert_all!(attributes, returning: nil); end
+
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def joins(*args, &blk); end
 
@@ -300,6 +312,12 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def unscope(*args, &blk); end
+
+            sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+            def upsert(attributes, returning: nil, unique_by: nil); end
+
+            sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+            def upsert_all(attributes, returning: nil, unique_by: nil); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def where(*args, &blk); end
@@ -425,26 +443,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
 
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert!(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert_all(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert_all!(attributes, returning: nil, unique_by: nil); end
-
             sig { returns(T::Array[::Post]) }
             def to_ary; end
-
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def upsert(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def upsert_all(attributes, returning: nil, unique_by: nil); end
 
             Elem = type_member(fixed: ::Post)
           end
@@ -471,18 +471,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
             def destroy(*records); end
 
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert!(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert_all(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def insert_all!(attributes, returning: nil, unique_by: nil); end
-
             sig { returns(T::Array[::Post]) }
             def load_target; end
 
@@ -492,7 +480,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
             def push(*records); end
 
-            sig { params(other_array: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).void }
+            sig { params(other_array: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
             def replace(other_array); end
 
             sig { returns(PrivateAssociationRelation) }
@@ -503,12 +491,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(T::Array[::Post]) }
             def to_ary; end
-
-            sig { params(attributes: Hash, returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def upsert(attributes, returning: nil, unique_by: nil); end
-
-            sig { params(attributes: T::Array[Hash], returning: T::Array[Symbol], unique_by: T.any(T::Array[Symbol], Symbol)).returns(ActiveRecord::Result) }
-            def upsert_all(attributes, returning: nil, unique_by: nil); end
 
             Elem = type_member(fixed: ::Post)
           end
