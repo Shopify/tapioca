@@ -14,6 +14,7 @@ module Tapioca
           compiler_path: String,
           tapioca_path: String,
           default_command: String,
+          file_writer: Thor::Actions,
           should_verify: T::Boolean,
           quiet: T::Boolean,
           verbose: T::Boolean
@@ -28,6 +29,7 @@ module Tapioca
         compiler_path:,
         tapioca_path:,
         default_command:,
+        file_writer: FileWriter.new,
         should_verify: false,
         quiet: false,
         verbose: false
@@ -43,7 +45,7 @@ module Tapioca
         @quiet = quiet
         @verbose = verbose
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
 
         @loader = T.let(nil, T.nilable(Loader))
       end

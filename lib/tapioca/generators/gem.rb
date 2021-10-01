@@ -22,6 +22,7 @@ module Tapioca
           outpath: Pathname,
           file_header: T::Boolean,
           doc: T::Boolean,
+          file_writer: Thor::Actions
         ).void
       end
       def initialize(
@@ -33,7 +34,8 @@ module Tapioca
         default_command:,
         outpath:,
         file_header:,
-        doc:
+        doc:,
+        file_writer: FileWriter.new
       )
         @gem_names = gem_names
         @gem_excludes = gem_excludes
@@ -43,7 +45,7 @@ module Tapioca
         @outpath = outpath
         @file_header = file_header
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
 
         @loader = T.let(nil, T.nilable(Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))

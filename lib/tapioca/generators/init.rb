@@ -8,14 +8,15 @@ module Tapioca
         params(
           sorbet_config: String,
           default_postrequire: String,
-          default_command: String
+          default_command: String,
+          file_writer: Thor::Actions
         ).void
       end
-      def initialize(sorbet_config:, default_postrequire:, default_command:)
+      def initialize(sorbet_config:, default_postrequire:, default_command:, file_writer: FileWriter.new)
         @sorbet_config = sorbet_config
         @default_postrequire = default_postrequire
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
 
         @installer = T.let(nil, T.nilable(Bundler::Installer))
         @spec = T.let(nil, T.nilable(Bundler::StubSpecification))

@@ -4,12 +4,19 @@
 module Tapioca
   module Generators
     class Todo < Base
-      sig { params(todos_path: String, file_header: T::Boolean, default_command: String).void }
-      def initialize(todos_path:, file_header:, default_command:)
+      sig do
+        params(
+          todos_path: String,
+          file_header: T::Boolean,
+          default_command: String,
+          file_writer: Thor::Actions
+        ).void
+      end
+      def initialize(todos_path:, file_header:, default_command:, file_writer: FileWriter.new)
         @todos_path = todos_path
         @file_header = file_header
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
       end
 
       sig { override.void }
