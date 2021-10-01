@@ -39,9 +39,7 @@ module Tapioca
         content << "# frozen_string_literal: true\n\n"
         content << rb_string
 
-        outdir = File.dirname(@requires_path)
-        FileUtils.mkdir_p(outdir)
-        File.write(@requires_path, content)
+        create_file(@requires_path, content, verbose: false)
 
         say("Done", :green)
 
