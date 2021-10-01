@@ -55,13 +55,13 @@ module Tapioca
       sig { void }
       def generate_binstub!
         installer.generate_bundler_executable_stubs(spec, { force: true })
-        shell.say_status(:force, @default_command, :yellow)
+        say_status(:force, @default_command, :yellow)
       end
 
       sig { void }
       def generate_binstub
         installer.generate_bundler_executable_stubs(spec)
-        shell.say_status(:create, @default_command, :green)
+        say_status(:create, @default_command, :green)
       end
 
       sig { returns(Bundler::Installer) }

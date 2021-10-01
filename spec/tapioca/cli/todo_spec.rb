@@ -39,8 +39,6 @@ module Tapioca
         assert_equal(<<~CONTENTS, output)
           Finding all unresolved constants, this may take a few seconds... Done
 
-                create  sorbet/rbi/todo.rbi
-
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
           Please review changes and commit them.
         CONTENTS
@@ -71,8 +69,6 @@ module Tapioca
 
         assert_equal(<<~CONTENTS, output)
           Finding all unresolved constants, this may take a few seconds... Done
-
-                create  sorbet/rbi/todo.rbi
 
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
           Please review changes and commit them.

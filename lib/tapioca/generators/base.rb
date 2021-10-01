@@ -19,9 +19,9 @@ module Tapioca
 
       abstract!
 
-      sig { params(default_command: String).void }
-      def initialize(default_command:)
-        @file_writer = T.let(FileWriter.new, FileWriter)
+      sig { params(default_command: String, file_writer: Thor::Actions).void }
+      def initialize(default_command:, file_writer: FileWriter.new)
+        @file_writer = file_writer
         @default_command = default_command
       end
 

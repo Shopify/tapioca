@@ -37,8 +37,7 @@ module Tapioca
         content << "\n"
 
         say("Done", :green)
-        say("\n")
-        create_file(@todos_path, content)
+        create_file(@todos_path, content, verbose: false)
 
         name = set_color(@todos_path, :yellow, :bold)
         say("\nAll unresolved constants have been written to #{name}.", [:green, :bold])

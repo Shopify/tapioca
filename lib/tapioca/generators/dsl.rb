@@ -77,8 +77,7 @@ module Tapioca
           constant_name = T.must(Reflection.name_of(constant))
 
           if @verbose && !@quiet
-            say("Processing: ", [:yellow])
-            say(constant_name)
+            say_status(:processing, constant_name, :yellow)
           end
 
           filename = compile_dsl_rbi(

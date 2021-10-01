@@ -224,13 +224,13 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Processing: Baz::Role
+            processing  Baz::Role
                 create  sorbet/rbi/dsl/baz/role.rbi
-          Processing: Job
+            processing  Job
                 create  sorbet/rbi/dsl/job.rbi
-          Processing: Namespace::Comment
+            processing  Namespace::Comment
                 create  sorbet/rbi/dsl/namespace/comment.rbi
-          Processing: Post
+            processing  Post
                 create  sorbet/rbi/dsl/post.rbi
 
           Done
@@ -253,13 +253,13 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Processing: Baz::Role
+            processing  Baz::Role
                 create  #{outdir}/baz/role.rbi
-          Processing: Job
+            processing  Job
                 create  #{outdir}/job.rbi
-          Processing: Namespace::Comment
+            processing  Namespace::Comment
                 create  #{outdir}/namespace/comment.rbi
-          Processing: Post
+            processing  Post
                 create  #{outdir}/post.rbi
 
           Done
