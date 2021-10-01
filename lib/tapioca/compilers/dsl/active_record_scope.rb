@@ -7,6 +7,8 @@ rescue LoadError
   return
 end
 
+require "tapioca/compilers/dsl/helper/active_record_constants"
+
 module Tapioca
   module Compilers
     module Dsl
@@ -42,6 +44,7 @@ module Tapioca
       # ~~~
       class ActiveRecordScope < Base
         extend T::Sig
+        include Helper::ActiveRecordConstants
 
         sig do
           override.params(
@@ -55,25 +58,23 @@ module Tapioca
           return if method_names.empty?
 
           root.create_path(constant) do |model|
-            relation_methods_module_name = "GeneratedRelationMethods"
-            relation_methods_module = model.create_module(relation_methods_module_name)
-            association_relation_methods_module_name = "GeneratedAssociationRelationMethods"
-            association_relation_methods_module = model.create_module(association_relation_methods_module_name)
+            relation_methods_module = model.create_module(RelationMethodsModuleName)
+            association_relation_methods_module = model.create_module(AssociationRelationMethodsModuleName)
 
             method_names.each do |scope_method|
               generate_scope_method(
                 relation_methods_module,
                 scope_method.to_s,
-                "PrivateRelation"
+                RelationClassName
               )
               generate_scope_method(
                 association_relation_methods_module,
                 scope_method.to_s,
-                "PrivateAssociationRelation"
+                AssociationRelationClassName
               )
             end
 
-            model.create_extend(relation_methods_module_name)
+            model.create_extend(RelationMethodsModuleName)
           end
         end
 

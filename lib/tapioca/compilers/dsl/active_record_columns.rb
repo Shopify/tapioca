@@ -7,6 +7,8 @@ rescue LoadError
   return
 end
 
+require "tapioca/compilers/dsl/helper/active_record_constants"
+
 module Tapioca
   module Compilers
     module Dsl
@@ -96,15 +98,14 @@ module Tapioca
       # ~~~
       class ActiveRecordColumns < Base
         extend T::Sig
+        include Helper::ActiveRecordConstants
 
         sig { override.params(root: RBI::Tree, constant: T.class_of(ActiveRecord::Base)).void }
         def decorate(root, constant)
           return unless constant.table_exists?
 
           root.create_path(constant) do |model|
-            module_name = "GeneratedAttributeMethods"
-
-            model.create_module(module_name) do |mod|
+            model.create_module(AttributeMethodsModuleName) do |mod|
               constant.columns_hash.each_key do |column_name|
                 column_name = column_name.to_s
                 add_methods_for_attribute(mod, constant, column_name)
@@ -121,7 +122,7 @@ module Tapioca
               end
             end
 
-            model.create_include(module_name)
+            model.create_include(AttributeMethodsModuleName)
           end
         end
 

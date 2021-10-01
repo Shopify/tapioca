@@ -7,6 +7,8 @@ rescue LoadError
   return
 end
 
+require "tapioca/compilers/dsl/helper/active_record_constants"
+
 module Tapioca
   module Compilers
     module Dsl
@@ -99,6 +101,7 @@ module Tapioca
       # ~~~
       class ActiveRecordAssociations < Base
         extend T::Sig
+        include Helper::ActiveRecordConstants
 
         ReflectionType = T.type_alias do
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
@@ -109,14 +112,12 @@ module Tapioca
           return if constant.reflections.empty?
 
           root.create_path(constant) do |model|
-            module_name = "GeneratedAssociationMethods"
-
-            model.create_module(module_name) do |mod|
+            model.create_module(AssociationMethodsModuleName) do |mod|
               populate_nested_attribute_writers(mod, constant)
               populate_associations(mod, constant)
             end
 
-            model.create_include(module_name)
+            model.create_include(AssociationMethodsModuleName)
           end
         end
 
@@ -256,7 +257,7 @@ module Tapioca
           "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                             polymorphic_association?(reflection)
 
-          "#{qualified_name_of(reflection.klass)}::PrivateCollectionProxy"
+          "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
         end
 
         sig do
