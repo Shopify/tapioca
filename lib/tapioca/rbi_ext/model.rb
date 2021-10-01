@@ -10,7 +10,7 @@ module RBI
     sig { returns(String) }
     def transformed_string
       transform_rbi!
-      root.string
+      string
     end
 
     sig { void }
