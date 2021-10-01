@@ -9,18 +9,17 @@ module RBI
 
     sig { returns(String) }
     def transformed_string
-      transform_rbi
+      rbi = transform_rbi!
+      rbi.string
     end
 
-    private
-
-    sig { returns(String) }
-    def transform_rbi
+    sig { returns(RBI::Tree) }
+    def transform_rbi!
       root.nest_singleton_methods!
       root.nest_non_public_methods!
       root.group_nodes!
       root.sort_nodes!
-      root.string
+      root
     end
   end
 
