@@ -41,7 +41,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
       rbi = RBI::File.new(strictness: "true")
-      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, include_docs).transformed_string
+      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, include_docs)
+      rbi.transformed_string
     end
 
     it("compiles DelegateClass") do

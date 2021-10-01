@@ -147,7 +147,8 @@ module Tapioca
 
         strictness = @typed_overrides[gem.name] || "true"
         rbi = RBI::File.new(strictness: strictness)
-        rbi_body_content = compiler.compile(gem, rbi, 0, @doc).transformed_string
+        compiler.compile(gem, rbi, 0, @doc)
+        rbi_body_content = rbi.transformed_string
         content = String.new
         content << rbi_header(
           "#{@default_command} gem #{gem.name}",

@@ -4,6 +4,26 @@
 require "rbi"
 
 module RBI
+  class File
+    extend T::Sig
+
+    sig { returns(String) }
+    def transformed_string
+      transform_rbi
+    end
+
+    private
+
+    sig { returns(String) }
+    def transform_rbi
+      root.nest_singleton_methods!
+      root.nest_non_public_methods!
+      root.group_nodes!
+      root.sort_nodes!
+      root.string
+    end
+  end
+
   class Tree
     extend T::Sig
 
@@ -86,11 +106,6 @@ module RBI
       self << method
     end
 
-    sig { returns(String) }
-    def transformed_string
-      transform_rbi
-    end
-
     private
 
     SPECIAL_METHOD_NAMES = T.let(
@@ -117,15 +132,6 @@ module RBI
       nodes_cache[node.to_s] = node
       self << node
       node
-    end
-
-    sig { returns(String) }
-    def transform_rbi
-      nest_singleton_methods!
-      nest_non_public_methods!
-      group_nodes!
-      sort_nodes!
-      string
     end
   end
 
