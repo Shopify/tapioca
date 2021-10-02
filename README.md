@@ -59,11 +59,12 @@ $ bundle exec tapioca
 Commands:
   tapioca --version, -v      # show version
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
-  tapioca generate [gem...]  # generate RBIs from gems
+  tapioca gem [gem...]       # generate RBIs from gems
+  tapioca generate [gem...]  # DEPRECATED: generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
   tapioca require            # generate the list of files to be required by tapioca
-  tapioca sync               # sync RBIs to Gemfile
+  tapioca sync               # DEPRECATED: sync RBIs to Gemfile
   tapioca todo               # generate the list of unresolved constants
 
 Options:
@@ -83,13 +84,21 @@ Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
-### Generate for gems
+### Generate RBIs for gems - **v0.5.0**
+
+Command: `tapioca gem [gem...]`
+
+This command will generate RBIs for the specified gems, place them in the RBI directory, and sync them with previously generated RBIs. This command will add, update, and remove RBIs as necessary.
+
+The `gem` command is new in [release v0.5.0](https://github.com/Shopify/tapioca/releases/tag/v0.5.0) and combines the **now deprecated** `generate` and `sync` commands. If you are using a Tapioca version below v0.5.0, you will not be able to use this command.
+
+### Generate for gems - **DEPRECATED with v0.5.0**
 
 Command: `tapioca generate [gems...]`
 
 This will generate RBIs for the specified gems and place them in the RBI directory.
 
-### Generate for all gems in Gemfile
+### Generate for all gems in Gemfile - **DEPRECATED with v0.5.0**
 
 Command: `tapioca sync`
 
