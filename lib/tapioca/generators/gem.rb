@@ -146,14 +146,9 @@ module Tapioca
         say("Compiling #{gem_name}, this may take a few seconds... ")
 
         strictness = @typed_overrides[gem.name] || "true"
-        rbi = RBI::File.new(strictness: strictness)
+        rbi = RBI::File.new
         compiler.compile(gem, rbi, 0, @doc)
-        rbi.transform_rbi!
-        # NOTE: This is not using the standard helper method `transformed_string`.
-        # The following test suite is based on the string output of the `RBI::Tree` rather
-        # than the, now used, `RBI::File`. The file output includes the sigils, comments, etc.
-        # We should eventually update these tests to be based on the `RBI::File`.
-        rbi_body_content = rbi.root.string
+        rbi_body_content = rbi.transformed_string
         content = String.new
         content << rbi_header(
           "#{@default_command} gem #{gem.name}",
