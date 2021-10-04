@@ -4,12 +4,19 @@
 module Tapioca
   module Generators
     class Require < Base
-      sig { params(requires_path: String, sorbet_config_path: String, default_command: String).void }
-      def initialize(requires_path:, sorbet_config_path:, default_command:)
+      sig do
+        params(
+          requires_path: String,
+          sorbet_config_path: String,
+          default_command: String,
+          file_writer: Thor::Actions
+        ).void
+      end
+      def initialize(requires_path:, sorbet_config_path:, default_command:, file_writer: FileWriter.new)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
       end
 
       sig { override.void }
@@ -32,9 +39,7 @@ module Tapioca
         content << "# frozen_string_literal: true\n\n"
         content << rb_string
 
-        outdir = File.dirname(@requires_path)
-        FileUtils.mkdir_p(outdir)
-        File.write(@requires_path, content)
+        create_file(@requires_path, content, verbose: false)
 
         say("Done", :green)
 

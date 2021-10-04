@@ -14,6 +14,7 @@ module Tapioca
           compiler_path: String,
           tapioca_path: String,
           default_command: String,
+          file_writer: Thor::Actions,
           should_verify: T::Boolean,
           quiet: T::Boolean,
           verbose: T::Boolean
@@ -28,6 +29,7 @@ module Tapioca
         compiler_path:,
         tapioca_path:,
         default_command:,
+        file_writer: FileWriter.new,
         should_verify: false,
         quiet: false,
         verbose: false
@@ -43,7 +45,7 @@ module Tapioca
         @quiet = quiet
         @verbose = verbose
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
 
         @loader = T.let(nil, T.nilable(Loader))
       end
@@ -77,8 +79,7 @@ module Tapioca
           constant_name = T.must(Reflection.name_of(constant))
 
           if @verbose && !@quiet
-            say("Processing: ", [:yellow])
-            say(constant_name)
+            say_status(:processing, constant_name, :yellow)
           end
 
           filename = compile_dsl_rbi(
@@ -222,13 +223,7 @@ module Tapioca
         )
         out << contents
 
-        FileUtils.mkdir_p(File.dirname(filename))
-        File.write(filename, out)
-
-        unless quiet
-          say("Wrote: ", [:green])
-          say(filename)
-        end
+        create_file(filename, out, verbose: !quiet)
 
         filename
       end

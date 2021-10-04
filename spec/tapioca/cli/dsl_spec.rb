@@ -33,7 +33,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/post.rbi
+                create  #{outdir}/post.rbi
 
           Done
           All operations performed in working directory.
@@ -126,10 +126,10 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/baz/role.rbi
-          Wrote: #{outdir}/job.rbi
-          Wrote: #{outdir}/namespace/comment.rbi
-          Wrote: #{outdir}/post.rbi
+                create  #{outdir}/baz/role.rbi
+                create  #{outdir}/job.rbi
+                create  #{outdir}/namespace/comment.rbi
+                create  #{outdir}/post.rbi
 
           Done
           All operations performed in working directory.
@@ -224,14 +224,14 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Processing: Baz::Role
-          Wrote: sorbet/rbi/dsl/baz/role.rbi
-          Processing: Job
-          Wrote: sorbet/rbi/dsl/job.rbi
-          Processing: Namespace::Comment
-          Wrote: sorbet/rbi/dsl/namespace/comment.rbi
-          Processing: Post
-          Wrote: sorbet/rbi/dsl/post.rbi
+            processing  Baz::Role
+                create  sorbet/rbi/dsl/baz/role.rbi
+            processing  Job
+                create  sorbet/rbi/dsl/job.rbi
+            processing  Namespace::Comment
+                create  sorbet/rbi/dsl/namespace/comment.rbi
+            processing  Post
+                create  sorbet/rbi/dsl/post.rbi
 
           Done
           All operations performed in working directory.
@@ -253,14 +253,14 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Processing: Baz::Role
-          Wrote: #{outdir}/baz/role.rbi
-          Processing: Job
-          Wrote: #{outdir}/job.rbi
-          Processing: Namespace::Comment
-          Wrote: #{outdir}/namespace/comment.rbi
-          Processing: Post
-          Wrote: #{outdir}/post.rbi
+            processing  Baz::Role
+                create  #{outdir}/baz/role.rbi
+            processing  Job
+                create  #{outdir}/job.rbi
+            processing  Namespace::Comment
+                create  #{outdir}/namespace/comment.rbi
+            processing  Post
+                create  #{outdir}/post.rbi
 
           Done
           All operations performed in working directory.
@@ -330,10 +330,10 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/baz/role.rbi
-          Wrote: #{outdir}/job.rbi
-          Wrote: #{outdir}/namespace/comment.rbi
-          Wrote: #{outdir}/post.rbi
+                create  #{outdir}/baz/role.rbi
+                create  #{outdir}/job.rbi
+                create  #{outdir}/namespace/comment.rbi
+                create  #{outdir}/post.rbi
 
           Removing stale RBI files...
           -- Removing: #{outdir}/does_not_exist.rbi
@@ -366,7 +366,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/post.rbi
+                create  #{outdir}/post.rbi
 
           Removing stale RBI files...
           -- Removing: #{outdir}/user.rbi
@@ -391,7 +391,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/job.rbi
+                create  #{outdir}/job.rbi
 
           Done
           All operations performed in working directory.
@@ -431,9 +431,9 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
-          Wrote: #{outdir}/baz/role.rbi
-          Wrote: #{outdir}/namespace/comment.rbi
-          Wrote: #{outdir}/post.rbi
+                create  #{outdir}/baz/role.rbi
+                create  #{outdir}/namespace/comment.rbi
+                create  #{outdir}/post.rbi
 
           Done
           All operations performed in working directory.

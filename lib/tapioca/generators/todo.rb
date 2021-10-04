@@ -4,19 +4,25 @@
 module Tapioca
   module Generators
     class Todo < Base
-      sig { params(todos_path: String, file_header: T::Boolean, default_command: String).void }
-      def initialize(todos_path:, file_header:, default_command:)
+      sig do
+        params(
+          todos_path: String,
+          file_header: T::Boolean,
+          default_command: String,
+          file_writer: Thor::Actions
+        ).void
+      end
+      def initialize(todos_path:, file_header:, default_command:, file_writer: FileWriter.new)
         @todos_path = todos_path
         @file_header = file_header
 
-        super(default_command: default_command)
+        super(default_command: default_command, file_writer: file_writer)
       end
 
       sig { override.void }
       def generate
         compiler = Compilers::TodosCompiler.new
-        name = set_color(@todos_path, :yellow, :bold)
-        say("Compiling #{name}, this may take a few seconds... ")
+        say("Finding all unresolved constants, this may take a few seconds... ")
 
         # Clean all existing unresolved constants before regenerating the list
         # so Sorbet won't grab them as already resolved.
@@ -37,13 +43,11 @@ module Tapioca
         content << rbi_string
         content << "\n"
 
-        outdir = File.dirname(@todos_path)
-        FileUtils.mkdir_p(outdir)
-        File.write(@todos_path, content)
-
         say("Done", :green)
+        create_file(@todos_path, content, verbose: false)
 
-        say("All unresolved constants have been written to #{name}.", [:green, :bold])
+        name = set_color(@todos_path, :yellow, :bold)
+        say("\nAll unresolved constants have been written to #{name}.", [:green, :bold])
         say("Please review changes and commit them.", [:green, :bold])
       end
 

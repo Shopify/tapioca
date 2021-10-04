@@ -14,7 +14,7 @@ module Tapioca
         output = execute("todo")
 
         assert_equal(<<~OUTPUT, output)
-          Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Nothing to do
+          Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUTPUT
 
         refute_path_exists(repo_path / "sorbet/rbi/todo.rbi")
@@ -37,7 +37,8 @@ module Tapioca
         File.delete(repo_path / "file.rb")
 
         assert_equal(<<~CONTENTS, output)
-          Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Done
+          Finding all unresolved constants, this may take a few seconds... Done
+
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
           Please review changes and commit them.
         CONTENTS
@@ -67,7 +68,8 @@ module Tapioca
         File.delete(repo_path / "file.rb")
 
         assert_equal(<<~CONTENTS, output)
-          Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Done
+          Finding all unresolved constants, this may take a few seconds... Done
+
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
           Please review changes and commit them.
         CONTENTS
@@ -98,7 +100,7 @@ module Tapioca
         output = execute("todo")
 
         assert_equal(<<~OUTPUT, output)
-          Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Nothing to do
+          Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUTPUT
 
         refute_path_exists(repo_path / "sorbet/rbi/todo.rbi")
