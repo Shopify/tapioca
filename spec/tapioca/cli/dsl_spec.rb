@@ -126,6 +126,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
+                create  #{outdir}/active_support/callbacks.rbi
                 create  #{outdir}/baz/role.rbi
                 create  #{outdir}/job.rbi
                 create  #{outdir}/namespace/comment.rbi
@@ -224,6 +225,8 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
+            processing  ActiveSupport::Callbacks
+                create  sorbet/rbi/dsl/active_support/callbacks.rbi
             processing  Baz::Role
                 create  sorbet/rbi/dsl/baz/role.rbi
             processing  Job
@@ -253,6 +256,8 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
+            processing  ActiveSupport::Callbacks
+                create  #{outdir}/active_support/callbacks.rbi
             processing  Baz::Role
                 create  #{outdir}/baz/role.rbi
             processing  Job
@@ -330,6 +335,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
+                create  #{outdir}/active_support/callbacks.rbi
                 create  #{outdir}/baz/role.rbi
                 create  #{outdir}/job.rbi
                 create  #{outdir}/namespace/comment.rbi
@@ -431,6 +437,7 @@ module Tapioca
           Loading DSL generator classes... Done
           Compiling DSL RBI files...
 
+                create  #{outdir}/active_support/callbacks.rbi
                 create  #{outdir}/baz/role.rbi
                 create  #{outdir}/namespace/comment.rbi
                 create  #{outdir}/post.rbi

@@ -17,6 +17,7 @@ module Tapioca
     PUBLIC_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:public_instance_methods), UnboundMethod)
     PROTECTED_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:protected_instance_methods), UnboundMethod)
     PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
+    METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
 
     sig { params(object: BasicObject).returns(Class).checked(:never) }
     def class_of(object)
@@ -105,6 +106,11 @@ module Tapioca
     sig { params(type: T::Types::Base).returns(String) }
     def name_of_type(type)
       type.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+    end
+
+    sig { params(constant: Module, method: Symbol).returns(Method) }
+    def method_of(constant, method)
+      METHOD_METHOD.bind(constant).call(method)
     end
 
     # Returns an array with all classes that are < than the supplied class.
