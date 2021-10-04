@@ -207,8 +207,12 @@ module Tapioca
       end
 
       sig do
-        params(constant_name: String, contents: String, outpath: Pathname, quiet: T::Boolean)
-          .returns(T.nilable(Pathname))
+        params(
+          constant_name: String,
+          contents: String,
+          outpath: Pathname,
+          quiet: T::Boolean
+        ).returns(T.nilable(Pathname))
       end
       def compile_dsl_rbi(constant_name, contents, outpath: @outpath, quiet: false)
         return if contents.nil?
