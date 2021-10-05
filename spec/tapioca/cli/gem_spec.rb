@@ -310,7 +310,7 @@ module Tapioca
 
           assert_includes(output, "++ Adding: #{outdir}/qux@0.5.0.rbi\n")
           assert_includes(output, <<~OUTPUT)
-            Compiling qux, this may take a few seconds...   Done
+            Compiling qux, this may take a few seconds...   Done (empty output)
           OUTPUT
 
           assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))

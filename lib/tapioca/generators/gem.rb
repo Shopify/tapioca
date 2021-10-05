@@ -147,10 +147,11 @@ module Tapioca
         Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, @doc)
 
         if rbi.empty?
-          rbi.include_empty_rbi_comment
+          say("Done (empty output)", :yellow)
+        else
+          say("Done", :green)
         end
 
-        say("Done", :green)
 
         create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
 
