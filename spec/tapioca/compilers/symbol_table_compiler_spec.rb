@@ -40,7 +40,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      rbi = RBI::File.new(strictness: "true")
+      rbi = RBI::FileWithConflicts.new(strictness: "true")
       Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, include_docs)
       rbi.transform_rbi!
       # NOTE: This is not using the standard helper method `transformed_string`.

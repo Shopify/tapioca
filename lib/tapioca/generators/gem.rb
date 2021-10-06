@@ -146,7 +146,7 @@ module Tapioca
         say("Compiling #{gem_name}, this may take a few seconds... ")
 
         strictness = @typed_overrides[gem.name] || "true"
-        rbi = RBI::File.new
+        rbi = RBI::FileWithConflicts.new
         compiler.compile(gem, rbi, 0, @doc)
         merge_with_exported_rbi(gem, rbi)
         rbi_body_content = rbi.transformed_string
@@ -174,31 +174,22 @@ module Tapioca
         end
       end
 
-      sig { params(gem: Gemfile::GemSpec, rbi: RBI::File).void }
+      sig { params(gem: Gemfile::GemSpec, rbi: RBI::FileWithConflicts).void }
       def merge_with_exported_rbi(gem, rbi)
-        return unless gem.has_exported_rbi_files?
+        exported_rbi = gem.exported_rbi
 
-        rbi_merge_result = gem.exported_rbi_tree
-        copied_rbi = rbi_merge_result.tree
+        return if exported_rbi.root.empty?
 
-        rbi_merge_result.conflicts.each do |conflict|
+        exported_rbi.conflicts.each do |conflict|
           say("\n\n  #{conflict}", :yellow)
           say("  Found at:", :yellow)
           say("    #{conflict.left.loc}", :yellow)
           say("    #{conflict.right.loc}", :yellow)
         end
 
-        display_conflict_warnings(rbi.root, copied_rbi)
+        rbi.merge_with(exported_rbi.root)
 
-        RBI::Rewriters::Merge.merge_trees(rbi.root, copied_rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
-      end
-
-      sig { params(generated_rbi: RBI::Tree, copied_rbi: RBI::Tree).void }
-      def display_conflict_warnings(generated_rbi, copied_rbi)
-        rewriter = RBI::Rewriters::Merge.new
-        rewriter.merge(generated_rbi)
-        conflicts = rewriter.merge(copied_rbi)
-        say(conflicts.join("\n"), :yellow) unless conflicts.empty?
+        say(rbi.conflicts.join("\n"), :yellow) unless rbi.conflicts.empty?
       end
 
       sig { void }
