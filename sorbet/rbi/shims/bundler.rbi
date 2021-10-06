@@ -1410,8 +1410,6 @@ end
 class Bundler::Installer
   def generate_bundler_executable_stubs(spec, options=T.unsafe(nil)); end
 
-  def generate_standalone_bundler_executable_stubs(spec); end
-
   def initialize(root, definition); end
 
   def post_install_messages(); end

@@ -7,7 +7,7 @@ module ContentHelper
   extend T::Sig
   extend T::Helpers
 
-  requires_ancestor Kernel
+  requires_ancestor { Kernel }
 
   sig { void }
   def teardown
