@@ -108,6 +108,7 @@ module Tapioca
         real_gem_path = to_realpath(@spec.full_gem_path)
         @full_gem_path = T.let(real_gem_path, String)
         @version = T.let(version_string, String)
+        @exported_rbi = T.let(nil, T.nilable(RBI::FileWithConflicts))
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -157,23 +158,14 @@ module Tapioca
         Dir.glob("#{full_gem_path}/rbi/*.rbi")
       end
 
-      sig { returns(T::Boolean) }
-      def has_exported_rbi_files?
-        !exported_rbi_files.empty?
-      end
-
-      sig { returns(RBI::MergeResult) }
-      def exported_rbi_tree
-        rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
-        all_conflicts = T.let([], T::Array[RBI::Rewriters::Merge::Conflict])
-
-        exported_rbi_files.each do |file|
-          gem_rbi = RBI::Parser.parse_file(file)
-          file_conflicts = rewriter.merge(gem_rbi)
-          all_conflicts = all_conflicts.concat(file_conflicts)
+      sig { returns(RBI::FileWithConflicts) }
+      def exported_rbi
+        @exported_rbi ||= RBI::FileWithConflicts.new do |rbi_file|
+          exported_rbi_files.each do |file|
+            rbi_tree = RBI::Parser.parse_file(file)
+            rbi_file.merge_with(rbi_tree, keep: RBI::Rewriters::Merge::Keep::NONE)
+          end
         end
-
-        RBI::MergeResult.new(tree: rewriter.tree, conflicts: all_conflicts)
       end
 
       private
