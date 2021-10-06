@@ -147,6 +147,7 @@ module Tapioca
         Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, @doc)
 
         if rbi.empty?
+          rbi.set_empty_body_content
           say("Done (empty output)", :yellow)
         else
           say("Done", :green)
