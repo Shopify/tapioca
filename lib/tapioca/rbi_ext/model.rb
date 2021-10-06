@@ -4,8 +4,20 @@
 require "rbi"
 
 module RBI
-  class File
+  class FileWithConflicts < File
     extend T::Sig
+
+    sig do
+      params(
+        strictness: T.nilable(String),
+        comments: T::Array[RBI::Comment],
+        block: T.nilable(T.proc.params(file: RBI::FileWithConflicts).void)
+      ).void
+    end
+    def initialize(strictness: T.unsafe(nil), comments: T.unsafe(nil), &block)
+      @conflicts = T.let([], T::Array[RBI::Rewriters::Merge::Conflict])
+      super
+    end
 
     sig { returns(String) }
     def transformed_string
@@ -20,6 +32,31 @@ module RBI
       root.group_nodes!
       root.sort_nodes!
     end
+
+    sig do
+      params(
+        rbi: RBI::Tree,
+        keep: RBI::Rewriters::Merge::Keep
+      ).void
+    end
+    def merge_with(rbi, keep: RBI::Rewriters::Merge::Keep::LEFT)
+      root.nest_singleton_methods!
+      rbi.nest_singleton_methods!
+      merger = RBI::Rewriters::Merge.new
+      merger.merge(root)
+      @conflicts |= merger.merge(rbi)
+
+      merger = RBI::Rewriters::Merge.new(keep: keep)
+      merger.merge(root)
+      merger.merge(rbi)
+      root.nodes.replace(merger.tree.nodes)
+      root.nodes.each { |node| node.parent_tree = root }
+      self.comments = merger.tree.comments
+    end
+
+
+    sig { returns(T::Array[RBI::Rewriters::Merge::Conflict]) }
+    attr_reader :conflicts
   end
 
   class Tree
