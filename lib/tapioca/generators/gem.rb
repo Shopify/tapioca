@@ -152,7 +152,6 @@ module Tapioca
           say("Done", :green)
         end
 
-
         create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
