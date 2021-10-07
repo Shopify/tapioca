@@ -38,7 +38,9 @@ module RBI
 
     sig { void }
     def set_empty_body_content
-      root.append_empty_rbi_comment!
+      comments << RBI::EmptyComment.new
+      comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
+      comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
     end
 
     sig { returns(T::Boolean) }
@@ -127,12 +129,6 @@ module RBI
         sig << RBI::SigParam.new(param.param.name, param.type)
       end
       self << method
-    end
-
-    sig { void }
-    def append_empty_rbi_comment!
-      comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
-      comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
     end
 
     private
