@@ -380,7 +380,7 @@ module Tapioca
 
           sig { void }
           def create_association_relation_methods
-            returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass)"
+            returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
             unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
 
             ASSOCIATION_METHODS.each do |method_name|
