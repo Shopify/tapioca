@@ -11,10 +11,7 @@ module Tapioca
 
     Spec = T.type_alias do
       T.any(
-        T.all(
-          ::Bundler::StubSpecification,
-          ::Bundler::RemoteSpecification
-        ),
+        ::Bundler::StubSpecification,
         ::Gem::Specification
       )
     end
@@ -117,12 +114,13 @@ module Tapioca
 
       sig { returns(T::Array[Pathname]) }
       def files
-        if default_gem?
-          @spec.files.map do |file|
+        spec = @spec
+        if default_gem? && spec.is_a?(::Gem::Specification)
+          spec.files.map do |file|
             ruby_lib_dir.join(file)
           end
         else
-          @spec.full_require_paths.flat_map do |path|
+          spec.full_require_paths.flat_map do |path|
             Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
           end
         end
