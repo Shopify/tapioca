@@ -38,7 +38,7 @@ module RBI
 
     sig { void }
     def set_empty_body_content
-      root.nest_empty_rbi_comment!
+      root.append_empty_rbi_comment!
     end
 
     sig { returns(T::Boolean) }
@@ -130,7 +130,7 @@ module RBI
     end
 
     sig { void }
-    def nest_empty_rbi_comment!
+    def append_empty_rbi_comment!
       comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
       comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
     end
