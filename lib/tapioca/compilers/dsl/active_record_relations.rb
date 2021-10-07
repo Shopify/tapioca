@@ -53,7 +53,7 @@ module Tapioca
       # with that return type in this module.
       #
       # 3. `Model::CommonRelationMethods` holds all the relation methods that do not depend on the type of
-      # relation in their return type. For example, `find_by!`` will always return the same type (a `Model`
+      # relation in their return type. For example, `find_by!` will always return the same type (a `Model`
       # instance), regardless of what kind of relation it is called on, and so belongs in this module.
       # This module is used to reduce the replication of methods between the previous two modules.
       #
@@ -62,7 +62,7 @@ module Tapioca
       # `Model` class.
       #
       # **CAUTION**: The generated relation classes are named `PrivateXXX` intentionally to reflect the fact
-      # that they represent private subconstants of the Active Record model. As such, these types are do not
+      # that they represent private subconstants of the Active Record model. As such, these types do not
       # exist at runtime, and their counterparts that do exist at runtime are marked `private_constant` anyway.
       # For that reason, these types cannot be used in user code or in `sig`s inside Ruby files, since that will
       # make the runtime checks fail.
