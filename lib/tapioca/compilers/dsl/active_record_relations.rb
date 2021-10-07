@@ -298,11 +298,30 @@ module Tapioca
 
           sig { params(klass: RBI::Scope).void }
           def create_collection_proxy_methods(klass)
-            const_collection = "T.any(" + [
-              constant_name,
-              "T::Array[#{constant_name}]",
-              "T::Array[#{AssociationsCollectionProxyClassName}]",
-            ].join(", ") + ")"
+            # For these cases, it is valid to pass:
+            # - a model instance, thus `Model`
+            # - a model collection which can be:
+            #   - an array of models, thus `T::Enumerable[Model]`
+            #   - an association relation of a model, thus `T::Enumerable[Model]`
+            #   - a collection proxy of a model, thus, again, a `T::Enumerable[Model]`
+            #   - a collection of relations or collection proxies, thus `T::Enumerable[T::Enumerable[Model]]`
+            #   - or, any mix of the above, thus `T::Enumerable[T.any(Model, T::Enumerable[Model])]`
+            # which altogether gives us:
+            #   `T.any(Model, T::Enumerable[T.any(Model, T::Enumerable[Model])])`
+            model_collection =
+              "T.any(#{constant_name}, T::Enumerable[T.any(#{constant_name}, T::Enumerable[#{constant_name}])])"
+
+            # For these cases, it is valid to pass the above kind of things, but also:
+            # - a model identifier, which can be:
+            #   - a numeric id, thus `Integer`
+            #   - a string id, thus `String`
+            # - a collection of identifiers
+            #   - a collection of identifiers, thus `T::Enumerable[T.any(Integer, String)]`
+            # which, coupled with the above case, gives us:
+            #   `T.any(Model, Integer, String, T::Enumerable[T.any(Model, Integer, String, T::Enumerable[Model])])`
+            model_or_id_collection =
+              "T.any(#{constant_name}, Integer, String" \
+                ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])"
 
             COLLECTION_PROXY_METHODS.each do |method_name|
               case method_name
@@ -310,7 +329,7 @@ module Tapioca
                 klass.create_method(
                   method_name.to_s,
                   parameters: [
-                    create_rest_param("records", type: const_collection),
+                    create_rest_param("records", type: model_collection),
                   ],
                   return_type: AssociationsCollectionProxyClassName
                 )
@@ -323,7 +342,7 @@ module Tapioca
                 klass.create_method(
                   method_name.to_s,
                   parameters: [
-                    create_rest_param("records", type: const_collection),
+                    create_rest_param("records", type: model_or_id_collection),
                   ],
                   return_type: "T::Array[#{constant_name}]"
                 )
@@ -336,7 +355,7 @@ module Tapioca
                 klass.create_method(
                   method_name.to_s,
                   parameters: [
-                    create_param("other_array", type: const_collection),
+                    create_param("other_array", type: model_collection),
                   ],
                   return_type: "T::Array[#{constant_name}]"
                 )

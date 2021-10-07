@@ -453,34 +453,34 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             include CommonRelationMethods
             include GeneratedAssociationRelationMethods
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
             def <<(*records); end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
             def append(*records); end
 
             sig { returns(PrivateCollectionProxy) }
             def clear; end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
             def concat(*records); end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
+            sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
             def delete(*records); end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
+            sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
             def destroy(*records); end
 
             sig { returns(T::Array[::Post]) }
             def load_target; end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
             def prepend(*records); end
 
-            sig { params(records: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(PrivateCollectionProxy) }
+            sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
             def push(*records); end
 
-            sig { params(other_array: T.any(::Post, T::Array[::Post], T::Array[PrivateCollectionProxy])).returns(T::Array[::Post]) }
+            sig { params(other_array: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
             def replace(other_array); end
 
             sig { returns(PrivateAssociationRelation) }
