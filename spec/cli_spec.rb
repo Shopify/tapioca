@@ -12,15 +12,14 @@ module Tapioca
 
     sig { params(command: String, use_default_outdir: T::Boolean).returns(String) }
     def tapioca(command, use_default_outdir: false)
-      default_flags = {}
-      default_flags[:outdir] = outdir unless use_default_outdir
-
       exec_command = [
         "bundle",
         "exec",
         "tapioca",
         command,
       ]
+
+      exec_command << "--outdir #{outdir}" unless use_default_outdir
 
       Bundler.with_unbundled_env do
         process = IO.popen(
