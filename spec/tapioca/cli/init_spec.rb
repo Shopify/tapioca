@@ -8,7 +8,7 @@ module Tapioca
     describe("#init") do
       it "must create proper files" do
         FileUtils.rm_f(repo_path / "bin/tapioca")
-        output = execute("init")
+        output = tapioca("init")
 
         assert_output(<<~OUTPUT, output)
           create  sorbet/config
@@ -41,7 +41,7 @@ module Tapioca
           repo_path / "sorbet/tapioca/require.rb",
         ])
 
-        output = execute("init")
+        output = tapioca("init")
 
         assert_output(<<~OUTPUT, output)
           skip  sorbet/config

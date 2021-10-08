@@ -7,11 +7,11 @@ module Tapioca
   class TodoSpec < CliSpec
     describe("#todo") do
       before do
-        execute("init")
+        tapioca("init")
       end
 
       it "does nothing if all constant are already resolved" do
-        output = execute("todo")
+        output = tapioca("todo")
 
         assert_equal(<<~OUTPUT, output)
           Finding all unresolved constants, this may take a few seconds... Nothing to do
@@ -32,7 +32,7 @@ module Tapioca
           Undef2::Undef4.bar
         RUBY
 
-        output = execute("todo")
+        output = tapioca("todo")
 
         File.delete(repo_path / "file.rb")
 
@@ -63,7 +63,7 @@ module Tapioca
           class Foo < ::Undef1; end
         RUBY
 
-        output = execute("todo", "--no-file-header")
+        output = tapioca("todo --no-file-header")
 
         File.delete(repo_path / "file.rb")
 
@@ -97,7 +97,7 @@ module Tapioca
           module Foo::Undef2; end
         RBI
 
-        output = execute("todo")
+        output = tapioca("todo")
 
         assert_equal(<<~OUTPUT, output)
           Finding all unresolved constants, this may take a few seconds... Nothing to do

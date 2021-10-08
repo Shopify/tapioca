@@ -7,7 +7,7 @@ module Tapioca
   class DslSpec < CliSpec
     describe("#dsl") do
       it "does not generate anything if there are no matching constants" do
-        output = execute("dsl", "User")
+        output = tapioca("dsl User")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -26,7 +26,7 @@ module Tapioca
       end
 
       it "generates RBI files for only required constants" do
-        output = execute("dsl", "Post")
+        output = tapioca("dsl Post")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -70,7 +70,7 @@ module Tapioca
       end
 
       it "errors for unprocessable required constants" do
-        output = execute("dsl", ["NonExistent::Foo", "NonExistent::Bar", "NonExistent::Baz"])
+        output = tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -94,7 +94,7 @@ module Tapioca
         FileUtils.touch("#{outdir}/non_existent/foo.rbi")
         FileUtils.touch("#{outdir}/non_existent/baz.rbi")
 
-        output = execute("dsl", ["NonExistent::Foo", "NonExistent::Bar", "NonExistent::Baz"])
+        output = tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -119,7 +119,7 @@ module Tapioca
       end
 
       it "generates RBI files for all processable constants" do
-        output = execute("dsl")
+        output = tapioca("dsl")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -218,7 +218,7 @@ module Tapioca
       end
 
       it "generates RBI files in the correct output directory" do
-        output = execute("dsl", "--verbose", use_default_outdir: true)
+        output = tapioca("dsl --verbose", use_default_outdir: true)
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -249,7 +249,7 @@ module Tapioca
       end
 
       it "generates RBI files with verbose output" do
-        output = execute("dsl", "--verbose")
+        output = tapioca("dsl --verbose")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -280,7 +280,7 @@ module Tapioca
       end
 
       it "can generates RBI files quietly" do
-        output = execute("dsl", "--quiet")
+        output = tapioca("dsl --quiet")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -301,7 +301,7 @@ module Tapioca
       end
 
       it "generates RBI files without header" do
-        execute("dsl", ["--no-file-header", "Post"])
+        tapioca("dsl --no-file-header Post")
 
         assert_equal(<<~CONTENTS, File.read("#{outdir}/post.rbi"))
           # typed: true
@@ -328,7 +328,7 @@ module Tapioca
         FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
         FileUtils.touch("#{outdir}/does_not_exist.rbi")
 
-        output = execute("dsl")
+        output = tapioca("dsl")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -365,7 +365,7 @@ module Tapioca
       it "removes stale RBI files of requested constants" do
         FileUtils.touch("#{outdir}/user.rbi")
 
-        output = execute("dsl", ["Post", "User"])
+        output = tapioca("dsl Post User")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -390,7 +390,7 @@ module Tapioca
       end
 
       it "must respect generators option" do
-        output = execute("dsl", "", generators: "SidekiqWorker Foo::Generator")
+        output = tapioca("dsl --generators SidekiqWorker Foo::Generator")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -412,7 +412,7 @@ module Tapioca
       end
 
       it "errors if there are no matching generators" do
-        output = execute("dsl", "", generators: "NonexistentGenerator")
+        output = tapioca("dsl --generators NonexistentGenerator")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -430,7 +430,7 @@ module Tapioca
       end
 
       it "must respect exclude_generators option" do
-        output = execute("dsl", "", exclude_generators: "SidekiqWorker Foo::Generator")
+        output = tapioca("dsl --exclude_generators SidekiqWorker Foo::Generator")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -455,7 +455,7 @@ module Tapioca
       end
 
       it "errors if there are no matching exclude_generators" do
-        output = execute("dsl", "", exclude_generators: "NonexistentGenerator")
+        output = tapioca("dsl --exclude_generators NonexistentGenerator")
 
         assert_equal(<<~OUTPUT, output)
           Loading Rails application... Done
@@ -493,7 +493,7 @@ module Tapioca
             #{timestamp}_create_articles.rb
           OUTPUT
 
-          output = execute("dsl")
+          output = tapioca("dsl")
           assert_match(expected_output, output)
         ensure
           File.delete(migration_path) if File.exist?(migration_path)
@@ -503,11 +503,11 @@ module Tapioca
       describe("verify") do
         describe("with no changes") do
           before do
-            execute("dsl")
+            tapioca("dsl")
           end
 
           it "does nothing and returns exit_status 0" do
-            output = execute("dsl", "--verify")
+            output = tapioca("dsl --verify")
 
             assert_includes(output, <<~OUTPUT)
               Nothing to do, all RBIs are up-to-date.
@@ -518,11 +518,11 @@ module Tapioca
 
         describe("with excluded files") do
           before do
-            execute("dsl")
+            tapioca("dsl")
           end
 
           it "advises of removed file(s) and returns exit_status 1" do
-            output = execute("dsl", "--verify", exclude_generators: "SidekiqWorker")
+            output = tapioca("dsl --verify --exclude_generators SidekiqWorker")
 
             assert_equal(output, <<~OUTPUT)
               Loading Rails application... Done
@@ -544,7 +544,7 @@ module Tapioca
 
         describe("with new file") do
           before do
-            execute("dsl")
+            tapioca("dsl")
             File.write(repo_path / "lib" / "image.rb", <<~RUBY)
               # typed: true
               # frozen_string_literal: true
@@ -562,7 +562,7 @@ module Tapioca
           end
 
           it "advises of new file(s) and returns exit_status 1" do
-            output = execute("dsl", "--verify")
+            output = tapioca("dsl --verify")
 
             assert_equal(output, <<~OUTPUT)
               Loading Rails application... Done
@@ -594,7 +594,7 @@ module Tapioca
                 property :title, accepts: String
               end
             RUBY
-            execute("dsl")
+            tapioca("dsl")
             File.write(repo_path / "lib" / "image.rb", <<~RUBY)
               # typed: true
               # frozen_string_literal: true
@@ -613,7 +613,7 @@ module Tapioca
           end
 
           it "advises of modified file(s) and returns exit status 1" do
-            output = execute("dsl", "--verify")
+            output = tapioca("dsl --verify")
 
             assert_equal(output, <<~OUTPUT)
               Loading Rails application... Done
