@@ -61,7 +61,7 @@ module Tapioca
     describe("#gem") do
       describe("flags") do
         it "must show an error if --all is supplied with arguments" do
-          output = execute("gem", ["--all", "foo"])
+          output = tapioca("gem --all foo")
 
           assert_equal(<<~OUTPUT, output)
             Option '--all' must be provided without any other arguments
@@ -69,7 +69,7 @@ module Tapioca
         end
 
         it "must show an error if --verify is supplied with arguments" do
-          output = execute("gem", ["--all", "foo"])
+          output = tapioca("gem --all foo")
 
           assert_equal(<<~OUTPUT, output)
             Option '--all' must be provided without any other arguments
@@ -77,7 +77,7 @@ module Tapioca
         end
 
         it "must show an error if both --all and --verify are supplied" do
-          output = execute("gem", ["--all", "--verify"])
+          output = tapioca("gem --all --verify")
 
           assert_equal(<<~OUTPUT, output)
             Options '--all' and '--verify' are mutually exclusive
@@ -87,11 +87,11 @@ module Tapioca
 
       describe("generate") do
         before do
-          execute("init")
+          tapioca("init")
         end
 
         it "must generate a single gem RBI" do
-          output = execute("gem", "foo")
+          output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
@@ -106,7 +106,7 @@ module Tapioca
         end
 
         it "must generate gem RBI in correct output directory" do
-          output = execute("gem", "foo", use_default_outdir: true)
+          output = tapioca("gem foo", use_default_outdir: true)
 
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
@@ -121,7 +121,7 @@ module Tapioca
         end
 
         it "must perform postrequire properly" do
-          output = execute("gem", "foo", postrequire: repo_path / "postrequire.rb")
+          output = tapioca("gem foo --postrequire #{repo_path / "postrequire.rb"}")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
@@ -144,7 +144,7 @@ module Tapioca
         end
 
         it "explains what went wrong when it can't load the postrequire properly" do
-          output = execute("gem", "foo", postrequire: repo_path / "postrequire_faulty.rb")
+          output = tapioca("gem foo --postrequire #{repo_path / "postrequire_faulty.rb"}")
 
           output.sub!(%r{/.*/postrequire_faulty\.rb}, "/postrequire_faulty.rb")
           assert_includes(output, <<~OUTPUT)
@@ -158,7 +158,7 @@ module Tapioca
         end
 
         it "must not include `rbi` definitions into `tapioca` RBI" do
-          output = execute("gem")
+          output = tapioca("gem")
 
           assert_includes(output, <<~OUTPUT)
             Compiling tapioca, this may take a few seconds...   Done
@@ -169,7 +169,7 @@ module Tapioca
         end
 
         it "must generate multiple gem RBIs" do
-          output = execute("gem", ["foo", "bar"])
+          output = tapioca("gem foo bar")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
@@ -191,7 +191,7 @@ module Tapioca
         end
 
         it "must generate RBIs for all gems in the Gemfile" do
-          output = execute("gem", "--all")
+          output = tapioca("gem --all")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'bar' gem:
@@ -218,7 +218,7 @@ module Tapioca
         end
 
         it "must not generate RBIs for missing gem specs" do
-          output = execute("gem")
+          output = tapioca("gem")
 
           missing_spec = "    completed with missing specs:   minitest-excludes (2.0.1)"
           assert_includes(output, missing_spec)
@@ -228,7 +228,7 @@ module Tapioca
         end
 
         it "must generate git gem RBIs with source revision numbers" do
-          output = execute("gem", "ast")
+          output = tapioca("gem ast")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'ast' gem:
@@ -239,7 +239,7 @@ module Tapioca
         end
 
         it "must respect exclude option" do
-          output = execute("gem", "--all", exclude: "foo bar")
+          output = tapioca("gem --all --exclude foo bar")
 
           refute_includes(output, <<~OUTPUT)
             Processing 'bar' gem:
@@ -265,7 +265,7 @@ module Tapioca
 
         it "does not crash when the extras gem is loaded" do
           File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/shell"')
-          output = execute("gem", "foo")
+          output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
@@ -281,9 +281,9 @@ module Tapioca
 
       describe("sync") do
         it "must perform no operations if everything is up-to-date" do
-          execute("gem")
+          tapioca("gem")
 
-          output = execute("gem")
+          output = tapioca("gem")
 
           refute_includes(output, "-- Removing:")
           refute_includes(output, "++ Adding:")
@@ -306,7 +306,7 @@ module Tapioca
         end
 
         it "generate an empty RBI file" do
-          output = execute("gem")
+          output = tapioca("gem")
 
           assert_includes(output, "++ Adding: #{outdir}/qux@0.5.0.rbi\n")
           assert_includes(output, <<~OUTPUT)
@@ -327,7 +327,7 @@ module Tapioca
         end
 
         it "generate an empty RBI file without header" do
-          execute("gem", "--no-file-header")
+          tapioca("gem --no-file-header")
 
           assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))
             # typed: true
@@ -339,9 +339,9 @@ module Tapioca
         end
 
         it "must respect exclude option" do
-          execute("gem")
+          tapioca("gem")
 
-          output = execute("gem", "", exclude: "foo bar")
+          output = tapioca("gem --exclude foo bar")
 
           assert_includes(output, "-- Removing: #{outdir}/foo@0.0.1.rbi\n")
           assert_includes(output, "-- Removing: #{outdir}/bar@0.3.0.rbi\n")
@@ -366,10 +366,10 @@ module Tapioca
         end
 
         it "must remove outdated RBIs" do
-          execute("gem")
+          tapioca("gem")
           FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
 
-          output = execute("gem")
+          output = tapioca("gem")
 
           assert_includes(output, "-- Removing: #{outdir}/outdated@5.0.0.rbi\n")
           refute_includes(output, "++ Adding:")
@@ -392,7 +392,7 @@ module Tapioca
             FileUtils.touch("#{outdir}/#{rbi}")
           end
 
-          output = execute("gem")
+          output = tapioca("gem")
 
           assert_includes(output, "++ Adding: #{outdir}/bar@0.3.0.rbi\n")
           assert_includes(output, "++ Adding: #{outdir}/baz@0.0.2.rbi\n")
@@ -415,7 +415,7 @@ module Tapioca
             FileUtils.touch("#{outdir}/#{rbi}")
           end
 
-          output = execute("gem")
+          output = tapioca("gem")
 
           assert_includes(output, "-> Moving: #{outdir}/bar@0.0.1.rbi to #{outdir}/bar@0.3.0.rbi\n")
           assert_includes(output, "++ Adding: #{outdir}/bar@0.3.0.rbi\n")
@@ -440,12 +440,12 @@ module Tapioca
 
       describe("verify") do
         before do
-          execute("gem")
+          tapioca("gem")
         end
 
         describe("with no changes") do
           it "does nothing and returns exit_status 0" do
-            output = execute("gem", "--verify")
+            output = tapioca("gem --verify")
 
             assert_equal(output, <<~OUTPUT)
               Checking for out-of-date RBIs...
@@ -458,7 +458,7 @@ module Tapioca
 
         describe("with excluded files") do
           it "advises of removed file(s) and returns exit_status 1" do
-            output = execute("gem", "--verify", exclude: "foo bar")
+            output = tapioca("gem --verify --exclude foo bar")
 
             assert_equal(output, <<~OUTPUT)
               Checking for out-of-date RBIs...
@@ -488,7 +488,7 @@ module Tapioca
           end
 
           it "advises of added/removed/changed file(s) and returns exit_status 1" do
-            output = execute("gem", "--verify")
+            output = tapioca("gem --verify")
 
             assert_equal(output, <<~OUTPUT)
               Checking for out-of-date RBIs...

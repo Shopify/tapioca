@@ -7,17 +7,17 @@ module Tapioca
   class DeprecationsSpec < CliSpec
     describe("deprecations") do
       it "prints the correct deprecation message with -c" do
-        output = execute("dsl", ["-c", "foo"])
+        output = tapioca("dsl -c foo")
         assert_includes(output, "DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.")
       end
 
       it "prints the correct deprecation message with --cmd" do
-        output = execute("dsl", ["--cmd", "foo"])
+        output = tapioca("dsl --cmd foo")
         assert_includes(output, "DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.")
       end
 
       it "doesn't print the correct deprecation message with no flag" do
-        output = execute("dsl")
+        output = tapioca("dsl")
         refute_includes(output, "DEPRECATION: The `-c` and `--cmd` flags will be removed in a future release.")
       end
     end

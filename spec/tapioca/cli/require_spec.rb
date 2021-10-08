@@ -7,7 +7,7 @@ module Tapioca
   class RequireSpec < CliSpec
     describe("#require") do
       before do
-        execute("init")
+        tapioca("init")
       end
 
       it "does nothing if there is nothing to require" do
@@ -18,7 +18,7 @@ module Tapioca
           --ignore=config/
         CONFIG
 
-        output = execute("require")
+        output = tapioca("require")
 
         assert_equal(<<~OUTPUT, output)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Nothing to do
@@ -34,7 +34,7 @@ module Tapioca
       end
 
       it "creates a list of all requires from all Ruby files passed to Sorbet" do
-        output = execute("require")
+        output = tapioca("require")
 
         assert_equal(<<~OUTPUT, output)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
@@ -64,7 +64,7 @@ module Tapioca
           --ignore=config/
         CONFIG
 
-        output = execute("require")
+        output = tapioca("require")
 
         assert_equal(<<~OUTPUT, output)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
