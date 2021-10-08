@@ -38,7 +38,7 @@ module RBI
 
     sig { void }
     def set_empty_body_content
-      comments << RBI::EmptyComment.new
+      comments << RBI::EmptyComment.new unless comments.empty?
       comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
       comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
     end
