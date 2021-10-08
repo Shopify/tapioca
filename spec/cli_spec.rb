@@ -10,19 +10,16 @@ module Tapioca
     attr_reader :outdir
     attr_reader :repo_path
 
-    def execute(command, args = [], use_default_outdir: false, **flags)
+    sig { params(command: String, use_default_outdir: T::Boolean).returns(String) }
+    def tapioca(command, use_default_outdir: false)
       default_flags = {}
       default_flags[:outdir] = outdir unless use_default_outdir
-
-      flags = default_flags.merge(flags).flat_map { |k, v| ["--#{k}", v.to_s] }
 
       exec_command = [
         "bundle",
         "exec",
         "tapioca",
         command,
-        *flags,
-        *args,
       ]
 
       Bundler.with_unbundled_env do
