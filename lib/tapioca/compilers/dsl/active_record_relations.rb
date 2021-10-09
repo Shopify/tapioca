@@ -248,6 +248,10 @@ module Tapioca
             model.create_extend(CommonRelationMethodsModuleName)
             # The model always extends the generated relation module
             model.create_extend(RelationMethodsModuleName)
+            # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
+            # See https://github.com/sorbet/sorbet/pull/4706 for details
+            model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
+
             create_relation_class
             create_association_relation_class
             create_collection_proxy_class

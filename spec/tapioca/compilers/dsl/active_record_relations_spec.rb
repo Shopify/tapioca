@@ -40,6 +40,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           extend CommonRelationMethods
           extend GeneratedRelationMethods
 
+          private
+
+          sig { returns(NilClass) }
+          def to_ary; end
+
           module CommonRelationMethods
             sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
             def any?(&block); end

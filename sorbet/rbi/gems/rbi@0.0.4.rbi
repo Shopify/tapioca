@@ -1315,8 +1315,8 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(name: String).void }
   def create_include(name); end
 
-  sig { params(name: String, parameters: T::Array[RBI::TypedParam], return_type: String, class_method: T::Boolean).void }
-  def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil)); end
+  sig { params(name: String, parameters: T::Array[RBI::TypedParam], return_type: String, class_method: T::Boolean, visibility: RBI::Visibility).void }
+  def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil)); end
 
   sig { params(name: String).void }
   def create_mixes_in_class_methods(name); end

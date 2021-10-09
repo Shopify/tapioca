@@ -91,14 +91,15 @@ module RBI
         name: String,
         parameters: T::Array[TypedParam],
         return_type: String,
-        class_method: T::Boolean
+        class_method: T::Boolean,
+        visibility: RBI::Visibility
       ).void
     end
-    def create_method(name, parameters: [], return_type: "T.untyped", class_method: false)
+    def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new)
       return unless valid_method_name?(name)
 
       sig = RBI::Sig.new(return_type: return_type)
-      method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method)
+      method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method, visibility: visibility)
       parameters.each do |param|
         method << param.param
         sig << RBI::SigParam.new(param.param.name, param.type)
