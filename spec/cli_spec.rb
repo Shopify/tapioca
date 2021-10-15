@@ -7,6 +7,8 @@ require "shellwords"
 
 module Tapioca
   class CliSpec < Minitest::HooksSpec
+    extend T::Sig
+
     attr_reader :outdir
     attr_reader :repo_path
 
