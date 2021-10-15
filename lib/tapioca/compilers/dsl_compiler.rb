@@ -34,7 +34,7 @@ module Tapioca
         @error_handler = T.let(error_handler || $stderr.method(:puts), T.proc.params(error: String).void)
       end
 
-      sig { params(blk: T.proc.params(constant: Module, rbi: String).void).void }
+      sig { params(blk: T.proc.params(constant: Module, rbi: RBI::File).void).void }
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
 
@@ -77,7 +77,7 @@ module Tapioca
         constants
       end
 
-      sig { params(constant: Module).returns(T.nilable(String)) }
+      sig { params(constant: Module).returns(T.nilable(RBI::File)) }
       def rbi_for_constant(constant)
         file = RBI::File.new(strictness: "true")
 
@@ -88,10 +88,7 @@ module Tapioca
 
         return if file.root.empty?
 
-        file.root.nest_non_public_methods!
-        file.root.group_nodes!
-        file.root.sort_nodes!
-        file.string
+        file
       end
 
       sig { params(error: String).returns(T.noreturn) }
