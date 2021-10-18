@@ -37,7 +37,7 @@ module Tapioca
 
       sig { void }
       def create_config
-        create_file(@sorbet_config, <<~CONTENT, skip: true)
+        create_file(@sorbet_config, <<~CONTENT, skip: true, force: false)
           --dir
           .
         CONTENT
@@ -45,7 +45,7 @@ module Tapioca
 
       sig { void }
       def create_post_require
-        create_file(@default_postrequire, <<~CONTENT, skip: true)
+        create_file(@default_postrequire, <<~CONTENT, skip: true, force: false)
           # typed: true
           # frozen_string_literal: true
 
