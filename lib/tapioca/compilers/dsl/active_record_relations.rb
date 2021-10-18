@@ -248,9 +248,16 @@ module Tapioca
             model.create_extend(CommonRelationMethodsModuleName)
             # The model always extends the generated relation module
             model.create_extend(RelationMethodsModuleName)
-            # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
-            # See https://github.com/sorbet/sorbet/pull/4706 for details
-            model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
+
+            # This feature is only available in versions of Sorbet with special support for
+            # handling `NilClass` returns from `to_ary`. We should not be typing `to_ary` like
+            # this for older versions since it will make all flatten operations be
+            # `T::Array[NilClass]`, otherwise.
+            if Tapioca::Compilers::Sorbet.supports?(:to_ary_nil_support)
+              # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
+              # See https://github.com/sorbet/sorbet/pull/4706 for details
+              model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
+            end
 
             create_relation_class
             create_association_relation_class
