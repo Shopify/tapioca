@@ -96,6 +96,7 @@ module Tapioca
           assert_includes(output, <<~OUTPUT)
             Processing 'foo' gem:
               Compiling foo, this may take a few seconds...   Done
+                  create  #{outdir}/foo@0.0.1.rbi
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -286,7 +287,7 @@ module Tapioca
           output = tapioca("gem")
 
           refute_includes(output, "-- Removing:")
-          refute_includes(output, "++ Adding:")
+          refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
           assert_includes(output, <<~OUTPUT)
@@ -308,7 +309,7 @@ module Tapioca
         it "generate an empty RBI file" do
           output = tapioca("gem")
 
-          assert_includes(output, "++ Adding: #{outdir}/qux@0.5.0.rbi\n")
+          assert_includes(output, "      create  #{outdir}/qux@0.5.0.rbi\n")
           assert_includes(output, <<~OUTPUT)
             Compiling qux, this may take a few seconds...   Done (empty output)
           OUTPUT
@@ -346,7 +347,7 @@ module Tapioca
           assert_includes(output, "-- Removing: #{outdir}/foo@0.0.1.rbi\n")
           assert_includes(output, "-- Removing: #{outdir}/bar@0.3.0.rbi\n")
           refute_includes(output, "-- Removing: #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "++ Adding:")
+          refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
           refute_includes(output, <<~OUTPUT)
@@ -372,7 +373,7 @@ module Tapioca
           output = tapioca("gem")
 
           assert_includes(output, "-- Removing: #{outdir}/outdated@5.0.0.rbi\n")
-          refute_includes(output, "++ Adding:")
+          refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
           assert_includes(output, <<~OUTPUT)
@@ -394,8 +395,8 @@ module Tapioca
 
           output = tapioca("gem")
 
-          assert_includes(output, "++ Adding: #{outdir}/bar@0.3.0.rbi\n")
-          assert_includes(output, "++ Adding: #{outdir}/baz@0.0.2.rbi\n")
+          assert_includes(output, "      create  #{outdir}/bar@0.3.0.rbi\n")
+          assert_includes(output, "      create  #{outdir}/baz@0.0.2.rbi\n")
           refute_includes(output, "-- Removing:")
           refute_includes(output, "-> Moving:")
 
@@ -418,9 +419,9 @@ module Tapioca
           output = tapioca("gem")
 
           assert_includes(output, "-> Moving: #{outdir}/bar@0.0.1.rbi to #{outdir}/bar@0.3.0.rbi\n")
-          assert_includes(output, "++ Adding: #{outdir}/bar@0.3.0.rbi\n")
+          assert_includes(output, "force  #{outdir}/bar@0.3.0.rbi\n")
           assert_includes(output, "-> Moving: #{outdir}/baz@0.0.1.rbi to #{outdir}/baz@0.0.2.rbi\n")
-          assert_includes(output, "++ Adding: #{outdir}/baz@0.0.2.rbi\n")
+          assert_includes(output, "force  #{outdir}/baz@0.0.2.rbi\n")
           refute_includes(output, "-- Removing:")
 
           assert_includes(output, <<~OUTPUT)

@@ -502,6 +502,54 @@ module Tapioca
         end
       end
 
+      it "overwrites existing RBIs without user input" do
+        File.write(repo_path / "lib" / "image.rb", <<~RUBY)
+          # typed: true
+          # frozen_string_literal: true
+
+          class Image
+            include(SmartProperties)
+
+            property :title, accepts: String
+          end
+        RUBY
+
+        tapioca("dsl")
+
+        File.write(repo_path / "lib" / "image.rb", <<~RUBY)
+          # typed: true
+          # frozen_string_literal: true
+
+          class Image
+            include SmartProperties
+
+            property :title, accepts: String
+            property :src, accepts: String
+          end
+        RUBY
+
+        output = tapioca("dsl")
+
+        assert_equal(output, <<~OUTPUT)
+          Loading Rails application... Done
+          Loading DSL generator classes... Done
+          Compiling DSL RBI files...
+
+             identical  #{outdir}/active_support/callbacks.rbi
+             identical  #{outdir}/baz/role.rbi
+                 force  #{outdir}/image.rbi
+             identical  #{outdir}/job.rbi
+             identical  #{outdir}/namespace/comment.rbi
+             identical  #{outdir}/post.rbi
+
+          Done
+          All operations performed in working directory.
+          Please review changes and commit them.
+        OUTPUT
+
+        FileUtils.rm_f(repo_path / "lib" / "image.rb")
+      end
+
       describe("verify") do
         describe("with no changes") do
           before do

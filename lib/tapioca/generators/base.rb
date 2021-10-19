@@ -44,9 +44,17 @@ module Tapioca
         $stderr.flush
       end
 
-      sig { params(path: T.any(String, Pathname), content: String, skip: T::Boolean, verbose: T::Boolean).void }
-      def create_file(path, content, skip: false, verbose: true)
-        @file_writer.create_file(path, skip: skip, verbose: verbose) { content }
+      sig do
+        params(
+          path: T.any(String, Pathname),
+          content: String,
+          force: T::Boolean,
+          skip: T::Boolean,
+          verbose: T::Boolean
+        ).void
+      end
+      def create_file(path, content, force: true, skip: false, verbose: true)
+        @file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
       end
     end
   end

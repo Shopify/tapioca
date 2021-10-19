@@ -229,8 +229,6 @@ module Tapioca
 
               gem = T.must(bundle.gem(gem_name))
               compile_gem_rbi(gem)
-              add(filename)
-
               puts
             end
           end
@@ -312,11 +310,6 @@ module Tapioca
       def move(old_filename, new_filename)
         say("-> Moving: #{old_filename} to #{new_filename}")
         old_filename.rename(new_filename.to_s)
-      end
-
-      sig { params(filename: Pathname).void }
-      def add(filename)
-        say("++ Adding: #{filename}")
       end
 
       sig { returns(T::Hash[String, String]) }
