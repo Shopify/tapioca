@@ -591,7 +591,7 @@ module Tapioca
               create_common_method(
                 method_name,
                 parameters: [
-                  create_opt_param("attributes", type: "T.nilable(T.any(::Hash, T::Array[::Hash]))", default: "nil"),
+                  create_opt_param("attributes", type: "T.untyped", default: "nil"),
                   create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
                 ],
                 return_type: constant_name

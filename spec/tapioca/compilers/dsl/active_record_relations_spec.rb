@@ -54,7 +54,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def average(column_name); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def build(attributes = nil, &block); end
 
             sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.untyped) }
@@ -63,10 +63,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.untyped).returns(T.untyped) }
             def count(column_name = nil); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create(attributes = nil, &block); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def create!(attributes = nil, &block); end
 
             sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
@@ -147,7 +147,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
             def minimum(column_name); end
 
-            sig { params(attributes: T.nilable(T.any(::Hash, T::Array[::Hash])), block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+            sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def new(attributes = nil, &block); end
 
             sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
