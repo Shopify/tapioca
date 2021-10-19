@@ -8,6 +8,7 @@ In the following section you will find all available DSL generators:
 * [ActionMailer](generator_actionmailer.md)
 * [ActiveJob](generator_activejob.md)
 * [ActiveModelAttributes](generator_activemodelattributes.md)
+* [ActiveModelSecurePassword](generator_activemodelsecurepassword.md)
 * [ActiveRecordAssociations](generator_activerecordassociations.md)
 * [ActiveRecordColumns](generator_activerecordcolumns.md)
 * [ActiveRecordEnum](generator_activerecordenum.md)
