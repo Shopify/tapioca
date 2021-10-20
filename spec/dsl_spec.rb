@@ -91,6 +91,23 @@ class DslSpec < Minitest::Spec
     file.root.nest_non_public_methods!
     file.root.group_nodes!
     file.root.sort_nodes!
-    file.string
+    file.string.tap do |str|
+      output = Tapioca::Compilers::Sorbet.run(
+        "--no-config",
+        "--stop-after",
+        "parser",
+        "-e",
+        str,
+        quiet: false
+      )
+
+      assert($?.success?, <<~MSG) # rubocop:disable Style/SpecialGlobalVars
+        Expected generated RBI file for `#{constant_name}` with no parsing errors.
+
+        Got these parsing errors:
+
+        #{indented(output, 2)}
+      MSG
+    end
   end
 end
