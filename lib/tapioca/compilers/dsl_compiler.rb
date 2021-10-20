@@ -45,7 +45,7 @@ module Tapioca
           ERROR
         end
 
-        constants_to_process.sort_by { |c| c.name.to_s }.each do |constant|
+        Executor.new(constants_to_process.sort_by { |c| c.name.to_s }).run_in_parallel do |constant|
           rbi = rbi_for_constant(constant)
           next if rbi.nil?
 
