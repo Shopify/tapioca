@@ -23,16 +23,14 @@ module Tapioca
       class << self
         extend(T::Sig)
 
-        sig { params(args: String).returns(String) }
-        def run(*args)
-          IO.popen(
-            [
-              sorbet_path,
-              "--quiet",
-              *args,
-            ].join(" "),
-            err: "/dev/null"
-          ).read
+        sig { params(args: String, quiet: T::Boolean).returns(String) }
+        def run(*args, quiet: true)
+          cmd = [sorbet_path]
+          cmd << "--quiet" if quiet
+          cmd |= args
+
+          File.write("foo.rb", cmd.to_s)
+          IO.popen(cmd, err: quiet ? "/dev/null" : [:child, :out], &:read)
         end
 
         sig { returns(String) }
