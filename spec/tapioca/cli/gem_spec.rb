@@ -94,8 +94,7 @@ module Tapioca
           output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
                   create  #{outdir}/foo@0.0.1.rbi
           OUTPUT
 
@@ -122,8 +121,7 @@ module Tapioca
           output = tapioca("gem foo", use_default_outdir: true)
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           assert_path_exists("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
@@ -137,8 +135,7 @@ module Tapioca
           output = tapioca("gem foo --postrequire #{repo_path / "postrequire.rb"}")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -174,7 +171,7 @@ module Tapioca
           output = tapioca("gem")
 
           assert_includes(output, <<~OUTPUT)
-            Compiling tapioca, this may take a few seconds...   Done
+            Done tapioca
           OUTPUT
 
           tapioca_rbi_file = T.must(Dir.glob("#{outdir}/tapioca@*.rbi").first)
@@ -185,13 +182,11 @@ module Tapioca
           output = tapioca("gem foo bar")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'bar' gem:
-              Compiling bar, this may take a few seconds...   Done
+            Done bar
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -207,18 +202,15 @@ module Tapioca
           output = tapioca("gem --all")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'bar' gem:
-              Compiling bar, this may take a few seconds...   Done
+            Done bar
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'baz' gem:
-              Compiling baz, this may take a few seconds...   Done
+            Done baz
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -244,8 +236,7 @@ module Tapioca
           output = tapioca("gem ast")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'ast' gem:
-              Compiling ast, this may take a few seconds...   Done
+            Done ast
           OUTPUT
 
           assert_path_exists("#{outdir}/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
@@ -255,18 +246,15 @@ module Tapioca
           output = tapioca("gem --all --exclude foo bar")
 
           refute_includes(output, <<~OUTPUT)
-            Processing 'bar' gem:
-              Compiling bar, this may take a few seconds...   Done
+            Done bar
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'baz' gem:
-              Compiling baz, this may take a few seconds...   Done
+            Done baz
           OUTPUT
 
           refute_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           refute_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -281,8 +269,7 @@ module Tapioca
           output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'foo' gem:
-              Compiling foo, this may take a few seconds...   Done
+            Done foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -323,7 +310,7 @@ module Tapioca
 
           assert_includes(output, "      create  #{outdir}/qux@0.5.0.rbi\n")
           assert_includes(output, <<~OUTPUT)
-            Compiling qux, this may take a few seconds...   Done (empty output)
+            Done qux (empty output)
           OUTPUT
 
           assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))

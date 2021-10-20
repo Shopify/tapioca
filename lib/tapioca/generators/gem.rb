@@ -51,15 +51,13 @@ module Tapioca
       def generate
         require_gem_file
 
-        gems_to_generate(@gem_names)
-          .reject { |gem| @gem_excludes.include?(gem.name) }
-          .each do |gem|
-            say("Processing '#{gem.name}' gem:", :green)
-            shell.indent do
-              compile_gem_rbi(gem)
-              puts
-            end
+        gem_queue = gems_to_generate(@gem_names).reject { |gem| @gem_excludes.include?(gem.name) }
+        Executor.new(gem_queue).run_in_parallel do |gem|
+          shell.indent do
+            compile_gem_rbi(gem)
+            puts
           end
+        end
 
         say("All operations performed in working directory.", [:green, :bold])
         say("Please review changes and commit them.", [:green, :bold])
@@ -135,7 +133,6 @@ module Tapioca
       sig { params(gem: Gemfile::GemSpec).void }
       def compile_gem_rbi(gem)
         gem_name = set_color(gem.name, :yellow, :bold)
-        say("Compiling #{gem_name}, this may take a few seconds... ")
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
         rbi.set_file_header(
@@ -148,9 +145,9 @@ module Tapioca
 
         if rbi.empty?
           rbi.set_empty_body_content
-          say("Done (empty output)", :yellow)
+          say("Done #{gem_name} (empty output)", :yellow)
         else
-          say("Done", :green)
+          say("Done #{gem_name}", :green)
         end
 
         create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
