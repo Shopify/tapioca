@@ -216,7 +216,7 @@ module Tapioca
           else
             require_gem_file
 
-            gems.each do |gem_name|
+            Executor.new(gems).run_in_parallel do |gem_name|
               filename = expected_rbi(gem_name)
 
               if gem_rbi_exists?(gem_name)
