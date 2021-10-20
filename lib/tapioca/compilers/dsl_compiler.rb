@@ -51,6 +51,10 @@ module Tapioca
 
           blk.call(constant, rbi)
         end
+
+        Tapioca::ErrorHandler.formatted_messages.each do |msg|
+          report_error(msg)
+        end
       end
 
       private

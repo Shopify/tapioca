@@ -3,6 +3,7 @@
 
 # TODO: Remove me when logging logic has been abstracted.
 require "thor"
+require "tapioca/error_handler"
 
 module Tapioca
   module Generators

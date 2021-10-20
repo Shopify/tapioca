@@ -57,6 +57,11 @@ module Tapioca
           @all_modules ||= T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each
         end
 
+        sig { params(error: Tapioca::Error).void }
+        def add_error(error)
+          Tapioca::ErrorHandler.add(error)
+        end
+
         # Get the types of each parameter from a method signature
         sig do
           params(
