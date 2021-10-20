@@ -5,9 +5,12 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no SmartProperty classes") do
       assert_empty(gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("gathers only SmartProperty classes and modules") do
@@ -32,7 +35,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RUBY
 
       assert_equal(["Post", "User", "Viewable"], gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("ignores SmartProperty classes and modules without a name") do
@@ -47,11 +49,14 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RUBY
 
       assert_empty(gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates empty RBI file if there are no smart properties") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
@@ -64,7 +69,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for simple smart property class") do
@@ -88,7 +92,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for simple smart property module") do
@@ -112,7 +115,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Viewable))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for required smart property") do
@@ -136,7 +138,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("defaults to T.untyped for smart property that does not have an accepter") do
@@ -160,7 +161,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("defaults to T::Array for smart property that accepts Arrays") do
@@ -184,7 +184,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts booleans") do
@@ -208,7 +207,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts an array of values") do
@@ -232,7 +230,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("defaults to T.untyped if a converter is defined") do
@@ -256,7 +253,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("ignores required if it is a lambda") do
@@ -280,7 +276,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("ignores required if property is not typed") do
@@ -304,7 +299,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates a reader that has been renamed correctly") do
@@ -328,7 +322,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts boolean and has a default") do
@@ -352,7 +345,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts boolean and has lambda as default") do
@@ -376,7 +368,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts String and has a non-nil default") do
@@ -400,7 +391,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts String and has a nil default") do
@@ -424,7 +414,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts a lambda") do
@@ -448,7 +437,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for smart property that accepts another ObjectClass") do
@@ -481,7 +469,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
 
       expected = <<~RBI
         # typed: strong
@@ -508,7 +495,6 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("Post::TrackingInfoInput"))
-      assert_empty(generated_errors)
     end
   end
 end

@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses") do
       assert_empty(gathered_constants)
     end
@@ -19,11 +23,14 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
       RUBY
 
       assert_equal(["Current"], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates empty RBI file if there are no current attributes") do
       add_ruby_file("current.rb", <<~RUBY)
         class Current < ActiveSupport::CurrentAttributes
@@ -35,7 +42,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Current))
-      assert_empty(generated_errors)
     end
 
     it("generates method sigs for every current attribute") do
@@ -76,7 +82,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Current))
-      assert_empty(generated_errors)
     end
 
     it("only generates a class method definition for non current attribute methods") do
@@ -122,7 +127,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Current))
-      assert_empty(generated_errors)
     end
   end
 end

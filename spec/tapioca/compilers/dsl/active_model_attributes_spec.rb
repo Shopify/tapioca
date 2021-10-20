@@ -5,9 +5,12 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no classes using ActiveModel::Attributes") do
       assert_empty(gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("gathers only classes including ActiveModel::Attributes") do
@@ -20,7 +23,6 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
         end
       RUBY
       assert_equal(["ShopWithAttributes"], gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("does not gather Active Record models") do
@@ -32,11 +34,14 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates empty RBI file if there are no attributes in the class") do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
@@ -49,7 +54,6 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
-      assert_empty(generated_errors)
     end
 
     it("generates method sigs for every active model attribute") do
@@ -74,7 +78,6 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
-      assert_empty(generated_errors)
     end
 
     it("only generates method for Active Model attributes and no other") do
@@ -100,7 +103,6 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
-      assert_empty(generated_errors)
     end
 
     it("generates method sigs with param types when type set on attribute") do
@@ -153,7 +155,6 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
-      assert_empty(generated_errors)
     end
   end
 end

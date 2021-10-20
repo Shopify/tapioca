@@ -9,6 +9,10 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
   end
 
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers `Settings` if there are no special config constant set") do
       ::Config.load_and_set_settings("")
 
@@ -24,6 +28,10 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates a module definition for a simple config") do
       add_content_file("settings.yml", <<~YAML)
         github_key: 12345
@@ -59,7 +67,6 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SettingsConfigOptions))
-      assert_empty(generated_errors)
     end
 
     it("generates a module definition for custom config") do
@@ -98,7 +105,6 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:FooConfigOptions))
-      assert_empty(generated_errors)
     end
 
     it("generates a module definition for a nested config") do
@@ -140,7 +146,6 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SettingsConfigOptions))
-      assert_empty(generated_errors)
     end
   end
 end

@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("does not gather anonymous constants") do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
@@ -28,7 +32,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
 
     it("does not gather constants that don't extend ActiveSupport::Concern") do
@@ -49,7 +52,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
 
     it("does not gather constants when its mixins don't extend ActiveSupport::Concern") do
@@ -70,7 +72,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
 
     it("does not gather constants for directly mixed in modules") do
@@ -87,7 +88,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
 
     it("gathers constants for nested AS::Concern") do
@@ -109,7 +109,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
 
     it("gathers constants for many nested mixins") do
@@ -141,11 +140,14 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal(["TestCase::Bar", "TestCase::Baz", "TestCase::Qux"], gathered_constants_in_namespace(:TestCase))
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("does not generate RBI when constant does not define a ClassMethods module") do
       add_ruby_file("test_case.rb", <<~RUBY)
         module Foo
@@ -167,7 +169,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal(expected, rbi_for(:Bar))
-      assert_empty(generated_errors)
     end
 
     it("does not generate RBI for directly mixed in modules") do
@@ -189,7 +190,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal(expected, rbi_for(:Foo))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI for nested AS::Concern") do
@@ -227,7 +227,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
         class_method_ancestors_for(:Baz),
         arguments_to_micm_in_effective_order(rbi_for(:Bar))
       )
-      assert_empty(generated_errors)
     end
 
     it("generates RBI for many nested mixins") do
@@ -276,7 +275,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
         end
       RUBY
       assert_equal(expected_bar, rbi_for(:Bar))
-      assert_empty(generated_errors)
 
       expected_qux = <<~RUBY
         # typed: strong
@@ -293,7 +291,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
         class_method_ancestors_for(:Quux),
         arguments_to_micm_in_effective_order(rbi_for(:Qux))
       )
-      assert_empty(generated_errors)
     end
   end
 

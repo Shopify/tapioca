@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers only the ActiveSupport::TestCase base class") do
       add_ruby_file("post_test.rb", <<~RUBY)
         class PostTest < ActiveSupport::TestCase
@@ -15,7 +19,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RUBY
 
       assert_equal(["ActiveSupport::TestCase"], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
@@ -27,13 +30,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       define_fake_rails_app
     end
 
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("does nothing if there are no fixtures") do
       expected = <<~RBI
         # typed: strong
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
-      assert_empty(generated_errors)
     end
 
     it("generates methods for fixtures") do
@@ -55,7 +61,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
-      assert_empty(generated_errors)
     end
 
     it("generates methods for fixtures from multiple sources") do
@@ -88,7 +93,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
-      assert_empty(generated_errors)
     end
   end
 

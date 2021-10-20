@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no Google::Protobuf classes") do
       add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
@@ -12,7 +16,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("gathers only classes with Protobuf Module") do
@@ -33,11 +36,14 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         ["Cart", "Google::Protobuf::Map", "Google::Protobuf::RepeatedField"],
         gathered_constants
       )
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates methods in RBI files for classes with Protobuf with integer field type") do
       add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
@@ -74,7 +80,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for classes with Protobuf with string field type") do
@@ -106,7 +111,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for classes with Protobuf with message field type") do
@@ -141,7 +145,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for classes with Protobuf with enum field") do
@@ -182,7 +185,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for classes with Protobuf with enum field with defined type") do
@@ -223,7 +225,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for repeated fields in Protobufs") do
@@ -264,7 +265,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for map fields in Protobufs") do
@@ -305,7 +305,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Cart))
-      assert_empty(generated_errors)
     end
 
     it("generates methods in RBI files for classes with Protobuf with all types") do
@@ -378,8 +377,6 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         sig { params(value: String).returns(String) }
         def string_value=(value); end
       RBI
-
-      assert_empty(generated_errors)
     end
   end
 end

@@ -9,9 +9,12 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
   end
 
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no FrozenRecord classes") do
       assert_empty(gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("gathers only FrozenRecord classes") do
@@ -24,11 +27,14 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       RUBY
 
       assert_equal(["Student"], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("generates empty RBI file if there are no frozen records") do
       add_ruby_file("student.rb", <<~RUBY)
         class Student < FrozenRecord::Base
@@ -44,7 +50,6 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Student))
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI file for frozen records") do
@@ -92,7 +97,6 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Student))
-      assert_empty(generated_errors)
     end
   end
 end

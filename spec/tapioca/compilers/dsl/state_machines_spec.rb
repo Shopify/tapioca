@@ -5,9 +5,12 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no StateMachines classes") do
       assert_empty(gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("gathers only StateMachines classes") do
@@ -25,11 +28,14 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RUBY
 
       assert_equal(["User", "Vehicle"], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it(" generates an RBI that includes state accessor methods") do
       add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
@@ -125,7 +131,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Vehicle))
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI that includes name helpers methods") do
@@ -158,7 +163,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Vehicle), expected)
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI with path, event and state helper methods") do
@@ -209,7 +213,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Vehicle), expected)
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI with path helper methods only") do
@@ -229,7 +232,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Vehicle), expected)
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI with scope methods when state machine defines scopes") do
@@ -272,7 +274,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Vehicle), expected)
-      assert_empty(generated_errors)
     end
 
     it("generates an RBI with action methods when state machine defines an action") do
@@ -309,7 +310,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Vehicle), expected)
-      assert_empty(generated_errors)
     end
   end
 end

@@ -6,9 +6,12 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
     describe("#initialize") do
+      after(:each) do
+        T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      end
+
       it("gathers no constants if there are no ActiveRecord subclasses") do
         assert_empty(gathered_constants)
-        assert_empty(generated_errors)
       end
 
       it("gathers only ActiveRecord subclasses") do
@@ -21,7 +24,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
 
         assert_equal(["Post"], gathered_constants)
-        assert_empty(generated_errors)
       end
 
       it("rejects abstract ActiveRecord subclasses") do
@@ -35,7 +37,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         RUBY
 
         assert_equal(["Post"], gathered_constants)
-        assert_empty(generated_errors)
       end
     end
 
@@ -50,6 +51,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
 
       describe("by default") do
+        after(:each) do
+          T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+        end
+
         it("generates default columns with strong types") do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
@@ -133,7 +138,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_equal(expected, rbi_for(:Post))
-          assert_empty(generated_errors)
         end
 
         it("generates attributes with strong types") do
@@ -165,7 +169,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("respects nullability of attributes") do
@@ -199,7 +202,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def body?; end
           RBI
           assert_includes(output, expected)
-          assert_empty(generated_errors)
 
           expected = indented(<<~RBI, 4)
             sig { returns(::String) }
@@ -212,7 +214,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def title?; end
           RBI
           assert_includes(output, expected)
-          assert_empty(generated_errors)
         end
 
         it("generates a proper type for every ActiveRecord column type") do
@@ -291,8 +292,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def money_column=(value); end
           RBI
           assert_includes(output, expected)
-
-          assert_empty(generated_errors)
         end
 
         it("falls back to generating BigDecimal for money column if MoneyColumn is not defined") do
@@ -325,7 +324,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def money_column=(value); end
           RBI
           assert_includes(output, expected)
-          assert_empty(generated_errors)
         end
 
         it("generates proper types for time_zone_aware_attributes") do
@@ -366,8 +364,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def time_column=(value); end
           RBI
           assert_includes(output, expected)
-
-          assert_empty(generated_errors)
         end
 
         it("generates methods for alias_attributes") do
@@ -458,8 +454,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def will_save_change_to_author?; end
           RBI
           assert_includes(output, expected)
-
-          assert_empty(generated_errors)
         end
 
         it("ignores conflicting alias_attributes") do
@@ -550,8 +544,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
             def will_save_change_to_body?; end
           RBI
           assert_includes(output, expected)
-
-          assert_empty(generated_errors)
         end
 
         it("discovers custom type from signature on deserialize method") do
@@ -599,7 +591,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("discovers custom type from signature on cast method") do
@@ -649,7 +640,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("discovers custom type from signature on serialize method") do
@@ -698,7 +688,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("discovers custom type even if it is generic") do
@@ -744,7 +733,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("generates a weak type if custom type cannot be discovered from signatures") do
@@ -791,11 +779,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
       end
 
       describe("when StrongTypeGeneration is defined") do
+        after(:each) do
+          T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+        end
+
         before do
           add_ruby_file("strong_type_generation.rb", <<~RUBY)
             module StrongTypeGeneration
@@ -887,7 +878,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_equal(expected, rbi_for(:Post))
-          assert_empty(generated_errors)
         end
 
         it("generates default columns with weak types if model does not extend StrongTypeGeneration") do
@@ -974,7 +964,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_equal(expected, rbi_for(:Post))
-          assert_empty(generated_errors)
         end
 
         it("generates attributes with strong types if model extends StrongTypeGeneration") do
@@ -1007,7 +996,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
 
         it("generates attributes with weak types if model does not extend StrongTypeGeneration") do
@@ -1040,7 +1028,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RBI
 
           assert_includes(rbi_for(:Post), expected)
-          assert_empty(generated_errors)
         end
       end
     end

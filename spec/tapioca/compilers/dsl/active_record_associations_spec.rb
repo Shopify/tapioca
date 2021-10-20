@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers no constants if there are no ActiveRecord subclasses") do
       assert_empty(gathered_constants)
     end
@@ -19,7 +23,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RUBY
 
       assert_equal(["Post"], gathered_constants)
-      assert_empty(generated_errors)
     end
 
     it("rejects abstract ActiveRecord subclasses") do
@@ -36,11 +39,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RUBY
 
       assert_equal(["Comment", "Post"], gathered_constants)
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     before(:each) do
       require "active_record"
 
@@ -61,7 +67,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for belongs_to single association") do
@@ -148,7 +153,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for polymorphic belongs_to single association") do
@@ -183,7 +187,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for has_one single association") do
@@ -241,7 +244,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for has_many collection association") do
@@ -284,7 +286,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for has_many :through collection association") do
@@ -358,7 +359,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for has_and_belongs_to_many collection association") do
@@ -402,7 +402,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
   end
 
@@ -427,6 +426,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
         Rails.application.initialize!
       RUBY
+    end
+
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
     end
 
     it("generates RBI file for has_one_attached ActiveStorage association") do
@@ -483,7 +486,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
 
     it("generates RBI file for has_many_attached ActiveStorage association") do
@@ -528,7 +530,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
-      assert_empty(generated_errors)
     end
   end
 end

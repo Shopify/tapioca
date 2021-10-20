@@ -10,6 +10,10 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   end
 
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("gathers modules that respond to class_attribute") do
       add_ruby_file("file.rb", <<~RUBY)
         module ManualIncluded
@@ -27,7 +31,6 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
       assert_includes(gathered_constants, "ManualIncluded")
       assert_includes(gathered_constants, "Concern")
       refute_includes(gathered_constants, "SomeOtherModule")
-      assert_empty(generated_errors)
     end
 
     it("gathers modules with private included hooks") do
@@ -39,11 +42,14 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
       RUBY
 
       assert_includes(gathered_constants, "PrivateIncluded")
-      assert_empty(generated_errors)
     end
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+    end
+
     it("does nothing if the module doesn't use class_attribute") do
       add_ruby_file("empty.rb", <<~RUBY)
         module Empty
@@ -57,7 +63,6 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Empty))
-      assert_empty(generated_errors)
     end
 
     it("generates class attribute RBIs when using manual included hooks") do
@@ -92,7 +97,6 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Manual))
-      assert_empty(generated_errors)
     end
 
     it("generates class attribute RBIs when using concerns") do
@@ -129,7 +133,6 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Taggeable))
-      assert_empty(generated_errors)
     end
   end
 end
