@@ -386,21 +386,25 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          add_mixins(tree, prepends.reverse, :prepend)
-          add_mixins(tree, includes.reverse, :include)
-          add_mixins(tree, extends.reverse, :extend)
+          mixin_locations = MixinTracker.mixin_locations_for(constant)
+
+          add_mixins(tree, prepends.reverse, :prepend, mixin_locations)
+          add_mixins(tree, includes.reverse, :include, mixin_locations)
+          add_mixins(tree, extends.reverse, :extend, mixin_locations)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: Symbol
+            mixin_type: Symbol,
+            mixin_locations: T::Hash[T.untyped, T.untyped]
           ).void
         end
-        def add_mixins(tree, mods, mixin_type)
+        def add_mixins(tree, mods, mixin_type, mixin_locations)
           mods
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+            .select { |mod| mixed_in_in_gem?(mixin_locations[mixin_type][mod]) }
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
 
@@ -649,6 +653,12 @@ module Tapioca
           files.any? do |file|
             gem.contains_path?(file)
           end
+        end
+
+        sig { params(mixin_locations: T.nilable(T::Array[String])).returns(T::Boolean) }
+        def mixed_in_in_gem?(mixin_locations)
+          return true unless mixin_locations
+          mixin_locations.any? { |location| gem.contains_path?(location) }
         end
 
         sig { params(constant: Module).returns(T::Array[String]) }
