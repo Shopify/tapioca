@@ -380,43 +380,40 @@ module Tapioca
           interesting_ancestors = interesting_ancestors_of(constant)
           interesting_singleton_class_ancestors = interesting_ancestors_of(singleton_class)
 
-          prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
-          include = interesting_ancestors.drop(prepend.size + 1)
-          extend  = interesting_singleton_class_ancestors.reject do |mod|
+          prepends = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
+          includes = interesting_ancestors.drop(prepends.size + 1)
+          extends  = interesting_singleton_class_ancestors.reject do |mod|
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          prepend
-            .reverse
+          add_mixins(tree, prepends.reverse, :prepend)
+          add_mixins(tree, includes.reverse, :include)
+          add_mixins(tree, extends.reverse, :extend)
+        end
+
+        sig do
+          params(
+            tree: RBI::Tree,
+            mods: T::Array[Module],
+            mixin_type: Symbol
+          ).void
+        end
+        def add_mixins(tree, mods, mixin_type)
+          mods
             .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
 
+              qname = qualified_name_of(mod)
+              case mixin_type
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              qname = qualified_name_of(mod)
-              tree << RBI::Include.new(T.must(qname))
-            end
-
-          include
-            .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .map do |mod|
-              add_to_symbol_queue(name_of(mod))
-
-              qname = qualified_name_of(mod)
-              tree << RBI::Include.new(T.must(qname))
-            end
-
-          extend
-            .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .map do |mod|
-              add_to_symbol_queue(name_of(mod))
-
-              qname = qualified_name_of(mod)
-              tree << RBI::Extend.new(T.must(qname))
+              when :include, :prepend
+                tree << RBI::Include.new(T.must(qname))
+              when :extend
+                tree << RBI::Extend.new(T.must(qname))
+              end
             end
         end
 
