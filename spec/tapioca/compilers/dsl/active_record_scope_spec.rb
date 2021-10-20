@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no ActiveRecord classes") do
@@ -32,7 +32,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates an empty RBI file for ActiveRecord classes with no scope field") do
@@ -101,7 +101,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
   describe("#decorate_active_storage") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     before(:each) do

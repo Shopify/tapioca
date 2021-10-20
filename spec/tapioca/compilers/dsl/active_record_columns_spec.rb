@@ -7,7 +7,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
     describe("#initialize") do
       after(:each) do
-        T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+        T.unsafe(self).assert_no_generated_errors
       end
 
       it("gathers no constants if there are no ActiveRecord subclasses") do
@@ -52,7 +52,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
       describe("by default") do
         after(:each) do
-          T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+          T.unsafe(self).assert_no_generated_errors
         end
 
         it("generates default columns with strong types") do
@@ -784,7 +784,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
 
       describe("when StrongTypeGeneration is defined") do
         after(:each) do
-          T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+          T.unsafe(self).assert_no_generated_errors
         end
 
         before do

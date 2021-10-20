@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no ActiveRecord subclasses") do
@@ -44,7 +44,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     before(:each) do
@@ -429,7 +429,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
 
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates RBI file for has_one_attached ActiveStorage association") do

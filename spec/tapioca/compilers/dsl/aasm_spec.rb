@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no classes that include AASM") do
@@ -27,7 +27,7 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it "generates empty RBI when AASM is included but no AASM call has been made" do

@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no classes using ActiveModel::Attributes") do
@@ -39,7 +39,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates empty RBI file if there are no attributes in the class") do

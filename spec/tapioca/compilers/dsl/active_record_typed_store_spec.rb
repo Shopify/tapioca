@@ -12,7 +12,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no ActiveRecordTypedStore classes") do
@@ -43,7 +43,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates no definitions if there are no accessors to define") do

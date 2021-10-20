@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no ActiveResource classes") do
@@ -31,7 +31,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates RBI file for ActiveResource classes with an integer schema field") do

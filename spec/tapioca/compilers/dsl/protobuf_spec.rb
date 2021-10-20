@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
   describe("#gather_constants") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers no constants if there are no Google::Protobuf classes") do
@@ -41,7 +41,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates methods in RBI files for classes with Protobuf with integer field type") do

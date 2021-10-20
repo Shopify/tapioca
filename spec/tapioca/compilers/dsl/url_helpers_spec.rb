@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("does not gather constants when url_helpers is not included") do
@@ -155,7 +155,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates RBI when there are no helper methods") do

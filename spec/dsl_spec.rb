@@ -104,4 +104,9 @@ class DslSpec < Minitest::Spec
   def generated_errors
     T.unsafe(self).subject.errors
   end
+
+  sig { void }
+  def assert_no_generated_errors
+    T.unsafe(self).assert_empty(generated_errors)
+  end
 end

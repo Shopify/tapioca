@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
   describe("#gather_constants") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("does not gather anonymous constants") do
@@ -145,7 +145,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("does not generate RBI when constant does not define a ClassMethods module") do

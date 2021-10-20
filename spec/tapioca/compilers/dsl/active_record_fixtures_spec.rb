@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
   describe("#initialize") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers only the ActiveSupport::TestCase base class") do
@@ -31,7 +31,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
     end
 
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("does nothing if there are no fixtures") do

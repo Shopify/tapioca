@@ -10,7 +10,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
 
   describe("#gather_constants") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("gathers `Settings` if there are no special config constant set") do
@@ -29,7 +29,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
 
   describe("#decorate") do
     after(:each) do
-      T.unsafe(self).assert_empty(T.unsafe(self).generated_errors)
+      T.unsafe(self).assert_no_generated_errors
     end
 
     it("generates a module definition for a simple config") do
