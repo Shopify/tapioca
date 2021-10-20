@@ -59,6 +59,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SettingsConfigOptions))
+      assert_empty(generated_errors)
     end
 
     it("generates a module definition for custom config") do
@@ -97,6 +98,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:FooConfigOptions))
+      assert_empty(generated_errors)
     end
 
     it("generates a module definition for a nested config") do
@@ -138,6 +140,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SettingsConfigOptions))
+      assert_empty(generated_errors)
     end
   end
 end

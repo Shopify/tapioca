@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActionMailer subclasses") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only ActionMailer subclasses") do
@@ -19,6 +20,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RUBY
 
       assert_equal(["NotifierMailer"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers subclasses of ActionMailer subclasses") do
@@ -31,6 +33,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RUBY
 
       assert_equal(["NotifierMailer", "SecondaryMailer"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("ignores abstract subclasses") do
@@ -44,6 +47,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RUBY
 
       assert_equal(["NotifierMailer"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -61,6 +65,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass with methods") do
@@ -82,6 +87,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass with method signatures") do
@@ -105,6 +111,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for mailer with delegated methods") do
@@ -136,6 +143,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
+      assert_empty(generated_errors)
     end
 
     it("does not generate RBI for methods defined in abstract classes") do
@@ -165,6 +173,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierMailer))
+      assert_empty(generated_errors)
     end
   end
 end

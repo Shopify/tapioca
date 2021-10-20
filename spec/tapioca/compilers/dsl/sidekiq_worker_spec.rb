@@ -23,6 +23,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RUBY
 
       assert_equal(["NotifierWorker", "SecondaryWorker"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -39,6 +40,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierWorker))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for class with perform method") do
@@ -67,6 +69,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierWorker))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for class with perform method with signature") do
@@ -97,6 +100,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifierWorker))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass of a sidekiq worker without perform method") do
@@ -128,6 +132,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SecondaryWorker))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass of a sidekiq worker with overridden methods") do
@@ -161,6 +166,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:SecondaryWorker))
+      assert_empty(generated_errors)
     end
 
     it("generates no method definitions for methods that are already explicitly overridden") do
@@ -191,6 +197,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:JobThing))
+      assert_empty(generated_errors)
     end
   end
 end

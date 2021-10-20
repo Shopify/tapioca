@@ -19,6 +19,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       RUBY
 
       assert_equal(["NotifyJob"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers subclasses of ActiveJob subclasses") do
@@ -31,6 +32,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       RUBY
 
       assert_equal(["NotifyJob", "SecondaryNotifyJob"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -46,6 +48,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifyJob))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass with methods") do
@@ -70,6 +73,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifyJob))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file for subclass with method signatures") do
@@ -96,6 +100,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:NotifyJob))
+      assert_empty(generated_errors)
     end
   end
 end

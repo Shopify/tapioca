@@ -13,6 +13,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecordTypedStore classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gather only TypedStore classes") do
@@ -34,6 +35,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RUBY
 
       assert_equal(gathered_constants, ["CustomPost", "Post"])
+      assert_empty(generated_errors)
     end
   end
 
@@ -57,6 +59,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_equal(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for TypedStore classes with string type") do
@@ -133,6 +136,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_equal(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with non-nilable types for accessors marked as not null") do
@@ -178,6 +182,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_equal(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with Date type for attributes with date type") do
@@ -254,6 +259,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_equal(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with DteTime type for attributes with datetime type") do
@@ -277,6 +283,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with Time type for attributes with time type") do
@@ -300,6 +307,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with Decimal type for attributes with decimal type") do
@@ -323,6 +331,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with T.untyped type for attributes with any type") do
@@ -346,6 +355,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with Integer type for attributes with integer type") do
@@ -369,6 +379,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
 
     it("generates methods with Float type for attributes with float type") do
@@ -392,6 +403,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       RBI
 
       assert_includes(rbi_for(:Post), expected)
+      assert_empty(generated_errors)
     end
   end
 end

@@ -18,6 +18,7 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
       RUBY
 
       assert_equal(["StateMachine"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -34,6 +35,7 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:StateMachine))
+      assert_empty(generated_errors)
     end
 
     it("generates correct RBI file") do
@@ -128,6 +130,7 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:StateMachine))
+      assert_empty(generated_errors)
     end
   end
 end

@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
@@ -23,6 +24,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RUBY
 
       assert_equal(["Conversation"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -60,6 +62,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with an enum attribute with string values") do
@@ -96,6 +99,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with an enum attribute with mix value types") do
@@ -137,6 +141,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with multiple enum attributes") do
@@ -188,6 +193,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with multiple enum attributes with mix value types") do
@@ -257,6 +263,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with enum attribute with suffix specified") do
@@ -292,6 +299,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for classes with enum attribute with prefix specified") do
@@ -327,6 +335,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+      assert_empty(generated_errors)
     end
   end
 end

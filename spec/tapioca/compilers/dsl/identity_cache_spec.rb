@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no IdentityCache classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gather only IdentityCache classes") do
@@ -26,6 +27,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RUBY
 
       assert_equal(["CustomPost", "Post"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers IdentityCache::WithoutPrimaryIndex classes") do
@@ -36,6 +38,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RUBY
 
       assert_equal(["Post"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -100,6 +103,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates multiple methods for singled cache_index with unique field") do
@@ -156,6 +160,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for combined cache_indexes") do
@@ -206,6 +211,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for classes with cache_has_manys index") do
@@ -248,6 +254,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for classes with cache_has_one index") do
@@ -290,6 +297,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
@@ -329,6 +337,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("takes cache aliases into account when generating methods") do
@@ -363,6 +372,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
@@ -402,6 +412,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
   end
 end

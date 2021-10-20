@@ -15,6 +15,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RUBY
 
       assert_equal(["ActiveSupport::TestCase"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -32,6 +33,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for fixtures") do
@@ -53,6 +55,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for fixtures from multiple sources") do
@@ -85,6 +88,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      assert_empty(generated_errors)
     end
   end
 

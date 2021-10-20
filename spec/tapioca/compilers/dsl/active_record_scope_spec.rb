@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only ActiveRecord constants with no abstract classes") do
@@ -23,6 +24,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RUBY
 
       assert_equal(["Post"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -38,6 +40,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for ActiveRecord classes with a scope field") do
@@ -61,6 +64,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for ActiveRecord classes with multiple scope fields") do
@@ -88,6 +92,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
   end
 
@@ -122,6 +127,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for ActiveRecord classes with has_many_attached scope fields") do
@@ -145,6 +151,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
   end
 end

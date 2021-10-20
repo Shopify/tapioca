@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no  classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only ActionController subclasses") do
@@ -19,6 +20,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal(["UserController"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("does not gather included modules as their own processable constant") do
@@ -32,6 +34,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal(["UserController"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers subclasses of ActionController subclasses") do
@@ -44,6 +47,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal(["HandController", "UserController"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("ignores abstract subclasses of ActionController") do
@@ -57,6 +61,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal(["UserController"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("ignores anonymous subclasses of ActionController") do
@@ -65,6 +70,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -96,6 +102,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:UserController))
+      assert_empty(generated_errors)
     end
 
     it("generates helper module and helper proxy class if helper_method target does not exist") do
@@ -147,6 +154,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:BaseController))
+      assert_empty(generated_errors)
 
       expected = <<~RBI
         # typed: strong
@@ -172,6 +180,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:UserController))
+      assert_empty(generated_errors)
     end
 
     it("generates helper module and helper proxy class when defining helper using helper_method") do
@@ -217,6 +226,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:UserController))
+      assert_empty(generated_errors)
     end
 
     it("generates helper module and helper proxy class when defining helper using block") do
@@ -262,6 +272,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:UserController))
+      assert_empty(generated_errors)
     end
 
     it("generates helper module and helper proxy class for defining external helper") do
@@ -302,6 +313,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:UserController))
+      assert_empty(generated_errors)
     end
   end
 end

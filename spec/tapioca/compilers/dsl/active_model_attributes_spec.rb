@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no classes using ActiveModel::Attributes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only classes including ActiveModel::Attributes") do
@@ -19,6 +20,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
         end
       RUBY
       assert_equal(["ShopWithAttributes"], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("does not gather Active Record models") do
@@ -30,6 +32,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RUBY
 
       assert_equal([], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -46,6 +49,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
+      assert_empty(generated_errors)
     end
 
     it("generates method sigs for every active model attribute") do
@@ -70,6 +74,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
+      assert_empty(generated_errors)
     end
 
     it("only generates method for Active Model attributes and no other") do
@@ -95,6 +100,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
+      assert_empty(generated_errors)
     end
 
     it("generates method sigs with param types when type set on attribute") do
@@ -147,6 +153,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Shop))
+      assert_empty(generated_errors)
     end
   end
 end

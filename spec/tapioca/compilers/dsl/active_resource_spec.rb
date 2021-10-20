@@ -7,6 +7,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   describe("#initialize") do
     it("gathers no constants if there are no ActiveResource classes") do
       assert_empty(gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers only ActiveResource constants ") do
@@ -22,6 +23,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       RUBY
 
       assert_equal(["Post", "Product"], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -51,6 +53,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for ActiveResource classes with multiple integer schema fields") do
@@ -96,6 +99,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI file for ActiveResource classes with schema with different types") do
@@ -133,6 +137,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
 
     it("generates methods for ActiveResource classes with an unsupported schema type") do
@@ -160,6 +165,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Post))
+      assert_empty(generated_errors)
     end
     it("generates methods for ActiveResource classes including all types in schema field") do
       add_ruby_file("post.rb", <<~RUBY)
@@ -230,6 +236,8 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
         sig { params(value: String).returns(String) }
         def message=(value); end
       RBI
+
+      assert_empty(generated_errors)
     end
   end
 end

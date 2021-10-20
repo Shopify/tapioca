@@ -20,6 +20,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedPathHelpersModule",
         "GeneratedUrlHelpersModule",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers constants that include url_helpers") do
@@ -39,6 +40,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "MyClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers constants that extend url_helpers") do
@@ -58,6 +60,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "MyClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers constants that have a singleton class that includes url_helpers") do
@@ -79,6 +82,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "MyClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("does not gather constants when its superclass includes url_helpers") do
@@ -101,6 +105,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "SuperClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("gathers constants when its superclass extends url_helpers") do
@@ -123,6 +128,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "SuperClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
 
     it("does not gather constants when the constant and its superclass includes url_helpers") do
@@ -146,6 +152,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "GeneratedUrlHelpersModule",
         "SuperClass",
       ], gathered_constants)
+      assert_empty(generated_errors)
     end
   end
 
@@ -166,6 +173,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for GeneratedPathHelpersModule with helper methods") do
@@ -196,6 +204,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:GeneratedPathHelpersModule))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for GeneratedUrlHelpersModule with helper methods") do
@@ -226,6 +235,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for ActionDispatch::IntegrationTest") do
@@ -244,6 +254,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActionDispatch::IntegrationTest"))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for ActionView::Helpers") do
@@ -262,6 +273,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for("ActionView::Helpers"))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for constant that includes url_helpers") do
@@ -286,6 +298,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:MyClass))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for constant that extends url_helpers") do
@@ -310,6 +323,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:MyClass))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for constant that includes and extends url_helpers") do
@@ -337,6 +351,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:MyClass))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI for constant that has a singleton class which includes url_helpers") do
@@ -363,6 +378,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:MyClass))
+      assert_empty(generated_errors)
     end
 
     it("generates RBI when constant itself and its singleton class includes url_helpers") do
@@ -392,6 +408,7 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:MyClass))
+      assert_empty(generated_errors)
     end
   end
 end
