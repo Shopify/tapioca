@@ -154,9 +154,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RBI
 
       compiled = compile
-        .gsub(/^\s+include ::Minitest::Expectations\s/, "")
-        .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
-        .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
       assert_includes(compiled, basic_object_output)
       assert_includes(compiled, object_output)
