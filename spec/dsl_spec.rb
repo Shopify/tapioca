@@ -20,6 +20,12 @@ class DslSpec < Minitest::Spec
     require(T.unsafe(self).target_class_file)
   end
 
+  sig { void }
+  def teardown
+    super
+    T.unsafe(self).subject.errors.clear
+  end
+
   subject do
     # Get the class under test and initialize a new instance of it
     # as the "subject"
@@ -92,5 +98,10 @@ class DslSpec < Minitest::Spec
     file.root.group_nodes!
     file.root.sort_nodes!
     file.string
+  end
+
+  sig { returns(T::Array[String]) }
+  def generated_errors
+    T.unsafe(self).subject.errors
   end
 end

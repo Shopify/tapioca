@@ -19,9 +19,13 @@ module Tapioca
         sig { returns(T::Set[Module]) }
         attr_reader :processable_constants
 
+        sig { returns(T::Array[String]) }
+        attr_reader :errors
+
         sig { void }
         def initialize
           @processable_constants = T.let(Set.new(gather_constants), T::Set[Module])
+          @errors = T.let([], T::Array[String])
         end
 
         sig { params(constant: Module).returns(T::Boolean) }
@@ -42,6 +46,11 @@ module Tapioca
 
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
+
+        sig { params(message: String).void }
+        def add_message(message)
+          @errors << message
+        end
 
         private
 

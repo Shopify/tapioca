@@ -51,6 +51,10 @@ module Tapioca
 
           blk.call(constant, rbi)
         end
+
+        generators.flat_map(&:errors).each do |msg|
+          report_error(msg)
+        end
       end
 
       private
