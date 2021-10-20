@@ -243,42 +243,69 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def bar
             "bar"
           end
+
+          module Bar; end
         end
       RUBY
 
       add_ruby_file("ext.rb", <<~RUBY)
+
         class String
+          include Foo::Bar
+
           def to_foo(base = "def")
             "abc" + base
           end
         end
 
         class Hash
+          extend Foo::Bar
+
           def to_bar
             {}
           end
         end
+
+        class Array
+          prepend Foo::Bar
+
+          def foo_int; end
+        end
+
+        class Module
+          def bar; end
+        end
       RUBY
 
       output = template(<<~RBI)
+        class Array
+          include ::Foo::Bar
+          include ::Enumerable
+
+          def foo_int; end
+        end
+
         class Foo
           def bar; end
           def to_s; end
         end
 
+        module Foo::Bar; end
+
         class Hash
           include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Hash
+          extend ::Foo::Bar
 
           def to_bar; end
         end
 
+        class Module
+          def bar; end
+        end
+
         class String
           include ::Comparable
-          include ::Colorize::InstanceMethods
-          include ::JSON::Ext::Generator::GeneratorMethods::String
-          extend ::Colorize::ClassMethods
-          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
+          include ::Foo::Bar
 
           def to_foo(base = T.unsafe(nil)); end
         end
