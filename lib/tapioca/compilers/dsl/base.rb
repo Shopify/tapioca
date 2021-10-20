@@ -47,9 +47,10 @@ module Tapioca
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
 
-        sig { params(message: String).void }
-        def add_message(message)
-          @errors << message
+        # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
+        sig { params(error: String).void }
+        def add_error(error)
+          @errors << error
         end
 
         private
