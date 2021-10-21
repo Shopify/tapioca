@@ -81,29 +81,31 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_by_blog_id(blog_id, includes: nil); end
+          class << self
+            sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_by_blog_id(blog_id, includes: nil); end
 
-          sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_by_title(title, includes: nil); end
+            sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_by_title(title, includes: nil); end
 
-          sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_blog_id(blog_id); end
+            sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_blog_id(blog_id); end
 
-          sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_title(title); end
+            sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_title(title); end
 
-          sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_multi_by_blog_id(index_values, includes: nil); end
+            sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_multi_by_blog_id(index_values, includes: nil); end
 
-          sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_multi_by_title(index_values, includes: nil); end
+            sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_multi_by_title(index_values, includes: nil); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
-          def self.fetch_multi_id_by_blog_id(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+            def fetch_multi_id_by_blog_id(keys); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
-          def self.fetch_multi_id_by_title(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+            def fetch_multi_id_by_title(keys); end
+          end
         end
       RBI
 
@@ -134,32 +136,34 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_by_blog_id(blog_id, includes: nil); end
+          class << self
+            sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_by_blog_id(blog_id, includes: nil); end
 
-          sig { params(title: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
-          def self.fetch_by_title(title, includes: nil); end
+            sig { params(title: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
+            def fetch_by_title(title, includes: nil); end
 
-          sig { params(title: T.untyped, includes: T.untyped).returns(::Post) }
-          def self.fetch_by_title!(title, includes: nil); end
+            sig { params(title: T.untyped, includes: T.untyped).returns(::Post) }
+            def fetch_by_title!(title, includes: nil); end
 
-          sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_blog_id(blog_id); end
+            sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_blog_id(blog_id); end
 
-          sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_title(title); end
+            sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_title(title); end
 
-          sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_multi_by_blog_id(index_values, includes: nil); end
+            sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_multi_by_blog_id(index_values, includes: nil); end
 
-          sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_multi_by_title(index_values, includes: nil); end
+            sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_multi_by_title(index_values, includes: nil); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
-          def self.fetch_multi_id_by_blog_id(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+            def fetch_multi_id_by_blog_id(keys); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
-          def self.fetch_multi_id_by_title(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+            def fetch_multi_id_by_title(keys); end
+          end
         end
       RBI
 
@@ -190,26 +194,28 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_by_title(title, includes: nil); end
+          class << self
+            sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_by_title(title, includes: nil); end
 
-          sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
-          def self.fetch_by_title_and_review_date(title, review_date, includes: nil); end
+            sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
+            def fetch_by_title_and_review_date(title, review_date, includes: nil); end
 
-          sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(::Post) }
-          def self.fetch_by_title_and_review_date!(title, review_date, includes: nil); end
+            sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(::Post) }
+            def fetch_by_title_and_review_date!(title, review_date, includes: nil); end
 
-          sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_title(title); end
+            sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_title(title); end
 
-          sig { params(title: T.untyped, review_date: T.untyped).returns(T.nilable(::Integer)) }
-          def self.fetch_id_by_title_and_review_date(title, review_date); end
+            sig { params(title: T.untyped, review_date: T.untyped).returns(T.nilable(::Integer)) }
+            def fetch_id_by_title_and_review_date(title, review_date); end
 
-          sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
-          def self.fetch_multi_by_title(index_values, includes: nil); end
+            sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+            def fetch_multi_by_title(index_values, includes: nil); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
-          def self.fetch_multi_id_by_title(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+            def fetch_multi_id_by_title(keys); end
+          end
         end
       RBI
 
@@ -362,11 +368,13 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { params(id: T.untyped).returns(T.nilable(::String)) }
-          def self.fetch_author_by_id(id); end
+          class << self
+            sig { params(id: T.untyped).returns(T.nilable(::String)) }
+            def fetch_author_by_id(id); end
 
-          sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
-          def self.fetch_multi_author_by_id(keys); end
+            sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+            def fetch_multi_author_by_id(keys); end
+          end
         end
       RBI
 
