@@ -8,34 +8,25 @@ module Tapioca
 
     @mixin_map = {}.compare_by_identity
 
-    def prepend(*mods)
-      MixinTracker.register(self, mods, :prepend, caller_locations)
+    def prepend_features(constant)
+      MixinTracker.register(constant, self, :prepend, caller_locations)
       super
-    rescue => ex
-      self
     end
 
-    def include(*mods)
-      MixinTracker.register(self, mods, :include, caller_locations)
+    def append_features(constant)
+      MixinTracker.register(constant, self, :include, caller_locations)
       super
-    rescue => ex
-      self
     end
 
-    def extend(*mods)
-      MixinTracker.register(self, mods, :extend, caller_locations)
+    def extend_object(obj)
+      MixinTracker.register(obj, self, :extend, caller_locations) if Module === obj
       super
-    rescue => ex
-      self
     end
 
-    def self.register(constant, mods, mixin_type, locations)
-      locs = mixin_locations_for(constant)
+    def self.register(constant, mod, mixin_type, locations)
       locations.map!(&:absolute_path).uniq!
-
-      mods.each do |mod|
-        locs[mixin_type][mod] = locations
-      end
+      locs = mixin_locations_for(constant)
+      locs[mixin_type][mod] = locations
     end
 
     def self.mixin_locations_for(constant)
@@ -47,7 +38,7 @@ module Tapioca
     end
 
     Module.prepend(self)
-    register(Module, [self], :prepend, caller_locations)
+    register(Module, self, :prepend, caller_locations)
   end
 
   private_constant :MixinTracker
