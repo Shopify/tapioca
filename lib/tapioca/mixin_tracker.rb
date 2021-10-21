@@ -31,7 +31,7 @@ module Tapioca
 
     def self.register(constant, mods, mixin_type, locations)
       locs = mixin_locations_for(constant)
-      locations.map!(&:absolute_path)
+      locations.map!(&:absolute_path).uniq!
 
       mods.each do |mod|
         locs[mixin_type][mod] = locations
