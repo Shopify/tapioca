@@ -8,14 +8,17 @@ module Tapioca
     MINIMUM_ITEMS_PER_WORKER = T.let(4, Integer)
     extend T::Sig
 
-    sig { params(queue: T::Array[T.untyped]).void }
-    def initialize(queue)
+    sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
+    def initialize(queue, number_of_workers: nil)
       @queue = queue
 
       # Forking workers is expensive and not worth it for a low number of gems. Here we assign the number of workers to
       # be the minimum between the number of available processors (max) or the number of workers to make sure that each
       # one has at least 4 items to process
-      @number_of_workers = T.let([Etc.nprocessors, (queue.length / MINIMUM_ITEMS_PER_WORKER)].min, Integer)
+      @number_of_workers = T.let(
+        number_of_workers || [Etc.nprocessors, (queue.length / MINIMUM_ITEMS_PER_WORKER)].min,
+        Integer
+      )
 
       # The number of items that will be processed per worker, so that we can split the queue into groups and assign
       # them to each one of the workers

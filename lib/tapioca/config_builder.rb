@@ -68,6 +68,7 @@ module Tapioca
       "generators" => [],
       "file_header" => true,
       "doc" => false,
+      "number_of_workers" => nil,
     }.freeze, T::Hash[String, T.untyped])
   end
 end

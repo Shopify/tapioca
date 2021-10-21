@@ -15,7 +15,8 @@ module Tapioca
           outpath: Pathname,
           file_header: T::Boolean,
           doc: T::Boolean,
-          file_writer: Thor::Actions
+          file_writer: Thor::Actions,
+          number_of_workers: T.nilable(Integer)
         ).void
       end
       def initialize(
@@ -28,7 +29,8 @@ module Tapioca
         outpath:,
         file_header:,
         doc:,
-        file_writer: FileWriter.new
+        file_writer: FileWriter.new,
+        number_of_workers: nil
       )
         @gem_names = gem_names
         @gem_excludes = gem_excludes
@@ -37,6 +39,7 @@ module Tapioca
         @typed_overrides = typed_overrides
         @outpath = outpath
         @file_header = file_header
+        @number_of_workers = number_of_workers
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -52,7 +55,7 @@ module Tapioca
         require_gem_file
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @gem_excludes.include?(gem.name) }
-        Executor.new(gem_queue).run_in_parallel do |gem|
+        Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
             compile_gem_rbi(gem)
             puts
@@ -216,7 +219,7 @@ module Tapioca
           else
             require_gem_file
 
-            Executor.new(gems).run_in_parallel do |gem_name|
+            Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem_name|
               filename = expected_rbi(gem_name)
 
               if gem_rbi_exists?(gem_name)

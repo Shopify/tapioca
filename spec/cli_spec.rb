@@ -22,6 +22,7 @@ module Tapioca
       ]
 
       exec_command << "--outdir #{outdir}" unless use_default_outdir
+      exec_command << "--number_of_workers=1" if command.start_with?("dsl") || command.start_with?("gem")
 
       Bundler.with_unbundled_env do
         process = IO.popen(
