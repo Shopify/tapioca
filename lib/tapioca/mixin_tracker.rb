@@ -11,16 +11,22 @@ module Tapioca
     def prepend(*mods)
       MixinTracker.register(self, mods, :prepend, caller_locations)
       super
+    rescue => ex
+      self
     end
 
     def include(*mods)
       MixinTracker.register(self, mods, :include, caller_locations)
       super
+    rescue => ex
+      self
     end
 
     def extend(*mods)
       MixinTracker.register(self, mods, :extend, caller_locations)
       super
+    rescue => ex
+      self
     end
 
     def self.register(constant, mods, mixin_type, locations)
