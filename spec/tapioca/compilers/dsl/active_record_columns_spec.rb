@@ -6,6 +6,10 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
     describe("#initialize") do
+      after(:each) do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
       it("gathers no constants if there are no ActiveRecord subclasses") do
         assert_empty(gathered_constants)
       end
@@ -47,6 +51,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
 
       describe("by default") do
+        after(:each) do
+          T.unsafe(self).assert_no_generated_errors
+        end
+
         it("generates default columns with strong types") do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
@@ -775,6 +783,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
 
       describe("when StrongTypeGeneration is defined") do
+        after(:each) do
+          T.unsafe(self).assert_no_generated_errors
+        end
+
         before do
           add_ruby_file("strong_type_generation.rb", <<~RUBY)
             module StrongTypeGeneration

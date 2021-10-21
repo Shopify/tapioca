@@ -10,6 +10,10 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   end
 
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("gathers modules that respond to class_attribute") do
       add_ruby_file("file.rb", <<~RUBY)
         module ManualIncluded
@@ -42,6 +46,10 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("does nothing if the module doesn't use class_attribute") do
       add_ruby_file("empty.rb", <<~RUBY)
         module Empty

@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("does not gather anonymous constants") do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
@@ -140,6 +144,10 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("does not generate RBI when constant does not define a ClassMethods module") do
       add_ruby_file("test_case.rb", <<~RUBY)
         module Foo

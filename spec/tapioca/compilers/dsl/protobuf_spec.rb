@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
   describe("#gather_constants") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("gathers no constants if there are no Google::Protobuf classes") do
       add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
@@ -36,6 +40,10 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("generates methods in RBI files for classes with Protobuf with integer field type") do
       add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do

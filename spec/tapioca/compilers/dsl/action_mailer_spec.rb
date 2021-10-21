@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("gathers no constants if there are no ActionMailer subclasses") do
       assert_empty(gathered_constants)
     end
@@ -48,6 +52,10 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("generates empty RBI file if there are no methods") do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base

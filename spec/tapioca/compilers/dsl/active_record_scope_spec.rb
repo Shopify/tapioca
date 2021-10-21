@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("gathers no constants if there are no ActiveRecord classes") do
       assert_empty(gathered_constants)
     end
@@ -27,6 +31,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("generates an empty RBI file for ActiveRecord classes with no scope field") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
@@ -92,6 +100,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   end
 
   describe("#decorate_active_storage") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     before(:each) do
       require "active_record"
       require "active_storage/attached"

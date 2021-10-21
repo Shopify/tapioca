@@ -5,6 +5,10 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
   describe("#initialize") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("gathers no constants if there are no ActiveJob subclasses") do
       assert_empty(gathered_constants)
     end
@@ -35,6 +39,10 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
   end
 
   describe("#decorate") do
+    after(:each) do
+      T.unsafe(self).assert_no_generated_errors
+    end
+
     it("generates an empty RBI file if there is no perform method") do
       add_ruby_file("job.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
