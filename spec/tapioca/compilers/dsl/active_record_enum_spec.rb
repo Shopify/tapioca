@@ -13,7 +13,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord constants with no abstract classes") do
+    it("gathers only ActiveRecord constants including abstract classes") do
       add_ruby_file("content.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
         end
@@ -26,7 +26,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Conversation"], gathered_constants)
+      assert_equal(["Conversation", "Product"], gathered_constants)
     end
   end
 
