@@ -94,10 +94,7 @@ class DslSpec < Minitest::Spec
     constant = Object.const_get(constant_name)
     T.unsafe(self).subject.decorate(file.root, constant)
 
-    file.root.nest_non_public_methods!
-    file.root.group_nodes!
-    file.root.sort_nodes!
-    file.string
+    file.transformed_string
   end
 
   sig { returns(T::Array[String]) }
