@@ -69,11 +69,13 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
         # typed: strong
 
         class NotifyJob
-          sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
-          def self.perform_later(user_id); end
+          class << self
+            sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
+            def perform_later(user_id); end
 
-          sig { params(user_id: T.untyped).returns(T.untyped) }
-          def self.perform_now(user_id); end
+            sig { params(user_id: T.untyped).returns(T.untyped) }
+            def perform_now(user_id); end
+          end
         end
       RBI
 
@@ -95,11 +97,13 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
         # typed: strong
 
         class NotifyJob
-          sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
-          def self.perform_later(user_id); end
+          class << self
+            sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
+            def perform_later(user_id); end
 
-          sig { params(user_id: Integer).void }
-          def self.perform_now(user_id); end
+            sig { params(user_id: Integer).void }
+            def perform_now(user_id); end
+          end
         end
       RBI
 
