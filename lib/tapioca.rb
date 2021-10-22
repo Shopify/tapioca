@@ -13,8 +13,6 @@ module Tapioca
   ensure
     $VERBOSE = original_verbosity
   end
-
-  class Error < StandardError; end
 end
 
 require "tapioca/reflection"
