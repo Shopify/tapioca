@@ -106,6 +106,18 @@ module Tapioca
           refute_path_exists("#{outdir}/baz@0.0.2.rbi")
         end
 
+        it "must generate RBI for a default gem" do
+          output = tapioca("gem did_you_mean")
+
+          assert_includes(output, <<~OUTPUT)
+            Processing 'did_you_mean' gem:
+              Compiling did_you_mean, this may take a few seconds...   Done
+          OUTPUT
+
+          did_you_mean_rbi_file = T.must(Dir.glob("#{outdir}/did_you_mean@*.rbi").first)
+          assert_includes(File.read(did_you_mean_rbi_file), "module DidYouMean")
+        end
+
         it "must generate gem RBI in correct output directory" do
           output = tapioca("gem foo", use_default_outdir: true)
 
