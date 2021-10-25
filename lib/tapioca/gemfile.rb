@@ -114,13 +114,14 @@ module Tapioca
 
       sig { returns(T::Array[Pathname]) }
       def files
-        spec = @spec
-        if default_gem? && spec.is_a?(::Gem::Specification)
-          spec.files.map do |file|
+        if default_gem?
+          # `Bundler::RemoteSpecification` delegates missing methods to
+          # `Gem::Specification`, so `files` actually always exists on spec.
+          T.unsafe(@spec).files.map do |file|
             ruby_lib_dir.join(file)
           end
         else
-          spec.full_require_paths.flat_map do |path|
+          @spec.full_require_paths.flat_map do |path|
             Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
           end
         end
