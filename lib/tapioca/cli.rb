@@ -79,7 +79,7 @@ module Tapioca
       aliases: ["-q"],
       type: :boolean,
       desc: "Supresses file creation output"
-    option :number_of_workers,
+    option :workers,
       type: :numeric,
       default: nil,
       desc: "Number of parallel workers to use when generating RBIs"
@@ -98,7 +98,7 @@ module Tapioca
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
-        number_of_workers: config.number_of_workers
+        number_of_workers: config.workers
       )
       Tapioca.silence_warnings do
         generator.generate
@@ -135,7 +135,7 @@ module Tapioca
     option :doc,
       type: :boolean,
       desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
-    option :number_of_workers,
+    option :workers,
       type: :numeric,
       default: nil,
       desc: "Number of parallel workers to use when generating RBIs"
@@ -155,7 +155,7 @@ module Tapioca
           outpath: config.outpath,
           file_header: config.file_header,
           doc: config.doc,
-          number_of_workers: config.number_of_workers
+          number_of_workers: config.workers
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
