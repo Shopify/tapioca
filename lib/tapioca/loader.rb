@@ -30,6 +30,7 @@ module Tapioca
         safe_require("./config/application")
       end
 
+      load_internal_extensions
       eager_load_rails_app if eager_load
     end
 
@@ -114,6 +115,11 @@ module Tapioca
           nil
         end
       end
+    end
+
+    sig { void }
+    def load_internal_extensions
+      Dir["#{__dir__}/extensions/*.rb"].each { |f| require(f) }
     end
   end
 end
