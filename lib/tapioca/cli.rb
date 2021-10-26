@@ -129,7 +129,6 @@ module Tapioca
       desc: "Verifies RBIs are up-to-date"
     option :doc,
       type: :boolean,
-      default: false,
       desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
     def gem(*gems)
       Tapioca.silence_warnings do
