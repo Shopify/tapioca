@@ -20,5 +20,23 @@ module Tapioca
       assert_equal(@queue.length, received_numbers.length)
       assert_equal(@queue, received_numbers.sort)
     end
+
+    it "runs sequentially when the number of workers is one" do
+      executor = Executor.new(@queue, number_of_workers: 1)
+      parent_pid = Process.pid
+
+      executor.run_in_parallel do |_|
+        assert_equal(parent_pid, Process.pid)
+      end
+    end
+
+    it "forks different processes if number of workers is greater than one" do
+      executor = Executor.new(@queue, number_of_workers: 4)
+      parent_pid = Process.pid
+
+      executor.run_in_parallel do |_|
+        refute_equal(parent_pid, Process.pid)
+      end
+    end
   end
 end
