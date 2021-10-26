@@ -94,7 +94,7 @@ module Tapioca
           output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
                   create  #{outdir}/foo@0.0.1.rbi
           OUTPUT
 
@@ -109,8 +109,8 @@ module Tapioca
           output = tapioca("gem did_you_mean")
 
           assert_includes(output, <<~OUTPUT)
-            Processing 'did_you_mean' gem:
-              Compiling did_you_mean, this may take a few seconds...   Done
+            Compiled did_you_mean
+                  create  #{outdir}/did_you_mean@1.5.0.rbi
           OUTPUT
 
           did_you_mean_rbi_file = T.must(Dir.glob("#{outdir}/did_you_mean@*.rbi").first)
@@ -121,7 +121,7 @@ module Tapioca
           output = tapioca("gem foo", use_default_outdir: true)
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           assert_path_exists("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
@@ -135,7 +135,7 @@ module Tapioca
           output = tapioca("gem foo --postrequire #{repo_path / "postrequire.rb"}")
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -171,7 +171,7 @@ module Tapioca
           output = tapioca("gem")
 
           assert_includes(output, <<~OUTPUT)
-            Done tapioca
+            Compiled tapioca
           OUTPUT
 
           tapioca_rbi_file = T.must(Dir.glob("#{outdir}/tapioca@*.rbi").first)
@@ -182,11 +182,11 @@ module Tapioca
           output = tapioca("gem foo bar")
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Done bar
+            Compiled bar
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -202,15 +202,15 @@ module Tapioca
           output = tapioca("gem --all")
 
           assert_includes(output, <<~OUTPUT)
-            Done bar
+            Compiled bar
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Done baz
+            Compiled baz
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -236,7 +236,7 @@ module Tapioca
           output = tapioca("gem ast")
 
           assert_includes(output, <<~OUTPUT)
-            Done ast
+            Compiled ast
           OUTPUT
 
           assert_path_exists("#{outdir}/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
@@ -246,15 +246,15 @@ module Tapioca
           output = tapioca("gem --all --exclude foo bar")
 
           refute_includes(output, <<~OUTPUT)
-            Done bar
+            Compiled bar
           OUTPUT
 
           assert_includes(output, <<~OUTPUT)
-            Done baz
+            Compiled baz
           OUTPUT
 
           refute_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           refute_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -269,7 +269,7 @@ module Tapioca
           output = tapioca("gem foo")
 
           assert_includes(output, <<~OUTPUT)
-            Done foo
+            Compiled foo
           OUTPUT
 
           assert_path_exists("#{outdir}/foo@0.0.1.rbi")
@@ -310,7 +310,7 @@ module Tapioca
 
           assert_includes(output, "      create  #{outdir}/qux@0.5.0.rbi\n")
           assert_includes(output, <<~OUTPUT)
-            Done qux (empty output)
+            Compiled qux (empty output)
           OUTPUT
 
           assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))

@@ -148,9 +148,9 @@ module Tapioca
 
         if rbi.empty?
           rbi.set_empty_body_content
-          say("Done #{gem_name} (empty output)", :yellow)
+          say("Compiled #{gem_name} (empty output)", :yellow)
         else
-          say("Done #{gem_name}", :green)
+          say("Compiled #{gem_name}", :green)
         end
 
         create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
