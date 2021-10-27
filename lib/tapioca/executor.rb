@@ -5,7 +5,7 @@ require "etc"
 
 module Tapioca
   class Executor
-    MINIMUM_ITEMS_PER_WORKER = T.let(4, Integer)
+    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
     extend T::Sig
 
     sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
