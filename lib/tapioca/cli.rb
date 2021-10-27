@@ -80,6 +80,7 @@ module Tapioca
       type: :boolean,
       desc: "Supresses file creation output"
     option :workers,
+      aliases: ["-w"],
       type: :numeric,
       default: nil,
       desc: "Number of parallel workers to use when generating RBIs"
@@ -136,6 +137,7 @@ module Tapioca
       type: :boolean,
       desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
     option :workers,
+      aliases: ["-w"],
       type: :numeric,
       default: nil,
       desc: "Number of parallel workers to use when generating RBIs"
