@@ -16,7 +16,7 @@ module Tapioca
       # be the minimum between the number of available processors (max) or the number of workers to make sure that each
       # one has at least 4 items to process
       @number_of_workers = T.let(
-        number_of_workers || [Etc.nprocessors, (queue.length / MINIMUM_ITEMS_PER_WORKER)].min,
+        number_of_workers || [Etc.nprocessors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min,
         Integer
       )
 
