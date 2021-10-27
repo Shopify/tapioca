@@ -95,7 +95,7 @@ module Tapioca
 
         sig { params(constant: T.class_of(::FrozenRecord::Base), record: RBI::Scope).void }
         def decorate_scopes(constant, record)
-          scopes = T.unsafe(constant).scope_names
+          scopes = T.unsafe(constant).__tapioca_scope_names
           return if scopes.nil?
 
           module_name = "GeneratedRelationMethods"

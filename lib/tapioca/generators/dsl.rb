@@ -361,7 +361,7 @@ module Tapioca
 
       sig { void }
       def load_dsl_extensions
-        Dir["#{__dir__}/../extensions/*.rb"].each { |f| require(f) }
+        Dir["#{__dir__}/../compilers/dsl/extensions/*.rb"].sort.each { |f| require(f) }
       end
     end
   end

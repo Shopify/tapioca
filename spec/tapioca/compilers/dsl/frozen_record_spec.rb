@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
   before(:each) do
     require "rails/railtie"
-    require "tapioca/extensions/frozen_record"
+    require "tapioca/compilers/dsl/extensions/frozen_record"
   end
 
   describe("#initialize") do
