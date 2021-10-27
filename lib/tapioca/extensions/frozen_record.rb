@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 begin
@@ -8,18 +8,14 @@ rescue LoadError
 end
 
 module ScopePatch
-  extend T::Sig
-
-  sig { returns(T.nilable(T::Array[T.any(String, Symbol)])) }
   attr_reader :scope_names
 
-  sig { params(name: T.untyped, body: T.untyped).void }
   def scope(name, body)
-    @scope_names ||= T.let([], T.nilable(T::Array[T.any(String, Symbol)]))
-    T.must(@scope_names) << name
+    @scope_names ||= []
+    @scope_names << name
 
     super
   end
-end
 
-FrozenRecord::Base.singleton_class.prepend(ScopePatch)
+  FrozenRecord::Base.singleton_class.prepend(self)
+end

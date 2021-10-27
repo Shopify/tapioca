@@ -116,16 +116,13 @@ module Tapioca
           ).void
         end
         def generate_scope_method(scope_method, mod)
-          # This return type should actually be Model::ActiveRecord_Relation
-          return_type = "T.untyped"
-
           mod.create_method(
             scope_method,
             parameters: [
               create_rest_param("args", type: "T.untyped"),
               create_block_param("blk", type: "T.untyped"),
             ],
-            return_type: return_type,
+            return_type: "T.untyped",
           )
         end
       end
