@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "tapioca/helpers/mixin_type"
 
 module Tapioca
   module Compilers
@@ -380,43 +381,49 @@ module Tapioca
           interesting_ancestors = interesting_ancestors_of(constant)
           interesting_singleton_class_ancestors = interesting_ancestors_of(singleton_class)
 
-          prepend = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
-          include = interesting_ancestors.drop(prepend.size + 1)
-          extend  = interesting_singleton_class_ancestors.reject do |mod|
+          prepends = interesting_ancestors.take_while { |c| !are_equal?(constant, c) }
+          includes = interesting_ancestors.drop(prepends.size + 1)
+          extends  = interesting_singleton_class_ancestors.reject do |mod|
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          prepend
-            .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+          mixin_locations = MixinTracker.mixin_locations_for(constant)
+
+          add_mixins(tree, prepends.reverse, MixinType::Prepend, mixin_locations)
+          add_mixins(tree, includes.reverse, MixinType::Include, mixin_locations)
+          add_mixins(tree, extends.reverse, MixinType::Extend, mixin_locations)
+        end
+
+        sig do
+          params(
+            tree: RBI::Tree,
+            mods: T::Array[Module],
+            mixin_type: MixinType,
+            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
+          ).void
+        end
+        def add_mixins(tree, mods, mixin_type, mixin_locations)
+          mods
+            .select do |mod|
+              name = name_of(mod)
+
+              name &&
+                !name.start_with?("T::") &&
+                mixed_in_by_gem?(mod, mixin_type, mixin_locations)
+            end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
 
+              qname = qualified_name_of(mod)
+              case mixin_type
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              qname = qualified_name_of(mod)
-              tree << RBI::Include.new(T.must(qname))
-            end
-
-          include
-            .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .map do |mod|
-              add_to_symbol_queue(name_of(mod))
-
-              qname = qualified_name_of(mod)
-              tree << RBI::Include.new(T.must(qname))
-            end
-
-          extend
-            .reverse
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .map do |mod|
-              add_to_symbol_queue(name_of(mod))
-
-              qname = qualified_name_of(mod)
-              tree << RBI::Extend.new(T.must(qname))
+              when MixinType::Include, MixinType::Prepend
+                tree << RBI::Include.new(T.must(qname))
+              when MixinType::Extend
+                tree << RBI::Extend.new(T.must(qname))
+              end
             end
         end
 
@@ -652,6 +659,19 @@ module Tapioca
           files.any? do |file|
             gem.contains_path?(file)
           end
+        end
+
+        sig do
+          params(
+            mod: Module,
+            mixin_type: MixinType,
+            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
+          ).returns(T::Boolean)
+        end
+        def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
+          locations = mixin_locations.dig(mixin_type, mod)
+          return true unless locations
+          locations.any? { |location| gem.contains_path?(location) }
         end
 
         sig { params(constant: Module).returns(T::Array[String]) }
