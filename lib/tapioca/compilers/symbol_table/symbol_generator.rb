@@ -86,24 +86,11 @@ module Tapioca
 
         sig { params(tree: RBI::Tree, symbol: String).void }
         def generate_from_symbol(tree, symbol)
-          constant = resolve_constant(symbol)
+          constant = constantize(symbol)
 
           return unless constant
 
           compile(tree, symbol, constant)
-        end
-
-        sig do
-          params(
-            symbol: String,
-            inherit: T::Boolean,
-            namespace: Module
-          ).returns(BasicObject).checked(:never)
-        end
-        def resolve_constant(symbol, inherit: false, namespace: Object)
-          namespace.const_get(symbol, inherit)
-        rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
-          nil
         end
 
         sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
@@ -270,7 +257,7 @@ module Tapioca
         def compile_subconstants(tree, name, constant)
           constants_of(constant).sort.uniq.map do |constant_name|
             symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
-            subconstant = resolve_constant(symbol)
+            subconstant = constantize(symbol)
 
             # Don't compile modules of Object because Object::Foo == Foo
             # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
@@ -301,7 +288,7 @@ module Tapioca
           # variable via the value of the type variable constant.
           subconstant_to_name_lookup = constants_of(constant)
             .each_with_object({}.compare_by_identity) do |constant_name, table|
-            table[resolve_constant(constant_name.to_s, namespace: constant)] = constant_name.to_s
+            table[constantize(constant_name.to_s, namespace: constant)] = constant_name.to_s
           end
 
           # Map each type variable to its string representation.
@@ -357,7 +344,7 @@ module Tapioca
             superclass_name = name_of(superclass)
             next unless superclass_name
 
-            resolved_superclass = resolve_constant(superclass_name)
+            resolved_superclass = constantize(superclass_name)
             next unless Module === resolved_superclass
             next if name_of(resolved_superclass) == constant_name
 
@@ -747,7 +734,7 @@ module Tapioca
           return name if name
           name = super(constant)
           return if name.nil?
-          return unless are_equal?(constant, resolve_constant(name, inherit: true))
+          return unless are_equal?(constant, constantize(name, inherit: true))
           name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
           name
         end
