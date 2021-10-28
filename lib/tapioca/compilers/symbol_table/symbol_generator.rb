@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "tapioca/helpers/mixin_type"
 
 module Tapioca
   module Compilers
@@ -388,16 +389,16 @@ module Tapioca
 
           mixin_locations = MixinTracker.mixin_locations_for(constant)
 
-          add_mixins(tree, prepends.reverse, :prepend, mixin_locations)
-          add_mixins(tree, includes.reverse, :include, mixin_locations)
-          add_mixins(tree, extends.reverse, :extend, mixin_locations)
+          add_mixins(tree, prepends.reverse, MixinType::Prepend, mixin_locations)
+          add_mixins(tree, includes.reverse, MixinType::Include, mixin_locations)
+          add_mixins(tree, extends.reverse, MixinType::Extend, mixin_locations)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: Symbol,
+            mixin_type: MixinType,
             mixin_locations: T::Hash[T.untyped, T.untyped]
           ).void
         end
@@ -413,9 +414,9 @@ module Tapioca
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              when :include, :prepend
+              when MixinType::Include, MixinType::Prepend
                 tree << RBI::Include.new(T.must(qname))
-              when :extend
+              when MixinType::Extend
                 tree << RBI::Extend.new(T.must(qname))
               end
             end

@@ -1,6 +1,8 @@
 # typed: true
 # frozen_string_literal: true
 
+require "tapioca/helpers/mixin_type"
+
 module Tapioca
   module MixinTracker
     extend T::Helpers
@@ -9,17 +11,17 @@ module Tapioca
     @mixin_map = {}.compare_by_identity
 
     def prepend_features(constant)
-      MixinTracker.register(constant, self, :prepend, caller_locations)
+      MixinTracker.register(constant, self, MixinType::Prepend, caller_locations)
       super
     end
 
     def append_features(constant)
-      MixinTracker.register(constant, self, :include, caller_locations)
+      MixinTracker.register(constant, self, MixinType::Include, caller_locations)
       super
     end
 
     def extend_object(obj)
-      MixinTracker.register(obj, self, :extend, caller_locations) if Module === obj
+      MixinTracker.register(obj, self, MixinType::Extend, caller_locations) if Module === obj
       super
     end
 
@@ -31,14 +33,14 @@ module Tapioca
 
     def self.mixin_locations_for(constant)
       @mixin_map[constant] ||= {
-        prepend: {}.compare_by_identity,
-        include: {}.compare_by_identity,
-        extend: {}.compare_by_identity,
+        MixinType::Prepend => {}.compare_by_identity,
+        MixinType::Include => {}.compare_by_identity,
+        MixinType::Extend => {}.compare_by_identity,
       }
     end
 
     Module.prepend(self)
-    register(Module, self, :prepend, caller_locations)
+    register(Module, self, MixinType::Prepend, caller_locations)
   end
 
   private_constant :MixinTracker
