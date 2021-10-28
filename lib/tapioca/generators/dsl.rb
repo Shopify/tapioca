@@ -17,7 +17,8 @@ module Tapioca
           file_writer: Thor::Actions,
           should_verify: T::Boolean,
           quiet: T::Boolean,
-          verbose: T::Boolean
+          verbose: T::Boolean,
+          number_of_workers: T.nilable(Integer),
         ).void
       end
       def initialize(
@@ -32,7 +33,8 @@ module Tapioca
         file_writer: FileWriter.new,
         should_verify: false,
         quiet: false,
-        verbose: false
+        verbose: false,
+        number_of_workers: nil
       )
         @requested_constants = requested_constants
         @outpath = outpath
@@ -44,6 +46,7 @@ module Tapioca
         @should_verify = should_verify
         @quiet = quiet
         @verbose = verbose
+        @number_of_workers = number_of_workers
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -72,7 +75,8 @@ module Tapioca
           excluded_generators: constantize_generators(@exclude_generators),
           error_handler: ->(error) {
             say_error(error, :bold, :red)
-          }
+          },
+          number_of_workers: @number_of_workers
         )
 
         compiler.run do |constant, contents|

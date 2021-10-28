@@ -12,8 +12,8 @@ module Tapioca
     attr_reader :outdir
     attr_reader :repo_path
 
-    sig { params(command: String, use_default_outdir: T::Boolean).returns(String) }
-    def tapioca(command, use_default_outdir: false)
+    sig { params(command: String, use_default_outdir: T::Boolean, number_of_workers: Integer).returns(String) }
+    def tapioca(command, use_default_outdir: false, number_of_workers: 1)
       exec_command = [
         "bundle",
         "exec",
@@ -22,6 +22,7 @@ module Tapioca
       ]
 
       exec_command << "--outdir #{outdir}" unless use_default_outdir
+      exec_command << "--workers=#{number_of_workers}" if command.start_with?("dsl") || command.start_with?("gem")
 
       Bundler.with_unbundled_env do
         process = IO.popen(
