@@ -40,6 +40,9 @@ module Tapioca
     end
 
     Module.prepend(self)
+    # We want to register ourselves explicitly, since when we
+    # get prepended, the hook has not been setup yet. Thus, we
+    # need to do the registration manually.
     register(Module, self, MixinType::Prepend, caller_locations)
   end
 
