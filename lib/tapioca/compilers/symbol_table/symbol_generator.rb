@@ -399,7 +399,7 @@ module Tapioca
             tree: RBI::Tree,
             mods: T::Array[Module],
             mixin_type: MixinType,
-            mixin_locations: T::Hash[T.untyped, T.untyped]
+            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
           ).void
         end
         def add_mixins(tree, mods, mixin_type, mixin_locations)
@@ -409,7 +409,7 @@ module Tapioca
 
               name &&
                 !name.start_with?("T::") &&
-                mixed_in_in_gem?(mixin_locations[mixin_type][mod])
+                mixed_in_by_gem?(mod, mixin_type, mixin_locations)
             end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
@@ -661,10 +661,17 @@ module Tapioca
           end
         end
 
-        sig { params(mixin_locations: T.nilable(T::Array[String])).returns(T::Boolean) }
-        def mixed_in_in_gem?(mixin_locations)
-          return true unless mixin_locations
-          mixin_locations.any? { |location| gem.contains_path?(location) }
+        sig do
+          params(
+            mod: Module,
+            mixin_type: MixinType,
+            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
+          ).returns(T::Boolean)
+        end
+        def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
+          locations = mixin_locations.dig(mixin_type, mod)
+          return true unless locations
+          locations.any? { |location| gem.contains_path?(location) }
         end
 
         sig { params(constant: Module).returns(T::Array[String]) }
