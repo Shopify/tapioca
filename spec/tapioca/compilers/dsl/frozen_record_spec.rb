@@ -6,6 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
   before(:each) do
     require "rails/railtie"
+    require "tapioca/compilers/dsl/extensions/frozen_record"
   end
 
   describe("#initialize") do
@@ -92,6 +93,53 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
 
             sig { returns(T::Boolean) }
             def last_name?; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Student))
+    end
+
+    it("can handle frozen record scopes") do
+      add_ruby_file("student.rb", <<~RUBY)
+        class Student < FrozenRecord::Base
+          self.base_path = __dir__
+
+          scope :programmers, -> { where(course: "Programming") }
+        end
+      RUBY
+
+      add_content_file("students.yml", <<~YAML)
+        - id: 1
+          course: Programming
+        - id: 2
+          course: Design
+      YAML
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Student
+          include FrozenRecordAttributeMethods
+          extend GeneratedRelationMethods
+
+          module FrozenRecordAttributeMethods
+            sig { returns(T.untyped) }
+            def course; end
+
+            sig { returns(T::Boolean) }
+            def course?; end
+
+            sig { returns(T.untyped) }
+            def id; end
+
+            sig { returns(T::Boolean) }
+            def id?; end
+          end
+
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def programmers(*args, &blk); end
           end
         end
       RBI

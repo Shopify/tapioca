@@ -81,12 +81,49 @@ module Tapioca
             end
 
             record.create_include(module_name)
+
+            decorate_scopes(constant, record)
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           descendants_of(::FrozenRecord::Base).reject(&:abstract_class?)
+        end
+
+        private
+
+        sig { params(constant: T.class_of(::FrozenRecord::Base), record: RBI::Scope).void }
+        def decorate_scopes(constant, record)
+          scopes = T.unsafe(constant).__tapioca_scope_names
+          return if scopes.nil?
+
+          module_name = "GeneratedRelationMethods"
+
+          record.create_module(module_name) do |mod|
+            scopes.each do |name|
+              generate_scope_method(name.to_s, mod)
+            end
+          end
+
+          record.create_extend(module_name)
+        end
+
+        sig do
+          params(
+            scope_method: String,
+            mod: RBI::Scope,
+          ).void
+        end
+        def generate_scope_method(scope_method, mod)
+          mod.create_method(
+            scope_method,
+            parameters: [
+              create_rest_param("args", type: "T.untyped"),
+              create_block_param("blk", type: "T.untyped"),
+            ],
+            return_type: "T.untyped",
+          )
         end
       end
     end

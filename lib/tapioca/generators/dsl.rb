@@ -55,6 +55,7 @@ module Tapioca
 
       sig { override.void }
       def generate
+        load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
         load_dsl_generators
@@ -360,6 +361,11 @@ module Tapioca
       sig { params(constant: String).returns(String) }
       def generate_command_for(constant)
         "#{@default_command} dsl #{constant}"
+      end
+
+      sig { void }
+      def load_dsl_extensions
+        Dir["#{__dir__}/../compilers/dsl/extensions/*.rb"].sort.each { |f| require(f) }
       end
     end
   end
