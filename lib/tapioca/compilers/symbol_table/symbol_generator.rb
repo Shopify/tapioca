@@ -404,8 +404,13 @@ module Tapioca
         end
         def add_mixins(tree, mods, mixin_type, mixin_locations)
           mods
-            .select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
-            .select { |mod| mixed_in_in_gem?(mixin_locations[mixin_type][mod]) }
+            .select do |mod|
+              name = name_of(mod)
+
+              name &&
+                !name.start_with?("T::") &&
+                mixed_in_in_gem?(mixin_locations[mixin_type][mod])
+            end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
 
