@@ -79,6 +79,9 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
         module TestCase
           module Foo
             extend ActiveSupport::Concern
+
+            module ClassMethods
+            end
           end
 
           class Bar
@@ -169,27 +172,6 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       RUBY
 
       assert_equal(expected, rbi_for(:Bar))
-    end
-
-    it("does not generate RBI for directly mixed in modules") do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module Foo
-          extend ActiveSupport::Concern
-
-          module ClassMethods
-          end
-        end
-
-        class Bar
-          include Foo
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-      RUBY
-
-      assert_equal(expected, rbi_for(:Foo))
     end
 
     it("generates RBI for nested AS::Concern") do

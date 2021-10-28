@@ -85,13 +85,15 @@ class DslSpec < Minitest::Spec
     ).returns(String)
   end
   def rbi_for(constant_name)
-    # Sometimes gather_constants registers temp constants, so
-    # let's call it once to ensure all constants are in place.
-    T.unsafe(self).subject.processable_constants
+    # Make sure this is a constant that we can handle.
+    assert_includes(gathered_constants, constant_name.to_s, <<~MSG)
+      `#{constant_name}` is not processable by the `#{target_class_name}` generator.
+    MSG
 
     file = RBI::File.new(strictness: "strong")
 
     constant = Object.const_get(constant_name)
+
     T.unsafe(self).subject.decorate(file.root, constant)
 
     file.transformed_string
