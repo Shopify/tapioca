@@ -436,6 +436,34 @@ module Tapioca
           refute_path_exists("#{outdir}/bar@0.0.1.rbi")
           refute_path_exists("#{outdir}/baz@0.0.1.rbi")
         end
+
+        it "generates the correct RBIs when running generate in parallel" do
+          tapioca("gem --all", number_of_workers: 3)
+
+          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
+          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
+          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+
+          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
+          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
+          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
+        end
+
+        it "generates the correct RBIs when running sync in parallel" do
+          refute_path_exists("#{outdir}/foo@0.0.1.rbi")
+          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
+          refute_path_exists("#{outdir}/baz@0.0.2.rbi")
+
+          tapioca("gem", number_of_workers: 3)
+
+          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
+          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
+          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+
+          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
+          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
+          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
+        end
       end
 
       describe("verify") do
