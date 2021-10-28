@@ -61,8 +61,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def public_kind(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def public_kind(*args, &blk); end
           end
         end
@@ -85,12 +90,108 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
-          module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def private_kind(*args, &blk); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def public_kind(*args, &blk); end
+          end
+
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def private_kind(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def public_kind(*args, &blk); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates relation includes from non-abstract parent models") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          scope :post_scope, -> { where.not(kind: 'private') }
+        end
+
+        class CustomPost < Post
+          scope :custom_post_scope, -> { where.not(kind: 'private') }
+        end
+
+        class SuperCustomPost < CustomPost
+          scope :super_custom_post_scope, -> { where.not(kind: 'private') }
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class SuperCustomPost
+          extend GeneratedRelationMethods
+
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def custom_post_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def post_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def super_custom_post_scope(*args, &blk); end
+          end
+
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def custom_post_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def post_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def super_custom_post_scope(*args, &blk); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:SuperCustomPost))
+    end
+
+    it("generates relation includes from abstract parent models") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class ApplicationRecord < ActiveRecord::Base
+          self.abstract_class = true
+
+          scope :app_scope, -> { where.not(kind: 'private') }
+        end
+
+        class Post < ApplicationRecord
+          scope :post_scope, -> { where.not(kind: 'private') }
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          extend GeneratedRelationMethods
+
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def app_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def post_scope(*args, &blk); end
+          end
+
+          module GeneratedRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def app_scope(*args, &blk); end
+
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            def post_scope(*args, &blk); end
           end
         end
       RBI
@@ -126,8 +227,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def with_attached_photo(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def with_attached_photo(*args, &blk); end
           end
         end
@@ -149,8 +255,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         class Post
           extend GeneratedRelationMethods
 
+          module GeneratedAssociationRelationMethods
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            def with_attached_photos(*args, &blk); end
+          end
+
           module GeneratedRelationMethods
-            sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def with_attached_photos(*args, &blk); end
           end
         end

@@ -7,6 +7,8 @@ rescue LoadError
   return
 end
 
+require "tapioca/compilers/dsl/helper/active_record_constants"
+
 module Tapioca
   module Compilers
     module Dsl
@@ -42,6 +44,7 @@ module Tapioca
       # ~~~
       class ActiveRecordScope < Base
         extend T::Sig
+        include Helper::ActiveRecordConstants
 
         sig do
           override.params(
@@ -50,19 +53,28 @@ module Tapioca
           ).void
         end
         def decorate(root, constant)
-          scope_method_names = constant.send(:generated_relation_methods).instance_methods(false)
-          return if scope_method_names.empty?
+          method_names = scope_method_names(constant)
+
+          return if method_names.empty?
 
           root.create_path(constant) do |model|
-            module_name = "GeneratedRelationMethods"
+            relation_methods_module = model.create_module(RelationMethodsModuleName)
+            association_relation_methods_module = model.create_module(AssociationRelationMethodsModuleName)
 
-            model.create_module(module_name) do |mod|
-              scope_method_names.each do |scope_method|
-                generate_scope_method(scope_method.to_s, mod)
-              end
+            method_names.each do |scope_method|
+              generate_scope_method(
+                relation_methods_module,
+                scope_method.to_s,
+                RelationClassName
+              )
+              generate_scope_method(
+                association_relation_methods_module,
+                scope_method.to_s,
+                AssociationRelationClassName
+              )
             end
 
-            model.create_extend(module_name)
+            model.create_extend(RelationMethodsModuleName)
           end
         end
 
@@ -73,16 +85,29 @@ module Tapioca
 
         private
 
+        sig { params(constant: T.class_of(::ActiveRecord::Base)).returns(T::Array[Symbol]) }
+        def scope_method_names(constant)
+          scope_methods = T.let([], T::Array[Symbol])
+
+          # Keep gathering scope methods until we hit "ActiveRecord::Base"
+          until constant == ActiveRecord::Base
+            scope_methods.concat(constant.send(:generated_relation_methods).instance_methods(false))
+
+            # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
+            constant = T.cast(constant.superclass, T.class_of(ActiveRecord::Base))
+          end
+
+          scope_methods
+        end
+
         sig do
           params(
-            scope_method: String,
             mod: RBI::Scope,
+            scope_method: String,
+            return_type: String
           ).void
         end
-        def generate_scope_method(scope_method, mod)
-          # This return type should actually be Model::ActiveRecord_Relation
-          return_type = "T.untyped"
-
+        def generate_scope_method(mod, scope_method, return_type)
           mod.create_method(
             scope_method,
             parameters: [
