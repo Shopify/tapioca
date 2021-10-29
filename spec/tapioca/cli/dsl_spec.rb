@@ -302,16 +302,6 @@ module Tapioca
         refute_path_exists("#{outdir}/user.rbi")
       end
 
-      it "generates the correct RBIs when running in parallel" do
-        tapioca("dsl", number_of_workers: 3)
-
-        assert_path_exists("#{outdir}/baz/role.rbi")
-        assert_path_exists("#{outdir}/job.rbi")
-        assert_path_exists("#{outdir}/post.rbi")
-        assert_path_exists("#{outdir}/namespace/comment.rbi")
-        refute_path_exists("#{outdir}/user.rbi")
-      end
-
       it "generates RBI files without header" do
         tapioca("dsl --no-file-header Post")
 
