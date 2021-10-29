@@ -269,9 +269,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def none(*args, &blk); end
 
-            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
-            def not(opts, *rest); end
-
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def offset(*args, &blk); end
 
@@ -390,9 +387,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def none(*args, &blk); end
-
-            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
-            def not(opts, *rest); end
 
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def offset(*args, &blk); end

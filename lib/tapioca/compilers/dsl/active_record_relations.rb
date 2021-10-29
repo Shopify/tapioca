@@ -465,13 +465,6 @@ module Tapioca
           def create_relation_methods
             create_relation_method("all")
             create_relation_method(
-              "not",
-              parameters: [
-                create_param("opts", type: "T.untyped"),
-                create_rest_param("rest", type: "T.untyped"),
-              ]
-            )
-            create_relation_method(
               "where",
               parameters: [
                 create_rest_param("args", type: "T.untyped"),
