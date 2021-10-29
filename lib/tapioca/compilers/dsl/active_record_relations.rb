@@ -287,38 +287,6 @@ module Tapioca
           end
 
           sig { void }
-          def create_relation_where_chain_class
-            model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
-              create_relation_where_chain_methods(klass)
-            end
-          end
-
-          sig { params(klass: RBI::Scope).void }
-          def create_relation_where_chain_methods(klass)
-            WHERE_CHAIN_QUERY_METHODS.each do |method_name|
-              case method_name
-              when :not
-                klass.create_method(
-                  method_name.to_s,
-                  parameters: [
-                    create_param("opts", type: "T.untyped"),
-                    create_rest_param("rest", type: "T.untyped"),
-                  ],
-                  return_type: RelationClassName
-                )
-              when :associated, :missing
-                klass.create_method(
-                  method_name.to_s,
-                  parameters: [
-                    create_rest_param("args", type: "T.untyped"),
-                  ],
-                  return_type: RelationClassName
-                )
-              end
-            end
-          end
-
-          sig { void }
           def create_association_relation_class
             superclass = "::ActiveRecord::AssociationRelation"
 
@@ -333,17 +301,24 @@ module Tapioca
           end
 
           sig { void }
+          def create_relation_where_chain_class
+            model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
+              create_where_chain_methods(klass, RelationClassName)
+            end
+          end
+
+          sig { void }
           def create_association_relation_where_chain_class
             model.create_class(
               AssociationRelationWhereChainClassName,
               superclass_name: AssociationRelationClassName
             ) do |klass|
-              create_association_relation_where_chain_methods(klass)
+              create_where_chain_methods(klass, AssociationRelationClassName)
             end
           end
 
-          sig { params(klass: RBI::Scope).void }
-          def create_association_relation_where_chain_methods(klass)
+          sig { params(klass: RBI::Scope, return_type: String).void }
+          def create_where_chain_methods(klass, return_type)
             WHERE_CHAIN_QUERY_METHODS.each do |method_name|
               case method_name
               when :not
@@ -353,7 +328,7 @@ module Tapioca
                     create_param("opts", type: "T.untyped"),
                     create_rest_param("rest", type: "T.untyped"),
                   ],
-                  return_type: AssociationRelationClassName
+                  return_type: return_type
                 )
               when :associated, :missing
                 klass.create_method(
@@ -361,7 +336,7 @@ module Tapioca
                   parameters: [
                     create_rest_param("args", type: "T.untyped"),
                   ],
-                  return_type: AssociationRelationClassName
+                  return_type: return_type
                 )
               end
             end
