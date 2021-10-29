@@ -326,7 +326,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
             def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationWhereChainRelation) }
             def where(*args, &blk); end
           end
 
@@ -454,6 +454,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             def to_ary; end
 
             Elem = type_member(fixed: ::Post)
+          end
+
+          class PrivateAssociationWhereChainRelation < PrivateAssociationRelation
+            sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
+            def missing(*args); end
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
