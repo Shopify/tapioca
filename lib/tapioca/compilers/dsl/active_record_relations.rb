@@ -297,6 +297,15 @@ module Tapioca
           def create_relation_where_chain_methods(klass)
             WHERE_CHAIN_QUERY_METHODS.each do |method_name|
               case method_name
+              when :not
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("opts", type: "T.untyped"),
+                    create_rest_param("rest", type: "T.untyped"),
+                  ],
+                  return_type: RelationClassName
+                )
               when :missing
                 klass.create_method(
                   method_name.to_s,
@@ -337,6 +346,15 @@ module Tapioca
           def create_association_relation_where_chain_methods(klass)
             WHERE_CHAIN_QUERY_METHODS.each do |method_name|
               case method_name
+              when :not
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("opts", type: "T.untyped"),
+                    create_rest_param("rest", type: "T.untyped"),
+                  ],
+                  return_type: AssociationRelationClassName
+                )
               when :missing
                 klass.create_method(
                   method_name.to_s,

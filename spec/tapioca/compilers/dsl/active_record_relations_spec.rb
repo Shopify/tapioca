@@ -459,6 +459,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
             sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
             def missing(*args); end
+
+            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
+            def not(opts, *rest); end
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -520,6 +523,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           class PrivateRelationWhereChain < PrivateRelation
             sig { params(args: T.untyped).returns(PrivateRelation) }
             def missing(*args); end
+
+            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
+            def not(opts, *rest); end
           end
         end
       RUBY
