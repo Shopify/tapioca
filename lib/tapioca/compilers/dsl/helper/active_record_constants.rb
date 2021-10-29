@@ -16,6 +16,7 @@ module Tapioca
           CommonRelationMethodsModuleName = T.let("CommonRelationMethods", String)
 
           RelationClassName = T.let("PrivateRelation", String)
+          RelationWhereChainClassName = T.let("PrivateWhereChainRelation", String)
           AssociationRelationClassName = T.let("PrivateAssociationRelation", String)
           AssociationsCollectionProxyClassName = T.let("PrivateCollectionProxy", String)
         end

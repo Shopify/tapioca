@@ -511,6 +511,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             Elem = type_member(fixed: ::Post)
           end
+
+          class PrivateWhereChainRelation < PrivateRelation
+            sig { params(args: T.untyped).returns(PrivateRelation) }
+            def missing(*args); end
+          end
         end
       RUBY
 
