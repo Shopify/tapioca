@@ -228,7 +228,7 @@ module Tapioca
               .grep_v(/=$/) # end with "=""
               .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
           end, T::Array[Symbol])
-          QUERY_WHERE_CHAIN_METHODS = T.let(
+          WHERE_CHAIN_QUERY_METHODS = T.let(
             ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
             T::Array[Symbol]
           )
@@ -295,7 +295,7 @@ module Tapioca
 
           sig { params(klass: RBI::Scope).void }
           def create_relation_where_chain_methods(klass)
-            QUERY_WHERE_CHAIN_METHODS.each do |method_name|
+            WHERE_CHAIN_QUERY_METHODS.each do |method_name|
               case method_name
               when :missing
                 klass.create_method(
@@ -335,7 +335,7 @@ module Tapioca
 
           sig { params(klass: RBI::Scope).void }
           def create_association_relation_where_chain_methods(klass)
-            QUERY_WHERE_CHAIN_METHODS.each do |method_name|
+            WHERE_CHAIN_QUERY_METHODS.each do |method_name|
               case method_name
               when :missing
                 klass.create_method(

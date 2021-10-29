@@ -326,7 +326,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
             def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationWhereChainRelation) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
             def where(*args, &blk); end
           end
 
@@ -442,7 +442,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def unscope(*args, &blk); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateWhereChainRelation) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
             def where(*args, &blk); end
           end
 
@@ -456,7 +456,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             Elem = type_member(fixed: ::Post)
           end
 
-          class PrivateAssociationWhereChainRelation < PrivateAssociationRelation
+          class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
             sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
             def missing(*args); end
           end
@@ -517,7 +517,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             Elem = type_member(fixed: ::Post)
           end
 
-          class PrivateWhereChainRelation < PrivateRelation
+          class PrivateRelationWhereChain < PrivateRelation
             sig { params(args: T.untyped).returns(PrivateRelation) }
             def missing(*args); end
           end
