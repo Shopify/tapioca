@@ -219,6 +219,8 @@ module Tapioca
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
             query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+            # Remove "where" which needs a custom return type for WhereChains
+            query_methods -= [:where]
             # Remove the methods that ...
             query_methods
               .grep_v(/_clause$/) # end with "_clause"
@@ -423,6 +425,14 @@ module Tapioca
                 create_param("opts", type: "T.untyped"),
                 create_rest_param("rest", type: "T.untyped"),
               ]
+            )
+            create_relation_method(
+              "where",
+              parameters: [
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("blk", type: "T.untyped"),
+              ],
+              relation_return_type: RelationWhereChainClassName
             )
 
             QUERY_METHODS.each do |method_name|
@@ -642,17 +652,24 @@ module Tapioca
             )
           end
 
-          sig { params(name: T.any(Symbol, String), parameters: T::Array[RBI::TypedParam]).void }
-          def create_relation_method(name, parameters: [])
+          sig do
+            params(
+              name: T.any(Symbol, String),
+              parameters: T::Array[RBI::TypedParam],
+              relation_return_type: T.nilable(String),
+              association_return_type: T.nilable(String),
+            ).void
+          end
+          def create_relation_method(name, parameters: [], relation_return_type: RelationClassName, association_return_type: AssociationRelationClassName)
             @relation_methods_module.create_method(
               name.to_s,
               parameters: parameters,
-              return_type: RelationClassName
+              return_type: relation_return_type
             )
             @association_relation_methods_module.create_method(
               name.to_s,
               parameters: parameters,
-              return_type: AssociationRelationClassName
+              return_type: association_return_type
             )
           end
         end
