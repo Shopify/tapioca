@@ -226,6 +226,10 @@ module Tapioca
               .grep_v(/=$/) # end with "=""
               .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
           end, T::Array[Symbol])
+          QUERY_WHERE_CHAIN_METHODS = T.let(
+            ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
+            T::Array[Symbol]
+          )
           FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
           CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
           ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
@@ -260,6 +264,7 @@ module Tapioca
             end
 
             create_relation_class
+            create_relation_where_chain_class
             create_association_relation_class
             create_collection_proxy_class
           end
@@ -275,6 +280,29 @@ module Tapioca
               klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            end
+          end
+
+          sig { void }
+          def create_relation_where_chain_class
+            model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
+              create_relation_where_chain_methods(klass)
+            end
+          end
+
+          sig { params(klass: RBI::Scope).void }
+          def create_relation_where_chain_methods(klass)
+            QUERY_WHERE_CHAIN_METHODS.each do |method_name|
+              case method_name
+              when :missing
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
+                  return_type: RelationClassName
+                )
+              end
             end
           end
 
