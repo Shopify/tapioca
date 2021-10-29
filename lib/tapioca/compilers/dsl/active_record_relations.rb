@@ -268,6 +268,7 @@ module Tapioca
             create_relation_class
             create_relation_where_chain_class
             create_association_relation_class
+            create_association_relation_where_chain_class
             create_collection_proxy_class
           end
 
@@ -319,6 +320,32 @@ module Tapioca
               klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            end
+          end
+
+          sig { void }
+          def create_association_relation_where_chain_class
+            model.create_class(
+              AssociationRelationWhereChainClassName,
+              superclass_name: AssociationRelationClassName
+            ) do |klass|
+              create_association_relation_where_chain_methods(klass)
+            end
+          end
+
+          sig { params(klass: RBI::Scope).void }
+          def create_association_relation_where_chain_methods(klass)
+            QUERY_WHERE_CHAIN_METHODS.each do |method_name|
+              case method_name
+              when :missing
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
+                  return_type: AssociationRelationClassName
+                )
+              end
             end
           end
 
@@ -432,7 +459,8 @@ module Tapioca
                 create_rest_param("args", type: "T.untyped"),
                 create_block_param("blk", type: "T.untyped"),
               ],
-              relation_return_type: RelationWhereChainClassName
+              relation_return_type: RelationWhereChainClassName,
+              association_return_type: AssociationRelationWhereChainClassName,
             )
 
             QUERY_METHODS.each do |method_name|
@@ -660,7 +688,12 @@ module Tapioca
               association_return_type: T.nilable(String),
             ).void
           end
-          def create_relation_method(name, parameters: [], relation_return_type: RelationClassName, association_return_type: AssociationRelationClassName)
+          def create_relation_method(
+            name,
+            parameters: [],
+            relation_return_type: RelationClassName,
+            association_return_type: AssociationRelationClassName
+          )
             @relation_methods_module.create_method(
               name.to_s,
               parameters: parameters,
