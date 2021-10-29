@@ -306,7 +306,7 @@ module Tapioca
                   ],
                   return_type: RelationClassName
                 )
-              when :missing
+              when :associated, :missing
                 klass.create_method(
                   method_name.to_s,
                   parameters: [
@@ -355,7 +355,7 @@ module Tapioca
                   ],
                   return_type: AssociationRelationClassName
                 )
-              when :missing
+              when :associated, :missing
                 klass.create_method(
                   method_name.to_s,
                   parameters: [
