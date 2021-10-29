@@ -695,8 +695,8 @@ module Tapioca
             params(
               name: T.any(Symbol, String),
               parameters: T::Array[RBI::TypedParam],
-              relation_return_type: T.nilable(String),
-              association_return_type: T.nilable(String),
+              relation_return_type: String,
+              association_return_type: String,
             ).void
           end
           def create_relation_method(
