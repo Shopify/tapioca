@@ -1,5 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
+
 begin
   require "active_record"
 rescue LoadError
@@ -266,9 +267,7 @@ module Tapioca
             end
 
             create_relation_class
-            create_relation_where_chain_class
             create_association_relation_class
-            create_association_relation_where_chain_class
             create_collection_proxy_class
           end
 
@@ -284,6 +283,8 @@ module Tapioca
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
             end
+
+            create_relation_where_chain_class
           end
 
           sig { void }
@@ -298,6 +299,8 @@ module Tapioca
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
             end
+
+            create_association_relation_where_chain_class
           end
 
           sig { void }
