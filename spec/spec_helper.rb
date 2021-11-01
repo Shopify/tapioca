@@ -8,9 +8,9 @@ require "minitest/hooks/default"
 require "minitest/reporters"
 require "byebug"
 
-require "content_helper"
-require "template_helper"
-require "isolation_helper"
+require "tapioca/helpers/test/content"
+require "tapioca/helpers/test/template"
+require "tapioca/helpers/test/isolation"
 require "cli_spec"
 require "dsl_spec"
 
