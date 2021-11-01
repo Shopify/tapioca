@@ -103,6 +103,8 @@ module Tapioca
         extend T::Sig
         include Helper::ActiveRecordConstants
 
+        SourceReflectionError = Class.new(StandardError)
+
         ReflectionType = T.type_alias do
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
         end
@@ -147,6 +149,10 @@ module Tapioca
             else
               populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
             end
+          rescue SourceReflectionError
+            add_error(<<~MSG)
+              Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
+            MSG
           end
         end
 
@@ -267,6 +273,8 @@ module Tapioca
         end
         def polymorphic_association?(reflection)
           if reflection.through_reflection?
+            raise SourceReflectionError unless reflection.source_reflection
+
             polymorphic_association?(reflection.source_reflection)
           else
             !!reflection.polymorphic?
