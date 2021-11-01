@@ -374,6 +374,24 @@ module Tapioca
         refute_path_exists("#{outdir}/user.rbi")
       end
 
+      it "removes stale RBIs properly when running in parallel" do
+        FileUtils.mkdir_p("#{outdir}/baz")
+        FileUtils.mkdir_p("#{outdir}/namespace")
+
+        FileUtils.touch("#{outdir}/baz/role.rbi")
+        FileUtils.touch("#{outdir}/job.rbi")
+        FileUtils.touch("#{outdir}/post.rbi")
+        FileUtils.touch("#{outdir}/namespace/comment.rbi")
+
+        tapioca("dsl", number_of_workers: 4)
+
+        assert_path_exists("#{outdir}/baz/role.rbi")
+        assert_path_exists("#{outdir}/job.rbi")
+        assert_path_exists("#{outdir}/post.rbi")
+        assert_path_exists("#{outdir}/namespace/comment.rbi")
+        refute_path_exists("#{outdir}/user.rbi")
+      end
+
       it "removes stale RBI files of requested constants" do
         FileUtils.touch("#{outdir}/user.rbi")
 

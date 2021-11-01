@@ -42,7 +42,11 @@ module Tapioca
         @number_of_workers = number_of_workers
       end
 
-      sig { params(blk: T.proc.params(constant: Module, rbi: RBI::File).void).void }
+      sig do
+        type_parameters(:T).params(
+          blk: T.proc.params(constant: Module, rbi: RBI::File).returns(T.nilable(T.type_parameter(:T)))
+        ).returns(T.nilable(T::Array[T.nilable(T.type_parameter(:T))]))
+      end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
 
@@ -53,7 +57,7 @@ module Tapioca
           ERROR
         end
 
-        Executor.new(
+        result = Executor.new(
           constants_to_process.sort_by { |c| c.name.to_s },
           number_of_workers: @number_of_workers
         ).run_in_parallel do |constant|
@@ -66,6 +70,8 @@ module Tapioca
         generators.flat_map(&:errors).each do |msg|
           report_error(msg)
         end
+
+        result
       end
 
       private

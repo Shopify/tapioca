@@ -80,24 +80,27 @@ module Tapioca
           number_of_workers: @number_of_workers
         )
 
-        compiler.run do |constant, contents|
+        processed_files = compiler.run do |constant, contents|
           constant_name = T.must(Reflection.name_of(constant))
 
           if @verbose && !@quiet
             say_status(:processing, constant_name, :yellow)
           end
 
-          filename = compile_dsl_rbi(
+          compile_dsl_rbi(
             constant_name,
             contents,
             outpath: outpath,
             quiet: @should_verify || @quiet && !@verbose
           )
-
-          if filename
-            rbi_files_to_purge.delete(filename)
-          end
         end
+
+        processed_files&.each do |filename|
+          next if filename.nil?
+
+          rbi_files_to_purge.delete(filename)
+        end
+
         say("")
 
         if @should_verify
