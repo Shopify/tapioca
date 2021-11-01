@@ -22,16 +22,24 @@ module Tapioca
           requested_constants: T::Array[Module],
           requested_generators: T::Array[T.class_of(Dsl::Base)],
           excluded_generators: T::Array[T.class_of(Dsl::Base)],
-          error_handler: T.nilable(T.proc.params(error: String).void)
+          error_handler: T.nilable(T.proc.params(error: String).void),
+          number_of_workers: T.nilable(Integer),
         ).void
       end
-      def initialize(requested_constants:, requested_generators: [], excluded_generators: [], error_handler: nil)
+      def initialize(
+        requested_constants:,
+        requested_generators: [],
+        excluded_generators: [],
+        error_handler: nil,
+        number_of_workers: nil
+      )
         @generators = T.let(
           gather_generators(requested_generators, excluded_generators),
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
         @error_handler = T.let(error_handler || $stderr.method(:puts), T.proc.params(error: String).void)
+        @number_of_workers = number_of_workers
       end
 
       sig { params(blk: T.proc.params(constant: Module, rbi: RBI::File).void).void }
@@ -45,7 +53,10 @@ module Tapioca
           ERROR
         end
 
-        constants_to_process.sort_by { |c| c.name.to_s }.each do |constant|
+        Executor.new(
+          constants_to_process.sort_by { |c| c.name.to_s },
+          number_of_workers: @number_of_workers
+        ).run_in_parallel do |constant|
           rbi = rbi_for_constant(constant)
           next if rbi.nil?
 

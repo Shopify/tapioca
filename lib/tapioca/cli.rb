@@ -79,6 +79,11 @@ module Tapioca
       aliases: ["-q"],
       type: :boolean,
       desc: "Supresses file creation output"
+    option :workers,
+      aliases: ["-w"],
+      type: :numeric,
+      default: nil,
+      desc: "Number of parallel workers to use when generating RBIs"
     def dsl(*constants)
       current_command = T.must(current_command_chain.first)
       config = ConfigBuilder.from_options(current_command, options)
@@ -93,7 +98,8 @@ module Tapioca
         default_command: Config::DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
-        verbose: options[:verbose]
+        verbose: options[:verbose],
+        number_of_workers: config.workers
       )
       Tapioca.silence_warnings do
         generator.generate
