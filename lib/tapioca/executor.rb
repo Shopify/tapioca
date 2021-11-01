@@ -25,8 +25,14 @@ module Tapioca
       @items_per_worker = T.let((queue.length.to_f / @number_of_workers).ceil, Integer)
     end
 
-    sig { params(block: T.proc.params(item: T.untyped).void).void }
+    sig do
+      type_parameters(:T).params(
+        block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T))
+      ).returns(T.nilable(T::Array[T.type_parameter(:T)]))
+    end
     def run_in_parallel(&block)
+      read, write = IO.pipe
+
       # If we only have one worker selected, it's not worth forking, just run sequentially
       if @number_of_workers == 1
         block.call(@queue.shift) until @queue.empty?
@@ -38,11 +44,29 @@ module Tapioca
       workers = (0...@number_of_workers).map do
         items = @queue.shift(@items_per_worker)
 
-        fork { block.call(items.shift) until items.empty? }
+        fork do
+          read.close
+          result = items.map { |item| block.call(item) }.compact
+
+          packed = [Marshal.dump(result)].pack("m")
+          write.puts("-#{packed}") unless result.empty?
+        end
       end
+
+      write.close
 
       # Wait until all the workers finish
       workers.each { |pid| Process.waitpid(pid) }
+
+      result = read.read
+      read.close
+
+      if result
+        result
+          .split("-")
+          .drop(1)
+          .flat_map { |item| T.unsafe(Marshal.load(item.unpack1("m"))) }
+      end
     end
   end
 end
