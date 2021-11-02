@@ -5,7 +5,7 @@ require "cli_spec"
 
 module Tapioca
   class GemSpec < CliSpec
-    include TemplateHelper
+    include Tapioca::Helpers::Test::Template
 
     FOO_RBI = <<~CONTENTS
       # typed: true

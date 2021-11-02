@@ -7,9 +7,9 @@ require "tmpdir"
 require "bundler"
 
 class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
-  include ContentHelper
-  include TemplateHelper
-  include IsolationHelper
+  include Tapioca::Helpers::Test::Content
+  include Tapioca::Helpers::Test::Template
+  include Tapioca::Helpers::Test::Isolation
 
   class GemStub < T::Struct
     extend T::Sig

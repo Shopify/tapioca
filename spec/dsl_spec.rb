@@ -3,16 +3,16 @@
 
 require "sorbet-runtime"
 require "minitest/spec"
-require "content_helper"
-require "template_helper"
-require "isolation_helper"
+require "tapioca/helpers/test/content"
+require "tapioca/helpers/test/template"
+require "tapioca/helpers/test/isolation"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
   include Kernel
-  include ContentHelper
-  include TemplateHelper
-  include IsolationHelper
+  include Tapioca::Helpers::Test::Content
+  include Tapioca::Helpers::Test::Template
+  include Tapioca::Helpers::Test::Isolation
 
   sig { void }
   def after_setup
