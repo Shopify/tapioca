@@ -456,6 +456,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
             def not(opts, *rest); end
+
+            Elem = type_member(fixed: ::Post)
           end
 
           class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -520,6 +522,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
             def not(opts, *rest); end
+
+            Elem = type_member(fixed: ::Post)
           end
         end
       RUBY

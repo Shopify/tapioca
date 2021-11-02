@@ -307,6 +307,7 @@ module Tapioca
           def create_relation_where_chain_class
             model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
               create_where_chain_methods(klass, RelationClassName)
+              klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
             end
           end
 
@@ -317,6 +318,7 @@ module Tapioca
               superclass_name: AssociationRelationClassName
             ) do |klass|
               create_where_chain_methods(klass, AssociationRelationClassName)
+              klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
             end
           end
 
