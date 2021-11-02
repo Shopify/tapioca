@@ -13,7 +13,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord constants with no abstract classes") do
+    it("gathers only ActiveRecord constants including abstract classes") do
       add_ruby_file("content.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
         end
@@ -26,7 +26,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
         end
       RUBY
 
-      assert_equal(["Conversation"], gathered_constants)
+      assert_equal(["Conversation", "Product"], gathered_constants)
     end
   end
 
@@ -349,6 +349,136 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       RBI
 
       assert_equal(expected, rbi_for(:Conversation))
+    end
+
+    it("generates RBI file for classes with enum attribute with inheritance") do
+      add_ruby_file("conversation.rb", <<~RUBY)
+        class AbstractConversation < ActiveRecord::Base
+          enum status: [:active, :archived]
+        end
+
+        class Conversation < AbstractConversation
+          enum status: [:inactive]
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Conversation
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def inactive!; end
+
+            sig { returns(T::Boolean) }
+            def inactive?; end
+          end
+
+          class << self
+            sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+            def statuses; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Conversation))
+
+      expected = <<~RBI
+        # typed: strong
+
+        class AbstractConversation
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+          end
+
+          class << self
+            sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+            def statuses; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:AbstractConversation))
+    end
+
+    it("generates RBI file for classes with enum attribute with inheritance from abstract class") do
+      add_ruby_file("conversation.rb", <<~RUBY)
+        class AbstractConversation < ActiveRecord::Base
+          self.abstract_class = true
+
+          enum status: [:active, :archived]
+        end
+
+        class Conversation < AbstractConversation
+          enum status: [:inactive]
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Conversation
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def inactive!; end
+
+            sig { returns(T::Boolean) }
+            def inactive?; end
+          end
+
+          class << self
+            sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+            def statuses; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Conversation))
+
+      expected = <<~RBI
+        # typed: strong
+
+        class AbstractConversation
+          include EnumMethodsModule
+
+          module EnumMethodsModule
+            sig { void }
+            def active!; end
+
+            sig { returns(T::Boolean) }
+            def active?; end
+
+            sig { void }
+            def archived!; end
+
+            sig { returns(T::Boolean) }
+            def archived?; end
+          end
+
+          class << self
+            sig { returns(T::Hash[T.any(String, Symbol), Integer]) }
+            def statuses; end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:AbstractConversation))
     end
   end
 end
