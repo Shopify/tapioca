@@ -44,8 +44,8 @@ module Tapioca
 
       sig do
         type_parameters(:T).params(
-          blk: T.proc.params(constant: Module, rbi: RBI::File).returns(T.nilable(T.type_parameter(:T)))
-        ).returns(T.nilable(T::Array[T.nilable(T.type_parameter(:T))]))
+          blk: T.proc.params(constant: Module, rbi: RBI::File).returns(T.type_parameter(:T))
+        ).returns(T.nilable(T::Array[T.type_parameter(:T)]))
       end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
@@ -71,7 +71,7 @@ module Tapioca
           report_error(msg)
         end
 
-        result
+        result&.compact
       end
 
       private

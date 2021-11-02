@@ -375,6 +375,7 @@ module Tapioca
       end
 
       it "removes stale RBIs properly when running in parallel" do
+        # Files that shouldn't be deleted
         FileUtils.mkdir_p("#{outdir}/baz")
         FileUtils.mkdir_p("#{outdir}/namespace")
 
@@ -383,7 +384,17 @@ module Tapioca
         FileUtils.touch("#{outdir}/post.rbi")
         FileUtils.touch("#{outdir}/namespace/comment.rbi")
 
+        # Files that should be deleted
+        FileUtils.mkdir_p("#{outdir}/to_be_deleted")
+        FileUtils.touch("#{outdir}/to_be_deleted/foo.rbi")
+        FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
+        FileUtils.touch("#{outdir}/does_not_exist.rbi")
+
         tapioca("dsl", number_of_workers: 4)
+
+        refute_path_exists("#{outdir}/does_not_exist.rbi")
+        refute_path_exists("#{outdir}/to_be_deleted/foo.rbi")
+        refute_path_exists("#{outdir}/to_be_deleted/baz.rbi")
 
         assert_path_exists("#{outdir}/baz/role.rbi")
         assert_path_exists("#{outdir}/job.rbi")

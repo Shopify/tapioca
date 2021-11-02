@@ -6,6 +6,9 @@ require "etc"
 module Tapioca
   class Executor
     MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
+
+    # The separator is used to divide Base64 values, because `-` is not a valid Base64 character
+    SEPARATOR = T.let("-", String)
     extend T::Sig
 
     sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
@@ -31,13 +34,12 @@ module Tapioca
       ).returns(T.nilable(T::Array[T.type_parameter(:T)]))
     end
     def run_in_parallel(&block)
+      # Create an IO pipe to communicate the return value of the parallelized block back from the workers to the main
+      # process
       read, write = IO.pipe
 
       # If we only have one worker selected, it's not worth forking, just run sequentially
-      if @number_of_workers == 1
-        block.call(@queue.shift) until @queue.empty?
-        return
-      end
+      return @queue.map { |item| block.call(item) }.compact if @number_of_workers == 1
 
       # If we have more than one worker, fork the pool by shifting the expected number of items per worker from the
       # queue
@@ -48,8 +50,15 @@ module Tapioca
           read.close
           result = items.map { |item| block.call(item) }.compact
 
+          # We mapped the result of invoking the paralllized block into an array. In order to return the array from the
+          # worker back to the main process, we encode it in Base64, append a separator in the beginning and write it to
+          # the pipe. The separator helps us split the results that are coming from the multiple workers. It looks
+          # something like this:
+          # -absbasd13231-asbasd123123
+          # ^^^^^^^^^^^^^ encoded result from first worker
+          #              ^^^^^^^^^^^^^ encoded result from second worker
           packed = [Marshal.dump(result)].pack("m")
-          write.puts("-#{packed}") unless result.empty?
+          write.puts("#{SEPARATOR}#{packed}") unless result.empty?
         end
       end
 
@@ -61,9 +70,15 @@ module Tapioca
       result = read.read
       read.close
 
+      # Here we need to do the opposite of what the workers are doing. We read from the pipe a Base64 string with
+      # separators e.g.: -absbasd13231-asbasd123123 and need to get back the Ruby object from it. In order, we
+      # 1. split the results based on the separator
+      # 2. drop the first item of the split array. It will always be an empty string since even the first worker has the
+      # appended separator
+      # 3. Map back the objects by decoding them from Base64 and loading with Marshal
       if result
         result
-          .split("-")
+          .split(SEPARATOR)
           .drop(1)
           .flat_map { |item| T.unsafe(Marshal.load(item.unpack1("m"))) }
       end
