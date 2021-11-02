@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 require "tapioca/ruby_ext/forking_patch"
@@ -18,7 +18,6 @@ module Tapioca
           !ENV["NO_FORK"] && Process.respond_to?(:fork)
         end
 
-        sig { void }
         def run
           serialized = T.unsafe(self).run_in_isolation do
             super
