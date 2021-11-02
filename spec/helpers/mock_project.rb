@@ -76,7 +76,7 @@ module Tapioca
     sig { params(command: String).returns([String, String, T::Boolean]) }
     def tapioca(command)
       exec_command = ["tapioca", command]
-      exec_command << "--workers=1" if command.start_with?(/dsl|gem/) && !command.match?("--workers")
+      exec_command << "--workers=1" if command.start_with?(/gem/) && !command.match?("--workers")
       bundle_exec(exec_command.join(" "))
     end
   end
