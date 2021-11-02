@@ -1,84 +1,100 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
-require "cli_spec"
+require "spec_with_project"
 
 module Tapioca
-  class RequireSpec < CliSpec
-    describe("#require") do
-      before do
-        tapioca("init")
+  class RequireSpec < SpecWithProject
+    describe("#cli::require") do
+      before(:all) do
+        project.bundle_install
+        project.tapioca("init")
+      end
+
+      after do
+        @project.remove("lib/")
+        @project.remove("test/")
+        @project.remove("sorbet/tapioca/require.rb")
       end
 
       it "does nothing if there is nothing to require" do
-        File.write(repo_path / "sorbet/config", <<~CONFIG)
-          .
-          --ignore=postrequire.rb
-          --ignore=postrequire_faulty.rb
-          --ignore=config/
-        CONFIG
+        out, err, status = @project.tapioca("require")
 
-        output = tapioca("require")
-
-        assert_equal(<<~OUTPUT, output)
+        assert_equal(<<~OUT, out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Nothing to do
-        OUTPUT
+        OUT
 
-        assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
-        assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
-          # typed: true
-          # frozen_string_literal: true
-
-          # Add your extra requires here (`bin/tapioca require` can be used to boostrap this list)
-        CONTENTS
+        assert_empty(err)
+        assert(status)
       end
 
       it "creates a list of all requires from all Ruby files passed to Sorbet" do
-        output = tapioca("require")
+        @project.write("lib/foo.rb", <<~RB)
+          require "found2"
+          require "bar"
+        RB
 
-        assert_equal(<<~OUTPUT, output)
+        @project.write("lib/bar.rb", <<~RB)
+          require "found1"
+          require "foo"
+        RB
+
+        out, err, status = @project.tapioca("require")
+
+        assert_equal(<<~OUT, out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.
-        OUTPUT
+        OUT
 
-        assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
-        assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
+        assert_project_file_equal("sorbet/tapioca/require.rb", <<~RB)
           # typed: true
           # frozen_string_literal: true
 
-          require "active_support/all"
-          require "baz"
-          require "foo/secret"
-          require "foo/will_fail"
-          require "rake"
-          require "sidekiq"
-          require "smart_properties"
-        CONTENTS
+          require "found1"
+          require "found2"
+        RB
+
+        assert_empty(err)
+        assert(status)
       end
 
       it "takes into account sorbet ignored paths" do
-        File.write(repo_path / "sorbet/config", <<~CONFIG)
+        @project.write("lib/foo.rb", <<~RB)
+          require "found2"
+        RB
+
+        @project.write("lib/bar.rb", <<~RB)
+          require "found1"
+        RB
+
+        @project.write("test/foo_test.rb", <<~RB)
+          require "not_found"
+        RB
+
+        @project.sorbet_config(<<~CONFIG)
           .
-          --ignore=postrequire_faulty.rb
-          --ignore=config/
+          --ignore=test/
         CONFIG
 
-        output = tapioca("require")
+        out, err, status = @project.tapioca("require")
 
-        assert_equal(<<~OUTPUT, output)
+        assert_equal(<<~OUT, out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.
-        OUTPUT
+        OUT
 
-        assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
-        assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
+        assert_project_file_equal("sorbet/tapioca/require.rb", <<~RB)
           # typed: true
           # frozen_string_literal: true
 
-          require "foo/secret"
-        CONTENTS
+          require "found1"
+          require "found2"
+        RB
+
+        assert_empty(err)
+        assert(status)
       end
     end
   end
