@@ -36,3 +36,5 @@ group(:development, :test) do
   gem("aasm", require: false)
   gem("bcrypt", require: false)
 end
+
+gem "unf_ext", "~> 0.0.8"

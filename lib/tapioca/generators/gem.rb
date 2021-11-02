@@ -48,6 +48,7 @@ module Tapioca
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @doc = T.let(doc, T::Boolean)
+        @compiler_class = T.let(Compilers::Gem::SymbolTableCompiler, T.class_of(Compilers::Gem::Base))
       end
 
       sig { override.void }
@@ -159,7 +160,7 @@ module Tapioca
           display_heading: @file_header
         )
 
-        Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, @doc)
+        @compiler_class.new(gem, include_docs: @doc).compile(rbi)
 
         if rbi.empty?
           rbi.set_empty_body_content

@@ -48,6 +48,11 @@ module Tapioca
     def rails_engines
       return [] unless Object.const_defined?("Rails::Engine")
 
+      rails = Object.const_get("Rails")
+      application = rails.application
+
+      return [] unless rails.application
+
       # We can use `Class#descendants` here, since we know Rails is loaded
       Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
     end
@@ -96,23 +101,7 @@ module Tapioca
     sig { void }
     def load_rails_engines
       rails_engines.each do |engine|
-        errored_files = []
-
-        engine.config.eager_load_paths.each do |load_path|
-          Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-            require(file)
-          rescue LoadError, StandardError
-            errored_files << file
-          end
-        end
-
-        # Try files that have errored one more time
-        # It might have been a load order problem
-        errored_files.each do |file|
-          require(file)
-        rescue LoadError, StandardError
-          nil
-        end
+        engine.eager_load!
       end
     end
   end

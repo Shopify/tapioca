@@ -6,7 +6,7 @@ require "tapioca/helpers/mixin_type"
 
 module Tapioca
   module Compilers
-    module SymbolTable
+    module Gem
       class SymbolGenerator
         extend(T::Sig)
         include(Reflection)
@@ -26,19 +26,18 @@ module Tapioca
         sig { returns(Gemfile::GemSpec) }
         attr_reader :gem
 
-        sig { returns(Integer) }
-        attr_reader :indent
+        sig { returns(T::Set[String]) }
+        attr_reader :symbols
 
-        sig { params(gem: Gemfile::GemSpec, indent: Integer, include_doc: T::Boolean).void }
-        def initialize(gem, indent = 0, include_doc = false)
+        sig { params(gem: Gemfile::GemSpec, symbols: T::Set[String], ignored_symbols: T::Set[String], include_doc: T::Boolean).void }
+        def initialize(gem, symbols, ignored_symbols, include_doc: false)
           @gem = gem
-          @indent = indent
           @seen = T.let(Set.new, T::Set[String])
           @alias_namespace = T.let(Set.new, T::Set[String])
+          @symbols = T.let(symbols, T::Set[String])
           @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
-          @symbols = T.let(nil, T.nilable(T::Set[String]))
           @include_doc = include_doc
-
+          @ignored_symbols = ignored_symbols
           gem.parse_yard_docs if include_doc
         end
 
@@ -52,36 +51,6 @@ module Tapioca
         sig { params(name: T.nilable(String)).void }
         def add_to_symbol_queue(name)
           @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_ignored?(name)
-        end
-
-        sig { returns(T::Set[String]) }
-        def symbols
-          @symbols ||= begin
-            symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(gem.files)
-            symbols.union(engine_symbols(symbols))
-          end
-        end
-
-        sig { params(symbols: T::Set[String]).returns(T::Set[String]) }
-        def engine_symbols(symbols)
-          return Set.new unless Object.const_defined?("Rails::Engine")
-
-          engine = descendants_of(Object.const_get("Rails::Engine"))
-            .reject(&:abstract_railtie?)
-            .find do |klass|
-              name = name_of(klass)
-              !name.nil? && symbols.include?(name)
-            end
-
-          return Set.new unless engine
-
-          paths = engine.config.eager_load_paths.flat_map do |load_path|
-            Pathname.glob("#{load_path}/**/*.rb")
-          end
-
-          Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(paths)
-        rescue
-          Set.new
         end
 
         sig { params(tree: RBI::Tree, symbol: String).void }
@@ -616,7 +585,7 @@ module Tapioca
 
         sig { params(symbol_name: String).returns(T::Boolean) }
         def symbol_ignored?(symbol_name)
-          SymbolLoader.ignore_symbol?(symbol_name)
+          @ignored_symbols.include?(symbol_name.delete_prefix("::"))
         end
 
         SPECIAL_METHOD_NAMES = T.let([

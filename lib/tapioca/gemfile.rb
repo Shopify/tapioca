@@ -127,6 +127,11 @@ module Tapioca
         end
       end
 
+      sig { returns(T::Array[String]) }
+      def full_require_paths
+        @spec.full_require_paths
+      end
+
       sig { returns(String) }
       def name
         @spec.name
