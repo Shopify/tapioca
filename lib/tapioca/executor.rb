@@ -50,7 +50,7 @@ module Tapioca
           read.close
           result = items.map { |item| block.call(item) }.compact
 
-          # We mapped the result of invoking the paralllized block into an array. In order to return the array from the
+          # We mapped the result of invoking the parallelized block into an array. In order to return the array from the
           # worker back to the main process, we encode it in Base64, append a separator in the beginning and write it to
           # the pipe. The separator helps us split the results that are coming from the multiple workers. It looks
           # something like this:
