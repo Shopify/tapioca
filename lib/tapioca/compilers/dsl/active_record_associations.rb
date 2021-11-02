@@ -153,6 +153,10 @@ module Tapioca
             add_error(<<~MSG)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
             MSG
+          rescue NameError
+            add_error(<<~MSG)
+              Cannot generate association `#{reflection.name}` on `#{constant}` since the constant `#{reflection.name.capitalize}` does not exist.
+            MSG
           end
         end
 

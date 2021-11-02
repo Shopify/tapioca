@@ -407,7 +407,42 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
 
     describe("with errors") do
-      it("generates RBI file for broken has_many :through collection association with errors") do
+      it("generates RBI file for broken has_one association") do
+        add_ruby_file("schema.rb", <<~RUBY)
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+                t.references(:author)
+              end
+            end
+          end
+        RUBY
+
+        add_ruby_file("post.rb", <<~RUBY)
+          class Post < ActiveRecord::Base
+            has_one :author
+          end
+        RUBY
+
+        expected = <<~RBI
+          # typed: strong
+
+          class Post
+            include GeneratedAssociationMethods
+
+            module GeneratedAssociationMethods; end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:Post))
+
+        assert_equal(1, generated_errors.size)
+        assert_equal(<<~MSG, generated_errors.first)
+          Cannot generate association `author` on `Post` since the constant `Author` does not exist.
+        MSG
+      end
+
+      it("generates RBI file for broken has_many :through collection association") do
         add_ruby_file("schema.rb", <<~RUBY)
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
