@@ -4,6 +4,10 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
+  before do
+    require "rails/railtie"
+  end
+
   describe("#initialize") do
     after(:each) do
       T.unsafe(self).assert_no_generated_errors

@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 begin
-  require "rails/railtie"
   require "identity_cache"
 rescue LoadError
   # means IdentityCache is not installed,
