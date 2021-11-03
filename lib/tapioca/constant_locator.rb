@@ -17,8 +17,14 @@ module Tapioca
     TracePoint.trace(:class) do |tp|
       unless tp.self.singleton_class?
         key = name_of(tp.self)
+        file = tp.path
+        if file == "(eval)"
+          file = T.must(caller_locations)
+            .drop_while { |loc| loc.path == "(eval)" }
+            .first&.path
+        end
         @class_files[key] ||= Set.new
-        @class_files[key] << tp.path
+        @class_files[key] << file
       end
     end
 
