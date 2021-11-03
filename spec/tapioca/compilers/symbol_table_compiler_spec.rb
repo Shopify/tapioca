@@ -2824,6 +2824,31 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("handles class_env created classes and modules") do
+      add_ruby_file("container.rb", <<~RUBY)
+        class Container
+          class_eval <<~EOF
+            class FooClass
+            end
+
+            module FooModule
+            end
+
+            Bar = 42
+          EOF
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Container; end
+        Container::Bar = T.let(T.unsafe(nil), Integer)
+        class Container::FooClass; end
+        module Container::FooModule; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("includes comment documentation from sources when doc is true") do
       add_ruby_file("foo.rb", <<~RUBY)
         # frozen_string_literal: true
