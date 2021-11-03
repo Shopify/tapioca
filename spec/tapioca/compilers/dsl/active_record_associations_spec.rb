@@ -157,6 +157,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
 
       it("generates RBI file for polymorphic belongs_to single association") do
+        add_ruby_file("category.rb", <<~RUBY)
+          class Category < ActiveRecord::Base
+          end
+        RUBY
+
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             belongs_to :category, polymorphic: true
