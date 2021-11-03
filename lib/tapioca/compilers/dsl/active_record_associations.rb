@@ -104,6 +104,7 @@ module Tapioca
         include Helper::ActiveRecordConstants
 
         SourceReflectionError = Class.new(StandardError)
+        MissingConstantError = Class.new(StandardError)
 
         ReflectionType = T.type_alias do
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
@@ -153,7 +154,7 @@ module Tapioca
             add_error(<<~MSG)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
             MSG
-          rescue NameError
+          rescue MissingConstantError
             add_error(<<~MSG)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the constant `#{reflection.name.capitalize}` does not exist.
             MSG
@@ -253,6 +254,7 @@ module Tapioca
         end
         def type_for(constant, reflection)
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
+          raise MissingConstantError unless Object.const_defined?(reflection.class_name)
 
           T.must(qualified_name_of(reflection.klass))
         end
