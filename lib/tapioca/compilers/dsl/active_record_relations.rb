@@ -1,5 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
+
 begin
   require "active_record"
 rescue LoadError
@@ -219,6 +220,8 @@ module Tapioca
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
             query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+            # Remove "where" which needs a custom return type for WhereChains
+            query_methods -= [:where]
             # Remove the methods that ...
             query_methods
               .grep_v(/_clause$/) # end with "_clause"
@@ -226,6 +229,10 @@ module Tapioca
               .grep_v(/=$/) # end with "=""
               .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
           end, T::Array[Symbol])
+          WHERE_CHAIN_QUERY_METHODS = T.let(
+            ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
+            T::Array[Symbol]
+          )
           FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
           CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
           ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
@@ -276,6 +283,8 @@ module Tapioca
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
             end
+
+            create_relation_where_chain_class
           end
 
           sig { void }
@@ -289,6 +298,52 @@ module Tapioca
               klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
 
               klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            end
+
+            create_association_relation_where_chain_class
+          end
+
+          sig { void }
+          def create_relation_where_chain_class
+            model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
+              create_where_chain_methods(klass, RelationClassName)
+              klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            end
+          end
+
+          sig { void }
+          def create_association_relation_where_chain_class
+            model.create_class(
+              AssociationRelationWhereChainClassName,
+              superclass_name: AssociationRelationClassName
+            ) do |klass|
+              create_where_chain_methods(klass, AssociationRelationClassName)
+              klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            end
+          end
+
+          sig { params(klass: RBI::Scope, return_type: String).void }
+          def create_where_chain_methods(klass, return_type)
+            WHERE_CHAIN_QUERY_METHODS.each do |method_name|
+              case method_name
+              when :not
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_param("opts", type: "T.untyped"),
+                    create_rest_param("rest", type: "T.untyped"),
+                  ],
+                  return_type: return_type
+                )
+              when :associated, :missing
+                klass.create_method(
+                  method_name.to_s,
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
+                  return_type: return_type
+                )
+              end
             end
           end
 
@@ -390,11 +445,13 @@ module Tapioca
           def create_relation_methods
             create_relation_method("all")
             create_relation_method(
-              "not",
+              "where",
               parameters: [
-                create_param("opts", type: "T.untyped"),
-                create_rest_param("rest", type: "T.untyped"),
-              ]
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("blk", type: "T.untyped"),
+              ],
+              relation_return_type: RelationWhereChainClassName,
+              association_return_type: AssociationRelationWhereChainClassName,
             )
 
             QUERY_METHODS.each do |method_name|
@@ -614,17 +671,29 @@ module Tapioca
             )
           end
 
-          sig { params(name: T.any(Symbol, String), parameters: T::Array[RBI::TypedParam]).void }
-          def create_relation_method(name, parameters: [])
+          sig do
+            params(
+              name: T.any(Symbol, String),
+              parameters: T::Array[RBI::TypedParam],
+              relation_return_type: String,
+              association_return_type: String,
+            ).void
+          end
+          def create_relation_method(
+            name,
+            parameters: [],
+            relation_return_type: RelationClassName,
+            association_return_type: AssociationRelationClassName
+          )
             @relation_methods_module.create_method(
               name.to_s,
               parameters: parameters,
-              return_type: RelationClassName
+              return_type: relation_return_type
             )
             @association_relation_methods_module.create_method(
               name.to_s,
               parameters: parameters,
-              return_type: AssociationRelationClassName
+              return_type: association_return_type
             )
           end
         end

@@ -269,9 +269,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def none(*args, &blk); end
 
-            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
-            def not(opts, *rest); end
-
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
             def offset(*args, &blk); end
 
@@ -326,7 +323,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
             def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
             def where(*args, &blk); end
           end
 
@@ -391,9 +388,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def none(*args, &blk); end
 
-            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
-            def not(opts, *rest); end
-
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def offset(*args, &blk); end
 
@@ -442,7 +436,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
             def unscope(*args, &blk); end
 
-            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+            sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
             def where(*args, &blk); end
           end
 
@@ -452,6 +446,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(T::Array[::Post]) }
             def to_ary; end
+
+            Elem = type_member(fixed: ::Post)
+          end
+
+          class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
+            sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
+            def missing(*args); end
+
+            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
+            def not(opts, *rest); end
 
             Elem = type_member(fixed: ::Post)
           end
@@ -508,6 +512,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
 
             sig { returns(T::Array[::Post]) }
             def to_ary; end
+
+            Elem = type_member(fixed: ::Post)
+          end
+
+          class PrivateRelationWhereChain < PrivateRelation
+            sig { params(args: T.untyped).returns(PrivateRelation) }
+            def missing(*args); end
+
+            sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
+            def not(opts, *rest); end
 
             Elem = type_member(fixed: ::Post)
           end
