@@ -407,12 +407,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
 
     describe("with errors") do
-      it("generates RBI file for broken has_one association") do
+      it("generates RBI file for broken associations") do
         add_ruby_file("schema.rb", <<~RUBY)
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
-                t.references(:author)
               end
             end
           end
@@ -421,6 +420,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             has_one :author
+            has_many :comments
+            belongs_to :blog
+            has_and_belongs_to_many :commenters
+            has_many :readers, through: :author
+            has_one :award, through: :blog
           end
         RUBY
 
@@ -436,10 +440,20 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
         assert_equal(expected, rbi_for(:Post))
 
-        assert_equal(1, generated_errors.size)
-        assert_equal(<<~MSG.strip, generated_errors.first)
-          Cannot generate association `author` on `Post` since the constant `Author` does not exist.
-        MSG
+        assert_equal(6, generated_errors.size)
+
+        # rubocop:disable Layout/LineLength
+        expected_errors = [
+          "Cannot generate association `has_one :author` on `Post` since the constant `Author` does not exist.",
+          "Cannot generate association `has_many :comments` on `Post` since the constant `Comment` does not exist.",
+          "Cannot generate association `belongs_to :blog` on `Post` since the constant `Blog` does not exist.",
+          "Cannot generate association `has_and_belongs_to_many :commenters` on `Post` since the constant `Commenter` does not exist.",
+          "Cannot generate association `has_many :readers, through: :author` on `Post` since the constant `Reader` does not exist.",
+          "Cannot generate association `has_one :award, through: :blog` on `Post` since the constant `Award` does not exist.",
+        ]
+        # rubocop:enable Layout/LineLength
+
+        assert_equal(expected_errors, generated_errors)
       end
 
       it("generates RBI file for broken has_many :through collection association") do
