@@ -151,12 +151,12 @@ module Tapioca
               populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
             end
           rescue SourceReflectionError
-            add_error(<<~MSG)
+            add_error(<<~MSG.strip)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
             MSG
           rescue MissingConstantError
-            add_error(<<~MSG)
-              Cannot generate association `#{reflection.name}` on `#{constant}` since the constant `#{reflection.name.capitalize}` does not exist.
+            add_error(<<~MSG.strip)
+              Cannot generate association `#{reflection.name}` on `#{constant}` since the constant `#{reflection.class_name}` does not exist.
             MSG
           end
         end

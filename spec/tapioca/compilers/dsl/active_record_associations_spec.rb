@@ -437,7 +437,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
 
         assert_equal(1, generated_errors.size)
-        assert_equal(<<~MSG, generated_errors.first)
+        assert_equal(<<~MSG.strip, generated_errors.first)
           Cannot generate association `author` on `Post` since the constant `Author` does not exist.
         MSG
       end
@@ -510,7 +510,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
 
         assert_equal(1, generated_errors.size)
-        assert_equal(<<~MSG, generated_errors.first)
+        assert_equal(<<~MSG.strip, generated_errors.first)
           Cannot generate association `manager` on `Post` since the source of the through association is missing.
         MSG
       end
