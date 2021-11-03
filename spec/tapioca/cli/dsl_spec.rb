@@ -390,7 +390,7 @@ module Tapioca
         FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
         FileUtils.touch("#{outdir}/does_not_exist.rbi")
 
-        tapioca("dsl", number_of_workers: 4)
+        tapioca("dsl", number_of_workers: 2)
 
         refute_path_exists("#{outdir}/does_not_exist.rbi")
         refute_path_exists("#{outdir}/to_be_deleted/foo.rbi")

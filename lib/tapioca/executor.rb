@@ -34,12 +34,13 @@ module Tapioca
       ).returns(T.nilable(T::Array[T.type_parameter(:T)]))
     end
     def run_in_parallel(&block)
-      # Create an IO pipe to communicate the return value of the parallelized block back from the workers to the main
-      # process
-      read, write = IO.pipe
-
       # If we only have one worker selected, it's not worth forking, just run sequentially
       return @queue.map { |item| block.call(item) }.compact if @number_of_workers == 1
+
+      # Create an IO pipe to communicate the return value of the parallelized block back from the workers to the main
+      # process. It's important to only create pipes if we're running with more than one worker, otherwise the tests
+      # fail with a "too many open files" error.
+      read, write = IO.pipe
 
       # If we have more than one worker, fork the pool by shifting the expected number of items per worker from the
       # queue
@@ -59,16 +60,17 @@ module Tapioca
           #              ^^^^^^^^^^^^^ encoded result from second worker
           packed = [Marshal.dump(result)].pack("m")
           write.puts("#{SEPARATOR}#{packed}") unless result.empty?
+          write.close
         end
       end
 
       write.close
-
-      # Wait until all the workers finish
-      workers.each { |pid| Process.waitpid(pid) }
-
       result = read.read
       read.close
+
+      # Wait until all the workers finish. Notice that waiting for the PIDs can only happen after we read and close the
+      # pipe or else we may end up in a condition where writing to the pipe hangs indefinitely
+      workers.each { |pid| Process.waitpid(pid) }
 
       # Here we need to do the opposite of what the workers are doing. We read from the pipe a Base64 string with
       # separators e.g.: -absbasd13231-asbasd123123 and need to get back the Ruby object from it. In order, we
