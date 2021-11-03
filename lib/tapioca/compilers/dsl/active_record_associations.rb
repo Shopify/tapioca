@@ -254,7 +254,7 @@ module Tapioca
         end
         def type_for(constant, reflection)
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
-          raise MissingConstantError unless Object.const_defined?(reflection.class_name)
+          raise MissingConstantError unless reflection.class_name.safe_constantize
 
           T.must(qualified_name_of(reflection.klass))
         end
@@ -266,6 +266,7 @@ module Tapioca
           ).returns(String)
         end
         def relation_type_for(constant, reflection)
+          raise MissingConstantError unless reflection.class_name.safe_constantize
           "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                             polymorphic_association?(reflection)
 
