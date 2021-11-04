@@ -1,9 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "sorbet-runtime"
-
+require "tapioca/internal"
 require "minitest/autorun"
+require "minitest/spec"
 require "minitest/hooks/default"
 require "minitest/reporters"
 
