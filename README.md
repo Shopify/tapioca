@@ -8,7 +8,7 @@ Tapioca is a library used to generate RBI (Ruby interface) files for use with [S
 
 As yet, no gem exports type information in a consumable format and it would be a huge effort to manually maintain such an interface file for all the gems that your codebase depends on. Thus, there is a need for an automated way to generate the appropriate RBI file for a given gem. The `tapioca` gem, developed at Shopify, is able to do exactly that to almost 99% accuracy. It can generate the definitions for all statically defined types and most of the runtime defined types exported from Ruby gems (non-Ruby gems are not handled yet).
 
-When you run `tapioca sync` in a project, `tapioca` loads all the gems that are in your dependency list from the Gemfile into memory. It then performs runtime introspection on the loaded types to understand their structure and generates an appropriate RBI file for each gem with a versioned filename.
+When you run `tapioca gem` in a project, `tapioca` loads all the gems that are in your dependency list from the Gemfile into memory. It then performs runtime introspection on the loaded types to understand their structure and generates an appropriate RBI file for each gem with a versioned filename.
 
 ## Manual gem requires
 
@@ -33,7 +33,7 @@ from (pry):3:in `__pry__`
 
 In order to make sure that `tapioca` can reflect on that type, we need to add the line `require "better_html/parser"` to the `sorbet/tapioca/require.rb` file. This will make sure `BetterHtml::Parser` is loaded into memory and a type annotation is generated for it in the `better_html.rbi` file. If this extra `require` line is not added to `sorbet/tapioca/require.rb` file, then the definition for that type will be missing from the RBI file.
 
-If you ever run into a case, where you add a gem or update the version of a gem and run `tapioca sync` but don't have some types you expect in the generated gem RBI files, you will need to make sure you have added the necessary requires to the `sorbet/tapioca/require.rb` file.
+If you ever run into a case, where you add a gem or update the version of a gem and run `tapioca gem` but don't have some types you expect in the generated gem RBI files, you will need to make sure you have added the necessary requires to the `sorbet/tapioca/require.rb` file.
 
 You can use the command `tapioca require` to auto-populate the `sorbet/tapioca/require.rb` file with all the requires found
 in your application. Once the file generated, you should review it, remove all unnecessary requires and commit it.
@@ -59,20 +59,18 @@ $ bundle exec tapioca
 Commands:
   tapioca --version, -v      # show version
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
-  tapioca generate [gem...]  # generate RBIs from gems
+  tapioca gem [gem...]       # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
   tapioca init               # initializes folder structure
   tapioca require            # generate the list of files to be required by tapioca
-  tapioca sync               # sync RBIs to Gemfile
   tapioca todo               # generate the list of unresolved constants
 
 Options:
-  --pre, -b, [--prerequire=file]                              # A file to be required before Bundler.require is called
-  --post, -a, [--postrequire=file]                            # A file to be required after Bundler.require is called
-  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]                     # The command to run to regenerate RBI files
-  -x, [--exclude=gem [gem ...]]                               # Excludes the given gem(s) from RBI generation
-  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Overrides for typed sigils for generated gem RBIs
+  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
+          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
+                                               # Default: true
+  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
 ```
 
 ## Usage
@@ -83,17 +81,13 @@ Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
-### Generate for gems
+### Generate RBI files for gems
 
-Command: `tapioca generate [gems...]`
+Command: `tapioca gem [gems...]`
 
 This will generate RBIs for the specified gems and place them in the RBI directory.
 
-### Generate for all gems in Gemfile
-
-Command: `tapioca sync`
-
-This will sync the RBIs with the gems in the Gemfile and will add, update, and remove RBIs as necessary.
+_Note_: Use the `--all` flag to regenerate RBIs for all gems.
 
 ### Generate the list of all unresolved constants
 
