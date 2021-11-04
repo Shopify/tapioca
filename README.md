@@ -81,13 +81,47 @@ Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
+```shell
+$ bundle exec tapioca help init
+Usage:
+  tapioca init
+
+Options:
+  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
+          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
+                                               # Default: true
+  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+
+initializes folder structure
+```
+
 ### Generate RBI files for gems
 
 Command: `tapioca gem [gems...]`
 
 This will generate RBIs for the specified gems and place them in the RBI directory.
 
-_Note_: Use the `--all` flag to regenerate RBIs for all gems.
+```shell
+$ bundle exec tapioca help gem
+Usage:
+  tapioca gem [gem...]
+
+Options:
+          [--all], [--no-all]                                 # Regenerate RBI files for all gems
+  --pre, -b, [--prerequire=file]                              # A file to be required before Bundler.require is called
+  --post, -a, [--postrequire=file]                            # A file to be required after Bundler.require is called
+  -x, [--exclude=gem [gem ...]]                               # Excludes the given gem(s) from RBI generation
+  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Overrides for typed sigils for generated gem RBIs
+          [--verify], [--no-verify]                           # Verifies RBIs are up-to-date
+  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]                     # The command to run to regenerate RBI files
+          [--file-header], [--no-file-header]                 # Add a "This file is generated" header on top of each generated RBI file
+                                                              # Default: true
+  -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
+
+generate RBIs from gems
+```
 
 ### Generate the list of all unresolved constants
 
@@ -95,11 +129,45 @@ Command: `tapioca todo`
 
 This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
+```shell
+$ bundle exec tapioca help todo
+Usage:
+  tapioca todo
+
+Options:
+  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
+          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
+                                               # Default: true
+  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+
+generate the list of unresolved constants
+```
+
 ### Generate DSL RBI files
 
 Command: `tapioca dsl [constant...]`
 
 This will generate DSL RBIs for specified constants (or for all handled constants, if a constant name is not supplied). You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
+
+```shell
+$ bundle exec tapioca help dsl
+Usage:
+  tapioca dsl [constant...]
+
+Options:
+  --gen, -g, [--generators=generator [generator ...]]       # Only run supplied DSL generators
+          [--exclude-generators=generator [generator ...]]  # Exclude supplied DSL generators
+          [--verify], [--no-verify]                         # Verifies RBIs are up-to-date
+  -q, [--quiet], [--no-quiet]                               # Supresses file creation output
+  --out, -o, [--outdir=directory]                           # The output directory for generated RBI files
+  --cmd, -c, [--generate-command=command]                   # The command to run to regenerate RBI files
+          [--file-header], [--no-file-header]               # Add a "This file is generated" header on top of each generated RBI file
+                                                            # Default: true
+  -V, [--verbose], [--no-verbose]                           # Verbose output for debugging purposes
+
+generate RBIs for dynamic methods
+```
 
 ### Flags
 
