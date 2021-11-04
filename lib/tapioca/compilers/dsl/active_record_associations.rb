@@ -103,7 +103,21 @@ module Tapioca
         extend T::Sig
         include Helper::ActiveRecordConstants
 
-        SourceReflectionError = Class.new(StandardError)
+        class SourceReflectionError < StandardError
+        end
+
+        class MissingConstantError < StandardError
+          extend T::Sig
+
+          sig { returns(String) }
+          attr_reader :class_name
+
+          sig { params(class_name: String).void }
+          def initialize(class_name)
+            @class_name = class_name
+            super
+          end
+        end
 
         ReflectionType = T.type_alias do
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
@@ -150,8 +164,12 @@ module Tapioca
               populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
             end
           rescue SourceReflectionError
-            add_error(<<~MSG)
+            add_error(<<~MSG.strip)
               Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
+            MSG
+          rescue MissingConstantError => error
+            add_error(<<~MSG.strip)
+              Cannot generate association `#{declaration(reflection)}` on `#{constant}` since the constant `#{error.class_name}` does not exist.
             MSG
           end
         end
@@ -248,9 +266,37 @@ module Tapioca
           ).returns(String)
         end
         def type_for(constant, reflection)
+          class_name = if reflection.through_reflection?
+            reflection.send(:delegate_reflection).class_name
+          else
+            reflection.class_name
+          end
+
+          raise MissingConstantError, class_name unless class_name.safe_constantize
+
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
 
           T.must(qualified_name_of(reflection.klass))
+        end
+
+        sig { params(reflection: ReflectionType).returns(T.nilable(String)) }
+        def declaration(reflection)
+          case reflection
+          when ActiveRecord::Reflection::HasOneReflection
+            "has_one :#{reflection.name}"
+          when ActiveRecord::Reflection::HasManyReflection
+            "has_many :#{reflection.name}"
+          when ActiveRecord::Reflection::HasAndBelongsToManyReflection
+            "has_and_belongs_to_many :#{reflection.name}"
+          when ActiveRecord::Reflection::BelongsToReflection
+            "belongs_to :#{reflection.name}"
+          when ActiveRecord::Reflection::ThroughReflection
+            delegate_reflection = reflection.send(:delegate_reflection)
+            declaration = declaration(delegate_reflection)
+            through_name = delegate_reflection.options[:through]
+
+            "#{declaration}, through: :#{through_name}"
+          end
         end
 
         sig do
@@ -260,6 +306,7 @@ module Tapioca
           ).returns(String)
         end
         def relation_type_for(constant, reflection)
+          raise MissingConstantError unless reflection.class_name.safe_constantize
           "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                             polymorphic_association?(reflection)
 
