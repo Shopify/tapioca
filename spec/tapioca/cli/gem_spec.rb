@@ -285,7 +285,7 @@ module Tapioca
 
           output = tapioca("gem")
 
-          refute_includes(output, "-- Removing:")
+          refute_includes(output, "      remove")
           refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
@@ -343,9 +343,9 @@ module Tapioca
 
           output = tapioca("gem --exclude foo bar")
 
-          assert_includes(output, "-- Removing: #{outdir}/foo@0.0.1.rbi\n")
-          assert_includes(output, "-- Removing: #{outdir}/bar@0.3.0.rbi\n")
-          refute_includes(output, "-- Removing: #{outdir}/baz@0.0.2.rbi\n")
+          assert_includes(output, "      remove  #{outdir}/foo@0.0.1.rbi\n")
+          assert_includes(output, "      remove  #{outdir}/bar@0.3.0.rbi\n")
+          refute_includes(output, "      remove  #{outdir}/baz@0.0.2.rbi\n")
           refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
@@ -371,7 +371,7 @@ module Tapioca
 
           output = tapioca("gem")
 
-          assert_includes(output, "-- Removing: #{outdir}/outdated@5.0.0.rbi\n")
+          assert_includes(output, "      remove  #{outdir}/outdated@5.0.0.rbi\n")
           refute_includes(output, "      create")
           refute_includes(output, "-> Moving:")
 
@@ -396,7 +396,7 @@ module Tapioca
 
           assert_includes(output, "      create  #{outdir}/bar@0.3.0.rbi\n")
           assert_includes(output, "      create  #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "-- Removing:")
+          refute_includes(output, "      remove")
           refute_includes(output, "-> Moving:")
 
           assert_includes(output, <<~OUTPUT)
@@ -421,7 +421,7 @@ module Tapioca
           assert_includes(output, "force  #{outdir}/bar@0.3.0.rbi\n")
           assert_includes(output, "-> Moving: #{outdir}/baz@0.0.1.rbi to #{outdir}/baz@0.0.2.rbi\n")
           assert_includes(output, "force  #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "-- Removing:")
+          refute_includes(output, "      remove")
 
           assert_includes(output, <<~OUTPUT)
             Removing RBI files of gems that have been removed:

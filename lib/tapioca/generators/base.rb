@@ -56,6 +56,16 @@ module Tapioca
       def create_file(path, content, force: true, skip: false, verbose: true)
         @file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
       end
+
+      sig do
+        params(
+          path: T.any(String, Pathname),
+          verbose: T::Boolean
+        ).void
+      end
+      def remove_file(path, verbose: true)
+        @file_writer.remove_file(path, verbose: verbose)
+      end
     end
   end
 end

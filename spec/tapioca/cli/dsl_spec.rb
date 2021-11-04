@@ -102,10 +102,10 @@ module Tapioca
           Compiling DSL RBI files...
 
           Error: Cannot find constant 'NonExistent::Foo'
-          -- Removing: #{outdir}/non_existent/foo.rbi
+                remove  #{outdir}/non_existent/foo.rbi
           Error: Cannot find constant 'NonExistent::Bar'
           Error: Cannot find constant 'NonExistent::Baz'
-          -- Removing: #{outdir}/non_existent/baz.rbi
+                remove  #{outdir}/non_existent/baz.rbi
         OUTPUT
 
         refute_path_exists("#{outdir}/non_existent/foo.rbi")
@@ -344,9 +344,9 @@ module Tapioca
                 create  #{outdir}/post.rbi
 
           Removing stale RBI files...
-          -- Removing: #{outdir}/does_not_exist.rbi
-          -- Removing: #{outdir}/to_be_deleted/baz.rbi
-          -- Removing: #{outdir}/to_be_deleted/foo.rbi
+                remove  #{outdir}/does_not_exist.rbi
+                remove  #{outdir}/to_be_deleted/baz.rbi
+                remove  #{outdir}/to_be_deleted/foo.rbi
 
           Done
           All operations performed in working directory.
@@ -377,7 +377,7 @@ module Tapioca
                 create  #{outdir}/post.rbi
 
           Removing stale RBI files...
-          -- Removing: #{outdir}/user.rbi
+                remove  #{outdir}/user.rbi
 
           Done
           All operations performed in working directory.

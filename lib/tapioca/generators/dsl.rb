@@ -172,7 +172,8 @@ module Tapioca
         unless unprocessable_constants.empty?
           unprocessable_constants.each do |name, _|
             say("Error: Cannot find constant '#{name}'", :red)
-            remove(dsl_rbi_filename(name))
+            filename = dsl_rbi_filename(name)
+            remove_file(filename) if File.file?(filename)
           end
 
           exit(1)
@@ -246,7 +247,7 @@ module Tapioca
           say("Removing stale RBI files...")
 
           files.sort.each do |filename|
-            remove(filename)
+            remove_file(filename)
           end
           say("")
         end
@@ -255,13 +256,6 @@ module Tapioca
       sig { params(constant_name: String).returns(Pathname) }
       def dsl_rbi_filename(constant_name)
         @outpath / "#{underscore(constant_name)}.rbi"
-      end
-
-      sig { params(filename: Pathname).void }
-      def remove(filename)
-        return unless filename.exist?
-        say("-- Removing: #{filename}")
-        filename.unlink
       end
 
       sig { params(tmp_dir: Pathname).returns(T::Hash[String, Symbol]) }
