@@ -156,7 +156,7 @@ module Tapioca
         create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
-          remove(file) unless file.basename.to_s == gem.rbi_file_name
+          remove_file(file) unless file.basename.to_s == gem.rbi_file_name
         end
       end
 
@@ -192,7 +192,7 @@ module Tapioca
           else
             gems.each do |removed|
               filename = existing_rbi(removed)
-              remove(filename)
+              remove_file(filename)
             end
 
             anything_done = true
@@ -250,13 +250,6 @@ module Tapioca
         say_error("with ", :yellow)
         say_error("`#{@default_command} require`", :bold, :blue)
         say_error("you should probably review it and remove the faulty line.", :yellow)
-      end
-
-      sig { params(filename: Pathname).void }
-      def remove(filename)
-        return unless filename.exist?
-        say("-- Removing: #{filename}")
-        filename.unlink
       end
 
       sig { returns(T::Array[String]) }
