@@ -81,7 +81,7 @@ Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
-### Generate Gem RBI files
+### Generate RBI files for gems
 
 Command: `tapioca gem [gems...]`
 
