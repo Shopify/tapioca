@@ -84,59 +84,63 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(String)) }
-          def reviewer; end
+          include StoreAccessors
 
-          sig { params(reviewer: T.nilable(String)).returns(T.nilable(String)) }
-          def reviewer=(reviewer); end
+          module StoreAccessors
+            sig { returns(T.nilable(String)) }
+            def reviewer; end
 
-          sig { returns(T::Boolean) }
-          def reviewer?; end
+            sig { params(reviewer: T.nilable(String)).returns(T.nilable(String)) }
+            def reviewer=(reviewer); end
 
-          sig { returns(T.nilable(String)) }
-          def reviewer_before_last_save; end
+            sig { returns(T::Boolean) }
+            def reviewer?; end
 
-          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
-          def reviewer_change; end
+            sig { returns(T.nilable(String)) }
+            def reviewer_before_last_save; end
 
-          sig { returns(T::Boolean) }
-          def reviewer_changed?; end
+            sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+            def reviewer_change; end
 
-          sig { returns(T.nilable(String)) }
-          def reviewer_was; end
+            sig { returns(T::Boolean) }
+            def reviewer_changed?; end
 
-          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
-          def saved_change_to_reviewer; end
+            sig { returns(T.nilable(String)) }
+            def reviewer_was; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_reviewer?; end
+            sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+            def saved_change_to_reviewer; end
 
-          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
-          def saved_change_to_title; end
+            sig { returns(T::Boolean) }
+            def saved_change_to_reviewer?; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_title?; end
+            sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+            def saved_change_to_title; end
 
-          sig { returns(T.nilable(String)) }
-          def title; end
+            sig { returns(T::Boolean) }
+            def saved_change_to_title?; end
 
-          sig { params(title: T.nilable(String)).returns(T.nilable(String)) }
-          def title=(title); end
+            sig { returns(T.nilable(String)) }
+            def title; end
 
-          sig { returns(T::Boolean) }
-          def title?; end
+            sig { params(title: T.nilable(String)).returns(T.nilable(String)) }
+            def title=(title); end
 
-          sig { returns(T.nilable(String)) }
-          def title_before_last_save; end
+            sig { returns(T::Boolean) }
+            def title?; end
 
-          sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
-          def title_change; end
+            sig { returns(T.nilable(String)) }
+            def title_before_last_save; end
 
-          sig { returns(T::Boolean) }
-          def title_changed?; end
+            sig { returns(T.nilable([T.nilable(String), T.nilable(String)])) }
+            def title_change; end
 
-          sig { returns(T.nilable(String)) }
-          def title_was; end
+            sig { returns(T::Boolean) }
+            def title_changed?; end
+
+            sig { returns(T.nilable(String)) }
+            def title_was; end
+          end
         end
       RBI
 
@@ -156,32 +160,36 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T::Boolean) }
-          def reviewed; end
+          include StoreAccessors
 
-          sig { params(reviewed: T::Boolean).returns(T::Boolean) }
-          def reviewed=(reviewed); end
+          module StoreAccessors
+            sig { returns(T::Boolean) }
+            def reviewed; end
 
-          sig { returns(T::Boolean) }
-          def reviewed?; end
+            sig { params(reviewed: T::Boolean).returns(T::Boolean) }
+            def reviewed=(reviewed); end
 
-          sig { returns(T::Boolean) }
-          def reviewed_before_last_save; end
+            sig { returns(T::Boolean) }
+            def reviewed?; end
 
-          sig { returns(T.nilable([T::Boolean, T::Boolean])) }
-          def reviewed_change; end
+            sig { returns(T::Boolean) }
+            def reviewed_before_last_save; end
 
-          sig { returns(T::Boolean) }
-          def reviewed_changed?; end
+            sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+            def reviewed_change; end
 
-          sig { returns(T::Boolean) }
-          def reviewed_was; end
+            sig { returns(T::Boolean) }
+            def reviewed_changed?; end
 
-          sig { returns(T.nilable([T::Boolean, T::Boolean])) }
-          def saved_change_to_reviewed; end
+            sig { returns(T::Boolean) }
+            def reviewed_was; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_reviewed?; end
+            sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+            def saved_change_to_reviewed; end
+
+            sig { returns(T::Boolean) }
+            def saved_change_to_reviewed?; end
+          end
         end
       RBI
 
@@ -205,66 +213,70 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(Date)) }
-          def review_date; end
+          include StoreAccessors
 
-          sig { params(review_date: T.nilable(Date)).returns(T.nilable(Date)) }
-          def review_date=(review_date); end
+          module StoreAccessors
+            sig { returns(T.nilable(Date)) }
+            def review_date; end
 
-          sig { returns(T::Boolean) }
-          def review_date?; end
+            sig { params(review_date: T.nilable(Date)).returns(T.nilable(Date)) }
+            def review_date=(review_date); end
 
-          sig { returns(T.nilable(Date)) }
-          def review_date_before_last_save; end
+            sig { returns(T::Boolean) }
+            def review_date?; end
 
-          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
-          def review_date_change; end
+            sig { returns(T.nilable(Date)) }
+            def review_date_before_last_save; end
 
-          sig { returns(T::Boolean) }
-          def review_date_changed?; end
+            sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+            def review_date_change; end
 
-          sig { returns(T.nilable(Date)) }
-          def review_date_was; end
+            sig { returns(T::Boolean) }
+            def review_date_changed?; end
 
-          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
-          def saved_change_to_review_date; end
+            sig { returns(T.nilable(Date)) }
+            def review_date_was; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_review_date?; end
+            sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+            def saved_change_to_review_date; end
 
-          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
-          def saved_change_to_title_date; end
+            sig { returns(T::Boolean) }
+            def saved_change_to_review_date?; end
 
-          sig { returns(T::Boolean) }
-          def saved_change_to_title_date?; end
+            sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+            def saved_change_to_title_date; end
 
-          sig { returns(T.nilable(Date)) }
-          def title_date; end
+            sig { returns(T::Boolean) }
+            def saved_change_to_title_date?; end
 
-          sig { params(title_date: T.nilable(Date)).returns(T.nilable(Date)) }
-          def title_date=(title_date); end
+            sig { returns(T.nilable(Date)) }
+            def title_date; end
 
-          sig { returns(T::Boolean) }
-          def title_date?; end
+            sig { params(title_date: T.nilable(Date)).returns(T.nilable(Date)) }
+            def title_date=(title_date); end
 
-          sig { returns(T.nilable(Date)) }
-          def title_date_before_last_save; end
+            sig { returns(T::Boolean) }
+            def title_date?; end
 
-          sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
-          def title_date_change; end
+            sig { returns(T.nilable(Date)) }
+            def title_date_before_last_save; end
 
-          sig { returns(T::Boolean) }
-          def title_date_changed?; end
+            sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
+            def title_date_change; end
 
-          sig { returns(T.nilable(Date)) }
-          def title_date_was; end
+            sig { returns(T::Boolean) }
+            def title_date_changed?; end
+
+            sig { returns(T.nilable(Date)) }
+            def title_date_was; end
+          end
         end
       RBI
 
       assert_equal(rbi_for(:Post), expected)
     end
 
-    it("generates methods with DteTime type for attributes with datetime type") do
+    it("generates methods with DateTime type for attributes with datetime type") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -277,11 +289,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(DateTime)) }
-          def review_date; end
+          include StoreAccessors
 
-          sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
-          def review_date=(review_date); end
+          module StoreAccessors
+            sig { returns(T.nilable(DateTime)) }
+            def review_date; end
+
+            sig { params(review_date: T.nilable(DateTime)).returns(T.nilable(DateTime)) }
+            def review_date=(review_date); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
@@ -300,11 +315,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(Time)) }
-          def review_time; end
+          include StoreAccessors
 
-          sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
-          def review_time=(review_time); end
+          module StoreAccessors
+            sig { returns(T.nilable(Time)) }
+            def review_time; end
+
+            sig { params(review_time: T.nilable(Time)).returns(T.nilable(Time)) }
+            def review_time=(review_time); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
@@ -323,11 +341,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(BigDecimal)) }
-          def rate; end
+          include StoreAccessors
 
-          sig { params(rate: T.nilable(BigDecimal)).returns(T.nilable(BigDecimal)) }
-          def rate=(rate); end
+          module StoreAccessors
+            sig { returns(T.nilable(BigDecimal)) }
+            def rate; end
+
+            sig { params(rate: T.nilable(BigDecimal)).returns(T.nilable(BigDecimal)) }
+            def rate=(rate); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
@@ -346,11 +367,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.untyped) }
-          def kind; end
+          include StoreAccessors
 
-          sig { params(kind: T.untyped).returns(T.untyped) }
-          def kind=(kind); end
+          module StoreAccessors
+            sig { returns(T.untyped) }
+            def kind; end
+
+            sig { params(kind: T.untyped).returns(T.untyped) }
+            def kind=(kind); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
@@ -369,11 +393,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(Integer)) }
-          def rate; end
+          include StoreAccessors
 
-          sig { params(rate: T.nilable(Integer)).returns(T.nilable(Integer)) }
-          def rate=(rate); end
+          module StoreAccessors
+            sig { returns(T.nilable(Integer)) }
+            def rate; end
+
+            sig { params(rate: T.nilable(Integer)).returns(T.nilable(Integer)) }
+            def rate=(rate); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
@@ -392,11 +419,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(Float)) }
-          def rate; end
+          include StoreAccessors
 
-          sig { params(rate: T.nilable(Float)).returns(T.nilable(Float)) }
-          def rate=(rate); end
+          module StoreAccessors
+            sig { returns(T.nilable(Float)) }
+            def rate; end
+
+            sig { params(rate: T.nilable(Float)).returns(T.nilable(Float)) }
+            def rate=(rate); end
       RBI
 
       assert_includes(rbi_for(:Post), expected)
