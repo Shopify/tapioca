@@ -5,11 +5,9 @@ require "etc"
 
 module Tapioca
   class Executor
-    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
-
-    # The separator is used to divide Base64 values, because `-` is not a valid Base64 character
-    SEPARATOR = T.let("-", String)
     extend T::Sig
+
+    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
 
     sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
     def initialize(queue, number_of_workers: nil)
@@ -31,59 +29,51 @@ module Tapioca
     sig do
       type_parameters(:T).params(
         block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T))
-      ).returns(T.nilable(T::Array[T.type_parameter(:T)]))
+      ).returns(T::Array[T.type_parameter(:T)])
     end
     def run_in_parallel(&block)
       # If we only have one worker selected, it's not worth forking, just run sequentially
       return @queue.map { |item| block.call(item) }.compact if @number_of_workers == 1
 
-      # Create an IO pipe to communicate the return value of the parallelized block back from the workers to the main
-      # process. It's important to only create pipes if we're running with more than one worker, otherwise the tests
-      # fail with a "too many open files" error.
-      read, write = IO.pipe
+      read_pipes = []
+      write_pipes = []
 
       # If we have more than one worker, fork the pool by shifting the expected number of items per worker from the
       # queue
       workers = (0...@number_of_workers).map do
         items = @queue.shift(@items_per_worker)
 
+        # Each worker has their own pair of pipes, so that we can read the result from each worker separately
+        read, write = IO.pipe
+        read_pipes << read
+        write_pipes << write
+
         fork do
           read.close
           result = items.map { |item| block.call(item) }.compact
 
-          # We mapped the result of invoking the parallelized block into an array. In order to return the array from the
-          # worker back to the main process, we encode it in Base64, append a separator in the beginning and write it to
-          # the pipe. The separator helps us split the results that are coming from the multiple workers. It looks
-          # something like this:
-          # -absbasd13231-asbasd123123
-          # ^^^^^^^^^^^^^ encoded result from first worker
-          #              ^^^^^^^^^^^^^ encoded result from second worker
+          # Pack the result as a Base64 string of the Marshal dump of the array of values returned by the block that we
+          # ran in parallel
           packed = [Marshal.dump(result)].pack("m")
-          write.puts("#{SEPARATOR}#{packed}") unless result.empty?
+          write.puts(packed)
           write.close
         end
       end
 
-      write.close
-      result = read.read
-      read.close
+      # Close all the write pipes, then read and close from all the read pipes
+      write_pipes.each(&:close)
+      result = read_pipes.map do |pipe|
+        content = pipe.read
+        pipe.close
+        content
+      end
 
       # Wait until all the workers finish. Notice that waiting for the PIDs can only happen after we read and close the
       # pipe or else we may end up in a condition where writing to the pipe hangs indefinitely
       workers.each { |pid| Process.waitpid(pid) }
 
-      # Here we need to do the opposite of what the workers are doing. We read from the pipe a Base64 string with
-      # separators e.g.: -absbasd13231-asbasd123123 and need to get back the Ruby object from it. In order, we
-      # 1. split the results based on the separator
-      # 2. drop the first item of the split array. It will always be an empty string since even the first worker has the
-      # appended separator
-      # 3. Map back the objects by decoding them from Base64 and loading with Marshal
-      if result
-        result
-          .split(SEPARATOR)
-          .drop(1)
-          .flat_map { |item| T.unsafe(Marshal.load(item.unpack1("m"))) }
-      end
+      # Decode the value back into the Ruby objects by doing the inverse of what each worker does
+      result.flat_map { |item| T.unsafe(Marshal.load(item.unpack1("m"))) }
     end
   end
 end

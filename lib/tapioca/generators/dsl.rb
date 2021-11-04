@@ -95,7 +95,7 @@ module Tapioca
           )
         end
 
-        processed_files&.each { |filename| rbi_files_to_purge.delete(T.must(filename)) }
+        processed_files.each { |filename| rbi_files_to_purge.delete(T.must(filename)) }
 
         say("")
 

@@ -44,7 +44,7 @@ module Tapioca
       executor = Executor.new(@queue, number_of_workers: 4)
       result = executor.run_in_parallel { |number| number }
 
-      assert_equal(queue, T.must(result).sort)
+      assert_equal(queue, result.sort)
     end
   end
 end
