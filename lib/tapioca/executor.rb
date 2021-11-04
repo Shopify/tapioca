@@ -33,7 +33,7 @@ module Tapioca
     end
     def run_in_parallel(&block)
       # If we only have one worker selected, it's not worth forking, just run sequentially
-      return @queue.map { |item| block.call(item) }.compact if @number_of_workers == 1
+      return @queue.map { |item| block.call(item) } if @number_of_workers == 1
 
       read_pipes = []
       write_pipes = []
@@ -50,7 +50,7 @@ module Tapioca
 
         fork do
           read.close
-          result = items.map { |item| block.call(item) }.compact
+          result = items.map { |item| block.call(item) }
 
           # Pack the result as a Base64 string of the Marshal dump of the array of values returned by the block that we
           # ran in parallel
