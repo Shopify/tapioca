@@ -1,6 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
+# Stop Minitest from mixing in expectations into `Object`
+ENV["MT_NO_EXPECTATIONS"] = "1"
+
 require "tapioca/internal"
 require "minitest/autorun"
 require "minitest/spec"
