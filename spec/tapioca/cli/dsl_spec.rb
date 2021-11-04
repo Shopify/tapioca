@@ -146,10 +146,10 @@ module Tapioca
             Compiling DSL RBI files...
 
             Error: Cannot find constant 'NonExistent::Foo'
-            -- Removing: sorbet/rbi/dsl/non_existent/foo.rbi
+                  remove  sorbet/rbi/dsl/non_existent/foo.rbi
             Error: Cannot find constant 'NonExistent::Bar'
             Error: Cannot find constant 'NonExistent::Baz'
-            -- Removing: sorbet/rbi/dsl/non_existent/baz.rbi
+                  remove  sorbet/rbi/dsl/non_existent/baz.rbi
           OUT
 
           assert_empty(err) # FIXME: Shouldn't the errors be printed here?
