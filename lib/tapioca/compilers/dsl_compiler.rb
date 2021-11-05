@@ -49,6 +49,8 @@ module Tapioca
       end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
+          .select { |c| Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
+          .sort_by! { |c| T.must(Reflection.name_of(c)) }
 
         if constants_to_process.empty?
           report_error(<<~ERROR)
@@ -58,7 +60,7 @@ module Tapioca
         end
 
         result = Executor.new(
-          constants_to_process.sort_by { |c| c.name.to_s },
+          constants_to_process,
           number_of_workers: @number_of_workers
         ).run_in_parallel do |constant|
           rbi = rbi_for_constant(constant)
