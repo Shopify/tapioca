@@ -37,6 +37,8 @@ module Tapioca
       sig { params(blk: T.proc.params(constant: Module, rbi: RBI::File).void).void }
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
+          .select { |c| Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
+          .sort_by! { |c| T.must(Reflection.name_of(c)) }
 
         if constants_to_process.empty?
           report_error(<<~ERROR)
@@ -45,7 +47,7 @@ module Tapioca
           ERROR
         end
 
-        constants_to_process.sort_by { |c| c.name.to_s }.each do |constant|
+        constants_to_process.each do |constant|
           rbi = rbi_for_constant(constant)
           next if rbi.nil?
 
