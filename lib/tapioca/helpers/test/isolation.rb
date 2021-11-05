@@ -53,11 +53,14 @@ module Tapioca
               end
 
               write.puts [result].pack("m")
+              write.close
               exit!(false)
             end
 
             write.close
             result = read.read
+            read.close
+
             Process.wait2(T.must(pid))
             T.must(result).unpack1("m")
           end

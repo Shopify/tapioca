@@ -5,8 +5,9 @@ require "etc"
 
 module Tapioca
   class Executor
-    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
     extend T::Sig
+
+    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
 
     sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
     def initialize(queue, number_of_workers: nil)
@@ -25,24 +26,54 @@ module Tapioca
       @items_per_worker = T.let((queue.length.to_f / @number_of_workers).ceil, Integer)
     end
 
-    sig { params(block: T.proc.params(item: T.untyped).void).void }
+    sig do
+      type_parameters(:T).params(
+        block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T))
+      ).returns(T::Array[T.type_parameter(:T)])
+    end
     def run_in_parallel(&block)
       # If we only have one worker selected, it's not worth forking, just run sequentially
-      if @number_of_workers == 1
-        block.call(@queue.shift) until @queue.empty?
-        return
-      end
+      return @queue.map { |item| block.call(item) } if @number_of_workers == 1
+
+      read_pipes = []
+      write_pipes = []
 
       # If we have more than one worker, fork the pool by shifting the expected number of items per worker from the
       # queue
       workers = (0...@number_of_workers).map do
         items = @queue.shift(@items_per_worker)
 
-        fork { block.call(items.shift) until items.empty? }
+        # Each worker has their own pair of pipes, so that we can read the result from each worker separately
+        read, write = IO.pipe
+        read_pipes << read
+        write_pipes << write
+
+        fork do
+          read.close
+          result = items.map { |item| block.call(item) }
+
+          # Pack the result as a Base64 string of the Marshal dump of the array of values returned by the block that we
+          # ran in parallel
+          packed = [Marshal.dump(result)].pack("m")
+          write.puts(packed)
+          write.close
+        end
       end
 
-      # Wait until all the workers finish
+      # Close all the write pipes, then read and close from all the read pipes
+      write_pipes.each(&:close)
+      result = read_pipes.map do |pipe|
+        content = pipe.read
+        pipe.close
+        content
+      end
+
+      # Wait until all the workers finish. Notice that waiting for the PIDs can only happen after we read and close the
+      # pipe or else we may end up in a condition where writing to the pipe hangs indefinitely
       workers.each { |pid| Process.waitpid(pid) }
+
+      # Decode the value back into the Ruby objects by doing the inverse of what each worker does
+      result.flat_map { |item| T.unsafe(Marshal.load(item.unpack1("m"))) }
     end
   end
 end

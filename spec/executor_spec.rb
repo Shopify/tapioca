@@ -38,5 +38,13 @@ module Tapioca
         refute_equal(parent_pid, Process.pid)
       end
     end
+
+    it "can return a value from the parallelized block" do
+      queue = @queue.dup
+      executor = Executor.new(@queue, number_of_workers: 4)
+      result = executor.run_in_parallel { |number| number }
+
+      assert_equal(queue, result.sort)
+    end
   end
 end

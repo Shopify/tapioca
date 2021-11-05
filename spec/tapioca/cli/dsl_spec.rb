@@ -302,6 +302,16 @@ module Tapioca
         refute_path_exists("#{outdir}/user.rbi")
       end
 
+      it "generates the correct RBIs when running in parallel" do
+        tapioca("dsl", number_of_workers: 3)
+
+        assert_path_exists("#{outdir}/baz/role.rbi")
+        assert_path_exists("#{outdir}/job.rbi")
+        assert_path_exists("#{outdir}/post.rbi")
+        assert_path_exists("#{outdir}/namespace/comment.rbi")
+        refute_path_exists("#{outdir}/user.rbi")
+      end
+
       it "generates RBI files without header" do
         tapioca("dsl --no-file-header Post")
 
@@ -352,6 +362,35 @@ module Tapioca
           All operations performed in working directory.
           Please review changes and commit them.
         OUTPUT
+
+        refute_path_exists("#{outdir}/does_not_exist.rbi")
+        refute_path_exists("#{outdir}/to_be_deleted/foo.rbi")
+        refute_path_exists("#{outdir}/to_be_deleted/baz.rbi")
+
+        assert_path_exists("#{outdir}/baz/role.rbi")
+        assert_path_exists("#{outdir}/job.rbi")
+        assert_path_exists("#{outdir}/post.rbi")
+        assert_path_exists("#{outdir}/namespace/comment.rbi")
+        refute_path_exists("#{outdir}/user.rbi")
+      end
+
+      it "removes stale RBIs properly when running in parallel" do
+        # Files that shouldn't be deleted
+        FileUtils.mkdir_p("#{outdir}/baz")
+        FileUtils.mkdir_p("#{outdir}/namespace")
+
+        FileUtils.touch("#{outdir}/baz/role.rbi")
+        FileUtils.touch("#{outdir}/job.rbi")
+        FileUtils.touch("#{outdir}/post.rbi")
+        FileUtils.touch("#{outdir}/namespace/comment.rbi")
+
+        # Files that should be deleted
+        FileUtils.mkdir_p("#{outdir}/to_be_deleted")
+        FileUtils.touch("#{outdir}/to_be_deleted/foo.rbi")
+        FileUtils.touch("#{outdir}/to_be_deleted/baz.rbi")
+        FileUtils.touch("#{outdir}/does_not_exist.rbi")
+
+        tapioca("dsl", number_of_workers: 2)
 
         refute_path_exists("#{outdir}/does_not_exist.rbi")
         refute_path_exists("#{outdir}/to_be_deleted/foo.rbi")
