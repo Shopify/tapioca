@@ -10,6 +10,8 @@ updates:
     reviewers:
       - "Shopify/sorbet"
     labels:
+      - "dependencies"
+      - "ruby"
       - "ignore-for-release"
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -18,4 +20,6 @@ updates:
     reviewers:
       - "Shopify/sorbet"
     labels:
+      - "dependencies"
+      - "gh-actions"
       - "ignore-for-release"
