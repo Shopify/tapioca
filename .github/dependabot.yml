@@ -9,9 +9,13 @@ updates:
       - dependency-name: "sorbet-runtime"
     reviewers:
       - "Shopify/sorbet"
+    labels:
+      - "ignore-for-release"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     reviewers:
       - "Shopify/sorbet"
+    labels:
+      - "ignore-for-release"
