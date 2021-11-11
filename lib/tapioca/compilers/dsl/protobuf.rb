@@ -64,6 +64,7 @@ module Tapioca
         class Field < T::Struct
           prop :name, String
           prop :type, String
+          prop :setter_type, String
           prop :init_type, String
           prop :default, String
         end
@@ -165,6 +166,7 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
+                setter_type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
                 default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
@@ -178,6 +180,7 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
+                setter_type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
                 default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
@@ -188,7 +191,8 @@ module Tapioca
             Field.new(
               name: descriptor.name,
               type: type,
-              init_type: type,
+              setter_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
+              init_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
               default: "nil"
             )
           end
@@ -210,7 +214,7 @@ module Tapioca
 
           klass.create_method(
             "#{field.name}=",
-            parameters: [create_param("value", type: field.type)],
+            parameters: [create_param("value", type: field.setter_type)],
             return_type: field.type
           )
 
