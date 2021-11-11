@@ -173,18 +173,29 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(value_type: Cart::VALUE_TYPE).void }
+          sig { params(value_type: Symbol).void }
           def initialize(value_type: nil); end
 
-          sig { returns(Cart::VALUE_TYPE) }
+          sig { returns(Symbol) }
           def value_type; end
 
-          sig { params(value: Cart::VALUE_TYPE).returns(Cart::VALUE_TYPE) }
+          sig { params(value: Symbol).returns(Symbol) }
           def value_type=(value); end
         end
       RBI
 
+      expected_enum_rbi = <<~RBI
+        # typed: strong
+
+        module Cart::VALUE_TYPE
+          FIXED_AMOUNT = 1
+          NULL = 0
+          PERCENTAGE = 2
+        end
+      RBI
+
       assert_equal(expected, rbi_for(:Cart))
+      assert_equal(expected_enum_rbi, rbi_for("Cart::VALUE_TYPE"))
     end
 
     it("generates methods in RBI files for classes with Protobuf with enum field with defined type") do
@@ -213,14 +224,20 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(value_type: Cart::MYVALUETYPE).void }
+          sig { params(value_type: Symbol).void }
           def initialize(value_type: nil); end
 
-          sig { returns(Cart::MYVALUETYPE) }
+          sig { returns(Symbol) }
           def value_type; end
 
-          sig { params(value: Cart::MYVALUETYPE).returns(Cart::MYVALUETYPE) }
+          sig { params(value: Symbol).returns(Symbol) }
           def value_type=(value); end
+
+          module MYVALUETYPE
+            ACROSS = 0
+            EACH = 2
+            ONE = 1
+          end
         end
       RBI
 

@@ -78,15 +78,22 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              descriptor = T.let(T.unsafe(constant).descriptor, Google::Protobuf::Descriptor)
-              fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
-              fields.sort_by!(&:name)
+              descriptor = T.let(T.unsafe(constant).descriptor, T.any(Google::Protobuf::Descriptor, Google::Protobuf::EnumDescriptor))
 
-              parameters = fields.map do |field|
-                create_kw_opt_param(field.name, type: field.init_type, default: field.default)
+              if descriptor.is_a? Google::Protobuf::EnumDescriptor
+                descriptor.to_h.each do |sym, val|
+                  klass.create_constant(sym.to_s, value: val.to_s)
+                end
+              else
+                fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
+                fields.sort_by!(&:name)
+
+                parameters = fields.map do |field|
+                  create_kw_opt_param(field.name, type: field.init_type, default: field.default)
+                end
+
+                klass.create_method("initialize", parameters: parameters, return_type: "void")
               end
-
-              klass.create_method("initialize", parameters: parameters, return_type: "void")
             end
           end
         end
@@ -94,7 +101,12 @@ module Tapioca
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
           marker = Google::Protobuf::MessageExts::ClassMethods
-          results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module])
+
+          enum_modules = ObjectSpace.each_object(Google::Protobuf::EnumDescriptor).map do |desc|
+            T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
+          end
+
+          results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module]).concat(enum_modules)
           results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
         end
 
@@ -117,7 +129,7 @@ module Tapioca
         def type_of(descriptor)
           case descriptor.type
           when :enum
-            descriptor.subtype.enummodule.name
+            "Symbol"
           when :message
             descriptor.subtype.msgclass.name
           when :int32, :int64, :uint32, :uint64
