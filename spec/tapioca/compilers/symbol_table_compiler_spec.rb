@@ -3056,5 +3056,20 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       assert_equal(output, compile(false))
     end
+
+    it("properly processes void in type aliases") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          MyType = T.type_alias { T.proc.params(val: T.untyped).void }
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Foo; end
+        Foo::MyType = T.type_alias { T.proc.params(val: T.untyped).void }
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end

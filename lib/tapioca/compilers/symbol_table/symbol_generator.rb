@@ -169,7 +169,8 @@ module Tapioca
           comments = documentation_comments(name)
 
           if klass_name == "T::Private::Types::TypeAlias"
-            constant = RBI::Const.new(name, "T.type_alias { #{T.unsafe(value).aliased_type} }", comments: comments)
+            type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
+            constant = RBI::Const.new(name, "T.type_alias { #{type_alias} }", comments: comments)
             tree << constant
             return
           end
