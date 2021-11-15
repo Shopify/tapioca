@@ -62,7 +62,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(customer_id: Integer, shop_id: Integer).void }
+          sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
           def initialize(customer_id: nil, shop_id: nil); end
 
           sig { returns(Integer) }
@@ -99,7 +99,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(events: String).void }
+          sig { params(events: T.nilable(String)).void }
           def initialize(events: nil); end
 
           sig { returns(String) }
@@ -133,7 +133,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
+          sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
           def initialize(cart_item_index: nil); end
 
           sig { returns(Google::Protobuf::UInt64Value) }
@@ -258,7 +258,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(customer_ids: T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer]), indices: T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value])).void }
+          sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
           def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
 
           sig { returns(Google::Protobuf::RepeatedField[Integer]) }
@@ -298,7 +298,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(customers: T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer]), stores: T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value])).void }
+          sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
           def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
 
           sig { returns(Google::Protobuf::Map[String, Integer]) }

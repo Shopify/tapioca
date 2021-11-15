@@ -167,7 +167,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 setter_type: type,
-                init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
+                init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
                 default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
             else
@@ -181,7 +181,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 setter_type: type,
-                init_type: "T.any(#{type}, T::Array[#{elem_type}])",
+                init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
                 default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
             end
@@ -192,7 +192,7 @@ module Tapioca
               name: descriptor.name,
               type: type,
               setter_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
-              init_type: descriptor.type == :enum ? "T.nilable(T.any(#{type}, Integer))" : type,
+              init_type: descriptor.type == :enum ? "T.nilable(T.any(#{type}, Integer))" : "T.nilable(#{type})",
               default: "nil"
             )
           end
