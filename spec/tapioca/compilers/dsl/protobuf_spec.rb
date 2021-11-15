@@ -173,7 +173,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(value_type: T.any(Symbol, Integer)).void }
+          sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
           def initialize(value_type: nil); end
 
           sig { returns(Symbol) }
@@ -224,7 +224,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         # typed: strong
 
         class Cart
-          sig { params(value_type: T.any(Symbol, Integer)).void }
+          sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
           def initialize(value_type: nil); end
 
           sig { returns(Symbol) }

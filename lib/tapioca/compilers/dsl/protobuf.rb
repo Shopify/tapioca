@@ -192,7 +192,7 @@ module Tapioca
               name: descriptor.name,
               type: type,
               setter_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
-              init_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
+              init_type: descriptor.type == :enum ? "T.nilable(T.any(#{type}, Integer))" : type,
               default: "nil"
             )
           end
