@@ -11,4 +11,46 @@ module Baz
       "abc" * 10
     end
   end
+
+  class AbstractMethod
+    extend T::Sig
+    extend T::Helpers
+
+    abstract!
+
+    sig { abstract.void }
+    def foo; end
+
+    sig { abstract.returns(String) }
+    def bar; end
+  end
+
+  class AbstractSingletonMethod
+    extend T::Sig
+    extend T::Helpers
+
+    abstract!
+
+    sig { abstract.void }
+    def self.foo; end
+
+    sig { abstract.returns(String) }
+    def self.bar; end
+  end
+
+  class AbstractSingletonMethodNested
+    extend T::Helpers
+
+    abstract!
+
+    class << self
+      extend T::Sig
+
+      sig { abstract.returns(String) }
+      def bar; end
+
+      sig { abstract.void }
+      def foo; end
+    end
+  end
 end
