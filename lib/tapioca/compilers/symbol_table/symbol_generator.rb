@@ -231,7 +231,8 @@ module Tapioca
 
         sig { params(tree: RBI::Tree, constant: Module).void }
         def compile_module_helpers(tree, constant)
-          abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type)
+          abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type) ||
+            T::Private::Abstract::Data.get(singleton_class_of(constant), :abstract_type)
 
           tree << RBI::Helper.new(abstract_type.to_s) if abstract_type
           tree << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)

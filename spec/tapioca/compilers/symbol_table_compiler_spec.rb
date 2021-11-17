@@ -193,6 +193,35 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("correctly compiles abstract singleton methods all nested") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          class << self
+            extend T::Sig
+            extend T::Helpers
+
+            abstract!
+
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+
+          class << self
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles complex type aliases") do
       add_ruby_file("bar.rb", <<~RUBY)
         module Bar

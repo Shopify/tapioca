@@ -74,6 +74,18 @@ module Tapioca
         end
       end
 
+      class Baz::AbstractSingletonMethodAllNested
+        abstract!
+
+        class << self
+          sig { abstract.returns(String) }
+          def bar; end
+
+          sig { abstract.void }
+          def foo; end
+        end
+      end
+
       class Baz::AbstractSingletonMethodNested
         abstract!
 

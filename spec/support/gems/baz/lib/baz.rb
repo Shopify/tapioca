@@ -53,4 +53,19 @@ module Baz
       def foo; end
     end
   end
+
+  class AbstractSingletonMethodAllNested
+    class << self
+      extend T::Sig
+      extend T::Helpers
+
+      abstract!
+
+      sig { abstract.returns(String) }
+      def bar; end
+
+      sig { abstract.void }
+      def foo; end
+    end
+  end
 end
