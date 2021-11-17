@@ -105,6 +105,123 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("correctly compiles abstract methods") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          extend T::Sig
+          extend T::Helpers
+
+          abstract!
+
+          sig { abstract.void }
+          def foo; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+
+          def initialize(*args, &blk); end
+
+          sig { abstract.void }
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("correctly compiles abstract singleton methods") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          extend T::Sig
+          extend T::Helpers
+
+          abstract!
+
+          sig { abstract.void }
+          def self.foo; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+
+          def initialize(*args, &blk); end
+
+          class << self
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("correctly compiles abstract singleton methods nested") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          extend T::Helpers
+
+          abstract!
+
+          class << self
+            extend T::Sig
+
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+
+          def initialize(*args, &blk); end
+
+          class << self
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it("correctly compiles abstract singleton methods all nested") do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          class << self
+            extend T::Sig
+            extend T::Helpers
+
+            abstract!
+
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+
+          class << self
+            sig { abstract.void }
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles complex type aliases") do
       add_ruby_file("bar.rb", <<~RUBY)
         module Bar

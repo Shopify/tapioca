@@ -48,6 +48,58 @@ module Tapioca
 
       module Baz; end
 
+      class Baz::AbstractMethod
+        abstract!
+
+        def initialize(*args, &blk); end
+
+        sig { abstract.returns(String) }
+        def bar; end
+
+        sig { abstract.void }
+        def foo; end
+      end
+
+      class Baz::AbstractSingletonMethod
+        abstract!
+
+        def initialize(*args, &blk); end
+
+        class << self
+          sig { abstract.returns(String) }
+          def bar; end
+
+          sig { abstract.void }
+          def foo; end
+        end
+      end
+
+      class Baz::AbstractSingletonMethodAllNested
+        abstract!
+
+        class << self
+          sig { abstract.returns(String) }
+          def bar; end
+
+          sig { abstract.void }
+          def foo; end
+        end
+      end
+
+      class Baz::AbstractSingletonMethodNested
+        abstract!
+
+        def initialize(*args, &blk); end
+
+        class << self
+          sig { abstract.returns(String) }
+          def bar; end
+
+          sig { abstract.void }
+          def foo; end
+        end
+      end
+
       class Baz::Role
         include ::SmartProperties
         extend ::SmartProperties::ClassMethods
