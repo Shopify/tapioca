@@ -206,6 +206,34 @@ module Tapioca
           @project.remove("rbis/")
         end
 
+        it "must remove outdated RBIs" do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
+
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.3.0.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.2.rbi")
+          @project.write("sorbet/rbi/gems/outdated@5.0.0.rbi")
+
+          out, err, status = @project.tapioca("gem --all")
+
+          assert_includes(out, "remove  sorbet/rbi/gems/outdated@5.0.0.rbi\n")
+          refute_includes(out, "create sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_includes(out, "create sorbet/rbi/gems/bar@0.3.0.rbi")
+          refute_includes(out, "create sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_includes(out, "-> Moving:")
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
+
+          assert_empty(err)
+          assert(status)
+        end
+
         it "must perform postrequire properly" do
           foo = mock_gem("foo", "0.0.1") do
             write("lib/foo.rb", FOO_RB)

@@ -55,6 +55,11 @@ module Tapioca
         require_gem_file
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @gem_excludes.include?(gem.name) }
+        anything_done = [
+          perform_removals,
+          gem_queue.any?,
+        ].any?
+
         Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
             compile_gem_rbi(gem)
@@ -62,8 +67,12 @@ module Tapioca
           end
         end
 
-        say("All operations performed in working directory.", [:green, :bold])
-        say("Please review changes and commit them.", [:green, :bold])
+        if anything_done
+          say("All operations performed in working directory.", [:green, :bold])
+          say("Please review changes and commit them.", [:green, :bold])
+        else
+          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
+        end
       end
 
       sig { params(should_verify: T::Boolean).void }
