@@ -68,6 +68,7 @@ module Tapioca
       "generators" => [],
       "file_header" => true,
       "doc" => false,
+      "exported_gem_rbis" => true,
       "workers" => 1,
     }.freeze, T::Hash[String, T.untyped])
   end

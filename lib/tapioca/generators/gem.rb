@@ -15,6 +15,7 @@ module Tapioca
           outpath: Pathname,
           file_header: T::Boolean,
           doc: T::Boolean,
+          include_exported_rbis: T::Boolean,
           file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer)
         ).void
@@ -29,6 +30,7 @@ module Tapioca
         outpath:,
         file_header:,
         doc:,
+        include_exported_rbis:,
         file_writer: FileWriter.new,
         number_of_workers: nil
       )
