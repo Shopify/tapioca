@@ -105,6 +105,7 @@ module Tapioca
         real_gem_path = to_realpath(@spec.full_gem_path)
         @full_gem_path = T.let(real_gem_path, String)
         @version = T.let(version_string, String)
+        @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -153,7 +154,7 @@ module Tapioca
 
       sig { returns(T::Array[String]) }
       def exported_rbi_files
-        Dir.glob("#{full_gem_path}/rbi/**/*.rbi")
+        @exported_rbi_files ||= Dir.glob("#{full_gem_path}/rbi/**/*.rbi")
       end
 
       sig { returns(T::Boolean) }
