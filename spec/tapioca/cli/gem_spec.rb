@@ -185,6 +185,22 @@ module Tapioca
           refute_path_exists("#{repo_path}/sorbet/rbi/gems/baz@0.0.2.rbi")
         end
 
+        it "must remove outdated RBIs" do
+          FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
+
+          output = tapioca("gem foo")
+
+          assert_includes(output, <<~OUTPUT)
+            Processing 'foo' gem:
+              Compiling foo, this may take a few seconds...   Done
+          OUTPUT
+
+          assert_includes(output, "-- Removing: #{outdir}/outdated@5.0.0.rbi\n")
+
+          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
+          refute_path_exists("#{outdir}/outdated@5.0.0.rbi")
+        end
+
         it "must perform postrequire properly" do
           output = tapioca("gem foo --postrequire #{repo_path / "postrequire.rb"}")
 

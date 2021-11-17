@@ -51,18 +51,27 @@ module Tapioca
       def generate
         require_gem_file
 
-        gems_to_generate(@gem_names)
-          .reject { |gem| @gem_excludes.include?(gem.name) }
-          .each do |gem|
-            say("Processing '#{gem.name}' gem:", :green)
-            shell.indent do
-              compile_gem_rbi(gem)
-              puts
-            end
-          end
+        gems_to_process = gems_to_generate(@gem_names).reject { |gem| @gem_excludes.include?(gem.name) }
 
-        say("All operations performed in working directory.", [:green, :bold])
-        say("Please review changes and commit them.", [:green, :bold])
+        anything_done = [
+          perform_removals,
+          gems_to_process.any?,
+        ].any?
+
+        gems_to_process.each do |gem|
+          say("Processing '#{gem.name}' gem:", :green)
+          shell.indent do
+            compile_gem_rbi(gem)
+            puts
+          end
+        end
+
+        if anything_done
+          say("All operations performed in working directory.", [:green, :bold])
+          say("Please review changes and commit them.", [:green, :bold])
+        else
+          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
+        end
       end
 
       sig { params(should_verify: T::Boolean).void }
