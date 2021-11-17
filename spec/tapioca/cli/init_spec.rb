@@ -1,63 +1,63 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
-require "cli_spec"
+require "spec_with_project"
 
 module Tapioca
-  class InitSpec < CliSpec
-    describe("#init") do
+  class InitSpec < SpecWithProject
+    describe("#cli::init") do
+      before(:all) do
+        project.bundle_install
+      end
+
+      after do
+        @project.remove("sorbet/config")
+        @project.remove("sorbet/tapioca")
+        @project.remove("bin/tapioca")
+      end
+
       it "must create proper files" do
-        FileUtils.rm_f(repo_path / "bin/tapioca")
-        output = tapioca("init")
+        out, err, status = @project.tapioca("init")
 
-        assert_output(<<~OUTPUT, output)
-          create  sorbet/config
-          create  sorbet/tapioca/require.rb
-          create  bin/tapioca
-        OUTPUT
+        assert_includes(out, "create  sorbet/config")
+        assert_includes(out, "create  sorbet/tapioca/require.rb")
+        assert_includes(out, "create  bin/tapioca")
 
-        assert_path_exists(repo_path / "sorbet/config")
-        assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/config"))
+        assert_equal(<<~CONFIG, @project.read("sorbet/config"))
           --dir
           .
-        CONTENTS
-        assert_path_exists(repo_path / "sorbet/tapioca/require.rb")
-        assert_equal(<<~CONTENTS, File.read(repo_path / "sorbet/tapioca/require.rb"))
+        CONFIG
+
+        assert_project_file_equal("sorbet/tapioca/require.rb", <<~RB)
           # typed: true
           # frozen_string_literal: true
 
           # Add your extra requires here (`bin/tapioca require` can be used to boostrap this list)
-        CONTENTS
+        RB
 
-        assert_path_exists(repo_path / "bin/tapioca")
+        assert_project_file_exist("bin/tapioca")
+
+        assert_empty(err)
+        assert(status)
       end
 
       it "must not overwrite files" do
-        FileUtils.mkdir_p(repo_path / "sorbet/tapioca")
-        FileUtils.mkdir_p(repo_path / "bin")
-        FileUtils.touch([
-          repo_path / "bin/tapioca",
-          repo_path / "sorbet/config",
-          repo_path / "sorbet/tapioca/require.rb",
-        ])
+        @project.write("bin/tapioca")
+        @project.write("sorbet/config")
+        @project.write("sorbet/tapioca/require.rb")
 
-        output = tapioca("init")
+        out, err, status = @project.tapioca("init")
 
-        assert_output(<<~OUTPUT, output)
-          skip  sorbet/config
-          skip  sorbet/tapioca/require.rb
-          force  bin/tapioca
-        OUTPUT
+        assert_includes(out, "skip  sorbet/config")
+        assert_includes(out, "skip  sorbet/tapioca/require.rb")
+        assert_includes(out, "force  bin/tapioca")
 
-        assert_empty(File.read(repo_path / "sorbet/config"))
-        assert_empty(File.read(repo_path / "sorbet/tapioca/require.rb"))
+        assert_empty(@project.read("sorbet/config"))
+        assert_empty(@project.read("sorbet/tapioca/require.rb"))
+
+        assert_empty(err)
+        assert(status)
       end
-    end
-
-    private
-
-    def assert_output(expected, output)
-      assert_equal(expected, output.lines.map(&:lstrip).join)
     end
   end
 end

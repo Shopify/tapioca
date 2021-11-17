@@ -327,11 +327,7 @@ module Tapioca
 
       sig { params(cause: Symbol, files: T::Array[String]).returns(String) }
       def build_error_for_files(cause, files)
-        filenames = files.map do |file|
-          @outpath / file
-        end.join("\n  - ")
-
-        "  File(s) #{cause}:\n  - #{filenames}"
+        "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
       end
     end
   end
