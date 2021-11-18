@@ -82,8 +82,7 @@ module Tapioca
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      default: nil,
-      desc: "Number of parallel workers to use when generating RBIs"
+      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs"
     def dsl(*constants)
       current_command = T.must(current_command_chain.first)
       config = ConfigBuilder.from_options(current_command, options)
@@ -101,6 +100,14 @@ module Tapioca
         verbose: options[:verbose],
         number_of_workers: config.workers
       )
+
+      if config.workers != 1
+        say(
+          "Using more than one worker is experimental and might produce results that are not deterministic",
+          :red
+        )
+      end
+
       Tapioca.silence_warnings do
         generator.generate
       end
@@ -139,8 +146,7 @@ module Tapioca
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      default: nil,
-      desc: "Number of parallel workers to use when generating RBIs"
+      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs"
     def gem(*gems)
       Tapioca.silence_warnings do
         all = options[:all]
@@ -165,6 +171,13 @@ module Tapioca
         unless gems.empty?
           raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
           raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
+        end
+
+        if config.workers != 1
+          say(
+            "Using more than one worker is experimental and might produce results that are not deterministic",
+            :red
+          )
         end
 
         if gems.empty? && !all
