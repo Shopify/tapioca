@@ -22,13 +22,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler: ${{ matrix.bundler }}
           bundler-cache: true
-      - name: Run type check
-        run: bin/typecheck
-      - name: Lint Ruby files
-        run: bin/style --config .rubocop.yml
-      - name: Verify documentation
-        run: bin/docs
       - name: Run tests
         env:
-          BUNDLER_VERSION: ${{matrix.bundler}} 
-        run: bin/test
+          BUNDLER_VERSION: ${{matrix.bundler}}
+        run: bin/test spec/tapioca/cli/gem_spec.rb

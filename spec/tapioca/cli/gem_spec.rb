@@ -380,6 +380,8 @@ module Tapioca
 
           out, err, status = @project.tapioca("gem --all")
 
+          puts out
+
           assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
           refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
 
