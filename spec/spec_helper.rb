@@ -11,7 +11,7 @@ require "byebug"
 require "tapioca/helpers/test/content"
 require "tapioca/helpers/test/template"
 require "tapioca/helpers/test/isolation"
-require "dsl_spec"
+require "dsl_spec_helper"
 
 Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))
 
