@@ -15,7 +15,7 @@ module Tapioca
     const(:generators, T::Array[String])
     const(:file_header, T::Boolean, default: true)
     const(:doc, T::Boolean, default: false)
-    const(:workers, T.nilable(Integer), default: nil)
+    const(:workers, T.nilable(Integer), default: 1)
 
     sig { returns(Pathname) }
     def outpath
