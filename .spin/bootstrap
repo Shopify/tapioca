@@ -1,0 +1,7 @@
+#!/usr/local/env bash
+
+# Install some dependencies
+apt-get install libsqlite3-dev
+
+# Configure environment
+bin/setup
