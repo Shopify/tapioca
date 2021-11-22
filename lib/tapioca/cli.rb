@@ -1,10 +1,10 @@
 # typed: true
 # frozen_string_literal: true
 
-require "thor"
-
 module Tapioca
   class Cli < Thor
+    include CliHelper
+
     class_option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
