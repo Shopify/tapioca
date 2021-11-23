@@ -139,5 +139,105 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
 
       assert_equal(expected, rbi_for(:StateMachine))
     end
+
+    it("generates a stable order") do
+      require "active_record"
+
+      ::ActiveRecord::Base.establish_connection(
+        adapter: "sqlite3",
+        database: ":memory:"
+      )
+
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+              t.string(:status)
+              t.timestamps
+            end
+          end
+        end
+      RUBY
+
+      add_ruby_file("content.rb", <<~RUBY)
+        class Post < ActiveRecord::Base
+          include AASM
+
+          enum status: {
+            pending: 'pending',
+            created: 'created',
+            in_transit: 'in_transit',
+          }
+
+          aasm column: 'status', enum: true do
+            state :pending
+            state :created
+            state :in_transit
+          end
+        end
+
+        puts Post.table_exists?
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          sig { returns(T::Boolean) }
+          def created?; end
+
+          sig { returns(T::Boolean) }
+          def in_transit?; end
+
+          sig { returns(T::Boolean) }
+          def pending?; end
+
+          class PrivateAASMMachine < AASM::Base
+            sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
+            def event(name, options = nil, &block); end
+
+            class PrivateAASMEvent < AASM::Core::Event
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def after(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def after_commit(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def after_transaction(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def before(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def before_success(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def before_transaction(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def ensure(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def error(&block); end
+
+              sig { params(block: T.proc.bind(Post).void).returns(T.untyped) }
+              def success(&block); end
+            end
+          end
+
+          STATE_CREATED = T.let(T.unsafe(nil), Symbol)
+          STATE_IN_TRANSIT = T.let(T.unsafe(nil), Symbol)
+          STATE_PENDING = T.let(T.unsafe(nil), Symbol)
+
+          class << self
+            sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
+            def aasm(*args, &block); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
   end
 end
