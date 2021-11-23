@@ -12,7 +12,6 @@ module Tapioca
       end
 
       include CliHelper
-      include Thor::Base # TODO: Remove me when logging logic has been abstracted
 
       abstract!
 
