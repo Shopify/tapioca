@@ -105,6 +105,7 @@ module Tapioca
         real_gem_path = to_realpath(@spec.full_gem_path)
         @full_gem_path = T.let(real_gem_path, String)
         @version = T.let(version_string, String)
+        @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -149,6 +150,28 @@ module Tapioca
       sig { void }
       def parse_yard_docs
         files.each { |path| YARD.parse(path.to_s, [], Logger::Severity::FATAL) }
+      end
+
+      sig { returns(T::Array[String]) }
+      def exported_rbi_files
+        @exported_rbi_files ||= Dir.glob("#{full_gem_path}/rbi/**/*.rbi")
+      end
+
+      sig { returns(T::Boolean) }
+      def export_rbi_files?
+        exported_rbi_files.any?
+      end
+
+      sig { returns(RBI::MergeTree) }
+      def exported_rbi_tree
+        rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
+
+        exported_rbi_files.each do |file|
+          rbi = RBI::Parser.parse_file(file)
+          rewriter.merge(rbi)
+        end
+
+        rewriter.tree
       end
 
       private

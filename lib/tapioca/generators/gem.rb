@@ -15,6 +15,7 @@ module Tapioca
           outpath: Pathname,
           file_header: T::Boolean,
           doc: T::Boolean,
+          include_exported_rbis: T::Boolean,
           file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer)
         ).void
@@ -29,6 +30,7 @@ module Tapioca
         outpath:,
         file_header:,
         doc:,
+        include_exported_rbis:,
         file_writer: FileWriter.new,
         number_of_workers: nil
       )
@@ -48,6 +50,7 @@ module Tapioca
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @doc = T.let(doc, T::Boolean)
+        @include_exported_rbis = include_exported_rbis
       end
 
       sig { override.void }
@@ -154,6 +157,8 @@ module Tapioca
         )
 
         Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, @doc)
+
+        merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 
         if rbi.empty?
           rbi.set_empty_body_content
@@ -337,6 +342,30 @@ module Tapioca
       sig { params(cause: Symbol, files: T::Array[String]).returns(String) }
       def build_error_for_files(cause, files)
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
+      end
+
+      sig { params(gem: Gemfile::GemSpec, file: RBI::File).void }
+      def merge_with_exported_rbi(gem, file)
+        return file unless gem.export_rbi_files?
+        tree = gem.exported_rbi_tree
+
+        unless tree.conflicts.empty?
+          say_error("\n\n  RBIs exported by `#{gem.name}` contain conflicts and can't be used:", :yellow)
+
+          tree.conflicts.each do |conflict|
+            say_error("\n    #{conflict}", :yellow)
+            say_error("    Found at:", :yellow)
+            say_error("      #{conflict.left.loc}", :yellow)
+            say_error("      #{conflict.right.loc}", :yellow)
+          end
+
+          return file
+        end
+
+        file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: RBI::Rewriters::Merge::Keep::LEFT)
+      rescue RBI::ParseError => e
+        say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
+        say_error("Cause: #{e.message} (#{e.location})")
       end
     end
   end
