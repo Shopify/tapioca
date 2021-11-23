@@ -26,6 +26,7 @@ module Tapioca
         sig { void }
         def initialize
           @processable_constants = T.let(Set.new(gather_constants), T::Set[Module])
+          @processable_constants.compare_by_identity
           @errors = T.let([], T::Array[String])
         end
 
