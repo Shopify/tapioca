@@ -92,6 +92,11 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
           sig { returns(T::Boolean) }
           def sleeping?; end
 
+          class << self
+            sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
+            def aasm(*args, &block); end
+          end
+
           class PrivateAASMMachine < AASM::Base
             sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
             def event(name, options = nil, &block); end
@@ -129,11 +134,6 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
           STATE_CLEANING = T.let(T.unsafe(nil), Symbol)
           STATE_RUNNING = T.let(T.unsafe(nil), Symbol)
           STATE_SLEEPING = T.let(T.unsafe(nil), Symbol)
-
-          class << self
-            sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
-            def aasm(*args, &block); end
-          end
         end
       RBI
 
