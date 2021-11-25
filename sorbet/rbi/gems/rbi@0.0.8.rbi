@@ -26,6 +26,23 @@ class RBI::ASTVisitor
   def parse_name(node); end
 end
 
+class RBI::Arg < ::RBI::Node
+  sig { params(value: String, loc: T.nilable(RBI::Loc)).void }
+  def initialize(value, loc: T.unsafe(nil)); end
+
+  sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+  def ==(other); end
+
+  sig { override.params(v: RBI::Printer).void }
+  def accept_printer(v); end
+
+  sig { returns(String) }
+  def to_s; end
+
+  sig { returns(String) }
+  def value; end
+end
+
 # Attributes
 class RBI::Attr < ::RBI::NodeWithComments
   include ::RBI::Indexable
@@ -330,10 +347,12 @@ class RBI::Group::Kind < ::T::Enum
     Helpers = new
     TypeMembers = new
     MixesInClassMethods = new
+    Sends = new
     TStructFields = new
     TEnums = new
     Inits = new
     Methods = new
+    SingletonClasses = new
     Consts = new
   end
 end
@@ -384,14 +403,19 @@ class RBI::Index < ::RBI::Visitor
   sig { params(id: String).returns(T::Array[RBI::Node]) }
   def [](id); end
 
-  sig { params(node: T.all(RBI::Indexable, RBI::Node)).void }
-  def index(node); end
+  sig { params(nodes: RBI::Node).void }
+  def index(*nodes); end
 
   sig { returns(T::Array[String]) }
   def keys; end
 
   sig { override.params(node: T.nilable(RBI::Node)).void }
   def visit(node); end
+
+  private
+
+  sig { params(node: T.all(RBI::Indexable, RBI::Node)).void }
+  def index_node(node); end
 
   class << self
     sig { params(node: RBI::Node).returns(RBI::Index) }
@@ -409,6 +433,23 @@ module RBI::Indexable
   # getter and the setter.
   sig { abstract.returns(T::Array[String]) }
   def index_ids; end
+end
+
+class RBI::KwArg < ::RBI::Arg
+  sig { params(keyword: String, value: String, loc: T.nilable(RBI::Loc)).void }
+  def initialize(keyword, value, loc: T.unsafe(nil)); end
+
+  sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+  def ==(other); end
+
+  sig { override.params(v: RBI::Printer).void }
+  def accept_printer(v); end
+
+  sig { returns(String) }
+  def keyword; end
+
+  sig { returns(String) }
+  def to_s; end
 end
 
 class RBI::KwOptParam < ::RBI::Param
@@ -752,8 +793,14 @@ class RBI::Parser
     sig { params(path: String).returns(RBI::Tree) }
     def parse_file(path); end
 
+    sig { params(paths: T::Array[String]).returns(T::Array[RBI::Tree]) }
+    def parse_files(paths); end
+
     sig { params(string: String).returns(RBI::Tree) }
     def parse_string(string); end
+
+    sig { params(strings: T::Array[String]).returns(T::Array[RBI::Tree]) }
+    def parse_strings(strings); end
   end
 end
 
@@ -1053,6 +1100,87 @@ class RBI::Rewriters::NestSingletonMethods < ::RBI::Visitor
   def visit(node); end
 end
 
+# Remove all definitions existing in the index from the current tree
+#
+# Let's create an `Index` from two different `Tree`s:
+# ~~~rb
+# tree1 = Parse.parse_string(<<~RBI)
+# class Foo
+# def foo; end
+# end
+# RBI
+#
+# tree2 = Parse.parse_string(<<~RBI)
+# FOO = 10
+# RBI
+#
+# index = Index.index(tree1, tree2)
+# ~~~
+#
+# We can use `RemoveKnownDefinitions` to remove the definitions found in the `index` from the `Tree` to clean:
+# ~~~rb
+# tree_to_clean = Parser.parse_string(<<~RBI)
+# class Foo
+# def foo; end
+# def bar; end
+# end
+# FOO = 10
+# BAR = 42
+# RBI
+#
+# cleaned_tree, operations = RemoveKnownDefinitions.remove(tree_to_clean, index)
+#
+# assert_equal(<<~RBI, cleaned_tree)
+# class Foo
+# def bar; end
+# end
+# BAR = 42
+# RBI
+#
+# assert_equal(<<~OPERATIONS, operations.join("\n"))
+# Deleted ::Foo#foo at -:2:2-2-16 (duplicate from -:2:2-2:16)
+# Deleted ::FOO at -:5:0-5:8 (duplicate from -:1:0-1:8)
+# OPERATIONS
+# ~~~
+class RBI::Rewriters::RemoveKnownDefinitions < ::RBI::Visitor
+  sig { params(index: RBI::Index).void }
+  def initialize(index); end
+
+  sig { returns(T::Array[RBI::Rewriters::RemoveKnownDefinitions::Operation]) }
+  def operations; end
+
+  sig { override.params(node: T.nilable(RBI::Node)).void }
+  def visit(node); end
+
+  sig { params(nodes: T::Array[RBI::Node]).void }
+  def visit_all(nodes); end
+
+  private
+
+  sig { params(node: RBI::Node, previous: RBI::Node).void }
+  def delete_node(node, previous); end
+
+  sig { params(node: RBI::Indexable).returns(T.nilable(RBI::Node)) }
+  def previous_definition_for(node); end
+
+  class << self
+    sig { params(tree: RBI::Tree, index: RBI::Index).returns([RBI::Tree, T::Array[RBI::Rewriters::RemoveKnownDefinitions::Operation]]) }
+    def remove(tree, index); end
+  end
+end
+
+class RBI::Rewriters::RemoveKnownDefinitions::Operation < ::T::Struct
+  const :deleted_node, RBI::Node
+  const :duplicate_of, RBI::Node
+
+  sig { returns(String) }
+  def to_s; end
+
+  class << self
+    def inherited(s); end
+  end
+end
+
 class RBI::Rewriters::SortNodes < ::RBI::Visitor
   sig { override.params(node: T.nilable(RBI::Node)).void }
   def visit(node); end
@@ -1126,6 +1254,38 @@ class RBI::ScopeConflict < ::RBI::Tree
   def oneline?; end
 
   def right; end
+end
+
+# Sends
+class RBI::Send < ::RBI::NodeWithComments
+  include ::RBI::Indexable
+
+  sig { params(method: String, args: T::Array[RBI::Arg], loc: T.nilable(RBI::Loc), comments: T::Array[RBI::Comment], block: T.nilable(T.proc.params(node: RBI::Send).void)).void }
+  def initialize(method, args = T.unsafe(nil), loc: T.unsafe(nil), comments: T.unsafe(nil), &block); end
+
+  sig { params(arg: RBI::Arg).void }
+  def <<(arg); end
+
+  sig { params(other: T.nilable(Object)).returns(T::Boolean) }
+  def ==(other); end
+
+  sig { override.params(v: RBI::Printer).void }
+  def accept_printer(v); end
+
+  sig { returns(T::Array[RBI::Arg]) }
+  def args; end
+
+  sig { override.params(other: RBI::Node).returns(T::Boolean) }
+  def compatible_with?(other); end
+
+  sig { override.returns(T::Array[String]) }
+  def index_ids; end
+
+  sig { returns(String) }
+  def method; end
+
+  sig { returns(String) }
+  def to_s; end
 end
 
 # Sorbet's sigs
@@ -1451,14 +1611,11 @@ end
 RBI::Tree::SPECIAL_METHOD_NAMES = T.let(T.unsafe(nil), Array)
 
 class RBI::TreeBuilder < ::RBI::ASTVisitor
-  sig { params(file: String, comments: T::Hash[Parser::Source::Map, T::Array[Parser::Source::Comment]]).void }
-  def initialize(file:, comments: T.unsafe(nil)); end
-
-  sig { params(comments: T::Array[Parser::Source::Comment]).void }
-  def assoc_dangling_comments(comments); end
+  sig { params(file: String, comments: T::Array[Parser::Source::Comment], nodes_comments_assoc: T::Hash[Parser::Source::Map, T::Array[Parser::Source::Comment]]).void }
+  def initialize(file:, comments: T.unsafe(nil), nodes_comments_assoc: T.unsafe(nil)); end
 
   sig { void }
-  def separate_header_comments; end
+  def post_process; end
 
   sig { returns(RBI::Tree) }
   def tree; end
@@ -1467,6 +1624,9 @@ class RBI::TreeBuilder < ::RBI::ASTVisitor
   def visit(node); end
 
   private
+
+  sig { void }
+  def assoc_dangling_comments; end
 
   sig { returns(RBI::Tree) }
   def current_scope; end
@@ -1501,6 +1661,9 @@ class RBI::TreeBuilder < ::RBI::ASTVisitor
   sig { params(node: AST::Node).returns(T.nilable(RBI::Node)) }
   def parse_send(node); end
 
+  sig { params(node: AST::Node).returns(T::Array[RBI::Arg]) }
+  def parse_send_args(node); end
+
   sig { params(node: AST::Node).returns(RBI::Sig) }
   def parse_sig(node); end
 
@@ -1509,6 +1672,12 @@ class RBI::TreeBuilder < ::RBI::ASTVisitor
 
   sig { params(node: AST::Node).returns([String, String, T.nilable(String)]) }
   def parse_tstruct_prop(node); end
+
+  sig { void }
+  def separate_header_comments; end
+
+  sig { void }
+  def set_root_tree_loc; end
 
   sig { params(node: AST::Node).returns(T::Boolean) }
   def struct_definition?(node); end
