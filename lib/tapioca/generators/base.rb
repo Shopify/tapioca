@@ -12,6 +12,7 @@ module Tapioca
       end
 
       include CliHelper
+      include Thor::Base
 
       abstract!
 

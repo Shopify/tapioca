@@ -8,7 +8,7 @@ module Tapioca
     extend T::Sig
     extend T::Helpers
 
-    include Thor::Shell
+    requires_ancestor { Thor::Shell }
 
     sig { params(message: String, color: T.any(Symbol, T::Array[Symbol])).void }
     def say_error(message = "", *color)
