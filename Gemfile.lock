@@ -217,7 +217,7 @@ GEM
       thor (~> 1.0)
     rainbow (3.0.0)
     rake (13.0.6)
-    rbi (0.0.7)
+    rbi (0.0.8)
       ast
       parser
       sorbet-runtime (>= 0.5.9204)
