@@ -73,15 +73,15 @@ module Tapioca
 
         # Descend into subconstants to trigger autoload for them.
         constant_names.each do |constant_name|
-          descend_into(constant_name, seen)
+          descend_into(constant_name, Object, seen)
         end
       end
 
       private
 
-      sig { params(constant_name: String, seen: T::Set[Module]).void }
-      def descend_into(constant_name, seen)
-        constant = constantize(constant_name, inherit: true)
+      sig { params(constant_name: String, namespace: Module, seen: T::Set[Module]).void }
+      def descend_into(constant_name, namespace, seen)
+        constant = constantize(constant_name, inherit: true, namespace: Object)
 
         # Skip if unresolveable
         return unless constant
@@ -94,7 +94,7 @@ module Tapioca
         seen.add(constant)
 
         constants_of(constant).each do |name|
-          descend_into("#{constant_name}::#{name}", seen)
+          descend_into(name.to_s, constant, seen)
         end
       end
     end
