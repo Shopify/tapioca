@@ -12,6 +12,8 @@ gem("rubocop-shopify", require: false)
 gem("rubocop-sorbet", ">= 0.4.1")
 gem("sorbet")
 
+gem("spoom", path: "/Users/alexandreterrasa/src/github.com/Shopify/spoom")
+
 group(:deployment, :development) do
   gem("rake")
 end
