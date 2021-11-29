@@ -417,6 +417,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               create_table :posts do |t|
               end
 
+              create_table :drafts do |t|
+              end
+
               create_table :authors do |t|
               end
 
@@ -434,8 +437,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               end
             end
 
+            class Draft < ActiveRecord::Base
+              belongs_to :author
+            end
+
             class Author < ActiveRecord::Base
               has_many :comments
+              has_many :drafts
             end
           end
 
@@ -492,6 +500,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
               sig { params(value: T::Enumerable[::Comment]).void }
               def comments=(value); end
+
+              sig { returns(T::Array[T.untyped]) }
+              def draft_ids; end
+
+              sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+              def draft_ids=(ids); end
+
+              sig { returns(::Blog::Draft::PrivateCollectionProxy) }
+              def drafts; end
+
+              sig { params(value: T::Enumerable[::Blog::Draft]).void }
+              def drafts=(value); end
             end
           end
         RBI
