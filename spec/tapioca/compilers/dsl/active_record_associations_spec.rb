@@ -409,6 +409,125 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
         assert_equal(expected, rbi_for(:Post))
       end
+
+      it("generates RBI files for models under different namespaces with associations to each other") do
+        add_ruby_file("schema.rb", <<~RUBY)
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+              end
+
+              create_table :authors do |t|
+              end
+
+              create_table :comments do |t|
+              end
+            end
+          end
+        RUBY
+
+        add_ruby_file("models.rb", <<~RUBY)
+          module Blog
+            module Core
+              class Post < ActiveRecord::Base
+                belongs_to :author
+              end
+            end
+
+            class Author < ActiveRecord::Base
+              has_many :comments
+            end
+          end
+
+          class Comment < ActiveRecord::Base
+            belongs_to :post, class_name: "Blog::Core::Post"
+          end
+        RUBY
+
+        expected = <<~RBI
+          # typed: strong
+
+          class Blog::Core::Post
+            include GeneratedAssociationMethods
+
+            module GeneratedAssociationMethods
+              sig { returns(T.nilable(::Blog::Author)) }
+              def author; end
+
+              sig { params(value: T.nilable(::Blog::Author)).void }
+              def author=(value); end
+
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+              def build_author(*args, &blk); end
+
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+              def create_author(*args, &blk); end
+
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+              def create_author!(*args, &blk); end
+
+              sig { returns(T.nilable(::Blog::Author)) }
+              def reload_author; end
+            end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for("Blog::Core::Post"))
+
+        expected = <<~RBI
+          # typed: strong
+
+          class Blog::Author
+            include GeneratedAssociationMethods
+
+            module GeneratedAssociationMethods
+              sig { returns(T::Array[T.untyped]) }
+              def comment_ids; end
+
+              sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+              def comment_ids=(ids); end
+
+              sig { returns(::Comment::PrivateCollectionProxy) }
+              def comments; end
+
+              sig { params(value: T::Enumerable[::Comment]).void }
+              def comments=(value); end
+            end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for("Blog::Author"))
+
+        expected = <<~RBI
+          # typed: strong
+
+          class Comment
+            include GeneratedAssociationMethods
+
+            module GeneratedAssociationMethods
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+              def build_post(*args, &blk); end
+
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+              def create_post(*args, &blk); end
+
+              sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+              def create_post!(*args, &blk); end
+
+              sig { returns(T.nilable(::Blog::Core::Post)) }
+              def post; end
+
+              sig { params(value: T.nilable(::Blog::Core::Post)).void }
+              def post=(value); end
+
+              sig { returns(T.nilable(::Blog::Core::Post)) }
+              def reload_post; end
+            end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:Comment))
+      end
     end
 
     describe("with errors") do

@@ -266,17 +266,39 @@ module Tapioca
           ).returns(String)
         end
         def type_for(constant, reflection)
+          validate_reflection!(reflection)
+
+          return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
+
+          T.must(qualified_name_of(reflection.klass))
+        end
+
+        sig do
+          params(
+            reflection: ReflectionType
+          ).void
+        end
+        def validate_reflection!(reflection)
+          # Check existence of source reflection, first, since, calling
+          # `.klass` also tries to go through the source reflection
+          # and fails with a cryptic error, otherwise.
+          if reflection.through_reflection?
+            raise SourceReflectionError unless reflection.source_reflection
+          end
+
+          # For non-polymorphic reflections, `.klass` should not be raising
+          # a `NameError`.
+          unless reflection.polymorphic?
+            reflection.klass
+          end
+        rescue NameError
           class_name = if reflection.through_reflection?
             reflection.send(:delegate_reflection).class_name
           else
             reflection.class_name
           end
 
-          raise MissingConstantError, class_name unless class_name.safe_constantize
-
-          return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
-
-          T.must(qualified_name_of(reflection.klass))
+          raise MissingConstantError, class_name
         end
 
         sig { params(reflection: ReflectionType).returns(T.nilable(String)) }
@@ -320,8 +342,6 @@ module Tapioca
         end
         def polymorphic_association?(reflection)
           if reflection.through_reflection?
-            raise SourceReflectionError unless reflection.source_reflection
-
             polymorphic_association?(reflection.source_reflection)
           else
             !!reflection.polymorphic?
