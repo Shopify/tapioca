@@ -192,6 +192,72 @@ module Tapioca
       end
     end
 
+    desc "clean-shims", "clean duplicated definitions in shim RBIs"
+    option :gem_rbis_path, type: :string, default: Config::DEFAULT_GEMDIR, desc: "Path to gem RBIs"
+    option :dsl_rbis_path, type: :string, default: Config::DEFAULT_DSLDIR, desc: "Path to DSL RBIs"
+    option :shim_rbis_path, type: :string, default: Config::DEFAULT_SHIMDIR, desc: "Path to shim RBIs"
+    def clean_shims(*files_to_clean)
+      index = RBI::Index.new
+
+      # Index gem RBIs
+      gem_rbis_path = options[:gem_rbis_path]
+      say("Loading gem RBIs from #{gem_rbis_path}... ")
+      gem_rbis_files = Dir.glob("#{gem_rbis_path}/**/*.rbi").sort
+      gem_rbis_trees = RBI::Parser.parse_files(gem_rbis_files)
+      index.visit_all(gem_rbis_trees)
+      say(" Done", :green)
+
+      # Index dsl RBIs
+      dsl_rbis_path = options[:dsl_rbis_path]
+      say("Loading dsl RBIs from #{dsl_rbis_path}... ")
+      dsl_rbis_files = Dir.glob("#{dsl_rbis_path}/**/*.rbi").sort
+      dsl_rbis_trees = RBI::Parser.parse_files(dsl_rbis_files)
+      index.visit_all(dsl_rbis_trees)
+      say(" Done", :green)
+
+      # Clean shim RBIs
+      if files_to_clean.empty?
+        shim_rbis_path = options[:shim_rbis_path]
+        print("Cleaning shim RBIs from #{shim_rbis_path}...")
+        files_to_clean = Dir.glob("#{shim_rbis_path}/*.rbi")
+      else
+        print("Cleaning shim RBIs...")
+      end
+
+      done_something = T.let(false, T::Boolean)
+      files_to_clean.sort.each do |path|
+        original = RBI::Parser.parse_file(path)
+        cleaned, operations = RBI::Rewriters::RemoveKnownDefinitions.remove(original, index)
+
+        next if operations.empty?
+        done_something = true
+
+        operations.each do |operation|
+          print("\n  #{operation}")
+        end
+
+        if cleaned.empty?
+          print("\n  Deleted empty file #{path}")
+          FileUtils.rm(path)
+        else
+          File.write(path, cleaned.string)
+        end
+      end
+
+      if done_something
+        say("\nDone", :green)
+      else
+        say(" Done ", :green)
+        say("(nothing to do)", :yellow)
+      end
+    rescue Errno::ENOENT => e
+      say_error("\nCan't read RBI: #{e}")
+      exit(1)
+    rescue RBI::ParseError => e
+      say_error("\nCan't parse RBI: #{e} (#{e.location})")
+      exit(1)
+    end
+
     desc "--version, -v", "show version"
     def __print_version
       puts "Tapioca v#{Tapioca::VERSION}"
