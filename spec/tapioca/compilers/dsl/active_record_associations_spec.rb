@@ -253,6 +253,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
 
       it("generates RBI file for has_many collection association") do
+        add_ruby_file("schema.rb", <<~RUBY)
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :posts do |t|
+              end
+
+              create_table :comments do |t|
+              end
+            end
+          end
+        RUBY
+
         add_ruby_file("comment.rb", <<~RUBY)
           class Comment
           end
@@ -282,7 +294,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               sig { returns(::Comment::PrivateCollectionProxy) }
               def comments; end
 
-              sig { params(value: T::Enumerable[T.untyped]).void }
+              sig { params(value: T::Enumerable[::Comment]).void }
               def comments=(value); end
 
               sig { params(attributes: T.untyped).returns(T.untyped) }
@@ -369,6 +381,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       it("generates RBI file for has_and_belongs_to_many collection association") do
         add_ruby_file("schema.rb", <<~RUBY)
+          ActiveRecord::Migration.suppress_messages do
+            ActiveRecord::Schema.define do
+              create_table :commenters do |t|
+              end
+
+              create_table :posts do |t|
+              end
+            end
+          end
+        RUBY
+
+        add_ruby_file("commenter.rb", <<~RUBY)
           class Commenter < ActiveRecord::Base
             has_and_belongs_to_many :posts
           end
@@ -398,7 +422,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               sig { returns(::Commenter::PrivateCollectionProxy) }
               def commenters; end
 
-              sig { params(value: T::Enumerable[T.untyped]).void }
+              sig { params(value: T::Enumerable[::Commenter]).void }
               def commenters=(value); end
 
               sig { params(attributes: T.untyped).returns(T.untyped) }
@@ -415,6 +439,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           ActiveRecord::Migration.suppress_messages do
             ActiveRecord::Schema.define do
               create_table :posts do |t|
+              end
+
+              create_table :drafts do |t|
               end
 
               create_table :authors do |t|
@@ -434,8 +461,13 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               end
             end
 
+            class Draft < ActiveRecord::Base
+              belongs_to :author
+            end
+
             class Author < ActiveRecord::Base
               has_many :comments
+              has_many :drafts
             end
           end
 
@@ -492,6 +524,18 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
               sig { params(value: T::Enumerable[::Comment]).void }
               def comments=(value); end
+
+              sig { returns(T::Array[T.untyped]) }
+              def draft_ids; end
+
+              sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+              def draft_ids=(ids); end
+
+              sig { returns(::Blog::Draft::PrivateCollectionProxy) }
+              def drafts; end
+
+              sig { params(value: T::Enumerable[::Blog::Draft]).void }
+              def drafts=(value); end
             end
           end
         RBI
@@ -739,6 +783,15 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
 
     it("generates RBI file for has_many_attached ActiveStorage association") do
+      add_ruby_file("schema.rb", <<~RUBY)
+        ActiveRecord::Migration.suppress_messages do
+          ActiveRecord::Schema.define do
+            create_table :posts do |t|
+            end
+          end
+        end
+      RUBY
+
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many_attached :photos
@@ -761,7 +814,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { returns(::ActiveStorage::Attachment::PrivateCollectionProxy) }
             def photos_attachments; end
 
-            sig { params(value: T::Enumerable[T.untyped]).void }
+            sig { params(value: T::Enumerable[::ActiveStorage::Attachment]).void }
             def photos_attachments=(value); end
 
             sig { returns(T::Array[T.untyped]) }
@@ -773,7 +826,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { returns(::ActiveStorage::Blob::PrivateCollectionProxy) }
             def photos_blobs; end
 
-            sig { params(value: T::Enumerable[T.untyped]).void }
+            sig { params(value: T::Enumerable[::ActiveStorage::Blob]).void }
             def photos_blobs=(value); end
           end
         end

@@ -328,9 +328,9 @@ module Tapioca
           ).returns(String)
         end
         def relation_type_for(constant, reflection)
-          raise MissingConstantError unless reflection.class_name.safe_constantize
-          "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
-                                                            polymorphic_association?(reflection)
+          validate_reflection!(reflection)
+          return "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
+                                                                   polymorphic_association?(reflection)
 
           "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
         end
