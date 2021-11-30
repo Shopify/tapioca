@@ -36,6 +36,7 @@ module Tapioca
     DEFAULT_RBIDIR = T.let("#{SORBET_PATH}/rbi", String)
     DEFAULT_DSLDIR = T.let("#{DEFAULT_RBIDIR}/dsl", String)
     DEFAULT_GEMDIR = T.let("#{DEFAULT_RBIDIR}/gems", String)
+    DEFAULT_SHIMDIR = T.let("#{DEFAULT_RBIDIR}/shims", String)
     DEFAULT_TODOSPATH = T.let("#{DEFAULT_RBIDIR}/todo.rbi", String)
 
     DEFAULT_OVERRIDES = T.let({
