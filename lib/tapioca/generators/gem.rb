@@ -123,6 +123,9 @@ module Tapioca
           explain_failed_require(@postrequire, e)
           exit(1)
         end
+
+        Tapioca::AutoloadTracker.eager_load_all!
+
         say(" Done", :green)
         unless bundle.missing_specs.empty?
           say("  completed with missing specs: ")

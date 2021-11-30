@@ -19,6 +19,19 @@ module Tapioca
     PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
     METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
 
+    sig do
+      params(
+        symbol: String,
+        inherit: T::Boolean,
+        namespace: Module
+      ).returns(BasicObject).checked(:never)
+    end
+    def constantize(symbol, inherit: false, namespace: Object)
+      namespace.const_get(symbol, inherit)
+    rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
+      nil
+    end
+
     sig { params(object: BasicObject).returns(Class).checked(:never) }
     def class_of(object)
       CLASS_METHOD.bind(object).call

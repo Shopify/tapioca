@@ -18,6 +18,7 @@ module Tapioca
 end
 
 require "tapioca/reflection"
+require "tapioca/autoload_tracker"
 require "tapioca/constant_locator"
 require "tapioca/mixin_tracker"
 require "tapioca/compilers/dsl/base"
