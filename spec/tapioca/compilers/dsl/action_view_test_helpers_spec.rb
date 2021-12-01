@@ -35,10 +35,15 @@ class Tapioca::Compilers::Dsl::ActionViewTestHelpersSpec < DslSpec
             "John"
           end
         end
+
+        module SomeOtherHelperModule
+        end
       RUBY
 
       add_ruby_file("users_helper_test.rb", <<~RUBY)
         class UsersHelperTest < ActionView::TestCase
+          helper SomeOtherHelperModule
+          helper_method :foo
         end
       RUBY
 
@@ -49,7 +54,43 @@ class Tapioca::Compilers::Dsl::ActionViewTestHelpersSpec < DslSpec
           include HelperMethods
 
           module HelperMethods
+            include ::ActionView::TestCase::HelperMethods
+            include ::SomeOtherHelperModule
             include ::UsersHelper
+
+            sig { params(args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
+            def foo(*args, **kwargs, &blk); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:UsersHelperTest))
+    end
+
+    it("generates a module with a custom helper module under test definition") do
+      add_ruby_file("users_helper.rb", <<~RUBY)
+        module SomeOtherHelperModule
+          def current_user_name
+            "John"
+          end
+        end
+      RUBY
+
+      add_ruby_file("users_helper_test.rb", <<~RUBY)
+        class UsersHelperTest < ActionView::TestCase
+          tests SomeOtherHelperModule
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class UsersHelperTest
+          include HelperMethods
+
+          module HelperMethods
+            include ::ActionView::TestCase::HelperMethods
+            include ::SomeOtherHelperModule
           end
         end
       RBI
