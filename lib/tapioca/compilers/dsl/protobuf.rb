@@ -79,9 +79,10 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              descriptor = T.let(T.unsafe(constant).descriptor, T.any(Google::Protobuf::Descriptor, Google::Protobuf::EnumDescriptor))
+              descriptor = T.let(T.unsafe(constant).descriptor,
+                T.any(Google::Protobuf::Descriptor, Google::Protobuf::EnumDescriptor))
 
-              if descriptor.is_a? Google::Protobuf::EnumDescriptor
+              if descriptor.is_a?(Google::Protobuf::EnumDescriptor)
                 descriptor.to_h.each do |sym, val|
                   klass.create_constant(sym.to_s, value: val.to_s)
                 end
