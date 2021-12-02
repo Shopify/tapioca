@@ -700,7 +700,7 @@ module Tapioca
             # Top-level autoloads `FakeYard::Rake` module.
             write("lib/fake_yard.rb", <<~RB)
               module FakeYard
-                autoload :Rake, "#{absolute_path("lib/fake_yard/rake.rb")}"
+                autoload :Rake, __dir__ + "/fake_yard/rake.rb"
               end
             RB
 
@@ -711,7 +711,7 @@ module Tapioca
             write("lib/fake_yard/rake.rb", <<~RB)
               module FakeYard
                 module Rake
-                  autoload :YardocTask, "#{absolute_path("lib/fake_yard/yardoc_task.rb")}"
+                  autoload :YardocTask, __dir__ + "/yardoc_task.rb"
                 end
               end
             RB
@@ -769,6 +769,57 @@ module Tapioca
             module FakeRake; end
             class FakeRake::TaskLib; end
           RBI
+        end
+
+        it "uses the correct autoload, even when a gem redefines it via alias-method-chain" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              class Module
+                alias_method :autoload_without_foo, :autoload
+
+                def autoload(const, path)
+                  autoload_without_foo(const, path)
+                end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          _, err, status = @project.tapioca("gem foo")
+          assert_empty(err)
+          assert(status)
+        end
+
+        it "uses ignores `abort` and `exit` calls inside autoloaded files" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              module Foo
+                autoload :Bar, __dir__ + "/foo/bar.rb"
+                autoload :Baz, __dir__ + "/foo/baz.rb"
+              end
+            RB
+
+            write("lib/foo/bar.rb", <<~RB)
+              abort("Cannot continue")
+            RB
+
+            write("lib/foo/baz.rb", <<~RB)
+              exit 2
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          # We know RDoc is problematic with respect to calling `abort` in an autoload
+          @project.require_real_gem("rdoc")
+          # Just so that we have something else we can generate for.
+          @project.require_real_gem("json")
+          @project.bundle_install
+
+          _, err, status = @project.tapioca("gem json")
+          assert_empty(err)
+          assert(status)
         end
 
         it "generates abstract classes properly" do
