@@ -12,17 +12,39 @@ module Tapioca
 
       sig { void }
       def eager_load_all!
-        until @constant_names_registered_for_autoload.empty?
-          # Grab the next constant name
-          constant_name = T.must(@constant_names_registered_for_autoload.shift)
-          # Trigger autoload by constantizing the registered name
-          Reflection.constantize(constant_name, inherit: true)
+        with_disabled_exits do
+          until @constant_names_registered_for_autoload.empty?
+            # Grab the next constant name
+            constant_name = T.must(@constant_names_registered_for_autoload.shift)
+            # Trigger autoload by constantizing the registered name
+            Reflection.constantize(constant_name, inherit: true)
+          end
         end
       end
 
       sig { params(constant_name: String).void }
       def register(constant_name)
         @constant_names_registered_for_autoload << constant_name
+      end
+
+      sig do
+        type_parameters(:Result)
+          .params(block: T.proc.returns(T.type_parameter(:Result)))
+          .returns(T.type_parameter(:Result))
+      end
+      def with_disabled_exits(&block)
+        original_abort = Kernel.instance_method(:abort)
+        original_exit = Kernel.instance_method(:exit)
+
+        begin
+          Kernel.define_method(:abort) {}
+          Kernel.define_method(:exit) {}
+
+          block.call
+        ensure
+          Kernel.define_method(:exit, original_exit)
+          Kernel.define_method(:abort, original_abort)
+        end
       end
     end
   end
