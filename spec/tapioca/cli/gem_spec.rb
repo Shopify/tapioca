@@ -700,7 +700,7 @@ module Tapioca
             # Top-level autoloads `FakeYard::Rake` module.
             write("lib/fake_yard.rb", <<~RB)
               module FakeYard
-                autoload :Rake, "#{absolute_path("lib/fake_yard/rake.rb")}"
+                autoload :Rake, __dir__ + "/fake_yard/rake.rb"
               end
             RB
 
@@ -711,7 +711,7 @@ module Tapioca
             write("lib/fake_yard/rake.rb", <<~RB)
               module FakeYard
                 module Rake
-                  autoload :YardocTask, "#{absolute_path("lib/fake_yard/yardoc_task.rb")}"
+                  autoload :YardocTask, __dir__ + "/yardoc_task.rb"
                 end
               end
             RB
