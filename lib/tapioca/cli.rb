@@ -4,43 +4,37 @@
 module Tapioca
   class Cli < Thor
     include CliHelper
+    include ConfigHelper
 
-    class_option :outdir,
-      aliases: ["--out", "-o"],
-      banner: "directory",
-      desc: "The output directory for generated RBI files"
-    class_option :generate_command,
-      aliases: ["--cmd", "-c"],
-      banner: "command",
-      desc: "The command to run to regenerate RBI files"
-    class_option :file_header,
-      type: :boolean,
-      default: true,
-      desc: "Add a \"This file is generated\" header on top of each generated RBI file"
+    class_option :config,
+      aliases: ["-c"],
+      banner: "<config file path>",
+      type: :string,
+      desc: "Path to the Tapioca configuration file",
+      default: ConfigHelper::TAPIOCA_CONFIG
     class_option :verbose,
       aliases: ["-V"],
       type: :boolean,
-      default: false,
-      desc: "Verbose output for debugging purposes"
-
-    map T.unsafe(["--version", "-v"] => :__print_version)
+      desc: "Verbose output for debugging purposes",
+      default: false
 
     desc "init", "initializes folder structure"
     def init
       generator = Generators::Init.new(
-        sorbet_config: Config::SORBET_CONFIG,
-        default_postrequire: Config::DEFAULT_POSTREQUIRE,
-        default_command: Config::DEFAULT_COMMAND
+        sorbet_config: ConfigHelper::SORBET_CONFIG,
+        default_postrequire: ConfigHelper::DEFAULT_POSTREQUIRE,
+        default_command: ConfigHelper::DEFAULT_COMMAND
       )
       generator.generate
     end
 
     desc "require", "generate the list of files to be required by tapioca"
+    option :postrequire, type: :string, default: ConfigHelper::DEFAULT_POSTREQUIRE
     def require
       generator = Generators::Require.new(
-        requires_path: ConfigBuilder.from_options(:require, options).postrequire,
-        sorbet_config_path: Config::SORBET_CONFIG,
-        default_command: Config::DEFAULT_COMMAND
+        requires_path: options[:postrequire],
+        sorbet_config_path: ConfigHelper::SORBET_CONFIG,
+        default_command: ConfigHelper::DEFAULT_COMMAND
       )
       Tapioca.silence_warnings do
         generator.generate
@@ -48,13 +42,18 @@ module Tapioca
     end
 
     desc "todo", "generate the list of unresolved constants"
+    option :todos_path,
+      type: :string,
+      default: ConfigHelper::DEFAULT_TODOSPATH
+    option :file_header,
+      type: :boolean,
+      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      default: true
     def todo
-      current_command = T.must(current_command_chain.first)
-      config = ConfigBuilder.from_options(current_command, options)
       generator = Generators::Todo.new(
-        todos_path: config.todos_path,
-        file_header: config.file_header,
-        default_command: Config::DEFAULT_COMMAND
+        todos_path: options[:todos_path],
+        file_header: options[:file_header],
+        default_command: ConfigHelper::DEFAULT_COMMAND
       )
       Tapioca.silence_warnings do
         generator.generate
@@ -62,15 +61,26 @@ module Tapioca
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
+    option :outdir,
+      aliases: ["--out", "-o"],
+      banner: "directory",
+      desc: "The output directory for generated RBI files",
+      default: ConfigHelper::DEFAULT_DSLDIR
+    option :file_header,
+      type: :boolean,
+      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      default: true
     option :generators,
       type: :array,
       aliases: ["--gen", "-g"],
       banner: "generator [generator ...]",
-      desc: "Only run supplied DSL generators"
+      desc: "Only run supplied DSL generators",
+      default: []
     option :exclude_generators,
       type: :array,
       banner: "generator [generator ...]",
-      desc: "Exclude supplied DSL generators"
+      desc: "Exclude supplied DSL generators",
+      default: []
     option :verify,
       type: :boolean,
       default: false,
@@ -78,30 +88,30 @@ module Tapioca
     option :quiet,
       aliases: ["-q"],
       type: :boolean,
-      desc: "Supresses file creation output"
+      desc: "Supresses file creation output",
+      default: false
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs"
+      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
+      default: 1
     def dsl(*constants)
-      current_command = T.must(current_command_chain.first)
-      config = ConfigBuilder.from_options(current_command, options)
       generator = Generators::Dsl.new(
         requested_constants: constants,
-        outpath: config.outpath,
-        generators: config.generators,
-        exclude_generators: config.exclude_generators,
-        file_header: config.file_header,
+        outpath: Pathname.new(options[:outdir]),
+        generators: options[:generators],
+        exclude_generators: options[:exclude_generators],
+        file_header: options[:file_header],
         compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
-        tapioca_path: Config::TAPIOCA_PATH,
-        default_command: Config::DEFAULT_COMMAND,
+        tapioca_path: ConfigHelper::TAPIOCA_PATH,
+        default_command: ConfigHelper::DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
-        number_of_workers: config.workers
+        number_of_workers: options[:workers]
       )
 
-      if config.workers != 1
+      if options[:workers] != 1
         say(
           "Using more than one worker is experimental and might produce results that are not deterministic",
           :red
@@ -114,60 +124,75 @@ module Tapioca
     end
 
     desc "gem [gem...]", "generate RBIs from gems"
+    option :outdir,
+      aliases: ["--out", "-o"],
+      banner: "directory",
+      desc: "The output directory for generated RBI files",
+      default: ConfigHelper::DEFAULT_GEMDIR
+    option :file_header,
+      type: :boolean,
+      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      default: true
     option :all,
       type: :boolean,
-      default: false,
-      desc: "Regenerate RBI files for all gems"
+      desc: "Regenerate RBI files for all gems",
+      default: false
     option :prerequire,
       aliases: ["--pre", "-b"],
       banner: "file",
-      desc: "A file to be required before Bundler.require is called"
+      desc: "A file to be required before Bundler.require is called",
+      default: nil
     option :postrequire,
       aliases: ["--post", "-a"],
       banner: "file",
-      desc: "A file to be required after Bundler.require is called"
+      desc: "A file to be required after Bundler.require is called",
+      default: ConfigHelper::DEFAULT_POSTREQUIRE
     option :exclude,
       aliases: ["-x"],
       type: :array,
       banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
+      desc: "Excludes the given gem(s) from RBI generation",
+      default: []
     option :typed_overrides,
       aliases: ["--typed", "-t"],
       type: :hash,
       banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
+      desc: "Overrides for typed sigils for generated gem RBIs",
+      default: ConfigHelper::DEFAULT_OVERRIDES
     option :verify,
       type: :boolean,
-      default: false,
-      desc: "Verifies RBIs are up-to-date"
+      desc: "Verifies RBIs are up-to-date",
+      default: false
     option :doc,
       type: :boolean,
-      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
+      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+      default: false
     option :exported_gem_rbis,
       type: :boolean,
-      desc: "Include RBIs found in the `rbi/` directory of the gem"
+      desc: "Include RBIs found in the `rbi/` directory of the gem",
+      default: true
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs"
+      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
+      default: 1
     def gem(*gems)
       Tapioca.silence_warnings do
         all = options[:all]
         verify = options[:verify]
-        current_command = T.must(current_command_chain.first)
-        config = ConfigBuilder.from_options(current_command, options)
+
         generator = Generators::Gem.new(
           gem_names: all ? [] : gems,
-          gem_excludes: config.exclude,
-          prerequire: config.prerequire,
-          postrequire: config.postrequire,
-          typed_overrides: config.typed_overrides,
-          default_command: Config::DEFAULT_COMMAND,
-          outpath: config.outpath,
-          file_header: config.file_header,
-          doc: config.doc,
-          include_exported_rbis: config.exported_gem_rbis,
-          number_of_workers: config.workers
+          gem_excludes: options[:exclude],
+          prerequire: options[:prerequire],
+          postrequire: options[:postrequire],
+          typed_overrides: options[:typed_overrides],
+          default_command: ConfigHelper::DEFAULT_COMMAND,
+          outpath: Pathname.new(options[:outdir]),
+          file_header: options[:file_header],
+          doc: options[:doc],
+          include_exported_rbis: options[:exported_gem_rbis],
+          number_of_workers: options[:workers]
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
@@ -177,7 +202,7 @@ module Tapioca
           raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
         end
 
-        if config.workers != 1
+        if options[:workers] != 1
           say(
             "Using more than one worker is experimental and might produce results that are not deterministic",
             :red
@@ -193,9 +218,9 @@ module Tapioca
     end
 
     desc "clean-shims", "clean duplicated definitions in shim RBIs"
-    option :gem_rbis_path, type: :string, default: Config::DEFAULT_GEMDIR, desc: "Path to gem RBIs"
-    option :dsl_rbis_path, type: :string, default: Config::DEFAULT_DSLDIR, desc: "Path to DSL RBIs"
-    option :shim_rbis_path, type: :string, default: Config::DEFAULT_SHIMDIR, desc: "Path to shim RBIs"
+    option :gem_rbis_path, type: :string, desc: "Path to gem RBIs", default: ConfigHelper::DEFAULT_GEMDIR
+    option :dsl_rbis_path, type: :string, desc: "Path to DSL RBIs", default: ConfigHelper::DEFAULT_DSLDIR
+    option :shim_rbis_path, type: :string, desc: "Path to shim RBIs", default: ConfigHelper::DEFAULT_SHIMDIR
     def clean_shims(*files_to_clean)
       index = RBI::Index.new
 
@@ -257,6 +282,8 @@ module Tapioca
       say_error("\nCan't parse RBI: #{e} (#{e.location})")
       exit(1)
     end
+
+    map T.unsafe(["--version", "-v"] => :__print_version)
 
     desc "--version, -v", "show version"
     def __print_version
