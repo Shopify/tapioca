@@ -7,26 +7,38 @@ module Tapioca
 
     @constant_names_registered_for_autoload = T.let([], T::Array[String])
 
-    def autoload(module_name, filename)
-      AutoloadTracker.register("#{self}::#{module_name}")
-      super
-    end
+    class << self
+      extend T::Sig
 
-    sig { void }
-    def self.eager_load_all!
-      until @constant_names_registered_for_autoload.empty?
-        # Grab the next constant name
-        constant_name = T.must(@constant_names_registered_for_autoload.shift)
-        # Trigger autoload by constantizing the registered name
-        Reflection.constantize(constant_name, inherit: true)
+      sig { void }
+      def eager_load_all!
+        until @constant_names_registered_for_autoload.empty?
+          # Grab the next constant name
+          constant_name = T.must(@constant_names_registered_for_autoload.shift)
+          # Trigger autoload by constantizing the registered name
+          Reflection.constantize(constant_name, inherit: true)
+        end
+      end
+
+      sig { params(constant_name: String).void }
+      def register(constant_name)
+        @constant_names_registered_for_autoload << constant_name
       end
     end
+  end
+end
 
-    sig { params(constant_name: String).void }
-    def self.register(constant_name)
-      @constant_names_registered_for_autoload << constant_name
-    end
+# We need to do the alias-method-chain dance since Bootsnap does the same,
+# and prepended modules and alias-method-chain don't play well together.
+#
+# So, why does Bootsnap do alias-method-chain and not prepend? Glad you asked!
+# That's because RubyGems does alias-method-chain for Kernel#require and such,
+# so, if Bootsnap were to do prepend, it might end up breaking RubyGems.
+class Module
+  alias_method(:autoload_without_tapioca, :autoload)
 
-    Module.prepend(self)
+  def autoload(const_name, path)
+    Tapioca::AutoloadTracker.register("#{self}::#{const_name}")
+    autoload_without_tapioca(const_name, path)
   end
 end
