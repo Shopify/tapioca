@@ -1233,6 +1233,10 @@ module Sprockets::Rails::Context
 
   def compute_asset_path(path, options = T.unsafe(nil)); end
 
+  class << self
+    def included(klass); end
+  end
+
   module GeneratedClassMethods
     def assets_prefix; end
     def assets_prefix=(value); end
@@ -1255,10 +1259,6 @@ module Sprockets::Rails::Context
     def digest_assets; end
     def digest_assets=(value); end
     def digest_assets?; end
-  end
-
-  class << self
-    def included(klass); end
   end
 end
 
@@ -1341,6 +1341,11 @@ module Sprockets::Rails::Helper
   # http://www.w3.org/TR/SRI/#non-secure-contexts-remain-non-secure
   def secure_subresource_integrity_context?; end
 
+  class << self
+    def extended(obj); end
+    def included(klass); end
+  end
+
   module GeneratedClassMethods
     def assets_environment; end
     def assets_environment=(value); end
@@ -1405,11 +1410,6 @@ module Sprockets::Rails::Helper
     def unknown_asset_fallback; end
     def unknown_asset_fallback=(value); end
     def unknown_asset_fallback?; end
-  end
-
-  class << self
-    def extended(obj); end
-    def included(klass); end
   end
 end
 

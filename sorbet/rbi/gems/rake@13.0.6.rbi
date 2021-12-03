@@ -1220,6 +1220,8 @@ class Rake::PseudoStatus
   def to_i; end
 end
 
+Rake::RDocTask = RDoc::Task
+
 # Error indicating a recursion overflow error in task selection.
 class Rake::RuleRecursionOverflowError < ::StandardError
   def initialize(*args); end

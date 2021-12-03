@@ -56,6 +56,11 @@ module ActiveSupport::ActionableError
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveSupport::ActionableError::ClassMethods
 
+  class << self
+    def actions(error); end
+    def dispatch(error, name); end
+  end
+
   module GeneratedClassMethods
     def _actions; end
     def _actions=(value); end
@@ -66,11 +71,6 @@ module ActiveSupport::ActionableError
     def _actions; end
     def _actions=(value); end
     def _actions?; end
-  end
-
-  class << self
-    def actions(error); end
-    def dispatch(error, name); end
   end
 end
 
@@ -9247,6 +9247,7 @@ class Date
 end
 
 Date::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
+Date::VERSION = T.let(T.unsafe(nil), String)
 module DateAndTime; end
 
 module DateAndTime::Calculations
@@ -10602,15 +10603,25 @@ module I18n
   extend ::I18n::Base
 
   class << self
+    def cache_key_digest; end
+    def cache_key_digest=(key_digest); end
+    def cache_namespace; end
+    def cache_namespace=(namespace); end
+    def cache_store; end
+    def cache_store=(store); end
+    def fallbacks; end
+    def fallbacks=(fallbacks); end
     def interpolate(string, values); end
     def interpolate_hash(string, values); end
     def new_double_nested_cache; end
+    def perform_caching?; end
   end
 end
 
 I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
 I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
+I18n::JSON = ActiveSupport::JSON
 I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
 I18n::RESERVED_KEYS_PATTERN = T.let(T.unsafe(nil), Regexp)
 
@@ -10696,6 +10707,8 @@ class Integer < ::Numeric
   # 2.years # => 2 years
   def years; end
 end
+
+Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
 
 module Kernel
   private
