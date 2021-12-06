@@ -8,7 +8,7 @@ module Tapioca
   # classes and modules are opened for definition. This is used to track
   # correspondence between classes/modules and files, as this information isn't
   # available in the ruby runtime without extra accounting.
-  module ConstantLocator
+  module ConstantTracker
     extend Reflection
 
     @class_files = {}

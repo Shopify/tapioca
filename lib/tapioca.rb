@@ -18,9 +18,7 @@ module Tapioca
 end
 
 require "tapioca/reflection"
-require "tapioca/autoload_tracker"
-require "tapioca/constant_locator"
-require "tapioca/mixin_tracker"
+require "tapioca/trackers"
 require "tapioca/compilers/dsl/base"
 require "tapioca/compilers/dynamic_mixin_compiler"
 require "tapioca/helpers/active_record_column_type_helper"
