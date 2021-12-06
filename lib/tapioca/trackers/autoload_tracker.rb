@@ -2,50 +2,52 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module AutoloadTracker
-    extend T::Sig
-
-    NOOP_METHOD = -> (*_args, **_kwargs, &_block) {}
-
-    @constant_names_registered_for_autoload = T.let([], T::Array[String])
-
-    class << self
+  module Trackers
+    module AutoloadTracker
       extend T::Sig
 
-      sig { void }
-      def eager_load_all!
-        with_disabled_exits do
-          until @constant_names_registered_for_autoload.empty?
-            # Grab the next constant name
-            constant_name = T.must(@constant_names_registered_for_autoload.shift)
-            # Trigger autoload by constantizing the registered name
-            Reflection.constantize(constant_name, inherit: true)
+      NOOP_METHOD = -> (*_args, **_kwargs, &_block) {}
+
+      @constant_names_registered_for_autoload = T.let([], T::Array[String])
+
+      class << self
+        extend T::Sig
+
+        sig { void }
+        def eager_load_all!
+          with_disabled_exits do
+            until @constant_names_registered_for_autoload.empty?
+              # Grab the next constant name
+              constant_name = T.must(@constant_names_registered_for_autoload.shift)
+              # Trigger autoload by constantizing the registered name
+              Reflection.constantize(constant_name, inherit: true)
+            end
           end
         end
-      end
 
-      sig { params(constant_name: String).void }
-      def register(constant_name)
-        @constant_names_registered_for_autoload << constant_name
-      end
+        sig { params(constant_name: String).void }
+        def register(constant_name)
+          @constant_names_registered_for_autoload << constant_name
+        end
 
-      sig do
-        type_parameters(:Result)
-          .params(block: T.proc.returns(T.type_parameter(:Result)))
-          .returns(T.type_parameter(:Result))
-      end
-      def with_disabled_exits(&block)
-        original_abort = Kernel.instance_method(:abort)
-        original_exit = Kernel.instance_method(:exit)
+        sig do
+          type_parameters(:Result)
+            .params(block: T.proc.returns(T.type_parameter(:Result)))
+            .returns(T.type_parameter(:Result))
+        end
+        def with_disabled_exits(&block)
+          original_abort = Kernel.instance_method(:abort)
+          original_exit = Kernel.instance_method(:exit)
 
-        begin
-          Kernel.define_method(:abort, NOOP_METHOD)
-          Kernel.define_method(:exit, NOOP_METHOD)
+          begin
+            Kernel.define_method(:abort, NOOP_METHOD)
+            Kernel.define_method(:exit, NOOP_METHOD)
 
-          block.call
-        ensure
-          Kernel.define_method(:exit, original_exit)
-          Kernel.define_method(:abort, original_abort)
+            block.call
+          ensure
+            Kernel.define_method(:exit, original_exit)
+            Kernel.define_method(:abort, original_abort)
+          end
         end
       end
     end
@@ -62,7 +64,7 @@ class Module
   alias_method(:autoload_without_tapioca, :autoload)
 
   def autoload(const_name, path)
-    Tapioca::AutoloadTracker.register("#{self}::#{const_name}")
+    Tapioca::Trackers::AutoloadTracker.register("#{self}::#{const_name}")
     autoload_without_tapioca(const_name, path)
   end
 end

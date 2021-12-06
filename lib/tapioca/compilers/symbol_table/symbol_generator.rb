@@ -376,7 +376,7 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          mixin_locations = MixinTracker.mixin_locations_for(constant)
+          mixin_locations = Tapioca::Trackers::MixinTracker.mixin_locations_for(constant)
 
           add_mixins(tree, prepends.reverse, MixinType::Prepend, mixin_locations)
           add_mixins(tree, includes.reverse, MixinType::Include, mixin_locations)
@@ -641,7 +641,7 @@ module Tapioca
         sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
         def defined_in_gem?(constant, strict: true)
           files = Set.new(get_file_candidates(constant))
-            .merge(Tapioca::ConstantLocator.files_for(constant))
+            .merge(Tapioca::Trackers::ConstantTracker.files_for(constant))
 
           return !strict if files.empty?
 
