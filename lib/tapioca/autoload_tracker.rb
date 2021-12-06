@@ -5,6 +5,8 @@ module Tapioca
   module AutoloadTracker
     extend T::Sig
 
+    NOOP_METHOD = -> (*_args, **_kwargs, &_block) {}
+
     @constant_names_registered_for_autoload = T.let([], T::Array[String])
 
     class << self
@@ -37,8 +39,8 @@ module Tapioca
         original_exit = Kernel.instance_method(:exit)
 
         begin
-          Kernel.define_method(:abort) {}
-          Kernel.define_method(:exit) {}
+          Kernel.define_method(:abort, NOOP_METHOD)
+          Kernel.define_method(:exit, NOOP_METHOD)
 
           block.call
         ensure
