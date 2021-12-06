@@ -802,11 +802,21 @@ module Tapioca
             RB
 
             write("lib/foo/bar.rb", <<~RB)
-              abort("Cannot continue")
+              begin
+                abort("Cannot continue")
+              rescue
+                # To make sure that we handle errors in our Kernel hooks
+                Process.exit(1)
+              end
             RB
 
             write("lib/foo/baz.rb", <<~RB)
-              exit 2
+              begin
+                exit 2
+              rescue
+                # To make sure that we handle errors in our Kernel hooks
+                Process.exit(1)
+              end
             RB
           end
 
