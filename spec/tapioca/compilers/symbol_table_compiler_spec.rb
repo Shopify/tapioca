@@ -122,7 +122,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
+        <% if ruby_version(">= 3.1") %>
+          def initialize(*args, **_arg1, &blk); end
+        <% else %>
           def initialize(*args, &blk); end
+        <% end %>
 
           sig { abstract.void }
           def foo; end
@@ -149,7 +153,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
+        <% if ruby_version(">= 3.1") %>
+          def initialize(*args, **_arg1, &blk); end
+        <% else %>
           def initialize(*args, &blk); end
+        <% end %>
 
           class << self
             sig { abstract.void }
@@ -181,7 +189,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
+        <% if ruby_version(">= 3.1") %>
+          def initialize(*args, **_arg1, &blk); end
+        <% else %>
           def initialize(*args, &blk); end
+        <% end %>
 
           class << self
             sig { abstract.void }
@@ -1020,6 +1032,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           class << self
             def [](*_arg0); end
             def inspect; end
+        <% if ruby_version(">= 3.1") %>
+            def keyword_init?; end
+        <% end %>
             def members; end
             def new(*_arg0); end
           end
@@ -1032,6 +1047,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           class << self
             def [](*_arg0); end
             def inspect; end
+        <% if ruby_version(">= 3.1") %>
+            def keyword_init?; end
+        <% end %>
             def members; end
             def new(*_arg0); end
           end
@@ -2158,7 +2176,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        <% if ruby_version(">= 2.7.0") %>
+        <% if ruby_version(">= 3.1") %>
+        class Foo
+          def foo(*_arg0, **_arg1, &_arg2); end
+        end
+        <% elsif ruby_version(">= 2.7.0") %>
         class Foo
           def foo(*_arg0, &_arg1); end
         end
@@ -2436,7 +2458,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Baz
           abstract!
 
+        <% if ruby_version(">= 3.1") %>
+          def initialize(*args, **_arg1, &blk); end
+        <% else %>
           def initialize(*args, &blk); end
+        <% end %>
 
           sig { abstract.void }
           def do_it; end
@@ -2829,12 +2855,20 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
+        <% if ruby_version(">= 3.1") %>
+          def bar(*args, **_arg1, &blk); end
+        <% else %>
           def bar(*args, &blk); end
+        <% end %>
 
           sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
           def baz(a); end
 
+        <% if ruby_version(">= 3.1") %>
+          def foo(*args, **_arg1, &blk); end
+        <% else %>
           def foo(*args, &blk); end
+        <% end %>
         end
       RBI
 
