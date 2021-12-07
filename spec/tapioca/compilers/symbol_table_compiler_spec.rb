@@ -386,7 +386,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def foo_int; end
         end
 
-        class Range
+        class Module
           def bar; end
         end
       RUBY
@@ -413,9 +413,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def to_bar; end
         end
 
-        class Range
-          include ::Enumerable
-
+        class Module
           def bar; end
         end
 

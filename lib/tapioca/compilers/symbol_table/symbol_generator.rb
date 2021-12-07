@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "pathname"
-require "tapioca/helpers/mixin_type"
 
 module Tapioca
   module Compilers
@@ -376,19 +375,19 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          mixin_locations = MixinTracker.mixin_locations_for(constant)
+          mixin_locations = Trackers::Mixin.mixin_locations_for(constant)
 
-          add_mixins(tree, prepends.reverse, MixinType::Prepend, mixin_locations)
-          add_mixins(tree, includes.reverse, MixinType::Include, mixin_locations)
-          add_mixins(tree, extends.reverse, MixinType::Extend, mixin_locations)
+          add_mixins(tree, prepends.reverse, Trackers::Mixin::Type::Prepend, mixin_locations)
+          add_mixins(tree, includes.reverse, Trackers::Mixin::Type::Include, mixin_locations)
+          add_mixins(tree, extends.reverse, Trackers::Mixin::Type::Extend, mixin_locations)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: MixinType,
-            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
+            mixin_type: Trackers::Mixin::Type,
+            mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
           ).void
         end
         def add_mixins(tree, mods, mixin_type, mixin_locations)
@@ -408,9 +407,9 @@ module Tapioca
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              when MixinType::Include, MixinType::Prepend
+              when Trackers::Mixin::Type::Include, Trackers::Mixin::Type::Prepend
                 tree << RBI::Include.new(T.must(qname))
-              when MixinType::Extend
+              when Trackers::Mixin::Type::Extend
                 tree << RBI::Extend.new(T.must(qname))
               end
             end
@@ -641,7 +640,7 @@ module Tapioca
         sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
         def defined_in_gem?(constant, strict: true)
           files = Set.new(get_file_candidates(constant))
-            .merge(Tapioca::ConstantLocator.files_for(constant))
+            .merge(Tapioca::Trackers::ConstantDefinition.files_for(constant))
 
           return !strict if files.empty?
 
@@ -653,8 +652,8 @@ module Tapioca
         sig do
           params(
             mod: Module,
-            mixin_type: MixinType,
-            mixin_locations: T::Hash[MixinType, T::Hash[Module, T::Array[String]]]
+            mixin_type: Trackers::Mixin::Type,
+            mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
           ).returns(T::Boolean)
         end
         def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
