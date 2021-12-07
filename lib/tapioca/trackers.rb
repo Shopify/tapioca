@@ -10,5 +10,5 @@
 # the mixin tracker to be in place, before any mixin operations
 # are performed.
 require "tapioca/trackers/mixin"
-require "tapioca/trackers/constant_tracker"
+require "tapioca/trackers/constant_definition"
 require "tapioca/trackers/autoload"
