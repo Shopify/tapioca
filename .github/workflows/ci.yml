@@ -11,8 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ 2.6, 2.7, 3.0 ]
-        bundler: [ 2.2.22, 2.2.25 ]
+        ruby: [ 2.6, 2.7, 3.0, 'head' ]
+        bundler: [ 2.2.25 ]
+        include:
+        - ruby: 2.6
+          bundler: 2.2.22
     name: Test Ruby ${{ matrix.ruby }}, Bundler ${{ matrix.bundler }}
     steps:
       - uses: actions/checkout@v2
@@ -30,5 +33,5 @@ jobs:
         run: bin/docs
       - name: Run tests
         env:
-          BUNDLER_VERSION: ${{matrix.bundler}} 
+          BUNDLER_VERSION: ${{matrix.bundler}}
         run: bin/test
