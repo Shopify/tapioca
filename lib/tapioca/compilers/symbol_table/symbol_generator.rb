@@ -525,7 +525,7 @@ module Tapioca
             end
 
             # Sanitize param names
-            name = name.to_s.gsub(/[^a-zA-Z0-9_]/, fallback_arg_name)
+            name = name.to_s.gsub(/.*[^a-zA-Z0-9_].*/, fallback_arg_name)
 
             [type, name]
           end

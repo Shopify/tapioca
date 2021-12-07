@@ -120,7 +120,7 @@ module Tapioca
             fallback_arg_name = "_arg#{index}"
 
             name ||= fallback_arg_name
-            name = name.to_s.gsub(/&|\*/, fallback_arg_name) # avoid incorrect names from `delegate`
+            name = name.to_s.gsub(/.*[^a-zA-Z0-9_].*/, fallback_arg_name) # avoid incorrect names from `delegate`
             method_type = T.must(method_types[index])
 
             case type
