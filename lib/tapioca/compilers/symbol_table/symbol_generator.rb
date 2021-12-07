@@ -376,7 +376,7 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          mixin_locations = Tapioca::Trackers::MixinTracker.mixin_locations_for(constant)
+          mixin_locations = Tapioca::Trackers::Mixin.mixin_locations_for(constant)
 
           add_mixins(tree, prepends.reverse, MixinType::Prepend, mixin_locations)
           add_mixins(tree, includes.reverse, MixinType::Include, mixin_locations)

@@ -5,24 +5,24 @@ require "tapioca/helpers/mixin_type"
 
 module Tapioca
   module Trackers
-    module MixinTracker
+    module Mixin
       extend T::Helpers
       requires_ancestor { Kernel }
 
       @mixin_map = {}.compare_by_identity
 
       def prepend_features(constant)
-        MixinTracker.register(constant, self, MixinType::Prepend, caller_locations)
+        Mixin.register(constant, self, MixinType::Prepend, caller_locations)
         super
       end
 
       def append_features(constant)
-        MixinTracker.register(constant, self, MixinType::Include, caller_locations)
+        Mixin.register(constant, self, MixinType::Include, caller_locations)
         super
       end
 
       def extend_object(obj)
-        MixinTracker.register(obj, self, MixinType::Extend, caller_locations) if Module === obj
+        Mixin.register(obj, self, MixinType::Extend, caller_locations) if Module === obj
         super
       end
 

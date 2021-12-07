@@ -9,6 +9,6 @@
 # catch and filter those mixins as coming from Tapioca, we need
 # the mixin tracker to be in place, before any mixin operations
 # are performed.
-require "tapioca/trackers/mixin_tracker"
+require "tapioca/trackers/mixin"
 require "tapioca/trackers/constant_tracker"
 require "tapioca/trackers/autoload"
