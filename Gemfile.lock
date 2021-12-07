@@ -109,6 +109,7 @@ GEM
     dedup (0.1.4)
     deep_merge (1.2.1)
     diff-lcs (1.4.4)
+    digest (3.1.0)
     dry-configurable (0.12.1)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.5, >= 0.5.0)
@@ -155,6 +156,7 @@ GEM
     identity_cache (1.1.0)
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
+    io-wait (0.2.1)
     loofah (2.10.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -172,6 +174,13 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    net-protocol (0.1.2)
+      io-wait
+      timeout
+    net-smtp (0.3.1)
+      digest
+      net-protocol
+      timeout
     nio4r (2.5.7)
     nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
@@ -273,6 +282,7 @@ GEM
     sqlite3 (1.4.2)
     state_machines (0.5.0)
     thor (1.2.1)
+    timeout (0.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.0.0)
@@ -306,6 +316,7 @@ DEPENDENCIES
   minitest
   minitest-hooks
   minitest-reporters
+  net-smtp (= 0.3.1)
   nokogiri
   pry-byebug
   rails
@@ -323,4 +334,4 @@ DEPENDENCIES
   xpath
 
 BUNDLED WITH
-   2.2.32
+   2.3.3
