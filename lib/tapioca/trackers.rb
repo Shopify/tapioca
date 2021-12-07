@@ -1,6 +1,14 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/trackers/autoload_tracker"
-require "tapioca/trackers/constant_tracker"
+# The load order below is important:
+# ----------------------------------
+# We want the mixin tracker to be the first thing that is
+# loaded because other trackers might apply their own mixins
+# into core types (like `Module` and `Kernel`). In order to
+# catch and filter those mixins as coming from Tapioca, we need
+# the mixin tracker to be in place, before any mixin operations
+# are performed.
 require "tapioca/trackers/mixin_tracker"
+require "tapioca/trackers/constant_tracker"
+require "tapioca/trackers/autoload_tracker"
