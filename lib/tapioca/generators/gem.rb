@@ -7,7 +7,7 @@ module Tapioca
       sig do
         params(
           gem_names: T::Array[String],
-          gem_excludes: T::Array[String],
+          exclude: T::Array[String],
           prerequire: T.nilable(String),
           postrequire: String,
           typed_overrides: T::Hash[String, String],
@@ -22,7 +22,7 @@ module Tapioca
       end
       def initialize(
         gem_names:,
-        gem_excludes:,
+        exclude:,
         prerequire:,
         postrequire:,
         typed_overrides:,
@@ -35,7 +35,7 @@ module Tapioca
         number_of_workers: nil
       )
         @gem_names = gem_names
-        @gem_excludes = gem_excludes
+        @exclude = exclude
         @prerequire = prerequire
         @postrequire = postrequire
         @typed_overrides = typed_overrides
@@ -57,7 +57,7 @@ module Tapioca
       def generate
         require_gem_file
 
-        gem_queue = gems_to_generate(@gem_names).reject { |gem| @gem_excludes.include?(gem.name) }
+        gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
         anything_done = [
           perform_removals,
           gem_queue.any?,
@@ -332,7 +332,7 @@ module Tapioca
       sig { returns(T::Hash[String, String]) }
       def expected_rbis
         @expected_rbis ||= bundle.dependencies
-          .reject { |gem| @gem_excludes.include?(gem.name) }
+          .reject { |gem| @exclude.include?(gem.name) }
           .map { |gem| [gem.name, gem.version.to_s] }
           .to_h
       end

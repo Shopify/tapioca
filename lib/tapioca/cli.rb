@@ -70,13 +70,12 @@ module Tapioca
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
       default: true
-    option :generators,
+    option :only,
       type: :array,
-      aliases: ["--gen", "-g"],
       banner: "generator [generator ...]",
       desc: "Only run supplied DSL generators",
       default: []
-    option :exclude_generators,
+    option :exclude,
       type: :array,
       banner: "generator [generator ...]",
       desc: "Exclude supplied DSL generators",
@@ -99,8 +98,8 @@ module Tapioca
       generator = Generators::Dsl.new(
         requested_constants: constants,
         outpath: Pathname.new(options[:outdir]),
-        generators: options[:generators],
-        exclude_generators: options[:exclude_generators],
+        only: options[:only],
+        exclude: options[:exclude],
         file_header: options[:file_header],
         compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
         tapioca_path: TAPIOCA_PATH,
@@ -183,7 +182,7 @@ module Tapioca
 
         generator = Generators::Gem.new(
           gem_names: all ? [] : gems,
-          gem_excludes: options[:exclude],
+          exclude: options[:exclude],
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
           typed_overrides: options[:typed_overrides],

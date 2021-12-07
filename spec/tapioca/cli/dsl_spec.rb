@@ -715,7 +715,7 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --generators SidekiqWorker Foo::Generator")
+          out, err, status = @project.tapioca("dsl --only SidekiqWorker Foo::Generator")
 
           assert_equal(<<~OUT, out)
             Loading Rails application... Done
@@ -738,7 +738,7 @@ module Tapioca
         end
 
         it "errors if there are no matching generators" do
-          out, err, status = @project.tapioca("dsl --generators NonexistentGenerator")
+          out, err, status = @project.tapioca("dsl --only NonexistentGenerator")
 
           assert_equal(<<~OUT, out)
             Loading Rails application... Done
@@ -789,7 +789,7 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --exclude-generators SidekiqWorker Foo::Generator")
+          out, err, status = @project.tapioca("dsl --exclude SidekiqWorker Foo::Generator")
 
           assert_equal(<<~OUT, out)
             Loading Rails application... Done
@@ -812,7 +812,7 @@ module Tapioca
         end
 
         it "errors if there are no matching exclude_generators" do
-          out, err, status = @project.tapioca("dsl --exclude-generators NonexistentGenerator")
+          out, err, status = @project.tapioca("dsl --exclude NonexistentGenerator")
 
           assert_equal(<<~OUT, out)
             Loading Rails application... Done
@@ -1007,7 +1007,7 @@ module Tapioca
 
         it "advises of removed file(s) and returns exit status 1 when files are excluded" do
           @project.tapioca("dsl")
-          out, err, status = @project.tapioca("dsl --verify --exclude-generators SmartProperties")
+          out, err, status = @project.tapioca("dsl --verify --exclude SmartProperties")
 
           assert_equal(<<~OUT, out)
             Loading Rails application... Done

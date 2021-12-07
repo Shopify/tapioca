@@ -156,7 +156,7 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-  --gen, -g, [--generators=generator [generator ...]]       # Only run supplied DSL generators
+          [--only=generator [generator ...]]                # Only run supplied DSL generators
           [--exclude-generators=generator [generator ...]]  # Exclude supplied DSL generators
           [--verify], [--no-verify]                         # Verifies RBIs are up-to-date
   -q, [--quiet], [--no-quiet]                               # Supresses file creation output
@@ -200,7 +200,7 @@ gem:
   docs: true
 dsl:
 dsl:
-  exclude_generators:
+  exclude:
   - UrlHelpers
   - ActiveRecordFixtures
 ```
