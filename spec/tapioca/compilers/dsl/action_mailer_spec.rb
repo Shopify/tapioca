@@ -135,7 +135,13 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
 
         class NotifierMailer
           class << self
-        <% if ruby_version(">= 2.7.0") %>
+        <% if ruby_version(">= 3.1.0") %>
+            sig { params(_arg0: T.untyped, _arg1: T.untyped, _arg2: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def notify_admin(*_arg0, **_arg1, &_arg2); end
+
+            sig { params(_arg0: T.untyped, _arg1: T.untyped, _arg2: T.untyped).returns(::ActionMailer::MessageDelivery) }
+            def notify_customer(*_arg0, **_arg1, &_arg2); end
+        <% elsif ruby_version(">= 2.7.0") %>
             sig { params(_arg0: T.untyped, _arg1: T.untyped).returns(::ActionMailer::MessageDelivery) }
             def notify_admin(*_arg0, &_arg1); end
 
