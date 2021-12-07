@@ -168,17 +168,19 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          @project.require_real_gem("did_you_mean", "= 1.5.0")
+          @project.require_real_gem("rdoc")
           @project.bundle_install
 
-          out, err, status = @project.tapioca("gem did_you_mean")
+          out, err, status = @project.tapioca("gem rdoc")
 
           assert_includes(out, <<~OUT)
-            Compiled did_you_mean
-                  create  sorbet/rbi/gems/did_you_mean@1.5.0.rbi
+            Compiled rdoc
           OUT
 
-          assert_includes(@project.read("sorbet/rbi/gems/did_you_mean@1.5.0.rbi"), "module DidYouMean")
+          match_data = out.match("create  sorbet/rbi/gems/rdoc@(.+).rbi")
+          rdoc_version = match_data.captures.first if match_data
+
+          assert_includes(@project.read("sorbet/rbi/gems/rdoc@#{rdoc_version}.rbi"), "module RDoc")
 
           assert_empty(err)
           assert(status)
@@ -566,7 +568,7 @@ module Tapioca
 
         it "must generate git gem RBIs with source revision numbers" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
+            gem("ast", git: "https://github.com/whitequark/ast", ref: "9f06914f0a4e64a64fc5378f989e96dc77b67c0c")
           GEMFILE
 
           @project.bundle_install
@@ -575,7 +577,7 @@ module Tapioca
 
           assert_includes(out, "Compiled ast")
 
-          assert_project_file_exist("sorbet/rbi/gems/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/ast@2.4.2-9f06914f0a4e64a64fc5378f989e96dc77b67c0c.rbi")
 
           assert_empty(err)
           assert(status)
