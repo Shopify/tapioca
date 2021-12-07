@@ -11,7 +11,7 @@ module Tapioca
       banner: "<config file path>",
       type: :string,
       desc: "Path to the Tapioca configuration file",
-      default: ConfigHelper::TAPIOCA_CONFIG
+      default: TAPIOCA_CONFIG
     class_option :verbose,
       aliases: ["-V"],
       type: :boolean,
@@ -21,20 +21,20 @@ module Tapioca
     desc "init", "initializes folder structure"
     def init
       generator = Generators::Init.new(
-        sorbet_config: ConfigHelper::SORBET_CONFIG,
-        default_postrequire: ConfigHelper::DEFAULT_POSTREQUIRE,
-        default_command: ConfigHelper::DEFAULT_COMMAND
+        sorbet_config: SORBET_CONFIG,
+        default_postrequire: DEFAULT_POSTREQUIRE,
+        default_command: DEFAULT_COMMAND
       )
       generator.generate
     end
 
     desc "require", "generate the list of files to be required by tapioca"
-    option :postrequire, type: :string, default: ConfigHelper::DEFAULT_POSTREQUIRE
+    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE
     def require
       generator = Generators::Require.new(
         requires_path: options[:postrequire],
-        sorbet_config_path: ConfigHelper::SORBET_CONFIG,
-        default_command: ConfigHelper::DEFAULT_COMMAND
+        sorbet_config_path: SORBET_CONFIG,
+        default_command: DEFAULT_COMMAND
       )
       Tapioca.silence_warnings do
         generator.generate
@@ -44,7 +44,7 @@ module Tapioca
     desc "todo", "generate the list of unresolved constants"
     option :todos_path,
       type: :string,
-      default: ConfigHelper::DEFAULT_TODOSPATH
+      default: DEFAULT_TODOSPATH
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
@@ -53,7 +53,7 @@ module Tapioca
       generator = Generators::Todo.new(
         todos_path: options[:todos_path],
         file_header: options[:file_header],
-        default_command: ConfigHelper::DEFAULT_COMMAND
+        default_command: DEFAULT_COMMAND
       )
       Tapioca.silence_warnings do
         generator.generate
@@ -65,7 +65,7 @@ module Tapioca
       aliases: ["--out", "-o"],
       banner: "directory",
       desc: "The output directory for generated RBI files",
-      default: ConfigHelper::DEFAULT_DSLDIR
+      default: DEFAULT_DSLDIR
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
@@ -103,8 +103,8 @@ module Tapioca
         exclude_generators: options[:exclude_generators],
         file_header: options[:file_header],
         compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
-        tapioca_path: ConfigHelper::TAPIOCA_PATH,
-        default_command: ConfigHelper::DEFAULT_COMMAND,
+        tapioca_path: TAPIOCA_PATH,
+        default_command: DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
@@ -128,7 +128,7 @@ module Tapioca
       aliases: ["--out", "-o"],
       banner: "directory",
       desc: "The output directory for generated RBI files",
-      default: ConfigHelper::DEFAULT_GEMDIR
+      default: DEFAULT_GEMDIR
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
@@ -146,7 +146,7 @@ module Tapioca
       aliases: ["--post", "-a"],
       banner: "file",
       desc: "A file to be required after Bundler.require is called",
-      default: ConfigHelper::DEFAULT_POSTREQUIRE
+      default: DEFAULT_POSTREQUIRE
     option :exclude,
       aliases: ["-x"],
       type: :array,
@@ -158,7 +158,7 @@ module Tapioca
       type: :hash,
       banner: "gem:level [gem:level ...]",
       desc: "Overrides for typed sigils for generated gem RBIs",
-      default: ConfigHelper::DEFAULT_OVERRIDES
+      default: DEFAULT_OVERRIDES
     option :verify,
       type: :boolean,
       desc: "Verifies RBIs are up-to-date",
@@ -187,7 +187,7 @@ module Tapioca
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
           typed_overrides: options[:typed_overrides],
-          default_command: ConfigHelper::DEFAULT_COMMAND,
+          default_command: DEFAULT_COMMAND,
           outpath: Pathname.new(options[:outdir]),
           file_header: options[:file_header],
           doc: options[:doc],
@@ -218,9 +218,9 @@ module Tapioca
     end
 
     desc "clean-shims", "clean duplicated definitions in shim RBIs"
-    option :gem_rbis_path, type: :string, desc: "Path to gem RBIs", default: ConfigHelper::DEFAULT_GEMDIR
-    option :dsl_rbis_path, type: :string, desc: "Path to DSL RBIs", default: ConfigHelper::DEFAULT_DSLDIR
-    option :shim_rbis_path, type: :string, desc: "Path to shim RBIs", default: ConfigHelper::DEFAULT_SHIMDIR
+    option :gem_rbis_path, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEMDIR
+    option :dsl_rbis_path, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSLDIR
+    option :shim_rbis_path, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIMDIR
     def clean_shims(*files_to_clean)
       index = RBI::Index.new
 

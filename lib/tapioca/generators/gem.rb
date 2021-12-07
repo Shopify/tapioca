@@ -302,7 +302,7 @@ module Tapioca
           say("Nothing to do, all RBIs are up-to-date.")
         else
           say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{ConfigHelper::DEFAULT_COMMAND} #{command}`", [:green, :bold])
+          say("  `#{@default_command} #{command}`", [:green, :bold])
           say("Once it is complete, be sure to commit and push any changes", :green)
 
           say("")
