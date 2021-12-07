@@ -375,19 +375,19 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          mixin_locations = Tapioca::Trackers::Mixin.mixin_locations_for(constant)
+          mixin_locations = Trackers::Mixin.mixin_locations_for(constant)
 
-          add_mixins(tree, prepends.reverse, Trackers::MixinType::Prepend, mixin_locations)
-          add_mixins(tree, includes.reverse, Trackers::MixinType::Include, mixin_locations)
-          add_mixins(tree, extends.reverse, Trackers::MixinType::Extend, mixin_locations)
+          add_mixins(tree, prepends.reverse, Trackers::Mixin::Type::Prepend, mixin_locations)
+          add_mixins(tree, includes.reverse, Trackers::Mixin::Type::Include, mixin_locations)
+          add_mixins(tree, extends.reverse, Trackers::Mixin::Type::Extend, mixin_locations)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: Trackers::MixinType,
-            mixin_locations: T::Hash[Trackers::MixinType, T::Hash[Module, T::Array[String]]]
+            mixin_type: Trackers::Mixin::Type,
+            mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
           ).void
         end
         def add_mixins(tree, mods, mixin_type, mixin_locations)
@@ -407,9 +407,9 @@ module Tapioca
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              when Trackers::MixinType::Include, Trackers::MixinType::Prepend
+              when Trackers::Mixin::Type::Include, Trackers::Mixin::Type::Prepend
                 tree << RBI::Include.new(T.must(qname))
-              when Trackers::MixinType::Extend
+              when Trackers::Mixin::Type::Extend
                 tree << RBI::Extend.new(T.must(qname))
               end
             end
@@ -652,8 +652,8 @@ module Tapioca
         sig do
           params(
             mod: Module,
-            mixin_type: Trackers::MixinType,
-            mixin_locations: T::Hash[Trackers::MixinType, T::Hash[Module, T::Array[String]]]
+            mixin_type: Trackers::Mixin::Type,
+            mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
           ).returns(T::Boolean)
         end
         def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
