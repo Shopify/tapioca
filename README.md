@@ -55,9 +55,10 @@ end
 and do not forget to execute `tapioca` using `bundler`:
 
 ```shell
-$ bundle exec tapioca
+$ bundle exec tapioca help
 Commands:
   tapioca --version, -v      # show version
+  tapioca clean-shims        # clean duplicated definitions in shim RBIs
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
@@ -66,11 +67,9 @@ Commands:
   tapioca todo               # generate the list of unresolved constants
 
 Options:
-  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
-          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
-                                               # Default: true
-  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+  -c, [--config=<config file path>]  # Path to the Tapioca configuration file
+                                     # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 ```
 
 ## Usage
@@ -87,11 +86,9 @@ Usage:
   tapioca init
 
 Options:
-  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
-          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
-                                               # Default: true
-  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+  -c, [--config=<config file path>]  # Path to the Tapioca configuration file
+                                     # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
 initializes folder structure
 ```
@@ -108,16 +105,25 @@ Usage:
   tapioca gem [gem...]
 
 Options:
+  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
+                                                              # Default: sorbet/rbi/gems
+          [--file-header], [--no-file-header]                 # Add a "This file is generated" header on top of each generated RBI file
+                                                              # Default: true
           [--all], [--no-all]                                 # Regenerate RBI files for all gems
   --pre, -b, [--prerequire=file]                              # A file to be required before Bundler.require is called
   --post, -a, [--postrequire=file]                            # A file to be required after Bundler.require is called
+                                                              # Default: sorbet/tapioca/require.rb
   -x, [--exclude=gem [gem ...]]                               # Excludes the given gem(s) from RBI generation
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Overrides for typed sigils for generated gem RBIs
+                                                              # Default: {"activesupport"=>"false"}
           [--verify], [--no-verify]                           # Verifies RBIs are up-to-date
-  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]                     # The command to run to regenerate RBI files
-          [--file-header], [--no-file-header]                 # Add a "This file is generated" header on top of each generated RBI file
+          [--doc], [--no-doc]                                 # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
+          [--exported-gem-rbis], [--no-exported-gem-rbis]     # Include RBIs found in the `rbi/` directory of the gem
                                                               # Default: true
+  -w, [--workers=N]                                           # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
+                                                              # Default: 1
+  -c, [--config=<config file path>]                           # Path to the Tapioca configuration file
+                                                              # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
 
 generate RBIs from gems
@@ -135,11 +141,13 @@ Usage:
   tapioca todo
 
 Options:
-  --out, -o, [--outdir=directory]              # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]      # The command to run to regenerate RBI files
-          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
-                                               # Default: true
-  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+      [--todos-path=TODOS_PATH]
+                                           # Default: sorbet/rbi/todo.rbi
+      [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
+                                           # Default: true
+  -c, [--config=<config file path>]        # Path to the Tapioca configuration file
+                                           # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]          # Verbose output for debugging purposes
 
 generate the list of unresolved constants
 ```
@@ -156,28 +164,22 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-          [--only=generator [generator ...]]                # Only run supplied DSL generators
-          [--exclude-generators=generator [generator ...]]  # Exclude supplied DSL generators
-          [--verify], [--no-verify]                         # Verifies RBIs are up-to-date
-  -q, [--quiet], [--no-quiet]                               # Supresses file creation output
-  --out, -o, [--outdir=directory]                           # The output directory for generated RBI files
-  --cmd, -c, [--generate-command=command]                   # The command to run to regenerate RBI files
-          [--file-header], [--no-file-header]               # Add a "This file is generated" header on top of each generated RBI file
-                                                            # Default: true
-  -V, [--verbose], [--no-verbose]                           # Verbose output for debugging purposes
+  --out, -o, [--outdir=directory]                # The output directory for generated RBI files
+                                                 # Default: sorbet/rbi/dsl
+          [--file-header], [--no-file-header]    # Add a "This file is generated" header on top of each generated RBI file
+                                                 # Default: true
+          [--only=generator [generator ...]]     # Only run supplied DSL generators
+          [--exclude=generator [generator ...]]  # Exclude supplied DSL generators
+          [--verify], [--no-verify]              # Verifies RBIs are up-to-date
+  -q, [--quiet], [--no-quiet]                    # Supresses file creation output
+  -w, [--workers=N]                              # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
+                                                 # Default: 1
+  -c, [--config=<config file path>]              # Path to the Tapioca configuration file
+                                                 # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]                # Verbose output for debugging purposes
 
 generate RBIs for dynamic methods
 ```
-
-### Flags
-
-- `--prerequire [file]`: A file to be required before `Bundler.require` is called.
-- `--postrequire [file]`: A file to be required after `Bundler.require` is called.
-- `--out [directory]`: The output directory for generated RBI files, default to `sorbet/rbi/gems`.
-- `--generate-command [command]`: **[DEPRECATED]** The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
-- `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
-
-
 ## Configuration
 
 Tapioca has support for loading command defaults from a configuration file. The default configuration
@@ -198,7 +200,6 @@ Additionally, if you always wanted to exclude the `AASM` and `ActiveRecordFixtur
 ```yaml
 gem:
   docs: true
-dsl:
 dsl:
   exclude:
   - UrlHelpers
