@@ -177,6 +177,34 @@ generate RBIs for dynamic methods
 - `--generate-command [command]`: **[DEPRECATED]** The command to run to regenerate RBI files (used in header comment of the RBI files), defaults to the current command.
 - `--typed-overrides [gem:level]`: Overrides typed sigils for generated gem RBIs for gem `gem` to level `level` (`level` can be one of `ignore`, `false`, `true`, `strict`, or `strong`, see [the Sorbet docs](https://sorbet.org/docs/static#file-level-granularity-strictness-levels) for more details).
 
+
+## Configuration
+
+Tapioca has support for loading command defaults from a configuration file. The default configuration
+file location is `sorbet/tapioca/config.yml` but this default can be changed using the `--config` flag
+and supplying an alternative configuration file path.
+
+A configuration file must be a well-formed YAML file with top-level keys for the various Tapioca commands. Keys under each such top-level command should be the underscore version of a long option name for that command and the value for that key should be the value of the option.
+
+For example, if you always want to generate gem RBIs with inline documentation, then you would create the file `sorbet/tapioca/config.yml` as:
+
+```yaml
+gem:
+  docs: true
+```
+
+Additionally, if you always wanted to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would look like this:
+
+```yaml
+gem:
+  docs: true
+dsl:
+dsl:
+  exclude_generators:
+  - UrlHelpers
+  - ActiveRecordFixtures
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/Shopify/tapioca/blob/main/CODE_OF_CONDUCT.md) code of conduct.
