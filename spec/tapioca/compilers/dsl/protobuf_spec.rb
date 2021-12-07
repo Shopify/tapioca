@@ -15,7 +15,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         end
       RUBY
 
-      assert_equal([], gathered_constants)
+      assert(gathered_constants.all? { |constant| constant.start_with?("Google::Protobuf") })
     end
 
     it("gathers only classes with Protobuf Module") do
@@ -32,10 +32,9 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
         Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
       RUBY
 
-      assert_equal(
-        ["Cart", "Google::Protobuf::Map", "Google::Protobuf::RepeatedField"],
-        gathered_constants
-      )
+      assert_equal(["Cart"], gathered_constants.reject { |constant| constant.start_with?("Google::Protobuf") })
+      assert_includes(gathered_constants, "Google::Protobuf::Map")
+      assert_includes(gathered_constants, "Google::Protobuf::RepeatedField")
     end
   end
 
