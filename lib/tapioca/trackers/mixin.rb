@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require "tapioca/helpers/mixin_type"
+require "tapioca/trackers/mixin_type"
 
 module Tapioca
   module Trackers
