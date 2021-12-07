@@ -11,4 +11,4 @@
 # are performed.
 require "tapioca/trackers/mixin_tracker"
 require "tapioca/trackers/constant_tracker"
-require "tapioca/trackers/autoload_tracker"
+require "tapioca/trackers/autoload"

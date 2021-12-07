@@ -124,7 +124,7 @@ module Tapioca
           exit(1)
         end
 
-        Tapioca::Trackers::AutoloadTracker.eager_load_all!
+        Tapioca::Trackers::Autoload.eager_load_all!
 
         say(" Done", :green)
         unless bundle.missing_specs.empty?

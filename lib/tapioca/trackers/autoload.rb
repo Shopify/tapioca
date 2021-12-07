@@ -3,7 +3,7 @@
 
 module Tapioca
   module Trackers
-    module AutoloadTracker
+    module Autoload
       extend T::Sig
 
       NOOP_METHOD = -> (*_args, **_kwargs, &_block) {}
@@ -64,7 +64,7 @@ class Module
   alias_method(:autoload_without_tapioca, :autoload)
 
   def autoload(const_name, path)
-    Tapioca::Trackers::AutoloadTracker.register("#{self}::#{const_name}")
+    Tapioca::Trackers::Autoload.register("#{self}::#{const_name}")
     autoload_without_tapioca(const_name, path)
   end
 end
