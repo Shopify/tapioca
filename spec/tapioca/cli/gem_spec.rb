@@ -172,17 +172,29 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          @project.require_real_gem("did_you_mean", "= 1.5.0")
+          gem_name = "ostruct"
+          gem_top_level_constant = "class OpenStruct"
+
+          # `default_stubs` is a private method on Ruby 2.6
+          gem_spec = Gem::Specification.send(:default_stubs, "*.gemspec").find do |spec|
+            spec.name == gem_name && spec.default_gem?
+          end
+          assert(gem_spec, "Cannot find default '#{gem_name}' gem")
+
+          gem_version = gem_spec.version.to_s
+
+          @project.require_real_gem(gem_name, gem_version)
           @project.bundle_install
 
-          out, err, status = @project.tapioca("gem did_you_mean")
+          out, err, status = @project.tapioca("gem #{gem_name}")
 
           assert_includes(out, <<~OUT)
-            Compiled did_you_mean
-                  create  sorbet/rbi/gems/did_you_mean@1.5.0.rbi
+            Compiled #{gem_name}
+                  create  sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi
           OUT
 
-          assert_includes(@project.read("sorbet/rbi/gems/did_you_mean@1.5.0.rbi"), "module DidYouMean")
+          rbi_contents = @project.read("sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi")
+          assert_includes(rbi_contents, gem_top_level_constant)
 
           assert_empty(err)
           assert(status)
