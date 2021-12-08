@@ -30,7 +30,11 @@ class DslSpec < Minitest::Spec
     # Get the class under test and initialize a new instance of it
     # as the "subject"
     class_name = T.unsafe(self).target_class_name
-    Object.const_get(class_name).new
+    compiler = Tapioca::Compilers::DslCompiler.new(
+      requested_constants: [],
+      requested_generators: [Object.const_get(class_name)]
+    )
+    compiler.generators.first
   end
 
   sig { returns(Class) }

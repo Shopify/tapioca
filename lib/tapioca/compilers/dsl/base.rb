@@ -3,6 +3,7 @@
 
 require "tapioca/rbi_ext/model"
 require "tapioca/compilers/dsl/param_helper"
+require "tapioca/compilers/dsl_compiler"
 
 module Tapioca
   module Compilers
@@ -23,8 +24,9 @@ module Tapioca
         sig { returns(T::Array[String]) }
         attr_reader :errors
 
-        sig { void }
-        def initialize
+        sig { params(compiler: Tapioca::Compilers::DslCompiler).void }
+        def initialize(compiler)
+          @compiler = compiler
           @processable_constants = T.let(Set.new(gather_constants), T::Set[Module])
           @processable_constants.compare_by_identity
           @errors = T.let([], T::Array[String])

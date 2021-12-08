@@ -22,7 +22,7 @@ module Tapioca
           requested_constants: T::Array[Module],
           requested_generators: T::Array[T.class_of(Dsl::Base)],
           excluded_generators: T::Array[T.class_of(Dsl::Base)],
-          error_handler: T.nilable(T.proc.params(error: String).void),
+          error_handler: T.proc.params(error: String).void,
           number_of_workers: T.nilable(Integer),
         ).void
       end
@@ -30,7 +30,7 @@ module Tapioca
         requested_constants:,
         requested_generators: [],
         excluded_generators: [],
-        error_handler: nil,
+        error_handler: $stderr.method(:puts).to_proc,
         number_of_workers: nil
       )
         @generators = T.let(
@@ -38,7 +38,7 @@ module Tapioca
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
-        @error_handler = T.let(error_handler || $stderr.method(:puts), T.proc.params(error: String).void)
+        @error_handler = error_handler
         @number_of_workers = number_of_workers
       end
 
@@ -90,7 +90,7 @@ module Tapioca
             !excluded_generators.include?(klass)
         end.sort_by { |klass| T.must(klass.name) }
 
-        generator_klasses.map(&:new)
+        generator_klasses.map { |generator_klass| generator_klass.new(self) }
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
