@@ -37,6 +37,11 @@ module Tapioca
           processable_constants.include?(constant)
         end
 
+        sig { params(generator_name: String).returns(T::Boolean) }
+        def generator_enabled?(generator_name)
+          @compiler.generator_enabled?(generator_name)
+        end
+
         sig do
           abstract
             .type_parameters(:T)

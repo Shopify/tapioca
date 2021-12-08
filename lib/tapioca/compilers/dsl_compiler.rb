@@ -76,6 +76,19 @@ module Tapioca
         result.compact
       end
 
+      sig { params(generator_name: String).returns(T::Boolean) }
+      def generator_enabled?(generator_name)
+        # Try to find built-in tapioca generator first, then globally defined generator. The
+        # explicit `break` ensures the class is returned, not the `potential_name`.
+        generator_klass = ["Tapioca::Compilers::Dsl::#{generator_name}", generator_name].find do |potential_name|
+          break Object.const_get(potential_name)
+        rescue NameError
+          # Skip if we can't find generator by the potential name
+        end
+
+        @generators.any?(generator_klass)
+      end
+
       private
 
       sig do
