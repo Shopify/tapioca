@@ -332,7 +332,11 @@ module Tapioca
           return "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
                                                                    polymorphic_association?(reflection)
 
-          "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
+          if generator_enabled?("ActiveRecordRelations")
+            "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
+          else
+            "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
+          end
         end
 
         sig do
