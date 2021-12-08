@@ -202,6 +202,46 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
+        it("generates RBI file for polymorphic has_many association") do
+          add_ruby_file("model.rb", <<~RUBY)
+            class Picture < ActiveRecord::Base
+              belongs_to :imageable, polymorphic: true
+            end
+
+            class Employee < ActiveRecord::Base
+              has_many :pictures, as: :imageable
+            end
+
+            class Product < ActiveRecord::Base
+              has_many :pictures, as: :imageable
+            end
+          RUBY
+
+          expected = <<~RBI
+            # typed: strong
+
+            class Employee
+              include GeneratedAssociationMethods
+
+              module GeneratedAssociationMethods
+                sig { returns(T::Array[T.untyped]) }
+                def picture_ids; end
+
+                sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                def picture_ids=(ids); end
+
+                sig { returns(ActiveRecord::Associations::CollectionProxy) }
+                def pictures; end
+
+                sig { params(value: T::Enumerable[T.untyped]).void }
+                def pictures=(value); end
+              end
+            end
+          RBI
+
+          assert_equal(expected, rbi_for(:Employee))
+        end
+
         it("generates RBI file for has_one single association") do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
@@ -848,6 +888,46 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           RBI
 
           assert_equal(expected, rbi_for(:Post))
+        end
+
+        it("generates RBI file for polymorphic has_many association") do
+          add_ruby_file("model.rb", <<~RUBY)
+            class Picture < ActiveRecord::Base
+              belongs_to :imageable, polymorphic: true
+            end
+
+            class Employee < ActiveRecord::Base
+              has_many :pictures, as: :imageable
+            end
+
+            class Product < ActiveRecord::Base
+              has_many :pictures, as: :imageable
+            end
+          RUBY
+
+          expected = <<~RBI
+            # typed: strong
+
+            class Employee
+              include GeneratedAssociationMethods
+
+              module GeneratedAssociationMethods
+                sig { returns(T::Array[T.untyped]) }
+                def picture_ids; end
+
+                sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                def picture_ids=(ids); end
+
+                sig { returns(ActiveRecord::Associations::CollectionProxy[T.untyped]) }
+                def pictures; end
+
+                sig { params(value: T::Enumerable[T.untyped]).void }
+                def pictures=(value); end
+              end
+            end
+          RBI
+
+          assert_equal(expected, rbi_for(:Employee))
         end
 
         it("generates RBI file for has_one single association") do
