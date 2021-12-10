@@ -24,6 +24,19 @@ module Tapioca
         sig { returns(T::Array[String]) }
         attr_reader :errors
 
+        sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Compilers::Dsl::Base))) }
+        def self.resolve(name)
+          # Try to find built-in tapioca generator first, then globally defined generator.
+          potentials = ["Tapioca::Compilers::Dsl::#{name}", name].map do |potential_name|
+            Object.const_get(potential_name)
+          rescue NameError
+            # Skip if we can't find generator by the potential name
+            nil
+          end
+
+          potentials.compact.first
+        end
+
         sig { params(compiler: Tapioca::Compilers::DslCompiler).void }
         def initialize(compiler)
           @compiler = compiler
