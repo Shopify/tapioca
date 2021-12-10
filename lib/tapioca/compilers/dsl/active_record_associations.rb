@@ -329,10 +329,21 @@ module Tapioca
         end
         def relation_type_for(constant, reflection)
           validate_reflection!(reflection)
-          return "ActiveRecord::Associations::CollectionProxy" if !constant.table_exists? ||
-                                                                   polymorphic_association?(reflection)
 
-          "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
+          relations_enabled = generator_enabled?("ActiveRecordRelations")
+          polymorphic_association = !constant.table_exists? || polymorphic_association?(reflection)
+
+          if relations_enabled
+            if polymorphic_association
+              "ActiveRecord::Associations::CollectionProxy"
+            else
+              "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
+            end
+          elsif polymorphic_association
+            "ActiveRecord::Associations::CollectionProxy[T.untyped]"
+          else
+            "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
+          end
         end
 
         sig do

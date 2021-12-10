@@ -27,10 +27,23 @@ class DslSpec < Minitest::Spec
   end
 
   subject do
-    # Get the class under test and initialize a new instance of it
-    # as the "subject"
-    class_name = T.unsafe(self).target_class_name
-    Object.const_get(class_name).new
+    T.bind(self, DslSpec)
+    # Get the class under test and initialize a new instance of it as the "subject"
+    generator_for_names(target_class_name)
+  end
+
+  sig { params(names: String).returns(Tapioca::Compilers::Dsl::Base) }
+  def generator_for_names(*names)
+    raise "name is required" if names.empty?
+
+    classes = names.map { |class_name| Object.const_get(class_name) }
+
+    compiler = Tapioca::Compilers::DslCompiler.new(
+      requested_constants: [],
+      requested_generators: classes
+    )
+
+    T.must(compiler.generators.find { |generator| generator.class.name == names.first })
   end
 
   sig { returns(Class) }

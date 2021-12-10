@@ -3,6 +3,7 @@
 
 require "tapioca/rbi_ext/model"
 require "tapioca/compilers/dsl/param_helper"
+require "tapioca/compilers/dsl_compiler"
 
 module Tapioca
   module Compilers
@@ -23,8 +24,22 @@ module Tapioca
         sig { returns(T::Array[String]) }
         attr_reader :errors
 
-        sig { void }
-        def initialize
+        sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Compilers::Dsl::Base))) }
+        def self.resolve(name)
+          # Try to find built-in tapioca generator first, then globally defined generator.
+          potentials = ["Tapioca::Compilers::Dsl::#{name}", name].map do |potential_name|
+            Object.const_get(potential_name)
+          rescue NameError
+            # Skip if we can't find generator by the potential name
+            nil
+          end
+
+          potentials.compact.first
+        end
+
+        sig { params(compiler: Tapioca::Compilers::DslCompiler).void }
+        def initialize(compiler)
+          @compiler = compiler
           @processable_constants = T.let(Set.new(gather_constants), T::Set[Module])
           @processable_constants.compare_by_identity
           @errors = T.let([], T::Array[String])
@@ -33,6 +48,11 @@ module Tapioca
         sig { params(constant: Module).returns(T::Boolean) }
         def handles?(constant)
           processable_constants.include?(constant)
+        end
+
+        sig { params(generator_name: String).returns(T::Boolean) }
+        def generator_enabled?(generator_name)
+          @compiler.generator_enabled?(generator_name)
         end
 
         sig do
