@@ -7,7 +7,7 @@ require "tapioca/compilers/dsl/param_helper"
 module Tapioca
   module Compilers
     module Dsl
-      COMPILERS_PATH = T.let(File.expand_path("..", __FILE__).to_s, String)
+      DSL_COMPILERS_DIR = T.let(File.expand_path("..", __FILE__).to_s, String)
 
       class Base
         extend T::Sig

@@ -11,7 +11,7 @@ module Tapioca
       banner: "<config file path>",
       type: :string,
       desc: "Path to the Tapioca configuration file",
-      default: TAPIOCA_CONFIG
+      default: TAPIOCA_CONFIG_FILE
     class_option :verbose,
       aliases: ["-V"],
       type: :boolean,
@@ -21,19 +21,19 @@ module Tapioca
     desc "init", "initializes folder structure"
     def init
       generator = Generators::Init.new(
-        sorbet_config: SORBET_CONFIG,
-        default_postrequire: DEFAULT_POSTREQUIRE,
+        sorbet_config: SORBET_CONFIG_FILE,
+        default_postrequire: DEFAULT_POSTREQUIRE_FILE,
         default_command: DEFAULT_COMMAND
       )
       generator.generate
     end
 
     desc "require", "generate the list of files to be required by tapioca"
-    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE
+    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def require
       generator = Generators::Require.new(
         requires_path: options[:postrequire],
-        sorbet_config_path: SORBET_CONFIG,
+        sorbet_config_path: SORBET_CONFIG_FILE,
         default_command: DEFAULT_COMMAND
       )
       Tapioca.silence_warnings do
@@ -42,16 +42,16 @@ module Tapioca
     end
 
     desc "todo", "generate the list of unresolved constants"
-    option :todos_path,
+    option :todo_file,
       type: :string,
-      default: DEFAULT_TODOSPATH
+      default: DEFAULT_TODO_FILE
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
       default: true
     def todo
       generator = Generators::Todo.new(
-        todos_path: options[:todos_path],
+        todo_file: options[:todo_file],
         file_header: options[:file_header],
         default_command: DEFAULT_COMMAND
       )
@@ -65,7 +65,7 @@ module Tapioca
       aliases: ["--out", "-o"],
       banner: "directory",
       desc: "The output directory for generated DSL RBI files",
-      default: DEFAULT_DSLDIR
+      default: DEFAULT_DSL_DIR
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
@@ -101,8 +101,8 @@ module Tapioca
         only: options[:only],
         exclude: options[:exclude],
         file_header: options[:file_header],
-        compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
-        tapioca_path: TAPIOCA_PATH,
+        compiler_path: Tapioca::Compilers::Dsl::DSL_COMPILERS_DIR,
+        tapioca_path: TAPIOCA_DIR,
         default_command: DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
@@ -127,7 +127,7 @@ module Tapioca
       aliases: ["--out", "-o"],
       banner: "directory",
       desc: "The output directory for generated gem RBI files",
-      default: DEFAULT_GEMDIR
+      default: DEFAULT_GEM_DIR
     option :file_header,
       type: :boolean,
       desc: "Add a \"This file is generated\" header on top of each generated RBI file",
@@ -145,7 +145,7 @@ module Tapioca
       aliases: ["--post", "-a"],
       banner: "file",
       desc: "A file to be required after Bundler.require is called",
-      default: DEFAULT_POSTREQUIRE
+      default: DEFAULT_POSTREQUIRE_FILE
     option :exclude,
       aliases: ["-x"],
       type: :array,
@@ -217,33 +217,33 @@ module Tapioca
     end
 
     desc "clean-shims", "clean duplicated definitions in shim RBIs"
-    option :gem_rbis_path, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEMDIR
-    option :dsl_rbis_path, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSLDIR
-    option :shim_rbis_path, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIMDIR
+    option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
+    option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
+    option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
     def clean_shims(*files_to_clean)
       index = RBI::Index.new
 
       # Index gem RBIs
-      gem_rbis_path = options[:gem_rbis_path]
-      say("Loading gem RBIs from #{gem_rbis_path}... ")
-      gem_rbis_files = Dir.glob("#{gem_rbis_path}/**/*.rbi").sort
+      gem_rbi_dir = options[:gem_rbi_dir]
+      say("Loading gem RBIs from #{gem_rbi_dir}... ")
+      gem_rbis_files = Dir.glob("#{gem_rbi_dir}/**/*.rbi").sort
       gem_rbis_trees = RBI::Parser.parse_files(gem_rbis_files)
       index.visit_all(gem_rbis_trees)
       say(" Done", :green)
 
       # Index dsl RBIs
-      dsl_rbis_path = options[:dsl_rbis_path]
-      say("Loading dsl RBIs from #{dsl_rbis_path}... ")
-      dsl_rbis_files = Dir.glob("#{dsl_rbis_path}/**/*.rbi").sort
+      dsl_rbi_dir = options[:dsl_rbi_dir]
+      say("Loading dsl RBIs from #{dsl_rbi_dir}... ")
+      dsl_rbis_files = Dir.glob("#{dsl_rbi_dir}/**/*.rbi").sort
       dsl_rbis_trees = RBI::Parser.parse_files(dsl_rbis_files)
       index.visit_all(dsl_rbis_trees)
       say(" Done", :green)
 
       # Clean shim RBIs
       if files_to_clean.empty?
-        shim_rbis_path = options[:shim_rbis_path]
-        print("Cleaning shim RBIs from #{shim_rbis_path}...")
-        files_to_clean = Dir.glob("#{shim_rbis_path}/*.rbi")
+        shim_rbi_dir = options[:shim_rbi_dir]
+        print("Cleaning shim RBIs from #{shim_rbi_dir}...")
+        files_to_clean = Dir.glob("#{shim_rbi_dir}/*.rbi")
       else
         print("Cleaning shim RBIs...")
       end

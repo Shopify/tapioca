@@ -141,7 +141,7 @@ Usage:
   tapioca todo
 
 Options:
-      [--todos-path=TODOS_PATH]
+      [--todo-file=TODO_FILE]
                                            # Default: sorbet/rbi/todo.rbi
       [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
                                            # Default: true

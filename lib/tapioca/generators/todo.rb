@@ -6,14 +6,14 @@ module Tapioca
     class Todo < Base
       sig do
         params(
-          todos_path: String,
+          todo_file: String,
           file_header: T::Boolean,
           default_command: String,
           file_writer: Thor::Actions
         ).void
       end
-      def initialize(todos_path:, file_header:, default_command:, file_writer: FileWriter.new)
-        @todos_path = todos_path
+      def initialize(todo_file:, file_header:, default_command:, file_writer: FileWriter.new)
+        @todo_file = todo_file
         @file_header = file_header
 
         super(default_command: default_command, file_writer: file_writer)
@@ -26,7 +26,7 @@ module Tapioca
 
         # Clean all existing unresolved constants before regenerating the list
         # so Sorbet won't grab them as already resolved.
-        File.delete(@todos_path) if File.exist?(@todos_path)
+        File.delete(@todo_file) if File.exist?(@todo_file)
 
         rbi_string = compiler.compile
         if rbi_string.empty?
@@ -44,9 +44,9 @@ module Tapioca
         content << "\n"
 
         say("Done", :green)
-        create_file(@todos_path, content, verbose: false)
+        create_file(@todo_file, content, verbose: false)
 
-        name = set_color(@todos_path, :yellow, :bold)
+        name = set_color(@todo_file, :yellow, :bold)
         say("\nAll unresolved constants have been written to #{name}.", [:green, :bold])
         say("Please review changes and commit them.", [:green, :bold])
       end

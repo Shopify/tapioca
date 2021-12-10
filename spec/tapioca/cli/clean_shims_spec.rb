@@ -190,7 +190,7 @@ module Tapioca
         RBI
 
         out, _, status = @project.tapioca(
-          "clean-shims --gem-rbis-path=rbi/gem --dsl-rbis-path=rbi/dsl --shim-rbis-path=rbi/shim"
+          "clean-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim"
         )
 
         assert_equal(<<~OUT, out)
