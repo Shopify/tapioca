@@ -10,6 +10,9 @@ module Tapioca
     sig { returns(String) }
     attr_reader :command_name
 
+    sig { returns(Thor::CoreExt::HashWithIndifferentAccess) }
+    attr_reader :defaults
+
     sig { params(args: T.untyped, local_options: T.untyped, config: T.untyped).void }
     def initialize(args = [], local_options = {}, config = {})
       # Store current command
@@ -17,13 +20,12 @@ module Tapioca
       command_options = config[:command_options]
       @command_name = T.let(command.name, String)
       @merged_options = T.let(nil, T.nilable(Thor::CoreExt::HashWithIndifferentAccess))
-      @defaults = T.let(nil, T.nilable(Thor::CoreExt::HashWithIndifferentAccess))
+      @defaults = T.let(Thor::CoreExt::HashWithIndifferentAccess.new, Thor::CoreExt::HashWithIndifferentAccess)
 
       # Filter command options unless we are handling the help command.
       # This is so that the defaults are printed
       filter_defaults(command_options) unless command_name == "help"
 
-      # Call original initialize method
       super
     end
 
@@ -47,11 +49,6 @@ module Tapioca
         # Remove the default value from the option
         option.instance_variable_set(:@default, nil)
       end
-    end
-
-    sig { returns(Thor::CoreExt::HashWithIndifferentAccess) }
-    def defaults
-      @defaults ||= Thor::CoreExt::HashWithIndifferentAccess.new
     end
 
     sig { params(options: Thor::CoreExt::HashWithIndifferentAccess).returns(Thor::CoreExt::HashWithIndifferentAccess) }
