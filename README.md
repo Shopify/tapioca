@@ -182,7 +182,7 @@ generate RBIs for dynamic methods
 ```
 ## Configuration
 
-Tapioca has support for loading command defaults from a configuration file. The default configuration
+Tapioca supports loading command defaults from a configuration file. The default configuration
 file location is `sorbet/tapioca/config.yml` but this default can be changed using the `--config` flag
 and supplying an alternative configuration file path.
 
@@ -195,7 +195,7 @@ gem:
   docs: true
 ```
 
-Additionally, if you always wanted to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would look like this:
+Additionally, if you always want to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would then look like this:
 
 ```yaml
 gem:

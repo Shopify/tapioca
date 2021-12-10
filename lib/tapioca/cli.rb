@@ -64,7 +64,7 @@ module Tapioca
     option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
-      desc: "The output directory for generated RBI files",
+      desc: "The output directory for generated DSL RBI files",
       default: DEFAULT_DSLDIR
     option :file_header,
       type: :boolean,
@@ -73,12 +73,12 @@ module Tapioca
     option :only,
       type: :array,
       banner: "generator [generator ...]",
-      desc: "Only run supplied DSL generators",
+      desc: "Only run supplied DSL generator(s)",
       default: []
     option :exclude,
       type: :array,
       banner: "generator [generator ...]",
-      desc: "Exclude supplied DSL generators",
+      desc: "Exclude supplied DSL generator(s)",
       default: []
     option :verify,
       type: :boolean,
@@ -126,7 +126,7 @@ module Tapioca
     option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
-      desc: "The output directory for generated RBI files",
+      desc: "The output directory for generated gem RBI files",
       default: DEFAULT_GEMDIR
     option :file_header,
       type: :boolean,
@@ -150,17 +150,17 @@ module Tapioca
       aliases: ["-x"],
       type: :array,
       banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation",
+      desc: "Exclude the given gem(s) from RBI generation",
       default: []
     option :typed_overrides,
       aliases: ["--typed", "-t"],
       type: :hash,
       banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs",
+      desc: "Override for typed sigils for generated gem RBIs",
       default: DEFAULT_OVERRIDES
     option :verify,
       type: :boolean,
-      desc: "Verifies RBIs are up-to-date",
+      desc: "Verify RBIs are up-to-date",
       default: false
     option :doc,
       type: :boolean,
