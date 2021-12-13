@@ -35,11 +35,7 @@ module Tapioca
         create_sorbet_config
         create_tapioca_config
         create_post_require
-        if File.exist?(@default_command)
-          generate_binstub!
-        else
-          generate_binstub
-        end
+        create_binstub
       end
 
       private
@@ -82,15 +78,16 @@ module Tapioca
       end
 
       sig { void }
-      def generate_binstub!
-        installer.generate_bundler_executable_stubs(spec, { force: true })
-        say_status(:force, @default_command, :yellow)
-      end
+      def create_binstub
+        force = File.exist?(@default_command)
 
-      sig { void }
-      def generate_binstub
-        installer.generate_bundler_executable_stubs(spec)
-        say_status(:create, @default_command, :green)
+        installer.generate_bundler_executable_stubs(spec, { force: force })
+
+        say_status(
+          force ? :force : :create,
+          @default_command,
+          force ? :yellow : :green
+        )
       end
 
       sig { returns(Bundler::Installer) }
