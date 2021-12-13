@@ -7,13 +7,21 @@ module Tapioca
       sig do
         params(
           sorbet_config: String,
+          tapioca_config: String,
           default_postrequire: String,
           default_command: String,
           file_writer: Thor::Actions
         ).void
       end
-      def initialize(sorbet_config:, default_postrequire:, default_command:, file_writer: FileWriter.new)
+      def initialize(
+        sorbet_config:,
+        tapioca_config:,
+        default_postrequire:,
+        default_command:,
+        file_writer: FileWriter.new
+      )
         @sorbet_config = sorbet_config
+        @tapioca_config = tapioca_config
         @default_postrequire = default_postrequire
 
         super(default_command: default_command, file_writer: file_writer)
@@ -24,7 +32,8 @@ module Tapioca
 
       sig { override.void }
       def generate
-        create_config
+        create_sorbet_config
+        create_tapioca_config
         create_post_require
         if File.exist?(@default_command)
           generate_binstub!
@@ -36,11 +45,30 @@ module Tapioca
       private
 
       sig { void }
-      def create_config
+      def create_sorbet_config
         create_file(@sorbet_config, <<~CONTENT, skip: true, force: false)
           --dir
           .
         CONTENT
+      end
+
+      sig { void }
+      def create_tapioca_config
+        create_file(@tapioca_config, <<~YAML, skip: true, force: false)
+          gem:
+            # Add your `gem` command parameters here:
+            #
+            # exclude:
+            # - gem_name
+            # doc: true
+            # workers: 5
+          dsl:
+            # Add your `dsl` command parameters here:
+            #
+            # exclude:
+            # - SomeGeneratorName
+            # workers: 5
+        YAML
       end
 
       sig { void }

@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "spec_with_project"
+require "yaml"
 
 module Tapioca
   class InitSpec < SpecWithProject
@@ -20,6 +21,7 @@ module Tapioca
         out, err, status = @project.tapioca("init")
 
         assert_includes(out, "create  sorbet/config")
+        assert_includes(out, "create  sorbet/tapioca/config.yml")
         assert_includes(out, "create  sorbet/tapioca/require.rb")
         assert_includes(out, "create  bin/tapioca")
 
@@ -37,6 +39,11 @@ module Tapioca
 
         assert_project_file_exist("bin/tapioca")
 
+        tapioca_config = YAML.load(@project.read("sorbet/tapioca/config.yml"))
+        assert_equal(["gem", "dsl"], tapioca_config.keys)
+        assert_nil(tapioca_config["gem"])
+        assert_nil(tapioca_config["dsl"])
+
         assert_empty(err)
         assert(status)
       end
@@ -45,10 +52,12 @@ module Tapioca
         @project.write("bin/tapioca")
         @project.write("sorbet/config")
         @project.write("sorbet/tapioca/require.rb")
+        @project.write("sorbet/tapioca/config.yml")
 
         out, err, status = @project.tapioca("init")
 
         assert_includes(out, "skip  sorbet/config")
+        assert_includes(out, "skip  sorbet/tapioca/config.yml")
         assert_includes(out, "skip  sorbet/tapioca/require.rb")
         assert_includes(out, "force  bin/tapioca")
 

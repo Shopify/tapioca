@@ -24,6 +24,7 @@ module Tapioca
     def init
       generator = Generators::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
+        tapioca_config: TAPIOCA_CONFIG_FILE,
         default_postrequire: DEFAULT_POSTREQUIRE_FILE,
         default_command: DEFAULT_COMMAND
       )
