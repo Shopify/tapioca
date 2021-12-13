@@ -56,6 +56,11 @@ module ActiveSupport::ActionableError
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveSupport::ActionableError::ClassMethods
 
+  class << self
+    def actions(error); end
+    def dispatch(error, name); end
+  end
+
   module GeneratedClassMethods
     def _actions; end
     def _actions=(value); end
@@ -66,11 +71,6 @@ module ActiveSupport::ActionableError
     def _actions; end
     def _actions=(value); end
     def _actions?; end
-  end
-
-  class << self
-    def actions(error); end
-    def dispatch(error, name); end
   end
 end
 
@@ -7560,6 +7560,14 @@ class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
   end
 end
 
+module ActiveSupport::Testing::Stream
+  private
+
+  def capture(stream); end
+  def quietly; end
+  def silence_stream(stream); end
+end
+
 # Logs a "PostsControllerTest: test name" heading before each test to
 # make test.log easier to search and follow along with.
 module ActiveSupport::Testing::TaggedLogging
@@ -10602,15 +10610,25 @@ module I18n
   extend ::I18n::Base
 
   class << self
+    def cache_key_digest; end
+    def cache_key_digest=(key_digest); end
+    def cache_namespace; end
+    def cache_namespace=(namespace); end
+    def cache_store; end
+    def cache_store=(store); end
+    def fallbacks; end
+    def fallbacks=(fallbacks); end
     def interpolate(string, values); end
     def interpolate_hash(string, values); end
     def new_double_nested_cache; end
+    def perform_caching?; end
   end
 end
 
 I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
 I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
+I18n::JSON = ActiveSupport::JSON
 I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
 I18n::RESERVED_KEYS_PATTERN = T.let(T.unsafe(nil), Regexp)
 
@@ -12466,6 +12484,41 @@ class String
   # is set, otherwise converts String to a Time via String#to_time
   def in_time_zone(zone = T.unsafe(nil)); end
 
+  # Indents the lines in the receiver:
+  #
+  # <<EOS.indent(2)
+  # def some_method
+  # some_code
+  # end
+  # EOS
+  # # =>
+  # def some_method
+  # some_code
+  # end
+  #
+  # The second argument, +indent_string+, specifies which indent string to
+  # use. The default is +nil+, which tells the method to make a guess by
+  # peeking at the first indented line, and fallback to a space if there is
+  # none.
+  #
+  # "  foo".indent(2)        # => "    foo"
+  # "foo\n\t\tbar".indent(2) # => "\t\tfoo\n\t\t\t\tbar"
+  # "foo".indent(2, "\t")    # => "\t\tfoo"
+  #
+  # While +indent_string+ is typically one space or tab, it may be any string.
+  #
+  # The third argument, +indent_empty_lines+, is a flag that says whether
+  # empty lines should be indented. Default is false.
+  #
+  # "foo\n\nbar".indent(2)            # => "  foo\n\n  bar"
+  # "foo\n\nbar".indent(2, nil, true) # => "  foo\n  \n  bar"
+  def indent(amount, indent_string = T.unsafe(nil), indent_empty_lines = T.unsafe(nil)); end
+
+  # Same as +indent+, except it indents the receiver in-place.
+  #
+  # Returns the indented string, or +nil+ if there was nothing to indent.
+  def indent!(amount, indent_string = T.unsafe(nil), indent_empty_lines = T.unsafe(nil)); end
+
   # Wraps the current string in the <tt>ActiveSupport::StringInquirer</tt> class,
   # which gives you a prettier way to test for equality.
   #
@@ -12647,6 +12700,26 @@ class String
   # str.squish!                         # => "foo bar boo"
   # str                                 # => "foo bar boo"
   def squish!; end
+
+  # Strips indentation in heredocs.
+  #
+  # For example in
+  #
+  # if options[:usage]
+  # puts <<-USAGE.strip_heredoc
+  # This command does such and such.
+  #
+  # Supported options are:
+  # -h         This message
+  # ...
+  # USAGE
+  # end
+  #
+  # the user would see the usage message aligned against the left margin.
+  #
+  # Technically, it looks for the least indented non-empty line
+  # in the whole string, and removes that amount of leading whitespace.
+  def strip_heredoc; end
 
   # Creates the name of a table like Rails does for models to table names. This method
   # uses the +pluralize+ method on the last word in the string.
