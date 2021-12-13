@@ -1,3 +1,4 @@
 ---
-exclude: []
-doc: true
+gem:
+  exclude: []
+  doc: true

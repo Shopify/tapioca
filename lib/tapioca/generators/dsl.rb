@@ -8,8 +8,8 @@ module Tapioca
         params(
           requested_constants: T::Array[String],
           outpath: Pathname,
-          generators: T::Array[String],
-          exclude_generators: T::Array[String],
+          only: T::Array[String],
+          exclude: T::Array[String],
           file_header: T::Boolean,
           compiler_path: String,
           tapioca_path: String,
@@ -24,8 +24,8 @@ module Tapioca
       def initialize(
         requested_constants:,
         outpath:,
-        generators:,
-        exclude_generators:,
+        only:,
+        exclude:,
         file_header:,
         compiler_path:,
         tapioca_path:,
@@ -38,8 +38,8 @@ module Tapioca
       )
         @requested_constants = requested_constants
         @outpath = outpath
-        @generators = generators
-        @exclude_generators = exclude_generators
+        @only = only
+        @exclude = exclude
         @file_header = file_header
         @compiler_path = compiler_path
         @tapioca_path = tapioca_path
@@ -72,8 +72,8 @@ module Tapioca
 
         compiler = Compilers::DslCompiler.new(
           requested_constants: constantize(@requested_constants),
-          requested_generators: constantize_generators(@generators),
-          excluded_generators: constantize_generators(@exclude_generators),
+          requested_generators: constantize_generators(@only),
+          excluded_generators: constantize_generators(@exclude),
           error_handler: ->(error) {
             say_error(error, :bold, :red)
           },
