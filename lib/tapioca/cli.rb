@@ -6,6 +6,8 @@ module Tapioca
     include CliHelper
     include ConfigHelper
 
+    FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
+
     class_option :config,
       aliases: ["-c"],
       banner: "<config file path>",
@@ -47,7 +49,7 @@ module Tapioca
       default: DEFAULT_TODO_FILE
     option :file_header,
       type: :boolean,
-      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      desc: FILE_HEADER_OPTION_DESC,
       default: true
     def todo
       generator = Generators::Todo.new(
@@ -68,7 +70,7 @@ module Tapioca
       default: DEFAULT_DSL_DIR
     option :file_header,
       type: :boolean,
-      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      desc: FILE_HEADER_OPTION_DESC,
       default: true
     option :only,
       type: :array,
@@ -130,7 +132,7 @@ module Tapioca
       default: DEFAULT_GEM_DIR
     option :file_header,
       type: :boolean,
-      desc: "Add a \"This file is generated\" header on top of each generated RBI file",
+      desc: FILE_HEADER_OPTION_DESC,
       default: true
     option :all,
       type: :boolean,
