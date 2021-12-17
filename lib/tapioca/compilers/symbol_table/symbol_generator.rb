@@ -375,29 +375,24 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          mixin_locations = Trackers::Mixin.mixin_locations_for(constant)
-
-          add_mixins(tree, prepends.reverse, Trackers::Mixin::Type::Prepend, mixin_locations)
-          add_mixins(tree, includes.reverse, Trackers::Mixin::Type::Include, mixin_locations)
-          add_mixins(tree, extends.reverse, Trackers::Mixin::Type::Extend, mixin_locations)
+          add_mixins(tree, prepends.reverse, Trackers::Mixin::Type::Prepend)
+          add_mixins(tree, includes.reverse, Trackers::Mixin::Type::Include)
+          add_mixins(tree, extends.reverse, Trackers::Mixin::Type::Extend)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: Trackers::Mixin::Type,
-            mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
+            mixin_type: Trackers::Mixin::Type
           ).void
         end
-        def add_mixins(tree, mods, mixin_type, mixin_locations)
+        def add_mixins(tree, mods, mixin_type)
           mods
             .select do |mod|
               name = name_of(mod)
 
-              name &&
-                !name.start_with?("T::") &&
-                mixed_in_by_gem?(mod, mixin_type, mixin_locations)
+              name && !name.start_with?("T::")
             end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))

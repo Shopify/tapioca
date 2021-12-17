@@ -271,6 +271,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       RBI
 
       compiled = compile
+        .gsub(/^\s+include ::Minitest::Expectations\s/, "")
+        .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
+        .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
       assert_includes(compiled, basic_object_output)
       assert_includes(compiled, object_output)
@@ -395,6 +398,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Array
           include ::Foo::Bar
           include ::Enumerable
+          include ::JSON::Ext::Generator::GeneratorMethods::Array
 
           def foo_int; end
         end
@@ -408,6 +412,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         class Hash
           include ::Enumerable
+          include ::JSON::Ext::Generator::GeneratorMethods::Hash
           extend ::Foo::Bar
 
           def to_bar; end
@@ -419,7 +424,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         class String
           include ::Comparable
+          include ::JSON::Ext::Generator::GeneratorMethods::String
           include ::Foo::Bar
+          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
           def to_foo(base = T.unsafe(nil)); end
         end
