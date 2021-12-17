@@ -68,7 +68,7 @@ module Tapioca
         .returns(Thor::CoreExt::HashWithIndifferentAccess)
     end
     def merge_options(*options)
-      options.each_with_object(Thor::CoreExt::HashWithIndifferentAccess.new) do |option, result|
+      merged = options.each_with_object({}) do |option, result|
         result.merge!(option || {}) do |_, this_val, other_val|
           if this_val.is_a?(Hash) && other_val.is_a?(Hash)
             Thor::CoreExt::HashWithIndifferentAccess.new(this_val.merge(other_val))
@@ -77,6 +77,8 @@ module Tapioca
           end
         end
       end
+
+      Thor::CoreExt::HashWithIndifferentAccess.new(merged)
     end
   end
 end
