@@ -335,7 +335,7 @@ module Tapioca
 
           if relations_enabled
             if polymorphic_association
-              "ActiveRecord::Associations::CollectionProxy"
+              "ActiveRecord::Associations::CollectionProxy[T.untyped]"
             else
               "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
             end

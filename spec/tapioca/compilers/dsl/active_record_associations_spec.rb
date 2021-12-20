@@ -230,7 +230,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
                 sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                 def picture_ids=(ids); end
 
-                sig { returns(ActiveRecord::Associations::CollectionProxy) }
+                sig { returns(ActiveRecord::Associations::CollectionProxy[T.untyped]) }
                 def pictures; end
 
                 sig { params(value: T::Enumerable[T.untyped]).void }
