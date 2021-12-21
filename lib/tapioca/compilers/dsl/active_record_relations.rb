@@ -532,7 +532,7 @@ module Tapioca
                   ],
                   return_type: "T::Boolean"
                 )
-              when :find, :find_by!
+              when :find
                 create_common_method(
                   "find",
                   parameters: [
@@ -547,6 +547,14 @@ module Tapioca
                     create_rest_param("args", type: "T.untyped"),
                   ],
                   return_type: "T.nilable(#{constant_name})"
+                )
+              when :find_by!
+                create_common_method(
+                  "find_by!",
+                  parameters: [
+                    create_rest_param("args", type: "T.untyped"),
+                  ],
+                  return_type: constant_name
                 )
               when :first, :last, :take
                 create_common_method(

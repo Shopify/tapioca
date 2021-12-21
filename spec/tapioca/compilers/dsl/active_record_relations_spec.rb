@@ -93,6 +93,9 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped).returns(T.nilable(::Post)) }
             def find_by(*args); end
 
+            sig { params(args: T.untyped).returns(::Post) }
+            def find_by!(*args); end
+
             sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
             def find_or_create_by(attributes, &block); end
 
