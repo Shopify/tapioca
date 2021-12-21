@@ -76,7 +76,7 @@ module Tapioca
           root.create_path(constant) do |k|
             properties.values.each do |property|
               generate_methods_for_property(k, property) do |method_name|
-                !instance_methods.include?(method_name.to_sym)
+                !instance_methods.include?(method_name)
               end
             end
           end
