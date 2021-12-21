@@ -90,9 +90,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
             sig { params(args: T.untyped).returns(T.untyped) }
             def find(*args); end
 
-            sig { params(args: T.untyped).returns(T.untyped) }
-            def find(*args); end
-
             sig { params(args: T.untyped).returns(T.nilable(::Post)) }
             def find_by(*args); end
 
