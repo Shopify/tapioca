@@ -151,9 +151,14 @@ module Tapioca
 
         sig { params(mod: Module, helper: Module).returns(T::Boolean) }
         def includes_helper?(mod, helper)
-          superclass_ancestors = mod.superclass&.ancestors if Class === mod
-          superclass_ancestors ||= []
-          (mod.ancestors - superclass_ancestors).include?(helper)
+          superclass_ancestors = []
+
+          if Class === mod
+            superclass = superclass_of(mod)
+            superclass_ancestors = ancestors_of(superclass) if superclass
+          end
+
+          (ancestors_of(mod) - superclass_ancestors).any? { |ancestor| helper == ancestor }
         end
       end
     end
