@@ -34,6 +34,14 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(["AppGenerator", "NamedGenerator", "UnnamedGenerator"], gathered_constants)
     end
 
+    it("does not gather XPath") do
+      add_ruby_file("xpath.rb", <<~RUBY)
+        require "xpath"
+      RUBY
+
+      assert_empty(gathered_constants)
+    end
+
     it("ignores generator classes without a name") do
       add_ruby_file("content.rb", <<~RUBY)
         unnamed = Class.new(::Rails::Generators::Base)
