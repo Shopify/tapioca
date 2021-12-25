@@ -151,6 +151,22 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
         "SuperClass",
       ], gathered_constants)
     end
+
+    it("does not gather XPath") do
+      add_ruby_file("xpath.rb", <<~RUBY)
+        require "xpath"
+
+        class Application < Rails::Application
+        end
+      RUBY
+
+      assert_equal([
+        "ActionDispatch::IntegrationTest",
+        "ActionView::Helpers",
+        "GeneratedPathHelpersModule",
+        "GeneratedUrlHelpersModule",
+      ], gathered_constants)
+    end
   end
 
   describe("#decorate") do
