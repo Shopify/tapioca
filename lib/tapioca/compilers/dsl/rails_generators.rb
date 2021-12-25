@@ -64,12 +64,12 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def gather_constants
-          all_modules.select do |const|
+          all_classes.select do |const|
             name = qualified_name_of(const)
 
             name &&
               !name.match?(BUILT_IN_MATCHER) &&
-              const < ::Rails::Generators::Base
+              ::Rails::Generators::Base > const
           end
         end
 
