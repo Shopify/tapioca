@@ -35,4 +35,5 @@ group(:development, :test) do
   gem("config", require: false)
   gem("aasm", require: false)
   gem("bcrypt", require: false)
+  gem("xpath", require: false)
 end
