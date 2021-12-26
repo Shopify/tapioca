@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "spoom"
+require "set"
 
 module Tapioca
   module Compilers
@@ -17,9 +18,10 @@ module Tapioca
       def compile
         config = Spoom::Sorbet::Config.parse_file(@sorbet_path)
         files = collect_files(config)
+        names_in_project = Set.new(files.map { |file| File.basename(file, ".rb") })
         files.flat_map do |file|
           collect_requires(file).reject do |req|
-            name_in_project?(files, req)
+            names_in_project.include?(req)
           end
         end.sort.uniq.map do |name|
           "require \"#{name}\"\n"
@@ -82,13 +84,6 @@ module Tapioca
       sig { params(path: Pathname).returns(T::Array[String]) }
       def path_parts(path)
         T.unsafe(path).descend.map { |part| part.basename.to_s }
-      end
-
-      sig { params(files: T::Enumerable[String], name: String).returns(T::Boolean) }
-      def name_in_project?(files, name)
-        files.any? do |file|
-          File.basename(file, ".rb") == name
-        end
       end
     end
   end
