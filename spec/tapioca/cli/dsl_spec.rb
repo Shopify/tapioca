@@ -101,11 +101,15 @@ module Tapioca
             # Please instead update this file by running `bin/tapioca dsl Post`.
 
             class Post
-              sig { returns(T.nilable(::String)) }
-              def title; end
+              include SmartPropertiesGeneratedMethods
 
-              sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-              def title=(title); end
+              module SmartPropertiesGeneratedMethods
+                sig { returns(T.nilable(::String)) }
+                def title; end
+
+                sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                def title=(title); end
+              end
             end
           RBI
 
@@ -206,11 +210,15 @@ module Tapioca
             # Please instead update this file by running `bin/tapioca dsl Post`.
 
             class Post
-              sig { returns(T.nilable(::String)) }
-              def title; end
+              include SmartPropertiesGeneratedMethods
 
-              sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-              def title=(title); end
+              module SmartPropertiesGeneratedMethods
+                sig { returns(T.nilable(::String)) }
+                def title; end
+
+                sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                def title=(title); end
+              end
             end
           RBI
 
@@ -222,11 +230,15 @@ module Tapioca
             # Please instead update this file by running `bin/tapioca dsl Namespace::Comment`.
 
             class Namespace::Comment
-              sig { returns(::String) }
-              def body; end
+              include SmartPropertiesGeneratedMethods
 
-              sig { params(body: ::String).returns(::String) }
-              def body=(body); end
+              module SmartPropertiesGeneratedMethods
+                sig { returns(::String) }
+                def body; end
+
+                sig { params(body: ::String).returns(::String) }
+                def body=(body); end
+              end
             end
           RBI
 
@@ -277,11 +289,15 @@ module Tapioca
             # Please instead update this file by running `bin/tapioca dsl Foo::Role`.
 
             class Foo::Role
-              sig { returns(T.nilable(::String)) }
-              def title; end
+              include SmartPropertiesGeneratedMethods
 
-              sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-              def title=(title); end
+              module SmartPropertiesGeneratedMethods
+                sig { returns(T.nilable(::String)) }
+                def title; end
+
+                sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                def title=(title); end
+              end
             end
           RBI
 
@@ -428,11 +444,15 @@ module Tapioca
             # typed: true
 
             class Post
-              sig { returns(T.nilable(::String)) }
-              def title; end
+              include SmartPropertiesGeneratedMethods
 
-              sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-              def title=(title); end
+              module SmartPropertiesGeneratedMethods
+                sig { returns(T.nilable(::String)) }
+                def title; end
+
+                sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                def title=(title); end
+              end
             end
           RBI
         end
@@ -663,15 +683,18 @@ module Tapioca
             class Post
               include GeneratedBar
               include GeneratedFoo
-
-              sig { returns(T.nilable(::String)) }
-              def title; end
-
-              sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-              def title=(title); end
+              include SmartPropertiesGeneratedMethods
 
               module GeneratedBar; end
               module GeneratedFoo; end
+
+              module SmartPropertiesGeneratedMethods
+                sig { returns(T.nilable(::String)) }
+                def title; end
+
+                sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                def title=(title); end
+              end
             end
           RBI
 

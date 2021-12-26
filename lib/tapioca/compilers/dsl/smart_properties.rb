@@ -71,14 +71,15 @@ module Tapioca
           )
           return if properties.keys.empty?
 
-          instance_methods = constant.instance_methods(false).map(&:to_s).to_set
-
           root.create_path(constant) do |k|
-            properties.values.each do |property|
-              generate_methods_for_property(k, property) do |method_name|
-                !instance_methods.include?(method_name)
+            smart_properties_methods_name = "SmartPropertiesGeneratedMethods"
+            k.create_module(smart_properties_methods_name) do |mod|
+              properties.values.each do |property|
+                generate_methods_for_property(mod, property)
               end
             end
+
+            k.create_include(smart_properties_methods_name)
           end
         end
 
@@ -95,26 +96,21 @@ module Tapioca
 
         sig do
           params(
-            klass: RBI::Scope,
-            property: ::SmartProperties::Property,
-            block: T.proc.params(arg: String).returns(T::Boolean)
+            mod: RBI::Scope,
+            property: ::SmartProperties::Property
           ).void
         end
-        def generate_methods_for_property(klass, property, &block)
+        def generate_methods_for_property(mod, property)
           type = type_for(property)
 
           if property.writable?
             name = property.name.to_s
             method_name = "#{name}="
 
-            klass.create_method(
-              method_name,
-              parameters: [create_param(name, type: type)],
-              return_type: type
-            ) if block.call(method_name)
+            mod.create_method(method_name, parameters: [create_param(name, type: type)], return_type: type)
           end
 
-          klass.create_method(property.reader.to_s, return_type: type) if block.call(property.reader.to_s)
+          mod.create_method(property.reader.to_s, return_type: type)
         end
 
         BOOLEANS = T.let([

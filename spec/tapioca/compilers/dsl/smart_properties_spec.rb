@@ -83,11 +83,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::String)) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def title; end
+
+            sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -106,11 +110,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         module Viewable
-          sig { returns(T.nilable(::String)) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def title; end
+
+            sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -129,11 +137,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(::String) }
-          def description; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(description: ::String).returns(::String) }
-          def description=(description); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(::String) }
+            def description; end
+
+            sig { params(description: ::String).returns(::String) }
+            def description=(description); end
+          end
         end
       RBI
 
@@ -152,11 +164,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.untyped) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.untyped).returns(T.untyped) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.untyped) }
+            def title; end
+
+            sig { params(title: T.untyped).returns(T.untyped) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -175,11 +191,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(T::Array[T.untyped])) }
-          def categories; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(categories: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
-          def categories=(categories); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(T::Array[T.untyped])) }
+            def categories; end
+
+            sig { params(categories: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+            def categories=(categories); end
+          end
         end
       RBI
 
@@ -198,11 +218,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(T::Boolean)) }
-          def published; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def published=(published); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(T::Boolean)) }
+            def published; end
+
+            sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+            def published=(published); end
+          end
         end
       RBI
 
@@ -221,11 +245,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(T.any(::String, ::Integer))) }
-          def status; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(status: T.nilable(T.any(::String, ::Integer))).returns(T.nilable(T.any(::String, ::Integer))) }
-          def status=(status); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(T.any(::String, ::Integer))) }
+            def status; end
+
+            sig { params(status: T.nilable(T.any(::String, ::Integer))).returns(T.nilable(T.any(::String, ::Integer))) }
+            def status=(status); end
+          end
         end
       RBI
 
@@ -244,11 +272,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.untyped) }
-          def status; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(status: T.untyped).returns(T.untyped) }
-          def status=(status); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.untyped) }
+            def status; end
+
+            sig { params(status: T.untyped).returns(T.untyped) }
+            def status=(status); end
+          end
         end
       RBI
 
@@ -267,11 +299,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::Integer)) }
-          def status; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
-          def status=(status); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::Integer)) }
+            def status; end
+
+            sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+            def status=(status); end
+          end
         end
       RBI
 
@@ -290,11 +326,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.untyped) }
-          def status; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(status: T.untyped).returns(T.untyped) }
-          def status=(status); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.untyped) }
+            def status; end
+
+            sig { params(status: T.untyped).returns(T.untyped) }
+            def status=(status); end
+          end
         end
       RBI
 
@@ -313,11 +353,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::Integer)) }
-          def reader_for_status; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
-          def status=(status); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::Integer)) }
+            def reader_for_status; end
+
+            sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+            def status=(status); end
+          end
         end
       RBI
 
@@ -336,11 +380,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(T::Boolean)) }
-          def enabled; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def enabled=(enabled); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(T::Boolean)) }
+            def enabled; end
+
+            sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+            def enabled=(enabled); end
+          end
         end
       RBI
 
@@ -359,11 +407,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(T::Boolean)) }
-          def enabled; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def enabled=(enabled); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(T::Boolean)) }
+            def enabled; end
+
+            sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+            def enabled=(enabled); end
+          end
         end
       RBI
 
@@ -382,11 +434,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::String)) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def title; end
+
+            sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -405,11 +461,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::String)) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def title; end
+
+            sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -428,11 +488,62 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.untyped) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.untyped).returns(T.untyped) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.untyped) }
+            def title; end
+
+            sig { params(title: T.untyped).returns(T.untyped) }
+            def title=(title); end
+          end
+        end
+      RBI
+
+      assert_equal(expected, rbi_for(:Post))
+    end
+
+    it("generates smart properties that have been overriden") do
+      add_ruby_file("post.rb", <<~RUBY)
+        class Post
+          include SmartProperties
+          property :title, accepts: String
+          property :body, accepts: String
+
+          protected :body
+
+          def body
+            "body"
+          end
+
+          def title
+            "title"
+          end
+
+          def title=
+          end
+        end
+      RUBY
+
+      expected = <<~RBI
+        # typed: strong
+
+        class Post
+          include SmartPropertiesGeneratedMethods
+
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def body; end
+
+            sig { params(body: T.nilable(::String)).returns(T.nilable(::String)) }
+            def body=(body); end
+
+            sig { returns(T.nilable(::String)) }
+            def title; end
+
+            sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -460,11 +571,15 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post
-          sig { returns(T.nilable(::Post::TrackingInfoInput)) }
-          def title; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(title: T.nilable(::Post::TrackingInfoInput)).returns(T.nilable(::Post::TrackingInfoInput)) }
-          def title=(title); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::Post::TrackingInfoInput)) }
+            def title; end
+
+            sig { params(title: T.nilable(::Post::TrackingInfoInput)).returns(T.nilable(::Post::TrackingInfoInput)) }
+            def title=(title); end
+          end
         end
       RBI
 
@@ -474,23 +589,27 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
         # typed: strong
 
         class Post::TrackingInfoInput
-          sig { returns(T.nilable(::String)) }
-          def carrier_id; end
+          include SmartPropertiesGeneratedMethods
 
-          sig { params(carrier_id: T.nilable(::String)).returns(T.nilable(::String)) }
-          def carrier_id=(carrier_id); end
+          module SmartPropertiesGeneratedMethods
+            sig { returns(T.nilable(::String)) }
+            def carrier_id; end
 
-          sig { returns(::String) }
-          def number; end
+            sig { params(carrier_id: T.nilable(::String)).returns(T.nilable(::String)) }
+            def carrier_id=(carrier_id); end
 
-          sig { params(number: ::String).returns(::String) }
-          def number=(number); end
+            sig { returns(::String) }
+            def number; end
 
-          sig { returns(T.nilable(::String)) }
-          def url; end
+            sig { params(number: ::String).returns(::String) }
+            def number=(number); end
 
-          sig { params(url: T.nilable(::String)).returns(T.nilable(::String)) }
-          def url=(url); end
+            sig { returns(T.nilable(::String)) }
+            def url; end
+
+            sig { params(url: T.nilable(::String)).returns(T.nilable(::String)) }
+            def url=(url); end
+          end
         end
       RBI
 
