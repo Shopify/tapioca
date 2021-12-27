@@ -50,13 +50,28 @@ module Tapioca
       write("sorbet/config", contents, append: append)
     end
 
+    sig { returns(String) }
+    def bundler_version
+      @bundler_version || Bundler::VERSION
+    end
+
+    sig { void }
+    def reset_bundler_version
+      return unless @bundler_version
+
+      bundle_install
+    end
+
     # Run `bundle install` in this project context (unbundled env)
-    sig { returns([String, String, T::Boolean]) }
-    def bundle_install
+    sig { params(version: T.nilable(String)).returns([String, String, T::Boolean]) }
+    def bundle_install(version: nil)
+      @bundler_version = T.let(version, T.nilable(String))
+
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
-        out, err, status = Open3.capture3("bundle", "install", opts)
+        Gem.install("bundler", bundler_version)
+        out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "install"].join(" "), opts)
         [out, err, T.must(status.success?)]
       end
     end
@@ -67,7 +82,7 @@ module Tapioca
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
-        out, err, status = Open3.capture3(["bundle", "exec", command].join(" "), opts)
+        out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
         [out, err, T.must(status.success?)]
       end
     end

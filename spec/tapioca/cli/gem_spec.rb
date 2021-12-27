@@ -91,6 +91,10 @@ module Tapioca
         @project.bundle_install
       end
 
+      before(:each) do
+        @project.reset_bundler_version
+      end
+
       describe("flags") do
         it "must show an error if --all is supplied with arguments" do
           out, err, status = @project.tapioca("gem --all foo")
@@ -561,6 +565,26 @@ module Tapioca
           refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
 
           assert_empty(err)
+          assert(status)
+        end
+
+        it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
+          @project.gemfile(<<~GEMFILE, append: true)
+            gem "minitest"
+
+            platform :truffleruby do
+              gem "minitest-excludes"
+            end
+          GEMFILE
+
+          @project.bundle_install(version: "2.2.22")
+
+          out, _, status = @project.tapioca("gem --all")
+
+          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
+          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+
+          # StdErr will have some messages about incompatibilities, so we don't check for clean err
           assert(status)
         end
 
