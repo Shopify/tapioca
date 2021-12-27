@@ -163,6 +163,34 @@ module Tapioca
             require "libd"
           REQ
         end
+
+        it("it handles ruby source files with encodings other than UTF-8") do
+          @project.sorbet_config(<<~CONFIG)
+            .
+          CONFIG
+
+          @project.write("lib/utf8-ascii-only.rb", <<~RB)
+            require "a"
+          RB
+
+          @project.write("lib/utf8.rb", <<~RB)
+            require "b" # やあ
+          RB
+
+          @project.write("lib/win-31j.rb", (<<~RB).encode("Windows-31J"))
+            # encoding:Windows-31J
+
+            require "b"
+            require "c" # やあ
+          RB
+
+          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          assert_equal(<<~REQ, compiler.compile)
+            require "a"
+            require "b"
+            require "c"
+          REQ
+        end
       end
     end
   end
