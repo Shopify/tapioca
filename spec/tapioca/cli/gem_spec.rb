@@ -562,10 +562,8 @@ module Tapioca
 
         it "must not generate RBIs for missing gem specs" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem "minitest"
-
-            platform :truffleruby do
-              gem "minitest-excludes"
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
             end
           GEMFILE
 
@@ -573,8 +571,8 @@ module Tapioca
 
           out, err, status = @project.tapioca("gem --all")
 
-          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
-          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+          assert_includes(out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(out, "Compiled ruby2_keywords")
 
           assert_empty(err)
           assert(status)
@@ -582,10 +580,8 @@ module Tapioca
 
         it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem "minitest"
-
-            platform :truffleruby do
-              gem "minitest-excludes"
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
             end
           GEMFILE
 
@@ -593,8 +589,8 @@ module Tapioca
 
           out, _, status = @project.tapioca("gem --all")
 
-          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
-          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+          assert_includes(out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(out, "Compiled ruby2_keywords")
 
           # StdErr will have some messages about incompatibilities, so we don't check for clean err
           assert(status)
