@@ -119,7 +119,7 @@ module Tapioca
           # `Bundler::RemoteSpecification` delegates missing methods to
           # `Gem::Specification`, so `files` actually always exists on spec.
           T.unsafe(@spec).files.map do |file|
-            ruby_lib_dir.join(file)
+            resolve_to_ruby_lib_dir(file)
           end
         else
           @spec.full_require_paths.flat_map do |path|
@@ -181,9 +181,29 @@ module Tapioca
         @spec.respond_to?(:default_gem?) && @spec.default_gem?
       end
 
-      sig { returns(Pathname) }
-      def ruby_lib_dir
-        Pathname.new(RbConfig::CONFIG["rubylibdir"])
+      sig { returns(Regexp) }
+      def require_paths_prefix_matcher
+        @require_paths_prefix_matcher = T.let(@require_paths_prefix_matcher, T.nilable(Regexp))
+
+        @require_paths_prefix_matcher ||= begin
+          require_paths = T.unsafe(@spec).require_paths
+          prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
+          Regexp.union(prefix_matchers)
+        end
+      end
+
+      sig { params(file: String).returns(Pathname) }
+      def resolve_to_ruby_lib_dir(file)
+        # We want to match require prefixes but fallback to an empty match
+        # if none of the require prefixes actually match. This is so that
+        # we can always replace the match with the Ruby lib directory and
+        # we would have properly resolved the file under the Ruby lib dir.
+        prefix_matcher = Regexp.union(require_paths_prefix_matcher, //)
+
+        ruby_lib_dir = RbConfig::CONFIG["rubylibdir"]
+        file = file.sub(prefix_matcher, "#{ruby_lib_dir}/")
+
+        Pathname.new(file).expand_path
       end
 
       sig { returns(String) }
