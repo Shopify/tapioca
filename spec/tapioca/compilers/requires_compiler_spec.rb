@@ -98,6 +98,29 @@ module Tapioca
           REQ
         end
 
+        it("it ignores requires with interpolation") do
+          @project.sorbet_config(<<~CONFIG)
+            .
+          CONFIG
+
+          @project.write("lib/file1.rb", <<~'RB')
+            require "a"
+            require "#{ENV["SOMETHING"]}"
+          RB
+
+          @project.write("lib/file2.rb", <<~'RB')
+            require "b"
+            require "a"
+            require "lib-#{1 + 2}"
+          RB
+
+          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          assert_equal(<<~REQ, compiler.compile)
+            require "a"
+            require "b"
+          REQ
+        end
+
         it("it ignores files ignored in the sorbet config") do
           @project.sorbet_config(<<~CONFIG)
             .

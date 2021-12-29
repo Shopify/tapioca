@@ -48,6 +48,7 @@ module Tapioca
         File.read(file_path).lines.map do |line|
           /^\s*require\s*(\(\s*)?['"](?<name>[^'"]+)['"](\s*\))?/.match(line) { |m| m["name"] }
         end.compact
+          .reject { |require| require.include?('#{') } # ignore interpolation
       end
 
       sig { params(config: Spoom::Sorbet::Config, file_path: Pathname).returns(T::Boolean) }
