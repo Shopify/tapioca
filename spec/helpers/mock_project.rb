@@ -40,7 +40,7 @@ module Tapioca
       <<~GEMFILE
         source("https://rubygems.org")
 
-        gem "tapioca", path: "#{TAPIOCA_PATH}"
+        gemspec name: "tapioca", path: "#{TAPIOCA_PATH}"
       GEMFILE
     end
 
