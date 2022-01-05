@@ -576,9 +576,9 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # inject_into_class "app/controllers/application_controller.rb", ApplicationController, "  filter_parameter :password\n"
+  # inject_into_class "app/controllers/application_controller.rb", "ApplicationController", "  filter_parameter :password\n"
   #
-  # inject_into_class "app/controllers/application_controller.rb", ApplicationController do
+  # inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
   # "  filter_parameter :password\n"
   # end
   def inject_into_class(path, klass, *args, &block); end
@@ -596,9 +596,9 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # inject_into_module "app/helpers/application_helper.rb", ApplicationHelper, "  def help; 'help'; end\n"
+  # inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper", "  def help; 'help'; end\n"
   #
-  # inject_into_module "app/helpers/application_helper.rb", ApplicationHelper do
+  # inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper" do
   # "  def help; 'help'; end\n"
   # end
   def inject_into_module(path, module_name, *args, &block); end
@@ -609,6 +609,8 @@ module Thor::Actions
   # is given it's referenced from the current root. The full path is yielded
   # to the block you provide. The path is set back to the previous path when
   # the method exits.
+  #
+  # Returns the value yielded by the block.
   #
   # ==== Parameters
   # dir<String>:: the directory to move to.
@@ -1590,6 +1592,7 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
   def [](key); end
   def []=(key, value); end
   def delete(key); end
+  def except(*keys); end
   def fetch(key, *args); end
   def key?(key); end
   def merge(other); end
@@ -2051,6 +2054,8 @@ class Thor::Options < ::Thor::Arguments
   def parse(args); end
   def peek; end
   def remaining; end
+  def shift; end
+  def unshift(arg, is_value: T.unsafe(nil)); end
 
   protected
 
@@ -2145,6 +2150,7 @@ module Thor::Shell
   def print_table(*args, &block); end
   def print_wrapped(*args, &block); end
   def say(*args, &block); end
+  def say_error(*args, &block); end
   def say_status(*args, &block); end
   def set_color(*args, &block); end
 
@@ -2276,6 +2282,14 @@ class Thor::Shell::Basic
   # ==== Example
   # say("I know you knew that.")
   def say(message = T.unsafe(nil), color = T.unsafe(nil), force_new_line = T.unsafe(nil)); end
+
+  # Say (print) an error to the user. If the sentence ends with a whitespace
+  # or tab character, a new line is not appended (print + flush). Otherwise
+  # are passed straight to puts (behavior got from Highline).
+  #
+  # ==== Example
+  # say_error("error: something went wrong")
+  def say_error(message = T.unsafe(nil), color = T.unsafe(nil), force_new_line = T.unsafe(nil)); end
 
   # Say a status with the given color and appends the message. Since this
   # method is used frequently by actions, it allows nil or false to be given

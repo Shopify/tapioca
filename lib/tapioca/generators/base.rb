@@ -11,8 +11,8 @@ module Tapioca
         include Thor::Actions
       end
 
-      include CliHelper
       include Thor::Base
+      include CliHelper
 
       abstract!
 
