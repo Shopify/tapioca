@@ -91,6 +91,10 @@ module Tapioca
         @project.bundle_install
       end
 
+      before(:each) do
+        @project.reset_bundler_version
+      end
+
       describe("flags") do
         it "must show an error if --all is supplied with arguments" do
           out, err, status = @project.tapioca("gem --all foo")
@@ -564,18 +568,40 @@ module Tapioca
           assert(status)
         end
 
+        it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
+          @project.gemfile(<<~GEMFILE, append: true)
+            gem "minitest"
+
+            platform :truffleruby do
+              gem "minitest-excludes"
+            end
+          GEMFILE
+
+          @project.bundle_install(version: "2.2.22")
+
+          out, _, status = @project.tapioca("gem --all")
+
+          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
+          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+
+          # StdErr will have some messages about incompatibilities, so we don't check for clean err
+          assert(status)
+        end
+
         it "must generate git gem RBIs with source revision numbers" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem("ast", git: "https://github.com/whitequark/ast", ref: "e07a4f66e05ac7972643a8841e336d327ea78ae1")
+            gem("faraday", git: "https://github.com/lostisland/faraday", ref: "23e249563613971ced8f851230c46b9eeeefe931")
           GEMFILE
 
           @project.bundle_install
 
-          out, err, status = @project.tapioca("gem ast")
+          out, err, status = @project.tapioca("gem faraday")
 
-          assert_includes(out, "Compiled ast")
+          assert_includes(out, "Compiled faraday")
 
-          assert_project_file_exist("sorbet/rbi/gems/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
+          assert_project_file_exist(
+            "sorbet/rbi/gems/faraday@2.0.0.alpha.pre.4-23e249563613971ced8f851230c46b9eeeefe931.rbi"
+          )
 
           assert_empty(err)
           assert(status)
