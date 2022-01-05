@@ -12,15 +12,16 @@ module Tapioca
 
     sig { params(message: String, color: T.any(Symbol, T::Array[Symbol])).void }
     def say_error(message = "", *color)
-      force_new_line = (message.to_s !~ /( |\t)\Z/)
-      # NOTE: This is a hack. We're no longer subclassing from Thor::Shell::Color
-      # so we no longer have access to the prepare_message call.
-      # We should update this to remove this.
-      buffer = shell.send(:prepare_message, *T.unsafe([message, *T.unsafe(color)]))
-      buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
-
-      $stderr.print(buffer)
-      $stderr.flush
+      # Thor has its own `say_error` now, but it has two problems:
+      # 1. it adds the padding around all the messages, even if they continue on
+      #    the same line, and
+      # 2. it accepts a last parameter which breaks the ability to pass color values
+      #    as splats.
+      #
+      # So we implement our own version here to work around those problems.
+      shell.indent(-shell.padding) do
+        super(message, color)
+      end
     end
   end
 end
