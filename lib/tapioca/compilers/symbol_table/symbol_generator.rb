@@ -496,7 +496,9 @@ module Tapioca
           sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
             fallback_arg_name = "_arg#{index}"
 
-            unless name
+            name = if name
+              name.to_s
+            else
               # For attr_writer methods, Sorbet signatures have the name
               # of the method (without the trailing = sign) as the name of
               # the only parameter. So, if the parameter does not have a name
@@ -512,15 +514,15 @@ module Tapioca
                 method_name[-1] == "="
               )
 
-              name = if writer_method_with_sig
-                T.must(method_name[0...-1]).to_sym
+              if writer_method_with_sig
+                method_name.delete_suffix("=")
               else
                 fallback_arg_name
               end
             end
 
             # Sanitize param names
-            name = name.to_s.gsub(/[^a-zA-Z0-9_]/, fallback_arg_name)
+            name = fallback_arg_name unless valid_parameter_name?(name)
 
             [type, name]
           end
@@ -622,6 +624,11 @@ module Tapioca
         def valid_method_name?(name)
           return true if SPECIAL_METHOD_NAMES.include?(name)
           !!name.match(/^[[:word:]]+[?!=]?$/)
+        end
+
+        sig { params(name: String).returns(T::Boolean) }
+        def valid_parameter_name?(name)
+          name.match?(/^[[[:alnum:]]_]+$/)
         end
 
         sig { params(method: UnboundMethod).returns(T::Boolean) }

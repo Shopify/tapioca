@@ -136,11 +136,13 @@ module Tapioca
           method_def = signature.nil? ? method_def : signature.method
           method_types = parameters_types_from_signature(method_def, signature)
 
-          method_def.parameters.each_with_index.map do |(type, name), index|
+          parameters = T.let(method_def.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+
+          parameters.each_with_index.map do |(type, name), index|
             fallback_arg_name = "_arg#{index}"
 
-            name ||= fallback_arg_name
-            name = name.to_s.gsub(/&|\*/, fallback_arg_name) # avoid incorrect names from `delegate`
+            name = name ? name.to_s : fallback_arg_name
+            name = fallback_arg_name unless valid_parameter_name?(name)
             method_type = T.must(method_types[index])
 
             case type
@@ -172,6 +174,11 @@ module Tapioca
           # Map <NOT-TYPED> to `T.untyped`
           return_type = "T.untyped" if return_type == "<NOT-TYPED>"
           return_type
+        end
+
+        sig { params(name: String).returns(T::Boolean) }
+        def valid_parameter_name?(name)
+          name.match?(/^[[[:alnum:]]_]+$/)
         end
       end
     end
