@@ -99,6 +99,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :full_gem_path, :version
 
+      sig { returns(T::Array[Pathname]) }
+      attr_reader :files
+
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
@@ -106,26 +109,12 @@ module Tapioca
         @full_gem_path = T.let(real_gem_path, String)
         @version = T.let(version_string, String)
         @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
+        @files = T.let(collect_files, T::Array[Pathname])
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
       def ignore?(gemfile_dir)
         gem_ignored? || gem_in_app_dir?(gemfile_dir)
-      end
-
-      sig { returns(T::Array[Pathname]) }
-      def files
-        if default_gem?
-          # `Bundler::RemoteSpecification` delegates missing methods to
-          # `Gem::Specification`, so `files` actually always exists on spec.
-          T.unsafe(@spec).files.map do |file|
-            resolve_to_ruby_lib_dir(file)
-          end
-        else
-          @spec.full_require_paths.flat_map do |path|
-            Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
-          end
-        end
       end
 
       sig { returns(String) }
@@ -176,7 +165,22 @@ module Tapioca
 
       private
 
-      sig { returns(T::Boolean) }
+      sig { returns(T::Array[Pathname]) }
+      def collect_files
+        if default_gem?
+          # `Bundler::RemoteSpecification` delegates missing methods to
+          # `Gem::Specification`, so `files` actually always exists on spec.
+          T.unsafe(@spec).files.map do |file|
+            resolve_to_ruby_lib_dir(file)
+          end
+        else
+          @spec.full_require_paths.flat_map do |path|
+            Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
+          end
+        end
+      end
+
+      sig { returns(T.nilable(T::Boolean)) }
       def default_gem?
         @spec.respond_to?(:default_gem?) && @spec.default_gem?
       end

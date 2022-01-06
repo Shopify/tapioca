@@ -150,5 +150,10 @@ module Tapioca
     def full_gem_path
       @rel_path
     end
+
+    sig { returns(T::Array[String]) }
+    def full_require_paths
+      []
+    end
   end
 end
