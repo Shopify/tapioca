@@ -99,6 +99,9 @@ module Tapioca
       sig { returns(String) }
       attr_reader :full_gem_path, :version
 
+      sig { returns(T::Array[Pathname]) }
+      attr_reader :files
+
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
@@ -106,26 +109,12 @@ module Tapioca
         @full_gem_path = T.let(real_gem_path, String)
         @version = T.let(version_string, String)
         @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
+        @files = T.let(collect_files, T::Array[Pathname])
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
       def ignore?(gemfile_dir)
         gem_ignored? || gem_in_app_dir?(gemfile_dir)
-      end
-
-      sig { returns(T::Array[Pathname]) }
-      def files
-        if default_gem?
-          # `Bundler::RemoteSpecification` delegates missing methods to
-          # `Gem::Specification`, so `files` actually always exists on spec.
-          T.unsafe(@spec).files.map do |file|
-            ruby_lib_dir.join(file)
-          end
-        else
-          @spec.full_require_paths.flat_map do |path|
-            Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
-          end
-        end
       end
 
       sig { returns(String) }
@@ -176,14 +165,49 @@ module Tapioca
 
       private
 
-      sig { returns(T::Boolean) }
+      sig { returns(T::Array[Pathname]) }
+      def collect_files
+        if default_gem?
+          # `Bundler::RemoteSpecification` delegates missing methods to
+          # `Gem::Specification`, so `files` actually always exists on spec.
+          T.unsafe(@spec).files.map do |file|
+            resolve_to_ruby_lib_dir(file)
+          end
+        else
+          @spec.full_require_paths.flat_map do |path|
+            Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
+          end
+        end
+      end
+
+      sig { returns(T.nilable(T::Boolean)) }
       def default_gem?
         @spec.respond_to?(:default_gem?) && @spec.default_gem?
       end
 
-      sig { returns(Pathname) }
-      def ruby_lib_dir
-        Pathname.new(RbConfig::CONFIG["rubylibdir"])
+      sig { returns(Regexp) }
+      def require_paths_prefix_matcher
+        @require_paths_prefix_matcher = T.let(@require_paths_prefix_matcher, T.nilable(Regexp))
+
+        @require_paths_prefix_matcher ||= begin
+          require_paths = T.unsafe(@spec).require_paths
+          prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
+          Regexp.union(prefix_matchers)
+        end
+      end
+
+      sig { params(file: String).returns(Pathname) }
+      def resolve_to_ruby_lib_dir(file)
+        # We want to match require prefixes but fallback to an empty match
+        # if none of the require prefixes actually match. This is so that
+        # we can always replace the match with the Ruby lib directory and
+        # we would have properly resolved the file under the Ruby lib dir.
+        prefix_matcher = Regexp.union(require_paths_prefix_matcher, //)
+
+        ruby_lib_dir = RbConfig::CONFIG["rubylibdir"]
+        file = file.sub(prefix_matcher, "#{ruby_lib_dir}/")
+
+        Pathname.new(file).expand_path
       end
 
       sig { returns(String) }
