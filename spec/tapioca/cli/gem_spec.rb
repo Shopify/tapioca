@@ -172,17 +172,29 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          @project.require_real_gem("did_you_mean", "= 1.5.0")
+          gem_name = "ostruct"
+          gem_top_level_constant = "class OpenStruct"
+
+          # `default_stubs` is a private method on Ruby 2.6
+          gem_spec = Gem::Specification.send(:default_stubs, "*.gemspec").find do |spec|
+            spec.name == gem_name && spec.default_gem?
+          end
+          assert(gem_spec, "Cannot find default '#{gem_name}' gem")
+
+          gem_version = gem_spec.version.to_s
+
+          @project.require_real_gem(gem_name, gem_version)
           @project.bundle_install
 
-          out, err, status = @project.tapioca("gem did_you_mean")
+          out, err, status = @project.tapioca("gem #{gem_name}")
 
           assert_includes(out, <<~OUT)
-            Compiled did_you_mean
-                  create  sorbet/rbi/gems/did_you_mean@1.5.0.rbi
+            Compiled #{gem_name}
+                  create  sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi
           OUT
 
-          assert_includes(@project.read("sorbet/rbi/gems/did_you_mean@1.5.0.rbi"), "module DidYouMean")
+          rbi_contents = @project.read("sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi")
+          assert_includes(rbi_contents, gem_top_level_constant)
 
           assert_empty(err)
           assert(status)
@@ -550,10 +562,8 @@ module Tapioca
 
         it "must not generate RBIs for missing gem specs" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem "minitest"
-
-            platform :truffleruby do
-              gem "minitest-excludes"
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
             end
           GEMFILE
 
@@ -561,8 +571,8 @@ module Tapioca
 
           out, err, status = @project.tapioca("gem --all")
 
-          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
-          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+          assert_includes(out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(out, "Compiled ruby2_keywords")
 
           assert_empty(err)
           assert(status)
@@ -570,10 +580,8 @@ module Tapioca
 
         it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
           @project.gemfile(<<~GEMFILE, append: true)
-            gem "minitest"
-
-            platform :truffleruby do
-              gem "minitest-excludes"
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
             end
           GEMFILE
 
@@ -581,8 +589,8 @@ module Tapioca
 
           out, _, status = @project.tapioca("gem --all")
 
-          assert_includes(out, "completed with missing specs: minitest-excludes (2.0.1)")
-          refute_includes(out, "Compiling minitest-excludes, this may take a few seconds")
+          assert_includes(out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(out, "Compiled ruby2_keywords")
 
           # StdErr will have some messages about incompatibilities, so we don't check for clean err
           assert(status)
