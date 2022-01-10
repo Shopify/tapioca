@@ -2725,8 +2725,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           extend T::Sig
           extend T::Generic
           Elem = type_member
-
-          interface!
+          abstract!
 
           sig { abstract.returns(T::Array[Node[Elem]]) }
           def children; end
@@ -2735,10 +2734,14 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def abstract_but_not_overridden_children; end
 
           sig { returns(T::Array[Node[Elem]]) }
-          def non_abstract_children; end
+          def non_abstract_children
+            []
+          end
 
           sig { returns(T::Array[Node[Elem]]) }
-          def non_abstract_but_overriden_children; end
+          def non_abstract_but_overriden_children
+            []
+          end
         end
 
         module Node
@@ -2748,21 +2751,21 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           Elem = type_member
         end
 
-        class OtherRoot < T::Struct
+        class OtherRoot
           include ::Root
-
           extend T::Sig
           extend T::Generic
-
           Elem = type_member(fixed: Integer)
 
           sig { override.returns(T::Array[Node[Integer]]) }
           def children
-            children
+            []
           end
 
           sig { returns(T::Array[Node[Integer]]) }
-          def non_abstract_but_overriden_children; end
+          def non_abstract_but_overriden_children
+            []
+          end
         end
       RUBY
 
@@ -2773,7 +2776,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           Elem = type_member
         end
 
-        class OtherRoot < ::T::Struct
+        class OtherRoot
           extend T::Generic
           include ::Root
 
@@ -2781,16 +2784,12 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           def children(*args, &blk); end
           def non_abstract_but_overriden_children(*args, &blk); end
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         module Root
           extend T::Generic
 
-          interface!
+          abstract!
 
           Elem = type_member
 
