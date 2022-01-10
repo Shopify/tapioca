@@ -109,6 +109,17 @@ module Tapioca
         # Let's set the `name` method to return the proper generic name
         generic_type.define_singleton_method(:name) { name }
 
+        # We need to define a `<=` method on the cloned constant, so that Sorbet
+        # can do covariance/contravariance checks on the type variables.
+        #
+        # Normally, we would be doing proper covariance/contravariance checks here, but
+        # that is not necessary, since we are not implementing a runtime type checker
+        # here. It is just enough for the checks to pass, so that we can serialize the
+        # signatures, assuming the sigs were well-formed.
+        #
+        # So we act like all subtype checks pass.
+        generic_type.define_singleton_method(:<=) { |_| true }
+
         # Return the generic type we created
         generic_type
       end
