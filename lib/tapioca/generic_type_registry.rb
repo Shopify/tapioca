@@ -23,7 +23,7 @@ module Tapioca
     TypeVariable = T.type_alias { T.any(TypeMember, TypeTemplate) }
     @generic_instances = T.let(
       {},
-      T::Hash[String, Module]
+      T::Hash[T::Array[T.untyped], Module]
     )
 
     @type_variables = T.let(
@@ -45,19 +45,14 @@ module Tapioca
       # 2 hash lookups (for the other two `Foo[Integer]`s).
       #
       # This method returns the created or cached clone of the constant.
-      sig { params(constant: T.untyped, types: T.untyped).returns(Module) }
+      sig { params(constant: T.untyped, types: T::Array[T.untyped]).returns(Module) }
       def register_type(constant, types)
-        # Build the name of the instantiated generic type,
-        # something like `"Foo[X, Y, Z]"`
-        type_list = types.map { |type| T::Utils.coerce(type).name }.join(", ")
-        name = "#{Reflection.name_of(constant)}[#{type_list}]"
-
         # Create a generic type with an overridden `name`
         # method that returns the name we constructed above.
         #
         # Also, we try to memoize the generic type based on the name, so that
         # we don't have to keep recreating them all the time.
-        @generic_instances[name] ||= create_generic_type(constant, name)
+        @generic_instances[types] ||= create_generic_type(constant, types)
       end
 
       sig { params(constant: Module).returns(T.nilable(T::Hash[TypeVariable, String])) }
@@ -88,8 +83,8 @@ module Tapioca
 
       private
 
-      sig { params(constant: Module, name: String).returns(Module) }
-      def create_generic_type(constant, name)
+      sig { params(constant: Module, types: T::Array[T.untyped]).returns(Module) }
+      def create_generic_type(constant, types)
         generic_type = case constant
         when Class
           # For classes, we want to create a subclass, so that an instance of
@@ -106,8 +101,14 @@ module Tapioca
           constant.clone
         end
 
+        constant_name = Reflection.name_of(constant)
         # Let's set the `name` method to return the proper generic name
-        generic_type.define_singleton_method(:name) { name }
+        generic_type.define_singleton_method(:name) do
+          type_names = types.map { |type| T::Utils.coerce(type).name }
+          type_list = type_names.join(", ")
+
+          "#{constant_name}[#{type_list}]"
+        end
 
         # We need to define a `<=` method on the cloned constant, so that Sorbet
         # can do covariance/contravariance checks on the type variables.
