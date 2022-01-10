@@ -2762,7 +2762,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             []
           end
 
-          sig { returns(T::Array[Node[Integer]]) }
+          sig { override.returns(T::Array[Node[Integer]]) }
           def non_abstract_but_overriden_children
             []
           end
@@ -2782,8 +2782,11 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           Elem = type_member(fixed: Integer)
 
-          def children(*args, &blk); end
-          def non_abstract_but_overriden_children(*args, &blk); end
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def children; end
+
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def non_abstract_but_overriden_children; end
         end
 
         module Root
