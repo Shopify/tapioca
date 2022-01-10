@@ -150,7 +150,7 @@ GEM
       dedup
     globalid (1.0.0)
       activesupport (>= 5.0)
-    google-protobuf (3.19.1)
+    google-protobuf (3.19.2)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     identity_cache (1.1.0)
