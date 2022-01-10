@@ -192,14 +192,14 @@ For example, if you always want to generate gem RBIs with inline documentation, 
 
 ```yaml
 gem:
-  docs: true
+  doc: true
 ```
 
 Additionally, if you always want to exclude the `AASM` and `ActiveRecordFixtures` DSL compilers in your DSL RBI generation runs, your config file would then look like this:
 
 ```yaml
 gem:
-  docs: true
+  doc: true
 dsl:
   exclude:
   - UrlHelpers
