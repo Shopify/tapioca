@@ -171,7 +171,7 @@ module Tapioca
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_module(tree, name, constant)
           return unless defined_in_gem?(constant, strict: false)
-          return if Tapioca::TypeVariable === constant
+          return if Tapioca::TypeVariableModule === constant
 
           comments = documentation_comments(name)
           scope =

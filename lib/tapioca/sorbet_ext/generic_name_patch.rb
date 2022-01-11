@@ -23,8 +23,8 @@ module T
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        Tapioca::TypeVariable.new(
-          Tapioca::TypeVariable::Type::Member,
+        Tapioca::TypeVariableModule.new(
+          Tapioca::TypeVariableModule::Type::Member,
           variance,
           fixed,
           lower,
@@ -37,8 +37,8 @@ module T
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        Tapioca::TypeVariable.new(
-          Tapioca::TypeVariable::Type::Template,
+        Tapioca::TypeVariableModule.new(
+          Tapioca::TypeVariableModule::Type::Template,
           variance,
           fixed,
           lower,
@@ -60,7 +60,7 @@ module T
           # `Simple` type. We want to always make type variable types valid, so we
           # need to explicitly check that `raw_type` is a `Tapioca::TypeVariable`
           # and return `true`
-          if defined?(Tapioca::TypeVariable) && Tapioca::TypeVariable === @raw_type
+          if defined?(Tapioca::TypeVariableModule) && Tapioca::TypeVariableModule === @raw_type
             return true
           end
 
@@ -94,7 +94,7 @@ module Tapioca
   # get bound to the constant names they are assigned to by Ruby. As a result, we don't
   # need to do any matching of constants to type variables to bind their names, Ruby will
   # do that automatically for us and we get the `name` method for free from `Module`.
-  class TypeVariable < Module
+  class TypeVariableModule < Module
     extend T::Sig
 
     class Type < T::Enum

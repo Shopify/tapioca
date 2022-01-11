@@ -27,7 +27,7 @@ module Tapioca
 
     @type_variables = T.let(
       {}.compare_by_identity,
-      T::Hash[Module, T::Hash[TypeVariable, String]]
+      T::Hash[Module, T::Hash[TypeVariableModule, String]]
     )
 
     class << self
@@ -59,7 +59,7 @@ module Tapioca
         @generic_instances[name] ||= create_generic_type(constant, name)
       end
 
-      sig { params(constant: Module).returns(T.nilable(T::Hash[TypeVariable, String])) }
+      sig { params(constant: Module).returns(T.nilable(T::Hash[TypeVariableModule, String])) }
       def lookup_type_variables(constant)
         @type_variables[constant]
       end
@@ -76,7 +76,7 @@ module Tapioca
       sig do
         params(
           constant: T.untyped,
-          type_variable: TypeVariable,
+          type_variable: TypeVariableModule,
         ).void
       end
       def register_type_variable(constant, type_variable)
@@ -150,7 +150,7 @@ module Tapioca
         end
       end
 
-      sig { params(constant: Module).returns(T::Hash[TypeVariable, String]) }
+      sig { params(constant: Module).returns(T::Hash[TypeVariableModule, String]) }
       def lookup_or_initialize_type_variables(constant)
         @type_variables[constant] ||= {}.compare_by_identity
       end
