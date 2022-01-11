@@ -20,7 +20,6 @@ module Tapioca
   # variable to type variable serializers. This allows us to associate type variables
   # to the constant names that represent them, easily.
   module GenericTypeRegistry
-    TypeVariable = T.type_alias { T.any(TypeMember, TypeTemplate) }
     @generic_instances = T.let(
       {},
       T::Hash[String, Module]

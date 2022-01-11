@@ -141,7 +141,6 @@ module Tapioca
           return if symbol_ignored?(name)
 
           klass = class_of(value)
-          return if klass == TypeMember || klass == TypeTemplate
 
           klass_name = if klass == ObjectSpace::WeakMap
             # WeakMap is an implicit generic with one type variable
@@ -172,6 +171,7 @@ module Tapioca
         sig { params(tree: RBI::Tree, name: String, constant: Module).void }
         def compile_module(tree, name, constant)
           return unless defined_in_gem?(constant, strict: false)
+          return if Tapioca::TypeVariable === constant
 
           comments = documentation_comments(name)
           scope =
@@ -282,30 +282,15 @@ module Tapioca
           type_variables = GenericTypeRegistry.lookup_type_variables(constant)
           return unless type_variables
 
-          # Create a map of subconstants (via their object ids) to their names.
-          # We need this later when we want to lookup the name of the registered type
-          # variable via the value of the type variable constant.
-          subconstant_to_name_lookup = constants_of(constant)
-            .each_with_object({}.compare_by_identity) do |constant_name, table|
-            table[constantize(constant_name.to_s, namespace: constant)] = constant_name.to_s
-          end
-
           # Map each type variable to its string representation.
           #
-          # Each entry of `type_variables` maps an object_id to a String,
+          # Each entry of `type_variables` maps a Module to a String,
           # and the order they are inserted into the hash is the order they should be
           # defined in the source code.
-          #
-          # By looping over these entries and then getting the actual constant name
-          # from the `subconstant_to_name_lookup` we defined above, gives us all the
-          # information we need to serialize type variable definitions.
           type_variable_declarations = type_variables.map do |type_variable, serialized_type_variable|
-            constant_name = subconstant_to_name_lookup[type_variable]
-            type_variable.name = constant_name
-            # Here, we know that constant_value will be an instance of
-            # T::Types::CustomTypeVariable, which knows how to serialize
-            # itself to a type_member/type_template
-            tree << RBI::TypeMember.new(constant_name, serialized_type_variable)
+            type_variable_name = T.must(type_variable.name&.split("::")&.last)
+
+            tree << RBI::TypeMember.new(type_variable_name, serialized_type_variable)
           end
 
           return if type_variable_declarations.empty?
