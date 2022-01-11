@@ -24,6 +24,7 @@ module T
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
         Tapioca::TypeVariableModule.new(
+          T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Member,
           variance,
           fixed,
@@ -38,6 +39,7 @@ module T
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
         Tapioca::TypeVariableModule.new(
+          T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Template,
           variance,
           fixed,
@@ -104,14 +106,36 @@ module Tapioca
       end
     end
 
-    sig { params(type: Type, variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void }
-    def initialize(type, variance, fixed, lower, upper)
+    sig do
+      params(context: Module, type: Type, variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void
+    end
+    def initialize(context, type, variance, fixed, lower, upper) # rubocop:disable Metrics/ParameterLists
+      @context = context
       @type = type
       @variance = variance
       @fixed = fixed
       @lower = lower
       @upper = upper
       super()
+    end
+
+    sig { returns(String) }
+    def constant_name
+      constant_name = name
+
+      # This is a hack to work around modules under anonymous modules not having
+      # names in 2.6 and 2.7: https://bugs.ruby-lang.org/issues/14895
+      #
+      # This happens when a type variable is declared under `class << self`, for
+      # example.
+      #
+      # The workaround is to give the parent context a name, at which point, our
+      # module gets bound to a name under that name, as well.
+      unless constant_name
+        constant_name = bind_and_get_name_pre_3_0
+      end
+
+      constant_name&.split("::")&.last
     end
 
     sig { returns(String) }
@@ -127,6 +151,18 @@ module Tapioca
       serialized = @type.serialize.dup
       serialized << "(#{parameters})" unless parameters.empty?
       serialized
+    end
+
+    private
+
+    sig { returns(T.nilable(String)) }
+    def bind_and_get_name_pre_3_0
+      require "securerandom"
+      temp_name = "TYPE_VARIABLE_TRACKING_#{SecureRandom.hex}"
+      self.class.const_set(temp_name, @context)
+      name
+    ensure
+      self.class.send(:remove_const, temp_name) if temp_name
     end
   end
 end
