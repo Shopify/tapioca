@@ -10,7 +10,6 @@ PATH
   specs:
     tapioca (0.6.1)
       bundler (>= 1.17.3)
-      pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.9)
       sorbet-runtime (>= 0.5.9204)
       sorbet-static (>= 0.5.9204)
@@ -318,6 +317,7 @@ DEPENDENCIES
   minitest-reporters
   net-smtp (= 0.3.1)
   nokogiri
+  pry
   pry-byebug
   rails
   rake
