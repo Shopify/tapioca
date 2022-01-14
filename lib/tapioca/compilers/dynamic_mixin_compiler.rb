@@ -174,7 +174,7 @@ class DynamicMixinCompiler
 
   sig { params(tree: RBI::Tree).returns([T::Array[Module], T::Array[Module]]) }
   def compile_mixes_in_class_methods(tree)
-    includes = dynamic_includes.select { |mod| (name = name_of(mod)) && !name.start_with?("T::") }
+    includes = dynamic_includes.select { |mod| (name = name_of(mod)) && !name.start_with?(/T\:\:(?!Props)/) }
     includes.each do |mod|
       qname = qualified_name_of(mod)
       tree << RBI::Include.new(T.must(qname))

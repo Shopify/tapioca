@@ -2133,6 +2133,35 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("doesn't filter out T::Props modules") do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          extend(T::Props)
+          extend(T::Props::Constructor)
+
+          def self.name
+            "SomethingElse"
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          extend ::T::Props
+          extend ::T::Props::Plugin
+          extend ::T::Props::Optional
+          extend ::T::Props::WeakConstructor
+          extend ::T::Props::Constructor
+
+          class << self
+            def name; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("doesn't crash when `singleton_class` is overloaded") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
@@ -2469,6 +2498,14 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Buzz
+          include ::T::Props
+          include ::T::Props::Plugin
+          include ::T::Props::Optional
+          include ::T::Props::WeakConstructor
+          include ::T::Props::Constructor
+          extend ::T::Props::ClassMethods
+          extend ::T::Props::Plugin::ClassMethods
+
           prop :bar, String
           const :baz, T.proc.params(arg0: String).void
           const :foo, Integer
