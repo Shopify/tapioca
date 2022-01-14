@@ -5,6 +5,7 @@ module Tapioca
   class Cli < Thor
     include CliHelper
     include ConfigHelper
+    include ShimsHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
@@ -218,6 +219,39 @@ module Tapioca
           generator.generate
         end
       end
+    end
+
+    desc "check-shims", "check duplicated definitions in shim RBIs"
+    option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
+    option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
+    option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
+    def check_shims
+      index = RBI::Index.new
+
+      shim_rbi_dir = options[:shim_rbi_dir]
+      if !Dir.exist?(shim_rbi_dir) || Dir.empty?(shim_rbi_dir)
+        say("No shim RBIs to check", :green)
+        exit(0)
+      end
+
+      index_rbis(index, "shim", shim_rbi_dir)
+      index_rbis(index, "gem", options[:gem_rbi_dir])
+      index_rbis(index, "dsl", options[:dsl_rbi_dir])
+
+      duplicates = duplicated_nodes_from_index(index, shim_rbi_dir)
+      unless duplicates.empty?
+        duplicates.each do |key, nodes|
+          say_error("\nDuplicated RBI for #{key}:", :red)
+          nodes.each do |node|
+            say_error(" * #{node.loc}", :red)
+          end
+        end
+        say_error("\nPlease remove the duplicated definitions from the #{shim_rbi_dir} directory.", :red)
+        exit(1)
+      end
+
+      say("\nNo duplicates found in shim RBIs", :green)
+      exit(0)
     end
 
     map T.unsafe(["--version", "-v"] => :__print_version)
