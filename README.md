@@ -188,7 +188,7 @@ and supplying an alternative configuration file path.
 
 A configuration file must be a well-formed YAML file with top-level keys for the various Tapioca commands. Keys under each such top-level command should be the underscore version of a long option name for that command and the value for that key should be the value of the option.
 
-For example, if you always want to generate gem RBIs with inline documentation and you want to generate `activesupport` RBIs with `typed: false`, then you would create the file `sorbet/tapioca/config.yml` as:
+For example, if you always want to generate gem RBIs with inline documentation and you want to generate `activesupport` RBI with `typed: false`, then you would create the file `sorbet/tapioca/config.yml` as:
 
 ```yaml
 gem:
