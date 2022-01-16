@@ -58,7 +58,7 @@ module T
     class Simple
       module GenericPatch
         def valid?(obj)
-          # Since `Tapioca::TypeVariable` is a `Module` now, it will be wrapped by a
+          # Since `Tapioca::TypeVariable` is a `Module`, it will be wrapped by a
           # `Simple` type. We want to always make type variable types valid, so we
           # need to explicitly check that `raw_type` is a `Tapioca::TypeVariable`
           # and return `true`
@@ -74,8 +74,8 @@ module T
         # we've created a clone of that type with the `name` method returning the
         # appropriate name for that specific concrete type.
         def name
-          if T::Generic === @raw_type
-            # for types that are generic, use the name
+          if T::Generic === @raw_type || Tapioca::TypeVariableModule === @raw_type
+            # for types that are generic or are type variables, use the name
             # returned by the "name" method of this instance
             @name ||= T.unsafe(@raw_type).name.freeze
           else
@@ -119,9 +119,9 @@ module Tapioca
       super()
     end
 
-    sig { returns(String) }
-    def constant_name
-      constant_name = name
+    sig { returns(T.nilable(String)) }
+    def name
+      constant_name = super
 
       # This is a hack to work around modules under anonymous modules not having
       # names in 2.6 and 2.7: https://bugs.ruby-lang.org/issues/14895
@@ -132,7 +132,7 @@ module Tapioca
       # The workaround is to give the parent context a name, at which point, our
       # module gets bound to a name under that name, as well.
       unless constant_name
-        constant_name = bind_and_get_name_pre_3_0
+        constant_name = with_bound_name_pre_3_0 { super }
       end
 
       constant_name&.split("::")&.last
@@ -155,12 +155,16 @@ module Tapioca
 
     private
 
-    sig { returns(T.nilable(String)) }
-    def bind_and_get_name_pre_3_0
+    sig do
+      type_parameters(:Result)
+        .params(block: T.proc.returns(T.type_parameter(:Result)))
+        .returns(T.type_parameter(:Result))
+    end
+    def with_bound_name_pre_3_0(&block)
       require "securerandom"
       temp_name = "TYPE_VARIABLE_TRACKING_#{SecureRandom.hex}"
       self.class.const_set(temp_name, @context)
-      name
+      block.call
     ensure
       self.class.send(:remove_const, temp_name) if temp_name
     end

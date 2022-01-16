@@ -2526,13 +2526,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           Template = type_template
           Elem = type_member
 
-          sig { params(foo: Generics::SimpleGenericType::Elem).void }
+          sig { params(foo: Elem).void }
           def initialize(foo); end
 
-          sig { params(foo: T::Hash[T::Array[Generics::SimpleGenericType::Template], T::Set[Generics::SimpleGenericType::Elem]]).void }
+          sig { params(foo: T::Hash[T::Array[Template], T::Set[Elem]]).void }
           def complex(foo); end
 
-          sig { params(foo: Generics::SimpleGenericType::Template).returns(Generics::SimpleGenericType::Template) }
+          sig { params(foo: Template).returns(Template) }
           def something(foo); end
         end
 
@@ -2677,7 +2677,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           Elem = type_member
 
-          const :foo, Foo::Elem
+          const :foo, Elem
 
           class << self
             def inherited(s); end
@@ -2766,11 +2766,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def non_abstract_but_overriden_children
             []
           end
-
-          sig { returns(T::Array[Node[Root::Elem]]) }
-          def references_ancestor_generic_type_variable
-            []
-          end
         end
       RUBY
 
@@ -2792,9 +2787,6 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           sig { override.returns(T::Array[Node[Integer]]) }
           def non_abstract_but_overriden_children; end
-
-          sig { returns(T::Array[Node[Root::Elem]]) }
-          def references_ancestor_generic_type_variable; end
         end
 
         module Root
@@ -2804,16 +2796,16 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           Elem = type_member
 
-          sig { abstract.returns(T::Array[Node[Root::Elem]]) }
+          sig { abstract.returns(T::Array[Node[Elem]]) }
           def abstract_but_not_overridden_children; end
 
-          sig { abstract.returns(T::Array[Node[Root::Elem]]) }
+          sig { abstract.returns(T::Array[Node[Elem]]) }
           def children; end
 
-          sig { returns(T::Array[Node[Root::Elem]]) }
+          sig { returns(T::Array[Node[Elem]]) }
           def non_abstract_but_overriden_children; end
 
-          sig { returns(T::Array[Node[Root::Elem]]) }
+          sig { returns(T::Array[Node[Elem]]) }
           def non_abstract_children; end
         end
       RBI

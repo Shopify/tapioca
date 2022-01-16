@@ -288,7 +288,7 @@ module Tapioca
           # and the order they are inserted into the hash is the order they should be
           # defined in the source code.
           type_variable_declarations = type_variables.map do |type_variable|
-            type_variable_name = type_variable.constant_name
+            type_variable_name = type_variable.name
             next unless type_variable_name
 
             tree << RBI::TypeMember.new(type_variable_name, type_variable.serialize)
