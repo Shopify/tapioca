@@ -211,6 +211,43 @@ dsl:
   - ActiveRecordFixtures
 ```
 
+The full configuration file, with each option and its default value, would look something like this:
+<!-- START_CONFIG_TEMPLATE -->
+```yaml
+---
+require:
+  postrequire: sorbet/tapioca/require.rb
+todo:
+  todo_file: sorbet/rbi/todo.rbi
+  file_header: true
+dsl:
+  outdir: sorbet/rbi/dsl
+  file_header: true
+  only: []
+  exclude: []
+  verify: false
+  quiet: false
+  workers: 1
+gem:
+  outdir: sorbet/rbi/gems
+  file_header: true
+  all: false
+  prerequire: ''
+  postrequire: sorbet/tapioca/require.rb
+  exclude: []
+  typed_overrides:
+    activesupport: 'false'
+  verify: false
+  doc: false
+  exported_gem_rbis: true
+  workers: 1
+clean_shims:
+  gem_rbi_dir: sorbet/rbi/gems
+  dsl_rbi_dir: sorbet/rbi/dsl
+  shim_rbi_dir: sorbet/rbi/shims
+```
+<!-- END_CONFIG_TEMPLATE -->
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/Shopify/tapioca/blob/main/CODE_OF_CONDUCT.md) code of conduct.
