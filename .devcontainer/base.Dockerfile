@@ -23,5 +23,3 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
  # Remove library scripts for final image
 RUN rm -rf /tmp/library-scripts
-
-
