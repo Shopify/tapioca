@@ -20,7 +20,6 @@ module Tapioca
   # variable to type variable serializers. This allows us to associate type variables
   # to the constant names that represent them, easily.
   module GenericTypeRegistry
-    TypeVariable = T.type_alias { T.any(TypeMember, TypeTemplate) }
     @generic_instances = T.let(
       {},
       T::Hash[String, Module]
@@ -28,7 +27,7 @@ module Tapioca
 
     @type_variables = T.let(
       {}.compare_by_identity,
-      T::Hash[Module, T::Hash[TypeVariable, String]]
+      T::Hash[Module, T::Array[TypeVariableModule]]
     )
 
     class << self
@@ -60,7 +59,7 @@ module Tapioca
         @generic_instances[name] ||= create_generic_type(constant, name)
       end
 
-      sig { params(constant: Module).returns(T.nilable(T::Hash[TypeVariable, String])) }
+      sig { params(constant: Module).returns(T.nilable(T::Array[TypeVariableModule])) }
       def lookup_type_variables(constant)
         @type_variables[constant]
       end
@@ -77,13 +76,13 @@ module Tapioca
       sig do
         params(
           constant: T.untyped,
-          type_variable: TypeVariable,
+          type_variable: TypeVariableModule,
         ).void
       end
       def register_type_variable(constant, type_variable)
         type_variables = lookup_or_initialize_type_variables(constant)
 
-        type_variables[type_variable] = type_variable.serialize
+        type_variables << type_variable
       end
 
       private
@@ -108,6 +107,17 @@ module Tapioca
 
         # Let's set the `name` method to return the proper generic name
         generic_type.define_singleton_method(:name) { name }
+
+        # We need to define a `<=` method on the cloned constant, so that Sorbet
+        # can do covariance/contravariance checks on the type variables.
+        #
+        # Normally, we would be doing proper covariance/contravariance checks here, but
+        # that is not necessary, since we are not implementing a runtime type checker
+        # here. It is just enough for the checks to pass, so that we can serialize the
+        # signatures, assuming the sigs were well-formed.
+        #
+        # So we act like all subtype checks pass.
+        generic_type.define_singleton_method(:<=) { |_| true }
 
         # Return the generic type we created
         generic_type
@@ -140,9 +150,9 @@ module Tapioca
         end
       end
 
-      sig { params(constant: Module).returns(T::Hash[TypeVariable, String]) }
+      sig { params(constant: Module).returns(T::Array[TypeVariableModule]) }
       def lookup_or_initialize_type_variables(constant)
-        @type_variables[constant] ||= {}.compare_by_identity
+        @type_variables[constant] ||= []
       end
     end
   end

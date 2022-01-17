@@ -23,17 +23,31 @@ module T
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        type_member = Tapioca::TypeMember.new(variance, fixed, lower, upper)
-        Tapioca::GenericTypeRegistry.register_type_variable(self, type_member)
-        type_member
+        Tapioca::TypeVariableModule.new(
+          T.cast(self, Module),
+          Tapioca::TypeVariableModule::Type::Member,
+          variance,
+          fixed,
+          lower,
+          upper
+        ).tap do |type_variable|
+          Tapioca::GenericTypeRegistry.register_type_variable(self, type_variable)
+        end
       end
 
       def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        type_template = Tapioca::TypeTemplate.new(variance, fixed, lower, upper)
-        Tapioca::GenericTypeRegistry.register_type_variable(self, type_template)
-        type_template
+        Tapioca::TypeVariableModule.new(
+          T.cast(self, Module),
+          Tapioca::TypeVariableModule::Type::Template,
+          variance,
+          fixed,
+          lower,
+          upper
+        ).tap do |type_variable|
+          Tapioca::GenericTypeRegistry.register_type_variable(self, type_variable)
+        end
       end
     end
 
@@ -42,15 +56,26 @@ module T
 
   module Types
     class Simple
-      # This module intercepts calls to the `name` method for
-      # simple types, so that it can ask the name to the type if
-      # the type is generic, since, by this point, we've created
-      # a clone of that type with the `name` method returning the
-      # appropriate name for that specific concrete type.
-      module GenericNamePatch
+      module GenericPatch
+        def valid?(obj)
+          # Since `Tapioca::TypeVariable` is a `Module`, it will be wrapped by a
+          # `Simple` type. We want to always make type variable types valid, so we
+          # need to explicitly check that `raw_type` is a `Tapioca::TypeVariable`
+          # and return `true`
+          if defined?(Tapioca::TypeVariableModule) && Tapioca::TypeVariableModule === @raw_type
+            return true
+          end
+
+          obj.is_a?(@raw_type)
+        end
+
+        # This method intercepts calls to the `name` method for simple types, so that
+        # it can ask the name to the type if the type is generic, since, by this point,
+        # we've created a clone of that type with the `name` method returning the
+        # appropriate name for that specific concrete type.
         def name
-          if T::Generic === @raw_type
-            # for types that are generic, use the name
+          if T::Generic === @raw_type || Tapioca::TypeVariableModule === @raw_type
+            # for types that are generic or are type variables, use the name
             # returned by the "name" method of this instance
             @name ||= T.unsafe(@raw_type).name.freeze
           else
@@ -60,27 +85,57 @@ module T
         end
       end
 
-      prepend GenericNamePatch
+      prepend GenericPatch
     end
   end
 end
 
 module Tapioca
-  class TypeMember < T::Types::TypeMember
+  # This is subclassing from `Module` so that instances of this type will be modules.
+  # The reason why we want that is because that means those instances will automatically
+  # get bound to the constant names they are assigned to by Ruby. As a result, we don't
+  # need to do any matching of constants to type variables to bind their names, Ruby will
+  # do that automatically for us and we get the `name` method for free from `Module`.
+  class TypeVariableModule < Module
     extend T::Sig
 
-    sig { returns(T.nilable(String)) }
-    attr_accessor :name
+    class Type < T::Enum
+      enums do
+        Member = new("type_member")
+        Template = new("type_template")
+      end
+    end
 
-    sig { returns(T.untyped) }
-    attr_reader :fixed, :lower, :upper
-
-    sig { params(variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void }
-    def initialize(variance, fixed, lower, upper)
-      super(variance)
+    sig do
+      params(context: Module, type: Type, variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void
+    end
+    def initialize(context, type, variance, fixed, lower, upper) # rubocop:disable Metrics/ParameterLists
+      @context = context
+      @type = type
+      @variance = variance
       @fixed = fixed
       @lower = lower
       @upper = upper
+      super()
+    end
+
+    sig { returns(T.nilable(String)) }
+    def name
+      constant_name = super
+
+      # This is a hack to work around modules under anonymous modules not having
+      # names in 2.6 and 2.7: https://bugs.ruby-lang.org/issues/14895
+      #
+      # This happens when a type variable is declared under `class << self`, for
+      # example.
+      #
+      # The workaround is to give the parent context a name, at which point, our
+      # module gets bound to a name under that name, as well.
+      unless constant_name
+        constant_name = with_bound_name_pre_3_0 { super }
+      end
+
+      constant_name&.split("::")&.last
     end
 
     sig { returns(String) }
@@ -93,42 +148,25 @@ module Tapioca
 
       parameters = parts.join(", ")
 
-      serialized = +"type_member"
+      serialized = @type.serialize.dup
       serialized << "(#{parameters})" unless parameters.empty?
       serialized
     end
-  end
 
-  class TypeTemplate < T::Types::TypeTemplate
-    extend T::Sig
+    private
 
-    sig { returns(T.nilable(String)) }
-    attr_accessor :name
-
-    sig { returns(T.untyped) }
-    attr_reader :fixed, :lower, :upper
-
-    sig { params(variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void }
-    def initialize(variance, fixed, lower, upper)
-      super(variance)
-      @fixed = fixed
-      @lower = lower
-      @upper = upper
+    sig do
+      type_parameters(:Result)
+        .params(block: T.proc.returns(T.type_parameter(:Result)))
+        .returns(T.type_parameter(:Result))
     end
-
-    sig { returns(String) }
-    def serialize
-      parts = []
-      parts << ":#{@variance}" unless @variance == :invariant
-      parts << "fixed: #{@fixed}" if @fixed
-      parts << "lower: #{@lower}" unless @lower == T.untyped
-      parts << "upper: #{@upper}" unless @upper == BasicObject
-
-      parameters = parts.join(", ")
-
-      serialized = +"type_template"
-      serialized << "(#{parameters})" unless parameters.empty?
-      serialized
+    def with_bound_name_pre_3_0(&block)
+      require "securerandom"
+      temp_name = "TYPE_VARIABLE_TRACKING_#{SecureRandom.hex}"
+      self.class.const_set(temp_name, @context)
+      block.call
+    ensure
+      self.class.send(:remove_const, temp_name) if temp_name
     end
   end
 end

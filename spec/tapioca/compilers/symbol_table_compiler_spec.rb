@@ -2719,6 +2719,100 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it("compiles nested generic interfaces") do
+      add_ruby_file("generic.rb", <<~RUBY)
+        module Root
+          extend T::Sig
+          extend T::Generic
+          Elem = type_member
+          abstract!
+
+          sig { abstract.returns(T::Array[Node[Elem]]) }
+          def children; end
+
+          sig { abstract.returns(T::Array[Node[Elem]]) }
+          def abstract_but_not_overridden_children; end
+
+          sig { returns(T::Array[Node[Elem]]) }
+          def non_abstract_children
+            []
+          end
+
+          sig { returns(T::Array[Node[Elem]]) }
+          def non_abstract_but_overriden_children
+            []
+          end
+        end
+
+        module Node
+          extend T::Sig
+          extend T::Helpers
+          extend T::Generic
+          Elem = type_member
+        end
+
+        class OtherRoot
+          include ::Root
+          extend T::Sig
+          extend T::Generic
+          Elem = type_member(fixed: Integer)
+
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def children
+            []
+          end
+
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def non_abstract_but_overriden_children
+            []
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Node
+          extend T::Generic
+
+          Elem = type_member
+        end
+
+        class OtherRoot
+          extend T::Generic
+          include ::Root
+
+          Elem = type_member(fixed: Integer)
+
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def children; end
+
+          sig { override.returns(T::Array[Node[Integer]]) }
+          def non_abstract_but_overriden_children; end
+        end
+
+        module Root
+          extend T::Generic
+
+          abstract!
+
+          Elem = type_member
+
+          sig { abstract.returns(T::Array[Node[Elem]]) }
+          def abstract_but_not_overridden_children; end
+
+          sig { abstract.returns(T::Array[Node[Elem]]) }
+          def children; end
+
+          sig { returns(T::Array[Node[Elem]]) }
+          def non_abstract_but_overriden_children; end
+
+          sig { returns(T::Array[Node[Elem]]) }
+          def non_abstract_children; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it("compiles structs with default values") do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct
