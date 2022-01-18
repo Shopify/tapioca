@@ -26,5 +26,7 @@ jobs:
         run: bin/style --config .rubocop.yml
       - name: Verify documentation
         run: bin/docs
+      - name: Verify README
+        run: bin/readme
       - name: Run tests
         run: bin/test

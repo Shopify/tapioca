@@ -80,8 +80,8 @@ Command: `tapioca init`
 
 This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for you, if they don't exist. If any of the files already exist, they will not be changed.
 
+<!-- START_HELP_COMMAND_INIT -->
 ```shell
-$ bundle exec tapioca help init
 Usage:
   tapioca init
 
@@ -92,6 +92,7 @@ Options:
 
 initializes folder structure
 ```
+<!-- END_HELP_COMMAND_INIT -->
 
 ### Generate RBI files for gems
 
@@ -99,13 +100,13 @@ Command: `tapioca gem [gems...]`
 
 This will generate RBIs for the specified gems and place them in the RBI directory.
 
+<!-- START_HELP_COMMAND_GEM -->
 ```shell
-$ bundle exec tapioca help gem
 Usage:
   tapioca gem [gem...]
 
 Options:
-  --out, -o, [--outdir=directory]                             # The output directory for generated RBI files
+  --out, -o, [--outdir=directory]                             # The output directory for generated gem RBI files
                                                               # Default: sorbet/rbi/gems
           [--file-header], [--no-file-header]                 # Add a "This file is generated" header on top of each generated RBI file
                                                               # Default: true
@@ -113,10 +114,10 @@ Options:
   --pre, -b, [--prerequire=file]                              # A file to be required before Bundler.require is called
   --post, -a, [--postrequire=file]                            # A file to be required after Bundler.require is called
                                                               # Default: sorbet/tapioca/require.rb
-  -x, [--exclude=gem [gem ...]]                               # Excludes the given gem(s) from RBI generation
-  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Overrides for typed sigils for generated gem RBIs
+  -x, [--exclude=gem [gem ...]]                               # Exclude the given gem(s) from RBI generation
+  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Override for typed sigils for generated gem RBIs
                                                               # Default: {"activesupport"=>"false"}
-          [--verify], [--no-verify]                           # Verifies RBIs are up-to-date
+          [--verify], [--no-verify]                           # Verify RBIs are up-to-date
           [--doc], [--no-doc]                                 # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
           [--exported-gem-rbis], [--no-exported-gem-rbis]     # Include RBIs found in the `rbi/` directory of the gem
                                                               # Default: true
@@ -128,6 +129,7 @@ Options:
 
 generate RBIs from gems
 ```
+<!-- END_HELP_COMMAND_GEM -->
 
 ### Generate the list of all unresolved constants
 
@@ -135,13 +137,13 @@ Command: `tapioca todo`
 
 This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules.
 
+<!-- START_HELP_COMMAND_TODO -->
 ```shell
-$ bundle exec tapioca help todo
 Usage:
   tapioca todo
 
 Options:
-      [--todo-file=TODO_FILE]
+      [--todo-file=TODO_FILE]              # Path to the generated todo RBI file
                                            # Default: sorbet/rbi/todo.rbi
       [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
                                            # Default: true
@@ -151,6 +153,7 @@ Options:
 
 generate the list of unresolved constants
 ```
+<!-- END_HELP_COMMAND_TODO -->
 
 ### Generate DSL RBI files
 
@@ -158,18 +161,18 @@ Command: `tapioca dsl [constant...]`
 
 This will generate DSL RBIs for specified constants (or for all handled constants, if a constant name is not supplied). You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
 
+<!-- START_HELP_COMMAND_DSL -->
 ```shell
-$ bundle exec tapioca help dsl
 Usage:
   tapioca dsl [constant...]
 
 Options:
-  --out, -o, [--outdir=directory]                # The output directory for generated RBI files
+  --out, -o, [--outdir=directory]                # The output directory for generated DSL RBI files
                                                  # Default: sorbet/rbi/dsl
           [--file-header], [--no-file-header]    # Add a "This file is generated" header on top of each generated RBI file
                                                  # Default: true
-          [--only=generator [generator ...]]     # Only run supplied DSL generators
-          [--exclude=generator [generator ...]]  # Exclude supplied DSL generators
+          [--only=generator [generator ...]]     # Only run supplied DSL generator(s)
+          [--exclude=generator [generator ...]]  # Exclude supplied DSL generator(s)
           [--verify], [--no-verify]              # Verifies RBIs are up-to-date
   -q, [--quiet], [--no-quiet]                    # Supresses file creation output
   -w, [--workers=N]                              # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
@@ -180,6 +183,8 @@ Options:
 
 generate RBIs for dynamic methods
 ```
+<!-- END_HELP_COMMAND_DSL -->
+
 ## Configuration
 
 Tapioca supports loading command defaults from a configuration file. The default configuration
@@ -205,6 +210,43 @@ dsl:
   - UrlHelpers
   - ActiveRecordFixtures
 ```
+
+The full configuration file, with each option and its default value, would look something like this:
+<!-- START_CONFIG_TEMPLATE -->
+```yaml
+---
+require:
+  postrequire: sorbet/tapioca/require.rb
+todo:
+  todo_file: sorbet/rbi/todo.rbi
+  file_header: true
+dsl:
+  outdir: sorbet/rbi/dsl
+  file_header: true
+  only: []
+  exclude: []
+  verify: false
+  quiet: false
+  workers: 1
+gem:
+  outdir: sorbet/rbi/gems
+  file_header: true
+  all: false
+  prerequire: ''
+  postrequire: sorbet/tapioca/require.rb
+  exclude: []
+  typed_overrides:
+    activesupport: 'false'
+  verify: false
+  doc: false
+  exported_gem_rbis: true
+  workers: 1
+clean_shims:
+  gem_rbi_dir: sorbet/rbi/gems
+  dsl_rbi_dir: sorbet/rbi/dsl
+  shim_rbi_dir: sorbet/rbi/shims
+```
+<!-- END_CONFIG_TEMPLATE -->
 
 ## Contributing
 
