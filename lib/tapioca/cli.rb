@@ -47,6 +47,7 @@ module Tapioca
     desc "todo", "generate the list of unresolved constants"
     option :todo_file,
       type: :string,
+      desc: "Path to the generated todo RBI file",
       default: DEFAULT_TODO_FILE
     option :file_header,
       type: :boolean,
