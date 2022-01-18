@@ -392,7 +392,7 @@ module Tapioca
             .select do |mod|
               name = name_of(mod)
 
-              name && !name.start_with?(/T\:\:(?!Props)/)
+              name && !CompilerHelper.filtered_mixin?(mixin: name)
             end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
