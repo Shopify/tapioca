@@ -378,7 +378,7 @@ module Tapioca
             .select do |mod|
               name = name_of(mod)
 
-              name && !name.start_with?("T::")
+              name && !filtered_mixin?(name)
             end
             .map do |mod|
               add_to_symbol_queue(name_of(mod))
@@ -599,6 +599,13 @@ module Tapioca
         sig { params(symbol_name: String).returns(T::Boolean) }
         def symbol_ignored?(symbol_name)
           SymbolLoader.ignore_symbol?(symbol_name)
+        end
+
+        sig { params(mixin_name: String).returns(T::Boolean) }
+        def filtered_mixin?(mixin_name)
+          # filter T:: namespace mixins that aren't T::Props
+          # T::Props and subconstants have semantic value
+          mixin_name.start_with?("T::") && !mixin_name.start_with?("T::Props")
         end
 
         SPECIAL_METHOD_NAMES = T.let([
