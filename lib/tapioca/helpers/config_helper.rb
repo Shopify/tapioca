@@ -6,6 +6,9 @@ require "yaml"
 module Tapioca
   module ConfigHelper
     extend T::Sig
+    extend T::Helpers
+
+    requires_ancestor { Thor }
 
     sig { returns(String) }
     attr_reader :command_name
@@ -60,7 +63,120 @@ module Tapioca
         config = YAML.load_file(config_file, fallback: {})
       end
 
+      validate_config!(config_file, config)
+
       Thor::CoreExt::HashWithIndifferentAccess.new(config[command_name] || {})
+    end
+
+    sig { params(config_file: String, config: T::Hash[T.untyped, T.untyped]).void }
+    def validate_config!(config_file, config)
+      # To ensure that this is not re-entered, we mark during validation
+      return if @validating_config
+      @validating_config = T.let(true, T.nilable(T::Boolean))
+
+      commands = T.cast(self, Thor).class.commands
+
+      errors = config.flat_map do |config_key, config_options|
+        command = commands[config_key.to_s]
+
+        unless command
+          next build_error("unknown key `#{config_key}`")
+        end
+
+        validate_config_options(command.options, config_key, config_options || {})
+      end.compact
+
+      unless errors.empty?
+        print_errors(config_file, errors)
+        exit(1)
+      end
+    ensure
+      @validating_config = false
+    end
+
+    sig do
+      params(
+        command_options: T::Hash[Symbol, Thor::Option],
+        config_key: String,
+        config_options: T::Hash[T.untyped, T.untyped]
+      ).returns(T::Array[ConfigError])
+    end
+    def validate_config_options(command_options, config_key, config_options)
+      config_options.map do |config_option_key, config_option_value|
+        command_option = command_options[config_option_key.to_sym]
+
+        unless command_option
+          next build_error("unknown option `#{config_option_key}` for key `#{config_key}`")
+        end
+
+        config_option_value_type = case config_option_value
+        when FalseClass, TrueClass
+          :boolean
+        when Numeric
+          :numeric
+        when Hash
+          :hash
+        when Array
+          :array
+        when String
+          :string
+        else
+          :object
+        end
+
+        unless config_option_value_type == command_option.type
+          next build_error("invalid value for option `#{config_option_key}` for key `#{config_key}` " \
+            "- expected `#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}")
+        end
+      end.compact
+    end
+
+    class ConfigErrorMessagePart < T::Struct
+      const :message, String
+      const :colors, T::Array[Symbol]
+    end
+
+    class ConfigError < T::Struct
+      const :message_parts, T::Array[ConfigErrorMessagePart]
+    end
+
+    sig { params(msg: String).returns(ConfigError) }
+    def build_error(msg)
+      parts = msg.split(/(`[^`]+` ?)/)
+
+      message_parts = parts.map do |part|
+        match = part.match(/`([^`]+)`( ?)/)
+
+        if match
+          ConfigErrorMessagePart.new(
+            message: "#{match[1]}#{match[2]}",
+            colors: [:bold, :blue]
+          )
+        else
+          ConfigErrorMessagePart.new(
+            message: part,
+            colors: [:yellow]
+          )
+        end
+      end
+
+      ConfigError.new(
+        message_parts: message_parts
+      )
+    end
+
+    sig { params(config_file: String, errors: T::Array[ConfigError]).void }
+    def print_errors(config_file, errors)
+      say_error("\nConfiguration file ", :red)
+      say_error("#{config_file} ", :blue, :bold)
+      say_error("has the following errors:\n\n", :red)
+
+      errors.each do |error|
+        say_error("- ")
+        error.message_parts.each do |part|
+          T.unsafe(self).say_error(part.message, *part.colors)
+        end
+      end
     end
 
     sig do
