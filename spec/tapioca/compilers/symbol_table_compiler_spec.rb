@@ -85,6 +85,19 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           Arr = T.let([1,2,3], T::Array[Integer])
           Foo = ::T.type_alias { T.any(String, Symbol) }
         end
+
+        module Base
+          include T::Props
+          extend T::Helpers
+
+          module Signatures
+            include T::Props::ClassMethods
+            include T::Sig
+            include T::Helpers
+          end
+
+          mixes_in_class_methods Signatures
+        end
       RUBY
 
       output = template(<<~RBI)
@@ -100,6 +113,17 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
         Bar::Arr = T.let(T.unsafe(nil), Array)
         Bar::Foo = T.type_alias { T.any(String, Symbol) }
+
+        module Base
+          include ::T::Props
+          extend ::T::Props::ClassMethods
+
+          mixes_in_class_methods ::Base::Signatures
+        end
+
+        module Base::Signatures
+          include ::T::Props::ClassMethods
+        end
       RBI
 
       assert_equal(output, compile)
