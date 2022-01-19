@@ -187,7 +187,10 @@ class DynamicMixinCompiler
 
     # If we can generate multiple mixes_in_class_methods, then we want to use all dynamic extends that are not the
     # constant itself
-    mixed_in_class_methods = dynamic_extends.select { |mod| mod != @constant }
+    mixed_in_class_methods = dynamic_extends.select do |mod|
+      mod != @constant && !module_included_by_another_dynamic_extend?(mod, dynamic_extends)
+    end
+
     return [[], []] if mixed_in_class_methods.empty?
 
     mixed_in_class_methods.each do |mod|
@@ -202,6 +205,13 @@ class DynamicMixinCompiler
     [mixed_in_class_methods, includes]
   rescue
     [[], []] # silence errors
+  end
+
+  sig { params(mod: Module, dynamic_extends: T::Array[Module]).returns(T::Boolean) }
+  def module_included_by_another_dynamic_extend?(mod, dynamic_extends)
+    dynamic_extends.any? do |dynamic_extend|
+      mod != dynamic_extend && ancestors_of(dynamic_extend).include?(mod)
+    end
   end
 
   sig { params(qualified_mixin_name: String).returns(T::Boolean) }
