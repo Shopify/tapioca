@@ -296,7 +296,7 @@ module Tapioca
 
         sig { params(type: String).returns(String) }
         def as_nilable_type(type)
-          return type if type.start_with?("T.nilable(")
+          return type if type.start_with?("T.nilable(") || type == "T.untyped"
           "T.nilable(#{type})"
         end
       end

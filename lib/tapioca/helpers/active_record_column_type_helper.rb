@@ -43,13 +43,13 @@ class ActiveRecordColumnTypeHelper
     setter_type = getter_type
 
     if column&.null
-      return ["T.nilable(#{getter_type})", "T.nilable(#{setter_type})"]
+      return [as_nilable_type(getter_type), as_nilable_type(setter_type)]
     end
 
     if column_name == @constant.primary_key ||
         column_name == "created_at" ||
         column_name == "updated_at"
-      getter_type = "T.nilable(#{getter_type})"
+      getter_type = as_nilable_type(getter_type)
     end
 
     [getter_type, setter_type]
@@ -61,6 +61,15 @@ class ActiveRecordColumnTypeHelper
   def do_not_generate_strong_types?(constant)
     Object.const_defined?(:StrongTypeGeneration) &&
         !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+  end
+
+  sig { params(type: String).returns(String) }
+  def as_nilable_type(type)
+    if type.start_with?("T.nilable(") || type == "T.untyped"
+      type
+    else
+      "T.nilable(#{type})"
+    end
   end
 
   sig { params(column_type: Object).returns(String) }

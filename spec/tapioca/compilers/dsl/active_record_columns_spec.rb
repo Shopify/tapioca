@@ -813,10 +813,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
 
           expected = indented(<<~RBI, 4)
-            sig { returns(T.nilable(T.untyped)) }
+            sig { returns(T.untyped) }
             def cost; end
 
-            sig { params(value: T.nilable(T.untyped)).returns(T.nilable(T.untyped)) }
+            sig { params(value: T.untyped).returns(T.untyped) }
             def cost=(value); end
           RBI
 
@@ -954,7 +954,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 sig { returns(T::Boolean) }
                 def id?; end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def id_before_last_save; end
 
                 sig { returns(T.untyped) }
@@ -972,7 +972,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 sig { returns(T::Boolean) }
                 def id_changed?; end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def id_in_database; end
 
                 sig { returns(T.nilable([T.untyped, T.untyped])) }
@@ -981,10 +981,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
                 sig { returns(T::Boolean) }
                 def id_previously_changed?; end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def id_previously_was; end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def id_was; end
 
                 sig { void }
