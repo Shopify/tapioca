@@ -59,6 +59,11 @@ module Tapioca
         @generic_instances[name] ||= create_generic_type(constant, name)
       end
 
+      sig { params(instance: Object).returns(T::Boolean) }
+      def generic_type_instance?(instance)
+        @generic_instances.values.any? { |generic_type| generic_type === instance }
+      end
+
       sig { params(constant: Module).returns(T.nilable(T::Array[TypeVariableModule])) }
       def lookup_type_variables(constant)
         @type_variables[constant]
