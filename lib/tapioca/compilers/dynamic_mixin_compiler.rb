@@ -174,20 +174,31 @@ class DynamicMixinCompiler
 
   sig { params(tree: RBI::Tree).returns([T::Array[Module], T::Array[Module]]) }
   def compile_mixes_in_class_methods(tree)
-    includes = dynamic_includes.select { |mod| (name = name_of(mod)) && !filtered_mixin?(name) }
-    includes.each do |mod|
+    includes = dynamic_includes.map do |mod|
       qname = qualified_name_of(mod)
-      tree << RBI::Include.new(T.must(qname))
-    end
+
+      next if qname.nil? || qname.empty?
+      next if filtered_mixin?(qname)
+
+      tree << RBI::Include.new(qname)
+
+      mod
+    end.compact
 
     # If we can generate multiple mixes_in_class_methods, then we want to use all dynamic extends that are not the
     # constant itself
-    mixed_in_class_methods = dynamic_extends.select { |mod| mod != @constant }
+    mixed_in_class_methods = dynamic_extends.select do |mod|
+      mod != @constant && !module_included_by_another_dynamic_extend?(mod, dynamic_extends)
+    end
+
     return [[], []] if mixed_in_class_methods.empty?
 
     mixed_in_class_methods.each do |mod|
       qualified_name = qualified_name_of(mod)
+
       next if qualified_name.nil? || qualified_name.empty?
+      next if filtered_mixin?(qualified_name)
+
       tree << RBI::MixesInClassMethods.new(qualified_name)
     end
 
@@ -196,10 +207,17 @@ class DynamicMixinCompiler
     [[], []] # silence errors
   end
 
-  sig { params(mixin_name: String).returns(T::Boolean) }
-  def filtered_mixin?(mixin_name)
+  sig { params(mod: Module, dynamic_extends: T::Array[Module]).returns(T::Boolean) }
+  def module_included_by_another_dynamic_extend?(mod, dynamic_extends)
+    dynamic_extends.any? do |dynamic_extend|
+      mod != dynamic_extend && ancestors_of(dynamic_extend).include?(mod)
+    end
+  end
+
+  sig { params(qualified_mixin_name: String).returns(T::Boolean) }
+  def filtered_mixin?(qualified_mixin_name)
     # filter T:: namespace mixins that aren't T::Props
     # T::Props and subconstants have semantic value
-    mixin_name.start_with?("T::") && !mixin_name.start_with?("T::Props")
+    qualified_mixin_name.start_with?("::T::") && !qualified_mixin_name.start_with?("::T::Props")
   end
 end
