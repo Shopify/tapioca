@@ -43,13 +43,13 @@ class ActiveRecordColumnTypeHelper
     setter_type = getter_type
 
     if column&.null
-      return ["T.nilable(#{getter_type})", "T.nilable(#{setter_type})"]
+      return [as_nilable_type(getter_type), as_nilable_type(setter_type)]
     end
 
     if column_name == @constant.primary_key ||
         column_name == "created_at" ||
         column_name == "updated_at"
-      getter_type = "T.nilable(#{getter_type})"
+      getter_type = as_nilable_type(getter_type)
     end
 
     [getter_type, setter_type]
@@ -63,9 +63,19 @@ class ActiveRecordColumnTypeHelper
         !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
   end
 
+  sig { params(type: String).returns(String) }
+  def as_nilable_type(type)
+    if type.start_with?("T.nilable(") || type == "T.untyped"
+      type
+    else
+      "T.nilable(#{type})"
+    end
+  end
+
   sig { params(column_type: Object).returns(String) }
   def handle_unknown_type(column_type)
     return "T.untyped" unless ActiveModel::Type::Value === column_type
+    return "T.untyped" if Tapioca::GenericTypeRegistry.generic_type_instance?(column_type)
 
     lookup_return_type_of_method(column_type, :deserialize) ||
       lookup_return_type_of_method(column_type, :cast) ||
