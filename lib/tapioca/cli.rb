@@ -5,6 +5,7 @@ module Tapioca
   class Cli < Thor
     include CliHelper
     include ConfigHelper
+    include ShimsHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
@@ -220,70 +221,37 @@ module Tapioca
       end
     end
 
-    desc "clean-shims", "clean duplicated definitions in shim RBIs"
+    desc "check-shims", "check duplicated definitions in shim RBIs"
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
     option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
-    def clean_shims(*files_to_clean)
+    def check_shims
       index = RBI::Index.new
 
-      # Index gem RBIs
-      gem_rbi_dir = options[:gem_rbi_dir]
-      say("Loading gem RBIs from #{gem_rbi_dir}... ")
-      gem_rbis_files = Dir.glob("#{gem_rbi_dir}/**/*.rbi").sort
-      gem_rbis_trees = RBI::Parser.parse_files(gem_rbis_files)
-      index.visit_all(gem_rbis_trees)
-      say(" Done", :green)
-
-      # Index dsl RBIs
-      dsl_rbi_dir = options[:dsl_rbi_dir]
-      say("Loading dsl RBIs from #{dsl_rbi_dir}... ")
-      dsl_rbis_files = Dir.glob("#{dsl_rbi_dir}/**/*.rbi").sort
-      dsl_rbis_trees = RBI::Parser.parse_files(dsl_rbis_files)
-      index.visit_all(dsl_rbis_trees)
-      say(" Done", :green)
-
-      # Clean shim RBIs
-      if files_to_clean.empty?
-        shim_rbi_dir = options[:shim_rbi_dir]
-        print("Cleaning shim RBIs from #{shim_rbi_dir}...")
-        files_to_clean = Dir.glob("#{shim_rbi_dir}/*.rbi")
-      else
-        print("Cleaning shim RBIs...")
+      shim_rbi_dir = options[:shim_rbi_dir]
+      if !Dir.exist?(shim_rbi_dir) || Dir.empty?(shim_rbi_dir)
+        say("No shim RBIs to check", :green)
+        exit(0)
       end
 
-      done_something = T.let(false, T::Boolean)
-      files_to_clean.sort.each do |path|
-        original = RBI::Parser.parse_file(path)
-        cleaned, operations = RBI::Rewriters::RemoveKnownDefinitions.remove(original, index)
+      index_rbis(index, "shim", shim_rbi_dir)
+      index_rbis(index, "gem", options[:gem_rbi_dir])
+      index_rbis(index, "dsl", options[:dsl_rbi_dir])
 
-        next if operations.empty?
-        done_something = true
-
-        operations.each do |operation|
-          print("\n  #{operation}")
+      duplicates = duplicated_nodes_from_index(index, shim_rbi_dir)
+      unless duplicates.empty?
+        duplicates.each do |key, nodes|
+          say_error("\nDuplicated RBI for #{key}:", :red)
+          nodes.each do |node|
+            say_error(" * #{node.loc}", :red)
+          end
         end
-
-        if cleaned.empty?
-          print("\n  Deleted empty file #{path}")
-          FileUtils.rm(path)
-        else
-          File.write(path, cleaned.string)
-        end
+        say_error("\nPlease remove the duplicated definitions from the #{shim_rbi_dir} directory.", :red)
+        exit(1)
       end
 
-      if done_something
-        say("\nDone", :green)
-      else
-        say(" Done ", :green)
-        say("(nothing to do)", :yellow)
-      end
-    rescue Errno::ENOENT => e
-      say_error("\nCan't read RBI: #{e}")
-      exit(1)
-    rescue RBI::ParseError => e
-      say_error("\nCan't parse RBI: #{e} (#{e.location})")
-      exit(1)
+      say("\nNo duplicates found in shim RBIs", :green)
+      exit(0)
     end
 
     map T.unsafe(["--version", "-v"] => :__print_version)

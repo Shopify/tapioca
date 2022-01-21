@@ -241,7 +241,7 @@ gem:
   doc: false
   exported_gem_rbis: true
   workers: 1
-clean_shims:
+check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
