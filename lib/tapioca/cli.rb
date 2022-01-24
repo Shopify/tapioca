@@ -255,7 +255,7 @@ module Tapioca
       exit(0)
     end
 
-    map T.unsafe(["--version", "-v"] => :__print_version)
+    map ["--version", "-v"] => :__print_version
 
     desc "--version, -v", "show version"
     def __print_version
