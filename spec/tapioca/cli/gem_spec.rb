@@ -95,6 +95,27 @@ module Tapioca
         @project.reset_bundler_version
       end
 
+      it "must support 'gems' as an alias to the command" do
+        foo = mock_gem("foo", "0.0.1") do
+          write("lib/foo.rb", FOO_RB)
+        end
+
+        @project.require_mock_gem(foo)
+        @project.bundle_install
+
+        out, err, status = @project.tapioca("gems foo")
+
+        assert_includes(out, <<~OUT)
+          Compiled foo
+                create  sorbet/rbi/gems/foo@0.0.1.rbi
+        OUT
+
+        assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+
+        assert_empty(err)
+        assert(status)
+      end
+
       describe("flags") do
         it "must show an error if --all is supplied with arguments" do
           out, err, status = @project.tapioca("gem --all foo")

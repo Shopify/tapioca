@@ -220,6 +220,7 @@ module Tapioca
         end
       end
     end
+    map "gems" => :gem
 
     desc "check-shims", "check duplicated definitions in shim RBIs"
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
