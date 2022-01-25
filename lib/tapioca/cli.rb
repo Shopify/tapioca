@@ -220,6 +220,7 @@ module Tapioca
         end
       end
     end
+    map "gems" => :gem
 
     desc "check-shims", "check duplicated definitions in shim RBIs"
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
@@ -254,7 +255,7 @@ module Tapioca
       exit(0)
     end
 
-    map T.unsafe(["--version", "-v"] => :__print_version)
+    map ["--version", "-v"] => :__print_version
 
     desc "--version, -v", "show version"
     def __print_version
