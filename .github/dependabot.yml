@@ -4,9 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    allow:
-      - dependency-name: "sorbet"
-      - dependency-name: "sorbet-runtime"
     reviewers:
       - "Shopify/sorbet"
     labels:
