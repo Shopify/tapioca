@@ -53,6 +53,8 @@ Spoom::Cli::Coverage::DATA_DIR = T.let(T.unsafe(nil), String)
 module Spoom::Cli::Helper
   include ::Spoom::Colorize
 
+  requires_ancestor { Thor }
+
   sig { params(string: String).returns(String) }
   def blue(string); end
 
