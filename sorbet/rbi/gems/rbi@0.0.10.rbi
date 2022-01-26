@@ -344,10 +344,12 @@ end
 class RBI::Group::Kind < ::T::Enum
   enums do
     Mixins = new
+    RequiredAncestors = new
     Helpers = new
     TypeMembers = new
     MixesInClassMethods = new
     Sends = new
+    Attrs = new
     TStructFields = new
     TEnums = new
     Inits = new
@@ -693,8 +695,8 @@ class RBI::Node
 
   def parent_tree=(_arg0); end
 
-  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
-  def print(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil)); end
+  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).void }
+  def print(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
 
   sig { params(v: RBI::Printer).void }
   def print_blank_line_before(v); end
@@ -702,8 +704,8 @@ class RBI::Node
   sig { params(node: RBI::Node).void }
   def replace(node); end
 
-  sig { params(indent: Integer, print_locs: T::Boolean).returns(String) }
-  def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil)); end
+  sig { params(indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).returns(String) }
+  def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
 end
 
 class RBI::NodeWithComments < ::RBI::Node
@@ -805,8 +807,11 @@ class RBI::Parser
 end
 
 class RBI::Printer < ::RBI::Visitor
-  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
-  def initialize(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil)); end
+  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).void }
+  def initialize(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
+
+  sig { returns(Integer) }
+  def current_indent; end
 
   sig { void }
   def dedent; end
@@ -817,6 +822,9 @@ class RBI::Printer < ::RBI::Visitor
   # Printing
   sig { void }
   def indent; end
+
+  sig { returns(T.nilable(Integer)) }
+  def max_line_length; end
 
   sig { returns(T.nilable(RBI::Node)) }
   def previous_node; end
@@ -873,6 +881,25 @@ class RBI::ReqParam < ::RBI::Param
 
   sig { params(other: T.nilable(Object)).returns(T::Boolean) }
   def ==(other); end
+end
+
+class RBI::RequiresAncestor < ::RBI::NodeWithComments
+  include ::RBI::Indexable
+
+  sig { params(name: String, loc: T.nilable(RBI::Loc), comments: T::Array[RBI::Comment]).void }
+  def initialize(name, loc: T.unsafe(nil), comments: T.unsafe(nil)); end
+
+  sig { override.params(v: RBI::Printer).void }
+  def accept_printer(v); end
+
+  sig { override.returns(T::Array[String]) }
+  def index_ids; end
+
+  sig { returns(String) }
+  def name; end
+
+  sig { override.returns(String) }
+  def to_s; end
 end
 
 class RBI::RestParam < ::RBI::Param
@@ -1157,6 +1184,9 @@ class RBI::Rewriters::RemoveKnownDefinitions < ::RBI::Visitor
 
   private
 
+  sig { params(node: RBI::Node, previous: RBI::Node).returns(T::Boolean) }
+  def can_delete_node?(node, previous); end
+
   sig { params(node: RBI::Node, previous: RBI::Node).void }
   def delete_node(node, previous); end
 
@@ -1195,6 +1225,9 @@ class RBI::Rewriters::SortNodes < ::RBI::Visitor
 
   sig { params(node: RBI::Node).returns(Integer) }
   def node_rank(node); end
+
+  sig { params(node: RBI::Node).void }
+  def sort_node_names!(node); end
 end
 
 # Scopes
@@ -1332,6 +1365,17 @@ class RBI::Sig < ::RBI::Node
 
   sig { returns(T::Array[String]) }
   def type_params; end
+
+  private
+
+  sig { params(v: RBI::Printer).void }
+  def print_as_block(v); end
+
+  sig { params(v: RBI::Printer).void }
+  def print_as_line(v); end
+
+  sig { returns(T::Array[String]) }
+  def sig_modifiers; end
 end
 
 class RBI::SigBuilder < ::RBI::ASTVisitor
@@ -1654,6 +1698,9 @@ class RBI::TreeBuilder < ::RBI::ASTVisitor
 
   sig { params(node: AST::Node).returns(RBI::Param) }
   def parse_param(node); end
+
+  sig { params(node: AST::Node).returns(RBI::RequiresAncestor) }
+  def parse_requires_ancestor(node); end
 
   sig { params(node: AST::Node).returns(RBI::Scope) }
   def parse_scope(node); end
