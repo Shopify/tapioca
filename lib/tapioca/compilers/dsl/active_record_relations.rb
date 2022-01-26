@@ -388,7 +388,7 @@ module Tapioca
             #   `T.any(Model, Integer, String, T::Enumerable[T.any(Model, Integer, String, T::Enumerable[Model])])`
             model_or_id_collection =
               "T.any(#{constant_name}, Integer, String" \
-                ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])"
+              ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])"
 
             COLLECTION_PROXY_METHODS.each do |method_name|
               case method_name

@@ -30,7 +30,9 @@ Sorbet/FalseSigil:
 Sorbet/TrueSigil:
   Enabled: true
   Include:
-  - "**/*.rb"
+    - "**/*.rb"
+  Exclude:
+    - "**/*.rake"
 
 Sorbet/ConstantsFromStrings:
   Enabled: false

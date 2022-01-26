@@ -105,9 +105,7 @@ module Tapioca
       config_options.map do |config_option_key, config_option_value|
         command_option = command_options[config_option_key.to_sym]
 
-        unless command_option
-          next build_error("unknown option `#{config_option_key}` for key `#{config_key}`")
-        end
+        next build_error("unknown option `#{config_option_key}` for key `#{config_key}`") unless command_option
 
         config_option_value_type = case config_option_value
         when FalseClass, TrueClass
@@ -124,10 +122,9 @@ module Tapioca
           :object
         end
 
+        next build_error("invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
+                         "`#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}") \
         unless config_option_value_type == command_option.type
-          next build_error("invalid value for option `#{config_option_key}` for key `#{config_key}` " \
-            "- expected `#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}")
-        end
       end.compact
     end
 
