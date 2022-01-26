@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.files         = Dir.glob("lib/**/*.rb") + ["README.md", "Gemfile", "Rakefile"]
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
-  spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.add_dependency("bundler", ">= 1.17.3")
   spec.add_dependency("pry", ">= 0.12.2")

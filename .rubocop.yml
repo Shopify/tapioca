@@ -36,3 +36,6 @@ Sorbet/TrueSigil:
 
 Sorbet/ConstantsFromStrings:
   Enabled: false
+
+Gemspec/RequireMFA:
+  Enabled: false
