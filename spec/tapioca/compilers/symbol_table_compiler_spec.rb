@@ -3384,5 +3384,65 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it "compile required ancestors" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Base
+          extend T::Helpers
+
+          requires_ancestor { ::Helper }
+
+          module Helper; end
+        end
+
+        module Helper
+          extend T::Helpers
+
+          requires_ancestor { Kernel }
+        end
+
+        module TestHelper
+          extend T::Helpers
+
+          requires_ancestor { Base::Helper }
+          requires_ancestor { ViewHelpers::UrlHelper }
+          requires_ancestor { Assertions }
+          requires_ancestor { Hooks }
+
+          module Assertions; end
+          module Hooks; end
+        end
+
+        module ViewHelpers
+          module UrlHelper; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Base
+          requires_ancestor { Helper }
+        end
+
+        module Base::Helper; end
+
+        module Helper
+          requires_ancestor { Kernel }
+        end
+
+        module TestHelper
+          requires_ancestor { Base::Helper }
+          requires_ancestor { TestHelper::Assertions }
+          requires_ancestor { TestHelper::Hooks }
+          requires_ancestor { ViewHelpers::UrlHelper }
+        end
+
+        module TestHelper::Assertions; end
+        module TestHelper::Hooks; end
+        module ViewHelpers; end
+        module ViewHelpers::UrlHelper; end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end

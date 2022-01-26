@@ -12,3 +12,4 @@
 require "tapioca/trackers/mixin"
 require "tapioca/trackers/constant_definition"
 require "tapioca/trackers/autoload"
+require "tapioca/trackers/required_ancestor"
