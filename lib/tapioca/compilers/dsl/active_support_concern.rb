@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/compilers/sorbet"
-
 begin
   require "active_support"
 rescue LoadError

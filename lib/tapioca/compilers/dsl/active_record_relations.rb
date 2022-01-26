@@ -168,6 +168,7 @@ module Tapioca
         class RelationGenerator
           extend T::Sig
           include ParamHelper
+          include SorbetHelper
           include Reflection
           include Helper::ActiveRecordConstants
 
@@ -260,7 +261,7 @@ module Tapioca
             # handling `NilClass` returns from `to_ary`. We should not be typing `to_ary` like
             # this for older versions since it will make all flatten operations be
             # `T::Array[NilClass]`, otherwise.
-            if Tapioca::Compilers::Sorbet.supports?(:to_ary_nil_support)
+            if sorbet_supports?(:to_ary_nil_support)
               # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
               # See https://github.com/sorbet/sorbet/pull/4706 for details
               model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
