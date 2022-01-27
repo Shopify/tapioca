@@ -155,6 +155,7 @@ GEM
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
     io-wait (0.2.1)
+    language_server-protocol (3.16.0.3)
     loofah (2.10.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -243,6 +244,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.15.1)
       parser (>= 3.0.1.1)
+    rubocop-lsp (0.1.6)
+      language_server-protocol (>= 3.16)
+      rubocop (>= 1.0)
     rubocop-rspec (2.4.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
@@ -324,6 +328,7 @@ DEPENDENCIES
   pry-byebug
   rails
   rake
+  rubocop-lsp
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
