@@ -294,12 +294,6 @@ module Tapioca
             return_type: "T::Boolean"
           )
         end
-
-        sig { params(type: String).returns(String) }
-        def as_nilable_type(type)
-          return type if type.start_with?("T.nilable(") || type == "T.untyped"
-          "T.nilable(#{type})"
-        end
       end
     end
   end

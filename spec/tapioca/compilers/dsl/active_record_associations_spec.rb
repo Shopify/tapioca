@@ -184,16 +184,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               include GeneratedAssociationMethods
 
               module GeneratedAssociationMethods
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def category; end
 
-                sig { params(value: T.nilable(T.untyped)).void }
+                sig { params(value: T.untyped).void }
                 def category=(value); end
 
                 sig { params(attributes: T.untyped).returns(T.untyped) }
                 def category_attributes=(attributes); end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def reload_category; end
               end
             end
@@ -872,16 +872,16 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
               include GeneratedAssociationMethods
 
               module GeneratedAssociationMethods
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def category; end
 
-                sig { params(value: T.nilable(T.untyped)).void }
+                sig { params(value: T.untyped).void }
                 def category=(value); end
 
                 sig { params(attributes: T.untyped).returns(T.untyped) }
                 def category_attributes=(attributes); end
 
-                sig { returns(T.nilable(T.untyped)) }
+                sig { returns(T.untyped) }
                 def reload_category; end
               end
             end
@@ -1499,22 +1499,22 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
             sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
             def create_photo_blob!(*args, &blk); end
 
-            sig { returns(T.nilable(T.untyped)) }
+            sig { returns(T.untyped) }
             def photo_attachment; end
 
-            sig { params(value: T.nilable(T.untyped)).void }
+            sig { params(value: T.untyped).void }
             def photo_attachment=(value); end
 
-            sig { returns(T.nilable(T.untyped)) }
+            sig { returns(T.untyped) }
             def photo_blob; end
 
-            sig { params(value: T.nilable(T.untyped)).void }
+            sig { params(value: T.untyped).void }
             def photo_blob=(value); end
 
-            sig { returns(T.nilable(T.untyped)) }
+            sig { returns(T.untyped) }
             def reload_photo_attachment; end
 
-            sig { returns(T.nilable(T.untyped)) }
+            sig { returns(T.untyped) }
             def reload_photo_blob; end
           end
         end

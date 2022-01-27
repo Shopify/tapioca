@@ -184,7 +184,7 @@ module Tapioca
         end
         def populate_single_assoc_getter_setter(klass, constant, association_name, reflection)
           association_class = type_for(constant, reflection)
-          association_type = "T.nilable(#{association_class})"
+          association_type = as_nilable_type(association_class)
 
           klass.create_method(
             association_name.to_s,

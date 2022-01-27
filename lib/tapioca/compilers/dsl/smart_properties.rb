@@ -143,11 +143,8 @@ module Tapioca
             "T.untyped"
           end
 
-          # Early return for "T.untyped", nothing more to do.
-          return type if type == "T.untyped"
-
           might_be_optional = Proc === required || !required
-          type = "T.nilable(#{type})" if might_be_optional
+          type = as_nilable_type(type) if might_be_optional
 
           type
         end
