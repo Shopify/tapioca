@@ -13,6 +13,8 @@ AllCops:
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
+  Include:
+  - "sorbet/rbi/**/*.rbi"
 
 Gemspec/RequireMFA:
   Enabled: false

@@ -1,11 +1,9 @@
 # typed: strict
 
 module T::Private
-  module Abstract
-    class Data
-      def self.get(mod, key); end
-      def self.set_default(mod, key, value); end
-    end
+  class Abstract::Data
+    def self.get(mod, key); end
+    def self.set_default(mod, key, value); end
   end
 
   class Final
@@ -16,10 +14,7 @@ module T::Private
     def self.sealed_module?(mod); end
   end
 
-  module Types
-    class NotTyped < T::Types::Base
-    end
-  end
+  class Types::NotTyped < T::Types::Base; end
 end
 
 class T::Enum

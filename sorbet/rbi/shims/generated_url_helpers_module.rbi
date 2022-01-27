@@ -1,4 +1,3 @@
 # typed: strict
 
-module GeneratedUrlHelpersModule
-end
+module GeneratedUrlHelpersModule; end
