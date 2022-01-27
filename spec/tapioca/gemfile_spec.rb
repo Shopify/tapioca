@@ -9,26 +9,26 @@ module Tapioca
     extend T::Sig
 
     describe("gem can export RBI files") do
-      it("export_rbi_files? returns false if the gem does not export RBI files") do
+      it "export_rbi_files? returns false if the gem does not export RBI files" do
         foo_gem = mock_gem("foo", "0.0.1")
         foo_spec = make_spec(foo_gem)
         refute(foo_spec.export_rbi_files?)
       end
 
-      it("export_rbi_files? returns true if the gem exports at least one RBI file") do
+      it "export_rbi_files? returns true if the gem exports at least one RBI file" do
         bar_gem = mock_gem("bar", "1.0.0")
         bar_gem.write("rbi/foo.rbi")
         bar_spec = make_spec(bar_gem)
         assert(bar_spec.export_rbi_files?)
       end
 
-      it("exported_rbi_files returns an empty array if the gem does not export RBI files") do
+      it "exported_rbi_files returns an empty array if the gem does not export RBI files" do
         foo_gem = mock_gem("foo", "0.0.1")
         foo_spec = make_spec(foo_gem)
         assert_empty(foo_spec.exported_rbi_files)
       end
 
-      it("exported_rbi_files returns the list of RBI files exported by the gem") do
+      it "exported_rbi_files returns the list of RBI files exported by the gem" do
         bar_gem = mock_gem("bar", "1.0.0")
         bar_gem.write("rbi/foo.rbi")
         bar_gem.write("rbi/bar.rbi")
@@ -37,7 +37,7 @@ module Tapioca
         assert_equal(["bar.rbi", "foo.rbi"], bar_rbis)
       end
 
-      it("creates an empty tree if the gem does not export RBI files") do
+      it "creates an empty tree if the gem does not export RBI files" do
         foo_gem = mock_gem("foo", "0.0.1")
         foo_spec = make_spec(foo_gem)
         foo_tree = foo_spec.exported_rbi_tree
@@ -45,7 +45,7 @@ module Tapioca
         assert_empty(foo_tree)
       end
 
-      it("creates a tree by merging all the RBI files exported by te gem") do
+      it "creates a tree by merging all the RBI files exported by te gem" do
         foo_gem = mock_gem("foo", "0.0.1")
 
         foo_gem.write("rbi/foo.rbi", <<~RBI)
@@ -86,7 +86,7 @@ module Tapioca
         RBI
       end
 
-      it("creates a tree with conflicts if the gem export RBI files with conflicting definitions") do
+      it "creates a tree with conflicts if the gem export RBI files with conflicting definitions" do
         foo_gem = mock_gem("foo", "0.0.1")
 
         foo_gem.write("rbi/foo.rbi", <<~RBI)

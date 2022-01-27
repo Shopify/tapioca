@@ -50,7 +50,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       rbi.root.string
     end
 
-    it("compiles DelegateClass") do
+    it "compiles DelegateClass" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
         end
@@ -69,7 +69,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("does not compile Sorbet related constants") do
+    it "does not compile Sorbet related constants" do
       add_ruby_file("bar.rb", <<~RUBY)
         module Bar
           extend(::T::Sig)
@@ -129,7 +129,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("correctly compiles abstract methods") do
+    it "correctly compiles abstract methods" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           extend T::Sig
@@ -160,7 +160,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("correctly compiles abstract singleton methods") do
+    it "correctly compiles abstract singleton methods" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           extend T::Sig
@@ -193,7 +193,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("correctly compiles abstract singleton methods nested") do
+    it "correctly compiles abstract singleton methods nested" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           extend T::Helpers
@@ -229,7 +229,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("correctly compiles abstract singleton methods all nested") do
+    it "correctly compiles abstract singleton methods all nested" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           class << self
@@ -258,7 +258,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles complex type aliases") do
+    it "compiles complex type aliases" do
       add_ruby_file("bar.rb", <<~RUBY)
         module Bar
           module A
@@ -279,7 +279,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles extensions to BasicObject and Object") do
+    it "compiles extensions to BasicObject and Object" do
       add_ruby_file("ext.rb", <<~RUBY)
         class BasicObject
           def hello
@@ -315,7 +315,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_includes(compiled, object_output)
     end
 
-    it("compiles mixins in the correct order") do
+    it "compiles mixins in the correct order" do
       add_ruby_file("bar.rb", <<~RUBY)
         module ModuleA
         end
@@ -355,7 +355,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles classes that have overridden == method that errors") do
+    it "compiles classes that have overridden == method that errors" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def self.==(other)
@@ -375,7 +375,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles classes defined as static fields") do
+    it "compiles classes defined as static fields" do
       add_ruby_file("symbol_table_compiler_test.rb", <<~RUBY)
         SymbolTableCompilerTest = Class.new
       RUBY
@@ -387,7 +387,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles extensions to core types") do
+    it "compiles extensions to core types" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def to_s
@@ -471,7 +471,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles without annotations") do
+    it "compiles without annotations" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def num(a)
@@ -489,7 +489,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles methods and leaves spacing") do
+    it "compiles methods and leaves spacing" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def num
@@ -510,7 +510,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles constants assignments") do
+    it "compiles constants assignments" do
       add_ruby_file("a.rb", <<~RUBY)
         module A
           ABC = 1
@@ -531,7 +531,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles simple arguments") do
+    it "compiles simple arguments" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def add(a, b:)
@@ -548,7 +548,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles default arguments") do
+    it "compiles default arguments" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def add(a = nil, b: 1)
@@ -565,7 +565,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles modules") do
+    it "compiles modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           # @return [Integer] a number
@@ -583,7 +583,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles compact SymbolTableCompilerTests") do
+    it "compiles compact SymbolTableCompilerTests" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -605,7 +605,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles nested namespaces") do
+    it "compiles nested namespaces" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           class Bar
@@ -626,7 +626,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles compact namespaces nested") do
+    it "compiles compact namespaces nested" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           module Bar
@@ -650,7 +650,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles deeply nested namespaces") do
+    it "compiles deeply nested namespaces" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           class Bar
@@ -674,7 +674,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class with a superclass") do
+    it "compiles a class with a superclass" do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz
           def toto
@@ -698,7 +698,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class with a relative superclass") do
+    it "compiles a class with a relative superclass" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           class Baz
@@ -717,7 +717,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class alias that is pointing to a constant which has been overwritten") do
+    it "compiles a class alias that is pointing to a constant which has been overwritten" do
       add_ruby_file("baz.rb", <<~RUBY)
         class HTTPClient
           module CookieManager
@@ -744,7 +744,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a constant which is aliased to a constant that has been overwritten as a placeholder") do
+    it "compiles a constant which is aliased to a constant that has been overwritten as a placeholder" do
       add_ruby_file("overwritten_class_module_references.rb", <<~RUBY)
         class MyClient
         end
@@ -781,7 +781,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class with an anchored superclass") do
+    it "compiles a class with an anchored superclass" do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz
         end
@@ -803,7 +803,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class with an private superclass") do
+    it "compiles a class with an private superclass" do
       add_ruby_file("toto.rb", <<~RUBY)
         module Toto
           class Baz
@@ -828,7 +828,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles constants that have a hash method on the constant which does not return an Integer") do
+    it "compiles constants that have a hash method on the constant which does not return an Integer" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           class << self
@@ -874,7 +874,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles constants that have horrible eql? or equal? overrides") do
+    it "compiles constants that have horrible eql? or equal? overrides" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           module Bar
@@ -910,7 +910,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class which effectively has itself as a superclass") do
+    it "compiles a class which effectively has itself as a superclass" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           class Baz < Numeric
@@ -941,7 +941,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a class with mixins") do
+    it "compiles a class with mixins" do
       add_ruby_file("baz.rb", <<~RUBY)
         class Baz
           def baz
@@ -1005,7 +1005,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles Structs, Classes, and Modules") do
+    it "compiles Structs, Classes, and Modules" do
       add_ruby_file("structs.rb", <<~RUBY)
         class S1 < Struct.new(:foo)
         end
@@ -1085,7 +1085,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles dynamic mixins") do
+    it "handles dynamic mixins" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -1124,7 +1124,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles methods on the class's singleton class") do
+    it "compiles methods on the class's singleton class" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def self.num(a)
@@ -1144,7 +1144,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("doesn't compile non-static singleton class reopening") do
+    it "doesn't compile non-static singleton class reopening" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           obj = Object.new
@@ -1162,7 +1162,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores methods on other objects") do
+    it "ignores methods on other objects" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           a = Object.new
@@ -1179,7 +1179,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles a singleton class") do
+    it "compiles a singleton class" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           class << self
@@ -1200,7 +1200,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles blocks") do
+    it "compiles blocks" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def size(&block)
@@ -1221,7 +1221,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles attr_reader/attr_writer/attr_accessor") do
+    it "compiles attr_reader/attr_writer/attr_accessor" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           attr_reader(:foo)
@@ -1248,7 +1248,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores methods with invalid names") do
+    it "ignores methods with invalid names" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           define_method("foo") do
@@ -1270,7 +1270,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores method calls") do
+    it "ignores method calls" do
       add_ruby_file("foo.rb", "", require_file: false)
 
       add_ruby_file("bar.rb", <<~RUBY)
@@ -1296,7 +1296,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores loops") do
+    it "ignores loops" do
       add_ruby_file("toto.rb", <<~RUBY)
         class Toto
           for x in [1, 2, 3]
@@ -1319,7 +1319,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("renames unnamed splats") do
+    it "renames unnamed splats" do
       add_ruby_file("toto.rb", <<~RUBY)
         class Toto
           def toto(a, *, **)
@@ -1336,7 +1336,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores ivar and cvar assigns") do
+    it "ignores ivar and cvar assigns" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           @@mod_var = 1
@@ -1352,7 +1352,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("ignores things done in the file body") do
+    it "ignores things done in the file body" do
       add_ruby_file("foo.rb", <<~RUBY)
         begin
           require "no_existent"
@@ -1393,7 +1393,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles methods of all visibility for classes") do
+    it "compiles methods of all visibility for classes" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def toto
@@ -1463,7 +1463,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles methods of all visibility for modules") do
+    it "compiles methods of all visibility for modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           def toto
@@ -1506,7 +1506,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("removes useless spacing") do
+    it "removes useless spacing" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           a = b = c = 1
@@ -1523,7 +1523,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles initialize") do
+    it "compiles initialize" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           def initialize
@@ -1540,7 +1540,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("understands redefined attr_accessor") do
+    it "understands redefined attr_accessor" do
       add_ruby_file("toto.rb", <<~RUBY)
         class Toto
           # @return [String]
@@ -1568,7 +1568,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles inheritance properly when the parent is a method call") do
+    it "handles inheritance properly when the parent is a method call" do
       add_ruby_file("baz.rb", <<~RUBY)
         module Baz
           class Bar; end
@@ -1596,7 +1596,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles multiple assign of constants") do
+    it "handles multiple assign of constants" do
       add_ruby_file("toto.rb", <<~RUBY)
         module Toto
           A, B, C, *D, e = "1.2.3.4".split(".")
@@ -1616,7 +1616,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles constants that override #!") do
+    it "handles constants that override #!" do
       add_ruby_file("hostile.rb", <<~RUBY)
         class Hostile
           class << self
@@ -1638,7 +1638,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles ranges properly") do
+    it "handles ranges properly" do
       add_ruby_file("toto.rb", <<~RUBY)
         module Toto
           A = ('a'...'z')
@@ -1653,7 +1653,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles weak maps properly") do
+    it "handles weak maps properly" do
       add_ruby_file("weak_map.rb", <<~RUBY)
         Foo = ObjectSpace::WeakMap.new
       RUBY
@@ -1665,7 +1665,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("doesn't output prepend for modules unrechable via constants") do
+    it "doesn't output prepend for modules unrechable via constants" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -1687,7 +1687,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("doesn't output include for modules unrechable via constants") do
+    it "doesn't output include for modules unrechable via constants" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -1709,7 +1709,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("can handle BasicObjects") do
+    it "can handle BasicObjects" do
       add_ruby_file("basic_object_test.rb", <<~RUBY)
         module BasicObjectTest
           class B < ::BasicObject
@@ -1730,7 +1730,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("adds mixes_in_class_methods to modules that extend base classes") do
+    it "adds mixes_in_class_methods to modules that extend base classes" do
       add_ruby_file("concern.rb", <<~RUBY)
         module Concern
           def included(base)
@@ -1836,7 +1836,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("safely bails out of generating mixes_in_class_methods for modules that do weird things") do
+    it "safely bails out of generating mixes_in_class_methods for modules that do weird things" do
       add_ruby_file("concern_that_requires_random_stuff.rb", <<~RUBY)
         module ConcernThatRequiresRandomStuff
           def self.included(base)
@@ -1889,7 +1889,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSupport::Concern") do
+    it "adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSupport::Concern" do
       add_ruby_file("validations.rb", <<~RUBY)
         require "active_support/concern"
 
@@ -1949,7 +1949,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
+    it "properly treats pre-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances" do
       add_ruby_file("active_support/deprecation/deprecation_proxy.rb", <<~RUBY)
         module ActiveSupport
           class Deprecation
@@ -2045,7 +2045,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances") do
+    it "properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances" do
       add_ruby_file("active_support/deprecation/deprecation_proxy.rb", <<~RUBY)
         module ActiveSupport
           class Deprecation
@@ -2132,7 +2132,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("properly filters out T::Private modules") do
+    it "properly filters out T::Private modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Private::Methods::SingletonMethodHooks)
@@ -2157,7 +2157,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("doesn't filter out T::Props modules") do
+    it "doesn't filter out T::Props modules" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Props)
@@ -2186,7 +2186,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("doesn't crash when `singleton_class` is overloaded") do
+    it "doesn't crash when `singleton_class` is overloaded" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           module Bar
@@ -2219,7 +2219,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("sanitize parameter names created through meta-programming") do
+    it "sanitize parameter names created through meta-programming" do
       add_ruby_file("foo.rb", template(<<~RUBY))
         class Foo
         <% if ruby_version(">= 2.7.0") %>
@@ -2245,7 +2245,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles T::Enum") do
+    it "compiles T::Enum" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Bar
           class Baz < T::Enum
@@ -2293,7 +2293,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("does not think random types that override < are T::Enum") do
+    it "does not think random types that override < are T::Enum" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           def self.<(other)
@@ -2318,7 +2318,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles signatures and structs in source files") do
+    it "compiles signatures and structs in source files" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Sig)
@@ -2628,7 +2628,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles fixed hashes in params properly") do
+    it "compiles fixed hashes in params properly" do
       add_ruby_file("sigs_with_fixed_hash_with_symbols_and_string.rb", <<~RUBY)
         class Foo
           extend T::Sig
@@ -2649,7 +2649,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("can compile sealed generics") do
+    it "can compile sealed generics" do
       add_ruby_file("sealed_generic.rb", <<~RUBY)
         class Foo
           extend T::Sig
@@ -2677,7 +2677,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("can compile generic constant types") do
+    it "can compile generic constant types" do
       add_ruby_file("optional.rb", <<~RUBY)
         class Foo
           extend T::Generic
@@ -2719,7 +2719,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("can compile typed struct generics") do
+    it "can compile typed struct generics" do
       add_ruby_file("tstruct_generic.rb", <<~RUBY)
         class Foo < T::Struct
           extend T::Generic
@@ -2749,7 +2749,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("can compile generics that prohibit subclasses") do
+    it "can compile generics that prohibit subclasses" do
       add_ruby_file("non_subclassable_generic.rb", <<~RUBY)
         class Foo
           extend T::Generic
@@ -2780,7 +2780,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles nested generic interfaces") do
+    it "compiles nested generic interfaces" do
       add_ruby_file("generic.rb", <<~RUBY)
         module Root
           extend T::Sig
@@ -2874,7 +2874,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("compiles structs with default values") do
+    it "compiles structs with default values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct
           extend T::Sig
@@ -2921,7 +2921,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("never sorts mixins") do
+    it "never sorts mixins" do
       add_ruby_file("foo.rb", <<~RUBY)
         module ActiveSupport
           module Rescuable
@@ -2988,7 +2988,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("skips signatures if they raise") do
+    it "skips signatures if they raise" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Sig)
@@ -3030,7 +3030,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles signatures with attached classes") do
+    it "handles signatures with attached classes" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           class FooAttachedClass; end
@@ -3075,7 +3075,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles class attributes created inside included blocks") do
+    it "handles class attributes created inside included blocks" do
       require "active_support/concern"
 
       add_ruby_file("foo.rb", <<~RUBY)
@@ -3137,7 +3137,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("handles class_env created classes and modules") do
+    it "handles class_env created classes and modules" do
       add_ruby_file("container.rb", <<~RUBY)
         class Container
           class_eval <<~EOF
@@ -3162,7 +3162,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it("includes comment documentation from sources when doc is true") do
+    it "includes comment documentation from sources when doc is true" do
       add_ruby_file("foo.rb", <<~RUBY)
         # frozen_string_literal: true
 
@@ -3278,7 +3278,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_doc: true))
     end
 
-    it("doesn't include YARD docs by default") do
+    it "doesn't include YARD docs by default" do
       add_ruby_file("foo.rb", <<~RUBY)
         # Namespace
         #
@@ -3370,7 +3370,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_doc: false))
     end
 
-    it("properly processes void in type aliases") do
+    it "properly processes void in type aliases" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
           MyType = T.type_alias { T.proc.params(val: T.untyped).void }

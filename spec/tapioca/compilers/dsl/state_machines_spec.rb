@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no StateMachines classes") do
+    it "gathers no constants if there are no StateMachines classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only StateMachines classes") do
+    it "gathers only StateMachines classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Vehicle
           state_machine
@@ -36,7 +36,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it(" generates an RBI that includes state accessor methods") do
+    it " generates an RBI that includes state accessor methods" do
       add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -133,7 +133,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       assert_equal(expected, rbi_for(:Vehicle))
     end
 
-    it("generates an RBI that includes name helpers methods") do
+    it "generates an RBI that includes name helpers methods" do
       add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -165,7 +165,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       assert_includes(rbi_for(:Vehicle), expected)
     end
 
-    it("generates an RBI with path, event and state helper methods") do
+    it "generates an RBI with path, event and state helper methods" do
       add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           state_machine :alarm_state, initial: :active, namespace: :'alarm' do
@@ -215,7 +215,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       assert_includes(rbi_for(:Vehicle), expected)
     end
 
-    it("generates an RBI with path helper methods only") do
+    it "generates an RBI with path helper methods only" do
       add_ruby_file("vehicle.rb", <<~RUBY)
         class Vehicle
           attr_accessor :seatbelt_on, :time_used, :auto_shop_busy
@@ -234,7 +234,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       assert_includes(rbi_for(:Vehicle), expected)
     end
 
-    it("generates an RBI with scope methods when state machine defines scopes") do
+    it "generates an RBI with scope methods when state machine defines scopes" do
       add_ruby_file("custom_attribute_integration.rb", <<~RUBY)
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base
@@ -276,7 +276,7 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
       assert_includes(rbi_for(:Vehicle), expected)
     end
 
-    it("generates an RBI with action methods when state machine defines an action") do
+    it "generates an RBI with action methods when state machine defines an action" do
       add_ruby_file("custom_attribute_integration.rb", <<~RUBY)
         module CustomAttributeIntegration
           include StateMachines::Integrations::Base

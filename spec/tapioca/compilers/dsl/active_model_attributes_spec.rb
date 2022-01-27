@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no classes using ActiveModel::Attributes") do
+    it "gathers no constants if there are no classes using ActiveModel::Attributes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only classes including ActiveModel::Attributes") do
+    it "gathers only classes including ActiveModel::Attributes" do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
         end
@@ -25,7 +25,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       assert_equal(["ShopWithAttributes"], gathered_constants)
     end
 
-    it("does not gather Active Record models") do
+    it "does not gather Active Record models" do
       add_ruby_file("post.rb", <<~RUBY)
         require "active_record"
 
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there are no attributes in the class") do
+    it "generates empty RBI file if there are no attributes in the class" do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
           include ActiveModel::Attributes
@@ -56,7 +56,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       assert_equal(expected, rbi_for(:Shop))
     end
 
-    it("generates method sigs for every active model attribute") do
+    it "generates method sigs for every active model attribute" do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
           include ActiveModel::Attributes
@@ -80,7 +80,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       assert_equal(expected, rbi_for(:Shop))
     end
 
-    it("only generates method for Active Model attributes and no other") do
+    it "only generates method for Active Model attributes and no other" do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
           include ActiveModel::Attributes
@@ -105,7 +105,7 @@ class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
       assert_equal(expected, rbi_for(:Shop))
     end
 
-    it("generates method sigs with param types when type set on attribute") do
+    it "generates method sigs with param types when type set on attribute" do
       add_ruby_file("shop.rb", <<~RUBY)
         class Shop
           include ActiveModel::Attributes

@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveJob subclasses") do
+    it "gathers no constants if there are no ActiveJob subclasses" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveJob subclasses") do
+    it "gathers only ActiveJob subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
         end
@@ -25,7 +25,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       assert_equal(["NotifyJob"], gathered_constants)
     end
 
-    it("gathers subclasses of ActiveJob subclasses") do
+    it "gathers subclasses of ActiveJob subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
         end
@@ -43,7 +43,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates an empty RBI file if there is no perform method") do
+    it "generates an empty RBI file if there is no perform method" do
       add_ruby_file("job.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
         end
@@ -56,7 +56,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifyJob))
     end
 
-    it("generates correct RBI file for subclass with methods") do
+    it "generates correct RBI file for subclass with methods" do
       add_ruby_file("job.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
           def perform(user_id)
@@ -82,7 +82,7 @@ class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifyJob))
     end
 
-    it("generates correct RBI file for subclass with method signatures") do
+    it "generates correct RBI file for subclass with method signatures" do
       add_ruby_file("job.rb", <<~RUBY)
         class NotifyJob < ActiveJob::Base
           extend T::Sig

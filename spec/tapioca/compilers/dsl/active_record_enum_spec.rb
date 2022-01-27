@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveRecord classes") do
+    it "gathers no constants if there are no ActiveRecord classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord constants including abstract classes") do
+    it "gathers only ActiveRecord constants including abstract classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
         end
@@ -35,7 +35,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates RBI file for classes with an enum attribute") do
+    it "generates RBI file for classes with an enum attribute" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [ :active, :archived ]
@@ -72,7 +72,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with an enum attribute with string values") do
+    it "generates RBI file for classes with an enum attribute with string values" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: "0", archived: "1" }
@@ -110,7 +110,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with an enum attribute with mix value types") do
+    it "generates RBI file for classes with an enum attribute with mix value types" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: 0, archived: true, inactive: "Inactive" }
@@ -153,7 +153,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with multiple enum attributes") do
+    it "generates RBI file for classes with multiple enum attributes" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [ :active, :archived ]
@@ -206,7 +206,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with multiple enum attributes with mix value types") do
+    it "generates RBI file for classes with multiple enum attributes with mix value types" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: { active: 0, archived: true, inactive: "Inactive" }
@@ -277,7 +277,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with enum attribute with suffix specified") do
+    it "generates RBI file for classes with enum attribute with suffix specified" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [:active, :archived], _suffix: true
@@ -314,7 +314,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with enum attribute with prefix specified") do
+    it "generates RBI file for classes with enum attribute with prefix specified" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Conversation < ActiveRecord::Base
           enum status: [:active, :archived], _prefix: :comments
@@ -351,7 +351,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:Conversation))
     end
 
-    it("generates RBI file for classes with enum attribute with inheritance") do
+    it "generates RBI file for classes with enum attribute with inheritance" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class AbstractConversation < ActiveRecord::Base
           enum status: [:active, :archived]
@@ -415,7 +415,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
       assert_equal(expected, rbi_for(:AbstractConversation))
     end
 
-    it("generates RBI file for classes with enum attribute with inheritance from abstract class") do
+    it "generates RBI file for classes with enum attribute with inheritance from abstract class" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class AbstractConversation < ActiveRecord::Base
           self.abstract_class = true

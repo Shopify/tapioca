@@ -5,11 +5,11 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
   describe("#initialize") do
-    it("gathers no constants if there are no classes using ActiveModel::SecurePassword") do
+    it "gathers no constants if there are no classes using ActiveModel::SecurePassword" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only classes including ActiveModel::SecurePassword") do
+    it "gathers only classes including ActiveModel::SecurePassword" do
       add_ruby_file("user.rb", <<~RUBY)
         class User
         end
@@ -30,7 +30,7 @@ class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
   end
 
   describe("#decorate") do
-    it("generates empty RBI file if there are no calls to has_secure_password") do
+    it "generates empty RBI file if there are no calls to has_secure_password" do
       add_ruby_file("user.rb", <<~RUBY)
         class User
           include ActiveModel::SecurePassword
@@ -44,7 +44,7 @@ class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
       assert_equal(expected, rbi_for(:User))
     end
 
-    it("generates default secure password methods") do
+    it "generates default secure password methods" do
       add_ruby_file("user.rb", <<~RUBY)
         class User
           include ActiveModel::SecurePassword
@@ -77,7 +77,7 @@ class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
       assert_equal(expected, rbi_for(:User))
     end
 
-    it("generates custom secure password methods") do
+    it "generates custom secure password methods" do
       add_ruby_file("user.rb", <<~RUBY)
         class User
           include ActiveModel::SecurePassword
@@ -107,7 +107,7 @@ class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
       assert_equal(expected, rbi_for(:User))
     end
 
-    it("generates multiple secure password methods") do
+    it "generates multiple secure password methods" do
       add_ruby_file("user.rb", <<~RUBY)
         class User
           include ActiveModel::SecurePassword

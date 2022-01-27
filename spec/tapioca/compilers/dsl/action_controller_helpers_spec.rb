@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no  classes") do
+    it "gathers no constants if there are no  classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActionController subclasses") do
+    it "gathers only ActionController subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
@@ -25,7 +25,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(["UserController"], gathered_constants)
     end
 
-    it("does not gather included modules as their own processable constant") do
+    it "does not gather included modules as their own processable constant" do
       add_ruby_file("content.rb", <<~RUBY)
         module UserHelper
         end
@@ -38,7 +38,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(["UserController"], gathered_constants)
     end
 
-    it("gathers subclasses of ActionController subclasses") do
+    it "gathers subclasses of ActionController subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
@@ -50,7 +50,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(["HandController", "UserController"], gathered_constants)
     end
 
-    it("ignores abstract subclasses of ActionController") do
+    it "ignores abstract subclasses of ActionController" do
       add_ruby_file("content.rb", <<~RUBY)
         class UserController < ActionController::Base
         end
@@ -63,7 +63,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(["UserController"], gathered_constants)
     end
 
-    it("ignores anonymous subclasses of ActionController") do
+    it "ignores anonymous subclasses of ActionController" do
       add_ruby_file("content.rb", <<~RUBY)
         Class.new(ActionController::Base)
       RUBY
@@ -77,7 +77,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty helper module when there are no helper methods specified") do
+    it "generates empty helper module when there are no helper methods specified" do
       add_ruby_file("controller.rb", <<~RUBY)
         class UserController < ActionController::Base
           def current_user_name
@@ -106,7 +106,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(expected, rbi_for(:UserController))
     end
 
-    it("generates helper module and helper proxy class if helper_method target does not exist") do
+    it "generates helper module and helper proxy class if helper_method target does not exist" do
       add_ruby_file("controller.rb", <<~RUBY)
         class BaseController < ActionController::Base
           extend T::Sig
@@ -182,7 +182,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(expected, rbi_for(:UserController))
     end
 
-    it("generates helper module and helper proxy class when defining helper using helper_method") do
+    it "generates helper module and helper proxy class when defining helper using helper_method" do
       add_ruby_file("controller.rb", <<~RUBY)
         class UserController < ActionController::Base
           extend T::Sig
@@ -227,7 +227,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(expected, rbi_for(:UserController))
     end
 
-    it("generates helper module and helper proxy class when defining helper using block") do
+    it "generates helper module and helper proxy class when defining helper using block" do
       add_ruby_file("controller.rb", <<~RUBY)
         class UserController < ActionController::Base
           helper { def greet(user) "Hello" end }
@@ -272,7 +272,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
       assert_equal(expected, rbi_for(:UserController))
     end
 
-    it("generates helper module and helper proxy class for defining external helper") do
+    it "generates helper module and helper proxy class for defining external helper" do
       add_ruby_file("greet_helper.rb", <<~RUBY)
         module GreetHelper
           def greet(user)

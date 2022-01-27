@@ -10,11 +10,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         T.unsafe(self).assert_no_generated_errors
       end
 
-      it("gathers no constants if there are no ActiveRecord subclasses") do
+      it "gathers no constants if there are no ActiveRecord subclasses" do
         assert_empty(gathered_constants)
       end
 
-      it("gathers only ActiveRecord subclasses") do
+      it "gathers only ActiveRecord subclasses" do
         add_ruby_file("content.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
@@ -26,7 +26,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         assert_equal(["Post"], gathered_constants)
       end
 
-      it("rejects abstract ActiveRecord subclasses") do
+      it "rejects abstract ActiveRecord subclasses" do
         add_ruby_file("content.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
@@ -55,7 +55,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           T.unsafe(self).assert_no_generated_errors
         end
 
-        it("generates default columns with strong types") do
+        it "generates default columns with strong types" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -140,7 +140,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates attributes with strong types") do
+        it "generates attributes with strong types" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -171,7 +171,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("respects nullability of attributes") do
+        it "respects nullability of attributes" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -216,7 +216,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("generates a proper type for every ActiveRecord column type") do
+        it "generates a proper type for every ActiveRecord column type" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -294,7 +294,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("falls back to generating BigDecimal for money column if MoneyColumn is not defined") do
+        it "falls back to generating BigDecimal for money column if MoneyColumn is not defined" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -326,7 +326,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("generates proper types for time_zone_aware_attributes") do
+        it "generates proper types for time_zone_aware_attributes" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Base.time_zone_aware_attributes = true
             ActiveRecord::Migration.suppress_messages do
@@ -366,7 +366,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("generates methods for alias_attributes") do
+        it "generates methods for alias_attributes" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -456,7 +456,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("ignores conflicting alias_attributes") do
+        it "ignores conflicting alias_attributes" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -546,7 +546,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(output, expected)
         end
 
-        it("discovers custom type from signature on deserialize method") do
+        it "discovers custom type from signature on deserialize method" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -593,7 +593,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("discovers custom type from signature on cast method") do
+        it "discovers custom type from signature on cast method" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -642,7 +642,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("discovers custom type from signature on serialize method") do
+        it "discovers custom type from signature on serialize method" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -690,7 +690,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("discovers custom type even if it is generic") do
+        it "discovers custom type even if it is generic" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -735,7 +735,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("generates a weak type when the custom column type is a type variable") do
+        it "generates a weak type when the custom column type is a type variable" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -777,7 +777,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("generates a weak type if custom type cannot be discovered from signatures") do
+        it "generates a weak type if custom type cannot be discovered from signatures" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -836,7 +836,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           RUBY
         end
 
-        it("generates default columns with strong types if model extends StrongTypeGeneration") do
+        it "generates default columns with strong types if model extends StrongTypeGeneration" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -922,7 +922,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates default columns with weak types if model does not extend StrongTypeGeneration") do
+        it "generates default columns with weak types if model does not extend StrongTypeGeneration" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1008,7 +1008,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates attributes with strong types if model extends StrongTypeGeneration") do
+        it "generates attributes with strong types if model extends StrongTypeGeneration" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1040,7 +1040,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
           assert_includes(rbi_for(:Post), expected)
         end
 
-        it("generates attributes with weak types if model does not extend StrongTypeGeneration") do
+        it "generates attributes with weak types if model does not extend StrongTypeGeneration" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do

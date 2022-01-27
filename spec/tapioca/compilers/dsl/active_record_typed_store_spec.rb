@@ -15,11 +15,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveRecordTypedStore classes") do
+    it "gathers no constants if there are no ActiveRecordTypedStore classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gather only TypedStore classes") do
+    it "gather only TypedStore classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -46,7 +46,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates no definitions if there are no accessors to define") do
+    it "generates no definitions if there are no accessors to define" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -67,7 +67,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_equal(rbi_for(:Post), expected)
     end
 
-    it("generates RBI for TypedStore classes with string type") do
+    it "generates RBI for TypedStore classes with string type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -147,7 +147,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_equal(rbi_for(:Post), expected)
     end
 
-    it("generates methods with non-nilable types for accessors marked as not null") do
+    it "generates methods with non-nilable types for accessors marked as not null" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -196,7 +196,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_equal(rbi_for(:Post), expected)
     end
 
-    it("generates methods with Date type for attributes with date type") do
+    it "generates methods with Date type for attributes with date type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -276,7 +276,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_equal(rbi_for(:Post), expected)
     end
 
-    it("generates methods with DateTime type for attributes with datetime type") do
+    it "generates methods with DateTime type for attributes with datetime type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -302,7 +302,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_includes(rbi_for(:Post), expected)
     end
 
-    it("generates methods with Time type for attributes with time type") do
+    it "generates methods with Time type for attributes with time type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -328,7 +328,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_includes(rbi_for(:Post), expected)
     end
 
-    it("generates methods with Decimal type for attributes with decimal type") do
+    it "generates methods with Decimal type for attributes with decimal type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -354,7 +354,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_includes(rbi_for(:Post), expected)
     end
 
-    it("generates methods with T.untyped type for attributes with any type") do
+    it "generates methods with T.untyped type for attributes with any type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -380,7 +380,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_includes(rbi_for(:Post), expected)
     end
 
-    it("generates methods with Integer type for attributes with integer type") do
+    it "generates methods with Integer type for attributes with integer type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|
@@ -406,7 +406,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
       assert_includes(rbi_for(:Post), expected)
     end
 
-    it("generates methods with Float type for attributes with float type") do
+    it "generates methods with Float type for attributes with float type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           typed_store :metadata do |s|

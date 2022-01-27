@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("does not gather anonymous constants") do
+    it "does not gather anonymous constants" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -34,7 +34,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal([], gathered_constants_in_namespace(:TestCase))
     end
 
-    it("does not gather constants that don't extend ActiveSupport::Concern") do
+    it "does not gather constants that don't extend ActiveSupport::Concern" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -54,7 +54,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal([], gathered_constants_in_namespace(:TestCase))
     end
 
-    it("does not gather constants when its mixins don't extend ActiveSupport::Concern") do
+    it "does not gather constants when its mixins don't extend ActiveSupport::Concern" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -74,7 +74,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal([], gathered_constants_in_namespace(:TestCase))
     end
 
-    it("does not gather constants for directly mixed in modules") do
+    it "does not gather constants for directly mixed in modules" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -93,7 +93,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal([], gathered_constants_in_namespace(:TestCase))
     end
 
-    it("gathers constants for nested AS::Concern") do
+    it "gathers constants for nested AS::Concern" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -114,7 +114,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
     end
 
-    it("gathers constants for many nested mixins") do
+    it "gathers constants for many nested mixins" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module TestCase
           module Foo
@@ -151,7 +151,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("does not generate RBI when constant does not define a ClassMethods module") do
+    it "does not generate RBI when constant does not define a ClassMethods module" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module Foo
           extend ActiveSupport::Concern
@@ -174,7 +174,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       assert_equal(expected, rbi_for(:Bar))
     end
 
-    it("generates RBI for nested AS::Concern") do
+    it "generates RBI for nested AS::Concern" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module Foo
           extend ActiveSupport::Concern
@@ -211,7 +211,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
       )
     end
 
-    it("generates RBI for many nested mixins") do
+    it "generates RBI for many nested mixins" do
       add_ruby_file("test_case.rb", <<~RUBY)
         module Foo
           extend ActiveSupport::Concern

@@ -6,7 +6,7 @@ require "spec_helper"
 module RBI
   class BuilderSpec < Minitest::HooksSpec
     describe("provides a simple interface to build trees") do
-      it("builds RBI nodes") do
+      it "builds RBI nodes" do
         rbi = RBI::Tree.new
         rbi.create_class("A")
         rbi.create_module("B")
@@ -31,7 +31,7 @@ module RBI
         RBI
       end
 
-      it("builds nodes paths") do
+      it "builds nodes paths" do
         rbi = RBI::Tree.new
         rbi.create_path(RBI)
 
@@ -40,7 +40,7 @@ module RBI
         RBI
       end
 
-      it("does not build same scope twice") do
+      it "does not build same scope twice" do
         rbi = RBI::Tree.new
         rbi.create_class("A")
         rbi.create_class("A")
@@ -63,7 +63,7 @@ module RBI
         RBI
       end
 
-      it("does not build the same path twice") do
+      it "does not build the same path twice" do
         rbi = RBI::Tree.new
         rbi.create_path(RBI)
         rbi.create_path(RBI)
@@ -73,7 +73,7 @@ module RBI
         RBI
       end
 
-      it("does not build the same scope twice but applies blocks") do
+      it "does not build the same scope twice but applies blocks" do
         rbi = RBI::Tree.new
 
         rbi.create_module("A") do |mod|
@@ -96,7 +96,7 @@ module RBI
         RBI
       end
 
-      it("does not build the same path twice but applies blocks") do
+      it "does not build the same path twice but applies blocks" do
         rbi = RBI::Tree.new
 
         rbi.create_path(RBI) do |mod|

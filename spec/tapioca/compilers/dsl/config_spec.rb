@@ -13,13 +13,13 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers `Settings` if there are no special config constant set") do
+    it "gathers `Settings` if there are no special config constant set" do
       ::Config.load_and_set_settings("")
 
       assert_equal(["SettingsConfigOptions"], gathered_constants)
     end
 
-    it("gathers `Foo` if there is special config constant set") do
+    it "gathers `Foo` if there is special config constant set" do
       ::Config.const_name = :Foo
       ::Config.load_and_set_settings("")
 
@@ -32,7 +32,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates a module definition for a simple config") do
+    it "generates a module definition for a simple config" do
       add_content_file("settings.yml", <<~YAML)
         github_key: 12345
         slack_token: foo_bar
@@ -69,7 +69,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       assert_equal(expected, rbi_for(:SettingsConfigOptions))
     end
 
-    it("generates a module definition for custom config") do
+    it "generates a module definition for custom config" do
       add_content_file("settings.yml", <<~YAML)
         github_key: 12345
         slack_token: foo_bar
@@ -107,7 +107,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
       assert_equal(expected, rbi_for(:FooConfigOptions))
     end
 
-    it("generates a module definition for a nested config") do
+    it "generates a module definition for a nested config" do
       add_content_file("settings.yml", <<~YAML)
         github:
           key: 12345

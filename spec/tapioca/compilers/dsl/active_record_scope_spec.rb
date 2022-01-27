@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveRecord classes") do
+    it "gathers no constants if there are no ActiveRecord classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord constants with no abstract classes") do
+    it "gathers only ActiveRecord constants with no abstract classes" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         generator_for_names(target_class_name, "Tapioca::Compilers::Dsl::ActiveRecordRelations")
       end
 
-      it("generates an empty RBI file for ActiveRecord classes with no scope field") do
+      it "generates an empty RBI file for ActiveRecord classes with no scope field" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
@@ -55,7 +55,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates RBI file for ActiveRecord classes with a scope field") do
+      it "generates RBI file for ActiveRecord classes with a scope field" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :public_kind, -> { where.not(kind: 'private') }
@@ -83,7 +83,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates RBI file for ActiveRecord classes with multiple scope fields") do
+      it "generates RBI file for ActiveRecord classes with multiple scope fields" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :public_kind, -> { where.not(kind: 'private') }
@@ -118,7 +118,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates relation includes from non-abstract parent models") do
+      it "generates relation includes from non-abstract parent models" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :post_scope, -> { where.not(kind: 'private') }
@@ -166,7 +166,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:SuperCustomPost))
       end
 
-      it("generates relation includes from abstract parent models") do
+      it "generates relation includes from abstract parent models" do
         add_ruby_file("post.rb", <<~RUBY)
           class ApplicationRecord < ActiveRecord::Base
             self.abstract_class = true
@@ -208,7 +208,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
     end
 
     describe("without relations enabled") do
-      it("generates an empty RBI file for ActiveRecord classes with no scope field") do
+      it "generates an empty RBI file for ActiveRecord classes with no scope field" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
           end
@@ -221,7 +221,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates RBI file for ActiveRecord classes with a scope field") do
+      it "generates RBI file for ActiveRecord classes with a scope field" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :public_kind, -> { where.not(kind: 'private') }
@@ -244,7 +244,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates RBI file for ActiveRecord classes with multiple scope fields") do
+      it "generates RBI file for ActiveRecord classes with multiple scope fields" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :public_kind, -> { where.not(kind: 'private') }
@@ -271,7 +271,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:Post))
       end
 
-      it("generates relation includes from non-abstract parent models") do
+      it "generates relation includes from non-abstract parent models" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base
             scope :post_scope, -> { where.not(kind: 'private') }
@@ -308,7 +308,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
         assert_equal(expected, rbi_for(:SuperCustomPost))
       end
 
-      it("generates relation includes from abstract parent models") do
+      it "generates relation includes from abstract parent models" do
         add_ruby_file("post.rb", <<~RUBY)
           class ApplicationRecord < ActiveRecord::Base
             self.abstract_class = true
@@ -362,7 +362,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)
     end
 
-    it("generates RBI file for ActiveRecord classes with has_one_attached scope fields") do
+    it "generates RBI file for ActiveRecord classes with has_one_attached scope fields" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_one_attached :photo
@@ -390,7 +390,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for ActiveRecord classes with has_many_attached scope fields") do
+    it "generates RBI file for ActiveRecord classes with has_many_attached scope fields" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many_attached :photos

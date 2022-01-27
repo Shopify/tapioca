@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no SmartProperty classes") do
+    it "gathers no constants if there are no SmartProperty classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only SmartProperty classes and modules") do
+    it "gathers only SmartProperty classes and modules" do
       add_ruby_file("content.rb", <<~RUBY)
         class Post
           include ::SmartProperties
@@ -37,7 +37,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(["Post", "User", "Viewable"], gathered_constants)
     end
 
-    it("ignores SmartProperty classes and modules without a name") do
+    it "ignores SmartProperty classes and modules without a name" do
       add_ruby_file("content.rb", <<~RUBY)
         post = Class.new do
           include ::SmartProperties
@@ -57,7 +57,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there are no smart properties") do
+    it "generates empty RBI file if there are no smart properties" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -71,7 +71,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for simple smart property class") do
+    it "generates RBI file for simple smart property class" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -98,7 +98,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for simple smart property module") do
+    it "generates RBI file for simple smart property module" do
       add_ruby_file("viewable.rb", <<~RUBY)
         module Viewable
           include SmartProperties
@@ -125,7 +125,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Viewable))
     end
 
-    it("generates RBI file for required smart property") do
+    it "generates RBI file for required smart property" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -152,7 +152,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("defaults to T.untyped for smart property that does not have an accepter") do
+    it "defaults to T.untyped for smart property that does not have an accepter" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -179,7 +179,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("defaults to T::Array for smart property that accepts Arrays") do
+    it "defaults to T::Array for smart property that accepts Arrays" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -206,7 +206,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts booleans") do
+    it "generates RBI file for smart property that accepts booleans" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -233,7 +233,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts an array of values") do
+    it "generates RBI file for smart property that accepts an array of values" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -260,7 +260,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("defaults to T.untyped if a converter is defined") do
+    it "defaults to T.untyped if a converter is defined" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -287,7 +287,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("ignores required if it is a lambda") do
+    it "ignores required if it is a lambda" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -314,7 +314,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("ignores required if property is not typed") do
+    it "ignores required if property is not typed" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -341,7 +341,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates a reader that has been renamed correctly") do
+    it "generates a reader that has been renamed correctly" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -368,7 +368,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts boolean and has a default") do
+    it "generates RBI file for smart property that accepts boolean and has a default" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -395,7 +395,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts boolean and has lambda as default") do
+    it "generates RBI file for smart property that accepts boolean and has lambda as default" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -422,7 +422,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts String and has a non-nil default") do
+    it "generates RBI file for smart property that accepts String and has a non-nil default" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -449,7 +449,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts String and has a nil default") do
+    it "generates RBI file for smart property that accepts String and has a nil default" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -476,7 +476,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts a lambda") do
+    it "generates RBI file for smart property that accepts a lambda" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -503,7 +503,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates smart properties that have been overriden") do
+    it "generates smart properties that have been overriden" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties
@@ -550,7 +550,7 @@ class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for smart property that accepts another ObjectClass") do
+    it "generates RBI file for smart property that accepts another ObjectClass" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post
           include SmartProperties

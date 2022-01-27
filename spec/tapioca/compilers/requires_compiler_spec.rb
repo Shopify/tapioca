@@ -14,7 +14,7 @@ module Tapioca
           @project.remove("sorbet/")
         end
 
-        it("does nothing on an empty project") do
+        it "does nothing on an empty project" do
           @project.sorbet_config(<<~CONFIG)
             .
           CONFIG
@@ -23,7 +23,7 @@ module Tapioca
           assert_empty(compiler.compile)
         end
 
-        it("extracts the requires from a simple project") do
+        it "extracts the requires from a simple project" do
           @project.sorbet_config(<<~CONFIG)
             lib/
           CONFIG
@@ -62,7 +62,7 @@ module Tapioca
           REQ
         end
 
-        it("extracts the requires from all the files listed in the sorbet config") do
+        it "extracts the requires from all the files listed in the sorbet config" do
           @project.sorbet_config(<<~CONFIG)
             lib/
             test/file1.rb
@@ -98,7 +98,7 @@ module Tapioca
           REQ
         end
 
-        it("ignores requires with interpolation") do
+        it "ignores requires with interpolation" do
           @project.sorbet_config(<<~CONFIG)
             .
           CONFIG
@@ -121,7 +121,7 @@ module Tapioca
           REQ
         end
 
-        it("ignores files ignored in the sorbet config") do
+        it "ignores files ignored in the sorbet config" do
           @project.sorbet_config(<<~CONFIG)
             .
             --ignore=lib/
@@ -155,7 +155,7 @@ module Tapioca
           REQ
         end
 
-        it("ignores files located in the project") do
+        it "ignores files located in the project" do
           @project.sorbet_config(<<~CONFIG)
             .
           CONFIG
@@ -187,7 +187,7 @@ module Tapioca
           REQ
         end
 
-        it("handles ruby source files with encodings other than UTF-8") do
+        it "handles ruby source files with encodings other than UTF-8" do
           @project.sorbet_config(<<~CONFIG)
             .
           CONFIG

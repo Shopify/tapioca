@@ -13,11 +13,11 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no IdentityCache classes") do
+    it "gathers no constants if there are no IdentityCache classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gather only IdentityCache classes") do
+    it "gather only IdentityCache classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache
@@ -36,7 +36,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(["CustomPost", "Post"], gathered_constants)
     end
 
-    it("gathers IdentityCache::WithoutPrimaryIndex classes") do
+    it "gathers IdentityCache::WithoutPrimaryIndex classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           include IdentityCache::WithoutPrimaryIndex
@@ -61,7 +61,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       )
     end
 
-    it("generates RBI file for classes with multiple cache_indexes") do
+    it "generates RBI file for classes with multiple cache_indexes" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -116,7 +116,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates multiple methods for singled cache_index with unique field") do
+    it "generates multiple methods for singled cache_index with unique field" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -174,7 +174,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for combined cache_indexes") do
+    it "generates methods for combined cache_indexes" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -226,7 +226,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for classes with cache_has_manys index") do
+    it "generates methods for classes with cache_has_manys index" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -268,7 +268,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for classes with cache_has_one index") do
+    it "generates methods for classes with cache_has_one index" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -310,7 +310,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for classes with cache_belongs_to index on a polymorphic relation") do
+    it "generates methods for classes with cache_belongs_to index on a polymorphic relation" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -349,7 +349,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("takes cache aliases into account when generating methods") do
+    it "takes cache aliases into account when generating methods" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do
@@ -385,7 +385,7 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for classes with cache_belongs_to index and a simple belong_to") do
+    it "generates methods for classes with cache_belongs_to index and a simple belong_to" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do

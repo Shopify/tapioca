@@ -20,11 +20,11 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveRecord classes") do
+    it "gathers no constants if there are no ActiveRecord classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord constants with no abstract classes") do
+    it "gathers only ActiveRecord constants with no abstract classes" do
       add_ruby_file("conversation.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
@@ -46,7 +46,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates an empty RBI file for ActiveRecord classes with no attachment") do
+    it "generates an empty RBI file for ActiveRecord classes with no attachment" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
@@ -59,7 +59,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for ActiveRecord classes with an attachment") do
+    it "generates RBI file for ActiveRecord classes with an attachment" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_one_attached :photo
@@ -81,7 +81,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for ActiveRecord classes with attachments") do
+    it "generates RBI file for ActiveRecord classes with attachments" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_many_attached :photos

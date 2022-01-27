@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no classes with Sidekiq::Worker as ancestor") do
+    it "gathers no constants if there are no classes with Sidekiq::Worker as ancestor" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only classes with Sidekiq::Worker as ancestor") do
+    it "gathers only classes with Sidekiq::Worker as ancestor" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -35,7 +35,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there is no perform method") do
+    it "generates empty RBI file if there is no perform method" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -49,7 +49,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierWorker))
     end
 
-    it("generates correct RBI file for class with perform method") do
+    it "generates correct RBI file for class with perform method" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -79,7 +79,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierWorker))
     end
 
-    it("generates correct RBI file for class with perform method with signature") do
+    it "generates correct RBI file for class with perform method with signature" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -111,7 +111,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierWorker))
     end
 
-    it("generates correct RBI file for subclass of a sidekiq worker without perform method") do
+    it "generates correct RBI file for subclass of a sidekiq worker without perform method" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -144,7 +144,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:SecondaryWorker))
     end
 
-    it("generates correct RBI file for subclass of a sidekiq worker with overridden methods") do
+    it "generates correct RBI file for subclass of a sidekiq worker with overridden methods" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierWorker
           include Sidekiq::Worker
@@ -179,7 +179,7 @@ class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
       assert_equal(expected, rbi_for(:SecondaryWorker))
     end
 
-    it("generates no method definitions for methods that are already explicitly overridden") do
+    it "generates no method definitions for methods that are already explicitly overridden" do
       add_ruby_file("job_thing.rb", <<~RUBY)
         class JobThing
           include Sidekiq::Worker
