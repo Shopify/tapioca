@@ -6,6 +6,7 @@ require "minitest/autorun"
 require "minitest/spec"
 require "minitest/hooks/default"
 require "minitest/reporters"
+require "rails/test_unit/line_filtering"
 require "byebug"
 
 require "tapioca/helpers/test/content"
@@ -18,7 +19,6 @@ Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))
 module Minitest
   class Test
     extend T::Sig
-
-    Minitest::Test.make_my_diffs_pretty!
+    extend Rails::LineFiltering
   end
 end
