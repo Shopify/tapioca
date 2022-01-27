@@ -1443,7 +1443,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
 
     before do
-      T.bind(self, Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec)
       add_ruby_file("application.rb", <<~RUBY)
         ENV["DATABASE_URL"] = "sqlite3::memory:"
 
