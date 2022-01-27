@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -43,7 +43,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   end
 
   describe("#decorate") do
-    before(:each) do
+    before do
       require "active_record"
 
       ::ActiveRecord::Base.establish_connection(
@@ -60,7 +60,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
 
       describe("without errors") do
-        after(:each) do
+        after do
           T.unsafe(self).assert_no_generated_errors
         end
 
@@ -748,7 +748,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
     describe("without relations enabled") do
       describe("without errors") do
-        after(:each) do
+        after do
           T.unsafe(self).assert_no_generated_errors
         end
 
@@ -1442,8 +1442,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       generator_for_names(target_class_name, "Tapioca::Compilers::Dsl::ActiveRecordRelations")
     end
 
-    before(:each) do
-      T.bind(self, Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec)
+    before do
       add_ruby_file("application.rb", <<~RUBY)
         ENV["DATABASE_URL"] = "sqlite3::memory:"
 
@@ -1464,7 +1463,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       RUBY
     end
 
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 

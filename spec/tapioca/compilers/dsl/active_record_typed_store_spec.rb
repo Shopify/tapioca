@@ -11,7 +11,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
   end
 
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
   end
 
   describe("#decorate") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 

@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -31,7 +31,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   end
 
   describe("#decorate") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -349,11 +349,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
       generator_for_names(target_class_name, "Tapioca::Compilers::Dsl::ActiveRecordRelations")
     end
 
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
-    before(:each) do
+    before do
       require "active_record"
       require "active_storage/attached"
       require "active_storage/reflection"

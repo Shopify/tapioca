@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -73,7 +73,7 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   end
 
   describe("#decorate") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 

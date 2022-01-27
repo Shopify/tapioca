@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
     describe("#initialize") do
-      after(:each) do
+      after do
         T.unsafe(self).assert_no_generated_errors
       end
 
@@ -41,7 +41,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
     end
 
     describe("#decorate") do
-      before(:each) do
+      before do
         require "active_record"
 
         ::ActiveRecord::Base.establish_connection(
@@ -51,7 +51,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
 
       describe("by default") do
-        after(:each) do
+        after do
           T.unsafe(self).assert_no_generated_errors
         end
 
@@ -825,7 +825,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
 
       describe("when StrongTypeGeneration is defined") do
-        after(:each) do
+        after do
           T.unsafe(self).assert_no_generated_errors
         end
 

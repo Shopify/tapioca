@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -30,7 +30,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   end
 
   describe("#decorate") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -169,6 +169,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       assert_equal(expected, rbi_for(:Post))
     end
+
     it("generates methods for ActiveResource classes including all types in schema field") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
