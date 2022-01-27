@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem activemodel-serializers-xml`.
 
 module ActiveModel
+  extend ::ActiveSupport::Autoload
+
   class << self
     def eager_load!; end
     def gem_version; end
@@ -121,6 +123,8 @@ end
 class ActiveModel::Serializers::Xml::Serializer::MethodAttribute < ::ActiveModel::Serializers::Xml::Serializer::Attribute; end
 
 module ActiveRecord
+  extend ::ActiveSupport::Autoload
+
   class << self
     def eager_load!; end
     def gem_version; end
@@ -128,7 +132,38 @@ module ActiveRecord
   end
 end
 
+class ActiveRecord::MigrationProxy < ::Struct
+  def initialize(name, version, filename, scope); end
+
+  def announce(*_arg0, &_arg1); end
+  def basename; end
+  def disable_ddl_transaction(*_arg0, &_arg1); end
+  def filename; end
+  def filename=(_); end
+  def migrate(*_arg0, &_arg1); end
+  def name; end
+  def name=(_); end
+  def scope; end
+  def scope=(_); end
+  def version; end
+  def version=(_); end
+  def write(*_arg0, &_arg1); end
+
+  private
+
+  def load_migration; end
+  def migration; end
+
+  class << self
+    def [](*_arg0); end
+    def inspect; end
+    def members; end
+    def new(*_arg0); end
+  end
+end
+
 module ActiveRecord::Serialization
+  extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
   include ::ActiveModel::Serializers::JSON
   include ::ActiveModel::Serializers::Xml

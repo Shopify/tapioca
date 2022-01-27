@@ -17391,6 +17391,8 @@ end
 # Extensions to the core String class
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)

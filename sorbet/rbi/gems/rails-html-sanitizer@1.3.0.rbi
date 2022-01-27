@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem rails-html-sanitizer`.
 
 module ActionView
+  extend ::ActiveSupport::Autoload
+
   class << self
     def eager_load!; end
 
@@ -19,9 +21,27 @@ end
 ActionView::ENCODING_FLAG = T.let(T.unsafe(nil), String)
 
 module ActionView::Helpers
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionView::Helpers::ActiveModelHelper
+  include ::ActionView::Helpers::AssetUrlHelper
+  include ::ActionView::Helpers::AtomFeedHelper
+  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::CaptureHelper
+  include ::ActionView::Helpers::ControllerHelper
+  include ::ActionView::Helpers::CspHelper
+  include ::ActionView::Helpers::CsrfHelper
+  include ::ActionView::Helpers::DateHelper
+  include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormOptionsHelper
+  include ::ActionView::Helpers::JavaScriptHelper
+  include ::ActionView::Helpers::NumberHelper
+  include ::ActionView::Helpers::RenderingHelper
+  extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Concern
   include ::ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::UrlHelper
@@ -42,6 +62,8 @@ end
 # The SanitizeHelper module provides a set of methods for scrubbing text of undesired HTML elements.
 # These helper methods extend Action View making them callable within your template files.
 module ActionView::Helpers::SanitizeHelper
+  extend ::ActiveSupport::Concern
+
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
   # Sanitizes HTML input, stripping all but known-safe tags and attributes.
@@ -225,6 +247,8 @@ end
 ActionView::TemplateError = ActionView::Template::Error
 
 module Rails
+  extend ::ActiveSupport::Autoload
+
   class << self
     def app_class; end
     def app_class=(_arg0); end

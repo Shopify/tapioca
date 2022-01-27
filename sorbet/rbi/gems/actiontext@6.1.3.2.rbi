@@ -554,9 +554,27 @@ ActionText::TrixAttachment::SELECTOR = T.let(T.unsafe(nil), String)
 ActionText::TrixAttachment::TAG_NAME = T.let(T.unsafe(nil), String)
 
 module ActionView::Helpers
+  include ::ActiveSupport::Benchmarkable
+  include ::ActionView::Helpers::ActiveModelHelper
+  include ::ActionView::Helpers::AssetUrlHelper
+  include ::ActionView::Helpers::AtomFeedHelper
+  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::SanitizeHelper
+  include ::ActionView::Helpers::CaptureHelper
+  include ::ActionView::Helpers::ControllerHelper
+  include ::ActionView::Helpers::CspHelper
+  include ::ActionView::Helpers::CsrfHelper
+  include ::ActionView::Helpers::DateHelper
+  include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
+  include ::ActionView::Helpers::FormOptionsHelper
+  include ::ActionView::Helpers::JavaScriptHelper
+  include ::ActionView::Helpers::NumberHelper
+  include ::ActionView::Helpers::RenderingHelper
+  extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Concern
   include ::ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::UrlHelper
@@ -575,6 +593,8 @@ module ActionView::Helpers
 end
 
 class ActionView::Helpers::FormBuilder
+  include ::ActionView::ModelNaming
+
   def initialize(object_name, object, template, options); end
 
   def button(value = T.unsafe(nil), options = T.unsafe(nil), &block); end
@@ -649,6 +669,9 @@ class ActionView::Helpers::FormBuilder
 end
 
 module ActionView::Helpers::FormHelper
+  include ::ActionView::ModelNaming
+  include ::ActionView::RecordIdentifier
+  extend ::ActiveSupport::Concern
   include ::ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper

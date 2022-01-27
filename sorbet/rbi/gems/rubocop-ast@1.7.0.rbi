@@ -2571,6 +2571,8 @@ end
 # and other information such as disabled lines for cops.
 # It also provides a convenient way to access source lines.
 class RuboCop::AST::ProcessedSource
+  include ::RuboCop::Ext::ProcessedSource
+
   def initialize(source, ruby_version, path = T.unsafe(nil)); end
 
   def [](*args); end
@@ -2684,6 +2686,8 @@ end
 # node when the builder constructs the AST, making its methods available
 # to all `regexp` nodes within RuboCop.
 class RuboCop::AST::RegexpNode < ::RuboCop::AST::Node
+  include ::RuboCop::Ext::RegexpNode
+
   def content; end
   def delimiter?(char); end
   def delimiters; end

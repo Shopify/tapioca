@@ -10,6 +10,9 @@ FileList = Rake::FileList
 # This a FileUtils extension that defines several additional commands to be
 # added to the FileUtils utility functions.
 module FileUtils
+  include ::FileUtils::StreamUtils_
+  extend ::FileUtils::StreamUtils_
+
   # Run a Ruby interpreter with the given arguments.
   #
   # Example:
@@ -68,6 +71,9 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
 class Module
+  include ::ActiveSupport::Dependencies::ModuleConstMissing
+  include ::Module::Concerning
+
   # Check for an existing method in the current class before extending.  If
   # the method already exists, then a warning is printed and the extension is
   # not added.  Otherwise the block is yielded and any definitions in the
@@ -1220,6 +1226,8 @@ class Rake::PseudoStatus
   def to_i; end
 end
 
+Rake::RDocTask = RDoc::Task
+
 # Error indicating a recursion overflow error in task selection.
 class Rake::RuleRecursionOverflowError < ::StandardError
   def initialize(*args); end
@@ -1880,6 +1888,8 @@ RakeFileUtils = Rake::FileUtilsExt
 
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   def ext(newext = T.unsafe(nil)); end
   def pathmap(spec = T.unsafe(nil), &block); end

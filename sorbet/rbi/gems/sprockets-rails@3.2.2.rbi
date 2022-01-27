@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem sprockets-rails`.
 
 module Rails
+  extend ::ActiveSupport::Autoload
+
   class << self
     # Returns the value of attribute app_class.
     def app_class; end
@@ -1078,6 +1080,9 @@ Rails::Application::INITIAL_VARIABLES = T.let(T.unsafe(nil), Array)
 # # load Blog::Engine with highest priority, followed by application and other railties
 # config.railties_order = [Blog::Engine, :main_app, :all]
 class Rails::Engine < ::Rails::Railtie
+  include ::ActiveSupport::Callbacks
+  extend ::ActiveSupport::Callbacks::ClassMethods
+
   def initialize; end
 
   def __callbacks; end
@@ -1233,6 +1238,10 @@ module Sprockets::Rails::Context
 
   def compute_asset_path(path, options = T.unsafe(nil)); end
 
+  class << self
+    def included(klass); end
+  end
+
   module GeneratedClassMethods
     def assets_prefix; end
     def assets_prefix=(value); end
@@ -1255,10 +1264,6 @@ module Sprockets::Rails::Context
     def digest_assets; end
     def digest_assets=(value); end
     def digest_assets?; end
-  end
-
-  class << self
-    def included(klass); end
   end
 end
 
@@ -1341,6 +1346,11 @@ module Sprockets::Rails::Helper
   # http://www.w3.org/TR/SRI/#non-secure-contexts-remain-non-secure
   def secure_subresource_integrity_context?; end
 
+  class << self
+    def extended(obj); end
+    def included(klass); end
+  end
+
   module GeneratedClassMethods
     def assets_environment; end
     def assets_environment=(value); end
@@ -1405,11 +1415,6 @@ module Sprockets::Rails::Helper
     def unknown_asset_fallback; end
     def unknown_asset_fallback=(value); end
     def unknown_asset_fallback?; end
-  end
-
-  class << self
-    def extended(obj); end
-    def included(klass); end
   end
 end
 

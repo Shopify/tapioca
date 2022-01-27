@@ -31,48 +31,6 @@ module IdentityCache
   def fetch_read_only_records; end
   def fetch_read_only_records=(val); end
 
-  module GeneratedClassMethods
-    def cache_indexes; end
-    def cache_indexes=(value); end
-    def cache_indexes?; end
-    def cached_belongs_tos; end
-    def cached_belongs_tos=(value); end
-    def cached_belongs_tos?; end
-    def cached_has_manys; end
-    def cached_has_manys=(value); end
-    def cached_has_manys?; end
-    def cached_has_ones; end
-    def cached_has_ones=(value); end
-    def cached_has_ones?; end
-    def cached_model; end
-    def cached_model=(value); end
-    def cached_model?; end
-    def parent_expiration_entries; end
-    def parent_expiration_entries=(value); end
-    def parent_expiration_entries?; end
-  end
-
-  module GeneratedInstanceMethods
-    def cache_indexes; end
-    def cache_indexes=(value); end
-    def cache_indexes?; end
-    def cached_belongs_tos; end
-    def cached_belongs_tos=(value); end
-    def cached_belongs_tos?; end
-    def cached_has_manys; end
-    def cached_has_manys=(value); end
-    def cached_has_manys?; end
-    def cached_has_ones; end
-    def cached_has_ones=(value); end
-    def cached_has_ones?; end
-    def cached_model; end
-    def cached_model=(value); end
-    def cached_model?; end
-    def parent_expiration_entries; end
-    def parent_expiration_entries=(value); end
-    def parent_expiration_entries?; end
-  end
-
   class << self
     def append_features(base); end
     def cache; end
@@ -126,6 +84,48 @@ module IdentityCache
     private
 
     def fetch_in_batches(keys); end
+  end
+
+  module GeneratedClassMethods
+    def cache_indexes; end
+    def cache_indexes=(value); end
+    def cache_indexes?; end
+    def cached_belongs_tos; end
+    def cached_belongs_tos=(value); end
+    def cached_belongs_tos?; end
+    def cached_has_manys; end
+    def cached_has_manys=(value); end
+    def cached_has_manys?; end
+    def cached_has_ones; end
+    def cached_has_ones=(value); end
+    def cached_has_ones?; end
+    def cached_model; end
+    def cached_model=(value); end
+    def cached_model?; end
+    def parent_expiration_entries; end
+    def parent_expiration_entries=(value); end
+    def parent_expiration_entries?; end
+  end
+
+  module GeneratedInstanceMethods
+    def cache_indexes; end
+    def cache_indexes=(value); end
+    def cache_indexes?; end
+    def cached_belongs_tos; end
+    def cached_belongs_tos=(value); end
+    def cached_belongs_tos?; end
+    def cached_has_manys; end
+    def cached_has_manys=(value); end
+    def cached_has_manys?; end
+    def cached_has_ones; end
+    def cached_has_ones=(value); end
+    def cached_has_ones?; end
+    def cached_model; end
+    def cached_model=(value); end
+    def cached_model?; end
+    def parent_expiration_entries; end
+    def parent_expiration_entries=(value); end
+    def parent_expiration_entries?; end
   end
 end
 
@@ -745,6 +745,16 @@ module IdentityCache::ParentModelExpiration
   def parents_to_expire_on_changes(parents_to_expire, association_name, cached_associations); end
   def should_expire_identity_cache_parent?(foreign_key, only_on_foreign_key_change); end
 
+  class << self
+    def add_parent_expiry_hook(cached_association); end
+    def install_all_pending_parent_expiry_hooks; end
+    def install_pending_parent_expiry_hooks(model); end
+
+    private
+
+    def lazy_hooks; end
+  end
+
   module GeneratedClassMethods
     def parent_expiration_entries; end
     def parent_expiration_entries=(value); end
@@ -755,16 +765,6 @@ module IdentityCache::ParentModelExpiration
     def parent_expiration_entries; end
     def parent_expiration_entries=(value); end
     def parent_expiration_entries?; end
-  end
-
-  class << self
-    def add_parent_expiry_hook(cached_association); end
-    def install_all_pending_parent_expiry_hooks; end
-    def install_pending_parent_expiry_hooks(model); end
-
-    private
-
-    def lazy_hooks; end
   end
 end
 
@@ -964,6 +964,10 @@ module IdentityCache::WithoutPrimaryIndex
   mixes_in_class_methods ::IdentityCache::ShouldUseCache::ClassMethods
   mixes_in_class_methods ::IdentityCache::WithoutPrimaryIndex::ClassMethods
 
+  class << self
+    def append_features(base); end
+  end
+
   module GeneratedClassMethods
     def cache_indexes; end
     def cache_indexes=(value); end
@@ -1004,10 +1008,6 @@ module IdentityCache::WithoutPrimaryIndex
     def parent_expiration_entries; end
     def parent_expiration_entries=(value); end
     def parent_expiration_entries?; end
-  end
-
-  class << self
-    def append_features(base); end
   end
 end
 

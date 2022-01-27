@@ -2225,6 +2225,7 @@ end
 # ^^
 class Parser::Source::Range
   include ::Comparable
+  include ::RuboCop::AST::Ext::Range
 
   def initialize(source_buffer, begin_pos, end_pos); end
 

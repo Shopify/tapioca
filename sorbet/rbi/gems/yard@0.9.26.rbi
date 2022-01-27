@@ -6,6 +6,7 @@
 
 class Array
   include ::Enumerable
+  include ::JSON::Ext::Generator::GeneratorMethods::Array
 
   # Places values before or after another object (by value) in
   # an array. This is used in tandem with the before and after
@@ -260,6 +261,9 @@ class Insertion
 end
 
 class Module
+  include ::ActiveSupport::Dependencies::ModuleConstMissing
+  include ::Module::Concerning
+
   # Returns the class name of a full module namespace path
   def class_name; end
 end
@@ -275,6 +279,8 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 # '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Splits text into tokens the way a shell would, handling quoted
   # text as a single token. Use '\"' and "\'" to escape quotes and
@@ -2581,6 +2587,7 @@ end
 # Handles class declarations
 class YARD::Handlers::Ruby::ClassHandler < ::YARD::Handlers::Ruby::Base
   include ::YARD::Handlers::Ruby::StructHandlerMethods
+  include ::YARDSorbet::Handlers::StructClassHandler
 
   private
 

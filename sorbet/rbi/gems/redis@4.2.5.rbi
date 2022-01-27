@@ -6,6 +6,7 @@
 
 class Redis
   include ::MonitorMixin
+  include ::ActiveSupport::Cache::ConnectionPoolLike
 
   # Create a new client instance
   def initialize(options = T.unsafe(nil)); end
@@ -1144,6 +1145,8 @@ end
 class Redis::ConnectionError < ::Redis::BaseConnectionError; end
 
 class Redis::Distributed
+  include ::ActiveSupport::Cache::ConnectionPoolLike
+
   def initialize(node_configs, options = T.unsafe(nil)); end
 
   def [](key); end

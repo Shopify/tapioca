@@ -2070,7 +2070,6 @@ module ActiveModel::Model
 
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
-  mixes_in_class_methods ::ActiveModel::Naming
   mixes_in_class_methods ::ActiveModel::Callbacks
   mixes_in_class_methods ::ActiveSupport::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveSupport::DescendantsTracker
@@ -2565,7 +2564,9 @@ module ActiveModel::Serialization
   def serializable_attributes(attribute_names); end
 end
 
-module ActiveModel::Serializers; end
+module ActiveModel::Serializers
+  extend ::ActiveSupport::Autoload
+end
 
 # == Active \Model \JSON \Serializer
 module ActiveModel::Serializers::JSON
@@ -3211,7 +3212,6 @@ module ActiveModel::Validations
 
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
-  mixes_in_class_methods ::ActiveModel::Naming
   mixes_in_class_methods ::ActiveModel::Callbacks
   mixes_in_class_methods ::ActiveSupport::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveSupport::DescendantsTracker

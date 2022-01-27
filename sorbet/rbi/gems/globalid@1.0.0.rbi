@@ -44,8 +44,6 @@ class GlobalID
 end
 
 module GlobalID::Identification
-  extend ::ActiveSupport::Concern
-
   def to_gid(options = T.unsafe(nil)); end
   def to_gid_param(options = T.unsafe(nil)); end
   def to_global_id(options = T.unsafe(nil)); end
