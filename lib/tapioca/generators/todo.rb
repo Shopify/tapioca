@@ -4,6 +4,8 @@
 module Tapioca
   module Generators
     class Todo < Base
+      include SorbetHelper
+
       sig do
         params(
           todo_file: String,
@@ -68,7 +70,7 @@ module Tapioca
       sig { returns(T::Array[String]) }
       def unresolved_constants
         # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
-        Tapioca::Compilers::Sorbet.run("--print=missing-constants", "--stdout-hup-hack", "--no-error-count")
+        sorbet("--print=missing-constants", "--stdout-hup-hack", "--no-error-count")
           .strip
           .each_line
           .map do |line|

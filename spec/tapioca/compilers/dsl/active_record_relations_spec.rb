@@ -4,6 +4,8 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
+  include Tapioca::SorbetHelper
+
   describe("#initialize") do
     it("gathers no constants if there are no ActiveRecord classes") do
       assert_empty(gathered_constants)
@@ -40,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
           extend CommonRelationMethods
           extend GeneratedRelationMethods
 
-        <% if Tapioca::Compilers::Sorbet.supports?(:to_ary_nil_support) %>
+        <% if sorbet_supports?(:to_ary_nil_support) %>
           private
 
           sig { returns(NilClass) }

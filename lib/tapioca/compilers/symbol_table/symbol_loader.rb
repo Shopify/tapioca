@@ -9,7 +9,8 @@ module Tapioca
     module SymbolTable
       module SymbolLoader
         class << self
-          extend(T::Sig)
+          extend T::Sig
+          include SorbetHelper
 
           sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
           def list_from_paths(paths)
@@ -49,7 +50,7 @@ module Tapioca
           end
 
           def symbol_table_json_from(input, table_type: "symbol-table-json")
-            Tapioca::Compilers::Sorbet.run("--no-config", "--print=#{table_type}", input)
+            sorbet("--no-config", "--print=#{table_type}", input)
           end
         end
 
