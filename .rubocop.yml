@@ -5,6 +5,7 @@ inherit_gem:
 
 require:
  - rubocop-sorbet
+ - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.6
@@ -14,6 +15,15 @@ AllCops:
   - "vendor/**/*"
 
 Gemspec/RequireMFA:
+  Enabled: false
+
+RSpec/BeforeAfterAll:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LeadingSubject:
   Enabled: false
 
 Sorbet:

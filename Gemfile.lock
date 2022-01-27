@@ -243,6 +243,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.15.1)
       parser (>= 3.0.1.1)
+    rubocop-rspec (2.4.0)
+      rubocop (~> 1.0)
+      rubocop-ast (>= 1.1.0)
     rubocop-shopify (2.1.0)
       rubocop (~> 1.13)
     rubocop-sorbet (0.6.5)
@@ -321,6 +324,7 @@ DEPENDENCIES
   pry-byebug
   rails
   rake
+  rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
   shopify-money
