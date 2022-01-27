@@ -176,6 +176,15 @@ module Tapioca
           return_type
         end
 
+        sig { params(type: String).returns(String) }
+        def as_nilable_type(type)
+          if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
+            type
+          else
+            "T.nilable(#{type})"
+          end
+        end
+
         sig { params(name: String).returns(T::Boolean) }
         def valid_parameter_name?(name)
           name.match?(/^[[[:alnum:]]_]+$/)

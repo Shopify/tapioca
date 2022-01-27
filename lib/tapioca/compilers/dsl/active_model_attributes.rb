@@ -109,7 +109,7 @@ module Tapioca
             return "T.untyped"
           end
 
-          "T.nilable(#{type})"
+          as_nilable_type(type)
         end
 
         sig { params(klass: RBI::Scope, method: String, type: String).void }
