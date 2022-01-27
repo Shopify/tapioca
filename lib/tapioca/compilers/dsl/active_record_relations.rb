@@ -260,6 +260,11 @@ module Tapioca
             end
           end
 
+          sig { params(method_name: Symbol).returns(T::Boolean) }
+          def bang_method?(method_name)
+            method_name.to_s.end_with?("!")
+          end
+
           sig { void }
           def create_classes_and_includes
             model.create_extend(CommonRelationMethodsModuleName)
@@ -489,7 +494,7 @@ module Tapioca
                 ]
 
                 # Bang methods don't have the `unique_by` parameter
-                unless method_name.end_with?("!")
+                unless bang_method?(method_name)
                   parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
                 end
 
@@ -505,7 +510,7 @@ module Tapioca
                 ]
 
                 # Bang methods don't have the `unique_by` parameter
-                unless method_name.end_with?("!")
+                unless bang_method?(method_name)
                   parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
                 end
 
@@ -577,7 +582,7 @@ module Tapioca
               when :raise_record_not_found_exception!
                 # skip
               else
-                return_type = if method_name.end_with?("!")
+                return_type = if bang_method?(method_name)
                   constant_name
                 else
                   as_nilable_type(constant_name)
