@@ -41,11 +41,6 @@ module RBI
       comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
       comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
     end
-
-    sig { returns(T::Boolean) }
-    def empty?
-      root.empty?
-    end
   end
 
   class Tree
