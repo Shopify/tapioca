@@ -51,13 +51,13 @@ class Money
 
   def floor; end
   def fraction(rate); end
-  def hash(*args, &block); end
+  def hash(*args, **_arg1, &block); end
   def init_with(coder); end
   def inspect; end
-  def negative?(*args, &block); end
+  def negative?(*args, **_arg1, &block); end
   def no_currency?; end
-  def nonzero?(*args, &block); end
-  def positive?(*args, &block); end
+  def nonzero?(*args, **_arg1, &block); end
+  def positive?(*args, **_arg1, &block); end
   def round(ndigits = T.unsafe(nil)); end
 
   # Split money amongst parties evenly without losing pennies.
@@ -65,8 +65,8 @@ class Money
 
   def subunits(format: T.unsafe(nil)); end
   def to_d; end
-  def to_f(*args, &block); end
-  def to_i(*args, &block); end
+  def to_f(*args, **_arg1, &block); end
+  def to_i(*args, **_arg1, &block); end
   def to_json(options = T.unsafe(nil)); end
   def to_money(curr = T.unsafe(nil)); end
   def to_s(style = T.unsafe(nil)); end
@@ -74,7 +74,7 @@ class Money
   # Returns the value of attribute value.
   def value; end
 
-  def zero?(*args, &block); end
+  def zero?(*args, **_arg1, &block); end
 
   private
 

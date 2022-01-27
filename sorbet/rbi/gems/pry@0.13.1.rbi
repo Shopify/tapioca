@@ -80,10 +80,10 @@ class Pry
   # Sets the attribute binding_stack
   def binding_stack=(_arg0); end
 
-  def color(*args, &block); end
-  def color=(*args, &block); end
-  def commands(*args, &block); end
-  def commands=(*args, &block); end
+  def color(*args, **_arg1, &block); end
+  def color=(*args, **_arg1, &block); end
+  def commands(*args, **_arg1, &block); end
+  def commands=(*args, **_arg1, &block); end
 
   # Generate completions.
   def complete(str); end
@@ -104,8 +104,8 @@ class Pry
   # Sets the attribute custom_completions
   def custom_completions=(_arg0); end
 
-  def editor(*args, &block); end
-  def editor=(*args, &block); end
+  def editor(*args, **_arg1, &block); end
+  def editor=(*args, **_arg1, &block); end
 
   # Pass a line of input to Pry.
   #
@@ -129,8 +129,8 @@ class Pry
   def eval_string=(_arg0); end
 
   def evaluate_ruby(code); end
-  def exception_handler(*args, &block); end
-  def exception_handler=(*args, &block); end
+  def exception_handler(*args, **_arg1, &block); end
+  def exception_handler=(*args, **_arg1, &block); end
 
   # Execute the specified hook.
   # If executing a hook raises an exception, we log that and then continue sucessfully.
@@ -141,10 +141,10 @@ class Pry
   # Returns the value of attribute exit_value.
   def exit_value; end
 
-  def extra_sticky_locals(*args, &block); end
-  def extra_sticky_locals=(*args, &block); end
-  def hooks(*args, &block); end
-  def hooks=(*args, &block); end
+  def extra_sticky_locals(*args, **_arg1, &block); end
+  def extra_sticky_locals=(*args, **_arg1, &block); end
+  def hooks(*args, **_arg1, &block); end
+  def hooks=(*args, **_arg1, &block); end
 
   # Injects a local variable into the provided binding.
   def inject_local(name, value, binding); end
@@ -152,8 +152,8 @@ class Pry
   # Inject all the sticky locals into the current binding.
   def inject_sticky_locals!; end
 
-  def input(*args, &block); end
-  def input=(*args, &block); end
+  def input(*args, **_arg1, &block); end
+  def input=(*args, **_arg1, &block); end
   def input_ring; end
 
   # Returns the value of attribute last_dir.
@@ -187,21 +187,21 @@ class Pry
   # Returns an output device
   def output; end
 
-  def output=(*args, &block); end
+  def output=(*args, **_arg1, &block); end
   def output_ring; end
 
   # Returns the currently configured pager
   def pager; end
 
-  def pager=(*args, &block); end
+  def pager=(*args, **_arg1, &block); end
 
   # Pops the current prompt off of the prompt stack. If the prompt you are
   # popping is the last prompt, it will not be popped. Use this to restore the
   # previous prompt.
   def pop_prompt; end
 
-  def print(*args, &block); end
-  def print=(*args, &block); end
+  def print(*args, **_arg1, &block); end
+  def print=(*args, **_arg1, &block); end
 
   # If the given line is a valid command, process it in the context of the
   # current `eval_string` and binding.
@@ -323,10 +323,10 @@ class Pry
     # Sets the attribute cli
     def cli=(_arg0); end
 
-    def color(*args, &block); end
-    def color=(*args, &block); end
-    def commands(*args, &block); end
-    def commands=(*args, &block); end
+    def color(*args, **_arg1, &block); end
+    def color=(*args, **_arg1, &block); end
+    def commands(*args, **_arg1, &block); end
+    def commands=(*args, **_arg1, &block); end
 
     # Returns the value of attribute config.
     def config; end
@@ -350,8 +350,8 @@ class Pry
     # Sets the attribute custom_completions
     def custom_completions=(_arg0); end
 
-    def editor(*args, &block); end
-    def editor=(*args, &block); end
+    def editor(*args, **_arg1, &block); end
+    def editor=(*args, **_arg1, &block); end
 
     # Returns the value of attribute eval_path.
     def eval_path; end
@@ -359,15 +359,15 @@ class Pry
     # Sets the attribute eval_path
     def eval_path=(_arg0); end
 
-    def exception_handler(*args, &block); end
-    def exception_handler=(*args, &block); end
-    def extra_sticky_locals(*args, &block); end
-    def extra_sticky_locals=(*args, &block); end
+    def exception_handler(*args, **_arg1, &block); end
+    def exception_handler=(*args, **_arg1, &block); end
+    def extra_sticky_locals(*args, **_arg1, &block); end
+    def extra_sticky_locals=(*args, **_arg1, &block); end
     def final_session_setup; end
-    def history(*args, &block); end
-    def history=(*args, &block); end
-    def hooks(*args, &block); end
-    def hooks=(*args, &block); end
+    def history(*args, **_arg1, &block); end
+    def history=(*args, **_arg1, &block); end
+    def hooks(*args, **_arg1, &block); end
+    def hooks=(*args, **_arg1, &block); end
     def in_critical_section?; end
 
     # Basic initialization.
@@ -379,8 +379,8 @@ class Pry
     # requires, and history.
     def initial_session_setup; end
 
-    def input(*args, &block); end
-    def input=(*args, &block); end
+    def input(*args, **_arg1, &block); end
+    def input=(*args, **_arg1, &block); end
 
     # Returns the value of attribute last_internal_error.
     def last_internal_error; end
@@ -403,7 +403,7 @@ class Pry
     # Load Readline history if required.
     def load_history; end
 
-    def load_plugins(*args, &block); end
+    def load_plugins(*args, **_arg1, &block); end
 
     # Load RC files if appropriate This method can also be used to reload the
     # files if they have changed.
@@ -417,19 +417,19 @@ class Pry
     def load_traps; end
 
     def load_win32console; end
-    def locate_plugins(*args, &block); end
+    def locate_plugins(*args, **_arg1, &block); end
     def main; end
-    def memory_size(*args, &block); end
-    def memory_size=(*args, &block); end
-    def output(*args, &block); end
-    def output=(*args, &block); end
-    def pager(*args, &block); end
-    def pager=(*args, &block); end
-    def plugins(*args, &block); end
-    def print(*args, &block); end
-    def print=(*args, &block); end
-    def prompt(*args, &block); end
-    def prompt=(*args, &block); end
+    def memory_size(*args, **_arg1, &block); end
+    def memory_size=(*args, **_arg1, &block); end
+    def output(*args, **_arg1, &block); end
+    def output=(*args, **_arg1, &block); end
+    def pager(*args, **_arg1, &block); end
+    def pager=(*args, **_arg1, &block); end
+    def plugins(*args, **_arg1, &block); end
+    def print(*args, **_arg1, &block); end
+    def print=(*args, **_arg1, &block); end
+    def prompt(*args, **_arg1, &block); end
+    def prompt=(*args, **_arg1, &block); end
 
     # Returns the value of attribute quiet.
     def quiet; end
@@ -3245,10 +3245,10 @@ class Pry::Method
   def name_with_owner; end
 
   def original_name; end
-  def owner(*args, &block); end
-  def parameters(*args, &block); end
+  def owner(*args, **_arg1, &block); end
+  def parameters(*args, **_arg1, &block); end
   def pry_method?; end
-  def receiver(*args, &block); end
+  def receiver(*args, **_arg1, &block); end
 
   # Update the live copy of the method's source.
   def redefine(source); end
@@ -3830,8 +3830,8 @@ class Pry::REPL
   # Create an instance of {REPL} wrapping the given {Pry}.
   def initialize(pry, options = T.unsafe(nil)); end
 
-  def input(*args, &block); end
-  def output(*args, &block); end
+  def input(*args, **_arg1, &block); end
+  def output(*args, **_arg1, &block); end
   def pry; end
   def pry=(_arg0); end
 
@@ -4802,18 +4802,18 @@ class Pry::WrappedModule::Candidate
 
   def initialize(wrapper, rank); end
 
-  def class?(*args, &block); end
+  def class?(*args, **_arg1, &block); end
   def doc; end
   def file; end
   def line; end
-  def module?(*args, &block); end
-  def nonblank_name(*args, &block); end
-  def number_of_candidates(*args, &block); end
+  def module?(*args, **_arg1, &block); end
+  def nonblank_name(*args, **_arg1, &block); end
+  def number_of_candidates(*args, **_arg1, &block); end
   def source; end
   def source_file; end
   def source_line; end
   def source_location; end
-  def wrapped(*args, &block); end
+  def wrapped(*args, **_arg1, &block); end
 
   private
 

@@ -294,8 +294,9 @@ module Diff::LCS
     # advance that arrow and will call <tt>callbacks#discard_a</tt> or
     # <tt>callbacks#discard_b</tt>, depending on which arrow it advanced. If both
     # arrows point to elements that are not part of the longest common
-    # subsequence, then #traverse_sequences will advance one of them and call the
-    # appropriate callback, but it is not specified which it will call.
+    # subsequence, then #traverse_sequences will advance arrow +a+ and call the
+    # appropriate callback, then it will advance arrow +b+ and call the appropriate
+    # callback.
     #
     # The methods for <tt>callbacks#match</tt>, <tt>callbacks#discard_a</tt>, and
     # <tt>callbacks#discard_b</tt> are invoked with an event comprising the

@@ -6,7 +6,7 @@
 
 module Spoom
   class << self
-    sig { params(cmd: String, arg: String, path: String, capture_err: T::Boolean).returns([String, T::Boolean]) }
+    sig { params(cmd: String, arg: String, path: String, capture_err: T::Boolean).returns([String, T::Boolean, Integer]) }
     def exec(cmd, *arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
   end
 end
@@ -58,6 +58,9 @@ module Spoom::Cli::Helper
   sig { params(string: String).returns(String) }
   def blue(string); end
 
+  sig { params(exit_code: Integer, block: T.nilable(T.proc.void)).void }
+  def check_sorbet_segfault(exit_code, &block); end
+
   # Is the `--color` option true?
   sig { returns(T::Boolean) }
   def color?; end
@@ -65,6 +68,9 @@ module Spoom::Cli::Helper
   # Colorize a string if `color?`
   sig { params(string: String, color: Spoom::Color).returns(String) }
   def colorize(string, *color); end
+
+  sig { params(string: String).returns(String) }
+  def cyan(string); end
 
   # Return the path specified through `--path`
   sig { returns(String) }
@@ -547,7 +553,7 @@ end
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { override.params(y: String, color: String, curve: String).returns(String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
@@ -1155,7 +1161,7 @@ Spoom::SPOOM_PATH = T.let(T.unsafe(nil), String)
 
 module Spoom::Sorbet
   class << self
-    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean]) }
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean, Integer]) }
     def srb(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
     # List all files typechecked by Sorbet from its `config`
@@ -1165,7 +1171,7 @@ module Spoom::Sorbet
     sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns(T.nilable(T::Hash[String, Integer])) }
     def srb_metrics(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
-    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean]) }
+    sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns([String, T::Boolean, Integer]) }
     def srb_tc(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
     sig { params(arg: String, path: String, capture_err: T::Boolean, sorbet_bin: T.nilable(String)).returns(T.nilable(String)) }
@@ -1257,6 +1263,8 @@ module Spoom::Sorbet::Errors
   end
 end
 
+Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE = T.let(T.unsafe(nil), String)
+
 class Spoom::Sorbet::Errors::Error
   include ::Comparable
 
@@ -1286,8 +1294,8 @@ end
 
 # Parse errors from Sorbet output
 class Spoom::Sorbet::Errors::Parser
-  sig { void }
-  def initialize; end
+  sig { params(error_url_base: String).void }
+  def initialize(error_url_base: T.unsafe(nil)); end
 
   sig { params(output: String).returns(T::Array[Spoom::Sorbet::Errors::Error]) }
   def parse(output); end
@@ -1300,6 +1308,9 @@ class Spoom::Sorbet::Errors::Parser
   sig { void }
   def close_error; end
 
+  sig { params(error_url_base: String).returns(Regexp) }
+  def error_line_match_regexp(error_url_base); end
+
   sig { params(line: String).returns(T.nilable(Spoom::Sorbet::Errors::Error)) }
   def match_error_line(line); end
 
@@ -1307,12 +1318,11 @@ class Spoom::Sorbet::Errors::Parser
   def open_error(error); end
 
   class << self
-    sig { params(output: String).returns(T::Array[Spoom::Sorbet::Errors::Error]) }
-    def parse_string(output); end
+    sig { params(output: String, error_url_base: String).returns(T::Array[Spoom::Sorbet::Errors::Error]) }
+    def parse_string(output, error_url_base: T.unsafe(nil)); end
   end
 end
 
-Spoom::Sorbet::Errors::Parser::ERROR_LINE_MATCH_REGEX = T.let(T.unsafe(nil), Regexp)
 Spoom::Sorbet::Errors::Parser::HEADER = T.let(T.unsafe(nil), Array)
 Spoom::Sorbet::GEM_PATH = T.let(T.unsafe(nil), String)
 
@@ -1330,6 +1340,7 @@ module Spoom::Sorbet::MetricsParser
 end
 
 Spoom::Sorbet::MetricsParser::DEFAULT_PREFIX = T.let(T.unsafe(nil), String)
+Spoom::Sorbet::SEGFAULT_CODE = T.let(T.unsafe(nil), Integer)
 
 module Spoom::Sorbet::Sigils
   class << self

@@ -87,6 +87,7 @@ class Rainbow::NullPresenter < ::String
   def bold; end
   def bright; end
   def color(*_values); end
+  def cross_out; end
   def cyan; end
   def dark; end
   def faint; end
@@ -100,6 +101,7 @@ class Rainbow::NullPresenter < ::String
   def method_missing(method_name, *args); end
   def red; end
   def reset; end
+  def strike; end
   def underline; end
   def white; end
   def yellow; end
@@ -133,6 +135,7 @@ class Rainbow::Presenter < ::String
   # Sets color of this text.
   def color(*values); end
 
+  def cross_out; end
   def cyan; end
 
   # Turns on faint/dark for this text (not well supported by terminal
@@ -174,6 +177,8 @@ class Rainbow::Presenter < ::String
   # It shouldn't be needed to use this method because all methods
   # append terminal reset code to end of string.
   def reset; end
+
+  def strike; end
 
   # Turns on underline decoration for this text.
   def underline; end

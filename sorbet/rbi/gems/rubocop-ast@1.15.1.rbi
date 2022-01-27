@@ -22,6 +22,14 @@ class RuboCop::AST::AliasNode < ::RuboCop::AST::Node
   def old_identifier; end
 end
 
+# A node extension for `op_asgn` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all assignment nodes within RuboCop.
+class RuboCop::AST::AndAsgnNode < ::RuboCop::AST::OpAsgnNode
+  # The operator being used for assignment as a symbol.
+  def operator; end
+end
+
 # A node extension for `until` nodes. This will be used in place of a plain
 # node when the builder constructs the AST, making its methods available
 # to all `until` nodes within RuboCop.
@@ -104,6 +112,17 @@ class RuboCop::AST::ArrayNode < ::RuboCop::AST::Node
 end
 
 RuboCop::AST::ArrayNode::PERCENT_LITERAL_TYPES = T.let(T.unsafe(nil), Hash)
+
+# A node extension for `lvasgn`, `ivasgn`, `cvasgn`, and `gvasgn` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all assignment nodes within RuboCop.
+class RuboCop::AST::AsgnNode < ::RuboCop::AST::Node
+  # The expression being assigned to the variable.
+  def expression; end
+
+  # The name of the variable being assigned as a symbol.
+  def name; end
+end
 
 # Common functionality for primitive literal nodes: `sym`, `str`,
 # `int`, `float`, ...
@@ -228,6 +247,11 @@ RuboCop::AST::Builder::NODE_MAP = T.let(T.unsafe(nil), Hash)
 class RuboCop::AST::CaseMatchNode < ::RuboCop::AST::Node
   include ::RuboCop::AST::ConditionalNode
 
+  # Returns an array of all the when branches in the `case` statement.
+  #
+  # and the `else` (if any). Note that these bodies could be nil.
+  def branches; end
+
   def each_in_pattern(&block); end
 
   # Checks whether this case statement has an `else` branch.
@@ -269,6 +293,20 @@ class RuboCop::AST::CaseNode < ::RuboCop::AST::Node
   def when_branches; end
 end
 
+# A node extension for `casgn` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all assignment nodes within RuboCop.
+class RuboCop::AST::CasgnNode < ::RuboCop::AST::Node
+  # The expression being assigned to the variable.
+  def expression; end
+
+  # The name of the variable being assigned as a symbol.
+  def name; end
+
+  # The namespace of the constant being assigned.
+  def namespace; end
+end
+
 # A node extension for `class` nodes. This will be used in place of a plain
 # node when the builder constructs the AST, making its methods available
 # to all `class` nodes within RuboCop.
@@ -276,7 +314,7 @@ class RuboCop::AST::ClassNode < ::RuboCop::AST::Node
   # The body of this `class` node.
   def body; end
 
-  # The identifer for this `class` node.
+  # The identifier for this `class` node.
   def identifier; end
 
   # The parent class for this `class` node.
@@ -287,140 +325,141 @@ end
 module RuboCop::AST::CollectionNode
   extend ::Forwardable
 
-  def &(*args, &block); end
-  def *(*args, &block); end
-  def +(*args, &block); end
-  def -(*args, &block); end
-  def <<(*args, &block); end
-  def [](*args, &block); end
-  def []=(*args, &block); end
-  def all?(*args, &block); end
-  def any?(*args, &block); end
-  def append(*args, &block); end
-  def assoc(*args, &block); end
-  def at(*args, &block); end
-  def bsearch(*args, &block); end
-  def bsearch_index(*args, &block); end
-  def chain(*args, &block); end
-  def chunk(*args, &block); end
-  def chunk_while(*args, &block); end
-  def clear(*args, &block); end
-  def collect(*args, &block); end
-  def collect!(*args, &block); end
-  def collect_concat(*args, &block); end
-  def combination(*args, &block); end
-  def compact(*args, &block); end
-  def compact!(*args, &block); end
-  def concat(*args, &block); end
-  def count(*args, &block); end
-  def cycle(*args, &block); end
-  def deconstruct(*args, &block); end
-  def delete(*args, &block); end
-  def delete_at(*args, &block); end
-  def delete_if(*args, &block); end
-  def detect(*args, &block); end
-  def difference(*args, &block); end
-  def dig(*args, &block); end
-  def drop(*args, &block); end
-  def drop_while(*args, &block); end
-  def each(*args, &block); end
-  def each_cons(*args, &block); end
-  def each_entry(*args, &block); end
-  def each_index(*args, &block); end
-  def each_slice(*args, &block); end
-  def each_with_index(*args, &block); end
-  def each_with_object(*args, &block); end
-  def empty?(*args, &block); end
-  def entries(*args, &block); end
-  def fetch(*args, &block); end
-  def fill(*args, &block); end
-  def filter(*args, &block); end
-  def filter!(*args, &block); end
-  def filter_map(*args, &block); end
-  def find(*args, &block); end
-  def find_all(*args, &block); end
-  def find_index(*args, &block); end
-  def first(*args, &block); end
-  def flat_map(*args, &block); end
-  def flatten(*args, &block); end
-  def flatten!(*args, &block); end
-  def grep(*args, &block); end
-  def grep_v(*args, &block); end
-  def group_by(*args, &block); end
-  def include?(*args, &block); end
-  def index(*args, &block); end
-  def inject(*args, &block); end
-  def insert(*args, &block); end
-  def intersection(*args, &block); end
-  def join(*args, &block); end
-  def keep_if(*args, &block); end
-  def last(*args, &block); end
-  def lazy(*args, &block); end
-  def length(*args, &block); end
-  def map(*args, &block); end
-  def map!(*args, &block); end
-  def max(*args, &block); end
-  def max_by(*args, &block); end
-  def member?(*args, &block); end
-  def min(*args, &block); end
-  def min_by(*args, &block); end
-  def minmax(*args, &block); end
-  def minmax_by(*args, &block); end
-  def none?(*args, &block); end
-  def one?(*args, &block); end
-  def pack(*args, &block); end
-  def partition(*args, &block); end
-  def permutation(*args, &block); end
-  def place(*args, &block); end
-  def pop(*args, &block); end
-  def prepend(*args, &block); end
-  def product(*args, &block); end
-  def push(*args, &block); end
-  def rassoc(*args, &block); end
-  def reduce(*args, &block); end
-  def reject(*args, &block); end
-  def reject!(*args, &block); end
-  def repeated_combination(*args, &block); end
-  def repeated_permutation(*args, &block); end
-  def replace(*args, &block); end
-  def reverse(*args, &block); end
-  def reverse!(*args, &block); end
-  def reverse_each(*args, &block); end
-  def rindex(*args, &block); end
-  def rotate(*args, &block); end
-  def rotate!(*args, &block); end
-  def sample(*args, &block); end
-  def select(*args, &block); end
-  def select!(*args, &block); end
-  def shelljoin(*args, &block); end
-  def shift(*args, &block); end
-  def shuffle(*args, &block); end
-  def shuffle!(*args, &block); end
-  def size(*args, &block); end
-  def slice(*args, &block); end
-  def slice!(*args, &block); end
-  def slice_after(*args, &block); end
-  def slice_before(*args, &block); end
-  def slice_when(*args, &block); end
-  def sort(*args, &block); end
-  def sort!(*args, &block); end
-  def sort_by(*args, &block); end
-  def sort_by!(*args, &block); end
-  def sum(*args, &block); end
-  def take(*args, &block); end
-  def take_while(*args, &block); end
-  def tally(*args, &block); end
-  def to_ary(*args, &block); end
-  def to_h(*args, &block); end
-  def to_set(*args, &block); end
-  def transpose(*args, &block); end
-  def union(*args, &block); end
-  def uniq(*args, &block); end
-  def uniq!(*args, &block); end
-  def unshift(*args, &block); end
-  def values_at(*args, &block); end
-  def zip(*args, &block); end
-  def |(*args, &block); end
+  def &(*args, **_arg1, &block); end
+  def *(*args, **_arg1, &block); end
+  def +(*args, **_arg1, &block); end
+  def -(*args, **_arg1, &block); end
+  def <<(*args, **_arg1, &block); end
+  def [](*args, **_arg1, &block); end
+  def []=(*args, **_arg1, &block); end
+  def all?(*args, **_arg1, &block); end
+  def any?(*args, **_arg1, &block); end
+  def append(*args, **_arg1, &block); end
+  def assoc(*args, **_arg1, &block); end
+  def at(*args, **_arg1, &block); end
+  def bsearch(*args, **_arg1, &block); end
+  def bsearch_index(*args, **_arg1, &block); end
+  def chain(*args, **_arg1, &block); end
+  def chunk(*args, **_arg1, &block); end
+  def chunk_while(*args, **_arg1, &block); end
+  def clear(*args, **_arg1, &block); end
+  def collect(*args, **_arg1, &block); end
+  def collect!(*args, **_arg1, &block); end
+  def collect_concat(*args, **_arg1, &block); end
+  def combination(*args, **_arg1, &block); end
+  def compact(*args, **_arg1, &block); end
+  def compact!(*args, **_arg1, &block); end
+  def concat(*args, **_arg1, &block); end
+  def count(*args, **_arg1, &block); end
+  def cycle(*args, **_arg1, &block); end
+  def deconstruct(*args, **_arg1, &block); end
+  def delete(*args, **_arg1, &block); end
+  def delete_at(*args, **_arg1, &block); end
+  def delete_if(*args, **_arg1, &block); end
+  def detect(*args, **_arg1, &block); end
+  def difference(*args, **_arg1, &block); end
+  def dig(*args, **_arg1, &block); end
+  def drop(*args, **_arg1, &block); end
+  def drop_while(*args, **_arg1, &block); end
+  def each(*args, **_arg1, &block); end
+  def each_cons(*args, **_arg1, &block); end
+  def each_entry(*args, **_arg1, &block); end
+  def each_index(*args, **_arg1, &block); end
+  def each_slice(*args, **_arg1, &block); end
+  def each_with_index(*args, **_arg1, &block); end
+  def each_with_object(*args, **_arg1, &block); end
+  def empty?(*args, **_arg1, &block); end
+  def entries(*args, **_arg1, &block); end
+  def fetch(*args, **_arg1, &block); end
+  def fill(*args, **_arg1, &block); end
+  def filter(*args, **_arg1, &block); end
+  def filter!(*args, **_arg1, &block); end
+  def filter_map(*args, **_arg1, &block); end
+  def find(*args, **_arg1, &block); end
+  def find_all(*args, **_arg1, &block); end
+  def find_index(*args, **_arg1, &block); end
+  def first(*args, **_arg1, &block); end
+  def flat_map(*args, **_arg1, &block); end
+  def flatten(*args, **_arg1, &block); end
+  def flatten!(*args, **_arg1, &block); end
+  def grep(*args, **_arg1, &block); end
+  def grep_v(*args, **_arg1, &block); end
+  def group_by(*args, **_arg1, &block); end
+  def include?(*args, **_arg1, &block); end
+  def index(*args, **_arg1, &block); end
+  def inject(*args, **_arg1, &block); end
+  def insert(*args, **_arg1, &block); end
+  def intersect?(*args, **_arg1, &block); end
+  def intersection(*args, **_arg1, &block); end
+  def join(*args, **_arg1, &block); end
+  def keep_if(*args, **_arg1, &block); end
+  def last(*args, **_arg1, &block); end
+  def lazy(*args, **_arg1, &block); end
+  def length(*args, **_arg1, &block); end
+  def map(*args, **_arg1, &block); end
+  def map!(*args, **_arg1, &block); end
+  def max(*args, **_arg1, &block); end
+  def max_by(*args, **_arg1, &block); end
+  def member?(*args, **_arg1, &block); end
+  def min(*args, **_arg1, &block); end
+  def min_by(*args, **_arg1, &block); end
+  def minmax(*args, **_arg1, &block); end
+  def minmax_by(*args, **_arg1, &block); end
+  def none?(*args, **_arg1, &block); end
+  def one?(*args, **_arg1, &block); end
+  def pack(*args, **_arg1, &block); end
+  def partition(*args, **_arg1, &block); end
+  def permutation(*args, **_arg1, &block); end
+  def place(*args, **_arg1, &block); end
+  def pop(*args, **_arg1, &block); end
+  def prepend(*args, **_arg1, &block); end
+  def product(*args, **_arg1, &block); end
+  def push(*args, **_arg1, &block); end
+  def rassoc(*args, **_arg1, &block); end
+  def reduce(*args, **_arg1, &block); end
+  def reject(*args, **_arg1, &block); end
+  def reject!(*args, **_arg1, &block); end
+  def repeated_combination(*args, **_arg1, &block); end
+  def repeated_permutation(*args, **_arg1, &block); end
+  def replace(*args, **_arg1, &block); end
+  def reverse(*args, **_arg1, &block); end
+  def reverse!(*args, **_arg1, &block); end
+  def reverse_each(*args, **_arg1, &block); end
+  def rindex(*args, **_arg1, &block); end
+  def rotate(*args, **_arg1, &block); end
+  def rotate!(*args, **_arg1, &block); end
+  def sample(*args, **_arg1, &block); end
+  def select(*args, **_arg1, &block); end
+  def select!(*args, **_arg1, &block); end
+  def shelljoin(*args, **_arg1, &block); end
+  def shift(*args, **_arg1, &block); end
+  def shuffle(*args, **_arg1, &block); end
+  def shuffle!(*args, **_arg1, &block); end
+  def size(*args, **_arg1, &block); end
+  def slice(*args, **_arg1, &block); end
+  def slice!(*args, **_arg1, &block); end
+  def slice_after(*args, **_arg1, &block); end
+  def slice_before(*args, **_arg1, &block); end
+  def slice_when(*args, **_arg1, &block); end
+  def sort(*args, **_arg1, &block); end
+  def sort!(*args, **_arg1, &block); end
+  def sort_by(*args, **_arg1, &block); end
+  def sort_by!(*args, **_arg1, &block); end
+  def sum(*args, **_arg1, &block); end
+  def take(*args, **_arg1, &block); end
+  def take_while(*args, **_arg1, &block); end
+  def tally(*args, **_arg1, &block); end
+  def to_ary(*args, **_arg1, &block); end
+  def to_h(*args, **_arg1, &block); end
+  def to_set(*args, **_arg1, &block); end
+  def transpose(*args, **_arg1, &block); end
+  def union(*args, **_arg1, &block); end
+  def uniq(*args, **_arg1, &block); end
+  def uniq!(*args, **_arg1, &block); end
+  def unshift(*args, **_arg1, &block); end
+  def values_at(*args, **_arg1, &block); end
+  def zip(*args, **_arg1, &block); end
+  def |(*args, **_arg1, &block); end
 end
 
 RuboCop::AST::CollectionNode::ARRAY_METHODS = T.let(T.unsafe(nil), Array)
@@ -450,8 +489,6 @@ end
 # A node extension for `const` nodes.
 class RuboCop::AST::ConstNode < ::RuboCop::AST::Node
   def absolute?; end
-
-  # The body of this block.
   def class_name?; end
 
   # Yield nodes for the namespace
@@ -462,12 +499,8 @@ class RuboCop::AST::ConstNode < ::RuboCop::AST::Node
   # s(:const, s(:const, :Foo), :Bar)
   def each_path(&block); end
 
-  # The body of this block.
   def module_name?; end
-
-  # The `send` node associated with this block.
   def namespace; end
-
   def relative?; end
   def short_name; end
 end
@@ -996,7 +1029,7 @@ module RuboCop::AST::MethodDispatchNode
   # Whether this method dispatch has an explicit block.
   def block_literal?; end
 
-  # The `block` node associated with this method dispatch, if any.
+  # The `block` or `numblock` node associated with this method dispatch, if any.
   def block_node; end
 
   # Checks whether the name of the dispatched method matches the argument
@@ -1172,7 +1205,7 @@ class RuboCop::AST::ModuleNode < ::RuboCop::AST::Node
   # The body of this `module` node.
   def body; end
 
-  # The identifer for this `module` node.
+  # The identifier for this `module` node.
   def identifier; end
 end
 
@@ -1551,7 +1584,7 @@ class RuboCop::AST::NodePattern
   # Returns the value of attribute ast.
   def ast; end
 
-  def captures(*args, &block); end
+  def captures(*args, **_arg1, &block); end
   def encode_with(coder); end
   def eql?(other); end
   def freeze; end
@@ -1563,12 +1596,12 @@ class RuboCop::AST::NodePattern
   # Returns the value of attribute match_code.
   def match_code; end
 
-  def named_parameters(*args, &block); end
+  def named_parameters(*args, **_arg1, &block); end
 
   # Returns the value of attribute pattern.
   def pattern; end
 
-  def positional_parameters(*args, &block); end
+  def positional_parameters(*args, **_arg1, &block); end
   def to_s; end
 
   class << self
@@ -1626,7 +1659,7 @@ class RuboCop::AST::NodePattern::Compiler
 
   def initialize; end
 
-  def bind(*args, &block); end
+  def bind(*args, **_arg1, &block); end
 
   # Returns the value of attribute binding.
   def binding; end
@@ -1705,14 +1738,14 @@ end
 class RuboCop::AST::NodePattern::Compiler::Debug < ::RuboCop::AST::NodePattern::Compiler
   def initialize; end
 
-  def comments(*args, &block); end
+  def comments(*args, **_arg1, &block); end
   def named_parameters; end
 
   # Returns the value of attribute node_ids.
   def node_ids; end
 
   def parser; end
-  def tokens(*args, &block); end
+  def tokens(*args, **_arg1, &block); end
 end
 
 class RuboCop::AST::NodePattern::Compiler::Debug::Colorizer
@@ -1773,6 +1806,7 @@ class RuboCop::AST::NodePattern::Compiler::Debug::Colorizer::Result < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2144,11 +2178,11 @@ RuboCop::AST::NodePattern::Node::AnyOrder::ARITIES = T.let(T.unsafe(nil), Hash)
 
 # Node class for `$something`
 class RuboCop::AST::NodePattern::Node::Capture < ::RuboCop::AST::NodePattern::Node
-  def arity(*args, &block); end
+  def arity(*args, **_arg1, &block); end
   def capture?; end
   def in_sequence_head; end
   def nb_captures; end
-  def rest?(*args, &block); end
+  def rest?(*args, **_arg1, &block); end
 end
 
 module RuboCop::AST::NodePattern::Node::ForbidInSeqHead
@@ -2267,14 +2301,14 @@ class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
   def _reduce_8(val, _values); end
   def _reduce_9(val, _values); end
   def _reduce_none(val, _values); end
-  def emit_atom(*args, &block); end
-  def emit_call(*args, &block); end
-  def emit_capture(*args, &block); end
-  def emit_list(*args, &block); end
-  def emit_unary_op(*args, &block); end
-  def emit_union(*args, &block); end
+  def emit_atom(*args, **_arg1, &block); end
+  def emit_call(*args, **_arg1, &block); end
+  def emit_capture(*args, **_arg1, &block); end
+  def emit_list(*args, **_arg1, &block); end
+  def emit_unary_op(*args, **_arg1, &block); end
+  def emit_union(*args, **_arg1, &block); end
   def inspect; end
-  def next_token(*args, &block); end
+  def next_token(*args, **_arg1, &block); end
 
   # (Similar API to `parser` gem)
   # Parses a source and returns the AST.
@@ -2351,6 +2385,7 @@ RuboCop::AST::NodePattern::Sets::SET_ADD_DEPENDENCY_ADD_RUNTIME_DEPENDENCY_ADD_D
 RuboCop::AST::NodePattern::Sets::SET_ANY_ALL_NORETURN_ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ATTR_READER_ATTR_WRITER_ATTR_ACCESSOR = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ATTR_READER_ATTR_WRITER_ATTR_ACCESSOR_ATTR = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_BRANCH_REF_TAG = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_CAPTURE2_CAPTURE2E_CAPTURE3_ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_CIPHER_DIGEST = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_CLASS_EVAL_INSTANCE_EVAL = T.let(T.unsafe(nil), Set)
@@ -2368,7 +2403,6 @@ RuboCop::AST::NodePattern::Sets::SET_ESCAPE_ENCODE_UNESCAPE_DECODE = T.let(T.uns
 RuboCop::AST::NodePattern::Sets::SET_FIRST_LAST__ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_FIXNUM_BIGNUM = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_FORMAT_SPRINTF_PRINTF = T.let(T.unsafe(nil), Set)
-RuboCop::AST::NodePattern::Sets::SET_GEMCUTTER_RUBYGEMS_RUBYFORGE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_GSUB_GSUB = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_INCLUDE_EXTEND_PREPEND = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_INSTANCE_EVAL_CLASS_EVAL_MODULE_EVAL = T.let(T.unsafe(nil), Set)
@@ -2379,6 +2413,7 @@ RuboCop::AST::NodePattern::Sets::SET_LAST_FIRST = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_LENGTH_SIZE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_LOAD_RESTORE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_MAP_COLLECT = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_NEW_ = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_NEW_FROM_AMOUNT_FROM_CENTS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_NEW_OPEN = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_NIL_ = T.let(T.unsafe(nil), Set)
@@ -2402,7 +2437,8 @@ RuboCop::AST::NodePattern::Sets::SET_STRUCT_CLASS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_SUCC_PRED_NEXT = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_TEMPFILE_STRINGIO = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_TO_ENUM_ENUM_FOR = T.let(T.unsafe(nil), Set)
-RuboCop::AST::NodePattern::Sets::SET_TO_I_TO_F_TO_C = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_TO_H_TO_HASH = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_TO_I_TO_F_TO_C_TO_R = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_TRUE_FALSE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_TYPE_TEMPLATE_TYPE_MEMBER = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ZERO_EMPTY = T.let(T.unsafe(nil), Set)
@@ -2433,6 +2469,30 @@ module RuboCop::AST::NumericNode
 end
 
 RuboCop::AST::NumericNode::SIGN_REGEX = T.let(T.unsafe(nil), Regexp)
+
+# A node extension for `op_asgn` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all assignment nodes within RuboCop.
+class RuboCop::AST::OpAsgnNode < ::RuboCop::AST::Node
+  def assignment_node; end
+
+  # The expression being assigned to the variable.
+  def expression; end
+
+  # The name of the variable being assigned as a symbol.
+  def name; end
+
+  # The operator being used for assignment as a symbol.
+  def operator; end
+end
+
+# A node extension for `op_asgn` nodes.
+# This will be used in place of a plain node when the builder constructs
+# the AST, making its methods available to all assignment nodes within RuboCop.
+class RuboCop::AST::OrAsgnNode < ::RuboCop::AST::OpAsgnNode
+  # The operator being used for assignment as a symbol.
+  def operator; end
+end
 
 # A node extension for `or` nodes. This will be used in place of a plain
 # node when the builder constructs the AST, making its methods available
@@ -2468,6 +2528,9 @@ class RuboCop::AST::PairNode < ::RuboCop::AST::Node
 
   # Returns the inverse delimiter of the `pair` as a string.
   def inverse_delimiter(*deprecated, with_spacing: T.unsafe(nil)); end
+
+  # Checks whether the `pair` uses hash value omission.
+  def value_omission?; end
 
   # Checks whether the value starts on its own line.
   def value_on_new_line?; end
@@ -2641,6 +2704,11 @@ class RuboCop::AST::ProcessedSource
   # Returns the value of attribute ruby_version.
   def ruby_version; end
 
+  # The tokens list is always sorted by token position, except for cases when heredoc
+  # is passed as a method argument. In this case tokens are interleaved by
+  # heredoc contents' tokens.
+  def sorted_tokens; end
+
   def start_with?(string); end
 
   # Returns the value of attribute tokens.
@@ -2657,12 +2725,6 @@ class RuboCop::AST::ProcessedSource
   def last_token_index(range_or_node); end
   def parse(source, ruby_version); end
   def parser_class(ruby_version); end
-
-  # The tokens list is always sorted by token position, except for cases when heredoc
-  # is passed as a method argument. In this case tokens are interleaved by
-  # heredoc contents' tokens.
-  def sorted_tokens; end
-
   def source_range(range_or_node); end
   def tokenize(parser); end
 
@@ -2774,7 +2836,7 @@ class RuboCop::AST::SelfClassNode < ::RuboCop::AST::Node
   # The body of this `sclass` node.
   def body; end
 
-  # The identifer for this `sclass` node. (Always `self`.)
+  # The identifier for this `sclass` node. (Always `self`.)
   def identifier; end
 end
 

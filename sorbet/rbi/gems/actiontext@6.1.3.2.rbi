@@ -75,7 +75,7 @@ class ActionText::Attachables::ContentAttachment
   def _validators; end
   def _validators?; end
   def attachable_plain_text_representation(caption); end
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute name.
   def name; end
@@ -107,7 +107,7 @@ end
 module ActionText::Attachables::MissingAttachable
   extend ::ActiveModel::Naming
 
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   class << self
     def to_partial_path; end
@@ -127,7 +127,7 @@ class ActionText::Attachables::RemoteImage
   # Returns the value of attribute height.
   def height; end
 
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
   def to_partial_path; end
 
   # Returns the value of attribute url.
@@ -161,13 +161,13 @@ class ActionText::Attachment
   def caption; end
   def full_attributes; end
   def inspect; end
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # Returns the value of attribute node.
   def node; end
 
   def to_html; end
-  def to_param(*_arg0, &_arg1); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
   def to_plain_text; end
   def to_s; end
   def with_full_attributes; end
@@ -224,7 +224,7 @@ class ActionText::AttachmentGallery
   def _validators?; end
   def attachments; end
   def inspect; end
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute node.
   def node; end
@@ -319,18 +319,18 @@ class ActionText::Content
   def attachables; end
   def attachment_galleries; end
   def attachments; end
-  def blank?(*_arg0, &_arg1); end
-  def empty?(*_arg0, &_arg1); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute fragment.
   def fragment; end
 
   def gallery_attachments; end
-  def html_safe(*_arg0, &_arg1); end
+  def html_safe(*_arg0, **_arg1, &_arg2); end
   def inspect; end
   def links; end
-  def present?(*_arg0, &_arg1); end
-  def render(*_arg0, &_arg1); end
+  def present?(*_arg0, **_arg1, &_arg2); end
+  def render(*_arg0, **_arg1, &_arg2); end
   def render_attachment_galleries(&block); end
   def render_attachments(**options, &block); end
   def to_html; end
@@ -475,8 +475,8 @@ class ActionText::RichText < ::ActionText::Record
   include ::ActionText::RichText::GeneratedAssociationMethods
 
   def autosave_associated_records_for_record(*args); end
-  def nil?(*_arg0, &_arg1); end
-  def to_s(*_arg0, &_arg1); end
+  def nil?(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   class << self
     def __callbacks; end
@@ -733,7 +733,7 @@ end
 class ActionView::Helpers::Tags::ActionText < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::Placeholderable
 
-  def dom_id(*_arg0, &_arg1); end
+  def dom_id(*_arg0, **_arg1, &_arg2); end
   def editable_value; end
   def render; end
 end

@@ -200,30 +200,30 @@ module Rack::Test::Methods
   extend ::Forwardable
 
   def _current_session_names; end
-  def authorize(*args, &block); end
-  def basic_authorize(*args, &block); end
+  def authorize(*args, **_arg1, &block); end
+  def basic_authorize(*args, **_arg1, &block); end
   def build_rack_mock_session; end
   def build_rack_test_session(name); end
-  def clear_cookies(*args, &block); end
+  def clear_cookies(*args, **_arg1, &block); end
   def current_session; end
-  def custom_request(*args, &block); end
-  def delete(*args, &block); end
-  def digest_authorize(*args, &block); end
-  def env(*args, &block); end
-  def follow_redirect!(*args, &block); end
-  def get(*args, &block); end
-  def head(*args, &block); end
-  def header(*args, &block); end
-  def last_request(*args, &block); end
-  def last_response(*args, &block); end
-  def options(*args, &block); end
-  def patch(*args, &block); end
-  def post(*args, &block); end
-  def put(*args, &block); end
+  def custom_request(*args, **_arg1, &block); end
+  def delete(*args, **_arg1, &block); end
+  def digest_authorize(*args, **_arg1, &block); end
+  def env(*args, **_arg1, &block); end
+  def follow_redirect!(*args, **_arg1, &block); end
+  def get(*args, **_arg1, &block); end
+  def head(*args, **_arg1, &block); end
+  def header(*args, **_arg1, &block); end
+  def last_request(*args, **_arg1, &block); end
+  def last_response(*args, **_arg1, &block); end
+  def options(*args, **_arg1, &block); end
+  def patch(*args, **_arg1, &block); end
+  def post(*args, **_arg1, &block); end
+  def put(*args, **_arg1, &block); end
   def rack_mock_session(name = T.unsafe(nil)); end
   def rack_test_session(name = T.unsafe(nil)); end
-  def request(*args, &block); end
-  def set_cookie(*args, &block); end
+  def request(*args, **_arg1, &block); end
+  def set_cookie(*args, **_arg1, &block); end
   def with_session(name); end
 end
 
@@ -268,7 +268,7 @@ class Rack::Test::Session
   # basic_authorize "bryan", "secret"
   def basic_authorize(username, password); end
 
-  def clear_cookies(*args, &block); end
+  def clear_cookies(*args, **_arg1, &block); end
 
   # Issue a request using the given verb for the given URI. See #get
   #
@@ -327,8 +327,8 @@ class Rack::Test::Session
   # header "User-Agent", "Firefox"
   def header(name, value); end
 
-  def last_request(*args, &block); end
-  def last_response(*args, &block); end
+  def last_request(*args, **_arg1, &block); end
+  def last_response(*args, **_arg1, &block); end
 
   # Issue an OPTIONS request for the given URI. See #get
   #
@@ -363,7 +363,7 @@ class Rack::Test::Session
   # request "/"
   def request(uri, env = T.unsafe(nil), &block); end
 
-  def set_cookie(*args, &block); end
+  def set_cookie(*args, **_arg1, &block); end
 
   private
 

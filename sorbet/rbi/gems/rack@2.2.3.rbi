@@ -203,7 +203,7 @@ class Rack::BodyProxy
   def closed?; end
 
   # Delegate missing methods to the wrapped body.
-  def method_missing(method_name, *args, &block); end
+  def method_missing(method_name, *args, **_arg2, &block); end
 
   private
 
@@ -319,7 +319,7 @@ class Rack::Builder
   # All requests through to this application will first be processed by the middleware class.
   # The +call+ method in this example sets an additional environment key which then can be
   # referenced in the application if required.
-  def use(middleware, *args, &block); end
+  def use(middleware, *args, **_arg2, &block); end
 
   # Takes a lambda or block that is used to warm-up the application. This block is called
   # before the Rack application is returned by to_app.
@@ -1006,6 +1006,18 @@ end
 
 Rack::Handler::SERVER_NAMES = T.let(T.unsafe(nil), Array)
 
+class Rack::Handler::WEBrick < ::WEBrick::HTTPServlet::AbstractServlet
+  def initialize(server, app); end
+
+  def service(req, res); end
+
+  class << self
+    def run(app, **options); end
+    def shutdown; end
+    def valid_options; end
+  end
+end
+
 # Rack::Head returns an empty body for all HEAD requests. It leaves
 # all other requests unchanged.
 class Rack::Head
@@ -1104,15 +1116,15 @@ class Rack::Lint::HijackWrapper
 
   def initialize(io); end
 
-  def close(*args, &block); end
-  def close_read(*args, &block); end
-  def close_write(*args, &block); end
-  def closed?(*args, &block); end
-  def flush(*args, &block); end
-  def read(*args, &block); end
-  def read_nonblock(*args, &block); end
-  def write(*args, &block); end
-  def write_nonblock(*args, &block); end
+  def close(*args, **_arg1, &block); end
+  def close_read(*args, **_arg1, &block); end
+  def close_write(*args, **_arg1, &block); end
+  def closed?(*args, **_arg1, &block); end
+  def flush(*args, **_arg1, &block); end
+  def read(*args, **_arg1, &block); end
+  def read_nonblock(*args, **_arg1, &block); end
+  def write(*args, **_arg1, &block); end
+  def write_nonblock(*args, **_arg1, &block); end
 end
 
 Rack::Lint::HijackWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
@@ -1529,6 +1541,7 @@ class Rack::Multipart::Parser::MultipartInfo < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1795,7 +1808,11 @@ class Rack::Request
 
   def delete_param(k); end
   def params; end
+  def query; end
   def update_param(k, v); end
+  def version_supplied; end
+  def version_supplied=(_arg0); end
+  def xhr?; end
 
   class << self
     # Returns the value of attribute ip_filter.
@@ -3308,3 +3325,15 @@ Rack::Utils::SYMBOL_TO_STATUS_CODE = T.let(T.unsafe(nil), Hash)
 
 # The Rack protocol version number implemented.
 Rack::VERSION = T.let(T.unsafe(nil), Array)
+
+# This monkey patch allows for applications to perform their own chunking
+# through WEBrick::HTTPResponse if rack is set to true.
+class WEBrick::HTTPResponse
+  # Returns the value of attribute rack.
+  def rack; end
+
+  # Sets the attribute rack
+  def rack=(_arg0); end
+
+  def setup_header; end
+end

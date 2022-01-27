@@ -41,6 +41,10 @@ end
 
 # This cop ensures that callback conditionals are bound to the right type
 # so that they are type checked properly.
+#
+# Auto-correction is unsafe because other libraries define similar style callbacks as Rails, but don't always need
+# binding to the attached class. Auto-correcting those usages can lead to false positives and auto-correction
+# introduces new typing errors.
 class RuboCop::Cop::Sorbet::CallbackConditionalsBinding < ::RuboCop::Cop::Cop
   def autocorrect(node); end
   def on_send(node); end
@@ -136,10 +140,10 @@ class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Sorbet::Signatur
 
   def accessor?(param0 = T.unsafe(nil)); end
   def autocorrect(node); end
-  def on_block(node); end
   def on_def(node); end
   def on_defs(node); end
   def on_send(node); end
+  def on_signature(node); end
   def scope(node); end
 
   private
@@ -172,6 +176,32 @@ class RuboCop::Cop::Sorbet::EnforceSignatures::SigSuggestion
   def generate_return; end
 end
 
+# This cop checks that there is only one Sorbet sigil in a given file
+#
+# For example, the following class with two sigils
+#
+# ```ruby
+# class Foo; end
+# ```
+#
+# Will be corrected as:
+#
+# ```ruby
+# class Foo; end
+# ```
+#
+# Other comments or magic comments are left in place.
+class RuboCop::Cop::Sorbet::EnforceSingleSigil < ::RuboCop::Cop::Sorbet::ValidSigil
+  include ::RuboCop::Cop::RangeHelp
+
+  def autocorrect(_node); end
+  def investigate(processed_source); end
+
+  protected
+
+  def extract_all_sigils(processed_source); end
+end
+
 # This cop makes the Sorbet `false` sigil mandatory in all files.
 class RuboCop::Cop::Sorbet::FalseSigil < ::RuboCop::Cop::Sorbet::HasSigil
   def minimum_strictness; end
@@ -194,6 +224,7 @@ RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims::RESTRICT_ON_SEND = T.let(T
 class RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral < ::RuboCop::Cop::Cop
   def initialize(*_arg0); end
 
+  def autocorrect(node); end
   def not_lit_const_include?(param0 = T.unsafe(nil)); end
   def on_send(node); end
 
@@ -206,14 +237,20 @@ end
 
 RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral::MSG = T.let(T.unsafe(nil), String)
 
-# This cop makes sure that RBI files are always located under sorbet/rbi/.
-class RuboCop::Cop::Sorbet::ForbidRBIOutsideOfSorbetDir < ::RuboCop::Cop::Cop
+# This cop makes sure that RBI files are always located under the defined allowed paths.
+#
+# Options:
+#
+# * `AllowedPaths`: A list of the paths where RBI files are allowed (default: ["sorbet/rbi/**"])
+class RuboCop::Cop::Sorbet::ForbidRBIOutsideOfAllowedPaths < ::RuboCop::Cop::Cop
   include ::RuboCop::Cop::RangeHelp
 
   def investigate(processed_source); end
-end
 
-RuboCop::Cop::Sorbet::ForbidRBIOutsideOfSorbetDir::PATH_REGEXP = T.let(T.unsafe(nil), Regexp)
+  private
+
+  def allowed_paths; end
+end
 
 class RuboCop::Cop::Sorbet::ForbidSuperclassConstLiteral < ::RuboCop::Cop::Cop
   def not_lit_const_superclass?(param0 = T.unsafe(nil)); end
@@ -288,19 +325,6 @@ end
 
 RuboCop::Cop::Sorbet::OneAncestorPerLine::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks for inconsistent ordering of parameters between the
-# signature and the method definition. The sorbet-runtime gem raises
-# when such inconsistency occurs.
-class RuboCop::Cop::Sorbet::ParametersOrderingInSignature < ::RuboCop::Cop::Sorbet::SignatureCop
-  def on_signature(node); end
-  def signature_params(param0); end
-
-  private
-
-  def check_for_inconsistent_param_ordering(sig_params_order, parameters); end
-  def extract_parameters(sig_params); end
-end
-
 class RuboCop::Cop::Sorbet::SignatureBuildOrder < ::RuboCop::Cop::Sorbet::SignatureCop
   def autocorrect(node); end
   def on_signature(node); end
@@ -327,9 +351,12 @@ RuboCop::Cop::Sorbet::SignatureBuildOrder::ORDER = T.let(T.unsafe(nil), Hash)
 #
 # You can subclass it to use the `on_signature` trigger and the `signature?` node matcher.
 class RuboCop::Cop::Sorbet::SignatureCop < ::RuboCop::Cop::Cop
+  def allowed_recv(recv); end
   def on_block(node); end
   def on_signature(_); end
   def signature?(param0 = T.unsafe(nil)); end
+  def with_runtime?(param0 = T.unsafe(nil)); end
+  def without_runtime?(param0 = T.unsafe(nil)); end
 end
 
 # This cop ensures empty class/module definitions in RBI files are

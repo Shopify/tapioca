@@ -9,7 +9,7 @@ module RBI; end
 class RBI::ASTVisitor
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { abstract.params(node: T.nilable(AST::Node)).void }
   def visit(node); end
@@ -301,8 +301,8 @@ class RBI::File
   sig { returns(T::Boolean) }
   def empty?; end
 
-  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean).void }
-  def print(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil)); end
+  sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).void }
+  def print(out: T.unsafe(nil), indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
 
   sig { returns(RBI::Tree) }
   def root; end
@@ -320,8 +320,8 @@ class RBI::File
 
   def strictness=(_arg0); end
 
-  sig { params(indent: Integer, print_locs: T::Boolean).returns(String) }
-  def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil)); end
+  sig { params(indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).returns(String) }
+  def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
 
   sig { void }
   def transform_rbi!; end
@@ -1236,7 +1236,7 @@ class RBI::Scope < ::RBI::Tree
 
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { override.params(v: RBI::Printer).void }
   def accept_printer(v); end
@@ -1794,7 +1794,7 @@ end
 class RBI::Visitor
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { abstract.params(node: T.nilable(RBI::Node)).void }
   def visit(node); end

@@ -289,18 +289,25 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # requests. These sensitive credentials are sent unencrypted, visible to
 # any onlooker, so this scheme should only be used with SSL.
 #
-# Digest authentication sends a crytographic hash of the username, password,
+# Digest authentication sends a cryptographic hash of the username, password,
 # HTTP method, URI, and a single-use secret key provided by the server.
 # Sensitive credentials aren't visible to onlookers, so digest authentication
 # doesn't require SSL. However, this doesn't mean the connection is secure!
 # Just the username and password.
 #
+# Another common way to authenticate requests is via bearer tokens, a scheme
+# originally created as part of the OAuth 2.0 protocol (see RFC 6750).
+#
+# Bearer authentication sends a token, that can maybe only be a short string
+# of hexadecimal characters or even a JWT Token. Similarly to the Basic
+# authentication, this scheme should only be used with SSL.
+#
 # (You really, really want to use SSL. There's little reason not to.)
 #
 # === Picking an authentication scheme
 #
-# Basic authentication is the default. To switch to digest authentication,
-# set +auth_type+ to +:digest+:
+# Basic authentication is the default. To switch to digest or bearer token authentication,
+# set +auth_type+ to +:digest+ or +:bearer+:
 #
 # class Person < ActiveResource::Base
 # self.auth_type = :digest
@@ -317,6 +324,16 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 #
 # # Or include them in the site:
 # self.site = "https://ryan:password@api.people.com"
+# end
+#
+# === Setting the bearer token
+#
+# Set +bearer_token+ on the class:
+#
+# class Person < ActiveResource::Base
+# # Set bearer token directly:
+# self.auth_type = :bearer
+# self.bearer_token = "my-bearer-token"
 # end
 #
 # === Certificate Authentication
@@ -364,7 +381,9 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # * 405 - ActiveResource::MethodNotAllowed
 # * 409 - ActiveResource::ResourceConflict
 # * 410 - ActiveResource::ResourceGone
+# * 412 - ActiveResource::PreconditionFailed
 # * 422 - ActiveResource::ResourceInvalid (rescued by save as validation errors)
+# * 429 - ActiveResource::TooManyRequests
 # * 401..499 - ActiveResource::ClientError
 # * 500..599 - ActiveResource::ServerError
 # * Other - ActiveResource::ConnectionError
@@ -676,7 +695,7 @@ class ActiveResource::Base
   # The logger for diagnosing and tracing Active Resource calls.
   def logger; end
 
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
@@ -861,6 +880,9 @@ class ActiveResource::Base
     def __callbacks; end
     def __callbacks=(value); end
     def __callbacks?; end
+    def _bearer_token; end
+    def _bearer_token=(value); end
+    def _bearer_token_defined?; end
     def _collection_parser; end
     def _collection_parser=(value); end
     def _collection_parser?; end
@@ -915,6 +937,13 @@ class ActiveResource::Base
     def around_update(*args, **options, &block); end
     def auth_type; end
     def auth_type=(auth_type); end
+
+    # Gets the \bearer_token for REST HTTP authentication.
+    def bearer_token; end
+
+    # Sets the \bearer_token for REST HTTP authentication.
+    def bearer_token=(bearer_token); end
+
     def before_create(*args, **options, &block); end
     def before_destroy(*args, **options, &block); end
     def before_save(*args, **options, &block); end
@@ -1331,7 +1360,7 @@ class ActiveResource::Base
     # example:
     #
     # class Person < ActiveResource::Base
-    # schema = {'name' => :string, 'age' => :integer }
+    # self.schema = {'name' => :string, 'age' => :integer }
     # end
     #
     # The keys/values can be strings or symbols. They will be converted to
@@ -1458,7 +1487,7 @@ class ActiveResource::Collection
   # ActiveResource::Collection is a wrapper to handle parsing index responses that
   # do not directly map to Rails conventions.
   #
-  # You can define a custom class that inherets from ActiveResource::Collection
+  # You can define a custom class that inherits from ActiveResource::Collection
   # in order to to set the elements instance.
   #
   # GET /posts.json delivers following response body:
@@ -1501,45 +1530,45 @@ class ActiveResource::Collection
   # and should set @elements.
   def initialize(elements = T.unsafe(nil)); end
 
-  def &(*_arg0, &_arg1); end
-  def *(*_arg0, &_arg1); end
-  def +(*_arg0, &_arg1); end
-  def -(*_arg0, &_arg1); end
-  def <<(*_arg0, &_arg1); end
-  def <=>(*_arg0, &_arg1); end
+  def &(*_arg0, **_arg1, &_arg2); end
+  def *(*_arg0, **_arg1, &_arg2); end
+  def +(*_arg0, **_arg1, &_arg2); end
+  def -(*_arg0, **_arg1, &_arg2); end
+  def <<(*_arg0, **_arg1, &_arg2); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
   def ==(arg); end
-  def [](*_arg0, &_arg1); end
-  def []=(*_arg0, &_arg1); end
-  def all?(*_arg0, &_arg1); end
-  def any?(*_arg0, &_arg1); end
-  def append(*_arg0, &_arg1); end
-  def as_json(*_arg0, &_arg1); end
-  def assoc(*_arg0, &_arg1); end
-  def at(*_arg0, &_arg1); end
-  def blank?(*_arg0, &_arg1); end
-  def bsearch(*_arg0, &_arg1); end
-  def bsearch_index(*_arg0, &_arg1); end
-  def clear(*_arg0, &_arg1); end
-  def collect(*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
+  def []=(*_arg0, **_arg1, &_arg2); end
+  def all?(*_arg0, **_arg1, &_arg2); end
+  def any?(*_arg0, **_arg1, &_arg2); end
+  def append(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
+  def assoc(*_arg0, **_arg1, &_arg2); end
+  def at(*_arg0, **_arg1, &_arg2); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
+  def bsearch(*_arg0, **_arg1, &_arg2); end
+  def bsearch_index(*_arg0, **_arg1, &_arg2); end
+  def clear(*_arg0, **_arg1, &_arg2); end
+  def collect(*_arg0, **_arg1, &_arg2); end
   def collect!; end
-  def combination(*_arg0, &_arg1); end
-  def compact(*_arg0, &_arg1); end
-  def compact!(*_arg0, &_arg1); end
-  def compact_blank!(*_arg0, &_arg1); end
-  def concat(*_arg0, &_arg1); end
-  def count(*_arg0, &_arg1); end
-  def cycle(*_arg0, &_arg1); end
-  def deconstruct(*_arg0, &_arg1); end
-  def deep_dup(*_arg0, &_arg1); end
-  def delete(*_arg0, &_arg1); end
-  def delete_at(*_arg0, &_arg1); end
-  def delete_if(*_arg0, &_arg1); end
-  def difference(*_arg0, &_arg1); end
-  def dig(*_arg0, &_arg1); end
-  def drop(*_arg0, &_arg1); end
-  def drop_while(*_arg0, &_arg1); end
-  def each(*_arg0, &_arg1); end
-  def each_index(*_arg0, &_arg1); end
+  def combination(*_arg0, **_arg1, &_arg2); end
+  def compact(*_arg0, **_arg1, &_arg2); end
+  def compact!(*_arg0, **_arg1, &_arg2); end
+  def compact_blank!(*_arg0, **_arg1, &_arg2); end
+  def concat(*_arg0, **_arg1, &_arg2); end
+  def count(*_arg0, **_arg1, &_arg2); end
+  def cycle(*_arg0, **_arg1, &_arg2); end
+  def deconstruct(*_arg0, **_arg1, &_arg2); end
+  def deep_dup(*_arg0, **_arg1, &_arg2); end
+  def delete(*_arg0, **_arg1, &_arg2); end
+  def delete_at(*_arg0, **_arg1, &_arg2); end
+  def delete_if(*_arg0, **_arg1, &_arg2); end
+  def difference(*_arg0, **_arg1, &_arg2); end
+  def dig(*_arg0, **_arg1, &_arg2); end
+  def drop(*_arg0, **_arg1, &_arg2); end
+  def drop_while(*_arg0, **_arg1, &_arg2); end
+  def each(*_arg0, **_arg1, &_arg2); end
+  def each_index(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def elements; end
@@ -1547,43 +1576,44 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def elements=(_arg0); end
 
-  def empty?(*_arg0, &_arg1); end
-  def eql?(*_arg0, &_arg1); end
-  def excluding(*_arg0, &_arg1); end
-  def extract!(*_arg0, &_arg1); end
-  def extract_options!(*_arg0, &_arg1); end
-  def fetch(*_arg0, &_arg1); end
-  def fifth(*_arg0, &_arg1); end
-  def fill(*_arg0, &_arg1); end
-  def filter(*_arg0, &_arg1); end
-  def filter!(*_arg0, &_arg1); end
-  def find_index(*_arg0, &_arg1); end
-  def first(*_arg0, &_arg1); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
+  def excluding(*_arg0, **_arg1, &_arg2); end
+  def extract!(*_arg0, **_arg1, &_arg2); end
+  def extract_options!(*_arg0, **_arg1, &_arg2); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
+  def fifth(*_arg0, **_arg1, &_arg2); end
+  def fill(*_arg0, **_arg1, &_arg2); end
+  def filter(*_arg0, **_arg1, &_arg2); end
+  def filter!(*_arg0, **_arg1, &_arg2); end
+  def find_index(*_arg0, **_arg1, &_arg2); end
+  def first(*_arg0, **_arg1, &_arg2); end
   def first_or_create(attributes = T.unsafe(nil)); end
   def first_or_initialize(attributes = T.unsafe(nil)); end
-  def flatten(*_arg0, &_arg1); end
-  def flatten!(*_arg0, &_arg1); end
-  def forty_two(*_arg0, &_arg1); end
-  def fourth(*_arg0, &_arg1); end
-  def from(*_arg0, &_arg1); end
-  def hash(*_arg0, &_arg1); end
-  def include?(*_arg0, &_arg1); end
-  def including(*_arg0, &_arg1); end
-  def index(*_arg0, &_arg1); end
-  def insert(*_arg0, &_arg1); end
-  def inspect(*_arg0, &_arg1); end
-  def intersection(*_arg0, &_arg1); end
-  def join(*_arg0, &_arg1); end
-  def keep_if(*_arg0, &_arg1); end
-  def last(*_arg0, &_arg1); end
-  def length(*_arg0, &_arg1); end
-  def map(*_arg0, &_arg1); end
+  def flatten(*_arg0, **_arg1, &_arg2); end
+  def flatten!(*_arg0, **_arg1, &_arg2); end
+  def forty_two(*_arg0, **_arg1, &_arg2); end
+  def fourth(*_arg0, **_arg1, &_arg2); end
+  def from(*_arg0, **_arg1, &_arg2); end
+  def hash(*_arg0, **_arg1, &_arg2); end
+  def include?(*_arg0, **_arg1, &_arg2); end
+  def including(*_arg0, **_arg1, &_arg2); end
+  def index(*_arg0, **_arg1, &_arg2); end
+  def insert(*_arg0, **_arg1, &_arg2); end
+  def inspect(*_arg0, **_arg1, &_arg2); end
+  def intersect?(*_arg0, **_arg1, &_arg2); end
+  def intersection(*_arg0, **_arg1, &_arg2); end
+  def join(*_arg0, **_arg1, &_arg2); end
+  def keep_if(*_arg0, **_arg1, &_arg2); end
+  def last(*_arg0, **_arg1, &_arg2); end
+  def length(*_arg0, **_arg1, &_arg2); end
+  def map(*_arg0, **_arg1, &_arg2); end
   def map!; end
-  def max(*_arg0, &_arg1); end
-  def min(*_arg0, &_arg1); end
-  def minmax(*_arg0, &_arg1); end
-  def none?(*_arg0, &_arg1); end
-  def one?(*_arg0, &_arg1); end
+  def max(*_arg0, **_arg1, &_arg2); end
+  def min(*_arg0, **_arg1, &_arg2); end
+  def minmax(*_arg0, **_arg1, &_arg2); end
+  def none?(*_arg0, **_arg1, &_arg2); end
+  def one?(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def original_params; end
@@ -1591,21 +1621,21 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def original_params=(_arg0); end
 
-  def pack(*_arg0, &_arg1); end
-  def permutation(*_arg0, &_arg1); end
-  def place(*_arg0, &_arg1); end
-  def pop(*_arg0, &_arg1); end
-  def prepend(*_arg0, &_arg1); end
-  def pretty_print(*_arg0, &_arg1); end
-  def pretty_print_cycle(*_arg0, &_arg1); end
-  def product(*_arg0, &_arg1); end
-  def push(*_arg0, &_arg1); end
-  def rassoc(*_arg0, &_arg1); end
-  def reject(*_arg0, &_arg1); end
-  def reject!(*_arg0, &_arg1); end
-  def repeated_combination(*_arg0, &_arg1); end
-  def repeated_permutation(*_arg0, &_arg1); end
-  def replace(*_arg0, &_arg1); end
+  def pack(*_arg0, **_arg1, &_arg2); end
+  def permutation(*_arg0, **_arg1, &_arg2); end
+  def place(*_arg0, **_arg1, &_arg2); end
+  def pop(*_arg0, **_arg1, &_arg2); end
+  def prepend(*_arg0, **_arg1, &_arg2); end
+  def pretty_print(*_arg0, **_arg1, &_arg2); end
+  def pretty_print_cycle(*_arg0, **_arg1, &_arg2); end
+  def product(*_arg0, **_arg1, &_arg2); end
+  def push(*_arg0, **_arg1, &_arg2); end
+  def rassoc(*_arg0, **_arg1, &_arg2); end
+  def reject(*_arg0, **_arg1, &_arg2); end
+  def reject!(*_arg0, **_arg1, &_arg2); end
+  def repeated_combination(*_arg0, **_arg1, &_arg2); end
+  def repeated_permutation(*_arg0, **_arg1, &_arg2); end
+  def replace(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def resource_class; end
@@ -1613,54 +1643,54 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def resource_class=(_arg0); end
 
-  def reverse(*_arg0, &_arg1); end
-  def reverse!(*_arg0, &_arg1); end
-  def reverse_each(*_arg0, &_arg1); end
-  def rindex(*_arg0, &_arg1); end
-  def rotate(*_arg0, &_arg1); end
-  def rotate!(*_arg0, &_arg1); end
-  def sample(*_arg0, &_arg1); end
-  def second(*_arg0, &_arg1); end
-  def second_to_last(*_arg0, &_arg1); end
-  def select(*_arg0, &_arg1); end
-  def select!(*_arg0, &_arg1); end
-  def shelljoin(*_arg0, &_arg1); end
-  def shift(*_arg0, &_arg1); end
-  def shuffle(*_arg0, &_arg1); end
-  def shuffle!(*_arg0, &_arg1); end
-  def size(*_arg0, &_arg1); end
-  def slice(*_arg0, &_arg1); end
-  def slice!(*_arg0, &_arg1); end
-  def sort(*_arg0, &_arg1); end
-  def sort!(*_arg0, &_arg1); end
-  def sort_by!(*_arg0, &_arg1); end
-  def sum(*_arg0, &_arg1); end
-  def take(*_arg0, &_arg1); end
-  def take_while(*_arg0, &_arg1); end
-  def third(*_arg0, &_arg1); end
-  def third_to_last(*_arg0, &_arg1); end
-  def to(*_arg0, &_arg1); end
+  def reverse(*_arg0, **_arg1, &_arg2); end
+  def reverse!(*_arg0, **_arg1, &_arg2); end
+  def reverse_each(*_arg0, **_arg1, &_arg2); end
+  def rindex(*_arg0, **_arg1, &_arg2); end
+  def rotate(*_arg0, **_arg1, &_arg2); end
+  def rotate!(*_arg0, **_arg1, &_arg2); end
+  def sample(*_arg0, **_arg1, &_arg2); end
+  def second(*_arg0, **_arg1, &_arg2); end
+  def second_to_last(*_arg0, **_arg1, &_arg2); end
+  def select(*_arg0, **_arg1, &_arg2); end
+  def select!(*_arg0, **_arg1, &_arg2); end
+  def shelljoin(*_arg0, **_arg1, &_arg2); end
+  def shift(*_arg0, **_arg1, &_arg2); end
+  def shuffle(*_arg0, **_arg1, &_arg2); end
+  def shuffle!(*_arg0, **_arg1, &_arg2); end
+  def size(*_arg0, **_arg1, &_arg2); end
+  def slice(*_arg0, **_arg1, &_arg2); end
+  def slice!(*_arg0, **_arg1, &_arg2); end
+  def sort(*_arg0, **_arg1, &_arg2); end
+  def sort!(*_arg0, **_arg1, &_arg2); end
+  def sort_by!(*_arg0, **_arg1, &_arg2); end
+  def sum(*_arg0, **_arg1, &_arg2); end
+  def take(*_arg0, **_arg1, &_arg2); end
+  def take_while(*_arg0, **_arg1, &_arg2); end
+  def third(*_arg0, **_arg1, &_arg2); end
+  def third_to_last(*_arg0, **_arg1, &_arg2); end
+  def to(*_arg0, **_arg1, &_arg2); end
   def to_a; end
-  def to_ary(*_arg0, &_arg1); end
-  def to_default_s(*_arg0, &_arg1); end
-  def to_formatted_s(*_arg0, &_arg1); end
-  def to_h(*_arg0, &_arg1); end
-  def to_param(*_arg0, &_arg1); end
-  def to_query(*_arg0, &_arg1); end
-  def to_s(*_arg0, &_arg1); end
-  def to_sentence(*_arg0, &_arg1); end
-  def to_xml(*_arg0, &_arg1); end
-  def to_yaml(*_arg0, &_arg1); end
-  def transpose(*_arg0, &_arg1); end
-  def union(*_arg0, &_arg1); end
-  def uniq(*_arg0, &_arg1); end
-  def uniq!(*_arg0, &_arg1); end
-  def unshift(*_arg0, &_arg1); end
-  def values_at(*_arg0, &_arg1); end
+  def to_ary(*_arg0, **_arg1, &_arg2); end
+  def to_default_s(*_arg0, **_arg1, &_arg2); end
+  def to_formatted_s(*_arg0, **_arg1, &_arg2); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
+  def to_query(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_sentence(*_arg0, **_arg1, &_arg2); end
+  def to_xml(*_arg0, **_arg1, &_arg2); end
+  def to_yaml(*_arg0, **_arg1, &_arg2); end
+  def transpose(*_arg0, **_arg1, &_arg2); end
+  def union(*_arg0, **_arg1, &_arg2); end
+  def uniq(*_arg0, **_arg1, &_arg2); end
+  def uniq!(*_arg0, **_arg1, &_arg2); end
+  def unshift(*_arg0, **_arg1, &_arg2); end
+  def values_at(*_arg0, **_arg1, &_arg2); end
   def where(clauses = T.unsafe(nil)); end
-  def without(*_arg0, &_arg1); end
-  def zip(*_arg0, &_arg1); end
-  def |(*_arg0, &_arg1); end
+  def without(*_arg0, **_arg1, &_arg2); end
+  def zip(*_arg0, **_arg1, &_arg2); end
+  def |(*_arg0, **_arg1, &_arg2); end
 end
 
 ActiveResource::Collection::SELF_DEFINE_METHODS = T.let(T.unsafe(nil), Array)
@@ -2121,6 +2151,12 @@ class ActiveResource::HttpMock::Responder
   def delete_duplicate_responses(request); end
 end
 
+class ActiveResource::InheritingHash < ::Hash
+  def initialize(parent_hash = T.unsafe(nil)); end
+
+  def [](key); end
+end
+
 class ActiveResource::InvalidRequestError < ::StandardError; end
 
 class ActiveResource::LogSubscriber < ::ActiveSupport::LogSubscriber
@@ -2134,6 +2170,10 @@ class ActiveResource::MethodNotAllowed < ::ActiveResource::ClientError
 end
 
 class ActiveResource::MissingPrefixParam < ::ArgumentError; end
+
+# 412 Precondition Failed
+class ActiveResource::PreconditionFailed < ::ActiveResource::ClientError; end
+
 class ActiveResource::Railtie < ::Rails::Railtie; end
 
 # 3xx Redirection
@@ -2436,6 +2476,9 @@ class ActiveResource::TimeoutError < ::ActiveResource::ConnectionError
 
   def to_s; end
 end
+
+# 429 Too Many Requests
+class ActiveResource::TooManyRequests < ::ActiveResource::ClientError; end
 
 # 401 Unauthorized
 class ActiveResource::UnauthorizedAccess < ::ActiveResource::ClientError; end

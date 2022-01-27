@@ -89,6 +89,7 @@ class WebSocket::Driver::CloseEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -100,6 +101,7 @@ class WebSocket::Driver::ConnectEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -325,6 +327,7 @@ class WebSocket::Driver::MessageEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -334,6 +337,7 @@ class WebSocket::Driver::OpenEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -349,6 +353,7 @@ class WebSocket::Driver::PingEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -364,6 +369,7 @@ class WebSocket::Driver::PongEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
