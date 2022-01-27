@@ -231,7 +231,7 @@ GEM
       parser
       sorbet-runtime (>= 0.5.9204)
       unparser
-    redis (4.2.5)
+    redis (4.5.1)
     regexp_parser (2.1.1)
     rexml (3.2.5)
     rubocop (1.17.0)
@@ -251,7 +251,7 @@ GEM
       rubocop
     ruby-progressbar (1.11.0)
     shopify-money (0.16.0)
-    sidekiq (6.2.1)
+    sidekiq (6.4.0)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
