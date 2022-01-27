@@ -23,7 +23,7 @@ jobs:
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
-        run: bin/style --config .rubocop.yml
+        run: bin/style
       - name: Verify documentation
         run: bin/docs
       - name: Verify README
