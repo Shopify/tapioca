@@ -27,8 +27,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
   end
 
   describe("compile") do
-    sig { params(include_docs: T::Boolean).returns(String) }
-    def compile(include_docs = false)
+    sig { params(include_doc: T::Boolean).returns(String) }
+    def compile(include_doc: false)
       stub = GemStub.new(
         name: "the-dep",
         version: "1.1.2",
@@ -41,7 +41,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
       rbi = RBI::File.new(strictness: "true")
-      Tapioca::Compilers::SymbolTableCompiler.new.compile(gem, rbi, 0, include_docs)
+      Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile(rbi)
       rbi.transform_rbi!
       # NOTE: This is not using the standard helper method `transformed_string`.
       # The following test suite is based on the string output of the `RBI::Tree` rather
@@ -3275,7 +3275,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
       RBI
 
-      assert_equal(output, compile(true))
+      assert_equal(output, compile(include_doc: true))
     end
 
     it("doesn't include YARD docs by default") do
@@ -3367,7 +3367,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
       RBI
 
-      assert_equal(output, compile(false))
+      assert_equal(output, compile(include_doc: false))
     end
 
     it("properly processes void in type aliases") do
