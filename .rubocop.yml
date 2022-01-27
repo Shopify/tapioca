@@ -12,17 +12,15 @@ AllCops:
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
-  - "spec/support/repo/bin/tapioca"
 
-Style/CaseEquality:
+Gemspec/RequireMFA:
   Enabled: false
-
-Style/ClassAndModuleChildren:
-  Exclude:
-  - "spec/tapioca/**/*"
 
 Sorbet:
   Enabled: true
+
+Sorbet/ConstantsFromStrings:
+  Enabled: false
 
 Sorbet/FalseSigil:
   Enabled: false
@@ -33,8 +31,9 @@ Sorbet/TrueSigil:
     - "**/*.rb"
     - "**/*.rake"
 
-Sorbet/ConstantsFromStrings:
+Style/CaseEquality:
   Enabled: false
 
-Gemspec/RequireMFA:
-  Enabled: false
+Style/ClassAndModuleChildren:
+  Exclude:
+  - "spec/tapioca/**/*"
