@@ -91,7 +91,7 @@ module Tapioca
             constant_name,
             contents,
             outpath: outpath,
-            quiet: @should_verify || @quiet && !@verbose
+            quiet: @should_verify || (@quiet && !@verbose)
           )
         end
 
@@ -165,11 +165,11 @@ module Tapioca
 
       sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
       def constantize(constant_names)
-        constant_map = constant_names.map do |name|
+        constant_map = constant_names.to_h do |name|
           [name, Object.const_get(name)]
         rescue NameError
           [name, nil]
-        end.to_h
+        end
 
         unprocessable_constants = constant_map.select { |_, v| v.nil? }
         unless unprocessable_constants.empty?

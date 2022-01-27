@@ -83,7 +83,7 @@ class DslSpec < Minitest::Spec
   def indented(str, indent)
     str.lines.map! do |line|
       next line if line.chomp.empty?
-      " " * indent + line
+      (" " * indent) + line
     end.join
   end
 

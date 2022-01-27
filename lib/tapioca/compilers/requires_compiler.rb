@@ -17,7 +17,7 @@ module Tapioca
       def compile
         config = Spoom::Sorbet::Config.parse_file(@sorbet_path)
         files = collect_files(config)
-        names_in_project = files.map { |file| [File.basename(file, ".rb"), true] }.to_h
+        names_in_project = files.to_h { |file| [File.basename(file, ".rb"), true] }
         files.flat_map do |file|
           collect_requires(file).reject { |req| names_in_project[req] }
         end.sort.uniq.map do |name|

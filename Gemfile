@@ -25,8 +25,12 @@ group(:development, :test) do
   gem("activerecord-typedstore", require: false)
   gem("sqlite3")
   gem("identity_cache", require: false)
-  gem("cityhash", git: "https://github.com/csfrancis/cityhash.git",
-                  ref: "3cfc7d01f333c01811d5e834f1495eaa29f87c36", require: false)
+  gem(
+    "cityhash",
+    git: "https://github.com/csfrancis/cityhash.git",
+    ref: "3cfc7d01f333c01811d5e834f1495eaa29f87c36",
+    require: false
+  )
   gem("activeresource", require: false)
   gem("google-protobuf", require: false)
   gem("shopify-money", require: false)

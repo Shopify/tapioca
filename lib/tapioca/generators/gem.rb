@@ -325,16 +325,14 @@ module Tapioca
       sig { returns(T::Hash[String, String]) }
       def existing_rbis
         @existing_rbis ||= Pathname.glob((@outpath / "*@*.rbi").to_s)
-          .map { |f| T.cast(f.basename(".*").to_s.split("@", 2), [String, String]) }
-          .to_h
+          .to_h { |f| T.cast(f.basename(".*").to_s.split("@", 2), [String, String]) }
       end
 
       sig { returns(T::Hash[String, String]) }
       def expected_rbis
         @expected_rbis ||= bundle.dependencies
           .reject { |gem| @exclude.include?(gem.name) }
-          .map { |gem| [gem.name, gem.version.to_s] }
-          .to_h
+          .to_h { |gem| [gem.name, gem.version.to_s] }
       end
 
       sig { params(gem_name: String, version: String).returns(Pathname) }
