@@ -17,14 +17,14 @@ module Tapioca
       end
 
       it "does nothing if all constant are already resolved" do
-        out, err, status = @project.tapioca("todo")
+        result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
 
         refute_project_file_exist("sorbet/rbi/todo.rbi")
       end
@@ -41,9 +41,9 @@ module Tapioca
           Undef2::Undef4.bar
         RB
 
-        out, err, status = @project.tapioca("todo")
+        result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Finding all unresolved constants, this may take a few seconds... Done
 
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
@@ -63,8 +63,8 @@ module Tapioca
           module Foo::Undef2; end
         RB
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "creates a TODO file without header" do
@@ -72,9 +72,9 @@ module Tapioca
           class Foo < ::Undef1; end
         RUBY
 
-        out, err, status = @project.tapioca("todo --no-file-header")
+        result = @project.tapioca("todo --no-file-header")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Finding all unresolved constants, this may take a few seconds... Done
 
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
@@ -87,8 +87,8 @@ module Tapioca
           module ::Undef1; end
         RB
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "deletes the todo.rbi file when everything is resolved" do
@@ -98,16 +98,16 @@ module Tapioca
           module SomeTodo; end
         RB
 
-        out, err, status = @project.tapioca("todo")
+        result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT
 
         refute_project_file_exist("sorbet/rbi/todo.rbi")
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
     end
   end

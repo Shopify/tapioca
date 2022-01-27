@@ -27,9 +27,9 @@ module Tapioca
             foo: "true"
         YAML
 
-        out, err, status = @project.tapioca("gem")
+        result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, err)
+        assert_equal(<<~ERR, result.err)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -38,8 +38,8 @@ module Tapioca
           - unknown key typed_overrides
         ERR
 
-        assert_empty(out)
-        refute(status)
+        assert_empty_stdout(result)
+        refute_success_status(result)
       end
 
       it "validates unknown configuration key options" do
@@ -51,9 +51,9 @@ module Tapioca
             bar: []
         YAML
 
-        out, err, status = @project.tapioca("gem")
+        result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, err)
+        assert_equal(<<~ERR, result.err)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -61,8 +61,8 @@ module Tapioca
           - unknown option bar for key dsl
         ERR
 
-        assert_empty(out)
-        refute(status)
+        assert_empty_stdout(result)
+        refute_success_status(result)
       end
 
       it "validates invalid configuration option values" do
@@ -77,9 +77,9 @@ module Tapioca
             exclude: true
         YAML
 
-        out, err, status = @project.tapioca("gem")
+        result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, err)
+        assert_equal(<<~ERR, result.err)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -89,8 +89,8 @@ module Tapioca
           - invalid value for option exclude for key dsl - expected Array but found Boolean
         ERR
 
-        assert_empty(out)
-        refute(status)
+        assert_empty_stdout(result)
+        refute_success_status(result)
       end
 
       it "validates unknown configuration keys, options, and invalid values" do
@@ -105,9 +105,9 @@ module Tapioca
           typed_overrides:
         YAML
 
-        out, err, status = @project.tapioca("gem")
+        result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, err)
+        assert_equal(<<~ERR, result.err)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -118,8 +118,8 @@ module Tapioca
           - unknown key typed_overrides
         ERR
 
-        assert_empty(out)
-        refute(status)
+        assert_empty_stdout(result)
+        refute_success_status(result)
       end
     end
   end

@@ -11,17 +11,17 @@ module Tapioca
       end
 
       it "must display the version when passing --version" do
-        out, err, status = @project.tapioca("--version")
-        assert_equal("Tapioca v#{Tapioca::VERSION}", out.strip)
-        assert_empty(err)
-        assert(status)
+        result = @project.tapioca("--version")
+        assert_equal("Tapioca v#{Tapioca::VERSION}", result.out.strip)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "must display the version when passing -v" do
-        out, err, status = @project.tapioca("-v")
-        assert_equal("Tapioca v#{Tapioca::VERSION}", out.strip)
-        assert_empty(err)
-        assert(status)
+        result = @project.tapioca("-v")
+        assert_equal("Tapioca v#{Tapioca::VERSION}", result.out.strip)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
     end
   end

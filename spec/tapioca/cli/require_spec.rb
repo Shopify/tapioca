@@ -18,14 +18,14 @@ module Tapioca
       end
 
       it "does nothing if there is nothing to require" do
-        out, err, status = @project.tapioca("require")
+        result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Nothing to do
         OUT
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "creates a list of all requires from all Ruby files passed to Sorbet" do
@@ -39,9 +39,9 @@ module Tapioca
           require "foo"
         RB
 
-        out, err, status = @project.tapioca("require")
+        result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.
@@ -55,8 +55,8 @@ module Tapioca
           require "found2"
         RB
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "takes into account sorbet ignored paths" do
@@ -77,9 +77,9 @@ module Tapioca
           --ignore=test/
         CONFIG
 
-        out, err, status = @project.tapioca("require")
+        result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.
@@ -93,8 +93,8 @@ module Tapioca
           require "found2"
         RB
 
-        assert_empty(err)
-        assert(status)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
     end
   end

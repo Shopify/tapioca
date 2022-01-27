@@ -48,23 +48,23 @@ module Tapioca
             class User; end
           RB
 
-          out, err, status = @project.tapioca("dsl User")
+          result = @project.tapioca("dsl User")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
 
           OUT
 
-          assert_equal(<<~ERR, err)
+          assert_equal(<<~ERR, result.err)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
 
           refute_project_file_exist("sorbet/rbi/dsl/user.rbi")
 
-          refute(status)
+          refute_success_status(result)
         end
 
         it "generates RBI files for only required constants" do
@@ -77,9 +77,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -91,7 +91,7 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_equal("sorbet/rbi/dsl/post.rbi", <<~RBI)
             # typed: true
@@ -113,13 +113,13 @@ module Tapioca
             end
           RBI
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "errors for unprocessable required constants" do
-          out, err, status = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
+          result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -129,22 +129,22 @@ module Tapioca
             Error: Cannot find constant 'NonExistent::Baz'
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/bar.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/baz.rbi")
 
-          refute(status)
+          refute_success_status(result)
         end
 
         it "removes RBI files for unprocessable required constants" do
           @project.write("sorbet/rbi/dsl/non_existent/foo.rbi")
           @project.write("sorbet/rbi/dsl/non_existent/baz.rbi")
 
-          out, err, status = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
+          result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -156,12 +156,12 @@ module Tapioca
                   remove  sorbet/rbi/dsl/non_existent/baz.rbi
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/baz.rbi")
 
-          refute(status)
+          refute_success_status(result)
         end
 
         it "generates RBI files for all processable constants" do
@@ -185,9 +185,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -200,7 +200,7 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_equal("sorbet/rbi/dsl/post.rbi", <<~RBI)
             # typed: true
@@ -242,7 +242,7 @@ module Tapioca
             end
           RBI
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "generates RBI files for processable constants coming from gems" do
@@ -265,9 +265,9 @@ module Tapioca
 
           @project.require_mock_gem(gem)
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -279,7 +279,7 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_equal("sorbet/rbi/dsl/foo/role.rbi", <<~RBI)
             # typed: true
@@ -301,7 +301,7 @@ module Tapioca
             end
           RBI
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "generates RBI files in the correct output directory" do
@@ -325,9 +325,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --verbose --outdir rbis/")
+          result = @project.tapioca("dsl --verbose --outdir rbis/")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -342,12 +342,12 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("rbis/namespace/comment.rbi")
           assert_project_file_exist("rbis/post.rbi")
 
-          assert(status)
+          assert_success_status(result)
 
           @project.remove("rbis/")
         end
@@ -373,9 +373,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --verbose")
+          result = @project.tapioca("dsl --verbose")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -390,12 +390,12 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/namespace/comment.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "can generates RBI files quietly" do
@@ -408,9 +408,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --quiet")
+          result = @project.tapioca("dsl --quiet")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -421,11 +421,11 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "generates RBI files without header" do
@@ -471,9 +471,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -490,14 +490,14 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           refute_project_file_exist("sorbet/rbi/dsl/does_not_exist.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/to_be_deleted/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/to_be_deleted/baz.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "does not crash withg anonymous constants" do
@@ -518,10 +518,10 @@ module Tapioca
             end
           RB
 
-          _, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_empty(err)
-          assert(status)
+          assert_empty_stderr(result)
+          assert_success_status(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
         end
@@ -555,10 +555,10 @@ module Tapioca
             end
           RB
 
-          _, err, status = @project.tapioca("dsl --workers 2")
+          result = @project.tapioca("dsl --workers 2")
 
-          assert_empty(err)
-          assert(status)
+          assert_empty_stderr(result)
+          assert_success_status(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
@@ -584,9 +584,9 @@ module Tapioca
             class User; end
           RB
 
-          out, err, status = @project.tapioca("dsl Post User")
+          result = @project.tapioca("dsl Post User")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -601,12 +601,12 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/user.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "must run custom generators" do
@@ -657,9 +657,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -671,7 +671,7 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_equal("sorbet/rbi/dsl/post.rbi", <<~RBI)
             # typed: true
@@ -698,7 +698,7 @@ module Tapioca
             end
           RBI
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "must respect generators option" do
@@ -738,9 +738,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --only SidekiqWorker Foo::Generator")
+          result = @project.tapioca("dsl --only SidekiqWorker Foo::Generator")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -752,18 +752,18 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "errors if there are no matching generators" do
-          out, err, status = @project.tapioca("dsl --only NonexistentGenerator")
+          result = @project.tapioca("dsl --only NonexistentGenerator")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -771,8 +771,8 @@ module Tapioca
             Error: Cannot find generator 'NonexistentGenerator'
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
-          refute(status)
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          refute_success_status(result)
         end
 
         it "must respect exclude_generators option" do
@@ -812,9 +812,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --exclude SidekiqWorker Foo::Generator")
+          result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Generator")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -826,18 +826,18 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           refute_project_file_exist("sorbet/rbi/dsl/job.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "errors if there are no matching exclude_generators" do
-          out, err, status = @project.tapioca("dsl --exclude NonexistentGenerator")
+          result = @project.tapioca("dsl --exclude NonexistentGenerator")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -845,8 +845,8 @@ module Tapioca
             Error: Cannot find generator 'NonexistentGenerator'
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
-          refute(status)
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          refute_success_status(result)
         end
 
         it "aborts if there are pending migrations" do
@@ -893,20 +893,20 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
           # FIXME: print the error to the correct stream
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             You have 1 pending migration:
             202001010000_create_articles.rb
           OUT
 
-          assert_equal(<<~ERR, err)
+          assert_equal(<<~ERR, result.err)
             Run `bin/rails db:migrate` to update your database then try again.
           ERR
 
-          refute(status)
+          refute_success_status(result)
         end
 
         it "overwrites existing RBIs without user input" do
@@ -923,9 +923,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl")
+          result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Compiling DSL RBI files...
@@ -937,11 +937,11 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_empty(err)
+          assert_empty_stderr(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/image.rbi")
 
-          assert(status)
+          assert_success_status(result)
         end
 
         it "generates the correct RBIs when running in parallel" do
@@ -975,10 +975,10 @@ module Tapioca
             end
           RB
 
-          _, err, status = @project.tapioca("dsl --workers 3")
+          result = @project.tapioca("dsl --workers 3")
 
-          assert_empty(err)
-          assert(status)
+          assert_empty_stderr(result)
+          assert_success_status(result)
 
           assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
@@ -1018,21 +1018,21 @@ module Tapioca
 
         it "does nothing and returns exit status 0 with no changes" do
           @project.tapioca("dsl")
-          out, err, status = @project.tapioca("dsl --verify")
+          result = @project.tapioca("dsl --verify")
 
-          assert_includes(out, <<~OUT)
+          assert_includes(result.out, <<~OUT)
             Nothing to do, all RBIs are up-to-date.
           OUT
 
-          assert_empty(err)
-          assert(status)
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "advises of removed file(s) and returns exit status 1 when files are excluded" do
           @project.tapioca("dsl")
-          out, err, status = @project.tapioca("dsl --verify --exclude SmartProperties")
+          result = @project.tapioca("dsl --verify --exclude SmartProperties")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Checking for out-of-date RBIs...
@@ -1047,8 +1047,8 @@ module Tapioca
               - sorbet/rbi/dsl/post.rbi
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
-          refute(status)
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          refute_success_status(result)
         end
 
         it "advises of new file(s) and returns exit status 1 with new files" do
@@ -1064,9 +1064,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --verify")
+          result = @project.tapioca("dsl --verify")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Checking for out-of-date RBIs...
@@ -1081,8 +1081,8 @@ module Tapioca
               - sorbet/rbi/dsl/image.rbi
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
-          refute(status)
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          refute_success_status(result)
 
           @project.remove("lib/image.rb")
         end
@@ -1109,9 +1109,9 @@ module Tapioca
             end
           RB
 
-          out, err, status = @project.tapioca("dsl --verify")
+          result = @project.tapioca("dsl --verify")
 
-          assert_equal(<<~OUT, out)
+          assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
             Loading DSL generator classes... Done
             Checking for out-of-date RBIs...
@@ -1126,8 +1126,8 @@ module Tapioca
               - sorbet/rbi/dsl/post.rbi
           OUT
 
-          assert_empty(err) # FIXME: Shouldn't the errors be printed here?
-          refute(status)
+          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          refute_success_status(result)
         end
       end
     end

@@ -27,13 +27,13 @@ module Tapioca
           end
         RBI
 
-        out, _, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           No shim RBIs to check
         OUT
 
-        assert(status)
+        assert_success_status(result)
       end
 
       it "does nothing when there is no duplicates" do
@@ -49,9 +49,9 @@ module Tapioca
           end
         RBI
 
-        out, _, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_equal(<<~OUT, out)
+        assert_equal(<<~OUT, result.out)
           Loading shim RBIs from sorbet/rbi/shims...  Done
           Loading gem RBIs from sorbet/rbi/gems...  Done
           Looking for duplicates...  Done
@@ -59,7 +59,7 @@ module Tapioca
           No duplicates found in shim RBIs
         OUT
 
-        assert(status)
+        assert_success_status(result)
       end
 
       it "detects duplicated definitions between shim and generated RBIs" do
@@ -87,25 +87,25 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Bar#bar:
            * sorbet/rbi/shims/bar.rbi:2:2-2:14
            * sorbet/rbi/dsl/bar.rbi:2:2-2:14
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:2:2-2:18
            * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the sorbet/rbi/shims directory.
         ERR
 
-        refute(status)
+        refute_success_status(result)
       end
 
       it "ignores duplicates that have a signature" do
@@ -122,8 +122,8 @@ module Tapioca
           end
         RBI
 
-        _, _, status = @project.tapioca("check-shims")
-        assert(status)
+        result = @project.tapioca("check-shims")
+        assert_success_status(result)
       end
 
       it "ignores duplicates that have a different signature" do
@@ -141,8 +141,8 @@ module Tapioca
           end
         RBI
 
-        _, _, status = @project.tapioca("check-shims")
-        assert(status)
+        result = @project.tapioca("check-shims")
+        assert_success_status(result)
       end
 
       it "detects duplicates that have the same signature" do
@@ -172,22 +172,22 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:3:2-3:20
            * sorbet/rbi/gems/foo@1.0.0.rbi:3:2-3:20
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the sorbet/rbi/shims directory.
         ERR
 
-        refute_includes(err, "Duplicated RBI for ::Foo#bar")
-        refute_includes(err, "Duplicated RBI for ::Foo#baz")
+        refute_includes(result.err, "Duplicated RBI for ::Foo#bar")
+        refute_includes(result.err, "Duplicated RBI for ::Foo#baz")
 
-        refute(status)
+        refute_success_status(result)
       end
 
       it "detects duplicates from nodes with multiple definitions" do
@@ -203,19 +203,19 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:2:2-2:24
            * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the sorbet/rbi/shims directory.
         ERR
 
-        refute(status)
+        refute_success_status(result)
       end
 
       it "detects duplicates from the same shim file" do
@@ -232,20 +232,20 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:2:2-2:24
            * sorbet/rbi/shims/foo.rbi:3:2-3:14
            * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the sorbet/rbi/shims directory.
         ERR
 
-        refute(status)
+        refute_success_status(result)
       end
 
       it "checks shims with custom rbi dirs" do
@@ -268,27 +268,27 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca(
+        result = @project.tapioca(
           "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim"
         )
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#bar:
            * rbi/shim/foo.rbi:3:2-3:14
            * rbi/dsl/foo.rbi:2:2-2:14
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * rbi/shim/foo.rbi:2:2-2:14
            * rbi/gem/foo@1.0.0.rbi:2:2-2:14
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the rbi/shim directory.
         ERR
 
-        refute(status)
+        refute_success_status(result)
       end
 
       it "skips files with parse errors" do
@@ -310,23 +310,23 @@ module Tapioca
           end
         RBI
 
-        _, err, status = @project.tapioca("check-shims")
+        result = @project.tapioca("check-shims")
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Warning: Unsupported block node type `foo` (sorbet/rbi/shims/foo.rbi:2:2-2:13)
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/bar.rbi:2:2-2:14
            * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
         ERR
 
-        assert_includes(err, <<~ERR)
+        assert_includes(result.err, <<~ERR)
           Please remove the duplicated definitions from the sorbet/rbi/shims directory.
         ERR
 
-        refute(status)
+        refute_success_status(result)
       end
     end
   end
