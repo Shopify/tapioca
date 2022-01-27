@@ -108,6 +108,26 @@ module Tapioca
       refute(@project.file?(path))
     end
 
+    sig { params(result: MockProject::ExecResult).void }
+    def assert_empty_stdout(result)
+      assert_empty(result.out)
+    end
+
+    sig { params(result: MockProject::ExecResult).void }
+    def assert_empty_stderr(result)
+      assert_empty(result.err)
+    end
+
+    sig { params(result: MockProject::ExecResult).void }
+    def assert_success_status(result)
+      assert(result.status)
+    end
+
+    sig { params(result: MockProject::ExecResult).void }
+    def refute_success_status(result)
+      refute(result.status)
+    end
+
     private
 
     sig { returns(String) }
