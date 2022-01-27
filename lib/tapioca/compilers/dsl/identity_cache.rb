@@ -9,6 +9,8 @@ rescue LoadError
   return
 end
 
+require "tapioca/compilers/dsl/helpers/active_record_column_type_helper"
+
 module Tapioca
   module Compilers
     module Dsl

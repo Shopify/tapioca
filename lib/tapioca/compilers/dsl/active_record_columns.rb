@@ -7,7 +7,8 @@ rescue LoadError
   return
 end
 
-require "tapioca/compilers/dsl/helper/active_record_constants"
+require "tapioca/compilers/dsl/helpers/active_record_column_type_helper"
+require "tapioca/compilers/dsl/helpers/active_record_constants"
 
 module Tapioca
   module Compilers
