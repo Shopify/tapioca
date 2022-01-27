@@ -169,6 +169,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
 
       assert_equal(expected, rbi_for(:Post))
     end
+
     it("generates methods for ActiveResource classes including all types in schema field") do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
