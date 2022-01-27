@@ -6,6 +6,8 @@
 
 class Hash
   include ::Enumerable
+  include ::JSON::Ext::Generator::GeneratorMethods::Hash
+  include ::DeepMerge::DeepMergeHash
 
   # Validates that the given hash only includes at *most* one of a set of
   # exclusive keys.  If more than one key is found, an ArgumentError will be

@@ -1157,6 +1157,9 @@ class RBI::Rewriters::RemoveKnownDefinitions < ::RBI::Visitor
 
   private
 
+  sig { params(node: RBI::Node, previous: RBI::Node).returns(T::Boolean) }
+  def can_delete_node?(node, previous); end
+
   sig { params(node: RBI::Node, previous: RBI::Node).void }
   def delete_node(node, previous); end
 

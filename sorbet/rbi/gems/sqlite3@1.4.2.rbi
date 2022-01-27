@@ -1072,6 +1072,8 @@ SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 # '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   def to_blob; end
 end

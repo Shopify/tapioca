@@ -427,6 +427,8 @@ RuboCop::Token = RuboCop::AST::Token
 # '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   def to_money(currency = T.unsafe(nil)); end
 end

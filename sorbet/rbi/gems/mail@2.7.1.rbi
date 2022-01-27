@@ -6082,6 +6082,8 @@ Mail::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)

@@ -689,6 +689,8 @@ Mail::RANDOM_TAG = T.let(T.unsafe(nil), String)
 Mail::RubyVer = Mail::Ruby19
 
 module Rails
+  extend ::ActiveSupport::Autoload
+
   class << self
     def app_class; end
     def app_class=(_arg0); end

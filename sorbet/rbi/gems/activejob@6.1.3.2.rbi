@@ -215,6 +215,13 @@ module ActiveJob::Callbacks
 
   def halted_callback_hook(_filter, name); end
 
+  class << self
+    def __callbacks; end
+    def __callbacks?; end
+    def _execute_callbacks; end
+    def _run_execute_callbacks(&block); end
+  end
+
   module GeneratedClassMethods
     def __callbacks; end
     def __callbacks=(value); end
@@ -226,13 +233,6 @@ module ActiveJob::Callbacks
   module GeneratedInstanceMethods
     def __callbacks; end
     def __callbacks?; end
-  end
-
-  class << self
-    def __callbacks; end
-    def __callbacks?; end
-    def _execute_callbacks; end
-    def _run_execute_callbacks(&block); end
   end
 end
 

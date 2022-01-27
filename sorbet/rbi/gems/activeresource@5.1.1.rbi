@@ -1792,6 +1792,7 @@ class ActiveResource::Connection
   def http; end
 
   def http_format_header(http_method); end
+  def http_stub; end
   def legitimize_auth_type(auth_type); end
   def new_http; end
 
@@ -1799,6 +1800,8 @@ class ActiveResource::Connection
   def request(method, path, *arguments); end
 
   def response_auth_header; end
+  def stub_http?; end
+  def unstub_http?; end
   def with_auth; end
 
   class << self

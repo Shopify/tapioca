@@ -36,6 +36,8 @@ end
 HTMLSelector::NO_STRIP = T.let(T.unsafe(nil), Array)
 
 module Rails
+  extend ::ActiveSupport::Autoload
+
   class << self
     def app_class; end
     def app_class=(_arg0); end

@@ -112,6 +112,8 @@ class Regexp::Expression::Backreference::NumberRelative < ::Regexp::Expression::
 end
 
 class Regexp::Expression::Base
+  include ::RuboCop::Ext::RegexpParser::Expression::Base
+
   def initialize(token, options = T.unsafe(nil)); end
 
   def =~(string, offset = T.unsafe(nil)); end
@@ -365,6 +367,8 @@ class Regexp::Expression::Base
 end
 
 class Regexp::Expression::CharacterSet < ::Regexp::Expression::Subexpression
+  include ::RuboCop::Ext::RegexpParser::Expression::CharacterSet
+
   def initialize(token, options = T.unsafe(nil)); end
 
   def close; end

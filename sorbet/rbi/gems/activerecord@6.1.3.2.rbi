@@ -4228,6 +4228,10 @@ module ActiveRecord::AttributeMethods
   def format_for_inspect(name, value); end
   def pk_attribute?(name); end
 
+  class << self
+    def dangerous_attribute_methods; end
+  end
+
   module GeneratedClassMethods
     def attribute_aliases; end
     def attribute_aliases=(value); end
@@ -4257,10 +4261,6 @@ module ActiveRecord::AttributeMethods
     def skip_time_zone_conversion_for_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types?; end
-  end
-
-  class << self
-    def dangerous_attribute_methods; end
   end
 end
 
@@ -6705,7 +6705,6 @@ module ActiveRecord::Callbacks
   include ::ActiveModel::Validations::Callbacks
 
   mixes_in_class_methods GeneratedClassMethods
-  mixes_in_class_methods ::ActiveModel::Callbacks
   mixes_in_class_methods ::ActiveRecord::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveModel::Validations::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveSupport::Callbacks::ClassMethods
@@ -14797,6 +14796,17 @@ module ActiveRecord::ModelSchema
 
   mixes_in_class_methods GeneratedClassMethods
 
+  class << self
+    # Derives the join table name for +first_table+ and +second_table+. The
+    # table names appear in alphabetical order. A common prefix is removed
+    # (useful for namespaced models like Music::Artist and Music::Record):
+    #
+    # artists, records => artists_records
+    # records, artists => artists_records
+    # music_artists, music_records => music_artists_records
+    def derive_join_table_name(first_table, second_table); end
+  end
+
   module GeneratedClassMethods
     def immutable_strings_by_default; end
     def immutable_strings_by_default=(value); end
@@ -14828,17 +14838,6 @@ module ActiveRecord::ModelSchema
     def table_name_prefix?; end
     def table_name_suffix; end
     def table_name_suffix?; end
-  end
-
-  class << self
-    # Derives the join table name for +first_table+ and +second_table+. The
-    # table names appear in alphabetical order. A common prefix is removed
-    # (useful for namespaced models like Music::Artist and Music::Record):
-    #
-    # artists, records => artists_records
-    # records, artists => artists_records
-    # music_artists, music_records => music_artists_records
-    def derive_join_table_name(first_table, second_table); end
   end
 end
 
@@ -17561,6 +17560,16 @@ module ActiveRecord::Reflection
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveRecord::Reflection::ClassMethods
 
+  class << self
+    def add_aggregate_reflection(ar, name, reflection); end
+    def add_reflection(ar, name, reflection); end
+    def create(macro, name, scope, options, ar); end
+
+    private
+
+    def reflection_class_for(macro); end
+  end
+
   module GeneratedClassMethods
     def _reflections; end
     def _reflections=(value); end
@@ -17575,16 +17584,6 @@ module ActiveRecord::Reflection
     def _reflections?; end
     def aggregate_reflections; end
     def aggregate_reflections?; end
-  end
-
-  class << self
-    def add_aggregate_reflection(ar, name, reflection); end
-    def add_reflection(ar, name, reflection); end
-    def create(macro, name, scope, options, ar); end
-
-    private
-
-    def reflection_class_for(macro); end
   end
 end
 
@@ -21260,7 +21259,6 @@ module ActiveRecord::Validations
 
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveModel::Validations::ClassMethods
-  mixes_in_class_methods ::ActiveModel::Naming
   mixes_in_class_methods ::ActiveModel::Callbacks
   mixes_in_class_methods ::ActiveSupport::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveSupport::DescendantsTracker

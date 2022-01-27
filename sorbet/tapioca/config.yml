@@ -2,3 +2,7 @@
 gem:
   exclude: []
   doc: true
+  typed_overrides:
+    "net-protocol": "false"
+    "net-smtp": "false"
+    "timeout": "false"

@@ -1264,6 +1264,9 @@ Minitest::Unit::VERSION = T.let(T.unsafe(nil), String)
 Minitest::VERSION = T.let(T.unsafe(nil), String)
 
 class Module
+  include ::ActiveSupport::Dependencies::ModuleConstMissing
+  include ::Module::Concerning
+
   def infect_an_assertion(meth, new_name, dont_flip = T.unsafe(nil)); end
 end
 
@@ -1272,9 +1275,15 @@ Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 class Object < ::BasicObject
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::ForkTracker::CoreExt
+  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Kernel
   include ::ActiveSupport::ForkTracker::CoreExt
   include ::ActiveSupport::ForkTracker::CoreExtPrivate
+  include ::JSON::Ext::Generator::GeneratorMethods::Object
   include ::Minitest::Expectations
+  include ::PP::ObjectMixin
+  include ::ActiveSupport::Tryable
+  include ::ActiveSupport::Dependencies::Loadable
 end

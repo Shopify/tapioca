@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem activerecord-typedstore`.
 
 module ActiveRecord
+  extend ::ActiveSupport::Autoload
+
   class << self
     def eager_load!; end
     def gem_version; end

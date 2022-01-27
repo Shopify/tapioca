@@ -2178,6 +2178,14 @@ module ActionController::Helpers
   # Provides a proxy to access helper methods from outside the view.
   def helpers; end
 
+  class << self
+    # Returns the value of attribute helpers_path.
+    def helpers_path; end
+
+    # Sets the attribute helpers_path
+    def helpers_path=(_arg0); end
+  end
+
   module GeneratedClassMethods
     def _helper_methods; end
     def _helper_methods=(value); end
@@ -2200,14 +2208,6 @@ module ActionController::Helpers
     def include_all_helpers; end
     def include_all_helpers=(value); end
     def include_all_helpers?; end
-  end
-
-  class << self
-    # Returns the value of attribute helpers_path.
-    def helpers_path; end
-
-    # Sets the attribute helpers_path
-    def helpers_path=(_arg0); end
   end
 end
 
@@ -2726,13 +2726,13 @@ module ActionController::Live
 
   mixes_in_class_methods ::ActionController::Live::ClassMethods
 
+  def new_controller_thread; end
   def process(name); end
   def response_body=(body); end
 
   private
 
   def log_error(exception); end
-  def new_controller_thread; end
 end
 
 class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
@@ -2949,6 +2949,8 @@ end
 # You can refer to the modules included in <tt>ActionController::Base</tt> to see
 # other features you can bring into your metal controller.
 class ActionController::Metal < ::AbstractController::Base
+  include ::ActionController::Testing::Functional
+
   def initialize; end
 
   def content_type(*_arg0, &_arg1); end
@@ -4418,6 +4420,10 @@ module ActionController::Redirecting
   def _extract_redirect_to_status(options, response_options); end
   def _url_host_allowed?(url); end
 
+  class << self
+    def _compute_redirect_to_location(request, options); end
+  end
+
   module GeneratedClassMethods
     def default_url_options; end
     def default_url_options=(value); end
@@ -4428,10 +4434,6 @@ module ActionController::Redirecting
     def default_url_options; end
     def default_url_options=(value); end
     def default_url_options?; end
-  end
-
-  class << self
-    def _compute_redirect_to_location(request, options); end
   end
 end
 
@@ -4564,18 +4566,6 @@ module ActionController::Renderers
   # <tt>ActionView::Rendering.render_to_body</tt>, if present.
   def render_to_body(options); end
 
-  module GeneratedClassMethods
-    def _renderers; end
-    def _renderers=(value); end
-    def _renderers?; end
-  end
-
-  module GeneratedInstanceMethods
-    def _renderers; end
-    def _renderers=(value); end
-    def _renderers?; end
-  end
-
   class << self
     def _render_with_renderer_method_name(key); end
 
@@ -4616,6 +4606,18 @@ module ActionController::Renderers
     #
     # ActionController::Renderers.remove(:csv)
     def remove(key); end
+  end
+
+  module GeneratedClassMethods
+    def _renderers; end
+    def _renderers=(value); end
+    def _renderers?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _renderers; end
+    def _renderers=(value); end
+    def _renderers?; end
   end
 end
 
