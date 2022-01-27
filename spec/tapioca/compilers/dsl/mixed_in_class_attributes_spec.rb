@@ -10,7 +10,7 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   end
 
   describe("#gather_constants") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -46,7 +46,7 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
   end
 
   describe("#decorate") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 

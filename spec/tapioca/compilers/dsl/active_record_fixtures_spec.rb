@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
   describe("#initialize") do
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 
@@ -30,7 +30,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       define_fake_rails_app
     end
 
-    after(:each) do
+    after do
       T.unsafe(self).assert_no_generated_errors
     end
 

@@ -91,7 +91,7 @@ module Tapioca
         @project.bundle_install
       end
 
-      before(:each) do
+      before do
         @project.reset_bundler_version
       end
 
