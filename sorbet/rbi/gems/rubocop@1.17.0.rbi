@@ -16995,6 +16995,66 @@ end
 
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
+# Provides a custom rake task.
+#
+# require 'rubocop/rake_task'
+# RuboCop::RakeTask.new
+#
+# Use global Rake namespace here to avoid namespace issues with custom
+# rubocop-rake tasks
+class RuboCop::RakeTask < ::Rake::TaskLib
+  def initialize(name = T.unsafe(nil), *args, &task_block); end
+
+  # Returns the value of attribute fail_on_error.
+  def fail_on_error; end
+
+  # Sets the attribute fail_on_error
+  def fail_on_error=(_arg0); end
+
+  # Returns the value of attribute formatters.
+  def formatters; end
+
+  # Sets the attribute formatters
+  def formatters=(_arg0); end
+
+  # Returns the value of attribute name.
+  def name; end
+
+  # Sets the attribute name
+  def name=(_arg0); end
+
+  # Returns the value of attribute options.
+  def options; end
+
+  # Sets the attribute options
+  def options=(_arg0); end
+
+  # Returns the value of attribute patterns.
+  def patterns; end
+
+  # Sets the attribute patterns
+  def patterns=(_arg0); end
+
+  # Returns the value of attribute requires.
+  def requires; end
+
+  # Sets the attribute requires
+  def requires=(_arg0); end
+
+  # Returns the value of attribute verbose.
+  def verbose; end
+
+  # Sets the attribute verbose
+  def verbose=(_arg0); end
+
+  private
+
+  def full_options; end
+  def run_cli(verbose, options); end
+  def setup_ivars(name); end
+  def setup_subtasks(name, *args, &task_block); end
+end
+
 # Common methods and behaviors for dealing with remote config files.
 class RuboCop::RemoteConfig
   def initialize(url, base_dir); end
@@ -17391,6 +17451,8 @@ end
 # Extensions to the core String class
 class String
   include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
