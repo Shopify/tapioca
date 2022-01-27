@@ -73,7 +73,7 @@ GEM
     activerecord (6.1.3.2)
       activemodel (= 6.1.3.2)
       activesupport (= 6.1.3.2)
-    activerecord-typedstore (1.3.2)
+    activerecord-typedstore (1.4.0)
       activerecord (>= 5.2)
     activeresource (6.0.0)
       activemodel (>= 6.0)
