@@ -251,6 +251,15 @@ module Tapioca
           sig { returns(String) }
           attr_reader :constant_name
 
+          sig { params(type: String).returns(String) }
+          def as_nilable_type(type)
+            if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
+              type
+            else
+              "T.nilable(#{type})"
+            end
+          end
+
           sig { void }
           def create_classes_and_includes
             model.create_extend(CommonRelationMethodsModuleName)
@@ -547,7 +556,7 @@ module Tapioca
                   parameters: [
                     create_rest_param("args", type: "T.untyped"),
                   ],
-                  return_type: "T.nilable(#{constant_name})"
+                  return_type: as_nilable_type(constant_name)
                 )
               when :find_by!
                 create_common_method(
@@ -571,7 +580,7 @@ module Tapioca
                 return_type = if method_name.end_with?("!")
                   constant_name
                 else
-                  "T.nilable(#{constant_name})"
+                  as_nilable_type(constant_name)
                 end
 
                 create_common_method(

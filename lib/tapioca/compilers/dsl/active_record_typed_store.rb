@@ -107,7 +107,7 @@ module Tapioca
               store_data.accessors.each do |accessor|
                 field = store_data.fields[accessor]
                 type = type_for(field.type_sym)
-                type = "T.nilable(#{type})" if field.null && type != "T.untyped"
+                type = as_nilable_type(type) if field.null
 
                 store_accessors_module = model.create_module("StoreAccessors")
                 generate_methods(store_accessors_module, field.name.to_s, type)

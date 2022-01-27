@@ -111,7 +111,7 @@ module Tapioca
           if arg.required || arg.default
             type
           else
-            "T.nilable(#{type})"
+            as_nilable_type(type)
           end
         end
       end

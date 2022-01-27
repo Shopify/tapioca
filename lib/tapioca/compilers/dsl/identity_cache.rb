@@ -116,7 +116,7 @@ module Tapioca
           if returns_collection
             COLLECTION_TYPE.call(cache_type)
           else
-            "T.nilable(::#{cache_type})"
+            as_nilable_type(T.must(qualified_name_of(cache_type)))
           end
         rescue ArgumentError
           "T.untyped"
@@ -175,18 +175,20 @@ module Tapioca
           parameters << create_kw_opt_param("includes", default: "nil", type: "T.untyped")
 
           if field.unique
+            type = T.must(qualified_name_of(constant))
+
             klass.create_method(
               "#{name}!",
               class_method: true,
               parameters: parameters,
-              return_type: "::#{constant}"
+              return_type: type
             )
 
             klass.create_method(
               name,
               class_method: true,
               parameters: parameters,
-              return_type: "T.nilable(::#{constant})"
+              return_type: as_nilable_type(type)
             )
           else
             klass.create_method(
