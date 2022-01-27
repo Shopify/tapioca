@@ -62,8 +62,14 @@ module Tapioca
       bundle_install
     end
 
+    class ExecResult < T::Struct
+      const :out, String
+      const :err, String
+      const :status, T::Boolean
+    end
+
     # Run `bundle install` in this project context (unbundled env)
-    sig { params(version: T.nilable(String)).returns([String, String, T::Boolean]) }
+    sig { params(version: T.nilable(String)).returns(ExecResult) }
     def bundle_install(version: nil)
       @bundler_version = T.let(version, T.nilable(String))
 
@@ -72,23 +78,23 @@ module Tapioca
       Bundler.with_unbundled_env do
         Gem.install("bundler", bundler_version)
         out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "install"].join(" "), opts)
-        [out, err, T.must(status.success?)]
+        ExecResult.new(out: out, err: err, status: T.must(status.success?))
       end
     end
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String).returns([String, String, T::Boolean]) }
+    sig { params(command: String).returns(ExecResult) }
     def bundle_exec(command)
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
         out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
-        [out, err, T.must(status.success?)]
+        ExecResult.new(out: out, err: err, status: T.must(status.success?))
       end
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String).returns([String, String, T::Boolean]) }
+    sig { params(command: String).returns(ExecResult) }
     def tapioca(command)
       exec_command = ["tapioca", command]
       exec_command << "--workers=1" if command.start_with?(/gem/) && !command.match?("--workers")
