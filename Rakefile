@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 
 require "bundler/gem_tasks"
-require "rake/testtask"
 Dir["tasks/**/*.rake"].each { |t| load t }
 
-Rake.application.options.trace = false
+require "rubocop/rake_task"
+RuboCop::RakeTask.new
 
-Rake::TestTask.new do |t|
-  t.libs << "lib"
-  t.libs << "spec"
-  t.warning = false
-  t.test_files = FileList["spec/**/*_spec.rb"]
+desc "Run tests"
+task :test do
+  require "shellwords"
+  test = Array(ENV.fetch("TEST", []))
+  test_opts = Shellwords.split(ENV.fetch("TESTOPTS", ""))
+  success = system("bin/test", *test, *test_opts)
+  success || exit(false)
 end
 
-task(:spec) do
-  Rake::Task[:test].execute
-rescue RuntimeError
-  exit(1)
-end
-
-task(default: :spec)
+task(default: :test)
