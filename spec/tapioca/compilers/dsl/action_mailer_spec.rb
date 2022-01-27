@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActionMailer subclasses") do
+    it "gathers no constants if there are no ActionMailer subclasses" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActionMailer subclasses") do
+    it "gathers only ActionMailer subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
@@ -25,7 +25,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(["NotifierMailer"], gathered_constants)
     end
 
-    it("gathers subclasses of ActionMailer subclasses") do
+    it "gathers subclasses of ActionMailer subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
@@ -37,7 +37,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(["NotifierMailer", "SecondaryMailer"], gathered_constants)
     end
 
-    it("ignores abstract subclasses") do
+    it "ignores abstract subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
@@ -56,7 +56,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there are no methods") do
+    it "generates empty RBI file if there are no methods" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
         end
@@ -71,7 +71,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
-    it("generates correct RBI file for subclass with methods") do
+    it "generates correct RBI file for subclass with methods" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
           def notify_customer(customer_id)
@@ -94,7 +94,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
-    it("generates correct RBI file for subclass with method signatures") do
+    it "generates correct RBI file for subclass with method signatures" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class NotifierMailer < ActionMailer::Base
           extend T::Sig
@@ -119,7 +119,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
-    it("generates correct RBI file for mailer with delegated methods") do
+    it "generates correct RBI file for mailer with delegated methods" do
       add_ruby_file("mailer.rb", template(<<~RUBY))
         class NotifierMailer < ActionMailer::Base
           delegate :notify_customer, to: :foo
@@ -158,7 +158,7 @@ class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
       assert_equal(expected, rbi_for(:NotifierMailer))
     end
 
-    it("does not generate RBI for methods defined in abstract classes") do
+    it "does not generate RBI for methods defined in abstract classes" do
       add_ruby_file("mailer.rb", <<~RUBY)
         class AbstractMailer < ActionMailer::Base
           abstract!

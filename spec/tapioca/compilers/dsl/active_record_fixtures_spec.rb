@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers only the ActiveSupport::TestCase base class") do
+    it "gathers only the ActiveSupport::TestCase base class" do
       add_ruby_file("post_test.rb", <<~RUBY)
         class PostTest < ActiveSupport::TestCase
         end
@@ -34,7 +34,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("does nothing if there are no fixtures") do
+    it "does nothing if there are no fixtures" do
       expected = <<~RBI
         # typed: strong
       RBI
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
     end
 
-    it("generates methods for fixtures") do
+    it "generates methods for fixtures" do
       add_content_file("test/fixtures/posts.yml", <<~YAML)
         super_post:
           title: An incredible Ruby post
@@ -63,7 +63,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
       assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
     end
 
-    it("generates methods for fixtures from multiple sources") do
+    it "generates methods for fixtures from multiple sources" do
       add_content_file("test/fixtures/posts.yml", <<~YAML)
         super_post:
           title: An incredible Ruby post

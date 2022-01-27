@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no Rails generator classes") do
+    it "gathers no constants if there are no Rails generator classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only Rails generators") do
+    it "gathers only Rails generators" do
       add_ruby_file("content.rb", <<~RUBY)
         class UnnamedGenerator < Rails::Generators::Base
         end
@@ -34,7 +34,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(["AppGenerator", "NamedGenerator", "UnnamedGenerator"], gathered_constants)
     end
 
-    it("does not gather XPath") do
+    it "does not gather XPath" do
       add_ruby_file("xpath.rb", <<~RUBY)
         require "xpath"
       RUBY
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_empty(gathered_constants)
     end
 
-    it("ignores generator classes without a name") do
+    it "ignores generator classes without a name" do
       add_ruby_file("content.rb", <<~RUBY)
         unnamed = Class.new(::Rails::Generators::Base)
         named = Class.new(::Rails::Generators::NamedBase)
@@ -58,7 +58,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there are no extra arguments or options") do
+    it "generates empty RBI file if there are no extra arguments or options" do
       add_ruby_file("contents.rb", <<~RUBY)
         class EmptyGenerator < ::Rails::Generators::Base
         end
@@ -71,7 +71,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(expected, rbi_for(:EmptyGenerator))
     end
 
-    it("generates an RBI file for arguments") do
+    it "generates an RBI file for arguments" do
       add_ruby_file("contents.rb", <<~RUBY)
         class ArgumentGenerator < ::Rails::Generators::Base
           argument :string, type: :string
@@ -102,7 +102,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(expected, rbi_for(:ArgumentGenerator))
     end
 
-    it("generates an RBI file for class options") do
+    it "generates an RBI file for class options" do
       add_ruby_file("contents.rb", <<~RUBY)
         class OptionGenerator < ::Rails::Generators::Base
           class_option :string, type: :string
@@ -137,7 +137,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(expected, rbi_for(:OptionGenerator))
     end
 
-    it("generates an RBI file for required and optional-with-defaults class options") do
+    it "generates an RBI file for required and optional-with-defaults class options" do
       add_ruby_file("contents.rb", <<~RUBY)
         class OptionsWithDefaultsGenerator < ::Rails::Generators::Base
           class_option :string, type: :string, required: true
@@ -160,7 +160,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(expected, rbi_for(:OptionsWithDefaultsGenerator))
     end
 
-    it("generates an RBI file for overriding built-in options") do
+    it "generates an RBI file for overriding built-in options" do
       add_ruby_file("contents.rb", <<~RUBY)
         class OverrideGenerator < ::Rails::Generators::Base
           class_option :force, type: :numeric
@@ -179,7 +179,7 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
       assert_equal(expected, rbi_for(:OverrideGenerator))
     end
 
-    it("generates an RBI file for non-Rails parent class arguments and options") do
+    it "generates an RBI file for non-Rails parent class arguments and options" do
       add_ruby_file("contents.rb", <<~RUBY)
         class ParentGenerator < ::Rails::Generators::NamedBase
           argument :str, type: :string

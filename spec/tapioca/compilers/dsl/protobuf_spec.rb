@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no Google::Protobuf classes") do
+    it "gathers no constants if there are no Google::Protobuf classes" do
       add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
         end
@@ -18,7 +18,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert(gathered_constants.all? { |constant| constant.start_with?("Google::Protobuf") })
     end
 
-    it("gathers only classes with Protobuf Module") do
+    it "gathers only classes with Protobuf Module" do
       add_ruby_file("content.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
@@ -43,7 +43,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates methods in RBI files for classes with Protobuf with integer field type") do
+    it "generates methods in RBI files for classes with Protobuf with integer field type" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
@@ -81,7 +81,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for classes with Protobuf with string field type") do
+    it "generates methods in RBI files for classes with Protobuf with string field type" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         Google::Protobuf::DescriptorPool.generated_pool.build do
           add_file("cart.proto", :syntax => :proto3) do
@@ -112,7 +112,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for classes with Protobuf with message field type") do
+    it "generates methods in RBI files for classes with Protobuf with message field type" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
@@ -146,7 +146,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for classes with Protobuf with enum field") do
+    it "generates methods in RBI files for classes with Protobuf with enum field" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
@@ -186,7 +186,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for classes with Protobuf with enum field with defined type") do
+    it "generates methods in RBI files for classes with Protobuf with enum field with defined type" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'
@@ -226,7 +226,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for repeated fields in Protobufs") do
+    it "generates methods in RBI files for repeated fields in Protobufs" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/wrappers_pb'
 
@@ -266,7 +266,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for map fields in Protobufs") do
+    it "generates methods in RBI files for map fields in Protobufs" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/wrappers_pb'
 
@@ -306,7 +306,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       assert_equal(expected, rbi_for(:Cart))
     end
 
-    it("generates methods in RBI files for classes with Protobuf with all types") do
+    it "generates methods in RBI files for classes with Protobuf with all types" do
       add_ruby_file("protobuf.rb", <<~RUBY)
         require 'google/protobuf/timestamp_pb'
         require 'google/protobuf/wrappers_pb'

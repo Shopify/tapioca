@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveResource classes") do
+    it "gathers no constants if there are no ActiveResource classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveResource constants ") do
+    it "gathers only ActiveResource constants " do
       add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveResource::Base
         end
@@ -34,7 +34,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates RBI file for ActiveResource classes with an integer schema field") do
+    it "generates RBI file for ActiveResource classes with an integer schema field" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
           schema do
@@ -61,7 +61,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for ActiveResource classes with multiple integer schema fields") do
+    it "generates RBI file for ActiveResource classes with multiple integer schema fields" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
           schema do
@@ -106,7 +106,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for ActiveResource classes with schema with different types") do
+    it "generates RBI file for ActiveResource classes with schema with different types" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
           schema do
@@ -143,7 +143,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for ActiveResource classes with an unsupported schema type") do
+    it "generates methods for ActiveResource classes with an unsupported schema type" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
           schema  do
@@ -170,7 +170,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates methods for ActiveResource classes including all types in schema field") do
+    it "generates methods for ActiveResource classes including all types in schema field" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveResource::Base
           schema do

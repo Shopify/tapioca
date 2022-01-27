@@ -14,11 +14,11 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no FrozenRecord classes") do
+    it "gathers no constants if there are no FrozenRecord classes" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only FrozenRecord classes") do
+    it "gathers only FrozenRecord classes" do
       add_ruby_file("content.rb", <<~RUBY)
         class Student < FrozenRecord::Base
         end
@@ -36,7 +36,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates empty RBI file if there are no frozen records") do
+    it "generates empty RBI file if there are no frozen records" do
       add_ruby_file("student.rb", <<~RUBY)
         class Student < FrozenRecord::Base
           self.base_path = __dir__
@@ -53,7 +53,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       assert_equal(expected, rbi_for(:Student))
     end
 
-    it("generates an RBI file for frozen records") do
+    it "generates an RBI file for frozen records" do
       add_ruby_file("student.rb", <<~RUBY)
         class Student < FrozenRecord::Base
           self.base_path = __dir__
@@ -100,7 +100,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
       assert_equal(expected, rbi_for(:Student))
     end
 
-    it("can handle frozen record scopes") do
+    it "can handle frozen record scopes" do
       add_ruby_file("student.rb", <<~RUBY)
         class Student < FrozenRecord::Base
           self.base_path = __dir__

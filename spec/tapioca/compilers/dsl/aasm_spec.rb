@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no classes that include AASM") do
+    it "gathers no constants if there are no classes that include AASM" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only classes that include AASM") do
+    it "gathers only classes that include AASM" do
       add_ruby_file("content.rb", <<~RUBY)
         class StateMachine
           include AASM
@@ -44,7 +44,7 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
       assert_equal(expected, rbi_for(:StateMachine))
     end
 
-    it("generates correct RBI file") do
+    it "generates correct RBI file" do
       add_ruby_file("content.rb", <<~RUBY)
         class StateMachine
           include AASM

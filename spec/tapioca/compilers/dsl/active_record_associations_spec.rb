@@ -9,11 +9,11 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("gathers no constants if there are no ActiveRecord subclasses") do
+    it "gathers no constants if there are no ActiveRecord subclasses" do
       assert_empty(gathered_constants)
     end
 
-    it("gathers only ActiveRecord subclasses") do
+    it "gathers only ActiveRecord subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class Post < ActiveRecord::Base
         end
@@ -25,7 +25,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       assert_equal(["Post"], gathered_constants)
     end
 
-    it("rejects abstract ActiveRecord subclasses") do
+    it "rejects abstract ActiveRecord subclasses" do
       add_ruby_file("content.rb", <<~RUBY)
         class Comment < ActiveRecord::Base
         end
@@ -64,7 +64,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           T.unsafe(self).assert_no_generated_errors
         end
 
-        it("generates empty RBI file if there are no associations") do
+        it "generates empty RBI file if there are no associations" do
           add_ruby_file("post.rb", <<~RUBY)
             class Post < ActiveRecord::Base
             end
@@ -77,7 +77,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for belongs_to single association") do
+        it "generates RBI file for belongs_to single association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -163,7 +163,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for polymorphic belongs_to single association") do
+        it "generates RBI file for polymorphic belongs_to single association" do
           add_ruby_file("category.rb", <<~RUBY)
             class Category < ActiveRecord::Base
             end
@@ -202,7 +202,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for polymorphic has_many association") do
+        it "generates RBI file for polymorphic has_many association" do
           add_ruby_file("model.rb", <<~RUBY)
             class Picture < ActiveRecord::Base
               belongs_to :imageable, polymorphic: true
@@ -242,7 +242,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Employee))
         end
 
-        it("generates RBI file for has_one single association") do
+        it "generates RBI file for has_one single association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -299,7 +299,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_many collection association") do
+        it "generates RBI file for has_many collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -353,7 +353,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_many :through collection association") do
+        it "generates RBI file for has_many :through collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -426,7 +426,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_and_belongs_to_many collection association") do
+        it "generates RBI file for has_and_belongs_to_many collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -481,7 +481,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI files for models under different namespaces with associations to each other") do
+        it "generates RBI files for models under different namespaces with associations to each other" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -622,7 +622,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
 
       describe("with errors") do
-        it("generates RBI file for broken associations") do
+        it "generates RBI file for broken associations" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -671,7 +671,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected_errors, generated_errors)
         end
 
-        it("generates RBI file for broken has_many :through collection association") do
+        it "generates RBI file for broken has_many :through collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -752,7 +752,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           T.unsafe(self).assert_no_generated_errors
         end
 
-        it("generates empty RBI file if there are no associations") do
+        it "generates empty RBI file if there are no associations" do
           add_ruby_file("post.rb", <<~RUBY)
             class Post < ActiveRecord::Base
             end
@@ -765,7 +765,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for belongs_to single association") do
+        it "generates RBI file for belongs_to single association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -851,7 +851,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for polymorphic belongs_to single association") do
+        it "generates RBI file for polymorphic belongs_to single association" do
           add_ruby_file("category.rb", <<~RUBY)
             class Category < ActiveRecord::Base
             end
@@ -890,7 +890,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for polymorphic has_many association") do
+        it "generates RBI file for polymorphic has_many association" do
           add_ruby_file("model.rb", <<~RUBY)
             class Picture < ActiveRecord::Base
               belongs_to :imageable, polymorphic: true
@@ -930,7 +930,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Employee))
         end
 
-        it("generates RBI file for has_one single association") do
+        it "generates RBI file for has_one single association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -987,7 +987,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_many collection association") do
+        it "generates RBI file for has_many collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1041,7 +1041,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_many :through collection association") do
+        it "generates RBI file for has_many :through collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1114,7 +1114,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI file for has_and_belongs_to_many collection association") do
+        it "generates RBI file for has_and_belongs_to_many collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1169,7 +1169,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected, rbi_for(:Post))
         end
 
-        it("generates RBI files for models under different namespaces with associations to each other") do
+        it "generates RBI files for models under different namespaces with associations to each other" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1310,7 +1310,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
 
       describe("with errors") do
-        it("generates RBI file for broken associations") do
+        it "generates RBI file for broken associations" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1359,7 +1359,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           assert_equal(expected_errors, generated_errors)
         end
 
-        it("generates RBI file for broken has_many :through collection association") do
+        it "generates RBI file for broken has_many :through collection association" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
               ActiveRecord::Schema.define do
@@ -1467,7 +1467,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       T.unsafe(self).assert_no_generated_errors
     end
 
-    it("generates RBI file for has_one_attached ActiveStorage association") do
+    it "generates RBI file for has_one_attached ActiveStorage association" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base
           has_one_attached :photo
@@ -1523,7 +1523,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       assert_equal(expected, rbi_for(:Post))
     end
 
-    it("generates RBI file for has_many_attached ActiveStorage association") do
+    it "generates RBI file for has_many_attached ActiveStorage association" do
       add_ruby_file("schema.rb", <<~RUBY)
         ActiveRecord::Migration.suppress_messages do
           ActiveRecord::Schema.define do

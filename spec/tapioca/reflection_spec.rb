@@ -58,7 +58,7 @@ module Tapioca
 
   class ReflectionSpec < Minitest::Spec
     describe("reflection methods") do
-      it("might return the wrong results without Reflection helpers") do
+      it "might return the wrong results without Reflection helpers" do
         foo = LyingFoo.new
 
         refute_equal([], LyingFoo.constants)
@@ -77,7 +77,7 @@ module Tapioca
         assert(foo.equal?(1))
       end
 
-      it("return the correct results with Reflection helpers") do
+      it "return the correct results with Reflection helpers" do
         foo = LyingFoo.new
 
         assert_equal([], Reflection.constants_of(LyingFoo))
@@ -101,13 +101,13 @@ module Tapioca
     end
 
     describe("#qualified_name_of") do
-      it("returns nil if the class is anonymous") do
+      it "returns nil if the class is anonymous" do
         klass = Class.new
 
         assert_nil(Reflection.qualified_name_of(klass))
       end
 
-      it("returns top level anchored name for named class") do
+      it "returns top level anchored name for named class" do
         assert_equal("::Tapioca::LyingFoo", Reflection.qualified_name_of(LyingFoo))
       end
     end
