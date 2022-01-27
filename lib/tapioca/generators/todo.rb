@@ -21,14 +21,13 @@ module Tapioca
 
       sig { override.void }
       def generate
-        compiler = Compilers::TodosCompiler.new
         say("Finding all unresolved constants, this may take a few seconds... ")
 
         # Clean all existing unresolved constants before regenerating the list
         # so Sorbet won't grab them as already resolved.
         File.delete(@todo_file) if File.exist?(@todo_file)
 
-        rbi_string = compiler.compile
+        rbi_string = compile
         if rbi_string.empty?
           say("Nothing to do", :green)
           return
@@ -70,6 +69,26 @@ module Tapioca
         else
           ""
         end
+      end
+
+      sig do
+        returns(String)
+      end
+      def compile
+        list_todos.each_line.map do |line|
+          next if line.include?("<") || line.include?("class_of")
+          "module #{line.strip.gsub("T.untyped::", "")}; end"
+        end.compact.join("\n")
+      end
+
+      # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
+      sig { returns(String) }
+      def list_todos
+        Tapioca::Compilers::Sorbet.run(
+          "--print=missing-constants",
+          "--stdout-hup-hack",
+          "--no-error-count"
+        ).strip
       end
     end
   end
