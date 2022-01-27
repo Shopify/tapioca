@@ -1,0 +1,11 @@
+{
+  "devTestRunner.command": "bin/test",
+  "ruby.lint": {
+    "rubocop": false
+  },
+  "ruby.codeCompletion": false,
+  "ruby.intellisense": "rubyLocate",
+  "byesig.opacity": 0.4,
+  "byesig.fold": false,
+  "byesig.showIcon": false,
+}
