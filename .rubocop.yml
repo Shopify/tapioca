@@ -12,7 +12,6 @@ AllCops:
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
-  - "spec/support/repo/bin/tapioca"
 
 Gemspec/RequireMFA:
   Enabled: false
