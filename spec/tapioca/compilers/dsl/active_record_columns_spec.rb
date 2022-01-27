@@ -4,8 +4,8 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
-  describe("Tapioca::Compilers::Dsl::ActiveRecordColumns") do
-    describe("#initialize") do
+  describe "Tapioca::Compilers::Dsl::ActiveRecordColumns" do
+    describe "#initialize" do
       after do
         T.unsafe(self).assert_no_generated_errors
       end
@@ -40,7 +40,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
     end
 
-    describe("#decorate") do
+    describe "#decorate" do
       before do
         require "active_record"
 
@@ -50,7 +50,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         )
       end
 
-      describe("by default") do
+      describe "by default" do
         after do
           T.unsafe(self).assert_no_generated_errors
         end
@@ -824,7 +824,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
         end
       end
 
-      describe("when StrongTypeGeneration is defined") do
+      describe "when StrongTypeGeneration is defined" do
         after do
           T.unsafe(self).assert_no_generated_errors
         end

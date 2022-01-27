@@ -15,7 +15,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
     RUBY
   end
 
-  describe("#initialize") do
+  describe "#initialize" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -41,7 +41,7 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

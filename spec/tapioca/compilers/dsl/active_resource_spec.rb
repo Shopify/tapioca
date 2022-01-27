@@ -4,7 +4,7 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
-  describe("#initialize") do
+  describe "#initialize" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -29,7 +29,7 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

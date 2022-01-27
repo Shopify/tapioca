@@ -8,7 +8,7 @@ module Tapioca
   class GemfileSpec < SpecWithProject
     extend T::Sig
 
-    describe("gem can export RBI files") do
+    describe "gem can export RBI files" do
       it "export_rbi_files? returns false if the gem does not export RBI files" do
         foo_gem = mock_gem("foo", "0.0.1")
         foo_spec = make_spec(foo_gem)

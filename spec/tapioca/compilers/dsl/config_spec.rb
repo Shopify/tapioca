@@ -8,7 +8,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
     Object.send(:remove_const, :Rails)
   end
 
-  describe("#gather_constants") do
+  describe "#gather_constants" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -27,7 +27,7 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

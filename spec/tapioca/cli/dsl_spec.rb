@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class DslSpec < SpecWithProject
-    describe("#cli::dsl") do
+    describe "#cli::dsl" do
       before(:all) do
         @project.write("config/application.rb", <<~RB)
           module Rails
@@ -30,7 +30,7 @@ module Tapioca
         RB
       end
 
-      describe("generate") do
+      describe "generate" do
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
@@ -986,7 +986,7 @@ module Tapioca
         end
       end
 
-      describe("verify") do
+      describe "verify" do
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
