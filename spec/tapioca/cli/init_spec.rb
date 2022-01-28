@@ -6,7 +6,7 @@ require "yaml"
 
 module Tapioca
   class InitSpec < SpecWithProject
-    describe "#cli::init" do
+    describe "cli::init" do
       before(:all) do
         project.bundle_install
       end

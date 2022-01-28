@@ -57,7 +57,7 @@ module Tapioca
   end
 
   class ReflectionSpec < Minitest::Spec
-    describe "reflection methods" do
+    describe Tapioca::Reflection do
       it "might return the wrong results without Reflection helpers" do
         foo = LyingFoo.new
 
@@ -98,9 +98,7 @@ module Tapioca
         assert(Reflection.are_equal?(foo, foo))
         refute(Reflection.are_equal?(foo, 1))
       end
-    end
 
-    describe "#qualified_name_of" do
       it "returns nil if the class is anonymous" do
         klass = Class.new
 

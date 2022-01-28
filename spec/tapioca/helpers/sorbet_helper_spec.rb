@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::SorbetHelperSpec < Minitest::Spec
   include Tapioca::SorbetHelper
 
-  describe "# helpers::sorbet" do
+  describe Tapioca::SorbetHelper do
     it "returns the value of TAPIOCA_SORBET_EXE if set" do
       with_custom_sorbet_exe_path("bin/custom-sorbet-static") do |custom_path|
         assert_equal(sorbet_path, custom_path)

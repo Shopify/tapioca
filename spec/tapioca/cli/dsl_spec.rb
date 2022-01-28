@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class DslSpec < SpecWithProject
-    describe "#cli::dsl" do
+    describe "cli::dsl" do
       before(:all) do
         @project.write("config/application.rb", <<~RB)
           module Rails

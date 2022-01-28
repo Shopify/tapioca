@@ -5,7 +5,7 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordColumns" do
-    describe "#initialize" do
+    describe "initialize" do
       after do
         T.unsafe(self).assert_no_generated_errors
       end
@@ -40,7 +40,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
       end
     end
 
-    describe "#decorate" do
+    describe "decorate" do
       before do
         require "active_record"
 

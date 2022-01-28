@@ -4,157 +4,159 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveModelAttributesSpec < DslSpec
-  describe "#initialize" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
+  describe "Tapioca::Compilers::Dsl::ActiveModelAttributes" do
+    describe "initialize" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
+      it "gathers no constants if there are no classes using ActiveModel::Attributes" do
+        assert_empty(gathered_constants)
+      end
+
+      it "gathers only classes including ActiveModel::Attributes" do
+        add_ruby_file("shop.rb", <<~RUBY)
+          class Shop
+          end
+
+          class ShopWithAttributes
+            include ActiveModel::Attributes
+          end
+        RUBY
+        assert_equal(["ShopWithAttributes"], gathered_constants)
+      end
+
+      it "does not gather Active Record models" do
+        add_ruby_file("post.rb", <<~RUBY)
+          require "active_record"
+
+          class Post < ActiveRecord::Base
+          end
+        RUBY
+
+        assert_equal([], gathered_constants)
+      end
     end
 
-    it "gathers no constants if there are no classes using ActiveModel::Attributes" do
-      assert_empty(gathered_constants)
-    end
+    describe "decorate" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
 
-    it "gathers only classes including ActiveModel::Attributes" do
-      add_ruby_file("shop.rb", <<~RUBY)
-        class Shop
-        end
+      it "generates empty RBI file if there are no attributes in the class" do
+        add_ruby_file("shop.rb", <<~RUBY)
+          class Shop
+            include ActiveModel::Attributes
+          end
+        RUBY
 
-        class ShopWithAttributes
-          include ActiveModel::Attributes
-        end
-      RUBY
-      assert_equal(["ShopWithAttributes"], gathered_constants)
-    end
+        expected = <<~RBI
+          # typed: strong
+        RBI
 
-    it "does not gather Active Record models" do
-      add_ruby_file("post.rb", <<~RUBY)
-        require "active_record"
+        assert_equal(expected, rbi_for(:Shop))
+      end
 
-        class Post < ActiveRecord::Base
-        end
-      RUBY
+      it "generates method sigs for every active model attribute" do
+        add_ruby_file("shop.rb", <<~RUBY)
+          class Shop
+            include ActiveModel::Attributes
 
-      assert_equal([], gathered_constants)
-    end
-  end
+            attribute :name
+          end
+        RUBY
 
-  describe "#decorate" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
+        expected = <<~RBI
+          # typed: strong
 
-    it "generates empty RBI file if there are no attributes in the class" do
-      add_ruby_file("shop.rb", <<~RUBY)
-        class Shop
-          include ActiveModel::Attributes
-        end
-      RUBY
+          class Shop
+            sig { returns(T.untyped) }
+            def name; end
 
-      expected = <<~RBI
-        # typed: strong
-      RBI
+            sig { params(value: T.untyped).returns(T.untyped) }
+            def name=(value); end
+          end
+        RBI
 
-      assert_equal(expected, rbi_for(:Shop))
-    end
+        assert_equal(expected, rbi_for(:Shop))
+      end
 
-    it "generates method sigs for every active model attribute" do
-      add_ruby_file("shop.rb", <<~RUBY)
-        class Shop
-          include ActiveModel::Attributes
+      it "only generates method for Active Model attributes and no other" do
+        add_ruby_file("shop.rb", <<~RUBY)
+          class Shop
+            include ActiveModel::Attributes
+            include ActiveModel::Dirty
 
-          attribute :name
-        end
-      RUBY
+            attribute :name
+          end
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
+        expected = <<~RBI
+          # typed: strong
 
-        class Shop
-          sig { returns(T.untyped) }
-          def name; end
+          class Shop
+            sig { returns(T.untyped) }
+            def name; end
 
-          sig { params(value: T.untyped).returns(T.untyped) }
-          def name=(value); end
-        end
-      RBI
+            sig { params(value: T.untyped).returns(T.untyped) }
+            def name=(value); end
+          end
+        RBI
 
-      assert_equal(expected, rbi_for(:Shop))
-    end
+        assert_equal(expected, rbi_for(:Shop))
+      end
 
-    it "only generates method for Active Model attributes and no other" do
-      add_ruby_file("shop.rb", <<~RUBY)
-        class Shop
-          include ActiveModel::Attributes
-          include ActiveModel::Dirty
+      it "generates method sigs with param types when type set on attribute" do
+        add_ruby_file("shop.rb", <<~RUBY)
+          class Shop
+            include ActiveModel::Attributes
 
-          attribute :name
-        end
-      RUBY
+            attribute :id, :integer
+            attribute :name, :string
+            attribute :latitude, :float
+            attribute :created_at, :datetime
+            attribute :test_shop, :boolean
+          end
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
+        expected = <<~RBI
+          # typed: strong
 
-        class Shop
-          sig { returns(T.untyped) }
-          def name; end
+          class Shop
+            sig { returns(T.nilable(::DateTime)) }
+            def created_at; end
 
-          sig { params(value: T.untyped).returns(T.untyped) }
-          def name=(value); end
-        end
-      RBI
+            sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
+            def created_at=(value); end
 
-      assert_equal(expected, rbi_for(:Shop))
-    end
+            sig { returns(T.nilable(::Integer)) }
+            def id; end
 
-    it "generates method sigs with param types when type set on attribute" do
-      add_ruby_file("shop.rb", <<~RUBY)
-        class Shop
-          include ActiveModel::Attributes
+            sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+            def id=(value); end
 
-          attribute :id, :integer
-          attribute :name, :string
-          attribute :latitude, :float
-          attribute :created_at, :datetime
-          attribute :test_shop, :boolean
-        end
-      RUBY
+            sig { returns(T.nilable(::Float)) }
+            def latitude; end
 
-      expected = <<~RBI
-        # typed: strong
+            sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
+            def latitude=(value); end
 
-        class Shop
-          sig { returns(T.nilable(::DateTime)) }
-          def created_at; end
+            sig { returns(T.nilable(::String)) }
+            def name; end
 
-          sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
-          def created_at=(value); end
+            sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+            def name=(value); end
 
-          sig { returns(T.nilable(::Integer)) }
-          def id; end
+            sig { returns(T.nilable(T::Boolean)) }
+            def test_shop; end
 
-          sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
-          def id=(value); end
+            sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+            def test_shop=(value); end
+          end
+        RBI
 
-          sig { returns(T.nilable(::Float)) }
-          def latitude; end
-
-          sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
-          def latitude=(value); end
-
-          sig { returns(T.nilable(::String)) }
-          def name; end
-
-          sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-          def name=(value); end
-
-          sig { returns(T.nilable(T::Boolean)) }
-          def test_shop; end
-
-          sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-          def test_shop=(value); end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:Shop))
+        assert_equal(expected, rbi_for(:Shop))
+      end
     end
   end
 end
