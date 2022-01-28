@@ -167,7 +167,7 @@ module Tapioca
 
         class RelationGenerator
           extend T::Sig
-          include ParamHelper
+          include Helpers::ParamHelper
           include SorbetHelper
           include Reflection
           include Helpers::ActiveRecordConstantsHelper

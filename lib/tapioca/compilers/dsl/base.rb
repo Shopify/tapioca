@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/rbi_ext/model"
-require "tapioca/compilers/dsl/param_helper"
+require "tapioca/compilers/dsl/helpers/param_helper"
 require "tapioca/compilers/dsl_compiler"
 
 module Tapioca
@@ -128,7 +128,7 @@ module Tapioca
           )
         end
 
-        include ParamHelper
+        include Helpers::ParamHelper
 
         sig { params(method_def: T.any(Method, UnboundMethod)).returns(T::Array[RBI::TypedParam]) }
         def compile_method_parameters_to_rbi(method_def)
