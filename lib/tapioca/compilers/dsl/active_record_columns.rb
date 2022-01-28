@@ -8,7 +8,7 @@ rescue LoadError
 end
 
 require "tapioca/compilers/dsl/helpers/active_record_column_type_helper"
-require "tapioca/compilers/dsl/helpers/active_record_constants"
+require "tapioca/compilers/dsl/helpers/active_record_constants_helper"
 
 module Tapioca
   module Compilers
@@ -99,7 +99,7 @@ module Tapioca
       # ~~~
       class ActiveRecordColumns < Base
         extend T::Sig
-        include Helper::ActiveRecordConstants
+        include Helpers::ActiveRecordConstantsHelper
 
         sig { override.params(root: RBI::Tree, constant: T.class_of(ActiveRecord::Base)).void }
         def decorate(root, constant)

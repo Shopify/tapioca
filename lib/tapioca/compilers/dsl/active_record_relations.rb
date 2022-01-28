@@ -7,7 +7,7 @@ rescue LoadError
   return
 end
 
-require "tapioca/compilers/dsl/helpers/active_record_constants"
+require "tapioca/compilers/dsl/helpers/active_record_constants_helper"
 
 module Tapioca
   module Compilers
@@ -170,7 +170,7 @@ module Tapioca
           include ParamHelper
           include SorbetHelper
           include Reflection
-          include Helper::ActiveRecordConstants
+          include Helpers::ActiveRecordConstantsHelper
 
           sig do
             params(
