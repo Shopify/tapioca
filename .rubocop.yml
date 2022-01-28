@@ -9,15 +9,12 @@ require:
 
 AllCops:
   TargetRubyVersion: 2.6
-  NewCops: enable
+  NewCops: disable
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
   Include:
   - "sorbet/rbi/**/*.rbi"
-
-Gemspec/RequireMFA:
-  Enabled: false
 
 RSpec/BeforeAfterAll:
   Enabled: false
