@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class TodoSpec < SpecWithProject
-    describe("#cli::todo") do
+    describe "#cli::todo" do
       before(:all) do
         project.bundle_install
         project.tapioca("init")

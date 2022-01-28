@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
     require "active_support/concern"
   end
 
-  describe("#gather_constants") do
+  describe "#gather_constants" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -45,7 +45,7 @@ class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

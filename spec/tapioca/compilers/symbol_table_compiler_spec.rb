@@ -26,7 +26,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
     end
   end
 
-  describe("compile") do
+  describe "compile" do
     sig { params(include_doc: T::Boolean).returns(String) }
     def compile(include_doc: false)
       stub = GemStub.new(

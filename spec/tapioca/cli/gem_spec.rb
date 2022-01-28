@@ -86,7 +86,7 @@ module Tapioca
       end
     RBI
 
-    describe("#cli::gem") do
+    describe "#cli::gem" do
       before(:all) do
         @project.bundle_install
       end
@@ -116,7 +116,7 @@ module Tapioca
         assert_success_status(result)
       end
 
-      describe("flags") do
+      describe "flags" do
         it "must show an error if --all is supplied with arguments" do
           result = @project.tapioca("gem --all foo")
 
@@ -151,7 +151,7 @@ module Tapioca
         end
       end
 
-      describe("generate") do
+      describe "generate" do
         before(:all) do
           @project.tapioca("init")
         end
@@ -888,7 +888,7 @@ module Tapioca
         end
       end
 
-      describe("sync") do
+      describe "sync" do
         before(:all) do
           @project.require_mock_gem(mock_gem("foo", "0.0.1"))
           @project.require_mock_gem(mock_gem("bar", "0.3.0"))
@@ -1037,7 +1037,7 @@ module Tapioca
         end
       end
 
-      describe("verify") do
+      describe "verify" do
         before(:all) do
           @project.require_mock_gem(mock_gem("foo", "0.0.1"))
           @project.require_mock_gem(mock_gem("bar", "0.3.0"))

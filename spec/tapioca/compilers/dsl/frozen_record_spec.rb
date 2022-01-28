@@ -9,7 +9,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
     require "tapioca/compilers/dsl/extensions/frozen_record"
   end
 
-  describe("#initialize") do
+  describe "#initialize" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -31,7 +31,7 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

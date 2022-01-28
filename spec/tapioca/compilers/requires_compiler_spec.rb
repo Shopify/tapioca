@@ -7,7 +7,7 @@ require "tapioca/compilers/requires_compiler"
 module Tapioca
   module Compilers
     class RequiresCompilerSpec < Tapioca::SpecWithProject
-      describe("#compilers::requires") do
+      describe "#compilers::requires" do
         after do
           @project.remove("lib/")
           @project.remove("test/")

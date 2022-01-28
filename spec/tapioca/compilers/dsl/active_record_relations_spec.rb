@@ -6,7 +6,7 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
   include Tapioca::SorbetHelper
 
-  describe("#initialize") do
+  describe "#initialize" do
     it "gathers no constants if there are no ActiveRecord classes" do
       assert_empty(gathered_constants)
     end
@@ -28,7 +28,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     it "generates proper relation classes and modules" do
       add_ruby_file("post.rb", <<~RUBY)
         class Post < ActiveRecord::Base

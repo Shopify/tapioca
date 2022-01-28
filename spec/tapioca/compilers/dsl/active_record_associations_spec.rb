@@ -4,7 +4,7 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
-  describe("#initialize") do
+  describe "#initialize" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -42,7 +42,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     before do
       require "active_record"
 
@@ -52,14 +52,14 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       )
     end
 
-    describe("with relations enabled") do
+    describe "with relations enabled" do
       subject do
         T.bind(self, DslSpec)
         require "tapioca/compilers/dsl/active_record_relations"
         generator_for_names(target_class_name, "Tapioca::Compilers::Dsl::ActiveRecordRelations")
       end
 
-      describe("without errors") do
+      describe "without errors" do
         after do
           T.unsafe(self).assert_no_generated_errors
         end
@@ -621,7 +621,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
       end
 
-      describe("with errors") do
+      describe "with errors" do
         it "generates RBI file for broken associations" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
@@ -746,8 +746,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
       end
     end
 
-    describe("without relations enabled") do
-      describe("without errors") do
+    describe "without relations enabled" do
+      describe "without errors" do
         after do
           T.unsafe(self).assert_no_generated_errors
         end
@@ -1309,7 +1309,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
       end
 
-      describe("with errors") do
+      describe "with errors" do
         it "generates RBI file for broken associations" do
           add_ruby_file("schema.rb", <<~RUBY)
             ActiveRecord::Migration.suppress_messages do
@@ -1435,7 +1435,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
     end
   end
 
-  describe("#decorate_active_storage") do
+  describe "#decorate_active_storage" do
     subject do
       T.bind(self, DslSpec)
       require "tapioca/compilers/dsl/active_record_relations"

@@ -4,7 +4,7 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
-  describe("#gather_constants") do
+  describe "#gather_constants" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -146,7 +146,7 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end

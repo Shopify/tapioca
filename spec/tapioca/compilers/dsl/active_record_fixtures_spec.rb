@@ -4,7 +4,7 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
-  describe("#initialize") do
+  describe "#initialize" do
     after do
       T.unsafe(self).assert_no_generated_errors
     end
@@ -22,7 +22,7 @@ class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
     end
   end
 
-  describe("#decorate") do
+  describe "#decorate" do
     before do
       require "active_record"
       require "rails"
