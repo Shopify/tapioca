@@ -85,10 +85,13 @@ module Sidekiq
     def redis_pool; end
     def server?; end
     def server_middleware; end
+    def strict_args!(mode = T.unsafe(nil)); end
   end
 end
 
 class Sidekiq::Client
+  include ::Sidekiq::JobUtil
+
   # Sidekiq::Client normally uses the default Redis pool but you may
   # pass a custom ConnectionPool if you want to shard your
   # Sidekiq jobs across several Redis instances (for scalability
@@ -160,11 +163,8 @@ class Sidekiq::Client
   private
 
   def atomic_push(conn, payloads); end
-  def normalize_item(item); end
-  def normalized_hash(item_class); end
   def process_single(worker_class, item); end
   def raw_push(payloads); end
-  def validate(item); end
 
   class << self
     # Resque compatibility helpers.  Note all helpers
@@ -228,6 +228,21 @@ module Sidekiq::Extensions::PsychAutoload
 end
 
 Sidekiq::FAKE_INFO = T.let(T.unsafe(nil), Hash)
+Sidekiq::Job = Sidekiq::Worker
+
+module Sidekiq::JobUtil
+  def normalize_item(item); end
+  def normalized_hash(item_class); end
+
+  # These functions encapsulate various job utilities.
+  # They must be simple and free from side effects.
+  def validate(item); end
+
+  private
+
+  def json_safe?(item); end
+end
+
 Sidekiq::LICENSE = T.let(T.unsafe(nil), String)
 
 class Sidekiq::Logger < ::Logger
@@ -421,6 +436,7 @@ Sidekiq::VERSION = T.let(T.unsafe(nil), String)
 #
 # class HardWorker
 # include Sidekiq::Worker
+# sidekiq_options queue: 'critical', retry: 5
 #
 # def perform(*args)
 # # do some work
@@ -432,6 +448,25 @@ Sidekiq::VERSION = T.let(T.unsafe(nil), String)
 # HardWorker.perform_async(1, 2, 3)
 #
 # Note that perform_async is a class method, perform is an instance method.
+#
+# Sidekiq::Worker also includes several APIs to provide compatibility with
+# ActiveJob.
+#
+# class SomeWorker
+# include Sidekiq::Worker
+# queue_as :critical
+#
+# def perform(...)
+# end
+# end
+#
+# SomeWorker.set(wait_until: 1.hour).perform_async(123)
+#
+# Note that arguments passed to the job must still obey Sidekiq's
+# best practice for simple, JSON-native data types. Sidekiq will not
+# implement ActiveJob's more complex argument serialization. For
+# this reason, we don't implement `perform_later` as our call semantics
+# are very different.
 module Sidekiq::Worker
   include ::Sidekiq::Worker::Options
 
@@ -515,10 +550,34 @@ module Sidekiq::Worker::ClassMethods
   # numeric (like an activesupport time interval).
   def perform_at(interval, *args); end
 
+  # Push a large number of jobs to Redis, while limiting the batch of
+  # each job payload to 1,000. This method helps cut down on the number
+  # of round trips to Redis, which can increase the performance of enqueueing
+  # large numbers of jobs.
+  #
+  # +items+ must be an Array of Arrays.
+  #
+  # For finer-grained control, use `Sidekiq::Client.push_bulk` directly.
+  #
+  # Example (3 Redis round trips):
+  #
+  # SomeWorker.perform_async(1)
+  # SomeWorker.perform_async(2)
+  # SomeWorker.perform_async(3)
+  #
+  # Would instead become (1 Redis round trip):
+  #
+  # SomeWorker.perform_bulk([[1], [2], [3]])
+  def perform_bulk(items, batch_size: T.unsafe(nil)); end
+
   # +interval+ must be a timestamp, numeric or something that acts
   # numeric (like an activesupport time interval).
   def perform_in(interval, *args); end
 
+  # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
+  def perform_inline(*args); end
+
+  def queue_as(q); end
   def set(options); end
 
   # Allows customization for this type of Worker.
@@ -573,6 +632,8 @@ Sidekiq::Worker::Options::ClassMethods::ACCESSOR_MUTEX = T.let(T.unsafe(nil), Th
 #
 # SomeWorker.set(queue: 'foo').perform_async(....)
 class Sidekiq::Worker::Setter
+  include ::Sidekiq::JobUtil
+
   def initialize(klass, opts); end
 
   def perform_async(*args); end
@@ -581,9 +642,23 @@ class Sidekiq::Worker::Setter
   # numeric (like an activesupport time interval).
   def perform_at(interval, *args); end
 
+  def perform_bulk(args, batch_size: T.unsafe(nil)); end
+
   # +interval+ must be a timestamp, numeric or something that acts
   # numeric (like an activesupport time interval).
   def perform_in(interval, *args); end
 
+  # Explicit inline execution of a job. Returns nil if the job did not
+  # execute, true otherwise.
+  def perform_inline(*args); end
+
+  # Explicit inline execution of a job. Returns nil if the job did not
+  # execute, true otherwise.
+  def perform_sync(*args); end
+
   def set(options); end
+
+  private
+
+  def at(interval); end
 end

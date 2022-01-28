@@ -36,10 +36,10 @@ end
 class ActionView::AbstractRenderer
   def initialize(lookup_context); end
 
-  def any_templates?(*_arg0, &_arg1); end
-  def formats(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
+  def formats(*_arg0, **_arg1, &_arg2); end
   def render; end
-  def template_exists?(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -300,10 +300,10 @@ class ActionView::Base
   def default_formats=(val); end
   def field_error_proc; end
   def field_error_proc=(val); end
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
   def formats=(arg); end
   def in_rendering_context(options); end
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
   def locale=(arg); end
   def logger; end
   def logger=(_arg0); end
@@ -319,7 +319,7 @@ class ActionView::Base
   def raise_on_missing_translations=(val); end
   def streaming_completion_on_exception; end
   def streaming_completion_on_exception=(val); end
-  def view_paths(*_arg0, &_arg1); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
   def view_paths=(arg); end
 
   # Returns the value of attribute view_renderer.
@@ -2074,23 +2074,23 @@ end
 # This module keeps all methods and behavior in ActionView
 # that simply delegates to the controller.
 module ActionView::Helpers::ControllerHelper
-  def action_name(*_arg0, &_arg1); end
+  def action_name(*_arg0, **_arg1, &_arg2); end
   def assign_controller(controller); end
   def controller; end
   def controller=(_arg0); end
-  def controller_name(*_arg0, &_arg1); end
-  def controller_path(*_arg0, &_arg1); end
-  def cookies(*_arg0, &_arg1); end
-  def flash(*_arg0, &_arg1); end
-  def headers(*_arg0, &_arg1); end
+  def controller_name(*_arg0, **_arg1, &_arg2); end
+  def controller_path(*_arg0, **_arg1, &_arg2); end
+  def cookies(*_arg0, **_arg1, &_arg2); end
+  def flash(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, **_arg1, &_arg2); end
   def logger; end
-  def params(*_arg0, &_arg1); end
+  def params(*_arg0, **_arg1, &_arg2); end
   def request; end
   def request=(_arg0); end
-  def request_forgery_protection_token(*_arg0, &_arg1); end
+  def request_forgery_protection_token(*_arg0, **_arg1, &_arg2); end
   def respond_to?(method_name, include_private = T.unsafe(nil)); end
-  def response(*_arg0, &_arg1); end
-  def session(*_arg0, &_arg1); end
+  def response(*_arg0, **_arg1, &_arg2); end
+  def session(*_arg0, **_arg1, &_arg2); end
 end
 
 ActionView::Helpers::ControllerHelper::CONTROLLER_DELEGATES = T.let(T.unsafe(nil), Array)
@@ -9031,7 +9031,7 @@ module ActionView::Layouts
 
   def initialize(*_arg0); end
 
-  def _layout_conditions(*_arg0, &_arg1); end
+  def _layout_conditions(*_arg0, **_arg1, &_arg2); end
   def _normalize_options(options); end
   def action_has_layout=(_arg0); end
 
@@ -9718,23 +9718,23 @@ class ActionView::PathSet
 
   def +(array); end
   def <<(*args); end
-  def [](*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
   def compact; end
   def concat(*args); end
-  def each(*_arg0, &_arg1); end
+  def each(*_arg0, **_arg1, &_arg2); end
   def exists?(path, prefixes, *args); end
   def find(*args); end
   def find_all(path, prefixes = T.unsafe(nil), *args); end
   def find_all_with_query(query); end
-  def include?(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
   def insert(*args); end
 
   # Returns the value of attribute paths.
   def paths; end
 
-  def pop(*_arg0, &_arg1); end
+  def pop(*_arg0, **_arg1, &_arg2); end
   def push(*args); end
-  def size(*_arg0, &_arg1); end
+  def size(*_arg0, **_arg1, &_arg2); end
   def to_ary; end
   def unshift(*args); end
 
@@ -9952,7 +9952,7 @@ class ActionView::Resolver
 
   def caching; end
   def caching=(val); end
-  def caching?(*_arg0, &_arg1); end
+  def caching?(*_arg0, **_arg1, &_arg2); end
   def clear_cache; end
 
   # Normalizes the arguments and passes it on to find_templates.
@@ -10640,7 +10640,7 @@ module ActionView::TestCase::Behavior
   # Sets the attribute controller
   def controller=(_arg0); end
 
-  def lookup_context(*_arg0, &_arg1); end
+  def lookup_context(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute output_buffer.
   def output_buffer; end
@@ -10803,7 +10803,7 @@ module ActionView::ViewPaths
   # The prefixes used in render "foo" shortcuts.
   def _prefixes; end
 
-  def any_templates?(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
 
   # Append a path to the list of view paths for the current <tt>LookupContext</tt>.
   #
@@ -10814,9 +10814,9 @@ module ActionView::ViewPaths
   def append_view_path(path); end
 
   def details_for_lookup; end
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
   def formats=(arg); end
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
   def locale=(arg); end
 
   # <tt>LookupContext</tt> is the object responsible for holding all
@@ -10832,8 +10832,8 @@ module ActionView::ViewPaths
   # (see ActionView::PathSet for more information)
   def prepend_view_path(path); end
 
-  def template_exists?(*_arg0, &_arg1); end
-  def view_paths(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
 
   class << self
     def all_view_paths; end

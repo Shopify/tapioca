@@ -10,16 +10,16 @@ class GlobalID
   def initialize(gid, options = T.unsafe(nil)); end
 
   def ==(other); end
-  def app(*_arg0, &_arg1); end
+  def app(*_arg0, **_arg1, &_arg2); end
   def eql?(other); end
   def find(options = T.unsafe(nil)); end
   def hash; end
   def model_class; end
-  def model_id(*_arg0, &_arg1); end
-  def model_name(*_arg0, &_arg1); end
-  def params(*_arg0, &_arg1); end
+  def model_id(*_arg0, **_arg1, &_arg2); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
+  def params(*_arg0, **_arg1, &_arg2); end
   def to_param; end
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute uri.
   def uri; end

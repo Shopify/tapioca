@@ -15,7 +15,7 @@ class Redis
   def _client; end
   def _eval(cmd, args); end
   def _exists(*keys); end
-  def _scan(command, cursor, args, match: T.unsafe(nil), count: T.unsafe(nil), &block); end
+  def _scan(command, cursor, args, match: T.unsafe(nil), count: T.unsafe(nil), type: T.unsafe(nil), &block); end
 
   # Append a value to a key.
   def append(key, value); end
@@ -24,7 +24,7 @@ class Redis
   def asking; end
 
   # Authenticate to the server.
-  def auth(password); end
+  def auth(*args); end
 
   # Asynchronously rewrite the append-only file.
   def bgrewriteaof; end
@@ -40,6 +40,10 @@ class Redis
 
   # Return the position of the first bit set to 1 or 0 in a string.
   def bitpos(key, bit, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Remove the first/last element in a list and append/prepend it
+  # to another list and return it, or block until one is available.
+  def blmove(source, destination, where_source, where_destination, timeout: T.unsafe(nil)); end
 
   # Remove and get the first element in a list, or block until one is available.
   def blpop(*args); end
@@ -176,6 +180,15 @@ class Redis
   # Returns the bit value at offset in the string value stored at key.
   def getbit(key, offset); end
 
+  # Get the value of key and delete the key. This command is similar to GET,
+  # except for the fact that it also deletes the key on success.
+  def getdel(key); end
+
+  # Get the value of key and optionally set its expiration. GETEX is similar to
+  # GET, but is a write command with additional options. When no options are
+  # provided, GETEX behaves like GET.
+  def getex(key, ex: T.unsafe(nil), px: T.unsafe(nil), exat: T.unsafe(nil), pxat: T.unsafe(nil), persist: T.unsafe(nil)); end
+
   # Get a substring of the string stored at a key.
   def getrange(key, start, stop); end
 
@@ -258,8 +271,11 @@ class Redis
   # Get the length of a list.
   def llen(key); end
 
-  # Remove and get the first element in a list.
-  def lpop(key); end
+  # Remove the first/last element in a list, append/prepend it to another list and return it.
+  def lmove(source, destination, where_source, where_destination); end
+
+  # Remove and get the first elements in a list.
+  def lpop(key, count = T.unsafe(nil)); end
 
   # Prepend one or more values to a list, creating the list if it doesn't exist
   def lpush(key, value); end
@@ -403,8 +419,8 @@ class Redis
   # Create a key using the serialized value, previously obtained using DUMP.
   def restore(key, ttl, serialized_value, replace: T.unsafe(nil)); end
 
-  # Remove and get the last element in a list.
-  def rpop(key); end
+  # Remove and get the last elements in a list.
+  def rpop(key, count = T.unsafe(nil)); end
 
   # Remove the last element in a list, append it to another list and return it.
   def rpoplpush(source, destination); end
@@ -446,7 +462,7 @@ class Redis
   def sentinel(subcommand, *args); end
 
   # Set the string value of a key.
-  def set(key, value, ex: T.unsafe(nil), px: T.unsafe(nil), nx: T.unsafe(nil), xx: T.unsafe(nil), keepttl: T.unsafe(nil)); end
+  def set(key, value, ex: T.unsafe(nil), px: T.unsafe(nil), exat: T.unsafe(nil), pxat: T.unsafe(nil), nx: T.unsafe(nil), xx: T.unsafe(nil), keepttl: T.unsafe(nil), get: T.unsafe(nil)); end
 
   # Sets or clears the bit at offset in the string value stored at key.
   def setbit(key, offset, value); end
@@ -480,6 +496,9 @@ class Redis
 
   # Get all the members in a set.
   def smembers(key); end
+
+  # Determine if multiple values are members of a set.
+  def smismember(key, *members); end
 
   # Move a member from one set to another.
   def smove(source, destination, member); end
@@ -571,6 +590,9 @@ class Redis
   # Add new entry to the stream.
   def xadd(key, entry, approximate: T.unsafe(nil), maxlen: T.unsafe(nil), id: T.unsafe(nil)); end
 
+  # Transfers ownership of pending stream entries that match the specified criteria.
+  def xautoclaim(key, group, consumer, min_idle_time, start, count: T.unsafe(nil), justid: T.unsafe(nil)); end
+
   # Changes the ownership of a pending entry
   def xclaim(key, group, consumer, min_idle_time, *ids, **opts); end
 
@@ -607,7 +629,7 @@ class Redis
 
   # Add one or more members to a sorted set, or update the score for members
   # that already exist.
-  def zadd(key, *args, nx: T.unsafe(nil), xx: T.unsafe(nil), ch: T.unsafe(nil), incr: T.unsafe(nil)); end
+  def zadd(key, *args, nx: T.unsafe(nil), xx: T.unsafe(nil), lt: T.unsafe(nil), gt: T.unsafe(nil), ch: T.unsafe(nil), incr: T.unsafe(nil)); end
 
   # Get the number of members in a sorted set.
   def zcard(key); end
@@ -618,6 +640,9 @@ class Redis
   # Increment the score of a member in a sorted set.
   def zincrby(key, increment, member); end
 
+  # Return the intersection of multiple sorted sets
+  def zinter(*keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil), with_scores: T.unsafe(nil)); end
+
   # Intersect multiple sorted sets and store the resulting sorted set in a new
   # key.
   def zinterstore(destination, keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil)); end
@@ -625,11 +650,17 @@ class Redis
   # Count the members, with the same score in a sorted set, within the given lexicographical range.
   def zlexcount(key, min, max); end
 
+  # Get the scores associated with the given members in a sorted set.
+  def zmscore(key, *members); end
+
   # Removes and returns up to count members with the highest scores in the sorted set stored at key.
   def zpopmax(key, count = T.unsafe(nil)); end
 
   # Removes and returns up to count members with the lowest scores in the sorted set stored at key.
   def zpopmin(key, count = T.unsafe(nil)); end
+
+  # Get one or more random members from a sorted set.
+  def zrandmember(key, count = T.unsafe(nil), withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
 
   # Return a range of members in a sorted set, by index.
   def zrange(key, start, stop, withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
@@ -683,6 +714,7 @@ class Redis
   private
 
   def _geoarguments(*args, options: T.unsafe(nil), sort: T.unsafe(nil), count: T.unsafe(nil)); end
+  def _normalize_move_wheres(where_source, where_destination); end
   def _subscription(method, timeout, channels, block); end
   def _xread(args, keys, ids, blocking_timeout_msec); end
 
@@ -764,6 +796,7 @@ class Redis::Client
   def reconnect; end
   def scheme; end
   def timeout; end
+  def username; end
   def with_reconnect(val = T.unsafe(nil)); end
   def with_socket_timeout(timeout); end
   def without_reconnect(&blk); end
@@ -827,11 +860,10 @@ class Redis::Cluster
   def assign_asking_node(err_msg); end
   def assign_node(command); end
   def assign_redirection_node(err_msg); end
-  def extract_keys_in_pipeline(pipeline); end
   def fetch_cluster_info!(option); end
   def fetch_command_details(nodes); end
   def find_node(node_key); end
-  def find_node_key(command); end
+  def find_node_key(command, primary_only: T.unsafe(nil)); end
   def send_client_command(command, &block); end
   def send_cluster_command(command, &block); end
   def send_command(command, &block); end
@@ -985,7 +1017,7 @@ class Redis::Cluster::Option
 
   # Redis cluster node returns only host and port information.
   # So we should complement additional information such as:
-  # scheme, password and so on.
+  # scheme, username, password and so on.
   def add_common_node_option_if_needed(options, node_opts, key); end
 
   def build_node_options(addrs); end
@@ -1114,7 +1146,7 @@ end
 module Redis::Connection::SocketMixin
   def initialize(*args); end
 
-  def _read_from_socket(nbytes); end
+  def _read_from_socket(nbytes, buffer = T.unsafe(nil)); end
   def gets; end
   def read(nbytes); end
   def timeout=(timeout); end
@@ -1169,6 +1201,10 @@ class Redis::Distributed
 
   # Return the position of the first bit set to 1 or 0 in a string.
   def bitpos(key, bit, start = T.unsafe(nil), stop = T.unsafe(nil)); end
+
+  # Remove the first/last element in a list and append/prepend it
+  # to another list and return it, or block until one is available.
+  def blmove(source, destination, where_source, where_destination, timeout: T.unsafe(nil)); end
 
   # Remove and get the first element in a list, or block until one is
   # available.
@@ -1237,6 +1273,12 @@ class Redis::Distributed
 
   # Returns the bit value at offset in the string value stored at key.
   def getbit(key, offset); end
+
+  # Get the value of a key and delete it.
+  def getdel(key); end
+
+  # Get the value of a key and sets its time to live based on options.
+  def getex(key, **options); end
 
   # Get a substring of the string stored at a key.
   def getrange(key, start, stop); end
@@ -1312,8 +1354,11 @@ class Redis::Distributed
   # Get the length of a list.
   def llen(key); end
 
-  # Remove and get the first element in a list.
-  def lpop(key); end
+  # Remove the first/last element in a list, append/prepend it to another list and return it.
+  def lmove(source, destination, where_source, where_destination); end
+
+  # Remove and get the first elements in a list.
+  def lpop(key, count = T.unsafe(nil)); end
 
   # Prepend one or more values to a list.
   def lpush(key, value); end
@@ -1424,8 +1469,8 @@ class Redis::Distributed
   # Returns the value of attribute ring.
   def ring; end
 
-  # Remove and get the last element in a list.
-  def rpop(key); end
+  # Remove and get the last elements in a list.
+  def rpop(key, count = T.unsafe(nil)); end
 
   # Remove the last element in a list, append it to another list and return
   # it.
@@ -1485,6 +1530,9 @@ class Redis::Distributed
   # Get all the members in a set.
   def smembers(key); end
 
+  # Determine if multiple values are members of a set.
+  def smismember(key, *members); end
+
   # Move a member from one set to another.
   def smove(source, destination, member); end
 
@@ -1543,7 +1591,7 @@ class Redis::Distributed
 
   # Add one or more members to a sorted set, or update the score for members
   # that already exist.
-  def zadd(key, *args); end
+  def zadd(key, *args, **_arg2); end
 
   # Get the number of members in a sorted set.
   def zcard(key); end
@@ -1554,9 +1602,18 @@ class Redis::Distributed
   # Increment the score of a member in a sorted set.
   def zincrby(key, increment, member); end
 
+  # Get the intersection of multiple sorted sets
+  def zinter(*keys, **options); end
+
   # Intersect multiple sorted sets and store the resulting sorted set in a new
   # key.
   def zinterstore(destination, keys, **options); end
+
+  # Get the scores associated with the given members in a sorted set.
+  def zmscore(key, *members); end
+
+  # Get one or more random members from a sorted set.
+  def zrandmember(key, count = T.unsafe(nil), **options); end
 
   # Return a range of members in a sorted set, by index.
   def zrange(key, start, stop, **options); end
@@ -1678,6 +1735,8 @@ Redis::HashifyClusterNodes = T.let(T.unsafe(nil), Proc)
 Redis::HashifyClusterSlaves = T.let(T.unsafe(nil), Proc)
 Redis::HashifyClusterSlots = T.let(T.unsafe(nil), Proc)
 Redis::HashifyInfo = T.let(T.unsafe(nil), Proc)
+Redis::HashifyStreamAutoclaim = T.let(T.unsafe(nil), Proc)
+Redis::HashifyStreamAutoclaimJustId = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreamEntries = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreamPendingDetails = T.let(T.unsafe(nil), Proc)
 Redis::HashifyStreamPendings = T.let(T.unsafe(nil), Proc)

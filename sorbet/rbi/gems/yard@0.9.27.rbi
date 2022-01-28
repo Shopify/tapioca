@@ -273,6 +273,37 @@ Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
+class Rack::Request
+  include ::Rack::Request::Env
+  include ::Rack::Request::Helpers
+
+  def initialize(env); end
+
+  def delete_param(k); end
+  def params; end
+  def query; end
+  def update_param(k, v); end
+
+  # Returns the value of attribute version_supplied.
+  def version_supplied; end
+
+  # Sets the attribute version_supplied
+  def version_supplied=(_arg0); end
+
+  def xhr?; end
+
+  class << self
+    # Returns the value of attribute ip_filter.
+    def ip_filter; end
+
+    # Sets the attribute ip_filter
+    def ip_filter=(_arg0); end
+  end
+end
+
+Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
+Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
+
 # Allows Writing of '100'.to_money for +String+ types
 # Excess characters will be discarded
 # '100'.to_money => #<Money @cents=10000>
@@ -328,6 +359,19 @@ class SymbolHash < ::Hash
   end
 end
 
+class WEBrick::HTTPRequest
+  # Returns the value of attribute version_supplied.
+  def version_supplied; end
+
+  # Sets the attribute version_supplied
+  def version_supplied=(_arg0); end
+
+  def xhr?; end
+end
+
+# same as Mongrel, Thin and Puma
+WEBrick::HTTPRequest::MAX_HEADER_LENGTH = T.let(T.unsafe(nil), Integer)
+
 # Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
 # upon gem installation.
 #
@@ -348,6 +392,7 @@ module YARD
     def ruby18?; end
     def ruby19?; end
     def ruby2?; end
+    def ruby3?; end
     def windows?; end
   end
 end
@@ -2864,7 +2909,11 @@ end
 
 # Handles module_function calls to turn methods into public class methods.
 # Also creates a private instance copy of the method.
-class YARD::Handlers::Ruby::ModuleFunctionHandler < ::YARD::Handlers::Ruby::Base; end
+class YARD::Handlers::Ruby::ModuleFunctionHandler < ::YARD::Handlers::Ruby::Base
+  include ::YARD::Handlers::Ruby::DecoratorHandlerMethods
+
+  def make_module_function(instance_method, namespace); end
+end
 
 # Handles the declaration of a module
 class YARD::Handlers::Ruby::ModuleHandler < ::YARD::Handlers::Ruby::Base; end
@@ -5459,6 +5508,14 @@ class YARD::Server::Commands::ListCommand < ::YARD::Server::Commands::LibraryCom
   def run; end
 end
 
+# Serves requests from the root of the server
+class YARD::Server::Commands::RootRequestCommand < ::YARD::Server::Commands::Base
+  include ::WEBrick::HTTPUtils
+  include ::YARD::Server::Commands::StaticFileHelpers
+
+  def run; end
+end
+
 # Performs a search over the objects inside of a library and returns
 # the results as HTML or plaintext
 class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryCommand
@@ -5479,6 +5536,40 @@ class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryC
   def serve_normal; end
   def serve_xhr; end
   def url_for(object); end
+end
+
+# Serves static content when no other router matches a request
+class YARD::Server::Commands::StaticFileCommand < ::YARD::Server::Commands::LibraryCommand
+  include ::WEBrick::HTTPUtils
+  include ::YARD::Server::Commands::StaticFileHelpers
+
+  def run; end
+end
+
+# Defines the paths used to search for static assets. To define an
+# extra path, use {YARD::Server.register_static_path} rather than
+# modifying this constant directly. Also note that files in the
+# document root will always take precedence over these paths.
+YARD::Server::Commands::StaticFileCommand::STATIC_PATHS = T.let(T.unsafe(nil), Array)
+
+# Include this module to get access to {#static_template_file?}
+# and {favicon?} helpers.
+module YARD::Server::Commands::StaticFileHelpers
+  include ::WEBrick::HTTPUtils
+
+  # Serves an empty favicon.
+  def favicon?; end
+
+  # Attempts to route a path to a static template file.
+  def static_template_file?; end
+
+  private
+
+  def find_file(adapter, url); end
+
+  class << self
+    def find_file(adapter, url); end
+  end
 end
 
 # A module that is mixed into {Templates::Template} in order to customize
@@ -5645,6 +5736,31 @@ end
 # code. If a message is provided, the body is set to the exception message.
 class YARD::Server::NotFoundError < ::RuntimeError; end
 
+# A server adapter to respond to requests using the Rack server infrastructure.
+class YARD::Server::RackAdapter < ::YARD::Server::Adapter
+  include ::WEBrick::HTTPUtils
+
+  # Responds to Rack requests and builds a response with the {Router}.
+  def call(env); end
+
+  # Starts the +Rack::Server+. This method will pass control to the server and
+  # block.
+  def start; end
+
+  private
+
+  def print_start_message(server); end
+end
+
+# This class wraps the {RackAdapter} into a Rack-compatible middleware.
+# See {#initialize} for a list of options to pass via Rack's +#use+ method.
+class YARD::Server::RackMiddleware
+  # Creates a new Rack-based middleware for serving YARD documentation.
+  def initialize(app, opts = T.unsafe(nil)); end
+
+  def call(env); end
+end
+
 # A router class implements the logic used to recognize a request for a specific
 # URL and run specific {Commands::Base commands}.
 #
@@ -5719,6 +5835,22 @@ module YARD::Server::StaticCaching
   # the existence of cached data. To actually cache a response, see
   # {Commands::Base#cache}.
   def check_static_cache; end
+end
+
+# The main adapter to initialize a WEBrick server.
+class YARD::Server::WebrickAdapter < ::YARD::Server::Adapter
+  # Initializes a WEBrick server. If {Adapter#server_options} contains a
+  # +:daemonize+ key set to true, the server will be daemonized.
+  def start; end
+end
+
+# The main WEBrick servlet implementation, accepting only GET requests.
+class YARD::Server::WebrickServlet < ::WEBrick::HTTPServlet::AbstractServlet
+  def initialize(server, adapter); end
+
+  def adapter; end
+  def adapter=(_arg0); end
+  def do_GET(request, response); end
 end
 
 # Stubs marshal dumps and acts a delegate class for an object by path
@@ -5855,6 +5987,7 @@ class YARD::Tags::Directive
 
   protected
 
+  def inside_directive?; end
   def parser; end
 end
 

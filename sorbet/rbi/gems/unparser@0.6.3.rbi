@@ -1858,6 +1858,8 @@ module Unparser::NodeHelpers
   def n_if?(node); end
   def n_in_pattern?(node); end
   def n_int?(node); end
+  def n_kwarg?(node); end
+  def n_kwargs?(node); end
   def n_kwsplat?(node); end
   def n_lambda?(node); end
   def n_match_rest?(node); end

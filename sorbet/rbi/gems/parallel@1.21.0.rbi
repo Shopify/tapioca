@@ -32,7 +32,7 @@ module Parallel
     def extract_count_from_options(options); end
 
     def process_incoming_jobs(read, write, job_factory, options, &block); end
-    def replace_worker(job_factory, workers, i, options, blk); end
+    def replace_worker(job_factory, workers, index, options, blk); end
     def with_instrumentation(item, index, options); end
     def work_direct(job_factory, options, &block); end
     def work_in_processes(job_factory, options, &blk); end

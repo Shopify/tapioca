@@ -924,7 +924,7 @@ class ActionMailer::Base < ::AbstractController::Base
 
     private
 
-    def method_missing(method_name, *args); end
+    def method_missing(method_name, *args, **_arg2); end
     def observer_class_for(value); end
     def respond_to_missing?(method, include_all = T.unsafe(nil)); end
     def set_payload_for_mail(payload, mail); end
@@ -934,8 +934,8 @@ end
 module ActionMailer::Base::HelperMethods
   include ::ActionMailer::MailHelper
 
-  def combined_fragment_cache_key(*args, &block); end
-  def view_cache_dependencies(*args, &block); end
+  def combined_fragment_cache_key(*args, **_arg1, &block); end
+  def view_cache_dependencies(*args, **_arg1, &block); end
 end
 
 class ActionMailer::Base::LateAttachmentsProxy < ::SimpleDelegator
@@ -974,7 +974,7 @@ end
 #
 # Exceptions are rescued and handled by the mailer class.
 class ActionMailer::DeliveryJob < ::ActiveJob::Base
-  def perform(mailer, mail_method, delivery_method, *args); end
+  def perform(mailer, mail_method, delivery_method, *args, **_arg4); end
 
   private
 
@@ -1055,7 +1055,7 @@ module ActionMailer::DeliveryMethods::ClassMethods
   # arguments: '-i'
   def add_delivery_method(symbol, klass, default_options = T.unsafe(nil)); end
 
-  def deliveries(*_arg0, &_arg1); end
+  def deliveries(*_arg0, **_arg1, &_arg2); end
   def deliveries=(arg); end
   def wrap_delivery_behavior(mail, method = T.unsafe(nil), options = T.unsafe(nil)); end
 end
@@ -1176,7 +1176,7 @@ end
 # Notifier.welcome(User.first).deliver_later # enqueue email delivery as a job through Active Job
 # Notifier.welcome(User.first).message       # a Mail::Message object
 class ActionMailer::MessageDelivery
-  def initialize(mailer_class, action, *args); end
+  def initialize(mailer_class, action, *args, **_arg3); end
 
   # Method calls are delegated to the Mail::Message that's ready to deliver.
   def __getobj__; end
@@ -1365,7 +1365,7 @@ module ActionMailer::Parameterized::ClassMethods
 end
 
 class ActionMailer::Parameterized::DeliveryJob < ::ActionMailer::DeliveryJob
-  def perform(mailer, mail_method, delivery_method, params, *args); end
+  def perform(mailer, mail_method, delivery_method, params, *args, **_arg5); end
 end
 
 class ActionMailer::Parameterized::Mailer
@@ -1373,12 +1373,12 @@ class ActionMailer::Parameterized::Mailer
 
   private
 
-  def method_missing(method_name, *args); end
+  def method_missing(method_name, *args, **_arg2); end
   def respond_to_missing?(method, include_all = T.unsafe(nil)); end
 end
 
 class ActionMailer::Parameterized::MessageDelivery < ::ActionMailer::MessageDelivery
-  def initialize(mailer_class, action, params, *args); end
+  def initialize(mailer_class, action, params, *args, **_arg4); end
 
   private
 

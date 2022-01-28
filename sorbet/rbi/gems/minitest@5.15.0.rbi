@@ -508,6 +508,7 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1125,6 +1126,7 @@ class Minitest::Test < ::Minitest::Runnable
   # Runs a single test with setup/teardown hooks.
   def run; end
 
+  def sanitize_exception(e); end
   def with_info_handler(&block); end
 
   class << self

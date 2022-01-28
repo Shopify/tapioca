@@ -326,21 +326,21 @@ class Byebug::Command
   def initialize(processor, input = T.unsafe(nil)); end
 
   def arguments; end
-  def confirm(*args, &block); end
+  def confirm(*args, **_arg1, &block); end
   def context; end
-  def errmsg(*args, &block); end
+  def errmsg(*args, **_arg1, &block); end
   def frame; end
-  def help(*args, &block); end
-  def match(*args, &block); end
-  def pr(*args, &block); end
-  def prc(*args, &block); end
-  def print(*args, &block); end
+  def help(*args, **_arg1, &block); end
+  def match(*args, **_arg1, &block); end
+  def pr(*args, **_arg1, &block); end
+  def prc(*args, **_arg1, &block); end
+  def print(*args, **_arg1, &block); end
 
   # Returns the value of attribute processor.
   def processor; end
 
-  def prv(*args, &block); end
-  def puts(*args, &block); end
+  def prv(*args, **_arg1, &block); end
+  def puts(*args, **_arg1, &block); end
 
   class << self
     # Special methods to allow command filtering in processors
@@ -419,20 +419,20 @@ class Byebug::CommandProcessor
   # Available commands
   def command_list; end
 
-  def commands(*args, &block); end
-  def confirm(*args, &block); end
+  def commands(*args, **_arg1, &block); end
+  def confirm(*args, **_arg1, &block); end
 
   # Returns the value of attribute context.
   def context; end
 
-  def errmsg(*args, &block); end
-  def frame(*args, &block); end
+  def errmsg(*args, **_arg1, &block); end
+  def frame(*args, **_arg1, &block); end
 
   # Returns the value of attribute interface.
   def interface; end
 
-  def pr(*args, &block); end
-  def prc(*args, &block); end
+  def pr(*args, **_arg1, &block); end
+  def prc(*args, **_arg1, &block); end
 
   # Returns the value of attribute prev_line.
   def prev_line; end
@@ -448,8 +448,8 @@ class Byebug::CommandProcessor
   # Handle byebug commands.
   def process_commands; end
 
-  def prv(*args, &block); end
-  def puts(*args, &block); end
+  def prv(*args, **_arg1, &block); end
+  def puts(*args, **_arg1, &block); end
 
   protected
 
@@ -521,7 +521,7 @@ class Byebug::Context
 
   def backtrace; end
   def dead?; end
-  def file(*args, &block); end
+  def file(*args, **_arg1, &block); end
 
   # Reader for the current frame
   def frame; end
@@ -541,7 +541,7 @@ class Byebug::Context
 
   def ignored?; end
   def interrupt; end
-  def line(*args, &block); end
+  def line(*args, **_arg1, &block); end
 
   # Current file & line information
   def location; end
@@ -1387,10 +1387,10 @@ class Byebug::ListCommand < ::Byebug::Command
   include ::Byebug::Helpers::FileHelper
   include ::Byebug::Helpers::ParseHelper
 
-  def amend_final(*args, &block); end
+  def amend_final(*args, **_arg1, &block); end
   def execute; end
-  def max_line(*args, &block); end
-  def size(*args, &block); end
+  def max_line(*args, **_arg1, &block); end
+  def size(*args, **_arg1, &block); end
 
   private
 
@@ -1832,7 +1832,7 @@ module Byebug::Subcommands
   # Delegates to subcommands or prints help if no subcommand specified.
   def execute; end
 
-  def subcommand_list(*args, &block); end
+  def subcommand_list(*args, **_arg1, &block); end
 
   class << self
     def included(command); end

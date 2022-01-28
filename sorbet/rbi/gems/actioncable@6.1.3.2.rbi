@@ -9,12 +9,14 @@ module ActionCable
 
   private
 
+  # Singleton instance of the server
   def server; end
 
   class << self
     # Returns the version of the currently loaded Action Cable as a <tt>Gem::Version</tt>.
     def gem_version; end
 
+    # Singleton instance of the server
     def server; end
 
     # Returns the version of the currently loaded Action Cable as a <tt>Gem::Version</tt>
@@ -146,7 +148,7 @@ class ActionCable::Channel::Base
   # Returns the value of attribute identifier.
   def identifier; end
 
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute params.
   def params; end
@@ -243,8 +245,8 @@ module ActionCable::Channel::Broadcasting
 
   mixes_in_class_methods ::ActionCable::Channel::Broadcasting::ClassMethods
 
-  def broadcast_to(*_arg0, &_arg1); end
-  def broadcasting_for(*_arg0, &_arg1); end
+  def broadcast_to(*_arg0, **_arg1, &_arg2); end
+  def broadcasting_for(*_arg0, **_arg1, &_arg2); end
 end
 
 module ActionCable::Channel::Broadcasting::ClassMethods
@@ -335,7 +337,7 @@ module ActionCable::Channel::Naming
 
   mixes_in_class_methods ::ActionCable::Channel::Naming::ClassMethods
 
-  def channel_name(*_arg0, &_arg1); end
+  def channel_name(*_arg0, **_arg1, &_arg2); end
 end
 
 module ActionCable::Channel::Naming::ClassMethods
@@ -459,7 +461,7 @@ end
 module ActionCable::Channel::Streams
   extend ::ActiveSupport::Concern
 
-  def pubsub(*_arg0, &_arg1); end
+  def pubsub(*_arg0, **_arg1, &_arg2); end
 
   # Unsubscribes all streams associated with this channel from the pubsub queue.
   def stop_all_streams; end
@@ -804,7 +806,7 @@ class ActionCable::Connection::Base
   # Returns the value of attribute env.
   def env; end
 
-  def event_loop(*_arg0, &_arg1); end
+  def event_loop(*_arg0, **_arg1, &_arg2); end
   def identifiers; end
   def identifiers=(_arg0); end
   def identifiers?; end
@@ -824,7 +826,7 @@ class ActionCable::Connection::Base
   # Returns the value of attribute protocol.
   def protocol; end
 
-  def pubsub(*_arg0, &_arg1); end
+  def pubsub(*_arg0, **_arg1, &_arg2); end
 
   # Decodes WebSocket messages and dispatches them to subscribed channels.
   # WebSocket message transfer encoding is always JSON.
@@ -1050,7 +1052,7 @@ class ActionCable::Connection::Subscriptions
   def add(data); end
   def execute_command(data); end
   def identifiers; end
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
   def perform_action(data); end
   def remove(data); end
   def remove_subscription(subscription); end
@@ -1400,7 +1402,7 @@ class ActionCable::Server::Base
   def disconnect(identifiers); end
 
   def event_loop; end
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute mutex.
   def mutex; end
@@ -1772,8 +1774,8 @@ module ActionCable::TestHelper
   def assert_no_broadcasts(stream, &block); end
 
   def before_setup; end
-  def broadcasts(*_arg0, &_arg1); end
-  def clear_messages(*_arg0, &_arg1); end
+  def broadcasts(*_arg0, **_arg1, &_arg2); end
+  def clear_messages(*_arg0, **_arg1, &_arg2); end
   def pubsub_adapter; end
 
   private

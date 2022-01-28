@@ -44,6 +44,28 @@ class YARDSorbet::Handlers::EnumsHandler < ::YARD::Handlers::Ruby::Base
   def const_assign_node?(node); end
 end
 
+# Extends any modules included via `mixes_in_class_methods`
+class YARDSorbet::Handlers::IncludeHandler < ::YARD::Handlers::Ruby::Base
+  sig { void }
+  def process; end
+
+  private
+
+  sig { returns(YARD::CodeObjects::NamespaceObject) }
+  def included_in; end
+end
+
+# Tracks modules that invoke `mixes_in_class_methods` for use in {IncludeHandler}
+class YARDSorbet::Handlers::MixesInClassMethodsHandler < ::YARD::Handlers::Ruby::Base
+  sig { void }
+  def process; end
+
+  class << self
+    sig { params(code_obj: String).returns(T.nilable(String)) }
+    def mixed_in_class_methods(code_obj); end
+  end
+end
+
 # A YARD Handler for Sorbet type declarations
 class YARDSorbet::Handlers::SigHandler < ::YARD::Handlers::Ruby::Base
   # Swap the method definition docstring and the sig docstring.
