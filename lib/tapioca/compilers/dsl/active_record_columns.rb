@@ -161,7 +161,7 @@ module Tapioca
           ).void
         end
         def add_methods_for_attribute(klass, constant, column_name, attribute_name = column_name, methods_to_add = nil)
-          getter_type, setter_type = ActiveRecordColumnTypeHelper.new(constant).type_for(column_name)
+          getter_type, setter_type = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(column_name)
 
           # Added by ActiveRecord::AttributeMethods::Read
           #
