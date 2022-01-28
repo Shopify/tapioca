@@ -16,9 +16,6 @@ AllCops:
   Include:
   - "sorbet/rbi/**/*.rbi"
 
-Gemspec/RequireMFA:
-  Enabled: false
-
 RSpec/BeforeAfterAll:
   Enabled: false
 
