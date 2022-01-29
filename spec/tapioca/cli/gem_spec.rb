@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-require "spec_with_project"
+require "spec_helper"
 require "tapioca/helpers/test/template"
 
 module Tapioca

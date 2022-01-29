@@ -13,6 +13,7 @@ require "tapioca/helpers/test/content"
 require "tapioca/helpers/test/template"
 require "tapioca/helpers/test/isolation"
 require "dsl_spec_helper"
+require "spec_with_project"
 
 Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))
 
