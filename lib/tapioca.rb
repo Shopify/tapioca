@@ -14,7 +14,7 @@ module Tapioca
   def self.silence_warnings(&blk)
     original_verbosity = $VERBOSE
     $VERBOSE = nil
-    Gem::DefaultUserInteraction.use_ui(Gem::SilentUI.new) do
+    ::Gem::DefaultUserInteraction.use_ui(::Gem::SilentUI.new) do
       blk.call
     end
   ensure
