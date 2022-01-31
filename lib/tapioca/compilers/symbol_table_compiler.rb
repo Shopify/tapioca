@@ -26,7 +26,7 @@ module Tapioca
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
-        @payload_symbols = T.let(SymbolTable::SymbolLoader.payload_symbols, T::Set[String])
+        @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
         @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
         @symbols = T.let(nil, T.nilable(T::Set[String]))
         @include_doc = include_doc
@@ -49,8 +49,8 @@ module Tapioca
       sig { returns(T::Set[String]) }
       def symbols
         @symbols ||= begin
-          symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.gem_symbols(@gem)
-          symbols.union(Tapioca::Compilers::SymbolTable::SymbolLoader.engine_symbols)
+          symbols = SymbolLoader.gem_symbols(@gem)
+          symbols.union(SymbolLoader.engine_symbols)
         end
       end
 
