@@ -6,7 +6,7 @@ module Tapioca
     module Autoload
       extend T::Sig
 
-      NOOP_METHOD = -> (*_args, **_kwargs, &_block) {}
+      NOOP_METHOD = ->(*_args, **_kwargs, &_block) {}
 
       @constant_names_registered_for_autoload = T.let([], T::Array[String])
 

@@ -64,7 +64,7 @@ module Tapioca
           sig { params(constant: Module).returns(T::Boolean) }
           def do_not_generate_strong_types?(constant)
             Object.const_defined?(:StrongTypeGeneration) &&
-                !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
+              !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
           end
 
           sig { params(type: String).returns(String) }

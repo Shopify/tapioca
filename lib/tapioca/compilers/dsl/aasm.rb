@@ -45,7 +45,7 @@ module Tapioca
         EVENT_CALLBACKS =
           T.let(
             ["after", "after_commit", "after_transaction", "before", "before_transaction", "ensure", "error",
-             "before_success", "success"].freeze,
+             "before_success", "success",].freeze,
             T::Array[String]
           )
 
