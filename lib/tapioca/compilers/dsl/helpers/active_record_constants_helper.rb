@@ -4,8 +4,8 @@
 module Tapioca
   module Compilers
     module Dsl
-      module Helper
-        module ActiveRecordConstants
+      module Helpers
+        module ActiveRecordConstantsHelper
           extend T::Sig
 
           AttributeMethodsModuleName = T.let("GeneratedAttributeMethods", String)

@@ -7,7 +7,7 @@ rescue LoadError
   return
 end
 
-require "tapioca/compilers/dsl/helpers/active_record_constants"
+require "tapioca/compilers/dsl/helpers/active_record_constants_helper"
 
 module Tapioca
   module Compilers
@@ -101,7 +101,7 @@ module Tapioca
       # ~~~
       class ActiveRecordAssociations < Base
         extend T::Sig
-        include Helper::ActiveRecordConstants
+        include Helpers::ActiveRecordConstantsHelper
 
         class SourceReflectionError < StandardError
         end
