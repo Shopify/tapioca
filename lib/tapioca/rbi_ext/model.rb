@@ -157,6 +157,20 @@ module RBI
     end
   end
 
+  class Method
+    extend T::Sig
+
+    # TODO: upstream this change
+    sig { returns(String) }
+    def fully_qualified_name
+      if is_singleton
+        "#{parent_scope&.fully_qualified_name}.#{name}"
+      else
+        "#{parent_scope&.fully_qualified_name}##{name}"
+      end
+    end
+  end
+
   class TypedParam < T::Struct
     const :param, RBI::Param
     const :type, String
