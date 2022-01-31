@@ -13,20 +13,6 @@ module Tapioca
           include SorbetHelper
           include Reflection
 
-          sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
-          def list_from_paths(paths)
-            output = T.cast(Tempfile.create("sorbet") do |file|
-              file.write(Array(paths).join("\n"))
-              file.flush
-
-              symbol_table_json_from("@#{file.path.shellescape}")
-            end, T.nilable(String))
-
-            return Set.new if output.nil? || output.empty?
-
-            SymbolTableParser.parse_json(output)
-          end
-
           sig { returns(T::Set[String]) }
           def payload_symbols
             unless @payload_symbols
@@ -43,6 +29,11 @@ module Tapioca
               @engine_symbols = T.let(load_engine_symbols, T.nilable(T::Set[String]))
             end
             T.must(@engine_symbols)
+          end
+
+          sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
+          def gem_symbols(gem)
+            symbols_from_paths(gem.files)
           end
 
           private
@@ -69,9 +60,23 @@ module Tapioca
               Pathname.glob("#{load_path}/**/*.rb")
             end
 
-            list_from_paths(paths)
+            symbols_from_paths(paths)
           rescue
             Set.new
+          end
+
+          sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
+          def symbols_from_paths(paths)
+            output = T.cast(Tempfile.create("sorbet") do |file|
+              file.write(Array(paths).join("\n"))
+              file.flush
+
+              symbol_table_json_from("@#{file.path.shellescape}")
+            end, T.nilable(String))
+
+            return Set.new if output.nil? || output.empty?
+
+            SymbolTableParser.parse_json(output)
           end
         end
       end

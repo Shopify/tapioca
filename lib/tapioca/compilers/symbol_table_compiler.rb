@@ -49,7 +49,7 @@ module Tapioca
       sig { returns(T::Set[String]) }
       def symbols
         @symbols ||= begin
-          symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(@gem.files)
+          symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.gem_symbols(@gem)
           symbols.union(Tapioca::Compilers::SymbolTable::SymbolLoader.engine_symbols)
         end
       end
