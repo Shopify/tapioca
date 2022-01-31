@@ -4,6 +4,7 @@
 require "pathname"
 
 require "tapioca/gem/plugins/base"
+require "tapioca/gem/plugins/yard_doc"
 
 module Tapioca
   module Compilers
@@ -155,21 +156,21 @@ module Tapioca
           name_of(klass)
         end
 
-        comments = documentation_comments(name)
-
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
-          constant = RBI::Const.new(name, "T.type_alias { #{type_alias} }", comments: comments)
+          constant = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
           tree << constant
+          decorate_const(constant)
           return
         end
 
         return if klass_name&.start_with?("T::Types::", "T::Private::")
 
         type_name = klass_name || "T.untyped"
-        constant = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})", comments: comments)
+        constant = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
 
         tree << constant
+        decorate_const(constant)
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
@@ -177,20 +178,26 @@ module Tapioca
         return unless defined_in_gem?(constant, strict: false)
         return if Tapioca::TypeVariableModule === constant
 
-        comments = documentation_comments(name)
-        scope =
-          if constant.is_a?(Class)
-            superclass = compile_superclass(constant)
-            RBI::Class.new(name, superclass_name: superclass, comments: comments)
-          else
-            RBI::Module.new(name, comments: comments)
-          end
+        scope = if constant.is_a?(Class)
+          superclass = compile_superclass(constant)
+          RBI::Class.new(name, superclass_name: superclass)
+        else
+          RBI::Module.new(name)
+        end
 
         compile_body(scope, name, constant)
 
         return if symbol_ignored?(name) && scope.empty?
 
         tree << scope
+
+        case scope
+        when RBI::Module
+          decorate_module(scope)
+        when RBI::Class
+          decorate_class(scope)
+        end
+
         compile_subconstants(tree, name, constant)
       end
 
@@ -527,15 +534,7 @@ module Tapioca
           [type, name]
         end
 
-        separator = constant.singleton_class? ? "." : "#"
-        comments = documentation_comments("#{symbol_name}#{separator}#{method_name}")
-        rbi_method = RBI::Method.new(
-          method_name,
-          is_singleton: constant.singleton_class?,
-          visibility: visibility,
-          comments: comments
-        )
-
+        rbi_method = RBI::Method.new(method_name, is_singleton: constant.singleton_class?, visibility: visibility)
         rbi_method.sigs << compile_signature(signature, sanitized_parameters) if signature
 
         sanitized_parameters.each do |type, name|
@@ -558,6 +557,7 @@ module Tapioca
         end
 
         tree << rbi_method
+        decorate_method(rbi_method)
       end
 
       TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
@@ -772,21 +772,6 @@ module Tapioca
         end
 
         name_of(target)
-      end
-
-      sig { params(name: String).returns(T::Array[RBI::Comment]) }
-      def documentation_comments(name)
-        return [] unless @include_doc
-
-        yard_docs = YARD::Registry.at(name)
-        return [] unless yard_docs
-
-        docstring = yard_docs.docstring
-        return [] if /(copyright|license)/i.match?(docstring)
-
-        docstring.lines
-          .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
-          .map! { |line| RBI::Comment.new(line) }
       end
     end
   end
