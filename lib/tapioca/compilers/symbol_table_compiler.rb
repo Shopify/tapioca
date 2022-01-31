@@ -50,30 +50,8 @@ module Tapioca
       def symbols
         @symbols ||= begin
           symbols = Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(@gem.files)
-          symbols.union(engine_symbols(symbols))
+          symbols.union(Tapioca::Compilers::SymbolTable::SymbolLoader.engine_symbols)
         end
-      end
-
-      sig { params(symbols: T::Set[String]).returns(T::Set[String]) }
-      def engine_symbols(symbols)
-        return Set.new unless Object.const_defined?("Rails::Engine")
-
-        engine = descendants_of(Object.const_get("Rails::Engine"))
-          .reject(&:abstract_railtie?)
-          .find do |klass|
-            name = name_of(klass)
-            !name.nil? && symbols.include?(name)
-          end
-
-        return Set.new unless engine
-
-        paths = engine.config.eager_load_paths.flat_map do |load_path|
-          Pathname.glob("#{load_path}/**/*.rb")
-        end
-
-        Tapioca::Compilers::SymbolTable::SymbolLoader.list_from_paths(paths)
-      rescue
-        Set.new
       end
 
       sig { params(tree: RBI::Tree, symbol: String).void }
