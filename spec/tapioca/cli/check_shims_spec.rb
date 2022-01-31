@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class CleanShimsTest < SpecWithProject
-    describe "tapioca clean-shims" do
+    describe "cli::clean-shims" do
       before(:all) do
         @project.bundle_install
       end

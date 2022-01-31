@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class VersionSpec < SpecWithProject
-    describe "#cli::version" do
+    describe("cli::version") do
       before(:all) do
         project.bundle_install
       end

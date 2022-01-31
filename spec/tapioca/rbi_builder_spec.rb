@@ -5,7 +5,7 @@ require "spec_helper"
 
 module RBI
   class BuilderSpec < Minitest::HooksSpec
-    describe "provides a simple interface to build trees" do
+    describe "Tapioca::RBI" do
       it "builds RBI nodes" do
         rbi = RBI::Tree.new
         rbi.create_class("A")

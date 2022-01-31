@@ -4,95 +4,97 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
-  describe "#initialize" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
+  describe "Tapioca::Compilers::Dsl::ActiveRecordFixtures" do
+    describe "initialize" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
+      it "gathers only the ActiveSupport::TestCase base class" do
+        add_ruby_file("post_test.rb", <<~RUBY)
+          class PostTest < ActiveSupport::TestCase
+          end
+
+          class User
+          end
+        RUBY
+
+        assert_equal(["ActiveSupport::TestCase"], gathered_constants)
+      end
     end
 
-    it "gathers only the ActiveSupport::TestCase base class" do
-      add_ruby_file("post_test.rb", <<~RUBY)
-        class PostTest < ActiveSupport::TestCase
-        end
+    describe "decorate" do
+      before do
+        require "active_record"
+        require "rails"
 
-        class User
-        end
-      RUBY
+        define_fake_rails_app
+      end
 
-      assert_equal(["ActiveSupport::TestCase"], gathered_constants)
-    end
-  end
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
 
-  describe "#decorate" do
-    before do
-      require "active_record"
-      require "rails"
+      it "does nothing if there are no fixtures" do
+        expected = <<~RBI
+          # typed: strong
+        RBI
 
-      define_fake_rails_app
-    end
+        assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      end
 
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
+      it "generates methods for fixtures" do
+        add_content_file("test/fixtures/posts.yml", <<~YAML)
+          super_post:
+            title: An incredible Ruby post
+            author: Johnny Developer
+            created_at: 2021-09-08 11:00:00
+            updated_at: 2021-09-08 11:00:00
+        YAML
 
-    it "does nothing if there are no fixtures" do
-      expected = <<~RBI
-        # typed: strong
-      RBI
+        expected = <<~RBI
+          # typed: strong
 
-      assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
-    end
+          class ActiveSupport::TestCase
+            sig { params(fixture_names: Symbol).returns(T.untyped) }
+            def posts(*fixture_names); end
+          end
+        RBI
 
-    it "generates methods for fixtures" do
-      add_content_file("test/fixtures/posts.yml", <<~YAML)
-        super_post:
-          title: An incredible Ruby post
-          author: Johnny Developer
-          created_at: 2021-09-08 11:00:00
-          updated_at: 2021-09-08 11:00:00
-      YAML
+        assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      end
 
-      expected = <<~RBI
-        # typed: strong
+      it "generates methods for fixtures from multiple sources" do
+        add_content_file("test/fixtures/posts.yml", <<~YAML)
+          super_post:
+            title: An incredible Ruby post
+            author: Johnny Developer
+            created_at: 2021-09-08 11:00:00
+            updated_at: 2021-09-08 11:00:00
+        YAML
 
-        class ActiveSupport::TestCase
-          sig { params(fixture_names: Symbol).returns(T.untyped) }
-          def posts(*fixture_names); end
-        end
-      RBI
+        add_content_file("test/fixtures/users.yml", <<~YAML)
+          customer:
+            first_name: John
+            last_name: Doe
+            created_at: 2021-09-08 11:00:00
+            updated_at: 2021-09-08 11:00:00
+        YAML
 
-      assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
-    end
+        expected = <<~RBI
+          # typed: strong
 
-    it "generates methods for fixtures from multiple sources" do
-      add_content_file("test/fixtures/posts.yml", <<~YAML)
-        super_post:
-          title: An incredible Ruby post
-          author: Johnny Developer
-          created_at: 2021-09-08 11:00:00
-          updated_at: 2021-09-08 11:00:00
-      YAML
+          class ActiveSupport::TestCase
+            sig { params(fixture_names: Symbol).returns(T.untyped) }
+            def posts(*fixture_names); end
 
-      add_content_file("test/fixtures/users.yml", <<~YAML)
-        customer:
-          first_name: John
-          last_name: Doe
-          created_at: 2021-09-08 11:00:00
-          updated_at: 2021-09-08 11:00:00
-      YAML
+            sig { params(fixture_names: Symbol).returns(T.untyped) }
+            def users(*fixture_names); end
+          end
+        RBI
 
-      expected = <<~RBI
-        # typed: strong
-
-        class ActiveSupport::TestCase
-          sig { params(fixture_names: Symbol).returns(T.untyped) }
-          def posts(*fixture_names); end
-
-          sig { params(fixture_names: Symbol).returns(T.untyped) }
-          def users(*fixture_names); end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+        assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+      end
     end
   end
 

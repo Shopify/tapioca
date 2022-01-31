@@ -86,7 +86,7 @@ module Tapioca
       end
     RBI
 
-    describe "#cli::gem" do
+    describe "cli::gem" do
       before(:all) do
         @project.bundle_install
       end

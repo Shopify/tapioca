@@ -5,7 +5,7 @@ require "spec_with_project"
 
 module Tapioca
   class ConfigTest < SpecWithProject
-    describe "tapioca configuration" do
+    describe "cli::configuration" do
       before(:all) do
         @project.bundle_install
       end

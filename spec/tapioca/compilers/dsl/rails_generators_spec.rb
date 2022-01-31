@@ -4,213 +4,215 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
-  describe "#initialize" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
+  describe "Tapioca::Compilers::Dsl::RailsGenerators" do
+    describe "initialize" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
+      it "gathers no constants if there are no Rails generator classes" do
+        assert_empty(gathered_constants)
+      end
+
+      it "gathers only Rails generators" do
+        add_ruby_file("content.rb", <<~RUBY)
+          class UnnamedGenerator < Rails::Generators::Base
+          end
+
+          class NamedGenerator < Rails::Generators::NamedBase
+          end
+
+          class AppGenerator < Rails::Generators::AppBase
+          end
+
+          class SomethingElse
+          end
+
+          module Entirely
+          end
+        RUBY
+
+        assert_equal(["AppGenerator", "NamedGenerator", "UnnamedGenerator"], gathered_constants)
+      end
+
+      it "does not gather XPath" do
+        add_ruby_file("xpath.rb", <<~RUBY)
+          require "xpath"
+        RUBY
+
+        assert_empty(gathered_constants)
+      end
+
+      it "ignores generator classes without a name" do
+        add_ruby_file("content.rb", <<~RUBY)
+          unnamed = Class.new(::Rails::Generators::Base)
+          named = Class.new(::Rails::Generators::NamedBase)
+          app = Class.new(::Rails::Generators::AppBase)
+        RUBY
+
+        assert_empty(gathered_constants)
+      end
     end
 
-    it "gathers no constants if there are no Rails generator classes" do
-      assert_empty(gathered_constants)
-    end
+    describe "decorate" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
 
-    it "gathers only Rails generators" do
-      add_ruby_file("content.rb", <<~RUBY)
-        class UnnamedGenerator < Rails::Generators::Base
-        end
+      it "generates empty RBI file if there are no extra arguments or options" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class EmptyGenerator < ::Rails::Generators::Base
+          end
+        RUBY
 
-        class NamedGenerator < Rails::Generators::NamedBase
-        end
+        expected = <<~RBI
+          # typed: strong
+        RBI
 
-        class AppGenerator < Rails::Generators::AppBase
-        end
+        assert_equal(expected, rbi_for(:EmptyGenerator))
+      end
 
-        class SomethingElse
-        end
+      it "generates an RBI file for arguments" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class ArgumentGenerator < ::Rails::Generators::Base
+            argument :string, type: :string
+            argument :hash, type: :hash
+            argument :array, type: :array
+            argument :numeric, type: :numeric
+          end
+        RUBY
 
-        module Entirely
-        end
-      RUBY
+        expected = <<~RBI
+          # typed: strong
 
-      assert_equal(["AppGenerator", "NamedGenerator", "UnnamedGenerator"], gathered_constants)
-    end
+          class ArgumentGenerator
+            sig { returns(T::Array[::String]) }
+            def array; end
 
-    it "does not gather XPath" do
-      add_ruby_file("xpath.rb", <<~RUBY)
-        require "xpath"
-      RUBY
+            sig { returns(T::Hash[::String, ::String]) }
+            def hash; end
 
-      assert_empty(gathered_constants)
-    end
+            sig { returns(::Numeric) }
+            def numeric; end
 
-    it "ignores generator classes without a name" do
-      add_ruby_file("content.rb", <<~RUBY)
-        unnamed = Class.new(::Rails::Generators::Base)
-        named = Class.new(::Rails::Generators::NamedBase)
-        app = Class.new(::Rails::Generators::AppBase)
-      RUBY
+            sig { returns(::String) }
+            def string; end
+          end
+        RBI
 
-      assert_empty(gathered_constants)
-    end
-  end
+        assert_equal(expected, rbi_for(:ArgumentGenerator))
+      end
 
-  describe "#decorate" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
+      it "generates an RBI file for class options" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class OptionGenerator < ::Rails::Generators::Base
+            class_option :string, type: :string
+            class_option :hash, type: :hash
+            class_option :array, type: :array
+            class_option :numeric, type: :numeric
+            class_option :bool, type: :boolean
+          end
+        RUBY
 
-    it "generates empty RBI file if there are no extra arguments or options" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class EmptyGenerator < ::Rails::Generators::Base
-        end
-      RUBY
+        expected = <<~RBI
+          # typed: strong
 
-      expected = <<~RBI
-        # typed: strong
-      RBI
+          class OptionGenerator
+            sig { returns(T.nilable(T::Array[::String])) }
+            def array; end
 
-      assert_equal(expected, rbi_for(:EmptyGenerator))
-    end
+            sig { returns(T.nilable(T::Boolean)) }
+            def bool; end
 
-    it "generates an RBI file for arguments" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class ArgumentGenerator < ::Rails::Generators::Base
-          argument :string, type: :string
-          argument :hash, type: :hash
-          argument :array, type: :array
-          argument :numeric, type: :numeric
-        end
-      RUBY
+            sig { returns(T.nilable(T::Hash[::String, ::String])) }
+            def hash; end
 
-      expected = <<~RBI
-        # typed: strong
+            sig { returns(T.nilable(::Numeric)) }
+            def numeric; end
 
-        class ArgumentGenerator
-          sig { returns(T::Array[::String]) }
-          def array; end
+            sig { returns(T.nilable(::String)) }
+            def string; end
+          end
+        RBI
 
-          sig { returns(T::Hash[::String, ::String]) }
-          def hash; end
+        assert_equal(expected, rbi_for(:OptionGenerator))
+      end
 
-          sig { returns(::Numeric) }
-          def numeric; end
+      it "generates an RBI file for required and optional-with-defaults class options" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class OptionsWithDefaultsGenerator < ::Rails::Generators::Base
+            class_option :string, type: :string, required: true
+            class_option :array, type: :array, required: false, default: []
+          end
+        RUBY
 
-          sig { returns(::String) }
-          def string; end
-        end
-      RBI
+        expected = <<~RBI
+          # typed: strong
 
-      assert_equal(expected, rbi_for(:ArgumentGenerator))
-    end
+          class OptionsWithDefaultsGenerator
+            sig { returns(T::Array[::String]) }
+            def array; end
 
-    it "generates an RBI file for class options" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class OptionGenerator < ::Rails::Generators::Base
-          class_option :string, type: :string
-          class_option :hash, type: :hash
-          class_option :array, type: :array
-          class_option :numeric, type: :numeric
-          class_option :bool, type: :boolean
-        end
-      RUBY
+            sig { returns(::String) }
+            def string; end
+          end
+        RBI
 
-      expected = <<~RBI
-        # typed: strong
+        assert_equal(expected, rbi_for(:OptionsWithDefaultsGenerator))
+      end
 
-        class OptionGenerator
-          sig { returns(T.nilable(T::Array[::String])) }
-          def array; end
+      it "generates an RBI file for overriding built-in options" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class OverrideGenerator < ::Rails::Generators::Base
+            class_option :force, type: :numeric
+          end
+        RUBY
 
-          sig { returns(T.nilable(T::Boolean)) }
-          def bool; end
+        expected = <<~RBI
+          # typed: strong
 
-          sig { returns(T.nilable(T::Hash[::String, ::String])) }
-          def hash; end
+          class OverrideGenerator
+            sig { returns(T.nilable(::Numeric)) }
+            def force; end
+          end
+        RBI
 
-          sig { returns(T.nilable(::Numeric)) }
-          def numeric; end
+        assert_equal(expected, rbi_for(:OverrideGenerator))
+      end
 
-          sig { returns(T.nilable(::String)) }
-          def string; end
-        end
-      RBI
+      it "generates an RBI file for non-Rails parent class arguments and options" do
+        add_ruby_file("contents.rb", <<~RUBY)
+          class ParentGenerator < ::Rails::Generators::NamedBase
+            argument :str, type: :string
+            class_option :number, type: :numeric
+          end
 
-      assert_equal(expected, rbi_for(:OptionGenerator))
-    end
+          class ChildGenerator < ParentGenerator
+            argument :child_arg, type: :string
+            class_option :child_opt, type: :string
+          end
+        RUBY
 
-    it "generates an RBI file for required and optional-with-defaults class options" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class OptionsWithDefaultsGenerator < ::Rails::Generators::Base
-          class_option :string, type: :string, required: true
-          class_option :array, type: :array, required: false, default: []
-        end
-      RUBY
+        expected = <<~RBI
+          # typed: strong
 
-      expected = <<~RBI
-        # typed: strong
+          class ChildGenerator
+            sig { returns(::String) }
+            def child_arg; end
 
-        class OptionsWithDefaultsGenerator
-          sig { returns(T::Array[::String]) }
-          def array; end
+            sig { returns(T.nilable(::String)) }
+            def child_opt; end
 
-          sig { returns(::String) }
-          def string; end
-        end
-      RBI
+            sig { returns(T.nilable(::Numeric)) }
+            def number; end
 
-      assert_equal(expected, rbi_for(:OptionsWithDefaultsGenerator))
-    end
+            sig { returns(::String) }
+            def str; end
+          end
+        RBI
 
-    it "generates an RBI file for overriding built-in options" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class OverrideGenerator < ::Rails::Generators::Base
-          class_option :force, type: :numeric
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-
-        class OverrideGenerator
-          sig { returns(T.nilable(::Numeric)) }
-          def force; end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:OverrideGenerator))
-    end
-
-    it "generates an RBI file for non-Rails parent class arguments and options" do
-      add_ruby_file("contents.rb", <<~RUBY)
-        class ParentGenerator < ::Rails::Generators::NamedBase
-          argument :str, type: :string
-          class_option :number, type: :numeric
-        end
-
-        class ChildGenerator < ParentGenerator
-          argument :child_arg, type: :string
-          class_option :child_opt, type: :string
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-
-        class ChildGenerator
-          sig { returns(::String) }
-          def child_arg; end
-
-          sig { returns(T.nilable(::String)) }
-          def child_opt; end
-
-          sig { returns(T.nilable(::Numeric)) }
-          def number; end
-
-          sig { returns(::String) }
-          def str; end
-        end
-      RBI
-
-      assert_equal(expected, rbi_for(:ChildGenerator))
+        assert_equal(expected, rbi_for(:ChildGenerator))
+      end
     end
   end
 end

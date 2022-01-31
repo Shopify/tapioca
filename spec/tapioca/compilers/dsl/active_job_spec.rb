@@ -4,110 +4,112 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
-  describe "#initialize" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
+  describe "Tapioca::Compilers::Dsl::ActiveJob" do
+    describe "initialize" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
 
-    it "gathers no constants if there are no ActiveJob subclasses" do
-      assert_empty(gathered_constants)
-    end
+      it "gathers no constants if there are no ActiveJob subclasses" do
+        assert_empty(gathered_constants)
+      end
 
-    it "gathers only ActiveJob subclasses" do
-      add_ruby_file("content.rb", <<~RUBY)
-        class NotifyJob < ActiveJob::Base
-        end
-
-        class User
-        end
-      RUBY
-
-      assert_equal(["NotifyJob"], gathered_constants)
-    end
-
-    it "gathers subclasses of ActiveJob subclasses" do
-      add_ruby_file("content.rb", <<~RUBY)
-        class NotifyJob < ActiveJob::Base
-        end
-
-        class SecondaryNotifyJob < NotifyJob
-        end
-      RUBY
-
-      assert_equal(["NotifyJob", "SecondaryNotifyJob"], gathered_constants)
-    end
-  end
-
-  describe "#decorate" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
-
-    it "generates an empty RBI file if there is no perform method" do
-      add_ruby_file("job.rb", <<~RUBY)
-        class NotifyJob < ActiveJob::Base
-        end
-      RUBY
-
-      expected = <<~RBI
-        # typed: strong
-      RBI
-
-      assert_equal(expected, rbi_for(:NotifyJob))
-    end
-
-    it "generates correct RBI file for subclass with methods" do
-      add_ruby_file("job.rb", <<~RUBY)
-        class NotifyJob < ActiveJob::Base
-          def perform(user_id)
-            # ...
+      it "gathers only ActiveJob subclasses" do
+        add_ruby_file("content.rb", <<~RUBY)
+          class NotifyJob < ActiveJob::Base
           end
-        end
-      RUBY
 
-      expected = <<~RBI
-        # typed: strong
-
-        class NotifyJob
-          class << self
-            sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
-            def perform_later(user_id); end
-
-            sig { params(user_id: T.untyped).returns(T.untyped) }
-            def perform_now(user_id); end
+          class User
           end
-        end
-      RBI
+        RUBY
 
-      assert_equal(expected, rbi_for(:NotifyJob))
+        assert_equal(["NotifyJob"], gathered_constants)
+      end
+
+      it "gathers subclasses of ActiveJob subclasses" do
+        add_ruby_file("content.rb", <<~RUBY)
+          class NotifyJob < ActiveJob::Base
+          end
+
+          class SecondaryNotifyJob < NotifyJob
+          end
+        RUBY
+
+        assert_equal(["NotifyJob", "SecondaryNotifyJob"], gathered_constants)
+      end
     end
 
-    it "generates correct RBI file for subclass with method signatures" do
-      add_ruby_file("job.rb", <<~RUBY)
-        class NotifyJob < ActiveJob::Base
-          extend T::Sig
-          sig { params(user_id: Integer).void }
-          def perform(user_id)
-            # ...
+    describe "decorate" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
+      it "generates an empty RBI file if there is no perform method" do
+        add_ruby_file("job.rb", <<~RUBY)
+          class NotifyJob < ActiveJob::Base
           end
-        end
-      RUBY
+        RUBY
 
-      expected = <<~RBI
-        # typed: strong
+        expected = <<~RBI
+          # typed: strong
+        RBI
 
-        class NotifyJob
-          class << self
-            sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
-            def perform_later(user_id); end
+        assert_equal(expected, rbi_for(:NotifyJob))
+      end
 
+      it "generates correct RBI file for subclass with methods" do
+        add_ruby_file("job.rb", <<~RUBY)
+          class NotifyJob < ActiveJob::Base
+            def perform(user_id)
+              # ...
+            end
+          end
+        RUBY
+
+        expected = <<~RBI
+          # typed: strong
+
+          class NotifyJob
+            class << self
+              sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
+              def perform_later(user_id); end
+
+              sig { params(user_id: T.untyped).returns(T.untyped) }
+              def perform_now(user_id); end
+            end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:NotifyJob))
+      end
+
+      it "generates correct RBI file for subclass with method signatures" do
+        add_ruby_file("job.rb", <<~RUBY)
+          class NotifyJob < ActiveJob::Base
+            extend T::Sig
             sig { params(user_id: Integer).void }
-            def perform_now(user_id); end
+            def perform(user_id)
+              # ...
+            end
           end
-        end
-      RBI
+        RUBY
 
-      assert_equal(expected, rbi_for(:NotifyJob))
+        expected = <<~RBI
+          # typed: strong
+
+          class NotifyJob
+            class << self
+              sig { params(user_id: Integer).returns(T.any(NotifyJob, FalseClass)) }
+              def perform_later(user_id); end
+
+              sig { params(user_id: Integer).void }
+              def perform_now(user_id); end
+            end
+          end
+        RBI
+
+        assert_equal(expected, rbi_for(:NotifyJob))
+      end
     end
   end
 end

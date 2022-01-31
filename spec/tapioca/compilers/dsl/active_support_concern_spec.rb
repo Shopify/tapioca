@@ -4,79 +4,179 @@
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
-  describe "#gather_constants" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
+  describe "Tapioca::Compilers::Dsl::ActiveSupportConcern" do
+    describe "gather_constants" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
 
-    it "does not gather anonymous constants" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
-          module Foo
-            extend ActiveSupport::Concern
+      it "does not gather anonymous constants" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+              extend ActiveSupport::Concern
+            end
+
+            class Baz
+              constant = Module.new do
+                extend ActiveSupport::Concern
+                include Foo
+
+                def self.name
+                  "TestName"
+                end
+              end
+
+              include constant
+            end
           end
+        RUBY
 
-          class Baz
-            constant = Module.new do
+        assert_equal([], gathered_constants_in_namespace(:TestCase))
+      end
+
+      it "does not gather constants that don't extend ActiveSupport::Concern" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+              extend ActiveSupport::Concern
+            end
+
+            module Bar
+              include Foo
+            end
+
+            class Baz
+              include Bar
+            end
+          end
+        RUBY
+
+        assert_equal([], gathered_constants_in_namespace(:TestCase))
+      end
+
+      it "does not gather constants when its mixins don't extend ActiveSupport::Concern" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+            end
+
+            module Bar
               extend ActiveSupport::Concern
               include Foo
+            end
 
-              def self.name
-                "TestName"
+            class Baz
+              include Bar
+            end
+          end
+        RUBY
+
+        assert_equal([], gathered_constants_in_namespace(:TestCase))
+      end
+
+      it "does not gather constants for directly mixed in modules" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+              extend ActiveSupport::Concern
+
+              module ClassMethods
               end
             end
 
-            include constant
+            class Bar
+              include Foo
+            end
           end
-        end
-      RUBY
+        RUBY
 
-      assert_equal([], gathered_constants_in_namespace(:TestCase))
+        assert_equal([], gathered_constants_in_namespace(:TestCase))
+      end
+
+      it "gathers constants for nested AS::Concern" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+              extend ActiveSupport::Concern
+            end
+
+            module Bar
+              extend ActiveSupport::Concern
+              include Foo
+            end
+
+            class Baz
+              include Bar
+            end
+          end
+        RUBY
+
+        assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
+      end
+
+      it "gathers constants for many nested mixins" do
+        add_ruby_file("test_case.rb", <<~RUBY)
+          module TestCase
+            module Foo
+              extend ActiveSupport::Concern
+            end
+
+            module Bar
+              extend ActiveSupport::Concern
+              include Foo
+            end
+
+            module Baz
+              extend ActiveSupport::Concern
+              include Bar
+            end
+
+            module Qux
+              extend ActiveSupport::Concern
+              include Baz
+            end
+
+            class Quux
+              include Qux
+            end
+          end
+        RUBY
+
+        assert_equal(["TestCase::Bar", "TestCase::Baz", "TestCase::Qux"], gathered_constants_in_namespace(:TestCase))
+      end
     end
 
-    it "does not gather constants that don't extend ActiveSupport::Concern" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
+    describe "decorate" do
+      after do
+        T.unsafe(self).assert_no_generated_errors
+      end
+
+      it "does not generate RBI when constant does not define a ClassMethods module" do
+        add_ruby_file("test_case.rb", <<~RUBY)
           module Foo
             extend ActiveSupport::Concern
           end
 
           module Bar
+            extend ActiveSupport::Concern
             include Foo
           end
 
           class Baz
             include Bar
           end
-        end
-      RUBY
+        RUBY
 
-      assert_equal([], gathered_constants_in_namespace(:TestCase))
-    end
+        expected = <<~RUBY
+          # typed: strong
+        RUBY
 
-    it "does not gather constants when its mixins don't extend ActiveSupport::Concern" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
-          module Foo
-          end
+        assert_equal(expected, rbi_for(:Bar))
+      end
 
-          module Bar
-            extend ActiveSupport::Concern
-            include Foo
-          end
-
-          class Baz
-            include Bar
-          end
-        end
-      RUBY
-
-      assert_equal([], gathered_constants_in_namespace(:TestCase))
-    end
-
-    it "does not gather constants for directly mixed in modules" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
+      it "generates RBI for nested AS::Concern" do
+        add_ruby_file("test_case.rb", <<~RUBY)
           module Foo
             extend ActiveSupport::Concern
 
@@ -84,195 +184,97 @@ class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
             end
           end
 
-          class Bar
-            include Foo
-          end
-        end
-      RUBY
-
-      assert_equal([], gathered_constants_in_namespace(:TestCase))
-    end
-
-    it "gathers constants for nested AS::Concern" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
-          module Foo
-            extend ActiveSupport::Concern
-          end
-
           module Bar
             extend ActiveSupport::Concern
             include Foo
+
+            module ClassMethods
+            end
           end
 
           class Baz
             include Bar
           end
-        end
-      RUBY
+        RUBY
 
-      assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
-    end
+        expected = <<~RUBY
+          # typed: strong
 
-    it "gathers constants for many nested mixins" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module TestCase
+          module Bar
+            mixes_in_class_methods ::Foo::ClassMethods
+          end
+        RUBY
+
+        assert_equal(expected, rbi_for(:Bar))
+        assert_equal(
+          class_method_ancestors_for(:Baz),
+          arguments_to_micm_in_effective_order(rbi_for(:Bar))
+        )
+      end
+
+      it "generates RBI for many nested mixins" do
+        add_ruby_file("test_case.rb", <<~RUBY)
           module Foo
             extend ActiveSupport::Concern
+
+            module ClassMethods
+            end
           end
 
           module Bar
             extend ActiveSupport::Concern
             include Foo
+
+            module ClassMethods
+            end
           end
 
           module Baz
             extend ActiveSupport::Concern
-            include Bar
+
+            module ClassMethods
+            end
           end
 
           module Qux
             extend ActiveSupport::Concern
             include Baz
+            include Bar
+
+            module ClassMethods
+            end
           end
 
           class Quux
             include Qux
           end
-        end
-      RUBY
+        RUBY
 
-      assert_equal(["TestCase::Bar", "TestCase::Baz", "TestCase::Qux"], gathered_constants_in_namespace(:TestCase))
-    end
-  end
+        expected_bar = <<~RUBY
+          # typed: strong
 
-  describe "#decorate" do
-    after do
-      T.unsafe(self).assert_no_generated_errors
-    end
-
-    it "does not generate RBI when constant does not define a ClassMethods module" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module Foo
-          extend ActiveSupport::Concern
-        end
-
-        module Bar
-          extend ActiveSupport::Concern
-          include Foo
-        end
-
-        class Baz
-          include Bar
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-      RUBY
-
-      assert_equal(expected, rbi_for(:Bar))
-    end
-
-    it "generates RBI for nested AS::Concern" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module Foo
-          extend ActiveSupport::Concern
-
-          module ClassMethods
+          module Bar
+            mixes_in_class_methods ::Foo::ClassMethods
           end
-        end
+        RUBY
+        assert_equal(expected_bar, rbi_for(:Bar))
 
-        module Bar
-          extend ActiveSupport::Concern
-          include Foo
+        expected_qux = <<~RUBY
+          # typed: strong
 
-          module ClassMethods
+          module Qux
+            mixes_in_class_methods ::Baz::ClassMethods
+            mixes_in_class_methods ::Foo::ClassMethods
+            mixes_in_class_methods ::Bar::ClassMethods
           end
-        end
+        RUBY
 
-        class Baz
-          include Bar
-        end
-      RUBY
-
-      expected = <<~RUBY
-        # typed: strong
-
-        module Bar
-          mixes_in_class_methods ::Foo::ClassMethods
-        end
-      RUBY
-
-      assert_equal(expected, rbi_for(:Bar))
-      assert_equal(
-        class_method_ancestors_for(:Baz),
-        arguments_to_micm_in_effective_order(rbi_for(:Bar))
-      )
-    end
-
-    it "generates RBI for many nested mixins" do
-      add_ruby_file("test_case.rb", <<~RUBY)
-        module Foo
-          extend ActiveSupport::Concern
-
-          module ClassMethods
-          end
-        end
-
-        module Bar
-          extend ActiveSupport::Concern
-          include Foo
-
-          module ClassMethods
-          end
-        end
-
-        module Baz
-          extend ActiveSupport::Concern
-
-          module ClassMethods
-          end
-        end
-
-        module Qux
-          extend ActiveSupport::Concern
-          include Baz
-          include Bar
-
-          module ClassMethods
-          end
-        end
-
-        class Quux
-          include Qux
-        end
-      RUBY
-
-      expected_bar = <<~RUBY
-        # typed: strong
-
-        module Bar
-          mixes_in_class_methods ::Foo::ClassMethods
-        end
-      RUBY
-      assert_equal(expected_bar, rbi_for(:Bar))
-
-      expected_qux = <<~RUBY
-        # typed: strong
-
-        module Qux
-          mixes_in_class_methods ::Baz::ClassMethods
-          mixes_in_class_methods ::Foo::ClassMethods
-          mixes_in_class_methods ::Bar::ClassMethods
-        end
-      RUBY
-
-      assert_equal(expected_qux, rbi_for(:Qux))
-      assert_equal(
-        class_method_ancestors_for(:Quux),
-        arguments_to_micm_in_effective_order(rbi_for(:Qux))
-      )
+        assert_equal(expected_qux, rbi_for(:Qux))
+        assert_equal(
+          class_method_ancestors_for(:Quux),
+          arguments_to_micm_in_effective_order(rbi_for(:Qux))
+        )
+      end
     end
   end
 
