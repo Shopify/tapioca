@@ -14,6 +14,7 @@ require "tapioca/helpers/test/template"
 require "tapioca/helpers/test/isolation"
 require "spec_reporter"
 require "dsl_spec_helper"
+require "spec_with_project"
 
 Minitest::Reporters.use!(SpecReporter.new(color: true))
 

@@ -1,23 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "sorbet-runtime"
-
-require "minitest/autorun"
-require "minitest/hooks/default"
-require "minitest/reporters"
-
 require "helpers/mock_project"
-
-Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(color: true))
-
-module Minitest
-  class Test
-    extend T::Sig
-
-    Minitest::Test.make_my_diffs_pretty!
-  end
-end
 
 module Tapioca
   class SpecWithProject < Minitest::HooksSpec

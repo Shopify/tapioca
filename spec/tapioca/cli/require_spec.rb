@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "spec_with_project"
+require "spec_helper"
 
 module Tapioca
   class RequireSpec < SpecWithProject

@@ -1,8 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "spec_with_project"
-require "tapioca/internal"
+require "spec_helper"
 
 module Tapioca
   class GemfileSpec < SpecWithProject
