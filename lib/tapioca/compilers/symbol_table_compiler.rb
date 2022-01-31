@@ -3,6 +3,8 @@
 
 require "pathname"
 
+require "tapioca/gem/plugins/base"
+
 module Tapioca
   module Compilers
     class SymbolTableCompiler
@@ -10,16 +12,6 @@ module Tapioca
       include Reflection
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
-      IGNORED_COMMENTS = T.let([
-        ":doc:",
-        ":nodoc:",
-        "typed:",
-        "frozen_string_literal:",
-        "encoding:",
-        "warn_indent:",
-        "shareable_constant_value:",
-        "rubocop:",
-      ], T::Array[String])
 
       sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
       def initialize(gem, include_doc: false)
@@ -28,7 +20,9 @@ module Tapioca
         @alias_namespace = T.let(Set.new, T::Set[String])
         @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
         @symbols = T.let(nil, T.nilable(T::Set[String]))
-        @include_doc = include_doc
+
+        @plugins = T.let([], T::Array[Tapioca::Gem::Plugins::Base])
+        @plugins << Tapioca::Gem::Plugins::YardDoc.new if include_doc
 
         gem.parse_yard_docs if include_doc
       end
@@ -39,6 +33,28 @@ module Tapioca
       end
 
       private
+
+      # Plugins
+
+      sig { params(mod: RBI::Module).void }
+      def decorate_module(mod)
+        @plugins.each { |plugin| plugin.decorate_module(mod) }
+      end
+
+      sig { params(cls: RBI::Class).void }
+      def decorate_class(cls)
+        @plugins.each { |plugin| plugin.decorate_class(cls) }
+      end
+
+      sig { params(const: RBI::Const).void }
+      def decorate_const(const)
+        @plugins.each { |plugin| plugin.decorate_const(const) }
+      end
+
+      sig { params(meth: RBI::Method).void }
+      def decorate_method(meth)
+        @plugins.each { |plugin| plugin.decorate_method(meth) }
+      end
 
       sig { params(name: T.nilable(String)).void }
       def add_to_symbol_queue(name)
