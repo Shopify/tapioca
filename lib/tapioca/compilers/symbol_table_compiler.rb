@@ -26,6 +26,7 @@ module Tapioca
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
+        @payload_symbols = T.let(SymbolTable::SymbolLoader.payload_symbols, T::Set[String])
         @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
         @symbols = T.let(nil, T.nilable(T::Set[String]))
         @include_doc = include_doc
@@ -596,7 +597,9 @@ module Tapioca
 
       sig { params(symbol_name: String).returns(T::Boolean) }
       def symbol_ignored?(symbol_name)
-        Compilers::SymbolTable::SymbolLoader.ignore_symbol?(symbol_name)
+        symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
+        return false unless symbol_name
+        @payload_symbols.include?(symbol_name)
       end
 
       sig { params(mixin_name: String).returns(T::Boolean) }

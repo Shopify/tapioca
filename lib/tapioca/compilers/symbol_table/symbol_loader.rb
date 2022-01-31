@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "json"
@@ -14,18 +14,6 @@ module Tapioca
 
           sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
           def list_from_paths(paths)
-            load_symbols(paths.map(&:to_s))
-          end
-
-          def ignore_symbol?(symbol)
-            symbol = symbol[2..-1] if symbol.start_with?("::")
-            ignored_symbols.include?(symbol)
-          end
-
-          private
-
-          sig { params(paths: T::Array[String]).returns(T::Set[String]) }
-          def load_symbols(paths)
             output = T.cast(Tempfile.create("sorbet") do |file|
               file.write(Array(paths).join("\n"))
               file.flush
@@ -38,15 +26,19 @@ module Tapioca
             SymbolTableParser.parse_json(output)
           end
 
-          def ignored_symbols
-            unless @ignored_symbols
+          sig { returns(T::Set[String]) }
+          def payload_symbols
+            unless @payload_symbols
               output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
-              @ignored_symbols = SymbolTableParser.parse_json(output)
+              @payload_symbols = T.let(SymbolTableParser.parse_json(output), T.nilable(T::Set[String]))
             end
 
-            @ignored_symbols
+            T.must(@payload_symbols)
           end
 
+          private
+
+          sig { params(input: String, table_type: String).returns(String) }
           def symbol_table_json_from(input, table_type: "symbol-table-json")
             sorbet("--no-config", "--print=#{table_type}", input)
           end
