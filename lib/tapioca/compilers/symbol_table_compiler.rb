@@ -328,7 +328,7 @@ module Tapioca
 
         scope =
           if constant.is_a?(Class)
-            superclass = compile_superclass(tree, constant)
+            superclass = compile_superclass(constant)
             RBI::Class.new(name, superclass_name: superclass)
           else
             RBI::Module.new(name)
@@ -341,8 +341,8 @@ module Tapioca
         compile_subconstants(tree, name, constant)
       end
 
-      sig { params(tree: RBI::Tree, constant: Class).returns(T.nilable(String)) }
-      def compile_superclass(tree, constant)
+      sig { params(constant: Class).returns(T.nilable(String)) }
+      def compile_superclass(constant)
         superclass = T.let(nil, T.nilable(Class)) # rubocop:disable Lint/UselessAssignment
 
         while (superclass = superclass_of(constant))
