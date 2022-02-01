@@ -264,17 +264,17 @@ module Tapioca
         case constant
         when Module
           if name_of(constant) != name
-            compile_alias(tree, name, constant)
+            compile_alias(name, constant)
           else
             compile_scope(tree, name, constant)
           end
         else
-          compile_object(tree, name, constant)
+          compile_object(name, constant)
         end
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_alias(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_alias(name, constant)
         return if symbol_in_payload?(name)
 
         target = name_of(constant)
@@ -287,11 +287,11 @@ module Tapioca
 
         node = RBI::Const.new(name, target)
         push_const(name,  constant, node)
-        tree <<  node
+        @root <<  node
       end
 
-      sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
-      def compile_object(tree, name, value)
+      sig { params(name: String, value: BasicObject).void.checked(:never) }
+      def compile_object(name, value)
         return if symbol_in_payload?(name)
 
         klass = class_of(value)
@@ -309,7 +309,7 @@ module Tapioca
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
           node = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
           push_const(name,  klass, node)
-          tree << node
+          @root << node
           return
         end
 
@@ -318,7 +318,7 @@ module Tapioca
         type_name = klass_name || "T.untyped"
         node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         push_const(name,  klass, node)
-        tree << node
+        @root << node
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
