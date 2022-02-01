@@ -123,7 +123,7 @@ module Tapioca
         end
 
         error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
-                    "`#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}"
+          "`#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}"
         next build_error(error_msg) unless config_option_value_type == command_option.type
       end.compact
     end

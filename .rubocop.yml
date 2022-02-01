@@ -16,6 +16,10 @@ AllCops:
   Include:
   - "sorbet/rbi/**/*.rbi"
 
+Naming/InclusiveLanguage:
+  Exclude:
+  - "lib/tapioca/compilers/dsl/protobuf.rb"
+
 RSpec/BeforeAfterAll:
   Enabled: false
 

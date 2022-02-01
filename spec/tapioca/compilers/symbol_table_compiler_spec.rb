@@ -954,7 +954,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def foo
           end
         end
-        RUBY
+      RUBY
 
       add_ruby_file("toto.rb", <<~RUBY)
         module Toto
