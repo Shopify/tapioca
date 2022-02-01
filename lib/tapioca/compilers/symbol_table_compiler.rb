@@ -266,7 +266,7 @@ module Tapioca
           if name_of(constant) != name
             compile_alias(tree, name, constant)
           else
-            compile_module(tree, name, constant)
+            compile_scope(tree, name, constant)
           end
         else
           compile_object(tree, name, constant)
@@ -322,7 +322,7 @@ module Tapioca
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_module(tree, name, constant)
+      def compile_scope(tree, name, constant)
         return unless defined_in_gem?(constant, strict: false)
         return if Tapioca::TypeVariableModule === constant
 
@@ -399,9 +399,8 @@ module Tapioca
           # Don't compile modules of Object because Object::Foo == Foo
           # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
           next if (Object == constant || BasicObject == constant) && Module === subconstant
-          next unless subconstant
 
-          push_constant(symbol, subconstant)
+          push_constant(symbol, subconstant) if subconstant
         end
       end
 
