@@ -9,6 +9,18 @@ module Tapioca
       extend T::Sig
       include Reflection
 
+      class SymbolEvent
+        extend T::Sig
+
+        sig { returns(String) }
+        attr_reader :symbol
+
+        sig { params(symbol: String).void }
+        def initialize(symbol)
+          @symbol = symbol
+        end
+      end
+
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
       IGNORED_COMMENTS = T.let([
         ":doc:",
@@ -36,7 +48,12 @@ module Tapioca
 
       sig { params(rbi: RBI::File).void }
       def compile(rbi)
-        generate_from_symbol(rbi.root, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+        @root = T.let(rbi.root, T.nilable(RBI::Tree))
+        until @symbol_queue.empty?
+          symbol = T.must(@symbol_queue.shift)
+          on_symbol(SymbolEvent.new(symbol))
+        end
+        @root = nil
       end
 
       private
@@ -54,13 +71,13 @@ module Tapioca
         end
       end
 
-      sig { params(tree: RBI::Tree, symbol: String).void }
-      def generate_from_symbol(tree, symbol)
-        constant = constantize(symbol)
+      sig { params(event: SymbolEvent).void }
+      def on_symbol(event)
+        constant = constantize(event.symbol)
 
         return unless constant
 
-        compile_constant(tree, symbol, constant)
+        compile_constant(T.must(@root), event.symbol, constant)
       end
 
       sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
