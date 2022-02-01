@@ -30,7 +30,7 @@ module Tapioca
           when RBI::Module, RBI::Class, RBI::Const
             node.comments = documentation_comments(event.symbol)
           when RBI::Method
-            separator = T.cast(event.constant, Module).singleton_class? ? "." : "#"
+            separator = event.constant.singleton_class? ? "." : "#"
             comments = documentation_comments("#{event.symbol}#{separator}#{node.name}")
             node.comments = comments
           end

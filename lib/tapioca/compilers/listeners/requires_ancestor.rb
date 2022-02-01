@@ -17,7 +17,7 @@ module Tapioca
 
           case node
           when RBI::Scope
-            ancestors = Trackers::RequiredAncestor.required_ancestors_by(T.cast(event.constant, Module))
+            ancestors = Trackers::RequiredAncestor.required_ancestors_by(event.constant)
             ancestors.each do |ancestor|
               next unless ancestor # TODO: We should have a way to warn from here
               node << RBI::RequiresAncestor.new(ancestor.to_s)

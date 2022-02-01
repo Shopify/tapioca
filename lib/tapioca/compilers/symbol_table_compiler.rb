@@ -56,13 +56,13 @@ module Tapioca
         sig { returns(String) }
         attr_reader :symbol
 
-        sig { returns(BasicObject).checked(:never) }
+        sig { returns(Module).checked(:never) }
         attr_reader :constant
 
         sig { returns(RBI::Node) }
         attr_reader :node
 
-        sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject, node: RBI::Node).void.checked(:never) }
+        sig { params(tree: RBI::Tree, symbol: String, constant: Module, node: RBI::Node).void.checked(:never) }
         def initialize(tree, symbol, constant, node)
           @tree = tree
           @symbol = symbol
@@ -109,7 +109,9 @@ module Tapioca
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
 
         @node_listeners = T.let([], T::Array[NodeListeners::Base])
+        @node_listeners << NodeListeners::Helpers.new(self)
         @node_listeners << NodeListeners::Signatures.new(self)
+        @node_listeners << NodeListeners::TypeVariables.new(self)
         @node_listeners << NodeListeners::YardDoc.new(self) if include_doc
         @node_listeners << NodeListeners::RequiresAncestor.new(self)
 
@@ -146,7 +148,7 @@ module Tapioca
 
       private
 
-      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject, node: RBI::Node).void.checked(:never) }
+      sig { params(tree: RBI::Tree, symbol: String, constant: Module, node: RBI::Node).void.checked(:never) }
       def push_node(tree, symbol, constant, node)
         @events << NodeEvent.new(tree, symbol, constant, node)
       end
@@ -298,10 +300,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
       def compile_body(tree, name, constant)
-        # Compiling type variables must happen first to populate generic names
-        compile_type_variables(tree, constant)
         compile_methods(tree, name, constant)
-        compile_module_helpers(tree, constant)
         compile_mixins(tree, constant)
         compile_props(tree, constant)
         compile_enums(tree, constant)
@@ -320,16 +319,6 @@ module Tapioca
           name = name_of(mod)
           push_symbol(tree, name) if name
         end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_module_helpers(tree, constant)
-        abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type) ||
-          T::Private::Abstract::Data.get(singleton_class_of(constant), :abstract_type)
-
-        tree << RBI::Helper.new(abstract_type.to_s) if abstract_type
-        tree << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)
-        tree << RBI::Helper.new("sealed") if T::Private::Sealed.sealed_module?(constant)
       end
 
       sig { params(tree: RBI::Tree, constant: Module).void }
@@ -372,38 +361,6 @@ module Tapioca
 
           push_constant(tree, symbol, subconstant)
         end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_type_variables(tree, constant)
-        compile_type_variable_declarations(tree, constant)
-
-        sclass = RBI::SingletonClass.new
-        compile_type_variable_declarations(sclass, singleton_class_of(constant))
-        tree << sclass if sclass.nodes.length > 1
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_type_variable_declarations(tree, constant)
-        # Try to find the type variables defined on this constant, bail if we can't
-        type_variables = GenericTypeRegistry.lookup_type_variables(constant)
-        return unless type_variables
-
-        # Map each type variable to its string representation.
-        #
-        # Each entry of `type_variables` maps a Module to a String,
-        # and the order they are inserted into the hash is the order they should be
-        # defined in the source code.
-        type_variable_declarations = type_variables.map do |type_variable|
-          type_variable_name = type_variable.name
-          next unless type_variable_name
-
-          tree << RBI::TypeMember.new(type_variable_name, type_variable.serialize)
-        end
-
-        return if type_variable_declarations.empty?
-
-        tree << RBI::Extend.new("T::Generic")
       end
 
       sig { params(tree: RBI::Tree, constant: Class).returns(T.nilable(String)) }
