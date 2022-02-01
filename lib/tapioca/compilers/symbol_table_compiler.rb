@@ -29,6 +29,7 @@ module Tapioca
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
         @node_listeners << Gem::Listeners::Mixins.new(self)
+        @node_listeners << Gem::Listeners::DynamicMixins.new(self)
         @node_listeners << Gem::Listeners::SorbetHelpers.new(self)
         @node_listeners << Gem::Listeners::SorbetEnums.new(self)
         @node_listeners << Gem::Listeners::SorbetProps.new(self)
@@ -210,21 +211,6 @@ module Tapioca
         # Compiling type variables must happen first to populate generic names
         compile_type_variables(tree, constant)
         compile_methods(tree, name, constant)
-        compile_dynamic_mixins(tree, constant)
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_dynamic_mixins(tree, constant)
-        return if constant.is_a?(Class)
-
-        mixin_compiler = DynamicMixinCompiler.new(constant)
-        mixin_compiler.compile_class_attributes(tree)
-        dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(tree)
-
-        (dynamic_includes + dynamic_extends).each do |mod|
-          name = name_of(mod)
-          push_symbol(name) if name
-        end
       end
 
       sig { params(name: String, constant: Module).void }
