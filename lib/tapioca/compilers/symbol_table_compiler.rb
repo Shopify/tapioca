@@ -27,42 +27,52 @@ module Tapioca
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
-        @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
-        @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
-        @symbols = T.let(nil, T.nilable(T::Set[String]))
         @include_doc = include_doc
+
+        @events = T.let([], T::Array[Gem::Event])
+
+        @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
+        @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
+        @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
         gem.parse_yard_docs if include_doc
       end
 
       sig { returns(RBI::Tree) }
       def compile
-        generate_from_symbol(T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+        dispatch(next_event) until @events.empty?
         @root
+      end
+
+      sig { params(symbol: String).void }
+      def push_symbol(symbol)
+        @events << Gem::NewSymbolFound.new(symbol)
       end
 
       private
 
-      sig { params(name: T.nilable(String)).void }
-      def add_to_symbol_queue(name)
-        @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_in_payload?(name)
+      sig { returns(Gem::Event) }
+      def next_event
+        T.must(@events.pop)
       end
 
-      sig { returns(T::Set[String]) }
-      def symbols
-        @symbols ||= begin
-          symbols = SymbolLoader.gem_symbols(@gem)
-          symbols.union(SymbolLoader.engine_symbols)
+      sig { params(event: Gem::Event).void }
+      def dispatch(event)
+        case event
+        when Gem::NewSymbolFound
+          on_symbol(event)
+        else
+          raise "Unsupported event #{event.class}"
         end
       end
 
-      sig { params(symbol: String).void }
-      def generate_from_symbol(symbol)
+      sig { params(event: Gem::NewSymbolFound).void }
+      def on_symbol(event)
+        symbol = event.symbol
+        return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
+
         constant = constantize(symbol)
-
-        return unless constant
-
-        compile_constant(symbol, constant)
+        compile_constant(symbol, constant) if constant
       end
 
       sig { params(name: T.nilable(String), constant: BasicObject).void.checked(:never) }
@@ -181,7 +191,8 @@ module Tapioca
         dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(tree)
 
         (dynamic_includes + dynamic_extends).each do |mod|
-          add_to_symbol_queue(name_of(mod))
+          name = name_of(mod)
+          push_symbol(name) if name
         end
       end
 
@@ -313,7 +324,7 @@ module Tapioca
         name = name_of(superclass)
         return if name.nil? || name.empty?
 
-        add_to_symbol_queue(name)
+        push_symbol(name)
 
         "::#{name}"
       end
@@ -351,7 +362,8 @@ module Tapioca
             name && !filtered_mixin?(name)
           end
           .map do |mod|
-            add_to_symbol_queue(name_of(mod))
+            name = name_of(mod)
+            push_symbol(name) if name
 
             qname = qualified_name_of(mod)
             case mixin_type
@@ -539,13 +551,14 @@ module Tapioca
 
         parameters.each do |_, name|
           type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-          add_to_symbol_queue(type)
+          push_symbol(type)
           sig << RBI::SigParam.new(name, type)
         end
 
         return_type = name_of_type(signature.return_type)
-        sig.return_type = sanitize_signature_types(return_type)
-        add_to_symbol_queue(sig.return_type)
+        return_type = sanitize_signature_types(return_type)
+        sig.return_type = return_type
+        push_symbol(return_type)
 
         parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
           sig.type_params << k
