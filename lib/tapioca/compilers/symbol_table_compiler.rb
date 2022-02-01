@@ -28,6 +28,7 @@ module Tapioca
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
+        @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
       end
 
@@ -207,7 +208,6 @@ module Tapioca
         compile_methods(tree, name, constant)
         compile_module_helpers(tree, constant)
         compile_mixins(tree, constant)
-        compile_required_ancestors(tree, constant)
         compile_props(tree, constant)
         compile_enums(tree, constant)
         compile_dynamic_mixins(tree, constant)
@@ -407,15 +407,6 @@ module Tapioca
               tree << RBI::Extend.new(T.must(qname))
             end
           end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_required_ancestors(tree, constant)
-        ancestors = Trackers::RequiredAncestor.required_ancestors_by(constant)
-        ancestors.each do |ancestor|
-          next unless ancestor # TODO: We should have a way to warn from here
-          tree << RBI::RequiresAncestor.new(ancestor.to_s)
-        end
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
