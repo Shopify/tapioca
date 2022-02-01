@@ -41,7 +41,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
       rbi = RBI::File.new(strictness: "true")
-      Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile(rbi)
+      rbi.root = Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile
       rbi.transform_rbi!
       # NOTE: This is not using the standard helper method `transformed_string`.
       # The following test suite is based on the string output of the `RBI::Tree` rather
