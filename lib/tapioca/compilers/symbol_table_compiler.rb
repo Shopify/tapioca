@@ -35,6 +35,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetEnums.new(self)
         @node_listeners << Gem::Listeners::SorbetProps.new(self)
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
+        @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
       end
 
@@ -64,9 +65,26 @@ module Tapioca
         @events << Gem::NewScopeNode.new(symbol, constant, node)
       end
 
-      sig { params(symbol: String, constant: Module, node: RBI::Method).void.checked(:never) }
-      def push_method(symbol, constant, node)
-        @events << Gem::NewMethodNode.new(symbol, constant, node)
+      sig do
+        params(
+          symbol: String,
+          constant: Module,
+          node: RBI::Method,
+          signature: T.untyped,
+          parameters: T::Array[[Symbol, String]]
+        ).void.checked(:never)
+      end
+      def push_method(symbol, constant, node, signature, parameters)
+        @events << Gem::NewMethodNode.new(symbol, constant, node, signature, parameters)
+      end
+
+      sig { params(sig_string: String).returns(String) }
+      def sanitize_signature_types(sig_string)
+        sig_string
+          .gsub(".returns(<VOID>)", ".void")
+          .gsub("<VOID>", "void")
+          .gsub("<NOT-TYPED>", "T.untyped")
+          .gsub(".params()", "")
       end
 
       private
@@ -400,8 +418,6 @@ module Tapioca
           visibility: visibility
         )
 
-        rbi_method.sigs << compile_signature(signature, sanitized_parameters) if signature
-
         sanitized_parameters.each do |type, name|
           case type
           when :req
@@ -421,59 +437,8 @@ module Tapioca
           end
         end
 
-        push_method(symbol_name, constant, rbi_method)
+        push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
         tree << rbi_method
-      end
-
-      TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
-
-      sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
-      def compile_signature(signature, parameters)
-        parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
-        parameter_types.merge!(signature.kwarg_types)
-        parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
-        parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest
-        parameter_types[signature.block_name] = signature.block_type if signature.block_name
-
-        sig = RBI::Sig.new
-
-        parameters.each do |_, name|
-          type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-          push_symbol(type)
-          sig << RBI::SigParam.new(name, type)
-        end
-
-        return_type = name_of_type(signature.return_type)
-        return_type = sanitize_signature_types(return_type)
-        sig.return_type = return_type
-        push_symbol(return_type)
-
-        parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
-          sig.type_params << k
-        end
-
-        case signature.mode
-        when "abstract"
-          sig.is_abstract = true
-        when "override"
-          sig.is_override = true
-        when "overridable_override"
-          sig.is_overridable = true
-          sig.is_override = true
-        when "overridable"
-          sig.is_overridable = true
-        end
-
-        sig
-      end
-
-      sig { params(sig_string: String).returns(String) }
-      def sanitize_signature_types(sig_string)
-        sig_string
-          .gsub(".returns(<VOID>)", ".void")
-          .gsub("<VOID>", "void")
-          .gsub("<NOT-TYPED>", "T.untyped")
-          .gsub(".params()", "")
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }

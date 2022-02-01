@@ -95,10 +95,26 @@ module Tapioca
         sig { returns(RBI::Method) }
         attr_reader :node
 
-        sig { params(symbol: String, constant: Module, node: RBI::Method).void.checked(:never) }
-        def initialize(symbol, constant, node)
+        sig { returns(T.untyped) }
+        attr_reader :signature
+
+        sig { returns(T::Array[[Symbol, String]]) }
+        attr_reader :parameters
+
+        sig do
+          params(
+            symbol: String,
+            constant: Module,
+            node: RBI::Method,
+            signature: T.untyped,
+            parameters: T::Array[[Symbol, String]]
+          ).void.checked(:never)
+        end
+        def initialize(symbol, constant, node, signature, parameters)
           super(symbol, constant)
           @node = node
+          @signature = signature
+          @parameters = parameters
         end
       end
     end
