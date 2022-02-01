@@ -9,7 +9,9 @@ module Tapioca
       extend T::Sig
       include Reflection
 
-      class SymbolEvent
+      class Event; end
+
+      class SymbolEvent < Event
         extend T::Sig
 
         sig { returns(RBI::Tree) }
@@ -46,7 +48,7 @@ module Tapioca
         @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
 
-        @events = T.let([], T::Array[SymbolEvent])
+        @events = T.let([], T::Array[Event])
         @include_doc = include_doc
 
         gem.parse_yard_docs if include_doc
@@ -55,13 +57,23 @@ module Tapioca
       sig { params(rbi: RBI::File).void }
       def compile(rbi)
         @bootstrap_symbols.sort.each { |symbol| push_symbol(rbi.root, symbol) }
-        until @events.empty?
-          event = T.must(@events.shift)
-          on_symbol(event)
-        end
+        dispatch_next until @events.empty?
       end
 
       private
+
+      sig { void }
+      def dispatch_next
+        dispatch_event(T.must(@events.shift))
+      end
+
+      sig { params(event: Event).void }
+      def dispatch_event(event)
+        case event
+        when SymbolEvent
+          on_symbol(event)
+        end
+      end
 
       sig { params(tree: RBI::Tree, symbol: String).void }
       def push_symbol(tree, symbol)
