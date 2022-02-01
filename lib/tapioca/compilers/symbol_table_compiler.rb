@@ -59,7 +59,7 @@ module Tapioca
         sig { returns(BasicObject).checked(:never) }
         attr_reader :constant
 
-        sig { returns(RBI::Node).checked(:never) }
+        sig { returns(RBI::Node) }
         attr_reader :node
 
         sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject, node: RBI::Node).void.checked(:never) }
@@ -68,6 +68,32 @@ module Tapioca
           @symbol = symbol
           @constant = constant
           @node = node
+        end
+      end
+
+      class MethodEvent < NodeEvent
+        extend T::Sig
+
+        sig { returns(T.untyped) }
+        attr_reader :signature
+
+        sig { returns(T::Array[[Symbol, String]]) }
+        attr_reader :parameters
+
+        sig do
+          params(
+            tree: RBI::Tree,
+            symbol: String,
+            constant: BasicObject,
+            node: RBI::Node,
+            signature: T.untyped,
+            parameters: T::Array[[Symbol, String]]
+          ).void.checked(:never)
+        end
+        def initialize(tree, symbol, constant, node, signature, parameters)
+          super(tree, symbol, constant, node)
+          @signature = signature
+          @parameters = parameters
         end
       end
 
@@ -83,8 +109,9 @@ module Tapioca
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
 
         @node_listeners = T.let([], T::Array[NodeListeners::Base])
-        @node_listeners << NodeListeners::YardDoc.new if include_doc
-        @node_listeners << NodeListeners::RequiresAncestor.new
+        @node_listeners << NodeListeners::Signatures.new(self)
+        @node_listeners << NodeListeners::YardDoc.new(self) if include_doc
+        @node_listeners << NodeListeners::RequiresAncestor.new(self)
 
         @events = T.let([], T::Array[Event])
         @include_doc = include_doc
@@ -98,7 +125,45 @@ module Tapioca
         dispatch_next until @events.empty?
       end
 
+      sig { params(tree: RBI::Tree, symbol: String).void }
+      def push_symbol(tree, symbol)
+        @events << SymbolEvent.new(tree, symbol)
+      end
+
+      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
+      def push_constant(tree, symbol, constant)
+        @events << ConstantEvent.new(tree, symbol, constant)
+      end
+
+      sig { params(sig_string: String).returns(String) }
+      def sanitize_signature_types(sig_string)
+        sig_string
+          .gsub(".returns(<VOID>)", ".void")
+          .gsub("<VOID>", "void")
+          .gsub("<NOT-TYPED>", "T.untyped")
+          .gsub(".params()", "")
+      end
+
       private
+
+      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject, node: RBI::Node).void.checked(:never) }
+      def push_node(tree, symbol, constant, node)
+        @events << NodeEvent.new(tree, symbol, constant, node)
+      end
+
+      sig do
+        params(
+          tree: RBI::Tree,
+          symbol: String,
+          constant: BasicObject,
+          node: RBI::Node,
+          signature: T.untyped,
+          parameters: T::Array[[Symbol, String]]
+        ).void.checked(:never)
+      end
+      def push_method(tree, symbol, constant, node, signature, parameters)
+        @events << MethodEvent.new(tree, symbol, constant, node, signature, parameters)
+      end
 
       sig { void }
       def dispatch_next
@@ -115,21 +180,6 @@ module Tapioca
         when NodeEvent
           on_node(event)
         end
-      end
-
-      sig { params(tree: RBI::Tree, symbol: String).void }
-      def push_symbol(tree, symbol)
-        @events << SymbolEvent.new(tree, symbol)
-      end
-
-      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
-      def push_constant(tree, symbol, constant)
-        @events << ConstantEvent.new(tree, symbol, constant)
-      end
-
-      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject, node: RBI::Node).void.checked(:never) }
-      def push_node(tree, symbol, constant, node)
-        @events << NodeEvent.new(tree, symbol, constant, node)
       end
 
       sig { params(event: SymbolEvent).void }
@@ -577,8 +627,6 @@ module Tapioca
           visibility: visibility
         )
 
-        rbi_method.sigs << compile_signature(tree, signature, sanitized_parameters) if signature
-
         sanitized_parameters.each do |type, name|
           case type
           when :req
@@ -598,59 +646,8 @@ module Tapioca
           end
         end
 
-        push_node(tree, symbol_name, constant, rbi_method)
+        push_method(tree, symbol_name, constant, rbi_method, signature, sanitized_parameters)
         tree << rbi_method
-      end
-
-      TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
-
-      sig { params(tree: RBI::Tree, signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
-      def compile_signature(tree, signature, parameters)
-        parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
-        parameter_types.merge!(signature.kwarg_types)
-        parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
-        parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest
-        parameter_types[signature.block_name] = signature.block_type if signature.block_name
-
-        sig = RBI::Sig.new
-
-        parameters.each do |_, name|
-          type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-          push_symbol(tree, type)
-          sig << RBI::SigParam.new(name, type)
-        end
-
-        return_type = name_of_type(signature.return_type)
-        return_type = sanitize_signature_types(return_type)
-        sig.return_type = return_type
-        push_symbol(tree, return_type)
-
-        parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
-          sig.type_params << k
-        end
-
-        case signature.mode
-        when "abstract"
-          sig.is_abstract = true
-        when "override"
-          sig.is_override = true
-        when "overridable_override"
-          sig.is_overridable = true
-          sig.is_override = true
-        when "overridable"
-          sig.is_overridable = true
-        end
-
-        sig
-      end
-
-      sig { params(sig_string: String).returns(String) }
-      def sanitize_signature_types(sig_string)
-        sig_string
-          .gsub(".returns(<VOID>)", ".void")
-          .gsub("<VOID>", "void")
-          .gsub("<NOT-TYPED>", "T.untyped")
-          .gsub(".params()", "")
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }

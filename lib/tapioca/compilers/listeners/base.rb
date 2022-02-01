@@ -12,6 +12,11 @@ module Tapioca
 
         abstract!
 
+        sig { params(compiler: SymbolTableCompiler).void }
+        def initialize(compiler)
+          @compiler = compiler
+        end
+
         sig { params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
         def dispatch(event)
           on_node(event)
