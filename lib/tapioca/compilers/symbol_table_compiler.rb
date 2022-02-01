@@ -29,6 +29,7 @@ module Tapioca
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
         @node_listeners << Gem::Listeners::SorbetHelpers.new(self)
+        @node_listeners << Gem::Listeners::SorbetEnums.new(self)
         @node_listeners << Gem::Listeners::SorbetProps.new(self)
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
@@ -209,7 +210,6 @@ module Tapioca
         compile_type_variables(tree, constant)
         compile_methods(tree, name, constant)
         compile_mixins(tree, constant)
-        compile_enums(tree, constant)
         compile_dynamic_mixins(tree, constant)
       end
 
@@ -225,17 +225,6 @@ module Tapioca
           name = name_of(mod)
           push_symbol(name) if name
         end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_enums(tree, constant)
-        return unless T::Enum > constant
-
-        enums = T.unsafe(constant).values.map do |enum_type|
-          enum_type.instance_variable_get(:@const_name).to_s
-        end
-
-        tree << RBI::TEnumBlock.new(enums)
       end
 
       sig { params(name: String, constant: Module).void }
