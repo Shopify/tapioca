@@ -39,7 +39,8 @@ module Tapioca
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
         @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
-        @events = T.let(symbols.sort.dup.map { |symbol| SymbolEvent.new(symbol) }, T::Array[SymbolEvent])
+        @events = T.let([], T::Array[SymbolEvent])
+        symbols.sort.dup.each { |symbol| push_symbol(symbol) }
         @symbols = T.let(nil, T.nilable(T::Set[String]))
         @include_doc = include_doc
 
@@ -60,7 +61,7 @@ module Tapioca
 
       sig { params(symbol: String).void }
       def push_symbol(symbol)
-        @events << SymbolEvent.new(symbol) unless is_from_payload?(symbol)
+        @events << SymbolEvent.new(symbol)
       end
 
       sig { returns(T::Set[String]) }
@@ -73,6 +74,7 @@ module Tapioca
 
       sig { params(event: SymbolEvent).void }
       def on_symbol(event)
+        return if symbol_in_payload?(event.symbol) && !symbols.include?(event.symbol)
         constant = constantize(event.symbol)
 
         return unless constant
@@ -107,7 +109,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
       def compile_alias(tree, name, constant)
-        return if is_from_payload?(name)
+        return if symbol_in_payload?(name)
 
         target = name_of(constant)
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
@@ -122,7 +124,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
       def compile_object(tree, name, value)
-        return if is_from_payload?(name)
+        return if symbol_in_payload?(name)
 
         klass = class_of(value)
 
@@ -168,7 +170,7 @@ module Tapioca
 
         compile_body(scope, name, constant)
 
-        return if is_from_payload?(name) && scope.empty?
+        return if symbol_in_payload?(name) && scope.empty?
 
         tree << scope
         compile_subconstants(tree, name, constant)
@@ -463,7 +465,7 @@ module Tapioca
       def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
         return unless method
         return unless method.owner == constant
-        return if is_from_payload?(symbol_name) && !method_in_gem?(method)
+        return if symbol_in_payload?(symbol_name) && !method_in_gem?(method)
 
         signature = signature_of(method)
         method = T.let(signature.method, UnboundMethod) if signature
@@ -594,7 +596,7 @@ module Tapioca
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }
-      def is_from_payload?(symbol_name)
+      def symbol_in_payload?(symbol_name)
         symbol_name = T.must(symbol_name[2..-1]) if symbol_name.start_with?("::")
         @payload_symbols.include?(symbol_name)
       end
