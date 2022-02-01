@@ -31,6 +31,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetTypeVariables.new(self)
         @node_listeners << Gem::Listeners::Mixins.new(self)
         @node_listeners << Gem::Listeners::DynamicMixins.new(self)
+        @node_listeners << Gem::Listeners::Methods.new(self)
         @node_listeners << Gem::Listeners::SorbetHelpers.new(self)
         @node_listeners << Gem::Listeners::SorbetEnums.new(self)
         @node_listeners << Gem::Listeners::SorbetProps.new(self)
@@ -85,6 +86,21 @@ module Tapioca
           .gsub("<VOID>", "void")
           .gsub("<NOT-TYPED>", "T.untyped")
           .gsub(".params()", "")
+      end
+
+      sig { params(symbol_name: String).returns(T::Boolean) }
+      def symbol_in_payload?(symbol_name)
+        symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
+        return false unless symbol_name
+        @payload_symbols.include?(symbol_name)
+      end
+
+      sig { params(method: UnboundMethod).returns(T::Boolean) }
+      def method_in_gem?(method)
+        source_location = method.source_location&.first
+        return false if source_location.nil?
+
+        @gem.contains_path?(source_location)
       end
 
       private
@@ -216,19 +232,9 @@ module Tapioca
             RBI::Module.new(name)
           end
 
-        compile_body(scope, name, constant)
-
-        return if symbol_in_payload?(name) && scope.empty?
-
         push_scope(name, constant, scope)
         @root << scope
         compile_subconstants(name, constant)
-      end
-
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_body(tree, name, constant)
-        # Compiling type variables must happen first to populate generic names
-        compile_methods(tree, name, constant)
       end
 
       sig { params(name: String, constant: Module).void }
@@ -295,183 +301,6 @@ module Tapioca
         "::#{name}"
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_methods(tree, name, constant)
-        compile_method(
-          tree,
-          name,
-          constant,
-          initialize_method_for(constant)
-        )
-
-        compile_directly_owned_methods(tree, name, constant)
-        compile_directly_owned_methods(tree, name, singleton_class_of(constant))
-      end
-
-      sig do
-        params(
-          tree: RBI::Tree,
-          module_name: String,
-          mod: Module,
-          for_visibility: T::Array[Symbol]
-        ).void
-      end
-      def compile_directly_owned_methods(tree, module_name, mod, for_visibility = [:public, :protected, :private])
-        method_names_by_visibility(mod)
-          .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
-          .each do |visibility, method_list|
-            method_list.sort!.map do |name|
-              next if name == :initialize
-              vis = case visibility
-              when :protected
-                RBI::Protected.new
-              when :private
-                RBI::Private.new
-              else
-                RBI::Public.new
-              end
-              compile_method(tree, module_name, mod, mod.instance_method(name), vis)
-            end
-          end
-      end
-
-      sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
-      def method_names_by_visibility(mod)
-        {
-          public: public_instance_methods_of(mod),
-          protected: protected_instance_methods_of(mod),
-          private: private_instance_methods_of(mod),
-        }
-      end
-
-      sig { params(constant: Module, method_name: String).returns(T::Boolean) }
-      def struct_method?(constant, method_name)
-        return false unless T::Props::ClassMethods === constant
-
-        constant
-          .props
-          .keys
-          .include?(method_name.gsub(/=$/, "").to_sym)
-      end
-
-      sig do
-        params(
-          tree: RBI::Tree,
-          symbol_name: String,
-          constant: Module,
-          method: T.nilable(UnboundMethod),
-          visibility: RBI::Visibility
-        ).void
-      end
-      def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
-        return unless method
-        return unless method.owner == constant
-        return if symbol_in_payload?(symbol_name) && !method_in_gem?(method)
-
-        signature = signature_of(method)
-        method = T.let(signature.method, UnboundMethod) if signature
-
-        method_name = method.name.to_s
-        return unless valid_method_name?(method_name)
-        return if struct_method?(constant, method_name)
-        return if method_name.start_with?("__t_props_generated_")
-
-        parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
-
-        sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
-          fallback_arg_name = "_arg#{index}"
-
-          name = if name
-            name.to_s
-          else
-            # For attr_writer methods, Sorbet signatures have the name
-            # of the method (without the trailing = sign) as the name of
-            # the only parameter. So, if the parameter does not have a name
-            # then the replacement name should be the name of the method
-            # (minus trailing =) if and only if there is a signature for the
-            # method and the parameter is required and there is a single
-            # parameter and the signature also defines a single parameter and
-            # the name of the method ends with a = character.
-            writer_method_with_sig = (
-              signature && type == :req &&
-              parameters.size == 1 &&
-              signature.arg_types.size == 1 &&
-              method_name[-1] == "="
-            )
-
-            if writer_method_with_sig
-              method_name.delete_suffix("=")
-            else
-              fallback_arg_name
-            end
-          end
-
-          # Sanitize param names
-          name = fallback_arg_name unless valid_parameter_name?(name)
-
-          [type, name]
-        end
-
-        rbi_method = RBI::Method.new(
-          method_name,
-          is_singleton: constant.singleton_class?,
-          visibility: visibility
-        )
-
-        sanitized_parameters.each do |type, name|
-          case type
-          when :req
-            rbi_method << RBI::Param.new(name)
-          when :opt
-            rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
-          when :rest
-            rbi_method << RBI::RestParam.new(name)
-          when :keyreq
-            rbi_method << RBI::KwParam.new(name)
-          when :key
-            rbi_method << RBI::KwOptParam.new(name, "T.unsafe(nil)")
-          when :keyrest
-            rbi_method << RBI::KwRestParam.new(name)
-          when :block
-            rbi_method << RBI::BlockParam.new(name)
-          end
-        end
-
-        push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
-        tree << rbi_method
-      end
-
-      sig { params(symbol_name: String).returns(T::Boolean) }
-      def symbol_in_payload?(symbol_name)
-        symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
-        return false unless symbol_name
-        @payload_symbols.include?(symbol_name)
-      end
-
-      SPECIAL_METHOD_NAMES = T.let([
-        "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
-        "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",
-      ], T::Array[String])
-
-      sig { params(name: String).returns(T::Boolean) }
-      def valid_method_name?(name)
-        return true if SPECIAL_METHOD_NAMES.include?(name)
-        !!name.match(/^[[:word:]]+[?!=]?$/)
-      end
-
-      sig { params(name: String).returns(T::Boolean) }
-      def valid_parameter_name?(name)
-        name.match?(/^[[[:alnum:]]_]+$/)
-      end
-
-      sig { params(method: UnboundMethod).returns(T::Boolean) }
-      def method_in_gem?(method)
-        source_location = method.source_location&.first
-        return false if source_location.nil?
-
-        @gem.contains_path?(source_location)
-      end
-
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
         files = Set.new(get_file_candidates(constant))
@@ -513,13 +342,6 @@ module Tapioca
       sig { params(name: String).returns(T::Boolean) }
       def seen?(name)
         @seen.include?(name)
-      end
-
-      sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
-      def initialize_method_for(constant)
-        constant.instance_method(:initialize)
-      rescue
-        nil
       end
 
       sig { params(constant: Module).returns(T.nilable(String)) }
