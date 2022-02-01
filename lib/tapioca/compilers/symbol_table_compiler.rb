@@ -43,7 +43,7 @@ module Tapioca
 
       sig { params(name: T.nilable(String)).void }
       def add_to_symbol_queue(name)
-        @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_ignored?(name)
+        @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_in_payload?(name)
       end
 
       sig { returns(T::Set[String]) }
@@ -90,7 +90,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
       def compile_alias(tree, name, constant)
-        return if symbol_ignored?(name)
+        return if symbol_in_payload?(name)
 
         target = name_of(constant)
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
@@ -105,7 +105,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
       def compile_object(tree, name, value)
-        return if symbol_ignored?(name)
+        return if symbol_in_payload?(name)
 
         klass = class_of(value)
 
@@ -151,7 +151,7 @@ module Tapioca
 
         compile_body(scope, name, constant)
 
-        return if symbol_ignored?(name) && scope.empty?
+        return if symbol_in_payload?(name) && scope.empty?
 
         tree << scope
         compile_subconstants(tree, name, constant)
@@ -444,7 +444,7 @@ module Tapioca
       def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
         return unless method
         return unless method.owner == constant
-        return if symbol_ignored?(symbol_name) && !method_in_gem?(method)
+        return if symbol_in_payload?(symbol_name) && !method_in_gem?(method)
 
         signature = signature_of(method)
         method = T.let(signature.method, UnboundMethod) if signature
@@ -574,7 +574,7 @@ module Tapioca
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }
-      def symbol_ignored?(symbol_name)
+      def symbol_in_payload?(symbol_name)
         symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
         return false unless symbol_name
         @payload_symbols.include?(symbol_name)
