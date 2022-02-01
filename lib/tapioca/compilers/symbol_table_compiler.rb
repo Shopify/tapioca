@@ -29,6 +29,7 @@ module Tapioca
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
         @node_listeners << Gem::Listeners::SorbetHelpers.new(self)
+        @node_listeners << Gem::Listeners::SorbetProps.new(self)
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
       end
@@ -208,7 +209,6 @@ module Tapioca
         compile_type_variables(tree, constant)
         compile_methods(tree, name, constant)
         compile_mixins(tree, constant)
-        compile_props(tree, constant)
         compile_enums(tree, constant)
         compile_dynamic_mixins(tree, constant)
       end
@@ -224,22 +224,6 @@ module Tapioca
         (dynamic_includes + dynamic_extends).each do |mod|
           name = name_of(mod)
           push_symbol(name) if name
-        end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_props(tree, constant)
-        return unless T::Props::ClassMethods === constant
-
-        constant.props.map do |name, prop|
-          type = prop.fetch(:type_object, "T.untyped").to_s.gsub(".returns(<VOID>)", ".void")
-
-          default = prop.key?(:default) ? "T.unsafe(nil)" : nil
-          tree << if prop.fetch(:immutable, false)
-            RBI::TStructConst.new(name.to_s, type, default: default)
-          else
-            RBI::TStructProp.new(name.to_s, type, default: default)
-          end
         end
       end
 
