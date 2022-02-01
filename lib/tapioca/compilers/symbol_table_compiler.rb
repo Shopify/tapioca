@@ -39,7 +39,7 @@ module Tapioca
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
         @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
-        @symbol_queue = T.let(symbols.sort.dup, T::Array[String])
+        @events = T.let(symbols.sort.dup.map { |symbol| SymbolEvent.new(symbol) }, T::Array[SymbolEvent])
         @symbols = T.let(nil, T.nilable(T::Set[String]))
         @include_doc = include_doc
 
@@ -49,18 +49,18 @@ module Tapioca
       sig { params(rbi: RBI::File).void }
       def compile(rbi)
         @root = T.let(rbi.root, T.nilable(RBI::Tree))
-        until @symbol_queue.empty?
-          symbol = T.must(@symbol_queue.shift)
-          on_symbol(SymbolEvent.new(symbol))
+        until @events.empty?
+          event = T.must(@events.shift)
+          on_symbol(event)
         end
         @root = nil
       end
 
       private
 
-      sig { params(name: T.nilable(String)).void }
-      def add_to_symbol_queue(name)
-        @symbol_queue << name unless name.nil? || symbols.include?(name) || symbol_ignored?(name)
+      sig { params(symbol: String).void }
+      def push_symbol(symbol)
+        @events << SymbolEvent.new(symbol) unless symbol_ignored?(symbol)
       end
 
       sig { returns(T::Set[String]) }
@@ -196,7 +196,8 @@ module Tapioca
         dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(tree)
 
         (dynamic_includes + dynamic_extends).each do |mod|
-          add_to_symbol_queue(name_of(mod))
+          name = name_of(mod)
+          push_symbol(name) if name
         end
       end
 
@@ -328,7 +329,7 @@ module Tapioca
         name = name_of(superclass)
         return if name.nil? || name.empty?
 
-        add_to_symbol_queue(name)
+        push_symbol(name)
 
         "::#{name}"
       end
@@ -366,7 +367,8 @@ module Tapioca
             name && !filtered_mixin?(name)
           end
           .map do |mod|
-            add_to_symbol_queue(name_of(mod))
+            name = name_of(mod)
+            push_symbol(name) if name
 
             qname = qualified_name_of(mod)
             case mixin_type
@@ -554,13 +556,14 @@ module Tapioca
 
         parameters.each do |_, name|
           type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-          add_to_symbol_queue(type)
+          push_symbol(type)
           sig << RBI::SigParam.new(name, type)
         end
 
         return_type = name_of_type(signature.return_type)
-        sig.return_type = sanitize_signature_types(return_type)
-        add_to_symbol_queue(sig.return_type)
+        return_type = sanitize_signature_types(return_type)
+        sig.return_type = return_type
+        push_symbol(return_type)
 
         parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
           sig.type_params << k
