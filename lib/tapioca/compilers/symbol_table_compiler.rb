@@ -19,6 +19,7 @@ module Tapioca
 
         sig { params(symbol: String).void }
         def initialize(symbol)
+          super()
           @symbol = symbol
         end
       end
@@ -34,6 +35,7 @@ module Tapioca
 
         sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
         def initialize(symbol, constant)
+          super()
           @symbol = symbol
           @constant = constant
         end
@@ -53,6 +55,7 @@ module Tapioca
 
         sig { params(symbol: String, constant: Module).void.checked(:never) }
         def initialize(symbol, constant)
+          super()
           @symbol = symbol
           @constant = constant
         end
@@ -115,17 +118,18 @@ module Tapioca
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
 
-      sig { params(gem: Gemfile::GemSpec, root: RBI::Tree, include_doc: T::Boolean).void }
-      def initialize(gem, root, include_doc: false)
+      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
+      def initialize(gem, include_doc: false)
         @gem = gem
-        @root = root
+        @root = T.let(RBI::Tree.new, RBI::Tree)
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
 
+        @events = T.let([], T::Array[Event])
+
         @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
-
-        @events = T.let([], T::Array[Event])
+        @bootstrap_symbols.sort.each { |symbol| push_symbol(symbol) }
 
         @node_listeners = T.let([], T::Array[NodeListeners::Base])
         @node_listeners << NodeListeners::Mixins.new(self)
@@ -137,17 +141,17 @@ module Tapioca
         @node_listeners << NodeListeners::RequiresAncestor.new(self)
         @node_listeners << NodeListeners::Signatures.new(self)
         @node_listeners << NodeListeners::TypeVariables.new(self)
-        @node_listeners << NodeListeners::YardDoc.new(self) if include_doc
 
-        gem.parse_yard_docs if include_doc
+        if include_doc
+          @node_listeners << NodeListeners::YardDoc.new(self)
+          gem.parse_yard_docs
+        end
       end
 
-      sig { params(rbi: RBI::File).void }
-      def compile(rbi)
-        @root = T.let(rbi.root, T.nilable(RBI::Tree))
-        @bootstrap_symbols.sort.each { |symbol| push_symbol(symbol) }
+      sig { returns(RBI::Tree) }
+      def compile
         dispatch_event(T.must(@events.shift)) until @events.empty?
-        @root = nil
+        @root
       end
 
       sig { params(symbol: String).void }
@@ -286,7 +290,7 @@ module Tapioca
         return if IGNORED_SYMBOLS.include?(name)
 
         node = RBI::Const.new(name, target)
-        push_const(name,  constant, node)
+        push_const(name, constant, node)
         @root <<  node
       end
 
@@ -308,7 +312,7 @@ module Tapioca
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
           node = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
-          push_const(name,  klass, node)
+          push_const(name, klass, node)
           @root << node
           return
         end
@@ -317,7 +321,7 @@ module Tapioca
 
         type_name = klass_name || "T.untyped"
         node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
-        push_const(name,  klass, node)
+        push_const(name, klass, node)
         @root << node
       end
 
@@ -336,7 +340,7 @@ module Tapioca
 
         # return if symbol_in_payload?(name) && scope.empty?
 
-        push_scope(name,  constant, scope)
+        push_scope(name, constant, scope)
         @root << scope
         compile_subconstants(name, constant)
       end
