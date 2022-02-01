@@ -23,6 +23,7 @@ module Tapioca
 
       sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
       def initialize(gem, include_doc: false)
+        @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
@@ -34,9 +35,10 @@ module Tapioca
         gem.parse_yard_docs if include_doc
       end
 
-      sig { params(rbi: RBI::File).void }
-      def compile(rbi)
-        generate_from_symbol(rbi.root, T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+      sig { returns(RBI::Tree) }
+      def compile
+        generate_from_symbol(T.must(@symbol_queue.shift)) until @symbol_queue.empty?
+        @root
       end
 
       private
@@ -54,17 +56,17 @@ module Tapioca
         end
       end
 
-      sig { params(tree: RBI::Tree, symbol: String).void }
-      def generate_from_symbol(tree, symbol)
+      sig { params(symbol: String).void }
+      def generate_from_symbol(symbol)
         constant = constantize(symbol)
 
         return unless constant
 
-        compile_constant(tree, symbol, constant)
+        compile_constant(symbol, constant)
       end
 
-      sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
-      def compile_constant(tree, name, constant)
+      sig { params(name: T.nilable(String), constant: BasicObject).void.checked(:never) }
+      def compile_constant(name, constant)
         return unless constant
         return unless name
         return if name.strip.empty?
@@ -79,17 +81,17 @@ module Tapioca
         case constant
         when Module
           if name_of(constant) != name
-            compile_alias(tree, name, constant)
+            compile_alias(name, constant)
           else
-            compile_module(tree, name, constant)
+            compile_module(name, constant)
           end
         else
-          compile_object(tree, name, constant)
+          compile_object(name, constant)
         end
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_alias(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_alias(name, constant)
         return if symbol_in_payload?(name)
 
         target = name_of(constant)
@@ -100,11 +102,11 @@ module Tapioca
 
         return if IGNORED_SYMBOLS.include?(name)
 
-        tree << RBI::Const.new(name, target)
+        @root << RBI::Const.new(name, target)
       end
 
-      sig { params(tree: RBI::Tree, name: String, value: BasicObject).void.checked(:never) }
-      def compile_object(tree, name, value)
+      sig { params(name: String, value: BasicObject).void.checked(:never) }
+      def compile_object(name, value)
         return if symbol_in_payload?(name)
 
         klass = class_of(value)
@@ -123,7 +125,7 @@ module Tapioca
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
           constant = RBI::Const.new(name, "T.type_alias { #{type_alias} }", comments: comments)
-          tree << constant
+          @root << constant
           return
         end
 
@@ -132,11 +134,11 @@ module Tapioca
         type_name = klass_name || "T.untyped"
         constant = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})", comments: comments)
 
-        tree << constant
+        @root << constant
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_module(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_module(name, constant)
         return unless defined_in_gem?(constant, strict: false)
         return if Tapioca::TypeVariableModule === constant
 
@@ -153,8 +155,8 @@ module Tapioca
 
         return if symbol_in_payload?(name) && scope.empty?
 
-        tree << scope
-        compile_subconstants(tree, name, constant)
+        @root << scope
+        compile_subconstants(name, constant)
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
@@ -220,8 +222,8 @@ module Tapioca
         tree << RBI::TEnumBlock.new(enums)
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_subconstants(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_subconstants(name, constant)
         constants_of(constant).sort.uniq.map do |constant_name|
           symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
           subconstant = constantize(symbol)
@@ -231,7 +233,7 @@ module Tapioca
           next if (Object == constant || BasicObject == constant) && Module === subconstant
           next unless subconstant
 
-          compile_constant(tree, symbol, subconstant)
+          compile_constant(symbol, subconstant)
         end
       end
 

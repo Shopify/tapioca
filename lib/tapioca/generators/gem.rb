@@ -159,7 +159,7 @@ module Tapioca
           display_heading: @file_header
         )
 
-        Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile(rbi)
+        rbi.root = Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 
