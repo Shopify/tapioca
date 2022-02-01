@@ -228,16 +228,7 @@ module Tapioca
 
         mark_seen(name)
 
-        case constant
-        when Module
-          if name_of(constant) != name
-            compile_alias(event.tree, name, constant)
-          else
-            compile_module(event.tree, name, constant)
-          end
-        else
-          compile_object(event.tree, name, constant)
-        end
+        compile_constant(event.tree, name, constant)
       end
 
       sig { params(event: NodeEvent).void }
@@ -246,6 +237,20 @@ module Tapioca
       end
 
       # Compiling
+
+      sig { params(tree: RBI::Tree, name: String, constant: BasicObject).void.checked(:never) }
+      def compile_constant(tree, name, constant)
+        case constant
+        when Module
+          if name_of(constant) != name
+            compile_alias(tree, name, constant)
+          else
+            compile_module(tree, name, constant)
+          end
+        else
+          compile_object(tree, name, constant)
+        end
+      end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
       def compile_alias(tree, name, constant)
@@ -315,21 +320,6 @@ module Tapioca
         compile_subconstants(tree, name, constant)
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_subconstants(tree, name, constant)
-        constants_of(constant).sort.uniq.map do |constant_name|
-          symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
-          subconstant = constantize(symbol)
-
-          # Don't compile modules of Object because Object::Foo == Foo
-          # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
-          next if (Object == constant || BasicObject == constant) && Module === subconstant
-          next unless subconstant
-
-          push_constant(tree, symbol, subconstant)
-        end
-      end
-
       sig { params(tree: RBI::Tree, constant: Class).returns(T.nilable(String)) }
       def compile_superclass(tree, constant)
         superclass = T.let(nil, T.nilable(Class)) # rubocop:disable Lint/UselessAssignment
@@ -379,6 +369,21 @@ module Tapioca
         "::#{name}"
       end
 
+      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
+      def compile_subconstants(tree, name, constant)
+        constants_of(constant).sort.uniq.map do |constant_name|
+          symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
+          subconstant = constantize(symbol)
+
+          # Don't compile modules of Object because Object::Foo == Foo
+          # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
+          next if (Object == constant || BasicObject == constant) && Module === subconstant
+          next unless subconstant
+
+          push_constant(tree, symbol, subconstant)
+        end
+      end
+
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
         files = Set.new(get_file_candidates(constant))
@@ -389,19 +394,6 @@ module Tapioca
         files.any? do |file|
           @gem.contains_path?(file)
         end
-      end
-
-      sig do
-        params(
-          mod: Module,
-          mixin_type: Trackers::Mixin::Type,
-          mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
-        ).returns(T::Boolean)
-      end
-      def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
-        locations = mixin_locations.dig(mixin_type, mod)
-        return true unless locations
-        locations.any? { |location| @gem.contains_path?(location) }
       end
 
       sig { params(constant: Module).returns(T::Array[String]) }
