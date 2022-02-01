@@ -27,6 +27,26 @@ module Tapioca
         end
       end
 
+      class ConstantEvent < Event
+        extend T::Sig
+
+        sig { returns(RBI::Tree) }
+        attr_reader :tree
+
+        sig { returns(String) }
+        attr_reader :symbol
+
+        sig { returns(BasicObject).checked(:never) }
+        attr_reader :constant
+
+        sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
+        def initialize(tree, symbol, constant)
+          @tree = tree
+          @symbol = symbol
+          @constant = constant
+        end
+      end
+
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
       IGNORED_COMMENTS = T.let([
         ":doc:",
@@ -72,12 +92,19 @@ module Tapioca
         case event
         when SymbolEvent
           on_symbol(event)
+        when ConstantEvent
+          on_constant(event)
         end
       end
 
       sig { params(tree: RBI::Tree, symbol: String).void }
       def push_symbol(tree, symbol)
         @events << SymbolEvent.new(tree, symbol)
+      end
+
+      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
+      def push_constant(tree, symbol, constant)
+        @events << ConstantEvent.new(tree, symbol, constant)
       end
 
       sig { params(event: SymbolEvent).void }
@@ -87,18 +114,20 @@ module Tapioca
         constant = constantize(symbol)
         return unless constant
 
-        compile_constant(event.tree, symbol, constant)
+        push_constant(event.tree, symbol, constant)
       end
 
-      sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
-      def compile_constant(tree, name, constant)
-        return unless constant
-        return unless name
+      sig { params(event: ConstantEvent).void.checked(:never) }
+      def on_constant(event)
+        name = event.symbol
+
         return if name.strip.empty?
         return if name.start_with?("#<")
         return if name.downcase == name
         return if alias_namespaced?(name)
         return if seen?(name)
+
+        constant = event.constant
         return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
         mark_seen(name)
@@ -106,12 +135,12 @@ module Tapioca
         case constant
         when Module
           if name_of(constant) != name
-            compile_alias(tree, name, constant)
+            compile_alias(event.tree, name, constant)
           else
-            compile_module(tree, name, constant)
+            compile_module(event.tree, name, constant)
           end
         else
-          compile_object(tree, name, constant)
+          compile_object(event.tree, name, constant)
         end
       end
 
@@ -259,7 +288,7 @@ module Tapioca
           next if (Object == constant || BasicObject == constant) && Module === subconstant
           next unless subconstant
 
-          compile_constant(tree, symbol, subconstant)
+          push_constant(tree, symbol, subconstant)
         end
       end
 
