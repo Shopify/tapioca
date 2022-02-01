@@ -2838,8 +2838,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class OtherRoot
-          extend T::Generic
           include ::Root
+          extend T::Generic
 
           Elem = type_member(fixed: Integer)
 

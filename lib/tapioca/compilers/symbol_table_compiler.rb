@@ -109,11 +109,13 @@ module Tapioca
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
 
         @node_listeners = T.let([], T::Array[NodeListeners::Base])
+        @node_listeners << NodeListeners::DynamicMixins.new(self)
         @node_listeners << NodeListeners::Helpers.new(self)
+        @node_listeners << NodeListeners::Props.new(self)
+        @node_listeners << NodeListeners::RequiresAncestor.new(self)
         @node_listeners << NodeListeners::Signatures.new(self)
         @node_listeners << NodeListeners::TypeVariables.new(self)
         @node_listeners << NodeListeners::YardDoc.new(self) if include_doc
-        @node_listeners << NodeListeners::RequiresAncestor.new(self)
 
         @events = T.let([], T::Array[Event])
         @include_doc = include_doc
@@ -302,39 +304,7 @@ module Tapioca
       def compile_body(tree, name, constant)
         compile_methods(tree, name, constant)
         compile_mixins(tree, constant)
-        compile_props(tree, constant)
         compile_enums(tree, constant)
-        compile_dynamic_mixins(tree, constant)
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_dynamic_mixins(tree, constant)
-        return if constant.is_a?(Class)
-
-        mixin_compiler = DynamicMixinCompiler.new(constant)
-        mixin_compiler.compile_class_attributes(tree)
-        dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(tree)
-
-        (dynamic_includes + dynamic_extends).each do |mod|
-          name = name_of(mod)
-          push_symbol(tree, name) if name
-        end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_props(tree, constant)
-        return unless T::Props::ClassMethods === constant
-
-        constant.props.map do |name, prop|
-          type = prop.fetch(:type_object, "T.untyped").to_s.gsub(".returns(<VOID>)", ".void")
-
-          default = prop.key?(:default) ? "T.unsafe(nil)" : nil
-          tree << if prop.fetch(:immutable, false)
-            RBI::TStructConst.new(name.to_s, type, default: default)
-          else
-            RBI::TStructProp.new(name.to_s, type, default: default)
-          end
-        end
       end
 
       sig { params(tree: RBI::Tree, constant: Module).void }
