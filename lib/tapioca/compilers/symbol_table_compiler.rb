@@ -12,11 +12,15 @@ module Tapioca
       class SymbolEvent
         extend T::Sig
 
+        sig { returns(RBI::Tree) }
+        attr_reader :tree
+
         sig { returns(String) }
         attr_reader :symbol
 
-        sig { params(symbol: String).void }
-        def initialize(symbol)
+        sig { params(tree: RBI::Tree, symbol: String).void }
+        def initialize(tree, symbol)
+          @tree = tree
           @symbol = symbol
         end
       end
@@ -43,7 +47,6 @@ module Tapioca
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
 
         @events = T.let([], T::Array[SymbolEvent])
-        @bootstrap_symbols.sort.each { |symbol| push_symbol(symbol) }
         @include_doc = include_doc
 
         gem.parse_yard_docs if include_doc
@@ -51,19 +54,18 @@ module Tapioca
 
       sig { params(rbi: RBI::File).void }
       def compile(rbi)
-        @root = T.let(rbi.root, T.nilable(RBI::Tree))
+        @bootstrap_symbols.sort.each { |symbol| push_symbol(rbi.root, symbol) }
         until @events.empty?
           event = T.must(@events.shift)
           on_symbol(event)
         end
-        @root = nil
       end
 
       private
 
-      sig { params(symbol: String).void }
-      def push_symbol(symbol)
-        @events << SymbolEvent.new(symbol)
+      sig { params(tree: RBI::Tree, symbol: String).void }
+      def push_symbol(tree, symbol)
+        @events << SymbolEvent.new(tree, symbol)
       end
 
       sig { params(event: SymbolEvent).void }
@@ -73,7 +75,7 @@ module Tapioca
         constant = constantize(symbol)
         return unless constant
 
-        compile_constant(T.must(@root), symbol, constant)
+        compile_constant(event.tree, symbol, constant)
       end
 
       sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
@@ -156,7 +158,7 @@ module Tapioca
         comments = documentation_comments(name)
         scope =
           if constant.is_a?(Class)
-            superclass = compile_superclass(constant)
+            superclass = compile_superclass(tree, constant)
             RBI::Class.new(name, superclass_name: superclass, comments: comments)
           else
             RBI::Module.new(name, comments: comments)
@@ -193,7 +195,7 @@ module Tapioca
 
         (dynamic_includes + dynamic_extends).each do |mod|
           name = name_of(mod)
-          push_symbol(name) if name
+          push_symbol(tree, name) if name
         end
       end
 
@@ -281,8 +283,8 @@ module Tapioca
         tree << RBI::Extend.new("T::Generic")
       end
 
-      sig { params(constant: Class).returns(T.nilable(String)) }
-      def compile_superclass(constant)
+      sig { params(tree: RBI::Tree, constant: Class).returns(T.nilable(String)) }
+      def compile_superclass(tree, constant)
         superclass = T.let(nil, T.nilable(Class)) # rubocop:disable Lint/UselessAssignment
 
         while (superclass = superclass_of(constant))
@@ -325,7 +327,7 @@ module Tapioca
         name = name_of(superclass)
         return if name.nil? || name.empty?
 
-        push_symbol(name)
+        push_symbol(tree, name)
 
         "::#{name}"
       end
@@ -364,7 +366,7 @@ module Tapioca
           end
           .map do |mod|
             name = name_of(mod)
-            push_symbol(name) if name
+            push_symbol(tree, name) if name
 
             qname = qualified_name_of(mod)
             case mixin_type
@@ -514,7 +516,7 @@ module Tapioca
           comments: comments
         )
 
-        rbi_method.sigs << compile_signature(signature, sanitized_parameters) if signature
+        rbi_method.sigs << compile_signature(tree, signature, sanitized_parameters) if signature
 
         sanitized_parameters.each do |type, name|
           case type
@@ -540,8 +542,8 @@ module Tapioca
 
       TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
-      sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
-      def compile_signature(signature, parameters)
+      sig { params(tree: RBI::Tree, signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
+      def compile_signature(tree, signature, parameters)
         parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
         parameter_types.merge!(signature.kwarg_types)
         parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
@@ -552,14 +554,14 @@ module Tapioca
 
         parameters.each do |_, name|
           type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
-          push_symbol(type)
+          push_symbol(tree, type)
           sig << RBI::SigParam.new(name, type)
         end
 
         return_type = name_of_type(signature.return_type)
         return_type = sanitize_signature_types(return_type)
         sig.return_type = return_type
-        push_symbol(return_type)
+        push_symbol(tree, return_type)
 
         parameter_types.values.join(", ").scan(TYPE_PARAMETER_MATCHER).flatten.uniq.each do |k, _|
           sig.type_params << k
