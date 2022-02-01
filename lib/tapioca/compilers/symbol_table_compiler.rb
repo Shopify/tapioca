@@ -623,19 +623,6 @@ module Tapioca
         end
       end
 
-      sig do
-        params(
-          mod: Module,
-          mixin_type: Trackers::Mixin::Type,
-          mixin_locations: T::Hash[Trackers::Mixin::Type, T::Hash[Module, T::Array[String]]]
-        ).returns(T::Boolean)
-      end
-      def mixed_in_by_gem?(mod, mixin_type, mixin_locations)
-        locations = mixin_locations.dig(mixin_type, mod)
-        return true unless locations
-        locations.any? { |location| @gem.contains_path?(location) }
-      end
-
       sig { params(constant: Module).returns(T::Array[String]) }
       def get_file_candidates(constant)
         wrapped_module = Pry::WrappedModule.new(constant)
