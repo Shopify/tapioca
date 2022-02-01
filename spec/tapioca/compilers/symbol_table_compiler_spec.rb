@@ -717,6 +717,54 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "does not drop absolute namespacing" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Bar; end
+
+        class Foo
+          extend T::Sig
+
+          class Bar; end
+          class String; end
+
+          sig { params(x: T.any(::String, ::Bar)).returns(::Bar) }
+          def bar(x); end
+
+          sig { params(x: ::String).returns(::String) }
+          def string(x); end
+
+          sig { params(x: Bar).returns(Bar) }
+          def local_bar(x); end
+
+          sig { params(x: String).returns(String) }
+          def local_string(x); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar; end
+
+        class Foo
+          sig { params(x: T.any(::Bar, ::String)).returns(::Bar) }
+          def bar(x); end
+
+          sig { params(x: Foo::Bar).returns(Foo::Bar) }
+          def local_bar(x); end
+
+          sig { params(x: Foo::String).returns(Foo::String) }
+          def local_string(x); end
+
+          sig { params(x: ::String).returns(::String) }
+          def string(x); end
+        end
+
+        class Foo::Bar; end
+        class Foo::String; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles a class alias that is pointing to a constant which has been overwritten" do
       add_ruby_file("baz.rb", <<~RUBY)
         class HTTPClient
