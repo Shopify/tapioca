@@ -35,6 +35,8 @@ module Tapioca
         @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
+        @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
+
         gem.parse_yard_docs if include_doc
       end
 
@@ -54,6 +56,21 @@ module Tapioca
         @events << Gem::NewConstantFound.new(symbol, constant)
       end
 
+      sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
+      def push_const(symbol, constant, node)
+        @events << Gem::NewConstNode.new(symbol, constant, node)
+      end
+
+      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
+      def push_scope(symbol, constant, node)
+        @events << Gem::NewScopeNode.new(symbol, constant, node)
+      end
+
+      sig { params(symbol: String, constant: Module, node: RBI::Method).void.checked(:never) }
+      def push_method(symbol, constant, node)
+        @events << Gem::NewMethodNode.new(symbol, constant, node)
+      end
+
       private
 
       sig { returns(Gem::Event) }
@@ -68,6 +85,8 @@ module Tapioca
           on_symbol(event)
         when Gem::NewConstantFound
           on_constant(event)
+        when Gem::NewNodeAdded
+          on_node(event)
         else
           raise "Unsupported event #{event.class}"
         end
@@ -99,6 +118,11 @@ module Tapioca
         compile_constant(name, constant)
       end
 
+      sig { params(event: Gem::NewNodeAdded).void }
+      def on_node(event)
+        @node_listeners.each { |listener| listener.dispatch(event) }
+      end
+
       # Compile
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
@@ -127,7 +151,9 @@ module Tapioca
 
         return if IGNORED_SYMBOLS.include?(name)
 
-        @root << RBI::Const.new(name, target)
+        node = RBI::Const.new(name, target)
+        push_const(name, constant, node)
+        @root << node
       end
 
       sig { params(name: String, value: BasicObject).void.checked(:never) }
@@ -149,17 +175,18 @@ module Tapioca
 
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
-          constant = RBI::Const.new(name, "T.type_alias { #{type_alias} }", comments: comments)
-          @root << constant
+          node = RBI::Const.new(name, "T.type_alias { #{type_alias} }", comments: comments)
+          push_const(name, klass, node)
+          @root << node
           return
         end
 
         return if klass_name&.start_with?("T::Types::", "T::Private::")
 
         type_name = klass_name || "T.untyped"
-        constant = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})", comments: comments)
-
-        @root << constant
+        node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})", comments: comments)
+        push_const(name, klass, node)
+        @root << node
       end
 
       sig { params(name: String, constant: Module).void }
@@ -180,6 +207,7 @@ module Tapioca
 
         return if symbol_in_payload?(name) && scope.empty?
 
+        push_scope(name, constant, scope)
         @root << scope
         compile_subconstants(name, constant)
       end
@@ -549,6 +577,7 @@ module Tapioca
           end
         end
 
+        push_method(symbol_name, constant, rbi_method)
         tree << rbi_method
       end
 
