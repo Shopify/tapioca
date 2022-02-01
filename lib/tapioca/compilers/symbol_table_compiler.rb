@@ -248,8 +248,7 @@ module Tapioca
 
         mark_seen(name)
 
-        tree = T.must(@root)
-        compile_constant(tree, name, constant)
+        compile_constant(name, constant)
       end
 
       sig { params(event: NodeEvent).void }
@@ -259,14 +258,14 @@ module Tapioca
 
       # Compiling
 
-      sig { params(tree: RBI::Tree, name: String, constant: BasicObject).void.checked(:never) }
-      def compile_constant(tree, name, constant)
+      sig { params(name: String, constant: BasicObject).void.checked(:never) }
+      def compile_constant(name, constant)
         case constant
         when Module
           if name_of(constant) != name
             compile_alias(name, constant)
           else
-            compile_scope(tree, name, constant)
+            compile_scope(name, constant)
           end
         else
           compile_object(name, constant)
@@ -321,8 +320,8 @@ module Tapioca
         @root << node
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_scope(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_scope(name, constant)
         return unless defined_in_gem?(constant, strict: false)
         return if Tapioca::TypeVariableModule === constant
 
@@ -337,8 +336,8 @@ module Tapioca
         # return if symbol_in_payload?(name) && scope.empty?
 
         push_scope(name,  constant, scope)
-        tree << scope
-        compile_subconstants(tree, name, constant)
+        @root << scope
+        compile_subconstants(name, constant)
       end
 
       sig { params(constant: Class).returns(T.nilable(String)) }
@@ -390,8 +389,8 @@ module Tapioca
         "::#{name}"
       end
 
-      sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-      def compile_subconstants(tree, name, constant)
+      sig { params(name: String, constant: Module).void }
+      def compile_subconstants(name, constant)
         constants_of(constant).sort.uniq.map do |constant_name|
           symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
           subconstant = constantize(symbol)
