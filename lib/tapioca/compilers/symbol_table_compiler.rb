@@ -49,6 +49,11 @@ module Tapioca
         @events << Gem::NewSymbolFound.new(symbol)
       end
 
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+      def push_constant(symbol, constant)
+        @events << Gem::NewConstantFound.new(symbol, constant)
+      end
+
       private
 
       sig { returns(Gem::Event) }
@@ -61,6 +66,8 @@ module Tapioca
         case event
         when Gem::NewSymbolFound
           on_symbol(event)
+        when Gem::NewConstantFound
+          on_constant(event)
         else
           raise "Unsupported event #{event.class}"
         end
@@ -72,31 +79,39 @@ module Tapioca
         return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
 
         constant = constantize(symbol)
-        compile_constant(symbol, constant) if constant
+        push_constant(symbol, constant) if constant
       end
 
-      sig { params(name: T.nilable(String), constant: BasicObject).void.checked(:never) }
-      def compile_constant(name, constant)
-        return unless constant
-        return unless name
+      sig { params(event: Gem::NewConstantFound).void.checked(:never) }
+      def on_constant(event)
+        name = event.symbol
+
         return if name.strip.empty?
         return if name.start_with?("#<")
         return if name.downcase == name
         return if alias_namespaced?(name)
         return if seen?(name)
+
+        constant = event.constant
         return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
 
         mark_seen(name)
+        compile_constant(name, constant)
+      end
 
+      # Compile
+
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+      def compile_constant(symbol, constant)
         case constant
         when Module
-          if name_of(constant) != name
-            compile_alias(name, constant)
+          if name_of(constant) != symbol
+            compile_alias(symbol, constant)
           else
-            compile_module(name, constant)
+            compile_module(symbol, constant)
           end
         else
-          compile_object(name, constant)
+          compile_object(symbol, constant)
         end
       end
 
@@ -244,7 +259,7 @@ module Tapioca
           next if (Object == constant || BasicObject == constant) && Module === subconstant
           next unless subconstant
 
-          compile_constant(symbol, subconstant)
+          push_constant(symbol, subconstant)
         end
       end
 

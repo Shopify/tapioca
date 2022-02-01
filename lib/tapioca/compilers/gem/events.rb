@@ -25,6 +25,23 @@ module Tapioca
           @symbol = symbol
         end
       end
+
+      class NewConstantFound < Event
+        extend T::Sig
+
+        sig { returns(String) }
+        attr_reader :symbol
+
+        sig { returns(BasicObject).checked(:never) }
+        attr_reader :constant
+
+        sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+        def initialize(symbol, constant)
+          super()
+          @symbol = symbol
+          @constant = constant
+        end
+      end
     end
   end
 end
