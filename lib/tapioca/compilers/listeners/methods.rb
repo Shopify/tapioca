@@ -18,28 +18,21 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ScopeEvent).void }
+        def on_scope(event)
+          scope = event.scope
+          name = event.symbol
           constant = event.constant
 
-          case node
-          when RBI::Scope
-            compile_methods(node, event.symbol, constant)
-          end
-        end
-
-        sig { params(tree: RBI::Tree, name: String, constant: Module).void }
-        def compile_methods(tree, name, constant)
           compile_method(
-            tree,
+            scope,
             name,
             constant,
             initialize_method_for(constant)
           )
 
-          compile_directly_owned_methods(tree, name, constant)
-          compile_directly_owned_methods(tree, name, singleton_class_of(constant))
+          compile_directly_owned_methods(scope, name, constant)
+          compile_directly_owned_methods(scope, name, singleton_class_of(constant))
         end
 
         sig do

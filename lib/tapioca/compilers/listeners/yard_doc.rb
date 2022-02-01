@@ -22,18 +22,20 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ConstEvent).void }
+        def on_const(event)
+          event.const.comments = documentation_comments(event.symbol)
+        end
 
-          case node
-          when RBI::Module, RBI::Class, RBI::Const
-            node.comments = documentation_comments(event.symbol)
-          when RBI::Method
-            separator = event.constant.singleton_class? ? "." : "#"
-            comments = documentation_comments("#{event.symbol}#{separator}#{node.name}")
-            node.comments = comments
-          end
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ScopeEvent).void }
+        def on_scope(event)
+          event.scope.comments = documentation_comments(event.symbol)
+        end
+
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::MethodEvent).void }
+        def on_method(event)
+          separator = event.constant.singleton_class? ? "." : "#"
+          event.node.comments = documentation_comments("#{event.symbol}#{separator}#{event.node.name}")
         end
 
         sig { params(name: String).returns(T::Array[RBI::Comment]) }

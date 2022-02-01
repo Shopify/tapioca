@@ -13,19 +13,10 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ScopeEvent).void }
+        def on_scope(event)
           constant = event.constant
 
-          case node
-          when RBI::Scope
-            compile_mixins(node, constant)
-          end
-        end
-
-        sig { params(tree: RBI::Tree, constant: Module).void }
-        def compile_mixins(tree, constant)
           singleton_class = singleton_class_of(constant)
 
           interesting_ancestors = interesting_ancestors_of(constant)
@@ -37,9 +28,10 @@ module Tapioca
             Module != class_of(mod) || are_equal?(mod, singleton_class)
           end
 
-          add_mixins(tree, prepends.reverse, Trackers::Mixin::Type::Prepend)
-          add_mixins(tree, includes.reverse, Trackers::Mixin::Type::Include)
-          add_mixins(tree, extends.reverse, Trackers::Mixin::Type::Extend)
+          scope = event.scope
+          add_mixins(scope, prepends.reverse, Trackers::Mixin::Type::Prepend)
+          add_mixins(scope, includes.reverse, Trackers::Mixin::Type::Include)
+          add_mixins(scope, extends.reverse, Trackers::Mixin::Type::Extend)
         end
 
         sig do

@@ -13,20 +13,16 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
-          case node
-          when RBI::Scope
-            constant = event.constant
-            return unless T::Enum > constant
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ScopeEvent).void }
+        def on_scope(event)
+          constant = event.constant
+          return unless T::Enum > constant
 
-            enums = T.unsafe(constant).values.map do |enum_type|
-              enum_type.instance_variable_get(:@const_name).to_s
-            end
-
-            node << RBI::TEnumBlock.new(enums)
+          enums = T.unsafe(constant).values.map do |enum_type|
+            enum_type.instance_variable_get(:@const_name).to_s
           end
+
+          event.scope << RBI::TEnumBlock.new(enums)
         end
       end
     end

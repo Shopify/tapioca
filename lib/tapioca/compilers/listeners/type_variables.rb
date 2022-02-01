@@ -13,16 +13,13 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
-          return unless node.is_a?(RBI::Scope)
-
-          compile_type_variable_declarations(node, event.constant)
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::ScopeEvent).void }
+        def on_scope(event)
+          compile_type_variable_declarations(event.scope, event.constant)
 
           sclass = RBI::SingletonClass.new
           compile_type_variable_declarations(sclass, singleton_class_of(event.constant))
-          node << sclass if sclass.nodes.length > 1
+          event.scope << sclass if sclass.nodes.length > 1
         end
 
         sig { params(tree: RBI::Tree, constant: Module).void }

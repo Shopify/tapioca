@@ -15,14 +15,11 @@ module Tapioca
 
         private
 
-        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::NodeEvent).void }
-        def on_node(event)
-          node = event.node
-
-          return unless node.is_a?(RBI::Method)
-          return unless event.is_a?(Tapioca::Compilers::SymbolTableCompiler::MethodEvent)
+        sig { override.params(event: Tapioca::Compilers::SymbolTableCompiler::MethodEvent).void }
+        def on_method(event)
           return unless event.signature
 
+          node = event.node
           node.sigs << compile_signature(event.tree, event.signature, event.parameters)
         end
 
