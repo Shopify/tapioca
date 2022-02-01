@@ -38,10 +38,12 @@ module Tapioca
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
+
         @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
+        @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
+
         @events = T.let([], T::Array[SymbolEvent])
-        symbols.sort.dup.each { |symbol| push_symbol(symbol) }
-        @symbols = T.let(nil, T.nilable(T::Set[String]))
+        @bootstrap_symbols.sort.each { |symbol| push_symbol(symbol) }
         @include_doc = include_doc
 
         gem.parse_yard_docs if include_doc
@@ -64,22 +66,14 @@ module Tapioca
         @events << SymbolEvent.new(symbol)
       end
 
-      sig { returns(T::Set[String]) }
-      def symbols
-        @symbols ||= begin
-          symbols = SymbolLoader.gem_symbols(@gem)
-          symbols.union(SymbolLoader.engine_symbols)
-        end
-      end
-
       sig { params(event: SymbolEvent).void }
       def on_symbol(event)
-        return if symbol_in_payload?(event.symbol) && !symbols.include?(event.symbol)
-        constant = constantize(event.symbol)
-
+        symbol = event.symbol
+        return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
+        constant = constantize(symbol)
         return unless constant
 
-        compile_constant(T.must(@root), event.symbol, constant)
+        compile_constant(T.must(@root), symbol, constant)
       end
 
       sig { params(tree: RBI::Tree, name: T.nilable(String), constant: BasicObject).void.checked(:never) }
