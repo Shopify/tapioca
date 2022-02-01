@@ -25,7 +25,7 @@ module Tapioca
 
           (dynamic_includes + dynamic_extends).each do |mod|
             name = name_of(mod)
-            @compiler.push_symbol(scope, name) if name
+            @compiler.push_symbol(name) if name
           end
         end
       end

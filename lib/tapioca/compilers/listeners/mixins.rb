@@ -50,7 +50,7 @@ module Tapioca
             end
             .map do |mod|
               name = name_of(mod)
-              @compiler.push_symbol(tree, name) if name
+              @compiler.push_symbol(name) if name
 
               qname = qualified_name_of(mod)
               case mixin_type

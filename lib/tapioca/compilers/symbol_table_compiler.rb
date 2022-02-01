@@ -14,15 +14,11 @@ module Tapioca
       class SymbolEvent < Event
         extend T::Sig
 
-        sig { returns(RBI::Tree) }
-        attr_reader :tree
-
         sig { returns(String) }
         attr_reader :symbol
 
-        sig { params(tree: RBI::Tree, symbol: String).void }
-        def initialize(tree, symbol)
-          @tree = tree
+        sig { params(symbol: String).void }
+        def initialize(symbol)
           @symbol = symbol
         end
       end
@@ -30,18 +26,14 @@ module Tapioca
       class ConstantEvent < Event
         extend T::Sig
 
-        sig { returns(RBI::Tree) }
-        attr_reader :tree
-
         sig { returns(String) }
         attr_reader :symbol
 
         sig { returns(BasicObject).checked(:never) }
         attr_reader :constant
 
-        sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
-        def initialize(tree, symbol, constant)
-          @tree = tree
+        sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+        def initialize(symbol, constant)
           @symbol = symbol
           @constant = constant
         end
@@ -51,8 +43,7 @@ module Tapioca
         extend T::Sig
         extend T::Helpers
 
-        sig { returns(RBI::Tree) }
-        attr_reader :tree
+        abstract!
 
         sig { returns(String) }
         attr_reader :symbol
@@ -60,9 +51,8 @@ module Tapioca
         sig { returns(Module).checked(:never) }
         attr_reader :constant
 
-        sig { params(tree: RBI::Tree, symbol: String, constant: Module).void.checked(:never) }
-        def initialize(tree, symbol, constant)
-          @tree = tree
+        sig { params(symbol: String, constant: Module).void.checked(:never) }
+        def initialize(symbol, constant)
           @symbol = symbol
           @constant = constant
         end
@@ -74,9 +64,9 @@ module Tapioca
         sig { returns(RBI::Const) }
         attr_reader :const
 
-        sig { params(tree: RBI::Tree, symbol: String, constant: Module, const: RBI::Const).void.checked(:never) }
-        def initialize(tree, symbol, constant, const)
-          super(tree, symbol, constant)
+        sig { params(symbol: String, constant: Module, const: RBI::Const).void.checked(:never) }
+        def initialize(symbol, constant, const)
+          super(symbol, constant)
           @const = const
         end
       end
@@ -87,9 +77,9 @@ module Tapioca
         sig { returns(RBI::Scope) }
         attr_reader :scope
 
-        sig { params(tree: RBI::Tree, symbol: String, constant: Module, scope: RBI::Scope).void.checked(:never) }
-        def initialize(tree, symbol, constant, scope)
-          super(tree, symbol, constant)
+        sig { params(symbol: String, constant: Module, scope: RBI::Scope).void.checked(:never) }
+        def initialize(symbol, constant, scope)
+          super(symbol, constant)
           @scope = scope
         end
       end
@@ -108,7 +98,6 @@ module Tapioca
 
         sig do
           params(
-            tree: RBI::Tree,
             symbol: String,
             constant: BasicObject,
             node: RBI::Method,
@@ -116,8 +105,8 @@ module Tapioca
             parameters: T::Array[[Symbol, String]]
           ).void.checked(:never)
         end
-        def initialize(tree, symbol, constant, node, signature, parameters)
-          super(tree, symbol, constant)
+        def initialize(symbol, constant, node, signature, parameters)
+          super(symbol, constant)
           @node = node
           @signature = signature
           @parameters = parameters
@@ -154,33 +143,34 @@ module Tapioca
 
       sig { params(rbi: RBI::File).void }
       def compile(rbi)
-        @bootstrap_symbols.sort.each { |symbol| push_symbol(rbi.root, symbol) }
-        dispatch_next until @events.empty?
+        @root = T.let(rbi.root, T.nilable(RBI::Tree))
+        @bootstrap_symbols.sort.each { |symbol| push_symbol(symbol) }
+        dispatch_event(T.must(@events.shift)) until @events.empty?
+        @root = nil
       end
 
-      sig { params(tree: RBI::Tree, symbol: String).void }
-      def push_symbol(tree, symbol)
-        @events << SymbolEvent.new(tree, symbol)
+      sig { params(symbol: String).void }
+      def push_symbol(symbol)
+        @events << SymbolEvent.new(symbol)
       end
 
-      sig { params(tree: RBI::Tree, symbol: String, constant: BasicObject).void.checked(:never) }
-      def push_constant(tree, symbol, constant)
-        @events << ConstantEvent.new(tree, symbol, constant)
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+      def push_constant(symbol, constant)
+        @events << ConstantEvent.new(symbol, constant)
       end
 
-      sig { params(tree: RBI::Tree, symbol: String, constant: Module, const: RBI::Const).void.checked(:never) }
-      def push_const(tree, symbol, constant, const)
-        @events << ConstEvent.new(tree, symbol, constant, const)
+      sig { params(symbol: String, constant: Module, const: RBI::Const).void.checked(:never) }
+      def push_const(symbol, constant, const)
+        @events << ConstEvent.new(symbol, constant, const)
       end
 
-      sig { params(tree: RBI::Tree, symbol: String, constant: Module, scope: RBI::Scope).void.checked(:never) }
-      def push_scope(tree, symbol, constant, scope)
-        @events << ScopeEvent.new(tree, symbol, constant, scope)
+      sig { params(symbol: String, constant: Module, scope: RBI::Scope).void.checked(:never) }
+      def push_scope(symbol, constant, scope)
+        @events << ScopeEvent.new(symbol, constant, scope)
       end
 
       sig do
         params(
-          tree: RBI::Tree,
           symbol: String,
           constant: BasicObject,
           node: RBI::Method,
@@ -188,8 +178,8 @@ module Tapioca
           parameters: T::Array[[Symbol, String]]
         ).void.checked(:never)
       end
-      def push_method(tree, symbol, constant, node, signature, parameters)
-        @events << MethodEvent.new(tree, symbol, constant, node, signature, parameters)
+      def push_method(symbol, constant, node, signature, parameters)
+        @events << MethodEvent.new(symbol, constant, node, signature, parameters)
       end
 
       sig { params(sig_string: String).returns(String) }
@@ -201,6 +191,7 @@ module Tapioca
           .gsub(".params()", "")
       end
 
+      # TODO: move
       sig { params(method: UnboundMethod).returns(T::Boolean) }
       def method_in_gem?(method)
         source_location = method.source_location&.first
@@ -209,6 +200,7 @@ module Tapioca
         @gem.contains_path?(source_location)
       end
 
+      # TODO: private
       sig { params(symbol_name: String).returns(T::Boolean) }
       def symbol_in_payload?(symbol_name)
         symbol_name = T.must(symbol_name[2..-1]) if symbol_name.start_with?("::")
@@ -218,11 +210,6 @@ module Tapioca
       private
 
       # Events
-
-      sig { void }
-      def dispatch_next
-        dispatch_event(T.must(@events.shift))
-      end
 
       sig { params(event: Event).void }
       def dispatch_event(event)
@@ -243,7 +230,7 @@ module Tapioca
         constant = constantize(symbol)
         return unless constant
 
-        push_constant(event.tree, symbol, constant)
+        push_constant(symbol, constant)
       end
 
       sig { params(event: ConstantEvent).void.checked(:never) }
@@ -261,7 +248,8 @@ module Tapioca
 
         mark_seen(name)
 
-        compile_constant(event.tree, name, constant)
+        tree = T.must(@root)
+        compile_constant(tree, name, constant)
       end
 
       sig { params(event: NodeEvent).void }
@@ -298,7 +286,7 @@ module Tapioca
         return if IGNORED_SYMBOLS.include?(name)
 
         node = RBI::Const.new(name, target)
-        push_const(tree, name,  constant, node)
+        push_const(name,  constant, node)
         tree <<  node
       end
 
@@ -320,7 +308,7 @@ module Tapioca
         if klass_name == "T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
           node = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
-          push_const(tree, name,  klass, node)
+          push_const(name,  klass, node)
           tree << node
           return
         end
@@ -329,7 +317,7 @@ module Tapioca
 
         type_name = klass_name || "T.untyped"
         node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
-        push_const(tree, name,  klass, node)
+        push_const(name,  klass, node)
         tree << node
       end
 
@@ -348,7 +336,7 @@ module Tapioca
 
         # return if symbol_in_payload?(name) && scope.empty?
 
-        push_scope(tree, name,  constant, scope)
+        push_scope(name,  constant, scope)
         tree << scope
         compile_subconstants(tree, name, constant)
       end
@@ -397,7 +385,7 @@ module Tapioca
         name = name_of(superclass)
         return if name.nil? || name.empty?
 
-        push_symbol(tree, name)
+        push_symbol(name)
 
         "::#{name}"
       end
@@ -413,7 +401,7 @@ module Tapioca
           next if (Object == constant || BasicObject == constant) && Module === subconstant
           next unless subconstant
 
-          push_constant(tree, symbol, subconstant)
+          push_constant(symbol, subconstant)
         end
       end
 

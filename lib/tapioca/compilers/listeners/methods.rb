@@ -145,7 +145,7 @@ module Tapioca
             end
           end
 
-          @compiler.push_method(tree, symbol_name, constant, rbi_method, signature, sanitized_parameters)
+          @compiler.push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
         end
 
