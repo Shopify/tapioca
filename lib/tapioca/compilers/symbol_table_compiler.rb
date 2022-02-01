@@ -28,6 +28,7 @@ module Tapioca
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
+        @node_listeners << Gem::Listeners::SorbetHelpers.new(self)
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
       end
@@ -206,7 +207,6 @@ module Tapioca
         # Compiling type variables must happen first to populate generic names
         compile_type_variables(tree, constant)
         compile_methods(tree, name, constant)
-        compile_module_helpers(tree, constant)
         compile_mixins(tree, constant)
         compile_props(tree, constant)
         compile_enums(tree, constant)
@@ -225,16 +225,6 @@ module Tapioca
           name = name_of(mod)
           push_symbol(name) if name
         end
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_module_helpers(tree, constant)
-        abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type) ||
-          T::Private::Abstract::Data.get(singleton_class_of(constant), :abstract_type)
-
-        tree << RBI::Helper.new(abstract_type.to_s) if abstract_type
-        tree << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)
-        tree << RBI::Helper.new("sealed") if T::Private::Sealed.sealed_module?(constant)
       end
 
       sig { params(tree: RBI::Tree, constant: Module).void }
