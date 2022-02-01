@@ -111,6 +111,7 @@ module Tapioca
         @node_listeners = T.let([], T::Array[NodeListeners::Base])
         @node_listeners << NodeListeners::DynamicMixins.new(self)
         @node_listeners << NodeListeners::Helpers.new(self)
+        @node_listeners << NodeListeners::Enums.new(self)
         @node_listeners << NodeListeners::Props.new(self)
         @node_listeners << NodeListeners::RequiresAncestor.new(self)
         @node_listeners << NodeListeners::Signatures.new(self)
@@ -304,18 +305,6 @@ module Tapioca
       def compile_body(tree, name, constant)
         compile_methods(tree, name, constant)
         compile_mixins(tree, constant)
-        compile_enums(tree, constant)
-      end
-
-      sig { params(tree: RBI::Tree, constant: Module).void }
-      def compile_enums(tree, constant)
-        return unless T::Enum > constant
-
-        enums = T.unsafe(constant).values.map do |enum_type|
-          enum_type.instance_variable_get(:@const_name).to_s
-        end
-
-        tree << RBI::TEnumBlock.new(enums)
       end
 
       sig { params(tree: RBI::Tree, name: String, constant: Module).void }
