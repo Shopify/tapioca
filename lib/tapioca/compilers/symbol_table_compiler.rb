@@ -115,9 +115,10 @@ module Tapioca
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
 
-      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
-      def initialize(gem, include_doc: false)
+      sig { params(gem: Gemfile::GemSpec, root: RBI::Tree, include_doc: T::Boolean).void }
+      def initialize(gem, root, include_doc: false)
         @gem = gem
+        @root = root
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
 
