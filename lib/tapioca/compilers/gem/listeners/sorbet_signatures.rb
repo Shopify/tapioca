@@ -9,6 +9,7 @@ module Tapioca
           extend T::Sig
 
           include Reflection
+          include RBIHelper
 
           TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
@@ -33,13 +34,13 @@ module Tapioca
             sig = RBI::Sig.new
 
             parameters.each do |_, name|
-              type = @compiler.sanitize_signature_types(parameter_types[name.to_sym].to_s)
+              type = sanitize_signature_types(parameter_types[name.to_sym].to_s)
               @compiler.push_symbol(type)
               sig << RBI::SigParam.new(name, type)
             end
 
             return_type = name_of_type(signature.return_type)
-            return_type = @compiler.sanitize_signature_types(return_type)
+            return_type = sanitize_signature_types(return_type)
             sig.return_type = return_type
             @compiler.push_symbol(return_type)
 
