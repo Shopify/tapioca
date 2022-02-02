@@ -748,10 +748,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           sig { params(x: T.any(::Bar, ::String)).returns(::Bar) }
           def bar(x); end
 
-          sig { params(x: Foo::Bar).returns(Foo::Bar) }
+          sig { params(x: ::Foo::Bar).returns(::Foo::Bar) }
           def local_bar(x); end
 
-          sig { params(x: Foo::String).returns(Foo::String) }
+          sig { params(x: ::Foo::String).returns(::Foo::String) }
           def local_string(x); end
 
           sig { params(x: ::String).returns(::String) }

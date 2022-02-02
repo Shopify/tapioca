@@ -66,7 +66,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: T.untyped).returns(T.any(::NotifyJob, ::FalseClass)) }
                     def perform_later(user_id); end
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
