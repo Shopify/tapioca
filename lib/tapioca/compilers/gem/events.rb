@@ -13,7 +13,7 @@ module Tapioca
         abstract!
       end
 
-      class NewSymbolFound < Event
+      class SymbolFound < Event
         extend T::Sig
 
         sig { returns(String) }
@@ -26,7 +26,7 @@ module Tapioca
         end
       end
 
-      class NewConstantFound < Event
+      class ConstantFound < Event
         extend T::Sig
 
         sig { returns(String) }
@@ -43,7 +43,7 @@ module Tapioca
         end
       end
 
-      class NewNodeAdded < Event
+      class NodeAdded < Event
         extend T::Helpers
         extend T::Sig
 
@@ -63,7 +63,7 @@ module Tapioca
         end
       end
 
-      class NewConstNode < NewNodeAdded
+      class ConstNodeAdded < NodeAdded
         extend T::Sig
 
         sig { returns(RBI::Const) }
@@ -76,7 +76,7 @@ module Tapioca
         end
       end
 
-      class NewScopeNode < NewNodeAdded
+      class ScopeNodeAdded < NodeAdded
         extend T::Sig
 
         sig { returns(RBI::Scope) }
@@ -89,7 +89,7 @@ module Tapioca
         end
       end
 
-      class NewMethodNode < NewNodeAdded
+      class MethodNodeAdded < NodeAdded
         extend T::Sig
 
         sig { returns(RBI::Method) }

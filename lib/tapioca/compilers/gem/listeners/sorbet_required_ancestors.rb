@@ -10,7 +10,7 @@ module Tapioca
 
           private
 
-          sig { override.params(event: NewScopeNode).void }
+          sig { override.params(event: ScopeNodeAdded).void }
           def on_scope(event)
             ancestors = Trackers::RequiredAncestor.required_ancestors_by(event.constant)
             ancestors.each do |ancestor|

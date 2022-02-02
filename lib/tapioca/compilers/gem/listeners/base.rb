@@ -16,14 +16,14 @@ module Tapioca
             @compiler = compiler
           end
 
-          sig { params(event: NewNodeAdded).void }
+          sig { params(event: NodeAdded).void }
           def dispatch(event)
             case event
-            when NewConstNode
+            when ConstNodeAdded
               on_const(event)
-            when NewScopeNode
+            when ScopeNodeAdded
               on_scope(event)
-            when NewMethodNode
+            when MethodNodeAdded
               on_method(event)
             else
               raise "Unsupported event #{event.class}"
@@ -32,15 +32,15 @@ module Tapioca
 
           private
 
-          sig { params(event: NewConstNode).void }
+          sig { params(event: ConstNodeAdded).void }
           def on_const(event)
           end
 
-          sig { params(event: NewScopeNode).void }
+          sig { params(event: ScopeNodeAdded).void }
           def on_scope(event)
           end
 
-          sig { params(event: NewMethodNode).void }
+          sig { params(event: MethodNodeAdded).void }
           def on_method(event)
           end
         end

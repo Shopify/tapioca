@@ -48,22 +48,22 @@ module Tapioca
 
       sig { params(symbol: String).void }
       def push_symbol(symbol)
-        @events << Gem::NewSymbolFound.new(symbol)
+        @events << Gem::SymbolFound.new(symbol)
       end
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def push_constant(symbol, constant)
-        @events << Gem::NewConstantFound.new(symbol, constant)
+        @events << Gem::ConstantFound.new(symbol, constant)
       end
 
       sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
       def push_const(symbol, constant, node)
-        @events << Gem::NewConstNode.new(symbol, constant, node)
+        @events << Gem::ConstNodeAdded.new(symbol, constant, node)
       end
 
       sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
       def push_scope(symbol, constant, node)
-        @events << Gem::NewScopeNode.new(symbol, constant, node)
+        @events << Gem::ScopeNodeAdded.new(symbol, constant, node)
       end
 
       sig do
@@ -76,7 +76,7 @@ module Tapioca
         ).void.checked(:never)
       end
       def push_method(symbol, constant, node, signature, parameters)
-        @events << Gem::NewMethodNode.new(symbol, constant, node, signature, parameters)
+        @events << Gem::MethodNodeAdded.new(symbol, constant, node, signature, parameters)
       end
 
       sig { params(sig_string: String).returns(String) }
@@ -113,18 +113,18 @@ module Tapioca
       sig { params(event: Gem::Event).void }
       def dispatch(event)
         case event
-        when Gem::NewSymbolFound
+        when Gem::SymbolFound
           on_symbol(event)
-        when Gem::NewConstantFound
+        when Gem::ConstantFound
           on_constant(event)
-        when Gem::NewNodeAdded
+        when Gem::NodeAdded
           on_node(event)
         else
           raise "Unsupported event #{event.class}"
         end
       end
 
-      sig { params(event: Gem::NewSymbolFound).void }
+      sig { params(event: Gem::SymbolFound).void }
       def on_symbol(event)
         symbol = event.symbol
         return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
@@ -133,7 +133,7 @@ module Tapioca
         push_constant(symbol, constant) if constant
       end
 
-      sig { params(event: Gem::NewConstantFound).void.checked(:never) }
+      sig { params(event: Gem::ConstantFound).void.checked(:never) }
       def on_constant(event)
         name = event.symbol
 
@@ -150,7 +150,7 @@ module Tapioca
         compile_constant(name, constant)
       end
 
-      sig { params(event: Gem::NewNodeAdded).void }
+      sig { params(event: Gem::NodeAdded).void }
       def on_node(event)
         @node_listeners.each { |listener| listener.dispatch(event) }
       end

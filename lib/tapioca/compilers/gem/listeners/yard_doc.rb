@@ -27,17 +27,17 @@ module Tapioca
 
           private
 
-          sig { override.params(event: NewConstNode).void }
+          sig { override.params(event: ConstNodeAdded).void }
           def on_const(event)
             event.node.comments = documentation_comments(event.symbol)
           end
 
-          sig { override.params(event: NewScopeNode).void }
+          sig { override.params(event: ScopeNodeAdded).void }
           def on_scope(event)
             event.node.comments = documentation_comments(event.symbol)
           end
 
-          sig { override.params(event: NewMethodNode).void }
+          sig { override.params(event: MethodNodeAdded).void }
           def on_method(event)
             separator = event.constant.singleton_class? ? "." : "#"
             event.node.comments = documentation_comments("#{event.symbol}#{separator}#{event.node.name}")

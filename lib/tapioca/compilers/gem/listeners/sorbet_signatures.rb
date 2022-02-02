@@ -14,7 +14,7 @@ module Tapioca
 
           private
 
-          sig { override.params(event: NewMethodNode).void }
+          sig { override.params(event: MethodNodeAdded).void }
           def on_method(event)
             signature = event.signature
             return unless signature

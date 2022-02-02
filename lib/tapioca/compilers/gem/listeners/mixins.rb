@@ -12,7 +12,7 @@ module Tapioca
 
           private
 
-          sig { override.params(event: NewScopeNode).void }
+          sig { override.params(event: ScopeNodeAdded).void }
           def on_scope(event)
             constant = event.constant
             singleton_class = singleton_class_of(constant)
