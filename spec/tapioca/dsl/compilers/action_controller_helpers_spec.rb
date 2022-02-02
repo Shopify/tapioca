@@ -165,7 +165,7 @@ module Tapioca
                     sig { returns(T.untyped) }
                     def current_user_name; end
 
-                    sig { params(user_id: Integer).void }
+                    sig { params(user_id: ::Integer).void }
                     def notify_user(user_id); end
                   end
 
@@ -210,7 +210,7 @@ module Tapioca
                     sig { returns(T.untyped) }
                     def current_user_name; end
 
-                    sig { params(user_id: Integer).void }
+                    sig { params(user_id: ::Integer).void }
                     def notify_user(user_id); end
                   end
 
@@ -255,7 +255,7 @@ module Tapioca
                     sig { params(user: T.untyped).returns(T.untyped) }
                     def greet(user); end
 
-                    sig { params(user_id: Integer).void }
+                    sig { params(user_id: ::Integer).void }
                     def notify_user(user_id); end
                   end
 

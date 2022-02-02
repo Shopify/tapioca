@@ -106,7 +106,7 @@ module Tapioca
 
                 class NotifierMailer
                   class << self
-                    sig { params(customer_id: Integer).returns(::ActionMailer::MessageDelivery) }
+                    sig { params(customer_id: ::Integer).returns(::ActionMailer::MessageDelivery) }
                     def notify_customer(customer_id); end
                   end
                 end

@@ -92,13 +92,13 @@ module Tapioca
 
                 class NotifierWorker
                   class << self
-                    sig { params(customer_id: Integer).returns(String) }
+                    sig { params(customer_id: ::Integer).returns(String) }
                     def perform_async(customer_id); end
 
-                    sig { params(interval: T.any(DateTime, Time), customer_id: Integer).returns(String) }
+                    sig { params(interval: T.any(DateTime, Time), customer_id: ::Integer).returns(String) }
                     def perform_at(interval, customer_id); end
 
-                    sig { params(interval: Numeric, customer_id: Integer).returns(String) }
+                    sig { params(interval: Numeric, customer_id: ::Integer).returns(String) }
                     def perform_in(interval, customer_id); end
                   end
                 end
