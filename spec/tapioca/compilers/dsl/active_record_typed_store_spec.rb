@@ -5,17 +5,12 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordTypedStore" do
-    before do
-      add_ruby_file("require.rb", <<~RUBY)
-        require "active_record"
-      RUBY
+    sig { void }
+    def before_setup
+      require "active_record"
     end
 
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveRecordTypedStore classes" do
         assert_empty(gathered_constants)
       end
@@ -43,10 +38,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates no definitions if there are no accessors to define" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base

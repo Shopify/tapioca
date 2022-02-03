@@ -7,8 +7,11 @@ module Tapioca
   module Helpers
     module Test
       module Template
-        include Kernel
         extend T::Sig
+        extend T::Helpers
+
+        requires_ancestor { Kernel }
+
         ERB_SUPPORTS_KVARGS = T.let(
           ::ERB.instance_method(:initialize).parameters.assoc(:key), T.nilable([Symbol, Symbol])
         )
@@ -27,6 +30,14 @@ module Tapioca
           end
 
           erb.result(binding)
+        end
+
+        sig { params(str: String, indent: Integer).returns(String) }
+        def indented(str, indent)
+          str.lines.map! do |line|
+            next line if line.chomp.empty?
+            (" " * indent) + line
+          end.join
         end
       end
     end

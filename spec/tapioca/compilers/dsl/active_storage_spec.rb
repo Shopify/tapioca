@@ -17,10 +17,6 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
     end
 
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)
       end
@@ -43,10 +39,6 @@ class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates an empty RBI file for ActiveRecord classes with no attachment" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveRecord::Base

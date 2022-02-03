@@ -5,16 +5,13 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::FrozenRecord" do
-    before do
+    sig { void }
+    def before_setup
       require "rails/railtie"
       require "tapioca/compilers/dsl/extensions/frozen_record"
     end
 
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no FrozenRecord classes" do
         assert_empty(gathered_constants)
       end
@@ -33,10 +30,6 @@ class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates empty RBI file if there are no frozen records" do
         add_ruby_file("student.rb", <<~RUBY)
           class Student < FrozenRecord::Base

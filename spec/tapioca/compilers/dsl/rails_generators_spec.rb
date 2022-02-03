@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::RailsGenerators" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no Rails generator classes" do
         assert_empty(gathered_constants)
       end
@@ -55,10 +51,6 @@ class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates empty RBI file if there are no extra arguments or options" do
         add_ruby_file("contents.rb", <<~RUBY)
           class EmptyGenerator < ::Rails::Generators::Base

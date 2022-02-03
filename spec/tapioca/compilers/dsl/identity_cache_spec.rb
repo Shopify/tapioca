@@ -5,15 +5,12 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::IdentityCache" do
-    before do
+    sig { void }
+    def before_setup
       require "rails/railtie"
     end
 
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no IdentityCache classes" do
         assert_empty(gathered_constants)
       end
@@ -49,10 +46,6 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       before do
         require "active_record"
 

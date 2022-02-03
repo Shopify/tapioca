@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActionControllerHelpers" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no  classes" do
         assert_empty(gathered_constants)
       end
@@ -74,10 +70,6 @@ class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates empty helper module when there are no helper methods specified" do
         add_ruby_file("controller.rb", <<~RUBY)
           class UserController < ActionController::Base

@@ -3,72 +3,60 @@
 
 require "sorbet-runtime"
 require "minitest/spec"
-require "tapioca/helpers/test/content"
-require "tapioca/helpers/test/template"
-require "tapioca/helpers/test/isolation"
+require "tapioca/helpers/test/dsl_compiler"
 
 class DslSpec < Minitest::Spec
   extend T::Sig
-  include Kernel
-  include Tapioca::Helpers::Test::Content
-  include Tapioca::Helpers::Test::Template
-  include Tapioca::Helpers::Test::Isolation
+  include Tapioca::Helpers::Test::DslCompiler
 
-  sig { void }
-  def after_setup
+  before do
     # Require the file that the target class should be loaded from
-    require(T.unsafe(self).target_class_file)
+    require(self.class.target_class_file)
+    use_dsl_compiler(self.class.target_class)
+    @expecting_errors = false
   end
 
-  sig { void }
-  def teardown
-    super
-    T.unsafe(self).subject.errors.clear
+  after do
+    assert_empty(generated_errors) unless @expecting_errors
+    generated_errors.clear
   end
 
-  subject do
-    T.bind(self, DslSpec)
-    # Get the class under test and initialize a new instance of it as the "subject"
-    generator_for_names(target_class_name)
-  end
-
-  sig { params(names: String).returns(Tapioca::Compilers::Dsl::Base) }
-  def generator_for_names(*names)
-    raise "name is required" if names.empty?
-
-    classes = names.map { |class_name| Object.const_get(class_name) }
-
-    compiler = Tapioca::Compilers::DslCompiler.new(
-      requested_constants: [],
-      requested_generators: classes
-    )
-
-    T.must(compiler.generators.find { |generator| generator.class.name == names.first })
+  sig { returns(T.nilable(T::Boolean)) }
+  def expect_dsl_compiler_errors!
+    @expecting_errors = T.let(true, T.nilable(T::Boolean))
   end
 
   sig { returns(Class) }
-  def spec_test_class
-    # Find the spec test class
-    klass = T.unsafe(self).class
+  def self.spec_test_class
     # It should be the one that directly inherits from DslSpec
-    klass = klass.superclass while klass.superclass != DslSpec
-    klass
+    class_ancestors = T.cast(ancestors.grep(Class), T::Array[Class])
+
+    klass = class_ancestors
+      .take_while { |ancestor| ancestor != DslSpec }
+      .last
+
+    T.must(klass)
   end
 
   sig { returns(String) }
-  def target_class_name
+  def self.target_class_name
     # Get the name of the class under test from the name of the
     # test class
     T.must(spec_test_class.name).gsub(/Spec$/, "")
   end
 
+  sig { returns(T.class_of(Tapioca::Compilers::Dsl::Base)) }
+  def self.target_class
+    Object.const_get(target_class_name)
+  end
+
   sig { returns(String) }
-  def target_class_file
+  def self.target_class_file
     underscore(target_class_name)
   end
 
   sig { params(class_name: String).returns(String) }
-  def underscore(class_name)
+  def self.underscore(class_name)
     return class_name unless /[A-Z-]|::/.match?(class_name)
 
     word = class_name.to_s.gsub("::", "/")
@@ -77,48 +65,5 @@ class DslSpec < Minitest::Spec
     word.tr!("-", "_")
     word.downcase!
     word
-  end
-
-  sig { params(str: String, indent: Integer).returns(String) }
-  def indented(str, indent)
-    str.lines.map! do |line|
-      next line if line.chomp.empty?
-      (" " * indent) + line
-    end.join
-  end
-
-  sig { returns(T::Array[String]) }
-  def gathered_constants
-    T.unsafe(self).subject.processable_constants.map(&:name).sort
-  end
-
-  sig do
-    params(
-      constant_name: T.any(Symbol, String)
-    ).returns(String)
-  end
-  def rbi_for(constant_name)
-    # Make sure this is a constant that we can handle.
-    assert_includes(gathered_constants, constant_name.to_s, <<~MSG)
-      `#{constant_name}` is not processable by the `#{target_class_name}` generator.
-    MSG
-
-    file = RBI::File.new(strictness: "strong")
-
-    constant = Object.const_get(constant_name)
-
-    T.unsafe(self).subject.decorate(file.root, constant)
-
-    file.transformed_string
-  end
-
-  sig { returns(T::Array[String]) }
-  def generated_errors
-    T.unsafe(self).subject.errors
-  end
-
-  sig { void }
-  def assert_no_generated_errors
-    T.unsafe(self).assert_empty(generated_errors)
   end
 end
