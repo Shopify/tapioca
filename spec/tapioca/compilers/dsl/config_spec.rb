@@ -1,11 +1,12 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::Config" do
-    before do
+    sig { void }
+    def before_setup
       Object.send(:remove_const, :Rails)
     end
 

@@ -5,10 +5,9 @@ require "spec_helper"
 
 class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordTypedStore" do
-    before do
-      add_ruby_file("require.rb", <<~RUBY)
-        require "active_record"
-      RUBY
+    sig { void }
+    def before_setup
+      require "active_record"
     end
 
     describe "initialize" do
