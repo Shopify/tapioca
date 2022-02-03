@@ -70,7 +70,7 @@ module Tapioca
         outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
         rbi_files_to_purge = existing_rbi_filenames(@requested_constants)
 
-        compiler = Compilers::DslCompiler.new(
+        pipeline = Compilers::DslPipeline.new(
           requested_constants: constantize(@requested_constants),
           requested_generators: constantize_generators(@only),
           excluded_generators: constantize_generators(@exclude),
@@ -80,7 +80,7 @@ module Tapioca
           number_of_workers: @number_of_workers
         )
 
-        processed_files = compiler.run do |constant, contents|
+        processed_files = pipeline.run do |constant, contents|
           constant_name = T.must(Reflection.name_of(constant))
 
           if @verbose && !@quiet

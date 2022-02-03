@@ -63,7 +63,7 @@ module Tapioca
             @compiler_class = compiler_class
             @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)])
             @compiler = T.let(nil, T.nilable(Tapioca::Compilers::Dsl::Base))
-            @pipeline = T.let(nil, T.nilable(Tapioca::Compilers::DslCompiler))
+            @pipeline = T.let(nil, T.nilable(Tapioca::Compilers::DslPipeline))
           end
 
           sig { params(compiler_classes: T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)]).void }
@@ -108,9 +108,9 @@ module Tapioca
             @compiler ||= T.must(pipeline.generators.grep(compiler_class).first)
           end
 
-          sig { returns(Tapioca::Compilers::DslCompiler) }
+          sig { returns(Tapioca::Compilers::DslPipeline) }
           def pipeline
-            @pipeline ||= Tapioca::Compilers::DslCompiler.new(
+            @pipeline ||= Tapioca::Compilers::DslPipeline.new(
               requested_constants: [],
               requested_generators: activated_compiler_classes
             )

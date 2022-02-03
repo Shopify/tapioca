@@ -3,7 +3,7 @@
 
 require "tapioca/rbi_ext/model"
 require "tapioca/compilers/dsl/helpers/param_helper"
-require "tapioca/compilers/dsl_compiler"
+require "tapioca/compilers/dsl_pipeline"
 
 module Tapioca
   module Compilers
@@ -37,9 +37,9 @@ module Tapioca
           potentials.compact.first
         end
 
-        sig { params(compiler: Tapioca::Compilers::DslCompiler).void }
-        def initialize(compiler)
-          @compiler = compiler
+        sig { params(pipeline: Tapioca::Compilers::DslPipeline).void }
+        def initialize(pipeline)
+          @pipeline = pipeline
           @processable_constants = T.let(Set.new(gather_constants), T::Set[Module])
           @processable_constants.compare_by_identity
           @errors = T.let([], T::Array[String])
@@ -52,7 +52,7 @@ module Tapioca
 
         sig { params(generator_name: String).returns(T::Boolean) }
         def generator_enabled?(generator_name)
-          @compiler.generator_enabled?(generator_name)
+          @pipeline.generator_enabled?(generator_name)
         end
 
         sig do

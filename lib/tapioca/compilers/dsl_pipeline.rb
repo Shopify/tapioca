@@ -5,7 +5,7 @@ require "tapioca/compilers/dsl/base"
 
 module Tapioca
   module Compilers
-    class DslCompiler
+    class DslPipeline
       extend T::Sig
 
       sig { returns(T::Enumerable[Dsl::Base]) }
