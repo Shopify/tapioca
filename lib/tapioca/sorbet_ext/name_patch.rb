@@ -1,9 +1,9 @@
 # typed: true
 # frozen_string_literal: true
 
-# We need sorbet to compile this signature before applying the patch
-# to avoid an infinite loop.
-::Tapioca::Reflection.qualified_name_of(String)
+# We need sorbet to compile the signature for `qualified_name_of` before applying
+# the patch to avoid an infinite loop.
+T::Utils.signature_for_method(::Tapioca::Reflection.method(:qualified_name_of))
 
 module T
   module Types
