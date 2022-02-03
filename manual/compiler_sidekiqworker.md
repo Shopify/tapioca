@@ -14,7 +14,7 @@ class NotifierWorker
 end
 ~~~
 
-this generator will produce the RBI file `notifier_worker.rbi` with the following content:
+this compiler will produce the RBI file `notifier_worker.rbi` with the following content:
 
 ~~~rbi
 # notifier_worker.rbi

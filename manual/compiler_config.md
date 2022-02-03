@@ -22,7 +22,7 @@ Config.setup do |config|
   config.const_name = "AppSettings"
 end
 ```
-this generator will produce the following RBI file:
+this compiler will produce the following RBI file:
 ```rbi
 AppSettings = T.let(T.unsafe(nil), AppSettingsConfigOptions)
 
