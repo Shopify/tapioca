@@ -5,7 +5,7 @@ begin
   require "smart_properties"
 rescue LoadError
   # means SmartProperties is not installed,
-  # so let's not even define the generator.
+  # so let's not even define the compiler.
   return
 end
 
@@ -29,7 +29,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this generator will produce the RBI file `post.rbi` with the following content:
+      # this compiler will produce the RBI file `post.rbi` with the following content:
       #
       # ~~~rbi
       # # post.rbi

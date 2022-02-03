@@ -25,7 +25,7 @@ module Tapioca
       # ~~~
       #
       # Rails will allow us to invoke `posts(:first_post)` in tests to get the fixture record.
-      # The generated RBI by this generator will produce the following
+      # The generated RBI by this compiler will produce the following
       #
       # ~~~rbi
       # # test_case.rbi

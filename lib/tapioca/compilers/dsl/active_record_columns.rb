@@ -15,7 +15,7 @@ module Tapioca
     module Dsl
       # `Tapioca::Compilers::Dsl::ActiveRecordColumns` refines RBI files for subclasses of
       # [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
-      # This generator is only responsible for defining the attribute methods that would be
+      # This compiler is only responsible for defining the attribute methods that would be
       # created for the columns that are defined in the Active Record model.
       #
       # For example, with the following model class:
@@ -36,7 +36,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this generator will produce the following methods in the RBI file
+      # this compiler will produce the following methods in the RBI file
       # `post.rbi`:
       #
       # ~~~rbi

@@ -159,7 +159,7 @@ generate the list of unresolved constants
 
 Command: `tapioca dsl [constant...]`
 
-This will generate DSL RBIs for specified constants (or for all handled constants, if a constant name is not supplied). You can read about DSL RBI generators supplied by `tapioca` in [the manual](manual/generators.md).
+This will generate DSL RBIs for specified constants (or for all handled constants, if a constant name is not supplied). You can read about DSL RBI compilers supplied by `tapioca` in [the manual](manual/compilers.md).
 
 <!-- START_HELP_COMMAND_DSL -->
 ```shell
@@ -167,19 +167,19 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-  --out, -o, [--outdir=directory]                # The output directory for generated DSL RBI files
-                                                 # Default: sorbet/rbi/dsl
-          [--file-header], [--no-file-header]    # Add a "This file is generated" header on top of each generated RBI file
-                                                 # Default: true
-          [--only=generator [generator ...]]     # Only run supplied DSL generator(s)
-          [--exclude=generator [generator ...]]  # Exclude supplied DSL generator(s)
-          [--verify], [--no-verify]              # Verifies RBIs are up-to-date
-  -q, [--quiet], [--no-quiet]                    # Supresses file creation output
-  -w, [--workers=N]                              # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
-                                                 # Default: 1
-  -c, [--config=<config file path>]              # Path to the Tapioca configuration file
-                                                 # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]                # Verbose output for debugging purposes
+  --out, -o, [--outdir=directory]              # The output directory for generated DSL RBI files
+                                               # Default: sorbet/rbi/dsl
+          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
+                                               # Default: true
+          [--only=compiler [compiler ...]]     # Only run supplied DSL compiler(s)
+          [--exclude=compiler [compiler ...]]  # Exclude supplied DSL compiler(s)
+          [--verify], [--no-verify]            # Verifies RBIs are up-to-date
+  -q, [--quiet], [--no-quiet]                  # Supresses file creation output
+  -w, [--workers=N]                            # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
+                                               # Default: 1
+  -c, [--config=<config file path>]            # Path to the Tapioca configuration file
+                                               # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
 
 generate RBIs for dynamic methods
 ```

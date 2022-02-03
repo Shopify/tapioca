@@ -2,7 +2,7 @@
 
 `Tapioca::Compilers::Dsl::ActiveRecordAssociations` refines RBI files for subclasses of
 [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
-This generator is only responsible for defining the methods that would be created for the associations that
+This compiler is only responsible for defining the methods that would be created for the associations that
 are defined in the Active Record model.
 
 For example, with the following model class:
@@ -17,7 +17,7 @@ class Post < ActiveRecord::Base
 end
 ~~~
 
-this generator will produce the following methods in the RBI file
+this compiler will produce the following methods in the RBI file
 `post.rbi`:
 
 ~~~rbi

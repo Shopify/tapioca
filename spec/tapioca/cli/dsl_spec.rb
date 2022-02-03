@@ -52,7 +52,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
           OUT
@@ -81,7 +81,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -121,7 +121,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
             Error: Cannot find constant 'NonExistent::Foo'
@@ -146,7 +146,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
             Error: Cannot find constant 'NonExistent::Foo'
@@ -189,7 +189,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/namespace/comment.rbi
@@ -269,7 +269,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/foo/role.rbi
@@ -329,7 +329,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
               processing  Namespace::Comment
@@ -377,7 +377,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
               processing  Namespace::Comment
@@ -412,7 +412,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
 
@@ -475,7 +475,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -588,7 +588,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -609,7 +609,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "must run custom generators" do
+        it "must run custom compilers" do
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"
 
@@ -619,8 +619,8 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/generators/generator_that_includes_bar_module.rb", <<~RB)
-            class GeneratorThatIncludesBarModuleInPost < Tapioca::Compilers::Dsl::Base
+          @project.write("lib/compilers/compiler_that_includes_bar_module.rb", <<~RB)
+            class CompilerThatIncludesBarModuleInPost < Tapioca::Compilers::Dsl::Base
               extend T::Sig
 
               sig { override.params(root: RBI::Tree, constant: T.class_of(Post)).void }
@@ -638,8 +638,8 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/generators/foo/generator_that_includes_foo_module.rb", <<~RB)
-            class GeneratorThatIncludesFooModuleInPost < Tapioca::Compilers::Dsl::Base
+          @project.write("lib/compilers/foo/compiler_that_includes_foo_module.rb", <<~RB)
+            class CompilerThatIncludesFooModuleInPost < Tapioca::Compilers::Dsl::Base
               extend T::Sig
 
               sig { override.params(root: RBI::Tree, constant: T.class_of(Post)).void }
@@ -661,7 +661,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -701,7 +701,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "must respect generators option" do
+        it "must respect `only` option" do
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"
 
@@ -721,9 +721,9 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/generators/foo/generator.rb", <<~RB)
+          @project.write("lib/compilers/foo/compiler.rb", <<~RB)
             module Foo
-              class Generator < Tapioca::Compilers::Dsl::Base
+              class Compiler < Tapioca::Compilers::Dsl::Base
                 extend T::Sig
 
                 sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionController::Base)).void }
@@ -738,11 +738,11 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --only SidekiqWorker Foo::Generator")
+          result = @project.tapioca("dsl --only SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/job.rbi
@@ -760,22 +760,22 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "errors if there are no matching generators" do
-          result = @project.tapioca("dsl --only NonexistentGenerator")
+        it "errors if there are no matching compilers" do
+          result = @project.tapioca("dsl --only NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
-            Error: Cannot find generator 'NonexistentGenerator'
+            Error: Cannot find compiler 'NonexistentCompiler'
           OUT
 
           assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
           refute_success_status(result)
         end
 
-        it "must respect exclude_generators option" do
+        it "must respect `exclude` option" do
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"
 
@@ -795,9 +795,9 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/generators/foo/generator.rb", <<~RB)
+          @project.write("lib/compilers/foo/compiler.rb", <<~RB)
             module Foo
-              class Generator < Tapioca::Compilers::Dsl::Base
+              class Compiler < Tapioca::Compilers::Dsl::Base
                 extend T::Sig
 
                 sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionController::Base)).void }
@@ -812,11 +812,11 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Generator")
+          result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -834,15 +834,15 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "errors if there are no matching exclude_generators" do
-          result = @project.tapioca("dsl --exclude NonexistentGenerator")
+        it "errors if there are no matching `exclude` compilers" do
+          result = @project.tapioca("dsl --exclude NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
-            Error: Cannot find generator 'NonexistentGenerator'
+            Error: Cannot find compiler 'NonexistentCompiler'
           OUT
 
           assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
@@ -927,7 +927,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
                    force  sorbet/rbi/dsl/image.rbi
@@ -1034,7 +1034,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
 
 
@@ -1068,7 +1068,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
 
 
@@ -1113,7 +1113,7 @@ module Tapioca
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
-            Loading DSL generator classes... Done
+            Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
 
 

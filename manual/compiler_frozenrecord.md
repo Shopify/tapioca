@@ -23,7 +23,7 @@ and the following YAML file:
   last_name:  Lord
 ~~~
 
-this generator will produce the RBI file `student.rbi` with the following content:
+this compiler will produce the RBI file `student.rbi` with the following content:
 
 ~~~rbi
 # Student.rbi

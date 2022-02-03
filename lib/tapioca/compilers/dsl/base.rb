@@ -26,11 +26,11 @@ module Tapioca
 
         sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Compilers::Dsl::Base))) }
         def self.resolve(name)
-          # Try to find built-in tapioca generator first, then globally defined generator.
+          # Try to find built-in tapioca compiler first, then globally defined compiler.
           potentials = ["Tapioca::Compilers::Dsl::#{name}", name].map do |potential_name|
             Object.const_get(potential_name)
           rescue NameError
-            # Skip if we can't find generator by the potential name
+            # Skip if we can't find compiler by the potential name
             nil
           end
 
@@ -50,9 +50,9 @@ module Tapioca
           processable_constants.include?(constant)
         end
 
-        sig { params(generator_name: String).returns(T::Boolean) }
-        def generator_enabled?(generator_name)
-          @pipeline.generator_enabled?(generator_name)
+        sig { params(compiler_name: String).returns(T::Boolean) }
+        def compiler_enabled?(compiler_name)
+          @pipeline.compiler_enabled?(compiler_name)
         end
 
         sig do

@@ -25,7 +25,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this generator will produce the RBI file `taggeable.rbi` with the following content:
+      # this compiler will produce the RBI file `taggeable.rbi` with the following content:
       #
       # ~~~rbi
       # # typed: strong

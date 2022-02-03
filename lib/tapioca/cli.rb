@@ -77,13 +77,13 @@ module Tapioca
       default: true
     option :only,
       type: :array,
-      banner: "generator [generator ...]",
-      desc: "Only run supplied DSL generator(s)",
+      banner: "compiler [compiler ...]",
+      desc: "Only run supplied DSL compiler(s)",
       default: []
     option :exclude,
       type: :array,
-      banner: "generator [generator ...]",
-      desc: "Exclude supplied DSL generator(s)",
+      banner: "compiler [compiler ...]",
+      desc: "Exclude supplied DSL compiler(s)",
       default: []
     option :verify,
       type: :boolean,

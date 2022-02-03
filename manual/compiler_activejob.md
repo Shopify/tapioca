@@ -14,7 +14,7 @@ class NotifyUserJob < ActiveJob::Base
 end
 ~~~
 
-this generator will produce the RBI file `notify_user_job.rbi` with the following content:
+this compiler will produce the RBI file `notify_user_job.rbi` with the following content:
 
 ~~~rbi
 # notify_user_job.rbi

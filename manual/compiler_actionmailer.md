@@ -13,7 +13,7 @@ class NotifierMailer < ActionMailer::Base
 end
 ~~~
 
-this generator will produce the RBI file `notifier_mailer.rbi` with the following content:
+this compiler will produce the RBI file `notifier_mailer.rbi` with the following content:
 
 ~~~rbi
 # notifier_mailer.rbi

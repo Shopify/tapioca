@@ -9,7 +9,7 @@ module Tapioca
       extend T::Sig
 
       sig { returns(T::Enumerable[Dsl::Base]) }
-      attr_reader :generators
+      attr_reader :compilers
 
       sig { returns(T::Array[Module]) }
       attr_reader :requested_constants
@@ -20,21 +20,21 @@ module Tapioca
       sig do
         params(
           requested_constants: T::Array[Module],
-          requested_generators: T::Array[T.class_of(Dsl::Base)],
-          excluded_generators: T::Array[T.class_of(Dsl::Base)],
+          requested_compilers: T::Array[T.class_of(Dsl::Base)],
+          excluded_compilers: T::Array[T.class_of(Dsl::Base)],
           error_handler: T.proc.params(error: String).void,
           number_of_workers: T.nilable(Integer),
         ).void
       end
       def initialize(
         requested_constants:,
-        requested_generators: [],
-        excluded_generators: [],
+        requested_compilers: [],
+        excluded_compilers: [],
         error_handler: $stderr.method(:puts).to_proc,
         number_of_workers: nil
       )
-        @generators = T.let(
-          gather_generators(requested_generators, excluded_generators),
+        @compilers = T.let(
+          gather_compilers(requested_compilers, excluded_compilers),
           T::Enumerable[Dsl::Base]
         )
         @requested_constants = requested_constants
@@ -69,42 +69,42 @@ module Tapioca
           blk.call(constant, rbi)
         end
 
-        generators.flat_map(&:errors).each do |msg|
+        compilers.flat_map(&:errors).each do |msg|
           report_error(msg)
         end
 
         result.compact
       end
 
-      sig { params(generator_name: String).returns(T::Boolean) }
-      def generator_enabled?(generator_name)
-        generator = Dsl::Base.resolve(generator_name)
+      sig { params(compiler_name: String).returns(T::Boolean) }
+      def compiler_enabled?(compiler_name)
+        compiler = Dsl::Base.resolve(compiler_name)
 
-        return false unless generator
+        return false unless compiler
 
-        @generators.any?(generator)
+        @compilers.any?(compiler)
       end
 
       private
 
       sig do
         params(
-          requested_generators: T::Array[T.class_of(Dsl::Base)],
-          excluded_generators: T::Array[T.class_of(Dsl::Base)]
+          requested_compilers: T::Array[T.class_of(Dsl::Base)],
+          excluded_compilers: T::Array[T.class_of(Dsl::Base)]
         ).returns(T::Enumerable[Dsl::Base])
       end
-      def gather_generators(requested_generators, excluded_generators)
-        generator_klasses = ::Tapioca::Reflection.descendants_of(Dsl::Base).select do |klass|
-          (requested_generators.empty? || requested_generators.include?(klass)) &&
-            !excluded_generators.include?(klass)
+      def gather_compilers(requested_compilers, excluded_compilers)
+        compiler_klasses = ::Tapioca::Reflection.descendants_of(Dsl::Base).select do |klass|
+          (requested_compilers.empty? || requested_compilers.include?(klass)) &&
+            !excluded_compilers.include?(klass)
         end.sort_by { |klass| T.must(klass.name) }
 
-        generator_klasses.map { |generator_klass| generator_klass.new(self) }
+        compiler_klasses.map { |compiler_klass| compiler_klass.new(self) }
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
       def gather_constants(requested_constants)
-        constants = generators.map(&:processable_constants).reduce(Set.new, :union)
+        constants = compilers.map(&:processable_constants).reduce(Set.new, :union)
         constants &= requested_constants unless requested_constants.empty?
         constants
       end
@@ -113,9 +113,9 @@ module Tapioca
       def rbi_for_constant(constant)
         file = RBI::File.new(strictness: "true")
 
-        generators.each do |generator|
-          next unless generator.handles?(constant)
-          generator.decorate(file.root, constant)
+        compilers.each do |compiler|
+          next unless compiler.handles?(constant)
+          compiler.decorate(file.root, constant)
         end
 
         return if file.root.empty?
