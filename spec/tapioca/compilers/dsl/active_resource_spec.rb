@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveResource" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveResource classes" do
         assert_empty(gathered_constants)
       end
@@ -31,10 +27,6 @@ class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates RBI file for ActiveResource classes with an integer schema field" do
         add_ruby_file("post.rb", <<~RUBY)
           class Post < ActiveResource::Base

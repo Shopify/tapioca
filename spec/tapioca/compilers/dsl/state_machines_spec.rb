@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::StateMachine" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no StateMachines classes" do
         assert_empty(gathered_constants)
       end
@@ -33,10 +29,6 @@ class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it " generates an RBI that includes state accessor methods" do
         add_ruby_file("vehicle.rb", <<~RUBY)
           class Vehicle

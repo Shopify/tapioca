@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveRecord subclasses" do
         assert_empty(gathered_constants)
       end
@@ -60,10 +56,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
 
         describe "without errors" do
-          after do
-            T.unsafe(self).assert_no_generated_errors
-          end
-
           it "generates empty RBI file if there are no associations" do
             add_ruby_file("post.rb", <<~RUBY)
               class Post < ActiveRecord::Base
@@ -622,6 +614,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
 
         describe "with errors" do
+          before do
+            expect_dsl_compiler_errors!
+          end
+
           it "generates RBI file for broken associations" do
             add_ruby_file("schema.rb", <<~RUBY)
               ActiveRecord::Migration.suppress_messages do
@@ -748,10 +744,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       describe "without relations enabled" do
         describe "without errors" do
-          after do
-            T.unsafe(self).assert_no_generated_errors
-          end
-
           it "generates empty RBI file if there are no associations" do
             add_ruby_file("post.rb", <<~RUBY)
               class Post < ActiveRecord::Base
@@ -1310,6 +1302,10 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
         end
 
         describe "with errors" do
+          before do
+            expect_dsl_compiler_errors!
+          end
+
           it "generates RBI file for broken associations" do
             add_ruby_file("schema.rb", <<~RUBY)
               ActiveRecord::Migration.suppress_messages do
@@ -1458,10 +1454,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
           end
           Rails.application.initialize!
         RUBY
-      end
-
-      after do
-        T.unsafe(self).assert_no_generated_errors
       end
 
       it "generates RBI file for has_one_attached ActiveStorage association" do

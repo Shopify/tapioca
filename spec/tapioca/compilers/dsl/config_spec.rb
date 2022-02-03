@@ -11,10 +11,6 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
     end
 
     describe "gather_constants" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers `Settings` if there are no special config constant set" do
         ::Config.load_and_set_settings("")
 
@@ -30,10 +26,6 @@ class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates a module definition for a simple config" do
         add_content_file("settings.yml", <<~YAML)
           github_key: 12345

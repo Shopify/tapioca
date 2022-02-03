@@ -13,10 +13,17 @@ class DslSpec < Minitest::Spec
     # Require the file that the target class should be loaded from
     require(self.class.target_class_file)
     use_dsl_compiler(self.class.target_class)
+    @expecting_errors = false
   end
 
   after do
+    assert_empty(generated_errors) unless @expecting_errors
     generated_errors.clear
+  end
+
+  sig { returns(T.nilable(T::Boolean)) }
+  def expect_dsl_compiler_errors!
+    @expecting_errors = T.let(true, T.nilable(T::Boolean))
   end
 
   sig { returns(Class) }
@@ -58,10 +65,5 @@ class DslSpec < Minitest::Spec
     word.tr!("-", "_")
     word.downcase!
     word
-  end
-
-  sig { void }
-  def assert_no_generated_errors
-    T.unsafe(self).assert_empty(generated_errors)
   end
 end

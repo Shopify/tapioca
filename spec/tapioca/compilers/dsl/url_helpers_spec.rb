@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::UrlHelper" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "does not gather constants when url_helpers is not included" do
         add_ruby_file("content.rb", <<~RUBY)
           class Application < Rails::Application
@@ -171,10 +167,6 @@ class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates RBI when there are no helper methods" do
         add_ruby_file("routes.rb", <<~RUBY)
           class Application < Rails::Application

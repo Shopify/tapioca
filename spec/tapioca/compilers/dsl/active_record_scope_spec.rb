@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordScope" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)
       end
@@ -32,10 +28,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       describe "with relations enabled" do
         before do
           require "tapioca/compilers/dsl/active_record_relations"
@@ -343,10 +335,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
     end
 
     describe "decorate_active_storage" do
-      after do
-        assert_no_generated_errors
-      end
-
       before do
         require "tapioca/compilers/dsl/active_record_relations"
         activate_other_dsl_compilers(Tapioca::Compilers::Dsl::ActiveRecordRelations)

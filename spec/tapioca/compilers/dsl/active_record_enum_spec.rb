@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::ActiveRecordEnum" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)
       end
@@ -32,10 +28,6 @@ class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates RBI file for classes with an enum attribute" do
         add_ruby_file("conversation.rb", <<~RUBY)
           class Conversation < ActiveRecord::Base

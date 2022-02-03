@@ -11,10 +11,6 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no IdentityCache classes" do
         assert_empty(gathered_constants)
       end
@@ -50,10 +46,6 @@ class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       before do
         require "active_record"
 

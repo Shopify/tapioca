@@ -6,10 +6,6 @@ require "spec_helper"
 class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
   describe "Tapioca::Compilers::Dsl::AASM" do
     describe "initialize" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "gathers no constants if there are no classes that include AASM" do
         assert_empty(gathered_constants)
       end
@@ -27,10 +23,6 @@ class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
     end
 
     describe "decorate" do
-      after do
-        T.unsafe(self).assert_no_generated_errors
-      end
-
       it "generates empty RBI when AASM is included but no AASM call has been made" do
         add_ruby_file("content.rb", <<~RUBY)
           class StateMachine
