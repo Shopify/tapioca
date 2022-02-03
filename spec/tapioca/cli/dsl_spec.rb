@@ -620,7 +620,7 @@ module Tapioca
           RB
 
           @project.write("lib/compilers/compiler_that_includes_bar_module.rb", <<~RB)
-            class CompilerThatIncludesBarModuleInPost < Tapioca::Compilers::Dsl::Base
+            class CompilerThatIncludesBarModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
 
               sig { override.params(root: RBI::Tree, constant: T.class_of(Post)).void }
@@ -639,7 +639,7 @@ module Tapioca
           RB
 
           @project.write("lib/compilers/foo/compiler_that_includes_foo_module.rb", <<~RB)
-            class CompilerThatIncludesFooModuleInPost < Tapioca::Compilers::Dsl::Base
+            class CompilerThatIncludesFooModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
 
               sig { override.params(root: RBI::Tree, constant: T.class_of(Post)).void }
@@ -723,7 +723,7 @@ module Tapioca
 
           @project.write("lib/compilers/foo/compiler.rb", <<~RB)
             module Foo
-              class Compiler < Tapioca::Compilers::Dsl::Base
+              class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
 
                 sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionController::Base)).void }
@@ -797,7 +797,7 @@ module Tapioca
 
           @project.write("lib/compilers/foo/compiler.rb", <<~RB)
             module Foo
-              class Compiler < Tapioca::Compilers::Dsl::Base
+              class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
 
                 sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionController::Base)).void }

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordTypedStoreSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordTypedStore" do
+class Tapioca::Dsl::Compilers::ActiveRecordTypedStoreSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordTypedStore" do
     sig { void }
     def before_setup
       require "active_record"

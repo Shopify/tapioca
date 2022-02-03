@@ -3,12 +3,12 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::FrozenRecordSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::FrozenRecord" do
+class Tapioca::Dsl::Compilers::FrozenRecordSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::FrozenRecord" do
     sig { void }
     def before_setup
       require "rails/railtie"
-      require "tapioca/compilers/dsl/extensions/frozen_record"
+      require "tapioca/dsl/extensions/frozen_record"
     end
 
     describe "initialize" do

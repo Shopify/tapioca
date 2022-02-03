@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::UrlHelpersSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::UrlHelper" do
+class Tapioca::Dsl::Compilers::UrlHelpersSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::UrlHelper" do
     describe "initialize" do
       it "does not gather constants when url_helpers is not included" do
         add_ruby_file("content.rb", <<~RUBY)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveModelSecurePasswordSpec" do
+class Tapioca::Dsl::Compilers::ActiveModelSecurePasswordSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveModelSecurePasswordSpec" do
     describe "initialize" do
       it "gathers no constants if there are no classes using ActiveModel::SecurePassword" do
         assert_empty(gathered_constants)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordScope" do
+class Tapioca::Dsl::Compilers::ActiveRecordScopeSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordScope" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)
@@ -30,8 +30,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
     describe "decorate" do
       describe "with relations enabled" do
         before do
-          require "tapioca/compilers/dsl/active_record_relations"
-          activate_other_dsl_compilers(Tapioca::Compilers::Dsl::ActiveRecordRelations)
+          require "tapioca/dsl/active_record_relations"
+          activate_other_dsl_compilers(Tapioca::Dsl::Compilers::ActiveRecordRelations)
         end
 
         it "generates an empty RBI file for ActiveRecord classes with no scope field" do
@@ -336,8 +336,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordScopeSpec < DslSpec
 
     describe "decorate_active_storage" do
       before do
-        require "tapioca/compilers/dsl/active_record_relations"
-        activate_other_dsl_compilers(Tapioca::Compilers::Dsl::ActiveRecordRelations)
+        require "tapioca/dsl/active_record_relations"
+        activate_other_dsl_compilers(Tapioca::Dsl::Compilers::ActiveRecordRelations)
 
         require "active_record"
         require "active_storage/attached"

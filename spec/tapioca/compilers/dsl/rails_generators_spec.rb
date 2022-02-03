@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::RailsGeneratorsSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::RailsGenerators" do
+class Tapioca::Dsl::Compilers::RailsGeneratorsSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::RailsGenerators" do
     describe "initialize" do
       it "gathers no constants if there are no Rails generator classes" do
         assert_empty(gathered_constants)

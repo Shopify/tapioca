@@ -45,7 +45,7 @@ class DslSpec < Minitest::Spec
     T.must(spec_test_class.name).gsub(/Spec$/, "")
   end
 
-  sig { returns(T.class_of(Tapioca::Compilers::Dsl::Base)) }
+  sig { returns(T.class_of(Tapioca::Dsl::Compiler)) }
   def self.target_class
     Object.const_get(target_class_name)
   end

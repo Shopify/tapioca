@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveResourceSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveResource" do
+class Tapioca::Dsl::Compilers::ActiveResourceSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveResource" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveResource classes" do
         assert_empty(gathered_constants)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordColumnsSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordColumns" do
+class Tapioca::Dsl::Compilers::ActiveRecordColumnsSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordColumns" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveRecord subclasses" do
         assert_empty(gathered_constants)

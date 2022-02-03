@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordEnumSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordEnum" do
+class Tapioca::Dsl::Compilers::ActiveRecordEnumSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordEnum" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributesSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes" do
+class Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributesSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses" do
         assert_empty(gathered_constants)

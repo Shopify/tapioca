@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveStorageSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveStorage" do
+class Tapioca::Dsl::Compilers::ActiveStorageSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveStorage" do
     before do
       add_ruby_file("require.rb", <<~RUBY)
         require "active_record"

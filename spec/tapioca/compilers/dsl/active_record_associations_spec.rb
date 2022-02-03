@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec" do
+class Tapioca::Dsl::Compilers::ActiveRecordAssociationsSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordAssociationsSpec" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveRecord subclasses" do
         assert_empty(gathered_constants)
@@ -51,8 +51,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
       describe "with relations enabled" do
         before do
-          require "tapioca/compilers/dsl/active_record_relations"
-          activate_other_dsl_compilers(Tapioca::Compilers::Dsl::ActiveRecordRelations)
+          require "tapioca/dsl/active_record_relations"
+          activate_other_dsl_compilers(Tapioca::Dsl::Compilers::ActiveRecordRelations)
         end
 
         describe "without errors" do
@@ -1433,8 +1433,8 @@ class Tapioca::Compilers::Dsl::ActiveRecordAssociationsSpec < DslSpec
 
     describe "decorate_active_storage" do
       before do
-        require "tapioca/compilers/dsl/active_record_relations"
-        activate_other_dsl_compilers(Tapioca::Compilers::Dsl::ActiveRecordRelations)
+        require "tapioca/dsl/active_record_relations"
+        activate_other_dsl_compilers(Tapioca::Dsl::Compilers::ActiveRecordRelations)
 
         add_ruby_file("application.rb", <<~RUBY)
           ENV["DATABASE_URL"] = "sqlite3::memory:"

@@ -3,10 +3,10 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordRelationsSpec < DslSpec
+class Tapioca::Dsl::Compilers::ActiveRecordRelationsSpec < DslSpec
   include Tapioca::SorbetHelper
 
-  describe "Tapioca::Compilers::Dsl::ActiveRecordRelations" do
+  describe "Tapioca::Dsl::Compilers::ActiveRecordRelations" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveRecord classes" do
         assert_empty(gathered_constants)

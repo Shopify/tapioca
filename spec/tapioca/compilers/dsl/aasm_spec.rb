@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::AASMSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::AASM" do
+class Tapioca::Dsl::Compilers::AASMSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::AASM" do
     describe "initialize" do
       it "gathers no constants if there are no classes that include AASM" do
         assert_empty(gathered_constants)

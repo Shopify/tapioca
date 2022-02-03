@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::SmartPropertiesSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::SmartProperties" do
+class Tapioca::Dsl::Compilers::SmartPropertiesSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::SmartProperties" do
     describe "initialize" do
       it "gathers no constants if there are no SmartProperty classes" do
         assert_empty(gathered_constants)

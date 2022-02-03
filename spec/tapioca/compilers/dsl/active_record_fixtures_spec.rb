@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveRecordFixturesSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveRecordFixtures" do
+class Tapioca::Dsl::Compilers::ActiveRecordFixturesSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveRecordFixtures" do
     describe "initialize" do
       it "gathers only the ActiveSupport::TestCase base class" do
         add_ruby_file("post_test.rb", <<~RUBY)

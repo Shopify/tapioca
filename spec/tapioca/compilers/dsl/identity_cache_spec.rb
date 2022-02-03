@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::IdentityCacheSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::IdentityCache" do
+class Tapioca::Dsl::Compilers::IdentityCacheSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::IdentityCache" do
     sig { void }
     def before_setup
       require "rails/railtie"

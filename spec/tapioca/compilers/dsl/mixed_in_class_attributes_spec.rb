@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::MixedInClassAttributesSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::MixedInClassAttributes" do
+class Tapioca::Dsl::Compilers::MixedInClassAttributesSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::MixedInClassAttributes" do
     before do
       require "active_support/core_ext/class/attribute"
       require "active_support/concern"

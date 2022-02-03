@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::Protobuf" do
+class Tapioca::Dsl::Compilers::ProtobufSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::Protobuf" do
     describe "gather_constants" do
       it "gathers no constants if there are no Google::Protobuf classes" do
         add_ruby_file("content.rb", <<~RUBY)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::SidekiqWorkerSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::SidekiqWorker" do
+class Tapioca::Dsl::Compilers::SidekiqWorkerSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::SidekiqWorker" do
     describe "initialize" do
       it "gathers no constants if there are no classes with Sidekiq::Worker as ancestor" do
         assert_empty(gathered_constants)

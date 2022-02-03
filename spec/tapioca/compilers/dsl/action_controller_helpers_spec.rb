@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActionControllerHelpersSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActionControllerHelpers" do
+class Tapioca::Dsl::Compilers::ActionControllerHelpersSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActionControllerHelpers" do
     describe "initialize" do
       it "gathers no constants if there are no  classes" do
         assert_empty(gathered_constants)

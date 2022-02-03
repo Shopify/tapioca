@@ -106,7 +106,7 @@ module Tapioca
         only: options[:only],
         exclude: options[:exclude],
         file_header: options[:file_header],
-        compiler_path: Tapioca::Compilers::Dsl::DSL_COMPILERS_DIR,
+        compiler_path: Tapioca::Dsl::DSL_COMPILERS_DIR,
         tapioca_path: TAPIOCA_DIR,
         default_command: DEFAULT_COMMAND,
         should_verify: options[:verify],

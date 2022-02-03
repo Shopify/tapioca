@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ConfigSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::Config" do
+class Tapioca::Dsl::Compilers::ConfigSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::Config" do
     sig { void }
     def before_setup
       Object.send(:remove_const, :Rails)

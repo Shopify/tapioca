@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::StateMachinesSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::StateMachine" do
+class Tapioca::Dsl::Compilers::StateMachinesSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::StateMachine" do
     describe "initialize" do
       it "gathers no constants if there are no StateMachines classes" do
         assert_empty(gathered_constants)

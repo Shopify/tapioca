@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveJobSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveJob" do
+class Tapioca::Dsl::Compilers::ActiveJobSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveJob" do
     describe "initialize" do
       it "gathers no constants if there are no ActiveJob subclasses" do
         assert_empty(gathered_constants)

@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActiveSupportConcernSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActiveSupportConcern" do
+class Tapioca::Dsl::Compilers::ActiveSupportConcernSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActiveSupportConcern" do
     describe "gather_constants" do
       it "does not gather anonymous constants" do
         add_ruby_file("test_case.rb", <<~RUBY)

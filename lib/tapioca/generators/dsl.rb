@@ -70,7 +70,7 @@ module Tapioca
         outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
         rbi_files_to_purge = existing_rbi_filenames(@requested_constants)
 
-        pipeline = Compilers::DslPipeline.new(
+        pipeline = Tapioca::Dsl::Pipeline.new(
           requested_constants: constantize(@requested_constants),
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),
@@ -186,10 +186,10 @@ module Tapioca
         constant_map.values
       end
 
-      sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Compilers::Dsl::Base)]) }
+      sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
       def constantize_compilers(compiler_names)
         compiler_map = compiler_names.to_h do |name|
-          [name, Compilers::Dsl::Base.resolve(name)]
+          [name, Tapioca::Dsl::Compiler.resolve(name)]
         end
 
         unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
@@ -201,7 +201,7 @@ module Tapioca
           exit(1)
         end
 
-        T.cast(compiler_map.values, T::Array[T.class_of(Compilers::Dsl::Base)])
+        T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
       end
 
       sig do

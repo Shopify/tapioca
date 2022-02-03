@@ -3,8 +3,8 @@
 
 require "spec_helper"
 
-class Tapioca::Compilers::Dsl::ActionMailerSpec < DslSpec
-  describe "Tapioca::Compilers::Dsl::ActionMailer" do
+class Tapioca::Dsl::Compilers::ActionMailerSpec < DslSpec
+  describe "Tapioca::Dsl::Compilers::ActionMailer" do
     describe "initialize" do
       it "gathers no constants if there are no ActionMailer subclasses" do
         assert_empty(gathered_constants)
