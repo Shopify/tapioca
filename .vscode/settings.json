@@ -4,8 +4,13 @@
     "rubocop": false
   },
   "ruby.codeCompletion": false,
-  "ruby.intellisense": "rubyLocate",
+  "ruby.intellisense": false,
+  "ruby.format": false,
   "byesig.opacity": 0.4,
   "byesig.fold": false,
   "byesig.showIcon": false,
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.rubocop-lsp",
+    "editor.formatOnSave": true
+  }
 }
