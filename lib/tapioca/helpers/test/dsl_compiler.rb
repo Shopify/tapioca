@@ -85,7 +85,7 @@ module Tapioca
           def rbi_for(constant_name)
             # Make sure this is a constant that we can handle.
             unless gathered_constants.include?(constant_name.to_s)
-              raise "`#{constant_name}` is not processable by the `#{compiler_class}` generator."
+              raise "`#{constant_name}` is not processable by the `#{compiler_class}` compiler."
             end
 
             file = RBI::File.new(strictness: "strong")
@@ -105,14 +105,14 @@ module Tapioca
 
           sig { returns(Tapioca::Compilers::Dsl::Base) }
           def compiler
-            @compiler ||= T.must(pipeline.generators.grep(compiler_class).first)
+            @compiler ||= T.must(pipeline.compilers.grep(compiler_class).first)
           end
 
           sig { returns(Tapioca::Compilers::DslPipeline) }
           def pipeline
             @pipeline ||= Tapioca::Compilers::DslPipeline.new(
               requested_constants: [],
-              requested_generators: activated_compiler_classes
+              requested_compilers: activated_compiler_classes
             )
           end
         end

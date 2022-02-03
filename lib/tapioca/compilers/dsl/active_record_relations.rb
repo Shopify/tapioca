@@ -21,7 +21,7 @@ module Tapioca
       # [finder](http://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html), and
       # [calculation](http://api.rubyonrails.org/classes/ActiveRecord/Calculations.html) methods.
       #
-      # The generator defines 3 (synthetic) modules and 3 (synthetic) classes to represent relations properly.
+      # The compiler defines 3 (synthetic) modules and 3 (synthetic) classes to represent relations properly.
       #
       # For a given model `Model`, we generate the following classes:
       #
@@ -75,7 +75,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this generator will produce the RBI file `post.rbi` with the following content:
+      # this compiler will produce the RBI file `post.rbi` with the following content:
       # ~~~rbi
       # # post.rbi
       # # typed: true

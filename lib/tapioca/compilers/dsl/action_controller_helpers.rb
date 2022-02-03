@@ -41,7 +41,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this generator will produce an RBI file `user_controller.rbi` with the following content:
+      # this compiler will produce an RBI file `user_controller.rbi` with the following content:
       #
       # ~~~rbi
       # # user_controller.rbi

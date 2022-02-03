@@ -58,7 +58,7 @@ module Tapioca
         load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
-        load_dsl_generators
+        load_dsl_compilers
 
         if @should_verify
           say("Checking for out-of-date RBIs...")
@@ -72,8 +72,8 @@ module Tapioca
 
         pipeline = Compilers::DslPipeline.new(
           requested_constants: constantize(@requested_constants),
-          requested_generators: constantize_generators(@only),
-          excluded_generators: constantize_generators(@exclude),
+          requested_compilers: constantize_compilers(@only),
+          excluded_compilers: constantize_compilers(@exclude),
           error_handler: ->(error) {
             say_error(error, :bold, :red)
           },
@@ -137,14 +137,15 @@ module Tapioca
       end
 
       sig { void }
-      def load_dsl_generators
-        say("Loading DSL generator classes... ")
+      def load_dsl_compilers
+        say("Loading DSL compiler classes... ")
 
         Dir.glob([
           "#{@compiler_path}/*.rb",
-          "#{@tapioca_path}/generators/**/*.rb",
-        ]).each do |generator|
-          require File.expand_path(generator)
+          "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
+          "#{@tapioca_path}/compilers/**/*.rb",
+        ]).each do |compiler|
+          require File.expand_path(compiler)
         end
 
         say("Done", :green)
@@ -185,22 +186,22 @@ module Tapioca
         constant_map.values
       end
 
-      sig { params(generator_names: T::Array[String]).returns(T::Array[T.class_of(Compilers::Dsl::Base)]) }
-      def constantize_generators(generator_names)
-        generator_map = generator_names.to_h do |name|
+      sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Compilers::Dsl::Base)]) }
+      def constantize_compilers(compiler_names)
+        compiler_map = compiler_names.to_h do |name|
           [name, Compilers::Dsl::Base.resolve(name)]
         end
 
-        unprocessable_generators = generator_map.select { |_, v| v.nil? }
-        unless unprocessable_generators.empty?
-          unprocessable_generators.each do |name, _|
-            say("Error: Cannot find generator '#{name}'", :red)
+        unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
+        unless unprocessable_compilers.empty?
+          unprocessable_compilers.each do |name, _|
+            say("Error: Cannot find compiler '#{name}'", :red)
           end
 
           exit(1)
         end
 
-        T.cast(generator_map.values, T::Array[T.class_of(Compilers::Dsl::Base)])
+        T.cast(compiler_map.values, T::Array[T.class_of(Compilers::Dsl::Base)])
       end
 
       sig do

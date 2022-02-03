@@ -32,13 +32,13 @@ module Tapioca
       #   # Use `T.unsafe` so that Sorbet does not complain about a dynamic
       #   # module being included. This allows the `include` to happen properly
       #   # at runtime but Sorbet won't see the include. However, since this
-      #   # generator will generate the proper RBI files for the include,
+      #   # compiler will generate the proper RBI files for the include,
       #   # static type checking will work as expected.
       #   T.unsafe(self).include Rails.application.routes.url_helpers
       # end
       # ~~~
       #
-      # this generator will produce the following RBI files:
+      # this compiler will produce the following RBI files:
       #
       # ~~~rbi
       # # generated_path_helpers_module.rbi
