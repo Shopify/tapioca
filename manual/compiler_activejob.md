@@ -1,6 +1,6 @@
 ## ActiveJob
 
-`Tapioca::Compilers::Dsl::ActiveJob` generates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveJob` generates RBI files for subclasses of
 [`ActiveJob::Base`](https://api.rubyonrails.org/classes/ActiveJob/Base.html).
 
 For example, with the following `ActiveJob` subclass:

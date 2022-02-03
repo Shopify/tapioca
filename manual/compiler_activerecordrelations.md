@@ -1,6 +1,6 @@
 ## ActiveRecordRelations
 
-`Tapioca::Compilers::Dsl::ActiveRecordRelations` decorates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveRecordRelations` decorates RBI files for subclasses of
 `ActiveRecord::Base` and adds
 [relation](http://api.rubyonrails.org/classes/ActiveRecord/Relation.html),
 [collection proxy](https://api.rubyonrails.org/classes/ActiveRecord/Associations/CollectionProxy.html),

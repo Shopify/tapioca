@@ -1,6 +1,6 @@
 ## RailsGenerators
 
-`Tapioca::Compilers::Dsl::RailsGenerators` generates RBI files for Rails generators
+`Tapioca::Dsl::Compilers::RailsGenerators` generates RBI files for Rails generators
 
 For example, with the following generator:
 

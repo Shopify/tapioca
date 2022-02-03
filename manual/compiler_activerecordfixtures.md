@@ -1,6 +1,6 @@
 ## ActiveRecordFixtures
 
-`Tapioca::Compilers::Dsl::ActiveRecordFixtures` decorates RBIs for test fixture methods
+`Tapioca::Dsl::Compilers::ActiveRecordFixtures` decorates RBIs for test fixture methods
 that are created dynamically by Rails.
 
 For example, given an application with a posts table, we can have a fixture file

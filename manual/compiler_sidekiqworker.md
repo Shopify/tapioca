@@ -1,6 +1,6 @@
 ## SidekiqWorker
 
-`Tapioca::Compilers::Dsl::SidekiqWorker` generates RBI files classes that include
+`Tapioca::Dsl::Compilers::SidekiqWorker` generates RBI files classes that include
 [`Sidekiq::Worker`](https://github.com/mperham/sidekiq/wiki/Getting-Started).
 
 For example, with the following class that includes `Sidekiq::Worker`:
