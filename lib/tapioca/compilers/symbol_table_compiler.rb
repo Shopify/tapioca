@@ -103,6 +103,17 @@ module Tapioca
         @gem.contains_path?(source_location)
       end
 
+      sig { params(constant: Module).returns(T.nilable(String)) }
+      def name_of(constant)
+        name = name_of_proxy_target(constant, super(class_of(constant)))
+        return name if name
+        name = super(constant)
+        return if name.nil?
+        return unless are_equal?(constant, constantize(name, inherit: true))
+        name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
+        name
+      end
+
       private
 
       sig { returns(Gem::Event) }
@@ -342,17 +353,6 @@ module Tapioca
       sig { params(name: String).returns(T::Boolean) }
       def seen?(name)
         @seen.include?(name)
-      end
-
-      sig { params(constant: Module).returns(T.nilable(String)) }
-      def name_of(constant)
-        name = name_of_proxy_target(constant, super(class_of(constant)))
-        return name if name
-        name = super(constant)
-        return if name.nil?
-        return unless are_equal?(constant, constantize(name, inherit: true))
-        name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
-        name
       end
 
       sig { params(constant: T.all(Module, T::Generic)).returns(String) }
