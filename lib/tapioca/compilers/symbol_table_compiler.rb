@@ -118,7 +118,7 @@ module Tapioca
 
       sig { returns(Gem::Event) }
       def next_event
-        T.must(@events.pop)
+        T.must(@events.shift)
       end
 
       sig { params(event: Gem::Event).void }
