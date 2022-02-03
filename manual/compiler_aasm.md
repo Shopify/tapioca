@@ -1,6 +1,6 @@
 ## AASM
 
-`Tapioca::Compilers::Dsl::AASM` generate types for AASM state machines.
+`Tapioca::Dsl::Compilers::AASM` generate types for AASM state machines.
 This gem dynamically defines constants and methods at runtime. For
 example, given a class:
 

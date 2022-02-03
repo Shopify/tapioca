@@ -1,6 +1,6 @@
 ## ActiveRecordTypedStore
 
-`Tapioca::Compilers::DSL::ActiveRecordTypedStore` generates RBI files for Active Record models that use
+`Tapioca::Dsl::Compilers::ActiveRecordTypedStore` generates RBI files for Active Record models that use
 [`ActiveRecord::TypedStore`](https://github.com/byroot/activerecord-typedstore) features.
 
 For example, with the following ActiveRecord class:

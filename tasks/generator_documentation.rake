@@ -3,9 +3,10 @@
 
 require "yard"
 require "tapioca"
+require "tapioca/reflection"
 
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
-  task.files = ["lib/tapioca/compilers/dsl/**/*.rb"]
+  task.files = ["lib/tapioca/dsl/compilers/**/*.rb"]
   task.options = ["--no-output"]
 end
 
@@ -71,16 +72,12 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
 
   def load_registry
     Dir.glob([
-      "lib/tapioca/compilers/dsl/*.rb",
+      "lib/tapioca/dsl/compilers/*.rb",
     ]).each do |compiler|
       require File.expand_path(compiler)
     end
 
-    skipped_classes = ["Tapioca::Compilers::Dsl::Base"]
-
-    Tapioca::Compilers::Dsl::Base
-      .descendants
-      .reject { |compiler| skipped_classes.include?(compiler.name) }
+    Tapioca::Reflection.descendants_of(Tapioca::Dsl::Compiler)
       .map do |compiler|
         code_object = YARD::Registry.at(compiler.name)
         RegistryEntry.new(code_object.name.to_s, compiler, code_object)

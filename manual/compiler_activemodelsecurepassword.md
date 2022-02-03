@@ -1,6 +1,6 @@
 ## ActiveModelSecurePassword
 
-`Tapioca::Compilers::Dsl::ActiveModelSecurePassword` decorates RBI files for all
+`Tapioca::Dsl::Compilers::ActiveModelSecurePassword` decorates RBI files for all
 classes that use [`ActiveModel::SecurePassword`](http://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html).
 
 For example, with the following class:

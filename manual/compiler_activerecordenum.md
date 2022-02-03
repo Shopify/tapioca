@@ -1,6 +1,6 @@
 ## ActiveRecordEnum
 
-`Tapioca::Compilers::Dsl::ActiveRecordEnum` decorates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveRecordEnum` decorates RBI files for subclasses of
 `ActiveRecord::Base` which declare [`enum` fields](https://api.rubyonrails.org/classes/ActiveRecord/Enum.html).
 
 For example, with the following `ActiveRecord::Base` subclass:

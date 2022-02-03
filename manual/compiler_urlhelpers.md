@@ -1,6 +1,6 @@
 ## UrlHelpers
 
-`Tapioca::Compilers::Dsl::UrlHelpers` generates RBI files for classes that include or extend
+`Tapioca::Dsl::Compilers::UrlHelpers` generates RBI files for classes that include or extend
 [`Rails.application.routes.url_helpers`](https://api.rubyonrails.org/v5.1.7/classes/ActionDispatch/Routing/UrlFor.html#module-ActionDispatch::Routing::UrlFor-label-URL+generation+for+named+routes).
 
 For example, with the following setup:

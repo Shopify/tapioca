@@ -1,6 +1,6 @@
 ## ActiveRecordAssociations
 
-`Tapioca::Compilers::Dsl::ActiveRecordAssociations` refines RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveRecordAssociations` refines RBI files for subclasses of
 [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
 This compiler is only responsible for defining the methods that would be created for the associations that
 are defined in the Active Record model.

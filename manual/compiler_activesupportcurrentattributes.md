@@ -1,6 +1,6 @@
 ## ActiveSupportCurrentAttributes
 
-`Tapioca::Compilers::Dsl::ActiveSupportCurrentAttributes` decorates RBI files for all
+`Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes` decorates RBI files for all
 subclasses of
 [`ActiveSupport::CurrentAttributes`](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html).
 

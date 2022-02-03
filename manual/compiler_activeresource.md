@@ -1,6 +1,6 @@
 ## ActiveResource
 
-`Tapioca::Compilers::Dsl::ActiveResource` decorates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveResource` decorates RBI files for subclasses of
 [`ActiveResource::Base`](https://github.com/rails/activeresource) which declare
 `schema` fields.
 

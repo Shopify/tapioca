@@ -1,6 +1,6 @@
 ## FrozenRecord
 
-`Tapioca::Compilers::Dsl::FrozenRecord` generates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::FrozenRecord` generates RBI files for subclasses of
 [`FrozenRecord::Base`](https://github.com/byroot/frozen_record).
 
 For example, with the following FrozenRecord class:

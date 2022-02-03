@@ -18,7 +18,7 @@ AllCops:
 
 Naming/InclusiveLanguage:
   Exclude:
-  - "lib/tapioca/compilers/dsl/protobuf.rb"
+  - "lib/tapioca/dsl/compilers/protobuf.rb"
 
 RSpec/BeforeAfterAll:
   Enabled: false

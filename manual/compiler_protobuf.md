@@ -1,6 +1,6 @@
 ## Protobuf
 
-`Tapioca::Compilers::Dsl::Protobuf` decorates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::Protobuf` decorates RBI files for subclasses of
 [`Google::Protobuf::MessageExts`](https://github.com/protocolbuffers/protobuf/tree/master/ruby).
 
 For example, with the following "cart.rb" file:

@@ -1,6 +1,6 @@
 ## ActiveRecordScope
 
-`Tapioca::Compilers::Dsl::ActiveRecordScope` decorates RBI files for
+`Tapioca::Dsl::Compilers::ActiveRecordScope` decorates RBI files for
 subclasses of `ActiveRecord::Base` which declare
 [`scope` fields](https://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html#method-i-scope).
 

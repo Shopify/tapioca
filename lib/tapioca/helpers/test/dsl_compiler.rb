@@ -18,12 +18,12 @@ module Tapioca
 
         requires_ancestor { Kernel }
 
-        sig { params(compiler_class: T.class_of(Tapioca::Compilers::Dsl::Base)).void }
+        sig { params(compiler_class: T.class_of(Tapioca::Dsl::Compiler)).void }
         def use_dsl_compiler(compiler_class)
           @context = T.let(CompilerContext.new(compiler_class), T.nilable(CompilerContext))
         end
 
-        sig { params(compiler_classes: T.class_of(Tapioca::Compilers::Dsl::Base)).void }
+        sig { params(compiler_classes: T.class_of(Tapioca::Dsl::Compiler)).void }
         def activate_other_dsl_compilers(*compiler_classes)
           context.activate_other_dsl_compilers(compiler_classes)
         end
@@ -52,26 +52,26 @@ module Tapioca
         class CompilerContext
           extend T::Sig
 
-          sig { returns(T.class_of(Tapioca::Compilers::Dsl::Base)) }
+          sig { returns(T.class_of(Tapioca::Dsl::Compiler)) }
           attr_reader :compiler_class
 
-          sig { returns(T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)]) }
+          sig { returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
           attr_reader :other_compiler_classes
 
-          sig { params(compiler_class: T.class_of(Tapioca::Compilers::Dsl::Base)).void }
+          sig { params(compiler_class: T.class_of(Tapioca::Dsl::Compiler)).void }
           def initialize(compiler_class)
             @compiler_class = compiler_class
-            @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)])
-            @compiler = T.let(nil, T.nilable(Tapioca::Compilers::Dsl::Base))
-            @pipeline = T.let(nil, T.nilable(Tapioca::Compilers::DslPipeline))
+            @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Dsl::Compiler)])
+            @compiler = T.let(nil, T.nilable(Tapioca::Dsl::Compiler))
+            @pipeline = T.let(nil, T.nilable(Tapioca::Dsl::Pipeline))
           end
 
-          sig { params(compiler_classes: T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)]).void }
+          sig { params(compiler_classes: T::Array[T.class_of(Tapioca::Dsl::Compiler)]).void }
           def activate_other_dsl_compilers(compiler_classes)
             @other_compiler_classes = compiler_classes
           end
 
-          sig { returns(T::Array[T.class_of(Tapioca::Compilers::Dsl::Base)]) }
+          sig { returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
           def activated_compiler_classes
             [compiler_class, *other_compiler_classes]
           end
@@ -103,14 +103,14 @@ module Tapioca
 
           private
 
-          sig { returns(Tapioca::Compilers::Dsl::Base) }
+          sig { returns(Tapioca::Dsl::Compiler) }
           def compiler
             @compiler ||= T.must(pipeline.compilers.grep(compiler_class).first)
           end
 
-          sig { returns(Tapioca::Compilers::DslPipeline) }
+          sig { returns(Tapioca::Dsl::Pipeline) }
           def pipeline
-            @pipeline ||= Tapioca::Compilers::DslPipeline.new(
+            @pipeline ||= Tapioca::Dsl::Pipeline.new(
               requested_constants: [],
               requested_compilers: activated_compiler_classes
             )

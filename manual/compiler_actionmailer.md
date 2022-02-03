@@ -1,6 +1,6 @@
 ## ActionMailer
 
-`Tapioca::Compilers::Dsl::ActionMailer` generates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActionMailer` generates RBI files for subclasses of
 [`ActionMailer::Base`](https://api.rubyonrails.org/classes/ActionMailer/Base.html).
 
 For example, with the following `ActionMailer` subclass:

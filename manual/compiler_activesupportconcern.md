@@ -1,6 +1,6 @@
 ## ActiveSupportConcern
 
-`Tapioca::Compilers::Dsl::ActiveSupportConcern` generates RBI files for classes that both `extend`
+`Tapioca::Dsl::Compilers::ActiveSupportConcern` generates RBI files for classes that both `extend`
 `ActiveSupport::Concern` and `include` another class that extends `ActiveSupport::Concern`
 
 For example for the following hierarchy:

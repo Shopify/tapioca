@@ -1,6 +1,6 @@
 ## ActiveModelAttributes
 
-`Tapioca::Compilers::Dsl::ActiveModelAttributes` decorates RBI files for all
+`Tapioca::Dsl::Compilers::ActiveModelAttributes` decorates RBI files for all
 classes that use [`ActiveModel::Attributes`](https://edgeapi.rubyonrails.org/classes/ActiveModel/Attributes/ClassMethods.html).
 
 For example, with the following class:

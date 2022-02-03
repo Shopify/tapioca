@@ -1,6 +1,6 @@
 ## ActiveStorage
 
-`Tapioca::Compilers::Dsl::ActiveStorage` decorates RBI files for subclasses of
+`Tapioca::Dsl::Compilers::ActiveStorage` decorates RBI files for subclasses of
 `ActiveRecord::Base` that declare [one](https://edgeguides.rubyonrails.org/active_storage_overview.html#has-one-attached)
 or [many](https://edgeguides.rubyonrails.org/active_storage_overview.html#has-many-attached) attachments.
 
