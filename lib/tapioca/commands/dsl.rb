@@ -188,7 +188,7 @@ module Tapioca
       sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
       def constantize_compilers(compiler_names)
         compiler_map = compiler_names.to_h do |name|
-          [name, Tapioca::Dsl::Compiler.resolve(name)]
+          [name, resolve(name)]
         end
 
         unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
@@ -201,6 +201,19 @@ module Tapioca
         end
 
         T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
+      end
+
+      sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Dsl::Compiler))) }
+      def resolve(name)
+        # Try to find built-in tapioca compiler first, then globally defined compiler.
+        potentials = Tapioca::Dsl::Compilers::NAMESPACES.map do |namespace|
+          Object.const_get(namespace + name)
+        rescue NameError
+          # Skip if we can't find compiler by the potential name
+          nil
+        end
+
+        potentials.compact.first
       end
 
       sig do

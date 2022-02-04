@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/dsl/compiler"
+require "tapioca/dsl/compilers"
 
 module Tapioca
   module Dsl
@@ -87,8 +87,10 @@ module Tapioca
 
       sig { params(compiler_name: String).returns(T::Boolean) }
       def compiler_enabled?(compiler_name)
+        potential_names = Compilers::NAMESPACES.map { |namespace| namespace + compiler_name }
+
         @compilers.any? do |compiler|
-          ["Tapioca::Compilers::Dsl::#{compiler_name}", compiler_name].any?(compiler.name)
+          potential_names.any?(compiler.name)
         end
       end
 
