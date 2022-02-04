@@ -37,6 +37,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetProps.new(self)
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
+        @node_listeners << Gem::Listeners::Subconstants.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
       end
@@ -246,22 +247,6 @@ module Tapioca
 
         push_scope(name, constant, scope)
         @root << scope
-        compile_subconstants(name, constant)
-      end
-
-      sig { params(name: String, constant: Module).void }
-      def compile_subconstants(name, constant)
-        constants_of(constant).sort.uniq.map do |constant_name|
-          symbol = (name == "Object" ? "" : name) + "::#{constant_name}"
-          subconstant = constantize(symbol)
-
-          # Don't compile modules of Object because Object::Foo == Foo
-          # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
-          next if (Object == constant || BasicObject == constant) && Module === subconstant
-          next unless subconstant
-
-          push_constant(symbol, subconstant)
-        end
       end
 
       sig { params(constant: Class).returns(T.nilable(String)) }
