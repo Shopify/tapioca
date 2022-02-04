@@ -17,6 +17,9 @@ module Tapioca
       sig { returns(T.proc.params(error: String).void) }
       attr_reader :error_handler
 
+      sig { returns(T::Array[String]) }
+      attr_reader :errors
+
       sig do
         params(
           requested_constants: T::Array[Module],
@@ -40,6 +43,7 @@ module Tapioca
         @requested_constants = requested_constants
         @error_handler = error_handler
         @number_of_workers = number_of_workers
+        @errors = T.let([], T::Array[String])
       end
 
       sig do
@@ -69,20 +73,23 @@ module Tapioca
           blk.call(constant, rbi)
         end
 
-        # compilers.flat_map(&:errors).each do |msg|
-        #   report_error(msg)
-        # end
+        errors.each do |msg|
+          report_error(msg)
+        end
 
         result.compact
       end
 
+      sig { params(error: String).void }
+      def add_error(error)
+        @errors << error
+      end
+
       sig { params(compiler_name: String).returns(T::Boolean) }
       def compiler_enabled?(compiler_name)
-        compiler = Compiler.resolve(compiler_name)
-
-        return false unless compiler
-
-        @compilers.any?(compiler)
+        @compilers.any? do |compiler|
+          ["Tapioca::Compilers::Dsl::#{compiler_name}", compiler_name].any?(compiler.name)
+        end
       end
 
       private

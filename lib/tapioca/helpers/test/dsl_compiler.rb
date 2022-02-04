@@ -40,8 +40,7 @@ module Tapioca
 
         sig { returns(T::Array[String]) }
         def generated_errors
-          # context.errors
-          []
+          context.errors
         end
 
         sig { returns(CompilerContext) }
@@ -64,6 +63,7 @@ module Tapioca
             @compiler_class = compiler_class
             @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Dsl::Compiler)])
             @pipeline = T.let(nil, T.nilable(Tapioca::Dsl::Pipeline))
+            @errors = T.let([], T::Array[String])
           end
 
           sig { params(compiler_classes: T::Array[T.class_of(Tapioca::Dsl::Compiler)]).void }
@@ -97,10 +97,10 @@ module Tapioca
             Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
           end
 
-          # sig { returns(T::Array[String]) }
-          # def errors
-          #   compiler.errors
-          # end
+          sig { returns(T::Array[String]) }
+          def errors
+            pipeline.errors
+          end
 
           private
 

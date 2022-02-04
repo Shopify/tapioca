@@ -23,9 +23,6 @@ module Tapioca
 
       abstract!
 
-      sig { returns(T::Array[String]) }
-      attr_reader :errors
-
       sig { returns(Elem) }
       attr_reader :constant
 
@@ -81,7 +78,7 @@ module Tapioca
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
       sig { params(error: String).void }
       def add_error(error)
-        @errors << error
+        @pipeline.add_error(error)
       end
 
       private
