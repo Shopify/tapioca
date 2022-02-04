@@ -65,8 +65,10 @@ module Tapioca
       class FrozenRecord < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::FrozenRecord::Base)).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::FrozenRecord::Base))
+
+        sig { override.void }
+        def decorate
           attributes = constant.attributes
           return if attributes.empty?
 
@@ -82,19 +84,19 @@ module Tapioca
 
             record.create_include(module_name)
 
-            decorate_scopes(constant, record)
+            decorate_scopes(record)
           end
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::FrozenRecord::Base).reject(&:abstract_class?)
         end
 
         private
 
-        sig { params(constant: T.class_of(::FrozenRecord::Base), record: RBI::Scope).void }
-        def decorate_scopes(constant, record)
+        sig { params(record: RBI::Scope).void }
+        def decorate_scopes(record)
           scopes = T.unsafe(constant).__tapioca_scope_names
           return if scopes.nil?
 

@@ -46,9 +46,11 @@ module Tapioca
           Regexp
         )
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::Rails::Generators::Base)).void }
-        def decorate(root, constant)
-          base_class = base_class_for(constant)
+        Elem = type_member(fixed: T.class_of(::Rails::Generators::Base))
+
+        sig { override.void }
+        def decorate
+          base_class = base_class_of_constant
           arguments = constant.arguments - base_class.arguments
           class_options = constant.class_options.reject do |name, option|
             base_class.class_options[name] == option
@@ -63,7 +65,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           all_classes.select do |const|
             name = qualified_name_of(const)
 
@@ -84,11 +86,8 @@ module Tapioca
           )
         end
 
-        sig do
-          params(constant: T.class_of(::Rails::Generators::Base))
-            .returns(T.class_of(::Rails::Generators::Base))
-        end
-        def base_class_for(constant)
+        sig { returns(T.class_of(::Rails::Generators::Base)) }
+        def base_class_of_constant
           ancestor = inherited_ancestors_of(constant).find do |klass|
             qualified_name_of(klass)&.match?(BUILT_IN_MATCHER)
           end

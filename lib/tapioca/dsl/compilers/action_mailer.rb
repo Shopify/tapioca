@@ -36,8 +36,10 @@ module Tapioca
       class ActionMailer < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActionMailer::Base)).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::ActionMailer::Base))
+
+        sig { override.void }
+        def decorate
           root.create_path(constant) do |mailer|
             constant.action_methods.to_a.each do |mailer_method|
               method_def = constant.instance_method(mailer_method)
@@ -53,7 +55,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActionMailer::Base).reject(&:abstract?)
         end
       end

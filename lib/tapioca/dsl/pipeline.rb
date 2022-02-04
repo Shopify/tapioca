@@ -8,7 +8,7 @@ module Tapioca
     class Pipeline
       extend T::Sig
 
-      sig { returns(T::Enumerable[Compiler]) }
+      sig { returns(T::Enumerable[T.class_of(Compiler)]) }
       attr_reader :compilers
 
       sig { returns(T::Array[Module]) }
@@ -35,7 +35,7 @@ module Tapioca
       )
         @compilers = T.let(
           gather_compilers(requested_compilers, excluded_compilers),
-          T::Enumerable[Compiler]
+          T::Enumerable[T.class_of(Compiler)]
         )
         @requested_constants = requested_constants
         @error_handler = error_handler
@@ -69,9 +69,9 @@ module Tapioca
           blk.call(constant, rbi)
         end
 
-        compilers.flat_map(&:errors).each do |msg|
-          report_error(msg)
-        end
+        # compilers.flat_map(&:errors).each do |msg|
+        #   report_error(msg)
+        # end
 
         result.compact
       end
@@ -91,15 +91,13 @@ module Tapioca
         params(
           requested_compilers: T::Array[T.class_of(Compiler)],
           excluded_compilers: T::Array[T.class_of(Compiler)]
-        ).returns(T::Enumerable[Compiler])
+        ).returns(T::Enumerable[T.class_of(Compiler)])
       end
       def gather_compilers(requested_compilers, excluded_compilers)
-        compiler_klasses = ::Tapioca::Reflection.descendants_of(Compiler).select do |klass|
+        ::Tapioca::Reflection.descendants_of(Compiler).select do |klass|
           (requested_compilers.empty? || requested_compilers.include?(klass)) &&
             !excluded_compilers.include?(klass)
         end.sort_by { |klass| T.must(klass.name) }
-
-        compiler_klasses.map { |compiler_klass| compiler_klass.new(self) }
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
@@ -113,9 +111,10 @@ module Tapioca
       def rbi_for_constant(constant)
         file = RBI::File.new(strictness: "true")
 
-        compilers.each do |compiler|
-          next unless compiler.handles?(constant)
-          compiler.decorate(file.root, constant)
+        compilers.each do |compiler_class|
+          next unless compiler_class.handles?(constant)
+          compiler = compiler_class.new(self, file.root, constant)
+          compiler.decorate
         end
 
         return if file.root.empty?

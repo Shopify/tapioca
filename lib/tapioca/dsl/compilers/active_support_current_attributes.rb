@@ -62,17 +62,12 @@ module Tapioca
       class ActiveSupportCurrentAttributes < Compiler
         extend T::Sig
 
-        sig do
-          override
-            .params(
-              root: RBI::Tree,
-              constant: T.class_of(::ActiveSupport::CurrentAttributes)
-            )
-            .void
-        end
-        def decorate(root, constant)
-          dynamic_methods = dynamic_methods_for(constant)
-          instance_methods = instance_methods_for(constant) - dynamic_methods
+        Elem = type_member(fixed: T.class_of(::ActiveSupport::CurrentAttributes))
+
+        sig { override.void }
+        def decorate
+          dynamic_methods = dynamic_methods_of_constant
+          instance_methods = instance_methods_of_constant - dynamic_methods
           return if dynamic_methods.empty? && instance_methods.empty?
 
           root.create_path(constant) do |current_attributes|
@@ -94,19 +89,19 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActiveSupport::CurrentAttributes)
         end
 
         private
 
-        sig { params(constant: T.class_of(::ActiveSupport::CurrentAttributes)).returns(T::Array[Symbol]) }
-        def dynamic_methods_for(constant)
+        sig { returns(T::Array[Symbol]) }
+        def dynamic_methods_of_constant
           constant.instance_variable_get(:@generated_attribute_methods)&.instance_methods(false) || []
         end
 
-        sig { params(constant: T.class_of(::ActiveSupport::CurrentAttributes)).returns(T::Array[Symbol]) }
-        def instance_methods_for(constant)
+        sig { returns(T::Array[Symbol]) }
+        def instance_methods_of_constant
           constant.instance_methods(false)
         end
 
