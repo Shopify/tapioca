@@ -175,6 +175,10 @@ module Tapioca
       type: :boolean,
       desc: "Include RBIs found in the `rbi/` directory of the gem",
       default: true
+    option :favor_exported_gem_rbis,
+      type: :boolean,
+      desc: "When there are conflicts between generated and exported rbis, favor the exported rbi.",
+      default: false
     option :workers,
       aliases: ["-w"],
       type: :numeric,
@@ -196,6 +200,7 @@ module Tapioca
           file_header: options[:file_header],
           doc: options[:doc],
           include_exported_rbis: options[:exported_gem_rbis],
+          favor_exported_gem_rbis: options[:favor_exported_gem_rbis],
           number_of_workers: options[:workers]
         )
 

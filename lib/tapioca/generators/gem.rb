@@ -16,6 +16,7 @@ module Tapioca
           file_header: T::Boolean,
           doc: T::Boolean,
           include_exported_rbis: T::Boolean,
+          favor_exported_gem_rbis: T::Boolean,
           file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer)
         ).void
@@ -31,6 +32,7 @@ module Tapioca
         file_header:,
         doc:,
         include_exported_rbis:,
+        favor_exported_gem_rbis:,
         file_writer: FileWriter.new,
         number_of_workers: nil
       )
@@ -51,6 +53,7 @@ module Tapioca
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @doc = T.let(doc, T::Boolean)
         @include_exported_rbis = include_exported_rbis
+        @favor_exported_gem_rbis = favor_exported_gem_rbis
       end
 
       sig { override.void }
@@ -345,6 +348,15 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
       end
 
+      sig { returns(RBI::Rewriters::Merge::Keep) }
+      def exported_rbi_merge_policy
+        if @favor_exported_gem_rbis
+          RBI::Rewriters::Merge::Keep::RIGHT
+        else
+          RBI::Rewriters::Merge::Keep::LEFT
+        end
+      end
+
       sig { params(gem: Gemfile::GemSpec, file: RBI::File).void }
       def merge_with_exported_rbi(gem, file)
         return file unless gem.export_rbi_files?
@@ -363,7 +375,7 @@ module Tapioca
           return file
         end
 
-        file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: RBI::Rewriters::Merge::Keep::LEFT)
+        file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: exported_rbi_merge_policy)
       rescue RBI::ParseError => e
         say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
         say_error("Cause: #{e.message} (#{e.location})")

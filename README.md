@@ -240,6 +240,7 @@ gem:
   verify: false
   doc: false
   exported_gem_rbis: true
+  favor_exported_gem_rbis: false
   workers: 1
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
