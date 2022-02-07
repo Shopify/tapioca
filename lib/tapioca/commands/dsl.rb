@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Dsl < Base
+    class Dsl < Command
       sig do
         params(
           requested_constants: T::Array[String],

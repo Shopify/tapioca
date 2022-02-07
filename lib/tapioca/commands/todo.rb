@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Todo < Base
+    class Todo < Command
       include SorbetHelper
 
       sig do

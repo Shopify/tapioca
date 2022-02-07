@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Base
+    class Command
       extend T::Sig
       extend T::Helpers
 

@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Init < Base
+    class Init < Command
       sig do
         params(
           sorbet_config: String,

@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Gem < Base
+    class Gem < Command
       include SorbetHelper
 
       sig do
