@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Base
       extend T::Sig
       extend T::Helpers
@@ -23,7 +23,7 @@ module Tapioca
       end
 
       sig { abstract.void }
-      def generate; end
+      def execute; end
 
       private
 

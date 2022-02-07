@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Dsl < Base
       sig do
         params(
@@ -57,7 +57,7 @@ module Tapioca
       end
 
       sig { override.void }
-      def generate
+      def execute
         load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!

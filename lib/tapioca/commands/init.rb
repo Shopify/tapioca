@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Init < Base
       sig do
         params(
@@ -31,7 +31,7 @@ module Tapioca
       end
 
       sig { override.void }
-      def generate
+      def execute
         create_sorbet_config
         create_tapioca_config
         create_post_require

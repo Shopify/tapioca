@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Require < Base
       sig do
         params(
@@ -20,7 +20,7 @@ module Tapioca
       end
 
       sig { override.void }
-      def generate
+      def execute
         compiler = Compilers::RequiresCompiler.new(@sorbet_config_path)
         name = set_color(@requires_path, :yellow, :bold)
         say("Compiling #{name}, this may take a few seconds... ")

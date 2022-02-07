@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Todo < Base
       include SorbetHelper
 
@@ -22,7 +22,7 @@ module Tapioca
       end
 
       sig { override.void }
-      def generate
+      def execute
         say("Finding all unresolved constants, this may take a few seconds... ")
 
         # Clean all existing unresolved constants before regenerating the list

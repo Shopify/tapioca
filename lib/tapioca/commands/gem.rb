@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
+  module Commands
     class Gem < Base
       include SorbetHelper
 
@@ -65,7 +65,7 @@ module Tapioca
       end
 
       sig { override.void }
-      def generate
+      def execute
         require_gem_file
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
