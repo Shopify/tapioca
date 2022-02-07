@@ -8,15 +8,14 @@ module Tapioca
         params(
           requires_path: String,
           sorbet_config_path: String,
-          default_command: String,
           file_writer: Thor::Actions
         ).void
       end
-      def initialize(requires_path:, sorbet_config_path:, default_command:, file_writer: FileWriter.new)
+      def initialize(requires_path:, sorbet_config_path:, file_writer: FileWriter.new)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
 
-        super(default_command: default_command, file_writer: file_writer)
+        super(file_writer: file_writer)
       end
 
       sig { override.void }
@@ -44,7 +43,7 @@ module Tapioca
         say("Done", :green)
 
         say("All requires from this application have been written to #{name}.", [:green, :bold])
-        cmd = set_color("#{@default_command} gem", :yellow, :bold)
+        cmd = set_color(default_command(:gem), :yellow, :bold)
         say("Please review changes and commit them, then run `#{cmd}`.", [:green, :bold])
       end
     end

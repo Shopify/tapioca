@@ -10,15 +10,14 @@ module Tapioca
         params(
           todo_file: String,
           file_header: T::Boolean,
-          default_command: String,
           file_writer: Thor::Actions
         ).void
       end
-      def initialize(todo_file:, file_header:, default_command:, file_writer: FileWriter.new)
+      def initialize(todo_file:, file_header:, file_writer: FileWriter.new)
         @todo_file = todo_file
         @file_header = file_header
 
-        super(default_command: default_command, file_writer: file_writer)
+        super(file_writer: file_writer)
       end
 
       sig { override.void }
@@ -37,7 +36,7 @@ module Tapioca
         end
 
         say("Done", :green)
-        contents = rbi(constants, command: "#{@default_command} todo")
+        contents = rbi(constants, command: default_command(:todo))
         create_file(@todo_file, contents.string, verbose: false)
 
         name = set_color(@todo_file, :yellow, :bold)

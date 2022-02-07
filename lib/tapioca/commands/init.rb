@@ -9,7 +9,6 @@ module Tapioca
           sorbet_config: String,
           tapioca_config: String,
           default_postrequire: String,
-          default_command: String,
           file_writer: Thor::Actions
         ).void
       end
@@ -17,14 +16,13 @@ module Tapioca
         sorbet_config:,
         tapioca_config:,
         default_postrequire:,
-        default_command:,
         file_writer: FileWriter.new
       )
         @sorbet_config = sorbet_config
         @tapioca_config = tapioca_config
         @default_postrequire = default_postrequire
 
-        super(default_command: default_command, file_writer: file_writer)
+        super(file_writer: file_writer)
 
         @installer = T.let(nil, T.nilable(Bundler::Installer))
         @spec = T.let(nil, T.nilable(Bundler::StubSpecification))
@@ -73,19 +71,19 @@ module Tapioca
           # typed: true
           # frozen_string_literal: true
 
-          # Add your extra requires here (`#{@default_command} require` can be used to boostrap this list)
+          # Add your extra requires here (`#{default_command(:require)}` can be used to boostrap this list)
         CONTENT
       end
 
       sig { void }
       def create_binstub
-        force = File.exist?(@default_command)
+        force = File.exist?(Tapioca::DEFAULT_COMMAND)
 
         installer.generate_bundler_executable_stubs(spec, { force: force })
 
         say_status(
           force ? :force : :create,
-          @default_command,
+          Tapioca::DEFAULT_COMMAND,
           force ? :yellow : :green
         )
       end

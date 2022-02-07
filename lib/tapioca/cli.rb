@@ -26,8 +26,7 @@ module Tapioca
       command = Commands::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: TAPIOCA_CONFIG_FILE,
-        default_postrequire: DEFAULT_POSTREQUIRE_FILE,
-        default_command: DEFAULT_COMMAND
+        default_postrequire: DEFAULT_POSTREQUIRE_FILE
       )
       command.execute
     end
@@ -37,8 +36,7 @@ module Tapioca
     def require
       command = Commands::Require.new(
         requires_path: options[:postrequire],
-        sorbet_config_path: SORBET_CONFIG_FILE,
-        default_command: DEFAULT_COMMAND
+        sorbet_config_path: SORBET_CONFIG_FILE
       )
       Tapioca.silence_warnings do
         command.execute
@@ -57,8 +55,7 @@ module Tapioca
     def todo
       command = Commands::Todo.new(
         todo_file: options[:todo_file],
-        file_header: options[:file_header],
-        default_command: DEFAULT_COMMAND
+        file_header: options[:file_header]
       )
       Tapioca.silence_warnings do
         command.execute
@@ -112,7 +109,6 @@ module Tapioca
         file_header: options[:file_header],
         compiler_path: Tapioca::Dsl::DSL_COMPILERS_DIR,
         tapioca_path: TAPIOCA_DIR,
-        default_command: DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
@@ -209,7 +205,6 @@ module Tapioca
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
           typed_overrides: options[:typed_overrides],
-          default_command: DEFAULT_COMMAND,
           outpath: Pathname.new(options[:outdir]),
           file_header: options[:file_header],
           doc: options[:doc],

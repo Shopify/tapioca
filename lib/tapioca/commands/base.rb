@@ -16,16 +16,20 @@ module Tapioca
 
       abstract!
 
-      sig { params(default_command: String, file_writer: Thor::Actions).void }
-      def initialize(default_command:, file_writer: FileWriter.new)
+      sig { params(file_writer: Thor::Actions).void }
+      def initialize(file_writer: FileWriter.new)
         @file_writer = file_writer
-        @default_command = default_command
       end
 
       sig { abstract.void }
       def execute; end
 
       private
+
+      sig { params(command: Symbol, args: String).returns(String) }
+      def default_command(command, *args)
+        [Tapioca::DEFAULT_COMMAND, command.to_s, *args].join(" ")
+      end
 
       sig do
         params(

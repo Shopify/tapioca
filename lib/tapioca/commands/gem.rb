@@ -13,7 +13,6 @@ module Tapioca
           prerequire: T.nilable(String),
           postrequire: String,
           typed_overrides: T::Hash[String, String],
-          default_command: String,
           outpath: Pathname,
           file_header: T::Boolean,
           doc: T::Boolean,
@@ -31,7 +30,6 @@ module Tapioca
         prerequire:,
         postrequire:,
         typed_overrides:,
-        default_command:,
         outpath:,
         file_header:,
         doc:,
@@ -54,7 +52,7 @@ module Tapioca
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
 
-        super(default_command: default_command, file_writer: file_writer)
+        super(file_writer: file_writer)
 
         @loader = T.let(nil, T.nilable(Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))
@@ -170,7 +168,7 @@ module Tapioca
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
 
         @rbi_formatter.write_header!(rbi,
-          "#{@default_command} gem #{gem.name}",
+          default_command(:gem, gem.name),
           reason: "types exported from the `#{gem.name}` gem",) if @file_header
 
         rbi.root = Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile
@@ -206,7 +204,7 @@ module Tapioca
           diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
         end
 
-        report_diff_and_exit_if_out_of_date(diff, "gem")
+        report_diff_and_exit_if_out_of_date(diff, :gem)
       end
 
       sig { void }
@@ -280,7 +278,7 @@ module Tapioca
         say_error("If you populated ", :yellow)
         say_error("#{file} ", :bold, :blue)
         say_error("with ", :yellow)
-        say_error("`#{@default_command} require`", :bold, :blue)
+        say_error("`#{default_command(:require)}`", :bold, :blue)
         say_error("you should probably review it and remove the faulty line.", :yellow)
       end
 
@@ -311,13 +309,13 @@ module Tapioca
         existing_rbis.key?(gem_name)
       end
 
-      sig { params(diff: T::Hash[String, Symbol], command: String).void }
+      sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
       def report_diff_and_exit_if_out_of_date(diff, command)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
           say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{@default_command} #{command}`", [:green, :bold])
+          say("  `#{default_command(command)}`", [:green, :bold])
           say("Once it is complete, be sure to commit and push any changes", :green)
 
           say("")
