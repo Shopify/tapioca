@@ -13,7 +13,6 @@ module Tapioca
           file_header: T::Boolean,
           compiler_path: String,
           tapioca_path: String,
-          file_writer: Thor::Actions,
           should_verify: T::Boolean,
           quiet: T::Boolean,
           verbose: T::Boolean,
@@ -29,7 +28,6 @@ module Tapioca
         file_header:,
         compiler_path:,
         tapioca_path:,
-        file_writer: FileWriter.new,
         should_verify: false,
         quiet: false,
         verbose: false,
@@ -49,7 +47,7 @@ module Tapioca
         @number_of_workers = number_of_workers
         @rbi_formatter = rbi_formatter
 
-        super(file_writer: file_writer)
+        super()
 
         @loader = T.let(nil, T.nilable(Loader))
       end

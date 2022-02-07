@@ -17,7 +17,6 @@ module Tapioca
           file_header: T::Boolean,
           doc: T::Boolean,
           include_exported_rbis: T::Boolean,
-          file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           dsl_dir: String,
@@ -34,7 +33,6 @@ module Tapioca
         file_header:,
         doc:,
         include_exported_rbis:,
-        file_writer: FileWriter.new,
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
@@ -52,7 +50,7 @@ module Tapioca
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
 
-        super(file_writer: file_writer)
+        super()
 
         @loader = T.let(nil, T.nilable(Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))

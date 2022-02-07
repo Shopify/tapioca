@@ -16,11 +16,6 @@ module Tapioca
 
       abstract!
 
-      sig { params(file_writer: Thor::Actions).void }
-      def initialize(file_writer: FileWriter.new)
-        @file_writer = file_writer
-      end
-
       sig { abstract.void }
       def execute; end
 
@@ -29,6 +24,11 @@ module Tapioca
       sig { params(command: Symbol, args: String).returns(String) }
       def default_command(command, *args)
         [Tapioca::DEFAULT_COMMAND, command.to_s, *args].join(" ")
+      end
+
+      sig { returns(Thor::Actions) }
+      def file_writer
+        FileWriter.new
       end
 
       sig do
@@ -41,7 +41,7 @@ module Tapioca
         ).void
       end
       def create_file(path, content, force: true, skip: false, verbose: true)
-        @file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
+        file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
       end
 
       sig do
@@ -51,7 +51,7 @@ module Tapioca
         ).void
       end
       def remove_file(path, verbose: true)
-        @file_writer.remove_file(path, verbose: verbose)
+        file_writer.remove_file(path, verbose: verbose)
       end
     end
   end

@@ -7,15 +7,14 @@ module Tapioca
       sig do
         params(
           requires_path: String,
-          sorbet_config_path: String,
-          file_writer: Thor::Actions
+          sorbet_config_path: String
         ).void
       end
-      def initialize(requires_path:, sorbet_config_path:, file_writer: FileWriter.new)
+      def initialize(requires_path:, sorbet_config_path:)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
 
-        super(file_writer: file_writer)
+        super()
       end
 
       sig { override.void }

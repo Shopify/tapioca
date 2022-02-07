@@ -9,15 +9,14 @@ module Tapioca
       sig do
         params(
           todo_file: String,
-          file_header: T::Boolean,
-          file_writer: Thor::Actions
+          file_header: T::Boolean
         ).void
       end
-      def initialize(todo_file:, file_header:, file_writer: FileWriter.new)
+      def initialize(todo_file:, file_header:)
         @todo_file = todo_file
         @file_header = file_header
 
-        super(file_writer: file_writer)
+        super()
       end
 
       sig { override.void }
