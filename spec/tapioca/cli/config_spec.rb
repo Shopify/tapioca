@@ -121,6 +121,25 @@ module Tapioca
         assert_empty_stdout(result)
         refute_success_status(result)
       end
+
+      it "validates top level configuration options" do
+        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+          gem_rbi_dir: sorbet/rbi/gem
+          dsl_rbi_dir: sorbet/rbi/dsl
+          shims_rbi_dir: sorbet/rbi/shims
+          todo_rbi_file: sorbet/rbi/todo.rbi
+          prerequire_file: sorbet/tapioca/pre_require.rb
+          postrequire_file: sorbet/tapioca/post_require.rb
+        YAML
+
+        result = @project.tapioca("gem")
+
+        puts result.out
+
+        assert_empty_stdout(result)
+        assert_empty_stderr(result)
+        refute_success_status(result)
+      end
     end
   end
 end

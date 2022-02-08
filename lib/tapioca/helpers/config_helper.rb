@@ -18,6 +18,7 @@ module Tapioca
 
     sig { params(args: T.untyped, local_options: T.untyped, config: T.untyped).void }
     def initialize(args = [], local_options = {}, config = {})
+      puts config[:options].keys
       # Store current command
       command = config[:current_command]
       command_options = config[:command_options]

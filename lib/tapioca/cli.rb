@@ -21,22 +21,59 @@ module Tapioca
       desc: "Verbose output for debugging purposes",
       default: false
 
+    class_option :gem_rbi_dir,
+      type: :string,
+      banner: "directory",
+      desc: "The output directory for generated gem RBI files",
+      default: DEFAULT_GEM_DIR
+
+    class_option :dsl_rbi_dir,
+      type: :string,
+      banner: "directory",
+      desc: "The output directory for generated DSL RBI files",
+      default: DEFAULT_DSL_DIR
+
+    class_option :shim_rbi_dir,
+      type: :string,
+      banner: "directory",
+      desc: "The directory containing shim RBI files",
+      default: DEFAULT_SHIM_DIR
+
+    class_option :todo_rbi_file,
+      type: :string,
+      banner: "file",
+      desc: "The output path for generated todo RBI",
+      default: DEFAULT_TODO_FILE
+
+    class_option :prerequire_file,
+      type: :string,
+      aliases: ["--pre", "-b"],
+      banner: "file",
+      desc: "A file to be required before Bundler.require is called",
+      default: nil
+
+    class_option :postrequire_file,
+      type: :string,
+      aliases: ["--post", "-a"],
+      banner: "file",
+      desc: "A file to be required after Bundler.require is called",
+      default: DEFAULT_POSTREQUIRE_FILE
+
     desc "init", "initializes folder structure"
     def init
       generator = Generators::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: TAPIOCA_CONFIG_FILE,
-        default_postrequire: DEFAULT_POSTREQUIRE_FILE,
+        default_postrequire: options[:postrequire_file],
         default_command: DEFAULT_COMMAND
       )
       generator.generate
     end
 
     desc "require", "generate the list of files to be required by tapioca"
-    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def require
       generator = Generators::Require.new(
-        requires_path: options[:postrequire],
+        requires_path: options[:postrequire_file],
         sorbet_config_path: SORBET_CONFIG_FILE,
         default_command: DEFAULT_COMMAND
       )
@@ -46,17 +83,13 @@ module Tapioca
     end
 
     desc "todo", "generate the list of unresolved constants"
-    option :todo_file,
-      type: :string,
-      desc: "Path to the generated todo RBI file",
-      default: DEFAULT_TODO_FILE
     option :file_header,
       type: :boolean,
       desc: FILE_HEADER_OPTION_DESC,
       default: true
     def todo
       generator = Generators::Todo.new(
-        todo_file: options[:todo_file],
+        todo_file: options[:todo_rbi_file],
         file_header: options[:file_header],
         default_command: DEFAULT_COMMAND
       )
@@ -66,11 +99,6 @@ module Tapioca
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
-    option :outdir,
-      aliases: ["--out", "-o"],
-      banner: "directory",
-      desc: "The output directory for generated DSL RBI files",
-      default: DEFAULT_DSL_DIR
     option :file_header,
       type: :boolean,
       desc: FILE_HEADER_OPTION_DESC,
@@ -102,7 +130,7 @@ module Tapioca
     def dsl(*constants)
       generator = Generators::Dsl.new(
         requested_constants: constants,
-        outpath: Pathname.new(options[:outdir]),
+        outpath: Pathname.new(options[:dsl_rbi_dir]),
         only: options[:only],
         exclude: options[:exclude],
         file_header: options[:file_header],
@@ -128,11 +156,6 @@ module Tapioca
     end
 
     desc "gem [gem...]", "generate RBIs from gems"
-    option :outdir,
-      aliases: ["--out", "-o"],
-      banner: "directory",
-      desc: "The output directory for generated gem RBI files",
-      default: DEFAULT_GEM_DIR
     option :file_header,
       type: :boolean,
       desc: FILE_HEADER_OPTION_DESC,
@@ -141,16 +164,6 @@ module Tapioca
       type: :boolean,
       desc: "Regenerate RBI files for all gems",
       default: false
-    option :prerequire,
-      aliases: ["--pre", "-b"],
-      banner: "file",
-      desc: "A file to be required before Bundler.require is called",
-      default: nil
-    option :postrequire,
-      aliases: ["--post", "-a"],
-      banner: "file",
-      desc: "A file to be required after Bundler.require is called",
-      default: DEFAULT_POSTREQUIRE_FILE
     option :exclude,
       aliases: ["-x"],
       type: :array,
@@ -188,11 +201,11 @@ module Tapioca
         generator = Generators::Gem.new(
           gem_names: all ? [] : gems,
           exclude: options[:exclude],
-          prerequire: options[:prerequire],
-          postrequire: options[:postrequire],
+          prerequire: options[:prerequire_file],
+          postrequire: options[:postrequire_file],
           typed_overrides: options[:typed_overrides],
           default_command: DEFAULT_COMMAND,
-          outpath: Pathname.new(options[:outdir]),
+          outpath: Pathname.new(options[:gem_rbi_dir]),
           file_header: options[:file_header],
           doc: options[:doc],
           include_exported_rbis: options[:exported_gem_rbis],
@@ -223,9 +236,6 @@ module Tapioca
     map "gems" => :gem
 
     desc "check-shims", "check duplicated definitions in shim RBIs"
-    option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
-    option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
-    option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
     def check_shims
       index = RBI::Index.new
 

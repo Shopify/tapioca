@@ -229,7 +229,7 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install
 
-          result = @project.tapioca("gem foo --outdir rbis/")
+          result = @project.tapioca("gem foo --gem-rbi-dir rbis/")
 
           assert_includes(result.out, <<~OUT)
             Compiled foo
