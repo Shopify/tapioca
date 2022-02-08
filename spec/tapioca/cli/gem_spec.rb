@@ -1123,6 +1123,142 @@ module Tapioca
           refute_success_status(result)
         end
       end
+
+      describe "strictness" do
+        before(:all) do
+          @project.tapioca("init")
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              module Foo
+                def foo(a, b, c); end
+              end
+            RB
+          end
+
+          bar = mock_gem("bar", "0.3.0") do
+            write("lib/bar.rb", <<~RB)
+              module Bar
+                def bar(a, b, c); end
+              end
+            RB
+          end
+
+          baz = mock_gem("baz", "1.0.0") do
+            write("lib/baz.rb", <<~RB)
+              module Baz
+                def baz(a, b, c); end
+              end
+            RB
+          end
+
+          @project.gemfile(<<~GEMFILE, append: true)
+            #{foo.gemfile_line}
+            #{bar.gemfile_line}
+            #{baz.gemfile_line}
+          GEMFILE
+
+          @project.bundle_install
+
+          @project.write("sorbet/rbi/dsl/foo.rbi", <<~RBI)
+            # typed: true
+
+            module Foo
+              def foo(a, b, c); end
+            end
+
+            module Bar
+              def bar(a, b); end
+            end
+
+            module Baz
+              def baz; end
+            end
+
+            module Quux
+              def quux; end
+              def quux(x); end
+            end
+          RBI
+        end
+
+        after do
+          project.remove("sorbet/rbi/gems")
+        end
+
+        it "must turn the strictness of files with errors to false" do
+          result = @project.tapioca("gem --all")
+
+          assert_includes(result.out, <<~OUT)
+            Typechecking RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/bar@0.3.0.rbi to `typed: false` (conflicting with DSL files)
+
+              Changed strictness of sorbet/rbi/gems/baz@1.0.0.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/baz@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must turn the strictness of files with error to false only in asked gems" do
+          @project.tapioca("gem --all --no-auto-strictness")
+
+          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
+
+          result = @project.tapioca("gem foo bar")
+
+          assert_includes(result.out, <<~OUT)
+            Typechecking RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/bar@0.3.0.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must turn the strictness of files with error to false with a custom dir" do
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            # typed: true
+
+            module Foo
+              def foo; end
+            end
+          RBI
+
+          result = @project.tapioca("gem --dsl-dir sorbet/rbi/shims")
+
+          assert_includes(result.out, <<~OUT)
+            Typechecking RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/foo@0.0.1.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("false", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
+          assert_file_strictness("true", "sorbet/rbi/shims/foo.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("sorbet/rbi/shims/foo.rbi")
+        end
+      end
     end
   end
 end
