@@ -19,6 +19,8 @@ module Tapioca
             "rubocop:",
           ], T::Array[String])
 
+          IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
+
           sig { params(compiler: SymbolTableCompiler).void }
           def initialize(compiler)
             super(compiler)
@@ -40,20 +42,51 @@ module Tapioca
           sig { override.params(event: MethodNodeAdded).void }
           def on_method(event)
             separator = event.constant.singleton_class? ? "." : "#"
-            event.node.comments = documentation_comments("#{event.symbol}#{separator}#{event.node.name}")
+            event.node.comments = documentation_comments(
+              "#{event.symbol}#{separator}#{event.node.name}",
+              sigs: event.node.sigs
+            )
           end
 
-          sig { params(name: String).returns(T::Array[RBI::Comment]) }
-          def documentation_comments(name)
+          sig { params(name: String, sigs: T::Array[RBI::Sig]).returns(T::Array[RBI::Comment]) }
+          def documentation_comments(name, sigs: [])
             yard_docs = YARD::Registry.at(name)
             return [] unless yard_docs
 
             docstring = yard_docs.docstring
             return [] if /(copyright|license)/i.match?(docstring)
 
-            docstring.lines
+            comments = docstring.lines
               .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
               .map! { |line| RBI::Comment.new(line) }
+
+            tags = yard_docs.tags
+            tags.reject! { |tag| IGNORED_SIG_TAGS.include?(tag.tag_name) } unless sigs.empty?
+
+            comments << RBI::Comment.new("") if comments.any? && tags.any?
+
+            tags.sort_by(&:tag_name).each do |tag|
+              line = +"@#{tag.tag_name}"
+
+              tag_name = tag.name
+              line << " #{tag_name}" if tag_name
+
+              tag_types = tag.types
+              line << " [#{tag_types.join(", ")}]" if tag_types&.any?
+
+              tag_text = tag.text
+              if tag_text && !tag_text.empty?
+                text_lines = tag_text.lines
+                line << " #{text_lines.shift&.strip}" unless tag_name
+                text_lines.each do |text_line|
+                  line << "\n  #{text_line.strip}"
+                end
+              end
+
+              comments << RBI::Comment.new(line)
+            end
+
+            comments
           end
         end
       end
