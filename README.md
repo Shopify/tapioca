@@ -123,6 +123,10 @@ Options:
                                                               # Default: true
   -w, [--workers=N]                                           # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
                                                               # Default: 1
+          [--auto-strictness], [--no-auto-strictness]         # Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs
+                                                              # Default: true
+  --dsl-dir, [--dsl-dir=directory]                            # The DSL directory used to correct gems strictnesses
+                                                              # Default: sorbet/rbi/dsl
   -c, [--config=<config file path>]                           # Path to the Tapioca configuration file
                                                               # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
@@ -241,6 +245,8 @@ gem:
   doc: false
   exported_gem_rbis: true
   workers: 1
+  auto_strictness: true
+  dsl_dir: sorbet/rbi/dsl
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
