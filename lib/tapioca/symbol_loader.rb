@@ -38,7 +38,7 @@ module Tapioca
 
       sig { params(input: String, table_type: String).returns(String) }
       def symbol_table_json_from(input, table_type: "symbol-table-json")
-        sorbet("--no-config", "--print=#{table_type}", input)
+        sorbet("--no-config", "--quiet", "--print=#{table_type}", input).out
       end
 
       sig { returns(T::Set[String]) }

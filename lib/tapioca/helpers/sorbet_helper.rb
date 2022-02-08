@@ -25,16 +25,16 @@ module Tapioca
       to_ary_nil_support: Gem::Requirement.new(">= 0.5.9220"),
     }.freeze, T::Hash[Symbol, Gem::Requirement])
 
-    sig { params(args: String).returns(String) }
-    def sorbet(*args)
-      IO.popen(
-        [
-          sorbet_path,
-          "--quiet",
-          *args,
-        ].join(" "),
-        err: "/dev/null"
-      ).read
+    class CmdResult < T::Struct
+      const :out, String
+      const :err, String
+      const :status, T::Boolean
+    end
+
+    sig { params(sorbet_args: String).returns(CmdResult) }
+    def sorbet(*sorbet_args)
+      out, err, status = Open3.capture3([sorbet_path, *sorbet_args].join(" "))
+      CmdResult.new(out: out, err: err, status: status.success? || false)
     end
 
     sig { returns(String) }
