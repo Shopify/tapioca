@@ -1,9 +1,13 @@
 # typed: true
 # frozen_string_literal: true
 
-require_relative "commands/command"
-require_relative "commands/dsl"
-require_relative "commands/init"
-require_relative "commands/gem"
-require_relative "commands/require"
-require_relative "commands/todo"
+module Tapioca
+  module Commands
+    autoload :Command, "tapioca/commands/command"
+    autoload :Dsl, "tapioca/commands/dsl"
+    autoload :Init, "tapioca/commands/init"
+    autoload :Gem, "tapioca/commands/gem"
+    autoload :Require, "tapioca/commands/require"
+    autoload :Todo, "tapioca/commands/todo"
+  end
+end
