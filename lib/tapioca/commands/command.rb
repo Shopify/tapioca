@@ -16,6 +16,11 @@ module Tapioca
 
       abstract!
 
+      sig { void }
+      def initialize
+        @file_writer = T.let(FileWriter.new, Thor::Actions)
+      end
+
       sig { abstract.void }
       def execute; end
 
@@ -27,9 +32,7 @@ module Tapioca
       end
 
       sig { returns(Thor::Actions) }
-      def file_writer
-        FileWriter.new
-      end
+      attr_reader :file_writer
 
       sig do
         params(
