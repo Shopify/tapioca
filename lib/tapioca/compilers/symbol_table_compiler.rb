@@ -131,7 +131,7 @@ module Tapioca
 
       sig { params(event: Gem::SymbolFound).void }
       def on_symbol(event)
-        symbol = event.symbol
+        symbol = event.symbol.delete_prefix("::")
         return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
 
         constant = constantize(symbol)
