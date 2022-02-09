@@ -75,13 +75,13 @@ module Tapioca
 
       sig { void }
       def create_binstub
-        force = File.exist?(Tapioca::DEFAULT_COMMAND)
+        force = File.exist?(Tapioca::BINARY_FILE)
 
         installer.generate_bundler_executable_stubs(spec, { force: force })
 
         say_status(
           force ? :force : :create,
-          Tapioca::DEFAULT_COMMAND,
+          Tapioca::BINARY_FILE,
           force ? :yellow : :green
         )
       end

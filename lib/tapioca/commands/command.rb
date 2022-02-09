@@ -28,7 +28,7 @@ module Tapioca
 
       sig { params(command: Symbol, args: String).returns(String) }
       def default_command(command, *args)
-        [Tapioca::DEFAULT_COMMAND, command.to_s, *args].join(" ")
+        [Tapioca::BINARY_FILE, command.to_s, *args].join(" ")
       end
 
       sig { returns(Thor::Actions) }
