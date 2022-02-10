@@ -6,11 +6,13 @@
 
 module RBI; end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::ASTVisitor
   abstract!
 
-  def initialize(*args, **_arg1, &blk); end
+  def initialize(*args, &blk); end
 
+  # @abstract
   sig { abstract.params(node: T.nilable(AST::Node)).void }
   def visit(node); end
 
@@ -44,6 +46,8 @@ class RBI::Arg < ::RBI::Node
 end
 
 # Attributes
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Attr < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
@@ -58,6 +62,7 @@ class RBI::Attr < ::RBI::NodeWithComments
   sig { override.params(other: RBI::Node).returns(T::Boolean) }
   def compatible_with?(other); end
 
+  # @abstract
   sig { abstract.returns(T::Array[String]) }
   def fully_qualified_names; end
 
@@ -70,6 +75,7 @@ class RBI::Attr < ::RBI::NodeWithComments
   sig { returns(T::Array[Symbol]) }
   def names; end
 
+  # @return [Array<Symbol>]
   def names=(_arg0); end
 
   sig { override.returns(T::Boolean) }
@@ -81,6 +87,7 @@ class RBI::Attr < ::RBI::NodeWithComments
   sig { returns(RBI::Visibility) }
   def visibility; end
 
+  # @return [Visibility]
   def visibility=(_arg0); end
 end
 
@@ -165,6 +172,7 @@ class RBI::Class < ::RBI::Scope
   sig { returns(String) }
   def name; end
 
+  # @return [String]
   def name=(_arg0); end
 
   sig { override.params(v: RBI::Printer).void }
@@ -173,6 +181,7 @@ class RBI::Class < ::RBI::Scope
   sig { returns(T.nilable(String)) }
   def superclass_name; end
 
+  # @return [String, nil]
   def superclass_name=(_arg0); end
 end
 
@@ -189,6 +198,7 @@ class RBI::Comment < ::RBI::Node
   sig { returns(String) }
   def text; end
 
+  # @return [String]
   def text=(_arg0); end
 end
 
@@ -197,13 +207,13 @@ end
 # Is rendered as a merge conflict between `left` and` right`:
 # ~~~rb
 # class Foo
-# <<<<<<< left
-# def m1; end
-# def m2(a); end
-# =======
-# def m1(a); end
-# def m2; end
-# >>>>>>> right
+#   <<<<<<< left
+#   def m1; end
+#   def m2(a); end
+#   =======
+#   def m1(a); end
+#   def m2; end
+#   >>>>>>> right
 # end
 # ~~~
 class RBI::ConflictTree < ::RBI::Tree
@@ -216,6 +226,7 @@ class RBI::ConflictTree < ::RBI::Tree
   sig { returns(RBI::Tree) }
   def left; end
 
+  # @return [Tree]
   def right; end
 end
 
@@ -244,6 +255,7 @@ class RBI::Const < ::RBI::NodeWithComments
   sig { override.returns(String) }
   def to_s; end
 
+  # @return [String]
   def value; end
 end
 
@@ -254,6 +266,7 @@ class RBI::ConstBuilder < ::RBI::ASTVisitor
   sig { returns(T::Array[String]) }
   def names; end
 
+  # @return [Array<String>]
   def names=(_arg0); end
 
   sig { override.params(node: T.nilable(AST::Node)).void }
@@ -296,6 +309,7 @@ class RBI::File
   sig { returns(T::Array[RBI::Comment]) }
   def comments; end
 
+  # @return [Array<Comment>]
   def comments=(_arg0); end
 
   sig { returns(T::Boolean) }
@@ -307,6 +321,7 @@ class RBI::File
   sig { returns(RBI::Tree) }
   def root; end
 
+  # @return [Tree]
   def root=(_arg0); end
 
   sig { void }
@@ -318,6 +333,7 @@ class RBI::File
   sig { returns(T.nilable(String)) }
   def strictness; end
 
+  # @return [String, nil]
   def strictness=(_arg0); end
 
   sig { params(indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).returns(String) }
@@ -328,6 +344,59 @@ class RBI::File
 
   sig { returns(String) }
   def transformed_string; end
+end
+
+class RBI::Formatter
+  sig { params(add_sig_templates: T::Boolean, group_nodes: T::Boolean, max_line_length: T.nilable(Integer), nest_singleton_methods: T::Boolean, nest_non_public_methods: T::Boolean, sort_nodes: T::Boolean).void }
+  def initialize(add_sig_templates: T.unsafe(nil), group_nodes: T.unsafe(nil), max_line_length: T.unsafe(nil), nest_singleton_methods: T.unsafe(nil), nest_non_public_methods: T.unsafe(nil), sort_nodes: T.unsafe(nil)); end
+
+  sig { returns(T::Boolean) }
+  def add_sig_templates; end
+
+  # @return [Boolean]
+  def add_sig_templates=(_arg0); end
+
+  sig { params(file: RBI::File).void }
+  def format_file(file); end
+
+  sig { params(tree: RBI::Tree).void }
+  def format_tree(tree); end
+
+  # @return [Boolean]
+  def group_nodes; end
+
+  # @return [Boolean]
+  def group_nodes=(_arg0); end
+
+  sig { returns(T.nilable(Integer)) }
+  def max_line_length; end
+
+  # @return [Integer, nil]
+  def max_line_length=(_arg0); end
+
+  # @return [Boolean]
+  def nest_non_public_methods; end
+
+  # @return [Boolean]
+  def nest_non_public_methods=(_arg0); end
+
+  # @return [Boolean]
+  def nest_singleton_methods; end
+
+  # @return [Boolean]
+  def nest_singleton_methods=(_arg0); end
+
+  sig { params(file: RBI::File).returns(String) }
+  def print_file(file); end
+
+  sig { params(tree: RBI::Tree).returns(String) }
+  def print_tree(tree); end
+
+  # @return [Boolean]
+  def sort_nodes; end
+
+  # @return [Boolean]
+  def sort_nodes=(_arg0); end
 end
 
 class RBI::Group < ::RBI::Tree
@@ -426,6 +495,8 @@ class RBI::Index < ::RBI::Visitor
 end
 
 # A Node that can be refered to by a unique ID inside an index
+#
+# @abstract Subclasses must implement the `abstract` methods below.
 module RBI::Indexable
   interface!
 
@@ -433,6 +504,8 @@ module RBI::Indexable
   #
   # Some nodes can have multiple ids, for example an attribute accessor matches the ID of the
   # getter and the setter.
+  #
+  # @abstract
   sig { abstract.returns(T::Array[String]) }
   def index_ids; end
 end
@@ -512,12 +585,16 @@ class RBI::Loc
   sig { params(file: T.nilable(String), begin_line: T.nilable(Integer), end_line: T.nilable(Integer), begin_column: T.nilable(Integer), end_column: T.nilable(Integer)).void }
   def initialize(file: T.unsafe(nil), begin_line: T.unsafe(nil), end_line: T.unsafe(nil), begin_column: T.unsafe(nil), end_column: T.unsafe(nil)); end
 
+  # @return [Integer, nil]
   def begin_column; end
 
   sig { returns(T.nilable(Integer)) }
   def begin_line; end
 
+  # @return [Integer, nil]
   def end_column; end
+
+  # @return [Integer, nil]
   def end_line; end
 
   sig { returns(T.nilable(String)) }
@@ -569,6 +646,7 @@ class RBI::Method < ::RBI::NodeWithComments
   sig { returns(T::Boolean) }
   def is_singleton; end
 
+  # @return [Boolean]
   def is_singleton=(_arg0); end
 
   sig { override.params(other: RBI::Node).void }
@@ -577,6 +655,7 @@ class RBI::Method < ::RBI::NodeWithComments
   sig { returns(String) }
   def name; end
 
+  # @return [String]
   def name=(_arg0); end
 
   sig { override.returns(T::Boolean) }
@@ -588,6 +667,7 @@ class RBI::Method < ::RBI::NodeWithComments
   sig { returns(T::Array[RBI::Sig]) }
   def sigs; end
 
+  # @return [Array<Sig>]
   def sigs=(_arg0); end
 
   sig { override.returns(String) }
@@ -596,6 +676,7 @@ class RBI::Method < ::RBI::NodeWithComments
   sig { returns(RBI::Visibility) }
   def visibility; end
 
+  # @return [Visibility]
   def visibility=(_arg0); end
 end
 
@@ -616,6 +697,8 @@ class RBI::MixesInClassMethods < ::RBI::Mixin
 end
 
 # Mixins
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Mixin < ::RBI::NodeWithComments
   abstract!
 
@@ -631,6 +714,7 @@ class RBI::Mixin < ::RBI::NodeWithComments
   sig { returns(T::Array[String]) }
   def names; end
 
+  # @return [Array<String>]
   def names=(_arg0); end
 end
 
@@ -647,18 +731,21 @@ class RBI::Module < ::RBI::Scope
   sig { returns(String) }
   def name; end
 
+  # @return [String]
   def name=(_arg0); end
 
   sig { override.params(v: RBI::Printer).void }
   def print_header(v); end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Node
   abstract!
 
   sig { params(loc: T.nilable(RBI::Loc)).void }
   def initialize(loc: T.unsafe(nil)); end
 
+  # @abstract
   sig { abstract.params(v: RBI::Printer).void }
   def accept_printer(v); end
 
@@ -675,6 +762,7 @@ class RBI::Node
   sig { returns(T.nilable(RBI::Loc)) }
   def loc; end
 
+  # @return [Loc, nil]
   def loc=(_arg0); end
 
   # Merge `self` and `other` into a single definition
@@ -693,6 +781,7 @@ class RBI::Node
   sig { returns(T.nilable(RBI::Tree)) }
   def parent_tree; end
 
+  # @return [Tree, nil]
   def parent_tree=(_arg0); end
 
   sig { params(out: T.any(IO, StringIO), indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).void }
@@ -708,6 +797,7 @@ class RBI::Node
   def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::NodeWithComments < ::RBI::Node
   abstract!
 
@@ -720,6 +810,7 @@ class RBI::NodeWithComments < ::RBI::Node
   sig { returns(T::Array[RBI::Comment]) }
   def comments; end
 
+  # @return [Array<Comment>]
   def comments=(_arg0); end
 
   sig { override.params(other: RBI::Node).void }
@@ -746,6 +837,7 @@ class RBI::OptParam < ::RBI::Param
   def value; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Param < ::RBI::NodeWithComments
   abstract!
 
@@ -816,7 +908,10 @@ class RBI::Printer < ::RBI::Visitor
   sig { void }
   def dedent; end
 
+  # @return [Boolean]
   def in_visibility_group; end
+
+  # @return [Boolean]
   def in_visibility_group=(_arg0); end
 
   # Printing
@@ -836,6 +931,7 @@ class RBI::Printer < ::RBI::Visitor
   sig { returns(T::Boolean) }
   def print_locs; end
 
+  # @return [Boolean]
   def print_locs=(_arg0); end
 
   # Print a string with indentation and `\n` at the end.
@@ -979,32 +1075,32 @@ end
 # Be this `Tree`:
 # ~~~rb
 # class Foo
-# attr_accessor :a
-# def m; end
-# C = 10
+#   attr_accessor :a
+#   def m; end
+#   C = 10
 # end
 # ~~~
 #
 # Merged with this one:
 # ~~~rb
 # class Foo
-# attr_reader :a
-# def m(x); end
-# C = 10
+#   attr_reader :a
+#   def m(x); end
+#   C = 10
 # end
 # ~~~
 #
 # Compatible definitions are merged together while incompatible definitions are moved into a `ConflictTree`:
 # ~~~rb
 # class Foo
-# <<<<<<< left
-# attr_accessor :a
-# def m; end
-# =======
-# attr_reader :a
-# def m(x); end
-# >>>>>>> right
-# C = 10
+#   <<<<<<< left
+#   attr_accessor :a
+#   def m; end
+#   =======
+#   attr_reader :a
+#   def m(x); end
+#   >>>>>>> right
+#   C = 10
 # end
 # ~~~
 class RBI::Rewriters::Merge
@@ -1043,29 +1139,29 @@ end
 # Transform this:
 # ~~~rb
 # class Foo
-# <<<<<<< left
-# def m1; end
-# =======
-# def m1(a); end
-# >>>>>>> right
-# <<<<<<< left
-# def m2(a); end
-# =======
-# def m2; end
-# >>>>>>> right
+#   <<<<<<< left
+#   def m1; end
+#   =======
+#   def m1(a); end
+#   >>>>>>> right
+#   <<<<<<< left
+#   def m2(a); end
+#   =======
+#   def m2; end
+#   >>>>>>> right
 # end
 # ~~~
 #
 # Into this:
 # ~~~rb
 # class Foo
-# <<<<<<< left
-# def m1; end
-# def m2(a); end
-# =======
-# def m1(a); end
-# def m2; end
-# >>>>>>> right
+#   <<<<<<< left
+#   def m1; end
+#   def m2(a); end
+#   =======
+#   def m1(a); end
+#   def m2; end
+#   >>>>>>> right
 # end
 # ~~~
 class RBI::Rewriters::Merge::ConflictTreeMerger < ::RBI::Visitor
@@ -1132,13 +1228,13 @@ end
 # Let's create an `Index` from two different `Tree`s:
 # ~~~rb
 # tree1 = Parse.parse_string(<<~RBI)
-# class Foo
-# def foo; end
-# end
+#   class Foo
+#     def foo; end
+#   end
 # RBI
 #
 # tree2 = Parse.parse_string(<<~RBI)
-# FOO = 10
+#   FOO = 10
 # RBI
 #
 # index = Index.index(tree1, tree2)
@@ -1147,26 +1243,26 @@ end
 # We can use `RemoveKnownDefinitions` to remove the definitions found in the `index` from the `Tree` to clean:
 # ~~~rb
 # tree_to_clean = Parser.parse_string(<<~RBI)
-# class Foo
-# def foo; end
-# def bar; end
-# end
-# FOO = 10
-# BAR = 42
+#   class Foo
+#     def foo; end
+#     def bar; end
+#   end
+#   FOO = 10
+#   BAR = 42
 # RBI
 #
 # cleaned_tree, operations = RemoveKnownDefinitions.remove(tree_to_clean, index)
 #
 # assert_equal(<<~RBI, cleaned_tree)
-# class Foo
-# def bar; end
-# end
-# BAR = 42
+#   class Foo
+#     def bar; end
+#   end
+#   BAR = 42
 # RBI
 #
 # assert_equal(<<~OPERATIONS, operations.join("\n"))
-# Deleted ::Foo#foo at -:2:2-2-16 (duplicate from -:2:2-2:16)
-# Deleted ::FOO at -:5:0-5:8 (duplicate from -:1:0-1:8)
+#   Deleted ::Foo#foo at -:2:2-2-16 (duplicate from -:2:2-2:16)
+#   Deleted ::FOO at -:5:0-5:8 (duplicate from -:1:0-1:8)
 # OPERATIONS
 # ~~~
 class RBI::Rewriters::RemoveKnownDefinitions < ::RBI::Visitor
@@ -1231,12 +1327,14 @@ class RBI::Rewriters::SortNodes < ::RBI::Visitor
 end
 
 # Scopes
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Scope < ::RBI::Tree
   include ::RBI::Indexable
 
   abstract!
 
-  def initialize(*args, **_arg1, &blk); end
+  def initialize(*args, &blk); end
 
   sig { override.params(v: RBI::Printer).void }
   def accept_printer(v); end
@@ -1245,6 +1343,7 @@ class RBI::Scope < ::RBI::Tree
   sig { returns(T.self_type) }
   def dup_empty; end
 
+  # @abstract
   sig { abstract.returns(String) }
   def fully_qualified_name; end
 
@@ -1254,6 +1353,7 @@ class RBI::Scope < ::RBI::Tree
   sig { params(v: RBI::Printer).void }
   def print_body(v); end
 
+  # @abstract
   sig { abstract.params(v: RBI::Printer).void }
   def print_header(v); end
 
@@ -1270,7 +1370,7 @@ end
 # =======
 # module Foo
 # >>>>>>> right
-# def m1; end
+#   def m1; end
 # end
 # ~~~
 class RBI::ScopeConflict < ::RBI::Tree
@@ -1286,6 +1386,7 @@ class RBI::ScopeConflict < ::RBI::Tree
   sig { override.returns(T::Boolean) }
   def oneline?; end
 
+  # @return [Scope]
   def right; end
 end
 
@@ -1323,8 +1424,8 @@ end
 
 # Sorbet's sigs
 class RBI::Sig < ::RBI::Node
-  sig { params(params: T::Array[RBI::SigParam], return_type: T.nilable(String), is_abstract: T::Boolean, is_override: T::Boolean, is_overridable: T::Boolean, type_params: T::Array[String], checked: T.nilable(Symbol), loc: T.nilable(RBI::Loc), block: T.nilable(T.proc.params(node: RBI::Sig).void)).void }
-  def initialize(params: T.unsafe(nil), return_type: T.unsafe(nil), is_abstract: T.unsafe(nil), is_override: T.unsafe(nil), is_overridable: T.unsafe(nil), type_params: T.unsafe(nil), checked: T.unsafe(nil), loc: T.unsafe(nil), &block); end
+  sig { params(params: T::Array[RBI::SigParam], return_type: T.nilable(String), is_abstract: T::Boolean, is_override: T::Boolean, is_overridable: T::Boolean, is_final: T::Boolean, type_params: T::Array[String], checked: T.nilable(Symbol), loc: T.nilable(RBI::Loc), block: T.nilable(T.proc.params(node: RBI::Sig).void)).void }
+  def initialize(params: T.unsafe(nil), return_type: T.unsafe(nil), is_abstract: T.unsafe(nil), is_override: T.unsafe(nil), is_overridable: T.unsafe(nil), is_final: T.unsafe(nil), type_params: T.unsafe(nil), checked: T.unsafe(nil), loc: T.unsafe(nil), &block); end
 
   sig { params(param: RBI::SigParam).void }
   def <<(param); end
@@ -1338,6 +1439,7 @@ class RBI::Sig < ::RBI::Node
   sig { returns(T.nilable(Symbol)) }
   def checked; end
 
+  # @return [Symbol, nil]
   def checked=(_arg0); end
 
   sig { returns(T::Boolean) }
@@ -1346,10 +1448,25 @@ class RBI::Sig < ::RBI::Node
   sig { returns(T::Boolean) }
   def is_abstract; end
 
+  # @return [Boolean]
   def is_abstract=(_arg0); end
+
+  # @return [Boolean]
+  def is_final; end
+
+  # @return [Boolean]
+  def is_final=(_arg0); end
+
+  # @return [Boolean]
   def is_overridable; end
+
+  # @return [Boolean]
   def is_overridable=(_arg0); end
+
+  # @return [Boolean]
   def is_override; end
+
+  # @return [Boolean]
   def is_override=(_arg0); end
 
   sig { override.returns(T::Boolean) }
@@ -1361,6 +1478,7 @@ class RBI::Sig < ::RBI::Node
   sig { returns(T.nilable(String)) }
   def return_type; end
 
+  # @return [String, nil]
   def return_type=(_arg0); end
 
   sig { returns(T::Array[String]) }
@@ -1385,6 +1503,7 @@ class RBI::SigBuilder < ::RBI::ASTVisitor
   sig { returns(RBI::Sig) }
   def current; end
 
+  # @return [Sig]
   def current=(_arg0); end
 
   sig { override.params(node: T.nilable(AST::Node)).void }
@@ -1418,6 +1537,7 @@ class RBI::SigParam < ::RBI::NodeWithComments
   sig { params(v: RBI::Printer, last: T::Boolean).void }
   def print_comment_leading_space(v, last:); end
 
+  # @return [String]
   def type; end
 end
 
@@ -1445,16 +1565,19 @@ class RBI::Struct < ::RBI::Scope
   sig { returns(T::Boolean) }
   def keyword_init; end
 
+  # @return [Boolean]
   def keyword_init=(_arg0); end
 
   sig { returns(T::Array[Symbol]) }
   def members; end
 
+  # @return [Array<Symbol>]
   def members=(_arg0); end
 
   sig { returns(String) }
   def name; end
 
+  # @return [String]
   def name=(_arg0); end
 
   sig { override.params(v: RBI::Printer).void }
@@ -1520,6 +1643,7 @@ class RBI::TStructConst < ::RBI::TStructField
   def to_s; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::TStructField < ::RBI::NodeWithComments
   abstract!
 
@@ -1535,16 +1659,23 @@ class RBI::TStructField < ::RBI::NodeWithComments
   sig { returns(T.nilable(String)) }
   def default; end
 
+  # @return [String, nil]
   def default=(_arg0); end
 
+  # @abstract
   sig { abstract.returns(T::Array[String]) }
   def fully_qualified_names; end
 
   sig { returns(String) }
   def name; end
 
+  # @return [String]
   def name=(_arg0); end
+
+  # @return [String]
   def type; end
+
+  # @return [String]
   def type=(_arg0); end
 end
 
@@ -1746,12 +1877,15 @@ class RBI::TypeMember < ::RBI::NodeWithComments
   sig { override.returns(String) }
   def to_s; end
 
+  # @return [String]
   def value; end
 end
 
 RBI::VERSION = T.let(T.unsafe(nil), String)
 
 # Visibility
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Visibility < ::RBI::NodeWithComments
   abstract!
 
@@ -1791,11 +1925,13 @@ class RBI::VisibilityGroup < ::RBI::Tree
   def visibility; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class RBI::Visitor
   abstract!
 
-  def initialize(*args, **_arg1, &blk); end
+  def initialize(*args, &blk); end
 
+  # @abstract
   sig { abstract.params(node: T.nilable(RBI::Node)).void }
   def visit(node); end
 
