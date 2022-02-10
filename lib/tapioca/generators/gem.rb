@@ -168,11 +168,10 @@ module Tapioca
         gem_name = set_color(gem.name, :yellow, :bold)
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
-        rbi.set_file_header(
+
+        @rbi_formatter.write_header!(rbi,
           "#{@default_command} gem #{gem.name}",
-          reason: "types exported from the `#{gem.name}` gem",
-          display_heading: @file_header
-        )
+          reason: "types exported from the `#{gem.name}` gem",) if @file_header
 
         rbi.root = Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile
 

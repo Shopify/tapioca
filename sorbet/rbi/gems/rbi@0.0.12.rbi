@@ -327,9 +327,6 @@ class RBI::File
   sig { void }
   def set_empty_body_content; end
 
-  sig { params(command: String, reason: T.nilable(String), display_heading: T::Boolean).void }
-  def set_file_header(command, reason: T.unsafe(nil), display_heading: T.unsafe(nil)); end
-
   sig { returns(T.nilable(String)) }
   def strictness; end
 
