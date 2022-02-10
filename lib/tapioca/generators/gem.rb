@@ -56,7 +56,7 @@ module Tapioca
 
         super(default_command: default_command, file_writer: file_writer)
 
-        @loader = T.let(nil, T.nilable(Loader))
+        @loader = T.let(nil, T.nilable(Runtime::Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -119,9 +119,9 @@ module Tapioca
 
       private
 
-      sig { returns(Loader) }
+      sig { returns(Runtime::Loader) }
       def loader
-        @loader ||= Loader.new
+        @loader ||= Runtime::Loader.new
       end
 
       sig { returns(Gemfile) }
