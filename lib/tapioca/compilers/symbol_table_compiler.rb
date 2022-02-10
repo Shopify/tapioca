@@ -338,7 +338,7 @@ module Tapioca
         type_name = T.must(constant.name)
         return type_name if type_name =~ /\[.*\]$/
 
-        type_variables = Tapioca::GenericTypeRegistry.lookup_type_variables(constant)
+        type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
         return type_name unless type_variables
 
         type_variable_names = type_variables.map { "T.untyped" }.join(", ")
