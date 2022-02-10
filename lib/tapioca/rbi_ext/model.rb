@@ -2,17 +2,6 @@
 # frozen_string_literal: true
 
 module RBI
-  class File
-    extend T::Sig
-
-    sig { void }
-    def set_empty_body_content
-      comments << RBI::BlankLine.new unless comments.empty?
-      comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
-      comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
-    end
-  end
-
   class Tree
     extend T::Sig
 

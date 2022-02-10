@@ -324,9 +324,6 @@ class RBI::File
   # @return [Tree]
   def root=(_arg0); end
 
-  sig { void }
-  def set_empty_body_content; end
-
   sig { returns(T.nilable(String)) }
   def strictness; end
 

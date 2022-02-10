@@ -178,7 +178,7 @@ module Tapioca
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 
         if rbi.empty?
-          rbi.set_empty_body_content
+          @rbi_formatter.write_empty_body_comment!(rbi)
           say("Compiled #{gem_name} (empty output)", :yellow)
         else
           say("Compiled #{gem_name}", :green)
