@@ -3192,7 +3192,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             #
             # This method does not have a signature
             #
-            # @param a [String, Integer]
+            # @param a [String, Integer] The `a` to use
             # @return [void]
             def no_sig(a); end
 
@@ -3256,7 +3256,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           #
           # This method does not have a signature
           #
-          # @param a [String, Integer]
+          # @param a [String, Integer] The `a` to use
           # @return [void]
           def no_sig(a); end
 
