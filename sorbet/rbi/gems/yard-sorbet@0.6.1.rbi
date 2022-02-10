@@ -83,7 +83,13 @@ class YARDSorbet::Handlers::SigHandler < ::YARD::Handlers::Ruby::Base
 
   private
 
-  sig { params(method_node: YARD::Parser::Ruby::AstNode, node: YARD::Parser::Ruby::AstNode, docstring: YARD::Docstring).void }
+  sig do
+    params(
+      method_node: YARD::Parser::Ruby::AstNode,
+      node: YARD::Parser::Ruby::AstNode,
+      docstring: YARD::Docstring
+    ).void
+  end
   def parse_params(method_node, node, docstring); end
 
   sig { params(node: YARD::Parser::Ruby::AstNode, docstring: YARD::Docstring).void }
@@ -106,7 +112,14 @@ module YARDSorbet::Handlers::StructClassHandler
 
   private
 
-  sig { params(object: YARD::CodeObjects::MethodObject, props: T::Array[YARDSorbet::TStructProp], docstring: YARD::Docstring, directives: T::Array[String]).void }
+  sig do
+    params(
+      object: YARD::CodeObjects::MethodObject,
+      props: T::Array[YARDSorbet::TStructProp],
+      docstring: YARD::Docstring,
+      directives: T::Array[String]
+    ).void
+  end
   def decorate_t_struct_init(object, props, docstring, directives); end
 
   # Create a virtual `initialize` method with all the `prop`/`const` arguments
@@ -157,7 +170,11 @@ module YARDSorbet::NodeUtils
     def bfs_traverse(node, &_blk); end
 
     # Gets the node that a sorbet `sig` can be attached do, bypassing visisbility modifiers and the like
-    sig { params(node: YARD::Parser::Ruby::AstNode).returns(T.any(YARD::Parser::Ruby::MethodCallNode, YARD::Parser::Ruby::MethodDefinitionNode)) }
+    sig do
+      params(
+        node: YARD::Parser::Ruby::AstNode
+      ).returns(T.any(YARD::Parser::Ruby::MethodCallNode, YARD::Parser::Ruby::MethodDefinitionNode))
+    end
     def get_method_node(node); end
 
     # Find and return the adjacent node (ascending)
@@ -240,11 +257,25 @@ end
 # Helper methods for working with `YARD` tags
 module YARDSorbet::TagUtils
   class << self
-    sig { params(docstring: YARD::Docstring, tag_name: String, name: T.nilable(String)).returns(T.nilable(YARD::Tags::Tag)) }
+    sig do
+      params(
+        docstring: YARD::Docstring,
+        tag_name: String,
+        name: T.nilable(String)
+      ).returns(T.nilable(YARD::Tags::Tag))
+    end
     def find_tag(docstring, tag_name, name); end
 
     # Create or update a `YARD` tag with type information
-    sig { params(docstring: YARD::Docstring, tag_name: String, types: T.nilable(T::Array[String]), name: T.nilable(String), text: String).void }
+    sig do
+      params(
+        docstring: YARD::Docstring,
+        tag_name: String,
+        types: T.nilable(T::Array[String]),
+        name: T.nilable(String),
+        text: String
+      ).void
+    end
     def upsert_tag(docstring, tag_name, types = T.unsafe(nil), name = T.unsafe(nil), text = T.unsafe(nil)); end
   end
 end
