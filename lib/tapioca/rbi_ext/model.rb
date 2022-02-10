@@ -1,25 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "rbi"
-
 module RBI
   class File
     extend T::Sig
-
-    sig { returns(String) }
-    def transformed_string
-      transform_rbi!
-      string
-    end
-
-    sig { void }
-    def transform_rbi!
-      root.nest_singleton_methods!
-      root.nest_non_public_methods!
-      root.group_nodes!
-      root.sort_nodes!
-    end
 
     sig do
       params(

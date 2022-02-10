@@ -338,12 +338,6 @@ class RBI::File
 
   sig { params(indent: Integer, print_locs: T::Boolean, max_line_length: T.nilable(Integer)).returns(String) }
   def string(indent: T.unsafe(nil), print_locs: T.unsafe(nil), max_line_length: T.unsafe(nil)); end
-
-  sig { void }
-  def transform_rbi!; end
-
-  sig { returns(String) }
-  def transformed_string; end
 end
 
 class RBI::Formatter

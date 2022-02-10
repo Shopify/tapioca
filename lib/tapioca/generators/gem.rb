@@ -21,7 +21,8 @@ module Tapioca
           file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
-          dsl_dir: String
+          dsl_dir: String,
+          rbi_formatter: RBIFormatter
         ).void
       end
       def initialize(
@@ -38,7 +39,8 @@ module Tapioca
         file_writer: FileWriter.new,
         number_of_workers: nil,
         auto_strictness: true,
-        dsl_dir: DEFAULT_DSL_DIR
+        dsl_dir: DEFAULT_DSL_DIR,
+        rbi_formatter: DEFAULT_RBI_FORMATTER
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -50,6 +52,7 @@ module Tapioca
         @number_of_workers = number_of_workers
         @auto_strictness = auto_strictness
         @dsl_dir = dsl_dir
+        @rbi_formatter = rbi_formatter
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -182,7 +185,8 @@ module Tapioca
           say("Compiled #{gem_name}", :green)
         end
 
-        create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
+        rbi_string = @rbi_formatter.print_file(rbi)
+        create_file(@outpath / gem.rbi_file_name, rbi_string)
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove_file(file) unless file.basename.to_s == gem.rbi_file_name
