@@ -180,6 +180,15 @@ module Tapioca
       type: :numeric,
       desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
       default: 1
+    option :auto_strictness,
+      type: :boolean,
+      desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
+      default: true
+    option :dsl_dir,
+      aliases: ["--dsl-dir"],
+      banner: "directory",
+      desc: "The DSL directory used to correct gems strictnesses",
+      default: DEFAULT_DSL_DIR
     def gem(*gems)
       Tapioca.silence_warnings do
         all = options[:all]
@@ -196,7 +205,9 @@ module Tapioca
           file_header: options[:file_header],
           doc: options[:doc],
           include_exported_rbis: options[:exported_gem_rbis],
-          number_of_workers: options[:workers]
+          number_of_workers: options[:workers],
+          auto_strictness: options[:auto_strictness],
+          dsl_dir: options[:dsl_dir]
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify

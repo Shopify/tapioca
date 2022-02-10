@@ -92,6 +92,11 @@ module Tapioca
       refute(@project.file?(path))
     end
 
+    sig { params(strictness: String, file: String).void }
+    def assert_file_strictness(strictness, file)
+      assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path(file)))
+    end
+
     sig { params(result: MockProject::ExecResult).void }
     def assert_empty_stdout(result)
       assert_empty(result.out)

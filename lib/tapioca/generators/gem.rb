@@ -4,6 +4,8 @@
 module Tapioca
   module Generators
     class Gem < Base
+      include SorbetHelper
+
       sig do
         params(
           gem_names: T::Array[String],
@@ -17,7 +19,9 @@ module Tapioca
           doc: T::Boolean,
           include_exported_rbis: T::Boolean,
           file_writer: Thor::Actions,
-          number_of_workers: T.nilable(Integer)
+          number_of_workers: T.nilable(Integer),
+          auto_strictness: T::Boolean,
+          dsl_dir: String
         ).void
       end
       def initialize(
@@ -32,7 +36,9 @@ module Tapioca
         doc:,
         include_exported_rbis:,
         file_writer: FileWriter.new,
-        number_of_workers: nil
+        number_of_workers: nil,
+        auto_strictness: true,
+        dsl_dir: DEFAULT_DSL_DIR
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -42,6 +48,8 @@ module Tapioca
         @outpath = outpath
         @file_header = file_header
         @number_of_workers = number_of_workers
+        @auto_strictness = auto_strictness
+        @dsl_dir = dsl_dir
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -71,6 +79,8 @@ module Tapioca
         end
 
         if anything_done
+          update_strictnesses(gem_queue.map(&:name), gem_dir: @outpath.to_s, dsl_dir: @dsl_dir) if @auto_strictness
+
           say("All operations performed in working directory.", [:green, :bold])
           say("Please review changes and commit them.", [:green, :bold])
         else
@@ -93,6 +103,8 @@ module Tapioca
         ].any?
 
         if anything_done
+          update_strictnesses([], gem_dir: @outpath.to_s, dsl_dir: @dsl_dir) if @auto_strictness
+
           say("All operations performed in working directory.", [:green, :bold])
           say("Please review changes and commit them.", [:green, :bold])
         else
@@ -367,6 +379,60 @@ module Tapioca
       rescue RBI::ParseError => e
         say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
         say_error("Cause: #{e.message} (#{e.location})")
+      end
+
+      sig { params(gem_names: T::Array[String], gem_dir: String, dsl_dir: String).void }
+      def update_strictnesses(gem_names, gem_dir: DEFAULT_GEM_DIR, dsl_dir: DEFAULT_DSL_DIR)
+        return unless File.directory?(dsl_dir)
+
+        error_url_base = Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE
+
+        say("Typechecking RBI files... ")
+        res = sorbet(
+          "--no-config",
+          "--error-url-base=#{error_url_base}",
+          "--isolate-error-code 4010",
+          dsl_dir,
+          gem_dir
+        )
+        say(" Done", :green)
+
+        errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err)
+
+        if errors.empty?
+          say("No error found", [:green, :bold])
+          return
+        end
+
+        files = []
+
+        errors.each do |error|
+          # Collect the file with error
+          files << error.file
+          error.more.each do |line|
+            # Also collect the conflicting definition file paths
+            next unless line.include?("Previous definition")
+            files << line.split(":").first&.strip
+          end
+        end
+
+        files
+          .uniq
+          .sort
+          .select do |file|
+            name = gem_name_from_rbi_path(file)
+            file.start_with?(gem_dir) && (gem_names.empty? || gem_names.include?(name))
+          end.each do |file|
+            Spoom::Sorbet::Sigils.change_sigil_in_file(file, "false")
+            say("\n  Changed strictness of #{file} to `typed: false` (conflicting with DSL files)", [:yellow, :bold])
+          end
+
+        say("\n")
+      end
+
+      sig { params(path: String).returns(String) }
+      def gem_name_from_rbi_path(path)
+        T.must(File.basename(path, ".rbi").split("@").first)
       end
     end
   end
