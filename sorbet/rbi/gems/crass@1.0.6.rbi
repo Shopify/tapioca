@@ -28,6 +28,8 @@ class Crass::Parser
   # or an array of tokens.
   #
   # See {Tokenizer#initialize} for _options_.
+  #
+  # @return [Parser] a new instance of Parser
   def initialize(input, options = T.unsafe(nil)); end
 
   # Consumes an at-rule and returns it.
@@ -53,8 +55,8 @@ class Crass::Parser
   #
   # Options:
   #
-  # * **:strict** - Set to `true` to exclude non-standard `:comment`,
-  # `:semicolon`, and `:whitespace` nodes.
+  #   * **:strict** - Set to `true` to exclude non-standard `:comment`,
+  #     `:semicolon`, and `:whitespace` nodes.
   #
   # 5.4.4. http://dev.w3.org/csswg/css-syntax/#consume-a-list-of-declarations
   def consume_declarations(input = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -162,7 +164,7 @@ class Crass::Parser
     #
     # Options:
     #
-    # * **:exclude_comments** - When `true`, comments will be excluded.
+    #   * **:exclude_comments** - When `true`, comments will be excluded.
     def stringify(nodes, options = T.unsafe(nil)); end
   end
 end
@@ -173,6 +175,8 @@ Crass::Parser::BLOCK_END_TOKENS = T.let(T.unsafe(nil), Hash)
 # CSS while preserving the original text.
 class Crass::Scanner
   # Creates a Scanner instance for the given _input_ string or IO instance.
+  #
+  # @return [Scanner] a new instance of Scanner
   def initialize(input); end
 
   # Consumes the next character and returns it, advancing the pointer, or
@@ -190,6 +194,8 @@ class Crass::Scanner
 
   # Returns `true` if the end of the string has been reached, `false`
   # otherwise.
+  #
+  # @return [Boolean]
   def eos?; end
 
   # Sets the marker to the position of the next character that will be
@@ -245,6 +251,7 @@ end
 
 # Like {Scanner}, but for tokens!
 class Crass::TokenScanner
+  # @return [TokenScanner] a new instance of TokenScanner
   def initialize(tokens); end
 
   # Executes the given block, collects all tokens that are consumed during its
@@ -285,12 +292,14 @@ class Crass::Tokenizer
   #
   # Options:
   #
-  # * **:preserve_comments** - If `true`, comments will be preserved as
-  # `:comment` tokens.
+  #   * **:preserve_comments** - If `true`, comments will be preserved as
+  #     `:comment` tokens.
   #
-  # * **:preserve_hacks** - If `true`, certain non-standard browser hacks
-  # such as the IE "*" hack will be preserved even though they violate
-  # CSS 3 syntax rules.
+  #   * **:preserve_hacks** - If `true`, certain non-standard browser hacks
+  #     such as the IE "*" hack will be preserved even though they violate
+  #     CSS 3 syntax rules.
+  #
+  # @return [Tokenizer] a new instance of Tokenizer
   def initialize(input, options = T.unsafe(nil)); end
 
   # Consumes a token and returns the token that was consumed.
@@ -375,6 +384,8 @@ class Crass::Tokenizer
   # input stream will be checked, but will not be consumed.
   #
   # 4.3.10. http://dev.w3.org/csswg/css-syntax/#would-start-an-identifier
+  #
+  # @return [Boolean]
   def start_identifier?(text = T.unsafe(nil)); end
 
   # Returns `true` if the given three-character _text_ would start a number.
@@ -382,6 +393,8 @@ class Crass::Tokenizer
   # stream will be checked, but will not be consumed.
   #
   # 4.3.11. http://dev.w3.org/csswg/css-syntax/#starts-with-a-number
+  #
+  # @return [Boolean]
   def start_number?(text = T.unsafe(nil)); end
 
   # Tokenizes the input stream and returns an array of tokens.
@@ -392,6 +405,8 @@ class Crass::Tokenizer
   # in the input stream will be checked, but will not be consumed.
   #
   # 4.3.9. http://dev.w3.org/csswg/css-syntax/#starts-with-a-valid-escape
+  #
+  # @return [Boolean]
   def valid_escape?(text = T.unsafe(nil)); end
 
   class << self

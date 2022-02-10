@@ -25,6 +25,7 @@ class Rainbow::Color
 end
 
 class Rainbow::Color::Indexed < ::Rainbow::Color
+  # @return [Indexed] a new instance of Indexed
   def initialize(ground, num); end
 
   def codes; end
@@ -34,6 +35,7 @@ class Rainbow::Color::Indexed < ::Rainbow::Color
 end
 
 class Rainbow::Color::Named < ::Rainbow::Color::Indexed
+  # @return [Named] a new instance of Named
   def initialize(ground, name); end
 
   class << self
@@ -45,6 +47,7 @@ end
 Rainbow::Color::Named::NAMES = T.let(T.unsafe(nil), Hash)
 
 class Rainbow::Color::RGB < ::Rainbow::Color::Indexed
+  # @return [RGB] a new instance of RGB
   def initialize(ground, *values); end
 
   # Returns the value of attribute b.
@@ -70,6 +73,7 @@ end
 class Rainbow::Color::X11Named < ::Rainbow::Color::RGB
   include ::Rainbow::X11ColorNames
 
+  # @return [X11Named] a new instance of X11Named
   def initialize(ground, name); end
 
   class << self
@@ -108,6 +112,7 @@ class Rainbow::NullPresenter < ::String
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(method_name, *args); end
 end
 
@@ -188,7 +193,9 @@ class Rainbow::Presenter < ::String
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(method_name, *args); end
+
   def wrap_with_sgr(codes); end
 end
 
@@ -202,12 +209,15 @@ class Rainbow::StringUtils
 end
 
 class Rainbow::Wrapper
+  # @return [Wrapper] a new instance of Wrapper
   def initialize(enabled = T.unsafe(nil)); end
 
   # Returns the value of attribute enabled.
   def enabled; end
 
   # Sets the attribute enabled
+  #
+  # @param value the value to set the attribute enabled to.
   def enabled=(_arg0); end
 
   def wrap(string); end

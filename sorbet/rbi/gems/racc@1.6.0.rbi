@@ -26,6 +26,8 @@ class Racc::Parser
   # for 'IDENT'.  ";" (String) for ';'.
   #
   # The final symbol (End of file) must be false.
+  #
+  # @raise [NotImplementedError]
   def next_token; end
 
   # This method is called when a parse error is found.
@@ -42,6 +44,8 @@ class Racc::Parser
   # This method raises ParseError by default.
   #
   # If this method returns, parsers enter "error recovering mode".
+  #
+  # @raise [ParseError]
   def on_error(t, val, vstack); end
 
   def racc_accept; end
@@ -61,7 +65,7 @@ class Racc::Parser
   def token_to_str(t); end
 
   # Exit parser.
-  # Return value is Symbol_Value_Stack[0].
+  # Return value is +Symbol_Value_Stack[0]+.
   def yyaccept; end
 
   # Leave error recovering mode.

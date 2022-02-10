@@ -16,9 +16,9 @@ module ActiveResource::Associations
   # this object holds an id:
   #
   # [association(force_reload = false)]
-  # Returns the associated object. +nil+ is returned if the foreign key is +nil+.
-  # Throws a ActiveResource::ResourceNotFound exception if the foreign key is not +nil+
-  # and the resource is not found.
+  #   Returns the associated object. +nil+ is returned if the foreign key is +nil+.
+  #   Throws a ActiveResource::ResourceNotFound exception if the foreign key is not +nil+
+  #   and the resource is not found.
   #
   # (+association+ is replaced with the symbol passed as the first argument, so
   # <tt>belongs_to :post</tt> would add among others <tt>post.nil?</tt>.
@@ -31,15 +31,15 @@ module ActiveResource::Associations
   #
   # === Options
   # [:class_name]
-  # Specify the class name for the association. Use it only if that name can't be inferred from association name.
-  # So <tt>belongs_to :post</tt> will by default be linked to the Post class, but if the real class name is Article,
-  # you'll have to specify it with this option.
+  #   Specify the class name for the association. Use it only if that name can't be inferred from association name.
+  #   So <tt>belongs_to :post</tt> will by default be linked to the Post class, but if the real class name is Article,
+  #   you'll have to specify it with this option.
   # [:foreign_key]
-  # Specify the foreign key used for the association. By default this is guessed to be the name
-  # of the association with an "_id" suffix. So a class that defines a <tt>belongs_to :post</tt>
-  # association will use "post_id" as the default <tt>:foreign_key</tt>. Similarly,
-  # <tt>belongs_to :article, :class_name => "Post"</tt> will use a foreign key
-  # of "article_id".
+  #   Specify the foreign key used for the association. By default this is guessed to be the name
+  #   of the association with an "_id" suffix. So a class that defines a <tt>belongs_to :post</tt>
+  #   association will use "post_id" as the default <tt>:foreign_key</tt>. Similarly,
+  #   <tt>belongs_to :article, :class_name => "Post"</tt> will use a foreign key
+  #   of "article_id".
   #
   # Option examples:
   # <tt>belongs_to :customer, :class_name => 'User'</tt>
@@ -61,23 +61,23 @@ module ActiveResource::Associations
   #
   # === Options
   # [:class_name]
-  # Specify the class name of the association. This class name would
-  # be used for resolving the association class.
+  #   Specify the class name of the association. This class name would
+  #   be used for resolving the association class.
   #
   # ==== Example for [:class_name] - option
   # GET /posts/123.json delivers following response body:
-  # {
-  # title: "ActiveResource now has associations",
-  # body: "Lorem Ipsum"
-  # comments: [
-  # {
-  # content: "..."
-  # },
-  # {
-  # content: "..."
-  # }
-  # ]
-  # }
+  #   {
+  #     title: "ActiveResource now has associations",
+  #     body: "Lorem Ipsum"
+  #     comments: [
+  #       {
+  #         content: "..."
+  #       },
+  #       {
+  #         content: "..."
+  #       }
+  #     ]
+  #   }
   # ====
   #
   # <tt>has_many :comments, :class_name => 'myblog/comment'</tt>
@@ -93,18 +93,18 @@ module ActiveResource::Associations
   #
   # === Options
   # [:class_name]
-  # Specify the class name of the association. This class name would
-  # be used for resolving the association class.
+  #   Specify the class name of the association. This class name would
+  #   be used for resolving the association class.
   #
   # ==== Example for [:class_name] - option
   # GET /posts/1.json delivers following response body:
-  # {
-  # title: "ActiveResource now has associations",
-  # body: "Lorem Ipsum",
-  # author: {
-  # name: "Gabby Blogger",
-  # }
-  # }
+  #   {
+  #     title: "ActiveResource now has associations",
+  #     body: "Lorem Ipsum",
+  #     author: {
+  #       name: "Gabby Blogger",
+  #     }
+  #   }
   # ====
   #
   # <tt>has_one :author, :class_name => 'myblog/author'</tt>
@@ -120,6 +120,7 @@ end
 module ActiveResource::Associations::Builder; end
 
 class ActiveResource::Associations::Builder::Association
+  # @return [Association] a new instance of Association
   def initialize(model, name, options); end
 
   def build; end
@@ -198,25 +199,25 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # Person maps to the resources people, very similarly to Active Record) and a +site+ value, which holds the
 # URI of the resources.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://api.people.com"
-# end
+#   class Person < ActiveResource::Base
+#     self.site = "https://api.people.com"
+#   end
 #
 # Now the Person class is mapped to RESTful resources located at <tt>https://api.people.com/people/</tt>, and
 # you can now use Active Resource's life cycle methods to manipulate resources. In the case where you already have
 # an existing model with the same name as the desired RESTful resource you can set the +element_name+ value.
 #
-# class PersonResource < ActiveResource::Base
-# self.site = "https://api.people.com"
-# self.element_name = "person"
-# end
+#   class PersonResource < ActiveResource::Base
+#     self.site = "https://api.people.com"
+#     self.element_name = "person"
+#   end
 #
 # If your Active Resource object is required to use an HTTP proxy you can set the +proxy+ value which holds a URI.
 #
-# class PersonResource < ActiveResource::Base
-# self.site = "https://api.people.com"
-# self.proxy = "https://user:password@proxy.people.com:8080"
-# end
+#   class PersonResource < ActiveResource::Base
+#     self.site = "https://api.people.com"
+#     self.proxy = "https://user:password@proxy.people.com:8080"
+#   end
 #
 #
 # == Life cycle methods
@@ -224,19 +225,19 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # Active Resource exposes methods for creating, finding, updating, and deleting resources
 # from REST web services.
 #
-# ryan = Person.new(:first => 'Ryan', :last => 'Daigle')
-# ryan.save                # => true
-# ryan.id                  # => 2
-# Person.exists?(ryan.id)  # => true
-# ryan.exists?             # => true
+#   ryan = Person.new(:first => 'Ryan', :last => 'Daigle')
+#   ryan.save                # => true
+#   ryan.id                  # => 2
+#   Person.exists?(ryan.id)  # => true
+#   ryan.exists?             # => true
 #
-# ryan = Person.find(1)
-# # Resource holding our newly created Person object
+#   ryan = Person.find(1)
+#   # Resource holding our newly created Person object
 #
-# ryan.first = 'Rizzle'
-# ryan.save                # => true
+#   ryan.first = 'Rizzle'
+#   ryan.save                # => true
 #
-# ryan.destroy             # => true
+#   ryan.destroy             # => true
 #
 # As you can see, these are very similar to Active Record's life cycle methods for database records.
 # You can read more about each of these methods in their respective documentation.
@@ -248,20 +249,20 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # <tt>post</tt>, <tt>put</tt> and <tt>delete</tt> methods where you can specify a custom REST method
 # name to invoke.
 #
-# # POST to the custom 'register' REST method, i.e. POST /people/new/register.json.
-# Person.new(:name => 'Ryan').post(:register)
-# # => { :id => 1, :name => 'Ryan', :position => 'Clerk' }
+#   # POST to the custom 'register' REST method, i.e. POST /people/new/register.json.
+#   Person.new(:name => 'Ryan').post(:register)
+#   # => { :id => 1, :name => 'Ryan', :position => 'Clerk' }
 #
-# # PUT an update by invoking the 'promote' REST method, i.e. PUT /people/1/promote.json?position=Manager.
-# Person.find(1).put(:promote, :position => 'Manager')
-# # => { :id => 1, :name => 'Ryan', :position => 'Manager' }
+#   # PUT an update by invoking the 'promote' REST method, i.e. PUT /people/1/promote.json?position=Manager.
+#   Person.find(1).put(:promote, :position => 'Manager')
+#   # => { :id => 1, :name => 'Ryan', :position => 'Manager' }
 #
-# # GET all the positions available, i.e. GET /people/positions.json.
-# Person.get(:positions)
-# # => [{:name => 'Manager'}, {:name => 'Clerk'}]
+#   # GET all the positions available, i.e. GET /people/positions.json.
+#   Person.get(:positions)
+#   # => [{:name => 'Manager'}, {:name => 'Clerk'}]
 #
-# # DELETE to 'fire' a person, i.e. DELETE /people/1/fire.json.
-# Person.find(1).delete(:fire)
+#   # DELETE to 'fire' a person, i.e. DELETE /people/1/fire.json.
+#   Person.find(1).delete(:fire)
 #
 # For more information on using custom REST methods, see the
 # ActiveResource::CustomMethods documentation.
@@ -270,13 +271,13 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 #
 # You can validate resources client side by overriding validation methods in the base class.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://api.people.com"
-# protected
-# def validate
-# errors.add("last", "has invalid characters") unless last =~ /[a-zA-Z]*/
-# end
-# end
+#   class Person < ActiveResource::Base
+#      self.site = "https://api.people.com"
+#      protected
+#        def validate
+#          errors.add("last", "has invalid characters") unless last =~ /[a-zA-Z]*/
+#        end
+#   end
 #
 # See the ActiveResource::Validations documentation for more information.
 #
@@ -309,48 +310,48 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # Basic authentication is the default. To switch to digest or bearer token authentication,
 # set +auth_type+ to +:digest+ or +:bearer+:
 #
-# class Person < ActiveResource::Base
-# self.auth_type = :digest
-# end
+#    class Person < ActiveResource::Base
+#      self.auth_type = :digest
+#    end
 #
 # === Setting the username and password
 #
 # Set +user+ and +password+ on the class, or include them in the +site+ URL.
 #
-# class Person < ActiveResource::Base
-# # Set user and password directly:
-# self.user = "ryan"
-# self.password = "password"
+#    class Person < ActiveResource::Base
+#      # Set user and password directly:
+#      self.user = "ryan"
+#      self.password = "password"
 #
-# # Or include them in the site:
-# self.site = "https://ryan:password@api.people.com"
-# end
+#      # Or include them in the site:
+#      self.site = "https://ryan:password@api.people.com"
+#    end
 #
 # === Setting the bearer token
 #
 # Set +bearer_token+ on the class:
 #
-# class Person < ActiveResource::Base
-# # Set bearer token directly:
-# self.auth_type = :bearer
-# self.bearer_token = "my-bearer-token"
-# end
+#    class Person < ActiveResource::Base
+#      # Set bearer token directly:
+#      self.auth_type = :bearer
+#      self.bearer_token = "my-bearer-token"
+#    end
 #
 # === Certificate Authentication
 #
 # You can also authenticate using an X509 certificate. <tt>See ssl_options=</tt> for all options.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://secure.api.people.com/"
+#    class Person < ActiveResource::Base
+#      self.site = "https://secure.api.people.com/"
 #
-# File.open(pem_file_path, 'rb') do |pem_file|
-# self.ssl_options = {
-# cert:        OpenSSL::X509::Certificate.new(pem_file),
-# key:         OpenSSL::PKey::RSA.new(pem_file),
-# ca_path:     "/path/to/OpenSSL/formatted/CA_Certs",
-# verify_mode: OpenSSL::SSL::VERIFY_PEER }
-# end
-# end
+#      File.open(pem_file_path, 'rb') do |pem_file|
+#        self.ssl_options = {
+#          cert:        OpenSSL::X509::Certificate.new(pem_file),
+#          key:         OpenSSL::PKey::RSA.new(pem_file),
+#          ca_path:     "/path/to/OpenSSL/formatted/CA_Certs",
+#          verify_mode: OpenSSL::SSL::VERIFY_PEER }
+#      end
+#    end
 #
 #
 # == Errors & Validation
@@ -365,8 +366,8 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # response code will be returned from the server which will raise an ActiveResource::ResourceNotFound
 # exception.
 #
-# # GET https://api.people.com/people/999.json
-# ryan = Person.find(999) # 404, raises ActiveResource::ResourceNotFound
+#   # GET https://api.people.com/people/999.json
+#   ryan = Person.find(999) # 404, raises ActiveResource::ResourceNotFound
 #
 #
 # <tt>404</tt> is just one of the HTTP error response codes that Active Resource will handle with its own exception. The
@@ -391,23 +392,23 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # These custom exceptions allow you to deal with resource errors more naturally and with more precision
 # rather than returning a general HTTP error. For example:
 #
-# begin
-# ryan = Person.find(my_id)
-# rescue ActiveResource::ResourceNotFound
-# redirect_to :action => 'not_found'
-# rescue ActiveResource::ResourceConflict, ActiveResource::ResourceInvalid
-# redirect_to :action => 'new'
-# end
+#   begin
+#     ryan = Person.find(my_id)
+#   rescue ActiveResource::ResourceNotFound
+#     redirect_to :action => 'not_found'
+#   rescue ActiveResource::ResourceConflict, ActiveResource::ResourceInvalid
+#     redirect_to :action => 'new'
+#   end
 #
 # When a GET is requested for a nested resource and you don't provide the prefix_param
 # an ActiveResource::MissingPrefixParam will be raised.
 #
-# class Comment < ActiveResource::Base
-# self.site = "https://someip.com/posts/:post_id"
-# end
+#  class Comment < ActiveResource::Base
+#    self.site = "https://someip.com/posts/:post_id"
+#  end
 #
-# Comment.find(1)
-# # => ActiveResource::MissingPrefixParam: post_id prefix_option is missing
+#  Comment.find(1)
+#  # => ActiveResource::MissingPrefixParam: post_id prefix_option is missing
 #
 # === Validation errors
 #
@@ -416,31 +417,31 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # a response code of <tt>422</tt> and an JSON or XML representation of the validation errors. The save operation will
 # then fail (with a <tt>false</tt> return value) and the validation errors can be accessed on the resource in question.
 #
-# ryan = Person.find(1)
-# ryan.first # => ''
-# ryan.save  # => false
+#   ryan = Person.find(1)
+#   ryan.first # => ''
+#   ryan.save  # => false
 #
-# # When
-# # PUT https://api.people.com/people/1.xml
-# # or
-# # PUT https://api.people.com/people/1.json
-# # is requested with invalid values, the response is:
-# #
-# # Response (422):
-# # <errors><error>First cannot be empty</error></errors>
-# # or
-# # {"errors":{"first":["cannot be empty"]}}
-# #
+#   # When
+#   # PUT https://api.people.com/people/1.xml
+#   # or
+#   # PUT https://api.people.com/people/1.json
+#   # is requested with invalid values, the response is:
+#   #
+#   # Response (422):
+#   # <errors><error>First cannot be empty</error></errors>
+#   # or
+#   # {"errors":{"first":["cannot be empty"]}}
+#   #
 #
-# ryan.errors.invalid?(:first)  # => true
-# ryan.errors.full_messages     # => ['First cannot be empty']
+#   ryan.errors.invalid?(:first)  # => true
+#   ryan.errors.full_messages     # => ['First cannot be empty']
 #
 # For backwards-compatibility with older endpoints, the following formats are also supported in JSON responses:
 #
-# # {"errors":['First cannot be empty']}
-# #   This was the required format for previous versions of ActiveResource
-# # {"first":["cannot be empty"]}
-# #   This was the default format produced by respond_with in ActionController <3.2.1
+#   # {"errors":['First cannot be empty']}
+#   #   This was the required format for previous versions of ActiveResource
+#   # {"first":["cannot be empty"]}
+#   #   This was the default format produced by respond_with in ActionController <3.2.1
 #
 # Parsing either of these formats will result in a deprecation warning.
 #
@@ -452,10 +453,10 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # unresponsive servers. In such cases, your Active Resource method calls could \timeout. You can control the
 # amount of time before Active Resource times out with the +timeout+ variable.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://api.people.com"
-# self.timeout = 5
-# end
+#   class Person < ActiveResource::Base
+#     self.site = "https://api.people.com"
+#     self.timeout = 5
+#   end
 #
 # This sets the +timeout+ to 5 seconds. You can adjust the +timeout+ to a value suitable for the RESTful API
 # you are accessing. It is recommended to set this to a reasonably low value to allow your Active Resource
@@ -474,11 +475,11 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 # wait for an upstream response). This is inline with supported +Net::HTTP+ timeout configuration and allows
 # for finer control of client timeouts depending on context.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://api.people.com"
-# self.open_timeout = 2
-# self.read_timeout = 10
-# end
+#   class Person < ActiveResource::Base
+#     self.site = "https://api.people.com"
+#     self.open_timeout = 2
+#     self.read_timeout = 10
+#   end
 class ActiveResource::Base
   include ::ActiveModel::Validations
   include ::ActiveSupport::Callbacks
@@ -510,36 +511,38 @@ class ActiveResource::Base
   # of attributes for the \new resource.
   #
   # ==== Examples
-  # my_course = Course.new
-  # my_course.name = "Western Civilization"
-  # my_course.lecturer = "Don Trotter"
-  # my_course.save
+  #   my_course = Course.new
+  #   my_course.name = "Western Civilization"
+  #   my_course.lecturer = "Don Trotter"
+  #   my_course.save
   #
-  # my_other_course = Course.new(:name => "Philosophy: Reason and Being", :lecturer => "Ralph Cling")
-  # my_other_course.save
+  #   my_other_course = Course.new(:name => "Philosophy: Reason and Being", :lecturer => "Ralph Cling")
+  #   my_other_course.save
+  #
+  # @return [Base] a new instance of Base
   def initialize(attributes = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
   # Test for equality. Resource are equal if and only if +other+ is the same object or
   # is an instance of the same class, is not <tt>new?</tt>, and has the same +id+.
   #
   # ==== Examples
-  # ryan = Person.create(:name => 'Ryan')
-  # jamie = Person.create(:name => 'Jamie')
+  #   ryan = Person.create(:name => 'Ryan')
+  #   jamie = Person.create(:name => 'Jamie')
   #
-  # ryan == jamie
-  # # => false (Different name attribute and id)
+  #   ryan == jamie
+  #   # => false (Different name attribute and id)
   #
-  # ryan_again = Person.new(:name => 'Ryan')
-  # ryan == ryan_again
-  # # => false (ryan_again is new?)
+  #   ryan_again = Person.new(:name => 'Ryan')
+  #   ryan == ryan_again
+  #   # => false (ryan_again is new?)
   #
-  # ryans_clone = Person.create(:name => 'Ryan')
-  # ryan == ryans_clone
-  # # => false (Different id attributes)
+  #   ryans_clone = Person.create(:name => 'Ryan')
+  #   ryan == ryans_clone
+  #   # => false (Different id attributes)
   #
-  # ryans_twin = Person.find(ryan.id)
-  # ryan == ryans_twin
-  # # => true
+  #   ryans_twin = Person.find(ryan.id)
+  #   ryan == ryans_twin
+  #   # => true
   def ==(other); end
 
   def __callbacks; end
@@ -570,23 +573,23 @@ class ActiveResource::Base
   # Returns a \clone of the resource that hasn't been assigned an +id+ yet and
   # is treated as a \new resource.
   #
-  # ryan = Person.find(1)
-  # not_ryan = ryan.clone
-  # not_ryan.new?  # => true
+  #   ryan = Person.find(1)
+  #   not_ryan = ryan.clone
+  #   not_ryan.new?  # => true
   #
   # Any active resource member attributes will NOT be cloned, though all other
   # attributes are. This is to prevent the conflict between any +prefix_options+
   # that refer to the original parent resource and the newly cloned parent
   # resource that does not exist.
   #
-  # ryan = Person.find(1)
-  # ryan.address = StreetAddress.find(1, :person_id => ryan.id)
-  # ryan.hash = {:not => "an ARes instance"}
+  #   ryan = Person.find(1)
+  #   ryan.address = StreetAddress.find(1, :person_id => ryan.id)
+  #   ryan.hash = {:not => "an ARes instance"}
   #
-  # not_ryan = ryan.clone
-  # not_ryan.new?            # => true
-  # not_ryan.address         # => NoMethodError
-  # not_ryan.hash            # => {:not => "an ARes instance"}
+  #   not_ryan = ryan.clone
+  #   not_ryan.new?            # => true
+  #   not_ryan.address         # => NoMethodError
+  #   not_ryan.hash            # => {:not => "an ARes instance"}
   def clone; end
 
   def connection_class; end
@@ -596,29 +599,29 @@ class ActiveResource::Base
   # Deletes the resource from the remote service.
   #
   # ==== Examples
-  # my_id = 3
-  # my_person = Person.find(my_id)
-  # my_person.destroy
-  # Person.find(my_id) # 404 (Resource Not Found)
+  #   my_id = 3
+  #   my_person = Person.find(my_id)
+  #   my_person.destroy
+  #   Person.find(my_id) # 404 (Resource Not Found)
   #
-  # new_person = Person.create(:name => 'James')
-  # new_id = new_person.id # => 7
-  # new_person.destroy
-  # Person.find(new_id) # 404 (Resource Not Found)
+  #   new_person = Person.create(:name => 'James')
+  #   new_id = new_person.id # => 7
+  #   new_person.destroy
+  #   Person.find(new_id) # 404 (Resource Not Found)
   def destroy; end
 
   # Duplicates the current resource without saving it.
   #
   # ==== Examples
-  # my_invoice = Invoice.create(:customer => 'That Company')
-  # next_invoice = my_invoice.dup
-  # next_invoice.new? # => true
+  #   my_invoice = Invoice.create(:customer => 'That Company')
+  #   next_invoice = my_invoice.dup
+  #   next_invoice.new? # => true
   #
-  # next_invoice.save
-  # next_invoice == my_invoice # => false (different id attributes)
+  #   next_invoice.save
+  #   next_invoice == my_invoice # => false (different id attributes)
   #
-  # my_invoice.customer   # => That Company
-  # next_invoice.customer # => That Company
+  #   my_invoice.customer   # => That Company
+  #   next_invoice.customer # => That Company
   def dup; end
 
   # Returns the serialized string representation of the resource in the configured
@@ -627,6 +630,8 @@ class ActiveResource::Base
   def encode(options = T.unsafe(nil)); end
 
   # Tests for equality (delegates to ==).
+  #
+  # @return [Boolean]
   def eql?(other); end
 
   # Evaluates to <tt>true</tt> if this resource is not <tt>new?</tt> and is
@@ -635,20 +640,22 @@ class ActiveResource::Base
   # and actions on it.
   #
   # ==== Examples
-  # Person.create(:name => 'Theodore Roosevelt')
-  # that_guy = Person.find(:first)
-  # that_guy.exists? # => true
+  #   Person.create(:name => 'Theodore Roosevelt')
+  #   that_guy = Person.find(:first)
+  #   that_guy.exists? # => true
   #
-  # that_lady = Person.new(:name => 'Paul Bean')
-  # that_lady.exists? # => false
+  #   that_lady = Person.new(:name => 'Paul Bean')
+  #   that_lady.exists? # => false
   #
-  # guys_id = that_guy.id
-  # Person.delete(guys_id)
-  # that_guy.exists? # => false
+  #   guys_id = that_guy.id
+  #   Person.delete(guys_id)
+  #   that_guy.exists? # => false
+  #
+  # @return [Boolean]
   def exists?; end
 
   # Delegates to id in order to allow two resources of the same type and \id to work with something like:
-  # [(a = Person.find 1), (b = Person.find 2)] & [(c = Person.find 1), (d = Person.find 4)] # => [a]
+  #   [(a = Person.find 1), (b = Person.find 2)] & [(c = Person.find 1), (d = Person.find 4)] # => [a]
   def hash; end
 
   # Gets the <tt>\id</tt> attribute of the resource.
@@ -673,67 +680,73 @@ class ActiveResource::Base
   # is provided.
   #
   # ==== Examples
-  # my_attrs = {:name => 'J&J Textiles', :industry => 'Cloth and textiles'}
-  # my_attrs = {:name => 'Marty', :colors => ["red", "green", "blue"]}
+  #   my_attrs = {:name => 'J&J Textiles', :industry => 'Cloth and textiles'}
+  #   my_attrs = {:name => 'Marty', :colors => ["red", "green", "blue"]}
   #
-  # the_supplier = Supplier.find(:first)
-  # the_supplier.name # => 'J&M Textiles'
-  # the_supplier.load(my_attrs)
-  # the_supplier.name('J&J Textiles')
+  #   the_supplier = Supplier.find(:first)
+  #   the_supplier.name # => 'J&M Textiles'
+  #   the_supplier.load(my_attrs)
+  #   the_supplier.name('J&J Textiles')
   #
-  # # These two calls are the same as Supplier.new(my_attrs)
-  # my_supplier = Supplier.new
-  # my_supplier.load(my_attrs)
+  #   # These two calls are the same as Supplier.new(my_attrs)
+  #   my_supplier = Supplier.new
+  #   my_supplier.load(my_attrs)
   #
-  # # These three calls are the same as Supplier.create(my_attrs)
-  # your_supplier = Supplier.new
-  # your_supplier.load(my_attrs)
-  # your_supplier.save
+  #   # These three calls are the same as Supplier.create(my_attrs)
+  #   your_supplier = Supplier.new
+  #   your_supplier.load(my_attrs)
+  #   your_supplier.save
   def load(attributes, remove_root = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
   # :singleton-method:
   # The logger for diagnosing and tracing Active Resource calls.
   def logger; end
 
-  def model_name(*_arg0, **_arg1, &_arg2); end
+  def model_name(*_arg0, &_arg1); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
   # ==== Examples
-  # not_new = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
-  # not_new.new? # => false
+  #   not_new = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
+  #   not_new.new? # => false
   #
-  # is_new = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
-  # is_new.new? # => true
+  #   is_new = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
+  #   is_new.new? # => true
   #
-  # is_new.save
-  # is_new.new? # => false
+  #   is_new.save
+  #   is_new.new? # => false
+  #
+  # @return [Boolean]
   def new?; end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
   # ==== Examples
-  # not_new = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
-  # not_new.new? # => false
+  #   not_new = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
+  #   not_new.new? # => false
   #
-  # is_new = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
-  # is_new.new? # => true
+  #   is_new = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
+  #   is_new.new? # => true
   #
-  # is_new.save
-  # is_new.new? # => false
+  #   is_new.save
+  #   is_new.new? # => false
+  #
+  # @return [Boolean]
   def new_record?; end
 
   # Returns +true+ if this object has been saved, otherwise returns +false+.
   #
   # ==== Examples
-  # persisted = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
-  # persisted.persisted? # => true
+  #   persisted = Computer.create(:brand => 'Apple', :make => 'MacBook', :vendor => 'MacMall')
+  #   persisted.persisted? # => true
   #
-  # not_persisted = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
-  # not_persisted.persisted? # => false
+  #   not_persisted = Computer.new(:brand => 'IBM', :make => 'Thinkpad', :vendor => 'IBM')
+  #   not_persisted.persisted? # => false
   #
-  # not_persisted.save
-  # not_persisted.persisted? # => true
+  #   not_persisted.save
+  #   not_persisted.persisted? # => true
+  #
+  # @return [Boolean]
   def persisted?; end
 
   def prefix_options; end
@@ -746,14 +759,14 @@ class ActiveResource::Base
   # A method to \reload the attributes of this object from the remote web service.
   #
   # ==== Examples
-  # my_branch = Branch.find(:first)
-  # my_branch.name # => "Wislon Raod"
+  #   my_branch = Branch.find(:first)
+  #   my_branch.name # => "Wislon Raod"
   #
-  # # Another client fixes the typo...
+  #   # Another client fixes the typo...
   #
-  # my_branch.name # => "Wislon Raod"
-  # my_branch.reload
-  # my_branch.name # => "Wilson Road"
+  #   my_branch.name # => "Wislon Raod"
+  #   my_branch.reload
+  #   my_branch.name # => "Wilson Road"
   def reload; end
 
   # For checking <tt>respond_to?</tt> without searching the attributes (which is faster).
@@ -765,13 +778,13 @@ class ActiveResource::Base
   # that weren't part of the original submit).
   #
   # ==== Examples
-  # my_company = Company.new(:name => 'RoleModel Software', :owner => 'Ken Auer', :size => 2)
-  # my_company.new? # => true
-  # my_company.save # sends POST /companies/ (create)
+  #   my_company = Company.new(:name => 'RoleModel Software', :owner => 'Ken Auer', :size => 2)
+  #   my_company.new? # => true
+  #   my_company.save # sends POST /companies/ (create)
   #
-  # my_company.new? # => false
-  # my_company.size = 10
-  # my_company.save # sends PUT /companies/1 (update)
+  #   my_company.new? # => false
+  #   my_company.size = 10
+  #   my_company.save # sends PUT /companies/1 (update)
   def save(options = T.unsafe(nil)); end
 
   # Saves the resource.
@@ -848,6 +861,7 @@ class ActiveResource::Base
 
   private
 
+  # @return [Boolean]
   def const_valid?(*const_args); end
 
   # Create and return a class definition for a resource inside the current resource
@@ -868,9 +882,13 @@ class ActiveResource::Base
   # A method to determine if an object responds to a message (e.g., a method call). In Active Resource, a Person object with a
   # +name+ attribute can answer <tt>true</tt> to <tt>my_person.respond_to?(:name)</tt>, <tt>my_person.respond_to?(:name=)</tt>, and
   # <tt>my_person.respond_to?(:name?)</tt>.
+  #
+  # @return [Boolean]
   def respond_to_missing?(method, include_priv = T.unsafe(nil)); end
 
   # Determine whether the response is allowed to have a body per HTTP 1.1 spec section 4.4.1
+  #
+  # @return [Boolean]
   def response_code_allows_body?(c); end
 
   def split_options(options = T.unsafe(nil)); end
@@ -961,6 +979,8 @@ class ActiveResource::Base
     def collection_name; end
 
     # Sets the attribute collection_name
+    #
+    # @param value the value to set the attribute collection_name to.
     def collection_name=(_arg0); end
 
     def collection_parser; end
@@ -973,21 +993,21 @@ class ActiveResource::Base
     #
     # ==== Options
     # * +prefix_options+ - A hash to add a prefix to the request for nested URLs (e.g., <tt>:account_id => 19</tt>
-    # would yield a URL like <tt>/accounts/19/purchases.json</tt>).
+    #   would yield a URL like <tt>/accounts/19/purchases.json</tt>).
     # * +query_options+ - A hash to add items to the query string for the request.
     #
     # ==== Examples
-    # Post.collection_path
-    # # => /posts.json
+    #   Post.collection_path
+    #   # => /posts.json
     #
-    # Comment.collection_path(:post_id => 5)
-    # # => /posts/5/comments.json
+    #   Comment.collection_path(:post_id => 5)
+    #   # => /posts/5/comments.json
     #
-    # Comment.collection_path(:post_id => 5, :active => 1)
-    # # => /posts/5/comments.json?active=1
+    #   Comment.collection_path(:post_id => 5, :active => 1)
+    #   # => /posts/5/comments.json?active=1
     #
-    # Comment.collection_path({:post_id => 5}, {:active => 1})
-    # # => /posts/5/comments.json?active=1
+    #   Comment.collection_path({:post_id => 5}, {:active => 1})
+    #   # => /posts/5/comments.json?active=1
     def collection_path(prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
 
     # An instance of ActiveResource::Connection that is the base \connection to the remote service.
@@ -1002,8 +1022,8 @@ class ActiveResource::Base
     # Creates a new resource instance and makes a request to the remote service
     # that it be saved, making it equivalent to the following simultaneous calls:
     #
-    # ryan = Person.new(:first => 'ryan')
-    # ryan.save
+    #   ryan = Person.new(:first => 'ryan')
+    #   ryan.save
     #
     # Returns the newly created resource. If a failure has occurred an
     # exception will be raised (see <tt>save</tt>). If the resource is invalid and
@@ -1011,18 +1031,18 @@ class ActiveResource::Base
     # while <tt>new?</tt> will still return <tt>true</tt>.
     #
     # ==== Examples
-    # Person.create(:name => 'Jeremy', :email => 'myname@nospam.com', :enabled => true)
-    # my_person = Person.find(:first)
-    # my_person.email # => myname@nospam.com
+    #   Person.create(:name => 'Jeremy', :email => 'myname@nospam.com', :enabled => true)
+    #   my_person = Person.find(:first)
+    #   my_person.email # => myname@nospam.com
     #
-    # dhh = Person.create(:name => 'David', :email => 'dhh@nospam.com', :enabled => true)
-    # dhh.valid? # => true
-    # dhh.new?   # => false
+    #   dhh = Person.create(:name => 'David', :email => 'dhh@nospam.com', :enabled => true)
+    #   dhh.valid? # => true
+    #   dhh.new?   # => false
     #
-    # # We'll assume that there's a validation that requires the name attribute
-    # that_guy = Person.create(:name => '', :email => 'thatguy@nospam.com', :enabled => true)
-    # that_guy.valid? # => false
-    # that_guy.new?   # => true
+    #   # We'll assume that there's a validation that requires the name attribute
+    #   that_guy = Person.create(:name => '', :email => 'thatguy@nospam.com', :enabled => true)
+    #   that_guy.valid? # => false
+    #   that_guy.new?   # => true
     def create(attributes = T.unsafe(nil)); end
 
     # Creates a new resource (just like <tt>create</tt>) and makes a request to the
@@ -1030,8 +1050,8 @@ class ActiveResource::Base
     # <tt>ActiveResource::ResourceInvalid</tt>, making it equivalent to the following
     # simultaneous calls:
     #
-    # ryan = Person.new(:first => 'ryan')
-    # ryan.save!
+    #   ryan = Person.new(:first => 'ryan')
+    #   ryan.save!
     def create!(attributes = T.unsafe(nil)); end
 
     # Deletes the resources with the ID in the +id+ parameter.
@@ -1040,19 +1060,21 @@ class ActiveResource::Base
     # All options specify \prefix and query parameters.
     #
     # ==== Examples
-    # Event.delete(2) # sends DELETE /events/2
+    #   Event.delete(2) # sends DELETE /events/2
     #
-    # Event.create(:name => 'Free Concert', :location => 'Community Center')
-    # my_event = Event.find(:first) # let's assume this is event with ID 7
-    # Event.delete(my_event.id) # sends DELETE /events/7
+    #   Event.create(:name => 'Free Concert', :location => 'Community Center')
+    #   my_event = Event.find(:first) # let's assume this is event with ID 7
+    #   Event.delete(my_event.id) # sends DELETE /events/7
     #
-    # # Let's assume a request to events/5/cancel.json
-    # Event.delete(params[:id]) # sends DELETE /events/5
+    #   # Let's assume a request to events/5/cancel.json
+    #   Event.delete(params[:id]) # sends DELETE /events/5
     def delete(custom_method_name, options = T.unsafe(nil)); end
 
     def element_name; end
 
     # Sets the attribute element_name
+    #
+    # @param value the value to set the attribute element_name to.
     def element_name=(_arg0); end
 
     # Gets the element path for the given ID in +id+. If the +query_options+ parameter is omitted, Rails
@@ -1065,21 +1087,21 @@ class ActiveResource::Base
     # +query_options+ - A \hash to add items to the query string for the request.
     #
     # ==== Examples
-    # Post.element_path(1)
-    # # => /posts/1.json
+    #   Post.element_path(1)
+    #   # => /posts/1.json
     #
-    # class Comment < ActiveResource::Base
-    # self.site = "https://37s.sunrise.com/posts/:post_id"
-    # end
+    #   class Comment < ActiveResource::Base
+    #     self.site = "https://37s.sunrise.com/posts/:post_id"
+    #   end
     #
-    # Comment.element_path(1, :post_id => 5)
-    # # => /posts/5/comments/1.json
+    #   Comment.element_path(1, :post_id => 5)
+    #   # => /posts/5/comments/1.json
     #
-    # Comment.element_path(1, :post_id => 5, :active => 1)
-    # # => /posts/5/comments/1.json?active=1
+    #   Comment.element_path(1, :post_id => 5, :active => 1)
+    #   # => /posts/5/comments/1.json?active=1
     #
-    # Comment.element_path(1, {:post_id => 5}, {:active => 1})
-    # # => /posts/5/comments/1.json?active=1
+    #   Comment.element_path(1, {:post_id => 5}, {:active => 1})
+    #   # => /posts/5/comments/1.json?active=1
     def element_path(id, prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
 
     # Gets the element url for the given ID in +id+. If the +query_options+ parameter is omitted, Rails
@@ -1092,30 +1114,32 @@ class ActiveResource::Base
     # +query_options+ - A \hash to add items to the query string for the request.
     #
     # ==== Examples
-    # Post.element_url(1)
-    # # => https://37s.sunrise.com/posts/1.json
+    #   Post.element_url(1)
+    #   # => https://37s.sunrise.com/posts/1.json
     #
-    # class Comment < ActiveResource::Base
-    # self.site = "https://37s.sunrise.com/posts/:post_id"
-    # end
+    #   class Comment < ActiveResource::Base
+    #     self.site = "https://37s.sunrise.com/posts/:post_id"
+    #   end
     #
-    # Comment.element_url(1, :post_id => 5)
-    # # => https://37s.sunrise.com/posts/5/comments/1.json
+    #   Comment.element_url(1, :post_id => 5)
+    #   # => https://37s.sunrise.com/posts/5/comments/1.json
     #
-    # Comment.element_url(1, :post_id => 5, :active => 1)
-    # # => https://37s.sunrise.com/posts/5/comments/1.json?active=1
+    #   Comment.element_url(1, :post_id => 5, :active => 1)
+    #   # => https://37s.sunrise.com/posts/5/comments/1.json?active=1
     #
-    # Comment.element_url(1, {:post_id => 5}, {:active => 1})
-    # # => https://37s.sunrise.com/posts/5/comments/1.json?active=1
+    #   Comment.element_url(1, {:post_id => 5}, {:active => 1})
+    #   # => https://37s.sunrise.com/posts/5/comments/1.json?active=1
     def element_url(id, prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
 
     # Asserts the existence of a resource, returning <tt>true</tt> if the resource is found.
     #
     # ==== Examples
-    # Note.create(:title => 'Hello, world.', :body => 'Nothing more for now...')
-    # Note.exists?(1) # => true
+    #   Note.create(:title => 'Hello, world.', :body => 'Nothing more for now...')
+    #   Note.exists?(1) # => true
     #
-    # Note.exists(1349) # => false
+    #   Note.exists(1349) # => false
+    #
+    # @return [Boolean]
     def exists?(id, options = T.unsafe(nil)); end
 
     # Core method for finding resources. Used similarly to Active Record's +find+ method.
@@ -1135,48 +1159,48 @@ class ActiveResource::Base
     # * <tt>:params</tt> - Sets query and \prefix (nested URL) parameters.
     #
     # ==== Examples
-    # Person.find(1)
-    # # => GET /people/1.json
+    #   Person.find(1)
+    #   # => GET /people/1.json
     #
-    # Person.find(:all)
-    # # => GET /people.json
+    #   Person.find(:all)
+    #   # => GET /people.json
     #
-    # Person.find(:all, :params => { :title => "CEO" })
-    # # => GET /people.json?title=CEO
+    #   Person.find(:all, :params => { :title => "CEO" })
+    #   # => GET /people.json?title=CEO
     #
-    # Person.find(:first, :from => :managers)
-    # # => GET /people/managers.json
+    #   Person.find(:first, :from => :managers)
+    #   # => GET /people/managers.json
     #
-    # Person.find(:last, :from => :managers)
-    # # => GET /people/managers.json
+    #   Person.find(:last, :from => :managers)
+    #   # => GET /people/managers.json
     #
-    # Person.find(:all, :from => "/companies/1/people.json")
-    # # => GET /companies/1/people.json
+    #   Person.find(:all, :from => "/companies/1/people.json")
+    #   # => GET /companies/1/people.json
     #
-    # Person.find(:one, :from => :leader)
-    # # => GET /people/leader.json
+    #   Person.find(:one, :from => :leader)
+    #   # => GET /people/leader.json
     #
-    # Person.find(:all, :from => :developers, :params => { :language => 'ruby' })
-    # # => GET /people/developers.json?language=ruby
+    #   Person.find(:all, :from => :developers, :params => { :language => 'ruby' })
+    #   # => GET /people/developers.json?language=ruby
     #
-    # Person.find(:one, :from => "/companies/1/manager.json")
-    # # => GET /companies/1/manager.json
+    #   Person.find(:one, :from => "/companies/1/manager.json")
+    #   # => GET /companies/1/manager.json
     #
-    # StreetAddress.find(1, :params => { :person_id => 1 })
-    # # => GET /people/1/street_addresses/1.json
+    #   StreetAddress.find(1, :params => { :person_id => 1 })
+    #   # => GET /people/1/street_addresses/1.json
     #
     # == Failure or missing data
     # A failure to find the requested object raises a ResourceNotFound
     # exception if the find was called with an id.
     # With any other scope, find returns nil when no data is returned.
     #
-    # Person.find(1)
-    # # => raises ResourceNotFound
+    #   Person.find(1)
+    #   # => raises ResourceNotFound
     #
-    # Person.find(:all)
-    # Person.find(:first)
-    # Person.find(:last)
-    # # => nil
+    #   Person.find(:all)
+    #   Person.find(:first)
+    #   Person.find(:last)
+    #   # => nil
     def find(*arguments); end
 
     # A convenience wrapper for <tt>find(:first, *args)</tt>. You can pass
@@ -1189,11 +1213,11 @@ class ActiveResource::Base
 
     # Sets the format that attributes are sent and received in from a mime type reference:
     #
-    # Person.format = :json
-    # Person.find(1) # => GET /people/1.json
+    #   Person.format = :json
+    #   Person.find(1) # => GET /people/1.json
     #
-    # Person.format = ActiveResource::Formats::XmlFormat
-    # Person.find(1) # => GET /people/1.xml
+    #   Person.format = ActiveResource::Formats::XmlFormat
+    #   Person.find(1) # => GET /people/1.xml
     #
     # Default format is <tt>:json</tt>.
     def format=(mime_type_reference_or_format); end
@@ -1232,15 +1256,15 @@ class ActiveResource::Base
     # would yield a URL like <tt>/accounts/19/purchases/new.json</tt>).
     #
     # ==== Examples
-    # Post.new_element_path
-    # # => /posts/new.json
+    #   Post.new_element_path
+    #   # => /posts/new.json
     #
-    # class Comment < ActiveResource::Base
-    # self.site = "https://37s.sunrise.com/posts/:post_id"
-    # end
+    #   class Comment < ActiveResource::Base
+    #     self.site = "https://37s.sunrise.com/posts/:post_id"
+    #   end
     #
-    # Comment.collection_path(:post_id => 5)
-    # # => /posts/5/comments/new.json
+    #   Comment.collection_path(:post_id => 5)
+    #   # => /posts/5/comments/new.json
     def new_element_path(prefix_options = T.unsafe(nil)); end
 
     # Gets the number of seconds after which connection attempts to the REST API should time out.
@@ -1275,6 +1299,8 @@ class ActiveResource::Base
     def primary_key; end
 
     # Sets the attribute primary_key
+    #
+    # @param value the value to set the attribute primary_key to.
     def primary_key=(_arg0); end
 
     # Gets the \proxy variable if a proxy is required
@@ -1307,37 +1333,37 @@ class ActiveResource::Base
     # remote system.
     #
     # example:
-    # class Person < ActiveResource::Base
-    # schema do
-    # # define each attribute separately
-    # attribute 'name', :string
+    #   class Person < ActiveResource::Base
+    #     schema do
+    #       # define each attribute separately
+    #       attribute 'name', :string
     #
-    # # or use the convenience methods and pass >=1 attribute names
-    # string  'eye_color', 'hair_color'
-    # integer 'age'
-    # float   'height', 'weight'
+    #       # or use the convenience methods and pass >=1 attribute names
+    #       string  'eye_color', 'hair_color'
+    #       integer 'age'
+    #       float   'height', 'weight'
     #
-    # # unsupported types should be left as strings
-    # # overload the accessor methods if you need to convert them
-    # attribute 'created_at', 'string'
-    # end
-    # end
+    #       # unsupported types should be left as strings
+    #       # overload the accessor methods if you need to convert them
+    #       attribute 'created_at', 'string'
+    #     end
+    #   end
     #
-    # p = Person.new
-    # p.respond_to? :name   # => true
-    # p.respond_to? :age    # => true
-    # p.name                # => nil
-    # p.age                 # => nil
+    #   p = Person.new
+    #   p.respond_to? :name   # => true
+    #   p.respond_to? :age    # => true
+    #   p.name                # => nil
+    #   p.age                 # => nil
     #
-    # j = Person.find_by_name('John')
-    # <person><name>John</name><age>34</age><num_children>3</num_children></person>
-    # j.respond_to? :name   # => true
-    # j.respond_to? :age    # => true
-    # j.name                # => 'John'
-    # j.age                 # => '34'  # note this is a string!
-    # j.num_children        # => '3'  # note this is a string!
+    #   j = Person.find_by_name('John')
+    #   <person><name>John</name><age>34</age><num_children>3</num_children></person>
+    #   j.respond_to? :name   # => true
+    #   j.respond_to? :age    # => true
+    #   j.name                # => 'John'
+    #   j.age                 # => '34'  # note this is a string!
+    #   j.num_children        # => '3'  # note this is a string!
     #
-    # p.num_children        # => NoMethodError
+    #   p.num_children        # => NoMethodError
     #
     # Attribute-types must be one of: <tt>string, text, integer, float, decimal, datetime, timestamp, time, date, binary, boolean</tt>
     #
@@ -1359,18 +1385,24 @@ class ActiveResource::Base
     #
     # example:
     #
-    # class Person < ActiveResource::Base
-    # self.schema = {'name' => :string, 'age' => :integer }
-    # end
+    #   class Person < ActiveResource::Base
+    #     self.schema = {'name' => :string, 'age' => :integer }
+    #   end
     #
     # The keys/values can be strings or symbols. They will be converted to
     # strings.
+    #
+    # @raise [ArgumentError]
     def schema=(the_schema); end
 
     # Sets the attribute collection_name
+    #
+    # @param value the value to set the attribute collection_name to.
     def set_collection_name(_arg0); end
 
     # Sets the attribute element_name
+    #
+    # @param value the value to set the attribute element_name to.
     def set_element_name(_arg0); end
 
     # Sets the \prefix for a resource's nested URL (e.g., <tt>prefix/collectionname/1.json</tt>).
@@ -1378,6 +1410,8 @@ class ActiveResource::Base
     def set_prefix(value = T.unsafe(nil)); end
 
     # Sets the attribute primary_key
+    #
+    # @param value the value to set the attribute primary_key to.
     def set_primary_key(_arg0); end
 
     # Gets the URI of the REST resources to map for this class. The site variable is required for
@@ -1416,6 +1450,7 @@ class ActiveResource::Base
     # Sets the \user for REST HTTP authentication.
     def user=(user); end
 
+    # @raise [ArgumentError]
     def where(clauses = T.unsafe(nil)); end
 
     private
@@ -1491,84 +1526,86 @@ class ActiveResource::Collection
   # in order to to set the elements instance.
   #
   # GET /posts.json delivers following response body:
-  # {
-  # posts: [
-  # {
-  # title: "ActiveResource now has associations",
-  # body: "Lorem Ipsum"
-  # },
-  # {...}
-  # ],
-  # next_page: "/posts.json?page=2"
-  # }
+  #   {
+  #     posts: [
+  #       {
+  #         title: "ActiveResource now has associations",
+  #         body: "Lorem Ipsum"
+  #       },
+  #       {...}
+  #     ],
+  #     next_page: "/posts.json?page=2"
+  #   }
   #
   # A Post class can be setup to handle it with:
   #
-  # class Post < ActiveResource::Base
-  # self.site = "http://example.com"
-  # self.collection_parser = PostCollection
-  # end
+  #   class Post < ActiveResource::Base
+  #     self.site = "http://example.com"
+  #     self.collection_parser = PostCollection
+  #   end
   #
   # And the collection parser:
   #
-  # class PostCollection < ActiveResource::Collection
-  # attr_accessor :next_page
-  # def initialize(parsed = {})
-  # @elements = parsed['posts']
-  # @next_page = parsed['next_page']
-  # end
-  # end
+  #   class PostCollection < ActiveResource::Collection
+  #     attr_accessor :next_page
+  #     def initialize(parsed = {})
+  #       @elements = parsed['posts']
+  #       @next_page = parsed['next_page']
+  #     end
+  #   end
   #
   # The result from a find method that returns multiple entries will now be a
   # PostParser instance.  ActiveResource::Collection includes Enumerable and
   # instances can be iterated over just like an array.
-  # @posts = Post.find(:all) # => PostCollection:xxx
-  # @posts.next_page         # => "/posts.json?page=2"
-  # @posts.map(&:id)         # =>[1, 3, 5 ...]
+  #    @posts = Post.find(:all) # => PostCollection:xxx
+  #    @posts.next_page         # => "/posts.json?page=2"
+  #    @posts.map(&:id)         # =>[1, 3, 5 ...]
   #
   # The initialize method will receive the ActiveResource::Formats parsed result
   # and should set @elements.
+  #
+  # @return [Collection] a new instance of Collection
   def initialize(elements = T.unsafe(nil)); end
 
-  def &(*_arg0, **_arg1, &_arg2); end
-  def *(*_arg0, **_arg1, &_arg2); end
-  def +(*_arg0, **_arg1, &_arg2); end
-  def -(*_arg0, **_arg1, &_arg2); end
-  def <<(*_arg0, **_arg1, &_arg2); end
-  def <=>(*_arg0, **_arg1, &_arg2); end
+  def &(*_arg0, &_arg1); end
+  def *(*_arg0, &_arg1); end
+  def +(*_arg0, &_arg1); end
+  def -(*_arg0, &_arg1); end
+  def <<(*_arg0, &_arg1); end
+  def <=>(*_arg0, &_arg1); end
   def ==(arg); end
-  def [](*_arg0, **_arg1, &_arg2); end
-  def []=(*_arg0, **_arg1, &_arg2); end
-  def all?(*_arg0, **_arg1, &_arg2); end
-  def any?(*_arg0, **_arg1, &_arg2); end
-  def append(*_arg0, **_arg1, &_arg2); end
-  def as_json(*_arg0, **_arg1, &_arg2); end
-  def assoc(*_arg0, **_arg1, &_arg2); end
-  def at(*_arg0, **_arg1, &_arg2); end
-  def blank?(*_arg0, **_arg1, &_arg2); end
-  def bsearch(*_arg0, **_arg1, &_arg2); end
-  def bsearch_index(*_arg0, **_arg1, &_arg2); end
-  def clear(*_arg0, **_arg1, &_arg2); end
-  def collect(*_arg0, **_arg1, &_arg2); end
+  def [](*_arg0, &_arg1); end
+  def []=(*_arg0, &_arg1); end
+  def all?(*_arg0, &_arg1); end
+  def any?(*_arg0, &_arg1); end
+  def append(*_arg0, &_arg1); end
+  def as_json(*_arg0, &_arg1); end
+  def assoc(*_arg0, &_arg1); end
+  def at(*_arg0, &_arg1); end
+  def blank?(*_arg0, &_arg1); end
+  def bsearch(*_arg0, &_arg1); end
+  def bsearch_index(*_arg0, &_arg1); end
+  def clear(*_arg0, &_arg1); end
+  def collect(*_arg0, &_arg1); end
   def collect!; end
-  def combination(*_arg0, **_arg1, &_arg2); end
-  def compact(*_arg0, **_arg1, &_arg2); end
-  def compact!(*_arg0, **_arg1, &_arg2); end
-  def compact_blank!(*_arg0, **_arg1, &_arg2); end
-  def concat(*_arg0, **_arg1, &_arg2); end
-  def count(*_arg0, **_arg1, &_arg2); end
-  def cycle(*_arg0, **_arg1, &_arg2); end
-  def deconstruct(*_arg0, **_arg1, &_arg2); end
-  def deep_dup(*_arg0, **_arg1, &_arg2); end
-  def delete(*_arg0, **_arg1, &_arg2); end
-  def delete_at(*_arg0, **_arg1, &_arg2); end
-  def delete_if(*_arg0, **_arg1, &_arg2); end
-  def difference(*_arg0, **_arg1, &_arg2); end
-  def dig(*_arg0, **_arg1, &_arg2); end
-  def drop(*_arg0, **_arg1, &_arg2); end
-  def drop_while(*_arg0, **_arg1, &_arg2); end
-  def each(*_arg0, **_arg1, &_arg2); end
-  def each_index(*_arg0, **_arg1, &_arg2); end
+  def combination(*_arg0, &_arg1); end
+  def compact(*_arg0, &_arg1); end
+  def compact!(*_arg0, &_arg1); end
+  def compact_blank!(*_arg0, &_arg1); end
+  def concat(*_arg0, &_arg1); end
+  def count(*_arg0, &_arg1); end
+  def cycle(*_arg0, &_arg1); end
+  def deconstruct(*_arg0, &_arg1); end
+  def deep_dup(*_arg0, &_arg1); end
+  def delete(*_arg0, &_arg1); end
+  def delete_at(*_arg0, &_arg1); end
+  def delete_if(*_arg0, &_arg1); end
+  def difference(*_arg0, &_arg1); end
+  def dig(*_arg0, &_arg1); end
+  def drop(*_arg0, &_arg1); end
+  def drop_while(*_arg0, &_arg1); end
+  def each(*_arg0, &_arg1); end
+  def each_index(*_arg0, &_arg1); end
 
   # The array of actual elements returned by index actions
   def elements; end
@@ -1576,44 +1613,43 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def elements=(_arg0); end
 
-  def empty?(*_arg0, **_arg1, &_arg2); end
-  def eql?(*_arg0, **_arg1, &_arg2); end
-  def excluding(*_arg0, **_arg1, &_arg2); end
-  def extract!(*_arg0, **_arg1, &_arg2); end
-  def extract_options!(*_arg0, **_arg1, &_arg2); end
-  def fetch(*_arg0, **_arg1, &_arg2); end
-  def fifth(*_arg0, **_arg1, &_arg2); end
-  def fill(*_arg0, **_arg1, &_arg2); end
-  def filter(*_arg0, **_arg1, &_arg2); end
-  def filter!(*_arg0, **_arg1, &_arg2); end
-  def find_index(*_arg0, **_arg1, &_arg2); end
-  def first(*_arg0, **_arg1, &_arg2); end
+  def empty?(*_arg0, &_arg1); end
+  def eql?(*_arg0, &_arg1); end
+  def excluding(*_arg0, &_arg1); end
+  def extract!(*_arg0, &_arg1); end
+  def extract_options!(*_arg0, &_arg1); end
+  def fetch(*_arg0, &_arg1); end
+  def fifth(*_arg0, &_arg1); end
+  def fill(*_arg0, &_arg1); end
+  def filter(*_arg0, &_arg1); end
+  def filter!(*_arg0, &_arg1); end
+  def find_index(*_arg0, &_arg1); end
+  def first(*_arg0, &_arg1); end
   def first_or_create(attributes = T.unsafe(nil)); end
   def first_or_initialize(attributes = T.unsafe(nil)); end
-  def flatten(*_arg0, **_arg1, &_arg2); end
-  def flatten!(*_arg0, **_arg1, &_arg2); end
-  def forty_two(*_arg0, **_arg1, &_arg2); end
-  def fourth(*_arg0, **_arg1, &_arg2); end
-  def from(*_arg0, **_arg1, &_arg2); end
-  def hash(*_arg0, **_arg1, &_arg2); end
-  def include?(*_arg0, **_arg1, &_arg2); end
-  def including(*_arg0, **_arg1, &_arg2); end
-  def index(*_arg0, **_arg1, &_arg2); end
-  def insert(*_arg0, **_arg1, &_arg2); end
-  def inspect(*_arg0, **_arg1, &_arg2); end
-  def intersect?(*_arg0, **_arg1, &_arg2); end
-  def intersection(*_arg0, **_arg1, &_arg2); end
-  def join(*_arg0, **_arg1, &_arg2); end
-  def keep_if(*_arg0, **_arg1, &_arg2); end
-  def last(*_arg0, **_arg1, &_arg2); end
-  def length(*_arg0, **_arg1, &_arg2); end
-  def map(*_arg0, **_arg1, &_arg2); end
+  def flatten(*_arg0, &_arg1); end
+  def flatten!(*_arg0, &_arg1); end
+  def forty_two(*_arg0, &_arg1); end
+  def fourth(*_arg0, &_arg1); end
+  def from(*_arg0, &_arg1); end
+  def hash(*_arg0, &_arg1); end
+  def include?(*_arg0, &_arg1); end
+  def including(*_arg0, &_arg1); end
+  def index(*_arg0, &_arg1); end
+  def insert(*_arg0, &_arg1); end
+  def inspect(*_arg0, &_arg1); end
+  def intersection(*_arg0, &_arg1); end
+  def join(*_arg0, &_arg1); end
+  def keep_if(*_arg0, &_arg1); end
+  def last(*_arg0, &_arg1); end
+  def length(*_arg0, &_arg1); end
+  def map(*_arg0, &_arg1); end
   def map!; end
-  def max(*_arg0, **_arg1, &_arg2); end
-  def min(*_arg0, **_arg1, &_arg2); end
-  def minmax(*_arg0, **_arg1, &_arg2); end
-  def none?(*_arg0, **_arg1, &_arg2); end
-  def one?(*_arg0, **_arg1, &_arg2); end
+  def max(*_arg0, &_arg1); end
+  def min(*_arg0, &_arg1); end
+  def minmax(*_arg0, &_arg1); end
+  def none?(*_arg0, &_arg1); end
+  def one?(*_arg0, &_arg1); end
 
   # The array of actual elements returned by index actions
   def original_params; end
@@ -1621,21 +1657,21 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def original_params=(_arg0); end
 
-  def pack(*_arg0, **_arg1, &_arg2); end
-  def permutation(*_arg0, **_arg1, &_arg2); end
-  def place(*_arg0, **_arg1, &_arg2); end
-  def pop(*_arg0, **_arg1, &_arg2); end
-  def prepend(*_arg0, **_arg1, &_arg2); end
-  def pretty_print(*_arg0, **_arg1, &_arg2); end
-  def pretty_print_cycle(*_arg0, **_arg1, &_arg2); end
-  def product(*_arg0, **_arg1, &_arg2); end
-  def push(*_arg0, **_arg1, &_arg2); end
-  def rassoc(*_arg0, **_arg1, &_arg2); end
-  def reject(*_arg0, **_arg1, &_arg2); end
-  def reject!(*_arg0, **_arg1, &_arg2); end
-  def repeated_combination(*_arg0, **_arg1, &_arg2); end
-  def repeated_permutation(*_arg0, **_arg1, &_arg2); end
-  def replace(*_arg0, **_arg1, &_arg2); end
+  def pack(*_arg0, &_arg1); end
+  def permutation(*_arg0, &_arg1); end
+  def place(*_arg0, &_arg1); end
+  def pop(*_arg0, &_arg1); end
+  def prepend(*_arg0, &_arg1); end
+  def pretty_print(*_arg0, &_arg1); end
+  def pretty_print_cycle(*_arg0, &_arg1); end
+  def product(*_arg0, &_arg1); end
+  def push(*_arg0, &_arg1); end
+  def rassoc(*_arg0, &_arg1); end
+  def reject(*_arg0, &_arg1); end
+  def reject!(*_arg0, &_arg1); end
+  def repeated_combination(*_arg0, &_arg1); end
+  def repeated_permutation(*_arg0, &_arg1); end
+  def replace(*_arg0, &_arg1); end
 
   # The array of actual elements returned by index actions
   def resource_class; end
@@ -1643,54 +1679,57 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def resource_class=(_arg0); end
 
-  def reverse(*_arg0, **_arg1, &_arg2); end
-  def reverse!(*_arg0, **_arg1, &_arg2); end
-  def reverse_each(*_arg0, **_arg1, &_arg2); end
-  def rindex(*_arg0, **_arg1, &_arg2); end
-  def rotate(*_arg0, **_arg1, &_arg2); end
-  def rotate!(*_arg0, **_arg1, &_arg2); end
-  def sample(*_arg0, **_arg1, &_arg2); end
-  def second(*_arg0, **_arg1, &_arg2); end
-  def second_to_last(*_arg0, **_arg1, &_arg2); end
-  def select(*_arg0, **_arg1, &_arg2); end
-  def select!(*_arg0, **_arg1, &_arg2); end
-  def shelljoin(*_arg0, **_arg1, &_arg2); end
-  def shift(*_arg0, **_arg1, &_arg2); end
-  def shuffle(*_arg0, **_arg1, &_arg2); end
-  def shuffle!(*_arg0, **_arg1, &_arg2); end
-  def size(*_arg0, **_arg1, &_arg2); end
-  def slice(*_arg0, **_arg1, &_arg2); end
-  def slice!(*_arg0, **_arg1, &_arg2); end
-  def sort(*_arg0, **_arg1, &_arg2); end
-  def sort!(*_arg0, **_arg1, &_arg2); end
-  def sort_by!(*_arg0, **_arg1, &_arg2); end
-  def sum(*_arg0, **_arg1, &_arg2); end
-  def take(*_arg0, **_arg1, &_arg2); end
-  def take_while(*_arg0, **_arg1, &_arg2); end
-  def third(*_arg0, **_arg1, &_arg2); end
-  def third_to_last(*_arg0, **_arg1, &_arg2); end
-  def to(*_arg0, **_arg1, &_arg2); end
+  def reverse(*_arg0, &_arg1); end
+  def reverse!(*_arg0, &_arg1); end
+  def reverse_each(*_arg0, &_arg1); end
+  def rindex(*_arg0, &_arg1); end
+  def rotate(*_arg0, &_arg1); end
+  def rotate!(*_arg0, &_arg1); end
+  def sample(*_arg0, &_arg1); end
+  def second(*_arg0, &_arg1); end
+  def second_to_last(*_arg0, &_arg1); end
+  def select(*_arg0, &_arg1); end
+  def select!(*_arg0, &_arg1); end
+  def shelljoin(*_arg0, &_arg1); end
+  def shift(*_arg0, &_arg1); end
+  def shuffle(*_arg0, &_arg1); end
+  def shuffle!(*_arg0, &_arg1); end
+  def size(*_arg0, &_arg1); end
+  def slice(*_arg0, &_arg1); end
+  def slice!(*_arg0, &_arg1); end
+  def sort(*_arg0, &_arg1); end
+  def sort!(*_arg0, &_arg1); end
+  def sort_by!(*_arg0, &_arg1); end
+  def sum(*_arg0, &_arg1); end
+  def take(*_arg0, &_arg1); end
+  def take_while(*_arg0, &_arg1); end
+  def third(*_arg0, &_arg1); end
+  def third_to_last(*_arg0, &_arg1); end
+  def to(*_arg0, &_arg1); end
   def to_a; end
-  def to_ary(*_arg0, **_arg1, &_arg2); end
-  def to_default_s(*_arg0, **_arg1, &_arg2); end
-  def to_formatted_s(*_arg0, **_arg1, &_arg2); end
-  def to_h(*_arg0, **_arg1, &_arg2); end
-  def to_param(*_arg0, **_arg1, &_arg2); end
-  def to_query(*_arg0, **_arg1, &_arg2); end
-  def to_s(*_arg0, **_arg1, &_arg2); end
-  def to_sentence(*_arg0, **_arg1, &_arg2); end
-  def to_xml(*_arg0, **_arg1, &_arg2); end
-  def to_yaml(*_arg0, **_arg1, &_arg2); end
-  def transpose(*_arg0, **_arg1, &_arg2); end
-  def union(*_arg0, **_arg1, &_arg2); end
-  def uniq(*_arg0, **_arg1, &_arg2); end
-  def uniq!(*_arg0, **_arg1, &_arg2); end
-  def unshift(*_arg0, **_arg1, &_arg2); end
-  def values_at(*_arg0, **_arg1, &_arg2); end
+  def to_ary(*_arg0, &_arg1); end
+  def to_default_s(*_arg0, &_arg1); end
+  def to_formatted_s(*_arg0, &_arg1); end
+  def to_h(*_arg0, &_arg1); end
+  def to_param(*_arg0, &_arg1); end
+  def to_query(*_arg0, &_arg1); end
+  def to_s(*_arg0, &_arg1); end
+  def to_sentence(*_arg0, &_arg1); end
+  def to_xml(*_arg0, &_arg1); end
+  def to_yaml(*_arg0, &_arg1); end
+  def transpose(*_arg0, &_arg1); end
+  def union(*_arg0, &_arg1); end
+  def uniq(*_arg0, &_arg1); end
+  def uniq!(*_arg0, &_arg1); end
+  def unshift(*_arg0, &_arg1); end
+  def values_at(*_arg0, &_arg1); end
+
+  # @raise [ArgumentError]
   def where(clauses = T.unsafe(nil)); end
-  def without(*_arg0, **_arg1, &_arg2); end
-  def zip(*_arg0, **_arg1, &_arg2); end
-  def |(*_arg0, **_arg1, &_arg2); end
+
+  def without(*_arg0, &_arg1); end
+  def zip(*_arg0, &_arg1); end
+  def |(*_arg0, &_arg1); end
 end
 
 ActiveResource::Collection::SELF_DEFINE_METHODS = T.let(T.unsafe(nil), Array)
@@ -1701,6 +1740,9 @@ ActiveResource::Collection::SELF_DEFINE_METHODS = T.let(T.unsafe(nil), Array)
 class ActiveResource::Connection
   # The +site+ parameter is required and will set the +site+
   # attribute to the URI for the remote resource service.
+  #
+  # @raise [ArgumentError]
+  # @return [Connection] a new instance of Connection
   def initialize(site, format = T.unsafe(nil), logger: T.unsafe(nil)); end
 
   # Returns the value of attribute auth_type.
@@ -1723,6 +1765,8 @@ class ActiveResource::Connection
   def format; end
 
   # Sets the attribute format
+  #
+  # @param value the value to set the attribute format to.
   def format=(_arg0); end
 
   # Executes a GET request.
@@ -1737,6 +1781,8 @@ class ActiveResource::Connection
   def logger; end
 
   # Sets the attribute logger
+  #
+  # @param value the value to set the attribute logger to.
   def logger=(_arg0); end
 
   # Returns the value of attribute open_timeout.
@@ -1842,6 +1888,7 @@ end
 ActiveResource::Connection::HTTP_FORMAT_HEADER_NAMES = T.let(T.unsafe(nil), Hash)
 
 class ActiveResource::ConnectionError < ::StandardError
+  # @return [ConnectionError] a new instance of ConnectionError
   def initialize(response, message = T.unsafe(nil)); end
 
   # Returns the value of attribute response.
@@ -1854,32 +1901,32 @@ end
 # of the "default" REST methods with your own custom resource requests. For example,
 # say you use Rails to expose a REST service and configure your routes with:
 #
-# map.resources :people, :new => { :register => :post },
-# :member => { :promote => :put, :deactivate => :delete }
-# :collection => { :active => :get }
+#    map.resources :people, :new => { :register => :post },
+#                           :member => { :promote => :put, :deactivate => :delete }
+#                           :collection => { :active => :get }
 #
 # This route set creates routes for the following HTTP requests:
 #
-# POST      /people/new/register.json # PeopleController.register
-# PATCH/PUT /people/1/promote.json    # PeopleController.promote with :id => 1
-# DELETE    /people/1/deactivate.json # PeopleController.deactivate with :id => 1
-# GET       /people/active.json       # PeopleController.active
+#    POST      /people/new/register.json # PeopleController.register
+#    PATCH/PUT /people/1/promote.json    # PeopleController.promote with :id => 1
+#    DELETE    /people/1/deactivate.json # PeopleController.deactivate with :id => 1
+#    GET       /people/active.json       # PeopleController.active
 #
 # Using this module, Active Resource can use these custom REST methods just like the
 # standard methods.
 #
-# class Person < ActiveResource::Base
-# self.site = "https://37s.sunrise.com"
-# end
+#   class Person < ActiveResource::Base
+#     self.site = "https://37s.sunrise.com"
+#   end
 #
-# Person.new(:name => 'Ryan').post(:register)  # POST /people/new/register.json
-# # => { :id => 1, :name => 'Ryan' }
+#   Person.new(:name => 'Ryan').post(:register)  # POST /people/new/register.json
+#   # => { :id => 1, :name => 'Ryan' }
 #
-# Person.find(1).put(:promote, :position => 'Manager') # PUT /people/1/promote.json
-# Person.find(1).delete(:deactivate) # DELETE /people/1/deactivate.json
+#   Person.find(1).put(:promote, :position => 'Manager') # PUT /people/1/promote.json
+#   Person.find(1).delete(:deactivate) # DELETE /people/1/deactivate.json
 #
-# Person.get(:active)  # GET /people/active.json
-# # => [{:id => 1, :name => 'Ryan'}, {:id => 2, :name => 'Joe'}]
+#   Person.get(:active)  # GET /people/active.json
+#   # => [{:id => 1, :name => 'Ryan'}, {:id => 2, :name => 'Joe'}]
 module ActiveResource::CustomMethods
   extend ::ActiveSupport::Concern
 
@@ -1929,8 +1976,8 @@ module ActiveResource::Formats
   class << self
     # Lookup the format class from a mime type reference symbol. Example:
     #
-    # ActiveResource::Formats[:xml]  # => ActiveResource::Formats::XmlFormat
-    # ActiveResource::Formats[:json] # => ActiveResource::Formats::JsonFormat
+    #   ActiveResource::Formats[:xml]  # => ActiveResource::Formats::XmlFormat
+    #   ActiveResource::Formats[:json] # => ActiveResource::Formats::JsonFormat
     def [](mime_type_reference); end
 
     def remove_root(data); end
@@ -1964,20 +2011,20 @@ end
 # each request should return. The passed in block has any number of entries in the following generalized
 # format:
 #
-# mock.http_method(path, request_headers = {}, body = nil, status = 200, response_headers = {})
+#   mock.http_method(path, request_headers = {}, body = nil, status = 200, response_headers = {})
 #
 # * <tt>http_method</tt> - The HTTP method to listen for. This can be +get+, +post+, +patch+, +put+, +delete+ or
-# +head+.
+#   +head+.
 # * <tt>path</tt> - A string, starting with a "/", defining the URI that is expected to be
-# called.
+#   called.
 # * <tt>request_headers</tt> - Headers that are expected along with the request. This argument uses a
-# hash format, such as <tt>{ "Content-Type" => "application/json" }</tt>. This mock will only trigger
-# if your tests sends a request with identical headers.
+#   hash format, such as <tt>{ "Content-Type" => "application/json" }</tt>. This mock will only trigger
+#   if your tests sends a request with identical headers.
 # * <tt>body</tt> - The data to be returned. This should be a string of Active Resource parseable content,
-# such as Json.
+#   such as Json.
 # * <tt>status</tt> - The HTTP response code, as an integer, to return with the response.
 # * <tt>response_headers</tt> - Headers to be returned with the response. Uses the same hash format as
-# <tt>request_headers</tt> listed above.
+#   <tt>request_headers</tt> listed above.
 #
 # In order for a mock to deliver its content, the incoming request must match by the <tt>http_method</tt>,
 # +path+ and <tt>request_headers</tt>. If no match is found an +InvalidRequestError+ exception
@@ -1985,21 +2032,22 @@ end
 # pairs have been recorded so you can create a new mock for that request.
 #
 # ==== Example
-# def setup
-# @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
-# ActiveResource::HttpMock.respond_to do |mock|
-# mock.post   "/people.json",   {}, @matz, 201, "Location" => "/people/1.json"
-# mock.get    "/people/1.json", {}, @matz
-# mock.put    "/people/1.json", {}, nil, 204
-# mock.delete "/people/1.json", {}, nil, 200
-# end
-# end
+#   def setup
+#     @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
+#     ActiveResource::HttpMock.respond_to do |mock|
+#       mock.post   "/people.json",   {}, @matz, 201, "Location" => "/people/1.json"
+#       mock.get    "/people/1.json", {}, @matz
+#       mock.put    "/people/1.json", {}, nil, 204
+#       mock.delete "/people/1.json", {}, nil, 200
+#     end
+#   end
 #
-# def test_get_matz
-# person = Person.find(1)
-# assert_equal "Matz", person.name
-# end
+#   def test_get_matz
+#     person = Person.find(1)
+#     assert_equal "Matz", person.name
+#   end
 class ActiveResource::HttpMock
+  # @return [HttpMock] a new instance of HttpMock
   def initialize(site); end
 
   def delete(path, headers); end
@@ -2020,31 +2068,34 @@ class ActiveResource::HttpMock
     # Net::HTTP instance instead of a mock.
     def enable_net_connection!; end
 
+    # @return [Boolean]
     def net_connection_disabled?; end
 
     # Checks if real requests can be used instead of the default mock used in tests.
+    #
+    # @return [Boolean]
     def net_connection_enabled?; end
 
     # Returns an array of all request objects that have been sent to the mock. You can use this to check
     # if your model actually sent an HTTP request.
     #
     # ==== Example
-    # def setup
-    # @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
-    # ActiveResource::HttpMock.respond_to do |mock|
-    # mock.get "/people/1.json", {}, @matz
-    # end
-    # end
+    #   def setup
+    #     @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
+    #     ActiveResource::HttpMock.respond_to do |mock|
+    #       mock.get "/people/1.json", {}, @matz
+    #     end
+    #   end
     #
-    # def test_should_request_remote_service
-    # person = Person.find(1)  # Call the remote service
+    #   def test_should_request_remote_service
+    #     person = Person.find(1)  # Call the remote service
     #
-    # # This request object has the same HTTP method and path as declared by the mock
-    # expected_request = ActiveResource::Request.new(:get, "/people/1.json")
+    #     # This request object has the same HTTP method and path as declared by the mock
+    #     expected_request = ActiveResource::Request.new(:get, "/people/1.json")
     #
-    # # Assert that the mock received, and responded to, the expected request from the model
-    # assert ActiveResource::HttpMock.requests.include?(expected_request)
-    # end
+    #     # Assert that the mock received, and responded to, the expected request from the model
+    #     assert ActiveResource::HttpMock.requests.include?(expected_request)
+    #   end
     def requests; end
 
     # Deletes all logged requests and responses.
@@ -2053,38 +2104,38 @@ class ActiveResource::HttpMock
     # Accepts a block which declares a set of requests and responses for the HttpMock to respond to in
     # the following format:
     #
-    # mock.http_method(path, request_headers = {}, body = nil, status = 200, response_headers = {})
+    #   mock.http_method(path, request_headers = {}, body = nil, status = 200, response_headers = {})
     #
     # === Example
     #
-    # @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
-    # ActiveResource::HttpMock.respond_to do |mock|
-    # mock.post   "/people.json",   {}, @matz, 201, "Location" => "/people/1.json"
-    # mock.get    "/people/1.json", {}, @matz
-    # mock.put    "/people/1.json", {}, nil, 204
-    # mock.delete "/people/1.json", {}, nil, 200
-    # end
+    #   @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
+    #   ActiveResource::HttpMock.respond_to do |mock|
+    #     mock.post   "/people.json",   {}, @matz, 201, "Location" => "/people/1.json"
+    #     mock.get    "/people/1.json", {}, @matz
+    #     mock.put    "/people/1.json", {}, nil, 204
+    #     mock.delete "/people/1.json", {}, nil, 200
+    #   end
     #
     # Alternatively, accepts a hash of <tt>{Request => Response}</tt> pairs allowing you to generate
     # these the following format:
     #
-    # ActiveResource::Request.new(method, path, body, request_headers)
-    # ActiveResource::Response.new(body, status, response_headers)
+    #   ActiveResource::Request.new(method, path, body, request_headers)
+    #   ActiveResource::Response.new(body, status, response_headers)
     #
     # === Example
     #
     # Request.new(method, path, nil, request_headers)
     #
-    # @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
+    #   @matz  = { :person => { :id => 1, :name => "Matz" } }.to_json
     #
-    # create_matz      = ActiveResource::Request.new(:post, '/people.json', @matz, {})
-    # created_response = ActiveResource::Response.new("", 201, {"Location" => "/people/1.json"})
-    # get_matz         = ActiveResource::Request.new(:get, '/people/1.json', nil)
-    # ok_response      = ActiveResource::Response.new("", 200, {})
+    #   create_matz      = ActiveResource::Request.new(:post, '/people.json', @matz, {})
+    #   created_response = ActiveResource::Response.new("", 201, {"Location" => "/people/1.json"})
+    #   get_matz         = ActiveResource::Request.new(:get, '/people/1.json', nil)
+    #   ok_response      = ActiveResource::Response.new("", 200, {})
     #
-    # pairs = {create_matz => created_response, get_matz => ok_response}
+    #   pairs = {create_matz => created_response, get_matz => ok_response}
     #
-    # ActiveResource::HttpMock.respond_to(pairs)
+    #   ActiveResource::HttpMock.respond_to(pairs)
     #
     # Note, by default, every time you call +respond_to+, any previous request and response pairs stored
     # in HttpMock will be deleted giving you a clean slate to work on.
@@ -2093,41 +2144,41 @@ class ActiveResource::HttpMock
     #
     # === Example
     #
-    # ActiveResource::HttpMock.respond_to do |mock|
-    # mock.send(:get, "/people/1", {}, "JSON1")
-    # end
-    # ActiveResource::HttpMock.responses.length #=> 1
+    #   ActiveResource::HttpMock.respond_to do |mock|
+    #     mock.send(:get, "/people/1", {}, "JSON1")
+    #   end
+    #   ActiveResource::HttpMock.responses.length #=> 1
     #
-    # ActiveResource::HttpMock.respond_to(false) do |mock|
-    # mock.send(:get, "/people/2", {}, "JSON2")
-    # end
-    # ActiveResource::HttpMock.responses.length #=> 2
+    #   ActiveResource::HttpMock.respond_to(false) do |mock|
+    #     mock.send(:get, "/people/2", {}, "JSON2")
+    #   end
+    #   ActiveResource::HttpMock.responses.length #=> 2
     #
     # This also works with passing in generated pairs of requests and responses, again, just pass in false
     # as the last argument:
     #
     # === Example
     #
-    # ActiveResource::HttpMock.respond_to do |mock|
-    # mock.send(:get, "/people/1", {}, "JSON1")
-    # end
-    # ActiveResource::HttpMock.responses.length #=> 1
+    #   ActiveResource::HttpMock.respond_to do |mock|
+    #     mock.send(:get, "/people/1", {}, "JSON1")
+    #   end
+    #   ActiveResource::HttpMock.responses.length #=> 1
     #
-    # get_matz         = ActiveResource::Request.new(:get, '/people/1.json', nil)
-    # ok_response      = ActiveResource::Response.new("", 200, {})
+    #   get_matz         = ActiveResource::Request.new(:get, '/people/1.json', nil)
+    #   ok_response      = ActiveResource::Response.new("", 200, {})
     #
-    # pairs = {get_matz => ok_response}
+    #   pairs = {get_matz => ok_response}
     #
-    # ActiveResource::HttpMock.respond_to(pairs, false)
-    # ActiveResource::HttpMock.responses.length #=> 2
+    #   ActiveResource::HttpMock.respond_to(pairs, false)
+    #   ActiveResource::HttpMock.responses.length #=> 2
     #
-    # # If you add a response with an existing request, it will be replaced
+    #   # If you add a response with an existing request, it will be replaced
     #
-    # fail_response      = ActiveResource::Response.new("", 404, {})
-    # pairs = {get_matz => fail_response}
+    #   fail_response      = ActiveResource::Response.new("", 404, {})
+    #   pairs = {get_matz => fail_response}
     #
-    # ActiveResource::HttpMock.respond_to(pairs, false)
-    # ActiveResource::HttpMock.responses.length #=> 2
+    #   ActiveResource::HttpMock.respond_to(pairs, false)
+    #   ActiveResource::HttpMock.responses.length #=> 2
     def respond_to(*args); end
 
     # Returns the list of requests and their mocked responses. Look up a
@@ -2137,6 +2188,7 @@ class ActiveResource::HttpMock
 end
 
 class ActiveResource::HttpMock::Responder
+  # @return [Responder] a new instance of Responder
   def initialize(responses); end
 
   def delete(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
@@ -2152,6 +2204,7 @@ class ActiveResource::HttpMock::Responder
 end
 
 class ActiveResource::InheritingHash < ::Hash
+  # @return [InheritingHash] a new instance of InheritingHash
   def initialize(parent_hash = T.unsafe(nil)); end
 
   def [](key); end
@@ -2207,6 +2260,7 @@ module ActiveResource::Reflection
 end
 
 class ActiveResource::Reflection::AssociationReflection
+  # @return [AssociationReflection] a new instance of AssociationReflection
   def initialize(macro, name, options); end
 
   # Returns the class name for the macro.
@@ -2248,6 +2302,7 @@ module ActiveResource::Reflection::ClassMethods
 end
 
 class ActiveResource::Request
+  # @return [Request] a new instance of Request
   def initialize(method, path, body = T.unsafe(nil), headers = T.unsafe(nil)); end
 
   def ==(req); end
@@ -2256,30 +2311,39 @@ class ActiveResource::Request
   def body; end
 
   # Sets the attribute body
+  #
+  # @param value the value to set the attribute body to.
   def body=(_arg0); end
 
   # Returns the value of attribute headers.
   def headers; end
 
   # Sets the attribute headers
+  #
+  # @param value the value to set the attribute headers to.
   def headers=(_arg0); end
 
   # Returns the value of attribute method.
   def method; end
 
   # Sets the attribute method
+  #
+  # @param value the value to set the attribute method to.
   def method=(_arg0); end
 
   # Returns the value of attribute path.
   def path; end
 
   # Sets the attribute path
+  #
+  # @param value the value to set the attribute path to.
   def path=(_arg0); end
 
   def to_s; end
 
   private
 
+  # @return [Boolean]
   def headers_match?(req); end
 end
 
@@ -2295,6 +2359,7 @@ class ActiveResource::ResourceInvalid < ::ActiveResource::ClientError; end
 class ActiveResource::ResourceNotFound < ::ActiveResource::ClientError; end
 
 class ActiveResource::Response
+  # @return [Response] a new instance of Response
   def initialize(body, message = T.unsafe(nil), headers = T.unsafe(nil)); end
 
   # Returns true if the other is a Response with an equal body, equal message
@@ -2308,33 +2373,44 @@ class ActiveResource::Response
   def body; end
 
   # Sets the attribute body
+  #
+  # @param value the value to set the attribute body to.
   def body=(_arg0); end
 
   # Returns the value of attribute code.
   def code; end
 
   # Sets the attribute code
+  #
+  # @param value the value to set the attribute code to.
   def code=(_arg0); end
 
   # Returns the value of attribute headers.
   def headers; end
 
   # Sets the attribute headers
+  #
+  # @param value the value to set the attribute headers to.
   def headers=(_arg0); end
 
   # Returns the value of attribute message.
   def message; end
 
   # Sets the attribute message
+  #
+  # @param value the value to set the attribute message to.
   def message=(_arg0); end
 
   # Returns true if code is 2xx,
   # false otherwise.
+  #
+  # @return [Boolean]
   def success?; end
 end
 
 # Raised when a OpenSSL::SSL::SSLError occurs.
 class ActiveResource::SSLError < ::ActiveResource::ConnectionError
+  # @return [SSLError] a new instance of SSLError
   def initialize(message); end
 
   def to_s; end
@@ -2345,16 +2421,19 @@ class ActiveResource::Schema
   # unlike an Active Record TableDefinition (on which it is based).
   # It provides a set of convenience methods for people to define their
   # schema using the syntax:
-  # schema do
-  # string :foo
-  # integer :bar
-  # end
+  #  schema do
+  #    string :foo
+  #    integer :bar
+  #  end
   #
-  # The schema stores the name and type of each attribute. That is then
-  # read out by the schema method to populate the schema of the actual
-  # resource.
+  #  The schema stores the name and type of each attribute. That is then
+  #  read out by the schema method to populate the schema of the actual
+  #  resource.
+  #
+  # @return [Schema] a new instance of Schema
   def initialize; end
 
+  # @raise [ArgumentError]
   def attribute(name, type, options = T.unsafe(nil)); end
 
   # An array of attribute definitions, representing the attributes that
@@ -2393,9 +2472,9 @@ module ActiveResource::Singleton
   # Deletes the resource from the remote service.
   #
   # ==== Examples
-  # weather = Weather.find
-  # weather.destroy
-  # Weather.find # 404 (Resource Not Found)
+  #   weather = Weather.find
+  #   weather.destroy
+  #   Weather.find # 404 (Resource Not Found)
   def destroy; end
 
   protected
@@ -2421,22 +2500,24 @@ module ActiveResource::Singleton::ClassMethods
   # * <tt>:params</tt> - Sets the query and \prefix (nested URL) parameters.
   #
   # ==== Examples
-  # Weather.find
-  # # => GET /weather.json
+  #   Weather.find
+  #   # => GET /weather.json
   #
-  # Weather.find(:params => {:degrees => 'fahrenheit'})
-  # # => GET /weather.json?degrees=fahrenheit
+  #   Weather.find(:params => {:degrees => 'fahrenheit'})
+  #   # => GET /weather.json?degrees=fahrenheit
   #
   # == Failure or missing data
   # A failure to find the requested object raises a ResourceNotFound exception.
   #
-  # Inventory.find
-  # # => raises ResourceNotFound
+  #   Inventory.find
+  #   # => raises ResourceNotFound
   def find(options = T.unsafe(nil)); end
 
   def singleton_name; end
 
   # Sets the attribute singleton_name
+  #
+  # @param value the value to set the attribute singleton_name to.
   def singleton_name=(_arg0); end
 
   # Gets the singleton path for the object.  If the +query_options+ parameter is omitted, Rails
@@ -2449,19 +2530,19 @@ module ActiveResource::Singleton::ClassMethods
   # * +query_options+ - A \hash to add items to the query string for the request.
   #
   # ==== Examples
-  # Weather.singleton_path
-  # # => /weather.json
+  #   Weather.singleton_path
+  #   # => /weather.json
   #
-  # class Inventory < ActiveResource::Base
-  # self.site =   "https://37s.sunrise.com"
-  # self.prefix = "/products/:product_id/"
-  # end
+  #   class Inventory < ActiveResource::Base
+  #     self.site =   "https://37s.sunrise.com"
+  #     self.prefix = "/products/:product_id/"
+  #   end
   #
-  # Inventory.singleton_path(:product_id => 5)
-  # # => /products/5/inventory.json
+  #   Inventory.singleton_path(:product_id => 5)
+  #   # => /products/5/inventory.json
   #
-  # Inventory.singleton_path({:product_id => 5}, {:sold => true})
-  # # => /products/5/inventory.json?sold=true
+  #   Inventory.singleton_path({:product_id => 5}, {:sold => true})
+  #   # => /products/5/inventory.json?sold=true
   def singleton_path(prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
 
   private
@@ -2472,6 +2553,7 @@ end
 
 # Raised when a Timeout::Error occurs.
 class ActiveResource::TimeoutError < ::ActiveResource::ConnectionError
+  # @return [TimeoutError] a new instance of TimeoutError
   def initialize(message); end
 
   def to_s; end
@@ -2499,15 +2581,15 @@ ActiveResource::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 # Consider a Person resource on the server requiring both a +first_name+ and a +last_name+ with a
 # <tt>validates_presence_of :first_name, :last_name</tt> declaration in the model:
 #
-# person = Person.new(:first_name => "Jim", :last_name => "")
-# person.save                   # => false (server returns an HTTP 422 status code and errors)
-# person.valid?                 # => false
-# person.errors.empty?          # => false
-# person.errors.count           # => 1
-# person.errors.full_messages   # => ["Last name can't be empty"]
-# person.errors[:last_name]  # => ["can't be empty"]
-# person.last_name = "Halpert"
-# person.save                   # => true (and person is now saved to the remote service)
+#   person = Person.new(:first_name => "Jim", :last_name => "")
+#   person.save                   # => false (server returns an HTTP 422 status code and errors)
+#   person.valid?                 # => false
+#   person.errors.empty?          # => false
+#   person.errors.count           # => 1
+#   person.errors.full_messages   # => ["Last name can't be empty"]
+#   person.errors[:last_name]  # => ["can't be empty"]
+#   person.last_name = "Halpert"
+#   person.save                   # => true (and person is now saved to the remote service)
 module ActiveResource::Validations
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -2538,13 +2620,15 @@ module ActiveResource::Validations
   # Remote errors can only be cleared by trying to re-save the resource.
   #
   # ==== Examples
-  # my_person = Person.create(params[:person])
-  # my_person.valid?
-  # # => true
+  #   my_person = Person.create(params[:person])
+  #   my_person.valid?
+  #   # => true
   #
-  # my_person.errors.add('login', 'can not be empty') if my_person.login == ''
-  # my_person.valid?
-  # # => false
+  #   my_person.errors.add('login', 'can not be empty') if my_person.login == ''
+  #   my_person.valid?
+  #   # => false
+  #
+  # @return [Boolean]
   def valid?; end
 
   module GeneratedClassMethods
@@ -2573,10 +2657,15 @@ module ThreadsafeAttributes
   def get_threadsafe_attribute_by_thread(name, thread); end
   def set_threadsafe_attribute(name, value, main_thread); end
   def set_threadsafe_attribute_by_thread(name, value, thread); end
+
+  # @return [Boolean]
   def threadsafe_attribute_defined?(name, main_thread); end
+
+  # @return [Boolean]
   def threadsafe_attribute_defined_by_thread?(name, thread); end
 
   class << self
+    # @private
     def included(klass); end
   end
 end

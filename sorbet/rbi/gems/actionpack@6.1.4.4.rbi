@@ -16,6 +16,7 @@ end
 class AbstractController::ActionNotFound < ::StandardError
   include ::DidYouMean::Correctable
 
+  # @return [ActionNotFound] a new instance of ActionNotFound
   def initialize(message = T.unsafe(nil), controller = T.unsafe(nil), action = T.unsafe(nil)); end
 
   # Returns the value of attribute action.
@@ -26,6 +27,7 @@ class AbstractController::ActionNotFound < ::StandardError
 end
 
 class AbstractController::ActionNotFound::Correction
+  # @return [Correction] a new instance of Correction
   def initialize(error); end
 
   def corrections; end
@@ -39,6 +41,8 @@ end
 # using it directly, and subclasses (like ActionController::Base) are
 # expected to provide their own +render+ method, since rendering means
 # different things depending on the context.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class AbstractController::Base
   include ::ActiveSupport::Configurable
   extend ::ActiveSupport::Configurable::ClassMethods
@@ -62,6 +66,8 @@ class AbstractController::Base
   #
   # ==== Parameters
   # * <tt>action_name</tt> - The name of an action to be tested
+  #
+  # @return [Boolean]
   def available_action?(action_name); end
 
   # Delegates to the class' ::controller_path
@@ -76,6 +82,8 @@ class AbstractController::Base
   # Tests if a response body is set. Used to determine if the
   # +process_action+ callback needs to be terminated in
   # +AbstractController::Callbacks+.
+  #
+  # @return [Boolean]
   def performed?; end
 
   # Calls the action going through the entire action dispatch stack.
@@ -124,6 +132,8 @@ class AbstractController::Base
   def _handle_action_missing(*args); end
 
   # Checks if the action name is valid and returns false otherwise.
+  #
+  # @return [Boolean]
   def _valid_action_name?(action_name); end
 
   # Returns true if the name can be considered an action because
@@ -131,6 +141,8 @@ class AbstractController::Base
   #
   # ==== Parameters
   # * <tt>name</tt> - The name of an action to be tested
+  #
+  # @return [Boolean]
   def action_method?(name); end
 
   # Takes an action name and returns the name of the method that will
@@ -194,11 +206,11 @@ class AbstractController::Base
 
     # Returns the full controller name, underscored, without the ending Controller.
     #
-    # class MyApp::MyPostsController < AbstractController::Base
+    #   class MyApp::MyPostsController < AbstractController::Base
     #
-    # end
+    #   end
     #
-    # MyApp::MyPostsController.controller_path # => "my_app/my_posts"
+    #   MyApp::MyPostsController.controller_path # => "my_app/my_posts"
     #
     # ==== Returns
     # * <tt>String</tt>
@@ -221,6 +233,8 @@ class AbstractController::Base
     # a path. A subclass of +AbstractController::Base+
     # may return false. An Email controller for example does not
     # support paths, only full URLs.
+    #
+    # @return [Boolean]
     def supports_path?; end
   end
 end
@@ -273,6 +287,7 @@ module AbstractController::Caching::ConfigMethods
 
   private
 
+  # @return [Boolean]
   def cache_configured?; end
 end
 
@@ -288,7 +303,7 @@ end
 # expiration (see links in CacheHelper for more information),
 # it is also possible to manually expire caches. For example:
 #
-# expire_fragment('name_of_cache')
+#   expire_fragment('name_of_cache')
 module AbstractController::Caching::Fragments
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -309,16 +324,16 @@ module AbstractController::Caching::Fragments
   # +key+ can take one of three forms:
   #
   # * String - This would normally take the form of a path, like
-  # <tt>pages/45/notes</tt>.
+  #   <tt>pages/45/notes</tt>.
   # * Hash - Treated as an implicit call to +url_for+, like
-  # <tt>{ controller: 'pages', action: 'notes', id: 45}</tt>
+  #   <tt>{ controller: 'pages', action: 'notes', id: 45}</tt>
   # * Regexp - Will remove any fragment that matches, so
-  # <tt>%r{pages/\d*/notes}</tt> might remove all notes. Make sure you
-  # don't use anchors in the regex (<tt>^</tt> or <tt>$</tt>) because
-  # the actual filename matched looks like
-  # <tt>./cache/filename/path.cache</tt>. Note: Regexp expiration is
-  # only supported on caches that can iterate over all keys (unlike
-  # memcached).
+  #   <tt>%r{pages/\d*/notes}</tt> might remove all notes. Make sure you
+  #   don't use anchors in the regex (<tt>^</tt> or <tt>$</tt>) because
+  #   the actual filename matched looks like
+  #   <tt>./cache/filename/path.cache</tt>. Note: Regexp expiration is
+  #   only supported on caches that can iterate over all keys (unlike
+  #   memcached).
   #
   # +options+ is passed through to the cache store's +delete+
   # method (or <tt>delete_matched</tt>, for Regexp keys).
@@ -326,6 +341,8 @@ module AbstractController::Caching::Fragments
 
   # Check if a cached fragment from the location signified by
   # +key+ exists (see +expire_fragment+ for acceptable formats).
+  #
+  # @return [Boolean]
   def fragment_exist?(key, options = T.unsafe(nil)); end
 
   def instrument_fragment_cache(name, key); end
@@ -360,19 +377,19 @@ module AbstractController::Caching::Fragments::ClassMethods
   # with a global version identifier, so you can easily
   # invalidate all caches.
   #
-  # class ApplicationController
-  # fragment_cache_key "v1"
-  # end
+  #   class ApplicationController
+  #     fragment_cache_key "v1"
+  #   end
   #
   # When it's time to invalidate all fragments, simply change
   # the string constant. Or, progressively roll out the cache
   # invalidation using a computed value:
   #
-  # class ApplicationController
-  # fragment_cache_key do
-  # @account.id.odd? ? "v1" : "v2"
-  # end
-  # end
+  #   class ApplicationController
+  #     fragment_cache_key do
+  #       @account.id.odd? ? "v1" : "v2"
+  #     end
+  #   end
   def fragment_cache_key(value = T.unsafe(nil), &key); end
 end
 
@@ -428,7 +445,7 @@ module AbstractController::Callbacks::ClassMethods
   #
   # ==== Parameters
   # * <tt>callbacks</tt> - An array of callbacks, with an optional
-  # options hash as the last parameter.
+  #   options hash as the last parameter.
   # * <tt>block</tt>    - A proc that should be added to the callbacks.
   #
   # ==== Block Parameters
@@ -447,12 +464,12 @@ module AbstractController::Callbacks::ClassMethods
   # Note that <tt>:only</tt> has priority over <tt>:if</tt> in case they
   # are used together.
   #
-  # only: :index, if: -> { true } # the :if option will be ignored.
+  #   only: :index, if: -> { true } # the :if option will be ignored.
   #
   # Note that <tt>:if</tt> has priority over <tt>:except</tt> in case they
   # are used together.
   #
-  # except: :index, if: -> { true } # the :except option will be ignored.
+  #   except: :index, if: -> { true } # the :except option will be ignored.
   #
   # ==== Options
   # * <tt>only</tt>   - The callback should be run only for this action.
@@ -519,6 +536,7 @@ module AbstractController::Collector
 end
 
 class AbstractController::DoubleRenderError < ::AbstractController::Error
+  # @return [DoubleRenderError] a new instance of DoubleRenderError
   def initialize(message = T.unsafe(nil)); end
 end
 
@@ -549,6 +567,8 @@ end
 
 module AbstractController::Helpers::ClassMethods
   # Sets the attribute _helpers
+  #
+  # @param value the value to set the attribute _helpers to.
   def _helpers=(_arg0); end
 
   def _helpers_for_modification; end
@@ -562,14 +582,14 @@ module AbstractController::Helpers::ClassMethods
   # Modules can be specified in different ways. All of the following calls
   # include +FooHelper+:
   #
-  # # Module, recommended.
-  # helper FooHelper
+  #   # Module, recommended.
+  #   helper FooHelper
   #
-  # # String/symbol without the "helper" suffix, camel or snake case.
-  # helper "Foo"
-  # helper :Foo
-  # helper "foo"
-  # helper :foo
+  #   # String/symbol without the "helper" suffix, camel or snake case.
+  #   helper "Foo"
+  #   helper :Foo
+  #   helper "foo"
+  #   helper :foo
   #
   # The last two assume that <tt>"foo".camelize</tt> returns "Foo".
   #
@@ -579,14 +599,14 @@ module AbstractController::Helpers::ClassMethods
   #
   # Namespaces are supported. The following calls include +Foo::BarHelper+:
   #
-  # # Module, recommended.
-  # helper Foo::BarHelper
+  #   # Module, recommended.
+  #   helper Foo::BarHelper
   #
-  # # String/symbol without the "helper" suffix, camel or snake case.
-  # helper "Foo::Bar"
-  # helper :"Foo::Bar"
-  # helper "foo/bar"
-  # helper :"foo/bar"
+  #   # String/symbol without the "helper" suffix, camel or snake case.
+  #   helper "Foo::Bar"
+  #   helper :"Foo::Bar"
+  #   helper "foo/bar"
+  #   helper :"foo/bar"
   #
   # The last two assume that <tt>"foo/bar".camelize</tt> returns "Foo::Bar".
   #
@@ -594,42 +614,42 @@ module AbstractController::Helpers::ClassMethods
   # the context of the controller helper module. This simple call makes the
   # +wadus+ method available in templates of the enclosing controller:
   #
-  # helper do
-  # def wadus
-  # "wadus"
-  # end
-  # end
+  #   helper do
+  #     def wadus
+  #       "wadus"
+  #     end
+  #   end
   #
   # Furthermore, all the above styles can be mixed together:
   #
-  # helper FooHelper, "woo", "bar/baz" do
-  # def wadus
-  # "wadus"
-  # end
-  # end
+  #   helper FooHelper, "woo", "bar/baz" do
+  #     def wadus
+  #       "wadus"
+  #     end
+  #   end
   def helper(*args, &block); end
 
   # Declare a controller method as a helper. For example, the following
   # makes the +current_user+ and +logged_in?+ controller methods available
   # to the view:
-  # class ApplicationController < ActionController::Base
-  # helper_method :current_user, :logged_in?
+  #   class ApplicationController < ActionController::Base
+  #     helper_method :current_user, :logged_in?
   #
-  # def current_user
-  # @current_user ||= User.find_by(id: session[:user])
-  # end
+  #     def current_user
+  #       @current_user ||= User.find_by(id: session[:user])
+  #     end
   #
-  # def logged_in?
-  # current_user != nil
-  # end
-  # end
+  #     def logged_in?
+  #       current_user != nil
+  #     end
+  #   end
   #
   # In a view:
-  # <% if logged_in? -%>Welcome, <%= current_user.name %><% end -%>
+  #  <% if logged_in? -%>Welcome, <%= current_user.name %><% end -%>
   #
   # ==== Parameters
   # * <tt>method[, method]</tt> - A name or names of a method on the controller
-  # to be made available on the view.
+  #   to be made available on the view.
   def helper_method(*methods); end
 
   # When a class is inherited, wrap its helper module in a new module.
@@ -648,6 +668,7 @@ module AbstractController::Helpers::ClassMethods
 end
 
 class AbstractController::Helpers::MissingHelperError < ::LoadError
+  # @return [MissingHelperError] a new instance of MissingHelperError
   def initialize(error, path); end
 end
 
@@ -825,12 +846,12 @@ end
 #
 # A sample controller could look like this:
 #
-# class PostsController < ApplicationController
-# def index
-# posts = Post.all
-# render json: posts
-# end
-# end
+#   class PostsController < ApplicationController
+#     def index
+#       posts = Post.all
+#       render json: posts
+#     end
+#   end
 #
 # Request, response, and parameters objects all work the exact same way as
 # <tt>ActionController::Base</tt>.
@@ -843,10 +864,10 @@ end
 # your controller is calling either <tt>render</tt> or <tt>redirect_to</tt> in
 # all actions, otherwise it will return 204 No Content.
 #
-# def show
-# post = Post.find(params[:id])
-# render json: post
-# end
+#   def show
+#     post = Post.find(params[:id])
+#     render json: post
+#   end
 #
 # == Redirects
 #
@@ -854,10 +875,10 @@ end
 # <tt>redirect_to</tt> method in your controllers in the same way as in
 # <tt>ActionController::Base</tt>. For example:
 #
-# def create
-# redirect_to root_url and return if not_authorized?
-# # do stuff here
-# end
+#   def create
+#     redirect_to root_url and return if not_authorized?
+#     # do stuff here
+#   end
 #
 # == Adding New Behavior
 #
@@ -869,24 +890,26 @@ end
 # +ApplicationController+ in case you want it available in your entire
 # application:
 #
-# class ApplicationController < ActionController::API
-# include ActionController::MimeResponds
-# end
+#   class ApplicationController < ActionController::API
+#     include ActionController::MimeResponds
+#   end
 #
-# class PostsController < ApplicationController
-# def index
-# posts = Post.all
+#   class PostsController < ApplicationController
+#     def index
+#       posts = Post.all
 #
-# respond_to do |format|
-# format.json { render json: posts }
-# format.xml  { render xml: posts }
-# end
-# end
-# end
+#       respond_to do |format|
+#         format.json { render json: posts }
+#         format.xml  { render xml: posts }
+#       end
+#     end
+#   end
 #
 # Make sure to check the modules included in <tt>ActionController::Base</tt>
 # if you want to use any other functionality that is not provided
 # by <tt>ActionController::API</tt> out of the box.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class ActionController::API < ::ActionController::Metal
   include ::ActionView::ViewPaths
   include ::AbstractController::Rendering
@@ -977,11 +1000,11 @@ class ActionController::API < ::ActionController::Metal
     # Shortcut helper that returns all the ActionController::API modules except
     # the ones passed as arguments:
     #
-    # class MyAPIBaseController < ActionController::Metal
-    # ActionController::API.without_modules(:UrlFor).each do |left|
-    # include left
-    # end
-    # end
+    #   class MyAPIBaseController < ActionController::Metal
+    #     ActionController::API.without_modules(:UrlFor).each do |left|
+    #       include left
+    #     end
+    #   end
     #
     # This gives better control over what you want to exclude and makes it easier
     # to create an API controller class, instead of listing the modules required
@@ -1003,6 +1026,7 @@ module ActionController::ApiRendering
 end
 
 class ActionController::BadRequest < ::ActionController::ActionControllerError
+  # @return [BadRequest] a new instance of BadRequest
   def initialize(msg = T.unsafe(nil)); end
 end
 
@@ -1016,16 +1040,16 @@ end
 #
 # A sample controller could look like this:
 #
-# class PostsController < ApplicationController
-# def index
-# @posts = Post.all
-# end
+#   class PostsController < ApplicationController
+#     def index
+#       @posts = Post.all
+#     end
 #
-# def create
-# @post = Post.create params[:post]
-# redirect_to posts_path
-# end
-# end
+#     def create
+#       @post = Post.create params[:post]
+#       redirect_to posts_path
+#     end
+#   end
 #
 # Actions, by default, render a template in the <tt>app/views</tt> directory corresponding to the name of the controller and action
 # after executing code in the action. For example, the +index+ action of the PostsController would render the
@@ -1046,10 +1070,10 @@ end
 #
 # The full request object is available via the request accessor and is primarily used to query for HTTP headers:
 #
-# def server_ip
-# location = request.env["REMOTE_ADDR"]
-# render plain: "This server hosted at #{location}"
-# end
+#   def server_ip
+#     location = request.env["REMOTE_ADDR"]
+#     render plain: "This server hosted at #{location}"
+#   end
 #
 # == Parameters
 #
@@ -1059,8 +1083,8 @@ end
 #
 # It's also possible to construct multi-dimensional parameter hashes by specifying keys using brackets, such as:
 #
-# <input type="text" name="post[name]" value="david">
-# <input type="text" name="post[address]" value="hyacintvej">
+#   <input type="text" name="post[name]" value="david">
+#   <input type="text" name="post[address]" value="hyacintvej">
 #
 # A request coming from a form holding these inputs will include <tt>{ "post" => { "name" => "david", "address" => "hyacintvej" } }</tt>.
 # If the address input had been named <tt>post[address][street]</tt>, the <tt>params</tt> would have included
@@ -1075,16 +1099,16 @@ end
 #
 # You can place objects in the session by using the <tt>session</tt> method, which accesses a hash:
 #
-# session[:person] = Person.authenticate(user_name, password)
+#   session[:person] = Person.authenticate(user_name, password)
 #
 # You can retrieve it again through the same hash:
 #
-# "Hello #{session[:person]}"
+#   "Hello #{session[:person]}"
 #
 # For removing objects from the session, you can either assign a single key to +nil+:
 #
-# # removes :person from session
-# session[:person] = nil
+#   # removes :person from session
+#   session[:person] = nil
 #
 # or you can remove the entire session with +reset_session+.
 #
@@ -1104,25 +1128,25 @@ end
 # of a template. Included in the Action Pack is the Action View, which enables rendering of ERB templates. It's automatically configured.
 # The controller passes objects to the view by assigning instance variables:
 #
-# def show
-# @post = Post.find(params[:id])
-# end
+#   def show
+#     @post = Post.find(params[:id])
+#   end
 #
 # Which are then automatically available to the view:
 #
-# Title: <%= @post.title %>
+#   Title: <%= @post.title %>
 #
 # You don't have to rely on the automated rendering. For example, actions that could result in the rendering of different templates
 # will use the manual rendering methods:
 #
-# def search
-# @results = Search.find(params[:query])
-# case @results.count
-# when 0 then render action: "no_results"
-# when 1 then render action: "show"
-# when 2..10 then render action: "show_many"
-# end
-# end
+#   def search
+#     @results = Search.find(params[:query])
+#     case @results.count
+#       when 0 then render action: "no_results"
+#       when 1 then render action: "show"
+#       when 2..10 then render action: "show_many"
+#     end
+#   end
 #
 # Read more about writing ERB and Builder templates in ActionView::Base.
 #
@@ -1132,15 +1156,15 @@ end
 # database, we might like to show the user the new entry. Because we're following good DRY principles (Don't Repeat Yourself), we're
 # going to reuse (and redirect to) a <tt>show</tt> action that we'll assume has already been created. The code might look like this:
 #
-# def create
-# @entry = Entry.new(params[:entry])
-# if @entry.save
-# # The entry was saved correctly, redirect to show
-# redirect_to action: 'show', id: @entry.id
-# else
-# # things didn't go so well, do something else
-# end
-# end
+#   def create
+#     @entry = Entry.new(params[:entry])
+#     if @entry.save
+#       # The entry was saved correctly, redirect to show
+#       redirect_to action: 'show', id: @entry.id
+#     else
+#       # things didn't go so well, do something else
+#     end
+#   end
 #
 # In this case, after saving our new entry to the database, the user is redirected to the <tt>show</tt> method, which is then executed.
 # Note that this is an external HTTP-level redirection which will cause the browser to make a second request (a GET to the show action),
@@ -1152,17 +1176,19 @@ end
 #
 # An action may contain only a single render or a single redirect. Attempting to try to do either again will result in a DoubleRenderError:
 #
-# def do_something
-# redirect_to action: "elsewhere"
-# render action: "overthere" # raises DoubleRenderError
-# end
+#   def do_something
+#     redirect_to action: "elsewhere"
+#     render action: "overthere" # raises DoubleRenderError
+#   end
 #
 # If you need to redirect on the condition of something, then be sure to add "and return" to halt execution.
 #
-# def do_something
-# redirect_to(action: "elsewhere") and return if monkeys.nil?
-# render action: "overthere" # won't be called if monkeys is nil
-# end
+#   def do_something
+#     redirect_to(action: "elsewhere") and return if monkeys.nil?
+#     render action: "overthere" # won't be called if monkeys is nil
+#   end
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class ActionController::Base < ::ActionController::Metal
   include ::ActionView::ViewPaths
   include ::AbstractController::Rendering
@@ -1281,7 +1307,7 @@ class ActionController::Base < ::ActionController::Metal
   def etaggers; end
   def etaggers=(_arg0); end
   def etaggers?; end
-  def flash(*_arg0, **_arg1, &_arg2); end
+  def flash(*_arg0, &_arg1); end
   def forgery_protection_origin_check; end
   def forgery_protection_origin_check=(value); end
   def forgery_protection_strategy; end
@@ -1415,11 +1441,11 @@ class ActionController::Base < ::ActionController::Metal
     # Shortcut helper that returns all the modules included in
     # ActionController::Base except the ones passed as arguments:
     #
-    # class MyBaseController < ActionController::Metal
-    # ActionController::Base.without_modules(:ParamsWrapper, :Streaming).each do |left|
-    # include left
-    # end
-    # end
+    #   class MyBaseController < ActionController::Metal
+    #     ActionController::Base.without_modules(:ParamsWrapper, :Streaming).each do |left|
+    #       include left
+    #     end
+    #   end
     #
     # This gives better control over what you want to exclude and makes it
     # easier to create a bare controller class, instead of listing the modules
@@ -1429,15 +1455,15 @@ class ActionController::Base < ::ActionController::Metal
 end
 
 module ActionController::Base::HelperMethods
-  def alert(*args, **_arg1, &block); end
-  def combined_fragment_cache_key(*args, **_arg1, &block); end
-  def content_security_policy?(*args, **_arg1, &block); end
-  def content_security_policy_nonce(*args, **_arg1, &block); end
-  def cookies(*args, **_arg1, &block); end
-  def form_authenticity_token(*args, **_arg1, &block); end
-  def notice(*args, **_arg1, &block); end
-  def protect_against_forgery?(*args, **_arg1, &block); end
-  def view_cache_dependencies(*args, **_arg1, &block); end
+  def alert(*args, &block); end
+  def combined_fragment_cache_key(*args, &block); end
+  def content_security_policy?(*args, &block); end
+  def content_security_policy_nonce(*args, &block); end
+  def cookies(*args, &block); end
+  def form_authenticity_token(*args, &block); end
+  def notice(*args, &block); end
+  def protect_against_forgery?(*args, &block); end
+  def view_cache_dependencies(*args, &block); end
 end
 
 ActionController::Base::MODULES = T.let(T.unsafe(nil), Array)
@@ -1456,7 +1482,7 @@ end
 # You can read more about each approach by clicking the modules below.
 #
 # Note: To turn off all caching provided by Action Controller, set
-# config.action_controller.perform_caching = false
+#   config.action_controller.perform_caching = false
 #
 # == \Caching stores
 #
@@ -1465,11 +1491,11 @@ end
 #
 # Configuration examples (FileStore is the default):
 #
-# config.action_controller.cache_store = :memory_store
-# config.action_controller.cache_store = :file_store, '/path/to/cache/directory'
-# config.action_controller.cache_store = :mem_cache_store, 'localhost'
-# config.action_controller.cache_store = :mem_cache_store, Memcached::Rails.new('localhost:11211')
-# config.action_controller.cache_store = MyOwnStore.new('parameter')
+#   config.action_controller.cache_store = :memory_store
+#   config.action_controller.cache_store = :file_store, '/path/to/cache/directory'
+#   config.action_controller.cache_store = :mem_cache_store, 'localhost'
+#   config.action_controller.cache_store = :mem_cache_store, Memcached::Rails.new('localhost:11211')
+#   config.action_controller.cache_store = MyOwnStore.new('parameter')
 module ActionController::Caching
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -1516,9 +1542,9 @@ module ActionController::ConditionalGet
   # Sets an HTTP 1.1 Cache-Control header. Defaults to issuing a +private+
   # instruction, so that intermediate caches must not cache the response.
   #
-  # expires_in 20.minutes
-  # expires_in 3.hours, public: true
-  # expires_in 3.hours, public: true, must_revalidate: true
+  #   expires_in 20.minutes
+  #   expires_in 3.hours, public: true
+  #   expires_in 3.hours, public: true, must_revalidate: true
   #
   # This method will overwrite an existing Cache-Control header.
   # See https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html for more possibilities.
@@ -1526,13 +1552,13 @@ module ActionController::ConditionalGet
   # HTTP Cache-Control Extensions for Stale Content. See https://tools.ietf.org/html/rfc5861
   # It helps to cache an asset and serve it while is being revalidated and/or returning with an error.
   #
-  # expires_in 3.hours, public: true, stale_while_revalidate: 60.seconds
-  # expires_in 3.hours, public: true, stale_while_revalidate: 60.seconds, stale_if_error: 5.minutes
+  #   expires_in 3.hours, public: true, stale_while_revalidate: 60.seconds
+  #   expires_in 3.hours, public: true, stale_while_revalidate: 60.seconds, stale_if_error: 5.minutes
   #
   # HTTP Cache-Control Extensions other values: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
   # Any additional key-value pairs are concatenated onto the `Cache-Control` header in the response:
   #
-  # expires_in 3.hours, public: true, "s-maxage": 3.hours, "no-transform": true
+  #   expires_in 3.hours, public: true, "s-maxage": 3.hours, "no-transform": true
   #
   # The method will also ensure an HTTP Date header for client compatibility.
   def expires_in(seconds, options = T.unsafe(nil)); end
@@ -1548,36 +1574,36 @@ module ActionController::ConditionalGet
   # === Parameters:
   #
   # * <tt>:etag</tt> Sets a "weak" ETag validator on the response. See the
-  # +:weak_etag+ option.
+  #   +:weak_etag+ option.
   # * <tt>:weak_etag</tt> Sets a "weak" ETag validator on the response.
-  # Requests that set If-None-Match header may return a 304 Not Modified
-  # response if it matches the ETag exactly. A weak ETag indicates semantic
-  # equivalence, not byte-for-byte equality, so they're good for caching
-  # HTML pages in browser caches. They can't be used for responses that
-  # must be byte-identical, like serving Range requests within a PDF file.
+  #   Requests that set If-None-Match header may return a 304 Not Modified
+  #   response if it matches the ETag exactly. A weak ETag indicates semantic
+  #   equivalence, not byte-for-byte equality, so they're good for caching
+  #   HTML pages in browser caches. They can't be used for responses that
+  #   must be byte-identical, like serving Range requests within a PDF file.
   # * <tt>:strong_etag</tt> Sets a "strong" ETag validator on the response.
-  # Requests that set If-None-Match header may return a 304 Not Modified
-  # response if it matches the ETag exactly. A strong ETag implies exact
-  # equality: the response must match byte for byte. This is necessary for
-  # doing Range requests within a large video or PDF file, for example, or
-  # for compatibility with some CDNs that don't support weak ETags.
+  #   Requests that set If-None-Match header may return a 304 Not Modified
+  #   response if it matches the ETag exactly. A strong ETag implies exact
+  #   equality: the response must match byte for byte. This is necessary for
+  #   doing Range requests within a large video or PDF file, for example, or
+  #   for compatibility with some CDNs that don't support weak ETags.
   # * <tt>:last_modified</tt> Sets a "weak" last-update validator on the
-  # response. Subsequent requests that set If-Modified-Since may return a
-  # 304 Not Modified response if last_modified <= If-Modified-Since.
+  #   response. Subsequent requests that set If-Modified-Since may return a
+  #   304 Not Modified response if last_modified <= If-Modified-Since.
   # * <tt>:public</tt> By default the Cache-Control header is private, set this to
-  # +true+ if you want your application to be cacheable by other devices (proxy caches).
+  #   +true+ if you want your application to be cacheable by other devices (proxy caches).
   # * <tt>:template</tt> By default, the template digest for the current
-  # controller/action is included in ETags. If the action renders a
-  # different template, you can include its digest instead. If the action
-  # doesn't render a template at all, you can pass <tt>template: false</tt>
-  # to skip any attempt to check for a template digest.
+  #   controller/action is included in ETags. If the action renders a
+  #   different template, you can include its digest instead. If the action
+  #   doesn't render a template at all, you can pass <tt>template: false</tt>
+  #   to skip any attempt to check for a template digest.
   #
   # === Example:
   #
-  # def show
-  # @article = Article.find(params[:id])
-  # fresh_when(etag: @article, last_modified: @article.updated_at, public: true)
-  # end
+  #   def show
+  #     @article = Article.find(params[:id])
+  #     fresh_when(etag: @article, last_modified: @article.updated_at, public: true)
+  #   end
   #
   # This will render the show template if the request isn't sending a matching ETag or
   # If-Modified-Since header and just a <tt>304 Not Modified</tt> response if there's a match.
@@ -1585,32 +1611,32 @@ module ActionController::ConditionalGet
   # You can also just pass a record. In this case +last_modified+ will be set
   # by calling +updated_at+ and +etag+ by passing the object itself.
   #
-  # def show
-  # @article = Article.find(params[:id])
-  # fresh_when(@article)
-  # end
+  #   def show
+  #     @article = Article.find(params[:id])
+  #     fresh_when(@article)
+  #   end
   #
   # You can also pass an object that responds to +maximum+, such as a
   # collection of active records. In this case +last_modified+ will be set by
   # calling <tt>maximum(:updated_at)</tt> on the collection (the timestamp of the
   # most recently updated record) and the +etag+ by passing the object itself.
   #
-  # def index
-  # @articles = Article.all
-  # fresh_when(@articles)
-  # end
+  #   def index
+  #     @articles = Article.all
+  #     fresh_when(@articles)
+  #   end
   #
   # When passing a record or a collection, you can still set the public header:
   #
-  # def show
-  # @article = Article.find(params[:id])
-  # fresh_when(@article, public: true)
-  # end
+  #   def show
+  #     @article = Article.find(params[:id])
+  #     fresh_when(@article, public: true)
+  #   end
   #
   # When rendering a different template than the default controller/action
   # style, you can indicate which digest to include in the ETag:
   #
-  # before_action { fresh_when @article, template: 'widgets/show' }
+  #   before_action { fresh_when @article, template: 'widgets/show' }
   def fresh_when(object = T.unsafe(nil), etag: T.unsafe(nil), weak_etag: T.unsafe(nil), strong_etag: T.unsafe(nil), last_modified: T.unsafe(nil), public: T.unsafe(nil), template: T.unsafe(nil)); end
 
   # Cache or yield the block. The cache is supposed to never expire.
@@ -1619,8 +1645,8 @@ module ActionController::ConditionalGet
   # and the browser and proxies should cache it indefinitely.
   #
   # * +public+: By default, HTTP responses are private, cached only on the
-  # user's web browser. To allow proxies to cache the response, set +true+ to
-  # indicate that they can serve the cached response to all users.
+  #   user's web browser. To allow proxies to cache the response, set +true+ to
+  #   indicate that they can serve the cached response to all users.
   def http_cache_forever(public: T.unsafe(nil)); end
 
   # Sets the +etag+ and/or +last_modified+ on the response and checks it against
@@ -1631,92 +1657,94 @@ module ActionController::ConditionalGet
   # === Parameters:
   #
   # * <tt>:etag</tt> Sets a "weak" ETag validator on the response. See the
-  # +:weak_etag+ option.
+  #   +:weak_etag+ option.
   # * <tt>:weak_etag</tt> Sets a "weak" ETag validator on the response.
-  # Requests that set If-None-Match header may return a 304 Not Modified
-  # response if it matches the ETag exactly. A weak ETag indicates semantic
-  # equivalence, not byte-for-byte equality, so they're good for caching
-  # HTML pages in browser caches. They can't be used for responses that
-  # must be byte-identical, like serving Range requests within a PDF file.
+  #   Requests that set If-None-Match header may return a 304 Not Modified
+  #   response if it matches the ETag exactly. A weak ETag indicates semantic
+  #   equivalence, not byte-for-byte equality, so they're good for caching
+  #   HTML pages in browser caches. They can't be used for responses that
+  #   must be byte-identical, like serving Range requests within a PDF file.
   # * <tt>:strong_etag</tt> Sets a "strong" ETag validator on the response.
-  # Requests that set If-None-Match header may return a 304 Not Modified
-  # response if it matches the ETag exactly. A strong ETag implies exact
-  # equality: the response must match byte for byte. This is necessary for
-  # doing Range requests within a large video or PDF file, for example, or
-  # for compatibility with some CDNs that don't support weak ETags.
+  #   Requests that set If-None-Match header may return a 304 Not Modified
+  #   response if it matches the ETag exactly. A strong ETag implies exact
+  #   equality: the response must match byte for byte. This is necessary for
+  #   doing Range requests within a large video or PDF file, for example, or
+  #   for compatibility with some CDNs that don't support weak ETags.
   # * <tt>:last_modified</tt> Sets a "weak" last-update validator on the
-  # response. Subsequent requests that set If-Modified-Since may return a
-  # 304 Not Modified response if last_modified <= If-Modified-Since.
+  #   response. Subsequent requests that set If-Modified-Since may return a
+  #   304 Not Modified response if last_modified <= If-Modified-Since.
   # * <tt>:public</tt> By default the Cache-Control header is private, set this to
-  # +true+ if you want your application to be cacheable by other devices (proxy caches).
+  #   +true+ if you want your application to be cacheable by other devices (proxy caches).
   # * <tt>:template</tt> By default, the template digest for the current
-  # controller/action is included in ETags. If the action renders a
-  # different template, you can include its digest instead. If the action
-  # doesn't render a template at all, you can pass <tt>template: false</tt>
-  # to skip any attempt to check for a template digest.
+  #   controller/action is included in ETags. If the action renders a
+  #   different template, you can include its digest instead. If the action
+  #   doesn't render a template at all, you can pass <tt>template: false</tt>
+  #   to skip any attempt to check for a template digest.
   #
   # === Example:
   #
-  # def show
-  # @article = Article.find(params[:id])
+  #   def show
+  #     @article = Article.find(params[:id])
   #
-  # if stale?(etag: @article, last_modified: @article.updated_at)
-  # @statistics = @article.really_expensive_call
-  # respond_to do |format|
-  # # all the supported formats
-  # end
-  # end
-  # end
+  #     if stale?(etag: @article, last_modified: @article.updated_at)
+  #       @statistics = @article.really_expensive_call
+  #       respond_to do |format|
+  #         # all the supported formats
+  #       end
+  #     end
+  #   end
   #
   # You can also just pass a record. In this case +last_modified+ will be set
   # by calling +updated_at+ and +etag+ by passing the object itself.
   #
-  # def show
-  # @article = Article.find(params[:id])
+  #   def show
+  #     @article = Article.find(params[:id])
   #
-  # if stale?(@article)
-  # @statistics = @article.really_expensive_call
-  # respond_to do |format|
-  # # all the supported formats
-  # end
-  # end
-  # end
+  #     if stale?(@article)
+  #       @statistics = @article.really_expensive_call
+  #       respond_to do |format|
+  #         # all the supported formats
+  #       end
+  #     end
+  #   end
   #
   # You can also pass an object that responds to +maximum+, such as a
   # collection of active records. In this case +last_modified+ will be set by
   # calling <tt>maximum(:updated_at)</tt> on the collection (the timestamp of the
   # most recently updated record) and the +etag+ by passing the object itself.
   #
-  # def index
-  # @articles = Article.all
+  #   def index
+  #     @articles = Article.all
   #
-  # if stale?(@articles)
-  # @statistics = @articles.really_expensive_call
-  # respond_to do |format|
-  # # all the supported formats
-  # end
-  # end
-  # end
+  #     if stale?(@articles)
+  #       @statistics = @articles.really_expensive_call
+  #       respond_to do |format|
+  #         # all the supported formats
+  #       end
+  #     end
+  #   end
   #
   # When passing a record or a collection, you can still set the public header:
   #
-  # def show
-  # @article = Article.find(params[:id])
+  #   def show
+  #     @article = Article.find(params[:id])
   #
-  # if stale?(@article, public: true)
-  # @statistics = @article.really_expensive_call
-  # respond_to do |format|
-  # # all the supported formats
-  # end
-  # end
-  # end
+  #     if stale?(@article, public: true)
+  #       @statistics = @article.really_expensive_call
+  #       respond_to do |format|
+  #         # all the supported formats
+  #       end
+  #     end
+  #   end
   #
   # When rendering a different template than the default controller/action
   # style, you can indicate which digest to include in the ETag:
   #
-  # def show
-  # super if stale? @article, template: 'widgets/show'
-  # end
+  #   def show
+  #     super if stale? @article, template: 'widgets/show'
+  #   end
+  #
+  # @return [Boolean]
   def stale?(object = T.unsafe(nil), **freshness_kwargs); end
 
   private
@@ -1742,15 +1770,15 @@ module ActionController::ConditionalGet::ClassMethods
   # may want to add the current user id to be part of the ETag to prevent unauthorized displaying
   # of cached pages.
   #
-  # class InvoicesController < ApplicationController
-  # etag { current_user&.id }
+  #   class InvoicesController < ApplicationController
+  #     etag { current_user&.id }
   #
-  # def show
-  # # Etag will differ even for the same invoice when it's viewed by a different current_user
-  # @invoice = Invoice.find(params[:id])
-  # fresh_when etag: @invoice
-  # end
-  # end
+  #     def show
+  #       # Etag will differ even for the same invoice when it's viewed by a different current_user
+  #       @invoice = Invoice.find(params[:id])
+  #       fresh_when etag: @invoice
+  #     end
+  #   end
   def etag(&etagger); end
 end
 
@@ -1770,7 +1798,9 @@ module ActionController::ContentSecurityPolicy
 
   private
 
+  # @return [Boolean]
   def content_security_policy?; end
+
   def content_security_policy_nonce; end
   def current_content_security_policy; end
 
@@ -1826,24 +1856,24 @@ module ActionController::DataStreaming
   # Options:
   # * <tt>:filename</tt> - suggests a filename for the browser to use.
   # * <tt>:type</tt> - specifies an HTTP content type. Defaults to 'application/octet-stream'.
-  # You can specify either a string or a symbol for a registered type with <tt>Mime::Type.register</tt>, for example :json.
-  # If omitted, type will be inferred from the file extension specified in <tt>:filename</tt>.
-  # If no content type is registered for the extension, the default type 'application/octet-stream' will be used.
+  #   You can specify either a string or a symbol for a registered type with <tt>Mime::Type.register</tt>, for example :json.
+  #   If omitted, type will be inferred from the file extension specified in <tt>:filename</tt>.
+  #   If no content type is registered for the extension, the default type 'application/octet-stream' will be used.
   # * <tt>:disposition</tt> - specifies whether the file will be shown inline or downloaded.
-  # Valid values are 'inline' and 'attachment' (default).
+  #   Valid values are 'inline' and 'attachment' (default).
   # * <tt>:status</tt> - specifies the status code to send with the response. Defaults to 200.
   #
   # Generic data download:
   #
-  # send_data buffer
+  #   send_data buffer
   #
   # Download a dynamically-generated tarball:
   #
-  # send_data generate_tgz('dir'), filename: 'dir.tgz'
+  #   send_data generate_tgz('dir'), filename: 'dir.tgz'
   #
   # Display an image Active Record in the browser:
   #
-  # send_data image.data, type: image.content_type, disposition: 'inline'
+  #   send_data image.data, type: image.content_type, disposition: 'inline'
   #
   # See +send_file+ for more information on HTTP Content-* headers and caching.
   def send_data(data, options = T.unsafe(nil)); end
@@ -1859,17 +1889,17 @@ module ActionController::DataStreaming
   #
   # Options:
   # * <tt>:filename</tt> - suggests a filename for the browser to use.
-  # Defaults to <tt>File.basename(path)</tt>.
+  #   Defaults to <tt>File.basename(path)</tt>.
   # * <tt>:type</tt> - specifies an HTTP content type.
-  # You can specify either a string or a symbol for a registered type with <tt>Mime::Type.register</tt>, for example :json.
-  # If omitted, the type will be inferred from the file extension specified in <tt>:filename</tt>.
-  # If no content type is registered for the extension, the default type 'application/octet-stream' will be used.
+  #   You can specify either a string or a symbol for a registered type with <tt>Mime::Type.register</tt>, for example :json.
+  #   If omitted, the type will be inferred from the file extension specified in <tt>:filename</tt>.
+  #   If no content type is registered for the extension, the default type 'application/octet-stream' will be used.
   # * <tt>:disposition</tt> - specifies whether the file will be shown inline or downloaded.
-  # Valid values are 'inline' and 'attachment' (default).
+  #   Valid values are 'inline' and 'attachment' (default).
   # * <tt>:status</tt> - specifies the status code to send with the response. Defaults to 200.
   # * <tt>:url_based_filename</tt> - set to +true+ if you want the browser to guess the filename from
-  # the URL, which is necessary for i18n filenames on certain browsers
-  # (setting <tt>:filename</tt> overrides this option).
+  #   the URL, which is necessary for i18n filenames on certain browsers
+  #   (setting <tt>:filename</tt> overrides this option).
   #
   # The default Content-Type and Content-Disposition headers are
   # set to download arbitrary binary files in as many browsers as
@@ -1878,15 +1908,15 @@ module ActionController::DataStreaming
   #
   # Simple download:
   #
-  # send_file '/path/to.zip'
+  #   send_file '/path/to.zip'
   #
   # Show a JPEG in the browser:
   #
-  # send_file '/path/to.jpeg', type: 'image/jpeg', disposition: 'inline'
+  #   send_file '/path/to.jpeg', type: 'image/jpeg', disposition: 'inline'
   #
   # Show a 404 page in the browser:
   #
-  # send_file '/path/to/404.html', type: 'text/html; charset=utf-8', disposition: 'inline', status: 404
+  #   send_file '/path/to/404.html', type: 'text/html; charset=utf-8', disposition: 'inline', status: 404
   #
   # Read about the other Content-* HTTP headers if you'd like to
   # provide the user with more information (such as Content-Description) in
@@ -1899,8 +1929,11 @@ module ActionController::DataStreaming
   # https://www.mnot.net/cache_docs/ for an overview of web caching and
   # https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
   # for the Cache-Control header spec.
+  #
+  # @raise [MissingFile]
   def send_file(path, options = T.unsafe(nil)); end
 
+  # @raise [ArgumentError]
   def send_file_headers!(options); end
 end
 
@@ -1951,16 +1984,16 @@ end
 #
 # Enabled by default for apps that use Action View. Disable by setting
 #
-# config.action_controller.etag_with_template_digest = false
+#   config.action_controller.etag_with_template_digest = false
 #
 # Override the template to digest by passing +:template+ to +fresh_when+
 # and +stale?+ calls. For example:
 #
-# # We're going to render widgets/show, not posts/show
-# fresh_when @post, template: 'widgets/show'
+#   # We're going to render widgets/show, not posts/show
+#   fresh_when @post, template: 'widgets/show'
 #
-# # We're not going to render a template, so omit it from the ETag.
-# fresh_when @post, template: false
+#   # We're not going to render a template, so omit it from the ETag.
+#   fresh_when @post, template: false
 module ActionController::EtagWithTemplateDigest
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -2024,16 +2057,16 @@ module ActionController::Flash::ClassMethods
   # flash types other than the default <tt>alert</tt> and <tt>notice</tt> in
   # your controllers and views. For instance:
   #
-  # # in application_controller.rb
-  # class ApplicationController < ActionController::Base
-  # add_flash_types :warning
-  # end
+  #   # in application_controller.rb
+  #   class ApplicationController < ActionController::Base
+  #     add_flash_types :warning
+  #   end
   #
-  # # in your controller
-  # redirect_to user_path(@user), warning: "Incomplete profile"
+  #   # in your controller
+  #   redirect_to user_path(@user), warning: "Incomplete profile"
   #
-  # # in your view
-  # <%= warning %>
+  #   # in your view
+  #   <%= warning %>
   #
   # This method will automatically define a new method for each of the given
   # names, and it will be available in your views.
@@ -2046,23 +2079,23 @@ end
 #
 # For example, given a form builder:
 #
-# class AdminFormBuilder < ActionView::Helpers::FormBuilder
-# def special_field(name)
-# end
-# end
+#   class AdminFormBuilder < ActionView::Helpers::FormBuilder
+#     def special_field(name)
+#     end
+#   end
 #
 # The controller specifies a form builder as its default:
 #
-# class AdminAreaController < ApplicationController
-# default_form_builder AdminFormBuilder
-# end
+#   class AdminAreaController < ApplicationController
+#     default_form_builder AdminFormBuilder
+#   end
 #
 # Then in the view any form using +form_for+ will be an instance of the
 # specified form builder:
 #
-# <%= form_for(@instance) do |builder| %>
-# <%= builder.special_field(:name) %>
-# <% end %>
+#   <%= form_for(@instance) do |builder| %>
+#     <%= builder.special_field(:name) %>
+#   <% end %>
 module ActionController::FormBuilder
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -2097,21 +2130,22 @@ module ActionController::Head
   # This allows you to easily return a response that consists only of
   # significant headers:
   #
-  # head :created, location: person_path(@person)
+  #   head :created, location: person_path(@person)
   #
-  # head :created, location: @person
+  #   head :created, location: @person
   #
   # It can also be used to return exceptional conditions:
   #
-  # return head(:method_not_allowed) unless request.post?
-  # return head(:bad_request) unless valid_request?
-  # render
+  #   return head(:method_not_allowed) unless request.post?
+  #   return head(:bad_request) unless valid_request?
+  #   render
   #
   # See Rack::Utils::SYMBOL_TO_STATUS_CODE for a full list of valid +status+ symbols.
   def head(status, options = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def include_content?(status); end
 end
 
@@ -2127,10 +2161,10 @@ end
 # matches the name of the controller, e.g., <tt>MyController</tt> will automatically
 # include <tt>MyHelper</tt>. You can revert to the old behavior with the following:
 #
-# # config/application.rb
-# class Application < Rails::Application
-# config.action_controller.include_all_helpers = false
-# end
+#    # config/application.rb
+#    class Application < Rails::Application
+#      config.action_controller.include_all_helpers = false
+#    end
 #
 # Additional helpers can be specified using the +helper+ class method in ActionController::Base or any
 # controller which inherits from it.
@@ -2138,34 +2172,34 @@ end
 # The +to_s+ method from the \Time class can be wrapped in a helper method to display a custom message if
 # a \Time object is blank:
 #
-# module FormattedTimeHelper
-# def format_time(time, format=:long, blank_message="&nbsp;")
-# time.blank? ? blank_message : time.to_s(format)
-# end
-# end
+#   module FormattedTimeHelper
+#     def format_time(time, format=:long, blank_message="&nbsp;")
+#       time.blank? ? blank_message : time.to_s(format)
+#     end
+#   end
 #
 # FormattedTimeHelper can now be included in a controller, using the +helper+ class method:
 #
-# class EventsController < ActionController::Base
-# helper FormattedTimeHelper
-# def index
-# @events = Event.all
-# end
-# end
+#   class EventsController < ActionController::Base
+#     helper FormattedTimeHelper
+#     def index
+#       @events = Event.all
+#     end
+#   end
 #
 # Then, in any view rendered by <tt>EventsController</tt>, the <tt>format_time</tt> method can be called:
 #
-# <% @events.each do |event| -%>
-# <p>
-# <%= format_time(event.time, :short, "N/A") %> | <%= event.name %>
-# </p>
-# <% end -%>
+#   <% @events.each do |event| -%>
+#     <p>
+#       <%= format_time(event.time, :short, "N/A") %> | <%= event.name %>
+#     </p>
+#   <% end -%>
 #
 # Finally, assuming we have two event instances, one which has a time and one which does not,
 # the output might look like this:
 #
-# 23 Aug 11:30 | Carolina Railhawks Soccer Match
-# N/A | Carolina Railhawks Training Workshop
+#   23 Aug 11:30 | Carolina Railhawks Soccer Match
+#   N/A | Carolina Railhawks Training Workshop
 module ActionController::Helpers
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -2183,6 +2217,8 @@ module ActionController::Helpers
     def helpers_path; end
 
     # Sets the attribute helpers_path
+    #
+    # @param value the value to set the attribute helpers_path to.
     def helpers_path=(_arg0); end
   end
 
@@ -2214,15 +2250,15 @@ end
 module ActionController::Helpers::ClassMethods
   # Returns a list of helper names in a given path.
   #
-  # ActionController::Base.all_helpers_from_path 'app/helpers'
-  # # => ["application", "chart", "rubygems"]
+  #   ActionController::Base.all_helpers_from_path 'app/helpers'
+  #   # => ["application", "chart", "rubygems"]
   def all_helpers_from_path(path); end
 
   # Declares helper accessors for controller attributes. For example, the
   # following adds new +name+ and <tt>name=</tt> instance methods to a
   # controller and makes them available to the view:
-  # attr_accessor :name
-  # helper_attr :name
+  #   attr_accessor :name
+  #   helper_attr :name
   #
   # ==== Parameters
   # * <tt>attrs</tt> - Names of attributes to be converted into helpers.
@@ -2259,58 +2295,58 @@ module ActionController::HttpAuthentication; end
 #
 # === Simple \Basic example
 #
-# class PostsController < ApplicationController
-# http_basic_authenticate_with name: "dhh", password: "secret", except: :index
+#   class PostsController < ApplicationController
+#     http_basic_authenticate_with name: "dhh", password: "secret", except: :index
 #
-# def index
-# render plain: "Everyone can see me!"
-# end
+#     def index
+#       render plain: "Everyone can see me!"
+#     end
 #
-# def edit
-# render plain: "I'm only accessible if you know the password"
-# end
-# end
+#     def edit
+#       render plain: "I'm only accessible if you know the password"
+#     end
+#  end
 #
 # === Advanced \Basic example
 #
 # Here is a more advanced \Basic example where only Atom feeds and the XML API is protected by HTTP authentication,
 # the regular HTML interface is protected by a session approach:
 #
-# class ApplicationController < ActionController::Base
-# before_action :set_account, :authenticate
+#   class ApplicationController < ActionController::Base
+#     before_action :set_account, :authenticate
 #
-# private
-# def set_account
-# @account = Account.find_by(url_name: request.subdomains.first)
-# end
+#     private
+#       def set_account
+#         @account = Account.find_by(url_name: request.subdomains.first)
+#       end
 #
-# def authenticate
-# case request.format
-# when Mime[:xml], Mime[:atom]
-# if user = authenticate_with_http_basic { |u, p| @account.users.authenticate(u, p) }
-# @current_user = user
-# else
-# request_http_basic_authentication
-# end
-# else
-# if session_authenticated?
-# @current_user = @account.users.find(session[:authenticated][:user_id])
-# else
-# redirect_to(login_url) and return false
-# end
-# end
-# end
-# end
+#       def authenticate
+#         case request.format
+#         when Mime[:xml], Mime[:atom]
+#           if user = authenticate_with_http_basic { |u, p| @account.users.authenticate(u, p) }
+#             @current_user = user
+#           else
+#             request_http_basic_authentication
+#           end
+#         else
+#           if session_authenticated?
+#             @current_user = @account.users.find(session[:authenticated][:user_id])
+#           else
+#             redirect_to(login_url) and return false
+#           end
+#         end
+#       end
+#   end
 #
 # In your integration tests, you can do something like this:
 #
-# def test_access_granted_from_xml
-# authorization = ActionController::HttpAuthentication::Basic.encode_credentials(users(:dhh).name, users(:dhh).password)
+#   def test_access_granted_from_xml
+#     authorization = ActionController::HttpAuthentication::Basic.encode_credentials(users(:dhh).name, users(:dhh).password)
 #
-# get "/notes/1.xml", headers: { 'HTTP_AUTHORIZATION' => authorization }
+#     get "/notes/1.xml", headers: { 'HTTP_AUTHORIZATION' => authorization }
 #
-# assert_equal 200, status
-# end
+#     assert_equal 200, status
+#   end
 module ActionController::HttpAuthentication::Basic
   extend ::ActionController::HttpAuthentication::Basic
 
@@ -2320,7 +2356,10 @@ module ActionController::HttpAuthentication::Basic
   def authentication_request(controller, realm, message); end
   def decode_credentials(request); end
   def encode_credentials(user_name, password); end
+
+  # @return [Boolean]
   def has_basic_credentials?(request); end
+
   def user_name_and_password(request); end
 end
 
@@ -2343,29 +2382,29 @@ end
 #
 # === Simple \Digest example
 #
-# require "digest/md5"
-# class PostsController < ApplicationController
-# REALM = "SuperSecret"
-# USERS = {"dhh" => "secret", #plain text password
-# "dap" => Digest::MD5.hexdigest(["dap",REALM,"secret"].join(":"))}  #ha1 digest password
+#   require "digest/md5"
+#   class PostsController < ApplicationController
+#     REALM = "SuperSecret"
+#     USERS = {"dhh" => "secret", #plain text password
+#              "dap" => Digest::MD5.hexdigest(["dap",REALM,"secret"].join(":"))}  #ha1 digest password
 #
-# before_action :authenticate, except: [:index]
+#     before_action :authenticate, except: [:index]
 #
-# def index
-# render plain: "Everyone can see me!"
-# end
+#     def index
+#       render plain: "Everyone can see me!"
+#     end
 #
-# def edit
-# render plain: "I'm only accessible if you know the password"
-# end
+#     def edit
+#       render plain: "I'm only accessible if you know the password"
+#     end
 #
-# private
-# def authenticate
-# authenticate_or_request_with_http_digest(REALM) do |username|
-# USERS[username]
-# end
-# end
-# end
+#     private
+#       def authenticate
+#         authenticate_or_request_with_http_digest(REALM) do |username|
+#           USERS[username]
+#         end
+#       end
+#   end
 #
 # === Notes
 #
@@ -2410,7 +2449,7 @@ module ActionController::HttpAuthentication::Digest
   # The quality of the implementation depends on a good choice.
   # A nonce might, for example, be constructed as the base 64 encoding of
   #
-  # time-stamp H(time-stamp ":" ETag ":" private-key)
+  #   time-stamp H(time-stamp ":" ETag ":" private-key)
   #
   # where time-stamp is a server-generated time or other non-repeating value,
   # ETag is the value of the HTTP ETag header associated with the requested entity,
@@ -2466,76 +2505,76 @@ end
 #
 # Simple Token example:
 #
-# class PostsController < ApplicationController
-# TOKEN = "secret"
+#   class PostsController < ApplicationController
+#     TOKEN = "secret"
 #
-# before_action :authenticate, except: [ :index ]
+#     before_action :authenticate, except: [ :index ]
 #
-# def index
-# render plain: "Everyone can see me!"
-# end
+#     def index
+#       render plain: "Everyone can see me!"
+#     end
 #
-# def edit
-# render plain: "I'm only accessible if you know the password"
-# end
+#     def edit
+#       render plain: "I'm only accessible if you know the password"
+#     end
 #
-# private
-# def authenticate
-# authenticate_or_request_with_http_token do |token, options|
-# # Compare the tokens in a time-constant manner, to mitigate
-# # timing attacks.
-# ActiveSupport::SecurityUtils.secure_compare(token, TOKEN)
-# end
-# end
-# end
+#     private
+#       def authenticate
+#         authenticate_or_request_with_http_token do |token, options|
+#           # Compare the tokens in a time-constant manner, to mitigate
+#           # timing attacks.
+#           ActiveSupport::SecurityUtils.secure_compare(token, TOKEN)
+#         end
+#       end
+#   end
 #
 #
 # Here is a more advanced Token example where only Atom feeds and the XML API is protected by HTTP token authentication,
 # the regular HTML interface is protected by a session approach:
 #
-# class ApplicationController < ActionController::Base
-# before_action :set_account, :authenticate
+#   class ApplicationController < ActionController::Base
+#     before_action :set_account, :authenticate
 #
-# private
-# def set_account
-# @account = Account.find_by(url_name: request.subdomains.first)
-# end
+#     private
+#       def set_account
+#         @account = Account.find_by(url_name: request.subdomains.first)
+#       end
 #
-# def authenticate
-# case request.format
-# when Mime[:xml], Mime[:atom]
-# if user = authenticate_with_http_token { |t, o| @account.users.authenticate(t, o) }
-# @current_user = user
-# else
-# request_http_token_authentication
-# end
-# else
-# if session_authenticated?
-# @current_user = @account.users.find(session[:authenticated][:user_id])
-# else
-# redirect_to(login_url) and return false
-# end
-# end
-# end
-# end
+#       def authenticate
+#         case request.format
+#         when Mime[:xml], Mime[:atom]
+#           if user = authenticate_with_http_token { |t, o| @account.users.authenticate(t, o) }
+#             @current_user = user
+#           else
+#             request_http_token_authentication
+#           end
+#         else
+#           if session_authenticated?
+#             @current_user = @account.users.find(session[:authenticated][:user_id])
+#           else
+#             redirect_to(login_url) and return false
+#           end
+#         end
+#       end
+#   end
 #
 #
 # In your integration tests, you can do something like this:
 #
-# def test_access_granted_from_xml
-# authorization = ActionController::HttpAuthentication::Token.encode_credentials(users(:dhh).token)
+#   def test_access_granted_from_xml
+#     authorization = ActionController::HttpAuthentication::Token.encode_credentials(users(:dhh).token)
 #
-# get "/notes/1.xml", headers: { 'HTTP_AUTHORIZATION' => authorization }
+#     get "/notes/1.xml", headers: { 'HTTP_AUTHORIZATION' => authorization }
 #
-# assert_equal 200, status
-# end
+#     assert_equal 200, status
+#   end
 #
 #
 # On shared hosts, Apache sometimes doesn't pass authentication headers to
 # FCGI instances. If your environment matches this description and you cannot
 # authenticate, try this rule in your Apache setup:
 #
-# RewriteRule ^(.*)$ dispatch.fcgi [E=X-HTTP_AUTHORIZATION:%{HTTP:Authorization},QSA,L]
+#   RewriteRule ^(.*)$ dispatch.fcgi [E=X-HTTP_AUTHORIZATION:%{HTTP:Authorization},QSA,L]
 module ActionController::HttpAuthentication::Token
   extend ::ActionController::HttpAuthentication::Token
 
@@ -2543,12 +2582,12 @@ module ActionController::HttpAuthentication::Token
   # procedure with the present token and options.
   #
   # [controller]
-  # ActionController::Base instance for the current request.
+  #   ActionController::Base instance for the current request.
   #
   # [login_procedure]
-  # Proc to call if a token is present. The Proc should take two arguments:
+  #   Proc to call if a token is present. The Proc should take two arguments:
   #
-  # authenticate(controller) { |token, options| ... }
+  #     authenticate(controller) { |token, options| ... }
   #
   # Returns the return value of <tt>login_procedure</tt> if a
   # token is found. Returns <tt>nil</tt> if no token is found.
@@ -2584,7 +2623,7 @@ module ActionController::HttpAuthentication::Token
   # Parses the token and options out of the token Authorization header.
   # The value for the Authorization header is expected to have the prefix
   # <tt>"Token"</tt> or <tt>"Bearer"</tt>. If the header looks like this:
-  # Authorization: Token token="abc", nonce="def"
+  #   Authorization: Token token="abc", nonce="def"
   # Then the returned token is <tt>"abc"</tt>, and the options are
   # <tt>{nonce: "def"}</tt>
   #
@@ -2641,6 +2680,7 @@ module ActionController::ImplicitRender
 
   private
 
+  # @return [Boolean]
   def interactive_browser_request?; end
 end
 
@@ -2673,9 +2713,9 @@ module ActionController::Instrumentation
   # A hook which allows you to clean up any time, wrongly taken into account in
   # views, like database querying time.
   #
-  # def cleanup_view_runtime
-  # super - time_taken_in_something_expensive
-  # end
+  #   def cleanup_view_runtime
+  #     super - time_taken_in_something_expensive
+  #   end
   def cleanup_view_runtime; end
 
   # A hook invoked every time a before callback is halted.
@@ -2695,19 +2735,19 @@ class ActionController::InvalidCrossOriginRequest < ::ActionController::ActionCo
 # Mix this module into your controller, and all actions in that controller
 # will be able to stream data to the client as it's written.
 #
-# class MyController < ActionController::Base
-# include ActionController::Live
+#   class MyController < ActionController::Base
+#     include ActionController::Live
 #
-# def stream
-# response.headers['Content-Type'] = 'text/event-stream'
-# 100.times {
-# response.stream.write "hello world\n"
-# sleep 1
-# }
-# ensure
-# response.stream.close
-# end
-# end
+#     def stream
+#       response.headers['Content-Type'] = 'text/event-stream'
+#       100.times {
+#         response.stream.write "hello world\n"
+#         sleep 1
+#       }
+#     ensure
+#       response.stream.close
+#     end
+#   end
 #
 # There are a few caveats with this module. You *cannot* write headers after the
 # response has been committed (Response#committed? will return truthy).
@@ -2738,6 +2778,7 @@ end
 class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   include ::MonitorMixin
 
+  # @return [Buffer] a new instance of Buffer
   def initialize(response); end
 
   # Inform the producer/writing thread that the client has
@@ -2759,6 +2800,8 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # The result of calling `write` when this is `false` is determined
   # by `ignore_disconnect`.
+  #
+  # @return [Boolean]
   def connected?; end
 
   # Ignore that the client has disconnected.
@@ -2782,7 +2825,18 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
 
   private
 
+  def build_queue(queue_size); end
   def each_chunk(&block); end
+
+  class << self
+    # Returns the value of attribute queue_size.
+    def queue_size; end
+
+    # Sets the attribute queue_size
+    #
+    # @param value the value to set the attribute queue_size to.
+    def queue_size=(_arg0); end
+  end
 end
 
 module ActionController::Live::ClassMethods
@@ -2805,36 +2859,37 @@ end
 # Writing an object will convert it into standard SSE format with whatever
 # options you have configured. You may choose to set the following options:
 #
-# 1) Event. If specified, an event with this name will be dispatched on
-# the browser.
-# 2) Retry. The reconnection time in milliseconds used when attempting
-# to send the event.
-# 3) Id. If the connection dies while sending an SSE to the browser, then
-# the server will receive a +Last-Event-ID+ header with value equal to +id+.
+#   1) Event. If specified, an event with this name will be dispatched on
+#   the browser.
+#   2) Retry. The reconnection time in milliseconds used when attempting
+#   to send the event.
+#   3) Id. If the connection dies while sending an SSE to the browser, then
+#   the server will receive a +Last-Event-ID+ header with value equal to +id+.
 #
 # After setting an option in the constructor of the SSE object, all future
 # SSEs sent across the stream will use those options unless overridden.
 #
 # Example Usage:
 #
-# class MyController < ActionController::Base
-# include ActionController::Live
+#   class MyController < ActionController::Base
+#     include ActionController::Live
 #
-# def index
-# response.headers['Content-Type'] = 'text/event-stream'
-# sse = SSE.new(response.stream, retry: 300, event: "event-name")
-# sse.write({ name: 'John'})
-# sse.write({ name: 'John'}, id: 10)
-# sse.write({ name: 'John'}, id: 10, event: "other-event")
-# sse.write({ name: 'John'}, id: 10, event: "other-event", retry: 500)
-# ensure
-# sse.close
-# end
-# end
+#     def index
+#       response.headers['Content-Type'] = 'text/event-stream'
+#       sse = SSE.new(response.stream, retry: 300, event: "event-name")
+#       sse.write({ name: 'John'})
+#       sse.write({ name: 'John'}, id: 10)
+#       sse.write({ name: 'John'}, id: 10, event: "other-event")
+#       sse.write({ name: 'John'}, id: 10, event: "other-event", retry: 500)
+#     ensure
+#       sse.close
+#     end
+#   end
 #
 # Note: SSEs are not currently supported by IE. However, they are supported
 # by Chrome, Firefox, Opera, and Safari.
 class ActionController::Live::SSE
+  # @return [SSE] a new instance of SSE
   def initialize(stream, options = T.unsafe(nil)); end
 
   def close; end
@@ -2886,10 +2941,10 @@ end
 module ActionController::Logging::ClassMethods
   # Set a different log level per request.
   #
-  # # Use the debug log level if a particular cookie is set.
-  # class ApplicationController < ActionController::Base
-  # log_at :debug, if: -> { cookies[:debug] }
-  # end
+  #   # Use the debug log level if a particular cookie is set.
+  #   class ApplicationController < ActionController::Base
+  #     log_at :debug, if: -> { cookies[:debug] }
+  #   end
   def log_at(level, **options); end
 end
 
@@ -2899,16 +2954,16 @@ end
 #
 # A sample metal controller might look like this:
 #
-# class HelloController < ActionController::Metal
-# def index
-# self.response_body = "Hello World!"
-# end
-# end
+#   class HelloController < ActionController::Metal
+#     def index
+#       self.response_body = "Hello World!"
+#     end
+#   end
 #
 # And then to route requests to your metal controller, you would add
 # something like this to <tt>config/routes.rb</tt>:
 #
-# get 'hello', to: HelloController.action(:index)
+#   get 'hello', to: HelloController.action(:index)
 #
 # The +action+ method returns a valid Rack application for the \Rails
 # router to dispatch to.
@@ -2921,49 +2976,52 @@ end
 # add the render helpers you're used to having in a normal controller, you
 # can do the following:
 #
-# class HelloController < ActionController::Metal
-# include AbstractController::Rendering
-# include ActionView::Layouts
-# append_view_path "#{Rails.root}/app/views"
+#   class HelloController < ActionController::Metal
+#     include AbstractController::Rendering
+#     include ActionView::Layouts
+#     append_view_path "#{Rails.root}/app/views"
 #
-# def index
-# render "hello/index"
-# end
-# end
+#     def index
+#       render "hello/index"
+#     end
+#   end
 #
 # == Redirection Helpers
 #
 # To add redirection helpers to your metal controller, do the following:
 #
-# class HelloController < ActionController::Metal
-# include ActionController::Redirecting
-# include Rails.application.routes.url_helpers
+#   class HelloController < ActionController::Metal
+#     include ActionController::Redirecting
+#     include Rails.application.routes.url_helpers
 #
-# def index
-# redirect_to root_url
-# end
-# end
+#     def index
+#       redirect_to root_url
+#     end
+#   end
 #
 # == Other Helpers
 #
 # You can refer to the modules included in <tt>ActionController::Base</tt> to see
 # other features you can bring into your metal controller.
+#
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class ActionController::Metal < ::AbstractController::Base
   include ::ActionController::Testing::Functional
 
+  # @return [Metal] a new instance of Metal
   def initialize; end
 
-  def content_type(*_arg0, **_arg1, &_arg2); end
+  def content_type(*_arg0, &_arg1); end
   def content_type=(arg); end
 
   # Delegates to the class' <tt>controller_name</tt>.
   def controller_name; end
 
   def dispatch(name, request, response); end
-  def headers(*_arg0, **_arg1, &_arg2); end
-  def location(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, &_arg1); end
+  def location(*_arg0, &_arg1); end
   def location=(arg); end
-  def media_type(*_arg0, **_arg1, &_arg2); end
+  def media_type(*_arg0, &_arg1); end
   def middleware_stack; end
   def middleware_stack=(_arg0); end
   def middleware_stack?; end
@@ -2971,6 +3029,8 @@ class ActionController::Metal < ::AbstractController::Base
   def params=(val); end
 
   # Tests if render or redirect has already happened.
+  #
+  # @return [Boolean]
   def performed?; end
 
   def request; end
@@ -2979,11 +3039,11 @@ class ActionController::Metal < ::AbstractController::Base
   def response; end
   def response=(_arg0); end
   def response_body=(body); end
-  def response_code(*_arg0, **_arg1, &_arg2); end
-  def session(*_arg0, **_arg1, &_arg2); end
+  def response_code(*_arg0, &_arg1); end
+  def session(*_arg0, &_arg1); end
   def set_request!(request); end
   def set_response!(response); end
-  def status(*_arg0, **_arg1, &_arg2); end
+  def status(*_arg0, &_arg1); end
   def status=(arg); end
   def to_a; end
 
@@ -3020,20 +3080,21 @@ class ActionController::Metal < ::AbstractController::Base
 
     # Pushes the given Rack middleware and its arguments to the bottom of the
     # middleware stack.
-    def use(*args, **_arg1, &block); end
+    def use(*args, &block); end
   end
 end
 
 class ActionController::MethodNotAllowed < ::ActionController::ActionControllerError
+  # @return [MethodNotAllowed] a new instance of MethodNotAllowed
   def initialize(*allowed_methods); end
 end
 
 # Extend ActionDispatch middleware stack to make it aware of options
 # allowing the following syntax in controllers:
 #
-# class PostsController < ApplicationController
-# use AuthenticationMiddleware, except: [:index, :show]
-# end
+#   class PostsController < ApplicationController
+#     use AuthenticationMiddleware, except: [:index, :show]
+#   end
 class ActionController::MiddlewareStack < ::ActionDispatch::MiddlewareStack
   def build(action, app = T.unsafe(nil), &block); end
 
@@ -3046,8 +3107,10 @@ ActionController::MiddlewareStack::EXCLUDE = T.let(T.unsafe(nil), Proc)
 ActionController::MiddlewareStack::INCLUDE = T.let(T.unsafe(nil), Proc)
 
 class ActionController::MiddlewareStack::Middleware < ::ActionDispatch::MiddlewareStack::Middleware
+  # @return [Middleware] a new instance of Middleware
   def initialize(klass, args, actions, strategy, block); end
 
+  # @return [Boolean]
   def valid?(action); end
 end
 
@@ -3057,28 +3120,28 @@ module ActionController::MimeResponds
   # Without web-service support, an action which collects the data for displaying a list of people
   # might look something like this:
   #
-  # def index
-  # @people = Person.all
-  # end
+  #   def index
+  #     @people = Person.all
+  #   end
   #
   # That action implicitly responds to all formats, but formats can also be explicitly enumerated:
   #
-  # def index
-  # @people = Person.all
-  # respond_to :html, :js
-  # end
+  #   def index
+  #     @people = Person.all
+  #     respond_to :html, :js
+  #   end
   #
   # Here's the same action, with web-service support baked in:
   #
-  # def index
-  # @people = Person.all
+  #   def index
+  #     @people = Person.all
   #
-  # respond_to do |format|
-  # format.html
-  # format.js
-  # format.xml { render xml: @people }
-  # end
-  # end
+  #     respond_to do |format|
+  #       format.html
+  #       format.js
+  #       format.xml { render xml: @people }
+  #     end
+  #   end
   #
   # What that says is, "if the client wants HTML or JS in response to this action, just respond as we
   # would have before, but if the client wants XML, return them the list of people in XML format."
@@ -3087,60 +3150,60 @@ module ActionController::MimeResponds
   # Supposing you have an action that adds a new person, optionally creating their company
   # (by name) if it does not already exist, without web-services, it might look like this:
   #
-  # def create
-  # @company = Company.find_or_create_by(name: params[:company][:name])
-  # @person  = @company.people.create(params[:person])
+  #   def create
+  #     @company = Company.find_or_create_by(name: params[:company][:name])
+  #     @person  = @company.people.create(params[:person])
   #
-  # redirect_to(person_list_url)
-  # end
+  #     redirect_to(person_list_url)
+  #   end
   #
   # Here's the same action, with web-service support baked in:
   #
-  # def create
-  # company  = params[:person].delete(:company)
-  # @company = Company.find_or_create_by(name: company[:name])
-  # @person  = @company.people.create(params[:person])
+  #   def create
+  #     company  = params[:person].delete(:company)
+  #     @company = Company.find_or_create_by(name: company[:name])
+  #     @person  = @company.people.create(params[:person])
   #
-  # respond_to do |format|
-  # format.html { redirect_to(person_list_url) }
-  # format.js
-  # format.xml  { render xml: @person.to_xml(include: @company) }
-  # end
-  # end
+  #     respond_to do |format|
+  #       format.html { redirect_to(person_list_url) }
+  #       format.js
+  #       format.xml  { render xml: @person.to_xml(include: @company) }
+  #     end
+  #   end
   #
   # If the client wants HTML, we just redirect them back to the person list. If they want JavaScript,
   # then it is an Ajax request and we render the JavaScript template associated with this action.
   # Lastly, if the client wants XML, we render the created person as XML, but with a twist: we also
   # include the person's company in the rendered XML, so you get something like this:
   #
-  # <person>
-  # <id>...</id>
-  # ...
-  # <company>
-  # <id>...</id>
-  # <name>...</name>
-  # ...
-  # </company>
-  # </person>
+  #   <person>
+  #     <id>...</id>
+  #     ...
+  #     <company>
+  #       <id>...</id>
+  #       <name>...</name>
+  #       ...
+  #     </company>
+  #   </person>
   #
   # Note, however, the extra bit at the top of that action:
   #
-  # company  = params[:person].delete(:company)
-  # @company = Company.find_or_create_by(name: company[:name])
+  #   company  = params[:person].delete(:company)
+  #   @company = Company.find_or_create_by(name: company[:name])
   #
   # This is because the incoming XML document (if a web-service request is in process) can only contain a
   # single root-node. So, we have to rearrange things so that the request looks like this (url-encoded):
   #
-  # person[name]=...&person[company][name]=...&...
+  #   person[name]=...&person[company][name]=...&...
   #
   # And, like this (xml-encoded):
   #
-  # <person>
-  # <name>...</name>
-  # <company>
-  # <name>...</name>
-  # </company>
-  # </person>
+  #   <person>
+  #     <name>...</name>
+  #     <company>
+  #       <name>...</name>
+  #     </company>
+  #   </person>
   #
   # In other words, we make the request so that it operates on a single entity's person. Then, in the action,
   # we extract the company data from the request, find or create the company, and then create the new person
@@ -3153,34 +3216,34 @@ module ActionController::MimeResponds
   # If you need to use a MIME type which isn't supported by default, you can register your own handlers in
   # +config/initializers/mime_types.rb+ as follows.
   #
-  # Mime::Type.register "image/jpg", :jpg
+  #   Mime::Type.register "image/jpg", :jpg
   #
   # +respond_to+ also allows you to specify a common block for different formats by using +any+:
   #
-  # def index
-  # @people = Person.all
+  #   def index
+  #     @people = Person.all
   #
-  # respond_to do |format|
-  # format.html
-  # format.any(:xml, :json) { render request.format.to_sym => @people }
-  # end
-  # end
+  #     respond_to do |format|
+  #       format.html
+  #       format.any(:xml, :json) { render request.format.to_sym => @people }
+  #     end
+  #   end
   #
   # In the example above, if the format is xml, it will render:
   #
-  # render xml: @people
+  #   render xml: @people
   #
   # Or if the format is json:
   #
-  # render json: @people
+  #   render json: @people
   #
   # +any+ can also be used with no arguments, in which case it will be used for any format requested by
   # the user:
   #
-  # respond_to do |format|
-  # format.html
-  # format.any { redirect_to support_path }
-  # end
+  #   respond_to do |format|
+  #     format.html
+  #     format.any { redirect_to support_path }
+  #   end
   #
   # Formats can have different variants.
   #
@@ -3192,62 +3255,65 @@ module ActionController::MimeResponds
   #
   # You can set the variant in a +before_action+:
   #
-  # request.variant = :tablet if /iPad/.match?(request.user_agent)
+  #   request.variant = :tablet if /iPad/.match?(request.user_agent)
   #
   # Respond to variants in the action just like you respond to formats:
   #
-  # respond_to do |format|
-  # format.html do |variant|
-  # variant.tablet # renders app/views/projects/show.html+tablet.erb
-  # variant.phone { extra_setup; render ... }
-  # variant.none  { special_setup } # executed only if there is no variant set
-  # end
-  # end
+  #   respond_to do |format|
+  #     format.html do |variant|
+  #       variant.tablet # renders app/views/projects/show.html+tablet.erb
+  #       variant.phone { extra_setup; render ... }
+  #       variant.none  { special_setup } # executed only if there is no variant set
+  #     end
+  #   end
   #
   # Provide separate templates for each format and variant:
   #
-  # app/views/projects/show.html.erb
-  # app/views/projects/show.html+tablet.erb
-  # app/views/projects/show.html+phone.erb
+  #   app/views/projects/show.html.erb
+  #   app/views/projects/show.html+tablet.erb
+  #   app/views/projects/show.html+phone.erb
   #
   # When you're not sharing any code within the format, you can simplify defining variants
   # using the inline syntax:
   #
-  # respond_to do |format|
-  # format.js         { render "trash" }
-  # format.html.phone { redirect_to progress_path }
-  # format.html.none  { render "trash" }
-  # end
+  #   respond_to do |format|
+  #     format.js         { render "trash" }
+  #     format.html.phone { redirect_to progress_path }
+  #     format.html.none  { render "trash" }
+  #   end
   #
   # Variants also support common +any+/+all+ block that formats have.
   #
   # It works for both inline:
   #
-  # respond_to do |format|
-  # format.html.any   { render html: "any"   }
-  # format.html.phone { render html: "phone" }
-  # end
+  #   respond_to do |format|
+  #     format.html.any   { render html: "any"   }
+  #     format.html.phone { render html: "phone" }
+  #   end
   #
   # and block syntax:
   #
-  # respond_to do |format|
-  # format.html do |variant|
-  # variant.any(:tablet, :phablet){ render html: "any" }
-  # variant.phone { render html: "phone" }
-  # end
-  # end
+  #   respond_to do |format|
+  #     format.html do |variant|
+  #       variant.any(:tablet, :phablet){ render html: "any" }
+  #       variant.phone { render html: "phone" }
+  #     end
+  #   end
   #
   # You can also set an array of variants:
   #
-  # request.variant = [:tablet, :phone]
+  #   request.variant = [:tablet, :phone]
   #
   # This will work similarly to formats and MIME types negotiation. If there
   # is no +:tablet+ variant declared, the +:phone+ variant will be used:
   #
-  # respond_to do |format|
-  # format.html.none
-  # format.html.phone # this gets rendered
-  # end
+  #   respond_to do |format|
+  #     format.html.none
+  #     format.html.phone # this gets rendered
+  #   end
+  #
+  # @raise [ArgumentError]
+  # @yield [collector]
   def respond_to(*mimes); end
 end
 
@@ -3258,10 +3324,10 @@ end
 # that is used to define responses to different mime-types, e.g.
 # for +respond_to+ :
 #
-# respond_to do |format|
-# format.html
-# format.xml { render xml: @people }
-# end
+#   respond_to do |format|
+#     format.html
+#     format.xml { render xml: @people }
+#   end
 #
 # In this usage, the argument passed to the block (+format+ above) is an
 # instance of the ActionController::MimeResponds::Collector class. This
@@ -3276,17 +3342,23 @@ end
 class ActionController::MimeResponds::Collector
   include ::AbstractController::Collector
 
+  # @return [Collector] a new instance of Collector
   def initialize(mimes, variant = T.unsafe(nil)); end
 
   def all(*args, &block); end
   def any(*args, &block); end
+
+  # @return [Boolean]
   def any_response?; end
+
   def custom(mime_type, &block); end
 
   # Returns the value of attribute format.
   def format; end
 
   # Sets the attribute format
+  #
+  # @param value the value to set the attribute format to.
   def format=(_arg0); end
 
   def negotiate_format(request); end
@@ -3294,6 +3366,7 @@ class ActionController::MimeResponds::Collector
 end
 
 class ActionController::MimeResponds::Collector::VariantCollector
+  # @return [VariantCollector] a new instance of VariantCollector
   def initialize(variant = T.unsafe(nil)); end
 
   def all(*args, &block); end
@@ -3311,6 +3384,7 @@ class ActionController::MissingFile < ::ActionController::ActionControllerError;
 
 # See <tt>Responder#api_behavior</tt>
 class ActionController::MissingRenderer < ::LoadError
+  # @return [MissingRenderer] a new instance of MissingRenderer
   def initialize(format); end
 end
 
@@ -3332,21 +3406,21 @@ module ActionController::ParameterEncoding::ClassMethods
   #
   # You can specify a binary (ASCII_8BIT) parameter with:
   #
-  # class RepositoryController < ActionController::Base
-  # # This specifies that file_path is not UTF-8 and is instead ASCII_8BIT
-  # param_encoding :show, :file_path, Encoding::ASCII_8BIT
+  #   class RepositoryController < ActionController::Base
+  #     # This specifies that file_path is not UTF-8 and is instead ASCII_8BIT
+  #     param_encoding :show, :file_path, Encoding::ASCII_8BIT
   #
-  # def show
-  # @repo = Repository.find_by_filesystem_path params[:file_path]
+  #     def show
+  #       @repo = Repository.find_by_filesystem_path params[:file_path]
   #
-  # # params[:repo_name] remains UTF-8 encoded
-  # @repo_name = params[:repo_name]
-  # end
+  #       # params[:repo_name] remains UTF-8 encoded
+  #       @repo_name = params[:repo_name]
+  #     end
   #
-  # def index
-  # @repositories = Repository.all
-  # end
-  # end
+  #     def index
+  #       @repositories = Repository.all
+  #     end
+  #   end
   #
   # The file_path parameter on the show action would be encoded as ASCII-8BIT,
   # but all other arguments will remain UTF-8 encoded.
@@ -3361,21 +3435,21 @@ module ActionController::ParameterEncoding::ClassMethods
   #
   # For example, a controller would use it like this:
   #
-  # class RepositoryController < ActionController::Base
-  # skip_parameter_encoding :show
+  #   class RepositoryController < ActionController::Base
+  #     skip_parameter_encoding :show
   #
-  # def show
-  # @repo = Repository.find_by_filesystem_path params[:file_path]
+  #     def show
+  #       @repo = Repository.find_by_filesystem_path params[:file_path]
   #
-  # # `repo_name` is guaranteed to be UTF-8, but was ASCII-8BIT, so
-  # # tag it as such
-  # @repo_name = params[:repo_name].force_encoding 'UTF-8'
-  # end
+  #       # `repo_name` is guaranteed to be UTF-8, but was ASCII-8BIT, so
+  #       # tag it as such
+  #       @repo_name = params[:repo_name].force_encoding 'UTF-8'
+  #     end
   #
-  # def index
-  # @repositories = Repository.all
-  # end
-  # end
+  #     def index
+  #       @repositories = Repository.all
+  #     end
+  #   end
   #
   # The show action in the above controller would have all parameter values
   # encoded as ASCII-8BIT. This is useful in the case where an application
@@ -3385,12 +3459,13 @@ end
 
 # Raised when a required parameter is missing.
 #
-# params = ActionController::Parameters.new(a: {})
-# params.fetch(:b)
-# # => ActionController::ParameterMissing: param is missing or the value is empty: b
-# params.require(:a)
-# # => ActionController::ParameterMissing: param is missing or the value is empty: a
+#   params = ActionController::Parameters.new(a: {})
+#   params.fetch(:b)
+#   # => ActionController::ParameterMissing: param is missing or the value is empty: b
+#   params.require(:a)
+#   # => ActionController::ParameterMissing: param is missing or the value is empty: a
 class ActionController::ParameterMissing < ::KeyError
+  # @return [ParameterMissing] a new instance of ParameterMissing
   def initialize(param, keys = T.unsafe(nil)); end
 
   def keys; end
@@ -3398,6 +3473,7 @@ class ActionController::ParameterMissing < ::KeyError
 end
 
 class ActionController::ParameterMissing::Correction
+  # @return [Correction] a new instance of Correction
   def initialize(error); end
 
   def corrections; end
@@ -3411,50 +3487,50 @@ end
 # used to mark parameters as required. The latter is used to set the parameter
 # as permitted and limit which attributes should be allowed for mass updating.
 #
-# params = ActionController::Parameters.new({
-# person: {
-# name: "Francesco",
-# age:  22,
-# role: "admin"
-# }
-# })
+#   params = ActionController::Parameters.new({
+#     person: {
+#       name: "Francesco",
+#       age:  22,
+#       role: "admin"
+#     }
+#   })
 #
-# permitted = params.require(:person).permit(:name, :age)
-# permitted            # => <ActionController::Parameters {"name"=>"Francesco", "age"=>22} permitted: true>
-# permitted.permitted? # => true
+#   permitted = params.require(:person).permit(:name, :age)
+#   permitted            # => <ActionController::Parameters {"name"=>"Francesco", "age"=>22} permitted: true>
+#   permitted.permitted? # => true
 #
-# Person.first.update!(permitted)
-# # => #<Person id: 1, name: "Francesco", age: 22, role: "user">
+#   Person.first.update!(permitted)
+#   # => #<Person id: 1, name: "Francesco", age: 22, role: "user">
 #
 # It provides two options that controls the top-level behavior of new instances:
 #
 # * +permit_all_parameters+ - If it's +true+, all the parameters will be
-# permitted by default. The default is +false+.
+#   permitted by default. The default is +false+.
 # * +action_on_unpermitted_parameters+ - Allow to control the behavior when parameters
-# that are not explicitly permitted are found. The values can be +false+ to just filter them
-# out, <tt>:log</tt> to additionally write a message on the logger, or <tt>:raise</tt> to raise
-# ActionController::UnpermittedParameters exception. The default value is <tt>:log</tt>
-# in test and development environments, +false+ otherwise.
+#   that are not explicitly permitted are found. The values can be +false+ to just filter them
+#   out, <tt>:log</tt> to additionally write a message on the logger, or <tt>:raise</tt> to raise
+#   ActionController::UnpermittedParameters exception. The default value is <tt>:log</tt>
+#   in test and development environments, +false+ otherwise.
 #
 # Examples:
 #
-# params = ActionController::Parameters.new
-# params.permitted? # => false
+#   params = ActionController::Parameters.new
+#   params.permitted? # => false
 #
-# ActionController::Parameters.permit_all_parameters = true
+#   ActionController::Parameters.permit_all_parameters = true
 #
-# params = ActionController::Parameters.new
-# params.permitted? # => true
+#   params = ActionController::Parameters.new
+#   params.permitted? # => true
 #
-# params = ActionController::Parameters.new(a: "123", b: "456")
-# params.permit(:c)
-# # => <ActionController::Parameters {} permitted: true>
+#   params = ActionController::Parameters.new(a: "123", b: "456")
+#   params.permit(:c)
+#   # => <ActionController::Parameters {} permitted: true>
 #
-# ActionController::Parameters.action_on_unpermitted_parameters = :raise
+#   ActionController::Parameters.action_on_unpermitted_parameters = :raise
 #
-# params = ActionController::Parameters.new(a: "123", b: "456")
-# params.permit(:c)
-# # => ActionController::UnpermittedParameters: found unpermitted keys: a, b
+#   params = ActionController::Parameters.new(a: "123", b: "456")
+#   params.permit(:c)
+#   # => ActionController::UnpermittedParameters: found unpermitted keys: a, b
 #
 # Please note that these options *are not thread-safe*. In a multi-threaded
 # environment they should only be set once at boot-time and never mutated at
@@ -3463,26 +3539,28 @@ end
 # You can fetch values of <tt>ActionController::Parameters</tt> using either
 # <tt>:key</tt> or <tt>"key"</tt>.
 #
-# params = ActionController::Parameters.new(key: "value")
-# params[:key]  # => "value"
-# params["key"] # => "value"
+#   params = ActionController::Parameters.new(key: "value")
+#   params[:key]  # => "value"
+#   params["key"] # => "value"
 class ActionController::Parameters
   # Returns a new instance of <tt>ActionController::Parameters</tt>.
   # Also, sets the +permitted+ attribute to the default value of
   # <tt>ActionController::Parameters.permit_all_parameters</tt>.
   #
-  # class Person < ActiveRecord::Base
-  # end
+  #   class Person < ActiveRecord::Base
+  #   end
   #
-  # params = ActionController::Parameters.new(name: "Francesco")
-  # params.permitted?  # => false
-  # Person.new(params) # => ActiveModel::ForbiddenAttributesError
+  #   params = ActionController::Parameters.new(name: "Francesco")
+  #   params.permitted?  # => false
+  #   Person.new(params) # => ActiveModel::ForbiddenAttributesError
   #
-  # ActionController::Parameters.permit_all_parameters = true
+  #   ActionController::Parameters.permit_all_parameters = true
   #
-  # params = ActionController::Parameters.new(name: "Francesco")
-  # params.permitted?  # => true
-  # Person.new(params) # => #<Person id: nil, name: "Francesco">
+  #   params = ActionController::Parameters.new(name: "Francesco")
+  #   params.permitted?  # => true
+  #   Person.new(params) # => #<Person id: nil, name: "Francesco">
+  #
+  # @return [Parameters] a new instance of Parameters
   def initialize(parameters = T.unsafe(nil)); end
 
   # Returns true if another +Parameters+ object contains the same content and
@@ -3492,9 +3570,9 @@ class ActionController::Parameters
   # Returns a parameter for the given +key+. If not found,
   # returns +nil+.
   #
-  # params = ActionController::Parameters.new(person: { name: "Francesco" })
-  # params[:person] # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
-  # params[:none]   # => nil
+  #   params = ActionController::Parameters.new(person: { name: "Francesco" })
+  #   params[:person] # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
+  #   params[:none]   # => nil
   def [](key); end
 
   # Assigns a value to a given +key+. The given key may still get filtered out
@@ -3503,7 +3581,7 @@ class ActionController::Parameters
 
   def always_permitted_parameters; end
   def always_permitted_parameters=(val); end
-  def as_json(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, &_arg1); end
 
   # Returns a new instance of <tt>ActionController::Parameters</tt> with +nil+ values removed.
   def compact; end
@@ -3553,19 +3631,19 @@ class ActionController::Parameters
   # Extracts the nested parameter from the given +keys+ by calling +dig+
   # at each step. Returns +nil+ if any intermediate step is +nil+.
   #
-  # params = ActionController::Parameters.new(foo: { bar: { baz: 1 } })
-  # params.dig(:foo, :bar, :baz) # => 1
-  # params.dig(:foo, :zot, :xyz) # => nil
+  #   params = ActionController::Parameters.new(foo: { bar: { baz: 1 } })
+  #   params.dig(:foo, :bar, :baz) # => 1
+  #   params.dig(:foo, :zot, :xyz) # => nil
   #
-  # params2 = ActionController::Parameters.new(foo: [10, 11, 12])
-  # params2.dig(:foo, 1) # => 11
+  #   params2 = ActionController::Parameters.new(foo: [10, 11, 12])
+  #   params2.dig(:foo, 1) # => 11
   def dig(*keys); end
 
   # Convert all hashes in values into parameters, then yield each pair in
   # the same way as <tt>Hash#each_pair</tt>.
   def each(&block); end
 
-  def each_key(*_arg0, **_arg1, &_arg2); end
+  def each_key(*_arg0, &_arg1); end
 
   # Convert all hashes in values into parameters, then yield each pair in
   # the same way as <tt>Hash#each_pair</tt>.
@@ -3575,7 +3653,7 @@ class ActionController::Parameters
   # the same way as <tt>Hash#each_value</tt>.
   def each_value(&block); end
 
-  def empty?(*_arg0, **_arg1, &_arg2); end
+  def empty?(*_arg0, &_arg1); end
 
   # Returns true if another +Parameters+ object contains the same content and
   # permitted flag.
@@ -3584,16 +3662,16 @@ class ActionController::Parameters
   # Returns a new <tt>ActionController::Parameters</tt> instance that
   # filters out the given +keys+.
   #
-  # params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
-  # params.except(:a, :b) # => <ActionController::Parameters {"c"=>3} permitted: false>
-  # params.except(:d)     # => <ActionController::Parameters {"a"=>1, "b"=>2, "c"=>3} permitted: false>
+  #   params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
+  #   params.except(:a, :b) # => <ActionController::Parameters {"c"=>3} permitted: false>
+  #   params.except(:d)     # => <ActionController::Parameters {"a"=>1, "b"=>2, "c"=>3} permitted: false>
   def except(*keys); end
 
   # Removes and returns the key/value pairs matching the given keys.
   #
-  # params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
-  # params.extract!(:a, :b) # => <ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
-  # params                  # => <ActionController::Parameters {"c"=>3} permitted: false>
+  #   params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
+  #   params.extract!(:a, :b) # => <ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
+  #   params                  # => <ActionController::Parameters {"c"=>3} permitted: false>
   def extract!(*keys); end
 
   # Returns a parameter for the given +key+. If the +key+
@@ -3603,35 +3681,35 @@ class ActionController::Parameters
   # instance of ActionController::Parameters if possible); if a block
   # is given, then that will be run and its result returned.
   #
-  # params = ActionController::Parameters.new(person: { name: "Francesco" })
-  # params.fetch(:person)               # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
-  # params.fetch(:none)                 # => ActionController::ParameterMissing: param is missing or the value is empty: none
-  # params.fetch(:none, {})             # => <ActionController::Parameters {} permitted: false>
-  # params.fetch(:none, "Francesco")    # => "Francesco"
-  # params.fetch(:none) { "Francesco" } # => "Francesco"
+  #   params = ActionController::Parameters.new(person: { name: "Francesco" })
+  #   params.fetch(:person)               # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
+  #   params.fetch(:none)                 # => ActionController::ParameterMissing: param is missing or the value is empty: none
+  #   params.fetch(:none, {})             # => <ActionController::Parameters {} permitted: false>
+  #   params.fetch(:none, "Francesco")    # => "Francesco"
+  #   params.fetch(:none) { "Francesco" } # => "Francesco"
   def fetch(key, *args); end
 
-  def has_key?(*_arg0, **_arg1, &_arg2); end
-  def has_value?(*_arg0, **_arg1, &_arg2); end
+  def has_key?(*_arg0, &_arg1); end
+  def has_value?(*_arg0, &_arg1); end
   def hash; end
-  def include?(*_arg0, **_arg1, &_arg2); end
+  def include?(*_arg0, &_arg1); end
   def init_with(coder); end
   def inspect; end
 
   # Equivalent to Hash#keep_if, but returns +nil+ if no changes were made.
   def keep_if(&block); end
 
-  def key?(*_arg0, **_arg1, &_arg2); end
+  def key?(*_arg0, &_arg1); end
 
   # :method: values
   #
   # :call-seq:
-  # values()
+  #   values()
   #
   # Returns a new array of the values of the parameters.
-  def keys(*_arg0, **_arg1, &_arg2); end
+  def keys(*_arg0, &_arg1); end
 
-  def member?(*_arg0, **_arg1, &_arg2); end
+  def member?(*_arg0, &_arg1); end
 
   # Returns a new <tt>ActionController::Parameters</tt> with all keys from
   # +other_hash+ merged into current hash.
@@ -3646,16 +3724,16 @@ class ActionController::Parameters
   # for the object to +true+. This is useful for limiting which attributes
   # should be allowed for mass updating.
   #
-  # params = ActionController::Parameters.new(user: { name: "Francesco", age: 22, role: "admin" })
-  # permitted = params.require(:user).permit(:name, :age)
-  # permitted.permitted?      # => true
-  # permitted.has_key?(:name) # => true
-  # permitted.has_key?(:age)  # => true
-  # permitted.has_key?(:role) # => false
+  #   params = ActionController::Parameters.new(user: { name: "Francesco", age: 22, role: "admin" })
+  #   permitted = params.require(:user).permit(:name, :age)
+  #   permitted.permitted?      # => true
+  #   permitted.has_key?(:name) # => true
+  #   permitted.has_key?(:age)  # => true
+  #   permitted.has_key?(:role) # => false
   #
   # Only permitted scalars pass the filter. For example, given
   #
-  # params.permit(:name)
+  #   params.permit(:name)
   #
   # +:name+ passes if it is a key of +params+ whose associated value is of type
   # +String+, +Symbol+, +NilClass+, +Numeric+, +TrueClass+, +FalseClass+,
@@ -3666,13 +3744,13 @@ class ActionController::Parameters
   # You may declare that the parameter should be an array of permitted scalars
   # by mapping it to an empty array:
   #
-  # params = ActionController::Parameters.new(tags: ["rails", "parameters"])
-  # params.permit(tags: [])
+  #   params = ActionController::Parameters.new(tags: ["rails", "parameters"])
+  #   params.permit(tags: [])
   #
   # Sometimes it is not possible or convenient to declare the valid keys of
   # a hash parameter or its internal structure. Just map to an empty hash:
   #
-  # params.permit(preferences: {})
+  #   params.permit(preferences: {})
   #
   # Be careful because this opens the door to arbitrary input. In this
   # case, +permit+ ensures values in the returned structure are permitted
@@ -3680,67 +3758,69 @@ class ActionController::Parameters
   #
   # You can also use +permit+ on nested parameters, like:
   #
-  # params = ActionController::Parameters.new({
-  # person: {
-  # name: "Francesco",
-  # age:  22,
-  # pets: [{
-  # name: "Purplish",
-  # category: "dogs"
-  # }]
-  # }
-  # })
+  #   params = ActionController::Parameters.new({
+  #     person: {
+  #       name: "Francesco",
+  #       age:  22,
+  #       pets: [{
+  #         name: "Purplish",
+  #         category: "dogs"
+  #       }]
+  #     }
+  #   })
   #
-  # permitted = params.permit(person: [ :name, { pets: :name } ])
-  # permitted.permitted?                    # => true
-  # permitted[:person][:name]               # => "Francesco"
-  # permitted[:person][:age]                # => nil
-  # permitted[:person][:pets][0][:name]     # => "Purplish"
-  # permitted[:person][:pets][0][:category] # => nil
+  #   permitted = params.permit(person: [ :name, { pets: :name } ])
+  #   permitted.permitted?                    # => true
+  #   permitted[:person][:name]               # => "Francesco"
+  #   permitted[:person][:age]                # => nil
+  #   permitted[:person][:pets][0][:name]     # => "Purplish"
+  #   permitted[:person][:pets][0][:category] # => nil
   #
   # Note that if you use +permit+ in a key that points to a hash,
   # it won't allow all the hash. You also need to specify which
   # attributes inside the hash should be permitted.
   #
-  # params = ActionController::Parameters.new({
-  # person: {
-  # contact: {
-  # email: "none@test.com",
-  # phone: "555-1234"
-  # }
-  # }
-  # })
+  #   params = ActionController::Parameters.new({
+  #     person: {
+  #       contact: {
+  #         email: "none@test.com",
+  #         phone: "555-1234"
+  #       }
+  #     }
+  #   })
   #
-  # params.require(:person).permit(:contact)
-  # # => <ActionController::Parameters {} permitted: true>
+  #   params.require(:person).permit(:contact)
+  #   # => <ActionController::Parameters {} permitted: true>
   #
-  # params.require(:person).permit(contact: :phone)
-  # # => <ActionController::Parameters {"contact"=><ActionController::Parameters {"phone"=>"555-1234"} permitted: true>} permitted: true>
+  #   params.require(:person).permit(contact: :phone)
+  #   # => <ActionController::Parameters {"contact"=><ActionController::Parameters {"phone"=>"555-1234"} permitted: true>} permitted: true>
   #
-  # params.require(:person).permit(contact: [ :email, :phone ])
-  # # => <ActionController::Parameters {"contact"=><ActionController::Parameters {"email"=>"none@test.com", "phone"=>"555-1234"} permitted: true>} permitted: true>
+  #   params.require(:person).permit(contact: [ :email, :phone ])
+  #   # => <ActionController::Parameters {"contact"=><ActionController::Parameters {"email"=>"none@test.com", "phone"=>"555-1234"} permitted: true>} permitted: true>
   def permit(*filters); end
 
   # Sets the +permitted+ attribute to +true+. This can be used to pass
   # mass assignment. Returns +self+.
   #
-  # class Person < ActiveRecord::Base
-  # end
+  #   class Person < ActiveRecord::Base
+  #   end
   #
-  # params = ActionController::Parameters.new(name: "Francesco")
-  # params.permitted?  # => false
-  # Person.new(params) # => ActiveModel::ForbiddenAttributesError
-  # params.permit!
-  # params.permitted?  # => true
-  # Person.new(params) # => #<Person id: nil, name: "Francesco">
+  #   params = ActionController::Parameters.new(name: "Francesco")
+  #   params.permitted?  # => false
+  #   Person.new(params) # => ActiveModel::ForbiddenAttributesError
+  #   params.permit!
+  #   params.permitted?  # => true
+  #   Person.new(params) # => #<Person id: nil, name: "Francesco">
   def permit!; end
 
   # Returns +true+ if the parameter is permitted, +false+ otherwise.
   #
-  # params = ActionController::Parameters.new
-  # params.permitted? # => false
-  # params.permit!
-  # params.permitted? # => true
+  #   params = ActionController::Parameters.new
+  #   params.permitted? # => false
+  #   params.permit!
+  #   params.permitted? # => true
+  #
+  # @return [Boolean]
   def permitted?; end
 
   # Returns a new instance of <tt>ActionController::Parameters</tt> with items
@@ -3755,49 +3835,49 @@ class ActionController::Parameters
   # When passed a single key, if it exists and its associated value is
   # either present or the singleton +false+, returns said value:
   #
-  # ActionController::Parameters.new(person: { name: "Francesco" }).require(:person)
-  # # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
+  #   ActionController::Parameters.new(person: { name: "Francesco" }).require(:person)
+  #   # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
   #
   # Otherwise raises <tt>ActionController::ParameterMissing</tt>:
   #
-  # ActionController::Parameters.new.require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new.require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: nil).require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: nil).require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: "\t").require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: "\t").require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: {}).require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: {}).require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
   # When given an array of keys, the method tries to require each one of them
   # in order. If it succeeds, an array with the respective return values is
   # returned:
   #
-  # params = ActionController::Parameters.new(user: { ... }, profile: { ... })
-  # user_params, profile_params = params.require([:user, :profile])
+  #   params = ActionController::Parameters.new(user: { ... }, profile: { ... })
+  #   user_params, profile_params = params.require([:user, :profile])
   #
   # Otherwise, the method re-raises the first exception found:
   #
-  # params = ActionController::Parameters.new(user: {}, profile: {})
-  # user_params, profile_params = params.require([:user, :profile])
-  # # ActionController::ParameterMissing: param is missing or the value is empty: user
+  #   params = ActionController::Parameters.new(user: {}, profile: {})
+  #   user_params, profile_params = params.require([:user, :profile])
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: user
   #
   # Technically this method can be used to fetch terminal values:
   #
-  # # CAREFUL
-  # params = ActionController::Parameters.new(person: { name: "Finn" })
-  # name = params.require(:person).require(:name) # CAREFUL
+  #   # CAREFUL
+  #   params = ActionController::Parameters.new(person: { name: "Finn" })
+  #   name = params.require(:person).require(:name) # CAREFUL
   #
   # but take into account that at some point those ones have to be permitted:
   #
-  # def person_params
-  # params.require(:person).permit(:name).tap do |person_params|
-  # person_params.require(:name) # SAFER
-  # end
-  # end
+  #   def person_params
+  #     params.require(:person).permit(:name).tap do |person_params|
+  #       person_params.require(:name) # SAFER
+  #     end
+  #   end
   #
   # for example.
   def require(key); end
@@ -3807,49 +3887,49 @@ class ActionController::Parameters
   # When passed a single key, if it exists and its associated value is
   # either present or the singleton +false+, returns said value:
   #
-  # ActionController::Parameters.new(person: { name: "Francesco" }).require(:person)
-  # # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
+  #   ActionController::Parameters.new(person: { name: "Francesco" }).require(:person)
+  #   # => <ActionController::Parameters {"name"=>"Francesco"} permitted: false>
   #
   # Otherwise raises <tt>ActionController::ParameterMissing</tt>:
   #
-  # ActionController::Parameters.new.require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new.require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: nil).require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: nil).require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: "\t").require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: "\t").require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
-  # ActionController::Parameters.new(person: {}).require(:person)
-  # # ActionController::ParameterMissing: param is missing or the value is empty: person
+  #   ActionController::Parameters.new(person: {}).require(:person)
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: person
   #
   # When given an array of keys, the method tries to require each one of them
   # in order. If it succeeds, an array with the respective return values is
   # returned:
   #
-  # params = ActionController::Parameters.new(user: { ... }, profile: { ... })
-  # user_params, profile_params = params.require([:user, :profile])
+  #   params = ActionController::Parameters.new(user: { ... }, profile: { ... })
+  #   user_params, profile_params = params.require([:user, :profile])
   #
   # Otherwise, the method re-raises the first exception found:
   #
-  # params = ActionController::Parameters.new(user: {}, profile: {})
-  # user_params, profile_params = params.require([:user, :profile])
-  # # ActionController::ParameterMissing: param is missing or the value is empty: user
+  #   params = ActionController::Parameters.new(user: {}, profile: {})
+  #   user_params, profile_params = params.require([:user, :profile])
+  #   # ActionController::ParameterMissing: param is missing or the value is empty: user
   #
   # Technically this method can be used to fetch terminal values:
   #
-  # # CAREFUL
-  # params = ActionController::Parameters.new(person: { name: "Finn" })
-  # name = params.require(:person).require(:name) # CAREFUL
+  #   # CAREFUL
+  #   params = ActionController::Parameters.new(person: { name: "Finn" })
+  #   name = params.require(:person).require(:name) # CAREFUL
   #
   # but take into account that at some point those ones have to be permitted:
   #
-  # def person_params
-  # params.require(:person).permit(:name).tap do |person_params|
-  # person_params.require(:name) # SAFER
-  # end
-  # end
+  #   def person_params
+  #     params.require(:person).permit(:name).tap do |person_params|
+  #       person_params.require(:name) # SAFER
+  #     end
+  #   end
   #
   # for example.
   # Alias of #require.
@@ -3874,9 +3954,9 @@ class ActionController::Parameters
   # includes only the given +keys+. If the given +keys+
   # don't exist, returns an empty hash.
   #
-  # params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
-  # params.slice(:a, :b) # => <ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
-  # params.slice(:d)     # => <ActionController::Parameters {} permitted: false>
+  #   params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
+  #   params.slice(:a, :b) # => <ActionController::Parameters {"a"=>1, "b"=>2} permitted: false>
+  #   params.slice(:d)     # => <ActionController::Parameters {} permitted: false>
   def slice(*keys); end
 
   # Returns current <tt>ActionController::Parameters</tt> instance which
@@ -3891,54 +3971,54 @@ class ActionController::Parameters
   # Returns a safe <tt>ActiveSupport::HashWithIndifferentAccess</tt>
   # representation of the parameters with all unpermitted keys removed.
   #
-  # params = ActionController::Parameters.new({
-  # name: "Senjougahara Hitagi",
-  # oddity: "Heavy stone crab"
-  # })
-  # params.to_h
-  # # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
+  #   params = ActionController::Parameters.new({
+  #     name: "Senjougahara Hitagi",
+  #     oddity: "Heavy stone crab"
+  #   })
+  #   params.to_h
+  #   # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
   #
-  # safe_params = params.permit(:name)
-  # safe_params.to_h # => {"name"=>"Senjougahara Hitagi"}
+  #   safe_params = params.permit(:name)
+  #   safe_params.to_h # => {"name"=>"Senjougahara Hitagi"}
   def to_h; end
 
   # Returns a safe <tt>Hash</tt> representation of the parameters
   # with all unpermitted keys removed.
   #
-  # params = ActionController::Parameters.new({
-  # name: "Senjougahara Hitagi",
-  # oddity: "Heavy stone crab"
-  # })
-  # params.to_hash
-  # # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
+  #   params = ActionController::Parameters.new({
+  #     name: "Senjougahara Hitagi",
+  #     oddity: "Heavy stone crab"
+  #   })
+  #   params.to_hash
+  #   # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
   #
-  # safe_params = params.permit(:name)
-  # safe_params.to_hash # => {"name"=>"Senjougahara Hitagi"}
+  #   safe_params = params.permit(:name)
+  #   safe_params.to_hash # => {"name"=>"Senjougahara Hitagi"}
   def to_hash; end
 
   # Returns a string representation of the receiver suitable for use as a URL
   # query string:
   #
-  # params = ActionController::Parameters.new({
-  # name: "David",
-  # nationality: "Danish"
-  # })
-  # params.to_query
-  # # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
+  #   params = ActionController::Parameters.new({
+  #     name: "David",
+  #     nationality: "Danish"
+  #   })
+  #   params.to_query
+  #   # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
   #
-  # safe_params = params.permit(:name, :nationality)
-  # safe_params.to_query
-  # # => "name=David&nationality=Danish"
+  #   safe_params = params.permit(:name, :nationality)
+  #   safe_params.to_query
+  #   # => "name=David&nationality=Danish"
   #
   # An optional namespace can be passed to enclose key names:
   #
-  # params = ActionController::Parameters.new({
-  # name: "David",
-  # nationality: "Danish"
-  # })
-  # safe_params = params.permit(:name, :nationality)
-  # safe_params.to_query("user")
-  # # => "user%5Bname%5D=David&user%5Bnationality%5D=Danish"
+  #   params = ActionController::Parameters.new({
+  #     name: "David",
+  #     nationality: "Danish"
+  #   })
+  #   safe_params = params.permit(:name, :nationality)
+  #   safe_params.to_query("user")
+  #   # => "user%5Bname%5D=David&user%5Bnationality%5D=Danish"
   #
   # The string pairs "key=value" that conform the query string
   # are sorted lexicographically in ascending order.
@@ -3949,26 +4029,26 @@ class ActionController::Parameters
   # Returns a string representation of the receiver suitable for use as a URL
   # query string:
   #
-  # params = ActionController::Parameters.new({
-  # name: "David",
-  # nationality: "Danish"
-  # })
-  # params.to_query
-  # # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
+  #   params = ActionController::Parameters.new({
+  #     name: "David",
+  #     nationality: "Danish"
+  #   })
+  #   params.to_query
+  #   # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
   #
-  # safe_params = params.permit(:name, :nationality)
-  # safe_params.to_query
-  # # => "name=David&nationality=Danish"
+  #   safe_params = params.permit(:name, :nationality)
+  #   safe_params.to_query
+  #   # => "name=David&nationality=Danish"
   #
   # An optional namespace can be passed to enclose key names:
   #
-  # params = ActionController::Parameters.new({
-  # name: "David",
-  # nationality: "Danish"
-  # })
-  # safe_params = params.permit(:name, :nationality)
-  # safe_params.to_query("user")
-  # # => "user%5Bname%5D=David&user%5Bnationality%5D=Danish"
+  #   params = ActionController::Parameters.new({
+  #     name: "David",
+  #     nationality: "Danish"
+  #   })
+  #   safe_params = params.permit(:name, :nationality)
+  #   safe_params.to_query("user")
+  #   # => "user%5Bname%5D=David&user%5Bnationality%5D=Danish"
   #
   # The string pairs "key=value" that conform the query string
   # are sorted lexicographically in ascending order.
@@ -3976,30 +4056,30 @@ class ActionController::Parameters
   # This method is also aliased as +to_param+.
   def to_query(*args); end
 
-  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, &_arg1); end
 
   # Returns an unsafe, unfiltered
   # <tt>ActiveSupport::HashWithIndifferentAccess</tt> representation of the
   # parameters.
   #
-  # params = ActionController::Parameters.new({
-  # name: "Senjougahara Hitagi",
-  # oddity: "Heavy stone crab"
-  # })
-  # params.to_unsafe_h
-  # # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
+  #   params = ActionController::Parameters.new({
+  #     name: "Senjougahara Hitagi",
+  #     oddity: "Heavy stone crab"
+  #   })
+  #   params.to_unsafe_h
+  #   # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
   def to_unsafe_h; end
 
   # Returns an unsafe, unfiltered
   # <tt>ActiveSupport::HashWithIndifferentAccess</tt> representation of the
   # parameters.
   #
-  # params = ActionController::Parameters.new({
-  # name: "Senjougahara Hitagi",
-  # oddity: "Heavy stone crab"
-  # })
-  # params.to_unsafe_h
-  # # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
+  #   params = ActionController::Parameters.new({
+  #     name: "Senjougahara Hitagi",
+  #     oddity: "Heavy stone crab"
+  #   })
+  #   params.to_unsafe_h
+  #   # => {"name"=>"Senjougahara Hitagi", "oddity" => "Heavy stone crab"}
   def to_unsafe_hash; end
 
   # Returns a new <tt>ActionController::Parameters</tt> instance with the
@@ -4013,17 +4093,17 @@ class ActionController::Parameters
   # Returns a new <tt>ActionController::Parameters</tt> with the results of
   # running +block+ once for every value. The keys are unchanged.
   #
-  # params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
-  # params.transform_values { |x| x * 2 }
-  # # => <ActionController::Parameters {"a"=>2, "b"=>4, "c"=>6} permitted: false>
+  #   params = ActionController::Parameters.new(a: 1, b: 2, c: 3)
+  #   params.transform_values { |x| x * 2 }
+  #   # => <ActionController::Parameters {"a"=>2, "b"=>4, "c"=>6} permitted: false>
   def transform_values; end
 
   # Performs values transformation and returns the altered
   # <tt>ActionController::Parameters</tt> instance.
   def transform_values!; end
 
-  def value?(*_arg0, **_arg1, &_arg2); end
-  def values(*_arg0, **_arg1, &_arg2); end
+  def value?(*_arg0, &_arg1); end
+  def values(*_arg0, &_arg1); end
 
   # Returns values that were assigned to the given +keys+. Note that all the
   # +Hash+ objects will be converted to <tt>ActionController::Parameters</tt>.
@@ -4040,17 +4120,23 @@ class ActionController::Parameters
   protected
 
   def each_nested_attribute; end
+
+  # @return [Boolean]
   def nested_attributes?; end
 
   # Returns the value of attribute parameters.
   def parameters; end
 
   # Sets the attribute permitted
+  #
+  # @param value the value to set the attribute permitted to.
   def permitted=(_arg0); end
 
   private
 
+  # @return [Boolean]
   def array_of_permitted_scalars?(value); end
+
   def convert_hashes_to_parameters(key, value); end
   def convert_parameters_to_hashes(value, using); end
   def convert_value_to_parameters(value); end
@@ -4058,21 +4144,26 @@ class ActionController::Parameters
   def hash_filter(params, filter); end
   def initialize_copy(source); end
   def new_instance_with_inherited_permitted_status(hash); end
+
+  # @return [Boolean]
   def non_scalar?(value); end
+
   def permit_any_in_array(array); end
   def permit_any_in_parameters(params); end
+
+  # @return [Boolean]
   def permitted_scalar?(value); end
 
   # Adds existing keys to the params if their values are scalar.
   #
   # For example:
   #
-  # puts self.keys #=> ["zipcode(90210i)"]
-  # params = {}
+  #   puts self.keys #=> ["zipcode(90210i)"]
+  #   params = {}
   #
-  # permitted_scalar_filter(params, "zipcode")
+  #   permitted_scalar_filter(params, "zipcode")
   #
-  # puts params.keys # => ["zipcode"]
+  #   puts params.keys # => ["zipcode"]
   def permitted_scalar_filter(params, permitted_key); end
 
   def unpermitted_keys(params); end
@@ -4084,7 +4175,10 @@ class ActionController::Parameters
     def always_permitted_parameters; end
     def always_permitted_parameters=(val); end
     def hook_into_yaml_loading; end
+
+    # @return [Boolean]
     def nested_attribute?(key, value); end
+
     def permit_all_parameters; end
     def permit_all_parameters=(val); end
   end
@@ -4111,32 +4205,32 @@ ActionController::Parameters::PERMITTED_SCALAR_TYPES = T.let(T.unsafe(nil), Arra
 # You could also turn it on per controller by setting the format array to
 # a non-empty array:
 #
-# class UsersController < ApplicationController
-# wrap_parameters format: [:json, :xml, :url_encoded_form, :multipart_form]
-# end
+#     class UsersController < ApplicationController
+#       wrap_parameters format: [:json, :xml, :url_encoded_form, :multipart_form]
+#     end
 #
 # If you enable +ParamsWrapper+ for +:json+ format, instead of having to
 # send JSON parameters like this:
 #
-# {"user": {"name": "Konata"}}
+#     {"user": {"name": "Konata"}}
 #
 # You can send parameters like this:
 #
-# {"name": "Konata"}
+#     {"name": "Konata"}
 #
 # And it will be wrapped into a nested hash with the key name matching the
 # controller's name. For example, if you're posting to +UsersController+,
 # your new +params+ hash will look like this:
 #
-# {"name" => "Konata", "user" => {"name" => "Konata"}}
+#     {"name" => "Konata", "user" => {"name" => "Konata"}}
 #
 # You can also specify the key in which the parameters should be wrapped to,
 # and also the list of attributes it should wrap by using either +:include+ or
 # +:exclude+ options like this:
 #
-# class UsersController < ApplicationController
-# wrap_parameters :person, include: [:username, :password]
-# end
+#     class UsersController < ApplicationController
+#       wrap_parameters :person, include: [:username, :password]
+#     end
 #
 # On Active Record models with no +:include+ or +:exclude+ option set,
 # it will only wrap the parameters returned by the class method
@@ -4147,9 +4241,9 @@ ActionController::Parameters::PERMITTED_SCALAR_TYPES = T.let(T.unsafe(nil), Arra
 # the method instead. The +ParamsWrapper+ will actually try to determine the
 # list of attribute names from the model and only wrap those attributes:
 #
-# class UsersController < ApplicationController
-# wrap_parameters Person
-# end
+#     class UsersController < ApplicationController
+#       wrap_parameters Person
+#     end
 #
 # You still could pass +:include+ and +:exclude+ to set the list of attributes
 # you want to wrap.
@@ -4158,8 +4252,8 @@ ActionController::Parameters::PERMITTED_SCALAR_TYPES = T.let(T.unsafe(nil), Arra
 # wrapped to, +ParamsWrapper+ will actually try to determine if there's
 # a model related to it or not. This controller, for example:
 #
-# class Admin::UsersController < ApplicationController
-# end
+#     class Admin::UsersController < ApplicationController
+#     end
 #
 # will try to check if <tt>Admin::User</tt> or +User+ model exists, and use it to
 # determine the wrapper key respectively. If both models don't exist,
@@ -4184,6 +4278,8 @@ module ActionController::ParamsWrapper
   def _wrap_parameters(parameters); end
 
   # Checks if we should perform parameters wrapping.
+  #
+  # @return [Boolean]
   def _wrapper_enabled?; end
 
   # Returns the list of enabled formats.
@@ -4217,29 +4313,29 @@ module ActionController::ParamsWrapper::ClassMethods
   # would use to determine the attribute names from.
   #
   # ==== Examples
-  # wrap_parameters format: :xml
-  # # enables the parameter wrapper for XML format
+  #   wrap_parameters format: :xml
+  #     # enables the parameter wrapper for XML format
   #
-  # wrap_parameters :person
-  # # wraps parameters into +params[:person]+ hash
+  #   wrap_parameters :person
+  #     # wraps parameters into +params[:person]+ hash
   #
-  # wrap_parameters Person
-  # # wraps parameters by determining the wrapper key from Person class
-  # # (+person+, in this case) and the list of attribute names
+  #   wrap_parameters Person
+  #     # wraps parameters by determining the wrapper key from Person class
+  #     # (+person+, in this case) and the list of attribute names
   #
-  # wrap_parameters include: [:username, :title]
-  # # wraps only +:username+ and +:title+ attributes from parameters.
+  #   wrap_parameters include: [:username, :title]
+  #     # wraps only +:username+ and +:title+ attributes from parameters.
   #
-  # wrap_parameters false
-  # # disables parameters wrapping for this controller altogether.
+  #   wrap_parameters false
+  #     # disables parameters wrapping for this controller altogether.
   #
   # ==== Options
   # * <tt>:format</tt> - The list of formats in which the parameters wrapper
-  # will be enabled.
+  #   will be enabled.
   # * <tt>:include</tt> - The list of attribute names which parameters wrapper
-  # will wrap into a nested hash.
+  #   will wrap into a nested hash.
   # * <tt>:exclude</tt> - The list of attribute names which parameters wrapper
-  # will exclude from a nested hash.
+  #   will exclude from a nested hash.
   def wrap_parameters(name_or_model_or_options, options = T.unsafe(nil)); end
 end
 
@@ -4248,18 +4344,25 @@ ActionController::ParamsWrapper::EXCLUDE_PARAMETERS = T.let(T.unsafe(nil), Array
 class ActionController::ParamsWrapper::Options < ::Struct
   include ::Mutex_m
 
+  # @return [Options] a new instance of Options
   def initialize(name, format, include, exclude, klass, model); end
 
   # Returns the value of attribute include
+  #
+  # @return [Object] the current value of include
   def include; end
 
   def lock; end
   def locked?; end
 
   # Returns the value of attribute model
+  #
+  # @return [Object] the current value of model
   def model; end
 
   # Returns the value of attribute name
+  #
+  # @return [Object] the current value of name
   def name; end
 
   def synchronize(&block); end
@@ -4293,22 +4396,22 @@ end
 #
 # Examples of usage:
 #
-# # Global policy
-# Rails.application.config.permissions_policy do |f|
-# f.camera      :none
-# f.gyroscope   :none
-# f.microphone  :none
-# f.usb         :none
-# f.fullscreen  :self
-# f.payment     :self, "https://secure.example.com"
-# end
+#   # Global policy
+#   Rails.application.config.permissions_policy do |f|
+#     f.camera      :none
+#     f.gyroscope   :none
+#     f.microphone  :none
+#     f.usb         :none
+#     f.fullscreen  :self
+#     f.payment     :self, "https://secure.example.com"
+#   end
 #
-# # Controller level policy
-# class PagesController < ApplicationController
-# permissions_policy do |p|
-# p.geolocation "https://example.com"
-# end
-# end
+#   # Controller level policy
+#   class PagesController < ApplicationController
+#     permissions_policy do |p|
+#       p.geolocation "https://example.com"
+#     end
+#   end
 module ActionController::PermissionsPolicy
   extend ::ActiveSupport::Concern
 
@@ -4349,13 +4452,13 @@ module ActionController::Redirecting
   # subject to browser security settings and user preferences. If the request
   # is missing this header, the <tt>fallback_location</tt> will be used.
   #
-  # redirect_back fallback_location: { action: "show", id: 5 }
-  # redirect_back fallback_location: @post
-  # redirect_back fallback_location: "http://www.rubyonrails.org"
-  # redirect_back fallback_location: "/images/screenshot.jpg"
-  # redirect_back fallback_location: posts_url
-  # redirect_back fallback_location: proc { edit_post_url(@post) }
-  # redirect_back fallback_location: '/', allow_other_host: false
+  #   redirect_back fallback_location: { action: "show", id: 5 }
+  #   redirect_back fallback_location: @post
+  #   redirect_back fallback_location: "http://www.rubyonrails.org"
+  #   redirect_back fallback_location: "/images/screenshot.jpg"
+  #   redirect_back fallback_location: posts_url
+  #   redirect_back fallback_location: proc { edit_post_url(@post) }
+  #   redirect_back fallback_location: '/', allow_other_host: false
   #
   # ==== Options
   # * <tt>:fallback_location</tt> - The default fallback location that will be used on missing +Referer+ header.
@@ -4375,19 +4478,19 @@ module ActionController::Redirecting
   #
   # === Examples:
   #
-  # redirect_to action: "show", id: 5
-  # redirect_to @post
-  # redirect_to "http://www.rubyonrails.org"
-  # redirect_to "/images/screenshot.jpg"
-  # redirect_to posts_url
-  # redirect_to proc { edit_post_url(@post) }
+  #   redirect_to action: "show", id: 5
+  #   redirect_to @post
+  #   redirect_to "http://www.rubyonrails.org"
+  #   redirect_to "/images/screenshot.jpg"
+  #   redirect_to posts_url
+  #   redirect_to proc { edit_post_url(@post) }
   #
   # The redirection happens as a <tt>302 Found</tt> header unless otherwise specified using the <tt>:status</tt> option:
   #
-  # redirect_to post_url(@post), status: :found
-  # redirect_to action: 'atom', status: :moved_permanently
-  # redirect_to post_url(@post), status: 301
-  # redirect_to action: 'atom', status: 302
+  #   redirect_to post_url(@post), status: :found
+  #   redirect_to action: 'atom', status: :moved_permanently
+  #   redirect_to post_url(@post), status: 301
+  #   redirect_to action: 'atom', status: 302
   #
   # The status code can either be a standard {HTTP Status code}[https://www.iana.org/assignments/http-status-codes] as an
   # integer, or a symbol representing the downcased, underscored and symbolized description.
@@ -4399,25 +4502,29 @@ module ActionController::Redirecting
   # around this you can return a <tt>303 See Other</tt> status code which will be
   # followed using a GET request.
   #
-  # redirect_to posts_url, status: :see_other
-  # redirect_to action: 'index', status: 303
+  #   redirect_to posts_url, status: :see_other
+  #   redirect_to action: 'index', status: 303
   #
   # It is also possible to assign a flash message as part of the redirection. There are two special accessors for the commonly used flash names
   # +alert+ and +notice+ as well as a general purpose +flash+ bucket.
   #
-  # redirect_to post_url(@post), alert: "Watch it, mister!"
-  # redirect_to post_url(@post), status: :found, notice: "Pay attention to the road"
-  # redirect_to post_url(@post), status: 301, flash: { updated_post_id: @post.id }
-  # redirect_to({ action: 'atom' }, alert: "Something serious happened")
+  #   redirect_to post_url(@post), alert: "Watch it, mister!"
+  #   redirect_to post_url(@post), status: :found, notice: "Pay attention to the road"
+  #   redirect_to post_url(@post), status: 301, flash: { updated_post_id: @post.id }
+  #   redirect_to({ action: 'atom' }, alert: "Something serious happened")
   #
   # Statements after +redirect_to+ in our controller get executed, so +redirect_to+ doesn't stop the execution of the function.
   # To terminate the execution of the function immediately after the +redirect_to+, use return.
-  # redirect_to post_url(@post) and return
+  #   redirect_to post_url(@post) and return
+  #
+  # @raise [ActionControllerError]
   def redirect_to(options = T.unsafe(nil), response_options = T.unsafe(nil)); end
 
   private
 
   def _extract_redirect_to_status(options, response_options); end
+
+  # @return [Boolean]
   def _url_host_allowed?(url); end
 
   class << self
@@ -4445,35 +4552,37 @@ class ActionController::RenderError < ::ActionController::ActionControllerError;
 # You get a concrete renderer class by invoking ActionController::Base#renderer.
 # For example:
 #
-# ApplicationController.renderer
+#   ApplicationController.renderer
 #
 # It allows you to call method #render directly.
 #
-# ApplicationController.renderer.render template: '...'
+#   ApplicationController.renderer.render template: '...'
 #
 # You can use this shortcut in a controller, instead of the previous example:
 #
-# ApplicationController.render template: '...'
+#   ApplicationController.render template: '...'
 #
 # #render allows you to use the same options that you can use when rendering in a controller.
 # For example:
 #
-# FooController.render :action, locals: { ... }, assigns: { ... }
+#   FooController.render :action, locals: { ... }, assigns: { ... }
 #
 # The template will be rendered in a Rack environment which is accessible through
 # ActionController::Renderer#env. You can set it up in two ways:
 #
 # *  by changing renderer defaults, like
 #
-# ApplicationController.renderer.defaults # => hash with default Rack environment
+#       ApplicationController.renderer.defaults # => hash with default Rack environment
 #
 # *  by initializing an instance of renderer by passing it a custom environment.
 #
-# ApplicationController.renderer.new(method: 'post', https: true)
+#       ApplicationController.renderer.new(method: 'post', https: true)
 class ActionController::Renderer
   # Accepts a custom Rack environment to render templates in.
   # It will be merged with the default Rack environment defined by
   # +ActionController::Renderer::DEFAULTS+.
+  #
+  # @return [Renderer] a new instance of Renderer
   def initialize(controller, env, defaults); end
 
   # Returns the value of attribute controller.
@@ -4490,13 +4599,13 @@ class ActionController::Renderer
   # The primary options are:
   # * <tt>:partial</tt> - See <tt>ActionView::PartialRenderer</tt> for details.
   # * <tt>:file</tt> - Renders an explicit template file. Add <tt>:locals</tt> to pass in, if so desired.
-  # It shouldn’t be used directly with unsanitized user input due to lack of validation.
+  #   It shouldn’t be used directly with unsanitized user input due to lack of validation.
   # * <tt>:inline</tt> - Renders an ERB template string.
   # * <tt>:plain</tt> - Renders provided text and sets the content type as <tt>text/plain</tt>.
   # * <tt>:html</tt> - Renders the provided HTML safe string, otherwise
-  # performs HTML escape on the string first. Sets the content type as <tt>text/html</tt>.
+  #   performs HTML escape on the string first. Sets the content type as <tt>text/html</tt>.
   # * <tt>:json</tt> - Renders the provided hash or object in JSON. You don't
-  # need to call <tt>.to_json</tt> on the object you want to render.
+  #   need to call <tt>.to_json</tt> on the object you want to render.
   # * <tt>:body</tt> - Renders provided text and sets content type of <tt>text/plain</tt>.
   #
   # If no <tt>options</tt> hash is passed or if <tt>:update</tt> is specified, then:
@@ -4512,13 +4621,13 @@ class ActionController::Renderer
   # The primary options are:
   # * <tt>:partial</tt> - See <tt>ActionView::PartialRenderer</tt> for details.
   # * <tt>:file</tt> - Renders an explicit template file. Add <tt>:locals</tt> to pass in, if so desired.
-  # It shouldn’t be used directly with unsanitized user input due to lack of validation.
+  #   It shouldn’t be used directly with unsanitized user input due to lack of validation.
   # * <tt>:inline</tt> - Renders an ERB template string.
   # * <tt>:plain</tt> - Renders provided text and sets the content type as <tt>text/plain</tt>.
   # * <tt>:html</tt> - Renders the provided HTML safe string, otherwise
-  # performs HTML escape on the string first. Sets the content type as <tt>text/html</tt>.
+  #   performs HTML escape on the string first. Sets the content type as <tt>text/html</tt>.
   # * <tt>:json</tt> - Renders the provided hash or object in JSON. You don't
-  # need to call <tt>.to_json</tt> on the object you want to render.
+  #   need to call <tt>.to_json</tt> on the object you want to render.
   # * <tt>:body</tt> - Renders provided text and sets content type of <tt>text/plain</tt>.
   #
   # If no <tt>options</tt> hash is passed or if <tt>:update</tt> is specified, then:
@@ -4578,12 +4687,12 @@ module ActionController::Renderers
     #
     # Create a csv renderer:
     #
-    # ActionController::Renderers.add :csv do |obj, options|
-    # filename = options[:filename] || 'data'
-    # str = obj.respond_to?(:to_csv) ? obj.to_csv : obj.to_s
-    # send_data str, type: Mime[:csv],
-    # disposition: "attachment; filename=#{filename}.csv"
-    # end
+    #   ActionController::Renderers.add :csv do |obj, options|
+    #     filename = options[:filename] || 'data'
+    #     str = obj.respond_to?(:to_csv) ? obj.to_csv : obj.to_s
+    #     send_data str, type: Mime[:csv],
+    #       disposition: "attachment; filename=#{filename}.csv"
+    #   end
     #
     # Note that we used Mime[:csv] for the csv mime type as it comes with Rails.
     # For a custom renderer, you'll need to register a mime type with
@@ -4591,20 +4700,20 @@ module ActionController::Renderers
     #
     # To use the csv renderer in a controller action:
     #
-    # def show
-    # @csvable = Csvable.find(params[:id])
-    # respond_to do |format|
-    # format.html
-    # format.csv { render csv: @csvable, filename: @csvable.name }
-    # end
-    # end
+    #   def show
+    #     @csvable = Csvable.find(params[:id])
+    #     respond_to do |format|
+    #       format.html
+    #       format.csv { render csv: @csvable, filename: @csvable.name }
+    #     end
+    #   end
     def add(key, &block); end
 
     # This method is the opposite of add method.
     #
     # To remove a csv renderer:
     #
-    # ActionController::Renderers.remove(:csv)
+    #   ActionController::Renderers.remove(:csv)
     def remove(key); end
   end
 
@@ -4665,17 +4774,17 @@ module ActionController::Renderers::ClassMethods
   # +use_renderers+. For example, a controller that includes only the <tt>:json</tt> renderer
   # (+_render_with_renderer_json+) might look like:
   #
-  # class MetalRenderingController < ActionController::Metal
-  # include AbstractController::Rendering
-  # include ActionController::Rendering
-  # include ActionController::Renderers
+  #   class MetalRenderingController < ActionController::Metal
+  #     include AbstractController::Rendering
+  #     include ActionController::Rendering
+  #     include ActionController::Renderers
   #
-  # use_renderers :json
+  #     use_renderers :json
   #
-  # def show
-  # render json: record
-  # end
-  # end
+  #     def show
+  #       render json: record
+  #     end
+  #   end
   #
   # You must specify a +use_renderer+, else the +controller.renderer+ and
   # +controller._renderers+ will be <tt>nil</tt>, and the action will fail.
@@ -4700,17 +4809,17 @@ module ActionController::Renderers::ClassMethods
   # +use_renderers+. For example, a controller that includes only the <tt>:json</tt> renderer
   # (+_render_with_renderer_json+) might look like:
   #
-  # class MetalRenderingController < ActionController::Metal
-  # include AbstractController::Rendering
-  # include ActionController::Rendering
-  # include ActionController::Renderers
+  #   class MetalRenderingController < ActionController::Metal
+  #     include AbstractController::Rendering
+  #     include ActionController::Rendering
+  #     include ActionController::Renderers
   #
-  # use_renderers :json
+  #     use_renderers :json
   #
-  # def show
-  # render json: record
-  # end
-  # end
+  #     def show
+  #       render json: record
+  #     end
+  #   end
   #
   # You must specify a +use_renderer+, else the +controller.renderer+ and
   # +controller._renderers+ will be <tt>nil</tt>, and the action will fail.
@@ -4730,6 +4839,8 @@ module ActionController::Rendering
   def process_action(*_arg0); end
 
   # Check for double render errors and set the content_type after rendering.
+  #
+  # @raise [::AbstractController::DoubleRenderError]
   def render(*args); end
 
   def render_to_body(options = T.unsafe(nil)); end
@@ -4759,7 +4870,7 @@ end
 
 module ActionController::Rendering::ClassMethods
   def inherited(klass); end
-  def render(*_arg0, **_arg1, &_arg2); end
+  def render(*_arg0, &_arg1); end
 
   # Returns a renderer instance (inherited from ActionController::Renderer)
   # for the controller.
@@ -4800,9 +4911,9 @@ ActionController::Rendering::RENDER_FORMATS_IN_PRIORITY = T.let(T.unsafe(nil), A
 # One way to achieve this is to use the <tt>:null_session</tt> strategy instead,
 # which allows unverified requests to be handled, but with an empty session:
 #
-# class ApplicationController < ActionController::Base
-# protect_from_forgery with: :null_session
-# end
+#   class ApplicationController < ActionController::Base
+#     protect_from_forgery with: :null_session
+#   end
 #
 # Note that API only applications don't include this module or a session middleware
 # by default, and so don't require CSRF protection to be configured.
@@ -4830,6 +4941,8 @@ module ActionController::RequestForgeryProtection
   private
 
   # Checks if any of the authenticity tokens from the request are valid.
+  #
+  # @return [Boolean]
   def any_authenticity_token_valid?; end
 
   def compare_with_global_token(token, session); end
@@ -4853,6 +4966,8 @@ module ActionController::RequestForgeryProtection
 
   # If the +verify_authenticity_token+ before_action ran, verify that
   # JavaScript responses are only served to same-origin GET requests.
+  #
+  # @return [Boolean]
   def marked_for_same_origin_verification?; end
 
   def mask_token(raw_token); end
@@ -4863,12 +4978,16 @@ module ActionController::RequestForgeryProtection
   def masked_authenticity_token(session, form_options: T.unsafe(nil)); end
 
   # Check for cross-origin JavaScript responses.
+  #
+  # @return [Boolean]
   def non_xhr_javascript_response?; end
 
   def normalize_action_path(action_path); end
   def per_form_csrf_token(session, action_path, method); end
 
   # Checks if the controller allows forgery protection.
+  #
+  # @return [Boolean]
   def protect_against_forgery?; end
 
   def real_csrf_token(session); end
@@ -4881,12 +5000,17 @@ module ActionController::RequestForgeryProtection
   # Checks the client's masked token to see if it matches the
   # session token. Essentially the inverse of
   # +masked_authenticity_token+.
+  #
+  # @return [Boolean]
   def valid_authenticity_token?(session, encoded_masked_token); end
 
+  # @return [Boolean]
   def valid_per_form_csrf_token?(token, session); end
 
   # Checks if the request originated from the same origin by looking at the
   # Origin header.
+  #
+  # @return [Boolean]
   def valid_request_origin?; end
 
   # Returns true or false if a request is verified. Checks:
@@ -4894,6 +5018,8 @@ module ActionController::RequestForgeryProtection
   # * Is it a GET or HEAD request? GETs should be safe and idempotent
   # * Does the form_authenticity_token match the given token value from the params?
   # * Does the X-CSRF-Token header match the form_authenticity_token?
+  #
+  # @return [Boolean]
   def verified_request?; end
 
   # The actual before_action that is used to verify the CSRF token.
@@ -4939,27 +5065,27 @@ ActionController::RequestForgeryProtection::CROSS_ORIGIN_JAVASCRIPT_WARNING = T.
 module ActionController::RequestForgeryProtection::ClassMethods
   # Turn on request forgery protection. Bear in mind that GET and HEAD requests are not checked.
   #
-  # class ApplicationController < ActionController::Base
-  # protect_from_forgery
-  # end
+  #   class ApplicationController < ActionController::Base
+  #     protect_from_forgery
+  #   end
   #
-  # class FooController < ApplicationController
-  # protect_from_forgery except: :index
-  # end
+  #   class FooController < ApplicationController
+  #     protect_from_forgery except: :index
+  #   end
   #
   # You can disable forgery protection on controller by skipping the verification before_action:
   #
-  # skip_before_action :verify_authenticity_token
+  #   skip_before_action :verify_authenticity_token
   #
   # Valid Options:
   #
   # * <tt>:only/:except</tt> - Only apply forgery protection to a subset of actions. For example <tt>only: [ :create, :create_all ]</tt>.
   # * <tt>:if/:unless</tt> - Turn off the forgery protection entirely depending on the passed Proc or method reference.
   # * <tt>:prepend</tt> - By default, the verification of the authentication token will be added at the position of the
-  # protect_from_forgery call in your application. This means any callbacks added before are run first. This is useful
-  # when you want your forgery protection to depend on other callbacks, like authentication methods (Oauth vs Cookie auth).
+  #   protect_from_forgery call in your application. This means any callbacks added before are run first. This is useful
+  #   when you want your forgery protection to depend on other callbacks, like authentication methods (Oauth vs Cookie auth).
   #
-  # If you need to add verification to the beginning of the callback chain, use <tt>prepend: true</tt>.
+  #   If you need to add verification to the beginning of the callback chain, use <tt>prepend: true</tt>.
   # * <tt>:with</tt> - Set the method to handle unverified request.
   #
   # Valid unverified request handling methods are:
@@ -4970,7 +5096,7 @@ module ActionController::RequestForgeryProtection::ClassMethods
 
   # Turn off request forgery protection. This is a wrapper for:
   #
-  # skip_before_action :verify_authenticity_token
+  #   skip_before_action :verify_authenticity_token
   #
   # See +skip_before_action+ for allowed options.
   def skip_forgery_protection(options = T.unsafe(nil)); end
@@ -4985,12 +5111,15 @@ ActionController::RequestForgeryProtection::NULL_ORIGIN_MESSAGE = T.let(T.unsafe
 module ActionController::RequestForgeryProtection::ProtectionMethods; end
 
 class ActionController::RequestForgeryProtection::ProtectionMethods::Exception
+  # @return [Exception] a new instance of Exception
   def initialize(controller); end
 
+  # @raise [ActionController::InvalidAuthenticityToken]
   def handle_unverified_request; end
 end
 
 class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
+  # @return [NullSession] a new instance of NullSession
   def initialize(controller); end
 
   # This is the method that defines the application behavior when a request is found to be unverified.
@@ -5002,15 +5131,18 @@ class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession
 end
 
 class ActionController::RequestForgeryProtection::ProtectionMethods::NullSession::NullSessionHash < ::Rack::Session::Abstract::SessionHash
+  # @return [NullSessionHash] a new instance of NullSessionHash
   def initialize(req); end
 
   # no-op
   def destroy; end
 
+  # @return [Boolean]
   def exists?; end
 end
 
 class ActionController::RequestForgeryProtection::ProtectionMethods::ResetSession
+  # @return [ResetSession] a new instance of ResetSession
   def initialize(controller); end
 
   def handle_unverified_request; end
@@ -5032,6 +5164,8 @@ module ActionController::Rescue
   # +consider_all_requests_local+ is +false+. By default, it returns
   # +false+, but someone may set it to <tt>request.local?</tt> so local
   # requests in production still show the detailed exception pages.
+  #
+  # @return [Boolean]
   def show_detailed_exceptions?; end
 
   private
@@ -5054,20 +5188,22 @@ end
 # Raised when a nested respond_to is triggered and the content types of each
 # are incompatible. For example:
 #
-# respond_to do |outer_type|
-# outer_type.js do
-# respond_to do |inner_type|
-# inner_type.html { render body: "HTML" }
-# end
-# end
-# end
+#  respond_to do |outer_type|
+#    outer_type.js do
+#      respond_to do |inner_type|
+#        inner_type.html { render body: "HTML" }
+#      end
+#    end
+#  end
 class ActionController::RespondToMismatchError < ::ActionController::ActionControllerError
+  # @return [RespondToMismatchError] a new instance of RespondToMismatchError
   def initialize(message = T.unsafe(nil)); end
 end
 
 ActionController::RespondToMismatchError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), String)
 
 class ActionController::RoutingError < ::ActionController::ActionControllerError
+  # @return [RoutingError] a new instance of RoutingError
   def initialize(message, failures = T.unsafe(nil)); end
 
   # Returns the value of attribute failures.
@@ -5075,6 +5211,7 @@ class ActionController::RoutingError < ::ActionController::ActionControllerError
 end
 
 class ActionController::SessionOverflowError < ::ActionController::ActionControllerError
+  # @return [SessionOverflowError] a new instance of SessionOverflowError
   def initialize(message = T.unsafe(nil)); end
 end
 
@@ -5103,12 +5240,12 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # Streaming can be added to a given template easily, all you need to do is
 # to pass the :stream option.
 #
-# class PostsController
-# def index
-# @posts = Post.all
-# render stream: true
-# end
-# end
+#   class PostsController
+#     def index
+#       @posts = Post.all
+#       render stream: true
+#     end
+#   end
 #
 # == When to use streaming
 #
@@ -5119,22 +5256,22 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # In such actions, you want to delay queries execution as much as you can.
 # For example, imagine the following +dashboard+ action:
 #
-# def dashboard
-# @posts = Post.all
-# @pages = Page.all
-# @articles = Article.all
-# end
+#   def dashboard
+#     @posts = Post.all
+#     @pages = Page.all
+#     @articles = Article.all
+#   end
 #
 # Most of the queries here are happening in the controller. In order to benefit
 # from streaming you would want to rewrite it as:
 #
-# def dashboard
-# # Allow lazy execution of the queries
-# @posts = Post.all
-# @pages = Page.all
-# @articles = Article.all
-# render stream: true
-# end
+#   def dashboard
+#     # Allow lazy execution of the queries
+#     @posts = Post.all
+#     @pages = Page.all
+#     @articles = Article.all
+#     render stream: true
+#   end
 #
 # Notice that :stream only works with templates. Rendering :json
 # or :xml with :stream won't work.
@@ -5154,37 +5291,37 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # Take a simple example where the layout expects the template to tell
 # which title to use:
 #
-# <html>
-# <head><title><%= yield :title %></title></head>
-# <body><%= yield %></body>
-# </html>
+#   <html>
+#     <head><title><%= yield :title %></title></head>
+#     <body><%= yield %></body>
+#   </html>
 #
 # You would use +content_for+ in your template to specify the title:
 #
-# <%= content_for :title, "Main" %>
-# Hello
+#   <%= content_for :title, "Main" %>
+#   Hello
 #
 # And the final result would be:
 #
-# <html>
-# <head><title>Main</title></head>
-# <body>Hello</body>
-# </html>
+#   <html>
+#     <head><title>Main</title></head>
+#     <body>Hello</body>
+#   </html>
 #
 # However, if +content_for+ is called several times, the final result
 # would have all calls concatenated. For instance, if we have the following
 # template:
 #
-# <%= content_for :title, "Main" %>
-# Hello
-# <%= content_for :title, " page" %>
+#   <%= content_for :title, "Main" %>
+#   Hello
+#   <%= content_for :title, " page" %>
 #
 # The final result would be:
 #
-# <html>
-# <head><title>Main page</title></head>
-# <body>Hello</body>
-# </html>
+#   <html>
+#     <head><title>Main page</title></head>
+#     <body>Hello</body>
+#   </html>
 #
 # This means that, if you have <code>yield :title</code> in your layout
 # and you want to use streaming, you would have to render the whole template
@@ -5195,16 +5332,16 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 #
 # For instance, the template above using +provide+ would be:
 #
-# <%= provide :title, "Main" %>
-# Hello
-# <%= content_for :title, " page" %>
+#   <%= provide :title, "Main" %>
+#   Hello
+#   <%= content_for :title, " page" %>
 #
 # Giving:
 #
-# <html>
-# <head><title>Main</title></head>
-# <body>Hello</body>
-# </html>
+#   <html>
+#     <head><title>Main</title></head>
+#     <body>Hello</body>
+#   </html>
 #
 # That said, when streaming, you need to properly check your templates
 # and choose when to use +provide+ and +content_for+.
@@ -5236,7 +5373,7 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # Currently, when an exception happens in development or production, Rails
 # will automatically stream to the client:
 #
-# "><script>window.location = "/500.html"</script></html>
+#   "><script>window.location = "/500.html"</script></html>
 #
 # The first two characters (">) are required in case the exception happens
 # while rendering attributes for a given tag. You can check the real cause
@@ -5252,12 +5389,12 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # Unicorn supports streaming but it needs to be configured. For this, you
 # need to create a config file as follow:
 #
-# # unicorn.config.rb
-# listen 3000, tcp_nopush: false
+#   # unicorn.config.rb
+#   listen 3000, tcp_nopush: false
 #
 # And use it on initialization:
 #
-# unicorn_rails --config-file unicorn.config.rb
+#   unicorn_rails --config-file unicorn.config.rb
 #
 # You may also want to configure other parameters like <tt>:tcp_nodelay</tt>.
 # Please check its documentation for more information: https://bogomips.org/unicorn/Unicorn/Configurator.html#method-i-listen
@@ -5291,60 +5428,60 @@ end
 # predefined raise/rescue flow to end up as a <tt>400 Bad Request</tt> with no
 # effort.
 #
-# class PeopleController < ActionController::Base
-# # Using "Person.create(params[:person])" would raise an
-# # ActiveModel::ForbiddenAttributesError exception because it'd
-# # be using mass assignment without an explicit permit step.
-# # This is the recommended form:
-# def create
-# Person.create(person_params)
-# end
+#   class PeopleController < ActionController::Base
+#     # Using "Person.create(params[:person])" would raise an
+#     # ActiveModel::ForbiddenAttributesError exception because it'd
+#     # be using mass assignment without an explicit permit step.
+#     # This is the recommended form:
+#     def create
+#       Person.create(person_params)
+#     end
 #
-# # This will pass with flying colors as long as there's a person key in the
-# # parameters, otherwise it'll raise an ActionController::ParameterMissing
-# # exception, which will get caught by ActionController::Base and turned
-# # into a 400 Bad Request reply.
-# def update
-# redirect_to current_account.people.find(params[:id]).tap { |person|
-# person.update!(person_params)
-# }
-# end
+#     # This will pass with flying colors as long as there's a person key in the
+#     # parameters, otherwise it'll raise an ActionController::ParameterMissing
+#     # exception, which will get caught by ActionController::Base and turned
+#     # into a 400 Bad Request reply.
+#     def update
+#       redirect_to current_account.people.find(params[:id]).tap { |person|
+#         person.update!(person_params)
+#       }
+#     end
 #
-# private
-# # Using a private method to encapsulate the permissible parameters is
-# # a good pattern since you'll be able to reuse the same permit
-# # list between create and update. Also, you can specialize this method
-# # with per-user checking of permissible attributes.
-# def person_params
-# params.require(:person).permit(:name, :age)
-# end
-# end
+#     private
+#       # Using a private method to encapsulate the permissible parameters is
+#       # a good pattern since you'll be able to reuse the same permit
+#       # list between create and update. Also, you can specialize this method
+#       # with per-user checking of permissible attributes.
+#       def person_params
+#         params.require(:person).permit(:name, :age)
+#       end
+#   end
 #
 # In order to use <tt>accepts_nested_attributes_for</tt> with Strong \Parameters, you
 # will need to specify which nested attributes should be permitted. You might want
 # to allow +:id+ and +:_destroy+, see ActiveRecord::NestedAttributes for more information.
 #
-# class Person
-# has_many :pets
-# accepts_nested_attributes_for :pets
-# end
+#   class Person
+#     has_many :pets
+#     accepts_nested_attributes_for :pets
+#   end
 #
-# class PeopleController < ActionController::Base
-# def create
-# Person.create(person_params)
-# end
+#   class PeopleController < ActionController::Base
+#     def create
+#       Person.create(person_params)
+#     end
 #
-# ...
+#     ...
 #
-# private
+#     private
 #
-# def person_params
-# # It's mandatory to specify the nested attributes that should be permitted.
-# # If you use `permit` with just the key that points to the nested attributes hash,
-# # it will return an empty hash.
-# params.require(:person).permit(:name, :age, pets_attributes: [ :id, :name, :category ])
-# end
-# end
+#       def person_params
+#         # It's mandatory to specify the nested attributes that should be permitted.
+#         # If you use `permit` with just the key that points to the nested attributes hash,
+#         # it will return an empty hash.
+#         params.require(:person).permit(:name, :age, pets_attributes: [ :id, :name, :category ])
+#       end
+#   end
 #
 # See ActionController::Parameters.require and ActionController::Parameters.permit
 # for more information.
@@ -5360,6 +5497,7 @@ module ActionController::StrongParameters
 end
 
 module ActionController::TemplateAssertions
+  # @raise [NoMethodError]
   def assert_template(options = T.unsafe(nil), message = T.unsafe(nil)); end
 end
 
@@ -5381,32 +5519,32 @@ end
 #
 # Functional tests are written as follows:
 # 1. First, one uses the +get+, +post+, +patch+, +put+, +delete+ or +head+ method to simulate
-# an HTTP request.
+#    an HTTP request.
 # 2. Then, one asserts whether the current state is as expected. "State" can be anything:
-# the controller's HTTP response, the database contents, etc.
+#    the controller's HTTP response, the database contents, etc.
 #
 # For example:
 #
-# class BooksControllerTest < ActionController::TestCase
-# def test_create
-# # Simulate a POST response with the given HTTP parameters.
-# post(:create, params: { book: { title: "Love Hina" }})
+#   class BooksControllerTest < ActionController::TestCase
+#     def test_create
+#       # Simulate a POST response with the given HTTP parameters.
+#       post(:create, params: { book: { title: "Love Hina" }})
 #
-# # Asserts that the controller tried to redirect us to
-# # the created book's URI.
-# assert_response :found
+#       # Asserts that the controller tried to redirect us to
+#       # the created book's URI.
+#       assert_response :found
 #
-# # Asserts that the controller really put the book in the database.
-# assert_not_nil Book.find_by(title: "Love Hina")
-# end
-# end
+#       # Asserts that the controller really put the book in the database.
+#       assert_not_nil Book.find_by(title: "Love Hina")
+#     end
+#   end
 #
 # You can also send a real document in the simulated HTTP request.
 #
-# def test_create
-# json = {book: { title: "Love Hina" }}.to_json
-# post :create, body: json
-# end
+#   def test_create
+#     json = {book: { title: "Love Hina" }}.to_json
+#     post :create, body: json
+#   end
 #
 # == Special instance variables
 #
@@ -5414,16 +5552,16 @@ end
 # variables for use in the tests:
 #
 # <b>@controller</b>::
-# The controller instance that will be tested.
+#      The controller instance that will be tested.
 # <b>@request</b>::
-# An ActionController::TestRequest, representing the current HTTP
-# request. You can modify this object before sending the HTTP request. For example,
-# you might want to set some session properties before sending a GET request.
+#      An ActionController::TestRequest, representing the current HTTP
+#      request. You can modify this object before sending the HTTP request. For example,
+#      you might want to set some session properties before sending a GET request.
 # <b>@response</b>::
-# An ActionDispatch::TestResponse object, representing the response
-# of the last HTTP response. In the above example, <tt>@response</tt> becomes valid
-# after calling +post+. If the various assert methods are not sufficient, then you
-# may use this object to inspect the HTTP response in detail.
+#      An ActionDispatch::TestResponse object, representing the response
+#      of the last HTTP response. In the above example, <tt>@response</tt> becomes valid
+#      after calling +post+. If the various assert methods are not sufficient, then you
+#      may use this object to inspect the HTTP response in detail.
 #
 # == Controller is automatically inferred
 #
@@ -5431,9 +5569,9 @@ end
 # from the test class name. If the controller cannot be inferred from the test
 # class name, you can explicitly set it with +tests+.
 #
-# class SpecialEdgeCaseWidgetsControllerTest < ActionController::TestCase
-# tests WidgetController
-# end
+#   class SpecialEdgeCaseWidgetsControllerTest < ActionController::TestCase
+#     tests WidgetController
+#   end
 #
 # == \Testing controller internals
 #
@@ -5446,8 +5584,8 @@ end
 #
 # These collections can be used just like any other hash:
 #
-# assert_equal "Dave", cookies[:name] # makes sure that a cookie called :name was set as "Dave"
-# assert flash.empty? # makes sure that there's nothing in the flash
+#   assert_equal "Dave", cookies[:name] # makes sure that a cookie called :name was set as "Dave"
+#   assert flash.empty? # makes sure that there's nothing in the flash
 #
 # On top of the collections, you have the complete URL that a given action redirected to available in <tt>redirect_to_url</tt>.
 #
@@ -5459,18 +5597,18 @@ end
 # Sometimes you need to set up the session and cookie variables for a test.
 # To do this just assign a value to the session or cookie collection:
 #
-# session[:key] = "value"
-# cookies[:key] = "value"
+#   session[:key] = "value"
+#   cookies[:key] = "value"
 #
 # To clear the cookies for a test just clear the cookie collection:
 #
-# cookies.clear
+#   cookies.clear
 #
 # == \Testing named routes
 #
 # If you're using named routes, they can be easily tested using the original named routes' methods straight in the test case.
 #
-# assert_redirected_to page_url(title: 'foo')
+#  assert_redirected_to page_url(title: 'foo')
 class ActionController::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::ConstantLookup
   include ::Rails::Dom::Testing::Assertions::DomAssertions
@@ -5527,7 +5665,7 @@ module ActionController::TestCase::Behavior
   # - +action+: The controller action to call.
   # - +params+: The hash with HTTP parameters that you want to pass. This may be +nil+.
   # - +body+: The request body with a string that is appropriately encoded
-  # (<tt>application/x-www-form-urlencoded</tt> or <tt>multipart/form-data</tt>).
+  #   (<tt>application/x-www-form-urlencoded</tt> or <tt>multipart/form-data</tt>).
   # - +session+: A hash of parameters to store in the session. This may be +nil+.
   # - +flash+: A hash of parameters to store in the flash. This may be +nil+.
   #
@@ -5535,10 +5673,10 @@ module ActionController::TestCase::Behavior
   # +post+, +patch+, +put+, +delete+, and +head+.
   # Example sending parameters, session and setting a flash message:
   #
-  # get :show,
-  # params: { id: 7 },
-  # session: { user_id: 1 },
-  # flash: { notice: 'This is flash message' }
+  #   get :show,
+  #     params: { id: 7 },
+  #     session: { user_id: 1 },
+  #     flash: { notice: 'This is flash message' }
   #
   # Note that the request method is not verified. The different methods are
   # available to make the tests more expressive.
@@ -5561,25 +5699,25 @@ module ActionController::TestCase::Behavior
   #
   # - +action+: The controller action to call.
   # - +method+: Request method used to send the HTTP request. Possible values
-  # are +GET+, +POST+, +PATCH+, +PUT+, +DELETE+, +HEAD+. Defaults to +GET+. Can be a symbol.
+  #   are +GET+, +POST+, +PATCH+, +PUT+, +DELETE+, +HEAD+. Defaults to +GET+. Can be a symbol.
   # - +params+: The hash with HTTP parameters that you want to pass. This may be +nil+.
   # - +body+: The request body with a string that is appropriately encoded
-  # (<tt>application/x-www-form-urlencoded</tt> or <tt>multipart/form-data</tt>).
+  #   (<tt>application/x-www-form-urlencoded</tt> or <tt>multipart/form-data</tt>).
   # - +session+: A hash of parameters to store in the session. This may be +nil+.
   # - +flash+: A hash of parameters to store in the flash. This may be +nil+.
   # - +format+: Request format. Defaults to +nil+. Can be string or symbol.
   # - +as+: Content type. Defaults to +nil+. Must be a symbol that corresponds
-  # to a mime type.
+  #   to a mime type.
   #
   # Example calling +create+ action and sending two params:
   #
-  # process :create,
-  # method: 'POST',
-  # params: {
-  # user: { name: 'Gaurish Sharma', email: 'user@example.com' }
-  # },
-  # session: { user_id: 1 },
-  # flash: { notice: 'This is flash message' }
+  #   process :create,
+  #     method: 'POST',
+  #     params: {
+  #       user: { name: 'Gaurish Sharma', email: 'user@example.com' }
+  #     },
+  #     session: { user_id: 1 },
+  #     flash: { notice: 'This is flash message' }
   #
   # To simulate +GET+, +POST+, +PATCH+, +PUT+, +DELETE+ and +HEAD+ requests
   # prefer using #get, #post, #patch, #put, #delete and #head methods
@@ -5631,15 +5769,16 @@ module ActionController::TestCase::Behavior::ClassMethods
   # Sets the controller class name. Useful if the name can't be inferred from test class.
   # Normalizes +controller_class+ before using.
   #
-  # tests WidgetController
-  # tests :widget
-  # tests 'widget'
+  #   tests WidgetController
+  #   tests :widget
+  #   tests 'widget'
   def tests(controller_class); end
 end
 
 # ActionController::TestCase will be deprecated and moved to a gem in the future.
 # Please use ActionDispatch::IntegrationTest going forward.
 class ActionController::TestRequest < ::ActionDispatch::TestRequest
+  # @return [TestRequest] a new instance of TestRequest
   def initialize(env, session, controller_class); end
 
   def assign_parameters(routes, controller_path, action, parameters, generated_path, query_string_keys); end
@@ -5671,11 +5810,15 @@ ActionController::TestRequest::ENCODER = T.let(T.unsafe(nil), T.untyped)
 
 # Methods #destroy and #load! are overridden to avoid calling methods on the
 class ActionController::TestSession < ::Rack::Session::Abstract::PersistedSecure::SecureSessionHash
+  # @return [TestSession] a new instance of TestSession
   def initialize(session = T.unsafe(nil)); end
 
   def destroy; end
   def dig(*keys); end
+
+  # @return [Boolean]
   def exists?; end
+
   def fetch(key, *args, &block); end
   def keys; end
   def values; end
@@ -5699,10 +5842,11 @@ end
 # Raised when a Parameters instance is not marked as permitted and
 # an operation to transform it to hash is called.
 #
-# params = ActionController::Parameters.new(a: "123", b: "456")
-# params.to_h
-# # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
+#   params = ActionController::Parameters.new(a: "123", b: "456")
+#   params.to_h
+#   # => ActionController::UnfilteredParameters: unable to convert unpermitted parameters to hash
 class ActionController::UnfilteredParameters < ::ArgumentError
+  # @return [UnfilteredParameters] a new instance of UnfilteredParameters
   def initialize; end
 end
 
@@ -5713,10 +5857,11 @@ class ActionController::UnknownHttpMethod < ::ActionController::ActionController
 # ActionController::Parameters.action_on_unpermitted_parameters
 # is set to <tt>:raise</tt>.
 #
-# params = ActionController::Parameters.new(a: "123", b: "456")
-# params.permit(:c)
-# # => ActionController::UnpermittedParameters: found unpermitted parameters: :a, :b
+#   params = ActionController::Parameters.new(a: "123", b: "456")
+#   params.permit(:c)
+#   # => ActionController::UnpermittedParameters: found unpermitted parameters: :a, :b
 class ActionController::UnpermittedParameters < ::IndexError
+  # @return [UnpermittedParameters] a new instance of UnpermittedParameters
   def initialize(params); end
 
   def params; end
@@ -5732,17 +5877,17 @@ end
 # that responds to the +host+, +optional_port+, +protocol+ and
 # +symbolized_path_parameter+ methods.
 #
-# class RootUrl
-# include ActionController::UrlFor
-# include Rails.application.routes.url_helpers
+#   class RootUrl
+#     include ActionController::UrlFor
+#     include Rails.application.routes.url_helpers
 #
-# delegate :env, :request, to: :controller
+#     delegate :env, :request, to: :controller
 #
-# def initialize(controller)
-# @controller = controller
-# @url        = root_path # named route from the application.
-# end
-# end
+#     def initialize(controller)
+#       @controller = controller
+#       @url        = root_path # named route from the application.
+#     end
+#   end
 module ActionController::UrlFor
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -5770,6 +5915,7 @@ end
 class ActionController::UrlGenerationError < ::ActionController::ActionControllerError
   include ::DidYouMean::Correctable
 
+  # @return [UrlGenerationError] a new instance of UrlGenerationError
   def initialize(message, routes = T.unsafe(nil), route_name = T.unsafe(nil), method_name = T.unsafe(nil)); end
 
   # Returns the value of attribute method_name.
@@ -5783,6 +5929,7 @@ class ActionController::UrlGenerationError < ::ActionController::ActionControlle
 end
 
 class ActionController::UrlGenerationError::Correction
+  # @return [Correction] a new instance of Correction
   def initialize(error); end
 
   def corrections; end
@@ -5801,6 +5948,7 @@ module ActionDispatch
 end
 
 class ActionDispatch::ActionableExceptions
+  # @return [ActionableExceptions] a new instance of ActionableExceptions
   def initialize(app); end
 
   def call(env); end
@@ -5809,7 +5957,9 @@ class ActionDispatch::ActionableExceptions
 
   private
 
+  # @return [Boolean]
   def actionable_request?(request); end
+
   def redirect_to(location); end
 
   class << self
@@ -5825,6 +5975,9 @@ class ActionDispatch::AssertionResponse
   # Accepts a specific response status code as an Integer (404) or String
   # ('404') or a response status range as a Symbol pseudo-code (:success,
   # indicating any 200-299 status code).
+  #
+  # @raise [ArgumentError]
+  # @return [AssertionResponse] a new instance of AssertionResponse
   def initialize(code_or_name); end
 
   # Returns the value of attribute code.
@@ -5856,17 +6009,17 @@ end
 module ActionDispatch::Assertions::ResponseAssertions
   # Asserts that the response is a redirect to a URL matching the given options.
   #
-  # # Asserts that the redirection was to the "index" action on the WeblogController
-  # assert_redirected_to controller: "weblog", action: "index"
+  #   # Asserts that the redirection was to the "index" action on the WeblogController
+  #   assert_redirected_to controller: "weblog", action: "index"
   #
-  # # Asserts that the redirection was to the named route login_url
-  # assert_redirected_to login_url
+  #   # Asserts that the redirection was to the named route login_url
+  #   assert_redirected_to login_url
   #
-  # # Asserts that the redirection was to the URL for @customer
-  # assert_redirected_to @customer
+  #   # Asserts that the redirection was to the URL for @customer
+  #   assert_redirected_to @customer
   #
-  # # Asserts that the redirection matches the regular expression
-  # assert_redirected_to %r(\Ahttp://example.org)
+  #   # Asserts that the redirection matches the regular expression
+  #   assert_redirected_to %r(\Ahttp://example.org)
   def assert_redirected_to(options = T.unsafe(nil), message = T.unsafe(nil)); end
 
   # Asserts that the response is one of the following types:
@@ -5880,11 +6033,11 @@ module ActionDispatch::Assertions::ResponseAssertions
   # or its symbolic equivalent <tt>assert_response(:not_implemented)</tt>.
   # See Rack::Utils::SYMBOL_TO_STATUS_CODE for a full list.
   #
-  # # Asserts that the response was a redirection
-  # assert_response :redirect
+  #   # Asserts that the response was a redirection
+  #   assert_response :redirect
   #
-  # # Asserts that the response code was status code 401 (unauthorized)
-  # assert_response 401
+  #   # Asserts that the response code was status code 401 (unauthorized)
+  #   assert_response 401
   def assert_response(type, message = T.unsafe(nil)); end
 
   private
@@ -5910,17 +6063,17 @@ module ActionDispatch::Assertions::RoutingAssertions
   #
   # The +defaults+ parameter is unused.
   #
-  # # Asserts that the default action is generated for a route with no action
-  # assert_generates "/items", controller: "items", action: "index"
+  #   # Asserts that the default action is generated for a route with no action
+  #   assert_generates "/items", controller: "items", action: "index"
   #
-  # # Tests that the list action is properly routed
-  # assert_generates "/items/list", controller: "items", action: "list"
+  #   # Tests that the list action is properly routed
+  #   assert_generates "/items/list", controller: "items", action: "list"
   #
-  # # Tests the generation of a route with a parameter
-  # assert_generates "/items/list/1", { controller: "items", action: "list", id: "1" }
+  #   # Tests the generation of a route with a parameter
+  #   assert_generates "/items/list/1", { controller: "items", action: "list", id: "1" }
   #
-  # # Asserts that the generated route gives us our custom route
-  # assert_generates "changesets/12", { controller: 'scm', action: 'show_diff', revision: "12" }
+  #   # Asserts that the generated route gives us our custom route
+  #   assert_generates "changesets/12", { controller: 'scm', action: 'show_diff', revision: "12" }
   def assert_generates(expected_path, options, defaults = T.unsafe(nil), extras = T.unsafe(nil), message = T.unsafe(nil)); end
 
   # Asserts that the routing of the given +path+ was handled correctly and that the parsed options (given in the +expected_options+ hash)
@@ -5930,29 +6083,29 @@ module ActionDispatch::Assertions::RoutingAssertions
   # requiring a specific HTTP method. The hash should contain a :path with the incoming request path
   # and a :method containing the required HTTP verb.
   #
-  # # Asserts that POSTing to /items will call the create action on ItemsController
-  # assert_recognizes({controller: 'items', action: 'create'}, {path: 'items', method: :post})
+  #   # Asserts that POSTing to /items will call the create action on ItemsController
+  #   assert_recognizes({controller: 'items', action: 'create'}, {path: 'items', method: :post})
   #
   # You can also pass in +extras+ with a hash containing URL parameters that would normally be in the query string. This can be used
   # to assert that values in the query string will end up in the params hash correctly. To test query strings you must use the extras
   # argument because appending the query string on the path directly will not work. For example:
   #
-  # # Asserts that a path of '/items/list/1?view=print' returns the correct options
-  # assert_recognizes({controller: 'items', action: 'list', id: '1', view: 'print'}, 'items/list/1', { view: "print" })
+  #   # Asserts that a path of '/items/list/1?view=print' returns the correct options
+  #   assert_recognizes({controller: 'items', action: 'list', id: '1', view: 'print'}, 'items/list/1', { view: "print" })
   #
   # The +message+ parameter allows you to pass in an error message that is displayed upon failure.
   #
-  # # Check the default route (i.e., the index action)
-  # assert_recognizes({controller: 'items', action: 'index'}, 'items')
+  #   # Check the default route (i.e., the index action)
+  #   assert_recognizes({controller: 'items', action: 'index'}, 'items')
   #
-  # # Test a specific action
-  # assert_recognizes({controller: 'items', action: 'list'}, 'items/list')
+  #   # Test a specific action
+  #   assert_recognizes({controller: 'items', action: 'list'}, 'items/list')
   #
-  # # Test an action with a parameter
-  # assert_recognizes({controller: 'items', action: 'destroy', id: '1'}, 'items/destroy/1')
+  #   # Test an action with a parameter
+  #   assert_recognizes({controller: 'items', action: 'destroy', id: '1'}, 'items/destroy/1')
   #
-  # # Test a custom route
-  # assert_recognizes({controller: 'items', action: 'show', id: '1'}, 'view/item1')
+  #   # Test a custom route
+  #   assert_recognizes({controller: 'items', action: 'show', id: '1'}, 'view/item1')
   def assert_recognizes(expected_options, path, extras = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # Asserts that path and options match both ways; in other words, it verifies that <tt>path</tt> generates
@@ -5962,20 +6115,20 @@ module ActionDispatch::Assertions::RoutingAssertions
   # The +extras+ hash allows you to specify options that would normally be provided as a query string to the action. The
   # +message+ parameter allows you to specify a custom error message to display upon failure.
   #
-  # # Asserts a basic route: a controller with the default action (index)
-  # assert_routing '/home', controller: 'home', action: 'index'
+  #  # Asserts a basic route: a controller with the default action (index)
+  #  assert_routing '/home', controller: 'home', action: 'index'
   #
-  # # Test a route generated with a specific controller, action, and parameter (id)
-  # assert_routing '/entries/show/23', controller: 'entries', action: 'show', id: 23
+  #  # Test a route generated with a specific controller, action, and parameter (id)
+  #  assert_routing '/entries/show/23', controller: 'entries', action: 'show', id: 23
   #
-  # # Asserts a basic route (controller + default action), with an error message if it fails
-  # assert_routing '/store', { controller: 'store', action: 'index' }, {}, {}, 'Route for store index not generated properly'
+  #  # Asserts a basic route (controller + default action), with an error message if it fails
+  #  assert_routing '/store', { controller: 'store', action: 'index' }, {}, {}, 'Route for store index not generated properly'
   #
-  # # Tests a route, providing a defaults hash
-  # assert_routing 'controller/action/9', {id: "9", item: "square"}, {controller: "controller", action: "action"}, {}, {item: "square"}
+  #  # Tests a route, providing a defaults hash
+  #  assert_routing 'controller/action/9', {id: "9", item: "square"}, {controller: "controller", action: "action"}, {}, {item: "square"}
   #
-  # # Tests a route with an HTTP method
-  # assert_routing({ method: 'put', path: '/product/321' }, { controller: "product", action: "update", id: "321" })
+  #  # Tests a route with an HTTP method
+  #  assert_routing({ method: 'put', path: '/product/321' }, { controller: "product", action: "update", id: "321" })
   def assert_routing(path, options, defaults = T.unsafe(nil), extras = T.unsafe(nil), message = T.unsafe(nil)); end
 
   # ROUTES TODO: These assertions should really work in an integration context
@@ -5989,12 +6142,12 @@ module ActionDispatch::Assertions::RoutingAssertions
   # The new instance is yielded to the passed block. Typically the block
   # will create some routes using <tt>set.draw { match ... }</tt>:
   #
-  # with_routing do |set|
-  # set.draw do
-  # resources :users
-  # end
-  # assert_equal "/users", users_path
-  # end
+  #   with_routing do |set|
+  #     set.draw do
+  #       resources :users
+  #     end
+  #     assert_equal "/users", users_path
+  #   end
   def with_routing; end
 
   private
@@ -6011,6 +6164,7 @@ class ActionDispatch::Callbacks
   extend ::ActiveSupport::Callbacks::ClassMethods
   extend ::ActiveSupport::DescendantsTracker
 
+  # @return [Callbacks] a new instance of Callbacks
   def initialize(app); end
 
   def __callbacks; end
@@ -6031,6 +6185,9 @@ class ActionDispatch::Callbacks
 end
 
 class ActionDispatch::ContentSecurityPolicy
+  # @return [ContentSecurityPolicy] a new instance of ContentSecurityPolicy
+  # @yield [_self]
+  # @yieldparam _self [ActionDispatch::ContentSecurityPolicy] the object that the method was called on
   def initialize; end
 
   def base_uri(*sources); end
@@ -6072,7 +6229,10 @@ class ActionDispatch::ContentSecurityPolicy
   def build_directive(sources, context); end
   def build_directives(context, nonce, nonce_directives); end
   def initialize_copy(other); end
+
+  # @return [Boolean]
   def nonce_directive?(directive, nonce_directives); end
+
   def resolve_source(source, context); end
 end
 
@@ -6081,6 +6241,7 @@ ActionDispatch::ContentSecurityPolicy::DIRECTIVES = T.let(T.unsafe(nil), Hash)
 ActionDispatch::ContentSecurityPolicy::MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 class ActionDispatch::ContentSecurityPolicy::Middleware
+  # @return [Middleware] a new instance of Middleware
   def initialize(app); end
 
   def call(env); end
@@ -6088,7 +6249,11 @@ class ActionDispatch::ContentSecurityPolicy::Middleware
   private
 
   def header_name(request); end
+
+  # @return [Boolean]
   def html_response?(headers); end
+
+  # @return [Boolean]
   def policy_present?(headers); end
 end
 
@@ -6125,84 +6290,85 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #
 # Examples of writing:
 #
-# # Sets a simple session cookie.
-# # This cookie will be deleted when the user's browser is closed.
-# cookies[:user_name] = "david"
+#   # Sets a simple session cookie.
+#   # This cookie will be deleted when the user's browser is closed.
+#   cookies[:user_name] = "david"
 #
-# # Cookie values are String based. Other data types need to be serialized.
-# cookies[:lat_lon] = JSON.generate([47.68, -122.37])
+#   # Cookie values are String based. Other data types need to be serialized.
+#   cookies[:lat_lon] = JSON.generate([47.68, -122.37])
 #
-# # Sets a cookie that expires in 1 hour.
-# cookies[:login] = { value: "XJ-122", expires: 1.hour }
+#   # Sets a cookie that expires in 1 hour.
+#   cookies[:login] = { value: "XJ-122", expires: 1.hour }
 #
-# # Sets a cookie that expires at a specific time.
-# cookies[:login] = { value: "XJ-122", expires: Time.utc(2020, 10, 15, 5) }
+#   # Sets a cookie that expires at a specific time.
+#   cookies[:login] = { value: "XJ-122", expires: Time.utc(2020, 10, 15, 5) }
 #
-# # Sets a signed cookie, which prevents users from tampering with its value.
-# # It can be read using the signed method `cookies.signed[:name]`
-# cookies.signed[:user_id] = current_user.id
+#   # Sets a signed cookie, which prevents users from tampering with its value.
+#   # It can be read using the signed method `cookies.signed[:name]`
+#   cookies.signed[:user_id] = current_user.id
 #
-# # Sets an encrypted cookie value before sending it to the client which
-# # prevent users from reading and tampering with its value.
-# # It can be read using the encrypted method `cookies.encrypted[:name]`
-# cookies.encrypted[:discount] = 45
+#   # Sets an encrypted cookie value before sending it to the client which
+#   # prevent users from reading and tampering with its value.
+#   # It can be read using the encrypted method `cookies.encrypted[:name]`
+#   cookies.encrypted[:discount] = 45
 #
-# # Sets a "permanent" cookie (which expires in 20 years from now).
-# cookies.permanent[:login] = "XJ-122"
+#   # Sets a "permanent" cookie (which expires in 20 years from now).
+#   cookies.permanent[:login] = "XJ-122"
 #
-# # You can also chain these methods:
-# cookies.signed.permanent[:login] = "XJ-122"
+#   # You can also chain these methods:
+#   cookies.signed.permanent[:login] = "XJ-122"
 #
 # Examples of reading:
 #
-# cookies[:user_name]           # => "david"
-# cookies.size                  # => 2
-# JSON.parse(cookies[:lat_lon]) # => [47.68, -122.37]
-# cookies.signed[:login]        # => "XJ-122"
-# cookies.encrypted[:discount]  # => 45
+#   cookies[:user_name]           # => "david"
+#   cookies.size                  # => 2
+#   JSON.parse(cookies[:lat_lon]) # => [47.68, -122.37]
+#   cookies.signed[:login]        # => "XJ-122"
+#   cookies.encrypted[:discount]  # => 45
 #
 # Example for deleting:
 #
-# cookies.delete :user_name
+#   cookies.delete :user_name
 #
 # Please note that if you specify a :domain when setting a cookie, you must also specify the domain when deleting the cookie:
 #
-# cookies[:name] = {
-# value: 'a yummy cookie',
-# expires: 1.year,
-# domain: 'domain.com'
-# }
+#  cookies[:name] = {
+#    value: 'a yummy cookie',
+#    expires: 1.year,
+#    domain: 'domain.com'
+#  }
 #
-# cookies.delete(:name, domain: 'domain.com')
+#  cookies.delete(:name, domain: 'domain.com')
 #
 # The option symbols for setting cookies are:
 #
 # * <tt>:value</tt> - The cookie's value.
 # * <tt>:path</tt> - The path for which this cookie applies. Defaults to the root
-# of the application.
+#   of the application.
 # * <tt>:domain</tt> - The domain for which this cookie applies so you can
-# restrict to the domain level. If you use a schema like www.example.com
-# and want to share session with user.example.com set <tt>:domain</tt>
-# to <tt>:all</tt>. To support multiple domains, provide an array, and
-# the first domain matching <tt>request.host</tt> will be used. Make
-# sure to specify the <tt>:domain</tt> option with <tt>:all</tt> or
-# <tt>Array</tt> again when deleting cookies.
+#   restrict to the domain level. If you use a schema like www.example.com
+#   and want to share session with user.example.com set <tt>:domain</tt>
+#   to <tt>:all</tt>. To support multiple domains, provide an array, and
+#   the first domain matching <tt>request.host</tt> will be used. Make
+#   sure to specify the <tt>:domain</tt> option with <tt>:all</tt> or
+#   <tt>Array</tt> again when deleting cookies.
 #
-# domain: nil  # Does not set cookie domain. (default)
-# domain: :all # Allow the cookie for the top most level
-# # domain and subdomains.
-# domain: %w(.example.com .example.org) # Allow the cookie
-# # for concrete domain names.
+#     domain: nil  # Does not set cookie domain. (default)
+#     domain: :all # Allow the cookie for the top most level
+#                  # domain and subdomains.
+#     domain: %w(.example.com .example.org) # Allow the cookie
+#                                           # for concrete domain names.
 #
 # * <tt>:tld_length</tt> - When using <tt>:domain => :all</tt>, this option can be used to explicitly
-# set the TLD length when using a short (<= 3 character) domain that is being interpreted as part of a TLD.
-# For example, to share cookies between user1.lvh.me and user2.lvh.me, set <tt>:tld_length</tt> to 2.
+#   set the TLD length when using a short (<= 3 character) domain that is being interpreted as part of a TLD.
+#   For example, to share cookies between user1.lvh.me and user2.lvh.me, set <tt>:tld_length</tt> to 2.
 # * <tt>:expires</tt> - The time at which this cookie expires, as a \Time or ActiveSupport::Duration object.
 # * <tt>:secure</tt> - Whether this cookie is only transmitted to HTTPS servers.
-# Default is +false+.
+#   Default is +false+.
 # * <tt>:httponly</tt> - Whether this cookie is accessible via scripting or
-# only HTTP. Defaults to +false+.
+#   only HTTP. Defaults to +false+.
 class ActionDispatch::Cookies
+  # @return [Cookies] a new instance of Cookies
   def initialize(app); end
 
   def call(env); end
@@ -6213,6 +6379,7 @@ ActionDispatch::Cookies::AUTHENTICATED_ENCRYPTED_COOKIE_SALT = T.let(T.unsafe(ni
 class ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::ChainedCookieJars
 
+  # @return [AbstractCookieJar] a new instance of AbstractCookieJar
   def initialize(parent_jar); end
 
   def [](name); end
@@ -6247,23 +6414,23 @@ module ActionDispatch::Cookies::ChainedCookieJars
   #
   # Example:
   #
-  # cookies.encrypted[:discount] = 45
-  # # => Set-Cookie: discount=DIQ7fw==--K3n//8vvnSbGq9dA--7Xh91HfLpwzbj1czhBiwOg==; path=/
+  #   cookies.encrypted[:discount] = 45
+  #   # => Set-Cookie: discount=DIQ7fw==--K3n//8vvnSbGq9dA--7Xh91HfLpwzbj1czhBiwOg==; path=/
   #
-  # cookies.encrypted[:discount] # => 45
+  #   cookies.encrypted[:discount] # => 45
   def encrypted; end
 
   # Returns a jar that'll automatically set the assigned cookies to have an expiration date 20 years from now. Example:
   #
-  # cookies.permanent[:prefers_open_id] = true
-  # # => Set-Cookie: prefers_open_id=true; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
+  #   cookies.permanent[:prefers_open_id] = true
+  #   # => Set-Cookie: prefers_open_id=true; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
   #
   # This jar is only meant for writing. You'll read permanent cookies through the regular accessor.
   #
   # This jar allows chaining with the signed jar as well, so you can set permanent, signed cookies. Examples:
   #
-  # cookies.permanent.signed[:remember_me] = current_user.id
-  # # => Set-Cookie: remember_me=BAhU--848956038e692d7046deab32b7131856ab20e14e; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
+  #   cookies.permanent.signed[:remember_me] = current_user.id
+  #   # => Set-Cookie: remember_me=BAhU--848956038e692d7046deab32b7131856ab20e14e; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
   def permanent; end
 
   # Returns a jar that'll automatically generate a signed representation of cookie value and verify it when reading from
@@ -6274,10 +6441,10 @@ module ActionDispatch::Cookies::ChainedCookieJars
   #
   # Example:
   #
-  # cookies.signed[:discount] = 45
-  # # => Set-Cookie: discount=BAhpMg==--2c1c6906c90a3bc4fd54a51ffb41dffa4bf6b5f7; path=/
+  #   cookies.signed[:discount] = 45
+  #   # => Set-Cookie: discount=BAhpMg==--2c1c6906c90a3bc4fd54a51ffb41dffa4bf6b5f7; path=/
   #
-  # cookies.signed[:discount] # => 45
+  #   cookies.signed[:discount] # => 45
   def signed; end
 
   # Returns the +signed+ or +encrypted+ jar, preferring +encrypted+ if +secret_key_base+ is set.
@@ -6287,8 +6454,13 @@ module ActionDispatch::Cookies::ChainedCookieJars
   private
 
   def encrypted_cookie_cipher; end
+
+  # @return [Boolean]
   def prepare_upgrade_legacy_hmac_aes_cbc_cookies?; end
+
   def signed_cookie_digest; end
+
+  # @return [Boolean]
   def upgrade_legacy_hmac_aes_cbc_cookies?; end
 end
 
@@ -6296,6 +6468,7 @@ class ActionDispatch::Cookies::CookieJar
   include ::ActionDispatch::Cookies::ChainedCookieJars
   include ::Enumerable
 
+  # @return [CookieJar] a new instance of CookieJar
   def initialize(request); end
 
   # Returns the value of the cookie by +name+, or +nil+ if no such cookie exists.
@@ -6312,6 +6485,8 @@ class ActionDispatch::Cookies::CookieJar
   def clear(options = T.unsafe(nil)); end
 
   def commit!; end
+
+  # @return [Boolean]
   def committed?; end
 
   # Removes the cookie on the client machine by setting the value to an empty string
@@ -6322,11 +6497,17 @@ class ActionDispatch::Cookies::CookieJar
   # Whether the given cookie is to be deleted by this CookieJar.
   # Like <tt>[]=</tt>, you can pass in an options hash to test if a
   # deletion applies to a specific <tt>:path</tt>, <tt>:domain</tt> etc.
+  #
+  # @return [Boolean]
   def deleted?(name, options = T.unsafe(nil)); end
 
   def each(&block); end
   def fetch(name, *args, &block); end
+
+  # @return [Boolean]
   def has_key?(name); end
+
+  # @return [Boolean]
   def key?(name); end
 
   # Returns the value of attribute request.
@@ -6345,6 +6526,8 @@ class ActionDispatch::Cookies::CookieJar
   def escape(string); end
   def handle_options(options); end
   def make_set_cookie_header(header); end
+
+  # @return [Boolean]
   def write_cookie?(cookie); end
 
   class << self
@@ -6378,11 +6561,14 @@ ActionDispatch::Cookies::ENCRYPTED_SIGNED_COOKIE_SALT = T.let(T.unsafe(nil), Str
 class ActionDispatch::Cookies::EncryptedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
+  # @return [EncryptedKeyRotatingCookieJar] a new instance of EncryptedKeyRotatingCookieJar
   def initialize(parent_jar); end
 
   private
 
+  # @raise [CookieOverflow]
   def commit(name, options); end
+
   def parse(name, encrypted_message, purpose: T.unsafe(nil)); end
 end
 
@@ -6421,7 +6607,10 @@ module ActionDispatch::Cookies::SerializedCookieJars
 
   def deserialize(name); end
   def digest; end
+
+  # @return [Boolean]
   def needs_migration?(value); end
+
   def serialize(value); end
   def serializer; end
 end
@@ -6432,11 +6621,14 @@ ActionDispatch::Cookies::SerializedCookieJars::SERIALIZER = ActiveSupport::Messa
 class ActionDispatch::Cookies::SignedKeyRotatingCookieJar < ::ActionDispatch::Cookies::AbstractCookieJar
   include ::ActionDispatch::Cookies::SerializedCookieJars
 
+  # @return [SignedKeyRotatingCookieJar] a new instance of SignedKeyRotatingCookieJar
   def initialize(parent_jar); end
 
   private
 
+  # @raise [CookieOverflow]
   def commit(name, options); end
+
   def parse(name, signed_message, purpose: T.unsafe(nil)); end
 end
 
@@ -6446,13 +6638,16 @@ ActionDispatch::Cookies::USE_COOKIES_WITH_METADATA = T.let(T.unsafe(nil), String
 # This middleware is responsible for logging exceptions and
 # showing a debugging page in case the request is local.
 class ActionDispatch::DebugExceptions
+  # @return [DebugExceptions] a new instance of DebugExceptions
   def initialize(app, routes_app = T.unsafe(nil), response_format = T.unsafe(nil), interceptors = T.unsafe(nil)); end
 
   def call(env); end
 
   private
 
+  # @return [Boolean]
   def api_request?(content_type); end
+
   def create_template(request, wrapper); end
   def invoke_interceptors(request, exception); end
   def log_array(logger, array); end
@@ -6476,7 +6671,7 @@ end
 # To use it, insert it near the top of the middleware stack, using
 # <tt>config/application.rb</tt>:
 #
-# config.middleware.insert_before Rack::Sendfile, ActionDispatch::DebugLocks
+#     config.middleware.insert_before Rack::Sendfile, ActionDispatch::DebugLocks
 #
 # After restarting the application and re-triggering the deadlock condition,
 # <tt>/rails/locks</tt> will show a summary of all threads currently known to
@@ -6493,31 +6688,41 @@ end
 # This middleware exposes operational details of the server, with no access
 # control. It should only be enabled when in use, and removed thereafter.
 class ActionDispatch::DebugLocks
+  # @return [DebugLocks] a new instance of DebugLocks
   def initialize(app, path = T.unsafe(nil)); end
 
   def call(env); end
 
   private
 
+  # @return [Boolean]
   def blocked_by?(victim, blocker, all_threads); end
+
   def render_details(req); end
 end
 
 class ActionDispatch::DebugView < ::ActionView::Base
+  # @return [DebugView] a new instance of DebugView
   def initialize(assigns); end
 
   def compiled_method_container; end
   def debug_hash(object); end
   def debug_headers(headers); end
   def debug_params(params); end
+
+  # @return [Boolean]
   def params_valid?; end
+
+  # @return [Boolean]
   def protect_against_forgery?; end
+
   def render(*_arg0); end
 end
 
 ActionDispatch::DebugView::RESCUES_TEMPLATE_PATH = T.let(T.unsafe(nil), String)
 
 class ActionDispatch::ExceptionWrapper
+  # @return [ExceptionWrapper] a new instance of ExceptionWrapper
   def initialize(backtrace_cleaner, exception); end
 
   def application_trace; end
@@ -6583,6 +6788,7 @@ class ActionDispatch::ExceptionWrapper
 end
 
 class ActionDispatch::Executor
+  # @return [Executor] a new instance of Executor
   def initialize(app, executor); end
 
   def call(env); end
@@ -6603,6 +6809,7 @@ end
 # <tt>index: "index"</tt> to change the default +path+/index.html, and optional
 # additional response headers.
 class ActionDispatch::FileHandler
+  # @return [FileHandler] a new instance of FileHandler
   def initialize(root, index: T.unsafe(nil), headers: T.unsafe(nil), precompressed: T.unsafe(nil), compressible_content_types: T.unsafe(nil)); end
 
   def attempt(env); end
@@ -6611,9 +6818,16 @@ class ActionDispatch::FileHandler
   private
 
   def clean_path(path_info); end
+
+  # @return [Boolean]
   def compressible?(content_type); end
+
+  # @yield [path, content_type || "text/plain"]
   def each_candidate_filepath(path_info); end
+
   def each_precompressed_filepath(filepath); end
+
+  # @return [Boolean]
   def file_readable?(path); end
 
   # Match a URI path to a static file to be served.
@@ -6641,27 +6855,27 @@ ActionDispatch::FileHandler::PRECOMPRESSED = T.let(T.unsafe(nil), Hash)
 # action that sets <tt>flash[:notice] = "Post successfully created"</tt> before redirecting to a display action that can
 # then expose the flash to its template. Actually, that exposure is automatically done.
 #
-# class PostsController < ActionController::Base
-# def create
-# # save post
-# flash[:notice] = "Post successfully created"
-# redirect_to @post
-# end
+#   class PostsController < ActionController::Base
+#     def create
+#       # save post
+#       flash[:notice] = "Post successfully created"
+#       redirect_to @post
+#     end
 #
-# def show
-# # doesn't need to assign the flash notice to the template, that's done automatically
-# end
-# end
+#     def show
+#       # doesn't need to assign the flash notice to the template, that's done automatically
+#     end
+#   end
 #
-# show.html.erb
-# <% if flash[:notice] %>
-# <div class="notice"><%= flash[:notice] %></div>
-# <% end %>
+#   show.html.erb
+#     <% if flash[:notice] %>
+#       <div class="notice"><%= flash[:notice] %></div>
+#     <% end %>
 #
 # Since the +notice+ and +alert+ keys are a common idiom, convenience accessors are available:
 #
-# flash.alert = "You must be logged in"
-# flash.notice = "Post successfully created"
+#   flash.alert = "You must be logged in"
+#   flash.notice = "Post successfully created"
 #
 # This example places a string in the flash. And of course, you can put as many as you like at a time too. If you want to pass
 # non-primitive types, you will have to handle that in your application. Example: To show messages with links, you will have to
@@ -6679,6 +6893,7 @@ end
 class ActionDispatch::Flash::FlashHash
   include ::Enumerable
 
+  # @return [FlashHash] a new instance of FlashHash
   def initialize(flashes = T.unsafe(nil), discard = T.unsafe(nil)); end
 
   def [](k); end
@@ -6695,20 +6910,24 @@ class ActionDispatch::Flash::FlashHash
 
   # Marks the entire flash or a single flash entry to be discarded by the end of the current action:
   #
-  # flash.discard              # discard the entire flash at the end of the current action
-  # flash.discard(:warning)    # discard only the "warning" entry at the end of the current action
+  #     flash.discard              # discard the entire flash at the end of the current action
+  #     flash.discard(:warning)    # discard only the "warning" entry at the end of the current action
   def discard(k = T.unsafe(nil)); end
 
   def each(&block); end
+
+  # @return [Boolean]
   def empty?; end
 
   # Keeps either the entire current flash or a specific flash entry available for the next action:
   #
-  # flash.keep            # keeps the entire flash
-  # flash.keep(:notice)   # keeps only the "notice" entry, the rest of the flash is discarded
+  #    flash.keep            # keeps the entire flash
+  #    flash.keep(:notice)   # keeps only the "notice" entry, the rest of the flash is discarded
   def keep(k = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def key?(name); end
+
   def keys; end
   def merge!(h); end
 
@@ -6720,7 +6939,7 @@ class ActionDispatch::Flash::FlashHash
 
   # Sets a flash that will not be available to the next action, only to the current.
   #
-  # flash.now[:message] = "Hello current action"
+  #     flash.now[:message] = "Hello current action"
   #
   # This method enables you to use the flash as a central messaging system in your app.
   # When you need to pass an object to the next action, you use the standard flash assign (<tt>[]=</tt>).
@@ -6731,11 +6950,11 @@ class ActionDispatch::Flash::FlashHash
   #
   # Also, brings two convenience accessors:
   #
-  # flash.now.alert = "Beware now!"
-  # # Equivalent to flash.now[:alert] = "Beware now!"
+  #   flash.now.alert = "Beware now!"
+  #   # Equivalent to flash.now[:alert] = "Beware now!"
   #
-  # flash.now.notice = "Good luck now!"
-  # # Equivalent to flash.now[:notice] = "Good luck now!"
+  #   flash.now.notice = "Good luck now!"
+  #   # Equivalent to flash.now[:notice] = "Good luck now!"
   def now; end
 
   def replace(h); end
@@ -6755,6 +6974,7 @@ class ActionDispatch::Flash::FlashHash
 
   protected
 
+  # @return [Boolean]
   def now_is_loaded?; end
 
   private
@@ -6768,6 +6988,7 @@ class ActionDispatch::Flash::FlashHash
 end
 
 class ActionDispatch::Flash::FlashNow
+  # @return [FlashNow] a new instance of FlashNow
   def initialize(flash); end
 
   def [](k); end
@@ -6780,6 +7001,8 @@ class ActionDispatch::Flash::FlashNow
   def flash; end
 
   # Sets the attribute flash
+  #
+  # @param value the value to set the attribute flash to.
   def flash=(_arg0); end
 
   # Convenience accessor for <tt>flash.now[:notice]=</tt>.
@@ -6807,37 +7030,54 @@ end
 #
 # Requests can opt-out of Host Authorization with +exclude+:
 #
-# config.host_authorization = { exclude: ->(request) { request.path =~ /healthcheck/ } }
+#    config.host_authorization = { exclude: ->(request) { request.path =~ /healthcheck/ } }
 #
 # When a request comes to an unauthorized host, the +response_app+
 # application will be executed and rendered. If no +response_app+ is given, a
 # default one will run, which responds with <tt>403 Forbidden</tt>.
 class ActionDispatch::HostAuthorization
+  # @return [HostAuthorization] a new instance of HostAuthorization
   def initialize(app, hosts, deprecated_response_app = T.unsafe(nil), exclude: T.unsafe(nil), response_app: T.unsafe(nil)); end
 
   def call(env); end
 
   private
 
+  # @return [Boolean]
   def authorized?(request); end
+
+  # @return [Boolean]
   def excluded?(request); end
+
   def mark_as_authorized(request); end
 end
 
+ActionDispatch::HostAuthorization::ALLOWED_HOSTS_IN_DEVELOPMENT = T.let(T.unsafe(nil), Array)
 ActionDispatch::HostAuthorization::DEFAULT_RESPONSE_APP = T.let(T.unsafe(nil), Proc)
+ActionDispatch::HostAuthorization::IPV4_HOSTNAME = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::IPV6_HOSTNAME = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::IPV6_HOSTNAME_WITH_PORT = T.let(T.unsafe(nil), Regexp)
+ActionDispatch::HostAuthorization::PORT_REGEX = T.let(T.unsafe(nil), Regexp)
 
 class ActionDispatch::HostAuthorization::Permissions
+  # @return [Permissions] a new instance of Permissions
   def initialize(hosts); end
 
+  # @return [Boolean]
   def allows?(host); end
+
+  # @return [Boolean]
   def empty?; end
 
   private
 
+  def extract_hostname(host); end
   def sanitize_hosts(hosts); end
   def sanitize_regexp(host); end
   def sanitize_string(host); end
 end
+
+ActionDispatch::HostAuthorization::VALID_IP_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 
 module ActionDispatch::Http
   extend ::ActiveSupport::Autoload
@@ -6846,16 +7086,21 @@ end
 module ActionDispatch::Http::Cache; end
 
 module ActionDispatch::Http::Cache::Request
+  # @return [Boolean]
   def etag_matches?(etag); end
 
   # Check response freshness (Last-Modified and ETag) against request
   # If-Modified-Since and If-None-Match conditions. If both headers are
   # supplied, both must match, or the request is not considered fresh.
+  #
+  # @return [Boolean]
   def fresh?(response); end
 
   def if_modified_since; end
   def if_none_match; end
   def if_none_match_etags; end
+
+  # @return [Boolean]
   def not_modified?(modified_at); end
 end
 
@@ -6868,6 +7113,8 @@ module ActionDispatch::Http::Cache::Response
 
   def date; end
   def date=(utc_time); end
+
+  # @return [Boolean]
   def date?; end
 
   # This method sets a weak ETag validator on the response so browsers
@@ -6891,18 +7138,27 @@ module ActionDispatch::Http::Cache::Response
   # Check out #strong_etag= to provide a strong ETag validator.
   def etag=(weak_validators); end
 
+  # @return [Boolean]
   def etag?; end
+
   def last_modified; end
   def last_modified=(utc_time); end
+
+  # @return [Boolean]
   def last_modified?; end
+
   def strong_etag=(strong_validators); end
 
   # True if an ETag is set and it isn't a weak validator (not preceded with W/)
+  #
+  # @return [Boolean]
   def strong_etag?; end
 
   def weak_etag=(weak_validators); end
 
   # True if an ETag is set and it's a weak validator (preceded with W/)
+  #
+  # @return [Boolean]
   def weak_etag?; end
 
   private
@@ -6927,6 +7183,7 @@ ActionDispatch::Http::Cache::Response::PUBLIC = T.let(T.unsafe(nil), String)
 ActionDispatch::Http::Cache::Response::SPECIAL_KEYS = T.let(T.unsafe(nil), Set)
 
 class ActionDispatch::Http::ContentDisposition
+  # @return [ContentDisposition] a new instance of ContentDisposition
   def initialize(disposition:, filename:); end
 
   def ascii_filename; end
@@ -6960,20 +7217,20 @@ ActionDispatch::Http::ContentDisposition::TRADITIONAL_ESCAPED_CHAR = T.let(T.uns
 # sub-hashes are passed to it, where the value or the key can be replaced using
 # String#replace or similar methods.
 #
-# env["action_dispatch.parameter_filter"] = [:password]
-# => replaces the value to all keys matching /password/i with "[FILTERED]"
+#   env["action_dispatch.parameter_filter"] = [:password]
+#   => replaces the value to all keys matching /password/i with "[FILTERED]"
 #
-# env["action_dispatch.parameter_filter"] = [:foo, "bar"]
-# => replaces the value to all keys matching /foo|bar/i with "[FILTERED]"
+#   env["action_dispatch.parameter_filter"] = [:foo, "bar"]
+#   => replaces the value to all keys matching /foo|bar/i with "[FILTERED]"
 #
-# env["action_dispatch.parameter_filter"] = [ "credit_card.code" ]
-# => replaces { credit_card: {code: "xxxx"} } with "[FILTERED]", does not
-# change { file: { code: "xxxx"} }
+#   env["action_dispatch.parameter_filter"] = [ "credit_card.code" ]
+#   => replaces { credit_card: {code: "xxxx"} } with "[FILTERED]", does not
+#   change { file: { code: "xxxx"} }
 #
-# env["action_dispatch.parameter_filter"] = -> (k, v) do
-# v.reverse! if k.match?(/secret/i)
-# end
-# => reverses the value to all keys matching /secret/i
+#   env["action_dispatch.parameter_filter"] = -> (k, v) do
+#     v.reverse! if k.match?(/secret/i)
+#   end
+#   => reverses the value to all keys matching /secret/i
 module ActionDispatch::Http::FilterParameters
   def initialize; end
 
@@ -7005,7 +7262,9 @@ module ActionDispatch::Http::FilterRedirect
 
   private
 
+  # @return [Boolean]
   def location_filter_match?; end
+
   def location_filters; end
 end
 
@@ -7013,26 +7272,27 @@ ActionDispatch::Http::FilterRedirect::FILTERED = T.let(T.unsafe(nil), String)
 
 # Provides access to the request's HTTP headers from the environment.
 #
-# env     = { "CONTENT_TYPE" => "text/plain", "HTTP_USER_AGENT" => "curl/7.43.0" }
-# headers = ActionDispatch::Http::Headers.from_hash(env)
-# headers["Content-Type"] # => "text/plain"
-# headers["User-Agent"] # => "curl/7.43.0"
+#   env     = { "CONTENT_TYPE" => "text/plain", "HTTP_USER_AGENT" => "curl/7.43.0" }
+#   headers = ActionDispatch::Http::Headers.from_hash(env)
+#   headers["Content-Type"] # => "text/plain"
+#   headers["User-Agent"] # => "curl/7.43.0"
 #
 # Also note that when headers are mapped to CGI-like variables by the Rack
 # server, both dashes and underscores are converted to underscores. This
 # ambiguity cannot be resolved at this stage anymore. Both underscores and
 # dashes have to be interpreted as if they were originally sent as dashes.
 #
-# # GET / HTTP/1.1
-# # ...
-# # User-Agent: curl/7.43.0
-# # X_Custom_Header: token
+#   # GET / HTTP/1.1
+#   # ...
+#   # User-Agent: curl/7.43.0
+#   # X_Custom_Header: token
 #
-# headers["X_Custom_Header"] # => nil
-# headers["X-Custom-Header"] # => "token"
+#   headers["X_Custom_Header"] # => nil
+#   headers["X-Custom-Header"] # => "token"
 class ActionDispatch::Http::Headers
   include ::Enumerable
 
+  # @return [Headers] a new instance of Headers
   def initialize(request); end
 
   # Returns the value for the given key mapped to @env.
@@ -7056,7 +7316,10 @@ class ActionDispatch::Http::Headers
   # its result returned.
   def fetch(key, default = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def include?(key); end
+
+  # @return [Boolean]
   def key?(key); end
 
   # Returns a new Http::Headers instance containing the contents of
@@ -7096,22 +7359,22 @@ module ActionDispatch::Http::MimeNegotiation
 
   # Returns the MIME type for the \format used in the request.
   #
-  # GET /posts/5.xml   | request.format => Mime[:xml]
-  # GET /posts/5.xhtml | request.format => Mime[:html]
-  # GET /posts/5       | request.format => Mime[:html] or Mime[:js], or request.accepts.first
+  #   GET /posts/5.xml   | request.format => Mime[:xml]
+  #   GET /posts/5.xhtml | request.format => Mime[:html]
+  #   GET /posts/5       | request.format => Mime[:html] or Mime[:js], or request.accepts.first
   def format(view_path = T.unsafe(nil)); end
 
   # Sets the \format by string extension, which can be used to force custom formats
   # that are not controlled by the extension.
   #
-  # class ApplicationController < ActionController::Base
-  # before_action :adjust_format_for_iphone
+  #   class ApplicationController < ActionController::Base
+  #     before_action :adjust_format_for_iphone
   #
-  # private
-  # def adjust_format_for_iphone
-  # request.format = :iphone if request.env["HTTP_USER_AGENT"][/iPhone/]
-  # end
-  # end
+  #     private
+  #       def adjust_format_for_iphone
+  #         request.format = :iphone if request.env["HTTP_USER_AGENT"][/iPhone/]
+  #       end
+  #   end
   def format=(extension); end
 
   def formats; end
@@ -7122,22 +7385,25 @@ module ActionDispatch::Http::MimeNegotiation
   # In this example, the :iphone format will be used if it's available, otherwise it'll fallback
   # to the :html format.
   #
-  # class ApplicationController < ActionController::Base
-  # before_action :adjust_format_for_iphone_with_html_fallback
+  #   class ApplicationController < ActionController::Base
+  #     before_action :adjust_format_for_iphone_with_html_fallback
   #
-  # private
-  # def adjust_format_for_iphone_with_html_fallback
-  # request.formats = [ :iphone, :html ] if request.env["HTTP_USER_AGENT"][/iPhone/]
-  # end
-  # end
+  #     private
+  #       def adjust_format_for_iphone_with_html_fallback
+  #         request.formats = [ :iphone, :html ] if request.env["HTTP_USER_AGENT"][/iPhone/]
+  #       end
+  #   end
   def formats=(extensions); end
 
+  # @return [Boolean]
   def has_content_type?; end
 
   # Returns the first MIME type that matches the provided array of MIME types.
   def negotiate_mime(order); end
 
+  # @return [Boolean]
   def should_apply_vary_header?; end
+
   def variant; end
 
   # Sets the \variant for template.
@@ -7146,7 +7412,10 @@ module ActionDispatch::Http::MimeNegotiation
   private
 
   def format_from_path_extension; end
+
+  # @return [Boolean]
   def params_readable?; end
+
   def use_accept_header; end
   def valid_accept_header; end
 end
@@ -7172,7 +7441,7 @@ module ActionDispatch::Http::Parameters
   # Returns a hash with the \parameters used to form the \path of the request.
   # Returned hash keys are strings:
   #
-  # {'action' => 'my_action', 'controller' => 'my_controller'}
+  #   {'action' => 'my_action', 'controller' => 'my_controller'}
   def path_parameters; end
 
   def path_parameters=(parameters); end
@@ -7190,10 +7459,10 @@ module ActionDispatch::Http::Parameters::ClassMethods
   # It accepts a hash where the key is the symbol of the MIME type
   # and the value is a proc.
   #
-  # original_parsers = ActionDispatch::Request.parameter_parsers
-  # xml_parser = -> (raw_post) { Hash.from_xml(raw_post) || {} }
-  # new_parsers = original_parsers.merge(xml: xml_parser)
-  # ActionDispatch::Request.parameter_parsers = new_parsers
+  #     original_parsers = ActionDispatch::Request.parameter_parsers
+  #     xml_parser = -> (raw_post) { Hash.from_xml(raw_post) || {} }
+  #     new_parsers = original_parsers.merge(xml: xml_parser)
+  #     ActionDispatch::Request.parameter_parsers = new_parsers
   def parameter_parsers=(parsers); end
 end
 
@@ -7203,6 +7472,7 @@ ActionDispatch::Http::Parameters::PARAMETERS_KEY = T.let(T.unsafe(nil), String)
 # Raised when raw data from the request cannot be parsed by the parser
 # defined for request's content MIME type.
 class ActionDispatch::Http::Parameters::ParseError < ::StandardError
+  # @return [ParseError] a new instance of ParseError
   def initialize; end
 end
 
@@ -7215,72 +7485,72 @@ module ActionDispatch::Http::URL
 
   # Returns the host for this request, such as "example.com".
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.host # => "example.com"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.host # => "example.com"
   def host; end
 
   # Returns a \host:\port string for this request, such as "example.com" or
   # "example.com:8080". Port is only included if it is not a default port
   # (80 or 443)
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
-  # req.host_with_port # => "example.com"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
+  #   req.host_with_port # => "example.com"
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
-  # req.host_with_port # => "example.com"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
+  #   req.host_with_port # => "example.com"
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.host_with_port # => "example.com:8080"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.host_with_port # => "example.com:8080"
   def host_with_port; end
 
   # Returns a number \port suffix like 8080 if the \port number of this request
   # is not the default HTTP \port 80 or HTTPS \port 443.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
-  # req.optional_port # => nil
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
+  #   req.optional_port # => nil
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.optional_port # => 8080
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.optional_port # => 8080
   def optional_port; end
 
   # Returns the port number of this request as an integer.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
-  # req.port # => 80
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
+  #   req.port # => 80
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.port # => 8080
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.port # => 8080
   def port; end
 
   # Returns a string \port suffix, including colon, like ":8080" if the \port
   # number of this request is not the default HTTP \port 80 or HTTPS \port 443.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
-  # req.port_string # => ""
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
+  #   req.port_string # => ""
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.port_string # => ":8080"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.port_string # => ":8080"
   def port_string; end
 
   # Returns 'https://' if this is an SSL request and 'http://' otherwise.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
-  # req.protocol # => "http://"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
+  #   req.protocol # => "http://"
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com', 'HTTPS' => 'on'
-  # req.protocol # => "https://"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com', 'HTTPS' => 'on'
+  #   req.protocol # => "https://"
   def protocol; end
 
   # Returns the \host and port for this request, such as "example.com:8080".
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
-  # req.raw_host_with_port # => "example.com"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
+  #   req.raw_host_with_port # => "example.com"
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
-  # req.raw_host_with_port # => "example.com:80"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
+  #   req.raw_host_with_port # => "example.com:80"
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.raw_host_with_port # => "example.com:8080"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.raw_host_with_port # => "example.com:8080"
   def raw_host_with_port; end
 
   def secure_protocol; end
@@ -7288,26 +7558,28 @@ module ActionDispatch::Http::URL
 
   # Returns the requested port, such as 8080, based on SERVER_PORT
   #
-  # req = ActionDispatch::Request.new 'SERVER_PORT' => '80'
-  # req.server_port # => 80
+  #   req = ActionDispatch::Request.new 'SERVER_PORT' => '80'
+  #   req.server_port # => 80
   #
-  # req = ActionDispatch::Request.new 'SERVER_PORT' => '8080'
-  # req.server_port # => 8080
+  #   req = ActionDispatch::Request.new 'SERVER_PORT' => '8080'
+  #   req.server_port # => 8080
   def server_port; end
 
   # Returns the standard \port number for this request's protocol.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.standard_port # => 80
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.standard_port # => 80
   def standard_port; end
 
   # Returns whether this request is using the standard port
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
-  # req.standard_port? # => true
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:80'
+  #   req.standard_port? # => true
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
-  # req.standard_port? # => false
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com:8080'
+  #   req.standard_port? # => false
+  #
+  # @return [Boolean]
   def standard_port?; end
 
   # Returns all the \subdomains as a string, so <tt>"dev.www"</tt> would be
@@ -7327,33 +7599,33 @@ module ActionDispatch::Http::URL
 
   # Returns the complete URL used for this request.
   #
-  # req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
-  # req.url # => "http://example.com"
+  #   req = ActionDispatch::Request.new 'HTTP_HOST' => 'example.com'
+  #   req.url # => "http://example.com"
   def url; end
 
   class << self
     # Returns the domain part of a host given the domain level.
     #
-    # # Top-level domain example
-    # extract_domain('www.example.com', 1) # => "example.com"
-    # # Second-level domain example
-    # extract_domain('dev.www.example.co.uk', 2) # => "example.co.uk"
+    #    # Top-level domain example
+    #    extract_domain('www.example.com', 1) # => "example.com"
+    #    # Second-level domain example
+    #    extract_domain('dev.www.example.co.uk', 2) # => "example.co.uk"
     def extract_domain(host, tld_length); end
 
     # Returns the subdomains of a host as a String given the domain level.
     #
-    # # Top-level domain example
-    # extract_subdomain('www.example.com', 1) # => "www"
-    # # Second-level domain example
-    # extract_subdomain('dev.www.example.co.uk', 2) # => "dev.www"
+    #    # Top-level domain example
+    #    extract_subdomain('www.example.com', 1) # => "www"
+    #    # Second-level domain example
+    #    extract_subdomain('dev.www.example.co.uk', 2) # => "dev.www"
     def extract_subdomain(host, tld_length); end
 
     # Returns the subdomains of a host as an Array given the domain level.
     #
-    # # Top-level domain example
-    # extract_subdomains('www.example.com', 1) # => ["www"]
-    # # Second-level domain example
-    # extract_subdomains('dev.www.example.co.uk', 2) # => ["dev", "www"]
+    #    # Top-level domain example
+    #    extract_subdomains('www.example.com', 1) # => ["www"]
+    #    # Second-level domain example
+    #    extract_subdomains('dev.www.example.co.uk', 2) # => ["dev", "www"]
     def extract_subdomains(host, tld_length); end
 
     def full_url_for(options); end
@@ -7372,7 +7644,10 @@ module ActionDispatch::Http::URL
     def build_host_url(host, port, protocol, options, path); end
     def extract_domain_from(host, tld_length); end
     def extract_subdomains_from(host, tld_length); end
+
+    # @return [Boolean]
     def named_host?(host); end
+
     def normalize_host(_host, options); end
     def normalize_port(port, protocol); end
     def normalize_protocol(protocol); end
@@ -7392,6 +7667,8 @@ ActionDispatch::Http::URL::PROTOCOL_REGEXP = T.let(T.unsafe(nil), Regexp)
 # the object is finalized Ruby unlinks the file, so there is no need to
 # clean them with a separate maintenance task.
 class ActionDispatch::Http::UploadedFile
+  # @raise [ArgumentError]
+  # @return [UploadedFile] a new instance of UploadedFile
   def initialize(hash); end
 
   # Shortcut for +tempfile.close+.
@@ -7404,6 +7681,8 @@ class ActionDispatch::Http::UploadedFile
   def content_type=(_arg0); end
 
   # Shortcut for +tempfile.eof?+.
+  #
+  # @return [Boolean]
   def eof?; end
 
   # A string with the headers of the multipart request.
@@ -7504,9 +7783,9 @@ module ActionDispatch::Integration::Runner
 
   def assertions; end
   def assertions=(assertions); end
-  def assigns(*_arg0, **_arg1, &_arg2); end
+  def assigns(*_arg0, &_arg1); end
   def before_setup; end
-  def cookies(*_arg0, **_arg1, &_arg2); end
+  def cookies(*_arg0, &_arg1); end
 
   # Copy the instance variables from the current session instance into the
   # test instance.
@@ -7515,27 +7794,27 @@ module ActionDispatch::Integration::Runner
   def create_session(app); end
   def default_url_options; end
   def default_url_options=(options); end
-  def delete(*_arg0, **_arg1, &_arg2); end
-  def follow_redirect!(*_arg0, **_arg1, &_arg2); end
-  def get(*_arg0, **_arg1, &_arg2); end
-  def head(*_arg0, **_arg1, &_arg2); end
+  def delete(*_arg0, &_arg1); end
+  def follow_redirect!(*_arg0, &_arg1); end
+  def get(*_arg0, &_arg1); end
+  def head(*_arg0, &_arg1); end
   def integration_session; end
 
   # Open a new session instance. If a block is given, the new session is
   # yielded to the block before being returned.
   #
-  # session = open_session do |sess|
-  # sess.extend(CustomAssertions)
-  # end
+  #   session = open_session do |sess|
+  #     sess.extend(CustomAssertions)
+  #   end
   #
   # By default, a single session is automatically created for you, but you
   # can use this method to open multiple sessions that ought to be tested
   # simultaneously.
   def open_session; end
 
-  def patch(*_arg0, **_arg1, &_arg2); end
-  def post(*_arg0, **_arg1, &_arg2); end
-  def put(*_arg0, **_arg1, &_arg2); end
+  def patch(*_arg0, &_arg1); end
+  def post(*_arg0, &_arg1); end
+  def put(*_arg0, &_arg1); end
   def remove!; end
 
   # Reset the current session. This is useful for testing multiple sessions
@@ -7548,8 +7827,9 @@ module ActionDispatch::Integration::Runner
   private
 
   # Delegate unhandled messages to the current session instance.
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
 
+  # @return [Boolean]
   def respond_to_missing?(method, _); end
 end
 
@@ -7579,6 +7859,8 @@ class ActionDispatch::Integration::Session
   include ::ActionDispatch::Routing::UrlFor
 
   # Create and initialize a new Session instance.
+  #
+  # @return [Session] a new instance of Session
   def initialize(app); end
 
   # The Accept header to send.
@@ -7587,7 +7869,7 @@ class ActionDispatch::Integration::Session
   # The Accept header to send.
   def accept=(_arg0); end
 
-  def body(*_arg0, **_arg1, &_arg2); end
+  def body(*_arg0, &_arg1); end
 
   # A reference to the controller instance used by the last request.
   def controller; end
@@ -7599,7 +7881,7 @@ class ActionDispatch::Integration::Session
   def default_url_options; end
   def default_url_options=(_arg0); end
   def default_url_options?; end
-  def headers(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, &_arg1); end
 
   # The hostname used in the last request.
   def host; end
@@ -7607,48 +7889,54 @@ class ActionDispatch::Integration::Session
   # Sets the attribute host
   # Set the host name to use in the next request.
   #
-  # session.host! "www.example.com"
+  #   session.host! "www.example.com"
+  #
+  # @param value the value to set the attribute host to.
   def host!(_arg0); end
 
   # Sets the attribute host
+  #
+  # @param value the value to set the attribute host to.
   def host=(_arg0); end
 
   # Specify whether or not the session should mimic a secure HTTPS request.
   #
-  # session.https!
-  # session.https!(false)
+  #   session.https!
+  #   session.https!(false)
   def https!(flag = T.unsafe(nil)); end
 
   # Returns +true+ if the session is mimicking a secure HTTPS request.
   #
-  # if session.https?
-  # ...
-  # end
+  #   if session.https?
+  #     ...
+  #   end
+  #
+  # @return [Boolean]
   def https?; end
 
-  def path(*_arg0, **_arg1, &_arg2); end
+  def path(*_arg0, &_arg1); end
 
   # Performs the actual request.
   #
   # - +method+: The HTTP method (GET, POST, PATCH, PUT, DELETE, HEAD, OPTIONS)
-  # as a symbol.
+  #   as a symbol.
   # - +path+: The URI (as a String) on which you want to perform the
-  # request.
+  #   request.
   # - +params+: The HTTP parameters that you want to pass. This may
-  # be +nil+,
-  # a Hash, or a String that is appropriately encoded
-  # (<tt>application/x-www-form-urlencoded</tt> or
-  # <tt>multipart/form-data</tt>).
+  #   be +nil+,
+  #   a Hash, or a String that is appropriately encoded
+  #   (<tt>application/x-www-form-urlencoded</tt> or
+  #   <tt>multipart/form-data</tt>).
   # - +headers+: Additional headers to pass, as a Hash. The headers will be
-  # merged into the Rack env hash.
+  #   merged into the Rack env hash.
   # - +env+: Additional env to pass, as a Hash. The headers will be
-  # merged into the Rack env hash.
+  #   merged into the Rack env hash.
   # - +xhr+: Set to +true+ if you want to make and Ajax request.
-  # Adds request headers characteristic of XMLHttpRequest e.g. HTTP_X_REQUESTED_WITH.
-  # The headers will be merged into the Rack env hash.
+  #   Adds request headers characteristic of XMLHttpRequest e.g. HTTP_X_REQUESTED_WITH.
+  #   The headers will be merged into the Rack env hash.
   # - +as+: Used for encoding the request with different content type.
-  # Supports +:json+ by default and will set the appropriate request headers.
-  # The headers will be merged into the Rack env hash.
+  #   Supports +:json+ by default and will set the appropriate request headers.
+  #   The headers will be merged into the Rack env hash.
   #
   # This method is rarely used directly. Use +#get+, +#post+, or other standard
   # HTTP methods in integration tests. +#process+ is only required when using a
@@ -7660,10 +7948,10 @@ class ActionDispatch::Integration::Session
   # which one can use to inspect the details of the response.
   #
   # Example:
-  # process :get, '/author', params: { since: 201501011400 }
+  #   process :get, '/author', params: { since: 201501011400 }
   def process(method, path, params: T.unsafe(nil), headers: T.unsafe(nil), env: T.unsafe(nil), xhr: T.unsafe(nil), as: T.unsafe(nil)); end
 
-  def redirect?(*_arg0, **_arg1, &_arg2); end
+  def redirect?(*_arg0, &_arg1); end
 
   # The remote_addr used in the last request.
   def remote_addr; end
@@ -7684,20 +7972,23 @@ class ActionDispatch::Integration::Session
   # in an existing session instance, so it can be used from a clean-slate
   # condition.
   #
-  # session.reset!
+  #   session.reset!
   def reset!; end
 
   # A reference to the response instance used by the last request.
   def response; end
 
-  def status(*_arg0, **_arg1, &_arg2); end
-  def status_message(*_arg0, **_arg1, &_arg2); end
+  def status(*_arg0, &_arg1); end
+  def status_message(*_arg0, &_arg1); end
   def url_options; end
 
   private
 
   def _mock_session; end
+
+  # @yield [location]
   def build_expanded_path(path); end
+
   def build_full_uri(path, env); end
 
   class << self
@@ -7717,98 +8008,98 @@ ActionDispatch::Integration::Session::DEFAULT_HOST = T.let(T.unsafe(nil), String
 # At its simplest, you simply extend <tt>IntegrationTest</tt> and write your tests
 # using the get/post methods:
 #
-# require "test_helper"
+#   require "test_helper"
 #
-# class ExampleTest < ActionDispatch::IntegrationTest
-# fixtures :people
+#   class ExampleTest < ActionDispatch::IntegrationTest
+#     fixtures :people
 #
-# def test_login
-# # get the login page
-# get "/login"
-# assert_equal 200, status
+#     def test_login
+#       # get the login page
+#       get "/login"
+#       assert_equal 200, status
 #
-# # post the login and follow through to the home page
-# post "/login", params: { username: people(:jamis).username,
-# password: people(:jamis).password }
-# follow_redirect!
-# assert_equal 200, status
-# assert_equal "/home", path
-# end
-# end
+#       # post the login and follow through to the home page
+#       post "/login", params: { username: people(:jamis).username,
+#         password: people(:jamis).password }
+#       follow_redirect!
+#       assert_equal 200, status
+#       assert_equal "/home", path
+#     end
+#   end
 #
 # However, you can also have multiple session instances open per test, and
 # even extend those instances with assertions and methods to create a very
 # powerful testing DSL that is specific for your application. You can even
 # reference any named routes you happen to have defined.
 #
-# require "test_helper"
+#   require "test_helper"
 #
-# class AdvancedTest < ActionDispatch::IntegrationTest
-# fixtures :people, :rooms
+#   class AdvancedTest < ActionDispatch::IntegrationTest
+#     fixtures :people, :rooms
 #
-# def test_login_and_speak
-# jamis, david = login(:jamis), login(:david)
-# room = rooms(:office)
+#     def test_login_and_speak
+#       jamis, david = login(:jamis), login(:david)
+#       room = rooms(:office)
 #
-# jamis.enter(room)
-# jamis.speak(room, "anybody home?")
+#       jamis.enter(room)
+#       jamis.speak(room, "anybody home?")
 #
-# david.enter(room)
-# david.speak(room, "hello!")
-# end
+#       david.enter(room)
+#       david.speak(room, "hello!")
+#     end
 #
-# private
+#     private
 #
-# module CustomAssertions
-# def enter(room)
-# # reference a named route, for maximum internal consistency!
-# get(room_url(id: room.id))
-# assert(...)
-# ...
-# end
+#       module CustomAssertions
+#         def enter(room)
+#           # reference a named route, for maximum internal consistency!
+#           get(room_url(id: room.id))
+#           assert(...)
+#           ...
+#         end
 #
-# def speak(room, message)
-# post "/say/#{room.id}", xhr: true, params: { message: message }
-# assert(...)
-# ...
-# end
-# end
+#         def speak(room, message)
+#           post "/say/#{room.id}", xhr: true, params: { message: message }
+#           assert(...)
+#           ...
+#         end
+#       end
 #
-# def login(who)
-# open_session do |sess|
-# sess.extend(CustomAssertions)
-# who = people(who)
-# sess.post "/login", params: { username: who.username,
-# password: who.password }
-# assert(...)
-# end
-# end
-# end
+#       def login(who)
+#         open_session do |sess|
+#           sess.extend(CustomAssertions)
+#           who = people(who)
+#           sess.post "/login", params: { username: who.username,
+#             password: who.password }
+#           assert(...)
+#         end
+#       end
+#   end
 #
 # Another longer example would be:
 #
 # A simple integration test that exercises multiple controllers:
 #
-# require "test_helper"
+#   require "test_helper"
 #
-# class UserFlowsTest < ActionDispatch::IntegrationTest
-# test "login and browse site" do
-# # login via https
-# https!
-# get "/login"
-# assert_response :success
+#   class UserFlowsTest < ActionDispatch::IntegrationTest
+#     test "login and browse site" do
+#       # login via https
+#       https!
+#       get "/login"
+#       assert_response :success
 #
-# post "/login", params: { username: users(:david).username, password: users(:david).password }
-# follow_redirect!
-# assert_equal '/welcome', path
-# assert_equal 'Welcome david!', flash[:notice]
+#       post "/login", params: { username: users(:david).username, password: users(:david).password }
+#       follow_redirect!
+#       assert_equal '/welcome', path
+#       assert_equal 'Welcome david!', flash[:notice]
 #
-# https!(false)
-# get "/articles/all"
-# assert_response :success
-# assert_select 'h1', 'Articles'
-# end
-# end
+#       https!(false)
+#       get "/articles/all"
+#       assert_response :success
+#       assert_select 'h1', 'Articles'
+#     end
+#   end
 #
 # As you can see the integration test involves multiple controllers and
 # exercises the entire stack from database to dispatcher. In addition you can
@@ -7818,48 +8109,48 @@ ActionDispatch::Integration::Session::DEFAULT_HOST = T.let(T.unsafe(nil), String
 #
 # Here's an example of multiple sessions and custom DSL in an integration test
 #
-# require "test_helper"
+#   require "test_helper"
 #
-# class UserFlowsTest < ActionDispatch::IntegrationTest
-# test "login and browse site" do
-# # User david logs in
-# david = login(:david)
-# # User guest logs in
-# guest = login(:guest)
+#   class UserFlowsTest < ActionDispatch::IntegrationTest
+#     test "login and browse site" do
+#       # User david logs in
+#       david = login(:david)
+#       # User guest logs in
+#       guest = login(:guest)
 #
-# # Both are now available in different sessions
-# assert_equal 'Welcome david!', david.flash[:notice]
-# assert_equal 'Welcome guest!', guest.flash[:notice]
+#       # Both are now available in different sessions
+#       assert_equal 'Welcome david!', david.flash[:notice]
+#       assert_equal 'Welcome guest!', guest.flash[:notice]
 #
-# # User david can browse site
-# david.browses_site
-# # User guest can browse site as well
-# guest.browses_site
+#       # User david can browse site
+#       david.browses_site
+#       # User guest can browse site as well
+#       guest.browses_site
 #
-# # Continue with other assertions
-# end
+#       # Continue with other assertions
+#     end
 #
-# private
+#     private
 #
-# module CustomDsl
-# def browses_site
-# get "/products/all"
-# assert_response :success
-# assert_select 'h1', 'Products'
-# end
-# end
+#       module CustomDsl
+#         def browses_site
+#           get "/products/all"
+#           assert_response :success
+#           assert_select 'h1', 'Products'
+#         end
+#       end
 #
-# def login(user)
-# open_session do |sess|
-# sess.extend(CustomDsl)
-# u = users(user)
-# sess.https!
-# sess.post "/login", params: { username: u.username, password: u.password }
-# assert_equal '/welcome', sess.path
-# sess.https!(false)
-# end
-# end
-# end
+#       def login(user)
+#         open_session do |sess|
+#           sess.extend(CustomDsl)
+#           u = users(user)
+#           sess.https!
+#           sess.post "/login", params: { username: u.username, password: u.password }
+#           assert_equal '/welcome', sess.path
+#           sess.https!(false)
+#         end
+#       end
+#   end
 #
 # See the {request helpers documentation}[rdoc-ref:ActionDispatch::Integration::RequestHelpers] for help on how to
 # use +get+, etc.
@@ -7869,18 +8160,18 @@ ActionDispatch::Integration::Session::DEFAULT_HOST = T.let(T.unsafe(nil), String
 # You can also test your JSON API easily by setting what the request should
 # be encoded as:
 #
-# require "test_helper"
+#   require "test_helper"
 #
-# class ApiTest < ActionDispatch::IntegrationTest
-# test "creates articles" do
-# assert_difference -> { Article.count } do
-# post articles_path, params: { article: { title: "Ahoy!" } }, as: :json
-# end
+#   class ApiTest < ActionDispatch::IntegrationTest
+#     test "creates articles" do
+#       assert_difference -> { Article.count } do
+#         post articles_path, params: { article: { title: "Ahoy!" } }, as: :json
+#       end
 #
-# assert_response :success
-# assert_equal({ id: Article.last.id, title: "Ahoy!" }, response.parsed_body)
-# end
-# end
+#       assert_response :success
+#       assert_equal({ id: Article.last.id, title: "Ahoy!" }, response.parsed_body)
+#     end
+#   end
 #
 # The +as+ option passes an "application/json" Accept header (thereby setting
 # the request format to JSON unless overridden), sets the content type to
@@ -7892,9 +8183,9 @@ ActionDispatch::Integration::Session::DEFAULT_HOST = T.let(T.unsafe(nil), String
 # Out of the box, only <tt>:json</tt> is supported. But for any custom MIME
 # types you've registered, you can add your own encoders with:
 #
-# ActionDispatch::IntegrationTest.register_encoder :wibble,
-# param_encoder: -> params { params.to_wibble },
-# response_parser: -> body { body }
+#   ActionDispatch::IntegrationTest.register_encoder :wibble,
+#     param_encoder: -> params { params.to_wibble },
+#     response_parser: -> body { body }
 #
 # Where +param_encoder+ defines how the params should be encoded and
 # +response_parser+ defines how the response body should be parsed through
@@ -7955,6 +8246,7 @@ end
 module ActionDispatch::Journey; end
 
 class ActionDispatch::Journey::Format
+  # @return [Format] a new instance of Format
   def initialize(parts); end
 
   def evaluate(hash); end
@@ -7972,21 +8264,30 @@ class ActionDispatch::Journey::Format::Parameter < ::Struct
   def escape(value); end
 
   # Returns the value of attribute escaper
+  #
+  # @return [Object] the current value of escaper
   def escaper; end
 
   # Sets the attribute escaper
+  #
+  # @param value [Object] the value to set the attribute escaper to.
+  # @return [Object] the newly set value
   def escaper=(_); end
 
   # Returns the value of attribute name
+  #
+  # @return [Object] the current value of name
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value [Object] the value to set the attribute name to.
+  # @return [Object] the newly set value
   def name=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7995,6 +8296,7 @@ end
 # The Formatter class is used for formatting URLs. For example, parameters
 # passed to +url_for+ in Rails will eventually call Formatter#generate.
 class ActionDispatch::Journey::Formatter
+  # @return [Formatter] a new instance of Formatter
   def initialize(routes); end
 
   def clear; end
@@ -8019,6 +8321,7 @@ class ActionDispatch::Journey::Formatter
 end
 
 class ActionDispatch::Journey::Formatter::MissingRoute
+  # @return [MissingRoute] a new instance of MissingRoute
   def initialize(constraints, missing_keys, unmatched_keys, routes, name); end
 
   # Returns the value of attribute constraints.
@@ -8033,6 +8336,8 @@ class ActionDispatch::Journey::Formatter::MissingRoute
   def name; end
 
   def params; end
+
+  # @raise [ActionController::UrlGenerationError]
   def path(method_name); end
 
   # Returns the value of attribute routes.
@@ -8043,6 +8348,7 @@ class ActionDispatch::Journey::Formatter::MissingRoute
 end
 
 class ActionDispatch::Journey::Formatter::RouteWithParams
+  # @return [RouteWithParams] a new instance of RouteWithParams
   def initialize(route, parameterized_parts, params); end
 
   # Returns the value of attribute params.
@@ -8054,6 +8360,7 @@ end
 module ActionDispatch::Journey::GTG; end
 
 class ActionDispatch::Journey::GTG::Builder
+  # @return [Builder] a new instance of Builder
   def initialize(root); end
 
   # Returns the value of attribute ast.
@@ -8064,6 +8371,8 @@ class ActionDispatch::Journey::GTG::Builder
 
   def firstpos(node); end
   def lastpos(node); end
+
+  # @return [Boolean]
   def nullable?(node); end
 
   # Returns the value of attribute root.
@@ -8080,6 +8389,7 @@ end
 ActionDispatch::Journey::GTG::Builder::DUMMY = T.let(T.unsafe(nil), ActionDispatch::Journey::Nodes::Dummy)
 
 class ActionDispatch::Journey::GTG::MatchData
+  # @return [MatchData] a new instance of MatchData
   def initialize(memos); end
 
   # Returns the value of attribute memos.
@@ -8087,6 +8397,7 @@ class ActionDispatch::Journey::GTG::MatchData
 end
 
 class ActionDispatch::Journey::GTG::Simulator
+  # @return [Simulator] a new instance of Simulator
   def initialize(transition_table); end
 
   def memos(string); end
@@ -8100,10 +8411,14 @@ ActionDispatch::Journey::GTG::Simulator::INITIAL_STATE = T.let(T.unsafe(nil), Ar
 class ActionDispatch::Journey::GTG::TransitionTable
   include ::ActionDispatch::Journey::NFA::Dot
 
+  # @return [TransitionTable] a new instance of TransitionTable
   def initialize; end
 
   def []=(from, to, sym); end
+
+  # @return [Boolean]
   def accepting?(state); end
+
   def accepting_states; end
   def add_accepting(state); end
   def add_memo(idx, memo); end
@@ -8134,6 +8449,7 @@ end
 module ActionDispatch::Journey::Nodes; end
 
 class ActionDispatch::Journey::Nodes::Binary < ::ActionDispatch::Journey::Nodes::Node
+  # @return [Binary] a new instance of Binary
   def initialize(left, right); end
 
   def children; end
@@ -8142,11 +8458,15 @@ class ActionDispatch::Journey::Nodes::Binary < ::ActionDispatch::Journey::Nodes:
   def right; end
 
   # Sets the attribute right
+  #
+  # @param value the value to set the attribute right to.
   def right=(_arg0); end
 end
 
 class ActionDispatch::Journey::Nodes::Cat < ::ActionDispatch::Journey::Nodes::Binary
+  # @return [Boolean]
   def cat?; end
+
   def type; end
 end
 
@@ -8155,55 +8475,81 @@ class ActionDispatch::Journey::Nodes::Dot < ::ActionDispatch::Journey::Nodes::Te
 end
 
 class ActionDispatch::Journey::Nodes::Dummy < ::ActionDispatch::Journey::Nodes::Literal
+  # @return [Dummy] a new instance of Dummy
   def initialize(x = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def literal?; end
 end
 
 class ActionDispatch::Journey::Nodes::Group < ::ActionDispatch::Journey::Nodes::Unary
+  # @return [Boolean]
   def group?; end
+
   def type; end
 end
 
 class ActionDispatch::Journey::Nodes::Literal < ::ActionDispatch::Journey::Nodes::Terminal
+  # @return [Boolean]
   def literal?; end
+
   def type; end
 end
 
 class ActionDispatch::Journey::Nodes::Node
   include ::Enumerable
 
+  # @return [Node] a new instance of Node
   def initialize(left); end
 
+  # @return [Boolean]
   def cat?; end
+
   def each(&block); end
+
+  # @return [Boolean]
   def group?; end
 
   # Returns the value of attribute left.
   def left; end
 
   # Sets the attribute left
+  #
+  # @param value the value to set the attribute left to.
   def left=(_arg0); end
 
+  # @return [Boolean]
   def literal?; end
 
   # Returns the value of attribute memo.
   def memo; end
 
   # Sets the attribute memo
+  #
+  # @param value the value to set the attribute memo to.
   def memo=(_arg0); end
 
   def name; end
+
+  # @return [Boolean]
   def star?; end
+
+  # @return [Boolean]
   def symbol?; end
+
+  # @return [Boolean]
   def terminal?; end
+
   def to_dot; end
   def to_s; end
   def to_sym; end
+
+  # @raise [NotImplementedError]
   def type; end
 end
 
 class ActionDispatch::Journey::Nodes::Or < ::ActionDispatch::Journey::Nodes::Node
+  # @return [Or] a new instance of Or
   def initialize(children); end
 
   # Returns the value of attribute children.
@@ -8218,13 +8564,18 @@ end
 
 class ActionDispatch::Journey::Nodes::Star < ::ActionDispatch::Journey::Nodes::Unary
   def name; end
+
+  # @return [Boolean]
   def star?; end
+
   def type; end
 end
 
 class ActionDispatch::Journey::Nodes::Symbol < ::ActionDispatch::Journey::Nodes::Terminal
+  # @return [Symbol] a new instance of Symbol
   def initialize(left, regexp = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def default_regexp?; end
 
   # Returns the value of attribute name.
@@ -8234,12 +8585,16 @@ class ActionDispatch::Journey::Nodes::Symbol < ::ActionDispatch::Journey::Nodes:
   def regexp; end
 
   # Sets the attribute regexp
+  #
+  # @param value the value to set the attribute regexp to.
   def regexp=(_arg0); end
 
   # Returns the value of attribute regexp.
   def symbol; end
 
+  # @return [Boolean]
   def symbol?; end
+
   def type; end
 end
 
@@ -8248,6 +8603,8 @@ ActionDispatch::Journey::Nodes::Symbol::GREEDY_EXP = T.let(T.unsafe(nil), Regexp
 
 class ActionDispatch::Journey::Nodes::Terminal < ::ActionDispatch::Journey::Nodes::Node
   def symbol; end
+
+  # @return [Boolean]
   def terminal?; end
 end
 
@@ -8258,6 +8615,7 @@ end
 class ActionDispatch::Journey::Parser < ::Racc::Parser
   include ::ActionDispatch::Journey::Nodes
 
+  # @return [Parser] a new instance of Parser
   def initialize; end
 
   # reduce 0 omitted
@@ -8292,6 +8650,7 @@ ActionDispatch::Journey::Parser::Racc_token_to_s_table = T.let(T.unsafe(nil), Ar
 module ActionDispatch::Journey::Path; end
 
 class ActionDispatch::Journey::Path::Pattern
+  # @return [Pattern] a new instance of Pattern
   def initialize(ast, requirements, separators, anchored); end
 
   def =~(other); end
@@ -8303,7 +8662,10 @@ class ActionDispatch::Journey::Path::Pattern
   def build_formatter; end
   def eager_load!; end
   def match(other); end
+
+  # @return [Boolean]
   def match?(other); end
+
   def names; end
   def optional_names; end
   def required_names; end
@@ -8326,6 +8688,7 @@ class ActionDispatch::Journey::Path::Pattern
 end
 
 class ActionDispatch::Journey::Path::Pattern::AnchoredRegexp < ::ActionDispatch::Journey::Visitors::Visitor
+  # @return [AnchoredRegexp] a new instance of AnchoredRegexp
   def initialize(separator, matchers); end
 
   def accept(node); end
@@ -8340,6 +8703,7 @@ class ActionDispatch::Journey::Path::Pattern::AnchoredRegexp < ::ActionDispatch:
 end
 
 class ActionDispatch::Journey::Path::Pattern::MatchData
+  # @return [MatchData] a new instance of MatchData
   def initialize(names, offsets, match); end
 
   def [](x); end
@@ -8361,6 +8725,8 @@ end
 class ActionDispatch::Journey::Route
   # +path+ is a path constraint.
   # +constraints+ is a hash of constraints to be applied to this route.
+  #
+  # @return [Route] a new instance of Route
   def initialize(name:, path:, app: T.unsafe(nil), constraints: T.unsafe(nil), required_defaults: T.unsafe(nil), defaults: T.unsafe(nil), request_method_match: T.unsafe(nil), precedence: T.unsafe(nil), scope_options: T.unsafe(nil), internal: T.unsafe(nil)); end
 
   # Returns the value of attribute app.
@@ -8377,15 +8743,21 @@ class ActionDispatch::Journey::Route
   # Returns the value of attribute defaults.
   def defaults; end
 
+  # @return [Boolean]
   def dispatcher?; end
+
   def eager_load!; end
   def format(path_options); end
+
+  # @return [Boolean]
   def glob?; end
 
   # Returns the value of attribute internal.
   def internal; end
 
   def ip; end
+
+  # @return [Boolean]
   def matches?(request); end
 
   # Returns the value of attribute name.
@@ -8399,7 +8771,9 @@ class ActionDispatch::Journey::Route
   # Returns the value of attribute precedence.
   def precedence; end
 
+  # @return [Boolean]
   def required_default?(key); end
+
   def required_defaults; end
   def required_keys; end
   def required_parts; end
@@ -8407,13 +8781,14 @@ class ActionDispatch::Journey::Route
   # Needed for `bin/rails routes`. Picks up succinctly defined requirements
   # for a route, for example route
   #
-  # get 'photo/:id', :controller => 'photos', :action => 'show',
-  # :id => /[A-Z]\d{5}/
+  #   get 'photo/:id', :controller => 'photos', :action => 'show',
+  #     :id => /[A-Z]\d{5}/
   #
   # will have {:controller=>"photos", :action=>"show", :id=>/[A-Z]\d{5}/}
   # as requirements.
   def requirements; end
 
+  # @return [Boolean]
   def requires_matching_verb?; end
 
   # Returns the value of attribute scope_options.
@@ -8514,6 +8889,7 @@ class ActionDispatch::Journey::Route::VerbMatchers::UNLINK
 end
 
 class ActionDispatch::Journey::Route::VerbMatchers::Unknown
+  # @return [Unknown] a new instance of Unknown
   def initialize(verb); end
 
   def call(request); end
@@ -8526,6 +8902,7 @@ ActionDispatch::Journey::Route::VerbMatchers::VERBS = T.let(T.unsafe(nil), Array
 ActionDispatch::Journey::Route::VerbMatchers::VERB_TO_CLASS = T.let(T.unsafe(nil), Hash)
 
 class ActionDispatch::Journey::Router
+  # @return [Router] a new instance of Router
   def initialize(routes); end
 
   def eager_load!; end
@@ -8535,6 +8912,8 @@ class ActionDispatch::Journey::Router
   def routes; end
 
   # Sets the attribute routes
+  #
+  # @param value the value to set the attribute routes to.
   def routes=(_arg0); end
 
   def serve(req); end
@@ -8562,17 +8941,17 @@ class ActionDispatch::Journey::Router::Utils
     # Strips off trailing slash and ensures there is a leading slash.
     # Also converts downcase URL encoded string to uppercase.
     #
-    # normalize_path("/foo")  # => "/foo"
-    # normalize_path("/foo/") # => "/foo"
-    # normalize_path("foo")   # => "/foo"
-    # normalize_path("")      # => "/"
-    # normalize_path("/%ab")  # => "/%AB"
+    #   normalize_path("/foo")  # => "/foo"
+    #   normalize_path("/foo/") # => "/foo"
+    #   normalize_path("foo")   # => "/foo"
+    #   normalize_path("")      # => "/"
+    #   normalize_path("/%ab")  # => "/%AB"
     def normalize_path(path); end
 
     # Replaces any escaped sequences with their unescaped representations.
     #
-    # uri = "/topics?title=Ruby%20on%20Rails"
-    # unescape_uri(uri)  #=> "/topics?title=Ruby on Rails"
+    #   uri = "/topics?title=Ruby%20on%20Rails"
+    #   unescape_uri(uri)  #=> "/topics?title=Ruby on Rails"
     def unescape_uri(uri); end
   end
 end
@@ -8612,6 +8991,7 @@ ActionDispatch::Journey::Router::Utils::UriEncoder::UTF_8 = T.let(T.unsafe(nil),
 class ActionDispatch::Journey::Routes
   include ::Enumerable
 
+  # @return [Routes] a new instance of Routes
   def initialize; end
 
   def add_route(name, mapping); end
@@ -8626,7 +9006,10 @@ class ActionDispatch::Journey::Routes
   def custom_routes; end
 
   def each(&block); end
+
+  # @return [Boolean]
   def empty?; end
+
   def last; end
   def length; end
   def partition_route(route); end
@@ -8643,9 +9026,12 @@ class ActionDispatch::Journey::Routes
 end
 
 class ActionDispatch::Journey::Scanner
+  # @return [Scanner] a new instance of Scanner
   def initialize; end
 
+  # @return [Boolean]
   def eos?; end
+
   def next_token; end
   def pos; end
   def pre_match; end
@@ -8663,6 +9049,7 @@ end
 module ActionDispatch::Journey::Visitors; end
 
 class ActionDispatch::Journey::Visitors::Dot < ::ActionDispatch::Journey::Visitors::FunctionalVisitor
+  # @return [Dot] a new instance of Dot
   def initialize; end
 
   def accept(node, seed = T.unsafe(nil)); end
@@ -8752,30 +9139,35 @@ ActionDispatch::Journey::Visitors::Visitor::DISPATCH_CACHE = T.let(T.unsafe(nil)
 class ActionDispatch::MiddlewareStack
   include ::Enumerable
 
+  # @return [MiddlewareStack] a new instance of MiddlewareStack
+  # @yield [_self]
+  # @yieldparam _self [ActionDispatch::MiddlewareStack] the object that the method was called on
   def initialize(*args); end
 
   def [](i); end
   def build(app = T.unsafe(nil), &block); end
   def delete(target); end
   def each; end
-  def insert(index, klass, *args, **_arg3, &block); end
-  def insert_after(index, *args, **_arg2, &block); end
-  def insert_before(index, klass, *args, **_arg3, &block); end
+  def insert(index, klass, *args, &block); end
+  def insert_after(index, *args, &block); end
+  def insert_before(index, klass, *args, &block); end
   def last; end
 
   # Returns the value of attribute middlewares.
   def middlewares; end
 
   # Sets the attribute middlewares
+  #
+  # @param value the value to set the attribute middlewares to.
   def middlewares=(_arg0); end
 
   def move(target, source); end
   def move_after(target, source); end
   def move_before(target, source); end
   def size; end
-  def swap(target, *args, **_arg2, &block); end
-  def unshift(klass, *args, **_arg2, &block); end
-  def use(klass, *args, **_arg2, &block); end
+  def swap(target, *args, &block); end
+  def unshift(klass, *args, &block); end
+  def use(klass, *args, &block); end
 
   private
 
@@ -8788,6 +9180,7 @@ end
 # It proxies the +call+ method transparently and instruments the method
 # call.
 class ActionDispatch::MiddlewareStack::InstrumentationProxy
+  # @return [InstrumentationProxy] a new instance of InstrumentationProxy
   def initialize(middleware, class_name); end
 
   def call(env); end
@@ -8796,6 +9189,7 @@ end
 ActionDispatch::MiddlewareStack::InstrumentationProxy::EVENT_NAME = T.let(T.unsafe(nil), String)
 
 class ActionDispatch::MiddlewareStack::Middleware
+  # @return [Middleware] a new instance of Middleware
   def initialize(klass, args, block); end
 
   def ==(middleware); end
@@ -8819,6 +9213,9 @@ end
 class ActionDispatch::MissingController < ::NameError; end
 
 class ActionDispatch::PermissionsPolicy
+  # @return [PermissionsPolicy] a new instance of PermissionsPolicy
+  # @yield [_self]
+  # @yieldparam _self [ActionDispatch::PermissionsPolicy] the object that the method was called on
   def initialize; end
 
   def accelerometer(*sources); end
@@ -8861,14 +9258,20 @@ ActionDispatch::PermissionsPolicy::DIRECTIVES = T.let(T.unsafe(nil), Hash)
 ActionDispatch::PermissionsPolicy::MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 class ActionDispatch::PermissionsPolicy::Middleware
+  # @return [Middleware] a new instance of Middleware
   def initialize(app); end
 
   def call(env); end
 
   private
 
+  # @return [Boolean]
   def html_response?(headers); end
+
+  # @return [Boolean]
   def policy_empty?(policy); end
+
+  # @return [Boolean]
   def policy_present?(headers); end
 end
 
@@ -8899,6 +9302,7 @@ ActionDispatch::PermissionsPolicy::Request::POLICY = T.let(T.unsafe(nil), String
 # When a request with a content type other than HTML is made, this middleware
 # will attempt to convert error information into the appropriate response type.
 class ActionDispatch::PublicExceptions
+  # @return [PublicExceptions] a new instance of PublicExceptions
   def initialize(public_path); end
 
   def call(env); end
@@ -8907,6 +9311,8 @@ class ActionDispatch::PublicExceptions
   def public_path; end
 
   # Sets the attribute public_path
+  #
+  # @param value the value to set the attribute public_path to.
   def public_path=(_arg0); end
 
   private
@@ -8965,6 +9371,8 @@ class ActionDispatch::RemoteIp
   # with your proxy servers after it. If your proxies aren't removed, pass
   # them in via the +custom_proxies+ parameter. That way, the middleware will
   # ignore those IP addresses, and return the one that you want.
+  #
+  # @return [RemoteIp] a new instance of RemoteIp
   def initialize(app, ip_spoofing_check = T.unsafe(nil), custom_proxies = T.unsafe(nil)); end
 
   # Since the IP address may not be needed, we store the object here
@@ -8984,6 +9392,7 @@ end
 # into an actual IP address. If the ActionDispatch::Request#remote_ip method
 # is called, this class will calculate the value and then memoize it.
 class ActionDispatch::RemoteIp::GetIp
+  # @return [GetIp] a new instance of GetIp
   def initialize(req, check_ip, proxies); end
 
   # Sort through the various IP address headers, looking for the IP most
@@ -9037,6 +9446,7 @@ class ActionDispatch::Request
   include ::Rack::Request::Env
   extend ::ActionDispatch::Http::Parameters::ClassMethods
 
+  # @return [Request] a new instance of Request
   def initialize(env); end
 
   # Override Rack's GET method to support indifferent access.
@@ -9091,25 +9501,29 @@ class ActionDispatch::Request
   #
   # A request body is not assumed to contain form-data when no
   # Content-Type header is provided and the request_method is POST.
+  #
+  # @return [Boolean]
   def form_data?; end
 
   def from; end
 
   # Returns the +String+ full path including params of the last URL requested.
   #
-  # # get "/articles"
-  # request.fullpath # => "/articles"
+  #    # get "/articles"
+  #    request.fullpath # => "/articles"
   #
-  # # get "/articles?page=2"
-  # request.fullpath # => "/articles?page=2"
+  #    # get "/articles?page=2"
+  #    request.fullpath # => "/articles?page=2"
   def fullpath; end
 
   def gateway_interface; end
+
+  # @return [Boolean]
   def have_cookie_jar?; end
 
   # Provides access to the request's HTTP headers, for example:
   #
-  # request.headers["Content-Type"] # => "text/plain"
+  #   request.headers["Content-Type"] # => "text/plain"
   def headers; end
 
   def http_auth_salt; end
@@ -9122,20 +9536,24 @@ class ActionDispatch::Request
 
   # Returns true if the request has a header matching the given key parameter.
   #
-  # request.key? :ip_spoofing_check # => true
+  #    request.key? :ip_spoofing_check # => true
+  #
+  # @return [Boolean]
   def key?(key); end
 
   def key_generator; end
 
   # True if the request came from localhost, 127.0.0.1, or ::1.
+  #
+  # @return [Boolean]
   def local?; end
 
   def logger; end
 
   # The +String+ MIME type of the request.
   #
-  # # get "/articles"
-  # request.media_type # => "application/x-www-form-urlencoded"
+  #    # get "/articles"
+  #    request.media_type # => "application/x-www-form-urlencoded"
   def media_type; end
 
   # Returns the original value of the environment's REQUEST_METHOD,
@@ -9151,19 +9569,19 @@ class ActionDispatch::Request
 
   # Returns a +String+ with the last requested path including their params.
   #
-  # # get '/foo'
-  # request.original_fullpath # => '/foo'
+  #    # get '/foo'
+  #    request.original_fullpath # => '/foo'
   #
-  # # get '/foo?bar'
-  # request.original_fullpath # => '/foo?bar'
+  #    # get '/foo?bar'
+  #    request.original_fullpath # => '/foo?bar'
   def original_fullpath; end
 
   def original_script_name; end
 
   # Returns the original request URL as a +String+.
   #
-  # # get "/articles?page=2"
-  # request.original_url # => "http://www.example.com/articles?page=2"
+  #    # get "/articles?page=2"
+  #    request.original_url # => "http://www.example.com/articles?page=2"
   def original_url; end
 
   def path_translated; end
@@ -9226,7 +9644,7 @@ class ActionDispatch::Request
   #
   # The +send_early_hints+ method accepts a hash of links as follows:
   #
-  # send_early_hints("Link" => "</style.css>; rel=preload; as=style\n</script.js>; rel=preload")
+  #   send_early_hints("Link" => "</style.css>; rel=preload; as=style\n</script.js>; rel=preload")
   #
   # If you are using +javascript_include_tag+ or +stylesheet_link_tag+ the
   # Early Hints headers are included by default if supported.
@@ -9241,10 +9659,16 @@ class ActionDispatch::Request
 
   def session=(session); end
   def session_options=(options); end
+
+  # @return [Boolean]
   def show_exceptions?; end
+
   def signed_cookie_digest; end
   def signed_cookie_salt; end
+
+  # @return [Boolean]
   def ssl?; end
+
   def use_authenticated_cookie_encryption; end
   def use_cookies_with_metadata; end
 
@@ -9265,11 +9689,15 @@ class ActionDispatch::Request
   # Returns true if the "X-Requested-With" header contains "XMLHttpRequest"
   # (case-insensitive), which may need to be manually added depending on the
   # choice of JavaScript libraries and frameworks.
+  #
+  # @return [Boolean]
   def xhr?; end
 
   # Returns true if the "X-Requested-With" header contains "XMLHttpRequest"
   # (case-insensitive), which may need to be manually added depending on the
   # choice of JavaScript libraries and frameworks.
+  #
+  # @return [Boolean]
   def xml_http_request?; end
 
   private
@@ -9320,6 +9748,7 @@ ActionDispatch::Request::RFC5789 = T.let(T.unsafe(nil), Array)
 
 # Session is responsible for lazily loading the session from store.
 class ActionDispatch::Request::Session
+  # @return [Session] a new instance of Session
   def initialize(by, req); end
 
   # Returns value of the key stored in the session or
@@ -9342,42 +9771,54 @@ class ActionDispatch::Request::Session
   def dig(*keys); end
 
   def each(&block); end
+
+  # @return [Boolean]
   def empty?; end
+
+  # @return [Boolean]
   def exists?; end
 
   # Returns value of the given key from the session, or raises +KeyError+
   # if can't find the given key and no default value is set.
   # Returns default value if specified.
   #
-  # session.fetch(:foo)
-  # # => KeyError: key not found: "foo"
+  #   session.fetch(:foo)
+  #   # => KeyError: key not found: "foo"
   #
-  # session.fetch(:foo, :bar)
-  # # => :bar
+  #   session.fetch(:foo, :bar)
+  #   # => :bar
   #
-  # session.fetch(:foo) do
-  # :bar
-  # end
-  # # => :bar
+  #   session.fetch(:foo) do
+  #     :bar
+  #   end
+  #   # => :bar
   def fetch(key, default = T.unsafe(nil), &block); end
 
   # Returns true if the session has the given key or false.
+  #
+  # @return [Boolean]
   def has_key?(key); end
 
   def id; end
 
   # Returns true if the session has the given key or false.
+  #
+  # @return [Boolean]
   def include?(key); end
 
   def inspect; end
 
   # Returns true if the session has the given key or false.
+  #
+  # @return [Boolean]
   def key?(key); end
 
   # Returns keys of the session as Array.
   def keys; end
 
+  # @return [Boolean]
   def loaded?; end
+
   def merge!(other); end
   def options; end
 
@@ -9389,14 +9830,14 @@ class ActionDispatch::Request::Session
 
   # Updates the session with given Hash.
   #
-  # session.to_hash
-  # # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2"}
+  #   session.to_hash
+  #   # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2"}
   #
-  # session.update({ "foo" => "bar" })
-  # # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
+  #   session.update({ "foo" => "bar" })
+  #   # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
   #
-  # session.to_hash
-  # # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
+  #   session.to_hash
+  #   # => {"session_id"=>"e29b9ea315edf98aad94cc78c34cc9b2", "foo" => "bar"}
   def update(hash); end
 
   # Returns values of the session as Array.
@@ -9421,6 +9862,7 @@ ActionDispatch::Request::Session::ENV_SESSION_KEY = T.let(T.unsafe(nil), String)
 ActionDispatch::Request::Session::ENV_SESSION_OPTIONS_KEY = T.let(T.unsafe(nil), String)
 
 class ActionDispatch::Request::Session::Options
+  # @return [Options] a new instance of Options
   def initialize(by, default_options); end
 
   def [](key); end
@@ -9476,6 +9918,7 @@ class ActionDispatch::Request::Utils::ParamEncoder
 end
 
 class ActionDispatch::RequestEncoder
+  # @return [RequestEncoder] a new instance of RequestEncoder
   def initialize(mime_name, param_encoder, response_parser); end
 
   def accept_header; end
@@ -9510,6 +9953,7 @@ end
 # The unique request id can be used to trace a request end-to-end and would typically end up being part of log files
 # from multiple pieces of the stack.
 class ActionDispatch::RequestId
+  # @return [RequestId] a new instance of RequestId
   def initialize(app, header:); end
 
   def call(env); end
@@ -9542,22 +9986,25 @@ end
 # For example, the following demo integration test prints the body of the
 # controller response to the console:
 #
-# class DemoControllerTest < ActionDispatch::IntegrationTest
-# def test_print_root_path_to_console
-# get('/')
-# puts response.body
-# end
-# end
+#  class DemoControllerTest < ActionDispatch::IntegrationTest
+#    def test_print_root_path_to_console
+#      get('/')
+#      puts response.body
+#    end
+#  end
 class ActionDispatch::Response
   include ::Rack::Response::Helpers
   include ::ActionDispatch::Http::FilterRedirect
   include ::ActionDispatch::Http::Cache::Response
   include ::MonitorMixin
 
+  # @return [Response] a new instance of Response
+  # @yield [_self]
+  # @yieldparam _self [ActionDispatch::Response] the object that the method was called on
   def initialize(status = T.unsafe(nil), header = T.unsafe(nil), body = T.unsafe(nil)); end
 
-  def [](*_arg0, **_arg1, &_arg2); end
-  def []=(*_arg0, **_arg1, &_arg2); end
+  def [](*_arg0, &_arg1); end
+  def []=(*_arg0, &_arg1); end
 
   # Aliasing these off because AD::Http::Cache::Response defines them.
   def _cache_control; end
@@ -9583,8 +10030,8 @@ class ActionDispatch::Response
   # Sets the HTTP character set. In case of +nil+ parameter
   # it sets the charset to +default_charset+.
   #
-  # response.charset = 'utf-16' # => 'utf-16'
-  # response.charset = nil      # => 'utf-8'
+  #   response.charset = 'utf-16' # => 'utf-16'
+  #   response.charset = nil      # => 'utf-8'
   def charset=(charset); end
 
   def close; end
@@ -9593,6 +10040,8 @@ class ActionDispatch::Response
   def code; end
 
   def commit!; end
+
+  # @return [Boolean]
   def committed?; end
 
   # Content type of response.
@@ -9601,7 +10050,7 @@ class ActionDispatch::Response
   # Sets the HTTP response's content MIME type. For example, in the controller
   # you could write this:
   #
-  # response.content_type = "text/plain"
+  #  response.content_type = "text/plain"
   #
   # If a character set has been defined for this response (see charset=) then
   # the character set information will also be included in the content type
@@ -9610,7 +10059,7 @@ class ActionDispatch::Response
 
   # Returns the response cookies, converted to a Hash of (name => value) pairs
   #
-  # assert_equal 'AuthorOfNewPage', r.cookies['author']
+  #   assert_equal 'AuthorOfNewPage', r.cookies['author']
   def cookies; end
 
   def default_charset; end
@@ -9620,6 +10069,8 @@ class ActionDispatch::Response
   def delete_header(key); end
   def each(&block); end
   def get_header(key); end
+
+  # @return [Boolean]
   def has_header?(key); end
 
   # Get headers for this response.
@@ -9633,17 +10084,17 @@ class ActionDispatch::Response
 
   # Returns the corresponding message for the current HTTP status code:
   #
-  # response.status = 200
-  # response.message # => "OK"
+  #   response.status = 200
+  #   response.message # => "OK"
   #
-  # response.status = 404
-  # response.message # => "Not Found"
+  #   response.status = 404
+  #   response.message # => "Not Found"
   def message; end
 
   # Turns the Response into a Rack-compatible array of the status, headers,
   # and body. Allows explicit splatting:
   #
-  # status, headers, body = *response
+  #   status, headers, body = *response
   def prepare!; end
 
   # The location header we'll be responding with.
@@ -9664,10 +10115,16 @@ class ActionDispatch::Response
   def send_file(path); end
 
   def sending!; end
+
+  # @return [Boolean]
   def sending?; end
+
   def sending_file=(v); end
   def sent!; end
+
+  # @return [Boolean]
   def sent?; end
+
   def set_header(key, v); end
 
   # The HTTP status code.
@@ -9678,11 +10135,11 @@ class ActionDispatch::Response
 
   # Returns the corresponding message for the current HTTP status code:
   #
-  # response.status = 200
-  # response.message # => "OK"
+  #   response.status = 200
+  #   response.message # => "OK"
   #
-  # response.status = 404
-  # response.message # => "Not Found"
+  #   response.status = 404
+  #   response.message # => "Not Found"
   def status_message; end
 
   # The underlying body, as a streamable object.
@@ -9691,7 +10148,7 @@ class ActionDispatch::Response
   # Turns the Response into a Rack-compatible array of the status, headers,
   # and body. Allows explicit splatting:
   #
-  # status, headers, body = *response
+  #   status, headers, body = *response
   def to_a; end
 
   def write(string); end
@@ -9726,13 +10183,19 @@ class ActionDispatch::Response
 end
 
 class ActionDispatch::Response::Buffer
+  # @return [Buffer] a new instance of Buffer
   def initialize(response, buf); end
 
   def abort; end
   def body; end
   def close; end
+
+  # @return [Boolean]
   def closed?; end
+
   def each(&block); end
+
+  # @raise [IOError]
   def write(string); end
 
   private
@@ -9745,21 +10208,30 @@ ActionDispatch::Response::CONTENT_TYPE_PARSER = T.let(T.unsafe(nil), Regexp)
 
 class ActionDispatch::Response::ContentTypeHeader < ::Struct
   # Returns the value of attribute charset
+  #
+  # @return [Object] the current value of charset
   def charset; end
 
   # Sets the attribute charset
+  #
+  # @param value [Object] the value to set the attribute charset to.
+  # @return [Object] the newly set value
   def charset=(_); end
 
   # Returns the value of attribute mime_type
+  #
+  # @return [Object] the current value of mime_type
   def mime_type; end
 
   # Sets the attribute mime_type
+  #
+  # @param value [Object] the value to set the attribute mime_type to.
+  # @return [Object] the newly set value
   def mime_type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -9769,6 +10241,7 @@ end
 # Rack::Sendfile will usually intercept the response and uses
 # the path directly, so there is no reason to open the file.
 class ActionDispatch::Response::FileBody
+  # @return [FileBody] a new instance of FileBody
   def initialize(path); end
 
   def body; end
@@ -9780,6 +10253,7 @@ class ActionDispatch::Response::FileBody
 end
 
 class ActionDispatch::Response::Header
+  # @return [Header] a new instance of Header
   def initialize(response, header); end
 
   def []=(k, v); end
@@ -9792,12 +10266,16 @@ ActionDispatch::Response::NO_CONTENT_CODES = T.let(T.unsafe(nil), Array)
 ActionDispatch::Response::NullContentTypeHeader = T.let(T.unsafe(nil), ActionDispatch::Response::ContentTypeHeader)
 
 class ActionDispatch::Response::RackBody
+  # @return [RackBody] a new instance of RackBody
   def initialize(response); end
 
   def body; end
   def close; end
   def each(*args, &block); end
+
+  # @return [Boolean]
   def respond_to?(method, include_private = T.unsafe(nil)); end
+
   def to_ary; end
   def to_path; end
 end
@@ -9812,16 +10290,16 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # Think of creating routes as drawing a map for your requests. The map tells
 # them where to go based on some predefined pattern:
 #
-# Rails.application.routes.draw do
-# Pattern 1 tells some request to go to one place
-# Pattern 2 tell them to go to another
-# ...
-# end
+#   Rails.application.routes.draw do
+#     Pattern 1 tells some request to go to one place
+#     Pattern 2 tell them to go to another
+#     ...
+#   end
 #
 # The following symbols are special:
 #
-# :controller maps to your controller name
-# :action     maps to an action with your controllers
+#   :controller maps to your controller name
+#   :action     maps to an action with your controllers
 #
 # Other names simply map to a parameter as in the case of <tt>:id</tt>.
 #
@@ -9832,21 +10310,21 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # for your +index+, +show+, +new+, +edit+, +create+, +update+ and +destroy+
 # actions, a resourceful route declares them in a single line of code:
 #
-# resources :photos
+#  resources :photos
 #
 # Sometimes, you have a resource that clients always look up without
 # referencing an ID. A common example, /profile always shows the profile of
 # the currently logged in user. In this case, you can use a singular resource
 # to map /profile (rather than /profile/:id) to the show action.
 #
-# resource :profile
+#  resource :profile
 #
 # It's common to have resources that are logically children of other
 # resources:
 #
-# resources :magazines do
-# resources :ads
-# end
+#   resources :magazines do
+#     resources :ads
+#   end
 #
 # You may wish to organize groups of controllers under a namespace. Most
 # commonly, you might group a number of administrative controllers under
@@ -9854,17 +10332,17 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # <tt>app/controllers/admin</tt> directory, and you can group them together
 # in your router:
 #
-# namespace "admin" do
-# resources :posts, :comments
-# end
+#   namespace "admin" do
+#     resources :posts, :comments
+#   end
 #
 # Alternatively, you can add prefixes to your path without using a separate
 # directory by using +scope+. +scope+ takes additional options which
 # apply to all enclosed routes.
 #
-# scope path: "/cpanel", as: 'admin' do
-# resources :posts, :comments
-# end
+#   scope path: "/cpanel", as: 'admin' do
+#     resources :posts, :comments
+#   end
 #
 # For more, see <tt>Routing::Mapper::Resources#resources</tt>,
 # <tt>Routing::Mapper::Scoping#namespace</tt>, and
@@ -9875,8 +10353,8 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # For routes that don't fit the <tt>resources</tt> mold, you can use the HTTP helper
 # methods <tt>get</tt>, <tt>post</tt>, <tt>patch</tt>, <tt>put</tt> and <tt>delete</tt>.
 #
-# get 'post/:id', to: 'posts#show'
-# post 'post/:id', to: 'posts#create_comment'
+#   get 'post/:id', to: 'posts#show'
+#   post 'post/:id', to: 'posts#create_comment'
 #
 # Now, if you POST to <tt>/posts/:id</tt>, it will route to the <tt>create_comment</tt> action. A GET on the same
 # URL will route to the <tt>show</tt> action.
@@ -9884,7 +10362,7 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # If your route needs to respond to more than one HTTP method (or all methods) then using the
 # <tt>:via</tt> option on <tt>match</tt> is preferable.
 #
-# match 'post/:id', to: 'posts#show', via: [:get, :post]
+#   match 'post/:id', to: 'posts#show', via: [:get, :post]
 #
 # == Named routes
 #
@@ -9894,82 +10372,82 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # Example:
 #
-# # In config/routes.rb
-# get '/login', to: 'accounts#login', as: 'login'
+#   # In config/routes.rb
+#   get '/login', to: 'accounts#login', as: 'login'
 #
-# # With render, redirect_to, tests, etc.
-# redirect_to login_url
+#   # With render, redirect_to, tests, etc.
+#   redirect_to login_url
 #
 # Arguments can be passed as well.
 #
-# redirect_to show_item_path(id: 25)
+#   redirect_to show_item_path(id: 25)
 #
 # Use <tt>root</tt> as a shorthand to name a route for the root path "/".
 #
-# # In config/routes.rb
-# root to: 'blogs#index'
+#   # In config/routes.rb
+#   root to: 'blogs#index'
 #
-# # would recognize http://www.example.com/ as
-# params = { controller: 'blogs', action: 'index' }
+#   # would recognize http://www.example.com/ as
+#   params = { controller: 'blogs', action: 'index' }
 #
-# # and provide these named routes
-# root_url   # => 'http://www.example.com/'
-# root_path  # => '/'
+#   # and provide these named routes
+#   root_url   # => 'http://www.example.com/'
+#   root_path  # => '/'
 #
 # Note: when using +controller+, the route is simply named after the
 # method you call on the block parameter rather than map.
 #
-# # In config/routes.rb
-# controller :blog do
-# get 'blog/show',    to: :list
-# get 'blog/delete',  to: :delete
-# get 'blog/edit',    to: :edit
-# end
+#   # In config/routes.rb
+#   controller :blog do
+#     get 'blog/show',    to: :list
+#     get 'blog/delete',  to: :delete
+#     get 'blog/edit',    to: :edit
+#   end
 #
-# # provides named routes for show, delete, and edit
-# link_to @article.title, blog_show_path(id: @article.id)
+#   # provides named routes for show, delete, and edit
+#   link_to @article.title, blog_show_path(id: @article.id)
 #
 # == Pretty URLs
 #
 # Routes can generate pretty URLs. For example:
 #
-# get '/articles/:year/:month/:day', to: 'articles#find_by_id', constraints: {
-# year:       /\d{4}/,
-# month:      /\d{1,2}/,
-# day:        /\d{1,2}/
-# }
+#   get '/articles/:year/:month/:day', to: 'articles#find_by_id', constraints: {
+#     year:       /\d{4}/,
+#     month:      /\d{1,2}/,
+#     day:        /\d{1,2}/
+#   }
 #
 # Using the route above, the URL "http://localhost:3000/articles/2005/11/06"
 # maps to
 #
-# params = {year: '2005', month: '11', day: '06'}
+#   params = {year: '2005', month: '11', day: '06'}
 #
 # == Regular Expressions and parameters
 # You can specify a regular expression to define a format for a parameter.
 #
-# controller 'geocode' do
-# get 'geocode/:postalcode', to: :show, constraints: {
-# postalcode: /\d{5}(-\d{4})?/
-# }
-# end
+#   controller 'geocode' do
+#     get 'geocode/:postalcode', to: :show, constraints: {
+#       postalcode: /\d{5}(-\d{4})?/
+#     }
+#   end
 #
 # Constraints can include the 'ignorecase' and 'extended syntax' regular
 # expression modifiers:
 #
-# controller 'geocode' do
-# get 'geocode/:postalcode', to: :show, constraints: {
-# postalcode: /hx\d\d\s\d[a-z]{2}/i
-# }
-# end
+#   controller 'geocode' do
+#     get 'geocode/:postalcode', to: :show, constraints: {
+#       postalcode: /hx\d\d\s\d[a-z]{2}/i
+#     }
+#   end
 #
-# controller 'geocode' do
-# get 'geocode/:postalcode', to: :show, constraints: {
-# postalcode: /# Postalcode format
-# \d{5} #Prefix
-# (-\d{4})? #Suffix
-# /x
-# }
-# end
+#   controller 'geocode' do
+#     get 'geocode/:postalcode', to: :show, constraints: {
+#       postalcode: /# Postalcode format
+#          \d{5} #Prefix
+#          (-\d{4})? #Suffix
+#          /x
+#     }
+#   end
 #
 # Using the multiline modifier will raise an +ArgumentError+.
 # Encoding regular expression modifiers are silently ignored. The
@@ -9979,13 +10457,13 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # You can redirect any path to another path using the redirect helper in your router:
 #
-# get "/stories", to: redirect("/posts")
+#   get "/stories", to: redirect("/posts")
 #
 # == Unicode character routes
 #
 # You can specify unicode character routes in your router:
 #
-# get "こんにちは", to: "welcome#index"
+#   get "こんにちは", to: "welcome#index"
 #
 # == Routing to Rack Applications
 #
@@ -9993,13 +10471,13 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 # index action in the PostsController, you can specify any Rack application
 # as the endpoint for a matcher:
 #
-# get "/application.js", to: Sprockets
+#   get "/application.js", to: Sprockets
 #
 # == Reloading routes
 #
 # You can reload routes if you feel you must:
 #
-# Rails.application.reload_routes!
+#   Rails.application.reload_routes!
 #
 # This will clear all named routes and reload config/routes.rb if the file has been modified from
 # last load. To absolutely force reloading, use <tt>reload!</tt>.
@@ -10010,19 +10488,19 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # === +assert_routing+
 #
-# def test_movie_route_properly_splits
-# opts = {controller: "plugin", action: "checkout", id: "2"}
-# assert_routing "plugin/checkout/2", opts
-# end
+#   def test_movie_route_properly_splits
+#     opts = {controller: "plugin", action: "checkout", id: "2"}
+#     assert_routing "plugin/checkout/2", opts
+#   end
 #
 # +assert_routing+ lets you test whether or not the route properly resolves into options.
 #
 # === +assert_recognizes+
 #
-# def test_route_has_options
-# opts = {controller: "plugin", action: "show", id: "12"}
-# assert_recognizes opts, "/plugins/show/12"
-# end
+#   def test_route_has_options
+#     opts = {controller: "plugin", action: "show", id: "12"}
+#     assert_recognizes opts, "/plugins/show/12"
+#   end
 #
 # Note the subtle difference between the two: +assert_routing+ tests that
 # a URL fits options while +assert_recognizes+ tests that a URL
@@ -10030,19 +10508,19 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # In tests you can simply pass the URL or named route to +get+ or +post+.
 #
-# def send_to_jail
-# get '/jail'
-# assert_response :success
-# end
+#   def send_to_jail
+#     get '/jail'
+#     assert_response :success
+#   end
 #
-# def goes_to_login
-# get login_url
-# #...
-# end
+#   def goes_to_login
+#     get login_url
+#     #...
+#   end
 #
 # == View a list of all your routes
 #
-# rails routes
+#   rails routes
 #
 # Target a specific controller with <tt>-c</tt>, or grep routes
 # using <tt>-g</tt>. Useful in conjunction with <tt>--expanded</tt>
@@ -10054,6 +10532,7 @@ end
 module ActionDispatch::Routing::ConsoleFormatter; end
 
 class ActionDispatch::Routing::ConsoleFormatter::Base
+  # @return [Base] a new instance of Base
   def initialize; end
 
   def header(routes); end
@@ -10064,6 +10543,7 @@ class ActionDispatch::Routing::ConsoleFormatter::Base
 end
 
 class ActionDispatch::Routing::ConsoleFormatter::Expanded < ::ActionDispatch::Routing::ConsoleFormatter::Base
+  # @return [Expanded] a new instance of Expanded
   def initialize(width: T.unsafe(nil)); end
 
   def section(routes); end
@@ -10089,16 +10569,26 @@ end
 
 class ActionDispatch::Routing::Endpoint
   def app; end
+
+  # @return [Boolean]
   def dispatcher?; end
+
+  # @return [Boolean]
   def engine?; end
+
+  # @return [Boolean]
   def matches?(req); end
+
   def rack_app; end
+
+  # @return [Boolean]
   def redirect?; end
 end
 
 ActionDispatch::Routing::HTTP_METHODS = T.let(T.unsafe(nil), Array)
 
 class ActionDispatch::Routing::HtmlTableFormatter
+  # @return [HtmlTableFormatter] a new instance of HtmlTableFormatter
   def initialize(view); end
 
   # The header is part of the HTML page, so we don't construct it here.
@@ -10119,6 +10609,7 @@ class ActionDispatch::Routing::Mapper
   include ::ActionDispatch::Routing::Mapper::Resources
   include ::ActionDispatch::Routing::Mapper::CustomUrls
 
+  # @return [Mapper] a new instance of Mapper
   def initialize(set); end
 
   class << self
@@ -10136,6 +10627,8 @@ module ActionDispatch::Routing::Mapper::Base
   def default_url_options=(options); end
 
   # Query if the following named route was already defined.
+  #
+  # @return [Boolean]
   def has_named_route?(name); end
 
   # Matches a URL pattern to one or more routes.
@@ -10145,8 +10638,8 @@ module ActionDispatch::Routing::Mapper::Base
   #
   # If you want to expose your action to both GET and POST, use:
   #
-  # # sets :controller, :action and :id in params
-  # match ':controller/:action/:id', via: [:get, :post]
+  #   # sets :controller, :action and :id in params
+  #   match ':controller/:action/:id', via: [:get, :post]
   #
   # Note that +:controller+, +:action+ and +:id+ are interpreted as URL
   # query parameters and thus available through +params+ in an action.
@@ -10155,21 +10648,21 @@ module ActionDispatch::Routing::Mapper::Base
   #
   # Instead of:
   #
-  # match ":controller/:action/:id"
+  #   match ":controller/:action/:id"
   #
   # Do:
   #
-  # get ":controller/:action/:id"
+  #   get ":controller/:action/:id"
   #
   # Two of these symbols are special, +:controller+ maps to the controller
   # and +:action+ to the controller's action. A pattern can also map
   # wildcard segments (globs) to params:
   #
-  # get 'songs/*category/:title', to: 'songs#show'
+  #   get 'songs/*category/:title', to: 'songs#show'
   #
-  # # 'songs/rock/classic/stairway-to-heaven' sets
-  # #  params[:category] = 'rock/classic'
-  # #  params[:title] = 'stairway-to-heaven'
+  #   # 'songs/rock/classic/stairway-to-heaven' sets
+  #   #  params[:category] = 'rock/classic'
+  #   #  params[:title] = 'stairway-to-heaven'
   #
   # To match a wildcard parameter, it must have a name assigned to it.
   # Without a variable name to attach the glob parameter to, the route
@@ -10178,17 +10671,17 @@ module ActionDispatch::Routing::Mapper::Base
   # When a pattern points to an internal route, the route's +:action+ and
   # +:controller+ should be set in options or hash shorthand. Examples:
   #
-  # match 'photos/:id' => 'photos#show', via: :get
-  # match 'photos/:id', to: 'photos#show', via: :get
-  # match 'photos/:id', controller: 'photos', action: 'show', via: :get
+  #   match 'photos/:id' => 'photos#show', via: :get
+  #   match 'photos/:id', to: 'photos#show', via: :get
+  #   match 'photos/:id', controller: 'photos', action: 'show', via: :get
   #
   # A pattern can also point to a +Rack+ endpoint i.e. anything that
   # responds to +call+:
   #
-  # match 'photos/:id', to: -> (hash) { [200, {}, ["Coming soon"]] }, via: :get
-  # match 'photos/:id', to: PhotoRackApp, via: :get
-  # # Yes, controller actions are just rack endpoints
-  # match 'photos/:id', to: PhotosController.action(:show), via: :get
+  #   match 'photos/:id', to: -> (hash) { [200, {}, ["Coming soon"]] }, via: :get
+  #   match 'photos/:id', to: PhotoRackApp, via: :get
+  #   # Yes, controller actions are just rack endpoints
+  #   match 'photos/:id', to: PhotosController.action(:show), via: :get
   #
   # Because requesting various HTTP verbs with a single action has security
   # implications, you must either specify the actions in
@@ -10200,133 +10693,133 @@ module ActionDispatch::Routing::Mapper::Base
   # Any options not seen here are passed on as params with the URL.
   #
   # [:controller]
-  # The route's controller.
+  #   The route's controller.
   #
   # [:action]
-  # The route's action.
+  #   The route's action.
   #
   # [:param]
-  # Overrides the default resource identifier +:id+ (name of the
-  # dynamic segment used to generate the routes).
-  # You can access that segment from your controller using
-  # <tt>params[<:param>]</tt>.
-  # In your router:
+  #   Overrides the default resource identifier +:id+ (name of the
+  #   dynamic segment used to generate the routes).
+  #   You can access that segment from your controller using
+  #   <tt>params[<:param>]</tt>.
+  #   In your router:
   #
-  # resources :users, param: :name
+  #      resources :users, param: :name
   #
-  # The +users+ resource here will have the following routes generated for it:
+  #   The +users+ resource here will have the following routes generated for it:
   #
-  # GET       /users(.:format)
-  # POST      /users(.:format)
-  # GET       /users/new(.:format)
-  # GET       /users/:name/edit(.:format)
-  # GET       /users/:name(.:format)
-  # PATCH/PUT /users/:name(.:format)
-  # DELETE    /users/:name(.:format)
+  #      GET       /users(.:format)
+  #      POST      /users(.:format)
+  #      GET       /users/new(.:format)
+  #      GET       /users/:name/edit(.:format)
+  #      GET       /users/:name(.:format)
+  #      PATCH/PUT /users/:name(.:format)
+  #      DELETE    /users/:name(.:format)
   #
-  # You can override <tt>ActiveRecord::Base#to_param</tt> of a related
-  # model to construct a URL:
+  #   You can override <tt>ActiveRecord::Base#to_param</tt> of a related
+  #   model to construct a URL:
   #
-  # class User < ActiveRecord::Base
-  # def to_param
-  # name
-  # end
-  # end
+  #      class User < ActiveRecord::Base
+  #        def to_param
+  #          name
+  #        end
+  #      end
   #
-  # user = User.find_by(name: 'Phusion')
-  # user_path(user)  # => "/users/Phusion"
+  #      user = User.find_by(name: 'Phusion')
+  #      user_path(user)  # => "/users/Phusion"
   #
   # [:path]
-  # The path prefix for the routes.
+  #   The path prefix for the routes.
   #
   # [:module]
-  # The namespace for :controller.
+  #   The namespace for :controller.
   #
-  # match 'path', to: 'c#a', module: 'sekret', controller: 'posts', via: :get
-  # # => Sekret::PostsController
+  #     match 'path', to: 'c#a', module: 'sekret', controller: 'posts', via: :get
+  #     # => Sekret::PostsController
   #
-  # See <tt>Scoping#namespace</tt> for its scope equivalent.
+  #   See <tt>Scoping#namespace</tt> for its scope equivalent.
   #
   # [:as]
-  # The name used to generate routing helpers.
+  #   The name used to generate routing helpers.
   #
   # [:via]
-  # Allowed HTTP verb(s) for route.
+  #   Allowed HTTP verb(s) for route.
   #
-  # match 'path', to: 'c#a', via: :get
-  # match 'path', to: 'c#a', via: [:get, :post]
-  # match 'path', to: 'c#a', via: :all
+  #      match 'path', to: 'c#a', via: :get
+  #      match 'path', to: 'c#a', via: [:get, :post]
+  #      match 'path', to: 'c#a', via: :all
   #
   # [:to]
-  # Points to a +Rack+ endpoint. Can be an object that responds to
-  # +call+ or a string representing a controller's action.
+  #   Points to a +Rack+ endpoint. Can be an object that responds to
+  #   +call+ or a string representing a controller's action.
   #
-  # match 'path', to: 'controller#action', via: :get
-  # match 'path', to: -> (env) { [200, {}, ["Success!"]] }, via: :get
-  # match 'path', to: RackApp, via: :get
+  #      match 'path', to: 'controller#action', via: :get
+  #      match 'path', to: -> (env) { [200, {}, ["Success!"]] }, via: :get
+  #      match 'path', to: RackApp, via: :get
   #
   # [:on]
-  # Shorthand for wrapping routes in a specific RESTful context. Valid
-  # values are +:member+, +:collection+, and +:new+. Only use within
-  # <tt>resource(s)</tt> block. For example:
+  #   Shorthand for wrapping routes in a specific RESTful context. Valid
+  #   values are +:member+, +:collection+, and +:new+. Only use within
+  #   <tt>resource(s)</tt> block. For example:
   #
-  # resource :bar do
-  # match 'foo', to: 'c#a', on: :member, via: [:get, :post]
-  # end
+  #      resource :bar do
+  #        match 'foo', to: 'c#a', on: :member, via: [:get, :post]
+  #      end
   #
-  # Is equivalent to:
+  #   Is equivalent to:
   #
-  # resource :bar do
-  # member do
-  # match 'foo', to: 'c#a', via: [:get, :post]
-  # end
-  # end
+  #      resource :bar do
+  #        member do
+  #          match 'foo', to: 'c#a', via: [:get, :post]
+  #        end
+  #      end
   #
   # [:constraints]
-  # Constrains parameters with a hash of regular expressions
-  # or an object that responds to <tt>matches?</tt>. In addition, constraints
-  # other than path can also be specified with any object
-  # that responds to <tt>===</tt> (e.g. String, Array, Range, etc.).
+  #   Constrains parameters with a hash of regular expressions
+  #   or an object that responds to <tt>matches?</tt>. In addition, constraints
+  #   other than path can also be specified with any object
+  #   that responds to <tt>===</tt> (e.g. String, Array, Range, etc.).
   #
-  # match 'path/:id', constraints: { id: /[A-Z]\d{5}/ }, via: :get
+  #     match 'path/:id', constraints: { id: /[A-Z]\d{5}/ }, via: :get
   #
-  # match 'json_only', constraints: { format: 'json' }, via: :get
+  #     match 'json_only', constraints: { format: 'json' }, via: :get
   #
-  # class PermitList
-  # def matches?(request) request.remote_ip == '1.2.3.4' end
-  # end
-  # match 'path', to: 'c#a', constraints: PermitList.new, via: :get
+  #     class PermitList
+  #       def matches?(request) request.remote_ip == '1.2.3.4' end
+  #     end
+  #     match 'path', to: 'c#a', constraints: PermitList.new, via: :get
   #
-  # See <tt>Scoping#constraints</tt> for more examples with its scope
-  # equivalent.
+  #   See <tt>Scoping#constraints</tt> for more examples with its scope
+  #   equivalent.
   #
   # [:defaults]
-  # Sets defaults for parameters
+  #   Sets defaults for parameters
   #
-  # # Sets params[:format] to 'jpg' by default
-  # match 'path', to: 'c#a', defaults: { format: 'jpg' }, via: :get
+  #     # Sets params[:format] to 'jpg' by default
+  #     match 'path', to: 'c#a', defaults: { format: 'jpg' }, via: :get
   #
-  # See <tt>Scoping#defaults</tt> for its scope equivalent.
+  #   See <tt>Scoping#defaults</tt> for its scope equivalent.
   #
   # [:anchor]
-  # Boolean to anchor a <tt>match</tt> pattern. Default is true. When set to
-  # false, the pattern matches any request prefixed with the given path.
+  #   Boolean to anchor a <tt>match</tt> pattern. Default is true. When set to
+  #   false, the pattern matches any request prefixed with the given path.
   #
-  # # Matches any request starting with 'path'
-  # match 'path', to: 'c#a', anchor: false, via: :get
+  #     # Matches any request starting with 'path'
+  #     match 'path', to: 'c#a', anchor: false, via: :get
   #
   # [:format]
-  # Allows you to specify the default value for optional +format+
-  # segment or disable it by supplying +false+.
+  #   Allows you to specify the default value for optional +format+
+  #   segment or disable it by supplying +false+.
   def match(path, options = T.unsafe(nil)); end
 
   # Mount a Rack-based application to be used within the application.
   #
-  # mount SomeRackApp, at: "some_route"
+  #   mount SomeRackApp, at: "some_route"
   #
   # Alternatively:
   #
-  # mount(SomeRackApp => "some_route")
+  #   mount(SomeRackApp => "some_route")
   #
   # For options, see +match+, as +mount+ uses it internally.
   #
@@ -10335,10 +10828,12 @@ module ActionDispatch::Routing::Mapper::Base
   # the helper is either +some_rack_app_path+ or +some_rack_app_url+.
   # To customize this helper's name, use the +:as+ option:
   #
-  # mount(SomeRackApp => "some_route", as: "exciting")
+  #   mount(SomeRackApp => "some_route", as: "exciting")
   #
   # This will generate the +exciting_path+ and +exciting_url+ helpers
   # which can be used to navigate to this mounted app.
+  #
+  # @raise [ArgumentError]
   def mount(app, options = T.unsafe(nil)); end
 
   def with_default_scope(scope, &block); end
@@ -10347,29 +10842,31 @@ module ActionDispatch::Routing::Mapper::Base
 
   def app_name(app, rails_app); end
   def define_generate_prefix(app, name); end
+
+  # @return [Boolean]
   def rails_app?(app); end
 end
 
 # Routing Concerns allow you to declare common routes that can be reused
 # inside others resources and routes.
 #
-# concern :commentable do
-# resources :comments
-# end
+#   concern :commentable do
+#     resources :comments
+#   end
 #
-# concern :image_attachable do
-# resources :images, only: :index
-# end
+#   concern :image_attachable do
+#     resources :images, only: :index
+#   end
 #
 # These concerns are used in Resources routing:
 #
-# resources :messages, concerns: [:commentable, :image_attachable]
+#   resources :messages, concerns: [:commentable, :image_attachable]
 #
 # or in a scope or namespace:
 #
-# namespace :posts do
-# concerns :commentable
-# end
+#   namespace :posts do
+#     concerns :commentable
+#   end
 module ActionDispatch::Routing::Mapper::Concerns
   # Define a routing concern using a name.
   #
@@ -10379,50 +10876,50 @@ module ActionDispatch::Routing::Mapper::Concerns
   # The concern object, if supplied, should respond to <tt>call</tt>,
   # which will receive two parameters:
   #
-  # * The current mapper
-  # * A hash of options which the concern object may use
+  #   * The current mapper
+  #   * A hash of options which the concern object may use
   #
   # Options may also be used by concerns defined in a block by accepting
   # a block parameter. So, using a block, you might do something as
   # simple as limit the actions available on certain resources, passing
   # standard resource options through the concern:
   #
-  # concern :commentable do |options|
-  # resources :comments, options
-  # end
+  #   concern :commentable do |options|
+  #     resources :comments, options
+  #   end
   #
-  # resources :posts, concerns: :commentable
-  # resources :archived_posts do
-  # # Don't allow comments on archived posts
-  # concerns :commentable, only: [:index, :show]
-  # end
+  #   resources :posts, concerns: :commentable
+  #   resources :archived_posts do
+  #     # Don't allow comments on archived posts
+  #     concerns :commentable, only: [:index, :show]
+  #   end
   #
   # Or, using a callable object, you might implement something more
   # specific to your application, which would be out of place in your
   # routes file.
   #
-  # # purchasable.rb
-  # class Purchasable
-  # def initialize(defaults = {})
-  # @defaults = defaults
-  # end
+  #   # purchasable.rb
+  #   class Purchasable
+  #     def initialize(defaults = {})
+  #       @defaults = defaults
+  #     end
   #
-  # def call(mapper, options = {})
-  # options = @defaults.merge(options)
-  # mapper.resources :purchases
-  # mapper.resources :receipts
-  # mapper.resources :returns if options[:returnable]
-  # end
-  # end
+  #     def call(mapper, options = {})
+  #       options = @defaults.merge(options)
+  #       mapper.resources :purchases
+  #       mapper.resources :receipts
+  #       mapper.resources :returns if options[:returnable]
+  #     end
+  #   end
   #
-  # # routes.rb
-  # concern :purchasable, Purchasable.new(returnable: true)
+  #   # routes.rb
+  #   concern :purchasable, Purchasable.new(returnable: true)
   #
-  # resources :toys, concerns: :purchasable
-  # resources :electronics, concerns: :purchasable
-  # resources :pets do
-  # concerns :purchasable, returnable: false
-  # end
+  #   resources :toys, concerns: :purchasable
+  #   resources :electronics, concerns: :purchasable
+  #   resources :pets do
+  #     concerns :purchasable, returnable: false
+  #   end
   #
   # Any routing helpers can be used inside a concern. If using a
   # callable, they're accessible from the Mapper that's passed to
@@ -10431,19 +10928,20 @@ module ActionDispatch::Routing::Mapper::Concerns
 
   # Use the named concerns
   #
-  # resources :posts do
-  # concerns :commentable
-  # end
+  #   resources :posts do
+  #     concerns :commentable
+  #   end
   #
   # Concerns also work in any routes helper that you want to use:
   #
-  # namespace :posts do
-  # concerns :commentable
-  # end
+  #   namespace :posts do
+  #     concerns :commentable
+  #   end
   def concerns(*args); end
 end
 
 class ActionDispatch::Routing::Mapper::Constraints < ::ActionDispatch::Routing::Endpoint
+  # @return [Constraints] a new instance of Constraints
   def initialize(app, constraints, strategy); end
 
   # Returns the value of attribute app.
@@ -10452,8 +10950,12 @@ class ActionDispatch::Routing::Mapper::Constraints < ::ActionDispatch::Routing::
   # Returns the value of attribute constraints.
   def constraints; end
 
+  # @return [Boolean]
   def dispatcher?; end
+
+  # @return [Boolean]
   def matches?(req); end
+
   def serve(req); end
 
   private
@@ -10469,17 +10971,17 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # routes. This allows you to override and/or replace the default behavior
   # of routing helpers, e.g:
   #
-  # direct :homepage do
-  # "https://rubyonrails.org"
-  # end
+  #   direct :homepage do
+  #     "https://rubyonrails.org"
+  #   end
   #
-  # direct :commentable do |model|
-  # [ model, anchor: model.dom_id ]
-  # end
+  #   direct :commentable do |model|
+  #     [ model, anchor: model.dom_id ]
+  #   end
   #
-  # direct :main do
-  # { controller: "pages", action: "index", subdomain: "www" }
-  # end
+  #   direct :main do
+  #     { controller: "pages", action: "index", subdomain: "www" }
+  #   end
   #
   # The return value from the block passed to +direct+ must be a valid set of
   # arguments for +url_for+ which will actually build the URL string. This can
@@ -10497,15 +10999,15 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # You can also specify default options that will be passed through to
   # your URL helper definition, e.g:
   #
-  # direct :browse, page: 1, size: 10 do |options|
-  # [ :products, options.merge(params.permit(:page, :size).to_h.symbolize_keys) ]
-  # end
+  #   direct :browse, page: 1, size: 10 do |options|
+  #     [ :products, options.merge(params.permit(:page, :size).to_h.symbolize_keys) ]
+  #   end
   #
   # In this instance the +params+ object comes from the context in which the
   # block is executed, e.g. generating a URL inside a controller action or a view.
   # If the block is executed where there isn't a +params+ object such as this:
   #
-  # Rails.application.routes.url_helpers.browse_path
+  #   Rails.application.routes.url_helpers.browse_path
   #
   # then it will raise a +NameError+. Because of this you need to be aware of the
   # context in which you will use your custom URL helper when defining it.
@@ -10518,11 +11020,11 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # behavior of +polymorphic_url+ and consequently the behavior of
   # +link_to+ and +form_for+ when passed a model instance, e.g:
   #
-  # resource :basket
+  #   resource :basket
   #
-  # resolve "Basket" do
-  # [:basket]
-  # end
+  #   resolve "Basket" do
+  #     [:basket]
+  #   end
   #
   # This will now generate "/basket" when a +Basket+ instance is passed to
   # +link_to+ or +form_for+ instead of the standard "/baskets/:id".
@@ -10530,17 +11032,17 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # NOTE: This custom behavior only applies to simple polymorphic URLs where
   # a single model instance is passed and not more complicated forms, e.g:
   #
-  # # config/routes.rb
-  # resource :profile
-  # namespace :admin do
-  # resources :users
-  # end
+  #   # config/routes.rb
+  #   resource :profile
+  #   namespace :admin do
+  #     resources :users
+  #   end
   #
-  # resolve("User") { [:profile] }
+  #   resolve("User") { [:profile] }
   #
-  # # app/views/application/_menu.html.erb
-  # link_to "Profile", @current_user
-  # link_to "Profile", [:admin, @current_user]
+  #   # app/views/application/_menu.html.erb
+  #   link_to "Profile", @current_user
+  #   link_to "Profile", [:admin, @current_user]
   #
   # The first +link_to+ will generate "/profile" but the second will generate
   # the standard polymorphic URL of "/admin/users/1".
@@ -10548,9 +11050,9 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # You can pass options to a polymorphic mapping - the arity for the block
   # needs to be two as the instance is passed as the first argument, e.g:
   #
-  # resolve "Basket", anchor: "items" do |basket, options|
-  # [:basket, options]
-  # end
+  #   resolve "Basket", anchor: "items" do |basket, options|
+  #     [:basket, options]
+  #   end
   #
   # This generates the URL "/basket#items" because when the last item in an
   # array passed to +polymorphic_url+ is a hash then it's treated as options
@@ -10565,37 +11067,37 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   # Define a route that only recognizes HTTP DELETE.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # delete 'broccoli', to: 'food#broccoli'
+  #   delete 'broccoli', to: 'food#broccoli'
   def delete(*args, &block); end
 
   # Define a route that only recognizes HTTP GET.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # get 'bacon', to: 'food#bacon'
+  #   get 'bacon', to: 'food#bacon'
   def get(*args, &block); end
 
   # Define a route that only recognizes HTTP OPTIONS.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # options 'carrots', to: 'food#carrots'
+  #   options 'carrots', to: 'food#carrots'
   def options(*args, &block); end
 
   # Define a route that only recognizes HTTP PATCH.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # patch 'bacon', to: 'food#bacon'
+  #   patch 'bacon', to: 'food#bacon'
   def patch(*args, &block); end
 
   # Define a route that only recognizes HTTP POST.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # post 'bacon', to: 'food#bacon'
+  #   post 'bacon', to: 'food#bacon'
   def post(*args, &block); end
 
   # Define a route that only recognizes HTTP PUT.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
-  # put 'bacon', to: 'food#bacon'
+  #   put 'bacon', to: 'food#bacon'
   def put(*args, &block); end
 
   private
@@ -10604,6 +11106,7 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
 end
 
 class ActionDispatch::Routing::Mapper::Mapping
+  # @return [Mapping] a new instance of Mapping
   def initialize(set:, ast:, controller:, default_action:, to:, formatted:, via:, options_constraints:, anchor:, scope_params:, options:); end
 
   def application; end
@@ -10666,6 +11169,8 @@ class ActionDispatch::Routing::Mapper::Mapping
     def build(scope, set, ast, controller, default_action, to, via, formatted, options_constraints, anchor, options); end
     def check_via(via); end
     def normalize_path(path, format); end
+
+    # @return [Boolean]
     def optional_format?(path, format); end
   end
 end
@@ -10679,21 +11184,21 @@ ActionDispatch::Routing::Mapper::Mapping::OPTIONAL_FORMAT_REGEX = T.let(T.unsafe
 # for your +index+, +show+, +new+, +edit+, +create+, +update+ and +destroy+
 # actions, a resourceful route declares them in a single line of code:
 #
-# resources :photos
+#  resources :photos
 #
 # Sometimes, you have a resource that clients always look up without
 # referencing an ID. A common example, /profile always shows the profile of
 # the currently logged in user. In this case, you can use a singular resource
 # to map /profile (rather than /profile/:id) to the show action.
 #
-# resource :profile
+#  resource :profile
 #
 # It's common to have resources that are logically children of other
 # resources:
 #
-# resources :magazines do
-# resources :ads
-# end
+#   resources :magazines do
+#     resources :ads
+#   end
 #
 # You may wish to organize groups of controllers under a namespace. Most
 # commonly, you might group a number of administrative controllers under
@@ -10701,25 +11206,25 @@ ActionDispatch::Routing::Mapper::Mapping::OPTIONAL_FORMAT_REGEX = T.let(T.unsafe
 # <tt>app/controllers/admin</tt> directory, and you can group them together
 # in your router:
 #
-# namespace "admin" do
-# resources :posts, :comments
-# end
+#   namespace "admin" do
+#     resources :posts, :comments
+#   end
 #
 # By default the +:id+ parameter doesn't accept dots. If you need to
 # use dots as part of the +:id+ parameter add a constraint which
 # overrides this restriction, e.g:
 #
-# resources :articles, id: /[^\/]+/
+#   resources :articles, id: /[^\/]+/
 #
 # This allows any character other than a slash as part of your +:id+.
 module ActionDispatch::Routing::Mapper::Resources
   # To add a route to the collection:
   #
-  # resources :photos do
-  # collection do
-  # get 'search'
-  # end
-  # end
+  #   resources :photos do
+  #     collection do
+  #       get 'search'
+  #     end
+  #   end
   #
   # This will enable Rails to recognize paths such as <tt>/photos/search</tt>
   # with GET, and route to the search action of +PhotosController+. It will also
@@ -10732,18 +11237,18 @@ module ActionDispatch::Routing::Mapper::Resources
   # Matches a URL pattern to one or more routes.
   # For more information, see match[rdoc-ref:Base#match].
   #
-  # match 'path' => 'controller#action', via: :patch
-  # match 'path', to: 'controller#action', via: :post
-  # match 'path', 'otherpath', on: :member, via: :get
+  #   match 'path' => 'controller#action', via: :patch
+  #   match 'path', to: 'controller#action', via: :post
+  #   match 'path', 'otherpath', on: :member, via: :get
   def match(path, *rest, &block); end
 
   # To add a member route, add a member block into the resource block:
   #
-  # resources :photos do
-  # member do
-  # get 'preview'
-  # end
-  # end
+  #   resources :photos do
+  #     member do
+  #       get 'preview'
+  #     end
+  #   end
   #
   # This will recognize <tt>/photos/1/preview</tt> with GET, and route to the
   # preview action of +PhotosController+. It will also create the
@@ -10762,18 +11267,18 @@ module ActionDispatch::Routing::Mapper::Resources
   # a singular resource to map /profile (rather than /profile/:id) to
   # the show action:
   #
-  # resource :profile
+  #   resource :profile
   #
   # This creates six different routes in your application, all mapping to
   # the +Profiles+ controller (note that the controller is named after
   # the plural):
   #
-  # GET       /profile/new
-  # GET       /profile
-  # GET       /profile/edit
-  # PATCH/PUT /profile
-  # DELETE    /profile
-  # POST      /profile
+  #   GET       /profile/new
+  #   GET       /profile
+  #   GET       /profile/edit
+  #   PATCH/PUT /profile
+  #   DELETE    /profile
+  #   POST      /profile
   #
   # === Options
   # Takes same options as resources[rdoc-ref:#resources]
@@ -10784,151 +11289,151 @@ module ActionDispatch::Routing::Mapper::Resources
   # to particular CRUD operations in a database. A single entry in the
   # routing file, such as
   #
-  # resources :photos
+  #   resources :photos
   #
   # creates seven different routes in your application, all mapping to
   # the +Photos+ controller:
   #
-  # GET       /photos
-  # GET       /photos/new
-  # POST      /photos
-  # GET       /photos/:id
-  # GET       /photos/:id/edit
-  # PATCH/PUT /photos/:id
-  # DELETE    /photos/:id
+  #   GET       /photos
+  #   GET       /photos/new
+  #   POST      /photos
+  #   GET       /photos/:id
+  #   GET       /photos/:id/edit
+  #   PATCH/PUT /photos/:id
+  #   DELETE    /photos/:id
   #
   # Resources can also be nested infinitely by using this block syntax:
   #
-  # resources :photos do
-  # resources :comments
-  # end
+  #   resources :photos do
+  #     resources :comments
+  #   end
   #
   # This generates the following comments routes:
   #
-  # GET       /photos/:photo_id/comments
-  # GET       /photos/:photo_id/comments/new
-  # POST      /photos/:photo_id/comments
-  # GET       /photos/:photo_id/comments/:id
-  # GET       /photos/:photo_id/comments/:id/edit
-  # PATCH/PUT /photos/:photo_id/comments/:id
-  # DELETE    /photos/:photo_id/comments/:id
+  #   GET       /photos/:photo_id/comments
+  #   GET       /photos/:photo_id/comments/new
+  #   POST      /photos/:photo_id/comments
+  #   GET       /photos/:photo_id/comments/:id
+  #   GET       /photos/:photo_id/comments/:id/edit
+  #   PATCH/PUT /photos/:photo_id/comments/:id
+  #   DELETE    /photos/:photo_id/comments/:id
   #
   # === Options
   # Takes same options as match[rdoc-ref:Base#match] as well as:
   #
   # [:path_names]
-  # Allows you to change the segment component of the +edit+ and +new+ actions.
-  # Actions not specified are not changed.
+  #   Allows you to change the segment component of the +edit+ and +new+ actions.
+  #   Actions not specified are not changed.
   #
-  # resources :posts, path_names: { new: "brand_new" }
+  #     resources :posts, path_names: { new: "brand_new" }
   #
-  # The above example will now change /posts/new to /posts/brand_new.
+  #   The above example will now change /posts/new to /posts/brand_new.
   #
   # [:path]
-  # Allows you to change the path prefix for the resource.
+  #   Allows you to change the path prefix for the resource.
   #
-  # resources :posts, path: 'postings'
+  #     resources :posts, path: 'postings'
   #
-  # The resource and all segments will now route to /postings instead of /posts.
+  #   The resource and all segments will now route to /postings instead of /posts.
   #
   # [:only]
-  # Only generate routes for the given actions.
+  #   Only generate routes for the given actions.
   #
-  # resources :cows, only: :show
-  # resources :cows, only: [:show, :index]
+  #     resources :cows, only: :show
+  #     resources :cows, only: [:show, :index]
   #
   # [:except]
-  # Generate all routes except for the given actions.
+  #   Generate all routes except for the given actions.
   #
-  # resources :cows, except: :show
-  # resources :cows, except: [:show, :index]
+  #     resources :cows, except: :show
+  #     resources :cows, except: [:show, :index]
   #
   # [:shallow]
-  # Generates shallow routes for nested resource(s). When placed on a parent resource,
-  # generates shallow routes for all nested resources.
+  #   Generates shallow routes for nested resource(s). When placed on a parent resource,
+  #   generates shallow routes for all nested resources.
   #
-  # resources :posts, shallow: true do
-  # resources :comments
-  # end
+  #     resources :posts, shallow: true do
+  #       resources :comments
+  #     end
   #
-  # Is the same as:
+  #   Is the same as:
   #
-  # resources :posts do
-  # resources :comments, except: [:show, :edit, :update, :destroy]
-  # end
-  # resources :comments, only: [:show, :edit, :update, :destroy]
+  #     resources :posts do
+  #       resources :comments, except: [:show, :edit, :update, :destroy]
+  #     end
+  #     resources :comments, only: [:show, :edit, :update, :destroy]
   #
-  # This allows URLs for resources that otherwise would be deeply nested such
-  # as a comment on a blog post like <tt>/posts/a-long-permalink/comments/1234</tt>
-  # to be shortened to just <tt>/comments/1234</tt>.
+  #   This allows URLs for resources that otherwise would be deeply nested such
+  #   as a comment on a blog post like <tt>/posts/a-long-permalink/comments/1234</tt>
+  #   to be shortened to just <tt>/comments/1234</tt>.
   #
-  # Set <tt>shallow: false</tt> on a child resource to ignore a parent's shallow parameter.
+  #   Set <tt>shallow: false</tt> on a child resource to ignore a parent's shallow parameter.
   #
   # [:shallow_path]
-  # Prefixes nested shallow routes with the specified path.
+  #   Prefixes nested shallow routes with the specified path.
   #
-  # scope shallow_path: "sekret" do
-  # resources :posts do
-  # resources :comments, shallow: true
-  # end
-  # end
+  #     scope shallow_path: "sekret" do
+  #       resources :posts do
+  #         resources :comments, shallow: true
+  #       end
+  #     end
   #
-  # The +comments+ resource here will have the following routes generated for it:
+  #   The +comments+ resource here will have the following routes generated for it:
   #
-  # post_comments    GET       /posts/:post_id/comments(.:format)
-  # post_comments    POST      /posts/:post_id/comments(.:format)
-  # new_post_comment GET       /posts/:post_id/comments/new(.:format)
-  # edit_comment     GET       /sekret/comments/:id/edit(.:format)
-  # comment          GET       /sekret/comments/:id(.:format)
-  # comment          PATCH/PUT /sekret/comments/:id(.:format)
-  # comment          DELETE    /sekret/comments/:id(.:format)
+  #     post_comments    GET       /posts/:post_id/comments(.:format)
+  #     post_comments    POST      /posts/:post_id/comments(.:format)
+  #     new_post_comment GET       /posts/:post_id/comments/new(.:format)
+  #     edit_comment     GET       /sekret/comments/:id/edit(.:format)
+  #     comment          GET       /sekret/comments/:id(.:format)
+  #     comment          PATCH/PUT /sekret/comments/:id(.:format)
+  #     comment          DELETE    /sekret/comments/:id(.:format)
   #
   # [:shallow_prefix]
-  # Prefixes nested shallow route names with specified prefix.
+  #   Prefixes nested shallow route names with specified prefix.
   #
-  # scope shallow_prefix: "sekret" do
-  # resources :posts do
-  # resources :comments, shallow: true
-  # end
-  # end
+  #     scope shallow_prefix: "sekret" do
+  #       resources :posts do
+  #         resources :comments, shallow: true
+  #       end
+  #     end
   #
-  # The +comments+ resource here will have the following routes generated for it:
+  #   The +comments+ resource here will have the following routes generated for it:
   #
-  # post_comments           GET       /posts/:post_id/comments(.:format)
-  # post_comments           POST      /posts/:post_id/comments(.:format)
-  # new_post_comment        GET       /posts/:post_id/comments/new(.:format)
-  # edit_sekret_comment     GET       /comments/:id/edit(.:format)
-  # sekret_comment          GET       /comments/:id(.:format)
-  # sekret_comment          PATCH/PUT /comments/:id(.:format)
-  # sekret_comment          DELETE    /comments/:id(.:format)
+  #     post_comments           GET       /posts/:post_id/comments(.:format)
+  #     post_comments           POST      /posts/:post_id/comments(.:format)
+  #     new_post_comment        GET       /posts/:post_id/comments/new(.:format)
+  #     edit_sekret_comment     GET       /comments/:id/edit(.:format)
+  #     sekret_comment          GET       /comments/:id(.:format)
+  #     sekret_comment          PATCH/PUT /comments/:id(.:format)
+  #     sekret_comment          DELETE    /comments/:id(.:format)
   #
   # [:format]
-  # Allows you to specify the default value for optional +format+
-  # segment or disable it by supplying +false+.
+  #   Allows you to specify the default value for optional +format+
+  #   segment or disable it by supplying +false+.
   #
   # [:param]
-  # Allows you to override the default param name of +:id+ in the URL.
+  #   Allows you to override the default param name of +:id+ in the URL.
   #
   # === Examples
   #
-  # # routes call <tt>Admin::PostsController</tt>
-  # resources :posts, module: "admin"
+  #   # routes call <tt>Admin::PostsController</tt>
+  #   resources :posts, module: "admin"
   #
-  # # resource actions are at /admin/posts.
-  # resources :posts, path: "admin/posts"
+  #   # resource actions are at /admin/posts.
+  #   resources :posts, path: "admin/posts"
   def resources(*resources, &block); end
 
   def resources_path_names(options); end
 
   # You can specify what Rails should route "/" to with the root method:
   #
-  # root to: 'pages#main'
+  #   root to: 'pages#main'
   #
   # For options, see +match+, as +root+ uses it internally.
   #
   # You can also pass a string which will expand
   #
-  # root 'pages#main'
+  #   root 'pages#main'
   #
   # You should put the root route at the top of <tt>config/routes.rb</tt>,
   # because this means it will be matched first. As this is the most popular route
@@ -10936,38 +11441,65 @@ module ActionDispatch::Routing::Mapper::Resources
   def root(path, options = T.unsafe(nil)); end
 
   def shallow; end
+
+  # @return [Boolean]
   def shallow?; end
 
   private
 
+  # @return [Boolean]
   def action_options?(options); end
+
   def action_path(name); end
+
+  # @raise [ArgumentError]
   def add_route(action, controller, options, _path, to, via, formatted, anchor, options_constraints); end
+
+  # @return [Boolean]
   def api_only?; end
+
   def apply_action_options(options); end
   def apply_common_behavior_for(method, resources, options, &block); end
+
+  # @return [Boolean]
   def canonical_action?(action); end
+
   def decomposed_match(path, controller, options, _path, to, via, formatted, anchor, options_constraints); end
   def get_to_from_path(path, to, action); end
   def map_match(paths, options); end
   def match_root_route(options); end
   def name_for_action(as, action); end
   def nested_options; end
+
+  # @return [Boolean]
   def nested_scope?; end
+
   def param_constraint; end
+
+  # @return [Boolean]
   def param_constraint?; end
+
   def parent_resource; end
   def path_for_action(action, path); end
   def path_scope(path); end
   def prefix_name_for_action(as, action); end
+
+  # @return [Boolean]
   def resource_method_scope?; end
+
   def resource_scope(resource); end
+
+  # @return [Boolean]
   def resource_scope?; end
+
   def scope_action_options; end
   def set_member_mappings_for_resource; end
   def shallow_nesting_depth; end
   def shallow_scope; end
+
+  # @return [Boolean]
   def using_match_shorthand?(path); end
+
   def with_scope_level(kind); end
 end
 
@@ -10975,6 +11507,7 @@ ActionDispatch::Routing::Mapper::Resources::CANONICAL_ACTIONS = T.let(T.unsafe(n
 ActionDispatch::Routing::Mapper::Resources::RESOURCE_OPTIONS = T.let(T.unsafe(nil), Array)
 
 class ActionDispatch::Routing::Mapper::Resources::Resource
+  # @return [Resource] a new instance of Resource
   def initialize(entities, api_only, shallow, options = T.unsafe(nil)); end
 
   def actions; end
@@ -11006,13 +11539,20 @@ class ActionDispatch::Routing::Mapper::Resources::Resource
 
   def plural; end
   def resource_scope; end
+
+  # @return [Boolean]
   def shallow?; end
+
   def shallow_scope; end
+
+  # @return [Boolean]
   def singleton?; end
+
   def singular; end
 end
 
 class ActionDispatch::Routing::Mapper::Resources::SingletonResource < ::ActionDispatch::Routing::Mapper::Resources::Resource
+  # @return [SingletonResource] a new instance of SingletonResource
   def initialize(entities, api_only, shallow, options); end
 
   def collection_name; end
@@ -11021,7 +11561,10 @@ class ActionDispatch::Routing::Mapper::Resources::SingletonResource < ::ActionDi
   def member_scope; end
   def nested_scope; end
   def plural; end
+
+  # @return [Boolean]
   def singleton?; end
+
   def singular; end
 end
 
@@ -11032,24 +11575,38 @@ ActionDispatch::Routing::Mapper::Resources::VALID_ON_OPTIONS = T.let(T.unsafe(ni
 class ActionDispatch::Routing::Mapper::Scope
   include ::Enumerable
 
+  # @return [Scope] a new instance of Scope
   def initialize(hash, parent = T.unsafe(nil), scope_level = T.unsafe(nil)); end
 
   def [](key); end
   def action_name(name_prefix, prefix, collection_name, member_name); end
   def each; end
   def frame; end
+
+  # @return [Boolean]
   def nested?; end
+
   def new(hash); end
   def new_level(level); end
+
+  # @return [Boolean]
   def null?; end
+
   def options; end
 
   # Returns the value of attribute parent.
   def parent; end
 
+  # @return [Boolean]
   def resource_method_scope?; end
+
+  # @return [Boolean]
   def resource_scope?; end
+
+  # @return [Boolean]
   def resources?; end
+
+  # @return [Boolean]
   def root?; end
 
   # Returns the value of attribute scope_level.
@@ -11067,81 +11624,81 @@ ActionDispatch::Routing::Mapper::Scope::RESOURCE_SCOPES = T.let(T.unsafe(nil), A
 # the <tt>app/controllers/admin</tt> directory, and you can group them
 # together in your router:
 #
-# namespace "admin" do
-# resources :posts, :comments
-# end
+#   namespace "admin" do
+#     resources :posts, :comments
+#   end
 #
 # This will create a number of routes for each of the posts and comments
 # controller. For <tt>Admin::PostsController</tt>, Rails will create:
 #
-# GET       /admin/posts
-# GET       /admin/posts/new
-# POST      /admin/posts
-# GET       /admin/posts/1
-# GET       /admin/posts/1/edit
-# PATCH/PUT /admin/posts/1
-# DELETE    /admin/posts/1
+#   GET       /admin/posts
+#   GET       /admin/posts/new
+#   POST      /admin/posts
+#   GET       /admin/posts/1
+#   GET       /admin/posts/1/edit
+#   PATCH/PUT /admin/posts/1
+#   DELETE    /admin/posts/1
 #
 # If you want to route /posts (without the prefix /admin) to
 # <tt>Admin::PostsController</tt>, you could use
 #
-# scope module: "admin" do
-# resources :posts
-# end
+#   scope module: "admin" do
+#     resources :posts
+#   end
 #
 # or, for a single case
 #
-# resources :posts, module: "admin"
+#   resources :posts, module: "admin"
 #
 # If you want to route /admin/posts to +PostsController+
 # (without the <tt>Admin::</tt> module prefix), you could use
 #
-# scope "/admin" do
-# resources :posts
-# end
+#   scope "/admin" do
+#     resources :posts
+#   end
 #
 # or, for a single case
 #
-# resources :posts, path: "/admin/posts"
+#   resources :posts, path: "/admin/posts"
 #
 # In each of these cases, the named routes remain the same as if you did
 # not use scope. In the last case, the following paths map to
 # +PostsController+:
 #
-# GET       /admin/posts
-# GET       /admin/posts/new
-# POST      /admin/posts
-# GET       /admin/posts/1
-# GET       /admin/posts/1/edit
-# PATCH/PUT /admin/posts/1
-# DELETE    /admin/posts/1
+#   GET       /admin/posts
+#   GET       /admin/posts/new
+#   POST      /admin/posts
+#   GET       /admin/posts/1
+#   GET       /admin/posts/1/edit
+#   PATCH/PUT /admin/posts/1
+#   DELETE    /admin/posts/1
 module ActionDispatch::Routing::Mapper::Scoping
   # === Parameter Restriction
   # Allows you to constrain the nested routes based on a set of rules.
   # For instance, in order to change the routes to allow for a dot character in the +id+ parameter:
   #
-  # constraints(id: /\d+\.\d+/) do
-  # resources :posts
-  # end
+  #   constraints(id: /\d+\.\d+/) do
+  #     resources :posts
+  #   end
   #
   # Now routes such as +/posts/1+ will no longer be valid, but +/posts/1.1+ will be.
   # The +id+ parameter must match the constraint passed in for this example.
   #
   # You may use this to also restrict other parameters:
   #
-  # resources :posts do
-  # constraints(post_id: /\d+\.\d+/) do
-  # resources :comments
-  # end
-  # end
+  #   resources :posts do
+  #     constraints(post_id: /\d+\.\d+/) do
+  #       resources :comments
+  #     end
+  #   end
   #
   # === Restricting based on IP
   #
   # Routes can also be constrained to an IP or a certain range of IP addresses:
   #
-  # constraints(ip: /192\.168\.\d+\.\d+/) do
-  # resources :posts
-  # end
+  #   constraints(ip: /192\.168\.\d+\.\d+/) do
+  #     resources :posts
+  #   end
   #
   # Any user connecting from the 192.168.* range will be able to see this resource,
   # where as any user connecting outside of this range will be told there is no such route.
@@ -11150,58 +11707,58 @@ module ActionDispatch::Routing::Mapper::Scoping
   #
   # Requests to routes can be constrained based on specific criteria:
   #
-  # constraints(-> (req) { /iPhone/.match?(req.env["HTTP_USER_AGENT"]) }) do
-  # resources :iphones
-  # end
+  #    constraints(-> (req) { /iPhone/.match?(req.env["HTTP_USER_AGENT"]) }) do
+  #      resources :iphones
+  #    end
   #
   # You are able to move this logic out into a class if it is too complex for routes.
   # This class must have a +matches?+ method defined on it which either returns +true+
   # if the user should be given access to that route, or +false+ if the user should not.
   #
-  # class Iphone
-  # def self.matches?(request)
-  # /iPhone/.match?(request.env["HTTP_USER_AGENT"])
-  # end
-  # end
+  #    class Iphone
+  #      def self.matches?(request)
+  #        /iPhone/.match?(request.env["HTTP_USER_AGENT"])
+  #      end
+  #    end
   #
   # An expected place for this code would be +lib/constraints+.
   #
   # This class is then used like this:
   #
-  # constraints(Iphone) do
-  # resources :iphones
-  # end
+  #    constraints(Iphone) do
+  #      resources :iphones
+  #    end
   def constraints(constraints = T.unsafe(nil)); end
 
   # Scopes routes to a specific controller
   #
-  # controller "food" do
-  # match "bacon", action: :bacon, via: :get
-  # end
+  #   controller "food" do
+  #     match "bacon", action: :bacon, via: :get
+  #   end
   def controller(controller); end
 
   # Allows you to set default parameters for a route, such as this:
-  # defaults id: 'home' do
-  # match 'scoped_pages/(:id)', to: 'pages#show'
-  # end
+  #   defaults id: 'home' do
+  #     match 'scoped_pages/(:id)', to: 'pages#show'
+  #   end
   # Using this, the +:id+ parameter here will default to 'home'.
   def defaults(defaults = T.unsafe(nil)); end
 
   # Scopes routes to a specific namespace. For example:
   #
-  # namespace :admin do
-  # resources :posts
-  # end
+  #   namespace :admin do
+  #     resources :posts
+  #   end
   #
   # This generates the following routes:
   #
-  # admin_posts GET       /admin/posts(.:format)          admin/posts#index
-  # admin_posts POST      /admin/posts(.:format)          admin/posts#create
-  # new_admin_post GET       /admin/posts/new(.:format)      admin/posts#new
-  # edit_admin_post GET       /admin/posts/:id/edit(.:format) admin/posts#edit
-  # admin_post GET       /admin/posts/:id(.:format)      admin/posts#show
-  # admin_post PATCH/PUT /admin/posts/:id(.:format)      admin/posts#update
-  # admin_post DELETE    /admin/posts/:id(.:format)      admin/posts#destroy
+  #       admin_posts GET       /admin/posts(.:format)          admin/posts#index
+  #       admin_posts POST      /admin/posts(.:format)          admin/posts#create
+  #    new_admin_post GET       /admin/posts/new(.:format)      admin/posts#new
+  #   edit_admin_post GET       /admin/posts/:id/edit(.:format) admin/posts#edit
+  #        admin_post GET       /admin/posts/:id(.:format)      admin/posts#show
+  #        admin_post PATCH/PUT /admin/posts/:id(.:format)      admin/posts#update
+  #        admin_post DELETE    /admin/posts/:id(.:format)      admin/posts#destroy
   #
   # === Options
   #
@@ -11211,29 +11768,29 @@ module ActionDispatch::Routing::Mapper::Scoping
   # For options, see <tt>Base#match</tt>. For +:shallow_path+ option, see
   # <tt>Resources#resources</tt>.
   #
-  # # accessible through /sekret/posts rather than /admin/posts
-  # namespace :admin, path: "sekret" do
-  # resources :posts
-  # end
+  #   # accessible through /sekret/posts rather than /admin/posts
+  #   namespace :admin, path: "sekret" do
+  #     resources :posts
+  #   end
   #
-  # # maps to <tt>Sekret::PostsController</tt> rather than <tt>Admin::PostsController</tt>
-  # namespace :admin, module: "sekret" do
-  # resources :posts
-  # end
+  #   # maps to <tt>Sekret::PostsController</tt> rather than <tt>Admin::PostsController</tt>
+  #   namespace :admin, module: "sekret" do
+  #     resources :posts
+  #   end
   #
-  # # generates +sekret_posts_path+ rather than +admin_posts_path+
-  # namespace :admin, as: "sekret" do
-  # resources :posts
-  # end
+  #   # generates +sekret_posts_path+ rather than +admin_posts_path+
+  #   namespace :admin, as: "sekret" do
+  #     resources :posts
+  #   end
   def namespace(path, options = T.unsafe(nil)); end
 
   # Scopes a set of routes to the given default options.
   #
   # Take the following route definition as an example:
   #
-  # scope path: ":account_id", as: "account" do
-  # resources :projects
-  # end
+  #   scope path: ":account_id", as: "account" do
+  #     resources :projects
+  #   end
   #
   # This generates helpers such as +account_projects_path+, just like +resources+ does.
   # The difference here being that the routes generated are like /:account_id/projects,
@@ -11243,20 +11800,20 @@ module ActionDispatch::Routing::Mapper::Scoping
   #
   # Takes same options as <tt>Base#match</tt> and <tt>Resources#resources</tt>.
   #
-  # # route /posts (without the prefix /admin) to <tt>Admin::PostsController</tt>
-  # scope module: "admin" do
-  # resources :posts
-  # end
+  #   # route /posts (without the prefix /admin) to <tt>Admin::PostsController</tt>
+  #   scope module: "admin" do
+  #     resources :posts
+  #   end
   #
-  # # prefix the posts resource's requests with '/admin'
-  # scope path: "/admin" do
-  # resources :posts
-  # end
+  #   # prefix the posts resource's requests with '/admin'
+  #   scope path: "/admin" do
+  #     resources :posts
+  #   end
   #
-  # # prefix the routing helper name: +sekret_posts_path+ instead of +posts_path+
-  # scope as: "sekret" do
-  # resources :posts
-  # end
+  #   # prefix the routing helper name: +sekret_posts_path+ instead of +posts_path+
+  #   scope as: "sekret" do
+  #     resources :posts
+  #   end
   def scope(*args); end
 
   private
@@ -11294,6 +11851,7 @@ class ActionDispatch::Routing::PathRedirect < ::ActionDispatch::Routing::Redirec
 
   private
 
+  # @return [Boolean]
   def interpolation_required?(string, params); end
 end
 
@@ -11308,25 +11866,25 @@ ActionDispatch::Routing::PathRedirect::URL_PARTS = T.let(T.unsafe(nil), Regexp)
 #
 # Nested resources and/or namespaces are also supported, as illustrated in the example:
 #
-# polymorphic_url([:admin, @article, @comment])
+#   polymorphic_url([:admin, @article, @comment])
 #
 # results in:
 #
-# admin_article_comment_url(@article, @comment)
+#   admin_article_comment_url(@article, @comment)
 #
 # == Usage within the framework
 #
 # Polymorphic URL helpers are used in a number of places throughout the \Rails framework:
 #
 # * <tt>url_for</tt>, so you can use it with a record as the argument, e.g.
-# <tt>url_for(@article)</tt>;
+#   <tt>url_for(@article)</tt>;
 # * ActionView::Helpers::FormHelper uses <tt>polymorphic_path</tt>, so you can write
-# <tt>form_for(@article)</tt> without having to specify <tt>:url</tt> parameter for the form
-# action;
+#   <tt>form_for(@article)</tt> without having to specify <tt>:url</tt> parameter for the form
+#   action;
 # * <tt>redirect_to</tt> (which, in fact, uses <tt>url_for</tt>) so you can write
-# <tt>redirect_to(post)</tt> in your controllers;
+#   <tt>redirect_to(post)</tt> in your controllers;
 # * ActionView::Helpers::AtomFeedHelper, so you don't have to explicitly specify URLs
-# for feed entries.
+#   for feed entries.
 #
 # == Prefixed polymorphic helpers
 #
@@ -11339,8 +11897,8 @@ ActionDispatch::Routing::PathRedirect::URL_PARTS = T.let(T.unsafe(nil), Regexp)
 #
 # Example usage:
 #
-# edit_polymorphic_path(@post)           # => "/posts/1/edit"
-# polymorphic_path(@post, format: :pdf)  # => "/posts/1.pdf"
+#   edit_polymorphic_path(@post)           # => "/posts/1/edit"
+#   polymorphic_path(@post, format: :pdf)  # => "/posts/1.pdf"
 #
 # == Usage with mounted engines
 #
@@ -11348,8 +11906,8 @@ ActionDispatch::Routing::PathRedirect::URL_PARTS = T.let(T.unsafe(nil), Regexp)
 # pointing at the engine's routes, pass in the engine's route proxy as the first
 # argument to the method. For example:
 #
-# polymorphic_url([blog, @post])  # calls blog.post_path(@post)
-# form_for([blog, @post])         # => "/blog/posts/1"
+#   polymorphic_url([blog, @post])  # calls blog.post_path(@post)
+#   form_for([blog, @post])         # => "/blog/posts/1"
 module ActionDispatch::Routing::PolymorphicRoutes
   def edit_polymorphic_path(record_or_hash, options = T.unsafe(nil)); end
   def edit_polymorphic_url(record_or_hash, options = T.unsafe(nil)); end
@@ -11362,45 +11920,45 @@ module ActionDispatch::Routing::PolymorphicRoutes
   # Constructs a call to a named RESTful route for the given record and returns the
   # resulting URL string. For example:
   #
-  # # calls post_url(post)
-  # polymorphic_url(post) # => "http://example.com/posts/1"
-  # polymorphic_url([blog, post]) # => "http://example.com/blogs/1/posts/1"
-  # polymorphic_url([:admin, blog, post]) # => "http://example.com/admin/blogs/1/posts/1"
-  # polymorphic_url([user, :blog, post]) # => "http://example.com/users/1/blog/posts/1"
-  # polymorphic_url(Comment) # => "http://example.com/comments"
+  #   # calls post_url(post)
+  #   polymorphic_url(post) # => "http://example.com/posts/1"
+  #   polymorphic_url([blog, post]) # => "http://example.com/blogs/1/posts/1"
+  #   polymorphic_url([:admin, blog, post]) # => "http://example.com/admin/blogs/1/posts/1"
+  #   polymorphic_url([user, :blog, post]) # => "http://example.com/users/1/blog/posts/1"
+  #   polymorphic_url(Comment) # => "http://example.com/comments"
   #
   # ==== Options
   #
   # * <tt>:action</tt> - Specifies the action prefix for the named route:
-  # <tt>:new</tt> or <tt>:edit</tt>. Default is no prefix.
+  #   <tt>:new</tt> or <tt>:edit</tt>. Default is no prefix.
   # * <tt>:routing_type</tt> - Allowed values are <tt>:path</tt> or <tt>:url</tt>.
-  # Default is <tt>:url</tt>.
+  #   Default is <tt>:url</tt>.
   #
   # Also includes all the options from <tt>url_for</tt>. These include such
   # things as <tt>:anchor</tt> or <tt>:trailing_slash</tt>. Example usage
   # is given below:
   #
-  # polymorphic_url([blog, post], anchor: 'my_anchor')
-  # # => "http://example.com/blogs/1/posts/1#my_anchor"
-  # polymorphic_url([blog, post], anchor: 'my_anchor', script_name: "/my_app")
-  # # => "http://example.com/my_app/blogs/1/posts/1#my_anchor"
+  #   polymorphic_url([blog, post], anchor: 'my_anchor')
+  #     # => "http://example.com/blogs/1/posts/1#my_anchor"
+  #   polymorphic_url([blog, post], anchor: 'my_anchor', script_name: "/my_app")
+  #     # => "http://example.com/my_app/blogs/1/posts/1#my_anchor"
   #
   # For all of these options, see the documentation for {url_for}[rdoc-ref:ActionDispatch::Routing::UrlFor].
   #
   # ==== Functionality
   #
-  # # an Article record
-  # polymorphic_url(record)  # same as article_url(record)
+  #   # an Article record
+  #   polymorphic_url(record)  # same as article_url(record)
   #
-  # # a Comment record
-  # polymorphic_url(record)  # same as comment_url(record)
+  #   # a Comment record
+  #   polymorphic_url(record)  # same as comment_url(record)
   #
-  # # it recognizes new records and maps to the collection
-  # record = Comment.new
-  # polymorphic_url(record)  # same as comments_url()
+  #   # it recognizes new records and maps to the collection
+  #   record = Comment.new
+  #   polymorphic_url(record)  # same as comments_url()
   #
-  # # the class of a record will also map to the collection
-  # polymorphic_url(Comment) # same as comments_url()
+  #   # the class of a record will also map to the collection
+  #   polymorphic_url(Comment) # same as comments_url()
   def polymorphic_url(record_or_hash_or_array, options = T.unsafe(nil)); end
 
   private
@@ -11411,6 +11969,7 @@ module ActionDispatch::Routing::PolymorphicRoutes
 end
 
 class ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder
+  # @return [HelperMethodBuilder] a new instance of HelperMethodBuilder
   def initialize(key_strategy, prefix, suffix); end
 
   def handle_class(klass); end
@@ -11447,6 +12006,7 @@ end
 ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder::CACHE = T.let(T.unsafe(nil), Hash)
 
 class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
+  # @return [Redirect] a new instance of Redirect
   def initialize(status, block); end
 
   # Returns the value of attribute block.
@@ -11455,7 +12015,10 @@ class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
   def call(env); end
   def inspect; end
   def path(params, request); end
+
+  # @return [Boolean]
   def redirect?; end
+
   def serve(req); end
 
   # Returns the value of attribute status.
@@ -11466,20 +12029,22 @@ class ActionDispatch::Routing::Redirect < ::ActionDispatch::Routing::Endpoint
   def escape(params); end
   def escape_fragment(params); end
   def escape_path(params); end
+
+  # @return [Boolean]
   def relative_path?(path); end
 end
 
 module ActionDispatch::Routing::Redirection
   # Redirect any path to another path:
   #
-  # get "/stories" => redirect("/posts")
+  #   get "/stories" => redirect("/posts")
   #
   # This will redirect the user, while ignoring certain parts of the request, including query string, etc.
   # <tt>/stories</tt>, <tt>/stories?foo=bar</tt>, etc all redirect to <tt>/posts</tt>.
   #
   # You can also use interpolation in the supplied redirect argument:
   #
-  # get 'docs/:article', to: redirect('/wiki/%{article}')
+  #   get 'docs/:article', to: redirect('/wiki/%{article}')
   #
   # Note that if you return a path without a leading slash then the URL is prefixed with the
   # current SCRIPT_NAME environment variable. This is typically '/' but may be different in
@@ -11492,10 +12057,10 @@ module ActionDispatch::Routing::Redirection
   # params, depending of how many arguments your block accepts. A string is required as a
   # return value.
   #
-  # get 'jokes/:number', to: redirect { |params, request|
-  # path = (params[:number].to_i.even? ? "wheres-the-beef" : "i-love-lamp")
-  # "http://#{request.host_with_port}/#{path}"
-  # }
+  #   get 'jokes/:number', to: redirect { |params, request|
+  #     path = (params[:number].to_i.even? ? "wheres-the-beef" : "i-love-lamp")
+  #     "http://#{request.host_with_port}/#{path}"
+  #   }
   #
   # Note that the <tt>do end</tt> syntax for the redirect block wouldn't work, as Ruby would pass
   # the block to +get+ instead of +redirect+. Use <tt>{ ... }</tt> instead.
@@ -11503,9 +12068,9 @@ module ActionDispatch::Routing::Redirection
   # The options version of redirect allows you to supply only the parts of the URL which need
   # to change, it also supports interpolation of the path similar to the first example.
   #
-  # get 'stores/:name',       to: redirect(subdomain: 'stores', path: '/%{name}')
-  # get 'stores/:name(*all)', to: redirect(subdomain: 'stores', path: '/%{name}%{all}')
-  # get '/stories', to: redirect(path: '/posts')
+  #   get 'stores/:name',       to: redirect(subdomain: 'stores', path: '/%{name}')
+  #   get 'stores/:name(*all)', to: redirect(subdomain: 'stores', path: '/%{name}%{all}')
+  #   get '/stories', to: redirect(path: '/posts')
   #
   # This will redirect the user, while changing only the specified parts of the request,
   # for example the +path+ option in the last example.
@@ -11515,18 +12080,27 @@ module ActionDispatch::Routing::Redirection
   # common redirect routes. The call method must accept two arguments, params and request, and return
   # a string.
   #
-  # get 'accounts/:name' => redirect(SubdomainRedirector.new('api'))
+  #   get 'accounts/:name' => redirect(SubdomainRedirector.new('api'))
+  #
+  # @raise [ArgumentError]
   def redirect(*args, &block); end
 end
 
 # :stopdoc:
 class ActionDispatch::Routing::RouteSet
+  # @return [RouteSet] a new instance of RouteSet
   def initialize(config = T.unsafe(nil)); end
 
   def add_polymorphic_mapping(klass, options, &block); end
+
+  # @raise [ArgumentError]
   def add_route(mapping, name); end
+
   def add_url_helper(name, options, &block); end
+
+  # @return [Boolean]
   def api_only?; end
+
   def append(&block); end
   def call(env); end
   def clear!; end
@@ -11535,12 +12109,16 @@ class ActionDispatch::Routing::RouteSet
   def default_scope; end
 
   # Sets the attribute default_scope
+  #
+  # @param value the value to set the attribute default_scope to.
   def default_scope=(_arg0); end
 
   # Returns the value of attribute default_url_options.
   def default_url_options; end
 
   # Sets the attribute default_url_options
+  #
+  # @param value the value to set the attribute default_url_options to.
   def default_url_options=(_arg0); end
 
   def define_mounted_helper(name, script_namer = T.unsafe(nil)); end
@@ -11549,6 +12127,8 @@ class ActionDispatch::Routing::RouteSet
   def disable_clear_and_finalize; end
 
   # Sets the attribute disable_clear_and_finalize
+  #
+  # @param value the value to set the attribute disable_clear_and_finalize to.
   def disable_clear_and_finalize=(_arg0); end
 
   def draw(&block); end
@@ -11557,9 +12137,13 @@ class ActionDispatch::Routing::RouteSet
   def draw_paths; end
 
   # Sets the attribute draw_paths
+  #
+  # @param value the value to set the attribute draw_paths to.
   def draw_paths=(_arg0); end
 
   def eager_load!; end
+
+  # @return [Boolean]
   def empty?; end
 
   # Returns the value of attribute env_key.
@@ -11577,6 +12161,8 @@ class ActionDispatch::Routing::RouteSet
   def formatter; end
 
   # Sets the attribute formatter
+  #
+  # @param value the value to set the attribute formatter to.
   def formatter=(_arg0); end
 
   def generate_extras(options, recall = T.unsafe(nil)); end
@@ -11598,9 +12184,13 @@ class ActionDispatch::Routing::RouteSet
   def named_routes; end
 
   # Sets the attribute named_routes
+  #
+  # @param value the value to set the attribute named_routes to.
   def named_routes=(_arg0); end
 
+  # @return [Boolean]
   def optimize_routes_generation?; end
+
   def path_for(options, route_name = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Returns the value of attribute polymorphic_mappings.
@@ -11616,12 +12206,16 @@ class ActionDispatch::Routing::RouteSet
   def resources_path_names; end
 
   # Sets the attribute resources_path_names
+  #
+  # @param value the value to set the attribute resources_path_names to.
   def resources_path_names=(_arg0); end
 
   # Returns the value of attribute router.
   def router; end
 
   # Sets the attribute router
+  #
+  # @param value the value to set the attribute router to.
   def router=(_arg0); end
 
   # Returns the value of attribute set.
@@ -11631,6 +12225,8 @@ class ActionDispatch::Routing::RouteSet
   def set; end
 
   # Sets the attribute set
+  #
+  # @param value the value to set the attribute set to.
   def set=(_arg0); end
 
   # The +options+ argument must be a hash whose keys are *symbols*.
@@ -11652,27 +12248,37 @@ end
 
 class ActionDispatch::Routing::RouteSet::Config < ::Struct
   # Returns the value of attribute api_only
+  #
+  # @return [Object] the current value of api_only
   def api_only; end
 
   # Sets the attribute api_only
+  #
+  # @param value [Object] the value to set the attribute api_only to.
+  # @return [Object] the newly set value
   def api_only=(_); end
 
   # Returns the value of attribute relative_url_root
+  #
+  # @return [Object] the current value of relative_url_root
   def relative_url_root; end
 
   # Sets the attribute relative_url_root
+  #
+  # @param value [Object] the value to set the attribute relative_url_root to.
+  # @return [Object] the newly set value
   def relative_url_root=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
 end
 
 class ActionDispatch::Routing::RouteSet::CustomUrlHelper
+  # @return [CustomUrlHelper] a new instance of CustomUrlHelper
   def initialize(name, defaults, &block); end
 
   # Returns the value of attribute block.
@@ -11695,9 +12301,12 @@ end
 ActionDispatch::Routing::RouteSet::DEFAULT_CONFIG = T.let(T.unsafe(nil), ActionDispatch::Routing::RouteSet::Config)
 
 class ActionDispatch::Routing::RouteSet::Dispatcher < ::ActionDispatch::Routing::Endpoint
+  # @return [Dispatcher] a new instance of Dispatcher
   def initialize(raise_on_name_error); end
 
+  # @return [Boolean]
   def dispatcher?; end
+
   def serve(req); end
 
   private
@@ -11707,10 +12316,13 @@ class ActionDispatch::Routing::RouteSet::Dispatcher < ::ActionDispatch::Routing:
 end
 
 class ActionDispatch::Routing::RouteSet::Generator
+  # @return [Generator] a new instance of Generator
   def initialize(named_route, options, recall, set); end
 
   def controller; end
   def current_controller; end
+
+  # @return [Boolean]
   def different_controller?; end
 
   # Generates a path from routes, returns a RouteWithParams or MissingRoute.
@@ -11749,7 +12361,9 @@ class ActionDispatch::Routing::RouteSet::Generator
 
   private
 
+  # @return [Boolean]
   def named_route_exists?; end
+
   def segment_keys; end
 end
 
@@ -11779,6 +12393,7 @@ end
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   include ::Enumerable
 
+  # @return [NamedRouteCollection] a new instance of NamedRouteCollection
   def initialize; end
 
   def [](name); end
@@ -11794,13 +12409,17 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   def each; end
   def get(name); end
   def helper_names; end
+
+  # @return [Boolean]
   def key?(name); end
+
   def length; end
   def names; end
 
   # Returns the value of attribute path_helpers_module.
   def path_helpers_module; end
 
+  # @return [Boolean]
   def route_defined?(name); end
 
   # Returns the value of attribute url_helpers_module.
@@ -11811,15 +12430,15 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
   # Create a URL helper allowing ordered parameters to be associated
   # with corresponding dynamic segments, so you can do:
   #
-  # foo_url(bar, baz, bang)
+  #   foo_url(bar, baz, bang)
   #
   # Instead of:
   #
-  # foo_url(bar: bar, baz: baz, bang: bang)
+  #   foo_url(bar: bar, baz: baz, bang: bang)
   #
   # Also allow options hash, so you can do:
   #
-  # foo_url(bar, baz, bang, sort_by: 'baz')
+  #   foo_url(bar, baz, bang, sort_by: 'baz')
   def define_url_helper(mod, name, helper, url_strategy); end
 
   # Returns the value of attribute routes.
@@ -11827,6 +12446,7 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection
 end
 
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
+  # @return [UrlHelper] a new instance of UrlHelper
   def initialize(route, options, route_name); end
 
   def call(t, method_name, args, inner_options, url_strategy); end
@@ -11837,11 +12457,14 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
 
   class << self
     def create(route, options, route_name); end
+
+    # @return [Boolean]
     def optimize_helper?(route); end
   end
 end
 
 class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper::OptimizedUrlHelper < ::ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper
+  # @return [OptimizedUrlHelper] a new instance of OptimizedUrlHelper
   def initialize(route, options, route_name); end
 
   # Returns the value of attribute arg_size.
@@ -11851,9 +12474,13 @@ class ActionDispatch::Routing::RouteSet::NamedRouteCollection::UrlHelper::Optimi
 
   private
 
+  # @return [Boolean]
   def optimize_routes_generation?(t); end
+
   def optimized_helper(args); end
   def parameterize_args(args); end
+
+  # @raise [ActionController::UrlGenerationError]
   def raise_generation_error(args); end
 end
 
@@ -11863,6 +12490,7 @@ ActionDispatch::Routing::RouteSet::PATH = T.let(T.unsafe(nil), Proc)
 ActionDispatch::Routing::RouteSet::RESERVED_OPTIONS = T.let(T.unsafe(nil), Array)
 
 class ActionDispatch::Routing::RouteSet::StaticDispatcher < ::ActionDispatch::Routing::RouteSet::Dispatcher
+  # @return [StaticDispatcher] a new instance of StaticDispatcher
   def initialize(controller_class); end
 
   private
@@ -11877,8 +12505,13 @@ class ActionDispatch::Routing::RouteWrapper < ::SimpleDelegator
   def constraints; end
   def controller; end
   def endpoint; end
+
+  # @return [Boolean]
   def engine?; end
+
+  # @return [Boolean]
   def internal?; end
+
   def name; end
   def path; end
   def rack_app; end
@@ -11889,6 +12522,7 @@ end
 # executes `bin/rails routes` or looks at the RoutingError page.
 # People should not use this class.
 class ActionDispatch::Routing::RoutesInspector
+  # @return [RoutesInspector] a new instance of RoutesInspector
   def initialize(routes); end
 
   def format(formatter, filter = T.unsafe(nil)); end
@@ -11905,6 +12539,7 @@ class ActionDispatch::Routing::RoutesProxy
   include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionDispatch::Routing::UrlFor
 
+  # @return [RoutesProxy] a new instance of RoutesProxy
   def initialize(routes, scope, helpers, script_namer = T.unsafe(nil)); end
 
   # Returns the value of attribute routes.
@@ -11918,12 +12553,16 @@ class ActionDispatch::Routing::RoutesProxy
   def routes; end
 
   # Sets the attribute routes
+  #
+  # @param value the value to set the attribute routes to.
   def routes=(_arg0); end
 
   # Returns the value of attribute scope.
   def scope; end
 
   # Sets the attribute scope
+  #
+  # @param value the value to set the attribute scope to.
   def scope=(_arg0); end
 
   def url_options; end
@@ -11937,6 +12576,8 @@ class ActionDispatch::Routing::RoutesProxy
   def merge_script_names(previous_script_name, new_script_name); end
 
   def method_missing(method, *args); end
+
+  # @return [Boolean]
   def respond_to_missing?(method, _); end
 
   class << self
@@ -11966,33 +12607,33 @@ ActionDispatch::Routing::SEPARATORS = T.let(T.unsafe(nil), Array)
 # of parameters. For example, you've probably had the chance to write code
 # like this in one of your views:
 #
-# <%= link_to('Click here', controller: 'users',
-# action: 'new', message: 'Welcome!') %>
-# # => <a href="/users/new?message=Welcome%21">Click here</a>
+#   <%= link_to('Click here', controller: 'users',
+#           action: 'new', message: 'Welcome!') %>
+#   # => <a href="/users/new?message=Welcome%21">Click here</a>
 #
 # link_to, and all other functions that require URL generation functionality,
 # actually use ActionController::UrlFor under the hood. And in particular,
 # they use the ActionController::UrlFor#url_for method. One can generate
 # the same path as the above example by using the following code:
 #
-# include UrlFor
-# url_for(controller: 'users',
-# action: 'new',
-# message: 'Welcome!',
-# only_path: true)
-# # => "/users/new?message=Welcome%21"
+#   include UrlFor
+#   url_for(controller: 'users',
+#           action: 'new',
+#           message: 'Welcome!',
+#           only_path: true)
+#   # => "/users/new?message=Welcome%21"
 #
 # Notice the <tt>only_path: true</tt> part. This is because UrlFor has no
 # information about the website hostname that your Rails app is serving. So if you
 # want to include the hostname as well, then you must also pass the <tt>:host</tt>
 # argument:
 #
-# include UrlFor
-# url_for(controller: 'users',
-# action: 'new',
-# message: 'Welcome!',
-# host: 'www.example.com')
-# # => "http://www.example.com/users/new?message=Welcome%21"
+#   include UrlFor
+#   url_for(controller: 'users',
+#           action: 'new',
+#           message: 'Welcome!',
+#           host: 'www.example.com')
+#   # => "http://www.example.com/users/new?message=Welcome%21"
 #
 # By default, all controllers and views have access to a special version of url_for,
 # that already knows what the current hostname is. So if you use url_for in your
@@ -12013,22 +12654,22 @@ ActionDispatch::Routing::SEPARATORS = T.let(T.unsafe(nil), Array)
 # named routes. For example, suppose that you have a 'users' resource in your
 # <tt>config/routes.rb</tt>:
 #
-# resources :users
+#   resources :users
 #
 # This generates, among other things, the method <tt>users_path</tt>. By default,
 # this method is accessible from your controllers, views and mailers. If you need
 # to access this auto-generated method from other places (such as a model), then
 # you can do that by including Rails.application.routes.url_helpers in your class:
 #
-# class User < ActiveRecord::Base
-# include Rails.application.routes.url_helpers
+#   class User < ActiveRecord::Base
+#     include Rails.application.routes.url_helpers
 #
-# def base_uri
-# user_path(self)
-# end
-# end
+#     def base_uri
+#       user_path(self)
+#     end
+#   end
 #
-# User.find(1).base_uri # => "/users/1"
+#   User.find(1).base_uri # => "/users/1"
 module ActionDispatch::Routing::UrlFor
   include ::ActionDispatch::Routing::PolymorphicRoutes
   extend ::ActiveSupport::Concern
@@ -12036,27 +12677,27 @@ module ActionDispatch::Routing::UrlFor
 
   mixes_in_class_methods GeneratedClassMethods
 
-  def initialize(*_arg0, **_arg1); end
+  def initialize(*_arg0); end
 
   def full_url_for(options = T.unsafe(nil)); end
 
   # Allows calling direct or regular named route.
   #
-  # resources :buckets
+  #   resources :buckets
   #
-  # direct :recordable do |recording|
-  # route_for(:bucket, recording.bucket)
-  # end
+  #   direct :recordable do |recording|
+  #     route_for(:bucket, recording.bucket)
+  #   end
   #
-  # direct :threadable do |threadable|
-  # route_for(:recordable, threadable.parent)
-  # end
+  #   direct :threadable do |threadable|
+  #     route_for(:recordable, threadable.parent)
+  #   end
   #
   # This maintains the context of the original caller on
   # whether to return a path or full URL, e.g:
   #
-  # threadable_path(threadable)  # => "/buckets/1"
-  # threadable_url(threadable)   # => "http://example.com/buckets/1"
+  #   threadable_path(threadable)  # => "/buckets/1"
+  #   threadable_url(threadable)   # => "http://example.com/buckets/1"
   def route_for(name, *args); end
 
   # Generate a URL based on the options provided, default_url_options and the
@@ -12065,16 +12706,16 @@ module ActionDispatch::Routing::UrlFor
   # * <tt>:only_path</tt> - If true, the relative URL is returned. Defaults to +false+.
   # * <tt>:protocol</tt> - The protocol to connect to. Defaults to 'http'.
   # * <tt>:host</tt> - Specifies the host the link should be targeted at.
-  # If <tt>:only_path</tt> is false, this option must be
-  # provided either explicitly, or via +default_url_options+.
+  #   If <tt>:only_path</tt> is false, this option must be
+  #   provided either explicitly, or via +default_url_options+.
   # * <tt>:subdomain</tt> - Specifies the subdomain of the link, using the +tld_length+
-  # to split the subdomain from the host.
-  # If false, removes all subdomains from the host part of the link.
+  #   to split the subdomain from the host.
+  #   If false, removes all subdomains from the host part of the link.
   # * <tt>:domain</tt> - Specifies the domain of the link, using the +tld_length+
-  # to split the domain from the host.
+  #   to split the domain from the host.
   # * <tt>:tld_length</tt> - Number of labels the TLD id composed of, only used if
-  # <tt>:subdomain</tt> or <tt>:domain</tt> are supplied. Defaults to
-  # <tt>ActionDispatch::Http::URL.tld_length</tt>, which in turn defaults to 1.
+  #   <tt>:subdomain</tt> or <tt>:domain</tt> are supplied. Defaults to
+  #   <tt>ActionDispatch::Http::URL.tld_length</tt>, which in turn defaults to 1.
   # * <tt>:port</tt> - Optionally specify the port to connect to.
   # * <tt>:anchor</tt> - An anchor name to be appended to the path.
   # * <tt>:params</tt> - The query parameters to be appended to the path.
@@ -12084,27 +12725,27 @@ module ActionDispatch::Routing::UrlFor
   # Any other key (<tt>:controller</tt>, <tt>:action</tt>, etc.) given to
   # +url_for+ is forwarded to the Routes module.
   #
-  # url_for controller: 'tasks', action: 'testing', host: 'somehost.org', port: '8080'
-  # # => 'http://somehost.org:8080/tasks/testing'
-  # url_for controller: 'tasks', action: 'testing', host: 'somehost.org', anchor: 'ok', only_path: true
-  # # => '/tasks/testing#ok'
-  # url_for controller: 'tasks', action: 'testing', trailing_slash: true
-  # # => 'http://somehost.org/tasks/testing/'
-  # url_for controller: 'tasks', action: 'testing', host: 'somehost.org', number: '33'
-  # # => 'http://somehost.org/tasks/testing?number=33'
-  # url_for controller: 'tasks', action: 'testing', host: 'somehost.org', script_name: "/myapp"
-  # # => 'http://somehost.org/myapp/tasks/testing'
-  # url_for controller: 'tasks', action: 'testing', host: 'somehost.org', script_name: "/myapp", only_path: true
-  # # => '/myapp/tasks/testing'
+  #    url_for controller: 'tasks', action: 'testing', host: 'somehost.org', port: '8080'
+  #    # => 'http://somehost.org:8080/tasks/testing'
+  #    url_for controller: 'tasks', action: 'testing', host: 'somehost.org', anchor: 'ok', only_path: true
+  #    # => '/tasks/testing#ok'
+  #    url_for controller: 'tasks', action: 'testing', trailing_slash: true
+  #    # => 'http://somehost.org/tasks/testing/'
+  #    url_for controller: 'tasks', action: 'testing', host: 'somehost.org', number: '33'
+  #    # => 'http://somehost.org/tasks/testing?number=33'
+  #    url_for controller: 'tasks', action: 'testing', host: 'somehost.org', script_name: "/myapp"
+  #    # => 'http://somehost.org/myapp/tasks/testing'
+  #    url_for controller: 'tasks', action: 'testing', host: 'somehost.org', script_name: "/myapp", only_path: true
+  #    # => '/myapp/tasks/testing'
   #
   # Missing routes keys may be filled in from the current request's parameters
   # (e.g. +:controller+, +:action+, +:id+ and any other parameters that are
   # placed in the path). Given that the current action has been reached
   # through <tt>GET /users/1</tt>:
   #
-  # url_for(only_path: true)                        # => '/users/1'
-  # url_for(only_path: true, action: 'edit')        # => '/users/1/edit'
-  # url_for(only_path: true, action: 'edit', id: 2) # => '/users/2/edit'
+  #   url_for(only_path: true)                        # => '/users/1'
+  #   url_for(only_path: true, action: 'edit')        # => '/users/1/edit'
+  #   url_for(only_path: true, action: 'edit', id: 2) # => '/users/2/edit'
   #
   # Notice that no +:id+ parameter was provided to the first +url_for+ call
   # and the helper used the one from the route's path. Any path parameter
@@ -12119,6 +12760,7 @@ module ActionDispatch::Routing::UrlFor
 
   protected
 
+  # @return [Boolean]
   def optimize_routes_generation?; end
 
   private
@@ -12144,47 +12786,48 @@ end
 # requests:
 #
 # 1. <b>TLS redirect</b>: Permanently redirects +http://+ requests to +https://+
-# with the same URL host, path, etc. Enabled by default. Set +config.ssl_options+
-# to modify the destination URL
-# (e.g. <tt>redirect: { host: "secure.widgets.com", port: 8080 }</tt>), or set
-# <tt>redirect: false</tt> to disable this feature.
+#    with the same URL host, path, etc. Enabled by default. Set +config.ssl_options+
+#    to modify the destination URL
+#    (e.g. <tt>redirect: { host: "secure.widgets.com", port: 8080 }</tt>), or set
+#    <tt>redirect: false</tt> to disable this feature.
 #
-# Requests can opt-out of redirection with +exclude+:
+#    Requests can opt-out of redirection with +exclude+:
 #
-# config.ssl_options = { redirect: { exclude: -> request { /healthcheck/.match?(request.path) } } }
+#      config.ssl_options = { redirect: { exclude: -> request { /healthcheck/.match?(request.path) } } }
 #
-# Cookies will not be flagged as secure for excluded requests.
+#    Cookies will not be flagged as secure for excluded requests.
 #
 # 2. <b>Secure cookies</b>: Sets the +secure+ flag on cookies to tell browsers they
-# must not be sent along with +http://+ requests. Enabled by default. Set
-# +config.ssl_options+ with <tt>secure_cookies: false</tt> to disable this feature.
+#    must not be sent along with +http://+ requests. Enabled by default. Set
+#    +config.ssl_options+ with <tt>secure_cookies: false</tt> to disable this feature.
 #
 # 3. <b>HTTP Strict Transport Security (HSTS)</b>: Tells the browser to remember
-# this site as TLS-only and automatically redirect non-TLS requests.
-# Enabled by default. Configure +config.ssl_options+ with <tt>hsts: false</tt> to disable.
+#    this site as TLS-only and automatically redirect non-TLS requests.
+#    Enabled by default. Configure +config.ssl_options+ with <tt>hsts: false</tt> to disable.
 #
-# Set +config.ssl_options+ with <tt>hsts: { ... }</tt> to configure HSTS:
+#    Set +config.ssl_options+ with <tt>hsts: { ... }</tt> to configure HSTS:
 #
-# * +expires+: How long, in seconds, these settings will stick. The minimum
-# required to qualify for browser preload lists is 1 year. Defaults to
-# 2 years (recommended).
+#    * +expires+: How long, in seconds, these settings will stick. The minimum
+#      required to qualify for browser preload lists is 1 year. Defaults to
+#      2 years (recommended).
 #
-# * +subdomains+: Set to +true+ to tell the browser to apply these settings
-# to all subdomains. This protects your cookies from interception by a
-# vulnerable site on a subdomain. Defaults to +true+.
+#    * +subdomains+: Set to +true+ to tell the browser to apply these settings
+#      to all subdomains. This protects your cookies from interception by a
+#      vulnerable site on a subdomain. Defaults to +true+.
 #
-# * +preload+: Advertise that this site may be included in browsers'
-# preloaded HSTS lists. HSTS protects your site on every visit <i>except the
-# first visit</i> since it hasn't seen your HSTS header yet. To close this
-# gap, browser vendors include a baked-in list of HSTS-enabled sites.
-# Go to https://hstspreload.org to submit your site for inclusion.
-# Defaults to +false+.
+#    * +preload+: Advertise that this site may be included in browsers'
+#      preloaded HSTS lists. HSTS protects your site on every visit <i>except the
+#      first visit</i> since it hasn't seen your HSTS header yet. To close this
+#      gap, browser vendors include a baked-in list of HSTS-enabled sites.
+#      Go to https://hstspreload.org to submit your site for inclusion.
+#      Defaults to +false+.
 #
-# To turn off HSTS, omitting the header is not enough. Browsers will remember the
-# original HSTS directive until it expires. Instead, use the header to tell browsers to
-# expire HSTS immediately. Setting <tt>hsts: false</tt> is a shortcut for
-# <tt>hsts: { expires: 0 }</tt>.
+#    To turn off HSTS, omitting the header is not enough. Browsers will remember the
+#    original HSTS directive until it expires. Instead, use the header to tell browsers to
+#    expire HSTS immediately. Setting <tt>hsts: false</tt> is a shortcut for
+#    <tt>hsts: { expires: 0 }</tt>.
 class ActionDispatch::SSL
+  # @return [SSL] a new instance of SSL
   def initialize(app, redirect: T.unsafe(nil), hsts: T.unsafe(nil), secure_cookies: T.unsafe(nil), ssl_default_redirect_status: T.unsafe(nil)); end
 
   def call(env); end
@@ -12241,8 +12884,9 @@ end
 # ==== Options
 # * <tt>cache</tt>         - The cache to use. If it is not specified, <tt>Rails.cache</tt> will be used.
 # * <tt>expire_after</tt>  - The length of time a session will be stored before automatically expiring.
-# By default, the <tt>:expires_in</tt> option of the cache is used.
+#   By default, the <tt>:expires_in</tt> option of the cache is used.
 class ActionDispatch::Session::CacheStore < ::ActionDispatch::Session::AbstractSecureStore
+  # @return [CacheStore] a new instance of CacheStore
   def initialize(app, options = T.unsafe(nil)); end
 
   # Remove a session from the cache.
@@ -12289,7 +12933,7 @@ end
 #
 # Configure your session store in an initializer:
 #
-# Rails.application.config.session_store :cookie_store, key: '_your_app_session'
+#   Rails.application.config.session_store :cookie_store, key: '_your_app_session'
 #
 # In the development and test environments your application's secret key base is
 # generated by Rails and stored in a temporary file in <tt>tmp/development_secret.txt</tt>.
@@ -12308,12 +12952,13 @@ end
 # options described there can be used to customize the session cookie that
 # is generated. For example:
 #
-# Rails.application.config.session_store :cookie_store, expire_after: 14.days
+#   Rails.application.config.session_store :cookie_store, expire_after: 14.days
 #
 # would set the session cookie to expire automatically 14 days after creation.
 # Other useful options include <tt>:key</tt>, <tt>:secure</tt> and
 # <tt>:httponly</tt>.
 class ActionDispatch::Session::CookieStore < ::ActionDispatch::Session::AbstractSecureStore
+  # @return [CookieStore] a new instance of CookieStore
   def initialize(app, options = T.unsafe(nil)); end
 
   def delete_session(req, session_id, options); end
@@ -12331,6 +12976,7 @@ class ActionDispatch::Session::CookieStore < ::ActionDispatch::Session::Abstract
 end
 
 class ActionDispatch::Session::CookieStore::SessionId
+  # @return [SessionId] a new instance of SessionId
   def initialize(session_id, cookie_value = T.unsafe(nil)); end
 
   # Returns the value of attribute cookie_value.
@@ -12338,11 +12984,14 @@ class ActionDispatch::Session::CookieStore::SessionId
 end
 
 module ActionDispatch::Session::SessionObject
+  # @return [Boolean]
   def loaded_session?(session); end
+
   def prepare_session(req); end
 end
 
 class ActionDispatch::Session::SessionRestoreError < ::StandardError
+  # @return [SessionRestoreError] a new instance of SessionRestoreError
   def initialize; end
 end
 
@@ -12365,6 +13014,7 @@ end
 # If any exception happens inside the exceptions app, this middleware
 # catches the exceptions and returns a FAILSAFE_RESPONSE.
 class ActionDispatch::ShowExceptions
+  # @return [ShowExceptions] a new instance of ShowExceptions
   def initialize(app, exceptions_app); end
 
   def call(env); end
@@ -12388,6 +13038,7 @@ ActionDispatch::ShowExceptions::FAILSAFE_RESPONSE = T.let(T.unsafe(nil), Array)
 #
 # Only files in the root directory are served; path traversal is denied.
 class ActionDispatch::Static
+  # @return [Static] a new instance of Static
   def initialize(app, path, index: T.unsafe(nil), headers: T.unsafe(nil)); end
 
   def call(env); end
@@ -12396,7 +13047,9 @@ end
 module ActionDispatch::TestProcess
   include ::ActionDispatch::TestProcess::FixtureFile
 
+  # @raise [NoMethodError]
   def assigns(key = T.unsafe(nil)); end
+
   def cookies; end
   def flash; end
   def redirect_to_url; end
@@ -12406,14 +13059,14 @@ end
 module ActionDispatch::TestProcess::FixtureFile
   # Shortcut for <tt>Rack::Test::UploadedFile.new(File.join(ActionDispatch::IntegrationTest.file_fixture_path, path), type)</tt>:
   #
-  # post :change_avatar, params: { avatar: fixture_file_upload('spongebob.png', 'image/png') }
+  #   post :change_avatar, params: { avatar: fixture_file_upload('spongebob.png', 'image/png') }
   #
   # Default fixture files location is <tt>test/fixtures/files</tt>.
   #
   # To upload binary files on Windows, pass <tt>:binary</tt> as the last parameter.
   # This will not affect other platforms:
   #
-  # post :change_avatar, params: { avatar: fixture_file_upload('spongebob.png', 'image/png', :binary) }
+  #   post :change_avatar, params: { avatar: fixture_file_upload('spongebob.png', 'image/png', :binary) }
   def fixture_file_upload(path, mime_type = T.unsafe(nil), binary = T.unsafe(nil)); end
 end
 
@@ -12490,9 +13143,13 @@ class Mime::AllType < ::Mime::Type
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
+  # @return [AllType] a new instance of AllType
   def initialize; end
 
+  # @return [Boolean]
   def all?; end
+
+  # @return [Boolean]
   def html?; end
 end
 
@@ -12502,6 +13159,7 @@ Mime::LOOKUP = T.let(T.unsafe(nil), Hash)
 class Mime::Mimes
   include ::Enumerable
 
+  # @return [Mimes] a new instance of Mimes
   def initialize; end
 
   def <<(type); end
@@ -12516,13 +13174,17 @@ class Mime::NullType
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
+  # @return [Boolean]
   def nil?; end
+
   def ref; end
   def to_s; end
 
   private
 
   def method_missing(method, *args); end
+
+  # @return [Boolean]
   def respond_to_missing?(method, _); end
 end
 
@@ -12530,31 +13192,40 @@ Mime::SET = T.let(T.unsafe(nil), Mime::Mimes)
 
 # Encapsulates the notion of a MIME type. Can be used at render time, for example, with:
 #
-# class PostsController < ActionController::Base
-# def show
-# @post = Post.find(params[:id])
+#   class PostsController < ActionController::Base
+#     def show
+#       @post = Post.find(params[:id])
 #
-# respond_to do |format|
-# format.html
-# format.ics { render body: @post.to_ics, mime_type: Mime::Type.lookup("text/calendar")  }
-# format.xml { render xml: @post }
-# end
-# end
-# end
+#       respond_to do |format|
+#         format.html
+#         format.ics { render body: @post.to_ics, mime_type: Mime::Type.lookup("text/calendar")  }
+#         format.xml { render xml: @post }
+#       end
+#     end
+#   end
 class Mime::Type
+  # @return [Type] a new instance of Type
   def initialize(string, symbol = T.unsafe(nil), synonyms = T.unsafe(nil)); end
 
   def ==(mime_type); end
   def ===(list); end
   def =~(mime_type); end
+
+  # @return [Boolean]
   def all?; end
+
+  # @return [Boolean]
   def eql?(other); end
 
   # Returns the value of attribute hash.
   def hash; end
 
+  # @return [Boolean]
   def html?; end
+
+  # @return [Boolean]
   def match?(mime_type); end
+
   def ref; end
 
   # Returns the value of attribute symbol.
@@ -12575,7 +13246,10 @@ class Mime::Type
   private
 
   def method_missing(method, *args); end
+
+  # @return [Boolean]
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
+
   def to_a; end
   def to_ary; end
 
@@ -12604,13 +13278,14 @@ class Mime::Type
     #
     # To unregister a MIME type:
     #
-    # Mime::Type.unregister(:mobile)
+    #   Mime::Type.unregister(:mobile)
     def unregister(symbol); end
   end
 end
 
 # A simple helper class used in parsing the accept header.
 class Mime::Type::AcceptItem
+  # @return [AcceptItem] a new instance of AcceptItem
   def initialize(index, name, q = T.unsafe(nil)); end
 
   def <=>(item); end

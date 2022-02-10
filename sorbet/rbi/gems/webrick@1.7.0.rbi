@@ -8,12 +8,12 @@
 #
 # Multiple logs may be written to at the same time:
 #
-# access_log = [
-# [$stderr, WEBrick::AccessLog::COMMON_LOG_FORMAT],
-# [$stderr, WEBrick::AccessLog::REFERER_LOG_FORMAT],
-# ]
+#   access_log = [
+#     [$stderr, WEBrick::AccessLog::COMMON_LOG_FORMAT],
+#     [$stderr, WEBrick::AccessLog::REFERER_LOG_FORMAT],
+#   ]
 #
-# server = WEBrick::HTTPServer.new :AccessLog => access_log
+#   server = WEBrick::HTTPServer.new :AccessLog => access_log
 #
 # Custom log formats may be defined.  WEBrick::AccessLog provides a subset
 # of the formatting from Apache's mod_log_config
@@ -43,8 +43,8 @@ module WEBrick::AccessLog
   # %{header}o:: Given response header
   # %p:: Server's request port
   # %{format}p:: The canonical port of the server serving the request or the
-  # actual port or the client's actual port.  Valid formats are
-  # canonical, local or remote.
+  #              actual port or the client's actual port.  Valid formats are
+  #              canonical, local or remote.
   # %q:: Request query string
   # %r:: First line of the request
   # %s:: Request status
@@ -77,8 +77,8 @@ module WEBrick::AccessLog
     # %{header}o:: Given response header
     # %p:: Server's request port
     # %{format}p:: The canonical port of the server serving the request or the
-    # actual port or the client's actual port.  Valid formats are
-    # canonical, local or remote.
+    #              actual port or the client's actual port.  Valid formats are
+    #              canonical, local or remote.
     # %q:: Request query string
     # %r:: First line of the request
     # %s:: Request status
@@ -98,6 +98,8 @@ class WEBrick::BasicLog
   # responds to #<< or nil which outputs to $stderr.
   #
   # If no level is given INFO is chosen by default
+  #
+  # @return [BasicLog] a new instance of BasicLog
   def initialize(log_file = T.unsafe(nil), level = T.unsafe(nil)); end
 
   # Synonym for log(INFO, obj.to_s)
@@ -110,24 +112,32 @@ class WEBrick::BasicLog
   def debug(msg); end
 
   # Will the logger output DEBUG messages?
+  #
+  # @return [Boolean]
   def debug?; end
 
   # Shortcut for logging an ERROR message
   def error(msg); end
 
   # Will the logger output ERROR messages?
+  #
+  # @return [Boolean]
   def error?; end
 
   # Shortcut for logging a FATAL message
   def fatal(msg); end
 
   # Will the logger output FATAL messages?
+  #
+  # @return [Boolean]
   def fatal?; end
 
   # Shortcut for logging an INFO message
   def info(msg); end
 
   # Will the logger output INFO messages?
+  #
+  # @return [Boolean]
   def info?; end
 
   # log-level, messages above this level will be logged
@@ -144,6 +154,8 @@ class WEBrick::BasicLog
   def warn(msg); end
 
   # Will the logger output WARN messages?
+  #
+  # @return [Boolean]
   def warn?; end
 
   private
@@ -151,7 +163,7 @@ class WEBrick::BasicLog
   # Formats +arg+ for the logger
   #
   # * If +arg+ is an Exception, it will format the error message and
-  # the back trace.
+  #   the back trace.
   # * If +arg+ responds to #to_str, it will return it.
   # * Otherwise it will return +arg+.inspect.
   def format(arg); end
@@ -162,6 +174,8 @@ end
 class WEBrick::GenericServer
   # Creates a new generic server from +config+.  The default configuration
   # comes from +default+.
+  #
+  # @return [GenericServer] a new instance of GenericServer
   def initialize(config = T.unsafe(nil), default = T.unsafe(nil)); end
 
   # Retrieves +key+ from the configuration
@@ -198,14 +212,16 @@ class WEBrick::GenericServer
   #
   # To completely shut down a server call #shutdown from ensure:
   #
-  # server = WEBrick::GenericServer.new
-  # # or WEBrick::HTTPServer.new
+  #   server = WEBrick::GenericServer.new
+  #   # or WEBrick::HTTPServer.new
   #
-  # begin
-  # server.start
-  # ensure
-  # server.shutdown
-  # end
+  #   begin
+  #     server.start
+  #   ensure
+  #     server.shutdown
+  #   end
+  #
+  # @raise [ServerError]
   def start(&block); end
 
   # The server status.  One of :Stop, :Running or :Shutdown
@@ -261,12 +277,12 @@ end
 # database and an authenticator.  To start, here's an Htpasswd database for
 # use with a DigestAuth authenticator:
 #
-# config = { :Realm => 'DigestAuth example realm' }
+#   config = { :Realm => 'DigestAuth example realm' }
 #
-# htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file'
-# htpasswd.auth_type = WEBrick::HTTPAuth::DigestAuth
-# htpasswd.set_passwd config[:Realm], 'username', 'password'
-# htpasswd.flush
+#   htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file'
+#   htpasswd.auth_type = WEBrick::HTTPAuth::DigestAuth
+#   htpasswd.set_passwd config[:Realm], 'username', 'password'
+#   htpasswd.flush
 #
 # The +:Realm+ is used to provide different access to different groups
 # across several resources on a server.  Typically you'll need only one
@@ -274,16 +290,16 @@ end
 #
 # This database can be used to create an authenticator:
 #
-# config[:UserDB] = htpasswd
+#   config[:UserDB] = htpasswd
 #
-# digest_auth = WEBrick::HTTPAuth::DigestAuth.new config
+#   digest_auth = WEBrick::HTTPAuth::DigestAuth.new config
 #
 # To authenticate a request call #authenticate with a request and response
 # object in a servlet:
 #
-# def do_GET req, res
-# @authenticator.authenticate req, res
-# end
+#   def do_GET req, res
+#     @authenticator.authenticate req, res
+#   end
 #
 # For digest authentication the authenticator must not be created every
 # request, it must be passed in as an option via WEBrick::HTTPServer#mount.
@@ -358,15 +374,15 @@ WEBrick::HTTPAuth::Authenticator::AuthException = WEBrick::HTTPStatus::Unauthori
 #
 # Here is an example of how to set up a BasicAuth:
 #
-# config = { :Realm => 'BasicAuth example realm' }
+#   config = { :Realm => 'BasicAuth example realm' }
 #
-# htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file', password_hash: :bcrypt
-# htpasswd.set_passwd config[:Realm], 'username', 'password'
-# htpasswd.flush
+#   htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file', password_hash: :bcrypt
+#   htpasswd.set_passwd config[:Realm], 'username', 'password'
+#   htpasswd.flush
 #
-# config[:UserDB] = htpasswd
+#   config[:UserDB] = htpasswd
 #
-# basic_auth = WEBrick::HTTPAuth::BasicAuth.new config
+#   basic_auth = WEBrick::HTTPAuth::BasicAuth.new config
 class WEBrick::HTTPAuth::BasicAuth
   include ::WEBrick::HTTPAuth::Authenticator
 
@@ -378,7 +394,9 @@ class WEBrick::HTTPAuth::BasicAuth
   #
   # :Realm:: The name of the realm being protected.
   # :UserDB:: A database of usernames and passwords.
-  # A WEBrick::HTTPAuth::Htpasswd instance should be used.
+  #           A WEBrick::HTTPAuth::Htpasswd instance should be used.
+  #
+  # @return [BasicAuth] a new instance of BasicAuth
   def initialize(config, default = T.unsafe(nil)); end
 
   # Authenticates a +req+ and returns a 401 Unauthorized using +res+ if
@@ -386,6 +404,8 @@ class WEBrick::HTTPAuth::BasicAuth
   def authenticate(req, res); end
 
   # Returns a challenge response which asks for authentication information
+  #
+  # @raise [@auth_exception]
   def challenge(req, res); end
 
   # Returns the value of attribute logger.
@@ -409,15 +429,15 @@ end
 #
 # Here is an example of how to set up DigestAuth:
 #
-# config = { :Realm => 'DigestAuth example realm' }
+#   config = { :Realm => 'DigestAuth example realm' }
 #
-# htdigest = WEBrick::HTTPAuth::Htdigest.new 'my_password_file'
-# htdigest.set_passwd config[:Realm], 'username', 'password'
-# htdigest.flush
+#   htdigest = WEBrick::HTTPAuth::Htdigest.new 'my_password_file'
+#   htdigest.set_passwd config[:Realm], 'username', 'password'
+#   htdigest.flush
 #
-# config[:UserDB] = htdigest
+#   config[:UserDB] = htdigest
 #
-# digest_auth = WEBrick::HTTPAuth::DigestAuth.new config
+#   digest_auth = WEBrick::HTTPAuth::DigestAuth.new config
 #
 # When using this as with a servlet be sure not to create a new DigestAuth
 # object in the servlet's #initialize.  By default WEBrick creates a new
@@ -436,7 +456,9 @@ class WEBrick::HTTPAuth::DigestAuth
   #
   # :Realm:: The name of the realm being protected.
   # :UserDB:: A database of usernames and passwords.
-  # A WEBrick::HTTPAuth::Htdigest instance should be used.
+  #           A WEBrick::HTTPAuth::Htdigest instance should be used.
+  #
+  # @return [DigestAuth] a new instance of DigestAuth
   def initialize(config, default = T.unsafe(nil)); end
 
   # Digest authentication algorithm
@@ -447,6 +469,8 @@ class WEBrick::HTTPAuth::DigestAuth
   def authenticate(req, res); end
 
   # Returns a challenge response which asks for authentication information
+  #
+  # @raise [@auth_exception]
   def challenge(req, res, stale = T.unsafe(nil)); end
 
   # Quality of protection.  RFC 2617 defines "auth" and "auth-int"
@@ -469,6 +493,27 @@ class WEBrick::HTTPAuth::DigestAuth
   end
 end
 
+# Struct containing the opaque portion of the digest authentication
+class WEBrick::HTTPAuth::DigestAuth::OpaqueInfo < ::Struct
+  # Sets the attribute nc
+  #
+  # @param value [Object] the value to set the attribute nc to.
+  # @return [Object] the newly set value
+  def nc=(_); end
+
+  # Sets the attribute nonce
+  #
+  # @param value [Object] the value to set the attribute nonce to.
+  # @return [Object] the newly set value
+  def nonce=(_); end
+
+  # Sets the attribute time
+  #
+  # @param value [Object] the value to set the attribute time to.
+  # @return [Object] the newly set value
+  def time=(_); end
+end
+
 # Htdigest accesses apache-compatible digest password files.  Passwords are
 # matched to a realm where they are valid.  For security, the path for a
 # digest password database should be stored outside of the paths available
@@ -477,13 +522,15 @@ end
 # Htdigest is intended for use with WEBrick::HTTPAuth::DigestAuth and
 # stores passwords using cryptographic hashes.
 #
-# htpasswd = WEBrick::HTTPAuth::Htdigest.new 'my_password_file'
-# htpasswd.set_passwd 'my realm', 'username', 'password'
-# htpasswd.flush
+#   htpasswd = WEBrick::HTTPAuth::Htdigest.new 'my_password_file'
+#   htpasswd.set_passwd 'my realm', 'username', 'password'
+#   htpasswd.flush
 class WEBrick::HTTPAuth::Htdigest
   include ::WEBrick::HTTPAuth::UserDB
 
   # Open a digest password database at +path+
+  #
+  # @return [Htdigest] a new instance of Htdigest
   def initialize(path); end
 
   # Removes a password from the database for +user+ in +realm+.
@@ -515,12 +562,14 @@ end
 #
 # Example:
 #
-# htgroup = WEBrick::HTTPAuth::Htgroup.new 'my_group_file'
-# htgroup.add 'superheroes', %w[spiderman batman]
+#   htgroup = WEBrick::HTTPAuth::Htgroup.new 'my_group_file'
+#   htgroup.add 'superheroes', %w[spiderman batman]
 #
-# htgroup.members('superheroes').include? 'magneto' # => false
+#   htgroup.members('superheroes').include? 'magneto' # => false
 class WEBrick::HTTPAuth::Htgroup
   # Open a group database at +path+
+  #
+  # @return [Htgroup] a new instance of Htgroup
   def initialize(path); end
 
   # Add an Array of +members+ to +group+
@@ -546,13 +595,15 @@ end
 #
 # To create an Htpasswd database with a single user:
 #
-# htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file'
-# htpasswd.set_passwd 'my realm', 'username', 'password'
-# htpasswd.flush
+#   htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file'
+#   htpasswd.set_passwd 'my realm', 'username', 'password'
+#   htpasswd.flush
 class WEBrick::HTTPAuth::Htpasswd
   include ::WEBrick::HTTPAuth::UserDB
 
   # Open a password database at +path+
+  #
+  # @return [Htpasswd] a new instance of Htpasswd
   def initialize(path, password_hash: T.unsafe(nil)); end
 
   # Removes a password from the database for +user+ in +realm+.
@@ -625,6 +676,8 @@ end
 class WEBrick::HTTPRequest
   # Creates a new HTTP request.  WEBrick::Config::HTTP is the default
   # configuration.
+  #
+  # @return [HTTPRequest] a new instance of HTTPRequest
   def initialize(config); end
 
   # Retrieves +header_name+
@@ -687,6 +740,8 @@ class WEBrick::HTTPRequest
   def keep_alive; end
 
   # Should the connection this request was made on be kept alive?
+  #
+  # @return [Boolean]
   def keep_alive?; end
 
   # This method provides the metavariables defined by the revision 3
@@ -734,7 +789,7 @@ class WEBrick::HTTPRequest
 
   # The complete request line such as:
   #
-  # GET / HTTP/1.1
+  #   GET / HTTP/1.1
   def request_line; end
 
   # The request method, GET, POST, PUT, etc.
@@ -756,6 +811,8 @@ class WEBrick::HTTPRequest
   def server_name; end
 
   # Is this an SSL request?
+  #
+  # @return [Boolean]
   def ssl?; end
 
   def to_s; end
@@ -780,6 +837,8 @@ class WEBrick::HTTPRequest
   def read_data(io, size); end
   def read_header(socket); end
   def read_line(io, size = T.unsafe(nil)); end
+
+  # @raise [HTTPStatus::EOFError]
   def read_request_line(socket); end
 
   # It's said that all X-Forwarded-* headers will contain more than one
@@ -798,6 +857,8 @@ WEBrick::HTTPRequest::MAX_HEADER_LENGTH = T.let(T.unsafe(nil), Integer)
 class WEBrick::HTTPResponse
   # Creates a new HTTP response object.  WEBrick::Config::HTTP is the
   # default configuration.
+  #
+  # @return [HTTPResponse] a new instance of HTTPResponse
   def initialize(config); end
 
   # Retrieves the response header +field+
@@ -817,12 +878,12 @@ class WEBrick::HTTPResponse
   # or <code>header['content-length']</code> explicitly provided.
   # Example:
   #
-  # server.mount_proc '/' do |req, res|
-  # res.chunked = true
-  # # or
-  # # res.header['content-length'] = 10
-  # res.body = proc { |out| out.write(Time.now.to_s) }
-  # end
+  #   server.mount_proc '/' do |req, res|
+  #     res.chunked = true
+  #     # or
+  #     # res.header['content-length'] = 10
+  #     res.body = proc { |out| out.write(Time.now.to_s) }
+  #   end
   def body; end
 
   # Body may be:
@@ -834,18 +895,20 @@ class WEBrick::HTTPResponse
   # or <code>header['content-length']</code> explicitly provided.
   # Example:
   #
-  # server.mount_proc '/' do |req, res|
-  # res.chunked = true
-  # # or
-  # # res.header['content-length'] = 10
-  # res.body = proc { |out| out.write(Time.now.to_s) }
-  # end
+  #   server.mount_proc '/' do |req, res|
+  #     res.chunked = true
+  #     # or
+  #     # res.header['content-length'] = 10
+  #     res.body = proc { |out| out.write(Time.now.to_s) }
+  #   end
   def body=(_arg0); end
 
   # Enables chunked transfer encoding.
   def chunked=(val); end
 
   # Will this response body be returned using chunked transfer-encoding?
+  #
+  # @return [Boolean]
   def chunked?; end
 
   # Configuration for this response
@@ -890,6 +953,8 @@ class WEBrick::HTTPResponse
   def keep_alive=(_arg0); end
 
   # Will this response's connection be kept alive?
+  #
+  # @return [Boolean]
   def keep_alive?; end
 
   def make_body_tempfile; end
@@ -939,7 +1004,7 @@ class WEBrick::HTTPResponse
   #
   # Example:
   #
-  # res.set_redirect WEBrick::HTTPStatus::TemporaryRedirect
+  #   res.set_redirect WEBrick::HTTPStatus::TemporaryRedirect
   def set_redirect(status, url); end
 
   # Response status code (200)
@@ -967,6 +1032,7 @@ class WEBrick::HTTPResponse
 end
 
 class WEBrick::HTTPResponse::ChunkedWrapper
+  # @return [ChunkedWrapper] a new instance of ChunkedWrapper
   def initialize(socket, resp); end
 
   def <<(*buf); end
@@ -986,11 +1052,13 @@ class WEBrick::HTTPServer < ::WEBrick::GenericServer
   # :HTTPVersion:: The HTTP version of this server
   # :Port:: Port to listen on
   # :RequestCallback:: Called with a request and response before each
-  # request is serviced.
+  #                    request is serviced.
   # :RequestTimeout:: Maximum time to wait between requests
   # :ServerAlias:: Array of alternate names for this server for virtual
-  # hosting
+  #                hosting
   # :ServerName:: Name for this server for virtual hosting
+  #
+  # @return [HTTPServer] a new instance of HTTPServer
   def initialize(config = T.unsafe(nil), default = T.unsafe(nil)); end
 
   # Logs +req+ and +res+ in the access logs.  +config+ is used for the
@@ -1018,6 +1086,8 @@ class WEBrick::HTTPServer < ::WEBrick::GenericServer
 
   # Mounts +proc+ or +block+ on +dir+ and calls it with a
   # WEBrick::HTTPRequest and WEBrick::HTTPResponse
+  #
+  # @raise [HTTPServerError]
   def mount_proc(dir, proc = T.unsafe(nil), &block); end
 
   # Processes requests on +sock+
@@ -1027,6 +1097,8 @@ class WEBrick::HTTPServer < ::WEBrick::GenericServer
   def search_servlet(path); end
 
   # Services +req+ and fills in +res+
+  #
+  # @raise [HTTPStatus::NotFound]
   def service(req, res); end
 
   # Unmounts +dir+
@@ -1044,6 +1116,7 @@ end
 # WEBrick::HTTPServer#mount, WEBrick::HTTPServer#unmount and
 # WEBrick::HTTPServer#search_servlet
 class WEBrick::HTTPServer::MountTable
+  # @return [MountTable] a new instance of MountTable
   def initialize; end
 
   def [](dir); end
@@ -1069,54 +1142,58 @@ end
 #
 # == A Simple Servlet
 #
-# class Simple < WEBrick::HTTPServlet::AbstractServlet
-# def do_GET request, response
-# status, content_type, body = do_stuff_with request
+#  class Simple < WEBrick::HTTPServlet::AbstractServlet
+#    def do_GET request, response
+#      status, content_type, body = do_stuff_with request
 #
-# response.status = status
-# response['Content-Type'] = content_type
-# response.body = body
-# end
+#      response.status = status
+#      response['Content-Type'] = content_type
+#      response.body = body
+#    end
 #
-# def do_stuff_with request
-# return 200, 'text/plain', 'you got a page'
-# end
-# end
+#    def do_stuff_with request
+#      return 200, 'text/plain', 'you got a page'
+#    end
+#  end
 #
 # This servlet can be mounted on a server at a given path:
 #
-# server.mount '/simple', Simple
+#   server.mount '/simple', Simple
 #
 # == Servlet Configuration
 #
 # Servlets can be configured via initialize.  The first argument is the
 # HTTP server the servlet is being initialized for.
 #
-# class Configurable < Simple
-# def initialize server, color, size
-# super server
-# @color = color
-# @size = size
-# end
+#  class Configurable < Simple
+#    def initialize server, color, size
+#      super server
+#      @color = color
+#      @size = size
+#    end
 #
-# def do_stuff_with request
-# content = "<p " \
-# %q{style="color: #{@color}; font-size: #{@size}"} \
-# ">Hello, World!"
+#    def do_stuff_with request
+#      content = "<p " \
+#                %q{style="color: #{@color}; font-size: #{@size}"} \
+#                ">Hello, World!"
 #
-# return 200, "text/html", content
-# end
-# end
+#      return 200, "text/html", content
+#    end
+#  end
 #
 # This servlet must be provided two arguments at mount time:
 #
-# server.mount '/configurable', Configurable, 'red', '2em'
+#   server.mount '/configurable', Configurable, 'red', '2em'
 class WEBrick::HTTPServlet::AbstractServlet
   # Initializes a new servlet for +server+ using +options+ which are
   # stored as-is in +@options+.  +@logger+ is also provided.
+  #
+  # @return [AbstractServlet] a new instance of AbstractServlet
   def initialize(server, *options); end
 
   # Raises a NotFound exception
+  #
+  # @raise [HTTPStatus::NotFound]
   def do_GET(req, res); end
 
   # Dispatches to do_GET
@@ -1147,16 +1224,22 @@ end
 #
 # Example:
 #
-# server.mount('/cgi/my_script', WEBrick::HTTPServlet::CGIHandler,
-# '/path/to/my_script')
+#  server.mount('/cgi/my_script', WEBrick::HTTPServlet::CGIHandler,
+#               '/path/to/my_script')
 class WEBrick::HTTPServlet::CGIHandler < ::WEBrick::HTTPServlet::AbstractServlet
   # Creates a new CGI script servlet for the script at +name+
+  #
+  # @return [CGIHandler] a new instance of CGIHandler
   def initialize(server, name); end
 
   # :stopdoc:
+  #
+  # @raise [HTTPStatus::InternalServerError]
   def do_GET(req, res); end
 
   # :stopdoc:
+  #
+  # @raise [HTTPStatus::InternalServerError]
   def do_POST(req, res); end
 end
 
@@ -1167,12 +1250,14 @@ WEBrick::HTTPServlet::CGIHandler::CGIRunnerArray = T.let(T.unsafe(nil), Array)
 #
 # Example:
 #
-# server.mount('/my_page.txt', WEBrick::HTTPServlet::DefaultFileHandler,
-# '/path/to/my_page.txt')
+#   server.mount('/my_page.txt', WEBrick::HTTPServlet::DefaultFileHandler,
+#                '/path/to/my_page.txt')
 #
 # This servlet handles If-Modified-Since and Range requests.
 class WEBrick::HTTPServlet::DefaultFileHandler < ::WEBrick::HTTPServlet::AbstractServlet
   # Creates a DefaultFileHandler instance for the file at +local_path+.
+  #
+  # @return [DefaultFileHandler] a new instance of DefaultFileHandler
   def initialize(server, local_path); end
 
   # :stopdoc:
@@ -1183,7 +1268,9 @@ class WEBrick::HTTPServlet::DefaultFileHandler < ::WEBrick::HTTPServlet::Abstrac
   # returns a lambda for webrick/httpresponse.rb send_body_proc
   def multipart_body(body, parts, boundary, mtype, filesize); end
 
+  # @return [Boolean]
   def not_modified?(req, res, mtime, etag); end
+
   def prepare_range(range, filesize); end
 end
 
@@ -1199,12 +1286,14 @@ end
 #
 # Example .rhtml file:
 #
-# Request to <%= servlet_request.request_uri %>
+#   Request to <%= servlet_request.request_uri %>
 #
-# Query params <%= servlet_request.query.inspect %>
+#   Query params <%= servlet_request.query.inspect %>
 class WEBrick::HTTPServlet::ERBHandler < ::WEBrick::HTTPServlet::AbstractServlet
   # Creates a new ERBHandler on +server+ that will evaluate and serve the
   # ERB file +name+
+  #
+  # @return [ERBHandler] a new instance of ERBHandler
   def initialize(server, name); end
 
   # Handles GET requests
@@ -1227,8 +1316,8 @@ end
 #
 # Example:
 #
-# server.mount('/assets', WEBrick::HTTPServlet::FileHandler,
-# '/path/to/assets')
+#   server.mount('/assets', WEBrick::HTTPServlet::FileHandler,
+#                '/path/to/assets')
 class WEBrick::HTTPServlet::FileHandler < ::WEBrick::HTTPServlet::AbstractServlet
   # Creates a FileHandler servlet on +server+ that serves files starting
   # at directory +root+
@@ -1238,6 +1327,8 @@ class WEBrick::HTTPServlet::FileHandler < ::WEBrick::HTTPServlet::AbstractServle
   #
   # If +options+ is true or false then +:FancyIndexing+ is enabled or
   # disabled respectively.
+  #
+  # @return [FileHandler] a new instance of FileHandler
   def initialize(server, root, options = T.unsafe(nil), default = T.unsafe(nil)); end
 
   def do_GET(req, res); end
@@ -1252,16 +1343,26 @@ class WEBrick::HTTPServlet::FileHandler < ::WEBrick::HTTPServlet::AbstractServle
 
   def call_callback(callback_name, req, res); end
   def check_filename(req, res, name); end
+
+  # @raise [HTTPStatus::NotFound]
   def exec_handler(req, res); end
+
   def get_handler(req, res); end
+
+  # @return [Boolean]
   def nondisclosure_name?(name); end
+
   def prevent_directory_traversal(req, res); end
   def search_file(req, res, basename); end
   def search_index_file(req, res); end
   def set_dir_list(req, res); end
   def set_filename(req, res); end
   def shift_path_info(req, res, path_info, base = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def trailing_pathsep?(path); end
+
+  # @return [Boolean]
   def windows_ambiguous_name?(name); end
 
   class << self
@@ -1282,58 +1383,82 @@ module WEBrick::HTTPStatus
   private
 
   # Is +code+ a client error status?
+  #
+  # @return [Boolean]
   def client_error?(code); end
 
   # Is +code+ an error status?
+  #
+  # @return [Boolean]
   def error?(code); end
 
   # Is +code+ an informational status?
+  #
+  # @return [Boolean]
   def info?(code); end
 
   # Returns the description corresponding to the HTTP status +code+
   #
-  # WEBrick::HTTPStatus.reason_phrase 404
-  # => "Not Found"
+  #   WEBrick::HTTPStatus.reason_phrase 404
+  #   => "Not Found"
   def reason_phrase(code); end
 
   # Is +code+ a redirection status?
+  #
+  # @return [Boolean]
   def redirect?(code); end
 
   # Is +code+ a server error status?
+  #
+  # @return [Boolean]
   def server_error?(code); end
 
   # Is +code+ a successful status?
+  #
+  # @return [Boolean]
   def success?(code); end
 
   class << self
     # Returns the status class corresponding to +code+
     #
-    # WEBrick::HTTPStatus[302]
-    # => WEBrick::HTTPStatus::NotFound
+    #   WEBrick::HTTPStatus[302]
+    #   => WEBrick::HTTPStatus::NotFound
     def [](code); end
 
     # Is +code+ a client error status?
+    #
+    # @return [Boolean]
     def client_error?(code); end
 
     # Is +code+ an error status?
+    #
+    # @return [Boolean]
     def error?(code); end
 
     # Is +code+ an informational status?
+    #
+    # @return [Boolean]
     def info?(code); end
 
     # Returns the description corresponding to the HTTP status +code+
     #
-    # WEBrick::HTTPStatus.reason_phrase 404
-    # => "Not Found"
+    #   WEBrick::HTTPStatus.reason_phrase 404
+    #   => "Not Found"
     def reason_phrase(code); end
 
     # Is +code+ a redirection status?
+    #
+    # @return [Boolean]
     def redirect?(code); end
 
     # Is +code+ a server error status?
+    #
+    # @return [Boolean]
     def server_error?(code); end
 
     # Is +code+ a successful status?
+    #
+    # @return [Boolean]
     def success?(code); end
   end
 end
@@ -1497,6 +1622,8 @@ class WEBrick::HTTPUtils::FormData < ::String
   # for each entry.
   #
   # This is called by WEBrick::HTTPUtils.parse_form_data for you
+  #
+  # @return [FormData] a new instance of FormData
   def initialize(*args); end
 
   # Adds +str+ to this FormData which may be the body, a header or a
@@ -1609,23 +1736,23 @@ end
 # Timeout handlers should be managed by using the class methods which are
 # synchronized.
 #
-# id = TimeoutHandler.register(10, Timeout::Error)
-# begin
-# sleep 20
-# puts 'foo'
-# ensure
-# TimeoutHandler.cancel(id)
-# end
+#   id = TimeoutHandler.register(10, Timeout::Error)
+#   begin
+#     sleep 20
+#     puts 'foo'
+#   ensure
+#     TimeoutHandler.cancel(id)
+#   end
 #
 # will raise Timeout::Error
 #
-# id = TimeoutHandler.register(10, Timeout::Error)
-# begin
-# sleep 5
-# puts 'foo'
-# ensure
-# TimeoutHandler.cancel(id)
-# end
+#   id = TimeoutHandler.register(10, Timeout::Error)
+#   begin
+#     sleep 5
+#     puts 'foo'
+#   ensure
+#     TimeoutHandler.cancel(id)
+#   end
 #
 # will print 'foo'
 class WEBrick::Utils::TimeoutHandler
@@ -1634,6 +1761,8 @@ class WEBrick::Utils::TimeoutHandler
 
   # Creates a new TimeoutHandler.  You should use ::register and ::cancel
   # instead of creating the timeout handler directly.
+  #
+  # @return [TimeoutHandler] a new instance of TimeoutHandler
   def initialize; end
 
   # Cancels the timeout handler +id+

@@ -14,14 +14,25 @@
 #
 # In order to use {SmartProperties}, simply include the {SmartProperties}
 # module and use the {ClassMethods#property} method to define properties.
+#
+# @example Definition of a property that makes use of all {SmartProperties} features.
+#
+#   property :language_code, :accepts => [:de, :en],
+#   :converts => :to_sym,
+#   :default  => :de,
+#   :required => true
+# @see ClassMethods#property More information on how to configure properties
 module SmartProperties
   mixes_in_class_methods ::SmartProperties::ClassMethods
-  mixes_in_class_methods ::SmartProperties::ModuleMethods
 
   # Implements a key-value enabled constructor that acts as default
   # constructor for all {SmartProperties}-enabled classes. Positional arguments
   # or keyword arguments that do not correspond to a property are forwarded to
   # the super class constructor.
+  #
+  # @param attrs [Hash] the set of attributes that is used for initialization
+  # @raise [SmartProperties::ConstructorArgumentForwardingError] when unknown arguments were supplied that could not be processed by the super class initializer either.
+  # @raise [SmartProperties::InitializationError] when incorrect values were supplied or required values weren't been supplied.
   def initialize(*args, &block); end
 
   def [](name); end
@@ -32,29 +43,38 @@ module SmartProperties
 
     # Extends the class, which this module is included in, with a property
     # method to define properties.
+    #
+    # @param base [Class] the class this module is included in
     def included(base); end
   end
 end
 
 class SmartProperties::AssignmentError < ::SmartProperties::Error
+  # @return [AssignmentError] a new instance of AssignmentError
   def initialize(sender, property, message); end
 
   # Returns the value of attribute property.
   def property; end
 
   # Sets the attribute property
+  #
+  # @param value the value to set the attribute property to.
   def property=(_arg0); end
 
   # Returns the value of attribute sender.
   def sender; end
 
   # Sets the attribute sender
+  #
+  # @param value the value to set the attribute sender to.
   def sender=(_arg0); end
 end
 
 module SmartProperties::ClassMethods
   # Returns a class's smart properties. This includes the properties that
   # have been defined in the parent classes.
+  #
+  # @return [Hash<String, Property>] A map of property names to property instances.
   def properties; end
 
   protected
@@ -63,33 +83,48 @@ module SmartProperties::ClassMethods
   # results in creating an accessor that has additional features:
   #
   # 1. Validation of input data by specifiying the +:accepts+ option:
-  # If you use a class as value for this option, the setter will check
-  # if the value it is about to assign is of this type. If you use an
-  # array, the setter will check if the value it is about to assign is
-  # included in this array. Finally, if you specify a block, it will
-  # invoke the block with the value it is about to assign and check if
-  # the block returns a thruthy value, meaning anything but +false+ and
-  # +nil+.
+  #    If you use a class as value for this option, the setter will check
+  #    if the value it is about to assign is of this type. If you use an
+  #    array, the setter will check if the value it is about to assign is
+  #    included in this array. Finally, if you specify a block, it will
+  #    invoke the block with the value it is about to assign and check if
+  #    the block returns a thruthy value, meaning anything but +false+ and
+  #    +nil+.
   #
   # 2. Conversion of input data by specifiying the +:converts+ option:
-  # If you use provide a symbol as value for this option, the setter will
-  # invoke this method on the object it is about to assign and take the
-  # result of this call instead. If you provide a block, it will invoke
-  # the block with the value it is about to assign and take the result
-  # of the block instead.
+  #    If you use provide a symbol as value for this option, the setter will
+  #    invoke this method on the object it is about to assign and take the
+  #    result of this call instead. If you provide a block, it will invoke
+  #    the block with the value it is about to assign and take the result
+  #    of the block instead.
   #
   # 3. Providing a default value by specifiying the +:default+ option.
   #
   # 4. Forcing a property to be present by setting the +:required+ option
-  # to true.
-  def property(name, options = T.unsafe(nil)); end
+  #    to true.
+  #
+  # @example Definition of a property that makes use of all {SmartProperties} features.
+  #
+  #   property :language_code, :accepts => [:de, :en],
+  #   :converts => :to_sym,
+  #   :default  => :de,
+  #   :required => true
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param name [Symbol] the name of the property
+  # @param options [Hash] the list of options used to configure the property
+  # @return [Property] The defined property.
+  def property(name, **options); end
 
-  def property!(name, options = T.unsafe(nil)); end
+  def property!(name, **options); end
 end
 
 class SmartProperties::ConfigurationError < ::SmartProperties::Error; end
 
 class SmartProperties::ConstructorArgumentForwardingError < ::SmartProperties::Error
+  # @return [ConstructorArgumentForwardingError] a new instance of ConstructorArgumentForwardingError
   def initialize(positional_arguments, keyword_arguments); end
 
   private
@@ -100,24 +135,30 @@ end
 class SmartProperties::Error < ::ArgumentError; end
 
 class SmartProperties::InitializationError < ::SmartProperties::Error
+  # @return [InitializationError] a new instance of InitializationError
   def initialize(sender, properties); end
 
   # Returns the value of attribute properties.
   def properties; end
 
   # Sets the attribute properties
+  #
+  # @param value the value to set the attribute properties to.
   def properties=(_arg0); end
 
   # Returns the value of attribute sender.
   def sender; end
 
   # Sets the attribute sender
+  #
+  # @param value the value to set the attribute sender to.
   def sender=(_arg0); end
 
   def to_hash; end
 end
 
 class SmartProperties::InvalidValueError < ::SmartProperties::AssignmentError
+  # @return [InvalidValueError] a new instance of InvalidValueError
   def initialize(sender, property, value); end
 
   def to_hash; end
@@ -126,6 +167,8 @@ class SmartProperties::InvalidValueError < ::SmartProperties::AssignmentError
   def value; end
 
   # Sets the attribute value
+  #
+  # @param value the value to set the attribute value to.
   def value=(_arg0); end
 
   private
@@ -134,6 +177,7 @@ class SmartProperties::InvalidValueError < ::SmartProperties::AssignmentError
 end
 
 class SmartProperties::MissingValueError < ::SmartProperties::AssignmentError
+  # @return [MissingValueError] a new instance of MissingValueError
   def initialize(sender, property); end
 
   def to_hash; end
@@ -144,12 +188,15 @@ module SmartProperties::ModuleMethods
 end
 
 class SmartProperties::Property
-  def initialize(name, attrs = T.unsafe(nil)); end
+  # @return [Property] a new instance of Property
+  def initialize(name, **attrs); end
 
   # Returns the value of attribute accepter.
   def accepter; end
 
+  # @return [Boolean]
   def accepts?(value, scope); end
+
   def convert(scope, value); end
 
   # Returns the value of attribute converter.
@@ -162,19 +209,27 @@ class SmartProperties::Property
   # Returns the value of attribute instance_variable_name.
   def instance_variable_name; end
 
+  # @return [Boolean]
   def missing?(scope); end
 
   # Returns the value of attribute name.
   def name; end
 
+  # @return [Boolean]
   def optional?(scope); end
+
+  # @raise [MissingValueError]
   def prepare(scope, value); end
+
+  # @return [Boolean]
   def present?(scope); end
 
   # Returns the value of attribute reader.
   def reader; end
 
+  # @return [Boolean]
   def required?(scope); end
+
   def set(scope, value); end
   def set_default(scope); end
   def to_h; end
@@ -182,14 +237,16 @@ class SmartProperties::Property
   # Returns the value of attribute writable.
   def writable; end
 
+  # @return [Boolean]
   def writable?; end
 
   private
 
+  # @return [Boolean]
   def null_object?(object); end
 
   class << self
-    def define(scope, name, options = T.unsafe(nil)); end
+    def define(scope, name, **options); end
   end
 end
 
@@ -199,12 +256,16 @@ SmartProperties::Property::MODULE_REFERENCE = T.let(T.unsafe(nil), Symbol)
 class SmartProperties::PropertyCollection
   include ::Enumerable
 
+  # @return [PropertyCollection] a new instance of PropertyCollection
   def initialize; end
 
   def [](name); end
   def []=(name, value); end
   def each(&block); end
+
+  # @return [Boolean]
   def key?(name); end
+
   def keys; end
 
   # Returns the value of attribute parent.
@@ -220,18 +281,24 @@ class SmartProperties::PropertyCollection
   def children; end
 
   # Sets the attribute children
+  #
+  # @param value the value to set the attribute children to.
   def children=(_arg0); end
 
   # Returns the value of attribute collection.
   def collection; end
 
   # Sets the attribute collection
+  #
+  # @param value the value to set the attribute collection to.
   def collection=(_arg0); end
 
   # Returns the value of attribute collection_with_parent_collection.
   def collection_with_parent_collection; end
 
   # Sets the attribute collection_with_parent_collection
+  #
+  # @param value the value to set the attribute collection_with_parent_collection to.
   def collection_with_parent_collection=(_arg0); end
 
   def notify_children; end
@@ -248,7 +315,6 @@ module SmartProperties::Validations; end
 class SmartProperties::Validations::Ancestor
   include ::SmartProperties
   extend ::SmartProperties::ClassMethods
-  extend ::SmartProperties::ModuleMethods
 
   def to_proc; end
   def to_s; end

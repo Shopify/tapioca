@@ -25,21 +25,25 @@ end
 # The base +Renderer+ class uses its +render+ method to delegate to the
 # renderers. These currently consist of
 #
-# PartialRenderer - Used for rendering partials
-# TemplateRenderer - Used for rendering other types of templates
-# StreamingTemplateRenderer - Used for streaming
+#   PartialRenderer - Used for rendering partials
+#   TemplateRenderer - Used for rendering other types of templates
+#   StreamingTemplateRenderer - Used for streaming
 #
 # Whenever the +render+ method is called on the base +Renderer+ class, a new
 # renderer object of the correct type is created, and the +render+ method on
 # that new object is called in turn. This abstracts the set up and rendering
 # into a separate classes for partials and templates.
 class ActionView::AbstractRenderer
+  # @return [AbstractRenderer] a new instance of AbstractRenderer
   def initialize(lookup_context); end
 
-  def any_templates?(*_arg0, **_arg1, &_arg2); end
-  def formats(*_arg0, **_arg1, &_arg2); end
+  def any_templates?(*_arg0, &_arg1); end
+  def formats(*_arg0, &_arg1); end
+
+  # @raise [NotImplementedError]
   def render; end
-  def template_exists?(*_arg0, **_arg1, &_arg2); end
+
+  def template_exists?(*_arg0, &_arg1); end
 
   private
 
@@ -68,7 +72,10 @@ module ActionView::AbstractRenderer::ObjectRendering
   # method will prefix the partial paths with a namespace.
   def partial_path(object, view); end
 
+  # @raise [ArgumentError]
   def raise_invalid_identifier(path); end
+
+  # @raise [ArgumentError]
   def raise_invalid_option_as(as); end
 end
 
@@ -77,6 +84,7 @@ ActionView::AbstractRenderer::ObjectRendering::OPTION_AS_ERROR_MESSAGE = T.let(T
 ActionView::AbstractRenderer::ObjectRendering::PREFIXED_PARTIAL_NAMES = T.let(T.unsafe(nil), Concurrent::Map)
 
 class ActionView::AbstractRenderer::RenderedCollection
+  # @return [RenderedCollection] a new instance of RenderedCollection
   def initialize(rendered_templates, spacer); end
 
   def body; end
@@ -91,6 +99,7 @@ class ActionView::AbstractRenderer::RenderedCollection
 end
 
 class ActionView::AbstractRenderer::RenderedCollection::EmptyCollection
+  # @return [EmptyCollection] a new instance of EmptyCollection
   def initialize(format); end
 
   def body; end
@@ -100,6 +109,7 @@ class ActionView::AbstractRenderer::RenderedCollection::EmptyCollection
 end
 
 class ActionView::AbstractRenderer::RenderedTemplate
+  # @return [RenderedTemplate] a new instance of RenderedTemplate
   def initialize(body, template); end
 
   # Returns the value of attribute body.
@@ -128,16 +138,16 @@ class ActionView::ActionViewError < ::StandardError; end
 # You trigger ERB by using embeddings such as <tt><% %></tt>, <tt><% -%></tt>, and <tt><%= %></tt>. The <tt><%= %></tt> tag set is used when you want output. Consider the
 # following loop for names:
 #
-# <b>Names of all the people</b>
-# <% @people.each do |person| %>
-# Name: <%= person.name %><br/>
-# <% end %>
+#   <b>Names of all the people</b>
+#   <% @people.each do |person| %>
+#     Name: <%= person.name %><br/>
+#   <% end %>
 #
 # The loop is set up in regular embedding tags <tt><% %></tt>, and the name is written using the output embedding tag <tt><%= %></tt>. Note that this
 # is not just a usage suggestion. Regular output functions like print or puts won't work with ERB templates. So this would be wrong:
 #
-# <%# WRONG %>
-# Hi, Mr. <% puts "Frodo" %>
+#   <%# WRONG %>
+#   Hi, Mr. <% puts "Frodo" %>
 #
 # If you absolutely must write from within a function use +concat+.
 #
@@ -150,9 +160,9 @@ class ActionView::ActionViewError < ::StandardError; end
 # Using sub templates allows you to sidestep tedious replication and extract common display structures in shared templates. The
 # classic example is the use of a header and footer (even though the Action Pack-way would be to use Layouts):
 #
-# <%= render "shared/header" %>
-# Something really specific and terrific
-# <%= render "shared/footer" %>
+#   <%= render "shared/header" %>
+#   Something really specific and terrific
+#   <%= render "shared/footer" %>
 #
 # As you see, we use the output embeddings for the render methods. The render call itself will just return a string holding the
 # result of the rendering. The output embedding writes it to the current template.
@@ -160,28 +170,28 @@ class ActionView::ActionViewError < ::StandardError; end
 # But you don't have to restrict yourself to static includes. Templates can share variables amongst themselves by using instance
 # variables defined using the regular embedding tags. Like this:
 #
-# <% @page_title = "A Wonderful Hello" %>
-# <%= render "shared/header" %>
+#   <% @page_title = "A Wonderful Hello" %>
+#   <%= render "shared/header" %>
 #
 # Now the header can pick up on the <tt>@page_title</tt> variable and use it for outputting a title tag:
 #
-# <title><%= @page_title %></title>
+#   <title><%= @page_title %></title>
 #
 # === Passing local variables to sub templates
 #
 # You can pass local variables to sub templates by using a hash with the variable names as keys and the objects as values:
 #
-# <%= render "shared/header", { headline: "Welcome", person: person } %>
+#   <%= render "shared/header", { headline: "Welcome", person: person } %>
 #
 # These can now be accessed in <tt>shared/header</tt> with:
 #
-# Headline: <%= headline %>
-# First name: <%= person.first_name %>
+#   Headline: <%= headline %>
+#   First name: <%= person.first_name %>
 #
 # The local variables passed to sub templates can be accessed as a hash using the <tt>local_assigns</tt> hash. This lets you access the
 # variables as:
 #
-# Headline: <%= local_assigns[:headline] %>
+#   Headline: <%= local_assigns[:headline] %>
 #
 # This is useful in cases where you aren't sure if the local variable has been assigned. Alternatively, you could also use
 # <tt>defined? headline</tt> to first check if the variable has been assigned before using it.
@@ -198,49 +208,49 @@ class ActionView::ActionViewError < ::StandardError; end
 #
 # Here are some basic examples:
 #
-# xml.em("emphasized")                                 # => <em>emphasized</em>
-# xml.em { xml.b("emph & bold") }                      # => <em><b>emph &amp; bold</b></em>
-# xml.a("A Link", "href" => "http://onestepback.org")  # => <a href="http://onestepback.org">A Link</a>
-# xml.target("name" => "compile", "option" => "fast")  # => <target option="fast" name="compile"\>
-# # NOTE: order of attributes is not specified.
+#   xml.em("emphasized")                                 # => <em>emphasized</em>
+#   xml.em { xml.b("emph & bold") }                      # => <em><b>emph &amp; bold</b></em>
+#   xml.a("A Link", "href" => "http://onestepback.org")  # => <a href="http://onestepback.org">A Link</a>
+#   xml.target("name" => "compile", "option" => "fast")  # => <target option="fast" name="compile"\>
+#                                                        # NOTE: order of attributes is not specified.
 #
 # Any method with a block will be treated as an XML markup tag with nested markup in the block. For example, the following:
 #
-# xml.div do
-# xml.h1(@person.name)
-# xml.p(@person.bio)
-# end
+#   xml.div do
+#     xml.h1(@person.name)
+#     xml.p(@person.bio)
+#   end
 #
 # would produce something like:
 #
-# <div>
-# <h1>David Heinemeier Hansson</h1>
-# <p>A product of Danish Design during the Winter of '79...</p>
-# </div>
+#   <div>
+#     <h1>David Heinemeier Hansson</h1>
+#     <p>A product of Danish Design during the Winter of '79...</p>
+#   </div>
 #
 # Here is a full-length RSS example actually used on Basecamp:
 #
-# xml.rss("version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/") do
-# xml.channel do
-# xml.title(@feed_title)
-# xml.link(@url)
-# xml.description "Basecamp: Recent items"
-# xml.language "en-us"
-# xml.ttl "40"
+#   xml.rss("version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/") do
+#     xml.channel do
+#       xml.title(@feed_title)
+#       xml.link(@url)
+#       xml.description "Basecamp: Recent items"
+#       xml.language "en-us"
+#       xml.ttl "40"
 #
-# @recent_items.each do |item|
-# xml.item do
-# xml.title(item_title(item))
-# xml.description(item_description(item)) if item_description(item)
-# xml.pubDate(item_pubDate(item))
-# xml.guid(@person.firm.account.url + @recent_items.url(item))
-# xml.link(@person.firm.account.url + @recent_items.url(item))
+#       @recent_items.each do |item|
+#         xml.item do
+#           xml.title(item_title(item))
+#           xml.description(item_description(item)) if item_description(item)
+#           xml.pubDate(item_pubDate(item))
+#           xml.guid(@person.firm.account.url + @recent_items.url(item))
+#           xml.link(@person.firm.account.url + @recent_items.url(item))
 #
-# xml.tag!("dc:creator", item.author_name) if item_has_creator?(item)
-# end
-# end
-# end
-# end
+#           xml.tag!("dc:creator", item.author_name) if item_has_creator?(item)
+#         end
+#       end
+#     end
+#   end
 #
 # For more information on Builder please consult the {source
 # code}[https://github.com/jimweirich/builder].
@@ -278,6 +288,8 @@ class ActionView::Base
   extend ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
   # :startdoc:
+  #
+  # @return [Base] a new instance of Base
   def initialize(lookup_context, assigns, controller); end
 
   def _routes; end
@@ -291,7 +303,10 @@ class ActionView::Base
   def assigns=(_arg0); end
   def automatically_disable_submit_tag; end
   def automatically_disable_submit_tag=(val); end
+
+  # @raise [NotImplementedError]
   def compiled_method_container; end
+
   def config; end
   def config=(_arg0); end
   def debug_missing_translation; end
@@ -300,10 +315,10 @@ class ActionView::Base
   def default_formats=(val); end
   def field_error_proc; end
   def field_error_proc=(val); end
-  def formats(*_arg0, **_arg1, &_arg2); end
+  def formats(*_arg0, &_arg1); end
   def formats=(arg); end
   def in_rendering_context(options); end
-  def locale(*_arg0, **_arg1, &_arg2); end
+  def locale(*_arg0, &_arg1); end
   def locale=(arg); end
   def logger; end
   def logger=(_arg0); end
@@ -319,7 +334,7 @@ class ActionView::Base
   def raise_on_missing_translations=(val); end
   def streaming_completion_on_exception; end
   def streaming_completion_on_exception=(val); end
-  def view_paths(*_arg0, **_arg1, &_arg2); end
+  def view_paths(*_arg0, &_arg1); end
   def view_paths=(arg); end
 
   # Returns the value of attribute view_renderer.
@@ -335,7 +350,10 @@ class ActionView::Base
     def automatically_disable_submit_tag=(val); end
     def cache_template_loading; end
     def cache_template_loading=(value); end
+
+    # @return [Boolean]
     def changed?(other); end
+
     def debug_missing_translation; end
     def debug_missing_translation=(val); end
     def default_form_builder; end
@@ -362,11 +380,14 @@ class ActionView::Base
     def with_context(context, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
     def with_empty_template_cache; end
     def with_view_paths(view_paths, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
+
+    # @return [Boolean]
     def xss_safe?; end
   end
 end
 
 class ActionView::CacheExpiry
+  # @return [CacheExpiry] a new instance of CacheExpiry
   def initialize(watcher:); end
 
   def clear_cache; end
@@ -379,6 +400,7 @@ class ActionView::CacheExpiry
 end
 
 class ActionView::CacheExpiry::Executor
+  # @return [Executor] a new instance of Executor
   def initialize(watcher:); end
 
   def before(target); end
@@ -390,7 +412,10 @@ module ActionView::CollectionCaching
   private
 
   def cache_collection_render(instrumentation_payload, view, template, collection); end
+
+  # @return [Boolean]
   def callable_cache_key?; end
+
   def collection_by_cache_keys(view, template, collection); end
   def expanded_cache_key(key, view, template, digest_path); end
 
@@ -411,6 +436,7 @@ module ActionView::CollectionCaching
   # written back to the underlying cache store.
   def fetch_or_cache_partial(cached_partials, template, order_by:); end
 
+  # @return [Boolean]
   def will_cache?(options, view); end
 end
 
@@ -430,6 +456,7 @@ end
 class ActionView::CollectionRenderer::CollectionIterator
   include ::Enumerable
 
+  # @return [CollectionIterator] a new instance of CollectionIterator
   def initialize(collection); end
 
   def each(&blk); end
@@ -438,12 +465,14 @@ class ActionView::CollectionRenderer::CollectionIterator
 end
 
 class ActionView::CollectionRenderer::MixedCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
+  # @return [MixedCollectionIterator] a new instance of MixedCollectionIterator
   def initialize(collection, paths); end
 
   def each_with_info; end
 end
 
 class ActionView::CollectionRenderer::PreloadCollectionIterator < ::ActionView::CollectionRenderer::SameCollectionIterator
+  # @return [PreloadCollectionIterator] a new instance of PreloadCollectionIterator
   def initialize(collection, path, variables, relation); end
 
   def each_with_info; end
@@ -451,6 +480,7 @@ class ActionView::CollectionRenderer::PreloadCollectionIterator < ::ActionView::
 end
 
 class ActionView::CollectionRenderer::SameCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
+  # @return [SameCollectionIterator] a new instance of SameCollectionIterator
   def initialize(collection, path, variables); end
 
   def each_with_info; end
@@ -480,12 +510,16 @@ module ActionView::Context
   def output_buffer; end
 
   # Sets the attribute output_buffer
+  #
+  # @param value the value to set the attribute output_buffer to.
   def output_buffer=(_arg0); end
 
   # Returns the value of attribute view_flow.
   def view_flow; end
 
   # Sets the attribute view_flow
+  #
+  # @param value the value to set the attribute view_flow to.
   def view_flow=(_arg0); end
 end
 
@@ -498,6 +532,7 @@ class ActionView::DependencyTracker
 end
 
 class ActionView::DependencyTracker::ERBTracker
+  # @return [ERBTracker] a new instance of ERBTracker
   def initialize(name, template, view_paths = T.unsafe(nil)); end
 
   def dependencies; end
@@ -522,6 +557,8 @@ class ActionView::DependencyTracker::ERBTracker
 
   class << self
     def call(name, template, view_paths = T.unsafe(nil)); end
+
+    # @return [Boolean]
     def supports_view_paths?; end
   end
 end
@@ -540,16 +577,16 @@ ActionView::DependencyTracker::ERBTracker::LAYOUT_HASH_KEY = T.let(T.unsafe(nil)
 ActionView::DependencyTracker::ERBTracker::PARTIAL_HASH_KEY = T.let(T.unsafe(nil), Regexp)
 
 # Matches:
-# partial: "comments/comment", collection: @all_comments => "comments/comment"
-# (object: @single_comment, partial: "comments/comment") => "comments/comment"
+#   partial: "comments/comment", collection: @all_comments => "comments/comment"
+#   (object: @single_comment, partial: "comments/comment") => "comments/comment"
 #
-# "comments/comments"
-# 'comments/comments'
-# ('comments/comments')
+#   "comments/comments"
+#   'comments/comments'
+#   ('comments/comments')
 #
-# (@topic)         => "topics/topic"
-# topics          => "topics/topic"
-# (message.topics) => "topics/topic"
+#   (@topic)         => "topics/topic"
+#    topics          => "topics/topic"
+#   (message.topics) => "topics/topic"
 ActionView::DependencyTracker::ERBTracker::RENDER_ARGUMENTS = T.let(T.unsafe(nil), Regexp)
 
 # A simple string literal. e.g. "School's out!"
@@ -589,6 +626,7 @@ class ActionView::Digestor::Missing < ::ActionView::Digestor::Node
 end
 
 class ActionView::Digestor::Node
+  # @return [Node] a new instance of Node
   def initialize(name, logical_name, template, children = T.unsafe(nil)); end
 
   # Returns the value of attribute children.
@@ -637,9 +675,14 @@ end
 
 # A resolver that loads files from the filesystem.
 class ActionView::FileSystemResolver < ::ActionView::PathResolver
+  # @raise [ArgumentError]
+  # @return [FileSystemResolver] a new instance of FileSystemResolver
   def initialize(path); end
 
+  # @return [Boolean]
   def ==(resolver); end
+
+  # @return [Boolean]
   def eql?(resolver); end
 
   # Returns the value of attribute path.
@@ -699,8 +742,13 @@ module ActionView::Helpers::ActiveModelInstanceTag
 
   private
 
+  # @return [Boolean]
   def object_has_errors?; end
+
+  # @return [Boolean]
   def select_markup_helper?(type); end
+
+  # @return [Boolean]
   def tag_generate_errors?(options); end
 end
 
@@ -708,10 +756,10 @@ end
 # as images, JavaScripts, stylesheets, and feeds. These methods do not verify
 # the assets exist before linking to them:
 #
-# image_tag("rails.png")
-# # => <img src="/assets/rails.png" />
-# stylesheet_link_tag("application")
-# # => <link href="/assets/application.css?body=1" media="screen" rel="stylesheet" />
+#   image_tag("rails.png")
+#   # => <img src="/assets/rails.png" />
+#   stylesheet_link_tag("application")
+#   # => <link href="/assets/application.css?body=1" media="screen" rel="stylesheet" />
 module ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AssetUrlHelper
   extend ::ActiveSupport::Concern
@@ -726,14 +774,14 @@ module ActionView::Helpers::AssetTagHelper
   # When the last parameter is a hash you can add HTML attributes using that
   # parameter.
   #
-  # audio_tag("sound")
-  # # => <audio src="/audios/sound"></audio>
-  # audio_tag("sound.wav")
-  # # => <audio src="/audios/sound.wav"></audio>
-  # audio_tag("sound.wav", autoplay: true, controls: true)
-  # # => <audio autoplay="autoplay" controls="controls" src="/audios/sound.wav"></audio>
-  # audio_tag("sound.wav", "sound.mid")
-  # # => <audio><source src="/audios/sound.wav" /><source src="/audios/sound.mid" /></audio>
+  #   audio_tag("sound")
+  #   # => <audio src="/audios/sound"></audio>
+  #   audio_tag("sound.wav")
+  #   # => <audio src="/audios/sound.wav"></audio>
+  #   audio_tag("sound.wav", autoplay: true, controls: true)
+  #   # => <audio autoplay="autoplay" controls="controls" src="/audios/sound.wav"></audio>
+  #   audio_tag("sound.wav", "sound.mid")
+  #   # => <audio><source src="/audios/sound.wav" /><source src="/audios/sound.mid" /></audio>
   def audio_tag(*sources); end
 
   # Returns a link tag that browsers and feed readers can use to auto-detect
@@ -749,20 +797,20 @@ module ActionView::Helpers::AssetTagHelper
   #
   # ==== Examples
   #
-  # auto_discovery_link_tag
-  # # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/controller/action" />
-  # auto_discovery_link_tag(:atom)
-  # # => <link rel="alternate" type="application/atom+xml" title="ATOM" href="http://www.currenthost.com/controller/action" />
-  # auto_discovery_link_tag(:json)
-  # # => <link rel="alternate" type="application/json" title="JSON" href="http://www.currenthost.com/controller/action" />
-  # auto_discovery_link_tag(:rss, {action: "feed"})
-  # # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/controller/feed" />
-  # auto_discovery_link_tag(:rss, {action: "feed"}, {title: "My RSS"})
-  # # => <link rel="alternate" type="application/rss+xml" title="My RSS" href="http://www.currenthost.com/controller/feed" />
-  # auto_discovery_link_tag(:rss, {controller: "news", action: "feed"})
-  # # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/news/feed" />
-  # auto_discovery_link_tag(:rss, "http://www.example.com/feed.rss", {title: "Example RSS"})
-  # # => <link rel="alternate" type="application/rss+xml" title="Example RSS" href="http://www.example.com/feed.rss" />
+  #   auto_discovery_link_tag
+  #   # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/controller/action" />
+  #   auto_discovery_link_tag(:atom)
+  #   # => <link rel="alternate" type="application/atom+xml" title="ATOM" href="http://www.currenthost.com/controller/action" />
+  #   auto_discovery_link_tag(:json)
+  #   # => <link rel="alternate" type="application/json" title="JSON" href="http://www.currenthost.com/controller/action" />
+  #   auto_discovery_link_tag(:rss, {action: "feed"})
+  #   # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/controller/feed" />
+  #   auto_discovery_link_tag(:rss, {action: "feed"}, {title: "My RSS"})
+  #   # => <link rel="alternate" type="application/rss+xml" title="My RSS" href="http://www.currenthost.com/controller/feed" />
+  #   auto_discovery_link_tag(:rss, {controller: "news", action: "feed"})
+  #   # => <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.currenthost.com/news/feed" />
+  #   auto_discovery_link_tag(:rss, "http://www.example.com/feed.rss", {title: "Example RSS"})
+  #   # => <link rel="alternate" type="application/rss+xml" title="Example RSS" href="http://www.example.com/feed.rss" />
   def auto_discovery_link_tag(type = T.unsafe(nil), url_options = T.unsafe(nil), tag_options = T.unsafe(nil)); end
 
   # Returns a link tag for a favicon managed by the asset pipeline.
@@ -780,18 +828,18 @@ module ActionView::Helpers::AssetTagHelper
   # to override their defaults, "shortcut icon" and "image/x-icon"
   # respectively:
   #
-  # favicon_link_tag
-  # # => <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  #   favicon_link_tag
+  #   # => <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   #
-  # favicon_link_tag 'myicon.ico'
-  # # => <link href="/assets/myicon.ico" rel="shortcut icon" type="image/x-icon" />
+  #   favicon_link_tag 'myicon.ico'
+  #   # => <link href="/assets/myicon.ico" rel="shortcut icon" type="image/x-icon" />
   #
   # Mobile Safari looks for a different link tag, pointing to an image that
   # will be used if you add the page to the home screen of an iOS device.
   # The following call would generate such a tag:
   #
-  # favicon_link_tag 'mb-icon.png', rel: 'apple-touch-icon', type: 'image/png'
-  # # => <link href="/assets/mb-icon.png" rel="apple-touch-icon" type="image/png" />
+  #   favicon_link_tag 'mb-icon.png', rel: 'apple-touch-icon', type: 'image/png'
+  #   # => <link href="/assets/mb-icon.png" rel="apple-touch-icon" type="image/png" />
   def favicon_link_tag(source = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns an HTML image tag for the +source+. The +source+ can be a full
@@ -803,42 +851,42 @@ module ActionView::Helpers::AssetTagHelper
   # additional keys for convenience and conformance:
   #
   # * <tt>:size</tt> - Supplied as "{Width}x{Height}" or "{Number}", so "30x45" becomes
-  # width="30" and height="45", and "50" becomes width="50" and height="50".
-  # <tt>:size</tt> will be ignored if the value is not in the correct format.
+  #   width="30" and height="45", and "50" becomes width="50" and height="50".
+  #   <tt>:size</tt> will be ignored if the value is not in the correct format.
   # * <tt>:srcset</tt> - If supplied as a hash or array of <tt>[source, descriptor]</tt>
-  # pairs, each image path will be expanded before the list is formatted as a string.
+  #   pairs, each image path will be expanded before the list is formatted as a string.
   #
   # ==== Examples
   #
   # Assets (images that are part of your app):
   #
-  # image_tag("icon")
-  # # => <img src="/assets/icon" />
-  # image_tag("icon.png")
-  # # => <img src="/assets/icon.png" />
-  # image_tag("icon.png", size: "16x10", alt: "Edit Entry")
-  # # => <img src="/assets/icon.png" width="16" height="10" alt="Edit Entry" />
-  # image_tag("/icons/icon.gif", size: "16")
-  # # => <img src="/icons/icon.gif" width="16" height="16" />
-  # image_tag("/icons/icon.gif", height: '32', width: '32')
-  # # => <img height="32" src="/icons/icon.gif" width="32" />
-  # image_tag("/icons/icon.gif", class: "menu_icon")
-  # # => <img class="menu_icon" src="/icons/icon.gif" />
-  # image_tag("/icons/icon.gif", data: { title: 'Rails Application' })
-  # # => <img data-title="Rails Application" src="/icons/icon.gif" />
-  # image_tag("icon.png", srcset: { "icon_2x.png" => "2x", "icon_4x.png" => "4x" })
-  # # => <img src="/assets/icon.png" srcset="/assets/icon_2x.png 2x, /assets/icon_4x.png 4x">
-  # image_tag("pic.jpg", srcset: [["pic_1024.jpg", "1024w"], ["pic_1980.jpg", "1980w"]], sizes: "100vw")
-  # # => <img src="/assets/pic.jpg" srcset="/assets/pic_1024.jpg 1024w, /assets/pic_1980.jpg 1980w" sizes="100vw">
+  #   image_tag("icon")
+  #   # => <img src="/assets/icon" />
+  #   image_tag("icon.png")
+  #   # => <img src="/assets/icon.png" />
+  #   image_tag("icon.png", size: "16x10", alt: "Edit Entry")
+  #   # => <img src="/assets/icon.png" width="16" height="10" alt="Edit Entry" />
+  #   image_tag("/icons/icon.gif", size: "16")
+  #   # => <img src="/icons/icon.gif" width="16" height="16" />
+  #   image_tag("/icons/icon.gif", height: '32', width: '32')
+  #   # => <img height="32" src="/icons/icon.gif" width="32" />
+  #   image_tag("/icons/icon.gif", class: "menu_icon")
+  #   # => <img class="menu_icon" src="/icons/icon.gif" />
+  #   image_tag("/icons/icon.gif", data: { title: 'Rails Application' })
+  #   # => <img data-title="Rails Application" src="/icons/icon.gif" />
+  #   image_tag("icon.png", srcset: { "icon_2x.png" => "2x", "icon_4x.png" => "4x" })
+  #   # => <img src="/assets/icon.png" srcset="/assets/icon_2x.png 2x, /assets/icon_4x.png 4x">
+  #   image_tag("pic.jpg", srcset: [["pic_1024.jpg", "1024w"], ["pic_1980.jpg", "1980w"]], sizes: "100vw")
+  #   # => <img src="/assets/pic.jpg" srcset="/assets/pic_1024.jpg 1024w, /assets/pic_1980.jpg 1980w" sizes="100vw">
   #
   # Active Storage blobs (images that are uploaded by the users of your app):
   #
-  # image_tag(user.avatar)
-  # # => <img src="/rails/active_storage/blobs/.../tiger.jpg" />
-  # image_tag(user.avatar.variant(resize_to_limit: [100, 100]))
-  # # => <img src="/rails/active_storage/representations/.../tiger.jpg" />
-  # image_tag(user.avatar.variant(resize_to_limit: [100, 100]), size: '100')
-  # # => <img width="100" height="100" src="/rails/active_storage/representations/.../tiger.jpg" />
+  #   image_tag(user.avatar)
+  #   # => <img src="/rails/active_storage/blobs/.../tiger.jpg" />
+  #   image_tag(user.avatar.variant(resize_to_limit: [100, 100]))
+  #   # => <img src="/rails/active_storage/representations/.../tiger.jpg" />
+  #   image_tag(user.avatar.variant(resize_to_limit: [100, 100]), size: '100')
+  #   # => <img width="100" height="100" src="/rails/active_storage/representations/.../tiger.jpg" />
   def image_tag(source, options = T.unsafe(nil)); end
 
   # Returns an HTML script tag for each of the +sources+ provided.
@@ -865,42 +913,42 @@ module ActionView::Helpers::AssetTagHelper
   # parameter. The following options are supported:
   #
   # * <tt>:extname</tt>  - Append an extension to the generated URL unless the extension
-  # already exists. This only applies for relative URLs.
+  #   already exists. This only applies for relative URLs.
   # * <tt>:protocol</tt>  - Sets the protocol of the generated URL. This option only
-  # applies when a relative URL and +host+ options are provided.
+  #   applies when a relative URL and +host+ options are provided.
   # * <tt>:host</tt>  - When a relative URL is provided the host is added to the
-  # that path.
+  #   that path.
   # * <tt>:skip_pipeline</tt>  - This option is used to bypass the asset pipeline
-  # when it is set to true.
+  #   when it is set to true.
   # * <tt>:nonce</tt>  - When set to true, adds an automatic nonce value if
-  # you have Content Security Policy enabled.
+  #   you have Content Security Policy enabled.
   #
   # ==== Examples
   #
-  # javascript_include_tag "xmlhr"
-  # # => <script src="/assets/xmlhr.debug-1284139606.js"></script>
+  #   javascript_include_tag "xmlhr"
+  #   # => <script src="/assets/xmlhr.debug-1284139606.js"></script>
   #
-  # javascript_include_tag "xmlhr", host: "localhost", protocol: "https"
-  # # => <script src="https://localhost/assets/xmlhr.debug-1284139606.js"></script>
+  #   javascript_include_tag "xmlhr", host: "localhost", protocol: "https"
+  #   # => <script src="https://localhost/assets/xmlhr.debug-1284139606.js"></script>
   #
-  # javascript_include_tag "template.jst", extname: false
-  # # => <script src="/assets/template.debug-1284139606.jst"></script>
+  #   javascript_include_tag "template.jst", extname: false
+  #   # => <script src="/assets/template.debug-1284139606.jst"></script>
   #
-  # javascript_include_tag "xmlhr.js"
-  # # => <script src="/assets/xmlhr.debug-1284139606.js"></script>
+  #   javascript_include_tag "xmlhr.js"
+  #   # => <script src="/assets/xmlhr.debug-1284139606.js"></script>
   #
-  # javascript_include_tag "common.javascript", "/elsewhere/cools"
-  # # => <script src="/assets/common.javascript.debug-1284139606.js"></script>
-  # #    <script src="/elsewhere/cools.debug-1284139606.js"></script>
+  #   javascript_include_tag "common.javascript", "/elsewhere/cools"
+  #   # => <script src="/assets/common.javascript.debug-1284139606.js"></script>
+  #   #    <script src="/elsewhere/cools.debug-1284139606.js"></script>
   #
-  # javascript_include_tag "http://www.example.com/xmlhr"
-  # # => <script src="http://www.example.com/xmlhr"></script>
+  #   javascript_include_tag "http://www.example.com/xmlhr"
+  #   # => <script src="http://www.example.com/xmlhr"></script>
   #
-  # javascript_include_tag "http://www.example.com/xmlhr.js"
-  # # => <script src="http://www.example.com/xmlhr.js"></script>
+  #   javascript_include_tag "http://www.example.com/xmlhr.js"
+  #   # => <script src="http://www.example.com/xmlhr.js"></script>
   #
-  # javascript_include_tag "http://www.example.com/xmlhr.js", nonce: true
-  # # => <script src="http://www.example.com/xmlhr.js" nonce="..."></script>
+  #   javascript_include_tag "http://www.example.com/xmlhr.js", nonce: true
+  #   # => <script src="http://www.example.com/xmlhr.js" nonce="..."></script>
   def javascript_include_tag(*sources); end
 
   # Returns a link tag that browsers can use to preload the +source+.
@@ -917,26 +965,26 @@ module ActionView::Helpers::AssetTagHelper
   #
   # ==== Examples
   #
-  # preload_link_tag("custom_theme.css")
-  # # => <link rel="preload" href="/assets/custom_theme.css" as="style" type="text/css" />
+  #   preload_link_tag("custom_theme.css")
+  #   # => <link rel="preload" href="/assets/custom_theme.css" as="style" type="text/css" />
   #
-  # preload_link_tag("/videos/video.webm")
-  # # => <link rel="preload" href="/videos/video.mp4" as="video" type="video/webm" />
+  #   preload_link_tag("/videos/video.webm")
+  #   # => <link rel="preload" href="/videos/video.mp4" as="video" type="video/webm" />
   #
-  # preload_link_tag(post_path(format: :json), as: "fetch")
-  # # => <link rel="preload" href="/posts.json" as="fetch" type="application/json" />
+  #   preload_link_tag(post_path(format: :json), as: "fetch")
+  #   # => <link rel="preload" href="/posts.json" as="fetch" type="application/json" />
   #
-  # preload_link_tag("worker.js", as: "worker")
-  # # => <link rel="preload" href="/assets/worker.js" as="worker" type="text/javascript" />
+  #   preload_link_tag("worker.js", as: "worker")
+  #   # => <link rel="preload" href="/assets/worker.js" as="worker" type="text/javascript" />
   #
-  # preload_link_tag("//example.com/font.woff2")
-  # # => <link rel="preload" href="//example.com/font.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+  #   preload_link_tag("//example.com/font.woff2")
+  #   # => <link rel="preload" href="//example.com/font.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
   #
-  # preload_link_tag("//example.com/font.woff2", crossorigin: "use-credentials")
-  # # => <link rel="preload" href="//example.com/font.woff2" as="font" type="font/woff2" crossorigin="use-credentials" />
+  #   preload_link_tag("//example.com/font.woff2", crossorigin: "use-credentials")
+  #   # => <link rel="preload" href="//example.com/font.woff2" as="font" type="font/woff2" crossorigin="use-credentials" />
   #
-  # preload_link_tag("/media/audio.ogg", nopush: true)
-  # # => <link rel="preload" href="/media/audio.ogg" as="audio" type="audio/ogg" />
+  #   preload_link_tag("/media/audio.ogg", nopush: true)
+  #   # => <link rel="preload" href="/media/audio.ogg" as="audio" type="audio/ogg" />
   def preload_link_tag(source, options = T.unsafe(nil)); end
 
   def preload_links_header; end
@@ -952,24 +1000,24 @@ module ActionView::Helpers::AssetTagHelper
   # If the server supports Early Hints header links for these assets will be
   # automatically pushed.
   #
-  # stylesheet_link_tag "style"
-  # # => <link href="/assets/style.css" media="screen" rel="stylesheet" />
+  #   stylesheet_link_tag "style"
+  #   # => <link href="/assets/style.css" media="screen" rel="stylesheet" />
   #
-  # stylesheet_link_tag "style.css"
-  # # => <link href="/assets/style.css" media="screen" rel="stylesheet" />
+  #   stylesheet_link_tag "style.css"
+  #   # => <link href="/assets/style.css" media="screen" rel="stylesheet" />
   #
-  # stylesheet_link_tag "http://www.example.com/style.css"
-  # # => <link href="http://www.example.com/style.css" media="screen" rel="stylesheet" />
+  #   stylesheet_link_tag "http://www.example.com/style.css"
+  #   # => <link href="http://www.example.com/style.css" media="screen" rel="stylesheet" />
   #
-  # stylesheet_link_tag "style", media: "all"
-  # # => <link href="/assets/style.css" media="all" rel="stylesheet" />
+  #   stylesheet_link_tag "style", media: "all"
+  #   # => <link href="/assets/style.css" media="all" rel="stylesheet" />
   #
-  # stylesheet_link_tag "style", media: "print"
-  # # => <link href="/assets/style.css" media="print" rel="stylesheet" />
+  #   stylesheet_link_tag "style", media: "print"
+  #   # => <link href="/assets/style.css" media="print" rel="stylesheet" />
   #
-  # stylesheet_link_tag "random.styles", "/css/stylish"
-  # # => <link href="/assets/random.styles" media="screen" rel="stylesheet" />
-  # #    <link href="/css/stylish.css" media="screen" rel="stylesheet" />
+  #   stylesheet_link_tag "random.styles", "/css/stylish"
+  #   # => <link href="/assets/random.styles" media="screen" rel="stylesheet" />
+  #   #    <link href="/css/stylish.css" media="screen" rel="stylesheet" />
   def stylesheet_link_tag(*sources); end
 
   # Returns an HTML video tag for the +sources+. If +sources+ is a string,
@@ -984,44 +1032,47 @@ module ActionView::Helpers::AssetTagHelper
   # parameter. The following options are supported:
   #
   # * <tt>:poster</tt> - Set an image (like a screenshot) to be shown
-  # before the video loads. The path is calculated like the +src+ of +image_tag+.
+  #   before the video loads. The path is calculated like the +src+ of +image_tag+.
   # * <tt>:size</tt> - Supplied as "{Width}x{Height}" or "{Number}", so "30x45" becomes
-  # width="30" and height="45", and "50" becomes width="50" and height="50".
-  # <tt>:size</tt> will be ignored if the value is not in the correct format.
+  #   width="30" and height="45", and "50" becomes width="50" and height="50".
+  #   <tt>:size</tt> will be ignored if the value is not in the correct format.
   # * <tt>:poster_skip_pipeline</tt> will bypass the asset pipeline when using
-  # the <tt>:poster</tt> option instead using an asset in the public folder.
+  #   the <tt>:poster</tt> option instead using an asset in the public folder.
   #
   # ==== Examples
   #
-  # video_tag("trailer")
-  # # => <video src="/videos/trailer"></video>
-  # video_tag("trailer.ogg")
-  # # => <video src="/videos/trailer.ogg"></video>
-  # video_tag("trailer.ogg", controls: true, preload: 'none')
-  # # => <video preload="none" controls="controls" src="/videos/trailer.ogg"></video>
-  # video_tag("trailer.m4v", size: "16x10", poster: "screenshot.png")
-  # # => <video src="/videos/trailer.m4v" width="16" height="10" poster="/assets/screenshot.png"></video>
-  # video_tag("trailer.m4v", size: "16x10", poster: "screenshot.png", poster_skip_pipeline: true)
-  # # => <video src="/videos/trailer.m4v" width="16" height="10" poster="screenshot.png"></video>
-  # video_tag("/trailers/hd.avi", size: "16x16")
-  # # => <video src="/trailers/hd.avi" width="16" height="16"></video>
-  # video_tag("/trailers/hd.avi", size: "16")
-  # # => <video height="16" src="/trailers/hd.avi" width="16"></video>
-  # video_tag("/trailers/hd.avi", height: '32', width: '32')
-  # # => <video height="32" src="/trailers/hd.avi" width="32"></video>
-  # video_tag("trailer.ogg", "trailer.flv")
-  # # => <video><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
-  # video_tag(["trailer.ogg", "trailer.flv"])
-  # # => <video><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
-  # video_tag(["trailer.ogg", "trailer.flv"], size: "160x120")
-  # # => <video height="120" width="160"><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
+  #   video_tag("trailer")
+  #   # => <video src="/videos/trailer"></video>
+  #   video_tag("trailer.ogg")
+  #   # => <video src="/videos/trailer.ogg"></video>
+  #   video_tag("trailer.ogg", controls: true, preload: 'none')
+  #   # => <video preload="none" controls="controls" src="/videos/trailer.ogg"></video>
+  #   video_tag("trailer.m4v", size: "16x10", poster: "screenshot.png")
+  #   # => <video src="/videos/trailer.m4v" width="16" height="10" poster="/assets/screenshot.png"></video>
+  #   video_tag("trailer.m4v", size: "16x10", poster: "screenshot.png", poster_skip_pipeline: true)
+  #   # => <video src="/videos/trailer.m4v" width="16" height="10" poster="screenshot.png"></video>
+  #   video_tag("/trailers/hd.avi", size: "16x16")
+  #   # => <video src="/trailers/hd.avi" width="16" height="16"></video>
+  #   video_tag("/trailers/hd.avi", size: "16")
+  #   # => <video height="16" src="/trailers/hd.avi" width="16"></video>
+  #   video_tag("/trailers/hd.avi", height: '32', width: '32')
+  #   # => <video height="32" src="/trailers/hd.avi" width="32"></video>
+  #   video_tag("trailer.ogg", "trailer.flv")
+  #   # => <video><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
+  #   video_tag(["trailer.ogg", "trailer.flv"])
+  #   # => <video><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
+  #   video_tag(["trailer.ogg", "trailer.flv"], size: "160x120")
+  #   # => <video height="120" width="160"><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
   def video_tag(*sources); end
 
   private
 
   def check_for_image_tag_errors(options); end
   def extract_dimensions(size); end
+
+  # @yield [options]
   def multiple_sources_tag_builder(type, sources); end
+
   def resolve_image_source(source, skip_pipeline); end
   def resolve_link_as(extname, mime_type); end
   def send_preload_links_header(preload_links); end
@@ -1035,11 +1086,11 @@ end
 # This module provides methods for generating asset paths and
 # URLs.
 #
-# image_path("rails.png")
-# # => "/assets/rails.png"
+#   image_path("rails.png")
+#   # => "/assets/rails.png"
 #
-# image_url("rails.png")
-# # => "http://www.example.com/assets/rails.png"
+#   image_url("rails.png")
+#   # => "http://www.example.com/assets/rails.png"
 #
 # === Using asset hosts
 #
@@ -1051,14 +1102,14 @@ end
 # host this way, inside the <tt>configure</tt> block of your environment-specific
 # configuration files or <tt>config/application.rb</tt>:
 #
-# config.action_controller.asset_host = "assets.example.com"
+#   config.action_controller.asset_host = "assets.example.com"
 #
 # Helpers take that into account:
 #
-# image_tag("rails.png")
-# # => <img src="http://assets.example.com/assets/rails.png" />
-# stylesheet_link_tag("application")
-# # => <link href="http://assets.example.com/assets/application.css" media="screen" rel="stylesheet" />
+#   image_tag("rails.png")
+#   # => <img src="http://assets.example.com/assets/rails.png" />
+#   stylesheet_link_tag("application")
+#   # => <link href="http://assets.example.com/assets/application.css" media="screen" rel="stylesheet" />
 #
 # Browsers open a limited number of simultaneous connections to a single
 # host. The exact number varies by browser and version. This limit may cause
@@ -1068,10 +1119,10 @@ end
 # <tt>assets%d.example.com</tt> will spread the asset requests over
 # "assets0.example.com", ..., "assets3.example.com".
 #
-# image_tag("rails.png")
-# # => <img src="http://assets0.example.com/assets/rails.png" />
-# stylesheet_link_tag("application")
-# # => <link href="http://assets2.example.com/assets/application.css" media="screen" rel="stylesheet" />
+#   image_tag("rails.png")
+#   # => <img src="http://assets0.example.com/assets/rails.png" />
+#   stylesheet_link_tag("application")
+#   # => <link href="http://assets2.example.com/assets/application.css" media="screen" rel="stylesheet" />
 #
 # This may improve the asset loading performance of your application.
 # It is also possible the combination of additional connection overhead
@@ -1091,13 +1142,13 @@ end
 # Alternatively, you can exert more control over the asset host by setting
 # +asset_host+ to a proc like this:
 #
-# ActionController::Base.asset_host = Proc.new { |source|
-# "http://assets#{Digest::MD5.hexdigest(source).to_i(16) % 2 + 1}.example.com"
-# }
-# image_tag("rails.png")
-# # => <img src="http://assets1.example.com/assets/rails.png" />
-# stylesheet_link_tag("application")
-# # => <link href="http://assets2.example.com/assets/application.css" media="screen" rel="stylesheet" />
+#   ActionController::Base.asset_host = Proc.new { |source|
+#     "http://assets#{Digest::MD5.hexdigest(source).to_i(16) % 2 + 1}.example.com"
+#   }
+#   image_tag("rails.png")
+#   # => <img src="http://assets1.example.com/assets/rails.png" />
+#   stylesheet_link_tag("application")
+#   # => <link href="http://assets2.example.com/assets/application.css" media="screen" rel="stylesheet" />
 #
 # The example above generates "http://assets1.example.com" and
 # "http://assets2.example.com". This option is useful for example if
@@ -1106,17 +1157,17 @@ end
 # As you see the proc takes a +source+ parameter. That's a string with the
 # absolute path of the asset, for example "/assets/rails.png".
 #
-# ActionController::Base.asset_host = Proc.new { |source|
-# if source.end_with?('.css')
-# "http://stylesheets.example.com"
-# else
-# "http://assets.example.com"
-# end
-# }
-# image_tag("rails.png")
-# # => <img src="http://assets.example.com/assets/rails.png" />
-# stylesheet_link_tag("application")
-# # => <link href="http://stylesheets.example.com/assets/application.css" media="screen" rel="stylesheet" />
+#    ActionController::Base.asset_host = Proc.new { |source|
+#      if source.end_with?('.css')
+#        "http://stylesheets.example.com"
+#      else
+#        "http://assets.example.com"
+#      end
+#    }
+#   image_tag("rails.png")
+#   # => <img src="http://assets.example.com/assets/rails.png" />
+#   stylesheet_link_tag("application")
+#   # => <link href="http://stylesheets.example.com/assets/application.css" media="screen" rel="stylesheet" />
 #
 # Alternatively you may ask for a second parameter +request+. That one is
 # particularly useful for serving assets from an SSL-protected page. The
@@ -1129,20 +1180,20 @@ end
 # +Proc+ instead of a lambda, since a +Proc+ allows missing parameters and sets them
 # to +nil+.
 #
-# config.action_controller.asset_host = Proc.new { |source, request|
-# if request && request.ssl?
-# "#{request.protocol}#{request.host_with_port}"
-# else
-# "#{request.protocol}assets.example.com"
-# end
-# }
+#   config.action_controller.asset_host = Proc.new { |source, request|
+#     if request && request.ssl?
+#       "#{request.protocol}#{request.host_with_port}"
+#     else
+#       "#{request.protocol}assets.example.com"
+#     end
+#   }
 #
 # You can also implement a custom asset host object that responds to +call+
 # and takes either one or two parameters just like the proc.
 #
-# config.action_controller.asset_host = AssetHostingWithMinimumSsl.new(
-# "http://asset%d.example.com", "https://asset1.example.com"
-# )
+#   config.action_controller.asset_host = AssetHostingWithMinimumSsl.new(
+#     "http://asset%d.example.com", "https://asset1.example.com"
+#   )
 module ActionView::Helpers::AssetUrlHelper
   # This is the entry point for all assets.
   # When using the asset pipeline (i.e. sprockets and sprockets-rails), the
@@ -1156,9 +1207,9 @@ module ActionView::Helpers::AssetUrlHelper
   # All options passed to +asset_path+ will be passed to +compute_asset_path+
   # which is implemented by sprockets-rails.
   #
-  # asset_path("application.js") # => "/assets/application-60aa4fdc5cea14baf5400fba1abf4f2a46a5166bad4772b1effe341570f07de9.js"
-  # asset_path('application.js', host: 'example.com') # => "//example.com/assets/application.js"
-  # asset_path("application.js", host: 'example.com', protocol: 'https') # => "https://example.com/assets/application.js"
+  #   asset_path("application.js") # => "/assets/application-60aa4fdc5cea14baf5400fba1abf4f2a46a5166bad4772b1effe341570f07de9.js"
+  #   asset_path('application.js', host: 'example.com') # => "//example.com/assets/application.js"
+  #   asset_path("application.js", host: 'example.com', protocol: 'https') # => "https://example.com/assets/application.js"
   #
   # === Without the asset pipeline (<tt>skip_pipeline: true</tt>)
   #
@@ -1166,10 +1217,10 @@ module ActionView::Helpers::AssetUrlHelper
   # checking is done to verify the source passed into +asset_path+ is valid
   # and that the file exists on disk.
   #
-  # asset_path("application.js", skip_pipeline: true)                 # => "application.js"
-  # asset_path("filedoesnotexist.png", skip_pipeline: true)           # => "filedoesnotexist.png"
-  # asset_path("application", type: :javascript, skip_pipeline: true) # => "/javascripts/application.js"
-  # asset_path("application", type: :stylesheet, skip_pipeline: true) # => "/stylesheets/application.css"
+  #   asset_path("application.js", skip_pipeline: true)                 # => "application.js"
+  #   asset_path("filedoesnotexist.png", skip_pipeline: true)           # => "filedoesnotexist.png"
+  #   asset_path("application", type: :javascript, skip_pipeline: true) # => "/javascripts/application.js"
+  #   asset_path("application", type: :stylesheet, skip_pipeline: true) # => "/stylesheets/application.css"
   #
   # === Options applying to all assets
   #
@@ -1177,36 +1228,38 @@ module ActionView::Helpers::AssetUrlHelper
   # using the asset pipeline.
   #
   # - All fully qualified URLs are returned immediately. This bypasses the
-  # asset pipeline and all other behavior described.
+  #   asset pipeline and all other behavior described.
   #
-  # asset_path("http://www.example.com/js/xmlhr.js") # => "http://www.example.com/js/xmlhr.js"
+  #     asset_path("http://www.example.com/js/xmlhr.js") # => "http://www.example.com/js/xmlhr.js"
   #
   # - All assets that begin with a forward slash are assumed to be full
-  # URLs and will not be expanded. This will bypass the asset pipeline.
+  #   URLs and will not be expanded. This will bypass the asset pipeline.
   #
-  # asset_path("/foo.png") # => "/foo.png"
+  #     asset_path("/foo.png") # => "/foo.png"
   #
   # - All blank strings will be returned immediately. This bypasses the
-  # asset pipeline and all other behavior described.
+  #   asset pipeline and all other behavior described.
   #
-  # asset_path("") # => ""
+  #     asset_path("") # => ""
   #
   # - If <tt>config.relative_url_root</tt> is specified, all assets will have that
-  # root prepended.
+  #   root prepended.
   #
-  # Rails.application.config.relative_url_root = "bar"
-  # asset_path("foo.js", skip_pipeline: true) # => "bar/foo.js"
+  #     Rails.application.config.relative_url_root = "bar"
+  #     asset_path("foo.js", skip_pipeline: true) # => "bar/foo.js"
   #
   # - A different asset host can be specified via <tt>config.action_controller.asset_host</tt>
-  # this is commonly used in conjunction with a CDN.
+  #   this is commonly used in conjunction with a CDN.
   #
-  # Rails.application.config.action_controller.asset_host = "assets.example.com"
-  # asset_path("foo.js", skip_pipeline: true) # => "http://assets.example.com/foo.js"
+  #     Rails.application.config.action_controller.asset_host = "assets.example.com"
+  #     asset_path("foo.js", skip_pipeline: true) # => "http://assets.example.com/foo.js"
   #
   # - An extension name can be specified manually with <tt>extname</tt>.
   #
-  # asset_path("foo", skip_pipeline: true, extname: ".js")     # => "/foo.js"
-  # asset_path("foo.css", skip_pipeline: true, extname: ".js") # => "/foo.css.js"
+  #     asset_path("foo", skip_pipeline: true, extname: ".js")     # => "/foo.js"
+  #     asset_path("foo.css", skip_pipeline: true, extname: ".js") # => "/foo.css.js"
+  #
+  # @raise [ArgumentError]
   def asset_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an asset in the public directory. This
@@ -1216,19 +1269,19 @@ module ActionView::Helpers::AssetUrlHelper
   #
   # All other options provided are forwarded to +asset_path+ call.
   #
-  # asset_url "application.js"                                 # => http://example.com/assets/application.js
-  # asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
+  #   asset_url "application.js"                                 # => http://example.com/assets/application.js
+  #   asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
   def asset_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to an audio asset in the public audios directory.
   # Full paths from the document root will be passed through.
   # Used internally by +audio_tag+ to build the audio path.
   #
-  # audio_path("horse")                                            # => /audios/horse
-  # audio_path("horse.wav")                                        # => /audios/horse.wav
-  # audio_path("sounds/horse.wav")                                 # => /audios/sounds/horse.wav
-  # audio_path("/sounds/horse.wav")                                # => /sounds/horse.wav
-  # audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
+  #   audio_path("horse")                                            # => /audios/horse
+  #   audio_path("horse.wav")                                        # => /audios/horse.wav
+  #   audio_path("sounds/horse.wav")                                 # => /audios/sounds/horse.wav
+  #   audio_path("/sounds/horse.wav")                                # => /sounds/horse.wav
+  #   audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
   def audio_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an audio asset in the public audios directory.
@@ -1236,7 +1289,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +audio_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
+  #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
   def audio_url(source, options = T.unsafe(nil)); end
 
   # Compute extname to append to asset path. Returns +nil+ if
@@ -1258,11 +1311,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Computes the path to a font asset.
   # Full paths from the document root will be passed through.
   #
-  # font_path("font")                                           # => /fonts/font
-  # font_path("font.ttf")                                       # => /fonts/font.ttf
-  # font_path("dir/font.ttf")                                   # => /fonts/dir/font.ttf
-  # font_path("/dir/font.ttf")                                  # => /dir/font.ttf
-  # font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
+  #   font_path("font")                                           # => /fonts/font
+  #   font_path("font.ttf")                                       # => /fonts/font.ttf
+  #   font_path("dir/font.ttf")                                   # => /fonts/dir/font.ttf
+  #   font_path("/dir/font.ttf")                                  # => /dir/font.ttf
+  #   font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
   def font_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a font asset.
@@ -1270,18 +1323,18 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +font_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
+  #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
   def font_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to an image asset.
   # Full paths from the document root will be passed through.
   # Used internally by +image_tag+ to build the image path:
   #
-  # image_path("edit")                                         # => "/assets/edit"
-  # image_path("edit.png")                                     # => "/assets/edit.png"
-  # image_path("icons/edit.png")                               # => "/assets/icons/edit.png"
-  # image_path("/icons/edit.png")                              # => "/icons/edit.png"
-  # image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
+  #   image_path("edit")                                         # => "/assets/edit"
+  #   image_path("edit.png")                                     # => "/assets/edit.png"
+  #   image_path("icons/edit.png")                               # => "/assets/icons/edit.png"
+  #   image_path("/icons/edit.png")                              # => "/icons/edit.png"
+  #   image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
   #
   # If you have images as application resources this method may conflict with their named routes.
   # The alias +path_to_image+ is provided to avoid that. Rails uses the alias internally, and
@@ -1293,7 +1346,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +image_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
+  #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
   def image_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to a JavaScript asset in the public javascripts directory.
@@ -1301,11 +1354,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +javascript_include_tag+ to build the script path.
   #
-  # javascript_path "xmlhr"                              # => /assets/xmlhr.js
-  # javascript_path "dir/xmlhr.js"                       # => /assets/dir/xmlhr.js
-  # javascript_path "/dir/xmlhr"                         # => /dir/xmlhr.js
-  # javascript_path "http://www.example.com/js/xmlhr"    # => http://www.example.com/js/xmlhr
-  # javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
+  #   javascript_path "xmlhr"                              # => /assets/xmlhr.js
+  #   javascript_path "dir/xmlhr.js"                       # => /assets/dir/xmlhr.js
+  #   javascript_path "/dir/xmlhr"                         # => /dir/xmlhr.js
+  #   javascript_path "http://www.example.com/js/xmlhr"    # => http://www.example.com/js/xmlhr
+  #   javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
   def javascript_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a JavaScript asset in the public javascripts directory.
@@ -1313,7 +1366,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +javascript_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
+  #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
   def javascript_url(source, options = T.unsafe(nil)); end
 
   # This is the entry point for all assets.
@@ -1328,9 +1381,9 @@ module ActionView::Helpers::AssetUrlHelper
   # All options passed to +asset_path+ will be passed to +compute_asset_path+
   # which is implemented by sprockets-rails.
   #
-  # asset_path("application.js") # => "/assets/application-60aa4fdc5cea14baf5400fba1abf4f2a46a5166bad4772b1effe341570f07de9.js"
-  # asset_path('application.js', host: 'example.com') # => "//example.com/assets/application.js"
-  # asset_path("application.js", host: 'example.com', protocol: 'https') # => "https://example.com/assets/application.js"
+  #   asset_path("application.js") # => "/assets/application-60aa4fdc5cea14baf5400fba1abf4f2a46a5166bad4772b1effe341570f07de9.js"
+  #   asset_path('application.js', host: 'example.com') # => "//example.com/assets/application.js"
+  #   asset_path("application.js", host: 'example.com', protocol: 'https') # => "https://example.com/assets/application.js"
   #
   # === Without the asset pipeline (<tt>skip_pipeline: true</tt>)
   #
@@ -1338,10 +1391,10 @@ module ActionView::Helpers::AssetUrlHelper
   # checking is done to verify the source passed into +asset_path+ is valid
   # and that the file exists on disk.
   #
-  # asset_path("application.js", skip_pipeline: true)                 # => "application.js"
-  # asset_path("filedoesnotexist.png", skip_pipeline: true)           # => "filedoesnotexist.png"
-  # asset_path("application", type: :javascript, skip_pipeline: true) # => "/javascripts/application.js"
-  # asset_path("application", type: :stylesheet, skip_pipeline: true) # => "/stylesheets/application.css"
+  #   asset_path("application.js", skip_pipeline: true)                 # => "application.js"
+  #   asset_path("filedoesnotexist.png", skip_pipeline: true)           # => "filedoesnotexist.png"
+  #   asset_path("application", type: :javascript, skip_pipeline: true) # => "/javascripts/application.js"
+  #   asset_path("application", type: :stylesheet, skip_pipeline: true) # => "/stylesheets/application.css"
   #
   # === Options applying to all assets
   #
@@ -1349,59 +1402,61 @@ module ActionView::Helpers::AssetUrlHelper
   # using the asset pipeline.
   #
   # - All fully qualified URLs are returned immediately. This bypasses the
-  # asset pipeline and all other behavior described.
+  #   asset pipeline and all other behavior described.
   #
-  # asset_path("http://www.example.com/js/xmlhr.js") # => "http://www.example.com/js/xmlhr.js"
+  #     asset_path("http://www.example.com/js/xmlhr.js") # => "http://www.example.com/js/xmlhr.js"
   #
   # - All assets that begin with a forward slash are assumed to be full
-  # URLs and will not be expanded. This will bypass the asset pipeline.
+  #   URLs and will not be expanded. This will bypass the asset pipeline.
   #
-  # asset_path("/foo.png") # => "/foo.png"
+  #     asset_path("/foo.png") # => "/foo.png"
   #
   # - All blank strings will be returned immediately. This bypasses the
-  # asset pipeline and all other behavior described.
+  #   asset pipeline and all other behavior described.
   #
-  # asset_path("") # => ""
+  #     asset_path("") # => ""
   #
   # - If <tt>config.relative_url_root</tt> is specified, all assets will have that
-  # root prepended.
+  #   root prepended.
   #
-  # Rails.application.config.relative_url_root = "bar"
-  # asset_path("foo.js", skip_pipeline: true) # => "bar/foo.js"
+  #     Rails.application.config.relative_url_root = "bar"
+  #     asset_path("foo.js", skip_pipeline: true) # => "bar/foo.js"
   #
   # - A different asset host can be specified via <tt>config.action_controller.asset_host</tt>
-  # this is commonly used in conjunction with a CDN.
+  #   this is commonly used in conjunction with a CDN.
   #
-  # Rails.application.config.action_controller.asset_host = "assets.example.com"
-  # asset_path("foo.js", skip_pipeline: true) # => "http://assets.example.com/foo.js"
+  #     Rails.application.config.action_controller.asset_host = "assets.example.com"
+  #     asset_path("foo.js", skip_pipeline: true) # => "http://assets.example.com/foo.js"
   #
   # - An extension name can be specified manually with <tt>extname</tt>.
   #
-  # asset_path("foo", skip_pipeline: true, extname: ".js")     # => "/foo.js"
-  # asset_path("foo.css", skip_pipeline: true, extname: ".js") # => "/foo.css.js"
+  #     asset_path("foo", skip_pipeline: true, extname: ".js")     # => "/foo.js"
+  #     asset_path("foo.css", skip_pipeline: true, extname: ".js") # => "/foo.css.js"
   # aliased to avoid conflicts with an asset_path named route
+  #
+  # @raise [ArgumentError]
   def path_to_asset(source, options = T.unsafe(nil)); end
 
   # Computes the path to an audio asset in the public audios directory.
   # Full paths from the document root will be passed through.
   # Used internally by +audio_tag+ to build the audio path.
   #
-  # audio_path("horse")                                            # => /audios/horse
-  # audio_path("horse.wav")                                        # => /audios/horse.wav
-  # audio_path("sounds/horse.wav")                                 # => /audios/sounds/horse.wav
-  # audio_path("/sounds/horse.wav")                                # => /sounds/horse.wav
-  # audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
+  #   audio_path("horse")                                            # => /audios/horse
+  #   audio_path("horse.wav")                                        # => /audios/horse.wav
+  #   audio_path("sounds/horse.wav")                                 # => /audios/sounds/horse.wav
+  #   audio_path("/sounds/horse.wav")                                # => /sounds/horse.wav
+  #   audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
   # aliased to avoid conflicts with an audio_path named route
   def path_to_audio(source, options = T.unsafe(nil)); end
 
   # Computes the path to a font asset.
   # Full paths from the document root will be passed through.
   #
-  # font_path("font")                                           # => /fonts/font
-  # font_path("font.ttf")                                       # => /fonts/font.ttf
-  # font_path("dir/font.ttf")                                   # => /fonts/dir/font.ttf
-  # font_path("/dir/font.ttf")                                  # => /dir/font.ttf
-  # font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
+  #   font_path("font")                                           # => /fonts/font
+  #   font_path("font.ttf")                                       # => /fonts/font.ttf
+  #   font_path("dir/font.ttf")                                   # => /fonts/dir/font.ttf
+  #   font_path("/dir/font.ttf")                                  # => /dir/font.ttf
+  #   font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
   # aliased to avoid conflicts with a font_path named route
   def path_to_font(source, options = T.unsafe(nil)); end
 
@@ -1409,11 +1464,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +image_tag+ to build the image path:
   #
-  # image_path("edit")                                         # => "/assets/edit"
-  # image_path("edit.png")                                     # => "/assets/edit.png"
-  # image_path("icons/edit.png")                               # => "/assets/icons/edit.png"
-  # image_path("/icons/edit.png")                              # => "/icons/edit.png"
-  # image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
+  #   image_path("edit")                                         # => "/assets/edit"
+  #   image_path("edit.png")                                     # => "/assets/edit.png"
+  #   image_path("icons/edit.png")                               # => "/assets/icons/edit.png"
+  #   image_path("/icons/edit.png")                              # => "/icons/edit.png"
+  #   image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
   #
   # If you have images as application resources this method may conflict with their named routes.
   # The alias +path_to_image+ is provided to avoid that. Rails uses the alias internally, and
@@ -1426,11 +1481,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +javascript_include_tag+ to build the script path.
   #
-  # javascript_path "xmlhr"                              # => /assets/xmlhr.js
-  # javascript_path "dir/xmlhr.js"                       # => /assets/dir/xmlhr.js
-  # javascript_path "/dir/xmlhr"                         # => /dir/xmlhr.js
-  # javascript_path "http://www.example.com/js/xmlhr"    # => http://www.example.com/js/xmlhr
-  # javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
+  #   javascript_path "xmlhr"                              # => /assets/xmlhr.js
+  #   javascript_path "dir/xmlhr.js"                       # => /assets/dir/xmlhr.js
+  #   javascript_path "/dir/xmlhr"                         # => /dir/xmlhr.js
+  #   javascript_path "http://www.example.com/js/xmlhr"    # => http://www.example.com/js/xmlhr
+  #   javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
   # aliased to avoid conflicts with a javascript_path named route
   def path_to_javascript(source, options = T.unsafe(nil)); end
 
@@ -1439,11 +1494,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +stylesheet_link_tag+ to build the stylesheet path.
   #
-  # stylesheet_path "style"                                  # => /assets/style.css
-  # stylesheet_path "dir/style.css"                          # => /assets/dir/style.css
-  # stylesheet_path "/dir/style.css"                         # => /dir/style.css
-  # stylesheet_path "http://www.example.com/css/style"       # => http://www.example.com/css/style
-  # stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
+  #   stylesheet_path "style"                                  # => /assets/style.css
+  #   stylesheet_path "dir/style.css"                          # => /assets/dir/style.css
+  #   stylesheet_path "/dir/style.css"                         # => /dir/style.css
+  #   stylesheet_path "http://www.example.com/css/style"       # => http://www.example.com/css/style
+  #   stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
   # aliased to avoid conflicts with a stylesheet_path named route
   def path_to_stylesheet(source, options = T.unsafe(nil)); end
 
@@ -1451,11 +1506,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +video_tag+ to build the video path.
   #
-  # video_path("hd")                                            # => /videos/hd
-  # video_path("hd.avi")                                        # => /videos/hd.avi
-  # video_path("trailers/hd.avi")                               # => /videos/trailers/hd.avi
-  # video_path("/trailers/hd.avi")                              # => /trailers/hd.avi
-  # video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
+  #   video_path("hd")                                            # => /videos/hd
+  #   video_path("hd.avi")                                        # => /videos/hd.avi
+  #   video_path("trailers/hd.avi")                               # => /videos/trailers/hd.avi
+  #   video_path("/trailers/hd.avi")                              # => /trailers/hd.avi
+  #   video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
   # aliased to avoid conflicts with a video_path named route
   def path_to_video(source, options = T.unsafe(nil)); end
 
@@ -1469,11 +1524,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +stylesheet_link_tag+ to build the stylesheet path.
   #
-  # stylesheet_path "style"                                  # => /assets/style.css
-  # stylesheet_path "dir/style.css"                          # => /assets/dir/style.css
-  # stylesheet_path "/dir/style.css"                         # => /dir/style.css
-  # stylesheet_path "http://www.example.com/css/style"       # => http://www.example.com/css/style
-  # stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
+  #   stylesheet_path "style"                                  # => /assets/style.css
+  #   stylesheet_path "dir/style.css"                          # => /assets/dir/style.css
+  #   stylesheet_path "/dir/style.css"                         # => /dir/style.css
+  #   stylesheet_path "http://www.example.com/css/style"       # => http://www.example.com/css/style
+  #   stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
   def stylesheet_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a stylesheet asset in the public stylesheets directory.
@@ -1481,7 +1536,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +stylesheet_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
+  #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
   def stylesheet_url(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an asset in the public directory. This
@@ -1491,8 +1546,8 @@ module ActionView::Helpers::AssetUrlHelper
   #
   # All other options provided are forwarded to +asset_path+ call.
   #
-  # asset_url "application.js"                                 # => http://example.com/assets/application.js
-  # asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
+  #   asset_url "application.js"                                 # => http://example.com/assets/application.js
+  #   asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
   # aliased to avoid conflicts with an asset_url named route
   def url_to_asset(source, options = T.unsafe(nil)); end
 
@@ -1501,7 +1556,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +audio_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
+  #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
   # aliased to avoid conflicts with an audio_url named route
   def url_to_audio(source, options = T.unsafe(nil)); end
 
@@ -1510,7 +1565,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +font_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
+  #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
   # aliased to avoid conflicts with a font_url named route
   def url_to_font(source, options = T.unsafe(nil)); end
 
@@ -1519,7 +1574,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +image_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
+  #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
   # aliased to avoid conflicts with an image_url named route
   def url_to_image(source, options = T.unsafe(nil)); end
 
@@ -1528,7 +1583,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +javascript_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
+  #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
   # aliased to avoid conflicts with a javascript_url named route
   def url_to_javascript(source, options = T.unsafe(nil)); end
 
@@ -1537,7 +1592,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +stylesheet_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
+  #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
   # aliased to avoid conflicts with a stylesheet_url named route
   def url_to_stylesheet(source, options = T.unsafe(nil)); end
 
@@ -1546,7 +1601,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +video_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
+  #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
   # aliased to avoid conflicts with a video_url named route
   def url_to_video(source, options = T.unsafe(nil)); end
 
@@ -1554,11 +1609,11 @@ module ActionView::Helpers::AssetUrlHelper
   # Full paths from the document root will be passed through.
   # Used internally by +video_tag+ to build the video path.
   #
-  # video_path("hd")                                            # => /videos/hd
-  # video_path("hd.avi")                                        # => /videos/hd.avi
-  # video_path("trailers/hd.avi")                               # => /videos/trailers/hd.avi
-  # video_path("/trailers/hd.avi")                              # => /trailers/hd.avi
-  # video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
+  #   video_path("hd")                                            # => /videos/hd
+  #   video_path("hd.avi")                                        # => /videos/hd.avi
+  #   video_path("trailers/hd.avi")                               # => /videos/trailers/hd.avi
+  #   video_path("/trailers/hd.avi")                              # => /trailers/hd.avi
+  #   video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
   def video_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a video asset in the public videos directory.
@@ -1566,7 +1621,7 @@ module ActionView::Helpers::AssetUrlHelper
   # Since +video_url+ is based on +asset_url+ method you can set :host options. If :host
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
-  # video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
+  #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
   def video_url(source, options = T.unsafe(nil)); end
 end
 
@@ -1583,42 +1638,42 @@ module ActionView::Helpers::AtomFeedHelper
   #
   # Full usage example:
   #
-  # config/routes.rb:
-  # Rails.application.routes.draw do
-  # resources :posts
-  # root to: "posts#index"
-  # end
+  #   config/routes.rb:
+  #     Rails.application.routes.draw do
+  #       resources :posts
+  #       root to: "posts#index"
+  #     end
   #
-  # app/controllers/posts_controller.rb:
-  # class PostsController < ApplicationController
-  # # GET /posts.html
-  # # GET /posts.atom
-  # def index
-  # @posts = Post.all
+  #   app/controllers/posts_controller.rb:
+  #     class PostsController < ApplicationController
+  #       # GET /posts.html
+  #       # GET /posts.atom
+  #       def index
+  #         @posts = Post.all
   #
-  # respond_to do |format|
-  # format.html
-  # format.atom
-  # end
-  # end
-  # end
+  #         respond_to do |format|
+  #           format.html
+  #           format.atom
+  #         end
+  #       end
+  #     end
   #
-  # app/views/posts/index.atom.builder:
-  # atom_feed do |feed|
-  # feed.title("My great blog!")
-  # feed.updated(@posts[0].created_at) if @posts.length > 0
+  #   app/views/posts/index.atom.builder:
+  #     atom_feed do |feed|
+  #       feed.title("My great blog!")
+  #       feed.updated(@posts[0].created_at) if @posts.length > 0
   #
-  # @posts.each do |post|
-  # feed.entry(post) do |entry|
-  # entry.title(post.title)
-  # entry.content(post.body, type: 'html')
+  #       @posts.each do |post|
+  #         feed.entry(post) do |entry|
+  #           entry.title(post.title)
+  #           entry.content(post.body, type: 'html')
   #
-  # entry.author do |author|
-  # author.name("DHH")
-  # end
-  # end
-  # end
-  # end
+  #           entry.author do |author|
+  #             author.name("DHH")
+  #           end
+  #         end
+  #       end
+  #     end
   #
   # The options for atom_feed are:
   #
@@ -1627,42 +1682,42 @@ module ActionView::Helpers::AtomFeedHelper
   # * <tt>:url</tt>: The URL for this feed. Defaults to the current URL.
   # * <tt>:id</tt>: The id for this feed. Defaults to "tag:localhost,2005:/posts", in this case.
   # * <tt>:schema_date</tt>: The date at which the tag scheme for the feed was first used. A good default is the year you
-  # created the feed. See http://feedvalidator.org/docs/error/InvalidTAG.html for more information. If not specified,
-  # 2005 is used (as an "I don't care" value).
+  #   created the feed. See http://feedvalidator.org/docs/error/InvalidTAG.html for more information. If not specified,
+  #   2005 is used (as an "I don't care" value).
   # * <tt>:instruct</tt>: Hash of XML processing instructions in the form {target => {attribute => value, }} or {target => [{attribute => value, }, ]}
   #
   # Other namespaces can be added to the root element:
   #
-  # app/views/posts/index.atom.builder:
-  # atom_feed({'xmlns:app' => 'http://www.w3.org/2007/app',
-  # 'xmlns:openSearch' => 'http://a9.com/-/spec/opensearch/1.1/'}) do |feed|
-  # feed.title("My great blog!")
-  # feed.updated((@posts.first.created_at))
-  # feed.tag!('openSearch:totalResults', 10)
+  #   app/views/posts/index.atom.builder:
+  #     atom_feed({'xmlns:app' => 'http://www.w3.org/2007/app',
+  #         'xmlns:openSearch' => 'http://a9.com/-/spec/opensearch/1.1/'}) do |feed|
+  #       feed.title("My great blog!")
+  #       feed.updated((@posts.first.created_at))
+  #       feed.tag!('openSearch:totalResults', 10)
   #
-  # @posts.each do |post|
-  # feed.entry(post) do |entry|
-  # entry.title(post.title)
-  # entry.content(post.body, type: 'html')
-  # entry.tag!('app:edited', Time.now)
+  #       @posts.each do |post|
+  #         feed.entry(post) do |entry|
+  #           entry.title(post.title)
+  #           entry.content(post.body, type: 'html')
+  #           entry.tag!('app:edited', Time.now)
   #
-  # entry.author do |author|
-  # author.name("DHH")
-  # end
-  # end
-  # end
-  # end
+  #           entry.author do |author|
+  #             author.name("DHH")
+  #           end
+  #         end
+  #       end
+  #     end
   #
   # The Atom spec defines five elements (content rights title subtitle
   # summary) which may directly contain xhtml content if type: 'xhtml'
   # is specified as an attribute. If so, this helper will take care of
   # the enclosing div and xhtml namespace declaration. Example usage:
   #
-  # entry.summary type: 'xhtml' do |xhtml|
-  # xhtml.p pluralize(order.line_items.count, "line item")
-  # xhtml.p "Shipped to #{order.address}"
-  # xhtml.p "Paid by #{order.pay_type}"
-  # end
+  #    entry.summary type: 'xhtml' do |xhtml|
+  #      xhtml.p pluralize(order.line_items.count, "line item")
+  #      xhtml.p "Shipped to #{order.address}"
+  #      xhtml.p "Paid by #{order.pay_type}"
+  #    end
   #
   #
   # <tt>atom_feed</tt> yields an +AtomFeedBuilder+ instance. Nested elements yield
@@ -1671,6 +1726,7 @@ module ActionView::Helpers::AtomFeedHelper
 end
 
 class ActionView::Helpers::AtomFeedHelper::AtomBuilder
+  # @return [AtomBuilder] a new instance of AtomBuilder
   def initialize(xml); end
 
   private
@@ -1683,12 +1739,15 @@ class ActionView::Helpers::AtomFeedHelper::AtomBuilder
   # True if the method name matches one of the five elements defined
   # in the Atom spec as potentially containing XHTML content and
   # if type: 'xhtml' is, in fact, specified.
+  #
+  # @return [Boolean]
   def xhtml_block?(method, arguments); end
 end
 
 ActionView::Helpers::AtomFeedHelper::AtomBuilder::XHTML_TAG_NAMES = T.let(T.unsafe(nil), Set)
 
 class ActionView::Helpers::AtomFeedHelper::AtomFeedBuilder < ::ActionView::Helpers::AtomFeedHelper::AtomBuilder
+  # @return [AtomFeedBuilder] a new instance of AtomFeedBuilder
   def initialize(xml, view, feed_options = T.unsafe(nil)); end
 
   # Creates an entry tag for a specific record and prefills the id using class and id.
@@ -1719,16 +1778,16 @@ module ActionView::Helpers::CacheHelper
   #
   # When using this method, you list the cache dependency as the name of the cache, like so:
   #
-  # <% cache project do %>
-  # <b>All the topics on this project</b>
-  # <%= render project.topics %>
-  # <% end %>
+  #   <% cache project do %>
+  #     <b>All the topics on this project</b>
+  #     <%= render project.topics %>
+  #   <% end %>
   #
   # This approach will assume that when a new topic is added, you'll touch
   # the project. The cache key generated from this call will be something like:
   #
-  # views/template/action:7a1156131a6928cb0026877f8b749ac9/projects/123
-  # ^template path  ^template tree digest            ^class   ^id
+  #   views/template/action:7a1156131a6928cb0026877f8b749ac9/projects/123
+  #         ^template path  ^template tree digest            ^class   ^id
   #
   # This cache key is stable, but it's combined with a cache version derived from the project
   # record. When the project updated_at is touched, the #cache_version changes, even
@@ -1739,10 +1798,10 @@ module ActionView::Helpers::CacheHelper
   # If your template cache depends on multiple sources (try to avoid this to keep things simple),
   # you can name all these dependencies as part of an array:
   #
-  # <% cache [ project, current_user ] do %>
-  # <b>All the topics on this project</b>
-  # <%= render project.topics %>
-  # <% end %>
+  #   <% cache [ project, current_user ] do %>
+  #     <b>All the topics on this project</b>
+  #     <%= render project.topics %>
+  #   <% end %>
   #
   # This will include both records as part of the cache key and updating either of them will
   # expire the cache.
@@ -1762,56 +1821,56 @@ module ActionView::Helpers::CacheHelper
   #
   # The digestor can be bypassed by passing skip_digest: true as an option to the cache call:
   #
-  # <% cache project, skip_digest: true do %>
-  # <b>All the topics on this project</b>
-  # <%= render project.topics %>
-  # <% end %>
+  #   <% cache project, skip_digest: true do %>
+  #     <b>All the topics on this project</b>
+  #     <%= render project.topics %>
+  #   <% end %>
   #
   # ==== Implicit dependencies
   #
   # Most template dependencies can be derived from calls to render in the template itself.
   # Here are some examples of render calls that Cache Digests knows how to decode:
   #
-  # render partial: "comments/comment", collection: commentable.comments
-  # render "comments/comments"
-  # render 'comments/comments'
-  # render('comments/comments')
+  #   render partial: "comments/comment", collection: commentable.comments
+  #   render "comments/comments"
+  #   render 'comments/comments'
+  #   render('comments/comments')
   #
-  # render "header" translates to render("comments/header")
+  #   render "header" translates to render("comments/header")
   #
-  # render(@topic)         translates to render("topics/topic")
-  # render(topics)         translates to render("topics/topic")
-  # render(message.topics) translates to render("topics/topic")
+  #   render(@topic)         translates to render("topics/topic")
+  #   render(topics)         translates to render("topics/topic")
+  #   render(message.topics) translates to render("topics/topic")
   #
   # It's not possible to derive all render calls like that, though.
   # Here are a few examples of things that can't be derived:
   #
-  # render group_of_attachments
-  # render @project.documents.where(published: true).order('created_at')
+  #   render group_of_attachments
+  #   render @project.documents.where(published: true).order('created_at')
   #
   # You will have to rewrite those to the explicit form:
   #
-  # render partial: 'attachments/attachment', collection: group_of_attachments
-  # render partial: 'documents/document', collection: @project.documents.where(published: true).order('created_at')
+  #   render partial: 'attachments/attachment', collection: group_of_attachments
+  #   render partial: 'documents/document', collection: @project.documents.where(published: true).order('created_at')
   #
   # === Explicit dependencies
   #
   # Sometimes you'll have template dependencies that can't be derived at all. This is typically
   # the case when you have template rendering that happens in helpers. Here's an example:
   #
-  # <%= render_sortable_todolists @project.todolists %>
+  #   <%= render_sortable_todolists @project.todolists %>
   #
   # You'll need to use a special comment format to call those out:
   #
-  # <%# Template Dependency: todolists/todolist %>
-  # <%= render_sortable_todolists @project.todolists %>
+  #   <%# Template Dependency: todolists/todolist %>
+  #   <%= render_sortable_todolists @project.todolists %>
   #
   # In some cases, like a single table inheritance setup, you might have
   # a bunch of explicit dependencies. Instead of writing every template out,
   # you can use a wildcard to match any template in a directory:
   #
-  # <%# Template Dependency: events/* %>
-  # <%= render_categorizable_events @person.events %>
+  #   <%# Template Dependency: events/* %>
+  #   <%= render_categorizable_events @person.events %>
   #
   # This marks every template in the directory as a dependency. To find those
   # templates, the wildcard path must be absolutely defined from <tt>app/views</tt> or paths
@@ -1829,8 +1888,8 @@ module ActionView::Helpers::CacheHelper
   # It doesn't really matter how you do it, but the MD5 of the template file
   # must change. One recommendation is to simply be explicit in a comment, like:
   #
-  # <%# Helper Dependency Updated: May 6, 2012 at 6pm %>
-  # <%= some_helper_method(person) %>
+  #   <%# Helper Dependency Updated: May 6, 2012 at 6pm %>
+  #   <%= some_helper_method(person) %>
   #
   # Now all you have to do is change that timestamp when the helper method changes.
   #
@@ -1841,7 +1900,7 @@ module ActionView::Helpers::CacheHelper
   #
   # For collections rendered such:
   #
-  # <%= render partial: 'projects/project', collection: @projects, cached: true %>
+  #   <%= render partial: 'projects/project', collection: @projects, cached: true %>
   #
   # The <tt>cached: true</tt> will make Action View's rendering read several templates
   # from cache at once instead of one call per template.
@@ -1851,10 +1910,10 @@ module ActionView::Helpers::CacheHelper
   # Works great alongside individual template fragment caching.
   # For instance if the template the collection renders is cached like:
   #
-  # # projects/_project.html.erb
-  # <% cache project do %>
-  # <%# ... %>
-  # <% end %>
+  #   # projects/_project.html.erb
+  #   <% cache project do %>
+  #     <%# ... %>
+  #   <% end %>
   #
   # Any collection renders will find those cached templates when attempting
   # to read multiple templates at once.
@@ -1862,7 +1921,7 @@ module ActionView::Helpers::CacheHelper
   # If your collection cache depends on multiple sources (try to avoid this to keep things simple),
   # you can name all these dependencies as part of a block that returns an array:
   #
-  # <%= render partial: 'projects/project', collection: @projects, cached: -> project { [ project, current_user ] } %>
+  #   <%= render partial: 'projects/project', collection: @projects, cached: -> project { [ project, current_user ] } %>
   #
   # This will include both records as part of the cache key and updating either of them will
   # expire the cache.
@@ -1877,18 +1936,18 @@ module ActionView::Helpers::CacheHelper
 
   # Cache fragments of a view if +condition+ is true
   #
-  # <% cache_if admin?, project do %>
-  # <b>All the topics on this project</b>
-  # <%= render project.topics %>
-  # <% end %>
+  #   <% cache_if admin?, project do %>
+  #     <b>All the topics on this project</b>
+  #     <%= render project.topics %>
+  #   <% end %>
   def cache_if(condition, name = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Cache fragments of a view unless +condition+ is true
   #
-  # <% cache_unless admin?, project do %>
-  # <b>All the topics on this project</b>
-  # <%= render project.topics %>
-  # <% end %>
+  #   <% cache_unless admin?, project do %>
+  #     <b>All the topics on this project</b>
+  #     <%= render project.topics %>
+  #   <% end %>
   def cache_unless(condition, name = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   def digest_path_from_template(template); end
@@ -1912,29 +1971,29 @@ module ActionView::Helpers::CaptureHelper
   #
   # The capture method can be used in ERB templates...
   #
-  # <% @greeting = capture do %>
-  # Welcome to my shiny new web page!  The date and time is
-  # <%= Time.now %>
-  # <% end %>
+  #   <% @greeting = capture do %>
+  #     Welcome to my shiny new web page!  The date and time is
+  #     <%= Time.now %>
+  #   <% end %>
   #
   # ...and Builder (RXML) templates.
   #
-  # @timestamp = capture do
-  # "The current timestamp is #{Time.now}."
-  # end
+  #   @timestamp = capture do
+  #     "The current timestamp is #{Time.now}."
+  #   end
   #
   # You can then use that variable anywhere else. For example:
   #
-  # <html>
-  # <head><title><%= @greeting %></title></head>
-  # <body>
-  # <b><%= @greeting %></b>
-  # </body>
-  # </html>
+  #   <html>
+  #   <head><title><%= @greeting %></title></head>
+  #   <body>
+  #   <b><%= @greeting %></b>
+  #   </body>
+  #   </html>
   #
   # The return of capture is the string generated by the block. For Example:
   #
-  # @greeting # => "Welcome to my shiny new web page! The date and time is 2018-09-06 11:09:16 -0500"
+  #   @greeting # => "Welcome to my shiny new web page! The date and time is 2018-09-06 11:09:16 -0500"
   def capture(*args); end
 
   # Calling <tt>content_for</tt> stores a block of markup in an identifier for later use.
@@ -1944,61 +2003,61 @@ module ActionView::Helpers::CaptureHelper
   # Note: <tt>yield</tt> can still be used to retrieve the stored content, but calling
   # <tt>yield</tt> doesn't work in helper modules, while <tt>content_for</tt> does.
   #
-  # <% content_for :not_authorized do %>
-  # alert('You are not authorized to do that!')
-  # <% end %>
+  #   <% content_for :not_authorized do %>
+  #     alert('You are not authorized to do that!')
+  #   <% end %>
   #
   # You can then use <tt>content_for :not_authorized</tt> anywhere in your templates.
   #
-  # <%= content_for :not_authorized if current_user.nil? %>
+  #   <%= content_for :not_authorized if current_user.nil? %>
   #
   # This is equivalent to:
   #
-  # <%= yield :not_authorized if current_user.nil? %>
+  #   <%= yield :not_authorized if current_user.nil? %>
   #
   # <tt>content_for</tt>, however, can also be used in helper modules.
   #
-  # module StorageHelper
-  # def stored_content
-  # content_for(:storage) || "Your storage is empty"
-  # end
-  # end
+  #   module StorageHelper
+  #     def stored_content
+  #       content_for(:storage) || "Your storage is empty"
+  #     end
+  #   end
   #
   # This helper works just like normal helpers.
   #
-  # <%= stored_content %>
+  #   <%= stored_content %>
   #
   # You can also use the <tt>yield</tt> syntax alongside an existing call to
   # <tt>yield</tt> in a layout. For example:
   #
-  # <%# This is the layout %>
-  # <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  # <head>
-  # <title>My Website</title>
-  # <%= yield :script %>
-  # </head>
-  # <body>
-  # <%= yield %>
-  # </body>
-  # </html>
+  #   <%# This is the layout %>
+  #   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  #   <head>
+  #     <title>My Website</title>
+  #     <%= yield :script %>
+  #   </head>
+  #   <body>
+  #     <%= yield %>
+  #   </body>
+  #   </html>
   #
   # And now, we'll create a view that has a <tt>content_for</tt> call that
   # creates the <tt>script</tt> identifier.
   #
-  # <%# This is our view %>
-  # Please login!
+  #   <%# This is our view %>
+  #   Please login!
   #
-  # <% content_for :script do %>
-  # <script>alert('You are not authorized to view this page!')</script>
-  # <% end %>
+  #   <% content_for :script do %>
+  #     <script>alert('You are not authorized to view this page!')</script>
+  #   <% end %>
   #
   # Then, in another view, you could to do something like this:
   #
-  # <%= link_to 'Logout', action: 'logout', remote: true %>
+  #   <%= link_to 'Logout', action: 'logout', remote: true %>
   #
-  # <% content_for :script do %>
-  # <%= javascript_include_tag :defaults %>
-  # <% end %>
+  #   <% content_for :script do %>
+  #     <%= javascript_include_tag :defaults %>
+  #   <% end %>
   #
   # That will place +script+ tags for your default set of JavaScript files on the page;
   # this technique is useful if you'll only be using these scripts in a few views.
@@ -2006,39 +2065,39 @@ module ActionView::Helpers::CaptureHelper
   # Note that <tt>content_for</tt> concatenates (default) the blocks it is given for a particular
   # identifier in order. For example:
   #
-  # <% content_for :navigation do %>
-  # <li><%= link_to 'Home', action: 'index' %></li>
-  # <% end %>
+  #   <% content_for :navigation do %>
+  #     <li><%= link_to 'Home', action: 'index' %></li>
+  #   <% end %>
   #
-  # And in another place:
+  #  And in another place:
   #
-  # <% content_for :navigation do %>
-  # <li><%= link_to 'Login', action: 'login' %></li>
-  # <% end %>
+  #   <% content_for :navigation do %>
+  #     <li><%= link_to 'Login', action: 'login' %></li>
+  #   <% end %>
   #
   # Then, in another template or layout, this code would render both links in order:
   #
-  # <ul><%= content_for :navigation %></ul>
+  #   <ul><%= content_for :navigation %></ul>
   #
   # If the flush parameter is +true+ <tt>content_for</tt> replaces the blocks it is given. For example:
   #
-  # <% content_for :navigation do %>
-  # <li><%= link_to 'Home', action: 'index' %></li>
-  # <% end %>
+  #   <% content_for :navigation do %>
+  #     <li><%= link_to 'Home', action: 'index' %></li>
+  #   <% end %>
   #
-  # <%#  Add some other content, or use a different template: %>
+  #   <%#  Add some other content, or use a different template: %>
   #
-  # <% content_for :navigation, flush: true do %>
-  # <li><%= link_to 'Login', action: 'login' %></li>
-  # <% end %>
+  #   <% content_for :navigation, flush: true do %>
+  #     <li><%= link_to 'Login', action: 'login' %></li>
+  #   <% end %>
   #
   # Then, in another template or layout, this code would render only the last link:
   #
-  # <ul><%= content_for :navigation %></ul>
+  #   <ul><%= content_for :navigation %></ul>
   #
   # Lastly, simple content can be passed as a parameter:
   #
-  # <% content_for :script, javascript_include_tag(:defaults) %>
+  #   <% content_for :script, javascript_include_tag(:defaults) %>
   #
   # WARNING: <tt>content_for</tt> is ignored in caches. So you shouldn't use it for elements that will be fragment cached.
   def content_for(name, content = T.unsafe(nil), options = T.unsafe(nil), &block); end
@@ -2046,17 +2105,19 @@ module ActionView::Helpers::CaptureHelper
   # <tt>content_for?</tt> checks whether any content has been captured yet using <tt>content_for</tt>.
   # Useful to render parts of your layout differently based on what is in your views.
   #
-  # <%# This is the layout %>
-  # <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  # <head>
-  # <title>My Website</title>
-  # <%= yield :script %>
-  # </head>
-  # <body class="<%= content_for?(:right_col) ? 'two-column' : 'one-column' %>">
-  # <%= yield %>
-  # <%= yield :right_col %>
-  # </body>
-  # </html>
+  #   <%# This is the layout %>
+  #   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  #   <head>
+  #     <title>My Website</title>
+  #     <%= yield :script %>
+  #   </head>
+  #   <body class="<%= content_for?(:right_col) ? 'two-column' : 'one-column' %>">
+  #     <%= yield %>
+  #     <%= yield :right_col %>
+  #   </body>
+  #   </html>
+  #
+  # @return [Boolean]
   def content_for?(name); end
 
   # The same as +content_for+ but when used with streaming flushes
@@ -2074,23 +2135,26 @@ end
 # This module keeps all methods and behavior in ActionView
 # that simply delegates to the controller.
 module ActionView::Helpers::ControllerHelper
-  def action_name(*_arg0, **_arg1, &_arg2); end
+  def action_name(*_arg0, &_arg1); end
   def assign_controller(controller); end
   def controller; end
   def controller=(_arg0); end
-  def controller_name(*_arg0, **_arg1, &_arg2); end
-  def controller_path(*_arg0, **_arg1, &_arg2); end
-  def cookies(*_arg0, **_arg1, &_arg2); end
-  def flash(*_arg0, **_arg1, &_arg2); end
-  def headers(*_arg0, **_arg1, &_arg2); end
+  def controller_name(*_arg0, &_arg1); end
+  def controller_path(*_arg0, &_arg1); end
+  def cookies(*_arg0, &_arg1); end
+  def flash(*_arg0, &_arg1); end
+  def headers(*_arg0, &_arg1); end
   def logger; end
-  def params(*_arg0, **_arg1, &_arg2); end
+  def params(*_arg0, &_arg1); end
   def request; end
   def request=(_arg0); end
-  def request_forgery_protection_token(*_arg0, **_arg1, &_arg2); end
+  def request_forgery_protection_token(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def respond_to?(method_name, include_private = T.unsafe(nil)); end
-  def response(*_arg0, **_arg1, &_arg2); end
-  def session(*_arg0, **_arg1, &_arg2); end
+
+  def response(*_arg0, &_arg1); end
+  def session(*_arg0, &_arg1); end
 end
 
 ActionView::Helpers::ControllerHelper::CONTROLLER_DELEGATES = T.let(T.unsafe(nil), Array)
@@ -2099,9 +2163,9 @@ module ActionView::Helpers::CspHelper
   # Returns a meta tag "csp-nonce" with the per-session nonce value
   # for allowing inline <script> tags.
   #
-  # <head>
-  # <%= csp_meta_tag %>
-  # </head>
+  #   <head>
+  #     <%= csp_meta_tag %>
+  #   </head>
   #
   # This is used by the Rails UJS helper to create dynamically
   # loaded inline <script> elements.
@@ -2112,9 +2176,9 @@ module ActionView::Helpers::CsrfHelper
   # Returns meta tags "csrf-param" and "csrf-token" with the name of the cross-site
   # request forgery protection parameter and token, respectively.
   #
-  # <head>
-  # <%= csrf_meta_tags %>
-  # </head>
+  #   <head>
+  #     <%= csrf_meta_tags %>
+  #   </head>
   #
   # These are used to generate the dynamic forms that implement non-remote links with
   # <tt>:method</tt>.
@@ -2129,9 +2193,9 @@ module ActionView::Helpers::CsrfHelper
   # Returns meta tags "csrf-param" and "csrf-token" with the name of the cross-site
   # request forgery protection parameter and token, respectively.
   #
-  # <head>
-  # <%= csrf_meta_tags %>
-  # </head>
+  #   <head>
+  #     <%= csrf_meta_tags %>
+  #   </head>
   #
   # These are used to generate the dynamic forms that implement non-remote links with
   # <tt>:method</tt>.
@@ -2149,111 +2213,111 @@ end
 # elements. All of the select-type methods share a number of common options that are as follows:
 #
 # * <tt>:prefix</tt> - overwrites the default prefix of "date" used for the select names. So specifying "birthday"
-# would give \birthday[month] instead of \date[month] if passed to the <tt>select_month</tt> method.
+#   would give \birthday[month] instead of \date[month] if passed to the <tt>select_month</tt> method.
 # * <tt>:include_blank</tt> - set to true if it should be possible to set an empty date.
 # * <tt>:discard_type</tt> - set to true if you want to discard the type part of the select name. If set to true,
-# the <tt>select_month</tt> method would use simply "date" (which can be overwritten using <tt>:prefix</tt>) instead
-# of \date[month].
+#   the <tt>select_month</tt> method would use simply "date" (which can be overwritten using <tt>:prefix</tt>) instead
+#   of \date[month].
 module ActionView::Helpers::DateHelper
   # Returns a set of select tags (one for year, month, and day) pre-selected for accessing a specified date-based
   # attribute (identified by +method+) on an object assigned to the template (identified by +object+).
   #
   # ==== Options
   # * <tt>:use_month_numbers</tt> - Set to true if you want to use month numbers rather than month names (e.g.
-  # "2" instead of "February").
+  #   "2" instead of "February").
   # * <tt>:use_two_digit_numbers</tt> - Set to true if you want to display two digit month and day numbers (e.g.
-  # "02" instead of "February" and "08" instead of "8").
+  #   "02" instead of "February" and "08" instead of "8").
   # * <tt>:use_short_month</tt>   - Set to true if you want to use abbreviated month names instead of full
-  # month names (e.g. "Feb" instead of "February").
+  #   month names (e.g. "Feb" instead of "February").
   # * <tt>:add_month_numbers</tt>  - Set to true if you want to use both month numbers and month names (e.g.
-  # "2 - February" instead of "February").
+  #   "2 - February" instead of "February").
   # * <tt>:use_month_names</tt>   - Set to an array with 12 month names if you want to customize month names.
-  # Note: You can also use Rails' i18n functionality for this.
+  #   Note: You can also use Rails' i18n functionality for this.
   # * <tt>:month_format_string</tt> - Set to a format string. The string gets passed keys +:number+ (integer)
-  # and +:name+ (string). A format string would be something like "%{name} (%<number>02d)" for example.
-  # See <tt>Kernel.sprintf</tt> for documentation on format sequences.
+  #   and +:name+ (string). A format string would be something like "%{name} (%<number>02d)" for example.
+  #   See <tt>Kernel.sprintf</tt> for documentation on format sequences.
   # * <tt>:date_separator</tt>    - Specifies a string to separate the date fields. Default is "" (i.e. nothing).
   # * <tt>:time_separator</tt>    - Specifies a string to separate the time fields. Default is " : ".
   # * <tt>:datetime_separator</tt>- Specifies a string to separate the date and time fields. Default is " &mdash; ".
   # * <tt>:start_year</tt>        - Set the start year for the year select. Default is <tt>Date.today.year - 5</tt> if
-  # you are creating new record. While editing existing record, <tt>:start_year</tt> defaults to
-  # the current selected year minus 5.
+  #   you are creating new record. While editing existing record, <tt>:start_year</tt> defaults to
+  #   the current selected year minus 5.
   # * <tt>:end_year</tt>          - Set the end year for the year select. Default is <tt>Date.today.year + 5</tt> if
-  # you are creating new record. While editing existing record, <tt>:end_year</tt> defaults to
-  # the current selected year plus 5.
+  #   you are creating new record. While editing existing record, <tt>:end_year</tt> defaults to
+  #   the current selected year plus 5.
   # * <tt>:year_format</tt>       - Set format of years for year select. Lambda should be passed.
   # * <tt>:discard_day</tt>       - Set to true if you don't want to show a day select. This includes the day
-  # as a hidden field instead of showing a select field. Also note that this implicitly sets the day to be the
-  # first of the given month in order to not create invalid dates like 31 February.
+  #   as a hidden field instead of showing a select field. Also note that this implicitly sets the day to be the
+  #   first of the given month in order to not create invalid dates like 31 February.
   # * <tt>:discard_month</tt>     - Set to true if you don't want to show a month select. This includes the month
-  # as a hidden field instead of showing a select field. Also note that this implicitly sets :discard_day to true.
+  #   as a hidden field instead of showing a select field. Also note that this implicitly sets :discard_day to true.
   # * <tt>:discard_year</tt>      - Set to true if you don't want to show a year select. This includes the year
-  # as a hidden field instead of showing a select field.
+  #   as a hidden field instead of showing a select field.
   # * <tt>:order</tt>             - Set to an array containing <tt>:day</tt>, <tt>:month</tt> and <tt>:year</tt> to
-  # customize the order in which the select fields are shown. If you leave out any of the symbols, the respective
-  # select will not be shown (like when you set <tt>discard_xxx: true</tt>. Defaults to the order defined in
-  # the respective locale (e.g. [:year, :month, :day] in the en locale that ships with Rails).
+  #   customize the order in which the select fields are shown. If you leave out any of the symbols, the respective
+  #   select will not be shown (like when you set <tt>discard_xxx: true</tt>. Defaults to the order defined in
+  #   the respective locale (e.g. [:year, :month, :day] in the en locale that ships with Rails).
   # * <tt>:include_blank</tt>     - Include a blank option in every select field so it's possible to set empty
-  # dates.
+  #   dates.
   # * <tt>:default</tt>           - Set a default date if the affected date isn't set or is +nil+.
   # * <tt>:selected</tt>          - Set a date that overrides the actual value.
   # * <tt>:disabled</tt>          - Set to true if you want show the select fields as disabled.
   # * <tt>:prompt</tt>            - Set to true (for a generic prompt), a prompt string or a hash of prompt strings
-  # for <tt>:year</tt>, <tt>:month</tt>, <tt>:day</tt>, <tt>:hour</tt>, <tt>:minute</tt> and <tt>:second</tt>.
-  # Setting this option prepends a select option with a generic prompt  (Day, Month, Year, Hour, Minute, Seconds)
-  # or the given prompt string.
+  #   for <tt>:year</tt>, <tt>:month</tt>, <tt>:day</tt>, <tt>:hour</tt>, <tt>:minute</tt> and <tt>:second</tt>.
+  #   Setting this option prepends a select option with a generic prompt  (Day, Month, Year, Hour, Minute, Seconds)
+  #   or the given prompt string.
   # * <tt>:with_css_classes</tt>  - Set to true or a hash of strings. Use true if you want to assign generic styles for
-  # select tags. This automatically set classes 'year', 'month', 'day', 'hour', 'minute' and 'second'. A hash of
-  # strings for <tt>:year</tt>, <tt>:month</tt>, <tt>:day</tt>, <tt>:hour</tt>, <tt>:minute</tt>, <tt>:second</tt>
-  # will extend the select type with the given value. Use +html_options+ to modify every select tag in the set.
+  #   select tags. This automatically set classes 'year', 'month', 'day', 'hour', 'minute' and 'second'. A hash of
+  #   strings for <tt>:year</tt>, <tt>:month</tt>, <tt>:day</tt>, <tt>:hour</tt>, <tt>:minute</tt>, <tt>:second</tt>
+  #   will extend the select type with the given value. Use +html_options+ to modify every select tag in the set.
   # * <tt>:use_hidden</tt>         - Set to true if you only want to generate hidden input tags.
   #
   # If anything is passed in the +html_options+ hash it will be applied to every select tag in the set.
   #
   # NOTE: Discarded selects will default to 1. So if no month select is available, January will be assumed.
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute.
-  # date_select("article", "written_on")
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute.
+  #   date_select("article", "written_on")
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
-  # # with the year in the year drop down box starting at 1995.
-  # date_select("article", "written_on", start_year: 1995)
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
+  #   # with the year in the year drop down box starting at 1995.
+  #   date_select("article", "written_on", start_year: 1995)
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
-  # # with the year in the year drop down box starting at 1995, numbers used for months instead of words,
-  # # and without a day select box.
-  # date_select("article", "written_on", start_year: 1995, use_month_numbers: true,
-  # discard_day: true, include_blank: true)
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
+  #   # with the year in the year drop down box starting at 1995, numbers used for months instead of words,
+  #   # and without a day select box.
+  #   date_select("article", "written_on", start_year: 1995, use_month_numbers: true,
+  #                                     discard_day: true, include_blank: true)
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
-  # # with two digit numbers used for months and days.
-  # date_select("article", "written_on", use_two_digit_numbers: true)
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute,
+  #   # with two digit numbers used for months and days.
+  #   date_select("article", "written_on", use_two_digit_numbers: true)
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
-  # # with the fields ordered as day, month, year rather than month, day, year.
-  # date_select("article", "written_on", order: [:day, :month, :year])
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
+  #   # with the fields ordered as day, month, year rather than month, day, year.
+  #   date_select("article", "written_on", order: [:day, :month, :year])
   #
-  # # Generates a date select that when POSTed is stored in the user variable, in the birthday attribute
-  # # lacking a year field.
-  # date_select("user", "birthday", order: [:month, :day])
+  #   # Generates a date select that when POSTed is stored in the user variable, in the birthday attribute
+  #   # lacking a year field.
+  #   date_select("user", "birthday", order: [:month, :day])
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
-  # # which is initially set to the date 3 days from the current date
-  # date_select("article", "written_on", default: 3.days.from_now)
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
+  #   # which is initially set to the date 3 days from the current date
+  #   date_select("article", "written_on", default: 3.days.from_now)
   #
-  # # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
-  # # which is set in the form with today's date, regardless of the value in the Active Record object.
-  # date_select("article", "written_on", selected: Date.today)
+  #   # Generates a date select that when POSTed is stored in the article variable, in the written_on attribute
+  #   # which is set in the form with today's date, regardless of the value in the Active Record object.
+  #   date_select("article", "written_on", selected: Date.today)
   #
-  # # Generates a date select that when POSTed is stored in the credit_card variable, in the bill_due attribute
-  # # that will have a default day of 20.
-  # date_select("credit_card", "bill_due", default: { day: 20 })
+  #   # Generates a date select that when POSTed is stored in the credit_card variable, in the bill_due attribute
+  #   # that will have a default day of 20.
+  #   date_select("credit_card", "bill_due", default: { day: 20 })
   #
-  # # Generates a date select with custom prompts.
-  # date_select("article", "written_on", prompt: { day: 'Select day', month: 'Select month', year: 'Select year' })
+  #   # Generates a date select with custom prompts.
+  #   date_select("article", "written_on", prompt: { day: 'Select day', month: 'Select month', year: 'Select year' })
   #
-  # # Generates a date select with custom year format.
-  # date_select("article", "written_on", year_format: ->(year) { "Heisei #{year - 1988}" })
+  #   # Generates a date select with custom year format.
+  #   date_select("article", "written_on", year_format: ->(year) { "Heisei #{year - 1988}" })
   #
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   #
@@ -2267,29 +2331,29 @@ module ActionView::Helpers::DateHelper
   #
   # If anything is passed in the html_options hash it will be applied to every select tag in the set.
   #
-  # # Generates a datetime select that, when POSTed, will be stored in the article variable in the written_on
-  # # attribute.
-  # datetime_select("article", "written_on")
+  #   # Generates a datetime select that, when POSTed, will be stored in the article variable in the written_on
+  #   # attribute.
+  #   datetime_select("article", "written_on")
   #
-  # # Generates a datetime select with a year select that starts at 1995 that, when POSTed, will be stored in the
-  # # article variable in the written_on attribute.
-  # datetime_select("article", "written_on", start_year: 1995)
+  #   # Generates a datetime select with a year select that starts at 1995 that, when POSTed, will be stored in the
+  #   # article variable in the written_on attribute.
+  #   datetime_select("article", "written_on", start_year: 1995)
   #
-  # # Generates a datetime select with a default value of 3 days from the current time that, when POSTed, will
-  # # be stored in the trip variable in the departing attribute.
-  # datetime_select("trip", "departing", default: 3.days.from_now)
+  #   # Generates a datetime select with a default value of 3 days from the current time that, when POSTed, will
+  #   # be stored in the trip variable in the departing attribute.
+  #   datetime_select("trip", "departing", default: 3.days.from_now)
   #
-  # # Generate a datetime select with hours in the AM/PM format
-  # datetime_select("article", "written_on", ampm: true)
+  #   # Generate a datetime select with hours in the AM/PM format
+  #   datetime_select("article", "written_on", ampm: true)
   #
-  # # Generates a datetime select that discards the type that, when POSTed, will be stored in the article variable
-  # # as the written_on attribute.
-  # datetime_select("article", "written_on", discard_type: true)
+  #   # Generates a datetime select that discards the type that, when POSTed, will be stored in the article variable
+  #   # as the written_on attribute.
+  #   datetime_select("article", "written_on", discard_type: true)
   #
-  # # Generates a datetime select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
-  # datetime_select("article", "written_on", prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
-  # datetime_select("article", "written_on", prompt: { hour: true }) # generic prompt for hours
-  # datetime_select("article", "written_on", prompt: true) # generic prompts for all
+  #   # Generates a datetime select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
+  #   datetime_select("article", "written_on", prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
+  #   datetime_select("article", "written_on", prompt: { hour: true }) # generic prompt for hours
+  #   datetime_select("article", "written_on", prompt: true) # generic prompts for all
   #
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   def datetime_select(object_name, method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
@@ -2298,83 +2362,83 @@ module ActionView::Helpers::DateHelper
   # Pass <tt>include_seconds: true</tt> if you want more detailed approximations when distance < 1 min, 29 secs.
   # Distances are reported based on the following table:
   #
-  # 0 <-> 29 secs                                                             # => less than a minute
-  # 30 secs <-> 1 min, 29 secs                                                # => 1 minute
-  # 1 min, 30 secs <-> 44 mins, 29 secs                                       # => [2..44] minutes
-  # 44 mins, 30 secs <-> 89 mins, 29 secs                                     # => about 1 hour
-  # 89 mins, 30 secs <-> 23 hrs, 59 mins, 29 secs                             # => about [2..24] hours
-  # 23 hrs, 59 mins, 30 secs <-> 41 hrs, 59 mins, 29 secs                     # => 1 day
-  # 41 hrs, 59 mins, 30 secs  <-> 29 days, 23 hrs, 59 mins, 29 secs           # => [2..29] days
-  # 29 days, 23 hrs, 59 mins, 30 secs <-> 44 days, 23 hrs, 59 mins, 29 secs   # => about 1 month
-  # 44 days, 23 hrs, 59 mins, 30 secs <-> 59 days, 23 hrs, 59 mins, 29 secs   # => about 2 months
-  # 59 days, 23 hrs, 59 mins, 30 secs <-> 1 yr minus 1 sec                    # => [2..12] months
-  # 1 yr <-> 1 yr, 3 months                                                   # => about 1 year
-  # 1 yr, 3 months <-> 1 yr, 9 months                                         # => over 1 year
-  # 1 yr, 9 months <-> 2 yr minus 1 sec                                       # => almost 2 years
-  # 2 yrs <-> max time or date                                                # => (same rules as 1 yr)
+  #   0 <-> 29 secs                                                             # => less than a minute
+  #   30 secs <-> 1 min, 29 secs                                                # => 1 minute
+  #   1 min, 30 secs <-> 44 mins, 29 secs                                       # => [2..44] minutes
+  #   44 mins, 30 secs <-> 89 mins, 29 secs                                     # => about 1 hour
+  #   89 mins, 30 secs <-> 23 hrs, 59 mins, 29 secs                             # => about [2..24] hours
+  #   23 hrs, 59 mins, 30 secs <-> 41 hrs, 59 mins, 29 secs                     # => 1 day
+  #   41 hrs, 59 mins, 30 secs  <-> 29 days, 23 hrs, 59 mins, 29 secs           # => [2..29] days
+  #   29 days, 23 hrs, 59 mins, 30 secs <-> 44 days, 23 hrs, 59 mins, 29 secs   # => about 1 month
+  #   44 days, 23 hrs, 59 mins, 30 secs <-> 59 days, 23 hrs, 59 mins, 29 secs   # => about 2 months
+  #   59 days, 23 hrs, 59 mins, 30 secs <-> 1 yr minus 1 sec                    # => [2..12] months
+  #   1 yr <-> 1 yr, 3 months                                                   # => about 1 year
+  #   1 yr, 3 months <-> 1 yr, 9 months                                         # => over 1 year
+  #   1 yr, 9 months <-> 2 yr minus 1 sec                                       # => almost 2 years
+  #   2 yrs <-> max time or date                                                # => (same rules as 1 yr)
   #
   # With <tt>include_seconds: true</tt> and the difference < 1 minute 29 seconds:
-  # 0-4   secs      # => less than 5 seconds
-  # 5-9   secs      # => less than 10 seconds
-  # 10-19 secs      # => less than 20 seconds
-  # 20-39 secs      # => half a minute
-  # 40-59 secs      # => less than a minute
-  # 60-89 secs      # => 1 minute
+  #   0-4   secs      # => less than 5 seconds
+  #   5-9   secs      # => less than 10 seconds
+  #   10-19 secs      # => less than 20 seconds
+  #   20-39 secs      # => half a minute
+  #   40-59 secs      # => less than a minute
+  #   60-89 secs      # => 1 minute
   #
-  # from_time = Time.now
-  # distance_of_time_in_words(from_time, from_time + 50.minutes)                                # => about 1 hour
-  # distance_of_time_in_words(from_time, 50.minutes.from_now)                                   # => about 1 hour
-  # distance_of_time_in_words(from_time, from_time + 15.seconds)                                # => less than a minute
-  # distance_of_time_in_words(from_time, from_time + 15.seconds, include_seconds: true)         # => less than 20 seconds
-  # distance_of_time_in_words(from_time, 3.years.from_now)                                      # => about 3 years
-  # distance_of_time_in_words(from_time, from_time + 60.hours)                                  # => 3 days
-  # distance_of_time_in_words(from_time, from_time + 45.seconds, include_seconds: true)         # => less than a minute
-  # distance_of_time_in_words(from_time, from_time - 45.seconds, include_seconds: true)         # => less than a minute
-  # distance_of_time_in_words(from_time, 76.seconds.from_now)                                   # => 1 minute
-  # distance_of_time_in_words(from_time, from_time + 1.year + 3.days)                           # => about 1 year
-  # distance_of_time_in_words(from_time, from_time + 3.years + 6.months)                        # => over 3 years
-  # distance_of_time_in_words(from_time, from_time + 4.years + 9.days + 30.minutes + 5.seconds) # => about 4 years
+  #   from_time = Time.now
+  #   distance_of_time_in_words(from_time, from_time + 50.minutes)                                # => about 1 hour
+  #   distance_of_time_in_words(from_time, 50.minutes.from_now)                                   # => about 1 hour
+  #   distance_of_time_in_words(from_time, from_time + 15.seconds)                                # => less than a minute
+  #   distance_of_time_in_words(from_time, from_time + 15.seconds, include_seconds: true)         # => less than 20 seconds
+  #   distance_of_time_in_words(from_time, 3.years.from_now)                                      # => about 3 years
+  #   distance_of_time_in_words(from_time, from_time + 60.hours)                                  # => 3 days
+  #   distance_of_time_in_words(from_time, from_time + 45.seconds, include_seconds: true)         # => less than a minute
+  #   distance_of_time_in_words(from_time, from_time - 45.seconds, include_seconds: true)         # => less than a minute
+  #   distance_of_time_in_words(from_time, 76.seconds.from_now)                                   # => 1 minute
+  #   distance_of_time_in_words(from_time, from_time + 1.year + 3.days)                           # => about 1 year
+  #   distance_of_time_in_words(from_time, from_time + 3.years + 6.months)                        # => over 3 years
+  #   distance_of_time_in_words(from_time, from_time + 4.years + 9.days + 30.minutes + 5.seconds) # => about 4 years
   #
-  # to_time = Time.now + 6.years + 19.days
-  # distance_of_time_in_words(from_time, to_time, include_seconds: true)                        # => about 6 years
-  # distance_of_time_in_words(to_time, from_time, include_seconds: true)                        # => about 6 years
-  # distance_of_time_in_words(Time.now, Time.now)                                               # => less than a minute
+  #   to_time = Time.now + 6.years + 19.days
+  #   distance_of_time_in_words(from_time, to_time, include_seconds: true)                        # => about 6 years
+  #   distance_of_time_in_words(to_time, from_time, include_seconds: true)                        # => about 6 years
+  #   distance_of_time_in_words(Time.now, Time.now)                                               # => less than a minute
   #
   # With the <tt>scope</tt> option, you can define a custom scope for Rails
   # to look up the translation.
   #
   # For example you can define the following in your locale (e.g. en.yml).
   #
-  # datetime:
-  # distance_in_words:
-  # short:
-  # about_x_hours:
-  # one: 'an hour'
-  # other: '%{count} hours'
+  #   datetime:
+  #     distance_in_words:
+  #       short:
+  #         about_x_hours:
+  #           one: 'an hour'
+  #           other: '%{count} hours'
   #
   # See https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
   # for more examples.
   #
   # Which will then result in the following:
   #
-  # from_time = Time.now
-  # distance_of_time_in_words(from_time, from_time + 50.minutes, scope: 'datetime.distance_in_words.short') # => "an hour"
-  # distance_of_time_in_words(from_time, from_time + 3.hours, scope: 'datetime.distance_in_words.short')    # => "3 hours"
+  #   from_time = Time.now
+  #   distance_of_time_in_words(from_time, from_time + 50.minutes, scope: 'datetime.distance_in_words.short') # => "an hour"
+  #   distance_of_time_in_words(from_time, from_time + 3.hours, scope: 'datetime.distance_in_words.short')    # => "3 hours"
   def distance_of_time_in_words(from_time, to_time = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Like <tt>distance_of_time_in_words</tt>, but where <tt>to_time</tt> is fixed to <tt>Time.now</tt>.
   #
-  # time_ago_in_words(3.minutes.from_now)                 # => 3 minutes
-  # time_ago_in_words(3.minutes.ago)                      # => 3 minutes
-  # time_ago_in_words(Time.now - 15.hours)                # => about 15 hours
-  # time_ago_in_words(Time.now)                           # => less than a minute
-  # time_ago_in_words(Time.now, include_seconds: true) # => less than 5 seconds
+  #   time_ago_in_words(3.minutes.from_now)                 # => 3 minutes
+  #   time_ago_in_words(3.minutes.ago)                      # => 3 minutes
+  #   time_ago_in_words(Time.now - 15.hours)                # => about 15 hours
+  #   time_ago_in_words(Time.now)                           # => less than a minute
+  #   time_ago_in_words(Time.now, include_seconds: true) # => less than 5 seconds
   #
-  # from_time = Time.now - 3.days - 14.minutes - 25.seconds
-  # time_ago_in_words(from_time)      # => 3 days
+  #   from_time = Time.now - 3.days - 14.minutes - 25.seconds
+  #   time_ago_in_words(from_time)      # => 3 days
   #
-  # from_time = (3.days + 14.minutes + 25.seconds).ago
-  # time_ago_in_words(from_time)      # => 3 days
+  #   from_time = (3.days + 14.minutes + 25.seconds).ago
+  #   time_ago_in_words(from_time)      # => 3 days
   #
   # Note that you cannot pass a <tt>Numeric</tt> value to <tt>time_ago_in_words</tt>.
   def distance_of_time_in_words_to_now(from_time, options = T.unsafe(nil)); end
@@ -2386,34 +2450,34 @@ module ActionView::Helpers::DateHelper
   #
   # If anything is passed in the html_options hash it will be applied to every select tag in the set.
   #
-  # my_date = Time.now + 6.days
+  #   my_date = Time.now + 6.days
   #
-  # # Generates a date select that defaults to the date in my_date (six days after today).
-  # select_date(my_date)
+  #   # Generates a date select that defaults to the date in my_date (six days after today).
+  #   select_date(my_date)
   #
-  # # Generates a date select that defaults to today (no specified date).
-  # select_date()
+  #   # Generates a date select that defaults to today (no specified date).
+  #   select_date()
   #
-  # # Generates a date select that defaults to the date in my_date (six days after today)
-  # # with the fields ordered year, month, day rather than month, day, year.
-  # select_date(my_date, order: [:year, :month, :day])
+  #   # Generates a date select that defaults to the date in my_date (six days after today)
+  #   # with the fields ordered year, month, day rather than month, day, year.
+  #   select_date(my_date, order: [:year, :month, :day])
   #
-  # # Generates a date select that discards the type of the field and defaults to the date in
-  # # my_date (six days after today).
-  # select_date(my_date, discard_type: true)
+  #   # Generates a date select that discards the type of the field and defaults to the date in
+  #   # my_date (six days after today).
+  #   select_date(my_date, discard_type: true)
   #
-  # # Generates a date select that defaults to the date in my_date,
-  # # which has fields separated by '/'.
-  # select_date(my_date, date_separator: '/')
+  #   # Generates a date select that defaults to the date in my_date,
+  #   # which has fields separated by '/'.
+  #   select_date(my_date, date_separator: '/')
   #
-  # # Generates a date select that defaults to the datetime in my_date (six days after today)
-  # # prefixed with 'payday' rather than 'date'.
-  # select_date(my_date, prefix: 'payday')
+  #   # Generates a date select that defaults to the datetime in my_date (six days after today)
+  #   # prefixed with 'payday' rather than 'date'.
+  #   select_date(my_date, prefix: 'payday')
   #
-  # # Generates a date select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
-  # select_date(my_date, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
-  # select_date(my_date, prompt: { hour: true }) # generic prompt for hours
-  # select_date(my_date, prompt: true) # generic prompts for all
+  #   # Generates a date select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
+  #   select_date(my_date, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
+  #   select_date(my_date, prompt: { hour: true }) # generic prompt for hours
+  #   select_date(my_date, prompt: true) # generic prompts for all
   def select_date(date = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a set of HTML select-tags (one for year, month, day, hour, minute, and second) pre-selected with the
@@ -2425,42 +2489,42 @@ module ActionView::Helpers::DateHelper
   #
   # If anything is passed in the html_options hash it will be applied to every select tag in the set.
   #
-  # my_date_time = Time.now + 4.days
+  #   my_date_time = Time.now + 4.days
   #
-  # # Generates a datetime select that defaults to the datetime in my_date_time (four days after today).
-  # select_datetime(my_date_time)
+  #   # Generates a datetime select that defaults to the datetime in my_date_time (four days after today).
+  #   select_datetime(my_date_time)
   #
-  # # Generates a datetime select that defaults to today (no specified datetime)
-  # select_datetime()
+  #   # Generates a datetime select that defaults to today (no specified datetime)
+  #   select_datetime()
   #
-  # # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
-  # # with the fields ordered year, month, day rather than month, day, year.
-  # select_datetime(my_date_time, order: [:year, :month, :day])
+  #   # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
+  #   # with the fields ordered year, month, day rather than month, day, year.
+  #   select_datetime(my_date_time, order: [:year, :month, :day])
   #
-  # # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
-  # # with a '/' between each date field.
-  # select_datetime(my_date_time, date_separator: '/')
+  #   # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
+  #   # with a '/' between each date field.
+  #   select_datetime(my_date_time, date_separator: '/')
   #
-  # # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
-  # # with a date fields separated by '/', time fields separated by '' and the date and time fields
-  # # separated by a comma (',').
-  # select_datetime(my_date_time, date_separator: '/', time_separator: '', datetime_separator: ',')
+  #   # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
+  #   # with a date fields separated by '/', time fields separated by '' and the date and time fields
+  #   # separated by a comma (',').
+  #   select_datetime(my_date_time, date_separator: '/', time_separator: '', datetime_separator: ',')
   #
-  # # Generates a datetime select that discards the type of the field and defaults to the datetime in
-  # # my_date_time (four days after today)
-  # select_datetime(my_date_time, discard_type: true)
+  #   # Generates a datetime select that discards the type of the field and defaults to the datetime in
+  #   # my_date_time (four days after today)
+  #   select_datetime(my_date_time, discard_type: true)
   #
-  # # Generate a datetime field with hours in the AM/PM format
-  # select_datetime(my_date_time, ampm: true)
+  #   # Generate a datetime field with hours in the AM/PM format
+  #   select_datetime(my_date_time, ampm: true)
   #
-  # # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
-  # # prefixed with 'payday' rather than 'date'
-  # select_datetime(my_date_time, prefix: 'payday')
+  #   # Generates a datetime select that defaults to the datetime in my_date_time (four days after today)
+  #   # prefixed with 'payday' rather than 'date'
+  #   select_datetime(my_date_time, prefix: 'payday')
   #
-  # # Generates a datetime select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
-  # select_datetime(my_date_time, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
-  # select_datetime(my_date_time, prompt: { hour: true }) # generic prompt for hours
-  # select_datetime(my_date_time, prompt: true) # generic prompts for all
+  #   # Generates a datetime select with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
+  #   select_datetime(my_date_time, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
+  #   select_datetime(my_date_time, prompt: { hour: true }) # generic prompt for hours
+  #   select_datetime(my_date_time, prompt: true) # generic prompts for all
   def select_datetime(datetime = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the days 1 through 31 with the current day selected.
@@ -2468,51 +2532,51 @@ module ActionView::Helpers::DateHelper
   # If you want to display days with a leading zero set the <tt>:use_two_digit_numbers</tt> key in +options+ to true.
   # Override the field name using the <tt>:field_name</tt> option, 'day' by default.
   #
-  # my_date = Time.now + 2.days
+  #   my_date = Time.now + 2.days
   #
-  # # Generates a select field for days that defaults to the day for the date in my_date.
-  # select_day(my_date)
+  #   # Generates a select field for days that defaults to the day for the date in my_date.
+  #   select_day(my_date)
   #
-  # # Generates a select field for days that defaults to the number given.
-  # select_day(5)
+  #   # Generates a select field for days that defaults to the number given.
+  #   select_day(5)
   #
-  # # Generates a select field for days that defaults to the number given, but displays it with two digits.
-  # select_day(5, use_two_digit_numbers: true)
+  #   # Generates a select field for days that defaults to the number given, but displays it with two digits.
+  #   select_day(5, use_two_digit_numbers: true)
   #
-  # # Generates a select field for days that defaults to the day for the date in my_date
-  # # that is named 'due' rather than 'day'.
-  # select_day(my_date, field_name: 'due')
+  #   # Generates a select field for days that defaults to the day for the date in my_date
+  #   # that is named 'due' rather than 'day'.
+  #   select_day(my_date, field_name: 'due')
   #
-  # # Generates a select field for days with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_day(5, prompt: 'Choose day')
+  #   # Generates a select field for days with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_day(5, prompt: 'Choose day')
   def select_day(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the hours 0 through 23 with the current hour selected.
   # The <tt>datetime</tt> can be either a +Time+ or +DateTime+ object or an integer.
   # Override the field name using the <tt>:field_name</tt> option, 'hour' by default.
   #
-  # my_time = Time.now + 6.hours
+  #   my_time = Time.now + 6.hours
   #
-  # # Generates a select field for hours that defaults to the hour for the time in my_time.
-  # select_hour(my_time)
+  #   # Generates a select field for hours that defaults to the hour for the time in my_time.
+  #   select_hour(my_time)
   #
-  # # Generates a select field for hours that defaults to the number given.
-  # select_hour(13)
+  #   # Generates a select field for hours that defaults to the number given.
+  #   select_hour(13)
   #
-  # # Generates a select field for hours that defaults to the hour for the time in my_time
-  # # that is named 'stride' rather than 'hour'.
-  # select_hour(my_time, field_name: 'stride')
+  #   # Generates a select field for hours that defaults to the hour for the time in my_time
+  #   # that is named 'stride' rather than 'hour'.
+  #   select_hour(my_time, field_name: 'stride')
   #
-  # # Generates a select field for hours with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_hour(13, prompt: 'Choose hour')
+  #   # Generates a select field for hours with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_hour(13, prompt: 'Choose hour')
   #
-  # # Generate a select field for hours in the AM/PM format
-  # select_hour(my_time, ampm: true)
+  #   # Generate a select field for hours in the AM/PM format
+  #   select_hour(my_time, ampm: true)
   #
-  # # Generates a select field that includes options for hours from 2 to 14.
-  # select_hour(my_time, start_hour: 2, end_hour: 14)
+  #   # Generates a select field that includes options for hours from 2 to 14.
+  #   select_hour(my_time, start_hour: 2, end_hour: 14)
   def select_hour(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the minutes 0 through 59 with the current minute selected.
@@ -2520,21 +2584,21 @@ module ActionView::Helpers::DateHelper
   # selected. The <tt>datetime</tt> can be either a +Time+ or +DateTime+ object or an integer.
   # Override the field name using the <tt>:field_name</tt> option, 'minute' by default.
   #
-  # my_time = Time.now + 10.minutes
+  #   my_time = Time.now + 10.minutes
   #
-  # # Generates a select field for minutes that defaults to the minutes for the time in my_time.
-  # select_minute(my_time)
+  #   # Generates a select field for minutes that defaults to the minutes for the time in my_time.
+  #   select_minute(my_time)
   #
-  # # Generates a select field for minutes that defaults to the number given.
-  # select_minute(14)
+  #   # Generates a select field for minutes that defaults to the number given.
+  #   select_minute(14)
   #
-  # # Generates a select field for minutes that defaults to the minutes for the time in my_time
-  # # that is named 'moment' rather than 'minute'.
-  # select_minute(my_time, field_name: 'moment')
+  #   # Generates a select field for minutes that defaults to the minutes for the time in my_time
+  #   # that is named 'moment' rather than 'minute'.
+  #   select_minute(my_time, field_name: 'moment')
   #
-  # # Generates a select field for minutes with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_minute(14, prompt: 'Choose minutes')
+  #   # Generates a select field for minutes with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_minute(14, prompt: 'Choose minutes')
   def select_minute(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the months January through December with the current month
@@ -2547,58 +2611,58 @@ module ActionView::Helpers::DateHelper
   # If you want to display months with a leading zero set the <tt>:use_two_digit_numbers</tt> key in +options+ to true.
   # Override the field name using the <tt>:field_name</tt> option, 'month' by default.
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys like "January", "March".
-  # select_month(Date.today)
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys like "January", "March".
+  #   select_month(Date.today)
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # is named "start" rather than "month".
-  # select_month(Date.today, field_name: 'start')
+  #   # Generates a select field for months that defaults to the current month that
+  #   # is named "start" rather than "month".
+  #   select_month(Date.today, field_name: 'start')
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys like "1", "3".
-  # select_month(Date.today, use_month_numbers: true)
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys like "1", "3".
+  #   select_month(Date.today, use_month_numbers: true)
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys like "1 - January", "3 - March".
-  # select_month(Date.today, add_month_numbers: true)
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys like "1 - January", "3 - March".
+  #   select_month(Date.today, add_month_numbers: true)
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys like "Jan", "Mar".
-  # select_month(Date.today, use_short_month: true)
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys like "Jan", "Mar".
+  #   select_month(Date.today, use_short_month: true)
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys like "Januar", "Marts."
-  # select_month(Date.today, use_month_names: %w(Januar Februar Marts ...))
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys like "Januar", "Marts."
+  #   select_month(Date.today, use_month_names: %w(Januar Februar Marts ...))
   #
-  # # Generates a select field for months that defaults to the current month that
-  # # will use keys with two digit numbers like "01", "03".
-  # select_month(Date.today, use_two_digit_numbers: true)
+  #   # Generates a select field for months that defaults to the current month that
+  #   # will use keys with two digit numbers like "01", "03".
+  #   select_month(Date.today, use_two_digit_numbers: true)
   #
-  # # Generates a select field for months with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_month(14, prompt: 'Choose month')
+  #   # Generates a select field for months with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_month(14, prompt: 'Choose month')
   def select_month(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the seconds 0 through 59 with the current second selected.
   # The <tt>datetime</tt> can be either a +Time+ or +DateTime+ object or an integer.
   # Override the field name using the <tt>:field_name</tt> option, 'second' by default.
   #
-  # my_time = Time.now + 16.seconds
+  #   my_time = Time.now + 16.seconds
   #
-  # # Generates a select field for seconds that defaults to the seconds for the time in my_time.
-  # select_second(my_time)
+  #   # Generates a select field for seconds that defaults to the seconds for the time in my_time.
+  #   select_second(my_time)
   #
-  # # Generates a select field for seconds that defaults to the number given.
-  # select_second(33)
+  #   # Generates a select field for seconds that defaults to the number given.
+  #   select_second(33)
   #
-  # # Generates a select field for seconds that defaults to the seconds for the time in my_time
-  # # that is named 'interval' rather than 'second'.
-  # select_second(my_time, field_name: 'interval')
+  #   # Generates a select field for seconds that defaults to the seconds for the time in my_time
+  #   # that is named 'interval' rather than 'second'.
+  #   select_second(my_time, field_name: 'interval')
   #
-  # # Generates a select field for seconds with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_second(14, prompt: 'Choose seconds')
+  #   # Generates a select field for seconds with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_second(14, prompt: 'Choose seconds')
   def select_second(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a set of HTML select-tags (one for hour and minute).
@@ -2607,36 +2671,36 @@ module ActionView::Helpers::DateHelper
   #
   # If anything is passed in the html_options hash it will be applied to every select tag in the set.
   #
-  # my_time = Time.now + 5.days + 7.hours + 3.minutes + 14.seconds
+  #   my_time = Time.now + 5.days + 7.hours + 3.minutes + 14.seconds
   #
-  # # Generates a time select that defaults to the time in my_time.
-  # select_time(my_time)
+  #   # Generates a time select that defaults to the time in my_time.
+  #   select_time(my_time)
   #
-  # # Generates a time select that defaults to the current time (no specified time).
-  # select_time()
+  #   # Generates a time select that defaults to the current time (no specified time).
+  #   select_time()
   #
-  # # Generates a time select that defaults to the time in my_time,
-  # # which has fields separated by ':'.
-  # select_time(my_time, time_separator: ':')
+  #   # Generates a time select that defaults to the time in my_time,
+  #   # which has fields separated by ':'.
+  #   select_time(my_time, time_separator: ':')
   #
-  # # Generates a time select that defaults to the time in my_time,
-  # # that also includes an input for seconds.
-  # select_time(my_time, include_seconds: true)
+  #   # Generates a time select that defaults to the time in my_time,
+  #   # that also includes an input for seconds.
+  #   select_time(my_time, include_seconds: true)
   #
-  # # Generates a time select that defaults to the time in my_time, that has fields
-  # # separated by ':' and includes an input for seconds.
-  # select_time(my_time, time_separator: ':', include_seconds: true)
+  #   # Generates a time select that defaults to the time in my_time, that has fields
+  #   # separated by ':' and includes an input for seconds.
+  #   select_time(my_time, time_separator: ':', include_seconds: true)
   #
-  # # Generate a time select field with hours in the AM/PM format
-  # select_time(my_time, ampm: true)
+  #   # Generate a time select field with hours in the AM/PM format
+  #   select_time(my_time, ampm: true)
   #
-  # # Generates a time select field with hours that range from 2 to 14
-  # select_time(my_time, start_hour: 2, end_hour: 14)
+  #   # Generates a time select field with hours that range from 2 to 14
+  #   select_time(my_time, start_hour: 2, end_hour: 14)
   #
-  # # Generates a time select with a custom prompt. Use <tt>:prompt</tt> to true for generic prompts.
-  # select_time(my_time, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
-  # select_time(my_time, prompt: { hour: true }) # generic prompt for hours
-  # select_time(my_time, prompt: true) # generic prompts for all
+  #   # Generates a time select with a custom prompt. Use <tt>:prompt</tt> to true for generic prompts.
+  #   select_time(my_time, prompt: { day: 'Choose day', month: 'Choose month', year: 'Choose year' })
+  #   select_time(my_time, prompt: { hour: true }) # generic prompt for hours
+  #   select_time(my_time, prompt: true) # generic prompts for all
   def select_time(datetime = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the five years on each side of the current, which is selected.
@@ -2645,40 +2709,40 @@ module ActionView::Helpers::DateHelper
   # greater than <tt>:end_year</tt>. The <tt>date</tt> can also be substituted for a year given as a number.
   # Override the field name using the <tt>:field_name</tt> option, 'year' by default.
   #
-  # # Generates a select field for years that defaults to the current year that
-  # # has ascending year values.
-  # select_year(Date.today, start_year: 1992, end_year: 2007)
+  #   # Generates a select field for years that defaults to the current year that
+  #   # has ascending year values.
+  #   select_year(Date.today, start_year: 1992, end_year: 2007)
   #
-  # # Generates a select field for years that defaults to the current year that
-  # # is named 'birth' rather than 'year'.
-  # select_year(Date.today, field_name: 'birth')
+  #   # Generates a select field for years that defaults to the current year that
+  #   # is named 'birth' rather than 'year'.
+  #   select_year(Date.today, field_name: 'birth')
   #
-  # # Generates a select field for years that defaults to the current year that
-  # # has descending year values.
-  # select_year(Date.today, start_year: 2005, end_year: 1900)
+  #   # Generates a select field for years that defaults to the current year that
+  #   # has descending year values.
+  #   select_year(Date.today, start_year: 2005, end_year: 1900)
   #
-  # # Generates a select field for years that defaults to the year 2006 that
-  # # has ascending year values.
-  # select_year(2006, start_year: 2000, end_year: 2010)
+  #   # Generates a select field for years that defaults to the year 2006 that
+  #   # has ascending year values.
+  #   select_year(2006, start_year: 2000, end_year: 2010)
   #
-  # # Generates a select field for years with a custom prompt. Use <tt>prompt: true</tt> for a
-  # # generic prompt.
-  # select_year(14, prompt: 'Choose year')
+  #   # Generates a select field for years with a custom prompt. Use <tt>prompt: true</tt> for a
+  #   # generic prompt.
+  #   select_year(14, prompt: 'Choose year')
   def select_year(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Like <tt>distance_of_time_in_words</tt>, but where <tt>to_time</tt> is fixed to <tt>Time.now</tt>.
   #
-  # time_ago_in_words(3.minutes.from_now)                 # => 3 minutes
-  # time_ago_in_words(3.minutes.ago)                      # => 3 minutes
-  # time_ago_in_words(Time.now - 15.hours)                # => about 15 hours
-  # time_ago_in_words(Time.now)                           # => less than a minute
-  # time_ago_in_words(Time.now, include_seconds: true) # => less than 5 seconds
+  #   time_ago_in_words(3.minutes.from_now)                 # => 3 minutes
+  #   time_ago_in_words(3.minutes.ago)                      # => 3 minutes
+  #   time_ago_in_words(Time.now - 15.hours)                # => about 15 hours
+  #   time_ago_in_words(Time.now)                           # => less than a minute
+  #   time_ago_in_words(Time.now, include_seconds: true) # => less than 5 seconds
   #
-  # from_time = Time.now - 3.days - 14.minutes - 25.seconds
-  # time_ago_in_words(from_time)      # => 3 days
+  #   from_time = Time.now - 3.days - 14.minutes - 25.seconds
+  #   time_ago_in_words(from_time)      # => 3 days
   #
-  # from_time = (3.days + 14.minutes + 25.seconds).ago
-  # time_ago_in_words(from_time)      # => 3 days
+  #   from_time = (3.days + 14.minutes + 25.seconds).ago
+  #   time_ago_in_words(from_time)      # => 3 days
   #
   # Note that you cannot pass a <tt>Numeric</tt> value to <tt>time_ago_in_words</tt>.
   def time_ago_in_words(from_time, options = T.unsafe(nil)); end
@@ -2694,23 +2758,23 @@ module ActionView::Helpers::DateHelper
   #
   # If anything is passed in the html_options hash it will be applied to every select tag in the set.
   #
-  # # Creates a time select tag that, when POSTed, will be stored in the article variable in the sunrise attribute.
-  # time_select("article", "sunrise")
+  #   # Creates a time select tag that, when POSTed, will be stored in the article variable in the sunrise attribute.
+  #   time_select("article", "sunrise")
   #
-  # # Creates a time select tag with a seconds field that, when POSTed, will be stored in the article variables in
-  # # the sunrise attribute.
-  # time_select("article", "start_time", include_seconds: true)
+  #   # Creates a time select tag with a seconds field that, when POSTed, will be stored in the article variables in
+  #   # the sunrise attribute.
+  #   time_select("article", "start_time", include_seconds: true)
   #
-  # # You can set the <tt>:minute_step</tt> to 15 which will give you: 00, 15, 30, and 45.
-  # time_select 'game', 'game_time', { minute_step: 15 }
+  #   # You can set the <tt>:minute_step</tt> to 15 which will give you: 00, 15, 30, and 45.
+  #   time_select 'game', 'game_time', { minute_step: 15 }
   #
-  # # Creates a time select tag with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
-  # time_select("article", "written_on", prompt: { hour: 'Choose hour', minute: 'Choose minute', second: 'Choose seconds' })
-  # time_select("article", "written_on", prompt: { hour: true }) # generic prompt for hours
-  # time_select("article", "written_on", prompt: true) # generic prompts for all
+  #   # Creates a time select tag with a custom prompt. Use <tt>prompt: true</tt> for generic prompts.
+  #   time_select("article", "written_on", prompt: { hour: 'Choose hour', minute: 'Choose minute', second: 'Choose seconds' })
+  #   time_select("article", "written_on", prompt: { hour: true }) # generic prompt for hours
+  #   time_select("article", "written_on", prompt: true) # generic prompts for all
   #
-  # # You can set :ampm option to true which will show the hours as: 12 PM, 01 AM .. 11 PM.
-  # time_select 'game', 'game_time', { ampm: true }
+  #   # You can set :ampm option to true which will show the hours as: 12 PM, 01 AM .. 11 PM.
+  #   time_select 'game', 'game_time', { ampm: true }
   #
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   #
@@ -2720,19 +2784,19 @@ module ActionView::Helpers::DateHelper
 
   # Returns an HTML time tag for the given date or time.
   #
-  # time_tag Date.today  # =>
-  # <time datetime="2010-11-04">November 04, 2010</time>
-  # time_tag Time.now  # =>
-  # <time datetime="2010-11-04T17:55:45+01:00">November 04, 2010 17:55</time>
-  # time_tag Date.yesterday, 'Yesterday'  # =>
-  # <time datetime="2010-11-03">Yesterday</time>
-  # time_tag Date.today, datetime: Date.today.strftime('%G-W%V') # =>
-  # <time datetime="2010-W44">November 04, 2010</time>
+  #   time_tag Date.today  # =>
+  #     <time datetime="2010-11-04">November 04, 2010</time>
+  #   time_tag Time.now  # =>
+  #     <time datetime="2010-11-04T17:55:45+01:00">November 04, 2010 17:55</time>
+  #   time_tag Date.yesterday, 'Yesterday'  # =>
+  #     <time datetime="2010-11-03">Yesterday</time>
+  #   time_tag Date.today, datetime: Date.today.strftime('%G-W%V') # =>
+  #     <time datetime="2010-W44">November 04, 2010</time>
   #
-  # <%= time_tag Time.now do %>
-  # <span>Right now</span>
-  # <% end %>
-  # # => <time datetime="2010-11-04T17:55:45+01:00"><span>Right now</span></time>
+  #   <%= time_tag Time.now do %>
+  #     <span>Right now</span>
+  #   <% end %>
+  #   # => <time datetime="2010-11-04T17:55:45+01:00"><span>Right now</span></time>
   def time_tag(date_or_time, *args, &block); end
 
   private
@@ -2749,6 +2813,7 @@ class ActionView::Helpers::DateTimeSelector
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
 
+  # @return [DateTimeSelector] a new instance of DateTimeSelector
   def initialize(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   def select_date; end
@@ -2764,37 +2829,37 @@ class ActionView::Helpers::DateTimeSelector
   private
 
   # Builds hidden input tag for date part and value.
-  # build_hidden(:year, 2008)
-  # => "<input id="post_written_on_1i" name="post[written_on(1i)]" type="hidden" value="2008" />"
+  #  build_hidden(:year, 2008)
+  #  => "<input id="post_written_on_1i" name="post[written_on(1i)]" type="hidden" value="2008" />"
   def build_hidden(type, value); end
 
   # Build select option HTML from date value and options.
-  # build_options(15, start: 1, end: 31)
-  # => "<option value="1">1</option>
-  # <option value="2">2</option>
-  # <option value="3">3</option>..."
+  #  build_options(15, start: 1, end: 31)
+  #  => "<option value="1">1</option>
+  #      <option value="2">2</option>
+  #      <option value="3">3</option>..."
   #
   # If <tt>use_two_digit_numbers: true</tt> option is passed
-  # build_options(15, start: 1, end: 31, use_two_digit_numbers: true)
-  # => "<option value="1">01</option>
-  # <option value="2">02</option>
-  # <option value="3">03</option>..."
+  #  build_options(15, start: 1, end: 31, use_two_digit_numbers: true)
+  #  => "<option value="1">01</option>
+  #      <option value="2">02</option>
+  #      <option value="3">03</option>..."
   #
   # If <tt>:step</tt> options is passed
-  # build_options(15, start: 1, end: 31, step: 2)
-  # => "<option value="1">1</option>
-  # <option value="3">3</option>
-  # <option value="5">5</option>..."
+  #  build_options(15, start: 1, end: 31, step: 2)
+  #  => "<option value="1">1</option>
+  #      <option value="3">3</option>
+  #      <option value="5">5</option>..."
   def build_options(selected, options = T.unsafe(nil)); end
 
   # Build full select tag from date type and options.
   def build_options_and_select(type, selected, options = T.unsafe(nil)); end
 
   # Builds select tag from date type and HTML select options.
-  # build_select(:month, "<option value="1">January</option>...")
-  # => "<select id="post_written_on_2i" name="post[written_on(2i)]">
-  # <option value="1">January</option>...
-  # </select>"
+  #  build_select(:month, "<option value="1">January</option>...")
+  #  => "<select id="post_written_on_2i" name="post[written_on(2i)]">
+  #        <option value="1">January</option>...
+  #      </select>"
   def build_select(type, select_options_as_html); end
 
   # Given an ordering of datetime components, create the selection HTML
@@ -2803,21 +2868,21 @@ class ActionView::Helpers::DateTimeSelector
 
   # Build select option HTML for year.
   # If <tt>year_format</tt> option is not passed
-  # build_year_options(1998, start: 1998, end: 2000)
-  # => "<option value="1998" selected="selected">1998</option>
-  # <option value="1999">1999</option>
-  # <option value="2000">2000</option>"
+  #  build_year_options(1998, start: 1998, end: 2000)
+  #  => "<option value="1998" selected="selected">1998</option>
+  #      <option value="1999">1999</option>
+  #      <option value="2000">2000</option>"
   #
   # If <tt>year_format</tt> option is passed
-  # build_year_options(1998, start: 1998, end: 2000, year_format: ->year { "Heisei #{ year - 1988 }" })
-  # => "<option value="1998" selected="selected">Heisei 10</option>
-  # <option value="1999">Heisei 11</option>
-  # <option value="2000">Heisei 12</option>"
+  #  build_year_options(1998, start: 1998, end: 2000, year_format: ->year { "Heisei #{ year - 1988 }" })
+  #  => "<option value="1998" selected="selected">Heisei 10</option>
+  #      <option value="1999">Heisei 11</option>
+  #      <option value="2000">Heisei 12</option>"
   def build_year_options(selected, options = T.unsafe(nil)); end
 
   # Builds the css class value for the select element
-  # css_class_attribute(:year, 'date optional', { year: 'my-year' })
-  # => "date optional my-year"
+  #  css_class_attribute(:year, 'date optional', { year: 'my-year' })
+  #  => "date optional my-year"
   def css_class_attribute(type, html_options_class, options); end
 
   def date_order; end
@@ -2825,11 +2890,11 @@ class ActionView::Helpers::DateTimeSelector
   def hour; end
 
   # Returns the id attribute for the input tag.
-  # => "post_written_on_1i"
+  #  => "post_written_on_1i"
   def input_id_from_type(type); end
 
   # Returns the name attribute for the input tag.
-  # => post[written_on(1i)]
+  #  => post[written_on(1i)]
   def input_name_from_type(type); end
 
   def min; end
@@ -2837,23 +2902,23 @@ class ActionView::Helpers::DateTimeSelector
 
   # Looks up month names by number (1-based):
   #
-  # month_name(1) # => "January"
+  #   month_name(1) # => "January"
   #
   # If the <tt>:use_month_numbers</tt> option is passed:
   #
-  # month_name(1) # => 1
+  #   month_name(1) # => 1
   #
   # If the <tt>:use_two_month_numbers</tt> option is passed:
   #
-  # month_name(1) # => '01'
+  #   month_name(1) # => '01'
   #
   # If the <tt>:add_month_numbers</tt> option is passed:
   #
-  # month_name(1) # => "1 - January"
+  #   month_name(1) # => "1 - January"
   #
   # If the <tt>:month_format_string</tt> option is passed:
   #
-  # month_name(1) # => "January (01)"
+  #   month_name(1) # => "January (01)"
   #
   # depending on the format string.
   def month_name(number); end
@@ -2863,8 +2928,8 @@ class ActionView::Helpers::DateTimeSelector
   def month_names; end
 
   # Builds a prompt option tag with supplied options or from default options.
-  # prompt_option_tag(:month, prompt: 'Select month')
-  # => "<option value="">Select month</option>"
+  #  prompt_option_tag(:month, prompt: 'Select month')
+  #  => "<option value="">Select month</option>"
   def prompt_option_tag(type, options); end
 
   def sec; end
@@ -2879,25 +2944,25 @@ class ActionView::Helpers::DateTimeSelector
   def translated_date_order; end
 
   # Returns translated month names.
-  # => [nil, "January", "February", "March",
-  # "April", "May", "June", "July",
-  # "August", "September", "October",
-  # "November", "December"]
+  #  => [nil, "January", "February", "March",
+  #           "April", "May", "June", "July",
+  #           "August", "September", "October",
+  #           "November", "December"]
   #
   # If <tt>:use_short_month</tt> option is set
-  # => [nil, "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  # "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  #  => [nil, "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  #           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   def translated_month_names; end
 
   def year; end
 
   # Looks up year names by number.
   #
-  # year_name(1998) # => 1998
+  #   year_name(1998) # => 1998
   #
   # If the <tt>:year_format</tt> option is passed:
   #
-  # year_name(1998) # => "Heisei 10"
+  #   year_name(1998) # => "Heisei 10"
   def year_name(number); end
 end
 
@@ -2914,17 +2979,17 @@ module ActionView::Helpers::DebugHelper
   # If the object cannot be converted to YAML using +to_yaml+, +inspect+ will be called instead.
   # Useful for inspecting an object at the time of rendering.
   #
-  # @user = User.new({ username: 'testing', password: 'xyz', age: 42})
-  # debug(@user)
-  # # =>
-  # <pre class='debug_dump'>--- !ruby/object:User
-  # attributes:
-  # updated_at:
-  # username: testing
-  # age: 42
-  # password: xyz
-  # created_at:
-  # </pre>
+  #   @user = User.new({ username: 'testing', password: 'xyz', age: 42})
+  #   debug(@user)
+  #   # =>
+  #   <pre class='debug_dump'>--- !ruby/object:User
+  #   attributes:
+  #     updated_at:
+  #     username: testing
+  #     age: 42
+  #     password: xyz
+  #     created_at:
+  #   </pre>
   def debug(object); end
 end
 
@@ -2933,10 +2998,10 @@ end
 # +FormBuilder+ object is yielded when using +form_for+ or +fields_for+.
 # For example:
 #
-# <%= form_for @person do |person_form| %>
-# Name: <%= person_form.text_field :name %>
-# Admin: <%= person_form.check_box :admin %>
-# <% end %>
+#   <%= form_for @person do |person_form| %>
+#     Name: <%= person_form.text_field :name %>
+#     Admin: <%= person_form.check_box :admin %>
+#   <% end %>
 #
 # In the above block, a +FormBuilder+ object is yielded as the
 # +person_form+ variable. This allows you to generate the +text_field+
@@ -2951,15 +3016,15 @@ end
 # You can create your own custom FormBuilder templates by subclassing this
 # class. For example:
 #
-# class MyFormBuilder < ActionView::Helpers::FormBuilder
-# def div_radio_button(method, tag_value, options = {})
-# @template.content_tag(:div,
-# @template.radio_button(
-# @object_name, method, tag_value, objectify_options(options)
-# )
-# )
-# end
-# end
+#   class MyFormBuilder < ActionView::Helpers::FormBuilder
+#     def div_radio_button(method, tag_value, options = {})
+#       @template.content_tag(:div,
+#         @template.radio_button(
+#           @object_name, method, tag_value, objectify_options(options)
+#         )
+#       )
+#     end
+#   end
 #
 # The above code creates a new method +div_radio_button+ which wraps a div
 # around the new radio button. Note that when options are passed in, you
@@ -2969,24 +3034,25 @@ end
 #
 # The +div_radio_button+ code from above can now be used as follows:
 #
-# <%= form_for @person, :builder => MyFormBuilder do |f| %>
-# I am a child: <%= f.div_radio_button(:admin, "child") %>
-# I am an adult: <%= f.div_radio_button(:admin, "adult") %>
-# <% end -%>
+#   <%= form_for @person, :builder => MyFormBuilder do |f| %>
+#     I am a child: <%= f.div_radio_button(:admin, "child") %>
+#     I am an adult: <%= f.div_radio_button(:admin, "adult") %>
+#   <% end -%>
 #
 # The standard set of helper methods for form building are located in the
 # +field_helpers+ class attribute.
 class ActionView::Helpers::FormBuilder
   include ::ActionView::ModelNaming
 
+  # @return [FormBuilder] a new instance of FormBuilder
   def initialize(object_name, object, template, options); end
 
   # Add the submit button for the given form. When no value is given, it checks
   # if the object is a new resource or not to create the proper label:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.button %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.button %>
+  #   <% end %>
   #
   # In the example above, if <tt>@post</tt> is a new record, it will use "Create Post" as
   # button label; otherwise, it uses "Update Post".
@@ -2994,37 +3060,37 @@ class ActionView::Helpers::FormBuilder
   # Those labels can be customized using I18n under the +helpers.submit+ key
   # (the same as submit helper) and using <tt>%{model}</tt> for translation interpolation:
   #
-  # en:
-  # helpers:
-  # submit:
-  # create: "Create a %{model}"
-  # update: "Confirm changes to %{model}"
+  #   en:
+  #     helpers:
+  #       submit:
+  #         create: "Create a %{model}"
+  #         update: "Confirm changes to %{model}"
   #
   # It also searches for a key specific to the given object:
   #
-  # en:
-  # helpers:
-  # submit:
-  # post:
-  # create: "Add %{model}"
+  #   en:
+  #     helpers:
+  #       submit:
+  #         post:
+  #           create: "Add %{model}"
   #
   # ==== Examples
-  # button("Create post")
-  # # => <button name='button' type='submit'>Create post</button>
+  #   button("Create post")
+  #   # => <button name='button' type='submit'>Create post</button>
   #
-  # button do
-  # content_tag(:strong, 'Ask me!')
-  # end
-  # # => <button name='button' type='submit'>
-  # #      <strong>Ask me!</strong>
-  # #    </button>
+  #   button do
+  #     content_tag(:strong, 'Ask me!')
+  #   end
+  #   # => <button name='button' type='submit'>
+  #   #      <strong>Ask me!</strong>
+  #   #    </button>
   #
-  # button do |text|
-  # content_tag(:strong, text)
-  # end
-  # # => <button name='button' type='submit'>
-  # #      <strong>Create post</strong>
-  # #    </button>
+  #   button do |text|
+  #     content_tag(:strong, text)
+  #   end
+  #   # => <button name='button' type='submit'>
+  #   #      <strong>Create post</strong>
+  #   #    </button>
   def button(value = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a checkbox tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -3041,7 +3107,7 @@ class ActionView::Helpers::FormBuilder
   # invoice the user unchecks its check box, no +paid+ parameter is sent. So,
   # any mass-assignment idiom like
   #
-  # @invoice.update(params[:invoice])
+  #   @invoice.update(params[:invoice])
   #
   # wouldn't update the flag.
   #
@@ -3058,10 +3124,10 @@ class ActionView::Helpers::FormBuilder
   # Unfortunately that workaround does not work when the check box goes
   # within an array-like parameter, as in
   #
-  # <%= fields_for "project[invoice_attributes][]", invoice, index: nil do |form| %>
-  # <%= form.check_box :paid %>
-  # ...
-  # <% end %>
+  #   <%= fields_for "project[invoice_attributes][]", invoice, index: nil do |form| %>
+  #     <%= form.check_box :paid %>
+  #     ...
+  #   <% end %>
   #
   # because parameter name repetition is precisely what Rails seeks to distinguish
   # the elements of the array. For each item with a checked check box you
@@ -3070,48 +3136,48 @@ class ActionView::Helpers::FormBuilder
   # In that case it is preferable to either use +check_box_tag+ or to use
   # hashes instead of arrays.
   #
-  # # Let's say that @post.validated? is 1:
-  # check_box("validated")
-  # # => <input name="post[validated]" type="hidden" value="0" />
-  # #    <input checked="checked" type="checkbox" id="post_validated" name="post[validated]" value="1" />
+  #   # Let's say that @post.validated? is 1:
+  #   check_box("validated")
+  #   # => <input name="post[validated]" type="hidden" value="0" />
+  #   #    <input checked="checked" type="checkbox" id="post_validated" name="post[validated]" value="1" />
   #
-  # # Let's say that @puppy.gooddog is "no":
-  # check_box("gooddog", {}, "yes", "no")
-  # # => <input name="puppy[gooddog]" type="hidden" value="no" />
-  # #    <input type="checkbox" id="puppy_gooddog" name="puppy[gooddog]" value="yes" />
+  #   # Let's say that @puppy.gooddog is "no":
+  #   check_box("gooddog", {}, "yes", "no")
+  #   # => <input name="puppy[gooddog]" type="hidden" value="no" />
+  #   #    <input type="checkbox" id="puppy_gooddog" name="puppy[gooddog]" value="yes" />
   #
-  # # Let's say that @eula.accepted is "no":
-  # check_box("accepted", { class: 'eula_check' }, "yes", "no")
-  # # => <input name="eula[accepted]" type="hidden" value="no" />
-  # #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
+  #   # Let's say that @eula.accepted is "no":
+  #   check_box("accepted", { class: 'eula_check' }, "yes", "no")
+  #   # => <input name="eula[accepted]" type="hidden" value="no" />
+  #   #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
   def check_box(method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_check_boxes for form builders:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.collection_check_boxes :author_ids, Author.all, :id, :name_with_initial %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.collection_check_boxes :author_ids, Author.all, :id, :name_with_initial %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def collection_check_boxes(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_radio_buttons for form builders:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.collection_radio_buttons :author_id, Author.all, :id, :name_with_initial %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.collection_radio_buttons :author_id, Author.all, :id, :name_with_initial %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def collection_radio_buttons(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_select for form builders:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.collection_select :person_id, Author.all, :id, :name_with_initial, prompt: true %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.collection_select :person_id, Author.all, :id, :name_with_initial, prompt: true %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def collection_select(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
@@ -3121,10 +3187,10 @@ class ActionView::Helpers::FormBuilder
 
   # Wraps ActionView::Helpers::DateHelper#date_select for form builders:
   #
-  # <%= form_for @person do |f| %>
-  # <%= f.date_select :birth_date %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @person do |f| %>
+  #     <%= f.date_select :birth_date %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def date_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
@@ -3134,16 +3200,19 @@ class ActionView::Helpers::FormBuilder
 
   # Wraps ActionView::Helpers::DateHelper#datetime_select for form builders:
   #
-  # <%= form_for @person do |f| %>
-  # <%= f.datetime_select :last_request_at %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @person do |f| %>
+  #     <%= f.datetime_select :last_request_at %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def datetime_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   def email_field(method, options = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def emitted_hidden_id?; end
+
   def field_helpers; end
   def field_helpers=(_arg0); end
   def field_helpers?; end
@@ -3167,16 +3236,16 @@ class ActionView::Helpers::FormBuilder
   # both an object name (represented by either a symbol or string) and the
   # object itself can be passed to the method separately -
   #
-  # <%= form_for @person do |person_form| %>
-  # First name: <%= person_form.text_field :first_name %>
-  # Last name : <%= person_form.text_field :last_name %>
+  #   <%= form_for @person do |person_form| %>
+  #     First name: <%= person_form.text_field :first_name %>
+  #     Last name : <%= person_form.text_field :last_name %>
   #
-  # <%= fields_for :permission, @person.permission do |permission_fields| %>
-  # Admin?  : <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #     <%= fields_for :permission, @person.permission do |permission_fields| %>
+  #       Admin?  : <%= permission_fields.check_box :admin %>
+  #     <% end %>
   #
-  # <%= person_form.submit %>
-  # <% end %>
+  #     <%= person_form.submit %>
+  #   <% end %>
   #
   # In this case, the checkbox field will be represented by an HTML +input+
   # tag with the +name+ attribute <tt>permission[admin]</tt>, and the submitted
@@ -3188,9 +3257,9 @@ class ActionView::Helpers::FormBuilder
   # Often this can be simplified by passing just the name of the model
   # object to +fields_for+ -
   #
-  # <%= fields_for :permission do |permission_fields| %>
-  # Admin?: <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #   <%= fields_for :permission do |permission_fields| %>
+  #     Admin?: <%= permission_fields.check_box :admin %>
+  #   <% end %>
   #
   # ...in which case, if <tt>:permission</tt> also happens to be the name of an
   # instance variable <tt>@permission</tt>, the initial state of the input
@@ -3200,9 +3269,9 @@ class ActionView::Helpers::FormBuilder
   # argument isn't a string or symbol +fields_for+ will realize that the
   # name has been omitted) -
   #
-  # <%= fields_for @person.permission do |permission_fields| %>
-  # Admin?: <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #   <%= fields_for @person.permission do |permission_fields| %>
+  #     Admin?: <%= permission_fields.check_box :admin %>
+  #   <% end %>
   #
   # and +fields_for+ will derive the required name of the field from the
   # _class_ of the model object, e.g. if <tt>@person.permission</tt>, is
@@ -3236,56 +3305,56 @@ class ActionView::Helpers::FormBuilder
   # <tt>address</tt> reader method and responds to the
   # <tt>address_attributes=</tt> writer method:
   #
-  # class Person
-  # def address
-  # @address
-  # end
+  #   class Person
+  #     def address
+  #       @address
+  #     end
   #
-  # def address_attributes=(attributes)
-  # # Process the attributes hash
-  # end
-  # end
+  #     def address_attributes=(attributes)
+  #       # Process the attributes hash
+  #     end
+  #   end
   #
   # This model can now be used with a nested fields_for, like so:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :address do |address_fields| %>
-  # Street  : <%= address_fields.text_field :street %>
-  # Zip code: <%= address_fields.text_field :zip_code %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :address do |address_fields| %>
+  #       Street  : <%= address_fields.text_field :street %>
+  #       Zip code: <%= address_fields.text_field :zip_code %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # When address is already an association on a Person you can use
   # +accepts_nested_attributes_for+ to define the writer method for you:
   #
-  # class Person < ActiveRecord::Base
-  # has_one :address
-  # accepts_nested_attributes_for :address
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_one :address
+  #     accepts_nested_attributes_for :address
+  #   end
   #
   # If you want to destroy the associated model through the form, you have
   # to enable it first using the <tt>:allow_destroy</tt> option for
   # +accepts_nested_attributes_for+:
   #
-  # class Person < ActiveRecord::Base
-  # has_one :address
-  # accepts_nested_attributes_for :address, allow_destroy: true
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_one :address
+  #     accepts_nested_attributes_for :address, allow_destroy: true
+  #   end
   #
   # Now, when you use a form element with the <tt>_destroy</tt> parameter,
   # with a value that evaluates to +true+, you will destroy the associated
   # model (e.g. 1, '1', true, or 'true'):
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :address do |address_fields| %>
-  # ...
-  # Delete: <%= address_fields.check_box :_destroy %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :address do |address_fields| %>
+  #       ...
+  #       Delete: <%= address_fields.check_box :_destroy %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # ==== One-to-many
   #
@@ -3293,15 +3362,15 @@ class ActionView::Helpers::FormBuilder
   # from the <tt>projects</tt> reader method and responds to the
   # <tt>projects_attributes=</tt> writer method:
   #
-  # class Person
-  # def projects
-  # [@project1, @project2]
-  # end
+  #   class Person
+  #     def projects
+  #       [@project1, @project2]
+  #     end
   #
-  # def projects_attributes=(attributes)
-  # # Process the attributes hash
-  # end
-  # end
+  #     def projects_attributes=(attributes)
+  #       # Process the attributes hash
+  #     end
+  #   end
   #
   # Note that the <tt>projects_attributes=</tt> writer method is in fact
   # required for fields_for to correctly identify <tt>:projects</tt> as a
@@ -3310,83 +3379,83 @@ class ActionView::Helpers::FormBuilder
   # When projects is already an association on Person you can use
   # +accepts_nested_attributes_for+ to define the writer method for you:
   #
-  # class Person < ActiveRecord::Base
-  # has_many :projects
-  # accepts_nested_attributes_for :projects
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_many :projects
+  #     accepts_nested_attributes_for :projects
+  #   end
   #
   # This model can now be used with a nested fields_for. The block given to
   # the nested fields_for call will be repeated for each instance in the
   # collection:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # <% if project_fields.object.active? %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       <% if project_fields.object.active? %>
+  #         Name: <%= project_fields.text_field :name %>
+  #       <% end %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # It's also possible to specify the instance to be used:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <% @person.projects.each do |project| %>
-  # <% if project.active? %>
-  # <%= person_form.fields_for :projects, project do |project_fields| %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # <% end %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <% @person.projects.each do |project| %>
+  #       <% if project.active? %>
+  #         <%= person_form.fields_for :projects, project do |project_fields| %>
+  #           Name: <%= project_fields.text_field :name %>
+  #         <% end %>
+  #       <% end %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # Or a collection to be used:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects, @active_projects do |project_fields| %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects, @active_projects do |project_fields| %>
+  #       Name: <%= project_fields.text_field :name %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # If you want to destroy any of the associated models through the
   # form, you have to enable it first using the <tt>:allow_destroy</tt>
   # option for +accepts_nested_attributes_for+:
   #
-  # class Person < ActiveRecord::Base
-  # has_many :projects
-  # accepts_nested_attributes_for :projects, allow_destroy: true
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_many :projects
+  #     accepts_nested_attributes_for :projects, allow_destroy: true
+  #   end
   #
   # This will allow you to specify which models to destroy in the
   # attributes hash by adding a form element for the <tt>_destroy</tt>
   # parameter with a value that evaluates to +true+
   # (e.g. 1, '1', true, or 'true'):
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # Delete: <%= project_fields.check_box :_destroy %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       Delete: <%= project_fields.check_box :_destroy %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # When a collection is used you might want to know the index of each
   # object into the array. For this purpose, the <tt>index</tt> method
   # is available in the FormBuilder object.
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # Project #<%= project_fields.index %>
-  # ...
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       Project #<%= project_fields.index %>
+  #       ...
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # Note that fields_for will automatically generate a hidden field
   # to store the ID of the record. There are circumstances where this
@@ -3408,33 +3477,33 @@ class ActionView::Helpers::FormBuilder
   # * <tt>:accept</tt> - If set to one or multiple mime-types, the user will be suggested a filter when choosing a file. You still need to set up model validations.
   #
   # ==== Examples
-  # # Let's say that @user has avatar:
-  # file_field(:avatar)
-  # # => <input type="file" id="user_avatar" name="user[avatar]" />
+  #   # Let's say that @user has avatar:
+  #   file_field(:avatar)
+  #   # => <input type="file" id="user_avatar" name="user[avatar]" />
   #
-  # # Let's say that @post has image:
-  # file_field(:image, :multiple => true)
-  # # => <input type="file" id="post_image" name="post[image][]" multiple="multiple" />
+  #   # Let's say that @post has image:
+  #   file_field(:image, :multiple => true)
+  #   # => <input type="file" id="post_image" name="post[image][]" multiple="multiple" />
   #
-  # # Let's say that @post has attached:
-  # file_field(:attached, accept: 'text/html')
-  # # => <input accept="text/html" type="file" id="post_attached" name="post[attached]" />
+  #   # Let's say that @post has attached:
+  #   file_field(:attached, accept: 'text/html')
+  #   # => <input accept="text/html" type="file" id="post_attached" name="post[attached]" />
   #
-  # # Let's say that @post has image:
-  # file_field(:image, accept: 'image/png,image/gif,image/jpeg')
-  # # => <input type="file" id="post_image" name="post[image]" accept="image/png,image/gif,image/jpeg" />
+  #   # Let's say that @post has image:
+  #   file_field(:image, accept: 'image/png,image/gif,image/jpeg')
+  #   # => <input type="file" id="post_image" name="post[image]" accept="image/png,image/gif,image/jpeg" />
   #
-  # # Let's say that @attachment has file:
-  # file_field(:file, class: 'file_input')
-  # # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
+  #   # Let's say that @attachment has file:
+  #   file_field(:file, class: 'file_input')
+  #   # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
   def file_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#grouped_collection_select for form builders:
   #
-  # <%= form_for @city do |f| %>
-  # <%= f.grouped_collection_select :country_id, @continents, :countries, :name, :id, :name %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @city do |f| %>
+  #     <%= f.grouped_collection_select :country_id, @continents, :countries, :name, :id, :name %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def grouped_collection_select(method, collection, group_method, group_label_method, option_key_method, option_value_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
@@ -3445,17 +3514,17 @@ class ActionView::Helpers::FormBuilder
   # shown.
   #
   # ==== Examples
-  # # Let's say that @signup.pass_confirm returns true:
-  # hidden_field(:pass_confirm)
-  # # => <input type="hidden" id="signup_pass_confirm" name="signup[pass_confirm]" value="true" />
+  #   # Let's say that @signup.pass_confirm returns true:
+  #   hidden_field(:pass_confirm)
+  #   # => <input type="hidden" id="signup_pass_confirm" name="signup[pass_confirm]" value="true" />
   #
-  # # Let's say that @post.tag_list returns "blog, ruby":
-  # hidden_field(:tag_list)
-  # # => <input type="hidden" id="post_tag_list" name="post[tag_list]" value="blog, ruby" />
+  #   # Let's say that @post.tag_list returns "blog, ruby":
+  #   hidden_field(:tag_list)
+  #   # => <input type="hidden" id="post_tag_list" name="post[tag_list]" value="blog, ruby" />
   #
-  # # Let's say that @user.token returns "abcde":
-  # hidden_field(:token)
-  # # => <input type="hidden" id="user_token" name="user[token]" value="abcde" />
+  #   # Let's say that @user.token returns "abcde":
+  #   hidden_field(:token)
+  #   # => <input type="hidden" id="user_token" name="user[token]" value="abcde" />
   def hidden_field(method, options = T.unsafe(nil)); end
 
   # Returns the value of attribute index.
@@ -3469,64 +3538,64 @@ class ActionView::Helpers::FormBuilder
   # target labels for radio_button tags (where the value is used in the ID of the input tag).
   #
   # ==== Examples
-  # label(:title)
-  # # => <label for="post_title">Title</label>
+  #   label(:title)
+  #   # => <label for="post_title">Title</label>
   #
   # You can localize your labels based on model and attribute names.
   # For example you can define the following in your locale (e.g. en.yml)
   #
-  # helpers:
-  # label:
-  # post:
-  # body: "Write your entire text here"
+  #   helpers:
+  #     label:
+  #       post:
+  #         body: "Write your entire text here"
   #
   # Which then will result in
   #
-  # label(:body)
-  # # => <label for="post_body">Write your entire text here</label>
+  #   label(:body)
+  #   # => <label for="post_body">Write your entire text here</label>
   #
   # Localization can also be based purely on the translation of the attribute-name
   # (if you are using ActiveRecord):
   #
-  # activerecord:
-  # attributes:
-  # post:
-  # cost: "Total cost"
+  #   activerecord:
+  #     attributes:
+  #       post:
+  #         cost: "Total cost"
   #
-  # label(:cost)
-  # # => <label for="post_cost">Total cost</label>
+  #   label(:cost)
+  #   # => <label for="post_cost">Total cost</label>
   #
-  # label(:title, "A short title")
-  # # => <label for="post_title">A short title</label>
+  #   label(:title, "A short title")
+  #   # => <label for="post_title">A short title</label>
   #
-  # label(:title, "A short title", class: "title_label")
-  # # => <label for="post_title" class="title_label">A short title</label>
+  #   label(:title, "A short title", class: "title_label")
+  #   # => <label for="post_title" class="title_label">A short title</label>
   #
-  # label(:privacy, "Public Post", value: "public")
-  # # => <label for="post_privacy_public">Public Post</label>
+  #   label(:privacy, "Public Post", value: "public")
+  #   # => <label for="post_privacy_public">Public Post</label>
   #
-  # label(:cost) do |translation|
-  # content_tag(:span, translation, class: "cost_label")
-  # end
-  # # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
+  #   label(:cost) do |translation|
+  #     content_tag(:span, translation, class: "cost_label")
+  #   end
+  #   # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
   #
-  # label(:cost) do |builder|
-  # content_tag(:span, builder.translation, class: "cost_label")
-  # end
-  # # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
+  #   label(:cost) do |builder|
+  #     content_tag(:span, builder.translation, class: "cost_label")
+  #   end
+  #   # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
   #
-  # label(:cost) do |builder|
-  # content_tag(:span, builder.translation, class: [
-  # "cost_label",
-  # ("error_label" if builder.object.errors.include?(:cost))
-  # ])
-  # end
-  # # => <label for="post_cost"><span class="cost_label error_label">Total cost</span></label>
+  #   label(:cost) do |builder|
+  #     content_tag(:span, builder.translation, class: [
+  #       "cost_label",
+  #       ("error_label" if builder.object.errors.include?(:cost))
+  #     ])
+  #   end
+  #   # => <label for="post_cost"><span class="cost_label error_label">Total cost</span></label>
   #
-  # label(:terms) do
-  # raw('Accept <a href="/terms">Terms</a>.')
-  # end
-  # # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
+  #   label(:terms) do
+  #     raw('Accept <a href="/terms">Terms</a>.')
+  #   end
+  #   # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
   def label(method, text = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   def month_field(method, options = T.unsafe(nil)); end
@@ -3545,18 +3614,24 @@ class ActionView::Helpers::FormBuilder
   def object; end
 
   # Sets the attribute object
+  #
+  # @param value the value to set the attribute object to.
   def object=(_arg0); end
 
   # Returns the value of attribute object_name.
   def object_name; end
 
   # Sets the attribute object_name
+  #
+  # @param value the value to set the attribute object_name to.
   def object_name=(_arg0); end
 
   # Returns the value of attribute options.
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   def password_field(method, options = T.unsafe(nil)); end
@@ -3569,17 +3644,17 @@ class ActionView::Helpers::FormBuilder
   # To force the radio button to be checked pass <tt>checked: true</tt> in the
   # +options+ hash. You may pass HTML options there as well.
   #
-  # # Let's say that @post.category returns "rails":
-  # radio_button("category", "rails")
-  # radio_button("category", "java")
-  # # => <input type="radio" id="post_category_rails" name="post[category]" value="rails" checked="checked" />
-  # #    <input type="radio" id="post_category_java" name="post[category]" value="java" />
+  #   # Let's say that @post.category returns "rails":
+  #   radio_button("category", "rails")
+  #   radio_button("category", "java")
+  #   # => <input type="radio" id="post_category_rails" name="post[category]" value="rails" checked="checked" />
+  #   #    <input type="radio" id="post_category_java" name="post[category]" value="java" />
   #
-  # # Let's say that @user.receive_newsletter returns "no":
-  # radio_button("receive_newsletter", "yes")
-  # radio_button("receive_newsletter", "no")
-  # # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
-  # #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
+  #   # Let's say that @user.receive_newsletter returns "no":
+  #   radio_button("receive_newsletter", "yes")
+  #   radio_button("receive_newsletter", "no")
+  #   # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
+  #   #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
   def radio_button(method, tag_value, options = T.unsafe(nil)); end
 
   def range_field(method, options = T.unsafe(nil)); end
@@ -3588,10 +3663,10 @@ class ActionView::Helpers::FormBuilder
 
   # Wraps ActionView::Helpers::FormOptionsHelper#select for form builders:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.select :person_id, Person.all.collect { |p| [ p.name, p.id ] }, include_blank: true %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.select :person_id, Person.all.collect { |p| [ p.name, p.id ] }, include_blank: true %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def select(method, choices = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
@@ -3599,9 +3674,9 @@ class ActionView::Helpers::FormBuilder
   # Add the submit button for the given form. When no value is given, it checks
   # if the object is a new resource or not to create the proper label:
   #
-  # <%= form_for @post do |f| %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # In the example above, if <tt>@post</tt> is a new record, it will use "Create Post" as
   # submit button label; otherwise, it uses "Update Post".
@@ -3609,19 +3684,19 @@ class ActionView::Helpers::FormBuilder
   # Those labels can be customized using I18n under the +helpers.submit+ key and using
   # <tt>%{model}</tt> for translation interpolation:
   #
-  # en:
-  # helpers:
-  # submit:
-  # create: "Create a %{model}"
-  # update: "Confirm changes to %{model}"
+  #   en:
+  #     helpers:
+  #       submit:
+  #         create: "Create a %{model}"
+  #         update: "Confirm changes to %{model}"
   #
   # It also searches for a key specific to the given object:
   #
-  # en:
-  # helpers:
-  # submit:
-  # post:
-  # create: "Add %{model}"
+  #   en:
+  #     helpers:
+  #       submit:
+  #         post:
+  #           create: "Add %{model}"
   def submit(value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def telephone_field(method, options = T.unsafe(nil)); end
@@ -3631,20 +3706,20 @@ class ActionView::Helpers::FormBuilder
 
   # Wraps ActionView::Helpers::DateHelper#time_select for form builders:
   #
-  # <%= form_for @race do |f| %>
-  # <%= f.time_select :average_lap %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @race do |f| %>
+  #     <%= f.time_select :average_lap %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def time_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#time_zone_select for form builders:
   #
-  # <%= form_for @user do |f| %>
-  # <%= f.time_zone_select :time_zone, nil, include_blank: true %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @user do |f| %>
+  #     <%= f.time_zone_select :time_zone, nil, include_blank: true %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # Please refer to the documentation of the base helper for details.
   def time_zone_select(method, priority_zones = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
@@ -3659,7 +3734,10 @@ class ActionView::Helpers::FormBuilder
   def convert_to_legacy_options(options); end
   def fields_for_nested_model(name, object, fields_options, block); end
   def fields_for_with_nested_attributes(association_name, association, options, block); end
+
+  # @return [Boolean]
   def nested_attributes_association?(association_name); end
+
   def nested_child_index(name); end
   def objectify_options(options); end
   def submit_default_value; end
@@ -3698,28 +3776,28 @@ end
 # +Person+ in the <tt>PeopleController#new</tt> action, <tt>@person</tt>, and
 # in the view template pass that object to +form_for+:
 #
-# <%= form_for @person do |f| %>
-# <%= f.label :first_name %>:
-# <%= f.text_field :first_name %><br />
+#   <%= form_for @person do |f| %>
+#     <%= f.label :first_name %>:
+#     <%= f.text_field :first_name %><br />
 #
-# <%= f.label :last_name %>:
-# <%= f.text_field :last_name %><br />
+#     <%= f.label :last_name %>:
+#     <%= f.text_field :last_name %><br />
 #
-# <%= f.submit %>
-# <% end %>
+#     <%= f.submit %>
+#   <% end %>
 #
 # The HTML generated for this would be (modulus formatting):
 #
-# <form action="/people" class="new_person" id="new_person" method="post">
-# <input name="authenticity_token" type="hidden" value="NrOp5bsjoLRuK8IW5+dQEYjKGUJDe7TQoZVvq95Wteg=" />
-# <label for="person_first_name">First name</label>:
-# <input id="person_first_name" name="person[first_name]" type="text" /><br />
+#   <form action="/people" class="new_person" id="new_person" method="post">
+#     <input name="authenticity_token" type="hidden" value="NrOp5bsjoLRuK8IW5+dQEYjKGUJDe7TQoZVvq95Wteg=" />
+#     <label for="person_first_name">First name</label>:
+#     <input id="person_first_name" name="person[first_name]" type="text" /><br />
 #
-# <label for="person_last_name">Last name</label>:
-# <input id="person_last_name" name="person[last_name]" type="text" /><br />
+#     <label for="person_last_name">Last name</label>:
+#     <input id="person_last_name" name="person[last_name]" type="text" /><br />
 #
-# <input name="commit" type="submit" value="Create Person" />
-# </form>
+#     <input name="commit" type="submit" value="Create Person" />
+#   </form>
 #
 # As you see, the HTML reflects knowledge about the resource in several spots,
 # like the path the form should be submitted to, or the names of the input fields.
@@ -3728,28 +3806,28 @@ end
 # controller gets a nested hash <tt>params[:person]</tt> with the person attributes
 # set in the form. That hash is ready to be passed to <tt>Person.new</tt>:
 #
-# @person = Person.new(params[:person])
-# if @person.save
-# # success
-# else
-# # error handling
-# end
+#   @person = Person.new(params[:person])
+#   if @person.save
+#     # success
+#   else
+#     # error handling
+#   end
 #
 # Interestingly, the exact same view code in the previous example can be used to edit
 # a person. If <tt>@person</tt> is an existing record with name "John Smith" and ID 256,
 # the code above as is would yield instead:
 #
-# <form action="/people/256" class="edit_person" id="edit_person_256" method="post">
-# <input name="_method" type="hidden" value="patch" />
-# <input name="authenticity_token" type="hidden" value="NrOp5bsjoLRuK8IW5+dQEYjKGUJDe7TQoZVvq95Wteg=" />
-# <label for="person_first_name">First name</label>:
-# <input id="person_first_name" name="person[first_name]" type="text" value="John" /><br />
+#   <form action="/people/256" class="edit_person" id="edit_person_256" method="post">
+#     <input name="_method" type="hidden" value="patch" />
+#     <input name="authenticity_token" type="hidden" value="NrOp5bsjoLRuK8IW5+dQEYjKGUJDe7TQoZVvq95Wteg=" />
+#     <label for="person_first_name">First name</label>:
+#     <input id="person_first_name" name="person[first_name]" type="text" value="John" /><br />
 #
-# <label for="person_last_name">Last name</label>:
-# <input id="person_last_name" name="person[last_name]" type="text" value="Smith" /><br />
+#     <label for="person_last_name">Last name</label>:
+#     <input id="person_last_name" name="person[last_name]" type="text" value="Smith" /><br />
 #
-# <input name="commit" type="submit" value="Update Person" />
-# </form>
+#     <input name="commit" type="submit" value="Update Person" />
+#   </form>
 #
 # Note that the endpoint, default values, and submit button label are tailored for <tt>@person</tt>.
 # That works that way because the involved helpers know whether the resource is a new record or not,
@@ -3758,11 +3836,11 @@ end
 # The controller would receive the form data again in <tt>params[:person]</tt>, ready to be
 # passed to <tt>Person#update</tt>:
 #
-# if @person.update(params[:person])
-# # success
-# else
-# # error handling
-# end
+#   if @person.update(params[:person])
+#     # success
+#   else
+#     # error handling
+#   end
 #
 # That's how you typically work with resources.
 module ActionView::Helpers::FormHelper
@@ -3792,7 +3870,7 @@ module ActionView::Helpers::FormHelper
   # invoice the user unchecks its check box, no +paid+ parameter is sent. So,
   # any mass-assignment idiom like
   #
-  # @invoice.update(params[:invoice])
+  #   @invoice.update(params[:invoice])
   #
   # wouldn't update the flag.
   #
@@ -3809,10 +3887,10 @@ module ActionView::Helpers::FormHelper
   # Unfortunately that workaround does not work when the check box goes
   # within an array-like parameter, as in
   #
-  # <%= fields_for "project[invoice_attributes][]", invoice, index: nil do |form| %>
-  # <%= form.check_box :paid %>
-  # ...
-  # <% end %>
+  #   <%= fields_for "project[invoice_attributes][]", invoice, index: nil do |form| %>
+  #     <%= form.check_box :paid %>
+  #     ...
+  #   <% end %>
   #
   # because parameter name repetition is precisely what Rails seeks to distinguish
   # the elements of the array. For each item with a checked check box you
@@ -3821,104 +3899,104 @@ module ActionView::Helpers::FormHelper
   # In that case it is preferable to either use +check_box_tag+ or to use
   # hashes instead of arrays.
   #
-  # # Let's say that @post.validated? is 1:
-  # check_box("post", "validated")
-  # # => <input name="post[validated]" type="hidden" value="0" />
-  # #    <input checked="checked" type="checkbox" id="post_validated" name="post[validated]" value="1" />
+  #   # Let's say that @post.validated? is 1:
+  #   check_box("post", "validated")
+  #   # => <input name="post[validated]" type="hidden" value="0" />
+  #   #    <input checked="checked" type="checkbox" id="post_validated" name="post[validated]" value="1" />
   #
-  # # Let's say that @puppy.gooddog is "no":
-  # check_box("puppy", "gooddog", {}, "yes", "no")
-  # # => <input name="puppy[gooddog]" type="hidden" value="no" />
-  # #    <input type="checkbox" id="puppy_gooddog" name="puppy[gooddog]" value="yes" />
+  #   # Let's say that @puppy.gooddog is "no":
+  #   check_box("puppy", "gooddog", {}, "yes", "no")
+  #   # => <input name="puppy[gooddog]" type="hidden" value="no" />
+  #   #    <input type="checkbox" id="puppy_gooddog" name="puppy[gooddog]" value="yes" />
   #
-  # check_box("eula", "accepted", { class: 'eula_check' }, "yes", "no")
-  # # => <input name="eula[accepted]" type="hidden" value="no" />
-  # #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
+  #   check_box("eula", "accepted", { class: 'eula_check' }, "yes", "no")
+  #   # => <input name="eula[accepted]" type="hidden" value="no" />
+  #   #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
   def check_box(object_name, method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
 
   # Returns a text_field of type "color".
   #
-  # color_field("car", "color")
-  # # => <input id="car_color" name="car[color]" type="color" value="#000000" />
+  #   color_field("car", "color")
+  #   # => <input id="car_color" name="car[color]" type="color" value="#000000" />
   def color_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "date".
   #
-  # date_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="date" />
+  #   date_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" />
   #
   # The default value is generated by trying to call +strftime+ with "%Y-%m-%d"
   # on the object's value, which makes it behave as expected for instances
   # of DateTime and ActiveSupport::TimeWithZone. You can still override that
   # by passing the "value" option explicitly, e.g.
   #
-  # @user.born_on = Date.new(1984, 1, 27)
-  # date_field("user", "born_on", value: "1984-05-12")
-  # # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-05-12" />
+  #   @user.born_on = Date.new(1984, 1, 27)
+  #   date_field("user", "born_on", value: "1984-05-12")
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-05-12" />
   #
   # You can create values for the "min" and "max" attributes by passing
   # instances of Date or Time to the options hash.
   #
-  # date_field("user", "born_on", min: Date.today)
-  # # => <input id="user_born_on" name="user[born_on]" type="date" min="2014-05-20" />
+  #   date_field("user", "born_on", min: Date.today)
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" min="2014-05-20" />
   #
   # Alternatively, you can pass a String formatted as an ISO8601 date as the
   # values for "min" and "max."
   #
-  # date_field("user", "born_on", min: "2014-05-20")
-  # # => <input id="user_born_on" name="user[born_on]" type="date" min="2014-05-20" />
+  #   date_field("user", "born_on", min: "2014-05-20")
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" min="2014-05-20" />
   def date_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "datetime-local".
   #
-  # datetime_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" />
+  #   datetime_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" />
   #
   # The default value is generated by trying to call +strftime+ with "%Y-%m-%dT%T"
   # on the object's value, which makes it behave as expected for instances
   # of DateTime and ActiveSupport::TimeWithZone.
   #
-  # @user.born_on = Date.new(1984, 1, 12)
-  # datetime_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="1984-01-12T00:00:00" />
+  #   @user.born_on = Date.new(1984, 1, 12)
+  #   datetime_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="1984-01-12T00:00:00" />
   #
   # You can create values for the "min" and "max" attributes by passing
   # instances of Date or Time to the options hash.
   #
-  # datetime_field("user", "born_on", min: Date.today)
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
+  #   datetime_field("user", "born_on", min: Date.today)
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   #
   # Alternatively, you can pass a String formatted as an ISO8601 datetime as
   # the values for "min" and "max."
   #
-  # datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
+  #   datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   def datetime_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "datetime-local".
   #
-  # datetime_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" />
+  #   datetime_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" />
   #
   # The default value is generated by trying to call +strftime+ with "%Y-%m-%dT%T"
   # on the object's value, which makes it behave as expected for instances
   # of DateTime and ActiveSupport::TimeWithZone.
   #
-  # @user.born_on = Date.new(1984, 1, 12)
-  # datetime_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="1984-01-12T00:00:00" />
+  #   @user.born_on = Date.new(1984, 1, 12)
+  #   datetime_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="1984-01-12T00:00:00" />
   #
   # You can create values for the "min" and "max" attributes by passing
   # instances of Date or Time to the options hash.
   #
-  # datetime_field("user", "born_on", min: Date.today)
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
+  #   datetime_field("user", "born_on", min: Date.today)
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   #
   # Alternatively, you can pass a String formatted as an ISO8601 datetime as
   # the values for "min" and "max."
   #
-  # datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
-  # # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
+  #   datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
+  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   def datetime_local_field(object_name, method, options = T.unsafe(nil)); end
 
   def default_form_builder; end
@@ -3926,34 +4004,34 @@ module ActionView::Helpers::FormHelper
 
   # Returns a text_field of type "email".
   #
-  # email_field("user", "address")
-  # # => <input id="user_address" name="user[address]" type="email" />
+  #   email_field("user", "address")
+  #   # => <input id="user_address" name="user[address]" type="email" />
   def email_field(object_name, method, options = T.unsafe(nil)); end
 
   # Scopes input fields with either an explicit scope or model.
   # Like +form_with+ does with <tt>:scope</tt> or <tt>:model</tt>,
   # except it doesn't output the form tags.
   #
-  # # Using a scope prefixes the input field names:
-  # <%= fields :comment do |fields| %>
-  # <%= fields.text_field :body %>
-  # <% end %>
-  # # => <input type="text" name="comment[body]">
+  #   # Using a scope prefixes the input field names:
+  #   <%= fields :comment do |fields| %>
+  #     <%= fields.text_field :body %>
+  #   <% end %>
+  #   # => <input type="text" name="comment[body]">
   #
-  # # Using a model infers the scope and assigns field values:
-  # <%= fields model: Comment.new(body: "full bodied") do |fields| %>
-  # <%= fields.text_field :body %>
-  # <% end %>
-  # # => <input type="text" name="comment[body]" value="full bodied">
+  #   # Using a model infers the scope and assigns field values:
+  #   <%= fields model: Comment.new(body: "full bodied") do |fields| %>
+  #     <%= fields.text_field :body %>
+  #   <% end %>
+  #   # => <input type="text" name="comment[body]" value="full bodied">
   #
-  # # Using +fields+ with +form_with+:
-  # <%= form_with model: @post do |form| %>
-  # <%= form.text_field :title %>
+  #   # Using +fields+ with +form_with+:
+  #   <%= form_with model: @post do |form| %>
+  #     <%= form.text_field :title %>
   #
-  # <%= form.fields :comment do |fields| %>
-  # <%= fields.text_field :body %>
-  # <% end %>
-  # <% end %>
+  #     <%= form.fields :comment do |fields| %>
+  #       <%= fields.text_field :body %>
+  #     <% end %>
+  #   <% end %>
   #
   # Much like +form_with+ a FormBuilder instance associated with the scope
   # or model is yielded, so any generated field names are prefixed with
@@ -3965,12 +4043,12 @@ module ActionView::Helpers::FormHelper
   # match the stand-alone FormHelper methods and methods
   # from FormTagHelper:
   #
-  # <%= fields model: @comment do |fields| %>
-  # <%= fields.text_field :body %>
+  #   <%= fields model: @comment do |fields| %>
+  #     <%= fields.text_field :body %>
   #
-  # <%= text_area :commenter, :biography %>
-  # <%= check_box_tag "comment[all_caps]", "1", @comment.commenter.hulk_mode? %>
-  # <% end %>
+  #     <%= text_area :commenter, :biography %>
+  #     <%= check_box_tag "comment[all_caps]", "1", @comment.commenter.hulk_mode? %>
+  #   <% end %>
   #
   # Same goes for the methods in FormOptionsHelper and DateHelper designed
   # to work with an object as a base, like
@@ -3993,16 +4071,16 @@ module ActionView::Helpers::FormHelper
   # both an object name (represented by either a symbol or string) and the
   # object itself can be passed to the method separately -
   #
-  # <%= form_for @person do |person_form| %>
-  # First name: <%= person_form.text_field :first_name %>
-  # Last name : <%= person_form.text_field :last_name %>
+  #   <%= form_for @person do |person_form| %>
+  #     First name: <%= person_form.text_field :first_name %>
+  #     Last name : <%= person_form.text_field :last_name %>
   #
-  # <%= fields_for :permission, @person.permission do |permission_fields| %>
-  # Admin?  : <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #     <%= fields_for :permission, @person.permission do |permission_fields| %>
+  #       Admin?  : <%= permission_fields.check_box :admin %>
+  #     <% end %>
   #
-  # <%= person_form.submit %>
-  # <% end %>
+  #     <%= person_form.submit %>
+  #   <% end %>
   #
   # In this case, the checkbox field will be represented by an HTML +input+
   # tag with the +name+ attribute <tt>permission[admin]</tt>, and the submitted
@@ -4014,9 +4092,9 @@ module ActionView::Helpers::FormHelper
   # Often this can be simplified by passing just the name of the model
   # object to +fields_for+ -
   #
-  # <%= fields_for :permission do |permission_fields| %>
-  # Admin?: <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #   <%= fields_for :permission do |permission_fields| %>
+  #     Admin?: <%= permission_fields.check_box :admin %>
+  #   <% end %>
   #
   # ...in which case, if <tt>:permission</tt> also happens to be the name of an
   # instance variable <tt>@permission</tt>, the initial state of the input
@@ -4026,9 +4104,9 @@ module ActionView::Helpers::FormHelper
   # argument isn't a string or symbol +fields_for+ will realize that the
   # name has been omitted) -
   #
-  # <%= fields_for @person.permission do |permission_fields| %>
-  # Admin?: <%= permission_fields.check_box :admin %>
-  # <% end %>
+  #   <%= fields_for @person.permission do |permission_fields| %>
+  #     Admin?: <%= permission_fields.check_box :admin %>
+  #   <% end %>
   #
   # and +fields_for+ will derive the required name of the field from the
   # _class_ of the model object, e.g. if <tt>@person.permission</tt>, is
@@ -4062,56 +4140,56 @@ module ActionView::Helpers::FormHelper
   # <tt>address</tt> reader method and responds to the
   # <tt>address_attributes=</tt> writer method:
   #
-  # class Person
-  # def address
-  # @address
-  # end
+  #   class Person
+  #     def address
+  #       @address
+  #     end
   #
-  # def address_attributes=(attributes)
-  # # Process the attributes hash
-  # end
-  # end
+  #     def address_attributes=(attributes)
+  #       # Process the attributes hash
+  #     end
+  #   end
   #
   # This model can now be used with a nested fields_for, like so:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :address do |address_fields| %>
-  # Street  : <%= address_fields.text_field :street %>
-  # Zip code: <%= address_fields.text_field :zip_code %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :address do |address_fields| %>
+  #       Street  : <%= address_fields.text_field :street %>
+  #       Zip code: <%= address_fields.text_field :zip_code %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # When address is already an association on a Person you can use
   # +accepts_nested_attributes_for+ to define the writer method for you:
   #
-  # class Person < ActiveRecord::Base
-  # has_one :address
-  # accepts_nested_attributes_for :address
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_one :address
+  #     accepts_nested_attributes_for :address
+  #   end
   #
   # If you want to destroy the associated model through the form, you have
   # to enable it first using the <tt>:allow_destroy</tt> option for
   # +accepts_nested_attributes_for+:
   #
-  # class Person < ActiveRecord::Base
-  # has_one :address
-  # accepts_nested_attributes_for :address, allow_destroy: true
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_one :address
+  #     accepts_nested_attributes_for :address, allow_destroy: true
+  #   end
   #
   # Now, when you use a form element with the <tt>_destroy</tt> parameter,
   # with a value that evaluates to +true+, you will destroy the associated
   # model (e.g. 1, '1', true, or 'true'):
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :address do |address_fields| %>
-  # ...
-  # Delete: <%= address_fields.check_box :_destroy %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :address do |address_fields| %>
+  #       ...
+  #       Delete: <%= address_fields.check_box :_destroy %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # ==== One-to-many
   #
@@ -4119,15 +4197,15 @@ module ActionView::Helpers::FormHelper
   # from the <tt>projects</tt> reader method and responds to the
   # <tt>projects_attributes=</tt> writer method:
   #
-  # class Person
-  # def projects
-  # [@project1, @project2]
-  # end
+  #   class Person
+  #     def projects
+  #       [@project1, @project2]
+  #     end
   #
-  # def projects_attributes=(attributes)
-  # # Process the attributes hash
-  # end
-  # end
+  #     def projects_attributes=(attributes)
+  #       # Process the attributes hash
+  #     end
+  #   end
   #
   # Note that the <tt>projects_attributes=</tt> writer method is in fact
   # required for fields_for to correctly identify <tt>:projects</tt> as a
@@ -4136,83 +4214,83 @@ module ActionView::Helpers::FormHelper
   # When projects is already an association on Person you can use
   # +accepts_nested_attributes_for+ to define the writer method for you:
   #
-  # class Person < ActiveRecord::Base
-  # has_many :projects
-  # accepts_nested_attributes_for :projects
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_many :projects
+  #     accepts_nested_attributes_for :projects
+  #   end
   #
   # This model can now be used with a nested fields_for. The block given to
   # the nested fields_for call will be repeated for each instance in the
   # collection:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # <% if project_fields.object.active? %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       <% if project_fields.object.active? %>
+  #         Name: <%= project_fields.text_field :name %>
+  #       <% end %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # It's also possible to specify the instance to be used:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <% @person.projects.each do |project| %>
-  # <% if project.active? %>
-  # <%= person_form.fields_for :projects, project do |project_fields| %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # <% end %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <% @person.projects.each do |project| %>
+  #       <% if project.active? %>
+  #         <%= person_form.fields_for :projects, project do |project_fields| %>
+  #           Name: <%= project_fields.text_field :name %>
+  #         <% end %>
+  #       <% end %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # Or a collection to be used:
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects, @active_projects do |project_fields| %>
-  # Name: <%= project_fields.text_field :name %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects, @active_projects do |project_fields| %>
+  #       Name: <%= project_fields.text_field :name %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # If you want to destroy any of the associated models through the
   # form, you have to enable it first using the <tt>:allow_destroy</tt>
   # option for +accepts_nested_attributes_for+:
   #
-  # class Person < ActiveRecord::Base
-  # has_many :projects
-  # accepts_nested_attributes_for :projects, allow_destroy: true
-  # end
+  #   class Person < ActiveRecord::Base
+  #     has_many :projects
+  #     accepts_nested_attributes_for :projects, allow_destroy: true
+  #   end
   #
   # This will allow you to specify which models to destroy in the
   # attributes hash by adding a form element for the <tt>_destroy</tt>
   # parameter with a value that evaluates to +true+
   # (e.g. 1, '1', true, or 'true'):
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # Delete: <%= project_fields.check_box :_destroy %>
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       Delete: <%= project_fields.check_box :_destroy %>
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # When a collection is used you might want to know the index of each
   # object into the array. For this purpose, the <tt>index</tt> method
   # is available in the FormBuilder object.
   #
-  # <%= form_for @person do |person_form| %>
-  # ...
-  # <%= person_form.fields_for :projects do |project_fields| %>
-  # Project #<%= project_fields.index %>
-  # ...
-  # <% end %>
-  # ...
-  # <% end %>
+  #   <%= form_for @person do |person_form| %>
+  #     ...
+  #     <%= person_form.fields_for :projects do |project_fields| %>
+  #       Project #<%= project_fields.index %>
+  #       ...
+  #     <% end %>
+  #     ...
+  #   <% end %>
   #
   # Note that fields_for will automatically generate a hidden field
   # to store the ID of the record. There are circumstances where this
@@ -4234,20 +4312,20 @@ module ActionView::Helpers::FormHelper
   # * <tt>:accept</tt> - If set to one or multiple mime-types, the user will be suggested a filter when choosing a file. You still need to set up model validations.
   #
   # ==== Examples
-  # file_field(:user, :avatar)
-  # # => <input type="file" id="user_avatar" name="user[avatar]" />
+  #   file_field(:user, :avatar)
+  #   # => <input type="file" id="user_avatar" name="user[avatar]" />
   #
-  # file_field(:post, :image, multiple: true)
-  # # => <input type="file" id="post_image" name="post[image][]" multiple="multiple" />
+  #   file_field(:post, :image, multiple: true)
+  #   # => <input type="file" id="post_image" name="post[image][]" multiple="multiple" />
   #
-  # file_field(:post, :attached, accept: 'text/html')
-  # # => <input accept="text/html" type="file" id="post_attached" name="post[attached]" />
+  #   file_field(:post, :attached, accept: 'text/html')
+  #   # => <input accept="text/html" type="file" id="post_attached" name="post[attached]" />
   #
-  # file_field(:post, :image, accept: 'image/png,image/gif,image/jpeg')
-  # # => <input type="file" id="post_image" name="post[image]" accept="image/png,image/gif,image/jpeg" />
+  #   file_field(:post, :image, accept: 'image/png,image/gif,image/jpeg')
+  #   # => <input type="file" id="post_image" name="post[image]" accept="image/png,image/gif,image/jpeg" />
   #
-  # file_field(:attachment, :file, class: 'file_input')
-  # # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
+  #   file_field(:attachment, :file, class: 'file_input')
+  #   # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
   def file_field(object_name, method, options = T.unsafe(nil)); end
 
   # Creates a form that allows the user to create or update the attributes
@@ -4259,24 +4337,24 @@ module ActionView::Helpers::FormHelper
   # can be created by passing +form_for+ a string or symbol representing
   # the object we are concerned with:
   #
-  # <%= form_for :person do |f| %>
-  # First name: <%= f.text_field :first_name %><br />
-  # Last name : <%= f.text_field :last_name %><br />
-  # Biography : <%= f.text_area :biography %><br />
-  # Admin?    : <%= f.check_box :admin %><br />
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for :person do |f| %>
+  #     First name: <%= f.text_field :first_name %><br />
+  #     Last name : <%= f.text_field :last_name %><br />
+  #     Biography : <%= f.text_area :biography %><br />
+  #     Admin?    : <%= f.check_box :admin %><br />
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # The variable +f+ yielded to the block is a FormBuilder object that
   # incorporates the knowledge about the model object represented by
   # <tt>:person</tt> passed to +form_for+. Methods defined on the FormBuilder
   # are used to generate fields bound to this model. Thus, for example,
   #
-  # <%= f.text_field :first_name %>
+  #   <%= f.text_field :first_name %>
   #
   # will get expanded to
   #
-  # <%= text_field :person, :first_name %>
+  #   <%= text_field :person, :first_name %>
   #
   # which results in an HTML <tt><input></tt> tag whose +name+ attribute is
   # <tt>person[first_name]</tt>. This means that when the form is submitted,
@@ -4294,45 +4372,45 @@ module ActionView::Helpers::FormHelper
   # optional hash of options -
   #
   # * <tt>:url</tt> - The URL the form is to be submitted to. This may be
-  # represented in the same way as values passed to +url_for+ or +link_to+.
-  # So for example you may use a named route directly. When the model is
-  # represented by a string or symbol, as in the example above, if the
-  # <tt>:url</tt> option is not specified, by default the form will be
-  # sent back to the current URL (We will describe below an alternative
-  # resource-oriented usage of +form_for+ in which the URL does not need
-  # to be specified explicitly).
+  #   represented in the same way as values passed to +url_for+ or +link_to+.
+  #   So for example you may use a named route directly. When the model is
+  #   represented by a string or symbol, as in the example above, if the
+  #   <tt>:url</tt> option is not specified, by default the form will be
+  #   sent back to the current URL (We will describe below an alternative
+  #   resource-oriented usage of +form_for+ in which the URL does not need
+  #   to be specified explicitly).
   # * <tt>:namespace</tt> - A namespace for your form to ensure uniqueness of
-  # id attributes on form elements. The namespace attribute will be prefixed
-  # with underscore on the generated HTML id.
+  #   id attributes on form elements. The namespace attribute will be prefixed
+  #   with underscore on the generated HTML id.
   # * <tt>:method</tt> - The method to use when submitting the form, usually
-  # either "get" or "post". If "patch", "put", "delete", or another verb
-  # is used, a hidden input with name <tt>_method</tt> is added to
-  # simulate the verb over post.
+  #   either "get" or "post". If "patch", "put", "delete", or another verb
+  #   is used, a hidden input with name <tt>_method</tt> is added to
+  #   simulate the verb over post.
   # * <tt>:authenticity_token</tt> - Authenticity token to use in the form.
-  # Use only if you need to pass custom authenticity token string, or to
-  # not add authenticity_token field at all (by passing <tt>false</tt>).
-  # Remote forms may omit the embedded authenticity token by setting
-  # <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
-  # This is helpful when you're fragment-caching the form. Remote forms
-  # get the authenticity token from the <tt>meta</tt> tag, so embedding is
-  # unnecessary unless you support browsers without JavaScript.
+  #   Use only if you need to pass custom authenticity token string, or to
+  #   not add authenticity_token field at all (by passing <tt>false</tt>).
+  #   Remote forms may omit the embedded authenticity token by setting
+  #   <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
+  #   This is helpful when you're fragment-caching the form. Remote forms
+  #   get the authenticity token from the <tt>meta</tt> tag, so embedding is
+  #   unnecessary unless you support browsers without JavaScript.
   # * <tt>:remote</tt> - If set to true, will allow the Unobtrusive
-  # JavaScript drivers to control the submit behavior.
+  #   JavaScript drivers to control the submit behavior.
   # * <tt>:enforce_utf8</tt> - If set to false, a hidden input with name
-  # utf8 is not output.
+  #   utf8 is not output.
   # * <tt>:html</tt> - Optional HTML attributes for the form tag.
   #
   # Also note that +form_for+ doesn't create an exclusive scope. It's still
   # possible to use both the stand-alone FormHelper methods and methods
   # from FormTagHelper. For example:
   #
-  # <%= form_for :person do |f| %>
-  # First name: <%= f.text_field :first_name %>
-  # Last name : <%= f.text_field :last_name %>
-  # Biography : <%= text_area :person, :biography %>
-  # Admin?    : <%= check_box_tag "person[admin]", "1", @person.company.admin? %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for :person do |f| %>
+  #     First name: <%= f.text_field :first_name %>
+  #     Last name : <%= f.text_field :last_name %>
+  #     Biography : <%= text_area :person, :biography %>
+  #     Admin?    : <%= check_box_tag "person[admin]", "1", @person.company.admin? %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # This also works for the methods in FormOptionsHelper and DateHelper that
   # are designed to work with an object as base, like
@@ -4346,9 +4424,9 @@ module ActionView::Helpers::FormHelper
   # to pass a model object itself to +form_for+. For example, if <tt>@post</tt>
   # is an existing record you wish to edit, you can create the form using
   #
-  # <%= form_for @post do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     ...
+  #   <% end %>
   #
   # This behaves in almost the same way as outlined previously, with a
   # couple of small exceptions. First, the prefix used to name the input
@@ -4357,9 +4435,9 @@ module ActionView::Helpers::FormHelper
   # if the object's class is +Post+. However, this can be overwritten using
   # the <tt>:as</tt> option, e.g. -
   #
-  # <%= form_for(@person, as: :client) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(@person, as: :client) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # would result in <tt>params[:client]</tt>.
   #
@@ -4369,9 +4447,9 @@ module ActionView::Helpers::FormHelper
   # variable. So, for example, if we had a _local_ variable +post+
   # representing an existing record,
   #
-  # <%= form_for post do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for post do |f| %>
+  #     ...
+  #   <% end %>
   #
   # would produce a form with fields whose initial state reflect the current
   # values of the attributes of +post+.
@@ -4386,52 +4464,52 @@ module ActionView::Helpers::FormHelper
   # in <tt>config/routes.rb</tt>. In this case Rails will simply infer the
   # appropriate URL from the record itself. For example,
   #
-  # <%= form_for @post do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @post do |f| %>
+  #     ...
+  #   <% end %>
   #
   # is then equivalent to something like:
   #
-  # <%= form_for @post, as: :post, url: post_path(@post), method: :patch, html: { class: "edit_post", id: "edit_post_45" } do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @post, as: :post, url: post_path(@post), method: :patch, html: { class: "edit_post", id: "edit_post_45" } do |f| %>
+  #     ...
+  #   <% end %>
   #
   # And for a new record
   #
-  # <%= form_for(Post.new) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(Post.new) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # is equivalent to something like:
   #
-  # <%= form_for @post, as: :post, url: posts_path, html: { class: "new_post", id: "new_post" } do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @post, as: :post, url: posts_path, html: { class: "new_post", id: "new_post" } do |f| %>
+  #     ...
+  #   <% end %>
   #
   # However you can still overwrite individual conventions, such as:
   #
-  # <%= form_for(@post, url: super_posts_path) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(@post, url: super_posts_path) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # You can also set the answer format, like this:
   #
-  # <%= form_for(@post, format: :json) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(@post, format: :json) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # For namespaced routes, like +admin_post_url+:
   #
-  # <%= form_for([:admin, @post]) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for([:admin, @post]) do |f| %>
+  #    ...
+  #   <% end %>
   #
   # If your resource has associations defined, for example, you want to add comments
   # to the document given that the routes are set correctly:
   #
-  # <%= form_for([@document, @comment]) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for([@document, @comment]) do |f| %>
+  #    ...
+  #   <% end %>
   #
   # Where <tt>@document = Document.find(params[:id])</tt> and
   # <tt>@comment = Comment.new</tt>.
@@ -4440,7 +4518,7 @@ module ActionView::Helpers::FormHelper
   #
   # You can force the form to use the full array of HTTP verbs by setting
   #
-  # method: (:get|:post|:patch|:put|:delete)
+  #    method: (:get|:post|:patch|:put|:delete)
   #
   # in the options hash. If the verb is not GET or POST, which are natively
   # supported by HTML forms, the form will be set to POST and a hidden input
@@ -4450,7 +4528,7 @@ module ActionView::Helpers::FormHelper
   #
   # Specifying:
   #
-  # remote: true
+  #    remote: true
   #
   # in the options hash creates a form that will allow the unobtrusive JavaScript drivers to modify its
   # behavior. The form submission will work just like a regular submission as viewed by the receiving
@@ -4458,32 +4536,32 @@ module ActionView::Helpers::FormHelper
   #
   # Example:
   #
-  # <%= form_for(@post, remote: true) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(@post, remote: true) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # The HTML generated for this would be:
   #
-  # <form action='http://www.example.com' method='post' data-remote='true'>
-  # <input name='_method' type='hidden' value='patch' />
-  # ...
-  # </form>
+  #   <form action='http://www.example.com' method='post' data-remote='true'>
+  #     <input name='_method' type='hidden' value='patch' />
+  #     ...
+  #   </form>
   #
   # === Setting HTML options
   #
   # You can set data attributes directly by passing in a data hash, but all other HTML options must be wrapped in
   # the HTML key. Example:
   #
-  # <%= form_for(@post, data: { behavior: "autosave" }, html: { name: "go" }) do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for(@post, data: { behavior: "autosave" }, html: { name: "go" }) do |f| %>
+  #     ...
+  #   <% end %>
   #
   # The HTML generated for this would be:
   #
-  # <form action='http://www.example.com' method='post' data-behavior='autosave' name='go'>
-  # <input name='_method' type='hidden' value='patch' />
-  # ...
-  # </form>
+  #   <form action='http://www.example.com' method='post' data-behavior='autosave' name='go'>
+  #     <input name='_method' type='hidden' value='patch' />
+  #     ...
+  #   </form>
   #
   # === Removing hidden model id's
   #
@@ -4497,11 +4575,11 @@ module ActionView::Helpers::FormHelper
   #
   # Example:
   #
-  # <%= form_for(@post) do |f| %>
-  # <%= f.fields_for(:comments, include_id: false) do |cf| %>
-  # ...
-  # <% end %>
-  # <% end %>
+  #   <%= form_for(@post) do |f| %>
+  #     <%= f.fields_for(:comments, include_id: false) do |cf| %>
+  #       ...
+  #     <% end %>
+  #   <% end %>
   #
   # === Customized form builders
   #
@@ -4510,17 +4588,17 @@ module ActionView::Helpers::FormHelper
   # custom builder. For example, let's say you made a helper to
   # automatically add labels to form inputs.
   #
-  # <%= form_for @person, url: { action: "create" }, builder: LabellingFormBuilder do |f| %>
-  # <%= f.text_field :first_name %>
-  # <%= f.text_field :last_name %>
-  # <%= f.text_area :biography %>
-  # <%= f.check_box :admin %>
-  # <%= f.submit %>
-  # <% end %>
+  #   <%= form_for @person, url: { action: "create" }, builder: LabellingFormBuilder do |f| %>
+  #     <%= f.text_field :first_name %>
+  #     <%= f.text_field :last_name %>
+  #     <%= f.text_area :biography %>
+  #     <%= f.check_box :admin %>
+  #     <%= f.submit %>
+  #   <% end %>
   #
   # In this case, if you use this:
   #
-  # <%= render f %>
+  #   <%= render f %>
   #
   # The rendered template is <tt>people/_labelling_form</tt> and the local
   # variable referencing the form builder is called
@@ -4532,10 +4610,10 @@ module ActionView::Helpers::FormHelper
   # In many cases you will want to wrap the above in another helper, so you
   # could do something like the following:
   #
-  # def labelled_form_for(record_or_name_or_array, *args, &block)
-  # options = args.extract_options!
-  # form_for(record_or_name_or_array, *(args << options.merge(builder: LabellingFormBuilder)), &block)
-  # end
+  #   def labelled_form_for(record_or_name_or_array, *args, &block)
+  #     options = args.extract_options!
+  #     form_for(record_or_name_or_array, *(args << options.merge(builder: LabellingFormBuilder)), &block)
+  #   end
   #
   # If you don't need to attach a form to a model instance, then check out
   # FormTagHelper#form_tag.
@@ -4547,66 +4625,68 @@ module ActionView::Helpers::FormHelper
   #
   # To set an authenticity token you need to pass an <tt>:authenticity_token</tt> parameter
   #
-  # <%= form_for @invoice, url: external_url, authenticity_token: 'external_token' do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @invoice, url: external_url, authenticity_token: 'external_token' do |f| %>
+  #     ...
+  #   <% end %>
   #
   # If you don't want to an authenticity token field be rendered at all just pass <tt>false</tt>:
   #
-  # <%= form_for @invoice, url: external_url, authenticity_token: false do |f| %>
-  # ...
-  # <% end %>
+  #   <%= form_for @invoice, url: external_url, authenticity_token: false do |f| %>
+  #     ...
+  #   <% end %>
+  #
+  # @raise [ArgumentError]
   def form_for(record, options = T.unsafe(nil), &block); end
 
   # Creates a form tag based on mixing URLs, scopes, or models.
   #
-  # # Using just a URL:
-  # <%= form_with url: posts_path do |form| %>
-  # <%= form.text_field :title %>
-  # <% end %>
-  # # =>
-  # <form action="/posts" method="post" data-remote="true">
-  # <input type="text" name="title">
-  # </form>
+  #   # Using just a URL:
+  #   <%= form_with url: posts_path do |form| %>
+  #     <%= form.text_field :title %>
+  #   <% end %>
+  #   # =>
+  #   <form action="/posts" method="post" data-remote="true">
+  #     <input type="text" name="title">
+  #   </form>
   #
-  # # Adding a scope prefixes the input field names:
-  # <%= form_with scope: :post, url: posts_path do |form| %>
-  # <%= form.text_field :title %>
-  # <% end %>
-  # # =>
-  # <form action="/posts" method="post" data-remote="true">
-  # <input type="text" name="post[title]">
-  # </form>
+  #   # Adding a scope prefixes the input field names:
+  #   <%= form_with scope: :post, url: posts_path do |form| %>
+  #     <%= form.text_field :title %>
+  #   <% end %>
+  #   # =>
+  #   <form action="/posts" method="post" data-remote="true">
+  #     <input type="text" name="post[title]">
+  #   </form>
   #
-  # # Using a model infers both the URL and scope:
-  # <%= form_with model: Post.new do |form| %>
-  # <%= form.text_field :title %>
-  # <% end %>
-  # # =>
-  # <form action="/posts" method="post" data-remote="true">
-  # <input type="text" name="post[title]">
-  # </form>
+  #   # Using a model infers both the URL and scope:
+  #   <%= form_with model: Post.new do |form| %>
+  #     <%= form.text_field :title %>
+  #   <% end %>
+  #   # =>
+  #   <form action="/posts" method="post" data-remote="true">
+  #     <input type="text" name="post[title]">
+  #   </form>
   #
-  # # An existing model makes an update form and fills out field values:
-  # <%= form_with model: Post.first do |form| %>
-  # <%= form.text_field :title %>
-  # <% end %>
-  # # =>
-  # <form action="/posts/1" method="post" data-remote="true">
-  # <input type="hidden" name="_method" value="patch">
-  # <input type="text" name="post[title]" value="<the title of the post>">
-  # </form>
+  #   # An existing model makes an update form and fills out field values:
+  #   <%= form_with model: Post.first do |form| %>
+  #     <%= form.text_field :title %>
+  #   <% end %>
+  #   # =>
+  #   <form action="/posts/1" method="post" data-remote="true">
+  #     <input type="hidden" name="_method" value="patch">
+  #     <input type="text" name="post[title]" value="<the title of the post>">
+  #   </form>
   #
-  # # Though the fields don't have to correspond to model attributes:
-  # <%= form_with model: Cat.new do |form| %>
-  # <%= form.text_field :cats_dont_have_gills %>
-  # <%= form.text_field :but_in_forms_they_can %>
-  # <% end %>
-  # # =>
-  # <form action="/cats" method="post" data-remote="true">
-  # <input type="text" name="cat[cats_dont_have_gills]">
-  # <input type="text" name="cat[but_in_forms_they_can]">
-  # </form>
+  #   # Though the fields don't have to correspond to model attributes:
+  #   <%= form_with model: Cat.new do |form| %>
+  #     <%= form.text_field :cats_dont_have_gills %>
+  #     <%= form.text_field :but_in_forms_they_can %>
+  #   <% end %>
+  #   # =>
+  #   <form action="/cats" method="post" data-remote="true">
+  #     <input type="text" name="cat[cats_dont_have_gills]">
+  #     <input type="text" name="cat[but_in_forms_they_can]">
+  #   </form>
   #
   # The parameters in the forms are accessible in controllers according to
   # their name nesting. So inputs named +title+ and <tt>post[title]</tt> are
@@ -4626,70 +4706,70 @@ module ActionView::Helpers::FormHelper
   #
   # So when passing such a model record, Rails infers the URL and method.
   #
-  # <%= form_with model: @post do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with model: @post do |form| %>
+  #     ...
+  #   <% end %>
   #
   # is then equivalent to something like:
   #
-  # <%= form_with scope: :post, url: post_path(@post), method: :patch do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with scope: :post, url: post_path(@post), method: :patch do |form| %>
+  #     ...
+  #   <% end %>
   #
   # And for a new record
   #
-  # <%= form_with model: Post.new do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with model: Post.new do |form| %>
+  #     ...
+  #   <% end %>
   #
   # is equivalent to something like:
   #
-  # <%= form_with scope: :post, url: posts_path do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with scope: :post, url: posts_path do |form| %>
+  #     ...
+  #   <% end %>
   #
   # ==== +form_with+ options
   #
   # * <tt>:url</tt> - The URL the form submits to. Akin to values passed to
-  # +url_for+ or +link_to+. For example, you may use a named route
-  # directly. When a <tt>:scope</tt> is passed without a <tt>:url</tt> the
-  # form just submits to the current URL.
+  #   +url_for+ or +link_to+. For example, you may use a named route
+  #   directly. When a <tt>:scope</tt> is passed without a <tt>:url</tt> the
+  #   form just submits to the current URL.
   # * <tt>:method</tt> - The method to use when submitting the form, usually
-  # either "get" or "post". If "patch", "put", "delete", or another verb
-  # is used, a hidden input named <tt>_method</tt> is added to
-  # simulate the verb over post.
+  #   either "get" or "post". If "patch", "put", "delete", or another verb
+  #   is used, a hidden input named <tt>_method</tt> is added to
+  #   simulate the verb over post.
   # * <tt>:format</tt> - The format of the route the form submits to.
-  # Useful when submitting to another resource type, like <tt>:json</tt>.
-  # Skipped if a <tt>:url</tt> is passed.
+  #   Useful when submitting to another resource type, like <tt>:json</tt>.
+  #   Skipped if a <tt>:url</tt> is passed.
   # * <tt>:scope</tt> - The scope to prefix input field names with and
-  # thereby how the submitted parameters are grouped in controllers.
+  #   thereby how the submitted parameters are grouped in controllers.
   # * <tt>:namespace</tt> - A namespace for your form to ensure uniqueness of
-  # id attributes on form elements. The namespace attribute will be prefixed
-  # with underscore on the generated HTML id.
+  #   id attributes on form elements. The namespace attribute will be prefixed
+  #   with underscore on the generated HTML id.
   # * <tt>:model</tt> - A model object to infer the <tt>:url</tt> and
-  # <tt>:scope</tt> by, plus fill out input field values.
-  # So if a +title+ attribute is set to "Ahoy!" then a +title+ input
-  # field's value would be "Ahoy!".
-  # If the model is a new record a create form is generated, if an
-  # existing record, however, an update form is generated.
-  # Pass <tt>:scope</tt> or <tt>:url</tt> to override the defaults.
-  # E.g. turn <tt>params[:post]</tt> into <tt>params[:article]</tt>.
+  #   <tt>:scope</tt> by, plus fill out input field values.
+  #   So if a +title+ attribute is set to "Ahoy!" then a +title+ input
+  #   field's value would be "Ahoy!".
+  #   If the model is a new record a create form is generated, if an
+  #   existing record, however, an update form is generated.
+  #   Pass <tt>:scope</tt> or <tt>:url</tt> to override the defaults.
+  #   E.g. turn <tt>params[:post]</tt> into <tt>params[:article]</tt>.
   # * <tt>:authenticity_token</tt> - Authenticity token to use in the form.
-  # Override with a custom authenticity token or pass <tt>false</tt> to
-  # skip the authenticity token field altogether.
-  # Useful when submitting to an external resource like a payment gateway
-  # that might limit the valid fields.
-  # Remote forms may omit the embedded authenticity token by setting
-  # <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
-  # This is helpful when fragment-caching the form. Remote forms
-  # get the authenticity token from the <tt>meta</tt> tag, so embedding is
-  # unnecessary unless you support browsers without JavaScript.
+  #   Override with a custom authenticity token or pass <tt>false</tt> to
+  #   skip the authenticity token field altogether.
+  #   Useful when submitting to an external resource like a payment gateway
+  #   that might limit the valid fields.
+  #   Remote forms may omit the embedded authenticity token by setting
+  #   <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
+  #   This is helpful when fragment-caching the form. Remote forms
+  #   get the authenticity token from the <tt>meta</tt> tag, so embedding is
+  #   unnecessary unless you support browsers without JavaScript.
   # * <tt>:local</tt> - By default form submits via typical HTTP requests.
-  # Enable remote and unobtrusive XHRs submits with <tt>local: false</tt>.
-  # Remote forms may be enabled by default by setting
-  # <tt>config.action_view.form_with_generates_remote_forms = true</tt>.
+  #   Enable remote and unobtrusive XHRs submits with <tt>local: false</tt>.
+  #   Remote forms may be enabled by default by setting
+  #   <tt>config.action_view.form_with_generates_remote_forms = true</tt>.
   # * <tt>:skip_enforcing_utf8</tt> - If set to true, a hidden input with name
-  # utf8 is not output.
+  #   utf8 is not output.
   # * <tt>:builder</tt> - Override the object used to build the form.
   # * <tt>:id</tt> - Optional HTML id attribute.
   # * <tt>:class</tt> - Optional HTML class attribute.
@@ -4700,23 +4780,23 @@ module ActionView::Helpers::FormHelper
   #
   # When not passing a block, +form_with+ just generates an opening form tag.
   #
-  # <%= form_with(model: @post, url: super_posts_path) %>
-  # <%= form_with(model: @post, scope: :article) %>
-  # <%= form_with(model: @post, format: :json) %>
-  # <%= form_with(model: @post, authenticity_token: false) %> # Disables the token.
+  #   <%= form_with(model: @post, url: super_posts_path) %>
+  #   <%= form_with(model: @post, scope: :article) %>
+  #   <%= form_with(model: @post, format: :json) %>
+  #   <%= form_with(model: @post, authenticity_token: false) %> # Disables the token.
   #
   # For namespaced routes, like +admin_post_url+:
   #
-  # <%= form_with(model: [ :admin, @post ]) do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with(model: [ :admin, @post ]) do |form| %>
+  #     ...
+  #   <% end %>
   #
   # If your resource has associations defined, for example, you want to add comments
   # to the document given that the routes are set correctly:
   #
-  # <%= form_with(model: [ @document, Comment.new ]) do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with(model: [ @document, Comment.new ]) do |form| %>
+  #     ...
+  #   <% end %>
   #
   # Where <tt>@document = Document.find(params[:id])</tt>.
   #
@@ -4726,15 +4806,15 @@ module ActionView::Helpers::FormHelper
   # match the stand-alone FormHelper methods and methods
   # from FormTagHelper:
   #
-  # <%= form_with scope: :person do |form| %>
-  # <%= form.text_field :first_name %>
-  # <%= form.text_field :last_name %>
+  #   <%= form_with scope: :person do |form| %>
+  #     <%= form.text_field :first_name %>
+  #     <%= form.text_field :last_name %>
   #
-  # <%= text_area :person, :biography %>
-  # <%= check_box_tag "person[admin]", "1", @person.company.admin? %>
+  #     <%= text_area :person, :biography %>
+  #     <%= check_box_tag "person[admin]", "1", @person.company.admin? %>
   #
-  # <%= form.submit %>
-  # <% end %>
+  #     <%= form.submit %>
+  #   <% end %>
   #
   # Same goes for the methods in FormOptionsHelper and DateHelper designed
   # to work with an object as a base, like
@@ -4744,7 +4824,7 @@ module ActionView::Helpers::FormHelper
   #
   # You can force the form to use the full array of HTTP verbs by setting
   #
-  # method: (:get|:post|:patch|:put|:delete)
+  #    method: (:get|:post|:patch|:put|:delete)
   #
   # in the options hash. If the verb is not GET or POST, which are natively
   # supported by HTML forms, the form will be set to POST and a hidden input
@@ -4755,16 +4835,16 @@ module ActionView::Helpers::FormHelper
   # You can set data attributes directly in a data hash, but HTML options
   # besides id and class must be wrapped in an HTML key:
   #
-  # <%= form_with(model: @post, data: { behavior: "autosave" }, html: { name: "go" }) do |form| %>
-  # ...
-  # <% end %>
+  #   <%= form_with(model: @post, data: { behavior: "autosave" }, html: { name: "go" }) do |form| %>
+  #     ...
+  #   <% end %>
   #
   # generates
   #
-  # <form action="/posts/123" method="post" data-behavior="autosave" name="go">
-  # <input name="_method" type="hidden" value="patch" />
-  # ...
-  # </form>
+  #   <form action="/posts/123" method="post" data-behavior="autosave" name="go">
+  #     <input name="_method" type="hidden" value="patch" />
+  #     ...
+  #   </form>
   #
   # === Removing hidden model id's
   #
@@ -4776,11 +4856,11 @@ module ActionView::Helpers::FormHelper
   # In the following example the Post model has many Comments stored within it in a NoSQL database,
   # thus there is no primary key for comments.
   #
-  # <%= form_with(model: @post) do |form| %>
-  # <%= form.fields(:comments, skip_id: true) do |fields| %>
-  # ...
-  # <% end %>
-  # <% end %>
+  #   <%= form_with(model: @post) do |form| %>
+  #     <%= form.fields(:comments, skip_id: true) do |fields| %>
+  #       ...
+  #     <% end %>
+  #   <% end %>
   #
   # === Customized form builders
   #
@@ -4789,17 +4869,17 @@ module ActionView::Helpers::FormHelper
   # custom builder. For example, let's say you made a helper to
   # automatically add labels to form inputs.
   #
-  # <%= form_with model: @person, url: { action: "create" }, builder: LabellingFormBuilder do |form| %>
-  # <%= form.text_field :first_name %>
-  # <%= form.text_field :last_name %>
-  # <%= form.text_area :biography %>
-  # <%= form.check_box :admin %>
-  # <%= form.submit %>
-  # <% end %>
+  #   <%= form_with model: @person, url: { action: "create" }, builder: LabellingFormBuilder do |form| %>
+  #     <%= form.text_field :first_name %>
+  #     <%= form.text_field :last_name %>
+  #     <%= form.text_area :biography %>
+  #     <%= form.check_box :admin %>
+  #     <%= form.submit %>
+  #   <% end %>
   #
   # In this case, if you use:
   #
-  # <%= render form %>
+  #   <%= render form %>
   #
   # The rendered template is <tt>people/_labelling_form</tt> and the local
   # variable referencing the form builder is called
@@ -4811,9 +4891,9 @@ module ActionView::Helpers::FormHelper
   # In many cases you will want to wrap the above in another helper, so you
   # could do something like the following:
   #
-  # def labelled_form_with(**options, &block)
-  # form_with(**options.merge(builder: LabellingFormBuilder), &block)
-  # end
+  #   def labelled_form_with(**options, &block)
+  #     form_with(**options.merge(builder: LabellingFormBuilder), &block)
+  #   end
   def form_with(model: T.unsafe(nil), scope: T.unsafe(nil), url: T.unsafe(nil), format: T.unsafe(nil), **options, &block); end
 
   def form_with_generates_ids; end
@@ -4827,14 +4907,14 @@ module ActionView::Helpers::FormHelper
   # shown.
   #
   # ==== Examples
-  # hidden_field(:signup, :pass_confirm)
-  # # => <input type="hidden" id="signup_pass_confirm" name="signup[pass_confirm]" value="#{@signup.pass_confirm}" />
+  #   hidden_field(:signup, :pass_confirm)
+  #   # => <input type="hidden" id="signup_pass_confirm" name="signup[pass_confirm]" value="#{@signup.pass_confirm}" />
   #
-  # hidden_field(:post, :tag_list)
-  # # => <input type="hidden" id="post_tag_list" name="post[tag_list]" value="#{@post.tag_list}" />
+  #   hidden_field(:post, :tag_list)
+  #   # => <input type="hidden" id="post_tag_list" name="post[tag_list]" value="#{@post.tag_list}" />
   #
-  # hidden_field(:user, :token)
-  # # => <input type="hidden" id="user_token" name="user[token]" value="#{@user.token}" />
+  #   hidden_field(:user, :token)
+  #   # => <input type="hidden" id="user_token" name="user[token]" value="#{@user.token}" />
   def hidden_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a label tag tailored for labelling an input field for a specified attribute (identified by +method+) on an object
@@ -4845,70 +4925,70 @@ module ActionView::Helpers::FormHelper
   # target labels for radio_button tags (where the value is used in the ID of the input tag).
   #
   # ==== Examples
-  # label(:post, :title)
-  # # => <label for="post_title">Title</label>
+  #   label(:post, :title)
+  #   # => <label for="post_title">Title</label>
   #
   # You can localize your labels based on model and attribute names.
   # For example you can define the following in your locale (e.g. en.yml)
   #
-  # helpers:
-  # label:
-  # post:
-  # body: "Write your entire text here"
+  #   helpers:
+  #     label:
+  #       post:
+  #         body: "Write your entire text here"
   #
   # Which then will result in
   #
-  # label(:post, :body)
-  # # => <label for="post_body">Write your entire text here</label>
+  #   label(:post, :body)
+  #   # => <label for="post_body">Write your entire text here</label>
   #
   # Localization can also be based purely on the translation of the attribute-name
   # (if you are using ActiveRecord):
   #
-  # activerecord:
-  # attributes:
-  # post:
-  # cost: "Total cost"
+  #   activerecord:
+  #     attributes:
+  #       post:
+  #         cost: "Total cost"
   #
-  # label(:post, :cost)
-  # # => <label for="post_cost">Total cost</label>
+  #   label(:post, :cost)
+  #   # => <label for="post_cost">Total cost</label>
   #
-  # label(:post, :title, "A short title")
-  # # => <label for="post_title">A short title</label>
+  #   label(:post, :title, "A short title")
+  #   # => <label for="post_title">A short title</label>
   #
-  # label(:post, :title, "A short title", class: "title_label")
-  # # => <label for="post_title" class="title_label">A short title</label>
+  #   label(:post, :title, "A short title", class: "title_label")
+  #   # => <label for="post_title" class="title_label">A short title</label>
   #
-  # label(:post, :privacy, "Public Post", value: "public")
-  # # => <label for="post_privacy_public">Public Post</label>
+  #   label(:post, :privacy, "Public Post", value: "public")
+  #   # => <label for="post_privacy_public">Public Post</label>
   #
-  # label(:post, :cost) do |translation|
-  # content_tag(:span, translation, class: "cost_label")
-  # end
-  # # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
+  #   label(:post, :cost) do |translation|
+  #     content_tag(:span, translation, class: "cost_label")
+  #   end
+  #   # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
   #
-  # label(:post, :cost) do |builder|
-  # content_tag(:span, builder.translation, class: "cost_label")
-  # end
-  # # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
+  #   label(:post, :cost) do |builder|
+  #     content_tag(:span, builder.translation, class: "cost_label")
+  #   end
+  #   # => <label for="post_cost"><span class="cost_label">Total cost</span></label>
   #
-  # label(:post, :terms) do
-  # raw('Accept <a href="/terms">Terms</a>.')
-  # end
-  # # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
+  #   label(:post, :terms) do
+  #     raw('Accept <a href="/terms">Terms</a>.')
+  #   end
+  #   # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
   def label(object_name, method, content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a text_field of type "month".
   #
-  # month_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="month" />
+  #   month_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="month" />
   #
   # The default value is generated by trying to call +strftime+ with "%Y-%m"
   # on the object's value, which makes it behave as expected for instances
   # of DateTime and ActiveSupport::TimeWithZone.
   #
-  # @user.born_on = Date.new(1984, 1, 27)
-  # month_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-01" />
+  #   @user.born_on = Date.new(1984, 1, 27)
+  #   month_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-01" />
   def month_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns an input tag of type "number".
@@ -4923,23 +5003,23 @@ module ActionView::Helpers::FormHelper
   # shown. For security reasons this field is blank by default; pass in a value via +options+ if this is not desired.
   #
   # ==== Examples
-  # password_field(:login, :pass, size: 20)
-  # # => <input type="password" id="login_pass" name="login[pass]" size="20" />
+  #   password_field(:login, :pass, size: 20)
+  #   # => <input type="password" id="login_pass" name="login[pass]" size="20" />
   #
-  # password_field(:account, :secret, class: "form_input", value: @account.secret)
-  # # => <input type="password" id="account_secret" name="account[secret]" value="#{@account.secret}" class="form_input" />
+  #   password_field(:account, :secret, class: "form_input", value: @account.secret)
+  #   # => <input type="password" id="account_secret" name="account[secret]" value="#{@account.secret}" class="form_input" />
   #
-  # password_field(:user, :password, onchange: "if ($('#user_password').val().length > 30) { alert('Your password needs to be shorter!'); }")
-  # # => <input type="password" id="user_password" name="user[password]" onchange="if ($('#user_password').val().length > 30) { alert('Your password needs to be shorter!'); }"/>
+  #   password_field(:user, :password, onchange: "if ($('#user_password').val().length > 30) { alert('Your password needs to be shorter!'); }")
+  #   # => <input type="password" id="user_password" name="user[password]" onchange="if ($('#user_password').val().length > 30) { alert('Your password needs to be shorter!'); }"/>
   #
-  # password_field(:account, :pin, size: 20, class: 'form_input')
-  # # => <input type="password" id="account_pin" name="account[pin]" size="20" class="form_input" />
+  #   password_field(:account, :pin, size: 20, class: 'form_input')
+  #   # => <input type="password" id="account_pin" name="account[pin]" size="20" class="form_input" />
   def password_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "tel".
   #
-  # telephone_field("user", "phone")
-  # # => <input id="user_phone" name="user[phone]" type="tel" />
+  #   telephone_field("user", "phone")
+  #   # => <input id="user_phone" name="user[phone]" type="tel" />
   # aliases telephone_field
   def phone_field(object_name, method, options = T.unsafe(nil)); end
 
@@ -4950,17 +5030,17 @@ module ActionView::Helpers::FormHelper
   # To force the radio button to be checked pass <tt>checked: true</tt> in the
   # +options+ hash. You may pass HTML options there as well.
   #
-  # # Let's say that @post.category returns "rails":
-  # radio_button("post", "category", "rails")
-  # radio_button("post", "category", "java")
-  # # => <input type="radio" id="post_category_rails" name="post[category]" value="rails" checked="checked" />
-  # #    <input type="radio" id="post_category_java" name="post[category]" value="java" />
+  #   # Let's say that @post.category returns "rails":
+  #   radio_button("post", "category", "rails")
+  #   radio_button("post", "category", "java")
+  #   # => <input type="radio" id="post_category_rails" name="post[category]" value="rails" checked="checked" />
+  #   #    <input type="radio" id="post_category_java" name="post[category]" value="java" />
   #
-  # # Let's say that @user.receive_newsletter returns "no":
-  # radio_button("user", "receive_newsletter", "yes")
-  # radio_button("user", "receive_newsletter", "no")
-  # # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
-  # #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
+  #   # Let's say that @user.receive_newsletter returns "no":
+  #   radio_button("user", "receive_newsletter", "yes")
+  #   radio_button("user", "receive_newsletter", "no")
+  #   # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
+  #   #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
   def radio_button(object_name, method, tag_value, options = T.unsafe(nil)); end
 
   # Returns an input tag of type "range".
@@ -4975,27 +5055,27 @@ module ActionView::Helpers::FormHelper
   # assigned to the template (identified by +object_name+). Inputs of type "search" may be styled differently by
   # some browsers.
   #
-  # search_field(:user, :name)
-  # # => <input id="user_name" name="user[name]" type="search" />
-  # search_field(:user, :name, autosave: false)
-  # # => <input autosave="false" id="user_name" name="user[name]" type="search" />
-  # search_field(:user, :name, results: 3)
-  # # => <input id="user_name" name="user[name]" results="3" type="search" />
-  # #  Assume request.host returns "www.example.com"
-  # search_field(:user, :name, autosave: true)
-  # # => <input autosave="com.example.www" id="user_name" name="user[name]" results="10" type="search" />
-  # search_field(:user, :name, onsearch: true)
-  # # => <input id="user_name" incremental="true" name="user[name]" onsearch="true" type="search" />
-  # search_field(:user, :name, autosave: false, onsearch: true)
-  # # => <input autosave="false" id="user_name" incremental="true" name="user[name]" onsearch="true" type="search" />
-  # search_field(:user, :name, autosave: true, onsearch: true)
-  # # => <input autosave="com.example.www" id="user_name" incremental="true" name="user[name]" onsearch="true" results="10" type="search" />
+  #   search_field(:user, :name)
+  #   # => <input id="user_name" name="user[name]" type="search" />
+  #   search_field(:user, :name, autosave: false)
+  #   # => <input autosave="false" id="user_name" name="user[name]" type="search" />
+  #   search_field(:user, :name, results: 3)
+  #   # => <input id="user_name" name="user[name]" results="3" type="search" />
+  #   #  Assume request.host returns "www.example.com"
+  #   search_field(:user, :name, autosave: true)
+  #   # => <input autosave="com.example.www" id="user_name" name="user[name]" results="10" type="search" />
+  #   search_field(:user, :name, onsearch: true)
+  #   # => <input id="user_name" incremental="true" name="user[name]" onsearch="true" type="search" />
+  #   search_field(:user, :name, autosave: false, onsearch: true)
+  #   # => <input autosave="false" id="user_name" incremental="true" name="user[name]" onsearch="true" type="search" />
+  #   search_field(:user, :name, autosave: true, onsearch: true)
+  #   # => <input autosave="com.example.www" id="user_name" incremental="true" name="user[name]" onsearch="true" results="10" type="search" />
   def search_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "tel".
   #
-  # telephone_field("user", "phone")
-  # # => <input id="user_phone" name="user[phone]" type="tel" />
+  #   telephone_field("user", "phone")
+  #   # => <input id="user_phone" name="user[phone]" type="tel" />
   def telephone_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a textarea opening and closing tag set tailored for accessing a specified attribute (identified by +method+)
@@ -5003,25 +5083,25 @@ module ActionView::Helpers::FormHelper
   # hash with +options+.
   #
   # ==== Examples
-  # text_area(:post, :body, cols: 20, rows: 40)
-  # # => <textarea cols="20" rows="40" id="post_body" name="post[body]">
-  # #      #{@post.body}
-  # #    </textarea>
+  #   text_area(:post, :body, cols: 20, rows: 40)
+  #   # => <textarea cols="20" rows="40" id="post_body" name="post[body]">
+  #   #      #{@post.body}
+  #   #    </textarea>
   #
-  # text_area(:comment, :text, size: "20x30")
-  # # => <textarea cols="20" rows="30" id="comment_text" name="comment[text]">
-  # #      #{@comment.text}
-  # #    </textarea>
+  #   text_area(:comment, :text, size: "20x30")
+  #   # => <textarea cols="20" rows="30" id="comment_text" name="comment[text]">
+  #   #      #{@comment.text}
+  #   #    </textarea>
   #
-  # text_area(:application, :notes, cols: 40, rows: 15, class: 'app_input')
-  # # => <textarea cols="40" rows="15" id="application_notes" name="application[notes]" class="app_input">
-  # #      #{@application.notes}
-  # #    </textarea>
+  #   text_area(:application, :notes, cols: 40, rows: 15, class: 'app_input')
+  #   # => <textarea cols="40" rows="15" id="application_notes" name="application[notes]" class="app_input">
+  #   #      #{@application.notes}
+  #   #    </textarea>
   #
-  # text_area(:entry, :body, size: "20x20", disabled: 'disabled')
-  # # => <textarea cols="20" rows="20" id="entry_body" name="entry[body]" disabled="disabled">
-  # #      #{@entry.body}
-  # #    </textarea>
+  #   text_area(:entry, :body, size: "20x20", disabled: 'disabled')
+  #   # => <textarea cols="20" rows="20" id="entry_body" name="entry[body]" disabled="disabled">
+  #   #      #{@entry.body}
+  #   #    </textarea>
   def text_area(object_name, method, options = T.unsafe(nil)); end
 
   # Returns an input tag of the "text" type tailored for accessing a specified attribute (identified by +method+) on an object
@@ -5030,20 +5110,20 @@ module ActionView::Helpers::FormHelper
   # shown.
   #
   # ==== Examples
-  # text_field(:post, :title, size: 20)
-  # # => <input type="text" id="post_title" name="post[title]" size="20" value="#{@post.title}" />
+  #   text_field(:post, :title, size: 20)
+  #   # => <input type="text" id="post_title" name="post[title]" size="20" value="#{@post.title}" />
   #
-  # text_field(:post, :title, class: "create_input")
-  # # => <input type="text" id="post_title" name="post[title]" value="#{@post.title}" class="create_input" />
+  #   text_field(:post, :title, class: "create_input")
+  #   # => <input type="text" id="post_title" name="post[title]" value="#{@post.title}" class="create_input" />
   #
-  # text_field(:post, :title,  maxlength: 30, class: "title_input")
-  # # => <input type="text" id="post_title" name="post[title]" maxlength="30" size="30" value="#{@post.title}" class="title_input" />
+  #   text_field(:post, :title,  maxlength: 30, class: "title_input")
+  #   # => <input type="text" id="post_title" name="post[title]" maxlength="30" size="30" value="#{@post.title}" class="title_input" />
   #
-  # text_field(:session, :user, onchange: "if ($('#session_user').val() === 'admin') { alert('Your login cannot be admin!'); }")
-  # # => <input type="text" id="session_user" name="session[user]" value="#{@session.user}" onchange="if ($('#session_user').val() === 'admin') { alert('Your login cannot be admin!'); }"/>
+  #   text_field(:session, :user, onchange: "if ($('#session_user').val() === 'admin') { alert('Your login cannot be admin!'); }")
+  #   # => <input type="text" id="session_user" name="session[user]" value="#{@session.user}" onchange="if ($('#session_user').val() === 'admin') { alert('Your login cannot be admin!'); }"/>
   #
-  # text_field(:snippet, :code, size: 20, class: 'code_input')
-  # # => <input type="text" id="snippet_code" name="snippet[code]" size="20" value="#{@snippet.code}" class="code_input" />
+  #   text_field(:snippet, :code, size: 20, class: 'code_input')
+  #   # => <input type="text" id="snippet_code" name="snippet[code]" size="20" value="#{@snippet.code}" class="code_input" />
   def text_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "time".
@@ -5056,40 +5136,40 @@ module ActionView::Helpers::FormHelper
   # * Accepts same options as time_field_tag
   #
   # === Example
-  # time_field("task", "started_at")
-  # # => <input id="task_started_at" name="task[started_at]" type="time" />
+  #   time_field("task", "started_at")
+  #   # => <input id="task_started_at" name="task[started_at]" type="time" />
   #
   # You can create values for the "min" and "max" attributes by passing
   # instances of Date or Time to the options hash.
   #
-  # time_field("task", "started_at", min: Time.now)
-  # # => <input id="task_started_at" name="task[started_at]" type="time" min="01:00:00.000" />
+  #   time_field("task", "started_at", min: Time.now)
+  #   # => <input id="task_started_at" name="task[started_at]" type="time" min="01:00:00.000" />
   #
   # Alternatively, you can pass a String formatted as an ISO8601 time as the
   # values for "min" and "max."
   #
-  # time_field("task", "started_at", min: "01:00:00")
-  # # => <input id="task_started_at" name="task[started_at]" type="time" min="01:00:00.000" />
+  #   time_field("task", "started_at", min: "01:00:00")
+  #   # => <input id="task_started_at" name="task[started_at]" type="time" min="01:00:00.000" />
   def time_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "url".
   #
-  # url_field("user", "homepage")
-  # # => <input id="user_homepage" name="user[homepage]" type="url" />
+  #   url_field("user", "homepage")
+  #   # => <input id="user_homepage" name="user[homepage]" type="url" />
   def url_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "week".
   #
-  # week_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="week" />
+  #   week_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="week" />
   #
   # The default value is generated by trying to call +strftime+ with "%Y-W%W"
   # on the object's value, which makes it behave as expected for instances
   # of DateTime and ActiveSupport::TimeWithZone.
   #
-  # @user.born_on = Date.new(1984, 5, 12)
-  # week_field("user", "born_on")
-  # # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-W19" />
+  #   @user.born_on = Date.new(1984, 5, 12)
+  #   week_field("user", "born_on")
+  #   # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-W19" />
   def week_field(object_name, method, options = T.unsafe(nil)); end
 
   private
@@ -5113,80 +5193,80 @@ end
 #
 # * <tt>:include_blank</tt> - set to true or a prompt string if the first option element of the select element is a blank. Useful if there is not a default value required for the select element.
 #
-# select("post", "category", Post::CATEGORIES, { include_blank: true })
+#     select("post", "category", Post::CATEGORIES, { include_blank: true })
 #
-# could become:
+#   could become:
 #
-# <select name="post[category]" id="post_category">
-# <option value="" label=" "></option>
-# <option value="joke">joke</option>
-# <option value="poem">poem</option>
-# </select>
+#     <select name="post[category]" id="post_category">
+#       <option value="" label=" "></option>
+#       <option value="joke">joke</option>
+#       <option value="poem">poem</option>
+#     </select>
 #
-# Another common case is a select tag for a <tt>belongs_to</tt>-associated object.
+#   Another common case is a select tag for a <tt>belongs_to</tt>-associated object.
 #
-# Example with <tt>@post.person_id => 2</tt>:
+#   Example with <tt>@post.person_id => 2</tt>:
 #
-# select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { include_blank: 'None' })
+#     select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { include_blank: 'None' })
 #
-# could become:
+#   could become:
 #
-# <select name="post[person_id]" id="post_person_id">
-# <option value="">None</option>
-# <option value="1">David</option>
-# <option value="2" selected="selected">Eileen</option>
-# <option value="3">Rafael</option>
-# </select>
+#     <select name="post[person_id]" id="post_person_id">
+#       <option value="">None</option>
+#       <option value="1">David</option>
+#       <option value="2" selected="selected">Eileen</option>
+#       <option value="3">Rafael</option>
+#     </select>
 #
 # * <tt>:prompt</tt> - set to true or a prompt string. When the select element doesn't have a value yet, this prepends an option with a generic prompt -- "Please select" -- or the given prompt string.
 #
-# select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { prompt: 'Select Person' })
+#     select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { prompt: 'Select Person' })
 #
-# could become:
+#   could become:
 #
-# <select name="post[person_id]" id="post_person_id">
-# <option value="">Select Person</option>
-# <option value="1">David</option>
-# <option value="2">Eileen</option>
-# <option value="3">Rafael</option>
-# </select>
+#     <select name="post[person_id]" id="post_person_id">
+#       <option value="">Select Person</option>
+#       <option value="1">David</option>
+#       <option value="2">Eileen</option>
+#       <option value="3">Rafael</option>
+#     </select>
 #
 # * <tt>:index</tt> - like the other form helpers, +select+ can accept an <tt>:index</tt> option to manually set the ID used in the resulting output. Unlike other helpers, +select+ expects this
-# option to be in the +html_options+ parameter.
+#   option to be in the +html_options+ parameter.
 #
-# select("album[]", "genre", %w[rap rock country], {}, { index: nil })
+#     select("album[]", "genre", %w[rap rock country], {}, { index: nil })
 #
-# becomes:
+#   becomes:
 #
-# <select name="album[][genre]" id="album__genre">
-# <option value="rap">rap</option>
-# <option value="rock">rock</option>
-# <option value="country">country</option>
-# </select>
+#     <select name="album[][genre]" id="album__genre">
+#       <option value="rap">rap</option>
+#       <option value="rock">rock</option>
+#       <option value="country">country</option>
+#     </select>
 #
 # * <tt>:disabled</tt> - can be a single value or an array of values that will be disabled options in the final output.
 #
-# select("post", "category", Post::CATEGORIES, { disabled: 'restricted' })
+#     select("post", "category", Post::CATEGORIES, { disabled: 'restricted' })
 #
-# could become:
+#   could become:
 #
-# <select name="post[category]" id="post_category">
-# <option value="joke">joke</option>
-# <option value="poem">poem</option>
-# <option disabled="disabled" value="restricted">restricted</option>
-# </select>
+#     <select name="post[category]" id="post_category">
+#       <option value="joke">joke</option>
+#       <option value="poem">poem</option>
+#       <option disabled="disabled" value="restricted">restricted</option>
+#     </select>
 #
-# When used with the <tt>collection_select</tt> helper, <tt>:disabled</tt> can also be a Proc that identifies those options that should be disabled.
+#   When used with the <tt>collection_select</tt> helper, <tt>:disabled</tt> can also be a Proc that identifies those options that should be disabled.
 #
-# collection_select(:post, :category_id, Category.all, :id, :name, { disabled: -> (category) { category.archived? } })
+#     collection_select(:post, :category_id, Category.all, :id, :name, { disabled: -> (category) { category.archived? } })
 #
-# If the categories "2008 stuff" and "Christmas" return true when the method <tt>archived?</tt> is called, this would return:
-# <select name="post[category_id]" id="post_category_id">
-# <option value="1" disabled="disabled">2008 stuff</option>
-# <option value="2" disabled="disabled">Christmas</option>
-# <option value="3">Jokes</option>
-# <option value="4">Poems</option>
-# </select>
+#   If the categories "2008 stuff" and "Christmas" return true when the method <tt>archived?</tt> is called, this would return:
+#     <select name="post[category_id]" id="post_category_id">
+#       <option value="1" disabled="disabled">2008 stuff</option>
+#       <option value="2" disabled="disabled">Christmas</option>
+#       <option value="3">Jokes</option>
+#       <option value="4">Poems</option>
+#     </select>
 module ActionView::Helpers::FormOptionsHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::CaptureHelper
@@ -5208,33 +5288,33 @@ module ActionView::Helpers::FormOptionsHelper
   # retrieve the value/text.
   #
   # Example object structure for use with this method:
-  # class Post < ActiveRecord::Base
-  # has_and_belongs_to_many :authors
-  # end
-  # class Author < ActiveRecord::Base
-  # has_and_belongs_to_many :posts
-  # def name_with_initial
-  # "#{first_name.first}. #{last_name}"
-  # end
-  # end
+  #   class Post < ActiveRecord::Base
+  #     has_and_belongs_to_many :authors
+  #   end
+  #   class Author < ActiveRecord::Base
+  #     has_and_belongs_to_many :posts
+  #     def name_with_initial
+  #       "#{first_name.first}. #{last_name}"
+  #     end
+  #   end
   #
   # Sample usage (selecting the associated Author for an instance of Post, <tt>@post</tt>):
-  # collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial)
+  #   collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial)
   #
   # If <tt>@post.author_ids</tt> is already <tt>[1]</tt>, this would return:
-  # <input id="post_author_ids_1" name="post[author_ids][]" type="checkbox" value="1" checked="checked" />
-  # <label for="post_author_ids_1">D. Heinemeier Hansson</label>
-  # <input id="post_author_ids_2" name="post[author_ids][]" type="checkbox" value="2" />
-  # <label for="post_author_ids_2">D. Thomas</label>
-  # <input id="post_author_ids_3" name="post[author_ids][]" type="checkbox" value="3" />
-  # <label for="post_author_ids_3">M. Clark</label>
-  # <input name="post[author_ids][]" type="hidden" value="" />
+  #   <input id="post_author_ids_1" name="post[author_ids][]" type="checkbox" value="1" checked="checked" />
+  #   <label for="post_author_ids_1">D. Heinemeier Hansson</label>
+  #   <input id="post_author_ids_2" name="post[author_ids][]" type="checkbox" value="2" />
+  #   <label for="post_author_ids_2">D. Thomas</label>
+  #   <input id="post_author_ids_3" name="post[author_ids][]" type="checkbox" value="3" />
+  #   <label for="post_author_ids_3">M. Clark</label>
+  #   <input name="post[author_ids][]" type="hidden" value="" />
   #
   # It is also possible to customize the way the elements will be shown by
   # giving a block to the method:
-  # collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
-  # b.label { b.check_box }
-  # end
+  #   collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
+  #     b.label { b.check_box }
+  #   end
   #
   # The argument passed to the block is a special kind of builder for this
   # collection, which has the ability to generate the label and check box
@@ -5244,16 +5324,16 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # The builder methods <tt>label</tt> and <tt>check_box</tt> also accept
   # extra HTML options:
-  # collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
-  # b.label(class: "check_box") { b.check_box(class: "check_box") }
-  # end
+  #   collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
+  #     b.label(class: "check_box") { b.check_box(class: "check_box") }
+  #   end
   #
   # There are also three special methods available: <tt>object</tt>, <tt>text</tt> and
   # <tt>value</tt>, which are the current item being rendered, its text and value methods,
   # respectively. You can use them like this:
-  # collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
-  # b.label(:"data-value" => b.value) { b.check_box + b.text }
-  # end
+  #   collection_check_boxes(:post, :author_ids, Author.all, :id, :name_with_initial) do |b|
+  #      b.label(:"data-value" => b.value) { b.check_box + b.text }
+  #   end
   #
   # ==== Gotcha
   #
@@ -5263,7 +5343,7 @@ module ActionView::Helpers::FormOptionsHelper
   # For example, if we have a +User+ model with +category_ids+ field and we
   # have the following code in our update action:
   #
-  # @user.update(params[:user])
+  #   @user.update(params[:user])
   #
   # If no +category_ids+ are selected then we can safely assume this field
   # will not be updated.
@@ -5290,32 +5370,32 @@ module ActionView::Helpers::FormOptionsHelper
   # retrieve the value/text.
   #
   # Example object structure for use with this method:
-  # class Post < ActiveRecord::Base
-  # belongs_to :author
-  # end
-  # class Author < ActiveRecord::Base
-  # has_many :posts
-  # def name_with_initial
-  # "#{first_name.first}. #{last_name}"
-  # end
-  # end
+  #   class Post < ActiveRecord::Base
+  #     belongs_to :author
+  #   end
+  #   class Author < ActiveRecord::Base
+  #     has_many :posts
+  #     def name_with_initial
+  #       "#{first_name.first}. #{last_name}"
+  #     end
+  #   end
   #
   # Sample usage (selecting the associated Author for an instance of Post, <tt>@post</tt>):
-  # collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial)
+  #   collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial)
   #
   # If <tt>@post.author_id</tt> is already <tt>1</tt>, this would return:
-  # <input id="post_author_id_1" name="post[author_id]" type="radio" value="1" checked="checked" />
-  # <label for="post_author_id_1">D. Heinemeier Hansson</label>
-  # <input id="post_author_id_2" name="post[author_id]" type="radio" value="2" />
-  # <label for="post_author_id_2">D. Thomas</label>
-  # <input id="post_author_id_3" name="post[author_id]" type="radio" value="3" />
-  # <label for="post_author_id_3">M. Clark</label>
+  #   <input id="post_author_id_1" name="post[author_id]" type="radio" value="1" checked="checked" />
+  #   <label for="post_author_id_1">D. Heinemeier Hansson</label>
+  #   <input id="post_author_id_2" name="post[author_id]" type="radio" value="2" />
+  #   <label for="post_author_id_2">D. Thomas</label>
+  #   <input id="post_author_id_3" name="post[author_id]" type="radio" value="3" />
+  #   <label for="post_author_id_3">M. Clark</label>
   #
   # It is also possible to customize the way the elements will be shown by
   # giving a block to the method:
-  # collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
-  # b.label { b.radio_button }
-  # end
+  #   collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
+  #     b.label { b.radio_button }
+  #   end
   #
   # The argument passed to the block is a special kind of builder for this
   # collection, which has the ability to generate the label and radio button
@@ -5325,16 +5405,16 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # The builder methods <tt>label</tt> and <tt>radio_button</tt> also accept
   # extra HTML options:
-  # collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
-  # b.label(class: "radio_button") { b.radio_button(class: "radio_button") }
-  # end
+  #   collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
+  #     b.label(class: "radio_button") { b.radio_button(class: "radio_button") }
+  #   end
   #
   # There are also three special methods available: <tt>object</tt>, <tt>text</tt> and
   # <tt>value</tt>, which are the current item being rendered, its text and value methods,
   # respectively. You can use them like this:
-  # collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
-  # b.label(:"data-value" => b.value) { b.radio_button + b.text }
-  # end
+  #   collection_radio_buttons(:post, :author_id, Author.all, :id, :name_with_initial) do |b|
+  #      b.label(:"data-value" => b.value) { b.radio_button + b.text }
+  #   end
   #
   # ==== Gotcha
   #
@@ -5344,7 +5424,7 @@ module ActionView::Helpers::FormOptionsHelper
   # if a +User+ model has a +category_id+ field and in the form no category is selected, no +category_id+ parameter is sent. So,
   # any strong parameters idiom like:
   #
-  # params.require(:user).permit(...)
+  #   params.require(:user).permit(...)
   #
   # will raise an error since no <tt>{user: ...}</tt> will be present.
   #
@@ -5368,28 +5448,28 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # Example object structure for use with this method:
   #
-  # class Post < ActiveRecord::Base
-  # belongs_to :author
-  # end
+  #   class Post < ActiveRecord::Base
+  #     belongs_to :author
+  #   end
   #
-  # class Author < ActiveRecord::Base
-  # has_many :posts
-  # def name_with_initial
-  # "#{first_name.first}. #{last_name}"
-  # end
-  # end
+  #   class Author < ActiveRecord::Base
+  #     has_many :posts
+  #     def name_with_initial
+  #       "#{first_name.first}. #{last_name}"
+  #     end
+  #   end
   #
   # Sample usage (selecting the associated Author for an instance of Post, <tt>@post</tt>):
   #
-  # collection_select(:post, :author_id, Author.all, :id, :name_with_initial, prompt: true)
+  #   collection_select(:post, :author_id, Author.all, :id, :name_with_initial, prompt: true)
   #
   # If <tt>@post.author_id</tt> is already <tt>1</tt>, this would return:
-  # <select name="post[author_id]" id="post_author_id">
-  # <option value="">Please select</option>
-  # <option value="1" selected="selected">D. Heinemeier Hansson</option>
-  # <option value="2">D. Thomas</option>
-  # <option value="3">M. Clark</option>
-  # </select>
+  #   <select name="post[author_id]" id="post_author_id">
+  #     <option value="">Please select</option>
+  #     <option value="1" selected="selected">D. Heinemeier Hansson</option>
+  #     <option value="2">D. Thomas</option>
+  #     <option value="3">M. Clark</option>
+  #   </select>
   def collection_select(object, method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns <tt><select></tt>, <tt><optgroup></tt> and <tt><option></tt> tags for the collection of existing return values of
@@ -5402,111 +5482,111 @@ module ActionView::Helpers::FormOptionsHelper
   # * +method+ - The attribute of +object+ corresponding to the select tag
   # * +collection+ - An array of objects representing the <tt><optgroup></tt> tags.
   # * +group_method+ - The name of a method which, when called on a member of +collection+, returns an
-  # array of child objects representing the <tt><option></tt> tags. It can also be any object that responds
-  # to +call+, such as a +proc+, that will be called for each member of the +collection+ to retrieve the
-  # value.
+  #   array of child objects representing the <tt><option></tt> tags. It can also be any object that responds
+  #   to +call+, such as a +proc+, that will be called for each member of the +collection+ to retrieve the
+  #   value.
   # * +group_label_method+ - The name of a method which, when called on a member of +collection+, returns a
-  # string to be used as the +label+ attribute for its <tt><optgroup></tt> tag. It can also be any object
-  # that responds to +call+, such as a +proc+, that will be called for each member of the +collection+ to
-  # retrieve the label.
+  #   string to be used as the +label+ attribute for its <tt><optgroup></tt> tag. It can also be any object
+  #   that responds to +call+, such as a +proc+, that will be called for each member of the +collection+ to
+  #   retrieve the label.
   # * +option_key_method+ - The name of a method which, when called on a child object of a member of
-  # +collection+, returns a value to be used as the +value+ attribute for its <tt><option></tt> tag.
+  #   +collection+, returns a value to be used as the +value+ attribute for its <tt><option></tt> tag.
   # * +option_value_method+ - The name of a method which, when called on a child object of a member of
-  # +collection+, returns a value to be used as the contents of its <tt><option></tt> tag.
+  #   +collection+, returns a value to be used as the contents of its <tt><option></tt> tag.
   #
   # Example object structure for use with this method:
   #
-  # class Continent < ActiveRecord::Base
-  # has_many :countries
-  # # attribs: id, name
-  # end
+  #   class Continent < ActiveRecord::Base
+  #     has_many :countries
+  #     # attribs: id, name
+  #   end
   #
-  # class Country < ActiveRecord::Base
-  # belongs_to :continent
-  # # attribs: id, name, continent_id
-  # end
+  #   class Country < ActiveRecord::Base
+  #     belongs_to :continent
+  #     # attribs: id, name, continent_id
+  #   end
   #
-  # class City < ActiveRecord::Base
-  # belongs_to :country
-  # # attribs: id, name, country_id
-  # end
+  #   class City < ActiveRecord::Base
+  #     belongs_to :country
+  #     # attribs: id, name, country_id
+  #   end
   #
   # Sample usage:
   #
-  # grouped_collection_select(:city, :country_id, @continents, :countries, :name, :id, :name)
+  #   grouped_collection_select(:city, :country_id, @continents, :countries, :name, :id, :name)
   #
   # Possible output:
   #
-  # <select name="city[country_id]" id="city_country_id">
-  # <optgroup label="Africa">
-  # <option value="1">South Africa</option>
-  # <option value="3">Somalia</option>
-  # </optgroup>
-  # <optgroup label="Europe">
-  # <option value="7" selected="selected">Denmark</option>
-  # <option value="2">Ireland</option>
-  # </optgroup>
-  # </select>
+  #   <select name="city[country_id]" id="city_country_id">
+  #     <optgroup label="Africa">
+  #       <option value="1">South Africa</option>
+  #       <option value="3">Somalia</option>
+  #     </optgroup>
+  #     <optgroup label="Europe">
+  #       <option value="7" selected="selected">Denmark</option>
+  #       <option value="2">Ireland</option>
+  #     </optgroup>
+  #   </select>
   def grouped_collection_select(object, method, collection, group_method, group_label_method, option_key_method, option_value_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a string of <tt><option></tt> tags, like <tt>options_for_select</tt>, but
   # wraps them with <tt><optgroup></tt> tags:
   #
-  # grouped_options = [
-  # ['North America',
-  # [['United States','US'],'Canada']],
-  # ['Europe',
-  # ['Denmark','Germany','France']]
-  # ]
-  # grouped_options_for_select(grouped_options)
+  #   grouped_options = [
+  #    ['North America',
+  #      [['United States','US'],'Canada']],
+  #    ['Europe',
+  #      ['Denmark','Germany','France']]
+  #   ]
+  #   grouped_options_for_select(grouped_options)
   #
-  # grouped_options = {
-  # 'North America' => [['United States','US'], 'Canada'],
-  # 'Europe' => ['Denmark','Germany','France']
-  # }
-  # grouped_options_for_select(grouped_options)
+  #   grouped_options = {
+  #     'North America' => [['United States','US'], 'Canada'],
+  #     'Europe' => ['Denmark','Germany','France']
+  #   }
+  #   grouped_options_for_select(grouped_options)
   #
   # Possible output:
-  # <optgroup label="North America">
-  # <option value="US">United States</option>
-  # <option value="Canada">Canada</option>
-  # </optgroup>
-  # <optgroup label="Europe">
-  # <option value="Denmark">Denmark</option>
-  # <option value="Germany">Germany</option>
-  # <option value="France">France</option>
-  # </optgroup>
+  #   <optgroup label="North America">
+  #     <option value="US">United States</option>
+  #     <option value="Canada">Canada</option>
+  #   </optgroup>
+  #   <optgroup label="Europe">
+  #     <option value="Denmark">Denmark</option>
+  #     <option value="Germany">Germany</option>
+  #     <option value="France">France</option>
+  #   </optgroup>
   #
   # Parameters:
   # * +grouped_options+ - Accepts a nested array or hash of strings. The first value serves as the
-  # <tt><optgroup></tt> label while the second value must be an array of options. The second value can be a
-  # nested array of text-value pairs. See <tt>options_for_select</tt> for more info.
-  # Ex. ["North America",[["United States","US"],["Canada","CA"]]]
+  #   <tt><optgroup></tt> label while the second value must be an array of options. The second value can be a
+  #   nested array of text-value pairs. See <tt>options_for_select</tt> for more info.
+  #    Ex. ["North America",[["United States","US"],["Canada","CA"]]]
   # * +selected_key+ - A value equal to the +value+ attribute for one of the <tt><option></tt> tags,
-  # which will have the +selected+ attribute set. Note: It is possible for this value to match multiple options
-  # as you might have the same option in multiple groups. Each will then get <tt>selected="selected"</tt>.
+  #   which will have the +selected+ attribute set. Note: It is possible for this value to match multiple options
+  #   as you might have the same option in multiple groups. Each will then get <tt>selected="selected"</tt>.
   #
   # Options:
   # * <tt>:prompt</tt> - set to true or a prompt string. When the select element doesn't have a value yet, this
-  # prepends an option with a generic prompt - "Please select" - or the given prompt string.
+  #   prepends an option with a generic prompt - "Please select" - or the given prompt string.
   # * <tt>:divider</tt> - the divider for the options groups.
   #
-  # grouped_options = [
-  # [['United States','US'], 'Canada'],
-  # ['Denmark','Germany','France']
-  # ]
-  # grouped_options_for_select(grouped_options, nil, divider: '---------')
+  #     grouped_options = [
+  #       [['United States','US'], 'Canada'],
+  #       ['Denmark','Germany','France']
+  #     ]
+  #     grouped_options_for_select(grouped_options, nil, divider: '---------')
   #
-  # Possible output:
-  # <optgroup label="---------">
-  # <option value="US">United States</option>
-  # <option value="Canada">Canada</option>
-  # </optgroup>
-  # <optgroup label="---------">
-  # <option value="Denmark">Denmark</option>
-  # <option value="Germany">Germany</option>
-  # <option value="France">France</option>
-  # </optgroup>
+  #   Possible output:
+  #     <optgroup label="---------">
+  #       <option value="US">United States</option>
+  #       <option value="Canada">Canada</option>
+  #     </optgroup>
+  #     <optgroup label="---------">
+  #       <option value="Denmark">Denmark</option>
+  #       <option value="Germany">Germany</option>
+  #       <option value="France">France</option>
+  #     </optgroup>
   #
   # <b>Note:</b> Only the <tt><optgroup></tt> and <tt><option></tt> tags are returned, so you still have to
   # wrap the output in an appropriate <tt><select></tt> tag.
@@ -5518,45 +5598,45 @@ module ActionView::Helpers::FormOptionsHelper
   # Parameters:
   # * +collection+ - An array of objects representing the <tt><optgroup></tt> tags.
   # * +group_method+ - The name of a method which, when called on a member of +collection+, returns an
-  # array of child objects representing the <tt><option></tt> tags.
+  #   array of child objects representing the <tt><option></tt> tags.
   # * +group_label_method+ - The name of a method which, when called on a member of +collection+, returns a
-  # string to be used as the +label+ attribute for its <tt><optgroup></tt> tag.
+  #   string to be used as the +label+ attribute for its <tt><optgroup></tt> tag.
   # * +option_key_method+ - The name of a method which, when called on a child object of a member of
-  # +collection+, returns a value to be used as the +value+ attribute for its <tt><option></tt> tag.
+  #   +collection+, returns a value to be used as the +value+ attribute for its <tt><option></tt> tag.
   # * +option_value_method+ - The name of a method which, when called on a child object of a member of
-  # +collection+, returns a value to be used as the contents of its <tt><option></tt> tag.
+  #   +collection+, returns a value to be used as the contents of its <tt><option></tt> tag.
   # * +selected_key+ - A value equal to the +value+ attribute for one of the <tt><option></tt> tags,
-  # which will have the +selected+ attribute set. Corresponds to the return value of one of the calls
-  # to +option_key_method+. If +nil+, no selection is made. Can also be a hash if disabled values are
-  # to be specified.
+  #   which will have the +selected+ attribute set. Corresponds to the return value of one of the calls
+  #   to +option_key_method+. If +nil+, no selection is made. Can also be a hash if disabled values are
+  #   to be specified.
   #
   # Example object structure for use with this method:
   #
-  # class Continent < ActiveRecord::Base
-  # has_many :countries
-  # # attribs: id, name
-  # end
+  #   class Continent < ActiveRecord::Base
+  #     has_many :countries
+  #     # attribs: id, name
+  #   end
   #
-  # class Country < ActiveRecord::Base
-  # belongs_to :continent
-  # # attribs: id, name, continent_id
-  # end
+  #   class Country < ActiveRecord::Base
+  #     belongs_to :continent
+  #     # attribs: id, name, continent_id
+  #   end
   #
   # Sample usage:
-  # option_groups_from_collection_for_select(@continents, :countries, :name, :id, :name, 3)
+  #   option_groups_from_collection_for_select(@continents, :countries, :name, :id, :name, 3)
   #
   # Possible output:
-  # <optgroup label="Africa">
-  # <option value="1">Egypt</option>
-  # <option value="4">Rwanda</option>
-  # ...
-  # </optgroup>
-  # <optgroup label="Asia">
-  # <option value="3" selected="selected">China</option>
-  # <option value="12">India</option>
-  # <option value="5">Japan</option>
-  # ...
-  # </optgroup>
+  #   <optgroup label="Africa">
+  #     <option value="1">Egypt</option>
+  #     <option value="4">Rwanda</option>
+  #     ...
+  #   </optgroup>
+  #   <optgroup label="Asia">
+  #     <option value="3" selected="selected">China</option>
+  #     <option value="12">India</option>
+  #     <option value="5">Japan</option>
+  #     ...
+  #   </optgroup>
   #
   # <b>Note:</b> Only the <tt><optgroup></tt> and <tt><option></tt> tags are returned, so you still have to
   # wrap the output in an appropriate <tt><select></tt> tag.
@@ -5568,54 +5648,54 @@ module ActionView::Helpers::FormOptionsHelper
   # become lasts. If +selected+ is specified, the matching "last" or element will get the selected option-tag. +selected+
   # may also be an array of values to be selected when using a multiple select.
   #
-  # options_for_select([["Dollar", "$"], ["Kroner", "DKK"]])
-  # # => <option value="$">Dollar</option>
-  # # => <option value="DKK">Kroner</option>
+  #   options_for_select([["Dollar", "$"], ["Kroner", "DKK"]])
+  #   # => <option value="$">Dollar</option>
+  #   # => <option value="DKK">Kroner</option>
   #
-  # options_for_select([ "VISA", "MasterCard" ], "MasterCard")
-  # # => <option value="VISA">VISA</option>
-  # # => <option selected="selected" value="MasterCard">MasterCard</option>
+  #   options_for_select([ "VISA", "MasterCard" ], "MasterCard")
+  #   # => <option value="VISA">VISA</option>
+  #   # => <option selected="selected" value="MasterCard">MasterCard</option>
   #
-  # options_for_select({ "Basic" => "$20", "Plus" => "$40" }, "$40")
-  # # => <option value="$20">Basic</option>
-  # # => <option value="$40" selected="selected">Plus</option>
+  #   options_for_select({ "Basic" => "$20", "Plus" => "$40" }, "$40")
+  #   # => <option value="$20">Basic</option>
+  #   # => <option value="$40" selected="selected">Plus</option>
   #
-  # options_for_select([ "VISA", "MasterCard", "Discover" ], ["VISA", "Discover"])
-  # # => <option selected="selected" value="VISA">VISA</option>
-  # # => <option value="MasterCard">MasterCard</option>
-  # # => <option selected="selected" value="Discover">Discover</option>
+  #   options_for_select([ "VISA", "MasterCard", "Discover" ], ["VISA", "Discover"])
+  #   # => <option selected="selected" value="VISA">VISA</option>
+  #   # => <option value="MasterCard">MasterCard</option>
+  #   # => <option selected="selected" value="Discover">Discover</option>
   #
   # You can optionally provide HTML attributes as the last element of the array.
   #
-  # options_for_select([ "Denmark", ["USA", { class: 'bold' }], "Sweden" ], ["USA", "Sweden"])
-  # # => <option value="Denmark">Denmark</option>
-  # # => <option value="USA" class="bold" selected="selected">USA</option>
-  # # => <option value="Sweden" selected="selected">Sweden</option>
+  #   options_for_select([ "Denmark", ["USA", { class: 'bold' }], "Sweden" ], ["USA", "Sweden"])
+  #   # => <option value="Denmark">Denmark</option>
+  #   # => <option value="USA" class="bold" selected="selected">USA</option>
+  #   # => <option value="Sweden" selected="selected">Sweden</option>
   #
-  # options_for_select([["Dollar", "$", { class: "bold" }], ["Kroner", "DKK", { onclick: "alert('HI');" }]])
-  # # => <option value="$" class="bold">Dollar</option>
-  # # => <option value="DKK" onclick="alert('HI');">Kroner</option>
+  #   options_for_select([["Dollar", "$", { class: "bold" }], ["Kroner", "DKK", { onclick: "alert('HI');" }]])
+  #   # => <option value="$" class="bold">Dollar</option>
+  #   # => <option value="DKK" onclick="alert('HI');">Kroner</option>
   #
   # If you wish to specify disabled option tags, set +selected+ to be a hash, with <tt>:disabled</tt> being either a value
   # or array of values to be disabled. In this case, you can use <tt>:selected</tt> to specify selected option tags.
   #
-  # options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], disabled: "Super Platinum")
-  # # => <option value="Free">Free</option>
-  # # => <option value="Basic">Basic</option>
-  # # => <option value="Advanced">Advanced</option>
-  # # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
+  #   options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], disabled: "Super Platinum")
+  #   # => <option value="Free">Free</option>
+  #   # => <option value="Basic">Basic</option>
+  #   # => <option value="Advanced">Advanced</option>
+  #   # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
   #
-  # options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], disabled: ["Advanced", "Super Platinum"])
-  # # => <option value="Free">Free</option>
-  # # => <option value="Basic">Basic</option>
-  # # => <option value="Advanced" disabled="disabled">Advanced</option>
-  # # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
+  #   options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], disabled: ["Advanced", "Super Platinum"])
+  #   # => <option value="Free">Free</option>
+  #   # => <option value="Basic">Basic</option>
+  #   # => <option value="Advanced" disabled="disabled">Advanced</option>
+  #   # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
   #
-  # options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], selected: "Free", disabled: "Super Platinum")
-  # # => <option value="Free" selected="selected">Free</option>
-  # # => <option value="Basic">Basic</option>
-  # # => <option value="Advanced">Advanced</option>
-  # # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
+  #   options_for_select(["Free", "Basic", "Advanced", "Super Platinum"], selected: "Free", disabled: "Super Platinum")
+  #   # => <option value="Free" selected="selected">Free</option>
+  #   # => <option value="Basic">Basic</option>
+  #   # => <option value="Advanced">Advanced</option>
+  #   # => <option value="Super Platinum" disabled="disabled">Super Platinum</option>
   #
   # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
   def options_for_select(container, selected = T.unsafe(nil)); end
@@ -5623,12 +5703,12 @@ module ActionView::Helpers::FormOptionsHelper
   # Returns a string of option tags that have been compiled by iterating over the +collection+ and assigning
   # the result of a call to the +value_method+ as the option value and the +text_method+ as the option text.
   #
-  # options_from_collection_for_select(@people, 'id', 'name')
-  # # => <option value="#{person.id}">#{person.name}</option>
+  #   options_from_collection_for_select(@people, 'id', 'name')
+  #   # => <option value="#{person.id}">#{person.name}</option>
   #
   # This is more often than not used inside a #select_tag like this example:
   #
-  # select_tag 'person', options_from_collection_for_select(@people, 'id', 'name')
+  #   select_tag 'person', options_from_collection_for_select(@people, 'id', 'name')
   #
   # If +selected+ is specified as a value or array of values, the element(s) returning a match on +value_method+
   # will be selected option tag(s).
@@ -5640,9 +5720,9 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # Be sure to specify the same class as the +value_method+ when specifying selected or disabled options.
   # Failure to do this will produce undesired results. Example:
-  # options_from_collection_for_select(@people, 'id', 'name', '1')
+  #   options_from_collection_for_select(@people, 'id', 'name', '1')
   # Will not select a person with the id of 1 because 1 (an Integer) is not the same as '1' (a string)
-  # options_from_collection_for_select(@people, 'id', 'name', 1)
+  #   options_from_collection_for_select(@people, 'id', 'name', 1)
   # should produce the desired results.
   def options_from_collection_for_select(collection, value_method, text_method, selected = T.unsafe(nil)); end
 
@@ -5657,16 +5737,16 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # For example:
   #
-  # select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { include_blank: true })
+  #   select("post", "person_id", Person.all.collect { |p| [ p.name, p.id ] }, { include_blank: true })
   #
   # would become:
   #
-  # <select name="post[person_id]" id="post_person_id">
-  # <option value="" label=" "></option>
-  # <option value="1" selected="selected">David</option>
-  # <option value="2">Eileen</option>
-  # <option value="3">Rafael</option>
-  # </select>
+  #   <select name="post[person_id]" id="post_person_id">
+  #     <option value="" label=" "></option>
+  #     <option value="1" selected="selected">David</option>
+  #     <option value="2">Eileen</option>
+  #     <option value="3">Rafael</option>
+  #   </select>
   #
   # assuming the associated person has ID 1.
   #
@@ -5683,11 +5763,11 @@ module ActionView::Helpers::FormOptionsHelper
   # A block can be passed to +select+ to customize how the options tags will be rendered. This
   # is useful when the options tag has complex attributes.
   #
-  # select(report, "campaign_ids") do
-  # available_campaigns.each do |c|
-  # content_tag(:option, c.name, value: c.id, data: { tags: c.tags.to_json })
-  # end
-  # end
+  #   select(report, "campaign_ids") do
+  #     available_campaigns.each do |c|
+  #       content_tag(:option, c.name, value: c.id, data: { tags: c.tags.to_json })
+  #     end
+  #   end
   #
   # ==== Gotcha
   #
@@ -5697,7 +5777,7 @@ module ActionView::Helpers::FormOptionsHelper
   # the user deselects all roles from +role_ids+ multiple select box, no +role_ids+ parameter is sent. So,
   # any mass-assignment idiom like
   #
-  # @user.update(params[:user])
+  #   @user.update(params[:user])
   #
   # wouldn't update roles.
   #
@@ -5752,17 +5832,17 @@ module ActionView::Helpers::FormOptionsHelper
   # Finally, this method supports a <tt>:default</tt> option, which selects
   # a default ActiveSupport::TimeZone if the object's time zone is +nil+.
   #
-  # time_zone_select("user", "time_zone", nil, include_blank: true)
+  #   time_zone_select("user", "time_zone", nil, include_blank: true)
   #
-  # time_zone_select("user", "time_zone", nil, default: "Pacific Time (US & Canada)")
+  #   time_zone_select("user", "time_zone", nil, default: "Pacific Time (US & Canada)")
   #
-  # time_zone_select("user", 'time_zone', ActiveSupport::TimeZone.us_zones, default: "Pacific Time (US & Canada)")
+  #   time_zone_select("user", 'time_zone', ActiveSupport::TimeZone.us_zones, default: "Pacific Time (US & Canada)")
   #
-  # time_zone_select("user", 'time_zone', [ ActiveSupport::TimeZone['Alaska'], ActiveSupport::TimeZone['Hawaii'] ])
+  #   time_zone_select("user", 'time_zone', [ ActiveSupport::TimeZone['Alaska'], ActiveSupport::TimeZone['Hawaii'] ])
   #
-  # time_zone_select("user", 'time_zone', /Australia/)
+  #   time_zone_select("user", 'time_zone', /Australia/)
   #
-  # time_zone_select("user", "time_zone", ActiveSupport::TimeZone.all.sort, model: ActiveSupport::TimeZone)
+  #   time_zone_select("user", "time_zone", ActiveSupport::TimeZone.all.sort, model: ActiveSupport::TimeZone)
   def time_zone_select(object, method, priority_zones = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   private
@@ -5771,7 +5851,10 @@ module ActionView::Helpers::FormOptionsHelper
   def extract_values_from_collection(collection, value_method, selected); end
   def option_html_attributes(element); end
   def option_text_and_value(option); end
+
+  # @return [Boolean]
   def option_value_selected?(value, selected); end
+
   def prompt_text(prompt); end
   def value_for_collection(item, value); end
 end
@@ -5802,45 +5885,45 @@ module ActionView::Helpers::FormTagHelper
   # ==== Options
   # * <tt>:data</tt> - This option can be used to add custom data attributes.
   # * <tt>:disabled</tt> - If true, the user will not be able to
-  # use this input.
+  #   use this input.
   # * Any other key creates standard HTML options for the tag.
   #
   # ==== Data attributes
   #
   # * <tt>confirm: 'question?'</tt> - If present, the
-  # unobtrusive JavaScript drivers will provide a prompt with
-  # the question specified. If the user accepts, the form is
-  # processed normally, otherwise no action is taken.
+  #   unobtrusive JavaScript drivers will provide a prompt with
+  #   the question specified. If the user accepts, the form is
+  #   processed normally, otherwise no action is taken.
   # * <tt>:disable_with</tt> - Value of this parameter will be
-  # used as the value for a disabled version of the submit
-  # button when the form is submitted. This feature is provided
-  # by the unobtrusive JavaScript driver.
+  #   used as the value for a disabled version of the submit
+  #   button when the form is submitted. This feature is provided
+  #   by the unobtrusive JavaScript driver.
   #
   # ==== Examples
-  # button_tag
-  # # => <button name="button" type="submit">Button</button>
+  #   button_tag
+  #   # => <button name="button" type="submit">Button</button>
   #
-  # button_tag 'Reset', type: 'reset'
-  # # => <button name="button" type="reset">Reset</button>
+  #   button_tag 'Reset', type: 'reset'
+  #   # => <button name="button" type="reset">Reset</button>
   #
-  # button_tag 'Button', type: 'button'
-  # # => <button name="button" type="button">Button</button>
+  #   button_tag 'Button', type: 'button'
+  #   # => <button name="button" type="button">Button</button>
   #
-  # button_tag 'Reset', type: 'reset', disabled: true
-  # # => <button name="button" type="reset" disabled="disabled">Reset</button>
+  #   button_tag 'Reset', type: 'reset', disabled: true
+  #   # => <button name="button" type="reset" disabled="disabled">Reset</button>
   #
-  # button_tag(type: 'button') do
-  # content_tag(:strong, 'Ask me!')
-  # end
-  # # => <button name="button" type="button">
-  # #     <strong>Ask me!</strong>
-  # #    </button>
+  #   button_tag(type: 'button') do
+  #     content_tag(:strong, 'Ask me!')
+  #   end
+  #   # => <button name="button" type="button">
+  #   #     <strong>Ask me!</strong>
+  #   #    </button>
   #
-  # button_tag "Save", data: { confirm: "Are you sure?" }
-  # # => <button name="button" type="submit" data-confirm="Are you sure?">Save</button>
+  #   button_tag "Save", data: { confirm: "Are you sure?" }
+  #   # => <button name="button" type="submit" data-confirm="Are you sure?">Save</button>
   #
-  # button_tag "Checkout", data: { disable_with: "Please wait..." }
-  # # => <button data-disable-with="Please wait..." name="button" type="submit">Checkout</button>
+  #   button_tag "Checkout", data: { disable_with: "Please wait..." }
+  #   # => <button data-disable-with="Please wait..." name="button" type="submit">Checkout</button>
   def button_tag(content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a check box form input tag.
@@ -5850,20 +5933,20 @@ module ActionView::Helpers::FormTagHelper
   # * Any other key creates standard HTML options for the tag.
   #
   # ==== Examples
-  # check_box_tag 'accept'
-  # # => <input id="accept" name="accept" type="checkbox" value="1" />
+  #   check_box_tag 'accept'
+  #   # => <input id="accept" name="accept" type="checkbox" value="1" />
   #
-  # check_box_tag 'rock', 'rock music'
-  # # => <input id="rock" name="rock" type="checkbox" value="rock music" />
+  #   check_box_tag 'rock', 'rock music'
+  #   # => <input id="rock" name="rock" type="checkbox" value="rock music" />
   #
-  # check_box_tag 'receive_email', 'yes', true
-  # # => <input checked="checked" id="receive_email" name="receive_email" type="checkbox" value="yes" />
+  #   check_box_tag 'receive_email', 'yes', true
+  #   # => <input checked="checked" id="receive_email" name="receive_email" type="checkbox" value="yes" />
   #
-  # check_box_tag 'tos', 'yes', false, class: 'accept_tos'
-  # # => <input class="accept_tos" id="tos" name="tos" type="checkbox" value="yes" />
+  #   check_box_tag 'tos', 'yes', false, class: 'accept_tos'
+  #   # => <input class="accept_tos" id="tos" name="tos" type="checkbox" value="yes" />
   #
-  # check_box_tag 'eula', 'accepted', false, disabled: true
-  # # => <input disabled="disabled" id="eula" name="eula" type="checkbox" value="accepted" />
+  #   check_box_tag 'eula', 'accepted', false, disabled: true
+  #   # => <input disabled="disabled" id="eula" name="eula" type="checkbox" value="accepted" />
   def check_box_tag(name, value = T.unsafe(nil), checked = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "color".
@@ -5872,17 +5955,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # color_field_tag 'name'
-  # # => <input id="name" name="name" type="color" />
+  #   color_field_tag 'name'
+  #   # => <input id="name" name="name" type="color" />
   #
-  # color_field_tag 'color', '#DEF726'
-  # # => <input id="color" name="color" type="color" value="#DEF726" />
+  #   color_field_tag 'color', '#DEF726'
+  #   # => <input id="color" name="color" type="color" value="#DEF726" />
   #
-  # color_field_tag 'color', nil, class: 'special_input'
-  # # => <input class="special_input" id="color" name="color" type="color" />
+  #   color_field_tag 'color', nil, class: 'special_input'
+  #   # => <input class="special_input" id="color" name="color" type="color" />
   #
-  # color_field_tag 'color', '#DEF726', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="color" name="color" type="color" value="#DEF726" />
+  #   color_field_tag 'color', '#DEF726', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="color" name="color" type="color" value="#DEF726" />
   def color_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "date".
@@ -5891,17 +5974,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # date_field_tag 'name'
-  # # => <input id="name" name="name" type="date" />
+  #   date_field_tag 'name'
+  #   # => <input id="name" name="name" type="date" />
   #
-  # date_field_tag 'date', '01/01/2014'
-  # # => <input id="date" name="date" type="date" value="01/01/2014" />
+  #   date_field_tag 'date', '01/01/2014'
+  #   # => <input id="date" name="date" type="date" value="01/01/2014" />
   #
-  # date_field_tag 'date', nil, class: 'special_input'
-  # # => <input class="special_input" id="date" name="date" type="date" />
+  #   date_field_tag 'date', nil, class: 'special_input'
+  #   # => <input class="special_input" id="date" name="date" type="date" />
   #
-  # date_field_tag 'date', '01/01/2014', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="date" name="date" type="date" value="01/01/2014" />
+  #   date_field_tag 'date', '01/01/2014', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="date" name="date" type="date" value="01/01/2014" />
   def date_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "datetime-local".
@@ -5931,17 +6014,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # email_field_tag 'name'
-  # # => <input id="name" name="name" type="email" />
+  #   email_field_tag 'name'
+  #   # => <input id="name" name="name" type="email" />
   #
-  # email_field_tag 'email', 'email@example.com'
-  # # => <input id="email" name="email" type="email" value="email@example.com" />
+  #   email_field_tag 'email', 'email@example.com'
+  #   # => <input id="email" name="email" type="email" value="email@example.com" />
   #
-  # email_field_tag 'email', nil, class: 'special_input'
-  # # => <input class="special_input" id="email" name="email" type="email" />
+  #   email_field_tag 'email', nil, class: 'special_input'
+  #   # => <input class="special_input" id="email" name="email" type="email" />
   #
-  # email_field_tag 'email', 'email@example.com', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="email" name="email" type="email" value="email@example.com" />
+  #   email_field_tag 'email', 'email@example.com', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="email" name="email" type="email" value="email@example.com" />
   def email_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def embed_authenticity_token_in_remote_forms; end
@@ -5953,29 +6036,29 @@ module ActionView::Helpers::FormTagHelper
   # <tt>options</tt> accept the same values as tag.
   #
   # ==== Examples
-  # <%= field_set_tag do %>
-  # <p><%= text_field_tag 'name' %></p>
-  # <% end %>
-  # # => <fieldset><p><input id="name" name="name" type="text" /></p></fieldset>
+  #   <%= field_set_tag do %>
+  #     <p><%= text_field_tag 'name' %></p>
+  #   <% end %>
+  #   # => <fieldset><p><input id="name" name="name" type="text" /></p></fieldset>
   #
-  # <%= field_set_tag 'Your details' do %>
-  # <p><%= text_field_tag 'name' %></p>
-  # <% end %>
-  # # => <fieldset><legend>Your details</legend><p><input id="name" name="name" type="text" /></p></fieldset>
+  #   <%= field_set_tag 'Your details' do %>
+  #     <p><%= text_field_tag 'name' %></p>
+  #   <% end %>
+  #   # => <fieldset><legend>Your details</legend><p><input id="name" name="name" type="text" /></p></fieldset>
   #
-  # <%= field_set_tag nil, class: 'format' do %>
-  # <p><%= text_field_tag 'name' %></p>
-  # <% end %>
-  # # => <fieldset class="format"><p><input id="name" name="name" type="text" /></p></fieldset>
+  #   <%= field_set_tag nil, class: 'format' do %>
+  #     <p><%= text_field_tag 'name' %></p>
+  #   <% end %>
+  #   # => <fieldset class="format"><p><input id="name" name="name" type="text" /></p></fieldset>
   def field_set_tag(legend = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a file upload field. If you are using file uploads then you will also need
   # to set the multipart option for the form tag:
   #
-  # <%= form_tag '/upload', multipart: true do %>
-  # <label for="file">File to Upload</label> <%= file_field_tag "file" %>
-  # <%= submit_tag %>
-  # <% end %>
+  #   <%= form_tag '/upload', multipart: true do %>
+  #     <label for="file">File to Upload</label> <%= file_field_tag "file" %>
+  #     <%= submit_tag %>
+  #   <% end %>
   #
   # The specified URL will then be passed a File object containing the selected file, or if the field
   # was left blank, a StringIO object.
@@ -5987,23 +6070,23 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:accept</tt> - If set to one or multiple mime-types, the user will be suggested a filter when choosing a file. You still need to set up model validations.
   #
   # ==== Examples
-  # file_field_tag 'attachment'
-  # # => <input id="attachment" name="attachment" type="file" />
+  #   file_field_tag 'attachment'
+  #   # => <input id="attachment" name="attachment" type="file" />
   #
-  # file_field_tag 'avatar', class: 'profile_input'
-  # # => <input class="profile_input" id="avatar" name="avatar" type="file" />
+  #   file_field_tag 'avatar', class: 'profile_input'
+  #   # => <input class="profile_input" id="avatar" name="avatar" type="file" />
   #
-  # file_field_tag 'picture', disabled: true
-  # # => <input disabled="disabled" id="picture" name="picture" type="file" />
+  #   file_field_tag 'picture', disabled: true
+  #   # => <input disabled="disabled" id="picture" name="picture" type="file" />
   #
-  # file_field_tag 'resume', value: '~/resume.doc'
-  # # => <input id="resume" name="resume" type="file" value="~/resume.doc" />
+  #   file_field_tag 'resume', value: '~/resume.doc'
+  #   # => <input id="resume" name="resume" type="file" value="~/resume.doc" />
   #
-  # file_field_tag 'user_pic', accept: 'image/png,image/gif,image/jpeg'
-  # # => <input accept="image/png,image/gif,image/jpeg" id="user_pic" name="user_pic" type="file" />
+  #   file_field_tag 'user_pic', accept: 'image/png,image/gif,image/jpeg'
+  #   # => <input accept="image/png,image/gif,image/jpeg" id="user_pic" name="user_pic" type="file" />
   #
-  # file_field_tag 'file', accept: 'text/html', class: 'upload', value: 'index.html'
-  # # => <input accept="text/html" class="upload" id="file" name="file" type="file" value="index.html" />
+  #   file_field_tag 'file', accept: 'text/html', class: 'upload', value: 'index.html'
+  #   # => <input accept="text/html" class="upload" id="file" name="file" type="file" value="index.html" />
   def file_field_tag(name, options = T.unsafe(nil)); end
 
   # Starts a form tag that points the action to a URL configured with <tt>url_for_options</tt> just like
@@ -6012,43 +6095,43 @@ module ActionView::Helpers::FormTagHelper
   # ==== Options
   # * <tt>:multipart</tt> - If set to true, the enctype is set to "multipart/form-data".
   # * <tt>:method</tt> - The method to use when submitting the form, usually either "get" or "post".
-  # If "patch", "put", "delete", or another verb is used, a hidden input with name <tt>_method</tt>
-  # is added to simulate the verb over post.
+  #   If "patch", "put", "delete", or another verb is used, a hidden input with name <tt>_method</tt>
+  #   is added to simulate the verb over post.
   # * <tt>:authenticity_token</tt> - Authenticity token to use in the form. Use only if you need to
-  # pass custom authenticity token string, or to not add authenticity_token field at all
-  # (by passing <tt>false</tt>).  Remote forms may omit the embedded authenticity token
-  # by setting <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
-  # This is helpful when you're fragment-caching the form. Remote forms get the
-  # authenticity token from the <tt>meta</tt> tag, so embedding is unnecessary unless you
-  # support browsers without JavaScript.
+  #   pass custom authenticity token string, or to not add authenticity_token field at all
+  #   (by passing <tt>false</tt>).  Remote forms may omit the embedded authenticity token
+  #   by setting <tt>config.action_view.embed_authenticity_token_in_remote_forms = false</tt>.
+  #   This is helpful when you're fragment-caching the form. Remote forms get the
+  #   authenticity token from the <tt>meta</tt> tag, so embedding is unnecessary unless you
+  #   support browsers without JavaScript.
   # * <tt>:remote</tt> - If set to true, will allow the Unobtrusive JavaScript drivers to control the
-  # submit behavior. By default this behavior is an ajax submit.
+  #   submit behavior. By default this behavior is an ajax submit.
   # * <tt>:enforce_utf8</tt> - If set to false, a hidden input with name utf8 is not output.
   # * Any other key creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # form_tag('/posts')
-  # # => <form action="/posts" method="post">
+  #   form_tag('/posts')
+  #   # => <form action="/posts" method="post">
   #
-  # form_tag('/posts/1', method: :put)
-  # # => <form action="/posts/1" method="post"> ... <input name="_method" type="hidden" value="put" /> ...
+  #   form_tag('/posts/1', method: :put)
+  #   # => <form action="/posts/1" method="post"> ... <input name="_method" type="hidden" value="put" /> ...
   #
-  # form_tag('/upload', multipart: true)
-  # # => <form action="/upload" method="post" enctype="multipart/form-data">
+  #   form_tag('/upload', multipart: true)
+  #   # => <form action="/upload" method="post" enctype="multipart/form-data">
   #
-  # <%= form_tag('/posts') do -%>
-  # <div><%= submit_tag 'Save' %></div>
-  # <% end -%>
-  # # => <form action="/posts" method="post"><div><input type="submit" name="commit" value="Save" /></div></form>
+  #   <%= form_tag('/posts') do -%>
+  #     <div><%= submit_tag 'Save' %></div>
+  #   <% end -%>
+  #   # => <form action="/posts" method="post"><div><input type="submit" name="commit" value="Save" /></div></form>
   #
-  # <%= form_tag('/posts', remote: true) %>
-  # # => <form action="/posts" method="post" data-remote="true">
+  #   <%= form_tag('/posts', remote: true) %>
+  #   # => <form action="/posts" method="post" data-remote="true">
   #
-  # form_tag('http://far.away.com/form', authenticity_token: false)
-  # # form without authenticity token
+  #   form_tag('http://far.away.com/form', authenticity_token: false)
+  #   # form without authenticity token
   #
-  # form_tag('http://far.away.com/form', authenticity_token: "cf50faa3fe97702ca1ae")
-  # # form with custom authenticity token
+  #   form_tag('http://far.away.com/form', authenticity_token: "cf50faa3fe97702ca1ae")
+  #   # form with custom authenticity token
   def form_tag(url_for_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a hidden form input field used to transmit data that would be lost due to HTTP's statelessness or
@@ -6058,15 +6141,15 @@ module ActionView::Helpers::FormTagHelper
   # * Creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # hidden_field_tag 'tags_list'
-  # # => <input id="tags_list" name="tags_list" type="hidden" />
+  #   hidden_field_tag 'tags_list'
+  #   # => <input id="tags_list" name="tags_list" type="hidden" />
   #
-  # hidden_field_tag 'token', 'VUBJKB23UIVI1UU1VOBVI@'
-  # # => <input id="token" name="token" type="hidden" value="VUBJKB23UIVI1UU1VOBVI@" />
+  #   hidden_field_tag 'token', 'VUBJKB23UIVI1UU1VOBVI@'
+  #   # => <input id="token" name="token" type="hidden" value="VUBJKB23UIVI1UU1VOBVI@" />
   #
-  # hidden_field_tag 'collected_input', '', onchange: "alert('Input collected!')"
-  # # => <input id="collected_input" name="collected_input" onchange="alert('Input collected!')"
-  # #    type="hidden" value="" />
+  #   hidden_field_tag 'collected_input', '', onchange: "alert('Input collected!')"
+  #   # => <input id="collected_input" name="collected_input" onchange="alert('Input collected!')"
+  #   #    type="hidden" value="" />
   def hidden_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Displays an image which when clicked will submit the form.
@@ -6081,24 +6164,24 @@ module ActionView::Helpers::FormTagHelper
   # ==== Data attributes
   #
   # * <tt>confirm: 'question?'</tt> - This will add a JavaScript confirm
-  # prompt with the question specified. If the user accepts, the form is
-  # processed normally, otherwise no action is taken.
+  #   prompt with the question specified. If the user accepts, the form is
+  #   processed normally, otherwise no action is taken.
   #
   # ==== Examples
-  # image_submit_tag("login.png")
-  # # => <input src="/assets/login.png" type="image" />
+  #   image_submit_tag("login.png")
+  #   # => <input src="/assets/login.png" type="image" />
   #
-  # image_submit_tag("purchase.png", disabled: true)
-  # # => <input disabled="disabled" src="/assets/purchase.png" type="image" />
+  #   image_submit_tag("purchase.png", disabled: true)
+  #   # => <input disabled="disabled" src="/assets/purchase.png" type="image" />
   #
-  # image_submit_tag("search.png", class: 'search_button', alt: 'Find')
-  # # => <input class="search_button" src="/assets/search.png" type="image" />
+  #   image_submit_tag("search.png", class: 'search_button', alt: 'Find')
+  #   # => <input class="search_button" src="/assets/search.png" type="image" />
   #
-  # image_submit_tag("agree.png", disabled: true, class: "agree_disagree_button")
-  # # => <input class="agree_disagree_button" disabled="disabled" src="/assets/agree.png" type="image" />
+  #   image_submit_tag("agree.png", disabled: true, class: "agree_disagree_button")
+  #   # => <input class="agree_disagree_button" disabled="disabled" src="/assets/agree.png" type="image" />
   #
-  # image_submit_tag("save.png", data: { confirm: "Are you sure?" })
-  # # => <input src="/assets/save.png" data-confirm="Are you sure?" type="image" />
+  #   image_submit_tag("save.png", data: { confirm: "Are you sure?" })
+  #   # => <input src="/assets/save.png" data-confirm="Are you sure?" type="image" />
   def image_submit_tag(source, options = T.unsafe(nil)); end
 
   # Creates a label element. Accepts a block.
@@ -6107,14 +6190,14 @@ module ActionView::Helpers::FormTagHelper
   # * Creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # label_tag 'name'
-  # # => <label for="name">Name</label>
+  #   label_tag 'name'
+  #   # => <label for="name">Name</label>
   #
-  # label_tag 'name', 'Your name'
-  # # => <label for="name">Your name</label>
+  #   label_tag 'name', 'Your name'
+  #   # => <label for="name">Your name</label>
   #
-  # label_tag 'name', nil, class: 'small_label'
-  # # => <label for="name" class="small_label">Name</label>
+  #   label_tag 'name', nil, class: 'small_label'
+  #   # => <label for="name" class="small_label">Name</label>
   def label_tag(name = T.unsafe(nil), content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a text field of type "month".
@@ -6132,41 +6215,41 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:min</tt> - The minimum acceptable value.
   # * <tt>:max</tt> - The maximum acceptable value.
   # * <tt>:in</tt> - A range specifying the <tt>:min</tt> and
-  # <tt>:max</tt> values.
+  #   <tt>:max</tt> values.
   # * <tt>:within</tt> - Same as <tt>:in</tt>.
   # * <tt>:step</tt> - The acceptable value granularity.
   # * Otherwise accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # number_field_tag 'quantity'
-  # # => <input id="quantity" name="quantity" type="number" />
+  #   number_field_tag 'quantity'
+  #   # => <input id="quantity" name="quantity" type="number" />
   #
-  # number_field_tag 'quantity', '1'
-  # # => <input id="quantity" name="quantity" type="number" value="1" />
+  #   number_field_tag 'quantity', '1'
+  #   # => <input id="quantity" name="quantity" type="number" value="1" />
   #
-  # number_field_tag 'quantity', nil, class: 'special_input'
-  # # => <input class="special_input" id="quantity" name="quantity" type="number" />
+  #   number_field_tag 'quantity', nil, class: 'special_input'
+  #   # => <input class="special_input" id="quantity" name="quantity" type="number" />
   #
-  # number_field_tag 'quantity', nil, min: 1
-  # # => <input id="quantity" name="quantity" min="1" type="number" />
+  #   number_field_tag 'quantity', nil, min: 1
+  #   # => <input id="quantity" name="quantity" min="1" type="number" />
   #
-  # number_field_tag 'quantity', nil, max: 9
-  # # => <input id="quantity" name="quantity" max="9" type="number" />
+  #   number_field_tag 'quantity', nil, max: 9
+  #   # => <input id="quantity" name="quantity" max="9" type="number" />
   #
-  # number_field_tag 'quantity', nil, in: 1...10
-  # # => <input id="quantity" name="quantity" min="1" max="9" type="number" />
+  #   number_field_tag 'quantity', nil, in: 1...10
+  #   # => <input id="quantity" name="quantity" min="1" max="9" type="number" />
   #
-  # number_field_tag 'quantity', nil, within: 1...10
-  # # => <input id="quantity" name="quantity" min="1" max="9" type="number" />
+  #   number_field_tag 'quantity', nil, within: 1...10
+  #   # => <input id="quantity" name="quantity" min="1" max="9" type="number" />
   #
-  # number_field_tag 'quantity', nil, min: 1, max: 10
-  # # => <input id="quantity" name="quantity" min="1" max="10" type="number" />
+  #   number_field_tag 'quantity', nil, min: 1, max: 10
+  #   # => <input id="quantity" name="quantity" min="1" max="10" type="number" />
   #
-  # number_field_tag 'quantity', nil, min: 1, max: 10, step: 2
-  # # => <input id="quantity" name="quantity" min="1" max="10" step="2" type="number" />
+  #   number_field_tag 'quantity', nil, min: 1, max: 10, step: 2
+  #   # => <input id="quantity" name="quantity" min="1" max="10" step="2" type="number" />
   #
-  # number_field_tag 'quantity', '1', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="quantity" name="quantity" type="number" value="1" />
+  #   number_field_tag 'quantity', '1', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="quantity" name="quantity" type="number" value="1" />
   def number_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a password field, a masked text field that will hide the users input behind a mask character.
@@ -6178,26 +6261,26 @@ module ActionView::Helpers::FormTagHelper
   # * Any other key creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # password_field_tag 'pass'
-  # # => <input id="pass" name="pass" type="password" />
+  #   password_field_tag 'pass'
+  #   # => <input id="pass" name="pass" type="password" />
   #
-  # password_field_tag 'secret', 'Your secret here'
-  # # => <input id="secret" name="secret" type="password" value="Your secret here" />
+  #   password_field_tag 'secret', 'Your secret here'
+  #   # => <input id="secret" name="secret" type="password" value="Your secret here" />
   #
-  # password_field_tag 'masked', nil, class: 'masked_input_field'
-  # # => <input class="masked_input_field" id="masked" name="masked" type="password" />
+  #   password_field_tag 'masked', nil, class: 'masked_input_field'
+  #   # => <input class="masked_input_field" id="masked" name="masked" type="password" />
   #
-  # password_field_tag 'token', '', size: 15
-  # # => <input id="token" name="token" size="15" type="password" value="" />
+  #   password_field_tag 'token', '', size: 15
+  #   # => <input id="token" name="token" size="15" type="password" value="" />
   #
-  # password_field_tag 'key', nil, maxlength: 16
-  # # => <input id="key" maxlength="16" name="key" type="password" />
+  #   password_field_tag 'key', nil, maxlength: 16
+  #   # => <input id="key" maxlength="16" name="key" type="password" />
   #
-  # password_field_tag 'confirm_pass', nil, disabled: true
-  # # => <input disabled="disabled" id="confirm_pass" name="confirm_pass" type="password" />
+  #   password_field_tag 'confirm_pass', nil, disabled: true
+  #   # => <input disabled="disabled" id="confirm_pass" name="confirm_pass" type="password" />
   #
-  # password_field_tag 'pin', '1234', maxlength: 4, size: 6, class: "pin_input"
-  # # => <input class="pin_input" id="pin" maxlength="4" name="pin" size="6" type="password" value="1234" />
+  #   password_field_tag 'pin', '1234', maxlength: 4, size: 6, class: "pin_input"
+  #   # => <input class="pin_input" id="pin" maxlength="4" name="pin" size="6" type="password" value="1234" />
   def password_field_tag(name = T.unsafe(nil), value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "tel".
@@ -6206,17 +6289,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # telephone_field_tag 'name'
-  # # => <input id="name" name="name" type="tel" />
+  #   telephone_field_tag 'name'
+  #   # => <input id="name" name="name" type="tel" />
   #
-  # telephone_field_tag 'tel', '0123456789'
-  # # => <input id="tel" name="tel" type="tel" value="0123456789" />
+  #   telephone_field_tag 'tel', '0123456789'
+  #   # => <input id="tel" name="tel" type="tel" value="0123456789" />
   #
-  # telephone_field_tag 'tel', nil, class: 'special_input'
-  # # => <input class="special_input" id="tel" name="tel" type="tel" />
+  #   telephone_field_tag 'tel', nil, class: 'special_input'
+  #   # => <input class="special_input" id="tel" name="tel" type="tel" />
   #
-  # telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
+  #   telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
   def phone_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a radio button; use groups of radio buttons named the same to allow users to
@@ -6227,17 +6310,17 @@ module ActionView::Helpers::FormTagHelper
   # * Any other key creates standard HTML options for the tag.
   #
   # ==== Examples
-  # radio_button_tag 'favorite_color', 'maroon'
-  # # => <input id="favorite_color_maroon" name="favorite_color" type="radio" value="maroon" />
+  #   radio_button_tag 'favorite_color', 'maroon'
+  #   # => <input id="favorite_color_maroon" name="favorite_color" type="radio" value="maroon" />
   #
-  # radio_button_tag 'receive_updates', 'no', true
-  # # => <input checked="checked" id="receive_updates_no" name="receive_updates" type="radio" value="no" />
+  #   radio_button_tag 'receive_updates', 'no', true
+  #   # => <input checked="checked" id="receive_updates_no" name="receive_updates" type="radio" value="no" />
   #
-  # radio_button_tag 'time_slot', "3:00 p.m.", false, disabled: true
-  # # => <input disabled="disabled" id="time_slot_3:00_p.m." name="time_slot" type="radio" value="3:00 p.m." />
+  #   radio_button_tag 'time_slot', "3:00 p.m.", false, disabled: true
+  #   # => <input disabled="disabled" id="time_slot_3:00_p.m." name="time_slot" type="radio" value="3:00 p.m." />
   #
-  # radio_button_tag 'color', "green", true, class: "color_input"
-  # # => <input checked="checked" class="color_input" id="color_green" name="color" type="radio" value="green" />
+  #   radio_button_tag 'color', "green", true, class: "color_input"
+  #   # => <input checked="checked" class="color_input" id="color_green" name="color" type="radio" value="green" />
   def radio_button_tag(name, value, checked = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a range form element.
@@ -6252,17 +6335,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # search_field_tag 'name'
-  # # => <input id="name" name="name" type="search" />
+  #   search_field_tag 'name'
+  #   # => <input id="name" name="name" type="search" />
   #
-  # search_field_tag 'search', 'Enter your search query here'
-  # # => <input id="search" name="search" type="search" value="Enter your search query here" />
+  #   search_field_tag 'search', 'Enter your search query here'
+  #   # => <input id="search" name="search" type="search" value="Enter your search query here" />
   #
-  # search_field_tag 'search', nil, class: 'special_input'
-  # # => <input class="special_input" id="search" name="search" type="search" />
+  #   search_field_tag 'search', nil, class: 'special_input'
+  #   # => <input class="special_input" id="search" name="search" type="search" />
   #
-  # search_field_tag 'search', 'Enter your search query here', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="search" name="search" type="search" value="Enter your search query here" />
+  #   search_field_tag 'search', 'Enter your search query here', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="search" name="search" type="search" value="Enter your search query here" />
   def search_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a dropdown selection box, or if the <tt>:multiple</tt> option is set to true, a multiple
@@ -6279,47 +6362,47 @@ module ActionView::Helpers::FormTagHelper
   # * Any other key creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # select_tag "people", options_from_collection_for_select(@people, "id", "name")
-  # # <select id="people" name="people"><option value="1">David</option></select>
+  #   select_tag "people", options_from_collection_for_select(@people, "id", "name")
+  #   # <select id="people" name="people"><option value="1">David</option></select>
   #
-  # select_tag "people", options_from_collection_for_select(@people, "id", "name", "1")
-  # # <select id="people" name="people"><option value="1" selected="selected">David</option></select>
+  #   select_tag "people", options_from_collection_for_select(@people, "id", "name", "1")
+  #   # <select id="people" name="people"><option value="1" selected="selected">David</option></select>
   #
-  # select_tag "people", raw("<option>David</option>")
-  # # => <select id="people" name="people"><option>David</option></select>
+  #   select_tag "people", raw("<option>David</option>")
+  #   # => <select id="people" name="people"><option>David</option></select>
   #
-  # select_tag "count", raw("<option>1</option><option>2</option><option>3</option><option>4</option>")
-  # # => <select id="count" name="count"><option>1</option><option>2</option>
-  # #    <option>3</option><option>4</option></select>
+  #   select_tag "count", raw("<option>1</option><option>2</option><option>3</option><option>4</option>")
+  #   # => <select id="count" name="count"><option>1</option><option>2</option>
+  #   #    <option>3</option><option>4</option></select>
   #
-  # select_tag "colors", raw("<option>Red</option><option>Green</option><option>Blue</option>"), multiple: true
-  # # => <select id="colors" multiple="multiple" name="colors[]"><option>Red</option>
-  # #    <option>Green</option><option>Blue</option></select>
+  #   select_tag "colors", raw("<option>Red</option><option>Green</option><option>Blue</option>"), multiple: true
+  #   # => <select id="colors" multiple="multiple" name="colors[]"><option>Red</option>
+  #   #    <option>Green</option><option>Blue</option></select>
   #
-  # select_tag "locations", raw("<option>Home</option><option selected='selected'>Work</option><option>Out</option>")
-  # # => <select id="locations" name="locations"><option>Home</option><option selected='selected'>Work</option>
-  # #    <option>Out</option></select>
+  #   select_tag "locations", raw("<option>Home</option><option selected='selected'>Work</option><option>Out</option>")
+  #   # => <select id="locations" name="locations"><option>Home</option><option selected='selected'>Work</option>
+  #   #    <option>Out</option></select>
   #
-  # select_tag "access", raw("<option>Read</option><option>Write</option>"), multiple: true, class: 'form_input', id: 'unique_id'
-  # # => <select class="form_input" id="unique_id" multiple="multiple" name="access[]"><option>Read</option>
-  # #    <option>Write</option></select>
+  #   select_tag "access", raw("<option>Read</option><option>Write</option>"), multiple: true, class: 'form_input', id: 'unique_id'
+  #   # => <select class="form_input" id="unique_id" multiple="multiple" name="access[]"><option>Read</option>
+  #   #    <option>Write</option></select>
   #
-  # select_tag "people", options_from_collection_for_select(@people, "id", "name"), include_blank: true
-  # # => <select id="people" name="people"><option value="" label=" "></option><option value="1">David</option></select>
+  #   select_tag "people", options_from_collection_for_select(@people, "id", "name"), include_blank: true
+  #   # => <select id="people" name="people"><option value="" label=" "></option><option value="1">David</option></select>
   #
-  # select_tag "people", options_from_collection_for_select(@people, "id", "name"), include_blank: "All"
-  # # => <select id="people" name="people"><option value="">All</option><option value="1">David</option></select>
+  #   select_tag "people", options_from_collection_for_select(@people, "id", "name"), include_blank: "All"
+  #   # => <select id="people" name="people"><option value="">All</option><option value="1">David</option></select>
   #
-  # select_tag "people", options_from_collection_for_select(@people, "id", "name"), prompt: "Select something"
-  # # => <select id="people" name="people"><option value="">Select something</option><option value="1">David</option></select>
+  #   select_tag "people", options_from_collection_for_select(@people, "id", "name"), prompt: "Select something"
+  #   # => <select id="people" name="people"><option value="">Select something</option><option value="1">David</option></select>
   #
-  # select_tag "destination", raw("<option>NYC</option><option>Paris</option><option>Rome</option>"), disabled: true
-  # # => <select disabled="disabled" id="destination" name="destination"><option>NYC</option>
-  # #    <option>Paris</option><option>Rome</option></select>
+  #   select_tag "destination", raw("<option>NYC</option><option>Paris</option><option>Rome</option>"), disabled: true
+  #   # => <select disabled="disabled" id="destination" name="destination"><option>NYC</option>
+  #   #    <option>Paris</option><option>Rome</option></select>
   #
-  # select_tag "credit_card", options_for_select([ "VISA", "MasterCard" ], "MasterCard")
-  # # => <select id="credit_card" name="credit_card"><option>VISA</option>
-  # #    <option selected="selected">MasterCard</option></select>
+  #   select_tag "credit_card", options_for_select([ "VISA", "MasterCard" ], "MasterCard")
+  #   # => <select id="credit_card" name="credit_card"><option>VISA</option>
+  #   #    <option selected="selected">MasterCard</option></select>
   def select_tag(name, option_tags = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a submit button with the text <tt>value</tt> as the caption.
@@ -6332,34 +6415,34 @@ module ActionView::Helpers::FormTagHelper
   # ==== Data attributes
   #
   # * <tt>confirm: 'question?'</tt> - If present the unobtrusive JavaScript
-  # drivers will provide a prompt with the question specified. If the user accepts,
-  # the form is processed normally, otherwise no action is taken.
+  #   drivers will provide a prompt with the question specified. If the user accepts,
+  #   the form is processed normally, otherwise no action is taken.
   # * <tt>:disable_with</tt> - Value of this parameter will be used as the value for a
-  # disabled version of the submit button when the form is submitted. This feature is
-  # provided by the unobtrusive JavaScript driver. To disable this feature for a single submit tag
-  # pass <tt>:data => { disable_with: false }</tt> Defaults to value attribute.
+  #   disabled version of the submit button when the form is submitted. This feature is
+  #   provided by the unobtrusive JavaScript driver. To disable this feature for a single submit tag
+  #   pass <tt>:data => { disable_with: false }</tt> Defaults to value attribute.
   #
   # ==== Examples
-  # submit_tag
-  # # => <input name="commit" data-disable-with="Save changes" type="submit" value="Save changes" />
+  #   submit_tag
+  #   # => <input name="commit" data-disable-with="Save changes" type="submit" value="Save changes" />
   #
-  # submit_tag "Edit this article"
-  # # => <input name="commit" data-disable-with="Edit this article" type="submit" value="Edit this article" />
+  #   submit_tag "Edit this article"
+  #   # => <input name="commit" data-disable-with="Edit this article" type="submit" value="Edit this article" />
   #
-  # submit_tag "Save edits", disabled: true
-  # # => <input disabled="disabled" name="commit" data-disable-with="Save edits" type="submit" value="Save edits" />
+  #   submit_tag "Save edits", disabled: true
+  #   # => <input disabled="disabled" name="commit" data-disable-with="Save edits" type="submit" value="Save edits" />
   #
-  # submit_tag "Complete sale", data: { disable_with: "Submitting..." }
-  # # => <input name="commit" data-disable-with="Submitting..." type="submit" value="Complete sale" />
+  #   submit_tag "Complete sale", data: { disable_with: "Submitting..." }
+  #   # => <input name="commit" data-disable-with="Submitting..." type="submit" value="Complete sale" />
   #
-  # submit_tag nil, class: "form_submit"
-  # # => <input class="form_submit" name="commit" type="submit" />
+  #   submit_tag nil, class: "form_submit"
+  #   # => <input class="form_submit" name="commit" type="submit" />
   #
-  # submit_tag "Edit", class: "edit_button"
-  # # => <input class="edit_button" data-disable-with="Edit" name="commit" type="submit" value="Edit" />
+  #   submit_tag "Edit", class: "edit_button"
+  #   # => <input class="edit_button" data-disable-with="Edit" name="commit" type="submit" value="Edit" />
   #
-  # submit_tag "Save", data: { confirm: "Are you sure?" }
-  # # => <input name='commit' type='submit' value='Save' data-disable-with="Save" data-confirm="Are you sure?" />
+  #   submit_tag "Save", data: { confirm: "Are you sure?" }
+  #   # => <input name='commit' type='submit' value='Save' data-disable-with="Save" data-confirm="Are you sure?" />
   def submit_tag(value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "tel".
@@ -6368,17 +6451,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # telephone_field_tag 'name'
-  # # => <input id="name" name="name" type="tel" />
+  #   telephone_field_tag 'name'
+  #   # => <input id="name" name="name" type="tel" />
   #
-  # telephone_field_tag 'tel', '0123456789'
-  # # => <input id="tel" name="tel" type="tel" value="0123456789" />
+  #   telephone_field_tag 'tel', '0123456789'
+  #   # => <input id="tel" name="tel" type="tel" value="0123456789" />
   #
-  # telephone_field_tag 'tel', nil, class: 'special_input'
-  # # => <input class="special_input" id="tel" name="tel" type="tel" />
+  #   telephone_field_tag 'tel', nil, class: 'special_input'
+  #   # => <input class="special_input" id="tel" name="tel" type="tel" />
   #
-  # telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
+  #   telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
   def telephone_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text input area; use a textarea for longer text inputs such as blog posts or descriptions.
@@ -6389,27 +6472,27 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:cols</tt> - Specify the number of columns in the textarea
   # * <tt>:disabled</tt> - If set to true, the user will not be able to use this input.
   # * <tt>:escape</tt> - By default, the contents of the text input are HTML escaped.
-  # If you need unescaped contents, set this to false.
+  #   If you need unescaped contents, set this to false.
   # * Any other key creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # text_area_tag 'post'
-  # # => <textarea id="post" name="post"></textarea>
+  #   text_area_tag 'post'
+  #   # => <textarea id="post" name="post"></textarea>
   #
-  # text_area_tag 'bio', @user.bio
-  # # => <textarea id="bio" name="bio">This is my biography.</textarea>
+  #   text_area_tag 'bio', @user.bio
+  #   # => <textarea id="bio" name="bio">This is my biography.</textarea>
   #
-  # text_area_tag 'body', nil, rows: 10, cols: 25
-  # # => <textarea cols="25" id="body" name="body" rows="10"></textarea>
+  #   text_area_tag 'body', nil, rows: 10, cols: 25
+  #   # => <textarea cols="25" id="body" name="body" rows="10"></textarea>
   #
-  # text_area_tag 'body', nil, size: "25x10"
-  # # => <textarea name="body" id="body" cols="25" rows="10"></textarea>
+  #   text_area_tag 'body', nil, size: "25x10"
+  #   # => <textarea name="body" id="body" cols="25" rows="10"></textarea>
   #
-  # text_area_tag 'description', "Description goes here.", disabled: true
-  # # => <textarea disabled="disabled" id="description" name="description">Description goes here.</textarea>
+  #   text_area_tag 'description', "Description goes here.", disabled: true
+  #   # => <textarea disabled="disabled" id="description" name="description">Description goes here.</textarea>
   #
-  # text_area_tag 'comment', nil, class: 'comment_input'
-  # # => <textarea class="comment_input" id="comment" name="comment"></textarea>
+  #   text_area_tag 'comment', nil, class: 'comment_input'
+  #   # => <textarea class="comment_input" id="comment" name="comment"></textarea>
   def text_area_tag(name, content = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a standard text field; use these text fields to input smaller chunks of text like a username
@@ -6420,34 +6503,34 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:size</tt> - The number of visible characters that will fit in the input.
   # * <tt>:maxlength</tt> - The maximum number of characters that the browser will allow the user to enter.
   # * <tt>:placeholder</tt> - The text contained in the field by default which is removed when the field receives focus.
-  # If set to true, use a translation is found in the current I18n locale
-  # (through helpers.placeholders.<modelname>.<attribute>).
+  #   If set to true, use a translation is found in the current I18n locale
+  #   (through helpers.placeholders.<modelname>.<attribute>).
   # * Any other key creates standard HTML attributes for the tag.
   #
   # ==== Examples
-  # text_field_tag 'name'
-  # # => <input id="name" name="name" type="text" />
+  #   text_field_tag 'name'
+  #   # => <input id="name" name="name" type="text" />
   #
-  # text_field_tag 'query', 'Enter your search query here'
-  # # => <input id="query" name="query" type="text" value="Enter your search query here" />
+  #   text_field_tag 'query', 'Enter your search query here'
+  #   # => <input id="query" name="query" type="text" value="Enter your search query here" />
   #
-  # text_field_tag 'search', nil, placeholder: 'Enter search term...'
-  # # => <input id="search" name="search" placeholder="Enter search term..." type="text" />
+  #   text_field_tag 'search', nil, placeholder: 'Enter search term...'
+  #   # => <input id="search" name="search" placeholder="Enter search term..." type="text" />
   #
-  # text_field_tag 'request', nil, class: 'special_input'
-  # # => <input class="special_input" id="request" name="request" type="text" />
+  #   text_field_tag 'request', nil, class: 'special_input'
+  #   # => <input class="special_input" id="request" name="request" type="text" />
   #
-  # text_field_tag 'address', '', size: 75
-  # # => <input id="address" name="address" size="75" type="text" value="" />
+  #   text_field_tag 'address', '', size: 75
+  #   # => <input id="address" name="address" size="75" type="text" value="" />
   #
-  # text_field_tag 'zip', nil, maxlength: 5
-  # # => <input id="zip" maxlength="5" name="zip" type="text" />
+  #   text_field_tag 'zip', nil, maxlength: 5
+  #   # => <input id="zip" maxlength="5" name="zip" type="text" />
   #
-  # text_field_tag 'payment_amount', '$0.00', disabled: true
-  # # => <input disabled="disabled" id="payment_amount" name="payment_amount" type="text" value="$0.00" />
+  #   text_field_tag 'payment_amount', '$0.00', disabled: true
+  #   # => <input disabled="disabled" id="payment_amount" name="payment_amount" type="text" value="$0.00" />
   #
-  # text_field_tag 'ip', '0.0.0.0', maxlength: 15, size: 20, class: "ip-input"
-  # # => <input class="ip-input" id="ip" maxlength="15" name="ip" size="20" type="text" value="0.0.0.0" />
+  #   text_field_tag 'ip', '0.0.0.0', maxlength: 15, size: 20, class: "ip-input"
+  #   # => <input class="ip-input" id="ip" maxlength="15" name="ip" size="20" type="text" value="0.0.0.0" />
   def text_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "time".
@@ -6465,17 +6548,17 @@ module ActionView::Helpers::FormTagHelper
   # * Accepts the same options as text_field_tag.
   #
   # ==== Examples
-  # url_field_tag 'name'
-  # # => <input id="name" name="name" type="url" />
+  #   url_field_tag 'name'
+  #   # => <input id="name" name="name" type="url" />
   #
-  # url_field_tag 'url', 'http://rubyonrails.org'
-  # # => <input id="url" name="url" type="url" value="http://rubyonrails.org" />
+  #   url_field_tag 'url', 'http://rubyonrails.org'
+  #   # => <input id="url" name="url" type="url" value="http://rubyonrails.org" />
   #
-  # url_field_tag 'url', nil, class: 'special_input'
-  # # => <input class="special_input" id="url" name="url" type="url" />
+  #   url_field_tag 'url', nil, class: 'special_input'
+  #   # => <input class="special_input" id="url" name="url" type="url" />
   #
-  # url_field_tag 'url', 'http://rubyonrails.org', class: 'special_input', disabled: true
-  # # => <input disabled="disabled" class="special_input" id="url" name="url" type="url" value="http://rubyonrails.org" />
+  #   url_field_tag 'url', 'http://rubyonrails.org', class: 'special_input', disabled: true
+  #   # => <input disabled="disabled" class="special_input" id="url" name="url" type="url" value="http://rubyonrails.org" />
   def url_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates the hidden UTF8 enforcer tag. Override this method in a helper
@@ -6518,7 +6601,7 @@ module ActionView::Helpers::JavaScriptHelper
   # Also available through the alias j(). This is particularly helpful in JavaScript
   # responses, like:
   #
-  # $('some_element').replaceWith('<%= j render 'some/element_template' %>');
+  #   $('some_element').replaceWith('<%= j render 'some/element_template' %>');
   def escape_javascript(javascript); end
 
   # Escapes carriage returns and single and double quotes for JavaScript segments.
@@ -6526,46 +6609,46 @@ module ActionView::Helpers::JavaScriptHelper
   # Also available through the alias j(). This is particularly helpful in JavaScript
   # responses, like:
   #
-  # $('some_element').replaceWith('<%= j render 'some/element_template' %>');
+  #   $('some_element').replaceWith('<%= j render 'some/element_template' %>');
   def j(javascript); end
 
   def javascript_cdata_section(content); end
 
   # Returns a JavaScript tag with the +content+ inside. Example:
-  # javascript_tag "alert('All is good')"
+  #   javascript_tag "alert('All is good')"
   #
   # Returns:
-  # <script>
-  # //<![CDATA[
-  # alert('All is good')
-  # //]]>
-  # </script>
+  #   <script>
+  #   //<![CDATA[
+  #   alert('All is good')
+  #   //]]>
+  #   </script>
   #
   # +html_options+ may be a hash of attributes for the <tt>\<script></tt>
   # tag.
   #
-  # javascript_tag "alert('All is good')", type: 'application/javascript'
+  #   javascript_tag "alert('All is good')", type: 'application/javascript'
   #
   # Returns:
-  # <script type="application/javascript">
-  # //<![CDATA[
-  # alert('All is good')
-  # //]]>
-  # </script>
+  #   <script type="application/javascript">
+  #   //<![CDATA[
+  #   alert('All is good')
+  #   //]]>
+  #   </script>
   #
   # Instead of passing the content as an argument, you can also use a block
   # in which case, you pass your +html_options+ as the first parameter.
   #
-  # <%= javascript_tag type: 'application/javascript' do -%>
-  # alert('All is good')
-  # <% end -%>
+  #   <%= javascript_tag type: 'application/javascript' do -%>
+  #     alert('All is good')
+  #   <% end -%>
   #
   # If you have a content security policy enabled then you can add an automatic
   # nonce value by passing <tt>nonce: true</tt> as part of +html_options+. Example:
   #
-  # <%= javascript_tag nonce: true do -%>
-  # alert('All is good')
-  # <% end -%>
+  #   <%= javascript_tag nonce: true do -%>
+  #     alert('All is good')
+  #   <% end -%>
   def javascript_tag(content_or_options_with_block = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 end
 
@@ -6592,49 +6675,49 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:precision</tt> - Sets the level of precision (defaults
-  # to 2).
+  #   to 2).
   # * <tt>:unit</tt> - Sets the denomination of the currency
-  # (defaults to "$").
+  #   (defaults to "$").
   # * <tt>:separator</tt> - Sets the separator between the units
-  # (defaults to ".").
+  #   (defaults to ".").
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to ",").
+  #   to ",").
   # * <tt>:format</tt> - Sets the format for non-negative numbers
-  # (defaults to "%u%n").  Fields are <tt>%u</tt> for the
-  # currency, and <tt>%n</tt> for the number.
+  #   (defaults to "%u%n").  Fields are <tt>%u</tt> for the
+  #   currency, and <tt>%n</tt> for the number.
   # * <tt>:negative_format</tt> - Sets the format for negative
-  # numbers (defaults to prepending a hyphen to the formatted
-  # number given by <tt>:format</tt>).  Accepts the same fields
-  # than <tt>:format</tt>, except <tt>%n</tt> is here the
-  # absolute value of the number.
+  #   numbers (defaults to prepending a hyphen to the formatted
+  #   number given by <tt>:format</tt>).  Accepts the same fields
+  #   than <tt>:format</tt>, except <tt>%n</tt> is here the
+  #   absolute value of the number.
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  # insignificant zeros after the decimal separator (defaults to
-  # +false+).
+  #   insignificant zeros after the decimal separator (defaults to
+  #   +false+).
   #
   # ==== Examples
   #
-  # number_to_currency(1234567890.50)                    # => $1,234,567,890.50
-  # number_to_currency(1234567890.506)                   # => $1,234,567,890.51
-  # number_to_currency(1234567890.506, precision: 3)     # => $1,234,567,890.506
-  # number_to_currency(1234567890.506, locale: :fr)      # => 1 234 567 890,51 €
-  # number_to_currency("123a456")                        # => $123a456
+  #   number_to_currency(1234567890.50)                    # => $1,234,567,890.50
+  #   number_to_currency(1234567890.506)                   # => $1,234,567,890.51
+  #   number_to_currency(1234567890.506, precision: 3)     # => $1,234,567,890.506
+  #   number_to_currency(1234567890.506, locale: :fr)      # => 1 234 567 890,51 €
+  #   number_to_currency("123a456")                        # => $123a456
   #
-  # number_to_currency("123a456", raise: true)           # => InvalidNumberError
+  #   number_to_currency("123a456", raise: true)           # => InvalidNumberError
   #
-  # number_to_currency(-0.456789, precision: 0)
-  # # => "$0"
-  # number_to_currency(-1234567890.50, negative_format: "(%u%n)")
-  # # => ($1,234,567,890.50)
-  # number_to_currency(1234567890.50, unit: "R$", separator: ",", delimiter: "")
-  # # => R$1234567890,50
-  # number_to_currency(1234567890.50, unit: "R$", separator: ",", delimiter: "", format: "%n %u")
-  # # => 1234567890,50 R$
-  # number_to_currency(1234567890.50, strip_insignificant_zeros: true)
-  # # => "$1,234,567,890.5"
+  #   number_to_currency(-0.456789, precision: 0)
+  #   # => "$0"
+  #   number_to_currency(-1234567890.50, negative_format: "(%u%n)")
+  #   # => ($1,234,567,890.50)
+  #   number_to_currency(1234567890.50, unit: "R$", separator: ",", delimiter: "")
+  #   # => R$1234567890,50
+  #   number_to_currency(1234567890.50, unit: "R$", separator: ",", delimiter: "", format: "%n %u")
+  #   # => 1234567890,50 R$
+  #   number_to_currency(1234567890.50, strip_insignificant_zeros: true)
+  #   # => "$1,234,567,890.5"
   def number_to_currency(number, options = T.unsafe(nil)); end
 
   # Pretty prints (formats and approximates) a number in a way it
@@ -6654,56 +6737,56 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:precision</tt> - Sets the precision of the number
-  # (defaults to 3).
+  #   (defaults to 3).
   # * <tt>:significant</tt> - If +true+, precision will be the number
-  # of significant_digits. If +false+, the number of fractional
-  # digits (defaults to +true+)
+  #   of significant_digits. If +false+, the number of fractional
+  #   digits (defaults to +true+)
   # * <tt>:separator</tt> - Sets the separator between the
-  # fractional and integer digits (defaults to ".").
+  #   fractional and integer digits (defaults to ".").
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to "").
+  #   to "").
   # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  # insignificant zeros after the decimal separator (defaults to
-  # +true+)
+  #   insignificant zeros after the decimal separator (defaults to
+  #   +true+)
   # * <tt>:units</tt> - A Hash of unit quantifier names. Or a
-  # string containing an i18n scope where to find this hash. It
-  # might have the following keys:
-  # * *integers*: <tt>:unit</tt>, <tt>:ten</tt>,
-  # <tt>:hundred</tt>, <tt>:thousand</tt>, <tt>:million</tt>,
-  # <tt>:billion</tt>, <tt>:trillion</tt>,
-  # <tt>:quadrillion</tt>
-  # * *fractionals*: <tt>:deci</tt>, <tt>:centi</tt>,
-  # <tt>:mili</tt>, <tt>:micro</tt>, <tt>:nano</tt>,
-  # <tt>:pico</tt>, <tt>:femto</tt>
+  #   string containing an i18n scope where to find this hash. It
+  #   might have the following keys:
+  #   * *integers*: <tt>:unit</tt>, <tt>:ten</tt>,
+  #     <tt>:hundred</tt>, <tt>:thousand</tt>, <tt>:million</tt>,
+  #     <tt>:billion</tt>, <tt>:trillion</tt>,
+  #     <tt>:quadrillion</tt>
+  #   * *fractionals*: <tt>:deci</tt>, <tt>:centi</tt>,
+  #     <tt>:mili</tt>, <tt>:micro</tt>, <tt>:nano</tt>,
+  #     <tt>:pico</tt>, <tt>:femto</tt>
   # * <tt>:format</tt> - Sets the format of the output string
-  # (defaults to "%n %u"). The field types are:
-  # * %u - The quantifier (ex.: 'thousand')
-  # * %n - The number
+  #   (defaults to "%n %u"). The field types are:
+  #   * %u - The quantifier (ex.: 'thousand')
+  #   * %n - The number
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_to_human(123)                                          # => "123"
-  # number_to_human(1234)                                         # => "1.23 Thousand"
-  # number_to_human(12345)                                        # => "12.3 Thousand"
-  # number_to_human(1234567)                                      # => "1.23 Million"
-  # number_to_human(1234567890)                                   # => "1.23 Billion"
-  # number_to_human(1234567890123)                                # => "1.23 Trillion"
-  # number_to_human(1234567890123456)                             # => "1.23 Quadrillion"
-  # number_to_human(1234567890123456789)                          # => "1230 Quadrillion"
-  # number_to_human(489939, precision: 2)                         # => "490 Thousand"
-  # number_to_human(489939, precision: 4)                         # => "489.9 Thousand"
-  # number_to_human(1234567, precision: 4,
-  # significant: false)                   # => "1.2346 Million"
-  # number_to_human(1234567, precision: 1,
-  # separator: ',',
-  # significant: false)                   # => "1,2 Million"
+  #   number_to_human(123)                                          # => "123"
+  #   number_to_human(1234)                                         # => "1.23 Thousand"
+  #   number_to_human(12345)                                        # => "12.3 Thousand"
+  #   number_to_human(1234567)                                      # => "1.23 Million"
+  #   number_to_human(1234567890)                                   # => "1.23 Billion"
+  #   number_to_human(1234567890123)                                # => "1.23 Trillion"
+  #   number_to_human(1234567890123456)                             # => "1.23 Quadrillion"
+  #   number_to_human(1234567890123456789)                          # => "1230 Quadrillion"
+  #   number_to_human(489939, precision: 2)                         # => "490 Thousand"
+  #   number_to_human(489939, precision: 4)                         # => "489.9 Thousand"
+  #   number_to_human(1234567, precision: 4,
+  #                           significant: false)                   # => "1.2346 Million"
+  #   number_to_human(1234567, precision: 1,
+  #                           separator: ',',
+  #                           significant: false)                   # => "1,2 Million"
   #
-  # number_to_human(500000000, precision: 5)                      # => "500 Million"
-  # number_to_human(12345012345, significant: false)              # => "12.345 Billion"
+  #   number_to_human(500000000, precision: 5)                      # => "500 Million"
+  #   number_to_human(12345012345, significant: false)              # => "12.345 Billion"
   #
   # Non-significant zeros after the decimal separator are stripped
   # out by default (set <tt>:strip_insignificant_zeros</tt> to
@@ -6715,29 +6798,29 @@ module ActionView::Helpers::NumberHelper
   # ==== Custom Unit Quantifiers
   #
   # You can also use your own custom unit quantifiers:
-  # number_to_human(500000, units: {unit: "ml", thousand: "lt"})  # => "500 lt"
+  #  number_to_human(500000, units: {unit: "ml", thousand: "lt"})  # => "500 lt"
   #
   # If in your I18n locale you have:
-  # distance:
-  # centi:
-  # one: "centimeter"
-  # other: "centimeters"
-  # unit:
-  # one: "meter"
-  # other: "meters"
-  # thousand:
-  # one: "kilometer"
-  # other: "kilometers"
-  # billion: "gazillion-distance"
+  #   distance:
+  #     centi:
+  #       one: "centimeter"
+  #       other: "centimeters"
+  #     unit:
+  #       one: "meter"
+  #       other: "meters"
+  #     thousand:
+  #       one: "kilometer"
+  #       other: "kilometers"
+  #     billion: "gazillion-distance"
   #
   # Then you could do:
   #
-  # number_to_human(543934, units: :distance)              # => "544 kilometers"
-  # number_to_human(54393498, units: :distance)            # => "54400 kilometers"
-  # number_to_human(54393498000, units: :distance)         # => "54.4 gazillion-distance"
-  # number_to_human(343, units: :distance, precision: 1)   # => "300 meters"
-  # number_to_human(1, units: :distance)                   # => "1 meter"
-  # number_to_human(0.34, units: :distance)                # => "34 centimeters"
+  #  number_to_human(543934, units: :distance)              # => "544 kilometers"
+  #  number_to_human(54393498, units: :distance)            # => "54400 kilometers"
+  #  number_to_human(54393498000, units: :distance)         # => "54.4 gazillion-distance"
+  #  number_to_human(343, units: :distance, precision: 1)   # => "300 meters"
+  #  number_to_human(1, units: :distance)                   # => "1 meter"
+  #  number_to_human(0.34, units: :distance)                # => "34 centimeters"
   def number_to_human(number, options = T.unsafe(nil)); end
 
   # Formats the bytes in +number+ into a more understandable
@@ -6751,37 +6834,37 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:precision</tt> - Sets the precision of the number
-  # (defaults to 3).
+  #   (defaults to 3).
   # * <tt>:significant</tt> - If +true+, precision will be the number
-  # of significant_digits. If +false+, the number of fractional
-  # digits (defaults to +true+)
+  #   of significant_digits. If +false+, the number of fractional
+  #   digits (defaults to +true+)
   # * <tt>:separator</tt> - Sets the separator between the
-  # fractional and integer digits (defaults to ".").
+  #   fractional and integer digits (defaults to ".").
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to "").
+  #   to "").
   # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  # insignificant zeros after the decimal separator (defaults to
-  # +true+)
+  #   insignificant zeros after the decimal separator (defaults to
+  #   +true+)
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_to_human_size(123)                                          # => 123 Bytes
-  # number_to_human_size(1234)                                         # => 1.21 KB
-  # number_to_human_size(12345)                                        # => 12.1 KB
-  # number_to_human_size(1234567)                                      # => 1.18 MB
-  # number_to_human_size(1234567890)                                   # => 1.15 GB
-  # number_to_human_size(1234567890123)                                # => 1.12 TB
-  # number_to_human_size(1234567890123456)                             # => 1.1 PB
-  # number_to_human_size(1234567890123456789)                          # => 1.07 EB
-  # number_to_human_size(1234567, precision: 2)                        # => 1.2 MB
-  # number_to_human_size(483989, precision: 2)                         # => 470 KB
-  # number_to_human_size(1234567, precision: 2, separator: ',')        # => 1,2 MB
-  # number_to_human_size(1234567890123, precision: 5)                  # => "1.1228 TB"
-  # number_to_human_size(524288000, precision: 5)                      # => "500 MB"
+  #   number_to_human_size(123)                                          # => 123 Bytes
+  #   number_to_human_size(1234)                                         # => 1.21 KB
+  #   number_to_human_size(12345)                                        # => 12.1 KB
+  #   number_to_human_size(1234567)                                      # => 1.18 MB
+  #   number_to_human_size(1234567890)                                   # => 1.15 GB
+  #   number_to_human_size(1234567890123)                                # => 1.12 TB
+  #   number_to_human_size(1234567890123456)                             # => 1.1 PB
+  #   number_to_human_size(1234567890123456789)                          # => 1.07 EB
+  #   number_to_human_size(1234567, precision: 2)                        # => 1.2 MB
+  #   number_to_human_size(483989, precision: 2)                         # => 470 KB
+  #   number_to_human_size(1234567, precision: 2, separator: ',')        # => 1,2 MB
+  #   number_to_human_size(1234567890123, precision: 5)                  # => "1.1228 TB"
+  #   number_to_human_size(524288000, precision: 5)                      # => "500 MB"
   def number_to_human_size(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ as a percentage string (e.g., 65%). You can
@@ -6790,36 +6873,36 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:precision</tt> - Sets the precision of the number
-  # (defaults to 3).
+  #   (defaults to 3).
   # * <tt>:significant</tt> - If +true+, precision will be the number
-  # of significant_digits. If +false+, the number of fractional
-  # digits (defaults to +false+).
+  #   of significant_digits. If +false+, the number of fractional
+  #   digits (defaults to +false+).
   # * <tt>:separator</tt> - Sets the separator between the
-  # fractional and integer digits (defaults to ".").
+  #   fractional and integer digits (defaults to ".").
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to "").
+  #   to "").
   # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  # insignificant zeros after the decimal separator (defaults to
-  # +false+).
+  #   insignificant zeros after the decimal separator (defaults to
+  #   +false+).
   # * <tt>:format</tt> - Specifies the format of the percentage
-  # string The number field is <tt>%n</tt> (defaults to "%n%").
+  #   string The number field is <tt>%n</tt> (defaults to "%n%").
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_to_percentage(100)                                        # => 100.000%
-  # number_to_percentage("98")                                       # => 98.000%
-  # number_to_percentage(100, precision: 0)                          # => 100%
-  # number_to_percentage(1000, delimiter: '.', separator: ',')       # => 1.000,000%
-  # number_to_percentage(302.24398923423, precision: 5)              # => 302.24399%
-  # number_to_percentage(1000, locale: :fr)                          # => 1 000,000%
-  # number_to_percentage("98a")                                      # => 98a%
-  # number_to_percentage(100, format: "%n  %")                       # => 100.000  %
+  #   number_to_percentage(100)                                        # => 100.000%
+  #   number_to_percentage("98")                                       # => 98.000%
+  #   number_to_percentage(100, precision: 0)                          # => 100%
+  #   number_to_percentage(1000, delimiter: '.', separator: ',')       # => 1.000,000%
+  #   number_to_percentage(302.24398923423, precision: 5)              # => 302.24399%
+  #   number_to_percentage(1000, locale: :fr)                          # => 1 000,000%
+  #   number_to_percentage("98a")                                      # => 98a%
+  #   number_to_percentage(100, format: "%n  %")                       # => 100.000  %
   #
-  # number_to_percentage("98a", raise: true)                         # => InvalidNumberError
+  #   number_to_percentage("98a", raise: true)                         # => InvalidNumberError
   def number_to_percentage(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ into a phone number (US by default e.g., (555)
@@ -6829,35 +6912,35 @@ module ActionView::Helpers::NumberHelper
   #
   # * <tt>:area_code</tt> - Adds parentheses around the area code.
   # * <tt>:delimiter</tt> - Specifies the delimiter to use
-  # (defaults to "-").
+  #   (defaults to "-").
   # * <tt>:extension</tt> - Specifies an extension to add to the
-  # end of the generated number.
+  #   end of the generated number.
   # * <tt>:country_code</tt> - Sets the country code for the phone
-  # number.
+  #   number.
   # * <tt>:pattern</tt> - Specifies how the number is divided into three
-  # groups with the custom regexp to override the default format.
+  #   groups with the custom regexp to override the default format.
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_to_phone(5551234)                                           # => 555-1234
-  # number_to_phone("5551234")                                         # => 555-1234
-  # number_to_phone(1235551234)                                        # => 123-555-1234
-  # number_to_phone(1235551234, area_code: true)                       # => (123) 555-1234
-  # number_to_phone(1235551234, delimiter: " ")                        # => 123 555 1234
-  # number_to_phone(1235551234, area_code: true, extension: 555)       # => (123) 555-1234 x 555
-  # number_to_phone(1235551234, country_code: 1)                       # => +1-123-555-1234
-  # number_to_phone("123a456")                                         # => 123a456
-  # number_to_phone("1234a567", raise: true)                           # => InvalidNumberError
+  #   number_to_phone(5551234)                                           # => 555-1234
+  #   number_to_phone("5551234")                                         # => 555-1234
+  #   number_to_phone(1235551234)                                        # => 123-555-1234
+  #   number_to_phone(1235551234, area_code: true)                       # => (123) 555-1234
+  #   number_to_phone(1235551234, delimiter: " ")                        # => 123 555 1234
+  #   number_to_phone(1235551234, area_code: true, extension: 555)       # => (123) 555-1234 x 555
+  #   number_to_phone(1235551234, country_code: 1)                       # => +1-123-555-1234
+  #   number_to_phone("123a456")                                         # => 123a456
+  #   number_to_phone("1234a567", raise: true)                           # => InvalidNumberError
   #
-  # number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
-  # # => +1.123.555.1234 x 1343
+  #   number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: ".")
+  #   # => +1.123.555.1234 x 1343
   #
-  # number_to_phone(75561234567, pattern: /(\d{1,4})(\d{4})(\d{4})$/, area_code: true)
-  # # => "(755) 6123-4567"
-  # number_to_phone(13312345678, pattern: /(\d{3})(\d{4})(\d{4})$/)
-  # # => "133-1234-5678"
+  #   number_to_phone(75561234567, pattern: /(\d{1,4})(\d{4})(\d{4})$/, area_code: true)
+  #   # => "(755) 6123-4567"
+  #   number_to_phone(13312345678, pattern: /(\d{3})(\d{4})(\d{4})$/)
+  #   # => "133-1234-5678"
   def number_to_phone(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ with grouped thousands using +delimiter+
@@ -6867,34 +6950,34 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to ",").
+  #   to ",").
   # * <tt>:separator</tt> - Sets the separator between the
-  # fractional and integer digits (defaults to ".").
+  #   fractional and integer digits (defaults to ".").
   # * <tt>:delimiter_pattern</tt> - Sets a custom regular expression used for
-  # deriving the placement of delimiter. Helpful when using currency formats
-  # like INR.
+  #   deriving the placement of delimiter. Helpful when using currency formats
+  #   like INR.
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_with_delimiter(12345678)                        # => 12,345,678
-  # number_with_delimiter("123456")                        # => 123,456
-  # number_with_delimiter(12345678.05)                     # => 12,345,678.05
-  # number_with_delimiter(12345678, delimiter: ".")        # => 12.345.678
-  # number_with_delimiter(12345678, delimiter: ",")        # => 12,345,678
-  # number_with_delimiter(12345678.05, separator: " ")     # => 12,345,678 05
-  # number_with_delimiter(12345678.05, locale: :fr)        # => 12 345 678,05
-  # number_with_delimiter("112a")                          # => 112a
-  # number_with_delimiter(98765432.98, delimiter: " ", separator: ",")
-  # # => 98 765 432,98
+  #   number_with_delimiter(12345678)                        # => 12,345,678
+  #   number_with_delimiter("123456")                        # => 123,456
+  #   number_with_delimiter(12345678.05)                     # => 12,345,678.05
+  #   number_with_delimiter(12345678, delimiter: ".")        # => 12.345.678
+  #   number_with_delimiter(12345678, delimiter: ",")        # => 12,345,678
+  #   number_with_delimiter(12345678.05, separator: " ")     # => 12,345,678 05
+  #   number_with_delimiter(12345678.05, locale: :fr)        # => 12 345 678,05
+  #   number_with_delimiter("112a")                          # => 112a
+  #   number_with_delimiter(98765432.98, delimiter: " ", separator: ",")
+  #   # => 98 765 432,98
   #
-  # number_with_delimiter("123456.78",
-  # delimiter_pattern: /(\d+?)(?=(\d\d)+(\d)(?!\d))/)    # => "1,23,456.78"
+  #   number_with_delimiter("123456.78",
+  #     delimiter_pattern: /(\d+?)(?=(\d\d)+(\d)(?!\d))/)    # => "1,23,456.78"
   #
-  # number_with_delimiter("112a", raise: true)              # => raise InvalidNumberError
+  #  number_with_delimiter("112a", raise: true)              # => raise InvalidNumberError
   def number_with_delimiter(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ with the specified level of
@@ -6905,39 +6988,39 @@ module ActionView::Helpers::NumberHelper
   # ==== Options
   #
   # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  # (defaults to current locale).
+  #   (defaults to current locale).
   # * <tt>:precision</tt> - Sets the precision of the number
-  # (defaults to 3).
+  #   (defaults to 3).
   # * <tt>:significant</tt> - If +true+, precision will be the number
-  # of significant_digits. If +false+, the number of fractional
-  # digits (defaults to +false+).
+  #   of significant_digits. If +false+, the number of fractional
+  #   digits (defaults to +false+).
   # * <tt>:separator</tt> - Sets the separator between the
-  # fractional and integer digits (defaults to ".").
+  #   fractional and integer digits (defaults to ".").
   # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  # to "").
+  #   to "").
   # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  # insignificant zeros after the decimal separator (defaults to
-  # +false+).
+  #   insignificant zeros after the decimal separator (defaults to
+  #   +false+).
   # * <tt>:raise</tt> - If true, raises +InvalidNumberError+ when
-  # the argument is invalid.
+  #   the argument is invalid.
   #
   # ==== Examples
   #
-  # number_with_precision(111.2345)                                         # => 111.235
-  # number_with_precision(111.2345, precision: 2)                           # => 111.23
-  # number_with_precision(13, precision: 5)                                 # => 13.00000
-  # number_with_precision(389.32314, precision: 0)                          # => 389
-  # number_with_precision(111.2345, significant: true)                      # => 111
-  # number_with_precision(111.2345, precision: 1, significant: true)        # => 100
-  # number_with_precision(13, precision: 5, significant: true)              # => 13.000
-  # number_with_precision(111.234, locale: :fr)                             # => 111,234
+  #   number_with_precision(111.2345)                                         # => 111.235
+  #   number_with_precision(111.2345, precision: 2)                           # => 111.23
+  #   number_with_precision(13, precision: 5)                                 # => 13.00000
+  #   number_with_precision(389.32314, precision: 0)                          # => 389
+  #   number_with_precision(111.2345, significant: true)                      # => 111
+  #   number_with_precision(111.2345, precision: 1, significant: true)        # => 100
+  #   number_with_precision(13, precision: 5, significant: true)              # => 13.000
+  #   number_with_precision(111.234, locale: :fr)                             # => 111,234
   #
-  # number_with_precision(13, precision: 5, significant: true, strip_insignificant_zeros: true)
-  # # => 13
+  #   number_with_precision(13, precision: 5, significant: true, strip_insignificant_zeros: true)
+  #   # => 13
   #
-  # number_with_precision(389.32314, precision: 4, significant: true)       # => 389.3
-  # number_with_precision(1111.2345, precision: 2, separator: ',', delimiter: '.')
-  # # => 1.111,23
+  #   number_with_precision(389.32314, precision: 4, significant: true)       # => 389.3
+  #   number_with_precision(1111.2345, precision: 2, separator: ',', delimiter: '.')
+  #   # => 1.111,23
   def number_with_precision(number, options = T.unsafe(nil)); end
 
   private
@@ -6946,19 +7029,26 @@ module ActionView::Helpers::NumberHelper
   def escape_units(units); end
   def escape_unsafe_options(options); end
   def parse_float(number, raise_error); end
+
+  # @return [Boolean]
   def valid_float?(number); end
+
+  # @raise [InvalidNumberError]
   def wrap_with_output_safety_handling(number, raise_on_invalid, &block); end
 end
 
 # Raised when argument +number+ param given to the helpers is invalid and
 # the option :raise is set to  +true+.
 class ActionView::Helpers::NumberHelper::InvalidNumberError < ::StandardError
+  # @return [InvalidNumberError] a new instance of InvalidNumberError
   def initialize(number); end
 
   # Returns the value of attribute number.
   def number; end
 
   # Sets the attribute number
+  #
+  # @param value the value to set the attribute number to.
   def number=(_arg0); end
 end
 
@@ -6970,8 +7060,8 @@ module ActionView::Helpers::OutputSafetyHelper
   #
   # For example:
   #
-  # raw @user.name
-  # # => 'Jimmy <alert>Tables</alert>'
+  #  raw @user.name
+  #  # => 'Jimmy <alert>Tables</alert>'
   def raw(stringish); end
 
   # This method returns an HTML safe string similar to what <tt>Array#join</tt>
@@ -6979,11 +7069,11 @@ module ActionView::Helpers::OutputSafetyHelper
   # the supplied separator, are HTML escaped unless they are HTML
   # safe, and the returned string is marked as HTML safe.
   #
-  # safe_join([raw("<p>foo</p>"), "<p>bar</p>"], "<br />")
-  # # => "<p>foo</p>&lt;br /&gt;&lt;p&gt;bar&lt;/p&gt;"
+  #   safe_join([raw("<p>foo</p>"), "<p>bar</p>"], "<br />")
+  #   # => "<p>foo</p>&lt;br /&gt;&lt;p&gt;bar&lt;/p&gt;"
   #
-  # safe_join([raw("<p>foo</p>"), raw("<p>bar</p>")], raw("<br />"))
-  # # => "<p>foo</p><br /><p>bar</p>"
+  #   safe_join([raw("<p>foo</p>"), raw("<p>bar</p>")], raw("<br />"))
+  #   # => "<p>foo</p><br /><p>bar</p>"
   def safe_join(array, sep = T.unsafe(nil)); end
 
   # Converts the array to a comma-separated sentence where the last element is
@@ -7008,43 +7098,43 @@ module ActionView::Helpers::RenderingHelper
   #
   # The user can override this default by passing a block to the layout:
   #
-  # # The template
-  # <%= render layout: "my_layout" do %>
-  # Content
-  # <% end %>
+  #   # The template
+  #   <%= render layout: "my_layout" do %>
+  #     Content
+  #   <% end %>
   #
-  # # The layout
-  # <html>
-  # <%= yield %>
-  # </html>
+  #   # The layout
+  #   <html>
+  #     <%= yield %>
+  #   </html>
   #
   # In this case, instead of the default block, which would return <tt>content_for(:layout)</tt>,
   # this method returns the block that was passed in to <tt>render :layout</tt>, and the response
   # would be
   #
-  # <html>
-  # Content
-  # </html>
+  #   <html>
+  #     Content
+  #   </html>
   #
   # Finally, the block can take block arguments, which can be passed in by +yield+:
   #
-  # # The template
-  # <%= render layout: "my_layout" do |customer| %>
-  # Hello <%= customer.name %>
-  # <% end %>
+  #   # The template
+  #   <%= render layout: "my_layout" do |customer| %>
+  #     Hello <%= customer.name %>
+  #   <% end %>
   #
-  # # The layout
-  # <html>
-  # <%= yield Struct.new(:name).new("David") %>
-  # </html>
+  #   # The layout
+  #   <html>
+  #     <%= yield Struct.new(:name).new("David") %>
+  #   </html>
   #
   # In this case, the layout would receive the block passed into <tt>render :layout</tt>,
   # and the struct specified would be passed into the block as an argument. The result
   # would be
   #
-  # <html>
-  # Hello David
-  # </html>
+  #   <html>
+  #     Hello David
+  #   </html>
   def _layout_for(*args, &block); end
 
   # Returns the result of a render that's dictated by the options hash. The primary options are:
@@ -7053,13 +7143,13 @@ module ActionView::Helpers::RenderingHelper
   # * <tt>:file</tt> - Renders an explicit template file (this used to be the old default), add :locals to pass in those.
   # * <tt>:inline</tt> - Renders an inline template similar to how it's done in the controller.
   # * <tt>:plain</tt> - Renders the text passed in out. Setting the content
-  # type as <tt>text/plain</tt>.
+  #   type as <tt>text/plain</tt>.
   # * <tt>:html</tt> - Renders the HTML safe string passed in out, otherwise
-  # performs HTML escape on the string first. Setting the content type as
-  # <tt>text/html</tt>.
+  #   performs HTML escape on the string first. Setting the content type as
+  #   <tt>text/html</tt>.
   # * <tt>:body</tt> - Renders the text passed in, and inherits the content
-  # type of <tt>text/plain</tt> from <tt>ActionDispatch::Response</tt>
-  # object.
+  #   type of <tt>text/plain</tt> from <tt>ActionDispatch::Response</tt>
+  #   object.
   #
   # If no <tt>options</tt> hash is passed or if <tt>:update</tt> is specified, then:
   #
@@ -7097,55 +7187,55 @@ module ActionView::Helpers::SanitizeHelper
   # * <tt>:tags</tt> - An array of allowed tags.
   # * <tt>:attributes</tt> - An array of allowed attributes.
   # * <tt>:scrubber</tt> - A {Rails::Html scrubber}[https://github.com/rails/rails-html-sanitizer]
-  # or {Loofah::Scrubber}[https://github.com/flavorjones/loofah] object that
-  # defines custom sanitization rules. A custom scrubber takes precedence over
-  # custom tags and attributes.
+  #   or {Loofah::Scrubber}[https://github.com/flavorjones/loofah] object that
+  #   defines custom sanitization rules. A custom scrubber takes precedence over
+  #   custom tags and attributes.
   #
   # ==== Examples
   #
   # Normal use:
   #
-  # <%= sanitize @comment.body %>
+  #   <%= sanitize @comment.body %>
   #
   # Providing custom lists of permitted tags and attributes:
   #
-  # <%= sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) %>
+  #   <%= sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) %>
   #
   # Providing a custom Rails::Html scrubber:
   #
-  # class CommentScrubber < Rails::Html::PermitScrubber
-  # def initialize
-  # super
-  # self.tags = %w( form script comment blockquote )
-  # self.attributes = %w( style )
-  # end
+  #   class CommentScrubber < Rails::Html::PermitScrubber
+  #     def initialize
+  #       super
+  #       self.tags = %w( form script comment blockquote )
+  #       self.attributes = %w( style )
+  #     end
   #
-  # def skip_node?(node)
-  # node.text?
-  # end
-  # end
+  #     def skip_node?(node)
+  #       node.text?
+  #     end
+  #   end
   #
-  # <%= sanitize @comment.body, scrubber: CommentScrubber.new %>
+  #   <%= sanitize @comment.body, scrubber: CommentScrubber.new %>
   #
   # See {Rails HTML Sanitizer}[https://github.com/rails/rails-html-sanitizer] for
   # documentation about Rails::Html scrubbers.
   #
   # Providing a custom Loofah::Scrubber:
   #
-  # scrubber = Loofah::Scrubber.new do |node|
-  # node.remove if node.name == 'script'
-  # end
+  #   scrubber = Loofah::Scrubber.new do |node|
+  #     node.remove if node.name == 'script'
+  #   end
   #
-  # <%= sanitize @comment.body, scrubber: scrubber %>
+  #   <%= sanitize @comment.body, scrubber: scrubber %>
   #
   # See {Loofah's documentation}[https://github.com/flavorjones/loofah] for more
   # information about defining custom Loofah::Scrubber objects.
   #
   # To set the default allowed tags or attributes across your application:
   #
-  # # In config/application.rb
-  # config.action_view.sanitized_allowed_tags = ['strong', 'em', 'a']
-  # config.action_view.sanitized_allowed_attributes = ['href', 'title']
+  #   # In config/application.rb
+  #   config.action_view.sanitized_allowed_tags = ['strong', 'em', 'a']
+  #   config.action_view.sanitized_allowed_attributes = ['href', 'title']
   def sanitize(html, options = T.unsafe(nil)); end
 
   # Sanitizes a block of CSS code. Used by +sanitize+ when it comes across a style attribute.
@@ -7153,32 +7243,32 @@ module ActionView::Helpers::SanitizeHelper
 
   # Strips all link tags from +html+ leaving just the link text.
   #
-  # strip_links('<a href="http://www.rubyonrails.org">Ruby on Rails</a>')
-  # # => Ruby on Rails
+  #   strip_links('<a href="http://www.rubyonrails.org">Ruby on Rails</a>')
+  #   # => Ruby on Rails
   #
-  # strip_links('Please e-mail me at <a href="mailto:me@email.com">me@email.com</a>.')
-  # # => Please e-mail me at me@email.com.
+  #   strip_links('Please e-mail me at <a href="mailto:me@email.com">me@email.com</a>.')
+  #   # => Please e-mail me at me@email.com.
   #
-  # strip_links('Blog: <a href="http://www.myblog.com/" class="nav" target=\"_blank\">Visit</a>.')
-  # # => Blog: Visit.
+  #   strip_links('Blog: <a href="http://www.myblog.com/" class="nav" target=\"_blank\">Visit</a>.')
+  #   # => Blog: Visit.
   #
-  # strip_links('<<a href="https://example.org">malformed & link</a>')
-  # # => &lt;malformed &amp; link
+  #   strip_links('<<a href="https://example.org">malformed & link</a>')
+  #   # => &lt;malformed &amp; link
   def strip_links(html); end
 
   # Strips all HTML tags from +html+, including comments and special characters.
   #
-  # strip_tags("Strip <i>these</i> tags!")
-  # # => Strip these tags!
+  #   strip_tags("Strip <i>these</i> tags!")
+  #   # => Strip these tags!
   #
-  # strip_tags("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
-  # # => Bold no more!  See more here...
+  #   strip_tags("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
+  #   # => Bold no more!  See more here...
   #
-  # strip_tags("<div id='top-bar'>Welcome to my website!</div>")
-  # # => Welcome to my website!
+  #   strip_tags("<div id='top-bar'>Welcome to my website!</div>")
+  #   # => Welcome to my website!
   #
-  # strip_tags("> A quote from Smith & Wesson")
-  # # => &gt; A quote from Smith &amp; Wesson
+  #   strip_tags("> A quote from Smith & Wesson")
+  #   # => &gt; A quote from Smith &amp; Wesson
   def strip_tags(html); end
 end
 
@@ -7186,34 +7276,40 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # Gets the Rails::Html::FullSanitizer instance used by +strip_tags+. Replace with
   # any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.full_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.full_sanitizer = MySpecialSanitizer.new
+  #   end
   def full_sanitizer; end
 
   # Sets the attribute full_sanitizer
+  #
+  # @param value the value to set the attribute full_sanitizer to.
   def full_sanitizer=(_arg0); end
 
   # Gets the Rails::Html::LinkSanitizer instance used by +strip_links+.
   # Replace with any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.link_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.link_sanitizer = MySpecialSanitizer.new
+  #   end
   def link_sanitizer; end
 
   # Sets the attribute link_sanitizer
+  #
+  # @param value the value to set the attribute link_sanitizer to.
   def link_sanitizer=(_arg0); end
 
   # Gets the Rails::Html::SafeListSanitizer instance used by sanitize and +sanitize_css+.
   # Replace with any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
+  #   end
   def safe_list_sanitizer; end
 
   # Sets the attribute safe_list_sanitizer
+  #
+  # @param value the value to set the attribute safe_list_sanitizer to.
   def safe_list_sanitizer=(_arg0); end
 
   def sanitized_allowed_attributes; end
@@ -7253,27 +7349,27 @@ module ActionView::Helpers::TagHelper
   # otherwise be recognized as markup. CDATA sections begin with the string
   # <tt><![CDATA[</tt> and end with (and may not contain) the string <tt>]]></tt>.
   #
-  # cdata_section("<hello world>")
-  # # => <![CDATA[<hello world>]]>
+  #   cdata_section("<hello world>")
+  #   # => <![CDATA[<hello world>]]>
   #
-  # cdata_section(File.read("hello_world.txt"))
-  # # => <![CDATA[<hello from a text file]]>
+  #   cdata_section(File.read("hello_world.txt"))
+  #   # => <![CDATA[<hello from a text file]]>
   #
-  # cdata_section("hello]]>world")
-  # # => <![CDATA[hello]]]]><![CDATA[>world]]>
+  #   cdata_section("hello]]>world")
+  #   # => <![CDATA[hello]]]]><![CDATA[>world]]>
   def cdata_section(content); end
 
   # Returns a string of tokens built from +args+.
   #
   # ==== Examples
-  # token_list("foo", "bar")
-  # # => "foo bar"
-  # token_list("foo", "foo bar")
-  # # => "foo bar"
-  # token_list({ foo: true, bar: false })
-  # # => "foo"
-  # token_list(nil, false, 123, "", "foo", { bar: true })
-  # # => "123 foo bar"
+  #   token_list("foo", "bar")
+  #    # => "foo bar"
+  #   token_list("foo", "foo bar")
+  #    # => "foo bar"
+  #   token_list({ foo: true, bar: false })
+  #    # => "foo"
+  #   token_list(nil, false, 123, "", "foo", { bar: true })
+  #    # => "123 foo bar"
   def class_names(*args); end
 
   # Returns an HTML block tag of type +name+ surrounding the +content+. Add
@@ -7289,30 +7385,30 @@ module ActionView::Helpers::TagHelper
   # symbols or strings for the attribute names.
   #
   # ==== Examples
-  # content_tag(:p, "Hello world!")
-  # # => <p>Hello world!</p>
-  # content_tag(:div, content_tag(:p, "Hello world!"), class: "strong")
-  # # => <div class="strong"><p>Hello world!</p></div>
-  # content_tag(:div, "Hello world!", class: ["strong", "highlight"])
-  # # => <div class="strong highlight">Hello world!</div>
-  # content_tag(:div, "Hello world!", class: ["strong", { highlight: current_user.admin? }])
-  # # => <div class="strong highlight">Hello world!</div>
-  # content_tag("select", options, multiple: true)
-  # # => <select multiple="multiple">...options...</select>
+  #   content_tag(:p, "Hello world!")
+  #    # => <p>Hello world!</p>
+  #   content_tag(:div, content_tag(:p, "Hello world!"), class: "strong")
+  #    # => <div class="strong"><p>Hello world!</p></div>
+  #   content_tag(:div, "Hello world!", class: ["strong", "highlight"])
+  #    # => <div class="strong highlight">Hello world!</div>
+  #   content_tag(:div, "Hello world!", class: ["strong", { highlight: current_user.admin? }])
+  #    # => <div class="strong highlight">Hello world!</div>
+  #   content_tag("select", options, multiple: true)
+  #    # => <select multiple="multiple">...options...</select>
   #
-  # <%= content_tag :div, class: "strong" do -%>
-  # Hello world!
-  # <% end -%>
-  # # => <div class="strong">Hello world!</div>
+  #   <%= content_tag :div, class: "strong" do -%>
+  #     Hello world!
+  #   <% end -%>
+  #    # => <div class="strong">Hello world!</div>
   def content_tag(name, content_or_options_with_block = T.unsafe(nil), options = T.unsafe(nil), escape = T.unsafe(nil), &block); end
 
   # Returns an escaped version of +html+ without affecting existing escaped entities.
   #
-  # escape_once("1 < 2 &amp; 3")
-  # # => "1 &lt; 2 &amp; 3"
+  #   escape_once("1 < 2 &amp; 3")
+  #   # => "1 &lt; 2 &amp; 3"
   #
-  # escape_once("&lt;&lt; Accept & Checkout")
-  # # => "&lt;&lt; Accept &amp; Checkout"
+  #   escape_once("&lt;&lt; Accept & Checkout")
+  #   # => "&lt;&lt; Accept &amp; Checkout"
   def escape_once(html); end
 
   # Returns an HTML tag.
@@ -7321,7 +7417,7 @@ module ActionView::Helpers::TagHelper
   #
   # Builds HTML5 compliant tags with a tag proxy. Every tag can be built with:
   #
-  # tag.<tag name>(optional content, options)
+  #   tag.<tag name>(optional content, options)
   #
   # where tag name can be e.g. br, div, section, article, or any tag really.
   #
@@ -7329,39 +7425,39 @@ module ActionView::Helpers::TagHelper
   #
   # Tags can pass content to embed within it:
   #
-  # tag.h1 'All titles fit to print' # => <h1>All titles fit to print</h1>
+  #   tag.h1 'All titles fit to print' # => <h1>All titles fit to print</h1>
   #
-  # tag.div tag.p('Hello world!')  # => <div><p>Hello world!</p></div>
+  #   tag.div tag.p('Hello world!')  # => <div><p>Hello world!</p></div>
   #
   # Content can also be captured with a block, which is useful in templates:
   #
-  # <%= tag.p do %>
-  # The next great American novel starts here.
-  # <% end %>
-  # # => <p>The next great American novel starts here.</p>
+  #   <%= tag.p do %>
+  #     The next great American novel starts here.
+  #   <% end %>
+  #   # => <p>The next great American novel starts here.</p>
   #
   # ==== Options
   #
   # Use symbol keyed options to add attributes to the generated tag.
   #
-  # tag.section class: %w( kitties puppies )
-  # # => <section class="kitties puppies"></section>
+  #   tag.section class: %w( kitties puppies )
+  #   # => <section class="kitties puppies"></section>
   #
-  # tag.section id: dom_id(@post)
-  # # => <section id="<generated dom id>"></section>
+  #   tag.section id: dom_id(@post)
+  #   # => <section id="<generated dom id>"></section>
   #
   # Pass +true+ for any attributes that can render with no values, like +disabled+ and +readonly+.
   #
-  # tag.input type: 'text', disabled: true
-  # # => <input type="text" disabled="disabled">
+  #   tag.input type: 'text', disabled: true
+  #   # => <input type="text" disabled="disabled">
   #
   # HTML5 <tt>data-*</tt> and <tt>aria-*</tt> attributes can be set with a
   # single +data+ or +aria+ key pointing to a hash of sub-attributes.
   #
   # To play nicely with JavaScript conventions, sub-attributes are dasherized.
   #
-  # tag.article data: { user_id: 123 }
-  # # => <article data-user-id="123"></article>
+  #   tag.article data: { user_id: 123 }
+  #   # => <article data-user-id="123"></article>
   #
   # Thus <tt>data-user-id</tt> can be accessed as <tt>dataset.userId</tt>.
   #
@@ -7370,33 +7466,33 @@ module ActionView::Helpers::TagHelper
   # This may come in handy when using jQuery's HTML5-aware <tt>.data()</tt>
   # from 1.4.3.
   #
-  # tag.div data: { city_state: %w( Chicago IL ) }
-  # # => <div data-city-state="[&quot;Chicago&quot;,&quot;IL&quot;]"></div>
+  #   tag.div data: { city_state: %w( Chicago IL ) }
+  #   # => <div data-city-state="[&quot;Chicago&quot;,&quot;IL&quot;]"></div>
   #
   # The generated attributes are escaped by default. This can be disabled using
   # +escape_attributes+.
   #
-  # tag.img src: 'open & shut.png'
-  # # => <img src="open &amp; shut.png">
+  #   tag.img src: 'open & shut.png'
+  #   # => <img src="open &amp; shut.png">
   #
-  # tag.img src: 'open & shut.png', escape_attributes: false
-  # # => <img src="open & shut.png">
+  #   tag.img src: 'open & shut.png', escape_attributes: false
+  #   # => <img src="open & shut.png">
   #
   # The tag builder respects
   # {HTML5 void elements}[https://www.w3.org/TR/html5/syntax.html#void-elements]
   # if no content is passed, and omits closing tags for those elements.
   #
-  # # A standard element:
-  # tag.div # => <div></div>
+  #   # A standard element:
+  #   tag.div # => <div></div>
   #
-  # # A void element:
-  # tag.br  # => <br>
+  #   # A void element:
+  #   tag.br  # => <br>
   #
   # === Legacy syntax
   #
   # The following format is for legacy syntax support. It will be deprecated in future versions of Rails.
   #
-  # tag(name, options = nil, open = false, escape = true)
+  #   tag(name, options = nil, open = false, escape = true)
   #
   # It returns an empty HTML tag of type +name+ which by default is XHTML
   # compliant. Set +open+ to true to create an open tag compatible
@@ -7416,42 +7512,42 @@ module ActionView::Helpers::TagHelper
   #
   # ==== Examples
   #
-  # tag("br")
-  # # => <br />
+  #   tag("br")
+  #   # => <br />
   #
-  # tag("br", nil, true)
-  # # => <br>
+  #   tag("br", nil, true)
+  #   # => <br>
   #
-  # tag("input", type: 'text', disabled: true)
-  # # => <input type="text" disabled="disabled" />
+  #   tag("input", type: 'text', disabled: true)
+  #   # => <input type="text" disabled="disabled" />
   #
-  # tag("input", type: 'text', class: ["strong", "highlight"])
-  # # => <input class="strong highlight" type="text" />
+  #   tag("input", type: 'text', class: ["strong", "highlight"])
+  #   # => <input class="strong highlight" type="text" />
   #
-  # tag("img", src: "open & shut.png")
-  # # => <img src="open &amp; shut.png" />
+  #   tag("img", src: "open & shut.png")
+  #   # => <img src="open &amp; shut.png" />
   #
-  # tag("img", { src: "open &amp; shut.png" }, false, false)
-  # # => <img src="open &amp; shut.png" />
+  #   tag("img", { src: "open &amp; shut.png" }, false, false)
+  #   # => <img src="open &amp; shut.png" />
   #
-  # tag("div", data: { name: 'Stephen', city_state: %w(Chicago IL) })
-  # # => <div data-name="Stephen" data-city-state="[&quot;Chicago&quot;,&quot;IL&quot;]" />
+  #   tag("div", data: { name: 'Stephen', city_state: %w(Chicago IL) })
+  #   # => <div data-name="Stephen" data-city-state="[&quot;Chicago&quot;,&quot;IL&quot;]" />
   #
-  # tag("div", class: { highlight: current_user.admin? })
-  # # => <div class="highlight" />
+  #   tag("div", class: { highlight: current_user.admin? })
+  #   # => <div class="highlight" />
   def tag(name = T.unsafe(nil), options = T.unsafe(nil), open = T.unsafe(nil), escape = T.unsafe(nil)); end
 
   # Returns a string of tokens built from +args+.
   #
   # ==== Examples
-  # token_list("foo", "bar")
-  # # => "foo bar"
-  # token_list("foo", "foo bar")
-  # # => "foo bar"
-  # token_list({ foo: true, bar: false })
-  # # => "foo"
-  # token_list(nil, false, 123, "", "foo", { bar: true })
-  # # => "123 foo bar"
+  #   token_list("foo", "bar")
+  #    # => "foo bar"
+  #   token_list("foo", "foo bar")
+  #    # => "foo bar"
+  #   token_list({ foo: true, bar: false })
+  #    # => "foo"
+  #   token_list(nil, false, 123, "", "foo", { bar: true })
+  #    # => "123 foo bar"
   def token_list(*args); end
 
   private
@@ -7474,6 +7570,7 @@ class ActionView::Helpers::TagHelper::TagBuilder
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
 
+  # @return [TagBuilder] a new instance of TagBuilder
   def initialize(view_context); end
 
   def boolean_tag_option(key); end
@@ -7487,6 +7584,8 @@ class ActionView::Helpers::TagHelper::TagBuilder
 
   def method_missing(called, *args, **options, &block); end
   def prefix_tag_option(prefix, key, value, escape); end
+
+  # @return [Boolean]
   def respond_to_missing?(*args); end
 end
 
@@ -7509,12 +7608,15 @@ class ActionView::Helpers::Tags::Base
   extend ::ActionView::Helpers::UrlHelper::ClassMethods
   extend ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
+  # @return [Base] a new instance of Base
   def initialize(object_name, method_name, template_object, options = T.unsafe(nil)); end
 
   # Returns the value of attribute object.
   def object; end
 
   # This is what child classes implement.
+  #
+  # @raise [NotImplementedError]
   def render; end
 
   private
@@ -7522,9 +7624,15 @@ class ActionView::Helpers::Tags::Base
   def add_default_name_and_id(options); end
   def add_default_name_and_id_for_value(tag_value, options); end
   def add_options(option_tags, options, value = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def generate_ids?; end
+
   def name_and_id_index(options); end
+
+  # @return [Boolean]
   def placeholder_required?(html_options); end
+
   def retrieve_autoindex(pre_match); end
   def retrieve_object(object); end
   def sanitized_method_name; end
@@ -7535,23 +7643,29 @@ class ActionView::Helpers::Tags::Base
   def tag_name(multiple = T.unsafe(nil), index = T.unsafe(nil)); end
   def value; end
   def value_before_type_cast; end
+
+  # @return [Boolean]
   def value_came_from_user?; end
 end
 
 class ActionView::Helpers::Tags::CheckBox < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::Checkable
 
+  # @return [CheckBox] a new instance of CheckBox
   def initialize(object_name, method_name, template_object, checked_value, unchecked_value, options); end
 
   def render; end
 
   private
 
+  # @return [Boolean]
   def checked?(value); end
+
   def hidden_field_for_checkbox(options); end
 end
 
 module ActionView::Helpers::Tags::Checkable
+  # @return [Boolean]
   def input_checked?(options); end
 end
 
@@ -7588,6 +7702,7 @@ module ActionView::Helpers::Tags::CollectionHelpers
 end
 
 class ActionView::Helpers::Tags::CollectionHelpers::Builder
+  # @return [Builder] a new instance of Builder
   def initialize(template_object, object_name, method_name, object, sanitized_attribute_name, text, value, input_html_options); end
 
   def label(label_html_options = T.unsafe(nil), &block); end
@@ -7617,6 +7732,7 @@ class ActionView::Helpers::Tags::CollectionRadioButtons::RadioButtonBuilder < ::
 end
 
 class ActionView::Helpers::Tags::CollectionSelect < ::ActionView::Helpers::Tags::Base
+  # @return [CollectionSelect] a new instance of CollectionSelect
   def initialize(object_name, method_name, template_object, collection, value_method, text_method, options, html_options); end
 
   def render; end
@@ -7637,6 +7753,7 @@ class ActionView::Helpers::Tags::DateField < ::ActionView::Helpers::Tags::Dateti
 end
 
 class ActionView::Helpers::Tags::DateSelect < ::ActionView::Helpers::Tags::Base
+  # @return [DateSelect] a new instance of DateSelect
   def initialize(object_name, method_name, template_object, options, html_options); end
 
   def render; end
@@ -7658,6 +7775,8 @@ class ActionView::Helpers::Tags::DatetimeField < ::ActionView::Helpers::Tags::Te
   private
 
   def datetime_value(value); end
+
+  # @raise [NotImplementedError]
   def format_date(value); end
 end
 
@@ -7676,6 +7795,7 @@ class ActionView::Helpers::Tags::EmailField < ::ActionView::Helpers::Tags::TextF
 class ActionView::Helpers::Tags::FileField < ::ActionView::Helpers::Tags::TextField; end
 
 class ActionView::Helpers::Tags::GroupedCollectionSelect < ::ActionView::Helpers::Tags::Base
+  # @return [GroupedCollectionSelect] a new instance of GroupedCollectionSelect
   def initialize(object_name, method_name, template_object, collection, group_method, group_label_method, option_key_method, option_value_method, options, html_options); end
 
   def render; end
@@ -7684,6 +7804,7 @@ end
 class ActionView::Helpers::Tags::HiddenField < ::ActionView::Helpers::Tags::TextField; end
 
 class ActionView::Helpers::Tags::Label < ::ActionView::Helpers::Tags::Base
+  # @return [Label] a new instance of Label
   def initialize(object_name, method_name, template_object, content_or_options = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def render(&block); end
@@ -7694,6 +7815,7 @@ class ActionView::Helpers::Tags::Label < ::ActionView::Helpers::Tags::Base
 end
 
 class ActionView::Helpers::Tags::Label::LabelBuilder
+  # @return [LabelBuilder] a new instance of LabelBuilder
   def initialize(template_object, object_name, method_name, object, tag_value); end
 
   # Returns the value of attribute object.
@@ -7724,12 +7846,14 @@ end
 class ActionView::Helpers::Tags::RadioButton < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::Checkable
 
+  # @return [RadioButton] a new instance of RadioButton
   def initialize(object_name, method_name, template_object, tag_value, options); end
 
   def render; end
 
   private
 
+  # @return [Boolean]
   def checked?(value); end
 end
 
@@ -7740,6 +7864,7 @@ class ActionView::Helpers::Tags::SearchField < ::ActionView::Helpers::Tags::Text
 end
 
 class ActionView::Helpers::Tags::Select < ::ActionView::Helpers::Tags::Base
+  # @return [Select] a new instance of Select
   def initialize(object_name, method_name, template_object, choices, options, html_options); end
 
   def render; end
@@ -7748,8 +7873,10 @@ class ActionView::Helpers::Tags::Select < ::ActionView::Helpers::Tags::Base
 
   # Grouped choices look like this:
   #
-  # [nil, []]
-  # { nil => [] }
+  #   [nil, []]
+  #   { nil => [] }
+  #
+  # @return [Boolean]
   def grouped_choices?; end
 end
 
@@ -7784,12 +7911,14 @@ end
 class ActionView::Helpers::Tags::TimeSelect < ::ActionView::Helpers::Tags::DateSelect; end
 
 class ActionView::Helpers::Tags::TimeZoneSelect < ::ActionView::Helpers::Tags::Base
+  # @return [TimeZoneSelect] a new instance of TimeZoneSelect
   def initialize(object_name, method_name, template_object, priority_zones, options, html_options); end
 
   def render; end
 end
 
 class ActionView::Helpers::Tags::Translator
+  # @return [Translator] a new instance of Translator
   def initialize(object, object_name, method_and_value, scope:); end
 
   def translate; end
@@ -7831,17 +7960,17 @@ end
 # but do not escape it. This means HTML tags will appear in the page but all malicious
 # code will be removed. Let's look at some examples using the +simple_format+ method:
 #
-# simple_format('<a href="http://example.com/">Example</a>')
-# # => "<p><a href=\"http://example.com/\">Example</a></p>"
+#   simple_format('<a href="http://example.com/">Example</a>')
+#   # => "<p><a href=\"http://example.com/\">Example</a></p>"
 #
-# simple_format('<a href="javascript:alert(\'no!\')">Example</a>')
-# # => "<p><a>Example</a></p>"
+#   simple_format('<a href="javascript:alert(\'no!\')">Example</a>')
+#   # => "<p><a>Example</a></p>"
 #
 # If you want to escape all content, you should invoke the +h+ method before
 # calling the text helper.
 #
-# simple_format h('<a href="http://example.com/">Example</a>')
-# # => "<p>&lt;a href=\"http://example.com/\"&gt;Example&lt;/a&gt;</p>"
+#   simple_format h('<a href="http://example.com/">Example</a>')
+#   # => "<p>&lt;a href=\"http://example.com/\"&gt;Example&lt;/a&gt;</p>"
 module ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   extend ::ActiveSupport::Concern
@@ -7855,30 +7984,30 @@ module ActionView::Helpers::TextHelper
   # do not operate as expected in an eRuby code block. If you absolutely must
   # output text within a non-output code block (i.e., <% %>), you can use the concat method.
   #
-  # <%
-  # concat "hello"
-  # # is the equivalent of <%= "hello" %>
+  #   <%
+  #       concat "hello"
+  #       # is the equivalent of <%= "hello" %>
   #
-  # if logged_in
-  # concat "Logged in!"
-  # else
-  # concat link_to('login', action: :login)
-  # end
-  # # will either display "Logged in!" or a login link
-  # %>
+  #       if logged_in
+  #         concat "Logged in!"
+  #       else
+  #         concat link_to('login', action: :login)
+  #       end
+  #       # will either display "Logged in!" or a login link
+  #   %>
   def concat(string); end
 
   # Returns the current cycle string after a cycle has been started. Useful
   # for complex table highlighting or any other design need which requires
   # the current cycle string in more than one place.
   #
-  # # Alternate background colors
-  # @items = [1,2,3,4]
-  # <% @items.each do |item| %>
-  # <div style="background-color:<%= cycle("red","white","blue") %>">
-  # <span style="background-color:<%= current_cycle %>"><%= item %></span>
-  # </div>
-  # <% end %>
+  #   # Alternate background colors
+  #   @items = [1,2,3,4]
+  #   <% @items.each do |item| %>
+  #     <div style="background-color:<%= cycle("red","white","blue") %>">
+  #       <span style="background-color:<%= current_cycle %>"><%= item %></span>
+  #     </div>
+  #   <% end %>
   def current_cycle(name = T.unsafe(nil)); end
 
   # Creates a Cycle object whose _to_s_ method cycles through elements of an
@@ -7890,34 +8019,34 @@ module ActionView::Helpers::TextHelper
   # and passing the name of the cycle. The current cycle string can be obtained
   # anytime using the current_cycle method.
   #
-  # # Alternate CSS classes for even and odd numbers...
-  # @items = [1,2,3,4]
-  # <table>
-  # <% @items.each do |item| %>
-  # <tr class="<%= cycle("odd", "even") -%>">
-  # <td><%= item %></td>
-  # </tr>
-  # <% end %>
-  # </table>
+  #   # Alternate CSS classes for even and odd numbers...
+  #   @items = [1,2,3,4]
+  #   <table>
+  #   <% @items.each do |item| %>
+  #     <tr class="<%= cycle("odd", "even") -%>">
+  #       <td><%= item %></td>
+  #     </tr>
+  #   <% end %>
+  #   </table>
   #
   #
-  # # Cycle CSS classes for rows, and text colors for values within each row
-  # @items = x = [{first: 'Robert', middle: 'Daniel', last: 'James'},
-  # {first: 'Emily', middle: 'Shannon', maiden: 'Pike', last: 'Hicks'},
-  # {first: 'June', middle: 'Dae', last: 'Jones'}]
-  # <% @items.each do |item| %>
-  # <tr class="<%= cycle("odd", "even", name: "row_class") -%>">
-  # <td>
-  # <% item.values.each do |value| %>
-  # <%# Create a named cycle "colors" %>
-  # <span style="color:<%= cycle("red", "green", "blue", name: "colors") -%>">
-  # <%= value %>
-  # </span>
-  # <% end %>
-  # <% reset_cycle("colors") %>
-  # </td>
-  # </tr>
-  # <% end %>
+  #   # Cycle CSS classes for rows, and text colors for values within each row
+  #   @items = x = [{first: 'Robert', middle: 'Daniel', last: 'James'},
+  #                {first: 'Emily', middle: 'Shannon', maiden: 'Pike', last: 'Hicks'},
+  #               {first: 'June', middle: 'Dae', last: 'Jones'}]
+  #   <% @items.each do |item| %>
+  #     <tr class="<%= cycle("odd", "even", name: "row_class") -%>">
+  #       <td>
+  #         <% item.values.each do |value| %>
+  #           <%# Create a named cycle "colors" %>
+  #           <span style="color:<%= cycle("red", "green", "blue", name: "colors") -%>">
+  #             <%= value %>
+  #           </span>
+  #         <% end %>
+  #         <% reset_cycle("colors") %>
+  #       </td>
+  #    </tr>
+  #  <% end %>
   def cycle(first_value, *values); end
 
   # Extracts an excerpt from +text+ that matches the first instance of +phrase+.
@@ -7927,23 +8056,23 @@ module ActionView::Helpers::TextHelper
   # <tt>:separator</tt> option to choose the delimitation. The resulting string will be stripped in any case. If the +phrase+
   # isn't found, +nil+ is returned.
   #
-  # excerpt('This is an example', 'an', radius: 5)
-  # # => ...s is an exam...
+  #   excerpt('This is an example', 'an', radius: 5)
+  #   # => ...s is an exam...
   #
-  # excerpt('This is an example', 'is', radius: 5)
-  # # => This is a...
+  #   excerpt('This is an example', 'is', radius: 5)
+  #   # => This is a...
   #
-  # excerpt('This is an example', 'is')
-  # # => This is an example
+  #   excerpt('This is an example', 'is')
+  #   # => This is an example
   #
-  # excerpt('This next thing is an example', 'ex', radius: 2)
-  # # => ...next...
+  #   excerpt('This next thing is an example', 'ex', radius: 2)
+  #   # => ...next...
   #
-  # excerpt('This is also an example', 'an', radius: 8, omission: '<chop> ')
-  # # => <chop> is also an example
+  #   excerpt('This is also an example', 'an', radius: 8, omission: '<chop> ')
+  #   # => <chop> is also an example
   #
-  # excerpt('This is a very beautiful morning', 'very', separator: ' ', radius: 1)
-  # # => ...a very beautiful...
+  #   excerpt('This is a very beautiful morning', 'very', separator: ' ', radius: 1)
+  #   # => ...a very beautiful...
   def excerpt(text, phrase, options = T.unsafe(nil)); end
 
   # Highlights one or more +phrases+ everywhere in +text+ by inserting it into
@@ -7953,26 +8082,26 @@ module ActionView::Helpers::TextHelper
   # is sanitized to prevent possible XSS attacks. If the input is trustworthy, passing false
   # for <tt>:sanitize</tt> will turn sanitizing off.
   #
-  # highlight('You searched for: rails', 'rails')
-  # # => You searched for: <mark>rails</mark>
+  #   highlight('You searched for: rails', 'rails')
+  #   # => You searched for: <mark>rails</mark>
   #
-  # highlight('You searched for: rails', /for|rails/)
-  # # => You searched <mark>for</mark>: <mark>rails</mark>
+  #   highlight('You searched for: rails', /for|rails/)
+  #   # => You searched <mark>for</mark>: <mark>rails</mark>
   #
-  # highlight('You searched for: ruby, rails, dhh', 'actionpack')
-  # # => You searched for: ruby, rails, dhh
+  #   highlight('You searched for: ruby, rails, dhh', 'actionpack')
+  #   # => You searched for: ruby, rails, dhh
   #
-  # highlight('You searched for: rails', ['for', 'rails'], highlighter: '<em>\1</em>')
-  # # => You searched <em>for</em>: <em>rails</em>
+  #   highlight('You searched for: rails', ['for', 'rails'], highlighter: '<em>\1</em>')
+  #   # => You searched <em>for</em>: <em>rails</em>
   #
-  # highlight('You searched for: rails', 'rails', highlighter: '<a href="search?q=\1">\1</a>')
-  # # => You searched for: <a href="search?q=rails">rails</a>
+  #   highlight('You searched for: rails', 'rails', highlighter: '<a href="search?q=\1">\1</a>')
+  #   # => You searched for: <a href="search?q=rails">rails</a>
   #
-  # highlight('You searched for: rails', 'rails') { |match| link_to(search_path(q: match, match)) }
-  # # => You searched for: <a href="search?q=rails">rails</a>
+  #   highlight('You searched for: rails', 'rails') { |match| link_to(search_path(q: match, match)) }
+  #   # => You searched for: <a href="search?q=rails">rails</a>
   #
-  # highlight('<a href="javascript:alert(\'no!\')">ruby</a> on rails', 'rails', sanitize: false)
-  # # => <a href="javascript:alert('no!')">ruby</a> on <mark>rails</mark>
+  #   highlight('<a href="javascript:alert(\'no!\')">ruby</a> on rails', 'rails', sanitize: false)
+  #   # => <a href="javascript:alert('no!')">ruby</a> on <mark>rails</mark>
   def highlight(text, phrases, options = T.unsafe(nil)); end
 
   # Attempts to pluralize the +singular+ word unless +count+ is 1. If
@@ -7984,40 +8113,40 @@ module ActionView::Helpers::TextHelper
   # (you must define your own inflection rules for languages other than English).
   # See ActiveSupport::Inflector.pluralize
   #
-  # pluralize(1, 'person')
-  # # => 1 person
+  #   pluralize(1, 'person')
+  #   # => 1 person
   #
-  # pluralize(2, 'person')
-  # # => 2 people
+  #   pluralize(2, 'person')
+  #   # => 2 people
   #
-  # pluralize(3, 'person', plural: 'users')
-  # # => 3 users
+  #   pluralize(3, 'person', plural: 'users')
+  #   # => 3 users
   #
-  # pluralize(0, 'person')
-  # # => 0 people
+  #   pluralize(0, 'person')
+  #   # => 0 people
   #
-  # pluralize(2, 'Person', locale: :de)
-  # # => 2 Personen
+  #   pluralize(2, 'Person', locale: :de)
+  #   # => 2 Personen
   def pluralize(count, singular, plural_arg = T.unsafe(nil), plural: T.unsafe(nil), locale: T.unsafe(nil)); end
 
   # Resets a cycle so that it starts from the first element the next time
   # it is called. Pass in +name+ to reset a named cycle.
   #
-  # # Alternate CSS classes for even and odd numbers...
-  # @items = [[1,2,3,4], [5,6,3], [3,4,5,6,7,4]]
-  # <table>
-  # <% @items.each do |item| %>
-  # <tr class="<%= cycle("even", "odd") -%>">
-  # <% item.each do |value| %>
-  # <span style="color:<%= cycle("#333", "#666", "#999", name: "colors") -%>">
-  # <%= value %>
-  # </span>
-  # <% end %>
+  #   # Alternate CSS classes for even and odd numbers...
+  #   @items = [[1,2,3,4], [5,6,3], [3,4,5,6,7,4]]
+  #   <table>
+  #   <% @items.each do |item| %>
+  #     <tr class="<%= cycle("even", "odd") -%>">
+  #         <% item.each do |value| %>
+  #           <span style="color:<%= cycle("#333", "#666", "#999", name: "colors") -%>">
+  #             <%= value %>
+  #           </span>
+  #         <% end %>
   #
-  # <% reset_cycle("colors") %>
-  # </tr>
-  # <% end %>
-  # </table>
+  #         <% reset_cycle("colors") %>
+  #     </tr>
+  #   <% end %>
+  #   </table>
   def reset_cycle(name = T.unsafe(nil)); end
 
   def safe_concat(string); end
@@ -8037,27 +8166,27 @@ module ActionView::Helpers::TextHelper
   # * <tt>:wrapper_tag</tt> - String representing the wrapper tag, defaults to <tt>"p"</tt>
   #
   # ==== Examples
-  # my_text = "Here is some basic text...\n...with a line break."
+  #   my_text = "Here is some basic text...\n...with a line break."
   #
-  # simple_format(my_text)
-  # # => "<p>Here is some basic text...\n<br />...with a line break.</p>"
+  #   simple_format(my_text)
+  #   # => "<p>Here is some basic text...\n<br />...with a line break.</p>"
   #
-  # simple_format(my_text, {}, wrapper_tag: "div")
-  # # => "<div>Here is some basic text...\n<br />...with a line break.</div>"
+  #   simple_format(my_text, {}, wrapper_tag: "div")
+  #   # => "<div>Here is some basic text...\n<br />...with a line break.</div>"
   #
-  # more_text = "We want to put a paragraph...\n\n...right there."
+  #   more_text = "We want to put a paragraph...\n\n...right there."
   #
-  # simple_format(more_text)
-  # # => "<p>We want to put a paragraph...</p>\n\n<p>...right there.</p>"
+  #   simple_format(more_text)
+  #   # => "<p>We want to put a paragraph...</p>\n\n<p>...right there.</p>"
   #
-  # simple_format("Look ma! A class!", class: 'description')
-  # # => "<p class='description'>Look ma! A class!</p>"
+  #   simple_format("Look ma! A class!", class: 'description')
+  #   # => "<p class='description'>Look ma! A class!</p>"
   #
-  # simple_format("<blink>Unblinkable.</blink>")
-  # # => "<p>Unblinkable.</p>"
+  #   simple_format("<blink>Unblinkable.</blink>")
+  #   # => "<p>Unblinkable.</p>"
   #
-  # simple_format("<blink>Blinkable!</blink> It's true.", {}, sanitize: false)
-  # # => "<p><blink>Blinkable!</blink> It's true.</p>"
+  #   simple_format("<blink>Blinkable!</blink> It's true.", {}, sanitize: false)
+  #   # => "<p><blink>Blinkable!</blink> It's true.</p>"
   def simple_format(text, html_options = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Truncates a given +text+ after a given <tt>:length</tt> if +text+ is longer than <tt>:length</tt>
@@ -8072,48 +8201,48 @@ module ActionView::Helpers::TextHelper
   # +false+. Care should be taken if +text+ contains HTML tags or entities, because truncation
   # may produce invalid HTML (such as unbalanced or incomplete tags).
   #
-  # truncate("Once upon a time in a world far far away")
-  # # => "Once upon a time in a world..."
+  #   truncate("Once upon a time in a world far far away")
+  #   # => "Once upon a time in a world..."
   #
-  # truncate("Once upon a time in a world far far away", length: 17)
-  # # => "Once upon a ti..."
+  #   truncate("Once upon a time in a world far far away", length: 17)
+  #   # => "Once upon a ti..."
   #
-  # truncate("Once upon a time in a world far far away", length: 17, separator: ' ')
-  # # => "Once upon a..."
+  #   truncate("Once upon a time in a world far far away", length: 17, separator: ' ')
+  #   # => "Once upon a..."
   #
-  # truncate("And they found that many people were sleeping better.", length: 25, omission: '... (continued)')
-  # # => "And they f... (continued)"
+  #   truncate("And they found that many people were sleeping better.", length: 25, omission: '... (continued)')
+  #   # => "And they f... (continued)"
   #
-  # truncate("<p>Once upon a time in a world far far away</p>")
-  # # => "&lt;p&gt;Once upon a time in a wo..."
+  #   truncate("<p>Once upon a time in a world far far away</p>")
+  #   # => "&lt;p&gt;Once upon a time in a wo..."
   #
-  # truncate("<p>Once upon a time in a world far far away</p>", escape: false)
-  # # => "<p>Once upon a time in a wo..."
+  #   truncate("<p>Once upon a time in a world far far away</p>", escape: false)
+  #   # => "<p>Once upon a time in a wo..."
   #
-  # truncate("Once upon a time in a world far far away") { link_to "Continue", "#" }
-  # # => "Once upon a time in a wo...<a href="#">Continue</a>"
+  #   truncate("Once upon a time in a world far far away") { link_to "Continue", "#" }
+  #   # => "Once upon a time in a wo...<a href="#">Continue</a>"
   def truncate(text, options = T.unsafe(nil), &block); end
 
   # Wraps the +text+ into lines no longer than +line_width+ width. This method
   # breaks on the first whitespace character that does not exceed +line_width+
   # (which is 80 by default).
   #
-  # word_wrap('Once upon a time')
-  # # => Once upon a time
+  #   word_wrap('Once upon a time')
+  #   # => Once upon a time
   #
-  # word_wrap('Once upon a time, in a kingdom called Far Far Away, a king fell ill, and finding a successor to the throne turned out to be more trouble than anyone could have imagined...')
-  # # => Once upon a time, in a kingdom called Far Far Away, a king fell ill, and finding\na successor to the throne turned out to be more trouble than anyone could have\nimagined...
+  #   word_wrap('Once upon a time, in a kingdom called Far Far Away, a king fell ill, and finding a successor to the throne turned out to be more trouble than anyone could have imagined...')
+  #   # => Once upon a time, in a kingdom called Far Far Away, a king fell ill, and finding\na successor to the throne turned out to be more trouble than anyone could have\nimagined...
   #
-  # word_wrap('Once upon a time', line_width: 8)
-  # # => Once\nupon a\ntime
+  #   word_wrap('Once upon a time', line_width: 8)
+  #   # => Once\nupon a\ntime
   #
-  # word_wrap('Once upon a time', line_width: 1)
-  # # => Once\nupon\na\ntime
+  #   word_wrap('Once upon a time', line_width: 1)
+  #   # => Once\nupon\na\ntime
   #
-  # You can also specify a custom +break_sequence+ ("\n" by default)
+  #   You can also specify a custom +break_sequence+ ("\n" by default)
   #
-  # word_wrap('Once upon a time', line_width: 1, break_sequence: "\r\n")
-  # # => Once\r\nupon\r\na\r\ntime
+  #   word_wrap('Once upon a time', line_width: 1, break_sequence: "\r\n")
+  #   # => Once\r\nupon\r\na\r\ntime
   def word_wrap(text, line_width: T.unsafe(nil), break_sequence: T.unsafe(nil)); end
 
   private
@@ -8130,6 +8259,7 @@ module ActionView::Helpers::TextHelper
 end
 
 class ActionView::Helpers::TextHelper::Cycle
+  # @return [Cycle] a new instance of Cycle
   def initialize(first_value, *values); end
 
   def current_value; end
@@ -8175,9 +8305,9 @@ module ActionView::Helpers::TranslationHelper
   # For example, the value returned for the missing translation key
   # <tt>"blog.post.title"</tt> will be:
   #
-  # <span
-  # class="translation_missing"
-  # title="translation missing: en.blog.post.title">Title</span>
+  #    <span
+  #      class="translation_missing"
+  #      title="translation missing: en.blog.post.title">Title</span>
   #
   # This allows for views to display rather reasonable strings while still
   # giving developers a way to find missing translations.
@@ -8207,9 +8337,9 @@ module ActionView::Helpers::TranslationHelper
   # To access the translated text along with the fully resolved
   # translation key, <tt>translate</tt> accepts a block:
   #
-  # <%= translate(".relative_key") do |translation, resolved_key| %>
-  # <span title="<%= resolved_key %>"><%= translation %></span>
-  # <% end %>
+  #     <%= translate(".relative_key") do |translation, resolved_key| %>
+  #       <span title="<%= resolved_key %>"><%= translation %></span>
+  #     <% end %>
   #
   # This enables annotate translated text to be aware of the scope it was
   # resolved against.
@@ -8228,9 +8358,9 @@ module ActionView::Helpers::TranslationHelper
   # For example, the value returned for the missing translation key
   # <tt>"blog.post.title"</tt> will be:
   #
-  # <span
-  # class="translation_missing"
-  # title="translation missing: en.blog.post.title">Title</span>
+  #    <span
+  #      class="translation_missing"
+  #      title="translation missing: en.blog.post.title">Title</span>
   #
   # This allows for views to display rather reasonable strings while still
   # giving developers a way to find missing translations.
@@ -8260,9 +8390,9 @@ module ActionView::Helpers::TranslationHelper
   # To access the translated text along with the fully resolved
   # translation key, <tt>translate</tt> accepts a block:
   #
-  # <%= translate(".relative_key") do |translation, resolved_key| %>
-  # <span title="<%= resolved_key %>"><%= translation %></span>
-  # <% end %>
+  #     <%= translate(".relative_key") do |translation, resolved_key| %>
+  #       <span title="<%= resolved_key %>"><%= translation %></span>
+  #     <% end %>
   #
   # This enables annotate translated text to be aware of the scope it was
   # resolved against.
@@ -8272,11 +8402,15 @@ module ActionView::Helpers::TranslationHelper
 
   def html_escape_translation_options(options); end
   def html_safe_translation(translation); end
+
+  # @return [Boolean]
   def html_safe_translation_key?(key); end
+
   def missing_translation(key, options); end
   def scope_key_by_partial(key); end
 
   class << self
+    # @return [Boolean]
     def i18n_option?(name); end
   end
 end
@@ -8316,122 +8450,79 @@ module ActionView::Helpers::UrlHelper
   #
   # There are a few special +html_options+:
   # * <tt>:method</tt> - \Symbol of HTTP verb. Supported verbs are <tt>:post</tt>, <tt>:get</tt>,
-  # <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>. By default it will be <tt>:post</tt>.
+  #   <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>. By default it will be <tt>:post</tt>.
   # * <tt>:disabled</tt> - If set to true, it will generate a disabled button.
   # * <tt>:data</tt> - This option can be used to add custom data attributes.
   # * <tt>:remote</tt> -  If set to true, will allow the Unobtrusive JavaScript drivers to control the
-  # submit behavior. By default this behavior is an ajax submit.
+  #   submit behavior. By default this behavior is an ajax submit.
   # * <tt>:form</tt> - This hash will be form attributes
   # * <tt>:form_class</tt> - This controls the class of the form within which the submit button will
-  # be placed
+  #   be placed
   # * <tt>:params</tt> - \Hash of parameters to be rendered as hidden fields within the form.
   #
   # ==== Data attributes
   #
   # * <tt>:confirm</tt> - This will use the unobtrusive JavaScript driver to
-  # prompt with the question specified. If the user accepts, the link is
-  # processed normally, otherwise no action is taken.
+  #   prompt with the question specified. If the user accepts, the link is
+  #   processed normally, otherwise no action is taken.
   # * <tt>:disable_with</tt> - Value of this parameter will be
-  # used as the value for a disabled version of the submit
-  # button when the form is submitted. This feature is provided
-  # by the unobtrusive JavaScript driver.
+  #   used as the value for a disabled version of the submit
+  #   button when the form is submitted. This feature is provided
+  #   by the unobtrusive JavaScript driver.
   #
   # ==== Examples
-  # <%= button_to "New", action: "new" %>
-  # # => "<form method="post" action="/controller/new" class="button_to">
-  # #      <input value="New" type="submit" />
-  # #    </form>"
+  #   <%= button_to "New", action: "new" %>
+  #   # => "<form method="post" action="/controller/new" class="button_to">
+  #   #      <input value="New" type="submit" />
+  #   #    </form>"
   #
-  # <%= button_to "New", new_article_path %>
-  # # => "<form method="post" action="/articles/new" class="button_to">
-  # #      <input value="New" type="submit" />
-  # #    </form>"
+  #   <%= button_to "New", new_article_path %>
+  #   # => "<form method="post" action="/articles/new" class="button_to">
+  #   #      <input value="New" type="submit" />
+  #   #    </form>"
   #
-  # <%= button_to [:make_happy, @user] do %>
-  # Make happy <strong><%= @user.name %></strong>
-  # <% end %>
-  # # => "<form method="post" action="/users/1/make_happy" class="button_to">
-  # #      <button type="submit">
-  # #        Make happy <strong><%= @user.name %></strong>
-  # #      </button>
-  # #    </form>"
+  #   <%= button_to [:make_happy, @user] do %>
+  #     Make happy <strong><%= @user.name %></strong>
+  #   <% end %>
+  #   # => "<form method="post" action="/users/1/make_happy" class="button_to">
+  #   #      <button type="submit">
+  #   #        Make happy <strong><%= @user.name %></strong>
+  #   #      </button>
+  #   #    </form>"
   #
-  # <%= button_to "New", { action: "new" }, form_class: "new-thing" %>
-  # # => "<form method="post" action="/controller/new" class="new-thing">
-  # #      <input value="New" type="submit" />
-  # #    </form>"
-  #
-  #
-  # <%= button_to "Create", { action: "create" }, remote: true, form: { "data-type" => "json" } %>
-  # # => "<form method="post" action="/images/create" class="button_to" data-remote="true" data-type="json">
-  # #      <input value="Create" type="submit" />
-  # #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
-  # #    </form>"
+  #   <%= button_to "New", { action: "new" }, form_class: "new-thing" %>
+  #   # => "<form method="post" action="/controller/new" class="new-thing">
+  #   #      <input value="New" type="submit" />
+  #   #    </form>"
   #
   #
-  # <%= button_to "Delete Image", { action: "delete", id: @image.id },
-  # method: :delete, data: { confirm: "Are you sure?" } %>
-  # # => "<form method="post" action="/images/delete/1" class="button_to">
-  # #      <input type="hidden" name="_method" value="delete" />
-  # #      <input data-confirm='Are you sure?' value="Delete Image" type="submit" />
-  # #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
-  # #    </form>"
+  #   <%= button_to "Create", { action: "create" }, remote: true, form: { "data-type" => "json" } %>
+  #   # => "<form method="post" action="/images/create" class="button_to" data-remote="true" data-type="json">
+  #   #      <input value="Create" type="submit" />
+  #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
+  #   #    </form>"
   #
   #
-  # <%= button_to('Destroy', 'http://www.example.com',
-  # method: :delete, remote: true, data: { confirm: 'Are you sure?', disable_with: 'loading...' }) %>
-  # # => "<form class='button_to' method='post' action='http://www.example.com' data-remote='true'>
-  # #       <input name='_method' value='delete' type='hidden' />
-  # #       <input value='Destroy' type='submit' data-disable-with='loading...' data-confirm='Are you sure?' />
-  # #       <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
-  # #     </form>"
-  # #
+  #   <%= button_to "Delete Image", { action: "delete", id: @image.id },
+  #                                   method: :delete, data: { confirm: "Are you sure?" } %>
+  #   # => "<form method="post" action="/images/delete/1" class="button_to">
+  #   #      <input type="hidden" name="_method" value="delete" />
+  #   #      <input data-confirm='Are you sure?' value="Delete Image" type="submit" />
+  #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
+  #   #    </form>"
+  #
+  #
+  #   <%= button_to('Destroy', 'http://www.example.com',
+  #             method: :delete, remote: true, data: { confirm: 'Are you sure?', disable_with: 'loading...' }) %>
+  #   # => "<form class='button_to' method='post' action='http://www.example.com' data-remote='true'>
+  #   #       <input name='_method' value='delete' type='hidden' />
+  #   #       <input value='Destroy' type='submit' data-disable-with='loading...' data-confirm='Are you sure?' />
+  #   #       <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
+  #   #     </form>"
+  #   #
   def button_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
-  # True if the current request URI was generated by the given +options+.
-  #
-  # ==== Examples
-  # Let's say we're in the <tt>http://www.example.com/shop/checkout?order=desc&page=1</tt> action.
-  #
-  # current_page?(action: 'process')
-  # # => false
-  #
-  # current_page?(action: 'checkout')
-  # # => true
-  #
-  # current_page?(controller: 'library', action: 'checkout')
-  # # => false
-  #
-  # current_page?(controller: 'shop', action: 'checkout')
-  # # => true
-  #
-  # current_page?(controller: 'shop', action: 'checkout', order: 'asc')
-  # # => false
-  #
-  # current_page?(controller: 'shop', action: 'checkout', order: 'desc', page: '1')
-  # # => true
-  #
-  # current_page?(controller: 'shop', action: 'checkout', order: 'desc', page: '2')
-  # # => false
-  #
-  # current_page?('http://www.example.com/shop/checkout')
-  # # => true
-  #
-  # current_page?('http://www.example.com/shop/checkout', check_parameters: true)
-  # # => false
-  #
-  # current_page?('/shop/checkout')
-  # # => true
-  #
-  # current_page?('http://www.example.com/shop/checkout?order=desc&page=1')
-  # # => true
-  #
-  # Let's say we're in the <tt>http://www.example.com/products</tt> action with method POST in case of invalid product.
-  #
-  # current_page?(controller: 'product', action: 'index')
-  # # => false
-  #
-  # We can also pass in the symbol arguments instead of strings.
+  # @return [Boolean]
   def current_page?(options = T.unsafe(nil), check_parameters: T.unsafe(nil), **options_as_kwargs); end
 
   # Creates an anchor element of the given +name+ using a URL created by the set of +options+.
@@ -8444,131 +8535,131 @@ module ActionView::Helpers::UrlHelper
   #
   # ==== Signatures
   #
-  # link_to(body, url, html_options = {})
-  # # url is a String; you can use URL helpers like
-  # # posts_path
+  #   link_to(body, url, html_options = {})
+  #     # url is a String; you can use URL helpers like
+  #     # posts_path
   #
-  # link_to(body, url_options = {}, html_options = {})
-  # # url_options, except :method, is passed to url_for
+  #   link_to(body, url_options = {}, html_options = {})
+  #     # url_options, except :method, is passed to url_for
   #
-  # link_to(options = {}, html_options = {}) do
-  # # name
-  # end
+  #   link_to(options = {}, html_options = {}) do
+  #     # name
+  #   end
   #
-  # link_to(url, html_options = {}) do
-  # # name
-  # end
+  #   link_to(url, html_options = {}) do
+  #     # name
+  #   end
   #
   # ==== Options
   # * <tt>:data</tt> - This option can be used to add custom data attributes.
   # * <tt>method: symbol of HTTP verb</tt> - This modifier will dynamically
-  # create an HTML form and immediately submit the form for processing using
-  # the HTTP verb specified. Useful for having links perform a POST operation
-  # in dangerous actions like deleting a record (which search bots can follow
-  # while spidering your site). Supported verbs are <tt>:post</tt>, <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>.
-  # Note that if the user has JavaScript disabled, the request will fall back
-  # to using GET. If <tt>href: '#'</tt> is used and the user has JavaScript
-  # disabled clicking the link will have no effect. If you are relying on the
-  # POST behavior, you should check for it in your controller's action by using
-  # the request object's methods for <tt>post?</tt>, <tt>delete?</tt>, <tt>patch?</tt>, or <tt>put?</tt>.
+  #   create an HTML form and immediately submit the form for processing using
+  #   the HTTP verb specified. Useful for having links perform a POST operation
+  #   in dangerous actions like deleting a record (which search bots can follow
+  #   while spidering your site). Supported verbs are <tt>:post</tt>, <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>.
+  #   Note that if the user has JavaScript disabled, the request will fall back
+  #   to using GET. If <tt>href: '#'</tt> is used and the user has JavaScript
+  #   disabled clicking the link will have no effect. If you are relying on the
+  #   POST behavior, you should check for it in your controller's action by using
+  #   the request object's methods for <tt>post?</tt>, <tt>delete?</tt>, <tt>patch?</tt>, or <tt>put?</tt>.
   # * <tt>remote: true</tt> - This will allow the unobtrusive JavaScript
-  # driver to make an Ajax request to the URL in question instead of following
-  # the link. The drivers each provide mechanisms for listening for the
-  # completion of the Ajax request and performing JavaScript operations once
-  # they're complete
+  #   driver to make an Ajax request to the URL in question instead of following
+  #   the link. The drivers each provide mechanisms for listening for the
+  #   completion of the Ajax request and performing JavaScript operations once
+  #   they're complete
   #
   # ==== Data attributes
   #
   # * <tt>confirm: 'question?'</tt> - This will allow the unobtrusive JavaScript
-  # driver to prompt with the question specified (in this case, the
-  # resulting text would be <tt>question?</tt>. If the user accepts, the
-  # link is processed normally, otherwise no action is taken.
+  #   driver to prompt with the question specified (in this case, the
+  #   resulting text would be <tt>question?</tt>. If the user accepts, the
+  #   link is processed normally, otherwise no action is taken.
   # * <tt>:disable_with</tt> - Value of this parameter will be used as the
-  # name for a disabled version of the link. This feature is provided by
-  # the unobtrusive JavaScript driver.
+  #   name for a disabled version of the link. This feature is provided by
+  #   the unobtrusive JavaScript driver.
   #
   # ==== Examples
   # Because it relies on +url_for+, +link_to+ supports both older-style controller/action/id arguments
   # and newer RESTful routes. Current Rails style favors RESTful routes whenever possible, so base
   # your application on resources and use
   #
-  # link_to "Profile", profile_path(@profile)
-  # # => <a href="/profiles/1">Profile</a>
+  #   link_to "Profile", profile_path(@profile)
+  #   # => <a href="/profiles/1">Profile</a>
   #
   # or the even pithier
   #
-  # link_to "Profile", @profile
-  # # => <a href="/profiles/1">Profile</a>
+  #   link_to "Profile", @profile
+  #   # => <a href="/profiles/1">Profile</a>
   #
   # in place of the older more verbose, non-resource-oriented
   #
-  # link_to "Profile", controller: "profiles", action: "show", id: @profile
-  # # => <a href="/profiles/show/1">Profile</a>
+  #   link_to "Profile", controller: "profiles", action: "show", id: @profile
+  #   # => <a href="/profiles/show/1">Profile</a>
   #
   # Similarly,
   #
-  # link_to "Profiles", profiles_path
-  # # => <a href="/profiles">Profiles</a>
+  #   link_to "Profiles", profiles_path
+  #   # => <a href="/profiles">Profiles</a>
   #
   # is better than
   #
-  # link_to "Profiles", controller: "profiles"
-  # # => <a href="/profiles">Profiles</a>
+  #   link_to "Profiles", controller: "profiles"
+  #   # => <a href="/profiles">Profiles</a>
   #
   # When name is +nil+ the href is presented instead
   #
-  # link_to nil, "http://example.com"
-  # # => <a href="http://www.example.com">http://www.example.com</a>
+  #   link_to nil, "http://example.com"
+  #   # => <a href="http://www.example.com">http://www.example.com</a>
   #
   # You can use a block as well if your link target is hard to fit into the name parameter. ERB example:
   #
-  # <%= link_to(@profile) do %>
-  # <strong><%= @profile.name %></strong> -- <span>Check it out!</span>
-  # <% end %>
-  # # => <a href="/profiles/1">
-  # <strong>David</strong> -- <span>Check it out!</span>
-  # </a>
+  #   <%= link_to(@profile) do %>
+  #     <strong><%= @profile.name %></strong> -- <span>Check it out!</span>
+  #   <% end %>
+  #   # => <a href="/profiles/1">
+  #          <strong>David</strong> -- <span>Check it out!</span>
+  #        </a>
   #
   # Classes and ids for CSS are easy to produce:
   #
-  # link_to "Articles", articles_path, id: "news", class: "article"
-  # # => <a href="/articles" class="article" id="news">Articles</a>
+  #   link_to "Articles", articles_path, id: "news", class: "article"
+  #   # => <a href="/articles" class="article" id="news">Articles</a>
   #
   # Be careful when using the older argument style, as an extra literal hash is needed:
   #
-  # link_to "Articles", { controller: "articles" }, id: "news", class: "article"
-  # # => <a href="/articles" class="article" id="news">Articles</a>
+  #   link_to "Articles", { controller: "articles" }, id: "news", class: "article"
+  #   # => <a href="/articles" class="article" id="news">Articles</a>
   #
   # Leaving the hash off gives the wrong link:
   #
-  # link_to "WRONG!", controller: "articles", id: "news", class: "article"
-  # # => <a href="/articles/index/news?class=article">WRONG!</a>
+  #   link_to "WRONG!", controller: "articles", id: "news", class: "article"
+  #   # => <a href="/articles/index/news?class=article">WRONG!</a>
   #
   # +link_to+ can also produce links with anchors or query strings:
   #
-  # link_to "Comment wall", profile_path(@profile, anchor: "wall")
-  # # => <a href="/profiles/1#wall">Comment wall</a>
+  #   link_to "Comment wall", profile_path(@profile, anchor: "wall")
+  #   # => <a href="/profiles/1#wall">Comment wall</a>
   #
-  # link_to "Ruby on Rails search", controller: "searches", query: "ruby on rails"
-  # # => <a href="/searches?query=ruby+on+rails">Ruby on Rails search</a>
+  #   link_to "Ruby on Rails search", controller: "searches", query: "ruby on rails"
+  #   # => <a href="/searches?query=ruby+on+rails">Ruby on Rails search</a>
   #
-  # link_to "Nonsense search", searches_path(foo: "bar", baz: "quux")
-  # # => <a href="/searches?foo=bar&baz=quux">Nonsense search</a>
+  #   link_to "Nonsense search", searches_path(foo: "bar", baz: "quux")
+  #   # => <a href="/searches?foo=bar&baz=quux">Nonsense search</a>
   #
   # The only option specific to +link_to+ (<tt>:method</tt>) is used as follows:
   #
-  # link_to("Destroy", "http://www.example.com", method: :delete)
-  # # => <a href='http://www.example.com' rel="nofollow" data-method="delete">Destroy</a>
+  #   link_to("Destroy", "http://www.example.com", method: :delete)
+  #   # => <a href='http://www.example.com' rel="nofollow" data-method="delete">Destroy</a>
   #
   # You can also use custom data attributes using the <tt>:data</tt> option:
   #
-  # link_to "Visit Other Site", "http://www.rubyonrails.org/", data: { confirm: "Are you sure?" }
-  # # => <a href="http://www.rubyonrails.org/" data-confirm="Are you sure?">Visit Other Site</a>
+  #   link_to "Visit Other Site", "http://www.rubyonrails.org/", data: { confirm: "Are you sure?" }
+  #   # => <a href="http://www.rubyonrails.org/" data-confirm="Are you sure?">Visit Other Site</a>
   #
   # Also you can set any link attributes such as <tt>target</tt>, <tt>rel</tt>, <tt>type</tt>:
   #
-  # link_to "External link", "http://www.rubyonrails.org/", target: "_blank", rel: "nofollow"
-  # # => <a href="http://www.rubyonrails.org/" target="_blank" rel="nofollow">External link</a>
+  #   link_to "External link", "http://www.rubyonrails.org/", target: "_blank", rel: "nofollow"
+  #   # => <a href="http://www.rubyonrails.org/" target="_blank" rel="nofollow">External link</a>
   def link_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -8577,19 +8668,19 @@ module ActionView::Helpers::UrlHelper
   # accepts the name or the full argument list for +link_to_if+.
   #
   # ==== Examples
-  # <%= link_to_if(@current_user.nil?, "Login", { controller: "sessions", action: "new" }) %>
-  # # If the user isn't logged in...
-  # # => <a href="/sessions/new/">Login</a>
+  #   <%= link_to_if(@current_user.nil?, "Login", { controller: "sessions", action: "new" }) %>
+  #   # If the user isn't logged in...
+  #   # => <a href="/sessions/new/">Login</a>
   #
-  # <%=
-  # link_to_if(@current_user.nil?, "Login", { controller: "sessions", action: "new" }) do
-  # link_to(@current_user.login, { controller: "accounts", action: "show", id: @current_user })
-  # end
-  # %>
-  # # If the user isn't logged in...
-  # # => <a href="/sessions/new/">Login</a>
-  # # If they are logged in...
-  # # => <a href="/accounts/show/3">my_username</a>
+  #   <%=
+  #      link_to_if(@current_user.nil?, "Login", { controller: "sessions", action: "new" }) do
+  #        link_to(@current_user.login, { controller: "accounts", action: "show", id: @current_user })
+  #      end
+  #   %>
+  #   # If the user isn't logged in...
+  #   # => <a href="/sessions/new/">Login</a>
+  #   # If they are logged in...
+  #   # => <a href="/accounts/show/3">my_username</a>
   def link_to_if(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -8599,19 +8690,19 @@ module ActionView::Helpers::UrlHelper
   # accepts the name or the full argument list for +link_to_unless+.
   #
   # ==== Examples
-  # <%= link_to_unless(@current_user.nil?, "Reply", { action: "reply" }) %>
-  # # If the user is logged in...
-  # # => <a href="/controller/reply/">Reply</a>
+  #   <%= link_to_unless(@current_user.nil?, "Reply", { action: "reply" }) %>
+  #   # If the user is logged in...
+  #   # => <a href="/controller/reply/">Reply</a>
   #
-  # <%=
-  # link_to_unless(@current_user.nil?, "Reply", { action: "reply" }) do |name|
-  # link_to(name, { controller: "accounts", action: "signup" })
-  # end
-  # %>
-  # # If the user is logged in...
-  # # => <a href="/controller/reply/">Reply</a>
-  # # If not...
-  # # => <a href="/accounts/signup">Reply</a>
+  #   <%=
+  #      link_to_unless(@current_user.nil?, "Reply", { action: "reply" }) do |name|
+  #        link_to(name, { controller: "accounts", action: "signup" })
+  #      end
+  #   %>
+  #   # If the user is logged in...
+  #   # => <a href="/controller/reply/">Reply</a>
+  #   # If not...
+  #   # => <a href="/accounts/signup">Reply</a>
   def link_to_unless(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -8624,34 +8715,34 @@ module ActionView::Helpers::UrlHelper
   # ==== Examples
   # Let's say you have a navigation menu...
   #
-  # <ul id="navbar">
-  # <li><%= link_to_unless_current("Home", { action: "index" }) %></li>
-  # <li><%= link_to_unless_current("About Us", { action: "about" }) %></li>
-  # </ul>
+  #   <ul id="navbar">
+  #     <li><%= link_to_unless_current("Home", { action: "index" }) %></li>
+  #     <li><%= link_to_unless_current("About Us", { action: "about" }) %></li>
+  #   </ul>
   #
   # If in the "about" action, it will render...
   #
-  # <ul id="navbar">
-  # <li><a href="/controller/index">Home</a></li>
-  # <li>About Us</li>
-  # </ul>
+  #   <ul id="navbar">
+  #     <li><a href="/controller/index">Home</a></li>
+  #     <li>About Us</li>
+  #   </ul>
   #
   # ...but if in the "index" action, it will render:
   #
-  # <ul id="navbar">
-  # <li>Home</li>
-  # <li><a href="/controller/about">About Us</a></li>
-  # </ul>
+  #   <ul id="navbar">
+  #     <li>Home</li>
+  #     <li><a href="/controller/about">About Us</a></li>
+  #   </ul>
   #
   # The implicit block given to +link_to_unless_current+ is evaluated if the current
   # action is the action given. So, if we had a comments page and wanted to render a
   # "Go Back" link instead of a link to the comments page, we could do something like this...
   #
-  # <%=
-  # link_to_unless_current("Comment", { controller: "comments", action: "new" }) do
-  # link_to("Go back", { controller: "posts", action: "index" })
-  # end
-  # %>
+  #    <%=
+  #        link_to_unless_current("Comment", { controller: "comments", action: "new" }) do
+  #           link_to("Go back", { controller: "posts", action: "index" })
+  #        end
+  #     %>
   def link_to_unless_current(name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a mailto link tag to the specified +email_address+, which is
@@ -8674,24 +8765,24 @@ module ActionView::Helpers::UrlHelper
   # install the +actionview-encoded_mail_to+ gem.
   #
   # ==== Examples
-  # mail_to "me@domain.com"
-  # # => <a href="mailto:me@domain.com">me@domain.com</a>
+  #   mail_to "me@domain.com"
+  #   # => <a href="mailto:me@domain.com">me@domain.com</a>
   #
-  # mail_to "me@domain.com", "My email"
-  # # => <a href="mailto:me@domain.com">My email</a>
+  #   mail_to "me@domain.com", "My email"
+  #   # => <a href="mailto:me@domain.com">My email</a>
   #
-  # mail_to "me@domain.com", "My email", cc: "ccaddress@domain.com",
-  # subject: "This is an example email"
-  # # => <a href="mailto:me@domain.com?cc=ccaddress@domain.com&subject=This%20is%20an%20example%20email">My email</a>
+  #   mail_to "me@domain.com", "My email", cc: "ccaddress@domain.com",
+  #            subject: "This is an example email"
+  #   # => <a href="mailto:me@domain.com?cc=ccaddress@domain.com&subject=This%20is%20an%20example%20email">My email</a>
   #
   # You can use a block as well if your link target is hard to fit into the name parameter. ERB example:
   #
-  # <%= mail_to "me@domain.com" do %>
-  # <strong>Email me:</strong> <span>me@domain.com</span>
-  # <% end %>
-  # # => <a href="mailto:me@domain.com">
-  # <strong>Email me:</strong> <span>me@domain.com</span>
-  # </a>
+  #   <%= mail_to "me@domain.com" do %>
+  #     <strong>Email me:</strong> <span>me@domain.com</span>
+  #   <% end %>
+  #   # => <a href="mailto:me@domain.com">
+  #          <strong>Email me:</strong> <span>me@domain.com</span>
+  #        </a>
   def mail_to(email_address, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a TEL anchor link tag to the specified +phone_number+, which is
@@ -8711,23 +8802,23 @@ module ActionView::Helpers::UrlHelper
   # * <tt>:country_code</tt> - Prepends the country code to the number
   #
   # ==== Examples
-  # phone_to "1234567890"
-  # # => <a href="tel:1234567890">1234567890</a>
+  #   phone_to "1234567890"
+  #   # => <a href="tel:1234567890">1234567890</a>
   #
-  # phone_to "1234567890", "Phone me"
-  # # => <a href="tel:134567890">Phone me</a>
+  #   phone_to "1234567890", "Phone me"
+  #   # => <a href="tel:134567890">Phone me</a>
   #
-  # phone_to "1234567890", "Phone me", country_code: "01"
-  # # => <a href="tel:+015155555785">Phone me</a>
+  #   phone_to "1234567890", "Phone me", country_code: "01"
+  #   # => <a href="tel:+015155555785">Phone me</a>
   #
   # You can use a block as well if your link target is hard to fit into the name parameter. \ERB example:
   #
-  # <%= phone_to "1234567890" do %>
-  # <strong>Phone me:</strong>
-  # <% end %>
-  # # => <a href="tel:1234567890">
-  # <strong>Phone me:</strong>
-  # </a>
+  #   <%= phone_to "1234567890" do %>
+  #     <strong>Phone me:</strong>
+  #   <% end %>
+  #   # => <a href="tel:1234567890">
+  #          <strong>Phone me:</strong>
+  #        </a>
   def phone_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates an SMS anchor link tag to the specified +phone_number+, which is
@@ -8744,24 +8835,24 @@ module ActionView::Helpers::UrlHelper
   # * <tt>:body</tt> - Preset the body of the message.
   #
   # ==== Examples
-  # sms_to "5155555785"
-  # # => <a href="sms:5155555785;">5155555785</a>
+  #   sms_to "5155555785"
+  #   # => <a href="sms:5155555785;">5155555785</a>
   #
-  # sms_to "5155555785", "Text me"
-  # # => <a href="sms:5155555785;">Text me</a>
+  #   sms_to "5155555785", "Text me"
+  #   # => <a href="sms:5155555785;">Text me</a>
   #
-  # sms_to "5155555785", "Text me",
-  # body: "Hello Jim I have a question about your product."
-  # # => <a href="sms:5155555785;?body=Hello%20Jim%20I%20have%20a%20question%20about%20your%20product">Text me</a>
+  #   sms_to "5155555785", "Text me",
+  #          body: "Hello Jim I have a question about your product."
+  #   # => <a href="sms:5155555785;?body=Hello%20Jim%20I%20have%20a%20question%20about%20your%20product">Text me</a>
   #
   # You can use a block as well if your link target is hard to fit into the name parameter. \ERB example:
   #
-  # <%= sms_to "5155555785" do %>
-  # <strong>Text me:</strong>
-  # <% end %>
-  # # => <a href="sms:5155555785;">
-  # <strong>Text me:</strong>
-  # </a>
+  #   <%= sms_to "5155555785" do %>
+  #     <strong>Text me:</strong>
+  #   <% end %>
+  #   # => <a href="sms:5155555785;">
+  #          <strong>Text me:</strong>
+  #        </a>
   def sms_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Basic implementation of url_for to allow use helpers without routes existence
@@ -8773,26 +8864,31 @@ module ActionView::Helpers::UrlHelper
   def _filtered_referrer; end
   def add_method_to_attributes!(html_options, method); end
   def convert_options_to_data_attributes(options, html_options); end
+
+  # @return [Boolean]
   def link_to_remote_options?(options); end
+
+  # @return [Boolean]
   def method_not_get_method?(method); end
+
   def method_tag(method); end
 
   # Returns an array of hashes each containing :name and :value keys
   # suitable for use as the names and values of form input fields:
   #
-  # to_form_params(name: 'David', nationality: 'Danish')
-  # # => [{name: 'name', value: 'David'}, {name: 'nationality', value: 'Danish'}]
+  #   to_form_params(name: 'David', nationality: 'Danish')
+  #   # => [{name: 'name', value: 'David'}, {name: 'nationality', value: 'Danish'}]
   #
-  # to_form_params(country: { name: 'Denmark' })
-  # # => [{name: 'country[name]', value: 'Denmark'}]
+  #   to_form_params(country: { name: 'Denmark' })
+  #   # => [{name: 'country[name]', value: 'Denmark'}]
   #
-  # to_form_params(countries: ['Denmark', 'Sweden']})
-  # # => [{name: 'countries[]', value: 'Denmark'}, {name: 'countries[]', value: 'Sweden'}]
+  #   to_form_params(countries: ['Denmark', 'Sweden']})
+  #   # => [{name: 'countries[]', value: 'Denmark'}, {name: 'countries[]', value: 'Sweden'}]
   #
   # An optional namespace can be passed to enclose key names:
   #
-  # to_form_params({ name: 'Denmark' }, 'country')
-  # # => [{name: 'country[name]', value: 'Denmark'}]
+  #   to_form_params({ name: 'Denmark' }, 'country')
+  #   # => [{name: 'country[name]', value: 'Denmark'}]
   def to_form_params(attribute, namespace = T.unsafe(nil)); end
 
   def token_tag(token = T.unsafe(nil), form_options: T.unsafe(nil)); end
@@ -8814,6 +8910,7 @@ ActionView::Helpers::UrlHelper::STRINGIFIED_COMMON_METHODS = T.let(T.unsafe(nil)
 # This is a class to fix I18n global state. Whenever you provide I18n.locale during a request,
 # it will trigger the lookup_context and consequently expire the cache.
 class ActionView::I18nProxy < ::I18n::Config
+  # @return [I18nProxy] a new instance of I18nProxy
   def initialize(original_config, lookup_context); end
 
   def locale; end
@@ -8825,9 +8922,9 @@ end
 # Layouts reverse the common pattern of including shared headers and footers in many templates to isolate changes in
 # repeated setups. The inclusion pattern has pages that look like this:
 #
-# <%= render "shared/header" %>
-# Hello World
-# <%= render "shared/footer" %>
+#   <%= render "shared/header" %>
+#   Hello World
+#   <%= render "shared/footer" %>
 #
 # This approach is a decent way of keeping common structures isolated from the changing content, but it's verbose
 # and if you ever want to change the structure of these two includes, you'll have to change all the templates.
@@ -8835,37 +8932,37 @@ end
 # With layouts, you can flip it around and have the common structure know where to insert changing content. This means
 # that the header and footer are only mentioned in one place, like this:
 #
-# // The header part of this layout
-# <%= yield %>
-# // The footer part of this layout
+#   // The header part of this layout
+#   <%= yield %>
+#   // The footer part of this layout
 #
 # And then you have content pages that look like this:
 #
-# hello world
+#    hello world
 #
 # At rendering time, the content page is computed and then inserted in the layout, like this:
 #
-# // The header part of this layout
-# hello world
-# // The footer part of this layout
+#   // The header part of this layout
+#   hello world
+#   // The footer part of this layout
 #
 # == Accessing shared variables
 #
 # Layouts have access to variables specified in the content pages and vice versa. This allows you to have layouts with
 # references that won't materialize before rendering time:
 #
-# <h1><%= @page_title %></h1>
-# <%= yield %>
+#   <h1><%= @page_title %></h1>
+#   <%= yield %>
 #
 # ...and content pages that fulfill these references _at_ rendering time:
 #
-# <% @page_title = "Welcome" %>
-# Off-world colonies offers you a chance to start a new life
+#    <% @page_title = "Welcome" %>
+#    Off-world colonies offers you a chance to start a new life
 #
 # The result after rendering is:
 #
-# <h1>Welcome</h1>
-# Off-world colonies offers you a chance to start a new life
+#   <h1>Welcome</h1>
+#   Off-world colonies offers you a chance to start a new life
 #
 # == Layout assignment
 #
@@ -8886,29 +8983,29 @@ end
 #
 # == Inheritance Examples
 #
-# class BankController < ActionController::Base
-# # bank.html.erb exists
+#   class BankController < ActionController::Base
+#     # bank.html.erb exists
 #
-# class ExchangeController < BankController
-# # exchange.html.erb exists
+#   class ExchangeController < BankController
+#     # exchange.html.erb exists
 #
-# class CurrencyController < BankController
+#   class CurrencyController < BankController
 #
-# class InformationController < BankController
-# layout "information"
+#   class InformationController < BankController
+#     layout "information"
 #
-# class TellerController < InformationController
-# # teller.html.erb exists
+#   class TellerController < InformationController
+#     # teller.html.erb exists
 #
-# class EmployeeController < InformationController
-# # employee.html.erb exists
-# layout nil
+#   class EmployeeController < InformationController
+#     # employee.html.erb exists
+#     layout nil
 #
-# class VaultController < BankController
-# layout :access_level_layout
+#   class VaultController < BankController
+#     layout :access_level_layout
 #
-# class TillController < BankController
-# layout false
+#   class TillController < BankController
+#     layout false
 #
 # In these examples, we have three implicit lookup scenarios:
 # * The +BankController+ uses the "bank" layout.
@@ -8930,40 +9027,40 @@ end
 #
 # The method reference is the preferred approach to variable layouts and is used like this:
 #
-# class WeblogController < ActionController::Base
-# layout :writers_and_readers
+#   class WeblogController < ActionController::Base
+#     layout :writers_and_readers
 #
-# def index
-# # fetching posts
-# end
+#     def index
+#       # fetching posts
+#     end
 #
-# private
-# def writers_and_readers
-# logged_in? ? "writer_layout" : "reader_layout"
-# end
-# end
+#     private
+#       def writers_and_readers
+#         logged_in? ? "writer_layout" : "reader_layout"
+#       end
+#   end
 #
 # Now when a new request for the index action is processed, the layout will vary depending on whether the person accessing
 # is logged in or not.
 #
 # If you want to use an inline method, such as a proc, do something like this:
 #
-# class WeblogController < ActionController::Base
-# layout proc { |controller| controller.logged_in? ? "writer_layout" : "reader_layout" }
-# end
+#   class WeblogController < ActionController::Base
+#     layout proc { |controller| controller.logged_in? ? "writer_layout" : "reader_layout" }
+#   end
 #
 # If an argument isn't given to the proc, it's evaluated in the context of
 # the current controller anyway.
 #
-# class WeblogController < ActionController::Base
-# layout proc { logged_in? ? "writer_layout" : "reader_layout" }
-# end
+#   class WeblogController < ActionController::Base
+#     layout proc { logged_in? ? "writer_layout" : "reader_layout" }
+#   end
 #
 # Of course, the most common way of specifying a layout is still just as a plain template name:
 #
-# class WeblogController < ActionController::Base
-# layout "weblog_standard"
-# end
+#   class WeblogController < ActionController::Base
+#     layout "weblog_standard"
+#   end
 #
 # The template will be looked always in <tt>app/views/layouts/</tt> folder. But you can point
 # <tt>layouts</tt> folder direct also. <tt>layout "layouts/demo"</tt> is the same as <tt>layout "demo"</tt>.
@@ -8971,18 +9068,18 @@ end
 # Setting the layout to +nil+ forces it to be looked up in the filesystem and fallbacks to the parent behavior if none exists.
 # Setting it to +nil+ is useful to re-enable template lookup overriding a previous configuration set in the parent:
 #
-# class ApplicationController < ActionController::Base
-# layout "application"
-# end
+#     class ApplicationController < ActionController::Base
+#       layout "application"
+#     end
 #
-# class PostsController < ApplicationController
-# # Will use "application" layout
-# end
+#     class PostsController < ApplicationController
+#       # Will use "application" layout
+#     end
 #
-# class CommentsController < ApplicationController
-# # Will search for "comments" layout and fallback "application" layout
-# layout nil
-# end
+#     class CommentsController < ApplicationController
+#       # Will search for "comments" layout and fallback "application" layout
+#       layout nil
+#     end
 #
 # == Conditional layouts
 #
@@ -8990,12 +9087,12 @@ end
 # a given action or set of actions without a layout, or restricting a layout to only a single action or a set of actions. The
 # <tt>:only</tt> and <tt>:except</tt> options can be passed to the layout call. For example:
 #
-# class WeblogController < ActionController::Base
-# layout "weblog_standard", except: :rss
+#   class WeblogController < ActionController::Base
+#     layout "weblog_standard", except: :rss
 #
-# # ...
+#     # ...
 #
-# end
+#   end
 #
 # This will assign "weblog_standard" as the WeblogController's layout for all actions except for the +rss+ action, which will
 # be rendered directly, without wrapping a layout around the rendered view.
@@ -9009,13 +9106,13 @@ end
 # Sometimes you'll have exceptions where one action wants to use a different layout than the rest of the controller.
 # You can do this by passing a <tt>:layout</tt> option to the <tt>render</tt> call. For example:
 #
-# class WeblogController < ActionController::Base
-# layout "weblog_standard"
+#   class WeblogController < ActionController::Base
+#     layout "weblog_standard"
 #
-# def help
-# render action: "help", layout: "help"
-# end
-# end
+#     def help
+#       render action: "help", layout: "help"
+#     end
+#   end
 #
 # This will override the controller-wide "weblog_standard" layout, and will render the help action with the "help" layout instead.
 module ActionView::Layouts
@@ -9031,7 +9128,7 @@ module ActionView::Layouts
 
   def initialize(*_arg0); end
 
-  def _layout_conditions(*_arg0, **_arg1, &_arg2); end
+  def _layout_conditions(*_arg0, &_arg1); end
   def _normalize_options(options); end
   def action_has_layout=(_arg0); end
 
@@ -9041,10 +9138,13 @@ module ActionView::Layouts
   # either override this method in your controller to return false
   # for that action or set the <tt>action_has_layout</tt> attribute
   # to false before rendering.
+  #
+  # @return [Boolean]
   def action_has_layout?; end
 
   private
 
+  # @return [Boolean]
   def _conditional_layout?; end
 
   # Returns the default layout for this controller.
@@ -9053,12 +9153,13 @@ module ActionView::Layouts
   # ==== Parameters
   # * <tt>formats</tt> - The formats accepted to this layout
   # * <tt>require_layout</tt> - If set to +true+ and layout is not found,
-  # an +ArgumentError+ exception is raised (defaults to +false+)
+  #   an +ArgumentError+ exception is raised (defaults to +false+)
   #
   # ==== Returns
   # * <tt>template</tt> - The template object for the default layout (or +nil+)
   def _default_layout(lookup_context, formats, require_layout = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def _include_layout?(options); end
 
   # This will be overwritten by _write_layout_method
@@ -9134,6 +9235,8 @@ module ActionView::Layouts::ClassMethods::LayoutConditions
   #
   # ==== Returns
   # * <tt>Boolean</tt> - True if the action has a layout definition, false otherwise.
+  #
+  # @return [Boolean]
   def _conditional_layout?; end
 end
 
@@ -9141,6 +9244,7 @@ end
 #
 # Provides functionality so that Rails can output logs from Action View.
 class ActionView::LogSubscriber < ::ActiveSupport::LogSubscriber
+  # @return [LogSubscriber] a new instance of LogSubscriber
   def initialize; end
 
   def logger; end
@@ -9174,6 +9278,7 @@ class ActionView::LookupContext
   include ::ActionView::LookupContext::DetailsCache
   include ::ActionView::LookupContext::ViewPaths
 
+  # @return [LookupContext] a new instance of LookupContext
   def initialize(view_paths, details = T.unsafe(nil), prefixes = T.unsafe(nil)); end
 
   def digest_cache; end
@@ -9237,6 +9342,8 @@ module ActionView::LookupContext::DetailsCache
   def cache; end
 
   # Sets the attribute cache
+  #
+  # @param value the value to set the attribute cache to.
   def cache=(_arg0); end
 
   # Calculate the details key. Remove the handlers from calculation to improve performance
@@ -9265,9 +9372,15 @@ end
 
 # Helpers related to template lookup using the lookup context information.
 module ActionView::LookupContext::ViewPaths
+  # @return [Boolean]
   def any?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def any_templates?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
+
   def find(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
   def find_all(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
   def find_template(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -9275,6 +9388,7 @@ module ActionView::LookupContext::ViewPaths
   # Returns the value of attribute html_fallback_for_js.
   def html_fallback_for_js; end
 
+  # @return [Boolean]
   def template_exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
 
   # Returns the value of attribute view_paths.
@@ -9305,6 +9419,7 @@ module ActionView::LookupContext::ViewPaths
 end
 
 class ActionView::MissingTemplate < ::ActionView::ActionViewError
+  # @return [MissingTemplate] a new instance of MissingTemplate
   def initialize(paths, path, prefixes, partial, details, *_arg5); end
 
   # Returns the value of attribute path.
@@ -9321,6 +9436,7 @@ end
 class ActionView::ObjectRenderer < ::ActionView::PartialRenderer
   include ::ActionView::AbstractRenderer::ObjectRendering
 
+  # @return [ObjectRenderer] a new instance of ObjectRenderer
   def initialize(lookup_context, options); end
 
   def render_object_derive_partial(object, context, block); end
@@ -9334,6 +9450,7 @@ end
 
 # An Optimized resolver for Rails' most common case.
 class ActionView::OptimizedFileSystemResolver < ::ActionView::FileSystemResolver
+  # @return [OptimizedFileSystemResolver] a new instance of OptimizedFileSystemResolver
   def initialize(path); end
 
   private
@@ -9350,14 +9467,15 @@ end
 # checked for nil before they are assigned and `to_s` is called on
 # the input. For example:
 #
-# obuf = ActionView::OutputBuffer.new "hello"
-# obuf << 5
-# puts obuf # => "hello5"
+#   obuf = ActionView::OutputBuffer.new "hello"
+#   obuf << 5
+#   puts obuf # => "hello5"
 #
-# sbuf = ActiveSupport::SafeBuffer.new "hello"
-# sbuf << 5
-# puts sbuf # => "hello\u0005"
+#   sbuf = ActiveSupport::SafeBuffer.new "hello"
+#   sbuf << 5
+#   puts sbuf # => "hello\u0005"
 class ActionView::OutputBuffer < ::ActiveSupport::SafeBuffer
+  # @return [OutputBuffer] a new instance of OutputBuffer
   def initialize(*_arg0); end
 
   def <<(value); end
@@ -9367,6 +9485,7 @@ class ActionView::OutputBuffer < ::ActiveSupport::SafeBuffer
 end
 
 class ActionView::OutputFlow
+  # @return [OutputFlow] a new instance of OutputFlow
   def initialize; end
 
   # Called by content_for
@@ -9386,9 +9505,12 @@ class ActionView::OutputFlow
 end
 
 class ActionView::PartialIteration
+  # @return [PartialIteration] a new instance of PartialIteration
   def initialize(size); end
 
   # Check if this is the first iteration of the partial.
+  #
+  # @return [Boolean]
   def first?; end
 
   # The current iteration of the partial.
@@ -9397,6 +9519,8 @@ class ActionView::PartialIteration
   def iterate!; end
 
   # Check if this is the last iteration of the partial.
+  #
+  # @return [Boolean]
   def last?; end
 
   # The number of iterations that will be done by the partial.
@@ -9412,17 +9536,17 @@ end
 #
 # In a template for Advertiser#account:
 #
-# <%= render partial: "account" %>
+#  <%= render partial: "account" %>
 #
 # This would render "advertiser/_account.html.erb".
 #
 # In another template for Advertiser#buy, we could have:
 #
-# <%= render partial: "account", locals: { account: @buyer } %>
+#   <%= render partial: "account", locals: { account: @buyer } %>
 #
-# <% @advertisements.each do |ad| %>
-# <%= render partial: "ad", locals: { ad: ad } %>
-# <% end %>
+#   <% @advertisements.each do |ad| %>
+#     <%= render partial: "ad", locals: { ad: ad } %>
+#   <% end %>
 #
 # This would first render <tt>advertiser/_account.html.erb</tt> with <tt>@buyer</tt> passed in as the local variable +account+, then
 # render <tt>advertiser/_ad.html.erb</tt> and pass the local variable +ad+ to the template for display.
@@ -9432,21 +9556,21 @@ end
 # By default ActionView::PartialRenderer doesn't have any local variables.
 # The <tt>:object</tt> option can be used to pass an object to the partial. For instance:
 #
-# <%= render partial: "account", object: @buyer %>
+#   <%= render partial: "account", object: @buyer %>
 #
 # would provide the <tt>@buyer</tt> object to the partial, available under the local variable +account+ and is
 # equivalent to:
 #
-# <%= render partial: "account", locals: { account: @buyer } %>
+#   <%= render partial: "account", locals: { account: @buyer } %>
 #
 # With the <tt>:as</tt> option we can specify a different name for said local variable. For example, if we
 # wanted it to be +user+ instead of +account+ we'd do:
 #
-# <%= render partial: "account", object: @buyer, as: 'user' %>
+#   <%= render partial: "account", object: @buyer, as: 'user' %>
 #
 # This is equivalent to
 #
-# <%= render partial: "account", locals: { user: @buyer } %>
+#   <%= render partial: "account", locals: { user: @buyer } %>
 #
 # == \Rendering a collection of partials
 #
@@ -9455,7 +9579,7 @@ end
 # accepts an array and renders a partial by the same name as the elements contained within. So the three-lined
 # example in "Using partials" can be rewritten with a single line:
 #
-# <%= render partial: "ad", collection: @advertisements %>
+#   <%= render partial: "ad", collection: @advertisements %>
 #
 # This will render <tt>advertiser/_ad.html.erb</tt> and pass the local variable +ad+ to the template for display. An
 # iteration object will automatically be made available to the template with a name of the form
@@ -9470,18 +9594,18 @@ end
 # You can specify a partial to be rendered between elements via the <tt>:spacer_template</tt> option.
 # The following example will render <tt>advertiser/_ad_divider.html.erb</tt> between each ad partial:
 #
-# <%= render partial: "ad", collection: @advertisements, spacer_template: "ad_divider" %>
+#   <%= render partial: "ad", collection: @advertisements, spacer_template: "ad_divider" %>
 #
 # If the given <tt>:collection</tt> is +nil+ or empty, <tt>render</tt> will return +nil+. This will allow you
 # to specify a text which will be displayed instead by using this form:
 #
-# <%= render(partial: "ad", collection: @advertisements) || "There's no ad to be displayed" %>
+#   <%= render(partial: "ad", collection: @advertisements) || "There's no ad to be displayed" %>
 #
 # == \Rendering shared partials
 #
 # Two controllers can share a set of partials and render them like this:
 #
-# <%= render partial: "advertisement/ad", locals: { ad: @advertisement } %>
+#   <%= render partial: "advertisement/ad", locals: { ad: @advertisement } %>
 #
 # This will render the partial <tt>advertisement/_ad.html.erb</tt> regardless of which controller this is being called from.
 #
@@ -9490,34 +9614,34 @@ end
 # Instead of explicitly naming the location of a partial, you can also let PartialRenderer do the work
 # and pick the proper path by checking +to_partial_path+ method.
 #
-# # @account.to_partial_path returns 'accounts/account', so it can be used to replace:
-# # <%= render partial: "accounts/account", locals: { account: @account} %>
-# <%= render partial: @account %>
+#  # @account.to_partial_path returns 'accounts/account', so it can be used to replace:
+#  # <%= render partial: "accounts/account", locals: { account: @account} %>
+#  <%= render partial: @account %>
 #
-# # @posts is an array of Post instances, so every post record returns 'posts/post' on +to_partial_path+,
-# # that's why we can replace:
-# # <%= render partial: "posts/post", collection: @posts %>
-# <%= render partial: @posts %>
+#  # @posts is an array of Post instances, so every post record returns 'posts/post' on +to_partial_path+,
+#  # that's why we can replace:
+#  # <%= render partial: "posts/post", collection: @posts %>
+#  <%= render partial: @posts %>
 #
 # == \Rendering the default case
 #
 # If you're not going to be using any of the options like collections or layouts, you can also use the short-hand
 # defaults of render to render partials. Examples:
 #
-# # Instead of <%= render partial: "account" %>
-# <%= render "account" %>
+#  # Instead of <%= render partial: "account" %>
+#  <%= render "account" %>
 #
-# # Instead of <%= render partial: "account", locals: { account: @buyer } %>
-# <%= render "account", account: @buyer %>
+#  # Instead of <%= render partial: "account", locals: { account: @buyer } %>
+#  <%= render "account", account: @buyer %>
 #
-# # @account.to_partial_path returns 'accounts/account', so it can be used to replace:
-# # <%= render partial: "accounts/account", locals: { account: @account} %>
-# <%= render @account %>
+#  # @account.to_partial_path returns 'accounts/account', so it can be used to replace:
+#  # <%= render partial: "accounts/account", locals: { account: @account} %>
+#  <%= render @account %>
 #
-# # @posts is an array of Post instances, so every post record returns 'posts/post' on +to_partial_path+,
-# # that's why we can replace:
-# # <%= render partial: "posts/post", collection: @posts %>
-# <%= render @posts %>
+#  # @posts is an array of Post instances, so every post record returns 'posts/post' on +to_partial_path+,
+#  # that's why we can replace:
+#  # <%= render partial: "posts/post", collection: @posts %>
+#  <%= render @posts %>
 #
 # == \Rendering partials with layouts
 #
@@ -9525,78 +9649,78 @@ end
 # specified globally for the entire action, but they work in a similar fashion. Imagine a list with two types
 # of users:
 #
-# <%# app/views/users/index.html.erb %>
-# Here's the administrator:
-# <%= render partial: "user", layout: "administrator", locals: { user: administrator } %>
+#   <%# app/views/users/index.html.erb %>
+#   Here's the administrator:
+#   <%= render partial: "user", layout: "administrator", locals: { user: administrator } %>
 #
-# Here's the editor:
-# <%= render partial: "user", layout: "editor", locals: { user: editor } %>
+#   Here's the editor:
+#   <%= render partial: "user", layout: "editor", locals: { user: editor } %>
 #
-# <%# app/views/users/_user.html.erb %>
-# Name: <%= user.name %>
+#   <%# app/views/users/_user.html.erb %>
+#   Name: <%= user.name %>
 #
-# <%# app/views/users/_administrator.html.erb %>
-# <div id="administrator">
-# Budget: $<%= user.budget %>
-# <%= yield %>
-# </div>
+#   <%# app/views/users/_administrator.html.erb %>
+#   <div id="administrator">
+#     Budget: $<%= user.budget %>
+#     <%= yield %>
+#   </div>
 #
-# <%# app/views/users/_editor.html.erb %>
-# <div id="editor">
-# Deadline: <%= user.deadline %>
-# <%= yield %>
-# </div>
+#   <%# app/views/users/_editor.html.erb %>
+#   <div id="editor">
+#     Deadline: <%= user.deadline %>
+#     <%= yield %>
+#   </div>
 #
 # ...this will return:
 #
-# Here's the administrator:
-# <div id="administrator">
-# Budget: $<%= user.budget %>
-# Name: <%= user.name %>
-# </div>
+#   Here's the administrator:
+#   <div id="administrator">
+#     Budget: $<%= user.budget %>
+#     Name: <%= user.name %>
+#   </div>
 #
-# Here's the editor:
-# <div id="editor">
-# Deadline: <%= user.deadline %>
-# Name: <%= user.name %>
-# </div>
+#   Here's the editor:
+#   <div id="editor">
+#     Deadline: <%= user.deadline %>
+#     Name: <%= user.name %>
+#   </div>
 #
 # If a collection is given, the layout will be rendered once for each item in
 # the collection. For example, these two snippets have the same output:
 #
-# <%# app/views/users/_user.html.erb %>
-# Name: <%= user.name %>
+#   <%# app/views/users/_user.html.erb %>
+#   Name: <%= user.name %>
 #
-# <%# app/views/users/index.html.erb %>
-# <%# This does not use layouts %>
-# <ul>
-# <% users.each do |user| -%>
-# <li>
-# <%= render partial: "user", locals: { user: user } %>
-# </li>
-# <% end -%>
-# </ul>
+#   <%# app/views/users/index.html.erb %>
+#   <%# This does not use layouts %>
+#   <ul>
+#     <% users.each do |user| -%>
+#       <li>
+#         <%= render partial: "user", locals: { user: user } %>
+#       </li>
+#     <% end -%>
+#   </ul>
 #
-# <%# app/views/users/_li_layout.html.erb %>
-# <li>
-# <%= yield %>
-# </li>
+#   <%# app/views/users/_li_layout.html.erb %>
+#   <li>
+#     <%= yield %>
+#   </li>
 #
-# <%# app/views/users/index.html.erb %>
-# <ul>
-# <%= render partial: "user", layout: "li_layout", collection: users %>
-# </ul>
+#   <%# app/views/users/index.html.erb %>
+#   <ul>
+#     <%= render partial: "user", layout: "li_layout", collection: users %>
+#   </ul>
 #
 # Given two users whose names are Alice and Bob, these snippets return:
 #
-# <ul>
-# <li>
-# Name: Alice
-# </li>
-# <li>
-# Name: Bob
-# </li>
-# </ul>
+#   <ul>
+#     <li>
+#       Name: Alice
+#     </li>
+#     <li>
+#       Name: Bob
+#     </li>
+#   </ul>
 #
 # The current object being rendered, as well as the object_counter, will be
 # available as local variables inside the layout template under the same names
@@ -9604,56 +9728,57 @@ end
 #
 # You can also apply a layout to a block within any template:
 #
-# <%# app/views/users/_chief.html.erb %>
-# <%= render(layout: "administrator", locals: { user: chief }) do %>
-# Title: <%= chief.title %>
-# <% end %>
+#   <%# app/views/users/_chief.html.erb %>
+#   <%= render(layout: "administrator", locals: { user: chief }) do %>
+#     Title: <%= chief.title %>
+#   <% end %>
 #
 # ...this will return:
 #
-# <div id="administrator">
-# Budget: $<%= user.budget %>
-# Title: <%= chief.name %>
-# </div>
+#   <div id="administrator">
+#     Budget: $<%= user.budget %>
+#     Title: <%= chief.name %>
+#   </div>
 #
 # As you can see, the <tt>:locals</tt> hash is shared between both the partial and its layout.
 #
 # If you pass arguments to "yield" then this will be passed to the block. One way to use this is to pass
 # an array to layout and treat it as an enumerable.
 #
-# <%# app/views/users/_user.html.erb %>
-# <div class="user">
-# Budget: $<%= user.budget %>
-# <%= yield user %>
-# </div>
+#   <%# app/views/users/_user.html.erb %>
+#   <div class="user">
+#     Budget: $<%= user.budget %>
+#     <%= yield user %>
+#   </div>
 #
-# <%# app/views/users/index.html.erb %>
-# <%= render layout: @users do |user| %>
-# Title: <%= user.title %>
-# <% end %>
+#   <%# app/views/users/index.html.erb %>
+#   <%= render layout: @users do |user| %>
+#     Title: <%= user.title %>
+#   <% end %>
 #
 # This will render the layout for each user and yield to the block, passing the user, each time.
 #
 # You can also yield multiple times in one layout and use block arguments to differentiate the sections.
 #
-# <%# app/views/users/_user.html.erb %>
-# <div class="user">
-# <%= yield user, :header %>
-# Budget: $<%= user.budget %>
-# <%= yield user, :footer %>
-# </div>
+#   <%# app/views/users/_user.html.erb %>
+#   <div class="user">
+#     <%= yield user, :header %>
+#     Budget: $<%= user.budget %>
+#     <%= yield user, :footer %>
+#   </div>
 #
-# <%# app/views/users/index.html.erb %>
-# <%= render layout: @users do |user, section| %>
-# <%- case section when :header -%>
-# Title: <%= user.title %>
-# <%- when :footer -%>
-# Deadline: <%= user.deadline %>
-# <%- end -%>
-# <% end %>
+#   <%# app/views/users/index.html.erb %>
+#   <%= render layout: @users do |user, section| %>
+#     <%- case section when :header -%>
+#       Title: <%= user.title %>
+#     <%- when :footer -%>
+#       Deadline: <%= user.deadline %>
+#     <%- end -%>
+#   <% end %>
 class ActionView::PartialRenderer < ::ActionView::AbstractRenderer
   include ::ActionView::CollectionCaching
 
+  # @return [PartialRenderer] a new instance of PartialRenderer
   def initialize(lookup_context, options); end
 
   def collection_cache; end
@@ -9674,6 +9799,7 @@ end
 
 # An abstract class that implements a Resolver with path semantics.
 class ActionView::PathResolver < ::ActionView::Resolver
+  # @return [PathResolver] a new instance of PathResolver
   def initialize; end
 
   def clear_cache; end
@@ -9695,7 +9821,10 @@ class ActionView::PathResolver < ::ActionView::Resolver
 
   def find_template_paths(query); end
   def find_template_paths_from_details(path, details); end
+
+  # @return [Boolean]
   def inside_path?(path, filename); end
+
   def query(path, details, formats, locals, cache:); end
   def reject_files_external_to_app(files); end
   def source_for_template(template); end
@@ -9714,27 +9843,31 @@ ActionView::PathResolver::EXTENSIONS = T.let(T.unsafe(nil), Hash)
 class ActionView::PathSet
   include ::Enumerable
 
+  # @return [PathSet] a new instance of PathSet
   def initialize(paths = T.unsafe(nil)); end
 
   def +(array); end
   def <<(*args); end
-  def [](*_arg0, **_arg1, &_arg2); end
+  def [](*_arg0, &_arg1); end
   def compact; end
   def concat(*args); end
-  def each(*_arg0, **_arg1, &_arg2); end
+  def each(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def exists?(path, prefixes, *args); end
+
   def find(*args); end
   def find_all(path, prefixes = T.unsafe(nil), *args); end
   def find_all_with_query(query); end
-  def include?(*_arg0, **_arg1, &_arg2); end
+  def include?(*_arg0, &_arg1); end
   def insert(*args); end
 
   # Returns the value of attribute paths.
   def paths; end
 
-  def pop(*_arg0, **_arg1, &_arg2); end
+  def pop(*_arg0, &_arg1); end
   def push(*args); end
-  def size(*_arg0, **_arg1, &_arg2); end
+  def size(*_arg0, &_arg1); end
   def to_ary; end
   def unshift(*args); end
 
@@ -9753,32 +9886,32 @@ class ActionView::Railtie < ::Rails::Engine; end
 #
 # Consider for example the following code that form of post:
 #
-# <%= form_for(post) do |f| %>
-# <%= f.text_field :body %>
-# <% end %>
+#   <%= form_for(post) do |f| %>
+#     <%= f.text_field :body %>
+#   <% end %>
 #
 # When +post+ is a new, unsaved ActiveRecord::Base instance, the resulting HTML
 # is:
 #
-# <form class="new_post" id="new_post" action="/posts" accept-charset="UTF-8" method="post">
-# <input type="text" name="post[body]" id="post_body" />
-# </form>
+#    <form class="new_post" id="new_post" action="/posts" accept-charset="UTF-8" method="post">
+#      <input type="text" name="post[body]" id="post_body" />
+#    </form>
 #
 # When +post+ is a persisted ActiveRecord::Base instance, the resulting HTML
 # is:
 #
-# <form class="edit_post" id="edit_post_42" action="/posts/42" accept-charset="UTF-8" method="post">
-# <input type="text" value="What a wonderful world!" name="post[body]" id="post_body" />
-# </form>
+#   <form class="edit_post" id="edit_post_42" action="/posts/42" accept-charset="UTF-8" method="post">
+#     <input type="text" value="What a wonderful world!" name="post[body]" id="post_body" />
+#   </form>
 #
 # In both cases, the +id+ and +class+ of the wrapping DOM element are
 # automatically generated, following naming conventions encapsulated by the
 # RecordIdentifier methods #dom_id and #dom_class:
 #
-# dom_id(Post.new)         # => "new_post"
-# dom_class(Post.new)      # => "post"
-# dom_id(Post.find 42)     # => "post_42"
-# dom_class(Post.find 42)  # => "post"
+#   dom_id(Post.new)         # => "new_post"
+#   dom_class(Post.new)      # => "post"
+#   dom_id(Post.find 42)     # => "post_42"
+#   dom_class(Post.find 42)  # => "post"
 #
 # Note that these methods do not strictly require +Post+ to be a subclass of
 # ActiveRecord::Base.
@@ -9786,17 +9919,17 @@ class ActionView::Railtie < ::Rails::Engine; end
 # and +model_name+, given that +model_name+ responds to +param_key+.
 # For instance:
 #
-# class Post
-# attr_accessor :to_key
+#   class Post
+#     attr_accessor :to_key
 #
-# def model_name
-# OpenStruct.new param_key: 'post'
-# end
+#     def model_name
+#       OpenStruct.new param_key: 'post'
+#     end
 #
-# def self.find(id)
-# new.tap { |post| post.to_key = [id] }
-# end
-# end
+#     def self.find(id)
+#       new.tap { |post| post.to_key = [id] }
+#     end
+#   end
 module ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
   extend ::ActionView::ModelNaming
@@ -9805,25 +9938,25 @@ module ActionView::RecordIdentifier
 
   # The DOM class convention is to use the singular form of an object or class.
   #
-  # dom_class(post)   # => "post"
-  # dom_class(Person) # => "person"
+  #   dom_class(post)   # => "post"
+  #   dom_class(Person) # => "person"
   #
   # If you need to address multiple instances of the same class in the same view, you can prefix the dom_class:
   #
-  # dom_class(post, :edit)   # => "edit_post"
-  # dom_class(Person, :edit) # => "edit_person"
+  #   dom_class(post, :edit)   # => "edit_post"
+  #   dom_class(Person, :edit) # => "edit_person"
   def dom_class(record_or_class, prefix = T.unsafe(nil)); end
 
   # The DOM id convention is to use the singular form of an object or class with the id following an underscore.
   # If no id is found, prefix with "new_" instead.
   #
-  # dom_id(Post.find(45))       # => "post_45"
-  # dom_id(Post.new)            # => "new_post"
+  #   dom_id(Post.find(45))       # => "post_45"
+  #   dom_id(Post.new)            # => "new_post"
   #
   # If you need to address multiple instances of the same class in the same view, you can prefix the dom_id:
   #
-  # dom_id(Post.find(45), :edit) # => "edit_post_45"
-  # dom_id(Post.new, :custom)    # => "custom_post"
+  #   dom_id(Post.find(45), :edit) # => "edit_post_45"
+  #   dom_id(Post.new, :custom)    # => "custom_post"
   def dom_id(record, prefix = T.unsafe(nil)); end
 
   private
@@ -9852,6 +9985,7 @@ ActionView::RecordIdentifier::NEW = T.let(T.unsafe(nil), String)
 # the setup and logic necessary to render a view and a new object is created
 # each time +render+ is called.
 class ActionView::Renderer
+  # @return [Renderer] a new instance of Renderer
   def initialize(lookup_context); end
 
   def cache_hits; end
@@ -9860,6 +9994,8 @@ class ActionView::Renderer
   def lookup_context; end
 
   # Sets the attribute lookup_context
+  #
+  # @param value the value to set the attribute lookup_context to.
   def lookup_context=(_arg0); end
 
   # Main render entry point shared by Action View and Action Controller.
@@ -9911,7 +10047,7 @@ module ActionView::Rendering
   # The view class must have the following methods:
   #
   # * <tt>View.new(lookup_context, assigns, controller)</tt> — Create a new
-  # ActionView instance for a controller and we can also pass the arguments.
+  #   ActionView instance for a controller and we can also pass the arguments.
   #
   # * <tt>View#render(option)</tt> — Returns String with the rendered template.
   #
@@ -9948,11 +10084,12 @@ end
 
 # = Action View Resolver
 class ActionView::Resolver
+  # @return [Resolver] a new instance of Resolver
   def initialize; end
 
   def caching; end
   def caching=(val); end
-  def caching?(*_arg0, **_arg1, &_arg2); end
+  def caching?(*_arg0, &_arg1); end
   def clear_cache; end
 
   # Normalizes the arguments and passes it on to find_templates.
@@ -9973,6 +10110,8 @@ class ActionView::Resolver
   # This is what child classes implement. No defaults are needed
   # because Resolver guarantees that the arguments are present and
   # normalized.
+  #
+  # @raise [NotImplementedError]
   def find_templates(name, prefix, partial, details, locals = T.unsafe(nil)); end
 
   class << self
@@ -9984,6 +10123,7 @@ end
 
 # Threadsafe template cache
 class ActionView::Resolver::Cache
+  # @return [Cache] a new instance of Cache
   def initialize; end
 
   # Cache the templates returned by the block
@@ -10014,11 +10154,13 @@ ActionView::Resolver::Cache::PARTIAL_BLOCK = T.let(T.unsafe(nil), Proc)
 ActionView::Resolver::Cache::PREFIX_BLOCK = T.let(T.unsafe(nil), Proc)
 
 class ActionView::Resolver::Cache::SmallCache < ::Concurrent::Map
+  # @return [SmallCache] a new instance of SmallCache
   def initialize(options = T.unsafe(nil)); end
 end
 
 # Keeps all information about view path and builds virtual path.
 class ActionView::Resolver::Path
+  # @return [Path] a new instance of Path
   def initialize(name, prefix, partial, virtual); end
 
   # Returns the value of attribute name.
@@ -10060,7 +10202,7 @@ module ActionView::RoutingUrlFor
   # * <tt>:anchor</tt> - Specifies the anchor name to be appended to the path.
   # * <tt>:only_path</tt> - If true, returns the relative URL (omitting the protocol, host name, and port) (<tt>true</tt> by default unless <tt>:host</tt> is specified).
   # * <tt>:trailing_slash</tt> - If true, adds a trailing slash, as in "/archive/2005/". Note that this
-  # is currently not recommended since it breaks caching.
+  #   is currently not recommended since it breaks caching.
   # * <tt>:host</tt> - Overrides the default (current) host if provided.
   # * <tt>:protocol</tt> - Overrides the default (current) protocol if provided.
   # * <tt>:user</tt> - Inline HTTP authentication (only plucked out if <tt>:password</tt> is also present).
@@ -10078,50 +10220,50 @@ module ActionView::RoutingUrlFor
   # Controllers passed in using the +:controller+ option will retain their namespace unless it is an absolute one.
   #
   # ==== Examples
-  # <%= url_for(action: 'index') %>
-  # # => /blogs/
+  #   <%= url_for(action: 'index') %>
+  #   # => /blogs/
   #
-  # <%= url_for(action: 'find', controller: 'books') %>
-  # # => /books/find
+  #   <%= url_for(action: 'find', controller: 'books') %>
+  #   # => /books/find
   #
-  # <%= url_for(action: 'login', controller: 'members', only_path: false, protocol: 'https') %>
-  # # => https://www.example.com/members/login/
+  #   <%= url_for(action: 'login', controller: 'members', only_path: false, protocol: 'https') %>
+  #   # => https://www.example.com/members/login/
   #
-  # <%= url_for(action: 'play', anchor: 'player') %>
-  # # => /messages/play/#player
+  #   <%= url_for(action: 'play', anchor: 'player') %>
+  #   # => /messages/play/#player
   #
-  # <%= url_for(action: 'jump', anchor: 'tax&ship') %>
-  # # => /testing/jump/#tax&ship
+  #   <%= url_for(action: 'jump', anchor: 'tax&ship') %>
+  #   # => /testing/jump/#tax&ship
   #
-  # <%= url_for(Workshop.new) %>
-  # # relies on Workshop answering a persisted? call (and in this case returning false)
-  # # => /workshops
+  #   <%= url_for(Workshop.new) %>
+  #   # relies on Workshop answering a persisted? call (and in this case returning false)
+  #   # => /workshops
   #
-  # <%= url_for(@workshop) %>
-  # # calls @workshop.to_param which by default returns the id
-  # # => /workshops/5
+  #   <%= url_for(@workshop) %>
+  #   # calls @workshop.to_param which by default returns the id
+  #   # => /workshops/5
   #
-  # # to_param can be re-defined in a model to provide different URL names:
-  # # => /workshops/1-workshop-name
+  #   # to_param can be re-defined in a model to provide different URL names:
+  #   # => /workshops/1-workshop-name
   #
-  # <%= url_for("http://www.example.com") %>
-  # # => http://www.example.com
+  #   <%= url_for("http://www.example.com") %>
+  #   # => http://www.example.com
   #
-  # <%= url_for(:back) %>
-  # # if request.env["HTTP_REFERER"] is set to "http://www.example.com"
-  # # => http://www.example.com
+  #   <%= url_for(:back) %>
+  #   # if request.env["HTTP_REFERER"] is set to "http://www.example.com"
+  #   # => http://www.example.com
   #
-  # <%= url_for(:back) %>
-  # # if request.env["HTTP_REFERER"] is not set or is blank
-  # # => javascript:history.back()
+  #   <%= url_for(:back) %>
+  #   # if request.env["HTTP_REFERER"] is not set or is blank
+  #   # => javascript:history.back()
   #
-  # <%= url_for(action: 'index', controller: 'users') %>
-  # # Assuming an "admin" namespace
-  # # => /admin/users
+  #   <%= url_for(action: 'index', controller: 'users') %>
+  #   # Assuming an "admin" namespace
+  #   # => /admin/users
   #
-  # <%= url_for(action: 'index', controller: '/users') %>
-  # # Specify absolute path with beginning slash
-  # # => /users
+  #   <%= url_for(action: 'index', controller: '/users') %>
+  #   # Specify absolute path with beginning slash
+  #   # => /users
   def url_for(options = T.unsafe(nil)); end
 
   def url_options; end
@@ -10131,22 +10273,29 @@ module ActionView::RoutingUrlFor
   def _generate_paths_by_default; end
   def _routes_context; end
   def ensure_only_path_option(options); end
+
+  # @return [Boolean]
   def optimize_routes_generation?; end
 end
 
 class ActionView::StreamingBuffer
+  # @return [StreamingBuffer] a new instance of StreamingBuffer
   def initialize(block); end
 
   def <<(value); end
   def append=(value); end
   def concat(value); end
   def html_safe; end
+
+  # @return [Boolean]
   def html_safe?; end
+
   def safe_append=(value); end
   def safe_concat(value); end
 end
 
 class ActionView::StreamingFlow < ::ActionView::OutputFlow
+  # @return [StreamingFlow] a new instance of StreamingFlow
   def initialize(view, fiber); end
 
   # Appends the contents for the given key. This is called
@@ -10161,6 +10310,7 @@ class ActionView::StreamingFlow < ::ActionView::OutputFlow
 
   private
 
+  # @return [Boolean]
   def inside_fiber?; end
 end
 
@@ -10183,6 +10333,7 @@ end
 # It is initialized with a block that, when called, starts
 # rendering the template.
 class ActionView::StreamingTemplateRenderer::Body
+  # @return [Body] a new instance of Body
   def initialize(&start); end
 
   def each(&block); end
@@ -10195,6 +10346,7 @@ end
 
 # :nodoc
 class ActionView::SyntaxErrorInTemplate < ::ActionView::Template::Error
+  # @return [SyntaxErrorInTemplate] a new instance of SyntaxErrorInTemplate
   def initialize(template, offending_code_string); end
 
   def annotated_source_code; end
@@ -10206,6 +10358,7 @@ class ActionView::Template
   extend ::ActiveSupport::Autoload
   extend ::ActionView::Template::Handlers
 
+  # @return [Template] a new instance of Template
   def initialize(source, identifier, handler, locals:, format: T.unsafe(nil), variant: T.unsafe(nil), virtual_path: T.unsafe(nil)); end
 
   # This method is responsible for properly setting the encoding of the
@@ -10253,6 +10406,8 @@ class ActionView::Template
 
   # Returns whether the underlying handler supports streaming. If so,
   # a streaming buffer *may* be passed when it starts rendering.
+  #
+  # @return [Boolean]
   def supports_streaming?; end
 
   def type; end
@@ -10298,6 +10453,7 @@ end
 # fails. This exception then gathers a bunch of intimate details and uses it to report a
 # precise exception message.
 class ActionView::Template::Error < ::ActionView::ActionViewError
+  # @return [Error] a new instance of Error
   def initialize(template); end
 
   def annotated_source_code; end
@@ -10320,6 +10476,7 @@ end
 ActionView::Template::Error::SOURCE_CODE_RADIUS = T.let(T.unsafe(nil), Integer)
 
 class ActionView::Template::HTML
+  # @return [HTML] a new instance of HTML
   def initialize(string, type); end
 
   def format; end
@@ -10338,6 +10495,8 @@ module ActionView::Template::Handlers
   # extensions. This can be used to implement new template types.
   # The handler must respond to +:call+, which will be passed the template
   # and should return the rendered template as a String.
+  #
+  # @raise [ArgumentError]
   def register_template_handler(*extensions, handler); end
 
   def registered_template_handler(extension); end
@@ -10347,7 +10506,9 @@ module ActionView::Template::Handlers
   def unregister_template_handler(*extensions); end
 
   class << self
+    # @private
     def extended(base); end
+
     def extensions; end
   end
 end
@@ -10380,11 +10541,16 @@ class ActionView::Template::Handlers::ERB
   def escape_ignore_list; end
   def escape_ignore_list=(_arg0); end
   def escape_ignore_list?; end
+
+  # @return [Boolean]
   def handles_encoding?; end
+
+  # @return [Boolean]
   def supports_streaming?; end
 
   private
 
+  # @raise [WrongEncodingError]
   def valid_encoding(string, encoding); end
 
   class << self
@@ -10404,6 +10570,7 @@ end
 ActionView::Template::Handlers::ERB::ENCODING_TAG = T.let(T.unsafe(nil), Regexp)
 
 class ActionView::Template::Handlers::ERB::Erubi < ::Erubi::Engine
+  # @return [Erubi] a new instance of Erubi
   def initialize(input, properties = T.unsafe(nil)); end
 
   def evaluate(action_view_erb_handler_context); end
@@ -10436,6 +10603,7 @@ end
 ActionView::Template::Inline::Finalizer = T.let(T.unsafe(nil), Proc)
 
 class ActionView::Template::RawFile
+  # @return [RawFile] a new instance of RawFile
   def initialize(filename); end
 
   def format; end
@@ -10447,6 +10615,7 @@ class ActionView::Template::RawFile
 end
 
 class ActionView::Template::Renderable
+  # @return [Renderable] a new instance of Renderable
   def initialize(renderable); end
 
   def format; end
@@ -10459,12 +10628,14 @@ module ActionView::Template::Sources
 end
 
 class ActionView::Template::Sources::File
+  # @return [File] a new instance of File
   def initialize(filename); end
 
   def to_s; end
 end
 
 class ActionView::Template::Text
+  # @return [Text] a new instance of Text
   def initialize(string); end
 
   def format; end
@@ -10490,6 +10661,7 @@ class ActionView::Template::Types
 end
 
 class ActionView::Template::Types::Type
+  # @return [Type] a new instance of Type
   def initialize(symbol); end
 
   def ==(type); end
@@ -10638,14 +10810,18 @@ module ActionView::TestCase::Behavior
   def controller; end
 
   # Sets the attribute controller
+  #
+  # @param value the value to set the attribute controller to.
   def controller=(_arg0); end
 
-  def lookup_context(*_arg0, **_arg1, &_arg2); end
+  def lookup_context(*_arg0, &_arg1); end
 
   # Returns the value of attribute output_buffer.
   def output_buffer; end
 
   # Sets the attribute output_buffer
+  #
+  # @param value the value to set the attribute output_buffer to.
   def output_buffer=(_arg0); end
 
   def render(options = T.unsafe(nil), local_assigns = T.unsafe(nil), &block); end
@@ -10654,6 +10830,8 @@ module ActionView::TestCase::Behavior
   def rendered; end
 
   # Sets the attribute rendered
+  #
+  # @param value the value to set the attribute rendered to.
   def rendered=(_arg0); end
 
   def rendered_views; end
@@ -10670,6 +10848,8 @@ module ActionView::TestCase::Behavior
   def document_root_element; end
 
   def method_missing(selector, *args); end
+
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   # The instance of ActionView::Base that is used by +render+.
@@ -10699,6 +10879,8 @@ module ActionView::TestCase::Behavior::ClassMethods
   def helper_class; end
 
   # Sets the attribute helper_class
+  #
+  # @param value the value to set the attribute helper_class to.
   def helper_class=(_arg0); end
 
   def helper_method(*methods); end
@@ -10719,16 +10901,21 @@ module ActionView::TestCase::Behavior::Locals
   def rendered_views; end
 
   # Sets the attribute rendered_views
+  #
+  # @param value the value to set the attribute rendered_views to.
   def rendered_views=(_arg0); end
 end
 
 # Need to experiment if this priority is the best one: rendered => output_buffer
 class ActionView::TestCase::Behavior::RenderedViewsCollection
+  # @return [RenderedViewsCollection] a new instance of RenderedViewsCollection
   def initialize; end
 
   def add(view, locals); end
   def locals_for(view); end
   def rendered_views; end
+
+  # @return [Boolean]
   def view_rendered?(view, expected_locals); end
 end
 
@@ -10741,6 +10928,7 @@ class ActionView::TestCase::TestController < ::ActionController::Base
   include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionDispatch::TestProcess
 
+  # @return [TestController] a new instance of TestController
   def initialize; end
 
   def controller_path=(path); end
@@ -10749,18 +10937,24 @@ class ActionView::TestCase::TestController < ::ActionController::Base
   def params; end
 
   # Sets the attribute params
+  #
+  # @param value the value to set the attribute params to.
   def params=(_arg0); end
 
   # Returns the value of attribute request.
   def request; end
 
   # Sets the attribute request
+  #
+  # @param value the value to set the attribute request to.
   def request=(_arg0); end
 
   # Returns the value of attribute response.
   def response; end
 
   # Sets the attribute response
+  #
+  # @param value the value to set the attribute response to.
   def response=(_arg0); end
 
   private
@@ -10779,6 +10973,7 @@ class ActionView::TestCase::TestController < ::ActionController::Base
 end
 
 class ActionView::UnboundTemplate
+  # @return [UnboundTemplate] a new instance of UnboundTemplate
   def initialize(source, identifier, handler, options); end
 
   def bind_locals(locals); end
@@ -10803,20 +10998,20 @@ module ActionView::ViewPaths
   # The prefixes used in render "foo" shortcuts.
   def _prefixes; end
 
-  def any_templates?(*_arg0, **_arg1, &_arg2); end
+  def any_templates?(*_arg0, &_arg1); end
 
   # Append a path to the list of view paths for the current <tt>LookupContext</tt>.
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into
-  # the default view path. You may also provide a custom view path
-  # (see ActionView::PathSet for more information)
+  #   the default view path. You may also provide a custom view path
+  #   (see ActionView::PathSet for more information)
   def append_view_path(path); end
 
   def details_for_lookup; end
-  def formats(*_arg0, **_arg1, &_arg2); end
+  def formats(*_arg0, &_arg1); end
   def formats=(arg); end
-  def locale(*_arg0, **_arg1, &_arg2); end
+  def locale(*_arg0, &_arg1); end
   def locale=(arg); end
 
   # <tt>LookupContext</tt> is the object responsible for holding all
@@ -10828,12 +11023,12 @@ module ActionView::ViewPaths
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into
-  # the default view path. You may also provide a custom view path
-  # (see ActionView::PathSet for more information)
+  #   the default view path. You may also provide a custom view path
+  #   (see ActionView::PathSet for more information)
   def prepend_view_path(path); end
 
-  def template_exists?(*_arg0, **_arg1, &_arg2); end
-  def view_paths(*_arg0, **_arg1, &_arg2); end
+  def template_exists?(*_arg0, &_arg1); end
+  def view_paths(*_arg0, &_arg1); end
 
   class << self
     def all_view_paths; end
@@ -10851,16 +11046,16 @@ module ActionView::ViewPaths::ClassMethods
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into
-  # the default view path. You may also provide a custom view path
-  # (see ActionView::PathSet for more information)
+  #   the default view path. You may also provide a custom view path
+  #   (see ActionView::PathSet for more information)
   def append_view_path(path); end
 
   # Prepend a path to the list of view paths for this controller.
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into
-  # the default view path. You may also provide a custom view path
-  # (see ActionView::PathSet for more information)
+  #   the default view path. You may also provide a custom view path
+  #   (see ActionView::PathSet for more information)
   def prepend_view_path(path); end
 
   # A list of all of the default view paths for this controller.
@@ -10870,7 +11065,7 @@ module ActionView::ViewPaths::ClassMethods
   #
   # ==== Parameters
   # * <tt>paths</tt> - If a PathSet is provided, use that;
-  # otherwise, process the parameter into a PathSet.
+  #   otherwise, process the parameter into a PathSet.
   def view_paths=(paths); end
 
   private
@@ -10881,6 +11076,7 @@ module ActionView::ViewPaths::ClassMethods
 end
 
 class ActionView::WrongEncodingError < ::ActionView::EncodingError
+  # @return [WrongEncodingError] a new instance of WrongEncodingError
   def initialize(string, encoding); end
 
   def message; end

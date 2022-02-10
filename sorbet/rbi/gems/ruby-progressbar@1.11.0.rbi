@@ -13,35 +13,48 @@ end
 class ProgressBar::Base
   extend ::Forwardable
 
+  # @return [Base] a new instance of Base
   def initialize(options = T.unsafe(nil)); end
 
-  def clear(*args, **_arg1, &block); end
+  def clear(*args, &block); end
   def decrement; end
   def finish; end
+
+  # @return [Boolean]
   def finished?; end
+
   def format(other); end
   def format=(other); end
   def increment; end
   def inspect; end
-  def log(*args, **_arg1, &block); end
+  def log(*args, &block); end
   def pause; end
+
+  # @return [Boolean]
   def paused?; end
-  def progress(*args, **_arg1, &block); end
+
+  def progress(*args, &block); end
   def progress=(new_progress); end
   def progress_mark=(mark); end
-  def refresh(*args, **_arg1, &block); end
+  def refresh(*args, &block); end
   def remainder_mark=(mark); end
   def reset; end
   def resume; end
   def start(options = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def started?; end
+
   def stop; end
+
+  # @return [Boolean]
   def stopped?; end
+
   def title; end
   def title=(title); end
   def to_h; end
   def to_s(new_format = T.unsafe(nil)); end
-  def total(*args, **_arg1, &block); end
+  def total(*args, &block); end
   def total=(new_total); end
 
   protected
@@ -50,66 +63,88 @@ class ProgressBar::Base
   def autofinish; end
 
   # Sets the attribute autofinish
+  #
+  # @param value the value to set the attribute autofinish to.
   def autofinish=(_arg0); end
 
   # Returns the value of attribute autostart.
   def autostart; end
 
   # Sets the attribute autostart
+  #
+  # @param value the value to set the attribute autostart to.
   def autostart=(_arg0); end
 
   # Returns the value of attribute bar.
   def bar; end
 
   # Sets the attribute bar
+  #
+  # @param value the value to set the attribute bar to.
   def bar=(_arg0); end
 
   # Returns the value of attribute finished.
   def finished; end
 
   # Sets the attribute finished
+  #
+  # @param value the value to set the attribute finished to.
   def finished=(_arg0); end
 
   # Returns the value of attribute output.
   def output; end
 
   # Sets the attribute output
+  #
+  # @param value the value to set the attribute output to.
   def output=(_arg0); end
 
   # Returns the value of attribute percentage.
   def percentage; end
 
   # Sets the attribute percentage
+  #
+  # @param value the value to set the attribute percentage to.
   def percentage=(_arg0); end
 
   # Returns the value of attribute progressable.
   def progressable; end
 
   # Sets the attribute progressable
+  #
+  # @param value the value to set the attribute progressable to.
   def progressable=(_arg0); end
 
   # Returns the value of attribute rate.
   def rate; end
 
   # Sets the attribute rate
+  #
+  # @param value the value to set the attribute rate to.
   def rate=(_arg0); end
 
   # Returns the value of attribute time.
   def time; end
 
   # Sets the attribute time
+  #
+  # @param value the value to set the attribute time to.
   def time=(_arg0); end
 
   # Returns the value of attribute timer.
   def timer; end
 
   # Sets the attribute timer
+  #
+  # @param value the value to set the attribute timer to.
   def timer=(_arg0); end
 
   # Returns the value of attribute title_comp.
   def title_comp; end
 
   # Sets the attribute title_comp
+  #
+  # @param value the value to set the attribute title_comp to.
   def title_comp=(_arg0); end
 
   def update_progress(*args); end
@@ -118,6 +153,7 @@ end
 module ProgressBar::Calculators; end
 
 class ProgressBar::Calculators::Length
+  # @return [Length] a new instance of Length
   def initialize(options = T.unsafe(nil)); end
 
   def calculate_length; end
@@ -126,9 +162,13 @@ class ProgressBar::Calculators::Length
   def current_length; end
 
   # Sets the attribute current_length
+  #
+  # @param value the value to set the attribute current_length to.
   def current_length=(_arg0); end
 
   def length; end
+
+  # @return [Boolean]
   def length_changed?; end
 
   # Returns the value of attribute length_override.
@@ -140,6 +180,8 @@ class ProgressBar::Calculators::Length
   def output; end
 
   # Sets the attribute output
+  #
+  # @param value the value to set the attribute output to.
   def output=(_arg0); end
 
   def reset_length; end
@@ -153,6 +195,8 @@ class ProgressBar::Calculators::Length
   def dynamic_width_via_output_stream_object; end
   def dynamic_width_via_system_calls; end
   def terminal_width; end
+
+  # @return [Boolean]
   def unix?; end
 end
 
@@ -165,30 +209,39 @@ end
 module ProgressBar::Components; end
 
 class ProgressBar::Components::Bar
+  # @return [Bar] a new instance of Bar
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute length.
   def length; end
 
   # Sets the attribute length
+  #
+  # @param value the value to set the attribute length to.
   def length=(_arg0); end
 
   # Returns the value of attribute progress.
   def progress; end
 
   # Sets the attribute progress
+  #
+  # @param value the value to set the attribute progress to.
   def progress=(_arg0); end
 
   # Returns the value of attribute progress_mark.
   def progress_mark; end
 
   # Sets the attribute progress_mark
+  #
+  # @param value the value to set the attribute progress_mark to.
   def progress_mark=(_arg0); end
 
   # Returns the value of attribute remainder_mark.
   def remainder_mark; end
 
   # Sets the attribute remainder_mark
+  #
+  # @param value the value to set the attribute remainder_mark to.
   def remainder_mark=(_arg0); end
 
   def to_s(options = T.unsafe(nil)); end
@@ -197,6 +250,8 @@ class ProgressBar::Components::Bar
   def upa_steps; end
 
   # Sets the attribute upa_steps
+  #
+  # @param value the value to set the attribute upa_steps to.
   def upa_steps=(_arg0); end
 
   private
@@ -219,12 +274,15 @@ ProgressBar::Components::Bar::DEFAULT_REMAINDER_MARK = T.let(T.unsafe(nil), Stri
 ProgressBar::Components::Bar::DEFAULT_UPA_STEPS = T.let(T.unsafe(nil), Array)
 
 class ProgressBar::Components::Percentage
+  # @return [Percentage] a new instance of Percentage
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute progress.
   def progress; end
 
   # Sets the attribute progress
+  #
+  # @param value the value to set the attribute progress to.
   def progress=(_arg0); end
 
   private
@@ -236,36 +294,47 @@ class ProgressBar::Components::Percentage
 end
 
 class ProgressBar::Components::Rate
+  # @return [Rate] a new instance of Rate
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute progress.
   def progress; end
 
   # Sets the attribute progress
+  #
+  # @param value the value to set the attribute progress to.
   def progress=(_arg0); end
 
   # Returns the value of attribute rate_scale.
   def rate_scale; end
 
   # Sets the attribute rate_scale
+  #
+  # @param value the value to set the attribute rate_scale to.
   def rate_scale=(_arg0); end
 
   # Returns the value of attribute started_at.
   def started_at; end
 
   # Sets the attribute started_at
+  #
+  # @param value the value to set the attribute started_at to.
   def started_at=(_arg0); end
 
   # Returns the value of attribute stopped_at.
   def stopped_at; end
 
   # Sets the attribute stopped_at
+  #
+  # @param value the value to set the attribute stopped_at to.
   def stopped_at=(_arg0); end
 
   # Returns the value of attribute timer.
   def timer; end
 
   # Sets the attribute timer
+  #
+  # @param value the value to set the attribute timer to.
   def timer=(_arg0); end
 
   private
@@ -278,6 +347,7 @@ class ProgressBar::Components::Rate
 end
 
 class ProgressBar::Components::Time
+  # @return [Time] a new instance of Time
   def initialize(options = T.unsafe(nil)); end
 
   def elapsed_with_label; end
@@ -298,12 +368,16 @@ class ProgressBar::Components::Time
   def progress; end
 
   # Sets the attribute progress
+  #
+  # @param value the value to set the attribute progress to.
   def progress=(_arg0); end
 
   # Returns the value of attribute timer.
   def timer; end
 
   # Sets the attribute timer
+  #
+  # @param value the value to set the attribute timer to.
   def timer=(_arg0); end
 
   private
@@ -325,12 +399,15 @@ ProgressBar::Components::Time::OOB_UNKNOWN_TIME_TEXT = T.let(T.unsafe(nil), Stri
 ProgressBar::Components::Time::TIME_FORMAT = T.let(T.unsafe(nil), String)
 
 class ProgressBar::Components::Title
+  # @return [Title] a new instance of Title
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute title.
   def title; end
 
   # Sets the attribute title
+  #
+  # @param value the value to set the attribute title to.
   def title=(_arg0); end
 end
 
@@ -344,15 +421,20 @@ class ProgressBar::Format::Formatter
 end
 
 class ProgressBar::Format::Molecule
+  # @return [Molecule] a new instance of Molecule
   def initialize(letter); end
 
+  # @return [Boolean]
   def bar_molecule?; end
+
   def full_key; end
 
   # Returns the value of attribute key.
   def key; end
 
   # Sets the attribute key
+  #
+  # @param value the value to set the attribute key to.
   def key=(_arg0); end
 
   def lookup_value(environment, length = T.unsafe(nil)); end
@@ -361,8 +443,11 @@ class ProgressBar::Format::Molecule
   def method_name; end
 
   # Sets the attribute method_name
+  #
+  # @param value the value to set the attribute method_name to.
   def method_name=(_arg0); end
 
+  # @return [Boolean]
   def non_bar_molecule?; end
 end
 
@@ -382,6 +467,7 @@ ProgressBar::Format::String::MOLECULE_PATTERN = T.let(T.unsafe(nil), Regexp)
 class ProgressBar::InvalidProgressError < ::RuntimeError; end
 
 class ProgressBar::Output
+  # @return [Output] a new instance of Output
   def initialize(options = T.unsafe(nil)); end
 
   def clear_string; end
@@ -393,6 +479,8 @@ class ProgressBar::Output
   def stream; end
 
   # Sets the attribute stream
+  #
+  # @param value the value to set the attribute stream to.
   def stream=(_arg0); end
 
   def with_refresh; end
@@ -403,18 +491,24 @@ class ProgressBar::Output
   def bar; end
 
   # Sets the attribute bar
+  #
+  # @param value the value to set the attribute bar to.
   def bar=(_arg0); end
 
   # Returns the value of attribute length_calculator.
   def length_calculator; end
 
   # Sets the attribute length_calculator
+  #
+  # @param value the value to set the attribute length_calculator to.
   def length_calculator=(_arg0); end
 
   # Returns the value of attribute throttle.
   def throttle; end
 
   # Sets the attribute throttle
+  #
+  # @param value the value to set the attribute throttle to.
   def throttle=(_arg0); end
 
   private
@@ -441,6 +535,8 @@ class ProgressBar::Outputs::NonTty < ::ProgressBar::Output
   protected
 
   # Sets the attribute last_update_length
+  #
+  # @param value the value to set the attribute last_update_length to.
   def last_update_length=(_arg0); end
 end
 
@@ -458,14 +554,21 @@ end
 ProgressBar::Outputs::Tty::DEFAULT_FORMAT_STRING = T.let(T.unsafe(nil), String)
 
 class ProgressBar::Progress
+  # @return [Progress] a new instance of Progress
   def initialize(options = T.unsafe(nil)); end
 
   def absolute; end
   def decrement; end
   def finish; end
+
+  # @return [Boolean]
   def finished?; end
+
   def increment; end
+
+  # @return [Boolean]
   def none?; end
+
   def percentage_completed; end
   def percentage_completed_with_precision; end
 
@@ -479,12 +582,16 @@ class ProgressBar::Progress
   def running_average; end
 
   # Sets the attribute running_average
+  #
+  # @param value the value to set the attribute running_average to.
   def running_average=(_arg0); end
 
   # Returns the value of attribute smoothing.
   def smoothing; end
 
   # Sets the attribute smoothing
+  #
+  # @param value the value to set the attribute smoothing to.
   def smoothing=(_arg0); end
 
   def start(options = T.unsafe(nil)); end
@@ -493,6 +600,8 @@ class ProgressBar::Progress
   def starting_position; end
 
   # Sets the attribute starting_position
+  #
+  # @param value the value to set the attribute starting_position to.
   def starting_position=(_arg0); end
 
   # Returns the value of attribute total.
@@ -500,6 +609,8 @@ class ProgressBar::Progress
 
   def total=(new_total); end
   def total_with_unknown_indicator; end
+
+  # @return [Boolean]
   def unknown?; end
 end
 
@@ -510,6 +621,7 @@ module ProgressBar::Refinements; end
 module ProgressBar::Refinements::Enumerator; end
 
 class ProgressBar::Throttle
+  # @return [Throttle] a new instance of Throttle
   def initialize(options = T.unsafe(nil)); end
 
   def choke(options = T.unsafe(nil)); end
@@ -518,28 +630,37 @@ class ProgressBar::Throttle
   def rate; end
 
   # Sets the attribute rate
+  #
+  # @param value the value to set the attribute rate to.
   def rate=(_arg0); end
 
   # Returns the value of attribute started_at.
   def started_at; end
 
   # Sets the attribute started_at
+  #
+  # @param value the value to set the attribute started_at to.
   def started_at=(_arg0); end
 
   # Returns the value of attribute stopped_at.
   def stopped_at; end
 
   # Sets the attribute stopped_at
+  #
+  # @param value the value to set the attribute stopped_at to.
   def stopped_at=(_arg0); end
 
   # Returns the value of attribute timer.
   def timer; end
 
   # Sets the attribute timer
+  #
+  # @param value the value to set the attribute timer to.
   def timer=(_arg0); end
 end
 
 class ProgressBar::Time
+  # @return [Time] a new instance of Time
   def initialize(time = T.unsafe(nil)); end
 
   def now; end
@@ -551,12 +672,15 @@ class ProgressBar::Time
   def time; end
 
   # Sets the attribute time
+  #
+  # @param value the value to set the attribute time to.
   def time=(_arg0); end
 end
 
 ProgressBar::Time::TIME_MOCKING_LIBRARY_METHODS = T.let(T.unsafe(nil), Array)
 
 class ProgressBar::Timer
+  # @return [Timer] a new instance of Timer
   def initialize(options = T.unsafe(nil)); end
 
   def divide_seconds(seconds); end
@@ -564,25 +688,36 @@ class ProgressBar::Timer
   def elapsed_whole_seconds; end
   def pause; end
   def reset; end
+
+  # @return [Boolean]
   def reset?; end
+
   def restart; end
   def resume; end
   def start; end
+
+  # @return [Boolean]
   def started?; end
 
   # Returns the value of attribute started_at.
   def started_at; end
 
   # Sets the attribute started_at
+  #
+  # @param value the value to set the attribute started_at to.
   def started_at=(_arg0); end
 
   def stop; end
+
+  # @return [Boolean]
   def stopped?; end
 
   # Returns the value of attribute stopped_at.
   def stopped_at; end
 
   # Sets the attribute stopped_at
+  #
+  # @param value the value to set the attribute stopped_at to.
   def stopped_at=(_arg0); end
 
   protected
@@ -591,5 +726,7 @@ class ProgressBar::Timer
   def time; end
 
   # Sets the attribute time
+  #
+  # @param value the value to set the attribute time to.
   def time=(_arg0); end
 end

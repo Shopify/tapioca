@@ -30,10 +30,10 @@
 # way to do this. This way, the SMTP connection is closed automatically
 # after the block is executed.
 #
-# require 'net/smtp'
-# Net::SMTP.start('your.smtp.server', 25) do |smtp|
-# # Use the SMTP object smtp only in this block.
-# end
+#     require 'net/smtp'
+#     Net::SMTP.start('your.smtp.server', 25) do |smtp|
+#       # Use the SMTP object smtp only in this block.
+#     end
 #
 # Replace 'your.smtp.server' with your SMTP server. Normally
 # your system manager or internet provider supplies a server
@@ -41,40 +41,40 @@
 #
 # Then you can send messages.
 #
-# msgstr = <<END_OF_MESSAGE
-# From: Your Name <your@mail.address>
-# To: Destination Address <someone@example.com>
-# Subject: test message
-# Date: Sat, 23 Jun 2001 16:26:43 +0900
-# Message-Id: <unique.message.id.string@example.com>
+#     msgstr = <<END_OF_MESSAGE
+#     From: Your Name <your@mail.address>
+#     To: Destination Address <someone@example.com>
+#     Subject: test message
+#     Date: Sat, 23 Jun 2001 16:26:43 +0900
+#     Message-Id: <unique.message.id.string@example.com>
 #
-# This is a test message.
-# END_OF_MESSAGE
+#     This is a test message.
+#     END_OF_MESSAGE
 #
-# require 'net/smtp'
-# Net::SMTP.start('your.smtp.server', 25) do |smtp|
-# smtp.send_message msgstr,
-# 'your@mail.address',
-# 'his_address@example.com'
-# end
+#     require 'net/smtp'
+#     Net::SMTP.start('your.smtp.server', 25) do |smtp|
+#       smtp.send_message msgstr,
+#                         'your@mail.address',
+#                         'his_address@example.com'
+#     end
 #
 # === Closing the Session
 #
 # You MUST close the SMTP session after sending messages, by calling
 # the #finish method:
 #
-# # using SMTP#finish
-# smtp = Net::SMTP.start('your.smtp.server', 25)
-# smtp.send_message msgstr, 'from@address', 'to@address'
-# smtp.finish
+#     # using SMTP#finish
+#     smtp = Net::SMTP.start('your.smtp.server', 25)
+#     smtp.send_message msgstr, 'from@address', 'to@address'
+#     smtp.finish
 #
 # You can also use the block form of SMTP.start/SMTP#start.  This closes
 # the SMTP session automatically:
 #
-# # using block form of SMTP.start
-# Net::SMTP.start('your.smtp.server', 25) do |smtp|
-# smtp.send_message msgstr, 'from@address', 'to@address'
-# end
+#     # using block form of SMTP.start
+#     Net::SMTP.start('your.smtp.server', 25) do |smtp|
+#       smtp.send_message msgstr, 'from@address', 'to@address'
+#     end
 #
 # I strongly recommend this scheme.  This form is simpler and more robust.
 #
@@ -86,8 +86,8 @@
 # The SMTP server will judge whether it should send or reject
 # the SMTP session by inspecting the HELO domain.
 #
-# Net::SMTP.start('your.smtp.server', 25
-# helo: 'mail.from.domain') { |smtp| ... }
+#     Net::SMTP.start('your.smtp.server', 25
+#                     helo: 'mail.from.domain') { |smtp| ... }
 #
 # === SMTP Authentication
 #
@@ -96,16 +96,16 @@
 # To use SMTP authentication, pass extra arguments to
 # SMTP.start/SMTP#start.
 #
-# # PLAIN
-# Net::SMTP.start('your.smtp.server', 25
-# user: 'Your Account', secret: 'Your Password', authtype: :plain)
-# # LOGIN
-# Net::SMTP.start('your.smtp.server', 25
-# user: 'Your Account', secret: 'Your Password', authtype: :login)
+#     # PLAIN
+#     Net::SMTP.start('your.smtp.server', 25
+#                     user: 'Your Account', secret: 'Your Password', authtype: :plain)
+#     # LOGIN
+#     Net::SMTP.start('your.smtp.server', 25
+#                     user: 'Your Account', secret: 'Your Password', authtype: :login)
 #
-# # CRAM MD5
-# Net::SMTP.start('your.smtp.server', 25
-# user: 'Your Account', secret: 'Your Password', authtype: :cram_md5)
+#     # CRAM MD5
+#     Net::SMTP.start('your.smtp.server', 25
+#                     user: 'Your Account', secret: 'Your Password', authtype: :cram_md5)
 class Net::SMTP < ::Net::Protocol
   # Creates a new Net::SMTP object.
   #
@@ -128,6 +128,8 @@ class Net::SMTP < ::Net::Protocol
   # This method does not open the TCP connection.  You can use
   # SMTP.start instead of SMTP.new if you want to do everything
   # at once.  Otherwise, follow SMTP.new with SMTP#start.
+  #
+  # @return [SMTP] a new instance of SMTP
   def initialize(address, port = T.unsafe(nil), tls: T.unsafe(nil), starttls: T.unsafe(nil), tls_verify: T.unsafe(nil), tls_hostname: T.unsafe(nil), ssl_context_params: T.unsafe(nil)); end
 
   # The address of the SMTP server to connect to.
@@ -142,6 +144,8 @@ class Net::SMTP < ::Net::Protocol
   def capabilities; end
 
   # true if the EHLO response contains +key+.
+  #
+  # @return [Boolean]
   def capable?(key); end
 
   # Returns supported authentication methods on this server.
@@ -150,18 +154,26 @@ class Net::SMTP < ::Net::Protocol
 
   # true if server advertises AUTH CRAM-MD5.
   # You cannot get valid value before opening SMTP session.
+  #
+  # @return [Boolean]
   def capable_cram_md5_auth?; end
 
   # true if server advertises AUTH LOGIN.
   # You cannot get valid value before opening SMTP session.
+  #
+  # @return [Boolean]
   def capable_login_auth?; end
 
   # true if server advertises AUTH PLAIN.
   # You cannot get valid value before opening SMTP session.
+  #
+  # @return [Boolean]
   def capable_plain_auth?; end
 
   # true if server advertises STARTTLS.
   # You cannot get valid value before opening SMTP session.
+  #
+  # @return [Boolean]
   def capable_starttls?; end
 
   # This method sends a message.
@@ -169,23 +181,23 @@ class Net::SMTP < ::Net::Protocol
   # If block is given, yield a message writer stream.
   # You must write message before the block is closed.
   #
-  # # Example 1 (by string)
-  # smtp.data(<<EndMessage)
-  # From: john@example.com
-  # To: betty@example.com
-  # Subject: I found a bug
+  #   # Example 1 (by string)
+  #   smtp.data(<<EndMessage)
+  #   From: john@example.com
+  #   To: betty@example.com
+  #   Subject: I found a bug
   #
-  # Check vm.c:58879.
-  # EndMessage
+  #   Check vm.c:58879.
+  #   EndMessage
   #
-  # # Example 2 (by block)
-  # smtp.data {|f|
-  # f.puts "From: john@example.com"
-  # f.puts "To: betty@example.com"
-  # f.puts "Subject: I found a bug"
-  # f.puts ""
-  # f.puts "Check vm.c:58879."
-  # }
+  #   # Example 2 (by block)
+  #   smtp.data {|f|
+  #     f.puts "From: john@example.com"
+  #     f.puts "To: betty@example.com"
+  #     f.puts "Subject: I found a bug"
+  #     f.puts ""
+  #     f.puts "Check vm.c:58879."
+  #   }
   def data(msgstr = T.unsafe(nil), &block); end
 
   # WARNING: This method causes serious security holes.
@@ -194,12 +206,12 @@ class Net::SMTP < ::Net::Protocol
   # Set an output stream for debug logging.
   # You must call this before #start.
   #
-  # # example
-  # smtp = Net::SMTP.new(addr, port)
-  # smtp.set_debug_output $stderr
-  # smtp.start do |smtp|
-  # ....
-  # end
+  #   # example
+  #   smtp = Net::SMTP.new(addr, port)
+  #   smtp.set_debug_output $stderr
+  #   smtp.start do |smtp|
+  #     ....
+  #   end
   def debug_output=(arg); end
 
   # Disables SMTP/TLS for this object.  Must be called before the
@@ -219,19 +231,27 @@ class Net::SMTP < ::Net::Protocol
   # Enables SMTP/TLS (SMTPS: SMTP over direct TLS connection) for
   # this object.  Must be called before the connection is established
   # to have any effect.  +context+ is a OpenSSL::SSL::SSLContext object.
+  #
+  # @raise [ArgumentError]
   def enable_ssl(context = T.unsafe(nil)); end
 
   # Enables SMTP/TLS (STARTTLS) for this object.
   # +context+ is a OpenSSL::SSL::SSLContext object.
+  #
+  # @raise [ArgumentError]
   def enable_starttls(context = T.unsafe(nil)); end
 
   # Enables SMTP/TLS (STARTTLS) for this object if server accepts.
   # +context+ is a OpenSSL::SSL::SSLContext object.
+  #
+  # @raise [ArgumentError]
   def enable_starttls_auto(context = T.unsafe(nil)); end
 
   # Enables SMTP/TLS (SMTPS: SMTP over direct TLS connection) for
   # this object.  Must be called before the connection is established
   # to have any effect.  +context+ is a OpenSSL::SSL::SSLContext object.
+  #
+  # @raise [ArgumentError]
   def enable_tls(context = T.unsafe(nil)); end
 
   # Set whether to use ESMTP or not.  This should be done before
@@ -258,6 +278,8 @@ class Net::SMTP < ::Net::Protocol
 
   # Finishes the SMTP session and closes TCP connection.
   # Raises IOError if not started.
+  #
+  # @raise [IOError]
   def finish; end
 
   def helo(domain); end
@@ -290,15 +312,15 @@ class Net::SMTP < ::Net::Protocol
   #
   # === Example
   #
-  # Net::SMTP.start('smtp.example.com', 25) do |smtp|
-  # smtp.open_message_stream('from@example.com', ['dest@example.com']) do |f|
-  # f.puts 'From: from@example.com'
-  # f.puts 'To: dest@example.com'
-  # f.puts 'Subject: test message'
-  # f.puts
-  # f.puts 'This is a test message.'
-  # end
-  # end
+  #     Net::SMTP.start('smtp.example.com', 25) do |smtp|
+  #       smtp.open_message_stream('from@example.com', ['dest@example.com']) do |f|
+  #         f.puts 'From: from@example.com'
+  #         f.puts 'To: dest@example.com'
+  #         f.puts 'Subject: test message'
+  #         f.puts
+  #         f.puts 'This is a test message.'
+  #       end
+  #     end
   #
   # === Errors
   #
@@ -310,6 +332,8 @@ class Net::SMTP < ::Net::Protocol
   # * Net::SMTPUnknownError
   # * Net::ReadTimeout
   # * IOError
+  #
+  # @raise [IOError]
   def open_message_stream(from_addr, *to_addrs, &block); end
 
   # Seconds to wait while attempting to open a connection.
@@ -330,6 +354,7 @@ class Net::SMTP < ::Net::Protocol
   # +to_addr+ is +String+ or +Net::SMTP::Address+
   def rcptto(to_addr); end
 
+  # @raise [ArgumentError]
   def rcptto_list(to_addrs); end
 
   # Seconds to wait while reading one block (by one read(2) call).
@@ -363,15 +388,15 @@ class Net::SMTP < ::Net::Protocol
   #
   # === Example
   #
-  # Net::SMTP.start('smtp.example.com', 25) do |smtp|
-  # smtp.open_message_stream('from@example.com', ['dest@example.com']) do |f|
-  # f.puts 'From: from@example.com'
-  # f.puts 'To: dest@example.com'
-  # f.puts 'Subject: test message'
-  # f.puts
-  # f.puts 'This is a test message.'
-  # end
-  # end
+  #     Net::SMTP.start('smtp.example.com', 25) do |smtp|
+  #       smtp.open_message_stream('from@example.com', ['dest@example.com']) do |f|
+  #         f.puts 'From: from@example.com'
+  #         f.puts 'To: dest@example.com'
+  #         f.puts 'Subject: test message'
+  #         f.puts
+  #         f.puts 'This is a test message.'
+  #       end
+  #     end
   #
   # === Errors
   #
@@ -384,6 +409,8 @@ class Net::SMTP < ::Net::Protocol
   # * Net::ReadTimeout
   # * IOError
   # obsolete
+  #
+  # @raise [IOError]
   def ready(from_addr, *to_addrs, &block); end
 
   # Aborts the current mail transaction
@@ -401,17 +428,17 @@ class Net::SMTP < ::Net::Protocol
   #
   # === Example
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # 'from@example.com',
-  # ['dest@example.com', 'dest2@example.com']
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         'from@example.com',
+  #                         ['dest@example.com', 'dest2@example.com']
+  #     end
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # Net::SMTP::Address.new('from@example.com', size: 12345),
-  # Net::SMTP::Address.new('dest@example.com', notify: :success)
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         Net::SMTP::Address.new('from@example.com', size: 12345),
+  #                         Net::SMTP::Address.new('dest@example.com', notify: :success)
+  #     end
   #
   # === Errors
   #
@@ -423,6 +450,8 @@ class Net::SMTP < ::Net::Protocol
   # * Net::SMTPUnknownError
   # * Net::ReadTimeout
   # * IOError
+  #
+  # @raise [IOError]
   def send_mail(msgstr, from_addr, *to_addrs); end
 
   # Sends +msgstr+ as a message.  Single CR ("\r") and LF ("\n") found
@@ -437,17 +466,17 @@ class Net::SMTP < ::Net::Protocol
   #
   # === Example
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # 'from@example.com',
-  # ['dest@example.com', 'dest2@example.com']
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         'from@example.com',
+  #                         ['dest@example.com', 'dest2@example.com']
+  #     end
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # Net::SMTP::Address.new('from@example.com', size: 12345),
-  # Net::SMTP::Address.new('dest@example.com', notify: :success)
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         Net::SMTP::Address.new('from@example.com', size: 12345),
+  #                         Net::SMTP::Address.new('dest@example.com', notify: :success)
+  #     end
   #
   # === Errors
   #
@@ -459,6 +488,8 @@ class Net::SMTP < ::Net::Protocol
   # * Net::SMTPUnknownError
   # * Net::ReadTimeout
   # * IOError
+  #
+  # @raise [IOError]
   def send_message(msgstr, from_addr, *to_addrs); end
 
   # Sends +msgstr+ as a message.  Single CR ("\r") and LF ("\n") found
@@ -473,17 +504,17 @@ class Net::SMTP < ::Net::Protocol
   #
   # === Example
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # 'from@example.com',
-  # ['dest@example.com', 'dest2@example.com']
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         'from@example.com',
+  #                         ['dest@example.com', 'dest2@example.com']
+  #     end
   #
-  # Net::SMTP.start('smtp.example.com') do |smtp|
-  # smtp.send_message msgstr,
-  # Net::SMTP::Address.new('from@example.com', size: 12345),
-  # Net::SMTP::Address.new('dest@example.com', notify: :success)
-  # end
+  #     Net::SMTP.start('smtp.example.com') do |smtp|
+  #       smtp.send_message msgstr,
+  #                         Net::SMTP::Address.new('from@example.com', size: 12345),
+  #                         Net::SMTP::Address.new('dest@example.com', notify: :success)
+  #     end
   #
   # === Errors
   #
@@ -496,6 +527,8 @@ class Net::SMTP < ::Net::Protocol
   # * Net::ReadTimeout
   # * IOError
   # obsolete
+  #
+  # @raise [IOError]
   def sendmail(msgstr, from_addr, *to_addrs); end
 
   # WARNING: This method causes serious security holes.
@@ -504,15 +537,17 @@ class Net::SMTP < ::Net::Protocol
   # Set an output stream for debug logging.
   # You must call this before #start.
   #
-  # # example
-  # smtp = Net::SMTP.new(addr, port)
-  # smtp.set_debug_output $stderr
-  # smtp.start do |smtp|
-  # ....
-  # end
+  #   # example
+  #   smtp = Net::SMTP.new(addr, port)
+  #   smtp.set_debug_output $stderr
+  #   smtp.start do |smtp|
+  #     ....
+  #   end
   def set_debug_output(arg); end
 
   # true if this object uses SMTP/TLS (SMTPS).
+  #
+  # @return [Boolean]
   def ssl?; end
 
   # Hash for additional SSLContext parameters.
@@ -522,8 +557,8 @@ class Net::SMTP < ::Net::Protocol
   def ssl_context_params=(_arg0); end
 
   # :call-seq:
-  # start(helo: 'localhost', user: nil, secret: nil, authtype: nil) { |smtp| ... }
-  # start(helo = 'localhost', user = nil, secret = nil, authtype = nil) { |smtp| ... }
+  #  start(helo: 'localhost', user: nil, secret: nil, authtype: nil) { |smtp| ... }
+  #  start(helo = 'localhost', user = nil, secret = nil, authtype = nil) { |smtp| ... }
   #
   # Opens a TCP connection and starts the SMTP session.
   #
@@ -549,11 +584,11 @@ class Net::SMTP < ::Net::Protocol
   #
   # This is very similar to the class method SMTP.start.
   #
-  # require 'net/smtp'
-  # smtp = Net::SMTP.new('smtp.mail.server', 25)
-  # smtp.start(helo: helo_domain, user: account, secret: password, authtype: authtype) do |smtp|
-  # smtp.send_message msgstr, 'from@example.com', ['dest@example.com']
-  # end
+  #     require 'net/smtp'
+  #     smtp = Net::SMTP.new('smtp.mail.server', 25)
+  #     smtp.start(helo: helo_domain, user: account, secret: password, authtype: authtype) do |smtp|
+  #       smtp.send_message msgstr, 'from@example.com', ['dest@example.com']
+  #     end
   #
   # The primary use of this method (as opposed to SMTP.start)
   # is probably to set debugging (#set_debug_output) or ESMTP
@@ -574,9 +609,13 @@ class Net::SMTP < ::Net::Protocol
   # * Net::OpenTimeout
   # * Net::ReadTimeout
   # * IOError
+  #
+  # @raise [ArgumentError]
   def start(*args, helo: T.unsafe(nil), user: T.unsafe(nil), secret: T.unsafe(nil), password: T.unsafe(nil), authtype: T.unsafe(nil)); end
 
   # +true+ if the SMTP session has been started.
+  #
+  # @return [Boolean]
   def started?; end
 
   def starttls; end
@@ -584,15 +623,23 @@ class Net::SMTP < ::Net::Protocol
   # Returns truth value if this object uses STARTTLS.
   # If this object always uses STARTTLS, returns :always.
   # If this object uses STARTTLS when the server support TLS, returns :auto.
+  #
+  # @return [Boolean]
   def starttls?; end
 
   # true if this object uses STARTTLS.
+  #
+  # @return [Boolean]
   def starttls_always?; end
 
   # true if this object uses STARTTLS when server advertises STARTTLS.
+  #
+  # @return [Boolean]
   def starttls_auto?; end
 
   # true if this object uses SMTP/TLS (SMTPS).
+  #
+  # @return [Boolean]
   def tls?; end
 
   # The hostname for verifying hostname in the server certificatate.
@@ -609,7 +656,9 @@ class Net::SMTP < ::Net::Protocol
 
   private
 
+  # @return [Boolean]
   def auth_capable?(type); end
+
   def auth_method(type); end
   def base64_encode(str); end
   def check_auth_args(user, secret, authtype = T.unsafe(nil)); end
@@ -653,20 +702,20 @@ class Net::SMTP < ::Net::Protocol
     def default_tls_port; end
 
     # :call-seq:
-    # start(address, port = nil, helo: 'localhost', user: nil, secret: nil, authtype: nil, tls: false, starttls: :auto, tls_verify: true, tls_hostname: nil, ssl_context_params: nil) { |smtp| ... }
-    # start(address, port = nil, helo = 'localhost', user = nil, secret = nil, authtype = nil) { |smtp| ... }
+    #  start(address, port = nil, helo: 'localhost', user: nil, secret: nil, authtype: nil, tls: false, starttls: :auto, tls_verify: true, tls_hostname: nil, ssl_context_params: nil) { |smtp| ... }
+    #  start(address, port = nil, helo = 'localhost', user = nil, secret = nil, authtype = nil) { |smtp| ... }
     #
     # Creates a new Net::SMTP object and connects to the server.
     #
     # This method is equivalent to:
     #
-    # Net::SMTP.new(address, port).start(helo: helo_domain, user: account, secret: password, authtype: authtype, tls_verify: flag, tls_hostname: hostname, ssl_context_params: nil)
+    #   Net::SMTP.new(address, port).start(helo: helo_domain, user: account, secret: password, authtype: authtype, tls_verify: flag, tls_hostname: hostname, ssl_context_params: nil)
     #
     # === Example
     #
-    # Net::SMTP.start('your.smtp.server') do |smtp|
-    # smtp.send_message msgstr, 'from@example.com', ['dest@example.com']
-    # end
+    #     Net::SMTP.start('your.smtp.server') do |smtp|
+    #       smtp.send_message msgstr, 'from@example.com', ['dest@example.com']
+    #     end
     #
     # === Block Usage
     #
@@ -716,6 +765,8 @@ class Net::SMTP < ::Net::Protocol
     # * Net::OpenTimeout
     # * Net::ReadTimeout
     # * IOError
+    #
+    # @raise [ArgumentError]
     def start(address, port = T.unsafe(nil), *args, helo: T.unsafe(nil), user: T.unsafe(nil), secret: T.unsafe(nil), password: T.unsafe(nil), authtype: T.unsafe(nil), tls: T.unsafe(nil), starttls: T.unsafe(nil), tls_verify: T.unsafe(nil), tls_hostname: T.unsafe(nil), ssl_context_params: T.unsafe(nil), &block); end
   end
 end
@@ -723,10 +774,12 @@ end
 # Address with parametres for MAIL or RCPT command
 class Net::SMTP::Address
   # :call-seq:
-  # initialize(address, parameter, ...)
+  #  initialize(address, parameter, ...)
   #
   # address +String+ or +Net::SMTP::Address+
   # parameter +String+ or +Hash+
+  #
+  # @return [Address] a new instance of Address
   def initialize(address, *args, **kw_args); end
 
   # mail address [String]
@@ -745,6 +798,8 @@ end
 class Net::SMTP::Response
   # Creates a new instance of the Response class and sets the status and
   # string attributes
+  #
+  # @return [Response] a new instance of Response
   def initialize(status, string); end
 
   # Returns a hash of the human readable reply text in the response if it
@@ -755,6 +810,8 @@ class Net::SMTP::Response
 
   # Determines whether the response received was a Positive Intermediate
   # reply (3xx reply code)
+  #
+  # @return [Boolean]
   def continue?; end
 
   # Creates a CRAM-MD5 challenge. You can view more information on CRAM-MD5
@@ -779,6 +836,8 @@ class Net::SMTP::Response
 
   # Determines whether the response received was a Positive Completion
   # reply (2xx reply code)
+  #
+  # @return [Boolean]
   def success?; end
 
   class << self
@@ -801,4 +860,5 @@ module Net::SMTPError
   def response; end
 end
 
+# class SMTP
 Net::SMTPSession = Net::SMTP

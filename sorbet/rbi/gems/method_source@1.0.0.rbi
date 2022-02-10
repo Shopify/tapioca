@@ -11,17 +11,34 @@ module MethodSource
     # Helper method responsible for opening source file and buffering up
     # the comments for a specified method. Defined here to avoid polluting
     # `Method` class.
+    #
+    # @param source_location [Array] The array returned by Method#source_location
+    # @param method_name [String]
+    # @raise [SourceNotFoundError]
+    # @return [String] The comments up to the point of the method.
     def comment_helper(source_location, name = T.unsafe(nil)); end
 
+    # @deprecated — use MethodSource::CodeHelpers#expression_at
     def extract_code(source_location); end
 
     # Load a memoized copy of the lines in a file.
+    #
+    # @param file_name [String]
+    # @param method_name [String]
+    # @raise [SourceNotFoundError]
+    # @return [Array<String>] the contents of the file
     def lines_for(file_name, name = T.unsafe(nil)); end
 
     # Helper method responsible for extracting method body.
     # Defined here to avoid polluting `Method` class.
+    #
+    # @param source_location [Array] The array returned by Method#source_location
+    # @param method_name [String]
+    # @return [String] The method body
     def source_helper(source_location, name = T.unsafe(nil)); end
 
+    # @deprecated — use MethodSource::CodeHelpers#complete_expression?
+    # @return [Boolean]
     def valid_expression?(str); end
   end
 end
@@ -30,24 +47,57 @@ module MethodSource::CodeHelpers
   # Retrieve the comment describing the expression on the given line of the given file.
   #
   # This is useful to get module or method documentation.
+  #
+  # @param file [Array<String>, File, String] The file to parse, either as a File or as
+  #   a String or an Array of lines.
+  # @param line_number [Integer] The line number at which to look.
+  #   NOTE: The first line in a file is line 1!
+  # @return [String] The comment
   def comment_describing(file, line_number); end
 
   # Determine if a string of code is a complete Ruby expression.
+  #
+  # @example
+  #   complete_expression?("class Hello") #=> false
+  #   complete_expression?("class Hello; end") #=> true
+  #   complete_expression?("class 123") #=> SyntaxError: unexpected tINTEGER
+  # @param code [String] The code to validate.
+  # @raise [SyntaxError] Any SyntaxError that does not represent incompleteness.
+  # @return [Boolean] Whether or not the code is a complete Ruby expression.
   def complete_expression?(str); end
 
   # Retrieve the first expression starting on the given line of the given file.
   #
   # This is useful to get module or method source code.
   #
-  # line 1!
+  #                           line 1!
+  #
+  # @option options
+  # @option options
+  # @param file [Array<String>, File, String] The file to parse, either as a File or as
+  # @param line_number [Integer] The line number at which to look.
+  #   NOTE: The first line in a file is
+  # @param options [Hash] The optional configuration parameters.
+  # @raise [SyntaxError] If the first complete expression can't be identified
+  # @return [String] The first complete expression
   def expression_at(file, line_number, options = T.unsafe(nil)); end
 
   private
 
   # Get the first expression from the input.
+  #
+  # @param lines [Array<String>]
+  # @param consume [Integer] A number of lines to automatically
+  #   consume (add to the expression buffer) without checking for validity.
+  # @raise [SyntaxError]
+  # @return [String] a valid ruby expression
+  # @yield a clean-up function to run before checking for complete_expression
   def extract_first_expression(lines, consume = T.unsafe(nil), &block); end
 
   # Get the last comment from the input.
+  #
+  # @param lines [Array<String>]
+  # @return [String]
   def extract_last_comment(lines); end
 end
 
@@ -56,6 +106,8 @@ end
 module MethodSource::CodeHelpers::IncompleteExpression
   class << self
     def ===(ex); end
+
+    # @return [Boolean]
     def rbx?; end
   end
 end
@@ -67,9 +119,26 @@ MethodSource::CodeHelpers::IncompleteExpression::RBX_ONLY_REGEXPS = T.let(T.unsa
 # provides the `#source` functionality
 module MethodSource::MethodExtensions
   # Return the comments associated with the method as a string.
+  #
+  # @example
+  #   Set.instance_method(:clear).comment.display
+  #   =>
+  #   # Removes all elements and returns self.
+  # @raise SourceNotFoundException
+  # @return [String] The method's comments as a string
   def comment; end
 
   # Return the sourcecode for the method as a string
+  #
+  # @example
+  #   Set.instance_method(:clear).source.display
+  #   =>
+  #   def clear
+  #   @hash.clear
+  #   self
+  #   end
+  # @raise SourceNotFoundException
+  # @return [String] The method sourcecode as a string
   def source; end
 
   class << self
@@ -77,6 +146,8 @@ module MethodSource::MethodExtensions
     # We need to use the included hook as Rubinius defines a `source`
     # on Method so including a module will have no effect (as it's
     # higher up the MRO).
+    #
+    # @param klass [Class] The class that includes the module.
     def included(klass); end
   end
 end
@@ -91,6 +162,10 @@ module MethodSource::SourceLocation; end
 
 module MethodSource::SourceLocation::MethodExtensions
   # Return the source location of a method for Ruby 1.8.
+  #
+  # @return [Array] A two element array. First element is the
+  #   file, second element is the line in the file where the
+  #   method definition is found.
   def source_location; end
 
   private
@@ -101,11 +176,19 @@ end
 module MethodSource::SourceLocation::ProcExtensions
   # Return the source location for a Proc (in implementations
   # without Proc#source_location)
+  #
+  # @return [Array] A two element array. First element is the
+  #   file, second element is the line in the file where the
+  #   proc definition is found.
   def source_location; end
 end
 
 module MethodSource::SourceLocation::UnboundMethodExtensions
   # Return the source location of an instance method for Ruby 1.8.
+  #
+  # @return [Array] A two element array. First element is the
+  #   file, second element is the line in the file where the
+  #   method definition is found.
   def source_location; end
 end
 

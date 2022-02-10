@@ -58,19 +58,21 @@ class Builder::XmlBase < ::BasicObject
   # Create an XML markup builder.
   #
   # out      :: Object receiving the markup.  +out+ must respond to
-  # <tt><<</tt>.
+  #             <tt><<</tt>.
   # indent   :: Number of spaces used for indentation (0 implies no
-  # indentation and no line breaks).
+  #             indentation and no line breaks).
   # initial  :: Level of initial indentation.
   # encoding :: When <tt>encoding</tt> and $KCODE are set to 'utf-8'
-  # characters aren't converted to character entities in
-  # the output stream.
+  #             characters aren't converted to character entities in
+  #             the output stream.
+  #
+  # @return [XmlBase] a new instance of XmlBase
   def initialize(indent = T.unsafe(nil), initial = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # Append text to the output target without escaping any markup.
   # May be used within the markup brackets as:
   #
-  # builder.p { |x| x << "<br/>HI" }   #=>  <p><br/>HI</p>
+  #   builder.p { |x| x << "<br/>HI" }   #=>  <p><br/>HI</p>
   #
   # This is useful when using non-builder enabled software that
   # generates strings.  Just insert the string directly into the
@@ -82,6 +84,7 @@ class Builder::XmlBase < ::BasicObject
   # targets.
   def <<(text); end
 
+  # @return [Boolean]
   def explicit_nil_handling?; end
 
   # Create XML markup based on the name of the method.  This method
@@ -95,6 +98,8 @@ class Builder::XmlBase < ::BasicObject
   # is pretty safe to define it here. (Note: this is an example of
   # cargo cult programming,
   # cf. http://fishbowl.pastiche.org/2004/10/13/cargo_cult_programming).
+  #
+  # @return [Boolean]
   def nil?; end
 
   # Create a tag named +sym+.  Other than the first argument which
@@ -105,7 +110,7 @@ class Builder::XmlBase < ::BasicObject
   # Append text to the output target.  Escape any markup.  May be
   # used within the markup brackets as:
   #
-  # builder.p { |b| b.br; b.text! "HI" }   #=>  <p><br/>HI</p>
+  #   builder.p { |b| b.br; b.text! "HI" }   #=>  <p><br/>HI</p>
   def text!(text); end
 
   private
@@ -129,6 +134,8 @@ class Builder::XmlBase < ::BasicObject
     def cache_method_calls; end
 
     # Sets the attribute cache_method_calls
+    #
+    # @param value the value to set the attribute cache_method_calls to.
     def cache_method_calls=(_arg0); end
   end
 end
@@ -140,30 +147,30 @@ end
 # markup.
 #
 # Usage:
-# xe = Builder::XmlEvents.new(hander)
-# xe.title("HI")    # Sends start_tag/end_tag/text messages to the handler.
+#   xe = Builder::XmlEvents.new(hander)
+#   xe.title("HI")    # Sends start_tag/end_tag/text messages to the handler.
 #
 # Indentation may also be selected by providing value for the
 # indentation size and initial indentation level.
 #
-# xe = Builder::XmlEvents.new(handler, indent_size, initial_indent_level)
+#   xe = Builder::XmlEvents.new(handler, indent_size, initial_indent_level)
 #
 # == XML Event Handler
 #
 # The handler object must expect the following events.
 #
 # [<tt>start_tag(tag, attrs)</tt>]
-# Announces that a new tag has been found.  +tag+ is the name of
-# the tag and +attrs+ is a hash of attributes for the tag.
+#     Announces that a new tag has been found.  +tag+ is the name of
+#     the tag and +attrs+ is a hash of attributes for the tag.
 #
 # [<tt>end_tag(tag)</tt>]
-# Announces that an end tag for +tag+ has been found.
+#     Announces that an end tag for +tag+ has been found.
 #
 # [<tt>text(text)</tt>]
-# Announces that a string of characters (+text+) has been found.
-# A series of characters may be broken up into more than one
-# +text+ call, so the client cannot assume that a single
-# callback contains all the text data.
+#     Announces that a string of characters (+text+) has been found.
+#     A series of characters may be broken up into more than one
+#     +text+ call, so the client cannot assume that a single
+#     callback contains all the text data.
 class Builder::XmlEvents < ::Builder::XmlMarkup
   def _end_tag(sym); end
   def _start_tag(sym, attrs, end_too = T.unsafe(nil)); end
@@ -178,174 +185,176 @@ end
 # Examples will demonstrate this easier than words.  In the
 # following, +xm+ is an +XmlMarkup+ object.
 #
-# xm.em("emphasized")            # => <em>emphasized</em>
-# xm.em { xm.b("emp & bold") }   # => <em><b>emph &amp; bold</b></em>
-# xm.a("A Link", "href"=>"http://onestepback.org")
-# # => <a href="http://onestepback.org">A Link</a>
-# xm.div { xm.br }               # => <div><br/></div>
-# xm.target("name"=>"compile", "option"=>"fast")
-# # => <target option="fast" name="compile"\>
-# # NOTE: order of attributes is not specified.
+#   xm.em("emphasized")            # => <em>emphasized</em>
+#   xm.em { xm.b("emp & bold") }   # => <em><b>emph &amp; bold</b></em>
+#   xm.a("A Link", "href"=>"http://onestepback.org")
+#                                  # => <a href="http://onestepback.org">A Link</a>
+#   xm.div { xm.br }               # => <div><br/></div>
+#   xm.target("name"=>"compile", "option"=>"fast")
+#                                  # => <target option="fast" name="compile"\>
+#                                  # NOTE: order of attributes is not specified.
 #
-# xm.instruct!                   # <?xml version="1.0" encoding="UTF-8"?>
-# xm.html {                      # <html>
-# xm.head {                    #   <head>
-# xm.title("History")        #     <title>History</title>
-# }                            #   </head>
-# xm.body {                    #   <body>
-# xm.comment! "HI"           #     <!-- HI -->
-# xm.h1("Header")            #     <h1>Header</h1>
-# xm.p("paragraph")          #     <p>paragraph</p>
-# }                            #   </body>
-# }                              # </html>
+#   xm.instruct!                   # <?xml version="1.0" encoding="UTF-8"?>
+#   xm.html {                      # <html>
+#     xm.head {                    #   <head>
+#       xm.title("History")        #     <title>History</title>
+#     }                            #   </head>
+#     xm.body {                    #   <body>
+#       xm.comment! "HI"           #     <!-- HI -->
+#       xm.h1("Header")            #     <h1>Header</h1>
+#       xm.p("paragraph")          #     <p>paragraph</p>
+#     }                            #   </body>
+#   }                              # </html>
 #
 # == Notes:
 #
 # * The order that attributes are inserted in markup tags is
-# undefined.
+#   undefined.
 #
 # * Sometimes you wish to insert text without enclosing tags.  Use
-# the <tt>text!</tt> method to accomplish this.
+#   the <tt>text!</tt> method to accomplish this.
 #
-# Example:
+#   Example:
 #
-# xm.div {                          # <div>
-# xm.text! "line"; xm.br          #   line<br/>
-# xm.text! "another line"; xmbr   #    another line<br/>
-# }                                 # </div>
+#     xm.div {                          # <div>
+#       xm.text! "line"; xm.br          #   line<br/>
+#       xm.text! "another line"; xmbr   #    another line<br/>
+#     }                                 # </div>
 #
 # * The special XML characters <, >, and & are converted to &lt;,
-# &gt; and &amp; automatically.  Use the <tt><<</tt> operation to
-# insert text without modification.
+#   &gt; and &amp; automatically.  Use the <tt><<</tt> operation to
+#   insert text without modification.
 #
 # * Sometimes tags use special characters not allowed in ruby
-# identifiers.  Use the <tt>tag!</tt> method to handle these
-# cases.
+#   identifiers.  Use the <tt>tag!</tt> method to handle these
+#   cases.
 #
-# Example:
+#   Example:
 #
-# xml.tag!("SOAP:Envelope") { ... }
+#     xml.tag!("SOAP:Envelope") { ... }
 #
-# will produce ...
+#   will produce ...
 #
-# <SOAP:Envelope> ... </SOAP:Envelope>"
+#     <SOAP:Envelope> ... </SOAP:Envelope>"
 #
-# <tt>tag!</tt> will also take text and attribute arguments (after
-# the tag name) like normal markup methods.  (But see the next
-# bullet item for a better way to handle XML namespaces).
+#   <tt>tag!</tt> will also take text and attribute arguments (after
+#   the tag name) like normal markup methods.  (But see the next
+#   bullet item for a better way to handle XML namespaces).
 #
 # * Direct support for XML namespaces is now available.  If the
-# first argument to a tag call is a symbol, it will be joined to
-# the tag to produce a namespace:tag combination.  It is easier to
-# show this than describe it.
+#   first argument to a tag call is a symbol, it will be joined to
+#   the tag to produce a namespace:tag combination.  It is easier to
+#   show this than describe it.
 #
-# xml.SOAP :Envelope do ... end
+#     xml.SOAP :Envelope do ... end
 #
-# Just put a space before the colon in a namespace to produce the
-# right form for builder (e.g. "<tt>SOAP:Envelope</tt>" =>
-# "<tt>xml.SOAP :Envelope</tt>")
+#   Just put a space before the colon in a namespace to produce the
+#   right form for builder (e.g. "<tt>SOAP:Envelope</tt>" =>
+#   "<tt>xml.SOAP :Envelope</tt>")
 #
 # * XmlMarkup builds the markup in any object (called a _target_)
-# that accepts the <tt><<</tt> method.  If no target is given,
-# then XmlMarkup defaults to a string target.
+#   that accepts the <tt><<</tt> method.  If no target is given,
+#   then XmlMarkup defaults to a string target.
 #
-# Examples:
+#   Examples:
 #
-# xm = Builder::XmlMarkup.new
-# result = xm.title("yada")
-# # result is a string containing the markup.
+#     xm = Builder::XmlMarkup.new
+#     result = xm.title("yada")
+#     # result is a string containing the markup.
 #
-# buffer = ""
-# xm = Builder::XmlMarkup.new(buffer)
-# # The markup is appended to buffer (using <<)
+#     buffer = ""
+#     xm = Builder::XmlMarkup.new(buffer)
+#     # The markup is appended to buffer (using <<)
 #
-# xm = Builder::XmlMarkup.new(STDOUT)
-# # The markup is written to STDOUT (using <<)
+#     xm = Builder::XmlMarkup.new(STDOUT)
+#     # The markup is written to STDOUT (using <<)
 #
-# xm = Builder::XmlMarkup.new
-# x2 = Builder::XmlMarkup.new(:target=>xm)
-# # Markup written to +x2+ will be send to +xm+.
+#     xm = Builder::XmlMarkup.new
+#     x2 = Builder::XmlMarkup.new(:target=>xm)
+#     # Markup written to +x2+ will be send to +xm+.
 #
 # * Indentation is enabled by providing the number of spaces to
-# indent for each level as a second argument to XmlBuilder.new.
-# Initial indentation may be specified using a third parameter.
+#   indent for each level as a second argument to XmlBuilder.new.
+#   Initial indentation may be specified using a third parameter.
 #
-# Example:
+#   Example:
 #
-# xm = Builder.new(:indent=>2)
-# # xm will produce nicely formatted and indented XML.
+#     xm = Builder.new(:indent=>2)
+#     # xm will produce nicely formatted and indented XML.
 #
-# xm = Builder.new(:indent=>2, :margin=>4)
-# # xm will produce nicely formatted and indented XML with 2
-# # spaces per indent and an over all indentation level of 4.
+#     xm = Builder.new(:indent=>2, :margin=>4)
+#     # xm will produce nicely formatted and indented XML with 2
+#     # spaces per indent and an over all indentation level of 4.
 #
-# builder = Builder::XmlMarkup.new(:target=>$stdout, :indent=>2)
-# builder.name { |b| b.first("Jim"); b.last("Weirich) }
-# # prints:
-# #     <name>
-# #       <first>Jim</first>
-# #       <last>Weirich</last>
-# #     </name>
+#     builder = Builder::XmlMarkup.new(:target=>$stdout, :indent=>2)
+#     builder.name { |b| b.first("Jim"); b.last("Weirich) }
+#     # prints:
+#     #     <name>
+#     #       <first>Jim</first>
+#     #       <last>Weirich</last>
+#     #     </name>
 #
 # * The instance_eval implementation which forces self to refer to
-# the message receiver as self is now obsolete.  We now use normal
-# block calls to execute the markup block.  This means that all
-# markup methods must now be explicitly send to the xml builder.
-# For instance, instead of
+#   the message receiver as self is now obsolete.  We now use normal
+#   block calls to execute the markup block.  This means that all
+#   markup methods must now be explicitly send to the xml builder.
+#   For instance, instead of
 #
-# xml.div { strong("text") }
+#      xml.div { strong("text") }
 #
-# you need to write:
+#   you need to write:
 #
-# xml.div { xml.strong("text") }
+#      xml.div { xml.strong("text") }
 #
-# Although more verbose, the subtle change in semantics within the
-# block was found to be prone to error.  To make this change a
-# little less cumbersome, the markup block now gets the markup
-# object sent as an argument, allowing you to use a shorter alias
-# within the block.
+#   Although more verbose, the subtle change in semantics within the
+#   block was found to be prone to error.  To make this change a
+#   little less cumbersome, the markup block now gets the markup
+#   object sent as an argument, allowing you to use a shorter alias
+#   within the block.
 #
-# For example:
+#   For example:
 #
-# xml_builder = Builder::XmlMarkup.new
-# xml_builder.div { |xml|
-# xml.stong("text")
-# }
+#     xml_builder = Builder::XmlMarkup.new
+#     xml_builder.div { |xml|
+#       xml.stong("text")
+#     }
 class Builder::XmlMarkup < ::Builder::XmlBase
   # Create an XML markup builder.  Parameters are specified by an
   # option hash.
   #
   # :target => <em>target_object</em>::
-  # Object receiving the markup.  +target_object+ must respond to
-  # the <tt><<(<em>a_string</em>)</tt> operator and return
-  # itself.  The default target is a plain string target.
+  #    Object receiving the markup.  +target_object+ must respond to
+  #    the <tt><<(<em>a_string</em>)</tt> operator and return
+  #    itself.  The default target is a plain string target.
   #
   # :indent => <em>indentation</em>::
-  # Number of spaces used for indentation.  The default is no
-  # indentation and no line breaks.
+  #    Number of spaces used for indentation.  The default is no
+  #    indentation and no line breaks.
   #
   # :margin => <em>initial_indentation_level</em>::
-  # Amount of initial indentation (specified in levels, not
-  # spaces).
+  #    Amount of initial indentation (specified in levels, not
+  #    spaces).
   #
   # :quote => <em>:single</em>::
-  # Use single quotes for attributes rather than double quotes.
+  #    Use single quotes for attributes rather than double quotes.
   #
   # :escape_attrs => <em>OBSOLETE</em>::
-  # The :escape_attrs option is no longer supported by builder
-  # (and will be quietly ignored).  String attribute values are
-  # now automatically escaped.  If you need unescaped attribute
-  # values (perhaps you are using entities in the attribute
-  # values), then give the value as a Symbol.  This allows much
-  # finer control over escaping attribute values.
+  #    The :escape_attrs option is no longer supported by builder
+  #    (and will be quietly ignored).  String attribute values are
+  #    now automatically escaped.  If you need unescaped attribute
+  #    values (perhaps you are using entities in the attribute
+  #    values), then give the value as a Symbol.  This allows much
+  #    finer control over escaping attribute values.
+  #
+  # @return [XmlMarkup] a new instance of XmlMarkup
   def initialize(options = T.unsafe(nil)); end
 
   # Insert a CDATA section into the XML markup.
   #
   # For example:
   #
-  # xml.cdata!("text to be included in cdata")
-  # #=> <![CDATA[text to be included in cdata]]>
+  #    xml.cdata!("text to be included in cdata")
+  #        #=> <![CDATA[text to be included in cdata]]>
   def cdata!(text); end
 
   def cdata_value!(open, text); end
@@ -355,18 +364,18 @@ class Builder::XmlMarkup < ::Builder::XmlBase
   #
   # For example:
   #
-  # xml.declare! :ELEMENT, :blah, "yada"
-  # # => <!ELEMENT blah "yada">
+  #   xml.declare! :ELEMENT, :blah, "yada"
+  #       # => <!ELEMENT blah "yada">
   def declare!(inst, *args, &block); end
 
   # Insert a processing instruction into the XML markup.  E.g.
   #
   # For example:
   #
-  # xml.instruct!
-  # #=> <?xml version="1.0" encoding="UTF-8"?>
-  # xml.instruct! :aaa, :bbb=>"ccc"
-  # #=> <?aaa bbb="ccc"?>
+  #    xml.instruct!
+  #        #=> <?xml version="1.0" encoding="UTF-8"?>
+  #    xml.instruct! :aaa, :bbb=>"ccc"
+  #        #=> <?aaa bbb="ccc"?>
   #
   # Note: If the encoding is setup to "UTF-8" and the value of
   # $KCODE is "UTF8", then builder will emit UTF-8 encoded strings

@@ -9,29 +9,31 @@
 #
 # Example usage with block (faster):
 #
-# @pool = ConnectionPool.new { Redis.new }
-# @pool.with do |redis|
-# redis.lpop('my-list') if redis.llen('my-list') > 0
-# end
+#    @pool = ConnectionPool.new { Redis.new }
+#    @pool.with do |redis|
+#      redis.lpop('my-list') if redis.llen('my-list') > 0
+#    end
 #
 # Using optional timeout override (for that single invocation)
 #
-# @pool.with(timeout: 2.0) do |redis|
-# redis.lpop('my-list') if redis.llen('my-list') > 0
-# end
+#    @pool.with(timeout: 2.0) do |redis|
+#      redis.lpop('my-list') if redis.llen('my-list') > 0
+#    end
 #
 # Example usage replacing an existing connection (slower):
 #
-# $redis = ConnectionPool.wrap { Redis.new }
+#    $redis = ConnectionPool.wrap { Redis.new }
 #
-# def do_work
-# $redis.lpop('my-list') if $redis.llen('my-list') > 0
-# end
+#    def do_work
+#      $redis.lpop('my-list') if $redis.llen('my-list') > 0
+#    end
 #
 # Accepts the following options:
 # - :size - number of connections to pool, defaults to 5
 # - :timeout - amount of time to wait for a connection if none currently available, defaults to 5 seconds
 class ConnectionPool
+  # @raise [ArgumentError]
+  # @return [ConnectionPool] a new instance of ConnectionPool
   def initialize(options = T.unsafe(nil), &block); end
 
   # Number of pool entries available for checkout at this instant.
@@ -67,20 +69,22 @@ class ConnectionPool::PoolShuttingDownError < ::ConnectionPool::Error; end
 
 # Examples:
 #
-# ts = TimedStack.new(1) { MyConnection.new }
+#    ts = TimedStack.new(1) { MyConnection.new }
 #
-# # fetch a connection
-# conn = ts.pop
+#    # fetch a connection
+#    conn = ts.pop
 #
-# # return a connection
-# ts.push conn
+#    # return a connection
+#    ts.push conn
 #
-# conn = ts.pop
-# ts.pop timeout: 5
-# #=> raises ConnectionPool::TimeoutError after 5 seconds
+#    conn = ts.pop
+#    ts.pop timeout: 5
+#    #=> raises ConnectionPool::TimeoutError after 5 seconds
 class ConnectionPool::TimedStack
   # Creates a new pool with +size+ connections that are created from the given
   # +block+.
+  #
+  # @return [TimedStack] a new instance of TimedStack
   def initialize(size = T.unsafe(nil), &block); end
 
   # Returns +obj+ to the stack.  +options+ is ignored in TimedStack but may be
@@ -88,6 +92,8 @@ class ConnectionPool::TimedStack
   def <<(obj, options = T.unsafe(nil)); end
 
   # Returns +true+ if there are no available connections.
+  #
+  # @return [Boolean]
   def empty?; end
 
   # The number of connections available on the stack.
@@ -113,6 +119,8 @@ class ConnectionPool::TimedStack
   # removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+ unless
   # +:reload+ is +true+.
+  #
+  # @raise [ArgumentError]
   def shutdown(reload: T.unsafe(nil), &block); end
 
   private
@@ -120,6 +128,8 @@ class ConnectionPool::TimedStack
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must returns true if a connection is available on the stack.
+  #
+  # @return [Boolean]
   def connection_stored?(options = T.unsafe(nil)); end
 
   def current_time; end
@@ -150,13 +160,17 @@ class ConnectionPool::TimeoutError < ::Timeout::Error; end
 ConnectionPool::VERSION = T.let(T.unsafe(nil), String)
 
 class ConnectionPool::Wrapper < ::BasicObject
+  # @return [Wrapper] a new instance of Wrapper
   def initialize(options = T.unsafe(nil), &block); end
 
   def method_missing(name, *args, **kwargs, &block); end
   def pool_available; end
   def pool_shutdown(&block); end
   def pool_size; end
+
+  # @return [Boolean]
   def respond_to?(id, *args); end
+
   def with(&block); end
   def wrapped_pool; end
 end

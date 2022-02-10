@@ -11,24 +11,50 @@ class Array
   # Places values before or after another object (by value) in
   # an array. This is used in tandem with the before and after
   # methods of the {Insertion} class.
+  #
+  # @example Places an item before another
+  #   [1, 2, 3].place(4).before(3) # => [1, 2, 4, 3]
+  # @example Places an item after another
+  #   [:a, :b, :c].place(:x).after(:a) # => [:a, :x, :b, :c]
+  # @param values [Array] value to insert
+  # @return [Insertion] an insertion object to
+  # @see Insertion#before
+  # @see Insertion#after
   def place(*values); end
 end
 
 class File < ::IO
   class << self
     # Cleans a path by removing extraneous '..', '.' and '/' characters
+    #
+    # @example Clean a path
+    #   File.cleanpath('a/b//./c/../e') # => "a/b/e"
+    # @param path [String] the path to clean
+    # @param rel_root [Boolean] allows relative path above root value
+    # @return [String] the sanitized path
     def cleanpath(path, rel_root = T.unsafe(nil)); end
 
     # Forces opening a file (for writing) by first creating the file's directory
+    #
+    # @param file [String] the filename to open
+    # @since 0.5.2
     def open!(file, *args, &block); end
 
     # Reads a file with binary encoding
+    #
+    # @return [String] the ascii-8bit encoded data
+    # @since 0.5.3
     def read_binary(file); end
 
     # Turns a path +to+ into a relative path from starting
     # point +from+. The argument +from+ is assumed to be
     # a filename. To treat it as a directory, make sure it
     # ends in +File::SEPARATOR+ ('/' on UNIX filesystems).
+    #
+    # @param from [String] the starting filename
+    #   (or directory with +from_isdir+ set to +true+).
+    # @param to [String] the final path that should be made relative.
+    # @return [String] the relative path from +from+ to +to+.
     def relative_path(from, to); end
   end
 end
@@ -44,7 +70,10 @@ module Gem
   end
 end
 
+# Cache is an alias for SourceIndex to allow older YAMLized source index
+# objects to load properly.
 Gem::Cache = Gem::SourceIndex
+
 Gem::ConfigMap = T.let(T.unsafe(nil), Hash)
 Gem::KERNEL_WARN_IGNORES_INTERNAL_ENTRIES = T.let(T.unsafe(nil), TrueClass)
 Gem::RbConfigPriorities = T.let(T.unsafe(nil), Array)
@@ -56,9 +85,9 @@ Gem::RubyGemsVersion = T.let(T.unsafe(nil), String)
 # specification.
 #
 # NOTE:: The class used to be named Cache, but that became
-# confusing when cached source fetchers where introduced. The
-# constant Gem::Cache is an alias for this class to allow old
-# YAMLized source index objects to load properly.
+#        confusing when cached source fetchers where introduced. The
+#        constant Gem::Cache is an alias for this class to allow old
+#        YAMLized source index objects to load properly.
 class Gem::SourceIndex
   include ::Enumerable
 
@@ -67,6 +96,8 @@ class Gem::SourceIndex
   # --
   # TODO merge @gems and @prerelease_gems and provide a separate method
   # #prerelease_gems
+  #
+  # @return [SourceIndex] a new instance of SourceIndex
   def initialize(specifications = T.unsafe(nil)); end
 
   def ==(other); end
@@ -157,13 +188,13 @@ class Gem::SourceIndex
     # path.
     #
     # deprecated::
-    # If supplied, from_installed_gems will act just like
-    # +from_gems_in+.  This argument is deprecated and is provided
-    # just for backwards compatibility, and should not generally
-    # be used.
+    #   If supplied, from_installed_gems will act just like
+    #   +from_gems_in+.  This argument is deprecated and is provided
+    #   just for backwards compatibility, and should not generally
+    #   be used.
     #
     # return::
-    # SourceIndex instance
+    #   SourceIndex instance
     def from_installed_gems(*deprecated); end
 
     # Returns a list of directories from Gem.path that contain specifications.
@@ -179,6 +210,7 @@ Gem::UNTAINT = T.let(T.unsafe(nil), Proc)
 Gem::UnsatisfiableDepedencyError = Gem::UnsatisfiableDependencyError
 
 class IRB::SLex
+  # @return [SLex] a new instance of SLex
   def initialize; end
 
   def create(token, preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
@@ -201,20 +233,22 @@ IRB::SLex::D_WARN = T.let(T.unsafe(nil), IRB::Notifier::LeveledNotifier)
 
 # ----------------------------------------------------------------------
 #
-# class Node -
+#   class Node -
 #
 # ----------------------------------------------------------------------
 class IRB::SLex::Node
   # if postproc is nil, this node is an abstract node.
   # if postproc is non-nil, this node is a real node.
+  #
+  # @return [Node] a new instance of Node
   def initialize(preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
 
   def create_subnode(chrs, preproc = T.unsafe(nil), postproc = T.unsafe(nil)); end
 
   # chrs: String
-  # character array
-  # io must have getc()/ungetc(); and ungetc() must be
-  # able to be called arbitrary number of times.
+  #       character array
+  #       io must have getc()/ungetc(); and ungetc() must be
+  #       able to be called arbitrary number of times.
   def match(chrs, op = T.unsafe(nil)); end
 
   def match_io(io, op = T.unsafe(nil)); end
@@ -223,12 +257,16 @@ class IRB::SLex::Node
   def postproc; end
 
   # Sets the attribute postproc
+  #
+  # @param value the value to set the attribute postproc to.
   def postproc=(_arg0); end
 
   # Returns the value of attribute preproc.
   def preproc; end
 
   # Sets the attribute preproc
+  #
+  # @param value the value to set the attribute preproc to.
   def preproc=(_arg0); end
 
   def search(chrs, opt = T.unsafe(nil)); end
@@ -236,27 +274,52 @@ end
 
 # The Insertion class inserts a value before or after another
 # value in a list.
+#
+# @example
+#   Insertion.new([1, 2, 3], 4).before(3) # => [1, 2, 4, 3]
 class Insertion
   # Creates an insertion object on a list with a value to be
   # inserted. To finalize the insertion, call {#before} or
   # {#after} on the object.
+  #
+  # @param list [Array] the list to perform the insertion on
+  # @param value [Object] the value to insert
+  # @return [Insertion] a new instance of Insertion
   def initialize(list, value); end
 
   # Inserts the value after +val+.
+  #
+  # @example If subsections are ignored
+  #   Insertion.new([1, [2], 3], :X).after(1) # => [1, [2], :X, 3]
+  # @param val [Object] the object the value will be inserted after
+  # @param recursive [Boolean] look inside sublists
   def after(val, recursive = T.unsafe(nil)); end
 
   # Alias for {#after} with +recursive+ set to true
+  #
+  # @since 0.6.0
   def after_any(val); end
 
   # Inserts the value before +val+
+  #
+  # @param val [Object] the object the value will be inserted before
+  # @param recursive [Boolean] look inside sublists
   def before(val, recursive = T.unsafe(nil)); end
 
   # Alias for {#before} with +recursive+ set to true
+  #
+  # @since 0.6.0
   def before_any(val); end
 
   private
 
   # This method performs the actual insertion
+  #
+  # @param val [Object] the value to insert
+  # @param rel [Fixnum] the relative index (0 or 1) of where the object
+  #   should be placed
+  # @param recursive [Boolean] look inside sublists
+  # @param list [Array] the list to place objects into
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
@@ -265,6 +328,10 @@ class Module
   include ::Module::Concerning
 
   # Returns the class name of a full module namespace path
+  #
+  # @example
+  #   module A::B::C; class_name end # => "C"
+  # @return [String] the last part of a module path
   def class_name; end
 end
 
@@ -273,10 +340,12 @@ Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
+# @private
 class Rack::Request
   include ::Rack::Request::Env
   include ::Rack::Request::Helpers
 
+  # @return [Request] a new instance of Request
   def initialize(env); end
 
   def delete_param(k); end
@@ -288,8 +357,11 @@ class Rack::Request
   def version_supplied; end
 
   # Sets the attribute version_supplied
+  #
+  # @param value the value to set the attribute version_supplied to.
   def version_supplied=(_arg0); end
 
+  # @return [Boolean]
   def xhr?; end
 
   class << self
@@ -297,6 +369,8 @@ class Rack::Request
     def ip_filter; end
 
     # Sets the attribute ip_filter
+    #
+    # @param value the value to set the attribute ip_filter to.
     def ip_filter=(_arg0); end
   end
 end
@@ -306,8 +380,8 @@ Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
 # Allows Writing of '100'.to_money for +String+ types
 # Excess characters will be discarded
-# '100'.to_money => #<Money @cents=10000>
-# '100.37'.to_money => #<Money @cents=10037>
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
   include ::JSON::Ext::Generator::GeneratorMethods::String
@@ -316,6 +390,8 @@ class String
   # Splits text into tokens the way a shell would, handling quoted
   # text as a single token. Use '\"' and "\'" to escape quotes and
   # '\\' to escape a backslash.
+  #
+  # @return [Array] an array representing the tokens
   def shell_split; end
 end
 
@@ -326,46 +402,81 @@ String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 # optionally, all String values are converted into Symbols.
 class SymbolHash < ::Hash
   # Creates a new SymbolHash object
+  #
+  # @param symbolize_value [Boolean] converts any String values into Symbols
+  #   if this is set to +true+.
+  # @return [SymbolHash] a new instance of SymbolHash
   def initialize(symbolize_value = T.unsafe(nil)); end
 
   # Accessed a symbolized key
+  #
+  # @param key [#to_sym] the key to access
+  # @return [Object] the value associated with the key
   def [](key); end
 
   # Assigns a value to a symbolized key
+  #
+  # @param key [#to_sym] the key
+  # @param value [Object] the value to be assigned. If this is a String and
+  #   values are set to be symbolized, it will be converted into a Symbol.
   def []=(key, value); end
 
   # Deleted a key and value associated with it
+  #
+  # @param key [#to_sym] the key to delete
+  # @return [void]
   def delete(key); end
 
   # Tests if a symbolized key exists
+  #
+  # @param key [#to_sym] the key to test
+  # @return [Boolean] whether the key exists
   def has_key?(key); end
 
   # Tests if a symbolized key exists
+  #
+  # @param key [#to_sym] the key to test
+  # @return [Boolean] whether the key exists
   def key?(key); end
 
   # Merges the contents of another hash into a new SymbolHash object
+  #
+  # @param hash [Hash] the hash of objects to copy
+  # @return [SymbolHash] a new SymbolHash containing the merged data
   def merge(hash); end
 
   # Updates the object with the contents of another Hash object.
   # This method modifies the original SymbolHash object
+  #
+  # @param hash [Hash] the hash object to copy the values from
+  # @return [SymbolHash] self
   def merge!(hash); end
 
   # Updates the object with the contents of another Hash object.
   # This method modifies the original SymbolHash object
+  #
+  # @param hash [Hash] the hash object to copy the values from
+  # @return [SymbolHash] self
   def update(hash); end
 
   class << self
+    # @overload []
+    # @overload []
     def [](*hsh); end
   end
 end
 
+# @private
 class WEBrick::HTTPRequest
   # Returns the value of attribute version_supplied.
   def version_supplied; end
 
   # Sets the attribute version_supplied
+  #
+  # @param value the value to set the attribute version_supplied to.
   def version_supplied=(_arg0); end
 
+  # @return [Boolean]
   def xhr?; end
 end
 
@@ -381,18 +492,38 @@ module YARD
     # Loads gems that match the name 'yard-*' (recommended) or 'yard_*' except
     # those listed in +~/.yard/ignored_plugins+. This is called immediately
     # after YARD is loaded to allow plugin support.
+    #
+    # @deprecated Use {Config.load_plugins}
+    # @return [Boolean] true if all plugins loaded successfully, false otherwise.
     def load_plugins; end
 
     # An alias to {Parser::SourceParser}'s parsing method
+    #
+    # @example Parse a glob of files
+    #   YARD.parse('lib/**/*.rb')
+    # @see Parser::SourceParser.parse
     def parse(*args); end
 
     # An alias to {Parser::SourceParser}'s parsing method
+    #
+    # @example Parse a string of input
+    #   YARD.parse_string('class Foo; end')
+    # @see Parser::SourceParser.parse_string
     def parse_string(*args); end
 
+    # @return [Boolean] whether YARD is being run in Ruby 1.8 mode
     def ruby18?; end
+
+    # @return [Boolean] whether YARD is being run in Ruby 1.9 mode
     def ruby19?; end
+
+    # @return [Boolean] whether YARD is being run in Ruby 2.0
     def ruby2?; end
+
+    # @return [Boolean] whether YARD is being run in Ruby 3.0
     def ruby3?; end
+
+    # @return [Boolean] whether YARD is being run inside of Windows
     def windows?; end
   end
 end
@@ -402,26 +533,50 @@ module YARD::CLI; end
 
 # Abstract base class for CLI utilities. Provides some helper methods for
 # the option parser
+#
+# @abstract
+# @since 0.6.0
 class YARD::CLI::Command
+  # @since 0.6.0
   def description; end
 
   protected
 
   # Adds a set of common options to the tail of the OptionParser
+  #
+  # @param opts [OptionParser] the option parser object
+  # @return [void]
+  # @since 0.6.0
   def common_options(opts); end
 
   # Loads a Ruby script. If <tt>Config.options[:safe_mode]</tt> is enabled,
   # this method will do nothing.
+  #
+  # @param file [String] the path to the script to load
+  # @since 0.6.2
   def load_script(file); end
 
   # Parses the option and gracefully handles invalid switches
+  #
+  # @param opts [OptionParser] the option parser object
+  # @param args [Array<String>] the arguments passed from input. This
+  #   array will be modified.
+  # @return [void]
+  # @since 0.6.0
   def parse_options(opts, args); end
 
   # Callback when an unrecognize option is parsed
+  #
+  # @param err [OptionParser::ParseError] the exception raised by the
+  #   option parser
+  # @since 0.6.0
   def unrecognized_option(err); end
 
   class << self
     # Helper method to run the utility on an instance.
+    #
+    # @see #run
+    # @since 0.6.0
     def run(*args); end
   end
 end
@@ -429,7 +584,7 @@ end
 # This class parses a command name out of the +yard+ CLI command and calls
 # that command in the form:
 #
-# $ yard command_name [options]
+#   $ yard command_name [options]
 #
 # If no command or arguments are specified, or if the arguments immediately
 # begin with a +--opt+ (not +--help+), the {default_command} will be used
@@ -441,11 +596,18 @@ end
 # the Symbolic command name to the {Command} class that implements the
 # command. To implement a command, see the documentation for the {Command}
 # class.
+#
+# @see Command
+# @see commands
+# @see default_command
 class YARD::CLI::CommandParser
+  # @return [CommandParser] a new instance of CommandParser
   def initialize; end
 
   # Runs the {Command} object matching the command name of the first
   # argument.
+  #
+  # @return [void]
   def run(*args); end
 
   private
@@ -454,150 +616,322 @@ class YARD::CLI::CommandParser
   def list_commands; end
 
   class << self
+    # @return [Hash{Symbol => Command}] the mapping of command names to
+    #   command classes to parse the user command.
     def commands; end
+
+    # @return [Hash{Symbol => Command}] the mapping of command names to
+    #   command classes to parse the user command.
     def commands=(_arg0); end
+
+    # @return [Symbol] the default command name to use when no options
+    #   are specified or
     def default_command; end
+
+    # @return [Symbol] the default command name to use when no options
+    #   are specified or
     def default_command=(_arg0); end
 
     # Convenience method to create a new CommandParser and call {#run}
+    #
+    # @return [void]
     def run(*args); end
   end
 end
 
 # CLI command to view or edit configuration options
+#
+# @since 0.6.2
 class YARD::CLI::Config < ::YARD::CLI::Command
+  # @return [Config] a new instance of Config
+  # @since 0.6.2
   def initialize; end
 
+  # @return [Boolean] whether to append values to existing key
+  # @since 0.6.2
   def append; end
+
+  # @return [Boolean] whether to append values to existing key
+  # @since 0.6.2
   def append=(_arg0); end
+
+  # @return [Boolean] whether the value being set should be inside a list
+  # @since 0.6.2
   def as_list; end
+
+  # @return [Boolean] whether the value being set should be inside a list
+  # @since 0.6.2
   def as_list=(_arg0); end
+
+  # @since 0.6.2
   def description; end
+
+  # @return [String, nil] command to use when configuring ~/.gemrc file.
+  #   If the string is nil, configuration should not occur.
+  # @since 0.6.2
   def gem_install_cmd; end
+
+  # @return [String, nil] command to use when configuring ~/.gemrc file.
+  #   If the string is nil, configuration should not occur.
+  # @since 0.6.2
   def gem_install_cmd=(_arg0); end
+
+  # @return [Symbol, nil] the key to view/edit, if any
+  # @since 0.6.2
   def key; end
+
+  # @return [Symbol, nil] the key to view/edit, if any
+  # @since 0.6.2
   def key=(_arg0); end
+
+  # @return [Boolean] whether to reset the {#key}
+  # @since 0.6.2
   def reset; end
+
+  # @return [Boolean] whether to reset the {#key}
+  # @since 0.6.2
   def reset=(_arg0); end
+
+  # @since 0.6.2
   def run(*args); end
+
+  # @return [Array, nil] the list of values to set (or single value), if modifying
+  # @since 0.6.2
   def values; end
+
+  # @return [Array, nil] the list of values to set (or single value), if modifying
+  # @since 0.6.2
   def values=(_arg0); end
 
   private
 
+  # @since 0.6.2
   def configure_gemrc; end
+
+  # @since 0.6.2
   def encode_value(value); end
+
+  # @since 0.6.2
   def encode_values; end
+
+  # @since 0.6.2
   def list_configuration; end
+
+  # @since 0.6.2
   def modify_item; end
+
+  # @since 0.6.2
   def optparse(*args); end
+
+  # @since 0.6.2
   def view_item; end
 end
 
 # CLI command to return the objects that were added/removed from 2 versions
 # of a project (library, gem, working copy).
+#
+# @since 0.6.0
 class YARD::CLI::Diff < ::YARD::CLI::Command
+  # @return [Diff] a new instance of Diff
+  # @since 0.6.0
   def initialize; end
 
+  # @since 0.6.0
   def description; end
+
+  # @since 0.6.0
   def run(*args); end
 
   private
 
+  # @since 0.6.0
   def added_objects(registry1, registry2); end
+
+  # @since 0.6.0
   def all_objects; end
+
+  # @since 0.6.0
   def cleanup(gemfile); end
+
+  # @since 0.6.0
   def expand_and_parse(gemfile, io); end
+
+  # @since 0.6.0
   def expand_gem(gemfile, io); end
+
+  # @since 0.6.0
   def generate_yardoc(dir); end
+
+  # @since 0.6.0
   def load_gem_data(gemfile); end
+
+  # @since 0.6.0
   def load_git_commit(commit); end
+
+  # @since 0.6.0
   def modified_objects(registry1, registry2); end
+
+  # @since 0.6.0
   def optparse(*args); end
+
+  # @since 0.6.0
   def removed_objects(registry1, registry2); end
+
+  # @since 0.6.0
   def require_rubygems; end
 end
 
 # Display one object
+#
+# @since 0.8.6
 class YARD::CLI::Display < ::YARD::CLI::Yardoc
+  # @return [Display] a new instance of Display
+  # @since 0.8.6
   def initialize(*args); end
 
+  # @since 0.8.6
   def description; end
+
+  # @return [String] the output data for all formatted objects
+  # @since 0.8.6
   def format_objects; end
+
+  # @since 0.8.6
   def output_options(opts); end
 
   # Parses commandline options.
+  #
+  # @param args [Array<String>] each tokenized argument
+  # @since 0.8.6
   def parse_arguments(*args); end
 
   # Runs the commandline utility, parsing arguments and displaying an object
   # from the {Registry}.
+  #
+  # @param args [Array<String>] the list of arguments.
+  # @return [void]
+  # @since 0.8.6
   def run(*args); end
 
+  # @since 0.8.6
   def wrap_layout(contents); end
 end
 
+# @since 0.6.0
 class YARD::CLI::Gems < ::YARD::CLI::Command
+  # @return [Gems] a new instance of Gems
+  # @since 0.6.0
   def initialize; end
 
+  # @since 0.6.0
   def description; end
 
   # Runs the commandline utility, parsing arguments and generating
   # YARD indexes for gems.
+  #
+  # @param args [Array<String>] the list of arguments
+  # @return [void]
+  # @since 0.6.0
   def run(*args); end
 
   private
 
+  # @since 0.6.0
   def add_gems(gems); end
 
   # Builds .yardoc files for all non-existing gems
+  #
+  # @since 0.6.0
   def build_gems; end
 
   # Parses options
+  #
+  # @since 0.6.0
   def optparse(*args); end
 end
 
 # A command-line utility to generate Graphviz graphs from
 # a set of objects
+#
+# @see Graph#run
+# @since 0.6.0
 class YARD::CLI::Graph < ::YARD::CLI::YardoptsCommand
   # Creates a new instance of the command-line utility
+  #
+  # @return [Graph] a new instance of Graph
+  # @since 0.6.0
   def initialize; end
 
+  # @since 0.6.0
   def description; end
 
   # The set of objects to include in the graph.
+  #
+  # @since 0.6.0
   def objects; end
 
   # The options parsed out of the commandline.
   # Default options are:
-  # :format => :dot
+  #   :format => :dot
+  #
+  # @since 0.6.0
   def options; end
 
   # Runs the command-line utility.
+  #
+  # @example
+  #   grapher = Graph.new
+  #   grapher.run('--private')
+  # @param args [Array<String>] each tokenized argument
+  # @since 0.6.0
   def run(*args); end
 
   private
 
   # Parses commandline options.
+  #
+  # @param args [Array<String>] each tokenized argument
+  # @since 0.6.0
   def optparse(*args); end
 
+  # @since 0.6.0
   def unrecognized_option(err); end
 end
 
 # Options to pass to the {Graph} CLI.
 class YARD::CLI::GraphOptions < ::YARD::Templates::TemplateOptions
+  # @return [String] any contents to pass to the digraph
   def contents; end
+
+  # @return [String] any contents to pass to the digraph
   def contents=(_arg0); end
+
+  # @return [Boolean] whether to show the object dependencies
   def dependencies; end
+
+  # @return [Boolean] whether to show the object dependencies
   def dependencies=(_arg0); end
+
+  # @return [:dot] the default output format
   def format; end
+
   def format=(_arg0); end
+
+  # @return [Boolean] whether to list the full class diagram
   def full; end
+
+  # @return [Boolean] whether to list the full class diagram
   def full=(_arg0); end
 end
 
 # Handles help for commands
+#
+# @since 0.6.0
 class YARD::CLI::Help < ::YARD::CLI::Command
+  # @since 0.6.0
   def description; end
+
+  # @since 0.6.0
   def run(*args); end
 end
 
@@ -605,15 +939,26 @@ end
 # I18n feature is based on gettext technology.
 # This command generates .pot file from docstring and extra
 # documentation.
+#
+# @since 0.8.0
+# @todo Support msgminit and msgmerge features?
 class YARD::CLI::I18n < ::YARD::CLI::Yardoc
+  # @return [I18n] a new instance of I18n
+  # @since 0.8.0
   def initialize; end
 
+  # @since 0.8.0
   def description; end
+
+  # @since 0.8.0
   def run(*args); end
 
   private
 
+  # @since 0.8.0
   def general_options(opts); end
+
+  # @since 0.8.0
   def generate_pot(relative_base_path); end
 end
 
@@ -623,155 +968,316 @@ class YARD::CLI::List < ::YARD::CLI::Command
 
   # Runs the commandline utility, parsing arguments and displaying a
   # list of objects
+  #
+  # @param args [Array<String>] the list of arguments.
+  # @return [void]
   def run(*args); end
 end
 
 # Lists all markup types
+#
+# @since 0.8.6
 class YARD::CLI::MarkupTypes < ::YARD::CLI::Command
+  # @since 0.8.6
   def description; end
 
   # Runs the commandline utility, parsing arguments and displaying a
   # list of markup types
+  #
+  # @param args [Array<String>] the list of arguments.
+  # @return [void]
+  # @since 0.8.6
   def run(*args); end
 end
 
 # A local documentation server
+#
+# @since 0.6.0
 class YARD::CLI::Server < ::YARD::CLI::Command
   # Creates a new instance of the Server command line utility
+  #
+  # @return [Server] a new instance of Server
+  # @since 0.6.0
   def initialize; end
 
+  # @return [YARD::Server::Adapter] the adapter to use for loading the web server
+  # @since 0.6.0
   def adapter; end
+
+  # @return [YARD::Server::Adapter] the adapter to use for loading the web server
+  # @since 0.6.0
   def adapter=(_arg0); end
+
+  # @since 0.6.0
   def description; end
+
+  # @return [Hash] a list of library names and yardoc files to serve
+  # @since 0.6.0
   def libraries; end
+
+  # @return [Hash] a list of library names and yardoc files to serve
+  # @since 0.6.0
   def libraries=(_arg0); end
+
+  # @return [Hash] a list of options to pass to the doc server
+  # @since 0.6.0
   def options; end
+
+  # @return [Hash] a list of options to pass to the doc server
+  # @since 0.6.0
   def options=(_arg0); end
+
+  # @since 0.6.0
   def run(*args); end
+
+  # @return [Array<String>] a list of scripts to load
+  # @since 0.6.2
   def scripts; end
+
+  # @return [Array<String>] a list of scripts to load
+  # @since 0.6.2
   def scripts=(_arg0); end
+
+  # @return [Hash] a list of options to pass to the web server
+  # @since 0.6.0
   def server_options; end
+
+  # @return [Hash] a list of options to pass to the web server
+  # @since 0.6.0
   def server_options=(_arg0); end
+
+  # @return [Array<String>] a list of template paths to register
+  # @since 0.6.2
   def template_paths; end
+
+  # @return [Array<String>] a list of template paths to register
+  # @since 0.6.2
   def template_paths=(_arg0); end
 
   private
 
+  # @since 0.6.0
   def add_gems; end
+
+  # @since 0.6.0
   def add_gems_from_gemfile(gemfile = T.unsafe(nil)); end
+
+  # @since 0.6.0
   def add_libraries(args); end
+
+  # @param library [String] The library name.
+  # @param dir [String, nil] The argument provided on the CLI after the
+  #   library name. Is supposed to point to either a project directory
+  #   with a Yard options file, or a yardoc db.
+  # @return [LibraryVersion, nil]
+  # @since 0.6.0
   def create_library_version_if_yardopts_exist(library, dir); end
+
+  # @since 0.6.0
   def extract_db_from_options_file(options_file); end
+
+  # @since 0.6.0
   def generate_doc_for_first_time(libver); end
+
+  # @since 0.6.0
   def load_scripts; end
+
+  # @since 0.6.0
   def load_template_paths; end
+
+  # @since 0.6.0
   def optparse(*args); end
+
+  # @since 0.6.0
   def select_adapter; end
 end
 
+# @since 0.6.0
 class YARD::CLI::Stats < ::YARD::CLI::Yardoc
   include ::YARD::Templates::Helpers::BaseHelper
 
+  # @param parse [Boolean] whether to parse and load registry (see {#parse})
+  # @return [Stats] a new instance of Stats
+  # @since 0.6.0
   def initialize(parse = T.unsafe(nil)); end
 
+  # @return [Array<CodeObjects::Base>] all the parsed objects in the registry,
+  #   removing any objects that are not visible (private, protected) depending
+  #   on the arguments passed to the command.
+  # @since 0.6.0
   def all_objects; end
+
+  # @since 0.6.0
   def description; end
 
   # Prints a statistic to standard out. This method is optimized for
   # getting Integer values, though it allows any data to be printed.
+  #
+  # @param name [String] the statistic name
+  # @param data [Integer, String] the numeric (or any) data representing
+  #   the statistic. If +data+ is an Integer, it should represent the
+  #   total objects of a type.
+  # @param undoc [Integer, nil] number of undocumented objects for the type
+  # @return [void]
+  # @since 0.6.0
   def output(name, data, undoc = T.unsafe(nil)); end
 
+  # @return [Boolean] whether to parse and load registry
+  # @since 0.6.0
   def parse; end
+
+  # @return [Boolean] whether to parse and load registry
+  # @since 0.6.0
   def parse=(_arg0); end
 
   # Prints statistics for different object types
   #
   # To add statistics for a specific type, add a method +#stats_for_TYPE+
   # to this class that calls {#output}.
+  #
+  # @since 0.6.0
   def print_statistics; end
 
   # Prints list of undocumented objects
+  #
+  # @since 0.6.0
   def print_undocumented_objects; end
 
   # Runs the commandline utility, parsing arguments and generating
   # output if set.
+  #
+  # @param args [Array<String>] the list of arguments
+  # @return [void]
+  # @since 0.6.0
   def run(*args); end
 
   # Statistics for attributes
+  #
+  # @since 0.6.0
   def stats_for_attributes; end
 
   # Statistics for classes
+  #
+  # @since 0.6.0
   def stats_for_classes; end
 
   # Statistics for constants
+  #
+  # @since 0.6.0
   def stats_for_constants; end
 
   # Statistics for files
+  #
+  # @since 0.6.0
   def stats_for_files; end
 
   # Statistics for methods
+  #
+  # @since 0.6.0
   def stats_for_methods; end
 
   # Statistics for modules
+  #
+  # @since 0.6.0
   def stats_for_modules; end
 
   private
 
+  # @since 0.6.0
   def general_options(opts); end
 
   # Parses commandline options.
+  #
+  # @param args [Array<String>] each tokenized argument
+  # @since 0.6.0
   def optparse(*args); end
 
+  # @since 0.6.0
   def type_statistics(type); end
 end
 
 # Maintains the order in which +stats_for_+ statistics methods should be
 # printed.
+#
+# @see #print_statistics
+# @since 0.6.0
 YARD::CLI::Stats::STATS_ORDER = T.let(T.unsafe(nil), Array)
 
 # A tool to view documentation in the console like `ri`
 class YARD::CLI::YRI < ::YARD::CLI::Command
+  # @return [YRI] a new instance of YRI
   def initialize; end
 
   def description; end
 
   # Runs the command-line utility.
+  #
+  # @example
+  #   YRI.new.run('String#reverse')
+  # @param args [Array<String>] each tokenized argument
   def run(*args); end
 
   protected
 
   # Caches the .yardoc file where an object can be found in the {CACHE_FILE}
+  #
+  # @return [void]
   def cache_object(name, path); end
 
   # Locates an object by name starting in the cached paths and then
   # searching through any search paths.
+  #
+  # @param name [String] the full name of the object
+  # @return [CodeObjects::Base] an object if found
+  # @return [nil] if no object is found
   def find_object(name); end
 
+  # @param object [CodeObjects::Base] the object to print.
+  # @return [String] the formatted output for an object.
   def print_object(object); end
 
   # Prints the command usage
+  #
+  # @return [void]
+  # @since 0.5.6
   def print_usage; end
 
   private
 
   # Adds paths in {SEARCH_PATHS_FILE}
+  #
+  # @since 0.5.1
   def add_default_paths; end
 
   # Adds all RubyGems yardoc files to search paths
+  #
+  # @return [void]
   def add_gem_paths; end
 
   # Loads {CACHE_FILE}
+  #
+  # @return [void]
   def load_cache; end
 
   # Parses commandline options.
+  #
+  # @param args [Array<String>] each tokenized argument
   def optparse(*args); end
 
   # Tries to load the object with name. If successful, caches the object
   # with the cache_path
+  #
+  # @param name [String] the object path
+  # @param cache_path [String] the location of the yardoc
+  #   db containing the object to cache for future lookups.
+  #   No caching is done if this is nil.
+  # @return [void]
   def try_load_object(name, cache_path); end
 
   class << self
     # Helper method to run the utility on an instance.
+    #
+    # @see #run
     def run(*args); end
   end
 end
@@ -784,195 +1290,454 @@ YARD::CLI::YRI::CACHE_FILE = T.let(T.unsafe(nil), String)
 # take precedence over all other paths ({SEARCH_PATHS_FILE} and RubyGems
 # paths). To add a path, call:
 #
-# DEFAULT_SEARCH_PATHS.push("/path/to/.yardoc")
+#   DEFAULT_SEARCH_PATHS.push("/path/to/.yardoc")
+#
+# @return [Array<String>] a list of extra search paths
+# @since 0.6.0
 YARD::CLI::YRI::DEFAULT_SEARCH_PATHS = T.let(T.unsafe(nil), Array)
 
 # A file containing all paths, delimited by newlines, to search for
 # yardoc databases.
+#
+# @since 0.5.1
 YARD::CLI::YRI::SEARCH_PATHS_FILE = T.let(T.unsafe(nil), String)
 
 class YARD::CLI::Yardoc < ::YARD::CLI::YardoptsCommand
   # Creates a new instance of the commandline utility
+  #
+  # @return [Yardoc] a new instance of Yardoc
+  # @since 0.2.1
   def initialize; end
 
   # The list of all objects to process. Override this method to change
   # which objects YARD should generate documentation for.
+  #
+  # @deprecated To hide methods use the +@private+ tag instead.
+  # @return [Array<CodeObjects::Base>] a list of code objects to process
+  # @since 0.2.1
   def all_objects; end
 
   # Keep track of which APIs are to be shown
+  #
+  # @return [Array<String>] a list of APIs
+  # @since 0.8.1
   def apis; end
 
   # Keep track of which APIs are to be shown
+  #
+  # @return [Array<String>] a list of APIs
+  # @since 0.8.1
   def apis=(_arg0); end
 
+  # @return [Array<String>] a list of assets to copy after generation
+  # @since 0.6.0
   def assets; end
+
+  # @return [Array<String>] a list of assets to copy after generation
+  # @since 0.6.0
   def assets=(_arg0); end
+
+  # @since 0.2.1
   def description; end
+
+  # @return [Array<String>] list of excluded paths (regexp matches)
+  # @since 0.5.3
   def excluded; end
+
+  # @return [Array<String>] list of excluded paths (regexp matches)
+  # @since 0.5.3
   def excluded=(_arg0); end
+
+  # @return [Boolean] whether yard exits with error status code if a warning occurs
+  # @since 0.2.1
   def fail_on_warning; end
+
+  # @return [Boolean] whether yard exits with error status code if a warning occurs
+  # @since 0.2.1
   def fail_on_warning=(_arg0); end
+
+  # @return [Array<String>] list of Ruby source files to process
+  # @since 0.2.1
   def files; end
+
+  # @return [Array<String>] list of Ruby source files to process
+  # @since 0.2.1
   def files=(_arg0); end
+
+  # @return [Boolean] whether to generate output
+  # @since 0.2.1
   def generate; end
+
+  # @return [Boolean] whether to generate output
+  # @since 0.2.1
   def generate=(_arg0); end
+
+  # @return [Boolean] whether markup option was specified
+  # @since 0.7.0
   def has_markup; end
+
+  # @return [Boolean] whether markup option was specified
+  # @since 0.7.0
   def has_markup=(_arg0); end
 
   # Keep track of which APIs are to be hidden
+  #
+  # @return [Array<String>] a list of APIs to be hidden
+  # @since 0.8.7
   def hidden_apis; end
 
   # Keep track of which APIs are to be hidden
+  #
+  # @return [Array<String>] a list of APIs to be hidden
+  # @since 0.8.7
   def hidden_apis=(_arg0); end
 
+  # @return [Array<Symbol>] a list of tags to hide from templates
+  # @since 0.6.0
   def hidden_tags; end
+
+  # @return [Array<Symbol>] a list of tags to hide from templates
+  # @since 0.6.0
   def hidden_tags=(_arg0); end
+
+  # @return [Boolean] whether to print a list of objects
+  # @since 0.5.5
   def list; end
+
+  # @return [Boolean] whether to print a list of objects
+  # @since 0.5.5
   def list=(_arg0); end
+
+  # @return [Hash] the hash of options passed to the template.
+  # @see Templates::Engine#render
+  # @since 0.2.1
   def options; end
 
   # Parses commandline arguments
+  #
+  # @param args [Array<String>] the list of arguments
+  # @return [Boolean] whether or not arguments are valid
+  # @since 0.5.6
   def parse_arguments(*args); end
 
   # Runs the commandline utility, parsing arguments and generating
   # output if set.
+  #
+  # @param args [Array<String>] the list of arguments. If the list only
+  #   contains a single nil value, skip calling of {#parse_arguments}
+  # @return [void]
+  # @since 0.2.1
   def run(*args); end
 
+  # @return [Boolean] whether objects should be serialized to .yardoc db
+  # @since 0.2.1
   def save_yardoc; end
+
+  # @return [Boolean] whether objects should be serialized to .yardoc db
+  # @since 0.2.1
   def save_yardoc=(_arg0); end
+
+  # @return [Boolean] whether to print statistics after parsing
+  # @since 0.6.0
   def statistics; end
+
+  # @return [Boolean] whether to print statistics after parsing
+  # @since 0.6.0
   def statistics=(_arg0); end
+
+  # @return [Boolean] whether to use the existing yardoc db if the
+  #   .yardoc already exists. Also makes use of file checksums to
+  #   parse only changed files.
+  # @since 0.2.1
   def use_cache; end
+
+  # @return [Boolean] whether to use the existing yardoc db if the
+  #   .yardoc already exists. Also makes use of file checksums to
+  #   parse only changed files.
+  # @since 0.2.1
   def use_cache=(_arg0); end
 
   # Keep track of which visibilities are to be shown
+  #
+  # @return [Array<Symbol>] a list of visibilities
+  # @since 0.5.6
   def visibilities; end
 
   # Keep track of which visibilities are to be shown
+  #
+  # @return [Array<Symbol>] a list of visibilities
+  # @since 0.5.6
   def visibilities=(_arg0); end
 
   private
 
   # Adds verifier rule for APIs
+  #
+  # @return [void]
+  # @since 0.8.1
   def add_api_verifier; end
 
   # Adds a set of extra documentation files to be processed
+  #
+  # @param files [Array<String>] the set of documentation files
+  # @since 0.2.1
   def add_extra_files(*files); end
 
+  # @since 0.6.0
   def add_tag(tag_data, factory_method = T.unsafe(nil)); end
 
   # Adds verifier rule for visibilities
+  #
+  # @return [void]
+  # @since 0.5.6
   def add_visibility_verifier; end
 
   # Applies the specified locale to collected objects
+  #
+  # @return [void]
+  # @since 0.8.3
   def apply_locale; end
 
   # Copies any assets to the output directory
+  #
+  # @return [void]
+  # @since 0.6.0
   def copy_assets; end
 
+  # @param file [String] the filename to validate
+  # @param check_exists [Boolean] whether the file should exist on disk
+  # @return [Boolean] whether the file is allowed to be used
+  # @since 0.2.1
   def extra_file_valid?(file, check_exists = T.unsafe(nil)); end
 
   # Adds general options
+  #
+  # @since 0.2.1
   def general_options(opts); end
 
   # Parses commandline options.
+  #
+  # @param args [Array<String>] each tokenized argument
+  # @since 0.2.1
   def optparse(*args); end
 
   # Adds output options
+  #
+  # @since 0.2.1
   def output_options(opts); end
 
   # Parses the file arguments into Ruby files and extra files, which are
   # separated by a '-' element.
+  #
+  # @example Parses a set of Ruby source files
+  #   parse_files %w(file1 file2 file3)
+  # @example Parses a set of Ruby files with a separator and extra files
+  #   parse_files %w(file1 file2 - extrafile1 extrafile2)
+  # @param files [Array<String>] the list of files to parse
+  # @return [void]
+  # @since 0.2.1
   def parse_files(*files); end
 
   # Prints a list of all objects
+  #
+  # @return [void]
+  # @since 0.5.5
   def print_list; end
 
   # Generates output for objects
+  #
+  # @param checksums [Hash, nil] if supplied, a list of checkums for files.
+  # @return [void]
+  # @since 0.5.1
   def run_generate(checksums); end
 
   # Runs a list of objects against the {Verifier} object passed into the
   # template and returns the subset of verified objects.
+  #
+  # @param list [Array<CodeObjects::Base>] a list of code objects
+  # @return [Array<CodeObjects::Base>] a list of code objects that match
+  #   the verifier. If no verifier is supplied, all objects are returned.
   def run_verifier(list); end
 
   # Adds tag options
+  #
+  # @since 0.6.0
   def tag_options(opts); end
 
   # Verifies that the markup options are valid before parsing any code.
   # Failing early is better than failing late.
+  #
+  # @return [Boolean] whether the markup provider was successfully loaded.
+  # @since 0.2.1
   def verify_markup_options; end
 end
 
 # Default options used in +yard doc+ command.
 class YARD::CLI::YardocOptions < ::YARD::Templates::TemplateOptions
+  # @return [CodeObjects::ExtraFileObject] the file object being rendered.
+  #   The +object+ key is not used so that a file may be rendered in the context
+  #   of an object's namespace (for generating links).
   def file; end
+
+  # @return [CodeObjects::ExtraFileObject] the file object being rendered.
+  #   The +object+ key is not used so that a file may be rendered in the context
+  #   of an object's namespace (for generating links).
   def file=(_arg0); end
+
+  # @return [Array<CodeObjects::ExtraFileObject>] the list of extra files rendered along with objects
   def files; end
+
   def files=(_arg0); end
+
+  # @return [Symbol] the default output format (:html).
   def format; end
+
   def format=(_arg0); end
+
+  # @return [Numeric] An index value for rendering sequentially related templates
   def index; end
+
+  # @return [Numeric] An index value for rendering sequentially related templates
   def index=(_arg0); end
+
+  # @return [CodeObjects::Base] an extra item to send to a template that is not
+  #   the main rendered object
   def item; end
+
+  # @return [CodeObjects::Base] an extra item to send to a template that is not
+  #   the main rendered object
   def item=(_arg0); end
+
+  # @return [String] the current locale
   def locale; end
+
+  # @return [String] the current locale
   def locale=(_arg0); end
+
+  # @return [Array<CodeObjects::Base>] the list of code objects to render
+  #   the templates with.
   def objects; end
+
+  # @return [Array<CodeObjects::Base>] the list of code objects to render
+  #   the templates with.
   def objects=(_arg0); end
+
+  # @return [Boolean] whether the data should be rendered in a single page,
+  #   if the template supports it.
   def onefile; end
+
   def onefile=(_arg0); end
+
+  # @return [CodeObjects::ExtraFileObject] the README file object rendered
+  #   along with objects
   def readme; end
+
+  # @return [CodeObjects::ExtraFileObject] the README file object rendered
+  #   along with objects
   def readme=(_arg0); end
+
+  # @return [Serializers::Base] the default serializer for generating output
+  #   to disk.
   def serializer; end
+
   def serializer=(_arg0); end
+
+  # @return [String] the default title appended to each generated page
   def title; end
+
   def title=(_arg0); end
+
+  # @return [Verifier] the default verifier object to filter queries
   def verifier; end
+
   def verifier=(_arg0); end
 end
 
 # Abstract base class for command that reads .yardopts file
+#
+# @abstract
+# @since 0.8.3
 class YARD::CLI::YardoptsCommand < ::YARD::CLI::Command
   # Creates a new command that reads .yardopts
+  #
+  # @return [YardoptsCommand] a new instance of YardoptsCommand
+  # @since 0.8.3
   def initialize; end
 
   # The options file name (defaults to {DEFAULT_YARDOPTS_FILE})
+  #
+  # @return [String] the filename to load extra options from
+  # @since 0.8.3
   def options_file; end
 
   # The options file name (defaults to {DEFAULT_YARDOPTS_FILE})
+  #
+  # @return [String] the filename to load extra options from
+  # @since 0.8.3
   def options_file=(_arg0); end
 
   # Parses commandline arguments
+  #
+  # @param args [Array<String>] the list of arguments
+  # @return [Boolean] whether or not arguments are valid
+  # @since 0.5.6
   def parse_arguments(*args); end
 
+  # @return [Boolean] whether to parse options from .document
+  # @since 0.8.3
   def use_document_file; end
+
+  # @return [Boolean] whether to parse options from .document
+  # @since 0.8.3
   def use_document_file=(_arg0); end
+
+  # @return [Boolean] whether to parse options from .yardopts
+  # @since 0.8.3
   def use_yardopts_file; end
+
+  # @return [Boolean] whether to parse options from .yardopts
+  # @since 0.8.3
   def use_yardopts_file=(_arg0); end
 
   protected
 
   # Adds --[no-]yardopts / --[no-]document
+  #
+  # @since 0.8.3
   def yardopts_options(opts); end
 
   private
 
+  # @since 0.8.3
   def parse_rdoc_document_file(file = T.unsafe(nil)); end
+
+  # @since 0.8.3
   def parse_yardopts(file = T.unsafe(nil)); end
 
   # Parses out the yardopts/document options
+  #
+  # @since 0.8.3
   def parse_yardopts_options(*args); end
 
   # Reads a .document file in the directory to get source file globs
+  #
+  # @return [Array<String>] an array of files parsed from .document
+  # @since 0.8.3
   def support_rdoc_document_file!(file = T.unsafe(nil)); end
 
   # Parses the .yardopts file for default yard options
+  #
+  # @return [Array<String>] an array of options parsed from .yardopts
+  # @since 0.8.3
   def yardopts(file = T.unsafe(nil)); end
 end
 
 # The configuration filename to load extra options from
+#
+# @since 0.8.3
 YARD::CLI::YardoptsCommand::DEFAULT_YARDOPTS_FILE = T.let(T.unsafe(nil), String)
 
+# @deprecated Use {Config::CONFIG_DIR}
 YARD::CONFIG_DIR = T.let(T.unsafe(nil), String)
 
 # A "code object" is defined as any entity in the Ruby language.
@@ -987,6 +1752,8 @@ end
 YARD::CodeObjects::BUILTIN_ALL = T.let(T.unsafe(nil), Array)
 
 # All builtin Ruby classes for inheritance tree.
+#
+# @note MatchingData is a 1.8.x legacy class
 YARD::CodeObjects::BUILTIN_CLASSES = T.let(T.unsafe(nil), Array)
 
 # All builtin Ruby exception classes for inheritance tree.
@@ -1025,177 +1792,366 @@ YARD::CodeObjects::BUILTIN_MODULES = T.let(T.unsafe(nil), Array)
 # Custom classes with different separator tokens should define their own
 # separators using the {NamespaceMapper.register_separator} method. The
 # standard Ruby separators have already been defined ('::', '#', '.', etc).
+#
+# @abstract This class should not be used directly. Instead, create a
+#   subclass that implements {#path}, {#sep} or {#type}. You might also
+#   need to register custom separators if {#sep} uses alternate separator
+#   tokens.
+# @see Registry
+# @see #path
+# @see #[]=
+# @see NamespaceObject
+# @see NamespaceMapper.register_separator
 class YARD::CodeObjects::Base
   # Creates a new code object
+  #
+  # @example Create a method in the root namespace
+  #   CodeObjects::Base.new(:root, '#method') # => #<yardoc method #method>
+  # @example Create class Z inside namespace X::Y
+  #   CodeObjects::Base.new(P("X::Y"), :Z) # or
+  #   CodeObjects::Base.new(Registry.root, "X::Y")
+  # @param namespace [NamespaceObject] the namespace the object belongs in,
+  #   {Registry.root} or :root should be provided if it is associated with
+  #   the top level namespace.
+  # @param name [Symbol, String] the name (or complex path) of the object.
+  # @return [Base] the newly created object
+  # @yield [self] a block to perform any extra initialization on the object
+  # @yieldparam self [Base] the newly initialized code object
   def initialize(namespace, name, *_arg2); end
 
   # Tests if another object is equal to this, including a proxy
+  #
+  # @param other [Base, Proxy] if other is a {Proxy}, tests if
+  #   the paths are equal
+  # @return [Boolean] whether or not the objects are considered the same
   def ==(other); end
 
   # Accesses a custom attribute on the object
+  #
+  # @param key [#to_s] the name of the custom attribute
+  # @return [Object, nil] the custom attribute or nil if not found.
+  # @see #[]=
   def [](key); end
 
   # Sets a custom attribute on the object
+  #
+  # @param key [#to_s] the name of the custom attribute
+  # @param value [Object] the value to associate
+  # @return [void]
+  # @see #[]
   def []=(key, value); end
 
   # Associates a file with a code object, optionally adding the line where it was defined.
   # By convention, '<stdin>' should be used to associate code that comes form standard input.
+  #
+  # @param file [String] the filename ('<stdin>' for standard input)
+  # @param line [Fixnum, nil] the line number where the object lies in the file
+  # @param has_comments [Boolean] whether or not the definition has comments associated. This
+  #   will allow {#file} to return the definition where the comments were made instead
+  #   of any empty definitions that might have been parsed before (module namespaces for instance).
+  # @raise [ArgumentError]
   def add_file(file, line = T.unsafe(nil), has_comments = T.unsafe(nil)); end
 
   # Add tags to the {#docstring}
+  #
+  # @see Docstring#add_tag
+  # @since 0.8.4
   def add_tag(*tags); end
 
   # The non-localized documentation string associated with the object
+  #
+  # @return [Docstring] the documentation string
+  # @since 0.8.4
   def base_docstring; end
 
   # Copies all data in this object to another code object, except for
   # uniquely identifying information (path, namespace, name, scope).
+  #
+  # @param other [Base] the object to copy data to
+  # @return [Base] the other object
+  # @since 0.8.0
   def copy_to(other); end
 
   # The documentation string associated with the object
+  #
+  # @param locale [String, I18n::Locale] (I18n::Locale.default)
+  #   the locale of the documentation string.
+  # @return [Docstring] the documentation string
   def docstring(locale = T.unsafe(nil)); end
 
   # Attaches a docstring to a code object by parsing the comments attached to the statement
   # and filling the {#tags} and {#docstring} methods with the parsed information.
+  #
+  # @param comments [String, Array<String>, Docstring] the comments attached to the code object to be parsed
+  #   into a docstring and meta tags.
   def docstring=(comments); end
 
   # Marks whether or not the method is conditionally defined at runtime
+  #
+  # @return [Boolean] true if the method is conditionally defined at runtime
   def dynamic; end
 
   # Marks whether or not the method is conditionally defined at runtime
+  #
+  # @return [Boolean] true if the method is conditionally defined at runtime
   def dynamic=(_arg0); end
 
   # Is the object defined conditionally at runtime?
+  #
+  # @return [Boolean]
+  # @see #dynamic
   def dynamic?; end
 
   # Tests if another object is equal to this, including a proxy
+  #
+  # @param other [Base, Proxy] if other is a {Proxy}, tests if
+  #   the paths are equal
+  # @return [Boolean] whether or not the objects are considered the same
   def eql?(other); end
 
   # Tests if another object is equal to this, including a proxy
+  #
+  # @param other [Base, Proxy] if other is a {Proxy}, tests if
+  #   the paths are equal
+  # @return [Boolean] whether or not the objects are considered the same
   def equal?(other); end
 
   # Returns the filename the object was first parsed at, taking
   # definitions with docstrings first.
+  #
+  # @return [String] a filename
   def file; end
 
   # The files the object was defined in. To add a file, use {#add_file}.
+  #
+  # @return [Array<Array(String, Integer)>] a list of files
+  # @see #add_file
   def files; end
 
   # Renders the object using the {Templates::Engine templating system}.
+  #
+  # @example Formats a class in plaintext
+  #   puts P('MyClass').format
+  # @example Formats a method in html with rdoc markup
+  #   puts P('MyClass#meth').format(:format => :html, :markup => :rdoc)
+  # @option options
+  # @option options
+  # @option options
+  # @option options
+  # @param options [Hash] a set of options to pass to the template
+  # @return [String] the rendered template
+  # @see Templates::Engine#render
   def format(options = T.unsafe(nil)); end
 
+  # @return [String] the group this object is associated with
+  # @since 0.6.0
   def group; end
+
+  # @return [String] the group this object is associated with
+  # @since 0.6.0
   def group=(_arg0); end
 
   # Tests if the {#docstring} has a tag
+  #
+  # @return [Boolean]
+  # @see Docstring#has_tag?
   def has_tag?(name); end
 
+  # @return [Integer] the object's hash value (for equality checking)
   def hash; end
 
   # Inspects the object, returning the type and path
+  #
+  # @return [String] a string describing the object
   def inspect; end
 
   # Returns the line the object was first parsed at (or nil)
+  #
+  # @return [Fixnum] the line where the object was first defined.
+  # @return [nil] if there is no line associated with the object
   def line; end
 
+  # @overload dynamic_attr_name
+  # @overload dynamic_attr_name=
   def method_missing(meth, *args, &block); end
 
   # The name of the object
+  #
+  # @param prefix [Boolean] whether to show a prefix. Implement
+  #   this in a subclass to define how the prefix is showed.
+  # @return [Symbol] if prefix is false, the symbolized name
+  # @return [String] if prefix is true, prefix + the name as a String.
+  #   This must be implemented by the subclass.
   def name(prefix = T.unsafe(nil)); end
 
   # The namespace the object is defined in. If the object is in the
   # top level namespace, this is {Registry.root}
+  #
+  # @return [NamespaceObject] the namespace object
   def namespace; end
 
   # Sets the namespace the object is defined in.
+  #
+  # @param obj [NamespaceObject, :root, nil] the new namespace (:root
+  #   for {Registry.root}). If obj is nil, the object is unregistered
+  #   from the Registry.
   def namespace=(obj); end
 
   # The namespace the object is defined in. If the object is in the
   # top level namespace, this is {Registry.root}
+  #
+  # @return [NamespaceObject] the namespace object
   def parent; end
 
   # Sets the namespace the object is defined in.
+  #
+  # @param obj [NamespaceObject, :root, nil] the new namespace (:root
+  #   for {Registry.root}). If obj is nil, the object is unregistered
+  #   from the Registry.
   def parent=(obj); end
 
   # Represents the unique path of the object. The default implementation
   # joins the path of {#namespace} with {#name} via the value of {#sep}.
   # Custom code objects should ensure that the path is unique to the code
   # object by either overriding {#sep} or this method.
+  #
+  # @example The path of an instance method
+  #   MethodObject.new(P("A::B"), :c).path # => "A::B#c"
+  # @return [String] the unique path of the object
+  # @see #sep
   def path; end
 
+  # @param other [Base, String] another code object (or object path)
+  # @return [String] the shortest relative path from this object to +other+
+  # @since 0.5.3
   def relative_path(other); end
+
+  # @return [Boolean] whether or not this object is a RootObject
   def root?; end
 
   # Override this method with a custom component separator. For instance,
   # {MethodObject} implements sep as '#' or '.' (depending on if the
   # method is instance or class respectively). {#path} depends on this
   # value to generate the full path in the form: namespace.path + sep + name
+  #
+  # @return [String] the component that separates the namespace path
+  #   and the name (default is {NSEP})
   def sep; end
 
   # The one line signature representing an object. For a method, this will
   # be of the form "def meth(arguments...)". This is usually the first
   # source line.
+  #
+  # @return [String] a line of source
   def signature; end
 
   # The one line signature representing an object. For a method, this will
   # be of the form "def meth(arguments...)". This is usually the first
   # source line.
+  #
+  # @return [String] a line of source
   def signature=(_arg0); end
 
   # The source code associated with the object
+  #
+  # @return [String, nil] source, if present, or nil
   def source; end
 
   # Attaches source code to a code object with an optional file location
+  #
+  # @param statement [#source, String] the +Parser::Statement+ holding the source code or the raw source
+  #   as a +String+ for the definition of the code object only (not the block)
   def source=(statement); end
 
   # Language of the source code associated with the object. Defaults to
   # +:ruby+.
+  #
+  # @return [Symbol] the language type
   def source_type; end
 
   # Language of the source code associated with the object. Defaults to
   # +:ruby+.
+  #
+  # @return [Symbol] the language type
   def source_type=(_arg0); end
 
   # Gets a tag from the {#docstring}
+  #
+  # @see Docstring#tag
   def tag(name); end
 
   # Gets a list of tags from the {#docstring}
+  #
+  # @see Docstring#tags
   def tags(name = T.unsafe(nil)); end
 
+  # @note Override this method if your object has a special title that does
+  #   not match the {#path} attribute value. This title will be used
+  #   when linking or displaying the object.
+  # @return [String] the display title for an object
+  # @see 0.8.4
   def title; end
+
+  # @return [nil] this object does not turn into an array
   def to_ary; end
 
   # Represents the unique path of the object. The default implementation
   # joins the path of {#namespace} with {#name} via the value of {#sep}.
   # Custom code objects should ensure that the path is unique to the code
   # object by either overriding {#sep} or this method.
+  #
+  # @example The path of an instance method
+  #   MethodObject.new(P("A::B"), :c).path # => "A::B#c"
+  # @return [String] the unique path of the object
+  # @see #sep
   def to_s; end
 
   # Default type is the lowercase class name without the "Object" suffix.
   # Override this method to provide a custom object type
+  #
+  # @return [Symbol] the type of code object this represents
   def type; end
 
+  # @return [Symbol] the visibility of an object (:public, :private, :protected)
   def visibility; end
+
+  # @return [Symbol] the visibility of an object (:public, :private, :protected)
   def visibility=(v); end
 
   protected
 
   # Override this method if your code object subclass does not allow
   # copying of certain attributes.
+  #
+  # @return [Array<String>] the list of instance variable names (without
+  #   "@" prefix) that should be copied when {#copy_to} is called
+  # @see #copy_to
+  # @since 0.8.0
   def copyable_attributes; end
 
   private
 
   # Formats source code by removing leading indentation
+  #
+  # @param source [String] the source code to format
+  # @return [String] formatted source
   def format_source(source); end
 
   def translate_docstring(locale); end
 
   class << self
     # Compares the class with subclasses
+    #
+    # @param other [Object] the other object to compare classes with
+    # @return [Boolean] true if other is a subclass of self
     def ===(other); end
 
     # Allocates a new code object
+    #
+    # @raise [ArgumentError]
+    # @return [Base]
+    # @see #initialize
+    # @yield [obj]
     def new(namespace, name, *args, &block); end
   end
 end
@@ -1216,38 +2172,70 @@ YARD::CodeObjects::CSEPQ = T.let(T.unsafe(nil), String)
 # with extra inheritance semantics through the superclass.
 class YARD::CodeObjects::ClassObject < ::YARD::CodeObjects::NamespaceObject
   # Creates a new class object in +namespace+ with +name+
+  #
+  # @return [ClassObject] a new instance of ClassObject
+  # @see Base.new
   def initialize(namespace, name, *args, &block); end
 
   # Returns the list of constants matching the options hash.
+  #
+  # @option opts
+  # @option opts
+  # @param opts [Hash] the options hash to match
+  # @return [Array<ConstantObject>] the list of constant that matched
   def constants(opts = T.unsafe(nil)); end
 
   # Returns the inheritance tree of the object including self.
+  #
+  # @param include_mods [Boolean] whether or not to include mixins in the
+  #   inheritance tree.
+  # @return [Array<NamespaceObject>] the list of code objects that make up
+  #   the inheritance tree.
   def inheritance_tree(include_mods = T.unsafe(nil)); end
 
   # Returns only the constants that were inherited.
+  #
+  # @return [Array<ConstantObject>] the list of inherited constant objects
   def inherited_constants; end
 
   # Returns only the methods that were inherited.
+  #
+  # @return [Array<MethodObject>] the list of inherited method objects
   def inherited_meths(opts = T.unsafe(nil)); end
 
   # Whether or not the class is a Ruby Exception
+  #
+  # @return [Boolean] whether the object represents a Ruby exception
   def is_exception?; end
 
   # Returns the list of methods matching the options hash. Returns
   # all methods if hash is empty.
+  #
+  # @option opts
+  # @option opts
+  # @param opts [Hash] the options hash to match
+  # @return [Array<MethodObject>] the list of methods that matched
   def meths(opts = T.unsafe(nil)); end
 
   # The {ClassObject} that this class object inherits from in Ruby source.
+  #
+  # @return [ClassObject] a class object that is the superclass of this one
   def superclass; end
 
   # Sets the superclass of the object
+  #
+  # @param object [Base, Proxy, String, Symbol, nil] the superclass value
+  # @return [void]
   def superclass=(object); end
 end
 
 # Represents a class variable inside a namespace. The path is expressed
 # in the form "A::B::@@classvariable"
 class YARD::CodeObjects::ClassVariableObject < ::YARD::CodeObjects::Base
+  # @return [String] the class variable's value
   def value; end
+
+  # @return [String] the class variable's value
   def value=(_arg0); end
 end
 
@@ -1255,12 +2243,21 @@ end
 # but also disallows any {Proxy} objects from being added.
 class YARD::CodeObjects::CodeObjectList < ::Array
   # Creates a new object list associated with a namespace
+  #
+  # @param owner [NamespaceObject] the namespace the list should be associated with
+  # @return [CodeObjectList]
   def initialize(owner = T.unsafe(nil)); end
 
   # Adds a new value to the list
+  #
+  # @param value [Base] a code object to add
+  # @return [CodeObjectList] self
   def <<(value); end
 
   # Adds a new value to the list
+  #
+  # @param value [Base] a code object to add
+  # @return [CodeObjectList] self
   def push(value); end
 end
 
@@ -1268,6 +2265,8 @@ end
 # To access the constant's (source code) value, use {#value}.
 class YARD::CodeObjects::ConstantObject < ::YARD::CodeObjects::Base
   # The source code representing the constant's value
+  #
+  # @return [String] the value the constant is set to
   def value; end
 
   def value=(value); end
@@ -1275,13 +2274,23 @@ end
 
 # Represents an instance method of a module that was mixed into the class
 # scope of another namespace.
+#
+# @see MethodObject
 class YARD::CodeObjects::ExtendedMethodObject
   # Sets up a delegate for {MethodObject} obj.
+  #
+  # @param obj [MethodObject] the instance method to treat as a mixed in
+  #   class method on another namespace.
+  # @return [ExtendedMethodObject] a new instance of ExtendedMethodObject
   def initialize(obj); end
 
   # Sends all methods to the {MethodObject} assigned in {#initialize}
+  #
+  # @see #initialize
+  # @see MethodObject
   def method_missing(sym, *args, &block); end
 
+  # @return [Symbol] always +:class+
   def scope; end
 end
 
@@ -1291,12 +2300,19 @@ end
 # compatible with most CodeObject interfaces.
 class YARD::CodeObjects::ExtraFileObject
   # Creates a new extra file object.
+  #
+  # @param filename [String] the location on disk of the file
+  # @param contents [String] the file contents. If not set, the contents
+  #   will be read from disk using the +filename+.
+  # @return [ExtraFileObject] a new instance of ExtraFileObject
   def initialize(filename, contents = T.unsafe(nil)); end
 
   def ==(other); end
   def attributes; end
 
   # Sets the attribute attributes
+  #
+  # @param value the value to set the attribute attributes to.
   def attributes=(_arg0); end
 
   def contents; end
@@ -1308,17 +2324,27 @@ class YARD::CodeObjects::ExtraFileObject
   def filename; end
 
   # Sets the attribute filename
+  #
+  # @param value the value to set the attribute filename to.
   def filename=(_arg0); end
 
   def hash; end
   def inspect; end
+
+  # @since 0.8.3
   def locale; end
+
+  # @param locale [String] the locale name to be translated.
+  # @return [void]
+  # @since 0.8.3
   def locale=(locale); end
 
   # Returns the value of attribute name.
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   # Returns the value of attribute name.
@@ -1331,7 +2357,10 @@ class YARD::CodeObjects::ExtraFileObject
   private
 
   def ensure_parsed; end
+
+  # @param data [String] the file contents
   def parse_contents(data); end
+
   def translate(data); end
 end
 
@@ -1354,15 +2383,51 @@ YARD::CodeObjects::METHODNAMEMATCH = T.let(T.unsafe(nil), Regexp)
 #
 # Macros are fully described in the {file:docs/Tags.md#macro Tags Overview}
 # document.
+#
+# @example Creating a basic named macro
+#   # @!macro prop
+#   #   @!method $1(${3-})
+#   #   @return [$2] the value of the $0
+#   property :foo, String, :a, :b
+#
+#   # @!macro prop
+#   property :bar, Numeric, :value
+# @example Creating a macro that is attached to the method call
+#   # @!macro [attach] prop2
+#   #   @!method $1(value)
+#   property :foo
+#
+#   # Extra data added to docstring
+#   property :bar
 class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
+  # @return [Boolean] whether this macro is attached to a method
   def attached?; end
 
   # Expands the macro using
+  #
+  # @example Expanding a Macro
+  #   macro.expand(%w(property foo bar), 'property :foo, :bar', '') #=>
+  #   "...macro data interpolating this line of code..."
+  # @param call_params [Array<String>] a list of tokens that are passed
+  #   to the method call
+  # @param full_source [String] the full method call (not including the block)
+  # @param block_source [String] the source passed in the block of the method
+  #   call, if there is a block.
+  # @see expand
   def expand(call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
 
+  # @return [String] the macro data stored on the object
   def macro_data; end
+
+  # @return [String] the macro data stored on the object
   def macro_data=(_arg0); end
+
+  # @return [CodeObjects::Base] the method object that this macro is
+  #   attached to.
   def method_object; end
+
+  # @return [CodeObjects::Base] the method object that this macro is
+  #   attached to.
   def method_object=(_arg0); end
 
   # Overrides {Base#path} so the macro path is ".macro.MACRONAME"
@@ -1375,14 +2440,39 @@ class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
     # Applies a macro on a docstring by creating any macro data inside of
     # the docstring first. Equivalent to calling {find_or_create} and {apply_macro}
     # on the new macro object.
+    #
+    # @param docstring [Docstring] the docstring to create a macro out of
+    # @param call_params [Array<String>] the method name and parameters
+    #   to the method call. These arguments will fill $0-N
+    # @param full_source [String] the full source line (excluding block)
+    #   interpolated as $*
+    # @param block_source [String] Currently unused. Will support
+    #   interpolating the block data as a variable.
+    # @return [String] the expanded macro data
+    # @see find_or_create
     def apply(docstring, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil), _method_object = T.unsafe(nil)); end
 
     # Applies a macro to a docstring, interpolating the macro's data on the
     # docstring and appending any extra local docstring data that was in
     # the original +docstring+ object.
+    #
+    # @param macro [MacroObject] the macro object
+    # @param call_params [Array<String>] the method name and parameters
+    #   to the method call. These arguments will fill $0-N
+    # @param full_source [String] the full source line (excluding block)
+    #   interpolated as $*
+    # @param block_source [String] Currently unused. Will support
+    #   interpolating the block data as a variable.
+    # @return [String] the expanded macro data
     def apply_macro(macro, docstring, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
 
     # Creates a new macro and fills in the relevant properties.
+    #
+    # @param macro_name [String] the name of the macro, must be unique.
+    # @param data [String] the data the macro should expand when re-used
+    # @param method_object [CodeObjects::Base] an object to attach this
+    #   macro to. If supplied, {#attached?} will be true
+    # @return [MacroObject] the newly created object
     def create(macro_name, data, method_object = T.unsafe(nil)); end
 
     # Parses a given docstring and determines if the macro is "new" or
@@ -1392,6 +2482,15 @@ class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
     # If a new macro is found, the macro is created and registered. Otherwise
     # the macro name is searched and returned. If a macro is not found,
     # nil is returned.
+    #
+    # @param macro_name [#to_s] the name of the macro
+    # @param method_object [CodeObjects::Base] an optional method to attach
+    #   the macro to. Only used if the macro is being created, otherwise
+    #   this argument is ignored.
+    # @return [MacroObject] the newly created or existing macro, depending
+    #   on whether the @!macro tag was a new tag or not.
+    # @return [nil] if the +data+ has no macro tag or if the macro is
+    #   not new and no macro by the macro name is found.
     def create_docstring(macro_name, data, method_object = T.unsafe(nil)); end
 
     # Expands +macro_data+ using the interpolation parameters.
@@ -1401,9 +2500,15 @@ class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
     # * $* = the full statement source (excluding block)
     # * Also supports $!{N-M} ranges, as well as negative indexes on N or M
     # * Use \$ to escape the variable name in a macro.
+    #
+    # @param macro_data [String] the macro data to expand (taken from {#macro_data})
     def expand(macro_data, call_params = T.unsafe(nil), full_source = T.unsafe(nil), block_source = T.unsafe(nil)); end
 
     # Finds a macro using +macro_name+
+    #
+    # @param macro_name [#to_s] the name of the macro
+    # @return [MacroObject] if a macro is found
+    # @return [nil] if there is no registered macro by that name
     def find(macro_name); end
 
     # Parses a given docstring and determines if the macro is "new" or
@@ -1413,6 +2518,15 @@ class YARD::CodeObjects::MacroObject < ::YARD::CodeObjects::Base
     # If a new macro is found, the macro is created and registered. Otherwise
     # the macro name is searched and returned. If a macro is not found,
     # nil is returned.
+    #
+    # @param macro_name [#to_s] the name of the macro
+    # @param method_object [CodeObjects::Base] an optional method to attach
+    #   the macro to. Only used if the macro is being created, otherwise
+    #   this argument is ignored.
+    # @return [MacroObject] the newly created or existing macro, depending
+    #   on whether the @!macro tag was a new tag or not.
+    # @return [nil] if the +data+ has no macro tag or if the macro is
+    #   not new and no macro by the macro name is found.
     def find_or_create(macro_name, data, method_object = T.unsafe(nil)); end
   end
 end
@@ -1427,66 +2541,121 @@ class YARD::CodeObjects::MethodObject < ::YARD::CodeObjects::Base
   # If scope is +:module+, this object is instantiated as a public
   # method in +:class+ scope, but also creates a new (empty) method
   # as a private +:instance+ method on the same class or module.
+  #
+  # @param namespace [NamespaceObject] the namespace
+  # @param name [String, Symbol] the method name
+  # @param scope [Symbol] +:instance+, +:class+, or +:module+
+  # @return [MethodObject] a new instance of MethodObject
   def initialize(namespace, name, scope = T.unsafe(nil), &block); end
 
   # Returns all alias names of the object
+  #
+  # @return [Array<MethodObject>] the alias names
   def aliases; end
 
   # Returns the read/writer info for the attribute if it is one
+  #
+  # @return [SymbolHash] if there is information about the attribute
+  # @return [nil] if the method is not an attribute
+  # @since 0.5.3
   def attr_info; end
 
+  # @return [Boolean] whether or not the method is the #initialize constructor method
   def constructor?; end
 
   # Whether the object is explicitly defined in source or whether it was
   # inferred by a handler. For instance, attribute methods are generally
   # inferred and therefore not explicitly defined in source.
+  #
+  # @return [Boolean] whether the object is explicitly defined in source.
   def explicit; end
 
   # Whether the object is explicitly defined in source or whether it was
   # inferred by a handler. For instance, attribute methods are generally
   # inferred and therefore not explicitly defined in source.
+  #
+  # @return [Boolean] whether the object is explicitly defined in source.
   def explicit=(_arg0); end
 
   # Tests if the object is defined as an alias of another method
+  #
+  # @return [Boolean] whether the object is an alias
   def is_alias?; end
 
   # Tests if the object is defined as an attribute in the namespace
+  #
+  # @return [Boolean] whether the object is an attribute
   def is_attribute?; end
 
   # Tests boolean {#explicit} value.
+  #
+  # @return [Boolean] whether the method is explicitly defined in source
   def is_explicit?; end
 
+  # @return [Boolean] whether or not this method was created as a module
+  #   function
+  # @since 0.8.0
   def module_function?; end
 
   # Returns the name of the object.
+  #
+  # @example The name of an instance method (with prefix)
+  #   an_instance_method.name(true) # => "#mymethod"
+  # @example The name of a class method (with prefix)
+  #   a_class_method.name(true) # => "mymethod"
+  # @param prefix [Boolean] whether or not to show the prefix
+  # @return [String] returns {#sep} + +name+ for an instance method if
+  #   prefix is true
+  # @return [Symbol] the name without {#sep} if prefix is set to false
   def name(prefix = T.unsafe(nil)); end
 
+  # @return [MethodObject] the object that this method overrides
+  # @return [nil] if it does not override a method
+  # @since 0.6.0
   def overridden_method; end
 
   # Returns the list of parameters parsed out of the method signature
   # with their default values.
+  #
+  # @return [Array<Array(String, String)>] a list of parameter names followed
+  #   by their default values (or nil)
   def parameters; end
 
   # Returns the list of parameters parsed out of the method signature
   # with their default values.
+  #
+  # @return [Array<Array(String, String)>] a list of parameter names followed
+  #   by their default values (or nil)
   def parameters=(_arg0); end
 
   # Override path handling for instance methods in the root namespace
   # (they should still have a separator as a prefix).
+  #
+  # @return [String] the path of a method
   def path; end
 
+  # @return [Boolean] whether the method is a reader attribute
+  # @since 0.5.3
   def reader?; end
 
   # The scope of the method (+:class+ or +:instance+)
+  #
+  # @return [Symbol] the scope
   def scope; end
 
   # Changes the scope of an object from :instance or :class
+  #
+  # @param v [Symbol] the new scope
   def scope=(v); end
 
   # Override separator to differentiate between class and instance
   # methods.
+  #
+  # @return [String] "#" for an instance method, "." for class
   def sep; end
 
+  # @return [Boolean] whether the method is a writer attribute
+  # @since 0.5.3
   def writer?; end
 
   protected
@@ -1497,6 +2666,10 @@ end
 # Represents a Ruby module.
 class YARD::CodeObjects::ModuleObject < ::YARD::CodeObjects::NamespaceObject
   # Returns the inheritance tree of mixins.
+  #
+  # @param include_mods [Boolean] if true, will include mixed in
+  #   modules (which is likely what is wanted).
+  # @return [Array<NamespaceObject>] a list of namespace objects
   def inheritance_tree(include_mods = T.unsafe(nil)); end
 end
 
@@ -1511,12 +2684,23 @@ YARD::CodeObjects::NSEPQ = T.let(T.unsafe(nil), String)
 
 # This module controls registration and accessing of namespace separators
 # for {Registry} lookup.
+#
+# @since 0.9.1
 module YARD::CodeObjects::NamespaceMapper
   # Clears the map of separators.
+  #
+  # @return [void]
+  # @since 0.9.1
   def clear_separators; end
 
   # Gets or sets the default separator value to use when no
   # separator for the namespace can be determined.
+  #
+  # @example
+  #   default_separator "::"
+  # @param value [String, nil] the default separator, or nil to return the
+  #   value
+  # @since 0.9.1
   def default_separator(value = T.unsafe(nil)); end
 
   # Registers a separator with an optional set of valid types that
@@ -1524,30 +2708,78 @@ module YARD::CodeObjects::NamespaceMapper
   #
   # Calls all callbacks defined by {NamespaceMapper.on_invalidate} after
   # the separator is registered.
+  #
+  # @example Registering separators for a method object
+  #   # Anything after a "#" denotes a method object
+  #   register_separator "#", :method
+  #   # Anything after a "." denotes a method object
+  #   register_separator ".", :method
+  # @param sep [String] the separator string for the namespace
+  # @param valid_types [Array<Symbol>] a list of object types that
+  #   must follow the separator. If the list is empty, any type can
+  #   follow the separator.
+  # @see .on_invalidate
+  # @since 0.9.1
   def register_separator(sep, *valid_types); end
 
+  # @return [Array<String>] all of the registered separators
+  # @since 0.9.1
   def separators; end
+
+  # @param type [String] the type to return separators for
+  # @return [Array<Symbol>] a list of separators registered to a type
+  # @since 0.9.1
   def separators_for_type(type); end
+
+  # @return [Regexp] the regexp match of all separators
+  # @since 0.9.1
   def separators_match; end
+
+  # @param sep [String] the separator to return types for
+  # @return [Array<Symbol>] a list of types registered to a separator
+  # @since 0.9.1
   def types_for_separator(sep); end
 
   # Unregisters a separator by a type.
+  #
+  # @param type [Symbol] the type to unregister
+  # @see #register_separator
+  # @since 0.9.1
   def unregister_separator_by_type(type); end
 
   class << self
+    # @return [String] the default separator when no separator can begin
+    #   determined.
+    # @since 0.9.1
     def default_separator; end
+
+    # @return [String] the default separator when no separator can begin
+    #   determined.
+    # @since 0.9.1
     def default_separator=(_arg0); end
 
     # Invalidates all separators
+    #
+    # @return [void]
+    # @since 0.9.1
     def invalidate; end
 
+    # @return [Hash] a mapping of types to separators
+    # @since 0.9.1
     def map; end
+
+    # @return [Regexp] the full list of separators as a regexp match
+    # @since 0.9.1
     def map_match; end
 
     # Adds a callback that triggers when a new separator is registered or
     # the cache is cleared by invalidation.
+    #
+    # @since 0.9.1
     def on_invalidate(&block); end
 
+    # @return [Hash] a reverse mapping of separators to types
+    # @since 0.9.1
     def rev_map; end
   end
 end
@@ -1557,60 +2789,133 @@ end
 # ({ModuleObject}) and classes ({ClassObject}).
 class YARD::CodeObjects::NamespaceObject < ::YARD::CodeObjects::Base
   # Creates a new namespace object inside +namespace+ with +name+.
+  #
+  # @return [NamespaceObject] a new instance of NamespaceObject
+  # @see Base#initialize
   def initialize(namespace, name, *args, &block); end
 
   # A hash containing two keys, :class and :instance, each containing
   # a hash of objects and their alias names.
+  #
+  # @return [Hash] a list of methods
   def aliases; end
 
   # A hash containing two keys, class and instance, each containing
   # the attribute name with a { :read, :write } hash for the read and
   # write objects respectively.
+  #
+  # @example The attributes of an object
+  #   >> Registry.at('YARD::Docstring').attributes
+  #   => {
+  #   :class => { },
+  #   :instance => {
+  #   :ref_tags => {
+  #   :read => #<yardoc method YARD::Docstring#ref_tags>,
+  #   :write => nil
+  #   },
+  #   :object => {
+  #   :read => #<yardoc method YARD::Docstring#object>,
+  #   :write => #<yardoc method YARD::Docstring#object=>
+  #   },
+  #   ...
+  #   }
+  #   }
+  # @return [Hash] a list of methods
   def attributes; end
 
   # Looks for a child that matches the attributes specified by +opts+.
+  #
+  # @example Finds a child by name and scope
+  #   namespace.child(:name => :to_s, :scope => :instance)
+  #   # => #<yardoc method MyClass#to_s>
+  # @return [Base, nil] the first matched child object, or nil
   def child(opts = T.unsafe(nil)); end
 
   # The list of objects defined in this namespace
+  #
+  # @return [Array<Base>] a list of objects
   def children; end
 
   # Only the class attributes
+  #
+  # @return [Hash] a list of method names and their read/write objects
+  # @see #attributes
   def class_attributes; end
 
   # Class mixins
+  #
+  # @return [Array<ModuleObject>] a list of mixins
   def class_mixins; end
 
   # Returns all constants in the namespace
+  #
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @return [Array<ConstantObject>] a list of constant objects
   def constants(opts = T.unsafe(nil)); end
 
   # Returns class variables defined in this namespace.
+  #
+  # @return [Array<ClassVariableObject>] a list of class variable objects
   def cvars; end
 
+  # @return [Array<String>] a list of ordered group names inside the namespace
+  # @since 0.6.0
   def groups; end
+
+  # @return [Array<String>] a list of ordered group names inside the namespace
+  # @since 0.6.0
   def groups=(_arg0); end
 
   # Returns constants included from any mixins
+  #
+  # @return [Array<ConstantObject>] a list of constant objects
   def included_constants; end
 
   # Returns methods included from any mixins that match the attributes
   # specified by +opts+. If no options are specified, returns all included
   # methods.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @see #meths
   def included_meths(opts = T.unsafe(nil)); end
 
   # Only the instance attributes
+  #
+  # @return [Hash] a list of method names and their read/write objects
+  # @see #attributes
   def instance_attributes; end
 
   # Instance mixins
+  #
+  # @return [Array<ModuleObject>] a list of mixins
   def instance_mixins; end
 
   # Returns all methods that match the attributes specified by +opts+. If
   # no options are provided, returns all methods.
+  #
+  # @example Finds all private and protected class methods
+  #   namespace.meths(:visibility => [:private, :protected], :scope => :class)
+  #   # => [#<yardoc method MyClass.privmeth>, #<yardoc method MyClass.protmeth>]
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @return [Array<MethodObject>] a list of method objects
   def meths(opts = T.unsafe(nil)); end
 
   # Returns for specific scopes. If no scopes are provided, returns all mixins.
+  #
+  # @param scopes [Array<Symbol>] a list of scopes (:class, :instance) to
+  #   return mixins for. If this is empty, all scopes will be returned.
+  # @return [Array<ModuleObject>] a list of mixins
   def mixins(*scopes); end
 end
 
+# @private
 YARD::CodeObjects::PROXY_MATCH = T.let(T.unsafe(nil), Regexp)
 
 # The Proxy class is a way to lazily resolve code objects in
@@ -1618,32 +2923,67 @@ YARD::CodeObjects::PROXY_MATCH = T.let(T.unsafe(nil), Regexp)
 # an unresolved path until a method is called on the object, at which
 # point it does a lookup using {Registry.resolve}. If the object is
 # not found, a warning is raised and {ProxyMethodError} might be raised.
+#
+# @example Creates a Proxy to the String class from a module
+#   # When the String class is parsed this method will
+#   # begin to act like the String ClassObject.
+#   Proxy.new(mymoduleobj, "String")
+# @see Registry.resolve
+# @see ProxyMethodError
 class YARD::CodeObjects::Proxy
   # Creates a new Proxy
+  #
+  # @raise [ArgumentError] if namespace is not a NamespaceObject
+  # @return [Proxy] self
   def initialize(namespace, name, type = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def <=>(other); end
+
+  # @return [Boolean]
   def ==(other); end
+
+  # @return [Boolean]
   def ===(other); end
 
   # Returns the class name of the object the proxy is mimicking, if
   # resolved. Otherwise returns +Proxy+.
+  #
+  # @return [Class] the resolved object's class or +Proxy+
   def class; end
 
+  # @return [Boolean]
   def equal?(other); end
+
+  # @return [Integer] the object's hash value (for equality checking)
   def hash; end
 
   # Returns a text representation of the Proxy
+  #
+  # @return [String] the object's #inspect method or P(OBJECTPATH)
   def inspect; end
 
+  # @return [Boolean]
   def instance_of?(klass); end
+
+  # @return [Boolean]
   def is_a?(klass); end
+
+  # @return [Boolean]
   def kind_of?(klass); end
 
   # Dispatches the method to the resolved object.
+  #
+  # @raise [ProxyMethodError] if the proxy cannot find the real object
   def method_missing(meth, *args, &block); end
 
   # The name of the object
+  #
+  # @param prefix [Boolean] whether to show a prefix. Implement
+  #   this in a subclass to define how the prefix is showed.
+  # @return [Symbol] if prefix is false, the symbolized name
+  # @return [String] if prefix is true, prefix + the name as a String.
+  #   This must be implemented by the subclass.
   def name(prefix = T.unsafe(nil)); end
 
   # Returns the value of attribute namespace.
@@ -1654,41 +2994,66 @@ class YARD::CodeObjects::Proxy
 
   # If the proxy resolves to an object, returns its path, otherwise
   # guesses at the correct path using the original namespace and name.
+  #
+  # @return [String] the assumed path of the proxy (or the real path
+  #   of the resolved object)
   def path; end
 
+  # @return [Boolean]
   def respond_to?(meth, include_private = T.unsafe(nil)); end
 
   # This class is never a root object
+  #
+  # @return [Boolean]
   def root?; end
 
   # If the proxy resolves to an object, returns its path, otherwise
   # guesses at the correct path using the original namespace and name.
+  #
+  # @return [String] the assumed path of the proxy (or the real path
+  #   of the resolved object)
   def title; end
 
   # If the proxy resolves to an object, returns its path, otherwise
   # guesses at the correct path using the original namespace and name.
+  #
+  # @return [String] the assumed path of the proxy (or the real path
+  #   of the resolved object)
   def to_s; end
 
   # If the proxy resolves to an object, returns its path, otherwise
   # guesses at the correct path using the original namespace and name.
+  #
+  # @return [String] the assumed path of the proxy (or the real path
+  #   of the resolved object)
   def to_str; end
 
   # Returns the type of the proxy. If it cannot be resolved at the
   # time of the call, it will either return the inferred proxy type
   # (see {#type=}) or +:proxy+
+  #
+  # @return [Symbol] the Proxy's type
+  # @see #type=
   def type; end
 
   # Allows a parser to infer the type of the proxy by its path.
+  #
+  # @param type [#to_sym] the proxy's inferred type
+  # @return [void]
   def type=(type); end
 
   private
 
   def proxy_path; end
+
+  # @note this method fixes a bug in 1.9.2: http://gist.github.com/437136
   def to_ary; end
 
   # Attempts to find the object that this unresolved object
   # references by checking if any objects by this name are
   # registered all the way up the namespace tree.
+  #
+  # @return [Base, nil] the registered code object or nil
   def to_obj; end
 
   class << self
@@ -1702,11 +3067,16 @@ class YARD::CodeObjects::ProxyMethodError < ::NoMethodError; end
 # Represents the root namespace object (the invisible Ruby module that
 # holds all top level modules, class and other objects).
 class YARD::CodeObjects::RootObject < ::YARD::CodeObjects::ModuleObject
+  # @return [Boolean]
   def equal?(other); end
+
   def hash; end
   def inspect; end
   def path; end
+
+  # @return [Boolean]
   def root?; end
+
   def title; end
 end
 
@@ -1726,13 +3096,13 @@ end
 #
 # An example of a configuration file is listed below:
 #
-# !!!yaml
-# load_plugins: true # Auto-load plugins when YARD starts
-# ignored_plugins:
-# - yard-broken
-# - broken2 # yard- prefix not necessary
-# autoload_plugins:
-# - yard-rspec
+#     !!!yaml
+#     load_plugins: true # Auto-load plugins when YARD starts
+#     ignored_plugins:
+#       - yard-broken
+#       - broken2 # yard- prefix not necessary
+#     autoload_plugins:
+#       - yard-rspec
 #
 # == Automatic Loading of Plugins
 #
@@ -1764,104 +3134,166 @@ end
 # the YARD configuration is strongly encouraged to utilize namespacing of
 # their configuration content.
 #
-# !!!yaml
-# load_plugins: true # Auto-load plugins when YARD starts
-# ignored_plugins:
-# - yard-broken
-# - broken2 # yard- prefix not necessary
-# autoload_plugins:
-# - yard-rspec
-# # Plugin Specific Configuration
-# yard-sample-plugin:
-# show-results-inline: true
+#     !!!yaml
+#     load_plugins: true # Auto-load plugins when YARD starts
+#     ignored_plugins:
+#       - yard-broken
+#       - broken2 # yard- prefix not necessary
+#     autoload_plugins:
+#       - yard-rspec
+#     # Plugin Specific Configuration
+#     yard-sample-plugin:
+#       show-results-inline: true
 #
 # As the configuration is available system wide, it can be
 # accessed within the plugin code.
 #
 #
-# if YARD::Config.options['yard-sample-plugin'] and
-# YARD::Config.options['yard-sample-plugin']['show-results-inline']
-# # ... perform the action that places the results inline ...
-# else
-# # ... do the default behavior of not showing the results inline ...
-# end
+#     if YARD::Config.options['yard-sample-plugin'] and
+#       YARD::Config.options['yard-sample-plugin']['show-results-inline']
+#       # ... perform the action that places the results inline ...
+#     else
+#       # ... do the default behavior of not showing the results inline ...
+#     end
 #
 # When accessing the configuration, be aware that this file is user managed
 # so configuration keys and values may not be present. Make no assumptions and
 # instead ensure that you check for the existence of keys before proceeding to
 # retrieve values.
+#
+# @see options
+# @since 0.6.2
 class YARD::Config
   class << self
     # Legacy support for {IGNORED_PLUGINS}
+    #
+    # @since 0.6.2
     def add_ignored_plugins_file; end
 
+    # @return [Array<String>] arguments from commandline and yardopts file
+    # @since 0.6.2
     def arguments; end
 
     # Loads settings from {CONFIG_FILE}. This method is called by YARD at
     # load time and should not be called by the user.
+    #
+    # @return [void]
+    # @since 0.6.2
     def load; end
 
     # Load plugins set in :autoload_plugins
+    #
+    # @since 0.6.2
     def load_autoload_plugins; end
 
     # Load plugins from {arguments}
+    #
+    # @since 0.6.2
     def load_commandline_plugins; end
 
     # Check for command-line safe_mode switch in {arguments}
+    #
+    # @since 0.6.2
     def load_commandline_safemode; end
 
     # Load gem plugins if :load_plugins is true
+    #
+    # @since 0.6.2
     def load_gem_plugins; end
 
     # Loads an individual plugin by name. It is not necessary to include the
     # +yard-+ plugin prefix here.
+    #
+    # @param name [String] the name of the plugin (with or without +yard-+ prefix)
+    # @return [Boolean] whether the plugin was successfully loaded
+    # @since 0.6.2
     def load_plugin(name); end
 
     # Print a warning if the plugin failed to load
+    #
+    # @return [false]
+    # @since 0.6.2
     def load_plugin_failed(name, exception); end
 
     # Loads gems that match the name 'yard-*' (recommended) or 'yard_*' except
     # those listed in +~/.yard/ignored_plugins+. This is called immediately
     # after YARD is loaded to allow plugin support.
+    #
+    # @return [Boolean] true if all plugins loaded successfully, false otherwise.
+    # @since 0.6.2
     def load_plugins; end
 
     # The system-wide configuration options for YARD
+    #
+    # @return [SymbolHash] a map a key-value pair settings.
+    # @see DEFAULT_CONFIG_OPTIONS
+    # @since 0.6.2
     def options; end
 
     # The system-wide configuration options for YARD
+    #
+    # @return [SymbolHash] a map a key-value pair settings.
+    # @see DEFAULT_CONFIG_OPTIONS
+    # @since 0.6.2
     def options=(_arg0); end
 
     # Loads the YAML configuration file into memory
+    #
+    # @return [Hash] the contents of the YAML file from disk
+    # @see CONFIG_FILE
+    # @since 0.6.2
     def read_config_file; end
 
     # Saves settings to {CONFIG_FILE}.
+    #
+    # @return [void]
+    # @since 0.6.2
     def save; end
 
     # Sanitizes and normalizes a plugin name to include the 'yard-' prefix.
+    #
+    # @param name [String] the plugin name
+    # @return [String] the sanitized and normalized plugin name.
+    # @since 0.6.2
     def translate_plugin_name(name); end
 
     # Translates plugin names to add yard- prefix.
+    #
+    # @since 0.6.2
     def translate_plugin_names; end
 
     # Temporarily loads .yardopts file into @yardopts
+    #
+    # @since 0.6.2
     def with_yardopts; end
   end
 end
 
 # The location where YARD stores user-specific settings
+#
+# @since 0.6.2
 YARD::Config::CONFIG_DIR = T.let(T.unsafe(nil), String)
 
 # The main configuration YAML file.
+#
+# @since 0.6.2
 YARD::Config::CONFIG_FILE = T.let(T.unsafe(nil), String)
 
 # Default configuration options
+#
+# @since 0.6.2
 YARD::Config::DEFAULT_CONFIG_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 # File listing all ignored plugins
+#
+# @deprecated Set `ignored_plugins` in the {CONFIG_FILE} instead.
+# @since 0.6.2
 YARD::Config::IGNORED_PLUGINS = T.let(T.unsafe(nil), String)
 
 # The prefix used for YARD plugins. Name your gem with this prefix
 # to allow it to be used as a plugin.
+#
+# @since 0.6.2
 YARD::Config::YARD_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
 
 # A documentation string, or "docstring" for short, encapsulates the
@@ -1870,56 +3302,119 @@ YARD::Config::YARD_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
 # long as they are indented. The following +@example+ tag shows how tags
 # can be indented:
 #
-# # @example My example
-# #   a = "hello world"
-# #   a.reverse
-# # @version 1.0
+#   # @example My example
+#   #   a = "hello world"
+#   #   a.reverse
+#   # @version 1.0
 #
 # Tags can be nested in a documentation string, though the {Tags::Tag}
 # itself is responsible for parsing the inner tags.
 class YARD::Docstring < ::String
   # Creates a new docstring with the raw contents attached to an optional
   # object. Parsing will be done by the {DocstringParser} class.
+  #
+  # @example
+  #   Docstring.new("hello world\n@return Object return", someobj)
+  # @note To properly parse directives with proper parser context within
+  #   handlers, you should not use this method to create a Docstring.
+  #   Instead, use the {parser}, which takes a handler object that
+  #   can pass parser state onto directives. If a Docstring is created
+  #   with this method, directives do not have access to any parser
+  #   state, and may not function as expected.
+  # @param content [String] the raw comments to be parsed into a docstring
+  #   and associated meta-data.
+  # @param object [CodeObjects::Base] an object to associate the docstring
+  #   with.
+  # @return [Docstring] a new instance of Docstring
   def initialize(content = T.unsafe(nil), object = T.unsafe(nil)); end
 
   # Adds another {Docstring}, copying over tags.
+  #
+  # @param other [Docstring, String] the other docstring (or string) to
+  #   add.
+  # @return [Docstring] a new docstring with both docstrings combines
   def +(other); end
 
   # Adds a tag or reftag object to the tag list. If you want to parse
   # tag data based on the {Tags::DefaultFactory} tag factory, use
   # {DocstringParser} instead.
+  #
+  # @param tags [Tags::Tag, Tags::RefTag] list of tag objects to add
+  # @return [void]
   def add_tag(*tags); end
 
+  # @return [String] the raw documentation (including raw tag text)
   def all; end
 
   # Replaces the docstring with new raw content. Called by {#all=}.
+  #
+  # @param content [String] the raw comments to be parsed
   def all=(content, parse = T.unsafe(nil)); end
 
   # Returns true if the docstring has no content that is visible to a template.
+  #
+  # @param only_visible_tags [Boolean] whether only {Tags::Library.visible_tags}
+  #   should be checked, or if all tags should be considered.
+  # @return [Boolean] whether or not the docstring has content
   def blank?(only_visible_tags = T.unsafe(nil)); end
 
   # Deletes all tags where the block returns true
+  #
+  # @return [void]
+  # @since 0.7.0
+  # @yieldparam tag [Tags::Tag] the tag that is being tested
+  # @yieldreturn [Boolean] true if the tag should be deleted
   def delete_tag_if(&block); end
 
   # Delete all tags with +name+
+  #
+  # @param name [String] the tag name
+  # @return [void]
+  # @since 0.7.0
   def delete_tags(name); end
 
   # Deep-copies a docstring
+  #
+  # @note This method creates a new docstring with new tag lists, but does
+  #   not create new individual tags. Modifying the tag objects will still
+  #   affect the original tags.
+  # @return [Docstring] a new copied docstring
+  # @since 0.7.0
   def dup; end
 
   # Returns true if at least one tag by the name +name+ was declared
+  #
+  # @param name [String] the tag name to search for
+  # @return [Boolean] whether or not the tag +name+ was declared
   def has_tag?(name); end
 
+  # @return [Boolean] whether the docstring was started with "##"
   def hash_flag; end
+
   def hash_flag=(v); end
+
+  # @return [Fixnum] the first line of the {#line_range}
+  # @return [nil] if there is no associated {#line_range}
   def line; end
+
+  # @return [Range] line range in the {#object}'s file where the docstring was parsed from
   def line_range; end
+
+  # @return [Range] line range in the {#object}'s file where the docstring was parsed from
   def line_range=(_arg0); end
+
+  # @return [CodeObjects::Base] the object that owns the docstring.
   def object; end
+
+  # @return [CodeObjects::Base] the object that owns the docstring.
   def object=(_arg0); end
+
+  # @return [Array<Tags::RefTag>] the list of reference tags
   def ref_tags; end
 
   # Replaces the docstring with new raw content. Called by {#all=}.
+  #
+  # @param content [String] the raw comments to be parsed
   def replace(content, parse = T.unsafe(nil)); end
 
   # Resolves unresolved other docstring reference if there is
@@ -1928,20 +3423,37 @@ class YARD::Docstring < ::String
   #
   # Normally, you don't need to call this method
   # explicitly. Resolving unresolved reference is done implicitly.
+  #
+  # @return [void]
   def resolve_reference; end
 
   # Gets the first line of a docstring to the period or the first paragraph.
+  #
+  # @return [String] The first line or paragraph of the docstring; always ends with a period.
   def summary; end
 
   # Convenience method to return the first tag
   # object in the list of tag objects of that name
+  #
+  # @example
+  #   doc = Docstring.new("@return zero when nil")
+  #   doc.tag(:return).text  # => "zero when nil"
+  # @param name [#to_s] the tag name to return data for
+  # @return [Tags::Tag] the first tag in the list of {#tags}
   def tag(name); end
 
   # Returns a list of tags specified by +name+ or all tags if +name+ is not specified.
+  #
+  # @param name [#to_s] the tag name to return data for, or nil for all tags
+  # @return [Array<Tags::Tag>] the list of tags by the specified tag name
   def tags(name = T.unsafe(nil)); end
 
   # Reformats and returns a raw representation of the tag data using the
   # current tag and docstring data, not the original text.
+  #
+  # @return [String] the updated raw formatted docstring data
+  # @since 0.7.0
+  # @todo Add Tags::Tag#to_raw and refactor
   def to_raw; end
 
   def to_s; end
@@ -1949,31 +3461,79 @@ class YARD::Docstring < ::String
   private
 
   # Maps valid reference tags
+  #
+  # @return [Array<Tags::RefTag>] the list of valid reference tags
   def convert_ref_tags; end
 
   # Parses out comments split by newlines into a new code object
+  #
+  # @param comments [String] the newline delimited array of comments. If the comments
+  #   are passed as a String, they will be split by newlines.
+  # @return [String] the non-metadata portion of the comments to
+  #   be used as a docstring
   def parse_comments(comments); end
 
   # A stable sort_by method.
+  #
+  # @param list [Enumerable] the list to sort.
+  # @return [Array] a stable sorted list.
   def stable_sort_by(list); end
 
   class << self
+    # @note Plugin developers should make sure to reset this value
+    #   after parsing finishes. This can be done via the
+    #   {Parser::SourceParser.after_parse_list} callback. This will
+    #   ensure that YARD can properly parse multiple projects in
+    #   the same process.
+    # @return [Class<DocstringParser>] the parser class used to parse
+    #   text and optional meta-data from docstrings. Defaults to
+    #   {DocstringParser}.
+    # @see DocstringParser
+    # @see Parser::SourceParser.after_parse_list
     def default_parser; end
+
+    # @note Plugin developers should make sure to reset this value
+    #   after parsing finishes. This can be done via the
+    #   {Parser::SourceParser.after_parse_list} callback. This will
+    #   ensure that YARD can properly parse multiple projects in
+    #   the same process.
+    # @return [Class<DocstringParser>] the parser class used to parse
+    #   text and optional meta-data from docstrings. Defaults to
+    #   {DocstringParser}.
+    # @see DocstringParser
+    # @see Parser::SourceParser.after_parse_list
     def default_parser=(_arg0); end
 
     # Creates a new docstring without performing any parsing through
     # a {DocstringParser}. This method is called by +DocstringParser+
     # when creating the new docstring object.
+    #
+    # @param text [String] the textual portion of the docstring
+    # @param tags [Array<Tags::Tag>] the list of tag objects in the docstring
+    # @param object [CodeObjects::Base, nil] the object associated with the
+    #   docstring. May be nil.
+    # @param raw_data [String] the complete docstring, including all
+    #   original formatting and any unparsed tags/directives.
+    # @param ref_object [CodeObjects::Base, nil] a reference object used for
+    #   the base set of documentation / tag information.
     def new!(text, tags = T.unsafe(nil), object = T.unsafe(nil), raw_data = T.unsafe(nil), ref_object = T.unsafe(nil)); end
 
     # Creates a parser object using the current {default_parser}.
     # Equivalent to:
-    # Docstring.default_parser.new(*args)
+    #   Docstring.default_parser.new(*args)
+    #
+    # @param args arguments are passed to the {DocstringParser}
+    #   class. See {DocstringParser#initialize} for details on
+    #   arguments.
+    # @return [DocstringParser] the parser object used to parse a
+    #   docstring.
     def parser(*args); end
   end
 end
 
 # Matches a tag at the start of a comment line
+#
+# @deprecated Use {DocstringParser::META_MATCH}
 YARD::Docstring::META_MATCH = T.let(T.unsafe(nil), Regexp)
 
 # Parses text and creates a {Docstring} object to represent documentation
@@ -1986,81 +3546,235 @@ YARD::Docstring::META_MATCH = T.let(T.unsafe(nil), Regexp)
 # setting the {Docstring.default_parser} attribute with the name of the
 # subclass. This allows developers to change the way docstrings are
 # parsed, allowing for completely different docstring syntaxes.
+#
+# @example Creating a Docstring with a DocstringParser
+#   DocstringParser.new.parse("text here").to_docstring
+# @example Creating a Custom DocstringParser
+#   # Parses docstrings backwards!
+#   class ReverseDocstringParser
+#   def parse_content(content)
+#   super(content.reverse)
+#   end
+#   end
+#
+#   # Set the parser as default when parsing
+#   YARD::Docstring.default_parser = ReverseDocstringParser
+# @see #parse_content
+# @since 0.8.0
 class YARD::DocstringParser
   # Creates a new parser to parse docstring data
+  #
+  # @param library [Tags::Library] a tag library for recognizing
+  #   tags.
+  # @return [DocstringParser] a new instance of DocstringParser
+  # @since 0.8.0
   def initialize(library = T.unsafe(nil)); end
 
   # Creates a new directive using the registered {#library}
+  #
+  # @return [Tags::Directive] the directive object that is created
+  # @since 0.8.0
   def create_directive(tag_name, tag_buf); end
 
   # Creates a {Tags::RefTag}
+  #
+  # @since 0.8.0
   def create_ref_tag(tag_name, name, object_name); end
 
   # Creates a tag from the {Tags::DefaultFactory tag factory}.
   #
   # To add an already created tag object, append it to {#tags}.
+  #
+  # @param tag_name [String] the tag name
+  # @param tag_buf [String] the text attached to the tag with newlines removed.
+  # @return [Tags::Tag, Tags::RefTag] a tag
+  # @since 0.8.0
   def create_tag(tag_name, tag_buf = T.unsafe(nil)); end
 
+  # @return [Array<Tags::Directive>] a list of directives identified
+  #   by the parser. This list will not be passed on to the
+  #   Docstring object.
+  # @since 0.8.0
   def directives; end
+
+  # @return [Array<Tags::Directive>] a list of directives identified
+  #   by the parser. This list will not be passed on to the
+  #   Docstring object.
+  # @since 0.8.0
   def directives=(_arg0); end
+
+  # @return [Handlers::Base, nil] the handler parsing this
+  #   docstring. May be nil if this docstring parser is not
+  #   initialized through
+  # @since 0.8.0
   def handler; end
+
+  # @return [Handlers::Base, nil] the handler parsing this
+  #   docstring. May be nil if this docstring parser is not
+  #   initialized through
+  # @since 0.8.0
   def handler=(_arg0); end
+
+  # @return [Tags::Library] the tag library being used to
+  #   identify registered tags in the docstring.
+  # @since 0.8.0
   def library; end
+
+  # @return [Tags::Library] the tag library being used to
+  #   identify registered tags in the docstring.
+  # @since 0.8.0
   def library=(_arg0); end
+
+  # @return [CodeObjects::Base, nil] the object associated with
+  #   the docstring being parsed. May be nil if the docstring is
+  #   not attached to any object.
+  # @since 0.8.0
   def object; end
+
+  # @return [CodeObjects::Base, nil] the object associated with
+  #   the docstring being parsed. May be nil if the docstring is
+  #   not attached to any object.
+  # @since 0.8.0
   def object=(_arg0); end
 
   # Parses all content and returns itself.
+  #
+  # @param content [String] the docstring text to parse
+  # @param object [CodeObjects::Base] the object that the docstring
+  #   is attached to. Will be passed to directives to act on
+  #   this object.
+  # @param handler [Handlers::Base, nil] the handler object that is
+  #   parsing this object. May be nil if this parser is not being
+  #   called from a {Parser::SourceParser} context.
+  # @return [self] the parser object. To get the docstring,
+  #   call {#to_docstring}.
+  # @see #to_docstring
+  # @since 0.8.0
   def parse(content, object = T.unsafe(nil), handler = T.unsafe(nil)); end
 
   # Parses a given block of text.
+  #
+  # @note Subclasses can override this method to perform custom
+  #   parsing of content data.
+  # @param content [String] the content to parse
+  # @since 0.8.0
   def parse_content(content); end
 
   # Call post processing callbacks on parser.
   # This is called implicitly by parser. Use this when
   # manually configuring a {Docstring} object.
+  #
+  # @return [void]
+  # @since 0.8.0
   def post_process; end
 
+  # @return [String] the complete input string to the parser.
+  # @since 0.8.0
   def raw_text; end
+
+  # @return [String] the complete input string to the parser.
+  # @since 0.8.0
   def raw_text=(_arg0); end
+
+  # @return [CodeObjects::Base, nil] the object referenced by
+  #   the docstring being parsed. May be nil if the docstring doesn't
+  #   refer to any object.
+  # @since 0.8.0
   def reference; end
+
+  # @return [CodeObjects::Base, nil] the object referenced by
+  #   the docstring being parsed. May be nil if the docstring doesn't
+  #   refer to any object.
+  # @since 0.8.0
   def reference=(_arg0); end
+
+  # @return [OpenStruct] any arbitrary state to be passed between
+  #   tags during parsing. Mainly used by directives to coordinate
+  #   behaviour (so that directives can be aware of other directives
+  #   used in a docstring).
+  # @since 0.8.0
   def state; end
+
+  # @return [OpenStruct] any arbitrary state to be passed between
+  #   tags during parsing. Mainly used by directives to coordinate
+  #   behaviour (so that directives can be aware of other directives
+  #   used in a docstring).
+  # @since 0.8.0
   def state=(_arg0); end
 
   # Backward compatibility to detect old tags that should be specified
   # as directives in 0.8 and onward.
+  #
+  # @return [Boolean]
+  # @since 0.8.0
   def tag_is_directive?(tag_name); end
 
+  # @return [Array<Tags::Tag>] the list of meta-data tags identified
+  #   by the parser
+  # @since 0.8.0
   def tags; end
+
+  # @return [Array<Tags::Tag>] the list of meta-data tags identified
+  #   by the parser
+  # @since 0.8.0
   def tags=(_arg0); end
+
+  # @return [String] the parsed text portion of the docstring,
+  #   with tags removed.
+  # @since 0.8.0
   def text; end
+
+  # @return [String] the parsed text portion of the docstring,
+  #   with tags removed.
+  # @since 0.8.0
   def text=(_arg0); end
+
+  # @return [Docstring] translates parsed text into
+  #   a Docstring object.
+  # @since 0.8.0
   def to_docstring; end
 
   private
 
   # Calls all {after_parse} callbacks
+  #
+  # @since 0.8.0
   def call_after_parse_callbacks; end
 
   # Calls the {Tags::Directive#after_parse} callback on all the
   # created directives.
+  #
+  # @since 0.8.0
   def call_directives_after_parse; end
 
+  # @since 0.8.0
   def detect_reference(content); end
+
+  # @since 0.8.0
   def namespace; end
 
   class << self
     # Creates a callback that is called after a docstring is successfully
     # parsed. Use this method to perform sanity checks on a docstring's
     # tag data, or add any extra tags automatically to a docstring.
+    #
+    # @return [void]
+    # @since 0.8.0
+    # @yield [parser] a block to be called after a docstring is parsed
+    # @yieldparam parser [DocstringParser] the docstring parser object
+    #   with all directives and tags created.
+    # @yieldreturn [void]
     def after_parse(&block); end
 
+    # @return [Array<Proc>] the {after_parse} callback proc objects
+    # @since 0.8.0
     def after_parse_callbacks; end
   end
 end
 
 # The regular expression to match the tag syntax
+#
+# @since 0.8.0
 YARD::DocstringParser::META_MATCH = T.let(T.unsafe(nil), Regexp)
 
 module YARD::GemIndex
@@ -2114,13 +3828,13 @@ module YARD::Handlers; end
 # declaration, taking either a {Parser::Ruby::Legacy::RubyToken}, {String} or `Regexp`.
 # Here is a simple example which processes module statements.
 #
-# class MyModuleHandler < YARD::Handlers::Base
-# handles TkMODULE
+#   class MyModuleHandler < YARD::Handlers::Base
+#     handles TkMODULE
 #
-# def process
-# # do something
-# end
-# end
+#     def process
+#       # do something
+#     end
+#   end
 #
 # == Processing Handler Data
 #
@@ -2144,11 +3858,11 @@ module YARD::Handlers; end
 # The +namespace+ attribute is a {CodeObjects::NamespaceObject namespace object}
 # which represents the current namespace that the parser is in. For instance:
 #
-# module SomeModule
-# class MyClass
-# def mymethod; end
-# end
-# end
+#   module SomeModule
+#     class MyClass
+#       def mymethod; end
+#     end
+#   end
 #
 # If a handler was to parse the 'class MyClass' statement, it would
 # be necessary to know that it belonged inside the SomeModule module.
@@ -2199,18 +3913,44 @@ module YARD::Handlers; end
 # YARD has the ability to continue into any block: class, module, method,
 # even if statements. For this reason, the block parsing method must be
 # invoked explicitly out of efficiency sake.
+#
+# @abstract Subclass this class to provide a handler for YARD to use
+#   during the processing phase.
+# @see CodeObjects::Base
+# @see CodeObjects::NamespaceObject
+# @see handles
+# @see #namespace
+# @see #owner
+# @see #register
+# @see #parse_block
 class YARD::Handlers::Base
   include ::YARD::CodeObjects
   include ::YARD::Parser
 
+  # @return [Base] a new instance of Base
   def initialize(source_parser, stmt); end
 
   # Aborts a handler by raising {Handlers::HandlerAborted}.
   # An exception will only be logged in debugging mode for
   # this kind of handler exit.
+  #
+  # @raise [Handlers::HandlerAborted]
+  # @since 0.8.4
   def abort!; end
 
+  # @abstract Implement this method to return the parameters in a method call
+  #   statement. It should return an empty list if the statement is not a
+  #   method call.
+  # @raise [NotImplementedError]
+  # @return [Array<String>] a list of argument names
   def call_params; end
+
+  # @abstract Implement this method to return the method being called in
+  #   a method call. It should return nil if the statement is not a method
+  #   call.
+  # @raise [NotImplementedError]
+  # @return [String] the method name being called
+  # @return [nil] if the statement is not a method call
   def caller_method; end
 
   # Ensures that a specific +object+ has been parsed and loaded into the
@@ -2221,6 +3961,17 @@ class YARD::Handlers::Base
   # Calling this method defers the handler until all other files have been
   # processed. If the object gets resolved, the rest of the handler continues,
   # otherwise an exception is raised.
+  #
+  # @example Adding a mixin to the String class programmatically
+  #   ensure_loaded! P('String')
+  #   # "String" is now guaranteed to be loaded
+  #   P('String').mixins << P('MyMixin')
+  # @param object [Proxy, CodeObjects::Base] the object to resolve.
+  # @param max_retries [Integer] the number of times to defer the handler
+  #   before raising a +NamespaceMissingError+.
+  # @raise [NamespaceMissingError] if the object is not resolved within
+  #   +max_retries+ attempts, this exception is raised and the handler
+  #   finishes processing.
   def ensure_loaded!(object, max_retries = T.unsafe(nil)); end
 
   # Returns the value of attribute extra_state.
@@ -2233,17 +3984,26 @@ class YARD::Handlers::Base
   def namespace; end
 
   # Sets the attribute namespace
+  #
+  # @param value the value to set the attribute namespace to.
   def namespace=(v); end
 
   # Returns the value of attribute owner.
   def owner; end
 
   # Sets the attribute owner
+  #
+  # @param value the value to set the attribute owner to.
   def owner=(v); end
 
   # Parses the semantic "block" contained in the statement node.
+  #
+  # @abstract Subclasses should call {Processor#process parser.process}
+  # @raise [NotImplementedError]
   def parse_block(*_arg0); end
 
+  # @return [Processor] the processor object that manages all global state
+  #   during handling.
   def parser; end
 
   # The main handler method called by the parser on a statement
@@ -2251,10 +4011,25 @@ class YARD::Handlers::Base
   #
   # Subclasses should override this method to provide the handling
   # functionality for the class.
+  #
+  # @raise [NotImplementedError]
+  # @return [Array<CodeObjects::Base>, CodeObjects::Base, Object] If this method returns a code object (or a list of them),
+  #   they are passed to the +#register+ method which adds basic
+  #   attributes. It is not necessary to return any objects and in
+  #   some cases you may want to explicitly avoid the returning of
+  #   any objects for post-processing by the register method.
+  # @see handles
+  # @see #register
   def process; end
 
   # Executes a given block with specific state values for {#owner},
   # {#namespace} and {#scope}.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @yield a block to execute with the given state values.
   def push_state(opts = T.unsafe(nil)); end
 
   # Do some post processing on a list of code objects.
@@ -2262,56 +4037,105 @@ class YARD::Handlers::Base
   # the filename, line number, {CodeObjects::Base#dynamic},
   # source code and {CodeObjects::Base#docstring},
   # but only if they don't exist.
+  #
+  # @param objects [Array<CodeObjects::Base>] the list of objects to post-process.
+  # @return [CodeObjects::Base, Array<CodeObjects::Base>] returns whatever is passed in, for chainability.
   def register(*objects); end
 
   # Registers any docstring found for the object and expands macros
+  #
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_docstring(object, docstring = T.unsafe(nil), stmt = T.unsafe(nil)); end
 
   # Registers the object as dynamic if the object is defined inside
   # a method or block (owner != namespace)
+  #
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_dynamic(object); end
 
   # Ensures that the object's namespace is loaded before attaching it
   # to the namespace.
+  #
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_ensure_loaded(object); end
 
   # Registers the file/line of the declaration with the object
+  #
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_file_info(object, file = T.unsafe(nil), line = T.unsafe(nil), comments = T.unsafe(nil)); end
 
   # Registers the object as being inside a specific group
+  #
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_group(object, group = T.unsafe(nil)); end
 
   # Registers the same method information on the module function, if
   # the object was defined as a module function.
+  #
+  # @param object [CodeObjects::Base] the possible module function object
+  #   to copy data for
+  # @since 0.8.0
   def register_module_function(object); end
 
+  # @param object [CodeObjects::Base] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_source(object, source = T.unsafe(nil), type = T.unsafe(nil)); end
 
   # Registers any transitive tags from the namespace on the object
+  #
+  # @param object [CodeObjects::Base, nil] the object to register
+  # @return [void]
+  # @since 0.8.0
   def register_transitive_tags(object); end
 
   # Registers visibility on a method object. If the object does not
   # respond to setting visibility, nothing is done.
+  #
+  # @param object [#visibility=] the object to register
+  # @param visibility [Symbol] the visibility to set on the object
+  # @since 0.8.0
   def register_visibility(object, visibility = T.unsafe(nil)); end
 
   # Returns the value of attribute scope.
   def scope; end
 
   # Sets the attribute scope
+  #
+  # @param value the value to set the attribute scope to.
   def scope=(v); end
 
+  # @return [Object] the statement object currently being processed. Usually
+  #   refers to one semantic language statement, though the strict definition
+  #   depends on the parser used.
   def statement; end
 
   # Returns the value of attribute visibility.
   def visibility; end
 
   # Sets the attribute visibility
+  #
+  # @param value the value to set the attribute visibility to.
   def visibility=(v); end
 
   class << self
     # Clear all registered subclasses. Testing purposes only
+    #
+    # @return [void]
     def clear_subclasses; end
 
+    # @return [Array] a list of matchers for the handler object.
+    # @see handles?
     def handlers; end
 
     # Declares the statement type which will be processed
@@ -2323,6 +4147,13 @@ class YARD::Handlers::Base
     # {#parse_block} would only be executed by one of
     # the handlers, otherwise the same code will be parsed
     # multiple times and slow YARD down.
+    #
+    # @param matches [Parser::Ruby::Legacy::RubyToken, Symbol, String, Regexp] statements that match the declaration will be
+    #   processed by this handler. A {String} match is
+    #   equivalent to a +/\Astring/+ regular expression
+    #   (match from the beginning of the line), and all
+    #   token matches match only the first token of the
+    #   statement.
     def handles(*matches); end
 
     # This class is implemented by {Ruby::Base} and {Ruby::Legacy::Base}.
@@ -2330,124 +4161,250 @@ class YARD::Handlers::Base
     # this method to return true if the handler should process the given
     # statement object. Use {handlers} to enumerate the matchers declared
     # for the handler class.
+    #
+    # @param statement a statement object or node (depends on language type)
+    # @raise [NotImplementedError]
+    # @return [Boolean] whether or not this handler object should process
+    #   the given statement
     def handles?(statement); end
 
     # Declares that a handler should only be called when inside a filename
     # by its basename or a regex match for the full path.
+    #
+    # @param filename [String, Regexp] a matching filename or regex
+    # @return [void]
+    # @since 0.6.2
     def in_file(filename); end
 
+    # @private
     def inherited(subclass); end
+
+    # @return [Boolean] whether the filename matches the declared file
+    #   match for a handler. If no file match is specified, returns true.
+    # @since 0.6.2
     def matches_file?(filename); end
 
     # Declares that the handler should only be called when inside a
     # {CodeObjects::NamespaceObject}, not a method body.
+    #
+    # @return [void]
     def namespace_only; end
 
+    # @return [Boolean] whether the handler should only be processed inside
+    #   a namespace.
     def namespace_only?; end
 
     # Generates a +process+ method, equivalent to +def process; ... end+.
     # Blocks defined with this syntax will be wrapped inside an anonymous
     # module so that the handler class can be extended with mixins that
     # override the +process+ method without alias chaining.
+    #
+    # @return [void]
+    # @see #process
+    # @since 0.5.4
     def process(&block); end
 
     # Returns all registered handler subclasses.
+    #
+    # @return [Array<Base>] a list of handlers
     def subclasses; end
   end
 end
 
 # CRuby Handlers
+#
+# @since 0.8.0
 module YARD::Handlers::C; end
 
+# @since 0.8.0
 class YARD::Handlers::C::AliasHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::AliasHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::AttributeHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::AttributeHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 
+# @since 0.8.0
 class YARD::Handlers::C::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::C
   include ::YARD::Handlers::Common::MethodHandler
   include ::YARD::Handlers::C::HandlerMethods
 
+  # @since 0.8.0
   def ensure_variable_defined!(var, max_retries = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def namespace_for_variable(var); end
+
+  # @since 0.8.0
   def namespaces; end
+
+  # @since 0.8.0
   def override_comments; end
+
+  # @since 0.8.0
   def parse_block(opts = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def process_file(file, object); end
+
+  # @since 0.8.0
   def processed_files; end
+
+  # @since 0.8.0
   def register_docstring(object, docstring = T.unsafe(nil), stmt = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def register_file_info(object, file = T.unsafe(nil), line = T.unsafe(nil), comments = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def register_source(object, source = T.unsafe(nil), type = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def register_visibility(object, visibility = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def symbols; end
 
   private
 
+  # @since 0.8.0
   def remove_var_prefix(var); end
 
   class << self
+    # @return [Boolean] whether the handler handles this statement
+    # @since 0.8.0
     def handles?(statement, processor); end
+
+    # @since 0.8.0
     def statement_class(type = T.unsafe(nil)); end
   end
 end
 
 # Generated by update_error_map.rb (Copy+past results)
+#
+# @since 0.8.0
 YARD::Handlers::C::Base::ERROR_CLASS_NAMES = T.let(T.unsafe(nil), Hash)
 
+# @since 0.8.0
 class YARD::Handlers::C::ClassHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::ClassHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 YARD::Handlers::C::ClassHandler::MATCH2 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::ConstantHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::ConstantHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 
+# @since 0.8.0
 module YARD::Handlers::C::HandlerMethods
   include ::YARD::Parser::C
   include ::YARD::CodeObjects
   include ::YARD::Handlers::Common::MethodHandler
 
+  # @since 0.8.0
   def handle_alias(var_name, new_name, old_name); end
+
+  # @since 0.8.0
   def handle_attribute(var_name, name, read, write); end
+
+  # @since 0.8.0
   def handle_class(var_name, class_name, parent, in_module = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def handle_constants(type, var_name, const_name, value); end
+
+  # @since 0.8.0
   def handle_method(scope, var_name, name, func_name, _source_file = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def handle_module(var_name, module_name, in_module = T.unsafe(nil)); end
 
   private
 
+  # @since 0.8.0
   def find_constant_docstring(object); end
+
+  # @since 0.8.0
   def find_method_body(object, symbol); end
+
+  # @since 0.8.0
   def record_parameters(object, symbol, src); end
 end
 
 # Handles the Init_Libname() method
+#
+# @since 0.8.0
 class YARD::Handlers::C::InitHandler < ::YARD::Handlers::C::Base; end
 
+# @since 0.8.0
 YARD::Handlers::C::InitHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::MethodHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::MethodHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 YARD::Handlers::C::MethodHandler::MATCH2 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 YARD::Handlers::C::MethodHandler::MATCH3 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::MixinHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::MixinHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::ModuleHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::ModuleHandler::MATCH1 = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 YARD::Handlers::C::ModuleHandler::MATCH2 = T.let(T.unsafe(nil), Regexp)
 
 # Parses comments
+#
+# @since 0.8.0
 class YARD::Handlers::C::OverrideCommentHandler < ::YARD::Handlers::C::Base
+  # @since 0.8.0
   def register_docstring(object, docstring = T.unsafe(nil), stmt = T.unsafe(nil)); end
+
+  # @since 0.8.0
   def register_file_info(object, file = T.unsafe(nil), line = T.unsafe(nil), comments = T.unsafe(nil)); end
 end
 
+# @since 0.8.0
 class YARD::Handlers::C::PathHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::PathHandler::MATCH = T.let(T.unsafe(nil), Regexp)
+
+# @since 0.8.0
 class YARD::Handlers::C::StructHandler < ::YARD::Handlers::C::Base; end
+
+# @since 0.8.0
 YARD::Handlers::C::StructHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 
 # Keeps track of function bodies for symbol lookup during Ruby method declarations
+#
+# @since 0.8.0
 class YARD::Handlers::C::SymbolHandler < ::YARD::Handlers::C::Base; end
 
+# @since 0.8.0
 YARD::Handlers::C::SymbolHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 
 # Shared logic between C and Ruby handlers.
@@ -2455,24 +4412,32 @@ module YARD::Handlers::Common; end
 
 # Shared functionality between Ruby and C method handlers.
 module YARD::Handlers::Common::MethodHandler
+  # @param obj [MethodObject]
   def add_predicate_return_tag(obj); end
 end
 
 # Raise this error when a handler should exit before completing.
 # The exception will be silenced, allowing the next handler(s) in the
 # queue to be executed.
+#
+# @since 0.8.4
 class YARD::Handlers::HandlerAborted < ::RuntimeError; end
 
 # Raised during processing phase when a handler needs to perform
 # an operation on an object's namespace but the namespace could
 # not be resolved.
 class YARD::Handlers::NamespaceMissingError < ::YARD::Parser::UndocumentableError
+  # @return [NamespaceMissingError] a new instance of NamespaceMissingError
   def initialize(object); end
 
   # The object the error occurred on
+  #
+  # @return [CodeObjects::Base] a code object
   def object; end
 
   # The object the error occurred on
+  #
+  # @return [CodeObjects::Base] a code object
   def object=(_arg0); end
 end
 
@@ -2488,8 +4453,13 @@ end
 # properties that any handler can set during the duration of the post
 # processing of a file from {#extra_state}. If you need to access state
 # across different files, look at {#globals}.
+#
+# @see Handlers::Base
 class YARD::Handlers::Processor
   # Creates a new Processor for a +file+.
+  #
+  # @param parser [Parser::SourceParser] the parser used to initialize the processor
+  # @return [Processor] a new instance of Processor
   def initialize(parser); end
 
   # Share state across different handlers inside of a file.
@@ -2498,6 +4468,9 @@ class YARD::Handlers::Processor
   # for the entire source file. Use this attribute to store any data
   # your handler might need to save during the parsing of a file. If
   # you need to save state across files, see {#globals}.
+  #
+  # @return [OpenStruct] an open structure that can store arbitrary data
+  # @see #globals
   def extra_state; end
 
   # Share state across different handlers inside of a file.
@@ -2506,65 +4479,142 @@ class YARD::Handlers::Processor
   # for the entire source file. Use this attribute to store any data
   # your handler might need to save during the parsing of a file. If
   # you need to save state across files, see {#globals}.
+  #
+  # @return [OpenStruct] an open structure that can store arbitrary data
+  # @see #globals
   def extra_state=(_arg0); end
 
+  # @return [String] the filename
   def file; end
+
+  # @return [String] the filename
   def file=(_arg0); end
 
   # Searches for all handlers in {Base.subclasses} that match the +statement+
+  #
+  # @param statement the statement object to match.
+  # @return [Array<Base>] a list of handlers to process the statement with.
   def find_handlers(statement); end
 
   # Handlers can share state for the entire post processing stage through
   # this attribute. Note that post processing stage spans multiple files.
   # To share state only within a single file, use {#extra_state}
+  #
+  # @example Sharing state among two handlers
+  #   class Handler1 < YARD::Handlers::Ruby::Base
+  #   handles :class
+  #   process { globals.foo = :bar }
+  #   end
+  #
+  #   class Handler2 < YARD::Handlers::Ruby::Base
+  #   handles :method
+  #   process { puts globals.foo }
+  #   end
+  # @return [OpenStruct] global shared state for post-processing stage
+  # @see #extra_state
   def globals; end
 
   # Handlers can share state for the entire post processing stage through
   # this attribute. Note that post processing stage spans multiple files.
   # To share state only within a single file, use {#extra_state}
+  #
+  # @example Sharing state among two handlers
+  #   class Handler1 < YARD::Handlers::Ruby::Base
+  #   handles :class
+  #   process { globals.foo = :bar }
+  #   end
+  #
+  #   class Handler2 < YARD::Handlers::Ruby::Base
+  #   handles :method
+  #   process { puts globals.foo }
+  #   end
+  # @return [OpenStruct] global shared state for post-processing stage
+  # @see #extra_state
   def globals=(_arg0); end
 
+  # @return [CodeObjects::NamespaceObject] the current namespace
   def namespace; end
+
+  # @return [CodeObjects::NamespaceObject] the current namespace
   def namespace=(_arg0); end
+
+  # @return [CodeObjects::Base, nil] unlike the namespace, the owner
+  #   is a non-namespace object that should be stored between statements.
+  #   For instance, when parsing a method body, the {CodeObjects::MethodObject}
+  #   is set as the owner, in case any extra method information is processed.
   def owner; end
+
+  # @return [CodeObjects::Base, nil] unlike the namespace, the owner
+  #   is a non-namespace object that should be stored between statements.
+  #   For instance, when parsing a method body, the {CodeObjects::MethodObject}
+  #   is set as the owner, in case any extra method information is processed.
   def owner=(_arg0); end
 
   # Continue parsing the remainder of the files in the +globals.ordered_parser+
   # object. After the remainder of files are parsed, processing will continue
   # on the current file.
+  #
+  # @return [void]
+  # @see Parser::OrderedParser
   def parse_remaining_files; end
 
+  # @return [Symbol] the parser type (:ruby, :ruby18, :c)
   def parser_type; end
+
+  # @return [Symbol] the parser type (:ruby, :ruby18, :c)
   def parser_type=(_arg0); end
 
   # Processes a list of statements by finding handlers to process each
   # one.
+  #
+  # @param statements [Array] a list of statements
+  # @return [void]
   def process(statements); end
 
+  # @return [Symbol] the current scope (class, instance)
   def scope; end
+
+  # @return [Symbol] the current scope (class, instance)
   def scope=(_arg0); end
+
+  # @return [Symbol] the current visibility (public, private, protected)
   def visibility; end
+
+  # @return [Symbol] the current visibility (public, private, protected)
   def visibility=(_arg0); end
 
   private
 
   # Returns the handler base class
+  #
+  # @return [Base] the base class
   def handler_base_class; end
 
   # The module holding the handlers to be loaded
+  #
+  # @return [Module] the module containing the handlers depending on
+  #   {#parser_type}.
   def handler_base_namespace; end
 
+  # @return [Boolean]
   def handles?(handler, statement); end
 
   # Loads handlers from {#handler_base_namespace}. This ensures that
   # Ruby1.9 handlers are never loaded into 1.8; also lowers the amount
   # of modules that are loaded
+  #
+  # @return [void]
   def load_handlers; end
 
   class << self
+    # @private
+    # @return [Hash] a list of registered parser type extensions
+    # @since 0.6.0
     def namespace_for_handler; end
 
     # Registers a new namespace for handlers of the given type.
+    #
+    # @since 0.6.0
     def register_handler_namespace(type, ns); end
   end
 end
@@ -2580,6 +4630,11 @@ class YARD::Handlers::Ruby::AttributeHandler < ::YARD::Handlers::Ruby::Base
   protected
 
   # Strips out any non-essential arguments from the attr statement.
+  #
+  # @param params [Array<Parser::Ruby::AstNode>] a list of the parameters
+  #   in the attr call.
+  # @raise [Parser::UndocumentableError] if the arguments are not valid.
+  # @return [Array<String>] the validated attribute names
   def validated_attribute_names(params); end
 end
 
@@ -2587,6 +4642,10 @@ end
 # All handlers that subclass this base class will be used when the
 # new-style parser is used. For implementing legacy handlers, see
 # {Legacy::Base}.
+#
+# @abstract See {Handlers::Base} for subclassing information.
+# @see Handlers::Base
+# @see Legacy::Base
 class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::Ruby
   extend ::YARD::Parser::Ruby
@@ -2596,6 +4655,8 @@ class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
   def parse_block(inner_node, opts = T.unsafe(nil)); end
 
   class << self
+    # @return [Boolean] whether or not an {AstNode} object should be
+    #   handled by this handler
     def handles?(node); end
 
     # Matcher for handling a node with a specific meta-type. An {AstNode}
@@ -2607,22 +4668,50 @@ class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
     # though you should not include the "?" suffix in your declaration.
     # Some examples are: "condition", "call", "literal", "kw", "token",
     # "ref".
+    #
+    # @example Handling any conditional statement (if, unless)
+    #   handles meta_type(:condition)
+    # @param type [Symbol] the meta-type to match. A meta-type can be
+    #   any method name + "?" that {AstNode} responds to.
+    # @return [void]
     def meta_type(type); end
 
     # Matcher for handling any type of method call. Method calls can
     # be expressed by many {AstNode} types depending on the syntax
     # with which it is called, so YARD allows you to use this matcher
     # to simplify matching a method call.
+    #
+    # @example Match the "describe" method call
+    #   handles method_call(:describe)
+    #
+    #   # The following will be matched:
+    #   # describe(...)
+    #   # object.describe(...)
+    #   # describe "argument" do ... end
+    # @param name [#to_s] matches the method call of this name
+    # @return [void]
     def method_call(name = T.unsafe(nil)); end
   end
 end
 
 # Matches if/unless conditions inside classes and attempts to process only
 # one branch (by evaluating the condition if possible).
+#
+# @example A simple class conditional
+#   class Foo
+#   if 0
+#   # This method is ignored
+#   def xyz; end
+#   end
+#   end
 class YARD::Handlers::Ruby::ClassConditionHandler < ::YARD::Handlers::Ruby::Base
   protected
 
   # Parses the condition part of the if/unless statement
+  #
+  # @return [true, false, nil] true if the condition can be definitely
+  #   parsed to true, false if not, and nil if the condition cannot be
+  #   parsed with certainty (it's dynamic)
   def parse_condition; end
 
   def parse_else_block; end
@@ -2640,6 +4729,9 @@ class YARD::Handlers::Ruby::ClassHandler < ::YARD::Handlers::Ruby::Base
 
   # Extract the parameters from the Struct.new AST node, returning them as a list
   # of strings
+  #
+  # @param superclass [MethodCallNode] the AST node for the Struct.new call
+  # @return [Array<String>] the member names to generate methods for
   def extract_parameters(superclass); end
 
   def parse_struct_superclass(klass, superclass); end
@@ -2661,6 +4753,9 @@ class YARD::Handlers::Ruby::ConstantHandler < ::YARD::Handlers::Ruby::Base
 
   # Extract the parameters from the Struct.new AST node, returning them as a list
   # of strings
+  #
+  # @param superclass [MethodCallNode] the AST node for the Struct.new call
+  # @return [Array<String>] the member names to generate methods for
   def extract_parameters(superclass); end
 
   def process_constant(statement); end
@@ -2682,8 +4777,14 @@ module YARD::Handlers::Ruby::DSLHandlerMethods
   private
 
   def find_attached_macro; end
+
+  # @return [Boolean]
   def implicit_docstring?; end
+
+  # @return [Boolean] whether caller method matches a macro or
+  #   its alias names.
   def macro_name_matches(macro); end
+
   def method_name; end
   def method_signature; end
 end
@@ -2692,10 +4793,12 @@ YARD::Handlers::Ruby::DSLHandlerMethods::IGNORE_METHODS = T.let(T.unsafe(nil), H
 
 # Helper methods to assist with processing decorators.
 module YARD::Handlers::Ruby::DecoratorHandlerMethods
+  # @overload process_decorator
   def process_decorator(*nodes, &block); end
 
   private
 
+  # @yield [method, node, name.to_sym]
   def process_decorator_parameter(node, opts = T.unsafe(nil), &block); end
 end
 
@@ -2703,6 +4806,8 @@ end
 class YARD::Handlers::Ruby::ExceptionHandler < ::YARD::Handlers::Ruby::Base; end
 
 # Handles 'extend' call to include modules into the class scope of another
+#
+# @see MixinHandler
 class YARD::Handlers::Ruby::ExtendHandler < ::YARD::Handlers::Ruby::MixinHandler
   def scope; end
 
@@ -2713,15 +4818,35 @@ end
 
 # To implement a custom handler matcher, subclass this class and implement
 # {#matches?} to return whether a node matches the handler.
+#
+# @example A Custom Handler Matcher Extension
+#   # Implements a handler that checks for a specific string
+#   # in the node's source.
+#   class MyExtension < HandlesExtension
+#   def matches?(node) node.source.include?(name) end
+#   end
+#
+#   # This handler will handle any node where the source includes 'foo'
+#   class MyHandler < Handlers::Ruby::Base
+#   handles MyExtension.new('foo')
+#   end
 class YARD::Handlers::Ruby::HandlesExtension
   # Creates a new extension with a specific matcher value +name+
+  #
+  # @param name [Object] the matcher value to check against {#matches?}
+  # @return [HandlesExtension] a new instance of HandlesExtension
   def initialize(name); end
 
   # Tests if the node matches the handler
+  #
+  # @param node [Parser::Ruby::AstNode] a Ruby node
+  # @raise [NotImplementedError]
+  # @return [Boolean] whether the +node+ matches the handler
   def matches?(node); end
 
   protected
 
+  # @return [String] the extension matcher value
   def name; end
 end
 
@@ -2736,6 +4861,8 @@ class YARD::Handlers::Ruby::Legacy::AttributeHandler < ::YARD::Handlers::Ruby::L
 
 # This is the base handler for the legacy parser. To implement a legacy
 # handler, subclass this class.
+#
+# @abstract See {Handlers::Base} for subclassing information.
 class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::Ruby::Legacy::RubyToken
 
@@ -2745,11 +4872,21 @@ class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   # Parses a statement's block with a set of state values. If the
   # statement has no block, nothing happens. A description of state
   # values can be found at {Handlers::Base#push_state}
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] State options
+  # @see Handlers::Base#push_state #push_state
   def parse_block(opts = T.unsafe(nil)); end
 
   private
 
   # Extracts method information for macro expansion only
+  #
+  # @return [Array<String,Array<Array<String>>>] the method name followed by method
+  #   arguments (name and optional value)
+  # @todo This is a duplicate implementation of {MethodHandler}. Refactor.
   def extract_method_details; end
 
   # The string value of a token. For example, the return value for the symbol :sym
@@ -2757,6 +4894,29 @@ class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   # +"foo #{ bar}"+ without any interpolation. The return value of the identifier
   # 'test' would be the same value: 'test'. Here is a list of common types and
   # their return values:
+  #
+  # @example
+  #   tokval(TokenList.new('"foo"').first) => "foo"
+  #   tokval(TokenList.new(':foo').first) => :foo
+  #   tokval(TokenList.new('CONSTANT').first, RubyToken::TkId) => "CONSTANT"
+  #   tokval(TokenList.new('identifier').first, RubyToken::TkId) => "identifier"
+  #   tokval(TokenList.new('3.25').first) => 3.25
+  #   tokval(TokenList.new('/xyz/i').first) => /xyz/i
+  # @param token [Token] The token of the class
+  # @param accepted_types [Array<Class<Token>>, Symbol] The allowed token types that this token can be. Defaults to [{TkVal}].
+  #   A list of types would be, for example, [+TkSTRING+, +TkSYMBOL+], to return
+  #   the token's value if it is either of those types. If +TkVal+ is accepted,
+  #   +TkNode+ is also accepted.
+  #
+  #   Certain symbol keys are allowed to specify multiple types in one fell swoop.
+  #   These symbols are:
+  #   :string       => +TkSTRING+, +TkDSTRING+, +TkDXSTRING+ and +TkXSTRING+
+  #   :attr         => +TkSYMBOL+ and +TkSTRING+
+  #   :identifier   => +TkIDENTIFIER, +TkFID+ and +TkGVAR+.
+  #   :number       => +TkFLOAT+, +TkINTEGER+
+  # @return [Object] if the token is one of the accepted types, in its real value form.
+  #   It should be noted that identifiers and constants are kept in String form.
+  # @return [nil] if the token is not any of the specified accepted types
   def tokval(token, *accepted_types); end
 
   # Returns a list of symbols or string values from a statement.
@@ -2764,8 +4924,8 @@ class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   # will only be returned to the end of the list only.
   #
   # Example:
-  # attr_accessor :a, 'b', :c, :d => ['a', 'b', 'c', 'd']
-  # attr_accessor 'a', UNACCEPTED_TYPE, 'c' => ['a', 'c']
+  #   attr_accessor :a, 'b', :c, :d => ['a', 'b', 'c', 'd']
+  #   attr_accessor 'a', UNACCEPTED_TYPE, 'c' => ['a', 'c']
   #
   # The tokval list of a {Parser::Ruby::Legacy::TokenList} of the above
   # code would be the {#tokval} value of :a, 'b',
@@ -2773,23 +4933,48 @@ class YARD::Handlers::Ruby::Legacy::Base < ::YARD::Handlers::Base
   #
   # It should also be noted that this function stops immediately at
   # any ruby keyword encountered:
-  # "attr_accessor :a, :b, :c if x == 5"  => ['a', 'b', 'c']
+  #   "attr_accessor :a, :b, :c if x == 5"  => ['a', 'b', 'c']
+  #
+  # @param tokenlist [TokenList] The list of tokens to process.
+  # @param accepted_types [Array<Class<Token>>] passed to {#tokval}
+  # @return [Array<String>] the list of tokvalues in the list.
+  # @return [Array<EMPTY>] if there are no symbols or Strings in the list
+  # @see #tokval
   def tokval_list(tokenlist, *accepted_types); end
 
   class << self
+    # @return [Boolean] whether or not a {Parser::Ruby::Legacy::Statement} object should be handled
+    #   by this handler.
     def handles?(stmt); end
   end
 end
 
 # Matches if/unless conditions inside classes and attempts to process only
 # one branch (by evaluating the condition if possible).
+#
+# @example A simple class conditional
+#   class Foo
+#   if 0
+#   # This method is ignored
+#   def xyz; end
+#   end
+#   end
+# @since 0.5.4
 class YARD::Handlers::Ruby::Legacy::ClassConditionHandler < ::YARD::Handlers::Ruby::Legacy::Base
   protected
 
   # Parses the condition part of the if/unless statement
+  #
+  # @return [true, false, nil] true if the condition can be definitely
+  #   parsed to true, false if not, and nil if the condition cannot be
+  #   parsed with certainty (it's dynamic)
+  # @since 0.5.5
   def parse_condition; end
 
+  # @since 0.5.5
   def parse_else_block; end
+
+  # @since 0.5.5
   def parse_then_block; end
 end
 
@@ -2804,6 +4989,9 @@ class YARD::Handlers::Ruby::Legacy::ClassHandler < ::YARD::Handlers::Ruby::Legac
   # Extracts the parameter list from the Struct.new declaration and returns it
   # formatted as a list of member names. Expects the user will have used symbols
   # to define the struct member names
+  #
+  # @param superstring [String] the string declaring the superclass
+  # @return [Array<String>] a list of member names
   def extract_parameters(superstring); end
 
   def parse_struct_subclass(klass, superclass_def); end
@@ -2840,6 +5028,8 @@ end
 class YARD::Handlers::Ruby::Legacy::ExceptionHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
 # Handles 'extend' call to include modules into the class scope of another
+#
+# @see MixinHandler
 class YARD::Handlers::Ruby::Legacy::ExtendHandler < ::YARD::Handlers::Ruby::Legacy::MixinHandler
   def scope; end
 
@@ -2855,6 +5045,7 @@ class YARD::Handlers::Ruby::Legacy::MethodHandler < ::YARD::Handlers::Ruby::Lega
 class YARD::Handlers::Ruby::Legacy::MixinHandler < ::YARD::Handlers::Ruby::Legacy::Base
   private
 
+  # @raise [YARD::Parser::UndocumentableError]
   def process_mixin(mixin); end
 end
 
@@ -2886,6 +5077,7 @@ class YARD::Handlers::Ruby::Legacy::VisibilityHandler < ::YARD::Handlers::Ruby::
 class YARD::Handlers::Ruby::Legacy::YieldHandler < ::YARD::Handlers::Ruby::Legacy::Base; end
 
 class YARD::Handlers::Ruby::MethodCallWrapper < ::YARD::Handlers::Ruby::HandlesExtension
+  # @return [Boolean]
   def matches?(node); end
 end
 
@@ -2903,7 +5095,9 @@ end
 class YARD::Handlers::Ruby::MixinHandler < ::YARD::Handlers::Ruby::Base
   protected
 
+  # @raise [YARD::Parser::UndocumentableError]
   def process_mixin(mixin); end
+
   def recipient(mixin); end
 end
 
@@ -2936,51 +5130,104 @@ class YARD::Handlers::Ruby::PublicClassMethodHandler < ::YARD::Handlers::Ruby::B
 end
 
 # Helper methods to parse @attr_* tags on a class.
+#
+# @deprecated The use of +@attr+ tags are deprecated since 0.8.0 in favour of
+#   the +@!attribute+ directive. This module should not be relied on.
+# @since 0.5.6
 module YARD::Handlers::Ruby::StructHandlerMethods
   include ::YARD::CodeObjects
 
   # Creates the auto-generated docstring for the getter method of a struct's
   # member. This is used so the generated documentation will look just like that
   # of an attribute defined using attr_accessor.
+  #
+  # @param klass [ClassObject] the class whose members we're working with
+  # @param member [String] the name of the member we're generating documentation for
+  # @return [String] a docstring to be attached to the getter method for this member
+  # @since 0.5.6
   def add_reader_tags(klass, new_method, member); end
 
   # Creates the auto-generated docstring for the setter method of a struct's
   # member. This is used so the generated documentation will look just like that
   # of an attribute defined using attr_accessor.
+  #
+  # @param klass [ClassObject] the class whose members we're working with
+  # @param member [String] the name of the member we're generating documentation for
+  # @return [String] a docstring to be attached to the setter method for this member
+  # @since 0.5.6
   def add_writer_tags(klass, new_method, member); end
 
   # Creates the given member methods and attaches them to the given ClassObject.
+  #
+  # @param klass [ClassObject] the class to generate attributes for
+  # @param members [Array<String>] a list of member names
+  # @since 0.5.6
   def create_attributes(klass, members); end
 
   # Creates and registers a class object with the given name and superclass name.
   # Returns it for further use.
+  #
+  # @param classname [String] the name of the class
+  # @param superclass [String] the name of the superclass
+  # @return [ClassObject] the class object for further processing/method attaching
+  # @since 0.5.6
   def create_class(classname, superclass); end
 
   # Determines whether to create an attribute method based on the class's
   # tags.
+  #
+  # @param klass [ClassObject] the class whose tags we're searching
+  # @param member [String] the name of the struct member we need
+  # @param type [Symbol] (:read) reader method, or writer method?
+  # @return [Boolean] should the attribute be created?
+  # @since 0.5.6
   def create_member_method?(klass, member, type = T.unsafe(nil)); end
 
   # Creates the getter (reader) method and attaches it to the class as an attribute.
   # Also sets up the docstring to prettify the documentation output.
+  #
+  # @param klass [ClassObject] the class to attach the method to
+  # @param member [String] the name of the member we're generating a method for
+  # @since 0.5.6
   def create_reader(klass, member); end
 
   # Creates the setter (writer) method and attaches it to the class as an attribute.
   # Also sets up the docstring to prettify the documentation output.
+  #
+  # @param klass [ClassObject] the class to attach the method to
+  # @param member [String] the name of the member we're generating a method for
+  # @since 0.5.6
   def create_writer(klass, member); end
 
   # Extracts the user's defined @member tag for a given class and its member. Returns
   # nil if the user did not define a @member tag for this struct entry.
+  #
+  # @param klass [ClassObject] the class whose tags we're searching
+  # @param member [String] the name of the struct member we need
+  # @param type [Symbol] reader method, or writer method?
+  # @return [Tags::Tag, nil] the tag matching the request, or nil if not found
+  # @since 0.5.6
   def member_tag_for_member(klass, member, type = T.unsafe(nil)); end
 
   # Retrieves all members defined in @attr* tags
+  #
+  # @param klass [ClassObject] the class with the attributes
+  # @return [Array<String>] the list of members defined as attributes on the class
+  # @since 0.5.6
   def members_from_tags(klass); end
 
   # Gets the return type for the member in a nicely formatted string. Used
   # to be injected into auto-generated docstrings.
+  #
+  # @param member_tag [Tags::Tag] the tag object to check for types
+  # @return [String] the user-declared type of the struct member, or [Object] if
+  #   the user did not define a type for this member.
+  # @since 0.5.6
   def return_type_from_tag(member_tag); end
 end
 
 class YARD::Handlers::Ruby::TestNodeWrapper < ::YARD::Handlers::Ruby::HandlesExtension
+  # @return [Boolean]
   def matches?(node); end
 end
 
@@ -2993,69 +5240,146 @@ end
 class YARD::Handlers::Ruby::YieldHandler < ::YARD::Handlers::Ruby::Base; end
 
 # Namespace for internationalization (i18n)
+#
+# @since 0.8.0
 module YARD::I18n; end
 
 # +Locale+ is a unit of translation. It has {#name} and a set of
 # messages.
+#
+# @since 0.8.2
 class YARD::I18n::Locale
   # Creates a locale for +name+ locale.
+  #
+  # @param name [String] the locale name.
+  # @return [Locale] a new instance of Locale
+  # @since 0.8.2
   def initialize(name); end
 
   # Loads translation messages from +locale_directory+/{#name}.po.
+  #
+  # @param locale_directory [String] the directory path that has
+  #   {#name}.po.
+  # @return [Boolean] +true+ if PO file exists, +false+ otherwise.
+  # @since 0.8.2
   def load(locale_directory); end
 
+  # @return [String] the name of the locale. It used IETF language
+  #   tag format +[language[_territory][.codeset][@modifier]]+.
+  # @see http://tools.ietf.org/rfc/bcp/bcp47.txt BCP 47 - Tags for Identifying Languages
+  # @since 0.8.2
   def name; end
+
+  # @param message [String] the translation target message.
+  # @return [String] translated message. If tarnslation isn't
+  #   registered, the +message+ is returned.
+  # @since 0.8.2
   def translate(message); end
 
   class << self
+    # @return [String, nil] the default locale name.
+    # @since 0.8.4
     def default; end
+
+    # @return [String, nil] the default locale name.
+    # @since 0.8.4
     def default=(locale); end
   end
 end
 
 # +Message+ is a translation target message. It has message ID as
 # {#id} and some properties {#locations} and {#comments}.
+#
+# @since 0.8.1
 class YARD::I18n::Message
   # Creates a trasnlate target message for message ID +id+.
+  #
+  # @param id [String] the message ID of the translate target message.
+  # @return [Message] a new instance of Message
+  # @since 0.8.1
   def initialize(id); end
 
+  # @param other [Message] the +Message+ to be compared.
+  # @return [Boolean] checks whether this message is equal to another.
+  # @since 0.8.1
   def ==(other); end
 
   # Adds a comment for the message.
+  #
+  # @param comment [String] the comment for the message to be added.
+  # @return [void]
+  # @since 0.8.1
   def add_comment(comment); end
 
   # Adds location information for the message.
+  #
+  # @param path [String] the path where the message appears.
+  # @param line [Integer] the line number where the message appears.
+  # @return [void]
+  # @since 0.8.1
   def add_location(path, line); end
 
+  # @return [Set] the set of comments for the messages.
+  # @since 0.8.1
   def comments; end
+
+  # @return [String] the message ID of the trnslation target message.
+  # @since 0.8.1
   def id; end
 
   # path and line number where the message is appeared.
+  #
+  # @return [Set] the set of locations. Location is an array of
+  # @since 0.8.1
   def locations; end
 end
 
 # Acts as a container for {Message} objects.
+#
+# @since 0.8.1
 class YARD::I18n::Messages
   include ::Enumerable
 
   # Creates a new container.
+  #
+  # @return [Messages] a new instance of Messages
+  # @since 0.8.1
   def initialize; end
 
   # Checks if this messages list is equal to another messages list.
+  #
+  # @param other [Messages] the container to compare.
+  # @return [Boolean] whether +self+ and +other+ is equivalence or not.
+  # @since 0.8.1
   def ==(other); end
 
+  # @param id [String] the message ID to perform a lookup on.
+  # @return [Message, nil] a registered message for the given +id+,
+  #   or nil if no message for the ID is found.
+  # @since 0.8.1
   def [](id); end
 
   # Enumerates each {Message} in the container.
+  #
+  # @return [void]
+  # @since 0.8.1
+  # @yieldparam message [Message] the next message object in
+  #   the enumeration.
   def each(&block); end
 
   # Registers a {Message}, the mssage ID of which is +id+. If
   # corresponding +Message+ is already registered, the previously
   # registered object is returned.
+  #
+  # @param id [String] the ID of the message to be registered.
+  # @return [Message] the registered +Message+.
+  # @since 0.8.1
   def register(id); end
 
   protected
 
+  # @return [Hash{String=>Message}] the set of message objects
+  # @since 0.8.1
   def messages; end
 end
 
@@ -3101,10 +5425,33 @@ end
 # file. The relative working directory path is ".." when the
 # working directory path is "."  and the POT is wrote into
 # "po/yard.pot".
+#
+# @example Generate a .pot file
+#   po_file_path = "po/yard.pot"
+#   po_file_directory_pathname = Pathname.new(po_file_path).directory)
+#   working_directory_pathname = Pathname.new(".")
+#   relative_base_path = working_directory_pathname.relative_path_from(po_file_directory_pathname).to_s
+#   # relative_base_path -> ".."
+#   generator = YARD::I18n::PotGenerator.new(relative_base_path)
+#   generator.parse_objects(objects)
+#   generator.parse_files(files)
+#   pot = generator.generate
+#   po_file_directory_pathname.mkpath
+#   File.open(po_file_path, "w") do |pot_file|
+#   pot_file.print(pot)
+#   end
+# @see http://www.gnu.org/software/gettext/manual/html_node/PO-Files.html GNU gettext manual about details of PO file
+# @since 0.8.0
 class YARD::I18n::PotGenerator
   # Creates a POT generator that uses +relative_base_path+ to
   # generate locations for a msgid. +relative_base_path+ is
   # prepended to all locations.
+  #
+  # @param relative_base_path [String] a relative working
+  #   directory path from a directory path that has created .pot
+  #   file.
+  # @return [PotGenerator] a new instance of PotGenerator
+  # @since 0.8.0
   def initialize(relative_base_path); end
 
   # Generates POT from +@messages+.
@@ -3118,52 +5465,131 @@ class YARD::I18n::PotGenerator
   #
   # Comments of the +Message+ are used to generate the
   # translator-comment line that is started with "# ".
+  #
+  # @return [String] POT format string
+  # @since 0.8.0
   def generate; end
 
   # Extracted messages.
+  #
+  # @return [Messages]
+  # @since 0.8.1
   def messages; end
 
   # Parses {CodeObjects::ExtraFileObject} objects and stores
   # extracted msgids into {#messages}.
+  #
+  # @param files [Array<CodeObjects::ExtraFileObject>] a list
+  #   of {CodeObjects::ExtraFileObject} objects to be parsed.
+  # @return [void]
+  # @since 0.8.0
   def parse_files(files); end
 
   # Parses {CodeObjects::Base} objects and stores extracted msgids
   # into {#messages}
+  #
+  # @param objects [Array<CodeObjects::Base>] a list of
+  #   {CodeObjects::Base} to be parsed.
+  # @return [void]
+  # @since 0.8.0
   def parse_objects(objects); end
 
   private
 
+  # @since 0.8.0
   def current_time; end
+
+  # @since 0.8.0
   def escape_message_id(message_id); end
+
+  # @since 0.8.0
   def extract_documents(object); end
+
+  # @since 0.8.0
   def extract_paragraphs(file); end
+
+  # @since 0.8.0
   def extract_tag_documents(tag); end
+
+  # @since 0.8.0
   def extract_tag_name(tag); end
+
+  # @since 0.8.0
   def extract_tag_text(tag); end
+
+  # @since 0.8.0
   def generate_message(pot, message); end
+
+  # @since 0.8.0
   def generate_pot_creation_date_value; end
+
+  # @since 0.8.0
   def header; end
+
+  # @since 0.8.0
   def register_message(id); end
 end
 
 # Provides some convenient features for translating a text.
+#
+# @since 0.8.0
 class YARD::I18n::Text
   # Creates a text object that has translation related features for
   # the input text.
+  #
+  # @option options
+  # @param input [#each_line] a text to be translated.
+  # @param options [Hash] a customizable set of options
+  # @return [Text] a new instance of Text
+  # @since 0.8.0
   def initialize(input, options = T.unsafe(nil)); end
 
   # Extracts translation target messages from +@input+.
+  #
+  # @return [void]
+  # @since 0.8.0
+  # @yield [:attribute, name, value, line_no] the block that
+  #   receives extracted an attribute in header. It may called many
+  #   times.
+  # @yield [:paragraph, text, start_line_no] the block that
+  #   receives extracted a paragraph in body. Paragraph is a text
+  #   block separated by one or more empty lines. Empty line is a
+  #   line that contains only zero or more whitespaces. It may
+  #   called many times.
+  # @yieldparam text [String] the text of extracted paragraph.
+  # @yieldparam start_line_no [Integer] the start line number of
+  #   extracted paragraph.
+  # @yieldparam name [String] the name of extracted attribute.
+  # @yieldparam value [String] the value of extracted attribute.
+  # @yieldparam line_no [Integer] the defined line number of extracted
+  #   attribute.
   def extract_messages; end
 
   # Translates into +locale+.
+  #
+  # @param locale [Locale] the translation target locale.
+  # @return [String] translated text.
+  # @since 0.8.0
   def translate(locale); end
 
   private
 
+  # @since 0.8.0
+  # @yield [part]
   def emit_attribute_event(match_data, line_no); end
+
+  # @since 0.8.0
+  # @yield [part]
   def emit_empty_line_event(line, line_no); end
+
+  # @since 0.8.0
+  # @yield [part]
   def emit_markup_event(line, line_no); end
+
+  # @since 0.8.0
   def emit_paragraph_event(paragraph, paragraph_start_line, line_no, &block); end
+
+  # @since 0.8.0
   def parse(&block); end
 end
 
@@ -3171,19 +5597,39 @@ end
 # Uses the stdlib Logger class in Ruby for all the backend logic.
 class YARD::Logger < ::Logger
   # Creates a new logger
+  #
+  # @return [Logger] a new instance of Logger
   def initialize(pipe, *args); end
 
   # Displays an unformatted line to the logger output stream.
+  #
+  # @param msg [String] the message to display
+  # @return [void]
+  # @since 0.8.2
   def <<(msg = T.unsafe(nil)); end
 
   # Prints the backtrace +exc+ to the logger as error data.
+  #
+  # @param exc [Array<String>] the backtrace list
+  # @param level_meth [Symbol] the level to log backtrace at
+  # @return [void]
   def backtrace(exc, level_meth = T.unsafe(nil)); end
 
   # Captures the duration of a block of code for benchmark analysis. Also
   # calls {#progress} on the message to display it to the user.
+  #
+  # @param msg [String] the message to display
+  # @param nontty_log [Symbol, nil] the level to log as if the output
+  #   stream is not a TTY. Use +nil+ for no alternate logging.
+  # @return [void]
+  # @todo Implement capture storage for reporting of benchmarks
+  # @yield a block of arbitrary code to benchmark
   def capture(msg, nontty_log = T.unsafe(nil)); end
 
   # Clears the progress indicator in the TTY display.
+  #
+  # @return [void]
+  # @since 0.8.2
   def clear_progress; end
 
   # Changes the debug level to DEBUG if $DEBUG is set
@@ -3191,31 +5637,64 @@ class YARD::Logger < ::Logger
   def debug(*args); end
 
   # Sets the logger level for the duration of the block
+  #
+  # @example
+  #   log.enter_level(Logger::ERROR) do
+  #   YARD.parse_string "def x; end"
+  #   end
+  # @param new_level [Fixnum] the logger level for the duration of the block.
+  #   values can be found in Ruby's Logger class.
+  # @yield the block with the logger temporarily set to +new_level+
   def enter_level(new_level = T.unsafe(nil)); end
 
+  # @return [IO] the IO object being logged to
+  # @since 0.8.2
   def io; end
+
   def io=(pipe); end
 
   # Displays an unformatted line to the logger output stream.
+  #
+  # @param msg [String] the message to display
+  # @return [void]
+  # @since 0.8.2
   def print(msg = T.unsafe(nil)); end
 
   # Displays a progress indicator for a given message. This progress report
   # is only displayed on TTY displays, otherwise the message is passed to
   # the +nontty_log+ level.
+  #
+  # @param msg [String] the message to log
+  # @param nontty_log [Symbol, nil] the level to log as if the output
+  #   stream is not a TTY. Use +nil+ for no alternate logging.
+  # @return [void]
+  # @since 0.8.2
   def progress(msg, nontty_log = T.unsafe(nil)); end
 
   # Displays an unformatted line to the logger output stream, adding
   # a newline.
+  #
+  # @param msg [String] the message to display
+  # @return [void]
+  # @since 0.8.2
   def puts(msg = T.unsafe(nil)); end
 
+  # @return [Boolean] whether backtraces should be shown (by default
+  #   this is on).
   def show_backtraces; end
 
   # Sets the attribute show_backtraces
+  #
+  # @param value the value to set the attribute show_backtraces to.
   def show_backtraces=(_arg0); end
 
+  # @return [Boolean] whether progress indicators should be shown when
+  #   logging CLIs (by default this is off).
   def show_progress; end
 
   # Sets the attribute show_progress
+  #
+  # @param value the value to set the attribute show_progress to.
   def show_progress=(_arg0); end
 
   # Remembers when a warning occurs and writes a warning message.
@@ -3224,12 +5703,17 @@ class YARD::Logger < ::Logger
   # Warns that the Ruby environment does not support continuations. Applies
   # to JRuby, Rubinius and MacRuby. This warning will only display once
   # per Ruby process.
+  #
+  # @deprecated Continuations are no longer needed by YARD 0.8.0+.
+  # @return [void]
   def warn_no_continuations; end
 
   # Returns the value of attribute warned.
   def warned; end
 
   # Sets the attribute warned
+  #
+  # @param value the value to set the attribute warned to.
   def warned=(_arg0); end
 
   private
@@ -3246,12 +5730,16 @@ class YARD::Logger < ::Logger
 
   class << self
     # The logger instance
+    #
+    # @return [Logger] the logger instance
     def instance(pipe = T.unsafe(nil)); end
   end
 end
 
 # The list of characters displayed beside the progress bar to indicate
 # "movement".
+#
+# @since 0.8.2
 YARD::Logger::PROGRESS_INDICATORS = T.let(T.unsafe(nil), Array)
 
 # Generalized options class for passing around large amounts of options between objects.
@@ -3280,19 +5768,80 @@ YARD::Logger::PROGRESS_INDICATORS = T.let(T.unsafe(nil), Array)
 # Note that the options class can contain default value definitions for certain options,
 # but to initialize these defaults, {#reset_defaults} must be called manually after
 # initialization; the options object is always created empty until defaults are applied.
+#
+# @abstract Subclasses should define (and document) custom attributes that are expected
+#   to be made available as option keys.
+# @example Defining an Options class with custom option keys
+#   class TemplateOptions < YARD::Options
+#   # @return [Symbol] the output format to generate templates in
+#   attr_accessor :format
+#
+#   # @return [Symbol] the template to use when generating output
+#   attr_accessor :template
+#   end
+# @example Initializing default option values
+#   class TemplateOptions < YARD::Options
+#   def reset_defaults
+#   super
+#   self.format = :html
+#   self.template = :default
+#   self.highlight = true
+#   # ...
+#   end
+#   end
+# @example Using +default_attr+ to create default attributes
+#   class TemplateOptions < YARD::Options
+#   default_attr :format, :html
+#   default_attr :template, :default
+#   default_attr :highlight, true
+#   end
+# @example Deprecating an option while still supporting it
+#   class TemplateOptions < YARD::Options
+#   # @return [Boolean] if syntax highlighting should be performed on code blocks.
+#   #   Defaults to true.
+#   attr_accessor :highlight
+#
+#   # @deprecated Use {#highlight} instead.
+#   # @return [Boolean] if no syntax highlighting should be performs on code blocks.
+#   #   Defaults to false.
+#   attr_accessor :no_highlight
+#   def no_highlight=(value) @highlight = !value end
+#   def no_highlight; !highlight end
+#   end
 class YARD::Options
+  # @return [Boolean] whether another Options object equals the
+  #   keys and values of this options object
   def ==(other); end
 
   # Delegates calls with Hash syntax to actual method with key name
+  #
+  # @example Calling on an option key with Hash syntax
+  #   options[:format] # equivalent to: options.format
+  # @param key [Symbol, String] the option name to access
+  # @return the value of the option named +key+
   def [](key); end
 
   # Delegates setter calls with Hash syntax to the attribute setter with the key name
+  #
+  # @example Setting an option with Hash syntax
+  #   options[:format] = :html # equivalent to: options.format = :html
+  # @param key [Symbol, String] the optin to set
+  # @param value [Object] the value to set for the option
+  # @return [Object] the value being set
   def []=(key, value); end
 
   # Deletes an option value for +key+
+  #
+  # @param key [Symbol, String] the key to delete a value for
+  # @return [Object] the value that was deleted
   def delete(key); end
 
   # Yields over every option key and value
+  #
+  # @return [void]
+  # @yield [key, value] every option key and value
+  # @yieldparam key [Symbol] the option key
+  # @yieldparam value [Object] the option value
   def each; end
 
   # Inspects the object
@@ -3300,23 +5849,49 @@ class YARD::Options
 
   # Creates a new options object and sets options hash or object value
   # onto that object.
+  #
+  # @param opts [Options, Hash]
+  # @return [Options] the newly created options object
+  # @see #update
   def merge(opts); end
 
   # Handles setting and accessing of unregistered keys similar
   # to an OpenStruct object.
+  #
+  # @note It is not recommended to set and access unregistered keys on
+  #   an Options object. Instead, register the attribute before using it.
   def method_missing(meth, *args, &block); end
 
   # Resets all values to their defaults.
+  #
+  # @abstract Subclasses should override this method to perform custom
+  #   value initialization if not using {default_attr}. Be sure to call
+  #   +super+ so that default initialization can take place.
+  # @return [void]
   def reset_defaults; end
 
+  # @return [Hash] Converts options object to an options hash. All keys
+  #   will be symbolized.
   def to_hash; end
 
   # Updates values from an options hash or options object on this object.
   # All keys passed should be key names defined by attributes on the class.
+  #
+  # @example Updating a set of options on an Options object
+  #   opts.update(:template => :guide, :type => :fulldoc)
+  # @param opts [Hash, Options]
+  # @return [self]
   def update(opts); end
 
   class << self
     # Defines an attribute named +key+ and sets a default value for it
+    #
+    # @example Defining a default option key
+    #   default_attr :name, 'Default Name'
+    #   default_attr :time, lambda { Time.now }
+    # @param key [Symbol] the option key name
+    # @param default [Object, Proc] the default object value. If the default
+    #   value is a proc, it is executed upon initialization.
     def default_attr(key, default); end
   end
 end
@@ -3331,24 +5906,54 @@ module YARD::Parser; end
 #
 # == Registering a Custom Parser
 # To register a parser, see {SourceParser.register_parser_type}
+#
+# @abstract
+# @see #parse
+# @see #tokenize
+# @see #enumerator
+# @since 0.5.6
 class YARD::Parser::Base
   # This default constructor does nothing. The subclass is responsible for
   # storing the source contents and filename if they are required.
+  #
+  # @param source [String] the source contents
+  # @param filename [String] the name of the file if from disk
+  # @raise [NotImplementedError]
+  # @return [Base] a new instance of Base
+  # @since 0.5.6
   def initialize(source, filename); end
 
   # This method should be implemented to return a list of semantic tokens
   # representing the source code to be post-processed. Otherwise the method
   # should return nil.
+  #
+  # @abstract
+  # @return [Array] a list of semantic tokens representing the source code
+  #   to be post-processed
+  # @return [nil] if no post-processing should be done
+  # @since 0.5.6
   def enumerator; end
 
   # This method should be implemented to parse the source and return itself.
+  #
+  # @abstract
+  # @raise [NotImplementedError]
+  # @return [Base] this method should return itself
+  # @since 0.5.6
   def parse; end
 
   # This method should be implemented to tokenize given source
+  #
+  # @abstract
+  # @raise [NotImplementedError]
+  # @return [Array] a list/tree of lexical tokens
+  # @since 0.5.6
   def tokenize; end
 
   class << self
     # Convenience method to create a new parser and {#parse}
+    #
+    # @since 0.5.6
     def parse(source, filename = T.unsafe(nil)); end
   end
 end
@@ -3361,14 +5966,19 @@ class YARD::Parser::C::BodyStatement < ::YARD::Parser::C::Statement
   def comments; end
 
   # Sets the attribute comments
+  #
+  # @param value the value to set the attribute comments to.
   def comments=(_arg0); end
 end
 
 class YARD::Parser::C::CParser < ::YARD::Parser::Base
+  # @return [CParser] a new instance of CParser
   def initialize(source, file = T.unsafe(nil)); end
 
   def enumerator; end
   def parse; end
+
+  # @raise [NotImplementedError]
   def tokenize; end
 
   private
@@ -3396,6 +6006,7 @@ end
 class YARD::Parser::C::Comment < ::YARD::Parser::C::Statement
   include ::YARD::Parser::C::CommentParser
 
+  # @return [Comment] a new instance of Comment
   def initialize(source, file = T.unsafe(nil), line = T.unsafe(nil)); end
 
   def comments; end
@@ -3404,18 +6015,24 @@ class YARD::Parser::C::Comment < ::YARD::Parser::C::Statement
   def overrides; end
 
   # Sets the attribute overrides
+  #
+  # @param value the value to set the attribute overrides to.
   def overrides=(_arg0); end
 
   # Returns the value of attribute statement.
   def statement; end
 
   # Sets the attribute statement
+  #
+  # @param value the value to set the attribute statement to.
   def statement=(_arg0); end
 
   # Returns the value of attribute type.
   def type; end
 
   # Sets the attribute type
+  #
+  # @param value the value to set the attribute type to.
   def type=(_arg0); end
 end
 
@@ -3433,12 +6050,15 @@ module YARD::Parser::C::CommentParser
 end
 
 class YARD::Parser::C::Statement
+  # @return [Statement] a new instance of Statement
   def initialize(source, file = T.unsafe(nil), line = T.unsafe(nil)); end
 
   # Returns the value of attribute comments_hash_flag.
   def comments_hash_flag; end
 
   # Sets the attribute comments_hash_flag
+  #
+  # @param value the value to set the attribute comments_hash_flag to.
   def comments_hash_flag=(_arg0); end
 
   def comments_range; end
@@ -3447,16 +6067,26 @@ class YARD::Parser::C::Statement
   def file; end
 
   # Sets the attribute file
+  #
+  # @param value the value to set the attribute file to.
   def file=(_arg0); end
 
   def first_line; end
+
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group; end
+
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group=(_arg0); end
 
   # Returns the value of attribute line.
   def line; end
 
   # Sets the attribute line
+  #
+  # @param value the value to set the attribute line to.
   def line=(_arg0); end
 
   def line_range; end
@@ -3467,6 +6097,8 @@ class YARD::Parser::C::Statement
   def source; end
 
   # Sets the attribute source
+  #
+  # @param value the value to set the attribute source to.
   def source=(_arg0); end
 end
 
@@ -3475,18 +6107,24 @@ class YARD::Parser::C::ToplevelStatement < ::YARD::Parser::C::Statement
   def block; end
 
   # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
   def block=(_arg0); end
 
   # Returns the value of attribute comments.
   def comments; end
 
   # Sets the attribute comments
+  #
+  # @param value the value to set the attribute comments to.
   def comments=(_arg0); end
 
   # Returns the value of attribute declaration.
   def declaration; end
 
   # Sets the attribute declaration
+  #
+  # @param value the value to set the attribute declaration to.
   def declaration=(_arg0); end
 end
 
@@ -3494,15 +6132,29 @@ end
 # {#parse} method of this class can be called from the
 # {SourceParser#globals} globals state list to re-enter
 # parsing for the remainder of files in the list recursively.
+#
+# @see Processor#parse_remaining_files
 class YARD::Parser::OrderedParser
   # Creates a new OrderedParser with the global state and a list
   # of files to parse.
+  #
+  # @note OrderedParser sets itself as the +ordered_parser+ key on
+  #   global_state for later use in {Handlers::Processor}.
+  # @param global_state [OpenStruct] a structure containing all global
+  #   state during parsing
+  # @param files [Array<String>] the list of files to parse
+  # @return [OrderedParser] a new instance of OrderedParser
   def initialize(global_state, files); end
 
+  # @return [Array<String>] the list of remaining files to parse
   def files; end
+
+  # @return [Array<String>] the list of remaining files to parse
   def files=(_arg0); end
 
   # Parses the remainder of the {#files} list.
+  #
+  # @see Processor#parse_remaining_files
   def parse; end
 end
 
@@ -3513,13 +6165,22 @@ class YARD::Parser::ParserSyntaxError < ::YARD::Parser::UndocumentableError; end
 module YARD::Parser::Ruby
   # Builds and s-expression by creating {AstNode} objects with
   # the type provided by the first argument.
+  #
+  # @example An implicit list of keywords
+  #   ast = s(s(:kw, "if"), s(:kw, "else"))
+  #   ast.type # => :list
+  # @example A method call
+  #   s(:command, s(:var_ref, "mymethod"))
+  # @overload s
+  # @overload s
+  # @see AstNode#initialize
   def s(*args); end
 end
 
 # An AST node is characterized by a type and a list of children. It
 # is most easily represented by the s-expression {#s} such as:
-# # AST for "if true; 5 end":
-# s(s(:if, s(:var_ref, s(:kw, "true")), s(s(:int, "5")), nil))
+#   # AST for "if true; 5 end":
+#   s(s(:if, s(:var_ref, s(:kw, "true")), s(s(:int, "5")), nil))
 #
 # The node type is not considered part of the list, only its children.
 # So +ast[0]+ does not refer to the type, but rather the first child
@@ -3528,11 +6189,30 @@ end
 # the AstNode children of the node, use {#children}.
 class YARD::Parser::Ruby::AstNode < ::Array
   # Creates a new AST node
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param type [Symbol] the type of node being created
+  # @param arr [Array<AstNode>] the child nodes
+  # @param opts [Hash] any extra line options
+  # @return [AstNode] a new instance of AstNode
   def initialize(type, arr, opts = T.unsafe(nil)); end
 
+  # @private
+  # @return [Boolean] whether the node is equal to another by checking
+  #   the list and type
   def ==(other); end
+
+  # @return [Boolean] whether the node has a block
   def block?; end
+
+  # @return [Boolean] whether the node is a method call
   def call?; end
+
+  # @return [Array<AstNode>] the {AstNode} children inside the node
   def children; end
 
   # Returns the value of attribute docstring.
@@ -3544,81 +6224,161 @@ class YARD::Parser::Ruby::AstNode < ::Array
   # Returns the value of attribute docstring_range.
   def comments_range; end
 
+  # @return [Boolean] whether the node is a if/elsif/else condition
   def condition?; end
+
+  # @return [Boolean] whether the node is a method definition
   def def?; end
 
   # Returns the value of attribute docstring.
   def docstring; end
 
   # Sets the attribute docstring
+  #
+  # @param value the value to set the attribute docstring to.
   def docstring=(_arg0); end
 
   # Returns the value of attribute docstring_hash_flag.
   def docstring_hash_flag; end
 
   # Sets the attribute docstring_hash_flag
+  #
+  # @param value the value to set the attribute docstring_hash_flag to.
   def docstring_hash_flag=(_arg0); end
 
   # Returns the value of attribute docstring_range.
   def docstring_range; end
 
   # Sets the attribute docstring_range
+  #
+  # @param value the value to set the attribute docstring_range to.
   def docstring_range=(_arg0); end
 
+  # @return [String] the filename the node was parsed from
   def file; end
 
   # Sets the attribute file
+  #
+  # @param value the value to set the attribute file to.
   def file=(_arg0); end
 
+  # @return [String] the first line of source represented by the node.
   def first_line; end
+
+  # @return [String] the full source that the node was parsed from
   def full_source; end
 
   # Sets the attribute full_source
+  #
+  # @param value the value to set the attribute full_source to.
   def full_source=(_arg0); end
 
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group; end
+
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group=(_arg0); end
+
+  # @return [Boolean] whether the node has a {#line_range} set
   def has_line?; end
+
+  # @return [String] inspects the object
   def inspect; end
 
   # Searches through the node and all descendants and returns the
   # first node with a type matching any of +node_types+, otherwise
   # returns the original node (self).
+  #
+  # @example Returns the first method definition in a block of code
+  #   ast = YARD.parse_string("if true; def x; end end").ast
+  #   ast.jump(:def)
+  #   # => s(:def, s(:ident, "x"), s(:params, nil, nil, nil, nil,
+  #   #      nil), s(s(:void_stmt, )))
+  # @example Returns first 'def' or 'class' statement
+  #   ast = YARD.parse_string("class X; def y; end end")
+  #   ast.jump(:def, :class).first
+  #   # =>
+  # @example If the node types are not present in the AST
+  #   ast = YARD.parse("def x; end")
+  #   ast.jump(:def)
+  # @param node_types [Array<Symbol>] a set of node types to match
+  # @return [AstNode] the matching node, if one was found
+  # @return [self] if no node was found
   def jump(*node_types); end
 
+  # @return [Boolean] whether the node is a keyword
   def kw?; end
+
+  # @return [Fixnum] the starting line number of the node
   def line; end
+
+  # @return [Range] the line range in {#full_source} represented
+  #   by the node
   def line_range; end
 
   # Sets the attribute line_range
+  #
+  # @param value the value to set the attribute line_range to.
   def line_range=(_arg0); end
 
+  # @return [Boolean] whether the node is a literal value
   def literal?; end
+
+  # @return [Boolean] whether the node is a loop
   def loop?; end
+
+  # @return [AstNode, nil] the node's parent or nil if it is a root node.
   def parent; end
+
+  # @return [AstNode, nil] the node's parent or nil if it is a root node.
   def parent=(_arg0); end
+
+  # @return [nil] pretty prints the node
   def pretty_print(q); end
+
+  # @return [Boolean] whether the node is a reference (variable,
+  #   constant name)
   def ref?; end
+
+  # @return [String] the first line of source the node represents
   def show; end
+
+  # @return [String] the parse of {#full_source} that the node represents
   def source; end
 
   # Sets the attribute source
+  #
+  # @param value the value to set the attribute source to.
   def source=(_arg0); end
 
+  # @return [Range] the character range in {#full_source} represented
+  #   by the node
   def source_range; end
 
   # Sets the attribute source_range
+  #
+  # @param value the value to set the attribute source_range to.
   def source_range=(_arg0); end
 
   # Returns the value of attribute source.
   def to_s; end
 
+  # @return [Boolean] whether the node is a token
   def token?; end
 
   # Traverses the object and yields each node (including descendants) in order.
+  #
+  # @return [void]
+  # @yield each descendant node in order
+  # @yieldparam self, [AstNode] or a child/descendant node
   def traverse; end
 
+  # @return [Symbol] the node's unique symbolic type
   def type; end
+
+  # @return [Symbol] the node's unique symbolic type
   def type=(_arg0); end
 
   # Resets node state in tree
@@ -3627,16 +6387,23 @@ class YARD::Parser::Ruby::AstNode < ::Array
   private
 
   # Resets line information
+  #
+  # @return [void]
   def reset_line_info; end
 
   class << self
     # Finds the node subclass that should be instantiated for a specific
     # node type
+    #
+    # @param type [Symbol] the node type to find a subclass for
+    # @return [Class] a subclass of AstNode to instantiate the node with.
     def node_class_for(type); end
   end
 end
 
 # List of all known keywords
+#
+# @return [Hash]
 YARD::Parser::Ruby::AstNode::KEYWORDS = T.let(T.unsafe(nil), Hash)
 
 class YARD::Parser::Ruby::ClassNode < ::YARD::Parser::Ruby::KeywordNode
@@ -3656,16 +6423,21 @@ end
 
 class YARD::Parser::Ruby::ConditionalNode < ::YARD::Parser::Ruby::KeywordNode
   def condition; end
+
+  # @return [Boolean]
   def condition?; end
+
   def else_block; end
   def then_block; end
 
   private
 
+  # @return [Boolean]
   def cmod?; end
 end
 
 class YARD::Parser::Ruby::KeywordNode < ::YARD::Parser::Ruby::AstNode
+  # @return [Boolean]
   def kw?; end
 end
 
@@ -3673,10 +6445,13 @@ end
 module YARD::Parser::Ruby::Legacy; end
 
 # Lexical analyzer for Ruby source
+#
+# @private
 class YARD::Parser::Ruby::Legacy::RubyLex
   include ::YARD::Parser::Ruby::Legacy::RubyToken
   include ::IRB
 
+  # @return [RubyLex] a new instance of RubyLex
   def initialize(content); end
 
   def char_no; end
@@ -3688,6 +6463,8 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   def exception_on_syntax_error; end
 
   # Sets the attribute exception_on_syntax_error
+  #
+  # @param value the value to set the attribute exception_on_syntax_error to.
   def exception_on_syntax_error=(_arg0); end
 
   def get_read; end
@@ -3716,12 +6493,16 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   def line_no; end
 
   def peek(i = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def peek_equal?(str); end
 
   # Returns the value of attribute read_auto_clean_up.
   def read_auto_clean_up; end
 
   # Sets the attribute read_auto_clean_up
+  #
+  # @param value the value to set the attribute read_auto_clean_up to.
   def read_auto_clean_up=(_arg0); end
 
   def read_escape; end
@@ -3731,12 +6512,15 @@ class YARD::Parser::Ruby::Legacy::RubyLex
   def skip_space; end
 
   # Sets the attribute skip_space
+  #
+  # @param value the value to set the attribute skip_space to.
   def skip_space=(_arg0); end
 
   def token; end
   def ungetc(c = T.unsafe(nil)); end
 
   class << self
+    # @return [Boolean]
     def debug?; end
   end
 end
@@ -3758,19 +6542,22 @@ YARD::Parser::Ruby::Legacy::RubyLex::ACCEPTS_COLON = T.let(T.unsafe(nil), Array)
 # the other to read the rest of the input line where the here
 # document was initially encountered. For example, we might have
 #
-# do_something(<<-A, <<-B)
-# stuff
-# for
-# A
-# stuff
-# for
-# B
+#   do_something(<<-A, <<-B)
+#     stuff
+#     for
+#   A
+#     stuff
+#     for
+#   B
 #
 # When the lexer encounters the <<A, it reads until the end of the
 # line, and keeps it around for later. It then reads the body of the
 # here document.  Once complete, it needs to read the rest of the
 # original line, but then skip the here document body.
+#
+# @private
 class YARD::Parser::Ruby::Legacy::RubyLex::BufferedReader
+  # @return [BufferedReader] a new instance of BufferedReader
   def initialize(content); end
 
   def column; end
@@ -3797,22 +6584,39 @@ YARD::Parser::Ruby::Legacy::RubyLex::PERCENT_LTYPE = T.let(T.unsafe(nil), Hash)
 YARD::Parser::Ruby::Legacy::RubyLex::PERCENT_PAREN = T.let(T.unsafe(nil), Hash)
 
 # Legacy Ruby parser
+#
+# @since 0.5.6
 class YARD::Parser::Ruby::Legacy::RubyParser < ::YARD::Parser::Base
+  # @return [RubyParser] a new instance of RubyParser
+  # @since 0.5.6
   def initialize(source, _filename); end
 
+  # @since 0.5.6
   def encoding_line; end
+
+  # @since 0.5.6
   def enumerator; end
+
+  # @since 0.5.6
   def parse; end
+
+  # @since 0.5.6
   def shebang_line; end
+
+  # @since 0.5.6
   def tokenize; end
 end
 
 # Legacy lexical tokenizer module.
 module YARD::Parser::Ruby::Legacy::RubyToken
+  # @private
   def Token(token, value = T.unsafe(nil)); end
+
+  # @private
   def set_token_position(line, char); end
 
   class << self
+    # @private
     def def_token(token_n, super_token = T.unsafe(nil), reading = T.unsafe(nil), *opts); end
   end
 end
@@ -4009,6 +6813,7 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkIVAR < ::YARD::Parser::Ruby::Lega
 
 # Represents a Ruby identifier
 class YARD::Parser::Ruby::Legacy::RubyToken::TkId < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
+  # @return [TkId] a new instance of TkId
   def initialize(line_no, char_no, name); end
 
   # Returns the value of attribute name.
@@ -4100,6 +6905,7 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkNode < ::YARD::Parser::Ruby::Lega
 end
 
 class YARD::Parser::Ruby::Legacy::RubyToken::TkOPASGN < ::YARD::Parser::Ruby::Legacy::RubyToken::TkOp
+  # @return [TkOPASGN] a new instance of TkOPASGN
   def initialize(line_no, char_no, op); end
 
   # Returns the value of attribute op.
@@ -4192,6 +6998,7 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TkUPLUS < ::YARD::Parser::Ruby::Leg
 end
 
 class YARD::Parser::Ruby::Legacy::RubyToken::TkUnknownChar < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
+  # @return [TkUnknownChar] a new instance of TkUnknownChar
   def initialize(line_no, char_no, _id); end
 
   # Returns the value of attribute name.
@@ -4200,6 +7007,7 @@ end
 
 # Represents a Ruby value
 class YARD::Parser::Ruby::Legacy::RubyToken::TkVal < ::YARD::Parser::Ruby::Legacy::RubyToken::Token
+  # @return [TkVal] a new instance of TkVal
   def initialize(line_no, char_no, value = T.unsafe(nil)); end
 end
 
@@ -4220,23 +7028,44 @@ class YARD::Parser::Ruby::Legacy::RubyToken::TklEND < ::YARD::Parser::Ruby::Lega
 # Represents a token in the Ruby lexer
 class YARD::Parser::Ruby::Legacy::RubyToken::Token
   # Creates a new Token object
+  #
+  # @param line_no [Integer] the line number to initialize the token to
+  # @param char_no [Integer] the char number to initialize the token to
+  # @return [Token] a new instance of Token
   def initialize(line_no, char_no); end
 
+  # @return [Integer] the character number in the file/stream the token
+  #   is located.
   def char_no; end
+
+  # @return [Symbol] the lexical state at the token
   def lex_state; end
+
+  # @return [Symbol] the lexical state at the token
   def lex_state=(_arg0); end
+
+  # @return [Integer] the line number in the file/stream the token is
+  #   located.
   def line_no; end
 
   # Chainable way to sets the text attribute
+  #
+  # @param text [String] the new text
+  # @return [Token] this token object
   def set_text(text); end
 
+  # @return [String] the token text value
   def text; end
 end
 
+# @private
 YARD::Parser::Ruby::Legacy::RubyToken::Token::NO_TEXT = T.let(T.unsafe(nil), String)
+
+# @private
 YARD::Parser::Ruby::Legacy::RubyToken::TokenDefinitions = T.let(T.unsafe(nil), Array)
 
 class YARD::Parser::Ruby::Legacy::Statement
+  # @return [Statement] a new instance of Statement
   def initialize(tokens, block = T.unsafe(nil), comments = T.unsafe(nil)); end
 
   # Returns the value of attribute block.
@@ -4249,20 +7078,37 @@ class YARD::Parser::Ruby::Legacy::Statement
   def comments_hash_flag; end
 
   # Sets the attribute comments_hash_flag
+  #
+  # @param value the value to set the attribute comments_hash_flag to.
   def comments_hash_flag=(_arg0); end
 
   # Returns the value of attribute comments_range.
   def comments_range; end
 
   # Sets the attribute comments_range
+  #
+  # @param value the value to set the attribute comments_range to.
   def comments_range=(_arg0); end
 
   def first_line; end
+
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group; end
+
+  # @deprecated Groups are now defined by directives
+  # @see Tags::GroupDirective
   def group=(_arg0); end
+
   def inspect; end
+
+  # @return [Fixnum] the first line of Ruby source
   def line; end
+
+  # @return [Range<Fixnum>] the first to last lines of Ruby source
+  # @since 0.5.4
   def line_range; end
+
   def show; end
   def signature; end
   def source(include_block = T.unsafe(nil)); end
@@ -4280,57 +7126,87 @@ class YARD::Parser::Ruby::Legacy::StatementList < ::Array
   include ::YARD::Parser::Ruby::Legacy::RubyToken
 
   # Creates a new statement list
+  #
+  # @param content [TokenList, String] the tokens to create the list from
+  # @return [StatementList] a new instance of StatementList
   def initialize(content); end
 
   # Returns the value of attribute encoding_line.
   def encoding_line; end
 
   # Sets the attribute encoding_line
+  #
+  # @param value the value to set the attribute encoding_line to.
   def encoding_line=(_arg0); end
 
   # Returns the value of attribute shebang_line.
   def shebang_line; end
 
   # Sets the attribute shebang_line
+  #
+  # @param value the value to set the attribute shebang_line to.
   def shebang_line=(_arg0); end
 
   private
 
   # Handles the balancing of parentheses and blocks
+  #
+  # @param tk [RubyToken::Token] the token to process
+  # @return [Boolean] whether or not the current statement's parentheses and blocks
+  #   are balanced after +tk+
   def balances?(tk); end
 
   # Returns the next statement in the token stream
+  #
+  # @return [Statement] the next statement
   def next_statement; end
 
   def parse_statements; end
 
   # Returns the next token in the stream that's not a space
+  #
+  # @return [RubyToken::Token] the next non-space token
   def peek_no_space; end
 
   # Processes a token in a block
+  #
+  # @param tk [RubyToken::Token] the token to process
   def process_block_token(tk); end
 
   # Processes a complex block-opening token;
   # that is, a block opener such as +while+ or +for+
   # that is followed by an expression
+  #
+  # @param tk [RubyToken::Token] the token to process
   def process_complex_block_opener(tk); end
 
   # Processes a comment token that comes before a statement
+  #
+  # @param tk [RubyToken::Token] the token to process
+  # @return [Boolean] whether or not +tk+ was processed as an initial comment
   def process_initial_comment(tk); end
 
   # Processes a simple block-opening token;
   # that is, a block opener such as +begin+ or +do+
   # that isn't followed by an expression
+  #
+  # @param tk [RubyToken::Token] the token to process
   def process_simple_block_opener(tk); end
 
   # Processes a token that closes a statement
+  #
+  # @param tk [RubyToken::Token] the token to process
   def process_statement_end(tk); end
 
   # Processes a single token
+  #
+  # @param tk [RubyToken::Token] the token to process
   def process_token(tk); end
 
   # Adds a token to the current statement,
   # unless it's a newline, semicolon, or comment
+  #
+  # @param tk [RubyToken::Token] the token to process
   def push_token(tk); end
 
   def sanitize_block; end
@@ -4344,10 +7220,17 @@ YARD::Parser::Ruby::Legacy::StatementList::OPEN_BLOCK_TOKENS = T.let(T.unsafe(ni
 class YARD::Parser::Ruby::Legacy::TokenList < ::Array
   include ::YARD::Parser::Ruby::Legacy::RubyToken
 
+  # @return [TokenList] a new instance of TokenList
   def initialize(content = T.unsafe(nil)); end
 
+  # @param tokens [TokenList, Token, String] A list of tokens. If the token is a string, it
+  #   is parsed with {RubyLex}.
   def <<(*tokens); end
+
+  # @param tokens [TokenList, Token, String] A list of tokens. If the token is a string, it
+  #   is parsed with {RubyLex}.
   def push(*tokens); end
+
   def squeeze(type = T.unsafe(nil)); end
   def to_s(full_statement = T.unsafe(nil), show_block = T.unsafe(nil)); end
 
@@ -4358,33 +7241,46 @@ class YARD::Parser::Ruby::Legacy::TokenList < ::Array
 end
 
 class YARD::Parser::Ruby::LiteralNode < ::YARD::Parser::Ruby::AstNode
+  # @return [Boolean]
   def literal?; end
 end
 
 class YARD::Parser::Ruby::LoopNode < ::YARD::Parser::Ruby::KeywordNode
   def block; end
   def condition; end
+
+  # @return [Boolean]
   def loop?; end
 end
 
 class YARD::Parser::Ruby::MethodCallNode < ::YARD::Parser::Ruby::AstNode
   def block; end
   def block_param; end
+
+  # @return [Boolean]
   def call?; end
+
   def method_name(name_only = T.unsafe(nil)); end
   def namespace; end
   def parameters(include_block_param = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def call_has_paren?; end
+
   def index_adjust; end
 end
 
 class YARD::Parser::Ruby::MethodDefinitionNode < ::YARD::Parser::Ruby::AstNode
   def block(*_arg0); end
+
+  # @return [Boolean]
   def def?; end
+
+  # @return [Boolean]
   def kw?; end
+
   def method_name(name_only = T.unsafe(nil)); end
   def namespace; end
   def parameters(include_block_param = T.unsafe(nil)); end
@@ -4413,21 +7309,43 @@ end
 class YARD::Parser::Ruby::ReferenceNode < ::YARD::Parser::Ruby::AstNode
   def namespace; end
   def path; end
+
+  # @return [Boolean]
   def ref?; end
 end
 
 # Internal parser class
+#
+# @since 0.5.6
 class YARD::Parser::Ruby::RipperParser < ::Ripper
+  # @return [RipperParser] a new instance of RipperParser
+  # @since 0.5.6
   def initialize(source, filename, *args); end
 
+  # @since 0.5.6
   def ast; end
+
+  # @since 0.5.6
   def charno; end
+
+  # @since 0.5.6
   def comments; end
+
+  # @since 0.5.6
   def encoding_line; end
+
+  # @since 0.5.6
   def enumerator; end
+
+  # @since 0.5.6
   def file; end
+
+  # @since 0.5.6
   def file_encoding; end
+
+  # @since 0.5.6
   def frozen_string_line; end
+
   def on_BEGIN(*args); end
   def on_CHAR(tok); end
   def on_END(*args); end
@@ -4590,59 +7508,151 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   def on_yield(*args); end
   def on_yield0(*args); end
   def on_zsuper(*args); end
+
+  # @since 0.5.6
   def parse; end
+
+  # @since 0.5.6
   def root; end
+
+  # @since 0.5.6
   def shebang_line; end
+
+  # @since 0.5.6
   def tokens; end
 
   private
 
+  # @since 0.5.6
   def add_comment(line, node = T.unsafe(nil), before_node = T.unsafe(nil), into = T.unsafe(nil)); end
+
+  # @since 0.5.6
   def add_token(token, data); end
+
+  # @return [Boolean]
+  # @since 0.5.6
   def comment_starts_line?(charno); end
+
+  # @raise [ParserSyntaxError]
+  # @since 0.5.6
   def compile_error(msg); end
+
+  # @since 0.5.6
   def freeze_tree(node = T.unsafe(nil)); end
+
+  # @since 0.5.6
   def insert_comments; end
+
+  # @since 0.5.6
   def on_aref(*args); end
+
+  # @since 0.5.6
   def on_aref_field(*args); end
+
+  # @since 0.5.6
   def on_array(other); end
+
+  # @since 0.5.6
   def on_assoc_new(*args); end
+
+  # @since 0.5.6
   def on_assoclist_from_args(*args); end
+
+  # @since 0.5.6
   def on_bare_assoc_hash(*args); end
+
+  # @since 0.5.6
   def on_body_stmt(*args); end
+
+  # @since 0.5.6
   def on_bodystmt(*args); end
+
+  # @since 0.5.6
   def on_comment(comment); end
+
+  # @since 0.5.6
   def on_const_path_ref(*args); end
+
+  # @since 0.5.6
   def on_dyna_symbol(sym); end
+
+  # @since 0.5.6
   def on_embdoc(text); end
+
+  # @since 0.5.6
   def on_embdoc_beg(text); end
+
+  # @since 0.5.6
   def on_embdoc_end(text); end
+
+  # @since 0.5.6
   def on_hash(*args); end
+
+  # @since 0.5.6
   def on_label(data); end
+
+  # @since 0.5.6
   def on_lambda(*args); end
+
+  # @since 0.5.6
   def on_lbracket(tok); end
+
+  # @since 0.5.6
   def on_params(*args); end
+
+  # @raise [ParserSyntaxError]
+  # @since 0.5.6
   def on_parse_error(msg); end
+
+  # @since 0.5.6
   def on_program(*args); end
+
+  # @since 0.5.6
   def on_rbracket(tok); end
+
+  # @since 0.5.6
   def on_rescue(exc, *args); end
+
+  # @since 0.5.6
   def on_sp(tok); end
+
+  # @since 0.5.6
   def on_string_content(*args); end
+
+  # @since 0.5.6
   def on_string_literal(*args); end
+
+  # @since 0.5.6
   def on_top_const_ref(*args); end
+
+  # @since 0.5.6
   def on_unary(op, val); end
+
+  # @since 0.5.6
   def on_void_stmt; end
+
+  # @since 0.5.6
   def visit_event(node); end
+
+  # @since 0.5.6
   def visit_event_arr(node); end
+
+  # @since 0.5.6
   def visit_ns_token(token, data, ast_token = T.unsafe(nil)); end
 end
 
+# @since 0.5.6
 YARD::Parser::Ruby::RipperParser::AST_TOKENS = T.let(T.unsafe(nil), Array)
+
+# @since 0.5.6
 YARD::Parser::Ruby::RipperParser::MAPPINGS = T.let(T.unsafe(nil), Hash)
+
+# @since 0.5.6
 YARD::Parser::Ruby::RipperParser::REV_MAPPINGS = T.let(T.unsafe(nil), Hash)
 
 # Ruby 1.9 parser
 class YARD::Parser::Ruby::RubyParser < ::YARD::Parser::Base
+  # @return [RubyParser] a new instance of RubyParser
   def initialize(source, filename); end
 
   # Ruby 1.9 parser
@@ -4670,10 +7680,37 @@ class YARD::Parser::Ruby::TokenResolver
   include ::YARD::CodeObjects::NamespaceMapper
 
   # Creates a token resolver for given source.
+  #
+  # @param source [String] the source code to tokenize
+  # @param namespace [CodeObjects::Base] the object/namespace to resolve from
+  # @raise [ParserSyntaxError]
+  # @return [TokenResolver] a new instance of TokenResolver
   def initialize(source, namespace = T.unsafe(nil)); end
 
   # Iterates over each token, yielding the token and a possible code
   # object that is associated with the token.
+  #
+  # @example Yielding code objects
+  #   r = TokenResolver.new("A::B::C")
+  #   r.each do |tok, obj|
+  #   if obj
+  #   puts "#{tok[0]} -> #{obj.path.inspect}"
+  #   else
+  #   puts "No object: #{tok.inspect}"
+  #   end
+  #   end
+  #
+  #   # Prints:
+  #   # :const -> "A"
+  #   # No object: [:op, "::"]
+  #   # :const -> "A::B"
+  #   # No object: [:op, "::"]
+  #   # :const -> "A::B::C"
+  # @yieldparam token [Array(Symbol,String,Array(Integer,Integer))] the
+  #   current token object being iterated
+  # @yieldparam object [CodeObjects::Base, nil] the fully qualified code
+  #   object associated with the current token, or nil if there is no object
+  #   for the yielded token.
   def each; end
 
   protected
@@ -4707,35 +7744,68 @@ end
 # SourceParser allows custom parsers to be registered and called when
 # a certain filetype is recognized. To register a parser and hook it
 # up to a set of file extensions, call {register_parser_type}
+#
+# @see register_parser_type
+# @see Handlers::Base
+# @see CodeObjects::Base
 class YARD::Parser::SourceParser
+  # @overload initialize
+  # @return [SourceParser] a new instance of SourceParser
   def initialize(parser_type = T.unsafe(nil), globals1 = T.unsafe(nil), globals2 = T.unsafe(nil)); end
 
+  # @return [String] the contents of the file to be parsed
+  # @since 0.7.0
   def contents; end
+
+  # @return [String] the filename being parsed by the parser.
   def file; end
+
+  # @return [String] the filename being parsed by the parser.
   def file=(_arg0); end
+
+  # @return [OpenStruct] an open struct containing arbitrary global state
+  #   shared between files and handlers.
+  # @since 0.7.0
   def globals; end
 
   # The main parser method. This should not be called directly. Instead,
   # use the class methods {parse} and {parse_string}.
+  #
+  # @param content [String, #read, Object] the source file to parse
+  # @return [Object, nil] the parser object used to parse the source
   def parse(content = T.unsafe(nil)); end
 
+  # @return [Symbol] the parser type associated with the parser instance.
+  #   This should be set by the {#initialize constructor}.
   def parser_type; end
 
   # Tokenizes but does not parse the block of code using the current {#parser_type}
+  #
+  # @param content [String] the block of code to tokenize
+  # @return [Array] a list of tokens
   def tokenize(content); end
 
   private
 
   # Searches for encoding line and forces encoding
+  #
+  # @since 0.5.3
   def convert_encoding(content); end
 
+  # @since 0.5.6
   def parser_class; end
+
   def parser_type=(value); end
 
   # Guesses the parser type to use depending on the file extension.
+  #
+  # @param filename [String] the filename to use to guess the parser type
+  # @return [Symbol] a parser type that matches the filename
   def parser_type_for_filename(filename); end
 
   # Runs a {Handlers::Processor} object to post process the parsed statements.
+  #
+  # @return [void]
   def post_process; end
 
   class << self
@@ -4745,15 +7815,56 @@ class YARD::Parser::SourceParser
     #
     # To register a callback that is called after the entire list of files
     # is processed, see {after_parse_list}.
+    #
+    # @example Printing the length of each file after it is parsed
+    #   SourceParser.after_parse_file do |parser|
+    #   puts "#{parser.file} is #{parser.contents.size} characters"
+    #   end
+    #   YARD.parse('lib/**/*.rb')
+    #   # prints:
+    #   "lib/foo.rb is 1240 characters"
+    #   "lib/foo_bar.rb is 248 characters"
+    # @return [Proc] the yielded block
+    # @see before_parse_file
+    # @see after_parse_list
+    # @since 0.7.0
+    # @yield [parser] the yielded block is called once after each file
+    #   that is parsed. This might happen many times for a single codebase.
+    # @yieldparam parser [SourceParser] the parser object that parsed
+    #   the file.
+    # @yieldreturn [void] the return value for the block is ignored.
     def after_parse_file(&block); end
 
+    # @return [Array<Proc>] the list of callbacks to be called after
+    #   parsing a file. Should only be used for testing.
+    # @since 0.7.0
     def after_parse_file_callbacks; end
 
     # Registers a callback to be called after a list of files is parsed
     # via {parse}. The block passed to this method will be called on
     # subsequent parse calls.
+    #
+    # @example Printing results after parsing occurs
+    #   SourceParser.after_parse_list do
+    #   puts "Finished parsing!"
+    #   end
+    #   YARD.parse
+    #   # Prints "Finished parsing!" after parsing files
+    # @return [Proc] the yielded block
+    # @see before_parse_list
+    # @see before_parse_file
+    # @since 0.7.0
+    # @yield [files, globals] the yielded block is called once before
+    #   parsing all files
+    # @yieldparam files [Array<String>] the list of files that will be parsed.
+    # @yieldparam globals [OpenStruct] a global structure to store arbitrary
+    #   state for post processing (see {Handlers::Processor#globals})
+    # @yieldreturn [void] the return value for the block is ignored.
     def after_parse_list(&block); end
 
+    # @return [Array<Proc>] the list of callbacks to be called after
+    #   parsing a list of files. Should only be used for testing.
+    # @since 0.7.0
     def after_parse_list_callbacks; end
 
     # Registers a callback to be called before an individual file is parsed.
@@ -4762,56 +7873,174 @@ class YARD::Parser::SourceParser
     #
     # To register a callback that is called before the entire list of files
     # is processed, see {before_parse_list}.
+    #
+    # @example Cancel parsing of any test_*.rb files
+    #   SourceParser.before_parse_file do |parser|
+    #   return false if parser.file =~ /^test_.+\.rb$/
+    #   end
+    # @example Installing a simple callback
+    #   SourceParser.before_parse_file do |parser|
+    #   puts "I'm parsing #{parser.file}"
+    #   end
+    #   YARD.parse('lib/**/*.rb')
+    #   # prints:
+    #   "I'm parsing lib/foo.rb"
+    #   "I'm parsing lib/foo_bar.rb"
+    #   "I'm parsing lib/last_file.rb"
+    # @return [Proc] the yielded block
+    # @see before_parse_list
+    # @see after_parse_file
+    # @since 0.7.0
+    # @yield [parser] the yielded block is called once before each
+    #   file that is parsed. This might happen many times for a single
+    #   codebase.
+    # @yieldparam parser [SourceParser] the parser object that will {#parse}
+    #   the file.
+    # @yieldreturn [Boolean] if the block returns +false+, parsing for
+    #   the file is cancelled.
     def before_parse_file(&block); end
 
+    # @return [Array<Proc>] the list of callbacks to be called before
+    #   parsing a file. Should only be used for testing.
+    # @since 0.7.0
     def before_parse_file_callbacks; end
 
     # Registers a callback to be called before a list of files is parsed
     # via {parse}. The block passed to this method will be called on
     # subsequent parse calls.
+    #
+    # @example Setting global state
+    #   SourceParser.before_parse_list do |files, globals|
+    #   globals.method_count = 0
+    #   end
+    #   SourceParser.after_parse_list do |files, globals|
+    #   puts "Found #{globals.method_count} methods"
+    #   end
+    #   class MyCountHandler < Handlers::Ruby::Base
+    #   handles :def, :defs
+    #   process { globals.method_count += 1 }
+    #   end
+    #   YARD.parse
+    #   # Prints: "Found 37 methods"
+    # @example Installing a simple callback
+    #   SourceParser.before_parse_list do |files, globals|
+    #   puts "Starting to parse..."
+    #   end
+    #   YARD.parse('lib/**/*.rb')
+    #   # prints "Starting to parse..."
+    # @example Using a global callback to cancel parsing
+    #   SourceParser.before_parse_list do |files, globals|
+    #   return false if files.include?('foo.rb')
+    #   end
+    #
+    #   YARD.parse(['foo.rb', 'bar.rb']) # callback cancels this method
+    #   YARD.parse('bar.rb') # parses normally
+    # @return [Proc] the yielded block
+    # @see before_parse_file
+    # @see after_parse_list
+    # @since 0.7.0
+    # @yield [files, globals] the yielded block is called once before
+    #   parsing all files
+    # @yieldparam files [Array<String>] the list of files that will be parsed.
+    # @yieldparam globals [OpenStruct] a global structure to store arbitrary
+    #   state for post processing (see {Handlers::Processor#globals})
+    # @yieldreturn [Boolean] if the block returns +false+, parsing is
+    #   cancelled.
     def before_parse_list(&block); end
 
+    # @return [Array<Proc>] the list of callbacks to be called before
+    #   parsing a list of files. Should only be used for testing.
+    # @since 0.7.0
     def before_parse_list_callbacks; end
 
     # Parses a path or set of paths
+    #
+    # @param paths [String, Array<String>] a path, glob, or list of paths to
+    #   parse
+    # @param excluded [Array<String, Regexp>] a list of excluded path matchers
+    # @param level [Fixnum] the logger level to use during parsing. See
+    #   {YARD::Logger}
+    # @return [void]
     def parse(paths = T.unsafe(nil), excluded = T.unsafe(nil), level = T.unsafe(nil)); end
 
     # Parses a string +content+
+    #
+    # @param content [String] the block of code to parse
+    # @param ptype [Symbol] the parser type to use. See {parser_type}.
+    # @return the parser object that was used to parse +content+
     def parse_string(content, ptype = T.unsafe(nil)); end
 
+    # @return [Symbol] the default parser type (defaults to :ruby)
     def parser_type; end
+
     def parser_type=(value); end
+
+    # @private
+    # @return [Hash] a list of registered parser type extensions
+    # @since 0.5.6
     def parser_type_extensions; end
+
     def parser_type_extensions=(value); end
 
     # Finds a parser type that is registered for the extension. If no
     # type is found, the default Ruby type is returned.
+    #
+    # @return [Symbol] the parser type to be used for the extension
+    # @since 0.5.6
     def parser_type_for_extension(extension); end
 
+    # @private
+    # @return [Hash{Symbol=>Object}] a list of registered parser types
+    # @since 0.5.6
     def parser_types; end
+
     def parser_types=(value); end
 
     # Registers a new parser type.
+    #
+    # @example Registering a parser for "java" files
+    #   SourceParser.register_parser_type :java, JavaParser, 'java'
+    # @param type [Symbol] a symbolic name for the parser type
+    # @param parser_klass [Base] a class that implements parsing and tokenization
+    # @param extensions [Array<String>, String, Regexp] a list of extensions or a
+    #   regex to match against the file extension
+    # @return [void]
+    # @see Parser::Base
     def register_parser_type(type, parser_klass, extensions = T.unsafe(nil)); end
 
     # Tokenizes but does not parse the block of code
+    #
+    # @param content [String] the block of code to tokenize
+    # @param ptype [Symbol] the parser type to use. See {parser_type}.
+    # @return [Array] a list of tokens
     def tokenize(content, ptype = T.unsafe(nil)); end
 
     # Returns the validated parser type. Basically, enforces that :ruby
     # type is never set if the Ripper library is not available
+    #
+    # @param type [Symbol] the parser type to set
+    # @private
+    # @return [Symbol] the validated parser type
     def validated_parser_type(type); end
 
     private
 
     # Parses a list of files in a queue.
+    #
+    # @param files [Array<String>] a list of files to queue for parsing
+    # @return [void]
     def parse_in_order(*files); end
   end
 end
 
 # The default glob of files to be parsed.
+#
+# @since 0.9.0
 YARD::Parser::SourceParser::DEFAULT_PATH_GLOB = T.let(T.unsafe(nil), Array)
 
 # Byte order marks for various encodings
+#
+# @since 0.7.0
 YARD::Parser::SourceParser::ENCODING_BYTE_ORDER_MARKS = T.let(T.unsafe(nil), Hash)
 
 YARD::Parser::SourceParser::ENCODING_LINE = T.let(T.unsafe(nil), Regexp)
@@ -4832,52 +8061,101 @@ module YARD::Rake; end
 # The rake task to run {CLI::Yardoc} and generate documentation.
 class YARD::Rake::YardocTask < ::Rake::TaskLib
   # Creates a new task with name +name+.
+  #
+  # @param name [String, Symbol] the name of the rake task
+  # @return [YardocTask] a new instance of YardocTask
+  # @yield a block to allow any options to be modified on the task
+  # @yieldparam _self [YardocTask] the task object to allow any parameters
+  #   to be changed.
   def initialize(name = T.unsafe(nil)); end
 
   # Runs a +Proc+ after the task
+  #
+  # @return [Proc] a proc to call after running the task
   def after; end
 
   # Runs a +Proc+ after the task
+  #
+  # @return [Proc] a proc to call after running the task
   def after=(_arg0); end
 
   # Runs a +Proc+ before the task
+  #
+  # @return [Proc] a proc to call before running the task
   def before; end
 
   # Runs a +Proc+ before the task
+  #
+  # @return [Proc] a proc to call before running the task
   def before=(_arg0); end
 
   # The Ruby source files (and any extra documentation files separated by '-')
   # to process.
+  #
+  # @example Task files assignment
+  #   YARD::Rake::YardocTask.new do |t|
+  #   t.files   = ['app/**/*.rb', 'lib/**/*.rb', '-', 'doc/FAQ.md', 'doc/Changes.md']
+  #   end
+  # @return [Array<String>] a list of files
   def files; end
 
   # The Ruby source files (and any extra documentation files separated by '-')
   # to process.
+  #
+  # @example Task files assignment
+  #   YARD::Rake::YardocTask.new do |t|
+  #   t.files   = ['app/**/*.rb', 'lib/**/*.rb', '-', 'doc/FAQ.md', 'doc/Changes.md']
+  #   end
+  # @return [Array<String>] a list of files
   def files=(_arg0); end
 
   # The name of the task
+  #
+  # @return [String] the task name
   def name; end
 
   # The name of the task
+  #
+  # @return [String] the task name
   def name=(_arg0); end
 
   # Options to pass to {CLI::Yardoc}
+  #
+  # @return [Array<String>] the options passed to the commandline utility
   def options; end
 
   # Options to pass to {CLI::Yardoc}
+  #
+  # @return [Array<String>] the options passed to the commandline utility
   def options=(_arg0); end
 
   # Options to pass to {CLI::Stats}
+  #
+  # @return [Array<String>] the options passed to the stats utility
   def stats_options; end
 
   # Options to pass to {CLI::Stats}
+  #
+  # @return [Array<String>] the options passed to the stats utility
   def stats_options=(_arg0); end
 
+  # @return [Verifier, Proc] an optional {Verifier} to run against all objects
+  #   being generated. Any object that the verifier returns false for will be
+  #   excluded from documentation. This attribute can also be a lambda.
+  # @see Verifier
   def verifier; end
+
+  # @return [Verifier, Proc] an optional {Verifier} to run against all objects
+  #   being generated. Any object that the verifier returns false for will be
+  #   excluded from documentation. This attribute can also be a lambda.
+  # @see Verifier
   def verifier=(_arg0); end
 
   protected
 
   # Defines the rake task
+  #
+  # @return [void]
   def define; end
 end
 
@@ -4898,102 +8176,253 @@ end
 # places across YARD. To mitigate threading issues, YARD (0.6.5+) makes
 # the Registry thread local. This means all access to a registry for a specific
 # object set must occur in the originating thread.
+#
+# @example Loading the Registry
+#   Registry.load!('/path/to/yardocfile') # loads all objects into memory
+#   Registry.at('YARD::CodeObjects::Base').docstring
+#   # => "+Base+ is the superclass of all code objects ..."
+# @example Getting an object by a specific path
+#   Registry.at('YARD::CodeObjects::Base#docstring')
+# @example Performing a lookup on a method anywhere in the inheritance tree
+#   Registry.resolve(P('YARD::CodeObjects::Base'), '#docstring', true)
 module YARD::Registry
   extend ::Enumerable
 
   class << self
     # Returns the object at a specific path.
+    #
+    # @param path [String, :root] the pathname to look for. If +path+ is +root+,
+    #   returns the {root} object.
+    # @return [CodeObjects::Base] the object at path
+    # @return [nil] if no object is found
     def [](path); end
 
     # Returns all objects in the registry that match one of the types provided
     # in the +types+ list (if +types+ is provided).
+    #
+    # @example Returns all objects
+    #   Registry.all
+    # @example Returns all classes and modules
+    #   Registry.all(:class, :module)
+    # @param types [Array<Symbol>] an optional list of types to narrow the
+    #   objects down by. Equivalent to performing a select:
+    #   +Registry.all.select {|o| types.include(o.type) }+
+    # @return [Array<CodeObjects::Base>] the list of objects found
+    # @see CodeObjects::Base#type
     def all(*types); end
 
     # Returns the object at a specific path.
+    #
+    # @param path [String, :root] the pathname to look for. If +path+ is +root+,
+    #   returns the {root} object.
+    # @return [CodeObjects::Base] the object at path
+    # @return [nil] if no object is found
     def at(path); end
 
+    # @param data [String] data to checksum
+    # @return [String] the SHA1 checksum for data
     def checksum_for(data); end
+
+    # @return [Hash{String => String}] a set of checksums for files
     def checksums; end
 
     # Clears the registry
+    #
+    # @return [void]
     def clear; end
 
     # Deletes an object from the registry
+    #
+    # @param object [CodeObjects::Base] the object to remove
+    # @return [void]
     def delete(object); end
 
     # Deletes the yardoc file from disk
+    #
+    # @return [void]
     def delete_from_disk; end
 
     # Iterates over {all} with no arguments
     def each(&block); end
 
     # The registry singleton instance.
+    #
+    # @deprecated use Registry.methodname directly.
+    # @return [Registry] returns the registry instance
     def instance; end
 
     # Loads the registry and/or parses a list of files
+    #
+    # @example Loads the yardoc file or parses files 'a', 'b' and 'c' (but not both)
+    #   Registry.load(['a', 'b', 'c'])
+    # @example Reparses files 'a' and 'b' regardless of whether yardoc file exists
+    #   Registry.load(['a', 'b'], true)
+    # @param files [String, Array] if +files+ is an Array, it should represent
+    #   a list of files that YARD should parse into the registry. If reload is
+    #   set to false and the yardoc file already exists, these files are skipped.
+    #   If files is a String, it should represent the yardoc file to load
+    #   into the registry.
+    # @param reparse [Boolean] if reparse is false and a yardoc file already
+    #   exists, any files passed in will be ignored.
+    # @raise [ArgumentError] if files is not a String or Array
+    # @return [Registry] the registry object (for chaining)
     def load(files = T.unsafe(nil), reparse = T.unsafe(nil)); end
 
     # Loads a yardoc file and forces all objects cached on disk into
     # memory. Equivalent to calling {load_yardoc} followed by {load_all}
+    #
+    # @param file [String] the yardoc file to load
+    # @return [Registry] the registry object (for chaining)
+    # @see #load_yardoc
+    # @see #load_all
+    # @since 0.5.1
     def load!(file = T.unsafe(nil)); end
 
     # Forces all objects cached on disk into memory
+    #
+    # @example Loads all objects from disk
+    #   Registry.load
+    #   Registry.all.count #=> 0
+    #   Registry.load_all
+    #   Registry.all.count #=> 17
+    # @return [Registry] the registry object (for chaining)
+    # @since 0.5.1
     def load_all; end
 
     # Loads a yardoc file directly
+    #
+    # @param file [String] the yardoc file to load.
+    # @return [Registry] the registry object (for chaining)
     def load_yardoc(file = T.unsafe(nil)); end
 
+    # @param name [String] the locale name.
+    # @return [I18n::Locale] the locale object for +name+.
+    # @since 0.8.3
     def locale(name); end
 
     # Creates a pessmistic transactional lock on the database for writing.
     # Use with {YARD.parse} to ensure the database is not written multiple
     # times.
+    #
+    # @see locked_for_writing?
     def lock_for_writing(file = T.unsafe(nil), &block); end
 
+    # @return [Boolean] whether the database is currently locked for writing
     def locked_for_writing?(file = T.unsafe(nil)); end
 
     # Returns the paths of all of the objects in the registry.
+    #
+    # @param reload [Boolean] whether to load entire database
+    # @return [Array<String>] all of the paths in the registry.
     def paths(reload = T.unsafe(nil)); end
 
     # Gets/sets the directory that has LANG.po files
+    #
+    # @return [String] the directory that has .po files
     def po_dir; end
 
     # Gets/sets the directory that has LANG.po files
+    #
+    # @return [String] the directory that has .po files
     def po_dir=(dir); end
 
     # The assumed types of a list of paths. This method is used by CodeObjects::Base
+    #
+    # @deprecated The registry no longer globally tracks proxy types.
+    # @private
+    # @return [{String => Symbol}] a set of unresolved paths and their assumed type
     def proxy_types; end
 
     # Registers a new object with the registry
+    #
+    # @param object [CodeObjects::Base] the object to register
+    # @return [CodeObjects::Base] the registered object
     def register(object); end
 
     # Attempts to find an object by name starting at +namespace+, performing
     # a lookup similar to Ruby's method of resolving a constant in a namespace.
+    #
+    # @example Looks for a constant in the root namespace
+    #   Registry.resolve(nil, 'CONSTANT')
+    # @example Looks for a class method respecting the inheritance tree
+    #   Registry.resolve(myclass, 'mymethod', true)
+    # @example Looks for instance method #reverse starting from A::B::C
+    #   Registry.resolve(P("A::B::C"), "#reverse")
+    # @example Looks for a constant but returns a proxy if not found
+    #   Registry.resolve(P('A::B::C'), 'D', false, true) # => #<yardoc proxy A::B::C::D>
+    # @example Looks for a complex path from a namespace
+    #   Registry.resolve(P('A::B'), 'B::D') # => #<yardoc class A::B::D>
+    # @param inheritance [Boolean] Follows inheritance chain (mixins, superclass)
+    #   when performing name resolution if set to +true+.
+    # @param namespace [CodeObjects::NamespaceObject, nil] the starting namespace
+    #   (module or class). If +nil+ or +:root+, starts from the {root} object.
+    # @param name [String, Symbol] the name (or complex path) to look for from
+    #   +namespace+.
+    # @param proxy_fallback [Boolean] If +true+, returns a proxy representing
+    #   the unresolved path (namespace + name) if no object is found.
+    # @param type [Symbol, nil] the {CodeObjects::Base#type} that the resolved
+    #   object must be equal to. No type checking if nil.
+    # @return [CodeObjects::Base] the object if it is found
+    # @return [CodeObjects::Proxy] a Proxy representing the object if
+    #   +proxy_fallback+ is +true+.
+    # @return [nil] if +proxy_fallback+ is +false+ and no object was found.
+    # @see P
     def resolve(namespace, name, inheritance = T.unsafe(nil), proxy_fallback = T.unsafe(nil), type = T.unsafe(nil)); end
 
     # The root namespace object.
+    #
+    # @return [CodeObjects::RootObject] the root object in the namespace
     def root; end
 
     # Saves the registry to +file+
+    #
+    # @param file [String] the yardoc file to save to
+    # @return [Boolean] true if the file was saved
     def save(merge = T.unsafe(nil), file = T.unsafe(nil)); end
 
     # Whether or not the Registry storage should load everything into a
     # single object database (for disk efficiency), or spread them out
     # (for load time efficiency).
+    #
+    # @note Setting this attribute to nil will offload the decision to
+    #   the {RegistryStore storage adapter}.
+    # @return [Boolean, nil] if this value is set to nil, the storage
+    #   adapter will decide how to store the data.
     def single_object_db; end
 
     # Whether or not the Registry storage should load everything into a
     # single object database (for disk efficiency), or spread them out
     # (for load time efficiency).
+    #
+    # @note Setting this attribute to nil will offload the decision to
+    #   the {RegistryStore storage adapter}.
+    # @return [Boolean, nil] if this value is set to nil, the storage
+    #   adapter will decide how to store the data.
     def single_object_db=(v); end
 
     # Gets/sets the yardoc filename
+    #
+    # @return [String] the yardoc filename
+    # @see DEFAULT_YARDOC_FILE
     def yardoc_file; end
 
     # Gets/sets the yardoc filename
+    #
+    # @return [String] the yardoc filename
+    # @see DEFAULT_YARDOC_FILE
     def yardoc_file=(v); end
 
     # Returns the .yardoc file associated with a gem.
+    #
+    # @param gem [String] the name of the gem to search for
+    # @param ver_require [String] an optional Gem version requirement
+    # @param for_writing [Boolean] whether or not the method should search
+    #   for writable locations
+    # @return [String] if +for_writing+ is set to +true+, returns the best
+    #   location suitable to write the .yardoc file. Otherwise, the first
+    #   existing location associated with the gem's .yardoc file.
+    # @return [nil] if +for_writing+ is set to false and no yardoc file
+    #   is found, returns nil.
     def yardoc_file_for_gem(gem, ver_require = T.unsafe(nil), for_writing = T.unsafe(nil)); end
 
     private
@@ -5003,10 +8432,20 @@ module YARD::Registry
     def old_global_yardoc_file(spec, for_writing = T.unsafe(nil)); end
 
     # Attempts to resolve a name in a namespace
+    #
+    # @param namespace [CodeObjects::NamespaceObject] the starting namespace
+    # @param name [String] the name to look for
+    # @param type [Symbol, nil] the {CodeObjects::Base#type} that the resolved
+    #   object must be equal to
     def partial_resolve(namespace, name, type = T.unsafe(nil)); end
 
+    # @since 0.9.1
     def thread_local_resolver; end
+
+    # @since 0.6.5
     def thread_local_store; end
+
+    # @since 0.6.5
     def thread_local_store=(value); end
   end
 end
@@ -5018,10 +8457,18 @@ YARD::Registry::LOCAL_YARDOC_INDEX = T.let(T.unsafe(nil), String)
 # Handles all logic for complex lexical and inherited object resolution.
 # Used by {Registry.resolve}, so there is no need to use this class
 # directly.
+#
+# @see Registry.resolve
+# @since 0.9.1
 class YARD::RegistryResolver
   include ::YARD::CodeObjects::NamespaceMapper
 
   # Creates a new resolver object for a registry.
+  #
+  # @param registry [Registry] only set this if customizing the registry
+  #   object
+  # @return [RegistryResolver] a new instance of RegistryResolver
+  # @since 0.9.1
   def initialize(registry = T.unsafe(nil)); end
 
   # Performs a lookup on a given path in the registry. Resolution will occur
@@ -5029,88 +8476,194 @@ class YARD::RegistryResolver
   # lookup, as well as (optionally) through the inheritance chain. A proxy
   # object can be returned if the lookup fails for future resolution. The
   # proxy will be type hinted with the +type+ used in the original lookup.
+  #
+  # @example A lookup on a method through the inheritance tree
+  #   resolver.lookup_by_math("A::B#foo", inheritance: true)
+  # @example A lookup from root
+  #   resolver.lookup_by_path("A::B::C")
+  # @example A lookup from the A::B namespace
+  #   resolver.lookup_by_path("C", namespace: P("A::B"))
+  # @option opts
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @return [CodeObjects::Base, CodeObjects::Proxy, nil] the first object
+  #   that matches the path lookup. If proxy_fallback is provided, a proxy
+  #   object will be returned in the event of no match, otherwise nil will
+  #   be returned.
+  # @since 0.9.1
   def lookup_by_path(path, opts = T.unsafe(nil)); end
 
   private
 
   # Collects and returns all inherited namespaces for a given object
+  #
+  # @since 0.9.1
   def collect_namespaces(object); end
 
   # Performs a lexical lookup from a namespace for a path and a type hint.
+  #
+  # @since 0.9.1
   def lookup_path_direct(namespace, path, type); end
 
   # Performs a lookup through the inheritance chain on a path with a type hint.
+  #
+  # @since 0.9.1
   def lookup_path_inherited(namespace, path, type); end
 
+  # @return [Regexp] the regexp that can be used to split a string on all
+  #   occurrences of separator tokens
+  # @since 0.9.1
   def split_on_separators_match; end
+
+  # @return [Regexp] the regexp match of the default separator
+  # @since 0.9.1
   def starts_with_default_separator_match; end
+
+  # @return [Regexp] the regexp that matches strings starting with
+  #   a separator
+  # @since 0.9.1
   def starts_with_separator_match; end
 
   # return [Boolean] if the obj's type matches the provided type.
+  #
+  # @since 0.9.1
   def validate(obj, type); end
 end
 
 # The data store for the {Registry}.
+#
+# @see Registry
+# @see Serializers::YardocSerializer
 class YARD::RegistryStore
+  # @return [RegistryStore] a new instance of RegistryStore
   def initialize; end
 
   # Gets a {CodeObjects::Base} from the store
+  #
+  # @param key [String, Symbol] the path name of the object to look for.
+  #   If it is empty or :root, returns the {#root} object.
+  # @return [CodeObjects::Base, nil] a code object or nil if none is found
   def [](key); end
 
   # Associates an object with a path
+  #
+  # @param key [String, Symbol] the path name (:root or '' for root object)
+  # @param value [CodeObjects::Base] the object to store
+  # @return [CodeObjects::Base] returns +value+
   def []=(key, value); end
 
   # Returns the value of attribute checksums.
   def checksums; end
 
   # Deletes an object at a given path
+  #
+  # @param key [#to_sym] the key to delete
+  # @return [void]
   def delete(key); end
 
   # Deletes the .yardoc database on disk
+  #
+  # @param force [Boolean] if force is not set to true, the file/directory
+  #   will only be removed if it ends with .yardoc. This helps with
+  #   cases where the directory might have been named incorrectly.
+  # @return [Boolean] true if the .yardoc database was deleted, false
+  #   otherwise.
   def destroy(force = T.unsafe(nil)); end
 
   # Returns the value of attribute file.
   def file; end
 
   # Gets a {CodeObjects::Base} from the store
+  #
+  # @param key [String, Symbol] the path name of the object to look for.
+  #   If it is empty or :root, returns the {#root} object.
+  # @return [CodeObjects::Base, nil] a code object or nil if none is found
   def get(key); end
 
   # Gets all path names from the store. Loads the entire database
   # if +reload+ is +true+
+  #
+  # @param reload [Boolean] if false, does not load the entire database
+  #   before a lookup.
+  # @return [Array<Symbol>] the path names of all the code objects
   def keys(reload = T.unsafe(nil)); end
 
+  # @param file [String, nil] the name of the yardoc db to load
+  # @return [Boolean] whether the database was loaded
   def load(file = T.unsafe(nil)); end
 
   # Loads the .yardoc file and loads all cached objects into memory
   # automatically.
+  #
+  # @param file [String, nil] the name of the yardoc db to load
+  # @return [Boolean] whether the database was loaded
+  # @see #load_all
+  # @since 0.5.1
   def load!(file = T.unsafe(nil)); end
 
   # Loads all cached objects into memory
+  #
+  # @return [void]
   def load_all; end
 
+  # @param name [String] the locale name.
+  # @return [I18n::Locale] the locale object for +name+.
+  # @since 0.8.3
   def locale(name); end
 
   # Creates a pessmistic transactional lock on the database for writing.
   # Use with {YARD.parse} to ensure the database is not written multiple
   # times.
+  #
+  # @param file [String] if supplied, the path to the database
+  # @see #locked_for_writing?
   def lock_for_writing(file = T.unsafe(nil), &block); end
 
+  # @param file [String] if supplied, the path to the database
+  # @return [Boolean] whether the database is currently locked for writing
   def locked_for_writing?(file = T.unsafe(nil)); end
+
+  # @param type [Symbol] the type to look for
+  # @return [Array<String>] a list of object paths with a given
+  #   {CodeObjects::Base#type}
+  # @since 0.8.0
   def paths_for_type(type, reload = T.unsafe(nil)); end
+
+  # @deprecated The registry no longer tracks proxy types
   def proxy_types; end
 
   # Associates an object with a path
+  #
+  # @param key [String, Symbol] the path name (:root or '' for root object)
+  # @param value [CodeObjects::Base] the object to store
+  # @return [CodeObjects::Base] returns +value+
   def put(key, value); end
 
+  # @return [CodeObjects::RootObject] the root object
   def root; end
 
   # Saves the database to disk
+  #
+  # @param merge [Boolean] if true, merges the data in memory with the
+  #   data on disk, otherwise the data on disk is deleted.
+  # @param file [String, nil] if supplied, the name of the file to save to
+  # @return [Boolean] whether the database was saved
   def save(merge = T.unsafe(nil), file = T.unsafe(nil)); end
 
   # Gets all code objects from the store. Loads the entire database
   # if +reload+ is +true+
+  #
+  # @param reload [Boolean] if false, does not load the entire database
+  #   before a lookup.
+  # @return [Array<CodeObjects::Base>] all the code objects
   def values(reload = T.unsafe(nil)); end
 
+  # @param type [Symbol] the type to look for
+  # @return [Array<CodeObjects::Base>] a list of objects with a given
+  #   {CodeObjects::Base#type}
+  # @since 0.8.0
   def values_for_type(type, reload = T.unsafe(nil)); end
 
   protected
@@ -5119,6 +8672,8 @@ class YARD::RegistryStore
   def load_yardoc; end
   def object_types_path; end
   def objects_path; end
+
+  # @deprecated The registry no longer tracks proxy types
   def proxy_types_path; end
 
   private
@@ -5127,12 +8682,17 @@ class YARD::RegistryStore
   def load_checksums; end
   def load_locale(name); end
   def load_object_types; end
+
+  # @deprecated The registry no longer tracks proxy types
   def load_proxy_types; end
+
   def load_root; end
   def load_yardoc_old; end
   def write_checksums; end
   def write_complete_lock; end
   def write_object_types; end
+
+  # @deprecated The registry no longer tracks proxy types
   def write_proxy_types; end
 end
 
@@ -5150,51 +8710,105 @@ module YARD::Serializers; end
 # Optionally, a serializer can implement before and after filters:
 # * {#before_serialize}
 # * {#after_serialize}
+#
+# @abstract Override this class to implement a custom serializer.
 class YARD::Serializers::Base
   # Creates a new serializer with options
+  #
+  # @param opts [Hash] the options to assign to {#options}
+  # @return [Base] a new instance of Base
   def initialize(opts = T.unsafe(nil)); end
 
   # Called after serialization.
+  #
+  # @abstract Should run code after serialization.
+  # @param data [String] the data that was serialized.
+  # @return [void]
   def after_serialize(data); end
 
   # Called before serialization.
+  #
+  # @abstract Should run code before serialization. Should return false
+  #   if serialization should not occur.
+  # @return [Boolean] whether or not serialization should occur
   def before_serialize; end
 
   # Returns whether an object has been serialized
+  #
+  # @abstract This method should return whether the endpoint already exists.
+  #   For instance, a file system serializer would check if the file exists
+  #   on disk. You will most likely use +#basepath+ and {#serialized_path} to
+  #   get the endpoint's location.
+  # @param object [CodeObjects::Base] the object to check existence of
+  # @return [Boolean] whether the endpoint exists.
+  # @since 0.6.0
   def exists?(object); end
 
   # All serializer options are saved so they can be passed to other serializers.
+  #
+  # @return [SymbolHash] the serializer options
   def options; end
 
   # Serializes an object.
+  #
+  # @abstract This method should implement the logic that serializes
+  #   +data+ to the respective endpoint. This method should also call
+  #   the before and after callbacks {#before_serialize} and {#after_serialize}
+  # @param object [CodeObjects::Base, String] the object to serialize the
+  #   data for. The object can also be a string (for non-object serialization)
+  # @param data [String] the contents that should be serialized
   def serialize(object, data); end
 
   # The serialized path of an object
+  #
+  # @abstract This method should return the path of the object on the
+  #   endpoint. For instance, for a file serializer, this should return
+  #   the filename that represents the object on disk.
+  # @param object [CodeObjects::Base] the object to return a path for
+  # @return [String] the serialized path of an object
   def serialized_path(object); end
 end
 
 # Implements a serializer that reads from and writes to the filesystem.
 class YARD::Serializers::FileSystemSerializer < ::YARD::Serializers::Base
   # Creates a new FileSystemSerializer with options
+  #
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @return [FileSystemSerializer] a new instance of FileSystemSerializer
   def initialize(opts = T.unsafe(nil)); end
 
   # The base path to write data to.
+  #
+  # @return [String] a base path
   def basepath; end
 
   def basepath=(value); end
 
   # Checks the disk for an object and returns whether it was serialized.
+  #
+  # @param object [CodeObjects::Base] the object to check
+  # @return [Boolean] whether an object has been serialized to disk
   def exists?(object); end
 
   # The extension of the filename (defaults to +html+)
+  #
+  # @return [String] the extension of the file. Empty string for no extension.
   def extension; end
 
   def extension=(value); end
 
   # Serializes object with data to its serialized path (prefixed by the +#basepath+).
+  #
+  # @return [String] the written data (for chaining)
   def serialize(object, data); end
 
   # Implements the serialized path of a code object.
+  #
+  # @param object [CodeObjects::Base, CodeObjects::ExtraFileObject, String] the object to get a path for. The path of a string is the string itself.
+  # @return [String] if object is a String, returns
+  #   object, otherwise the path on disk (without the basepath).
   def serialized_path(object); end
 
   private
@@ -5203,6 +8817,9 @@ class YARD::Serializers::FileSystemSerializer < ::YARD::Serializers::Base
   # Needed to handle case sensitive YARD objects mapped into a case
   # insensitive filesystem. Uses with {#mapped_name} to determine the
   # mapping name for a given object.
+  #
+  # @note In order to use filesystem name mapping, you must initialize
+  #   the serializer object after preparing the {YARD::Registry}.
   def build_filename_map; end
 
   # Remove special chars from filenames.
@@ -5210,12 +8827,20 @@ class YARD::Serializers::FileSystemSerializer < ::YARD::Serializers::Base
   # non alphanumeric (plus period, underscore and dash).
   def encode_path_components(*components); end
 
+  # @return [String] the filesystem mapped name of a given object.
   def mapped_name(object); end
 end
 
 # Serializes an object to a process (like less)
+#
+# @example Serializing to a pager (less)
+#   serializer = ProcessSerializer.new('less')
+#   serializer.serialize(object, "data!")
 class YARD::Serializers::ProcessSerializer < ::YARD::Serializers::Base
   # Creates a new ProcessSerializer for the shell command +cmd+
+  #
+  # @param cmd [String] the command that will accept data on stdin
+  # @return [ProcessSerializer] a new instance of ProcessSerializer
   def initialize(cmd); end
 
   # Overrides serialize behaviour and writes data to standard input
@@ -5226,6 +8851,10 @@ end
 # A serializer that writes data to standard output.
 class YARD::Serializers::StdoutSerializer < ::YARD::Serializers::Base
   # Creates a serializer to print text to stdout
+  #
+  # @param wrap [Fixnum, nil] if wrap is a number, wraps text to +wrap+
+  #   columns, otherwise no wrapping is done.
+  # @return [StdoutSerializer] a new instance of StdoutSerializer
   def initialize(wrap = T.unsafe(nil)); end
 
   # Overrides serialize behaviour to write data to standard output
@@ -5234,27 +8863,42 @@ class YARD::Serializers::StdoutSerializer < ::YARD::Serializers::Base
   private
 
   # Wraps text to a specific column length
+  #
+  # @param text [String] the text to wrap
+  # @param _length [Fixnum] the column length to wrap to
+  # @return [String] the wrapped text
   def word_wrap(text, _length = T.unsafe(nil)); end
 end
 
 class YARD::Serializers::YardocSerializer < ::YARD::Serializers::FileSystemSerializer
+  # @return [YardocSerializer] a new instance of YardocSerializer
   def initialize(yfile); end
 
   def checksums_path; end
+
+  # @return [Boolean]
   def complete?; end
+
   def complete_lock_path; end
   def deserialize(path, is_path = T.unsafe(nil)); end
 
   # Creates a pessmistic transactional lock on the database for writing.
   # Use with {YARD.parse} to ensure the database is not written multiple
   # times.
+  #
+  # @see #locked_for_writing?
   def lock_for_writing; end
 
+  # @return [Boolean] whether the database is currently locked for writing
   def locked_for_writing?; end
+
   def object_types_path; end
   def objects_path; end
   def processing_path; end
+
+  # @deprecated The registry no longer tracks proxy types
   def proxy_types_path; end
+
   def serialize(object); end
   def serialized_path(object); end
 
@@ -5272,9 +8916,15 @@ end
 # == Rack Middleware
 # If you want to use the YARD server as a Rack middleware, see the documentation
 # in {RackMiddleware}.
+#
+# @since 0.6.0
 module YARD::Server
   class << self
     # Registers a static path to be used in static asset lookup.
+    #
+    # @param path [String] the pathname to register
+    # @return [void]
+    # @since 0.6.2
     def register_static_path(path); end
   end
 end
@@ -5287,38 +8937,110 @@ end
 # == Subclassing Notes
 # To create a concrete adapter class, implement the {#start} method to
 # initiate the server backend.
+#
+# @abstract
+# @since 0.6.0
 class YARD::Server::Adapter
   # Creates a new adapter object
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param libs [Hash{String=>Array<LibraryVersion>}] a list of libraries,
+  #   see {#libraries} for formulating this list.
+  # @param opts [Hash] extra options to pass to the adapter
+  # @return [Adapter] a new instance of Adapter
+  # @since 0.6.0
   def initialize(libs, opts = T.unsafe(nil), server_opts = T.unsafe(nil)); end
 
   # Adds a library to the {#libraries} mapping for a given library object.
+  #
+  # @example Adding a new library to an adapter
+  #   adapter.add_library LibraryVersion.new('mylib', '1.0', '/path/to/.yardoc')
+  # @param library [LibraryVersion] a library to add
+  # @since 0.6.0
   def add_library(library); end
 
+  # @return [String] the location where static files are located, if any.
+  #   To set this field on initialization, pass +:DocumentRoot+ to the
+  #   +server_opts+ argument in {#initialize}
+  # @since 0.6.0
   def document_root; end
+
+  # @return [String] the location where static files are located, if any.
+  #   To set this field on initialization, pass +:DocumentRoot+ to the
+  #   +server_opts+ argument in {#initialize}
+  # @since 0.6.0
   def document_root=(_arg0); end
+
+  # @return [Hash{String=>Array<LibraryVersion>}] a map of libraries.
+  # @see LibraryVersion LibraryVersion for information on building a list of libraries
+  # @see #add_library
+  # @since 0.6.0
   def libraries; end
+
+  # @return [Hash{String=>Array<LibraryVersion>}] a map of libraries.
+  # @see LibraryVersion LibraryVersion for information on building a list of libraries
+  # @see #add_library
+  # @since 0.6.0
   def libraries=(_arg0); end
+
+  # @return [Hash] options passed and processed by adapters. The actual
+  #   options mostly depend on the adapters themselves.
+  # @since 0.6.0
   def options; end
+
+  # @return [Hash] options passed and processed by adapters. The actual
+  #   options mostly depend on the adapters themselves.
+  # @since 0.6.0
   def options=(_arg0); end
+
+  # @return [Router] the router object used to route URLs to commands
+  # @since 0.6.0
   def router; end
+
+  # @return [Router] the router object used to route URLs to commands
+  # @since 0.6.0
   def router=(_arg0); end
+
+  # @return [Hash] a set of options to pass to the server backend. Note
+  #   that +:DocumentRoot+ also sets the {#document_root}.
+  # @since 0.6.0
   def server_options; end
+
+  # @return [Hash] a set of options to pass to the server backend. Note
+  #   that +:DocumentRoot+ also sets the {#document_root}.
+  # @since 0.6.0
   def server_options=(_arg0); end
 
   # Implement this method to connect your adapter to your server.
+  #
+  # @abstract
+  # @raise [NotImplementedError]
+  # @since 0.6.0
   def start; end
 
   class << self
     # Performs any global initialization for the adapter.
+    #
+    # @note If you subclass this method, make sure to call +super+.
+    # @return [void]
+    # @since 0.6.0
     def setup; end
 
     # Performs any global shutdown procedures for the adapter.
+    #
+    # @note If you subclass this method, make sure to call +super+.
+    # @return [void]
+    # @since 0.6.0
     def shutdown; end
   end
 end
 
 # Commands implement specific kinds of server responses which are routed
 # to by the {Router} class. To implement a custom command, subclass {Commands::Base}.
+#
+# @since 0.6.0
 module YARD::Server::Commands; end
 
 # This is the base command class used to implement custom commands for
@@ -5330,13 +9052,13 @@ module YARD::Server::Commands; end
 # method. When creating a custom command, the {Adapter#options} will
 # automatically be mapped to attributes by the same name on your class.
 #
-# class MyCommand < Base
-# attr_accessor :myattr
-# end
+#   class MyCommand < Base
+#     attr_accessor :myattr
+#   end
 #
-# Adapter.new(libs, {:myattr => 'foo'}).start
+#   Adapter.new(libs, {:myattr => 'foo'}).start
 #
-# # when a request comes in, cmd.myattr == 'foo'
+#   # when a request comes in, cmd.myattr == 'foo'
 #
 # == Subclassing Notes
 # To implement a custom command, override the {#run} method, not {#call}.
@@ -5345,84 +9067,208 @@ module YARD::Server::Commands; end
 #
 # Note that if your command deals directly with libraries, you should
 # consider subclassing the more specific {LibraryCommand} class instead.
+#
+# @abstract
+# @see #run
+# @since 0.6.0
 class YARD::Server::Commands::Base
   # Creates a new command object, setting attributes named by keys
   # in the options hash. After initialization, the options hash
   # is saved in {#command_options} for further inspection.
+  #
+  # @example Creating a Command
+  #   cmd = DisplayObjectCommand.new(:caching => true, :library => mylib)
+  #   cmd.library # => mylib
+  #   cmd.command_options # => {:caching => true, :library => mylib}
+  # @param opts [Hash] the options hash, saved to {#command_options}
+  #   after initialization.
+  # @return [Base] a new instance of Base
+  # @since 0.6.0
   def initialize(opts = T.unsafe(nil)); end
 
+  # @return [Adapter] the server adapter
+  # @since 0.6.0
   def adapter; end
+
+  # @return [Adapter] the server adapter
+  # @since 0.6.0
   def adapter=(_arg0); end
+
+  # @return [String] the response body. Defaults to empty string.
+  # @since 0.6.0
   def body; end
+
+  # @return [String] the response body. Defaults to empty string.
+  # @since 0.6.0
   def body=(_arg0); end
+
+  # @return [Boolean] whether to cache
+  # @since 0.6.0
   def caching; end
+
+  # @return [Boolean] whether to cache
+  # @since 0.6.0
   def caching=(_arg0); end
 
   # The main method called by a router with a request object.
+  #
+  # @note This command should not be overridden by subclasses. Implement
+  #   the callback method {#run} instead.
+  # @param request [Adapter Dependent] the request object
+  # @return [Array(Numeric,Hash,Array<String>)] a Rack-style response
+  #   of status, headers, and body wrapped in an array.
+  # @since 0.6.0
   def call(request); end
 
+  # @return [Hash] the options passed to the command's constructor
+  # @since 0.6.0
   def command_options; end
+
+  # @return [Hash] the options passed to the command's constructor
+  # @since 0.6.0
   def command_options=(_arg0); end
+
+  # @return [Hash{String => String}] response headers
+  # @since 0.6.0
   def headers; end
+
+  # @return [Hash{String => String}] response headers
+  # @since 0.6.0
   def headers=(_arg0); end
+
+  # @return [String] the path after the command base URI
+  # @since 0.6.0
   def path; end
+
+  # @return [String] the path after the command base URI
+  # @since 0.6.0
   def path=(_arg0); end
+
+  # @return [Rack::Request] request object
+  # @since 0.6.0
   def request; end
+
+  # @return [Rack::Request] request object
+  # @since 0.6.0
   def request=(_arg0); end
 
   # Subclass this method to implement a custom command. This method
   # should set the {#status} and {#body}, and optionally modify the
   # {#headers}. Note that +#status+ defaults to 200.
+  #
+  # @abstract
+  # @example A custom command
+  #   class ErrorCommand < Base
+  #   def run
+  #   self.body = 'ERROR! The System is down!'
+  #   self.status = 500
+  #   self.headers['Conten-Type'] = 'text/plain'
+  #   end
+  #   end
+  # @raise [NotImplementedError]
+  # @return [void]
+  # @since 0.6.0
   def run; end
 
+  # @return [Numeric] status code. Defaults to 200 per request
+  # @since 0.6.0
   def status; end
+
+  # @return [Numeric] status code. Defaults to 200 per request
+  # @since 0.6.0
   def status=(_arg0); end
 
   protected
 
   # Override this method to implement custom caching mechanisms for
+  #
+  # @example Caching to memory
+  #   $memory_cache = {}
+  #   def cache(data)
+  #   $memory_cache[path] = data
+  #   end
+  # @param data [String] the data to cache
+  # @return [String] the same cached data (for chaining)
+  # @see StaticCaching
+  # @since 0.6.0
   def cache(data); end
 
   # Sets the body and headers for a 404 response. Does not modify the
   # body if already set.
+  #
+  # @return [void]
+  # @since 0.6.0
   def not_found; end
 
   # Sets the headers and status code for a redirection to a given URL
+  #
+  # @param url [String] the URL to redirect to
+  # @raise [FinishRequest] causes the request to terminate.
+  # @since 0.6.0
   def redirect(url); end
 
   # Renders a specific object if provided, or a regular template rendering
   # if object is not provided.
+  #
+  # @param object [CodeObjects::Base, nil] calls {CodeObjects::Base#format} if
+  #   an object is provided, or {Templates::Engine.render} if object is nil. Both
+  #   receive +#options+ as an argument.
+  # @return [String] the resulting output to display
+  # @since 0.6.0
+  # @todo This method is dependent on +#options+, it should be in {LibraryCommand}.
   def render(object = T.unsafe(nil)); end
 
   private
 
   # Add a conservative cache control policy to reduce load on
   # requests served with "?1234567890" style timestamp query strings.
+  #
+  # @since 0.6.0
   def add_cache_control; end
 end
 
 # Displays a README or extra file.
+#
+# @since 0.6.0
+# @todo Implement better support for detecting binary (image) filetypes
 class YARD::Server::Commands::DisplayFileCommand < ::YARD::Server::Commands::LibraryCommand
+  # @since 0.6.0
   def index; end
+
+  # @since 0.6.0
   def index=(_arg0); end
+
+  # @raise [NotFoundError]
+  # @since 0.6.0
   def run; end
 end
 
 # Displays documentation for a specific object identified by the path
+#
+# @since 0.6.0
 class YARD::Server::Commands::DisplayObjectCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Server::DocServerHelper
 
+  # @since 0.6.0
   def index; end
+
+  # @since 0.6.0
   def not_found; end
+
+  # @since 0.6.0
   def run; end
 
   private
 
+  # @since 0.6.0
   def object_path; end
 end
 
 # Displays an object wrapped in frames
+#
+# @since 0.6.0
 class YARD::Server::Commands::FramesCommand < ::YARD::Server::Commands::DisplayObjectCommand
+  # @since 0.6.0
   def run; end
 end
 
@@ -5430,56 +9276,136 @@ end
 # Some commands do not, but most (like {DisplayObjectCommand}) do. If your
 # command deals with libraries directly, subclass this class instead.
 # See {Base} for notes on how to subclass a command.
+#
+# @abstract
+# @since 0.6.0
 class YARD::Server::Commands::LibraryCommand < ::YARD::Server::Commands::Base
+  # @return [LibraryCommand] a new instance of LibraryCommand
+  # @since 0.6.0
   def initialize(opts = T.unsafe(nil)); end
 
+  # @since 0.6.0
   def call(request); end
+
+  # @return [Boolean] whether to reparse data
+  # @since 0.6.0
   def incremental; end
+
+  # @return [Boolean] whether to reparse data
+  # @since 0.6.0
   def incremental=(_arg0); end
+
+  # @return [LibraryVersion] the object containing library information
+  # @since 0.6.0
   def library; end
+
+  # @return [LibraryVersion] the object containing library information
+  # @since 0.6.0
   def library=(_arg0); end
+
+  # @return [LibraryOptions] default options for the library
+  # @since 0.6.0
   def options; end
+
+  # @return [LibraryOptions] default options for the library
+  # @since 0.6.0
   def options=(_arg0); end
+
+  # @return [Serializers::Base] the serializer used to perform file linking
+  # @since 0.6.0
   def serializer; end
+
+  # @return [Serializers::Base] the serializer used to perform file linking
+  # @since 0.6.0
   def serializer=(_arg0); end
+
+  # @return [Boolean] whether router should route for multiple libraries
+  # @since 0.6.0
   def single_library; end
+
+  # @return [Boolean] whether router should route for multiple libraries
+  # @since 0.6.0
   def single_library=(_arg0); end
+
+  # @return [Boolean] whether or not this adapter calls +fork+ when serving
+  #   library requests. Defaults to false.
+  # @since 0.6.0
   def use_fork; end
+
+  # @return [Boolean] whether or not this adapter calls +fork+ when serving
+  #   library requests. Defaults to false.
+  # @since 0.6.0
   def use_fork=(_arg0); end
 
   private
 
+  # @since 0.6.0
   def call_with_fork(request, &block); end
+
+  # @since 0.6.0
   def call_without_fork(request); end
+
+  # @return [Boolean]
+  # @since 0.6.0
   def can_fork?; end
 
   # Hack to load a custom fulldoc template object that does
   # not do any rendering/generation. We need this to access the
   # generate_*_list methods.
+  #
+  # @since 0.6.0
   def fulldoc_template; end
 
+  # @raise [LibraryNotPreparedError]
+  # @since 0.6.0
   def load_yardoc; end
+
+  # @since 0.6.0
   def not_prepared; end
+
+  # @since 0.6.0
   def restore_template_info; end
+
+  # @since 0.6.0
   def save_default_template_info; end
+
+  # @since 0.6.0
   def setup_library; end
+
+  # @since 0.6.0
   def setup_yardopts; end
 end
 
 YARD::Server::Commands::LibraryCommand::CAN_FORK = T.let(T.unsafe(nil), TrueClass)
 
 # Returns the index of libraries served by the server.
+#
+# @since 0.6.0
 class YARD::Server::Commands::LibraryIndexCommand < ::YARD::Server::Commands::Base
+  # @since 0.6.0
   def options; end
+
+  # @since 0.6.0
   def options=(_arg0); end
+
+  # @since 0.6.0
   def run; end
 end
 
+# @since 0.6.0
 class YARD::Server::Commands::LibraryIndexOptions < ::YARD::CLI::YardocOptions
+  # @since 0.6.0
   def adapter; end
+
+  # @since 0.6.0
   def adapter=(_arg0); end
+
+  # @since 0.6.0
   def libraries; end
+
+  # @since 0.6.0
   def libraries=(_arg0); end
+
   def serialize; end
   def serialize=(_arg0); end
   def template; end
@@ -5488,61 +9414,111 @@ class YARD::Server::Commands::LibraryIndexOptions < ::YARD::CLI::YardocOptions
   def type=(_arg0); end
 end
 
+# @since 0.6.0
 class YARD::Server::Commands::LibraryOptions < ::YARD::CLI::YardocOptions
+  # @since 0.6.0
   def adapter; end
+
+  # @since 0.6.0
   def command; end
+
+  # @since 0.6.0
   def command=(_arg0); end
+
+  # @since 0.6.0
+  # @yield [:adapter, adapter]
   def each(&block); end
+
+  # @since 0.6.0
   def frames; end
+
+  # @since 0.6.0
   def frames=(_arg0); end
+
+  # @since 0.6.0
   def library; end
+
+  # @since 0.6.0
   def serialize; end
+
+  # @since 0.6.0
   def serializer; end
+
+  # @since 0.6.0
   def single_library; end
 end
 
 # Returns a list of objects of a specific type
+#
+# @since 0.6.0
 class YARD::Server::Commands::ListCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
 
+  # @since 0.6.0
   def run; end
 end
 
 # Serves requests from the root of the server
+#
+# @since 0.6.0
 class YARD::Server::Commands::RootRequestCommand < ::YARD::Server::Commands::Base
   include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
+  # @since 0.6.0
   def run; end
 end
 
 # Performs a search over the objects inside of a library and returns
 # the results as HTML or plaintext
+#
+# @since 0.6.0
 class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
   include ::YARD::Templates::Helpers::ModuleHelper
   include ::YARD::Server::DocServerHelper
 
+  # @since 0.6.0
   def query; end
+
+  # @since 0.6.0
   def query=(_arg0); end
+
+  # @since 0.6.0
   def results; end
+
+  # @since 0.6.0
   def results=(_arg0); end
+
+  # @since 0.6.0
   def run; end
+
+  # @since 0.6.0
   def visible_results; end
 
   private
 
+  # @since 0.6.0
   def search_for_object; end
+
+  # @since 0.6.0
   def serve_normal; end
+
+  # @since 0.6.0
   def serve_xhr; end
+
+  # @since 0.6.0
   def url_for(object); end
 end
 
 # Serves static content when no other router matches a request
+#
+# @since 0.6.0
 class YARD::Server::Commands::StaticFileCommand < ::YARD::Server::Commands::LibraryCommand
   include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
+  # @since 0.6.0
   def run; end
 end
 
@@ -5550,77 +9526,148 @@ end
 # extra path, use {YARD::Server.register_static_path} rather than
 # modifying this constant directly. Also note that files in the
 # document root will always take precedence over these paths.
+#
+# @since 0.6.0
 YARD::Server::Commands::StaticFileCommand::STATIC_PATHS = T.let(T.unsafe(nil), Array)
 
 # Include this module to get access to {#static_template_file?}
 # and {favicon?} helpers.
+#
+# @since 0.6.0
 module YARD::Server::Commands::StaticFileHelpers
   include ::WEBrick::HTTPUtils
 
   # Serves an empty favicon.
+  #
+  # @raise [FinishRequest] finalizes an empty body if the path matches
+  #   /favicon.ico so browsers don't complain.
+  # @return [Boolean]
+  # @since 0.6.0
   def favicon?; end
 
   # Attempts to route a path to a static template file.
+  #
+  # @raise [FinishRequest] if a file was found and served
+  # @return [void]
+  # @since 0.6.0
   def static_template_file?; end
 
   private
 
+  # @since 0.6.0
   def find_file(adapter, url); end
 
   class << self
+    # @since 0.6.0
     def find_file(adapter, url); end
   end
 end
 
 # A module that is mixed into {Templates::Template} in order to customize
 # certain template methods.
+#
+# @since 0.6.0
 module YARD::Server::DocServerHelper
+  # @param path_components [Array<String>] components of a URL
+  # @return [String] the absolute path from any mounted base URI.
+  # @since 0.6.0
   def abs_url(*path_components); end
+
+  # @example The base path for a library 'foo'
+  #   base_path('docs') # => 'docs/foo'
+  # @param path [String] the path prefix for a base path URI
+  # @return [String] the base URI for a library with an extra +path+ prefix
+  # @since 0.6.0
   def base_path(path); end
+
+  # @return [String] a timestamp for a given file
+  # @since 0.6.0
   def mtime(file); end
+
+  # @return [String] a URL for a file with a timestamp
+  # @since 0.6.0
   def mtime_url(file); end
+
+  # @return [Router] convenience method for accessing the router
+  # @since 0.6.0
   def router; end
 
   # Modifies {Templates::Helpers::HtmlHelper#url_for} to return a URL instead
   # of a disk location.
+  #
+  # @param obj [String, CodeObjects::Base] the object (or object path) to link to
+  # @param anchor [String] the anchor to link to
+  # @param relative [Boolean] use a relative or absolute link
+  # @return [String] the URL location of the object
+  # @since 0.6.0
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Modifies {Templates::Helpers::HtmlHelper#url_for_file} to return a URL instead
   # of a disk location.
+  #
+  # @param filename [String, CodeObjects::ExtraFileObject] the filename to link to
+  # @param anchor [String] optional anchor
+  # @return [String] the URL pointing to the file
+  # @since 0.6.0
   def url_for_file(filename, anchor = T.unsafe(nil)); end
 
   # Returns the frames URL for the page
+  #
+  # @return [String] the URL pointing to the frames page
+  # @since 0.6.0
   def url_for_frameset; end
 
   # Returns the URL for the alphabetic index page
+  #
+  # @return [String] the URL pointing to the first main page the
+  #   user should see.
+  # @since 0.6.0
   def url_for_index; end
 
   # Modifies {Templates::Helpers::HtmlHelper#url_for_list} to return a URL
   # based on the list prefix instead of a HTML filename.
+  #
+  # @param type [String, Symbol] the list type to generate a URL for
+  # @return [String] the URL pointing to the list
+  # @since 0.6.0
   def url_for_list(type); end
 
   # Returns the main URL, first checking a readme and then linking to the index
+  #
+  # @return [String] the URL pointing to the first main page the
+  #   user should see.
+  # @since 0.6.0
   def url_for_main; end
 end
 
 # A custom {Serializers::Base serializer} which returns resource URLs instead of
 # static relative paths to files on disk.
+#
+# @since 0.6.0
 class YARD::Server::DocServerSerializer < ::YARD::Serializers::FileSystemSerializer
+  # @return [DocServerSerializer] a new instance of DocServerSerializer
+  # @since 0.6.0
   def initialize(_command = T.unsafe(nil)); end
 
+  # @since 0.6.0
   def serialized_path(object); end
 
   private
 
+  # @since 0.6.0
   def urlencode(name); end
 end
 
 # Short circuits a request by raising an error. This exception is caught
 # by {Commands::Base#call} to immediately end a request and return a response.
+#
+# @since 0.6.0
 class YARD::Server::FinishRequest < ::RuntimeError; end
 
 # This exception is raised when {LibraryVersion#prepare!} fails, or discovers
 # that the library is not "prepared" to be served by
+#
+# @since 0.6.0
 class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
 
 # A library version encapsulates a library's documentation at a specific version.
@@ -5644,8 +9691,8 @@ class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
 # you should create a hash of library names mapped to an *Array* of LibraryVersion
 # objects. For example:
 #
-# {'mylib' => [LibraryVersion.new('mylib', '1.0', ...),
-# LibraryVersion.new('mylib', '2.0', ...)]}
+#   {'mylib' => [LibraryVersion.new('mylib', '1.0', ...),
+#                LibraryVersion.new('mylib', '2.0', ...)]}
 #
 # Note that you can also use {Adapter#add_library} for convenience.
 #
@@ -5679,15 +9726,73 @@ class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
 # Note that only +#load_yardoc_from_SOURCE+ is required. The other two
 # methods are optional and can be set manually (via {#source_path=} and
 # {#yardoc_file=}) on the object at any time.
+#
+# @example Implementing a Custom Library Source
+#   # Adds the source type "http" for .yardoc files zipped on HTTP servers
+#   class LibraryVersion
+#   def load_yardoc_from_http
+#   Thread.new do
+#   # zip/unzip method implementations are not shown
+#   download_zip_file("http://mysite.com/yardocs/#{self}.zip")
+#   unzip_file_to("/path/to/yardocs/#{self}")
+#   end
+#
+#   # tell the server it's not ready yet (but it might be next time)
+#   raise LibraryNotPreparedError
+#   end
+#
+#   def yardoc_file_for_http
+#   "/path/to/yardocs/#{self}/.yardoc"
+#   end
+#
+#   def source_path_for_http
+#   File.dirname(yardoc_file)
+#   end
+#   end
+#
+#   # Creating a library of this source type:
+#   LibraryVersion.new('name', '1.0', nil, :http)
+# @since 0.6.0
 class YARD::Server::LibraryVersion
+  # @param name [String] the name of the library
+  # @param version [String] the specific (usually, but not always, numeric) library
+  #   version
+  # @param yardoc [String] the location of the yardoc file, or nil if it is
+  #   generated later
+  # @param source [Symbol] the location of the files used to build the yardoc.
+  #   Builtin source types are +:disk+ or +:gem+.
+  # @return [LibraryVersion] a new instance of LibraryVersion
+  # @since 0.6.0
   def initialize(name, version = T.unsafe(nil), yardoc = T.unsafe(nil), source = T.unsafe(nil)); end
 
+  # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   def ==(other); end
+
+  # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   def eql?(other); end
+
+  # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   def equal?(other); end
+
+  # @return [Gem::Specification] a gemspec object for a given library. Used
+  #   for :gem source types.
+  # @return [nil] if there is no installed gem for the library
+  # @since 0.6.0
   def gemspec; end
+
+  # @return [Fixnum] used for Hash mapping.
+  # @since 0.6.0
   def hash; end
+
+  # @return [String] the name of the library
+  # @since 0.6.0
   def name; end
+
+  # @return [String] the name of the library
+  # @since 0.6.0
   def name=(_arg0); end
 
   # Prepares a library to be displayed by the server. This callback is
@@ -5695,17 +9800,73 @@ class YARD::Server::LibraryVersion
   # and ready to be viewed. If any steps need to be performed prior to loading,
   # they are performed through this method (though they should be implemented
   # through the +load_yardoc_from_SOURCE+ method).
+  #
+  # @note You should not directly override this method. Instead, implement
+  #   +load_yardoc_from_SOURCENAME+ when implementing loading for a specific
+  #   source type. See the {LibraryVersion} documentation for "Implementing
+  #   a Custom Library Source"
+  # @raise [LibraryNotPreparedError] if the library is not ready to be
+  #   displayed. Usually when raising this error, you would simultaneously
+  #   begin preparing the library for subsequent requests, although this
+  #   is not necessary.
+  # @since 0.6.0
   def prepare!; end
 
+  # @return [Boolean] whether the library has been completely processed
+  #   and is ready to be served
+  # @since 0.6.0
   def ready?; end
+
+  # @return [Symbol] the source type representing where the yardoc should be
+  #   loaded from. Defaults are +:disk+ and +:gem+, though custom sources
+  #   may be implemented. This value is used to inform {#prepare!} about how
+  #   to load the necessary data in order to display documentation for an object.
+  # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   def source; end
+
+  # @return [Symbol] the source type representing where the yardoc should be
+  #   loaded from. Defaults are +:disk+ and +:gem+, though custom sources
+  #   may be implemented. This value is used to inform {#prepare!} about how
+  #   to load the necessary data in order to display documentation for an object.
+  # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   def source=(_arg0); end
+
+  # @return [String] the location of the source code for a library. This
+  #   value is filled by calling +#source_path_for_SOURCE+ on this class.
+  # @return [nil] if there is no source code
+  # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   def source_path; end
+
+  # @since 0.6.0
   def source_path=(_arg0); end
+
+  # @param url_format [Boolean] if true, returns the string in a URI-compatible
+  #   format (for appending to a URL). Otherwise, it is given in a more human
+  #   readable format.
+  # @return [String] the string representation of the library.
+  # @since 0.6.0
   def to_s(url_format = T.unsafe(nil)); end
+
+  # @return [String] the version of the specific library
+  # @since 0.6.0
   def version; end
+
+  # @return [String] the version of the specific library
+  # @since 0.6.0
   def version=(_arg0); end
+
+  # @note To implement a custom yardoc file getter, implement
+  # @return [String] the location of the yardoc file used to load the object
+  #   information from.
+  # @return [nil] if no yardoc file exists yet. In this case, {#prepare!} will
+  #   be called on this library to build the yardoc file.
+  # @since 0.6.0
   def yardoc_file; end
+
+  # @since 0.6.0
   def yardoc_file=(_arg0); end
 
   protected
@@ -5713,51 +9874,100 @@ class YARD::Server::LibraryVersion
   # Called when a library of source type "disk" is to be prepared. In this
   # case, the {#yardoc_file} should already be set, but the library may not
   # be prepared. Run preparation if not done.
+  #
+  # @raise [LibraryNotPreparedError] if the yardoc file has not been
+  #   prepared.
+  # @since 0.6.0
   def load_yardoc_from_disk; end
 
   # Called when a library of source type "gem" is to be prepared. In this
   # case, the {#yardoc_file} needs to point to the correct location for
   # the installed gem. The yardoc file is built if it has not been done.
+  #
+  # @raise [LibraryNotPreparedError] if the gem does not have an existing
+  #   yardoc file.
+  # @since 0.6.0
   def load_yardoc_from_gem; end
 
+  # @return [String] the source path for a disk source
+  # @since 0.6.0
   def source_path_for_disk; end
+
+  # @return [String] the source path for a gem source
+  # @since 0.6.0
   def source_path_for_gem; end
+
+  # @return [String] the yardoc file for a gem source
+  # @since 0.6.0
   def yardoc_file_for_gem; end
 
   private
 
+  # @since 0.6.0
   def load_source_path; end
+
+  # @since 0.6.0
   def load_yardoc_file; end
+
+  # @since 0.6.0
   def serializer; end
 end
 
 # Raises an error if a resource is not found. This exception is caught by
 # {Commands::Base#call} to immediately end a request and return a 404 response
 # code. If a message is provided, the body is set to the exception message.
+#
+# @since 0.6.0
 class YARD::Server::NotFoundError < ::RuntimeError; end
 
 # A server adapter to respond to requests using the Rack server infrastructure.
+#
+# @since 0.6.0
 class YARD::Server::RackAdapter < ::YARD::Server::Adapter
   include ::WEBrick::HTTPUtils
 
   # Responds to Rack requests and builds a response with the {Router}.
+  #
+  # @return [Array(Numeric,Hash,Array)] the Rack-style response
+  # @since 0.6.0
   def call(env); end
 
   # Starts the +Rack::Server+. This method will pass control to the server and
   # block.
+  #
+  # @return [void]
+  # @since 0.6.0
   def start; end
 
   private
 
+  # @since 0.6.0
   def print_start_message(server); end
 end
 
 # This class wraps the {RackAdapter} into a Rack-compatible middleware.
 # See {#initialize} for a list of options to pass via Rack's +#use+ method.
+#
+# @example Using the RackMiddleware in a Rack application
+#   libraries = {:mylib => [YARD::Server::LibraryVersion.new('mylib', nil, '/path/to/.yardoc')]}
+#   use YARD::Server::RackMiddleware, :libraries => libraries
+# @note You must pass a +:libraries+ option to the RackMiddleware via +#use+. To
+#   read about how to return a list of libraries, see {LibraryVersion} or look
+#   at the example below.
+# @since 0.6.0
 class YARD::Server::RackMiddleware
   # Creates a new Rack-based middleware for serving YARD documentation.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param app the next Rack middleware in the stack
+  # @param opts [Hash] a customizable set of options
+  # @return [RackMiddleware] a new instance of RackMiddleware
+  # @since 0.6.0
   def initialize(app, opts = T.unsafe(nil)); end
 
+  # @since 0.6.0
   def call(env); end
 end
 
@@ -5777,54 +9987,137 @@ end
 # requests through the +#check_static_cache+. To override this behaviour,
 # or create your own caching mechanism, mixin your own custom module with
 # this method implemented as per {StaticCaching#check_static_cache}.
+#
+# @example Creating a subclassed router
+#   # Adds 'my' to all routing prefixes
+#   class MyRouter < YARD::Server::Router
+#   def docs_prefix; 'mydocs' end
+#   def list_prefix; 'mylist' end
+#   def static_prefix; 'mystatic' end
+#   def search_prefix; 'mysearch' end
+#   end
+#
+#   # Using it:
+#   WebrickAdapter.new(libraries, :router => MyRouter).start
+# @since 0.6.0
 class YARD::Server::Router
   include ::YARD::Server::StaticCaching
   include ::YARD::Server::Commands
 
   # Creates a new router for a specific adapter
+  #
+  # @param adapter [Adapter] the adapter to route requests to
+  # @return [Router] a new instance of Router
+  # @since 0.6.0
   def initialize(adapter); end
 
+  # @return [Adapter] the adapter used by the router
+  # @since 0.6.0
   def adapter; end
+
+  # @return [Adapter] the adapter used by the router
+  # @since 0.6.0
   def adapter=(_arg0); end
 
   # Perform routing on a specific request, serving the request as a static
   # file through {Commands::RootRequestCommand} if no route is found.
+  #
+  # @param request [Adapter Dependent] the request object
+  # @return [Array(Numeric,Hash,Array)] the Rack-style server response data
+  # @since 0.6.0
   def call(request); end
 
+  # @return [String] the URI prefix for all object documentation requests
+  # @since 0.6.0
   def docs_prefix; end
+
+  # @return [String] the URI prefix for all class/method/file list requests
+  # @since 0.6.0
   def list_prefix; end
+
+  # @return [Array(LibraryVersion, Array<String>)] the library followed
+  #   by the rest of the path components in the request path. LibraryVersion
+  #   will be nil if no matching library was found.
+  # @since 0.6.0
   def parse_library_from_path(paths); end
+
+  # @return [Adapter Dependent] the request data coming in with the routing
+  # @since 0.6.0
   def request; end
+
+  # @return [Adapter Dependent] the request data coming in with the routing
+  # @since 0.6.0
   def request=(_arg0); end
+
+  # @return [String] the URI prefix for all search requests
+  # @since 0.6.0
   def search_prefix; end
+
+  # @return [String] the URI prefix for all static assets (templates)
+  # @since 0.6.0
   def static_prefix; end
 
   protected
 
   # Adds extra :library/:path option keys to the adapter options.
   # Use this method when passing options to a command.
+  #
+  # @param library [LibraryVersion] the library to route for
+  # @param paths [Array<String>] path components (split by '/')
+  # @return [Hash] finalized options
+  # @since 0.6.0
   def final_options(library, paths); end
 
   # Performs routing algorithm to find which prefix is called, first
   # parsing out library name/version information.
+  #
+  # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
+  # @return [nil] if no route is matched
+  # @since 0.6.0
   def route(path = T.unsafe(nil)); end
 
   # Routes requests from {#docs_prefix} and calls the appropriate command
+  #
+  # @param library [LibraryVersion] the library to route for
+  # @param paths [Array<String>] path components (split by '/')
+  # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
+  # @return [nil] if no route is matched
+  # @since 0.6.0
   def route_docs(library, paths); end
 
   # Routes for the index of a library / multiple libraries
+  #
+  # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
+  # @return [nil] if no route is matched
+  # @since 0.6.0
   def route_index; end
 
   # Routes requests from {#list_prefix} and calls the appropriate command
+  #
+  # @param library [LibraryVersion] the library to route for
+  # @param paths [Array<String>] path components (split by '/')
+  # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
+  # @return [nil] if no route is matched
+  # @since 0.6.0
   def route_list(library, paths); end
 
   # Routes requests from {#search_prefix} and calls the appropriate command
+  #
+  # @param library [LibraryVersion] the library to route for
+  # @param paths [Array<String>] path components (split by '/')
+  # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
+  # @return [nil] if no route is matched
+  # @since 0.6.0
   def route_search(library, paths); end
 
+  # @since 0.6.0
   def route_static(library, paths); end
 end
 
 # Implements static caching for requests.
+#
+# @see Router Router documentation for "Caching"
+# @since 0.6.0
 module YARD::Server::StaticCaching
   # Called by a router to return the cached object. By default, this
   # method performs disk-based caching. To perform other forms of caching,
@@ -5834,27 +10127,63 @@ module YARD::Server::StaticCaching
   # Note that caching does not occur here. This method simply checks for
   # the existence of cached data. To actually cache a response, see
   # {Commands::Base#cache}.
+  #
+  # @example Implementing In-Memory Cache Checking
+  #   module MemoryCaching
+  #   def check_static_cache
+  #   # $memory_cache is filled by {Commands::Base#cache}
+  #   cached_data = $memory_cache[request.path]
+  #   if cached_data
+  #   [200, {'Content-Type' => 'text/html'}, [cached_data]]
+  #   else
+  #   nil
+  #   end
+  #   end
+  #   end
+  #
+  #   class YARD::Server::Router; include MemoryCaching; end
+  # @return [Array(Numeric,Hash,Array)] the Rack-style response
+  # @return [nil] if no cache is available and routing should continue
+  # @see Commands::Base#cache
+  # @since 0.6.0
   def check_static_cache; end
 end
 
 # The main adapter to initialize a WEBrick server.
+#
+# @since 0.6.0
 class YARD::Server::WebrickAdapter < ::YARD::Server::Adapter
   # Initializes a WEBrick server. If {Adapter#server_options} contains a
   # +:daemonize+ key set to true, the server will be daemonized.
+  #
+  # @since 0.6.0
   def start; end
 end
 
 # The main WEBrick servlet implementation, accepting only GET requests.
+#
+# @since 0.6.0
 class YARD::Server::WebrickServlet < ::WEBrick::HTTPServlet::AbstractServlet
+  # @return [WebrickServlet] a new instance of WebrickServlet
+  # @since 0.6.0
   def initialize(server, adapter); end
 
+  # @since 0.6.0
   def adapter; end
+
+  # @since 0.6.0
   def adapter=(_arg0); end
+
+  # @private
+  # @since 0.6.0
   def do_GET(request, response); end
 end
 
 # Stubs marshal dumps and acts a delegate class for an object by path
+#
+# @private
 class YARD::StubProxy
+  # @return [StubProxy] a new instance of StubProxy
   def initialize(path, transient = T.unsafe(nil)); end
 
   def _dump(_depth); end
@@ -5882,26 +10211,62 @@ module YARD::Tags; end
 # if it is, that source code will be used as the method's source.
 #
 # To define a regular method, see {tag:!method}
+#
+# @example Defining a simple readonly attribute
+#   # @!attribute [r] count
+#   #   @return [Fixnum] the size of the list
+# @example Defining a simple readwrite attribute
+#   # @!attribute name
+#   #   @return [String] the name of the user
+# @note This directive should only be used if there is no explicit +attr_*+
+#   declaration for the attribute in any source files (i.e., the attribute
+#   is declared dynamically via meta-programming). In all other cases, add
+#   documentation to the attribute declaration itself.
+# @note For backwards compatibility support, you do not need to indent
+#   the attribute's docstring text. If an +@!attribute+ directive is seen with
+#   no indented block, the entire docstring is used as the new attribute's
+#   docstring text.
+# @see tag:!method
+# @since 0.7.0
 class YARD::Tags::AttributeDirective < ::YARD::Tags::MethodDirective
+  # @since 0.7.0
   def after_parse; end
 
   protected
 
+  # @since 0.7.0
   def method_name; end
+
+  # @since 0.7.0
   def method_signature; end
 
   private
 
+  # @since 0.7.0
   def create_attribute_data(object); end
+
+  # @return [Boolean]
+  # @since 0.7.0
   def readable?; end
+
+  # @return [Boolean]
+  # @since 0.7.0
   def writable?; end
 end
 
 class YARD::Tags::DefaultFactory
   # Parses tag text and creates a new tag with descriptive text
+  #
+  # @param tag_name the name of the tag to parse
+  # @param text [String] the raw tag text
+  # @return [Tag] a tag object with the tag_name and text values filled
   def parse_tag(tag_name, text); end
 
   # Parses tag text and creates a new tag with a key name and descriptive text
+  #
+  # @param tag_name the name of the tag to parse
+  # @param text [String] the raw tag text
+  # @return [Tag] a tag object with the tag_name, name and text values filled
   def parse_tag_with_name(tag_name, text); end
 
   def parse_tag_with_options(tag_name, text); end
@@ -5909,14 +10274,27 @@ class YARD::Tags::DefaultFactory
 
   # Parses tag text and creates a new tag with formally declared types and
   # descriptive text
+  #
+  # @param tag_name the name of the tag to parse
+  # @param text [String] the raw tag text
+  # @raise [TagFormatError]
+  # @return [Tag] a tag object with the tag_name, types and text values filled
   def parse_tag_with_types(tag_name, text); end
 
   # Parses tag text and creates a new tag with formally declared types, a key
   # name and descriptive text
+  #
+  # @param tag_name the name of the tag to parse
+  # @param text [String] the raw tag text
+  # @return [Tag] a tag object with the tag_name, name, types and text values filled
   def parse_tag_with_types_and_name(tag_name, text); end
 
   # Parses tag text and creates a new tag with formally declared types, a title
   # on the first line and descriptive text
+  #
+  # @param tag_name the name of the tag to parse
+  # @param text [String] the raw tag text
+  # @return [Tag] a tag object with the tag_name, name, types and text values filled
   def parse_tag_with_types_and_title(tag_name, text); end
 
   def parse_tag_with_types_name_and_default(tag_name, text); end
@@ -5924,12 +10302,24 @@ class YARD::Tags::DefaultFactory
   private
 
   # Extracts the name from raw tag text returning the name and remaining value
+  #
+  # @param text [String] the raw tag text
+  # @return [Array] an array holding the name as the first element and the
+  #   value as the second element
   def extract_name_from_text(text); end
 
+  # @raise [TagFormatError]
   def extract_title_and_desc_from_text(text); end
 
   # Parses a [], <>, {} or () block at the beginning of a line of text
   # into a list of comma delimited values.
+  #
+  # @example
+  #   obj.parse_types('[String, Array<Hash, String>, nil]') # => [nil, ['String', 'Array<Hash, String>', 'nil'], ""]
+  #   obj.parse_types('b<String> A string') # => ['b', ['String'], 'A string']
+  # @return [Array(String, Array<String>, String)] the text before the type
+  #   list (or nil), followed by the type list parsed into an array of
+  #   strings, followed by the text following the type list.
   def extract_types_and_name_from_text(text, opening_types = T.unsafe(nil), closing_types = T.unsafe(nil)); end
 
   def extract_types_and_name_from_text_unstripped(text, opening_types = T.unsafe(nil), closing_types = T.unsafe(nil)); end
@@ -5939,6 +10329,7 @@ YARD::Tags::DefaultFactory::TYPELIST_CLOSING_CHARS = T.let(T.unsafe(nil), String
 YARD::Tags::DefaultFactory::TYPELIST_OPENING_CHARS = T.let(T.unsafe(nil), String)
 
 class YARD::Tags::DefaultTag < ::YARD::Tags::Tag
+  # @return [DefaultTag] a new instance of DefaultTag
   def initialize(tag_name, text, types = T.unsafe(nil), name = T.unsafe(nil), defaults = T.unsafe(nil)); end
 
   # Returns the value of attribute defaults.
@@ -5958,36 +10349,87 @@ end
 # to modify the generated code object directly. Note that both of these
 # attributes may be nil, and directives should test their existence
 # before attempting to use them.
+#
+# @abstract Subclasses should implement {#call}.
+# @see Library.define_directive
+# @since 0.8.0
 class YARD::Tags::Directive
+  # @param tag [Tag] the meta-data tag containing all input to the docstring
+  # @param parser [DocstringParser] the docstring parser object
+  # @return [Directive] a new instance of Directive
+  # @since 0.8.0
   def initialize(tag, parser); end
 
   # Called after parsing all directives and tags in the docstring. Used
   # to perform any cleanup after all directives perform their main task.
+  #
+  # @return [void]
+  # @since 0.8.0
   def after_parse; end
 
   # Called when processing the directive. Subclasses should implement
   # this method to perform all functionality of the directive.
+  #
+  # @abstract implement this method to perform all data processing for
+  #   the directive.
+  # @raise [NotImplementedError]
+  # @return [void]
+  # @since 0.8.0
   def call; end
 
   # Set this field to replace the directive definition inside of a docstring
   # with arbitrary text. For instance, the {MacroDirective} uses this field
   # to expand its macro data in place of the call to a +@!macro+.
+  #
+  # @return [String] the text to expand in the original docstring in place
+  #   of this directive definition.
+  # @return [nil] if no expansion should take place for this directive
+  # @since 0.8.0
   def expanded_text; end
 
   # Set this field to replace the directive definition inside of a docstring
   # with arbitrary text. For instance, the {MacroDirective} uses this field
   # to expand its macro data in place of the call to a +@!macro+.
+  #
+  # @return [String] the text to expand in the original docstring in place
+  #   of this directive definition.
+  # @return [nil] if no expansion should take place for this directive
+  # @since 0.8.0
   def expanded_text=(_arg0); end
 
+  # @return [Handlers::Base, nil] the handler object the docstring parser
+  #   might be attached to. May be nil. Only available when parsing
+  #   through {Parser::SourceParser}.
+  # @since 0.8.0
   def handler; end
+
+  # @return [CodeObjects::Base, nil] the object the parent docstring is
+  #   attached to. May be nil.
+  # @since 0.8.0
   def object; end
+
+  # @return [DocstringParser] the parser that is parsing all tag
+  #   information out of the docstring
+  # @since 0.8.0
   def parser=(_arg0); end
+
+  # @return [Tag] the meta-data tag containing data input to the directive
+  # @since 0.8.0
   def tag; end
+
+  # @return [Tag] the meta-data tag containing data input to the directive
+  # @since 0.8.0
   def tag=(_arg0); end
 
   protected
 
+  # @return [Boolean]
+  # @since 0.8.0
   def inside_directive?; end
+
+  # @return [DocstringParser] the parser that is parsing all tag
+  #   information out of the docstring
+  # @since 0.8.0
   def parser; end
 end
 
@@ -5996,7 +10438,22 @@ end
 # the last group definition, but occasionally you need to end the current
 # group to return to the default listing. Use {tag:!group} to begin a
 # group listing.
+#
+# @example
+#   class Controller
+#   # @!group Callbacks
+#
+#   def before_filter; end
+#   def after_filter; end
+#
+#   # @!endgroup
+#
+#   def index; end
+#   end
+# @see tag:!group
+# @since 0.6.0
 class YARD::Tags::EndGroupDirective < ::YARD::Tags::Directive
+  # @since 0.6.0
   def call; end
 end
 
@@ -6005,7 +10462,19 @@ end
 # group name. The group listing is used by templates to organize methods
 # and attributes into respective logical groups. To end a group listing
 # use {tag:!endgroup}.
+#
+# @example
+#   # @!group Callbacks
+#
+#   def before_filter; end
+#   def after_filter; end
+# @note A group definition only applies to the scope it is defined in.
+#   If a new class or module is opened after the directive, this directive
+#   will not apply to methods in that class or module.
+# @see tag:!endgroup
+# @since 0.6.0
 class YARD::Tags::GroupDirective < ::YARD::Tags::Directive
+  # @since 0.6.0
   def call; end
 end
 
@@ -6023,9 +10492,9 @@ end
 # method that returns a {Tag} object, but they will not take advantage of tag factory
 # parsing:
 #
-# def mytag_tag(text)
-# Tag.new(:mytag, text)
-# end
+#   def mytag_tag(text)
+#     Tag.new(:mytag, text)
+#   end
 #
 # == Defining Custom Directives
 #
@@ -6038,9 +10507,9 @@ end
 # Similar to tags, Directives can also be defined manually, in this case using
 # the method name "mydirective_directive" and returning a new {Directive} object:
 #
-# def mydirective_directive(tag, parser)
-# MyDirective.new(tag, parser)
-# end
+#   def mydirective_directive(tag, parser)
+#     MyDirective.new(tag, parser)
+#   end
 #
 # == Namespaced Tags
 #
@@ -6054,46 +10523,122 @@ end
 # object with your own by setting {Library.default_factory= Library.default_factory}
 # to a new class with its own parsing methods before running YARD. This is useful
 # if you want to change the syntax of existing tags (@see, @since, etc.)
+#
+# @example Defining a custom tag
+#   define_tag "Parameter", :param, :with_types_and_name
+#   define_tag "Author", :author
+# @example Defining a custom directive
+#   define_directive :method, :with_title_and_text, MethodDirective
+# @see DefaultFactory
+# @see define_tag
+# @see define_directive
+# @see Directive
 class YARD::Tags::Library
+  # @return [Library] a new instance of Library
   def initialize(factory = T.unsafe(nil)); end
 
   # Marks a class/module/method as abstract with optional
   # implementor information.
+  #
+  # @example
+  #   # @abstract Subclass and override {#run} to implement
+  #   #   a custom Threadable class.
+  #   class Runnable
+  #   def run; raise NotImplementedError end
+  #   end
   def abstract_tag(text); end
 
   # Declares the API that the object belongs to. Does not display in
   # output, but useful for performing queries (+yardoc --query+). Any text is
   # allowable in this tag, and there are no predefined values.
+  #
+  # @example
+  #   class Post
+  #   # @api private
+  #   def reset_table!; table.flush end
+  #   end
+  # @note This tag is *transitive*. If it is applied on a
+  #   namespace (module or class), it will immediately be
+  #   applied to all children objects of that namespace unless
+  #   it is redefined on the child object.
+  # @note The special name +@api private+ does display a notice in
+  #   documentation if it is listed, letting users know that the
+  #   method is not to be used by external components.
   def api_tag(text); end
 
   # Declares a readonly attribute on a Struct or class.
+  #
+  # @deprecated Use the more powerful {tag:!attribute} directive instead.
+  # @example
+  #   # @attr_reader [String] name the name of the structure
+  #   # @attr_reader [Fixnum] size the size of the structure
+  #   class MyStruct < Struct; end
+  # @note This attribute is only applicable on class docstrings
   def attr_reader_tag(text); end
 
   # Declares a readwrite attribute on a Struct or class.
+  #
+  # @deprecated Use the more powerful {tag:!attribute} directive instead.
+  # @example
+  #   # @attr [String] name the name of the structure
+  #   # @attr [Fixnum] size the size of the structure
+  #   class MyStruct < Struct; end
+  # @note This attribute is only applicable on class docstrings
   def attr_tag(text); end
 
   # Declares a writeonly attribute on a Struct or class.
+  #
+  # @deprecated Use the more powerful {tag:!attribute} directive instead.
+  # @example
+  #   # @attr_reader [String] name the name of the structure
+  #   # @attr_reader [Fixnum] size the size of the structure
+  #   class MyStruct < Struct; end
+  # @note This attribute is only applicable on class docstrings
   def attr_writer_tag(text); end
 
   def attribute_directive(tag, parser); end
 
   # List the author or authors of a class, module, or method.
+  #
+  # @example
+  #   # @author Foo Bar <foo@bar.com>
+  #   class MyClass; end
   def author_tag(text); end
 
   # Marks a method/class as deprecated with an optional description.
   # The description should be used to inform users of the recommended
   # migration path, and/or any useful information about why the object
   # was marked as deprecated.
+  #
+  # @example Deprecate a method with a replacement API
+  #   # @deprecated Use {#bar} instead.
+  #   def foo; end
+  # @example Deprecate a method with no replacement
+  #   class Thread
+  #   # @deprecated Exiting a thread in this way is not reliable and
+  #   #   can cause a program crash.
+  #   def kill; end
+  #   end
   def deprecated_tag(text); end
 
   # Creates a new directive with tag information and a docstring parser
   # object.
+  #
+  # @param tag_name [String] the name of the tag
+  # @param tag_buf [String] the tag data
+  # @param parser [DocstringParser] the parser object parsing the docstring
+  # @return [Directive] the newly created directive
   def directive_create(tag_name, tag_buf, parser); end
 
   def endgroup_directive(tag, parser); end
 
   # Show an example snippet of code for an object. The first line
   # is an optional title.
+  #
+  # @example
+  #   # @example Reverse a String
+  #   #   "mystring".reverse #=> "gnirtsym"
+  #   def reverse; end
   def example_tag(text); end
 
   # A factory class to handle parsing of tags, defaults to {default_factory}
@@ -6103,12 +10648,26 @@ class YARD::Tags::Library
   def factory=(_arg0); end
 
   def group_directive(tag, parser); end
+
+  # @param tag_name [#to_s] the name of the tag to look for
+  # @return [Boolean] whether a directive by the given name is registered in
+  #   the library.
   def has_directive?(tag_name); end
+
+  # @param tag_name [#to_s] the name of the tag to look for
+  # @return [Boolean] whether a tag by the given name is registered in
+  #   the library.
   def has_tag?(tag_name); end
+
   def macro_directive(tag, parser); end
   def method_directive(tag, parser); end
 
   # Adds an emphasized note at the top of the docstring for the object
+  #
+  # @example
+  #   # @note This method should only be used in outer space.
+  #   def eject; end
+  # @see tag:todo
   def note_tag(text); end
 
   # Describe an options hash in a method. The tag takes the
@@ -6119,6 +10678,15 @@ class YARD::Tags::Library
   #
   # Note that a +@param+ tag need not be defined for the options
   # hash itself, though it is useful to do so for completeness.
+  #
+  # @example
+  #   # @param [Hash] opts the options to create a message with.
+  #   # @option opts [String] :subject The subject
+  #   # @option opts [String] :from ('nobody') From address
+  #   # @option opts [String] :to Recipient email
+  #   # @option opts [String] :body ('') The email's body
+  #   def send_email(opts = {}) end
+  # @note For keyword parameters, use +@param+, not +@option+.
   def option_tag(text); end
 
   # Describe that your method can be used in various
@@ -6126,10 +10694,25 @@ class YARD::Tags::Library
   # line should declare the new method signature, and the following
   # indented tag data will be a new documentation string with its
   # own tags adding metadata for such an overload.
+  #
+  # @example
+  #   # @overload set(key, value)
+  #   #   Sets a value on key
+  #   #   @param key [Symbol] describe key param
+  #   #   @param value [Object] describe value param
+  #   # @overload set(value)
+  #   #   Sets a value on the default key +:foo+
+  #   #   @param value [Object] describe value param
+  #   def set(*args) end
   def overload_tag(text); end
 
   # Documents a single method parameter (either regular or keyword) with a given name, type
   # and optional description.
+  #
+  # @example
+  #   # @param url [String] the URL of the page to download
+  #   # @param directory [String] the name of the directory to save to
+  #   def load_page(url, directory: 'pages') end
   def param_tag(text); end
 
   def parse_directive(tag, parser); end
@@ -6148,16 +10731,45 @@ class YARD::Tags::Library
   #
   # If you simply want to set the API visibility of a method, you should
   # look at the {tag:api} tag instead.
+  #
+  # @example
+  #   # @private
+  #   class InteralImplementation; end
+  # @note This method is not recommended for hiding undocumented or
+  #   "unimportant" methods. This tag should only be used to mark objects
+  #   private when Ruby visibility rules cannot do so. In Ruby 1.9.3, you
+  #   can use +private_constant+ to declare constants (like classes or
+  #   modules) as private, and should be used instead of +@private+.
+  # @note This tag is *transitive*. If it is applied on a
+  #   namespace (module or class), it will immediately be
+  #   applied to all children objects of that namespace unless
+  #   it is redefined on the child object.
+  # @see tag:api
   def private_tag(text); end
 
   # Describes that a method may raise a given exception, with
   # an optional description of what it may mean.
+  #
+  # @example
+  #   # @raise [AccountBalanceError] if the account does not have
+  #   #   sufficient funds to perform the transaction
+  #   def withdraw(amount) end
   def raise_tag(text); end
 
   # Describes the return value (and type or types) of a method.
   # You can list multiple return tags for a method in the case
   # where a method has distinct return cases. In this case, each
   # case should begin with "if ...".
+  #
+  # @example A regular return value
+  #   # @return [Fixnum] the size of the file
+  #   def size; @file.size end
+  # @example A method returns an Array or a single object
+  #   # @return [String] if a single object was returned
+  #   #   from the database.
+  #   # @return [Array<String>] if multiple objects were
+  #   #   returned.
+  #   def find(query) end
   def return_tag(text); end
 
   # Sets the scope of a DSL method. Only applicable to DSL method
@@ -6168,31 +10780,54 @@ class YARD::Tags::Library
   # other code objects with an optional description at the end.
   # Note that the URL or object will be automatically linked by
   # YARD and does not need to be formatted with markup.
+  #
+  # @example
+  #   # Synchronizes system time using NTP.
+  #   # @see http://ntp.org/documentation.html NTP Documentation
+  #   # @see NTPHelperMethods
+  #   class NTPUpdater; end
   def see_tag(text); end
 
   # Lists the version that the object was first added.
+  #
+  # @example
+  #   # @since 1.2.4
+  #   def clear_routes; end
+  # @note This tag is *transitive*. If it is applied on a
+  #   namespace (module or class), it will immediately be
+  #   applied to all children objects of that namespace unless
+  #   it is redefined on the child object.
   def since_tag(text); end
 
   # Creates a new {Tag} object with a given tag name and data
+  #
+  # @return [Tag] the newly created tag object
   def tag_create(tag_name, tag_buf); end
 
   # Marks a TODO note in the object being documented.
   # For reference, objects with TODO items can be enumerated
   # from the command line with a simple command:
   #
-  # !!!sh
-  # mocker$ yard list --query '@todo'
-  # lib/mocker/mocker.rb:15: Mocker
-  # lib/mocker/report/html.rb:5: Mocker::Report::Html
+  #   !!!sh
+  #   mocker$ yard list --query '@todo'
+  #   lib/mocker/mocker.rb:15: Mocker
+  #   lib/mocker/report/html.rb:5: Mocker::Report::Html
   #
   # YARD can also be used to enumerate the TODO items from
   # a short script:
   #
-  # !!!ruby
-  # require 'yard'
-  # YARD::Registry.load!.all.each do |o|
-  # puts o.tag(:todo).text if o.tag(:todo)
-  # end
+  #   !!!ruby
+  #   require 'yard'
+  #   YARD::Registry.load!.all.each do |o|
+  #     puts o.tag(:todo).text if o.tag(:todo)
+  #   end
+  #
+  # @example
+  #   # @todo Add support for Jabberwocky service.
+  #   #   There is an open source Jabberwocky library available
+  #   #   at http://jbrwcky.org that can be easily integrated.
+  #   class Wonderlander; end
+  # @see tag:note
   def todo_tag(text); end
 
   # Lists the version of a class, module or method. This is
@@ -6201,6 +10836,11 @@ class YARD::Tags::Library
   # or generalized components might change independently between
   # releases. A version tag is used to infer the API compatibility
   # of a specific object.
+  #
+  # @example
+  #   # The public REST API for http://jbrwcky.org
+  #   # @version 2.0
+  #   class JabberwockyAPI; end
   def version_tag(text); end
 
   # Sets the visibility of a DSL method. Only applicable to
@@ -6213,20 +10853,38 @@ class YARD::Tags::Library
   # parameters with +@yieldparam+, you do not need to define
   # the parameters in the type specification of +@yield+ as
   # well.
+  #
+  # @example
+  #   # For a block {|a,b,c| ... }
+  #   # @yield [a, b, c] Gives 3 random numbers to the block
+  #   def provide3values(&block) yield(42, 42, 42) end
+  # @see tag:yieldparam
+  # @see tag:yieldreturn
   def yield_tag(text); end
 
   # Defines a parameter yielded by a block. If you define the
   # parameters with +@yieldparam+, you do not need to define
   # them via +@yield+ as well.
+  #
+  # @example
+  #   # @yieldparam [String] name the name that is yielded
+  #   def with_name(name) yield(name) end
   def yieldparam_tag(text); end
 
   # Documents the value and type that the block is expected
   # to return to the method.
+  #
+  # @example
+  #   # @yieldreturn [Fixnum] the number to add 5 to.
+  #   def add5_block(&block) 5 + yield end
+  # @see tag:return
   def yieldreturn_tag(text); end
 
   private
 
+  # @return [Directive]
   def directive_call(tag, parser); end
+
   def send_to_factory(tag_name, meth, text); end
 
   class << self
@@ -6236,6 +10894,10 @@ class YARD::Tags::Library
     #
     # You should set this value before performing any source parsing with
     # YARD, otherwise your factory class will not be used.
+    #
+    # @example
+    #   YARD::Tags::Library.default_factory = MyFactory
+    # @see DefaultFactory
     def default_factory; end
 
     # Replace the factory object responsible for parsing tags by setting
@@ -6244,28 +10906,58 @@ class YARD::Tags::Library
     #
     # You should set this value before performing any source parsing with
     # YARD, otherwise your factory class will not be used.
+    #
+    # @example
+    #   YARD::Tags::Library.default_factory = MyFactory
+    # @see DefaultFactory
     def default_factory=(factory); end
 
+    # @overload define_directive
     def define_directive(tag, tag_meth = T.unsafe(nil), directive_class = T.unsafe(nil)); end
 
     # Convenience method to define a new tag using one of {Tag}'s factory methods, or the
     # regular {DefaultFactory#parse_tag} factory method if none is supplied.
+    #
+    # @param label [#to_s] the label used when displaying the tag in templates
+    # @param tag [#to_s] the tag name to create
+    # @param meth [#to_s, Class<Tag>] the {Tag} factory method to call when
+    #   creating the tag or the name of the class to directly create a tag for
     def define_tag(label, tag, meth = T.unsafe(nil)); end
 
     def directive_method_name(tag_name); end
 
     # Returns the factory method used to parse the tag text for a specific tag
+    #
+    # @param tag [Symbol] the tag name
+    # @return [Symbol] the factory method name for the tag
+    # @return [Class<Tag>, Symbol] the Tag class to use to parse the tag
+    #   or the method to call on the factory class
+    # @return [nil] if the tag is freeform text
+    # @since 0.6.0
     def factory_method_for(tag); end
 
     # Returns the factory method used to parse the tag text for a specific
     # directive
+    #
+    # @param directive [Symbol] the directive name
+    # @return [Symbol] the factory method name for the tag
+    # @return [Class<Tag>, Symbol] the Tag class to use to parse the tag or
+    #   the methods to call on the factory class
+    # @return [nil] if the tag is freeform text
+    # @since 0.8.0
     def factory_method_for_directive(directive); end
 
+    # @return [Library] the main Library instance object.
     def instance; end
+
+    # @return [SymbolHash{Symbol=>String}] the map of tag names and their
+    #   respective display labels.
     def labels; end
 
     # Sorts the labels lexically by their label name, often used when displaying
     # the tags.
+    #
+    # @return [Array<Symbol>, String] the sorted labels as an array of the tag name and label
     def sorted_labels; end
 
     def tag_method_name(tag_name); end
@@ -6274,12 +10966,18 @@ class YARD::Tags::Library
     # namespace they are defined in. For instance, a "@since" tag should
     # apply to all methods inside a module it is defined in. Transitive
     # tags can be overridden by directly defining a tag on the child object.
+    #
+    # @return [Array<Symbol>] a list of transitive tags
+    # @since 0.6.0
     def transitive_tags; end
 
     # Sets the list of tags that should apply to any children inside the
     # namespace they are defined in. For instance, a "@since" tag should
     # apply to all methods inside a module it is defined in. Transitive
     # tags can be overridden by directly defining a tag on the child object.
+    #
+    # @return [Array<Symbol>] a list of transitive tags
+    # @since 0.6.0
     def transitive_tags=(_arg0); end
 
     # Sets the list of tags to display when rendering templates. The order of
@@ -6289,7 +10987,10 @@ class YARD::Tags::Library
     # You can use the {Array#place} to insert new tags to be displayed in
     # the templates at specific positions:
     #
-    # Library.visible_tags.place(:mytag).before(:return)
+    #   Library.visible_tags.place(:mytag).before(:return)
+    #
+    # @return [Array<Symbol>] a list of ordered tags
+    # @since 0.6.0
     def visible_tags; end
 
     # Sets the list of tags to display when rendering templates. The order of
@@ -6299,7 +11000,10 @@ class YARD::Tags::Library
     # You can use the {Array#place} to insert new tags to be displayed in
     # the templates at specific positions:
     #
-    # Library.visible_tags.place(:mytag).before(:return)
+    #   Library.visible_tags.place(:mytag).before(:return)
+    #
+    # @return [Array<Symbol>] a list of ordered tags
+    # @since 0.6.0
     def visible_tags=(_arg0); end
 
     private
@@ -6357,11 +11061,11 @@ end
 # The following example shows what the expansion variables might hold for a given
 # DSL method call:
 #
-# property :foo, :a, :b, :c, String
-# # $0 => "property"
-# # $1 => "foo"
-# # $2 => "a"
-# # $& => "property :foo, :a, :b, :c, String"
+#   property :foo, :a, :b, :c, String
+#   # $0 => "property"
+#   # $1 => "foo"
+#   # $2 => "a"
+#   # $& => "property :foo, :a, :b, :c, String"
 #
 # === Ranges
 #
@@ -6371,17 +11075,17 @@ end
 # argument names following, ending with the return type of the method. This
 # could be documented as:
 #
-# # @!macro dsl_method
-# #   @!method $1(${2--2})
-# #   @return [${-1}] the return value of $0
-# create_method_with_args :foo, :a, :b, :c, String
+#     # @!macro dsl_method
+#     #   @!method $1(${2--2})
+#     #   @return [${-1}] the return value of $0
+#     create_method_with_args :foo, :a, :b, :c, String
 #
 # As described, the method is using the signature <tt>foo(a, b, c)</tt> and the return
 # type from the last argument, +String+. When using ranges, tokens are joined
 # with commas. Note that this includes using $0:
 #
-# !!!plain
-# $0-1 # => Interpolates to "create_method_with_args, foo"
+#     !!!plain
+#     $0-1 # => Interpolates to "create_method_with_args, foo"
 #
 # If you want to separate them with spaces, use <tt>$1 $2 $3 $4 ...</tt>. Note that
 # if the token cannot be expanded, it will return the empty string (not an error),
@@ -6391,19 +11095,76 @@ end
 #
 # Interpolation can be escaped by prefixing the +$+ with +\\\+, like so:
 #
-# # @!macro foo
-# #   I have \$2.00 USD.
+#     # @!macro foo
+#     #   I have \$2.00 USD.
+#
+# @example Defining a simple macro
+#   # @!macro [new] returnself
+#   #   @return [self] returns itself
+# @example Using a simple macro in multiple docstrings
+#   # Documentation for map
+#   # ...
+#   # @macro returnself
+#   def map; end
+#
+#   # Documentation for filter
+#   # ...
+#   # @macro returnself
+#   def filter; end
+# @example Attaching a macro to a class method (for DSL usage)
+#   class Resource
+#   # Defines a new property
+#   # @param [String] name the property name
+#   # @param [Class] type the property's type
+#   # @!macro [attach] property
+#   #   @return [$2] the $1 property
+#   def self.property(name, type) end
+#   end
+#
+#   class Post < Resource
+#   property :title, String
+#   property :view_count, Integer
+#   end
+# @example Attaching a macro directly to a DSL method
+#   class Post < Resource
+#   # @!macro [attach] property
+#   #   @return [$2] the $1 property
+#   property :title, String
+#
+#   # Macro will expand on this definition too
+#   property :view_count, Integer
+#   end
+# @since 0.7.0
 class YARD::Tags::MacroDirective < ::YARD::Tags::Directive
+  # @raise [TagFormatError]
+  # @since 0.7.0
   def call; end
 
   private
 
+  # @return [Boolean]
+  # @since 0.7.0
   def anonymous?; end
+
+  # @return [Boolean]
+  # @since 0.7.0
   def attach?; end
+
+  # @return [Boolean]
+  # @since 0.7.0
   def class_method?; end
+
+  # @since 0.7.0
   def expand(macro_data); end
+
+  # @since 0.7.0
   def find_or_create; end
+
+  # @return [Boolean]
+  # @since 0.7.0
   def new?; end
+
+  # @since 0.7.0
   def warn; end
 end
 
@@ -6414,40 +11175,84 @@ end
 # used as the method's source.
 #
 # To define an attribute method, see {tag:!attribute}
+#
+# @example Defining a simple method
+#   # @!method quit(username, message = "Quit")
+#   #   Sends a quit message to the server for a +username+.
+#   #   @param [String] username the username to quit
+#   #   @param [String] message the quit message
+#   quit_message_method
+# @example Attaching multiple methods to the same source
+#   # @!method method1
+#   # @!method method2
+#   create_methods :method1, :method2
+# @note This directive should only be used if there is no explicit
+#   declaration for the method in any source files (i.e., the method
+#   is declared dynamically via meta-programming). In all other cases, add
+#   documentation to the method definition itself.
+# @note For backwards compatibility support, you do not need to indent
+#   the method's docstring text. If a +@!method+ directive is seen with
+#   no indented block, the entire docstring is used as the new method's
+#   docstring text.
+# @see tag:!attribute
+# @since 0.7.0
 class YARD::Tags::MethodDirective < ::YARD::Tags::Directive
+  # @since 0.7.0
   def after_parse; end
+
+  # @since 0.7.0
   def call; end
 
   protected
 
+  # @since 0.7.0
   def create_object; end
+
+  # @since 0.7.0
   def method_name; end
+
+  # @since 0.7.0
   def method_signature; end
+
+  # @since 0.7.0
   def sanitized_tag_signature; end
+
+  # @since 0.7.0
   def use_indented_text; end
 end
 
+# @since 0.7.0
 YARD::Tags::MethodDirective::SCOPE_MATCH = T.let(T.unsafe(nil), Regexp)
 
 class YARD::Tags::OptionTag < ::YARD::Tags::Tag
+  # @return [OptionTag] a new instance of OptionTag
   def initialize(tag_name, name, pair); end
 
   # Returns the value of attribute pair.
   def pair; end
 
   # Sets the attribute pair
+  #
+  # @param value the value to set the attribute pair to.
   def pair=(_arg0); end
 end
 
 class YARD::Tags::OverloadTag < ::YARD::Tags::Tag
+  # @return [OverloadTag] a new instance of OverloadTag
   def initialize(tag_name, text); end
 
   # Returns the value of attribute docstring.
   def docstring; end
 
+  # @return [Boolean]
   def has_tag?(name); end
+
+  # @return [Boolean]
   def is_a?(other); end
+
+  # @return [Boolean]
   def kind_of?(other); end
+
   def method_missing(*args, &block); end
   def name(prefix = T.unsafe(nil)); end
   def object=(value); end
@@ -6474,7 +11279,26 @@ end
 #
 # You can specify the language of the code block using the types
 # specification list. By default, the code language is "ruby".
+#
+# @example Documenting dynamic module inclusion
+#   class User
+#   # includes "UserMixin" and extends "UserMixin::ClassMethods"
+#   # using the UserMixin.included callback.
+#   # @!parse include UserMixin
+#   # @!parse extend UserMixin::ClassMethods
+#   end
+# @example Declaring a method as an attribute
+#   # This should really be an attribute
+#   # @!parse attr_reader :foo
+#   def object; @parent.object end
+# @example Parsing C code
+#   # @!parse [c]
+#   #   void Init_Foo() {
+#   #     rb_define_method(rb_cFoo, "method", method, 0);
+#   #   }
+# @since 0.8.0
 class YARD::Tags::ParseDirective < ::YARD::Tags::Directive
+  # @since 0.8.0
   def call; end
 end
 
@@ -6483,28 +11307,37 @@ module YARD::Tags::RefTag
   def owner; end
 
   # Sets the attribute owner
+  #
+  # @param value the value to set the attribute owner to.
   def owner=(_arg0); end
 end
 
 class YARD::Tags::RefTagList
+  # @return [RefTagList] a new instance of RefTagList
   def initialize(tag_name, owner, name = T.unsafe(nil)); end
 
   # Returns the value of attribute name.
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   # Returns the value of attribute owner.
   def owner; end
 
   # Sets the attribute owner
+  #
+  # @param value the value to set the attribute owner to.
   def owner=(_arg0); end
 
   # Returns the value of attribute tag_name.
   def tag_name; end
 
   # Sets the attribute tag_name
+  #
+  # @param value the value to set the attribute tag_name to.
   def tag_name=(_arg0); end
 
   def tags; end
@@ -6514,12 +11347,33 @@ end
 # directive is defined on a docstring attached to an object definition,
 # it is applied only to that object. Otherwise, it applies the scope
 # to all future objects in the namespace.
+#
+# @example Modifying the scope of a DSL method
+#   # @!scope class
+#   cattr_accessor :subclasses
+# @example Modifying the scope of a set of methods
+#   # @!scope class
+#
+#   # Documentation for method1
+#   def method1; end
+#
+#   # Documentation for method2
+#   def method2; end
+# @since 0.7.0
 class YARD::Tags::ScopeDirective < ::YARD::Tags::Directive
+  # @since 0.7.0
   def call; end
 end
 
 # Represents a metadata tag value (+@tag+). Tags can have any combination of
 # {#types}, {#name} and {#text}, or none of the above.
+#
+# @example Programmatic tag creation
+#   # The following docstring syntax:
+#   #   @param [String, nil] arg an argument
+#   #
+#   # is equivalent to:
+#   Tag.new(:param, 'an argument', ['String', 'nil'], 'arg')
 class YARD::Tags::Tag
   # Creates a new tag object with a tag name and text. Optionally, formally declared types
   # and a key name can be specified.
@@ -6528,26 +11382,61 @@ class YARD::Tags::Tag
   #
   # Key names are for tags that declare meta data for a specific key or name, such as +param+,
   # +raise+, etc.
+  #
+  # @param tag_name [#to_s] the tag name to create the tag for
+  # @param text [String] the descriptive text for this tag
+  # @param types [Array<String>] optional type list of formally declared types
+  #   for the tag
+  # @param name [String] optional key name which the tag refers to
+  # @return [Tag] a new instance of Tag
   def initialize(tag_name, text, types = T.unsafe(nil), name = T.unsafe(nil)); end
 
   # Provides a plain English summary of the type specification, or nil
   # if no types are provided or parseable.
+  #
+  # @return [String] a plain English description of the associated types
+  # @return [nil] if no types are provided or not parseable
   def explain_types; end
 
+  # @return [String] a name associated with the tag
   def name; end
+
+  # @return [String] a name associated with the tag
   def name=(_arg0); end
+
+  # @return [CodeObjects::Base] the associated object
   def object; end
+
+  # @return [CodeObjects::Base] the associated object
   def object=(_arg0); end
+
+  # @return [String] the name of the tag
   def tag_name; end
+
+  # @return [String] the name of the tag
   def tag_name=(_arg0); end
+
+  # @return [String] the tag text associated with the tag
+  # @return [nil] if no tag text is supplied
   def text; end
+
+  # @return [String] the tag text associated with the tag
+  # @return [nil] if no tag text is supplied
   def text=(_arg0); end
 
   # Convenience method to access the first type specified. This should mainly
   # be used for tags that only specify one type.
+  #
+  # @return [String] the first of the list of specified types
+  # @see #types
   def type; end
 
+  # @return [Array<String>] a list of types associated with the tag
+  # @return [nil] if no types are associated with the tag
   def types; end
+
+  # @return [Array<String>] a list of types associated with the tag
+  # @return [nil] if no types are associated with the tag
   def types=(_arg0); end
 end
 
@@ -6557,15 +11446,26 @@ class YARD::Tags::TypesExplainer
   class << self
     # Provides a plain English summary of the type specification, or nil
     # if no types are provided or parseable.
+    #
+    # @param types [Array<String>] a list of types to parse and summarize
+    # @return [String] a plain English description of the associated types
+    # @return [nil] if no types are provided or not parseable
     def explain(*types); end
 
     # Provides a plain English summary of the type specification, or nil
     # if no types are provided or parseable.
+    #
+    # @param types [Array<String>] a list of types to parse and summarize
+    # @raise [SyntaxError] if the types are not parseable
+    # @return [String] a plain English description of the associated types
+    # @return [nil] if no types are provided or not parseable
     def explain!(*types); end
   end
 end
 
+# @private
 class YARD::Tags::TypesExplainer::CollectionType < ::YARD::Tags::TypesExplainer::Type
+  # @return [CollectionType] a new instance of CollectionType
   def initialize(name, types); end
 
   def to_s(_singular = T.unsafe(nil)); end
@@ -6574,20 +11474,27 @@ class YARD::Tags::TypesExplainer::CollectionType < ::YARD::Tags::TypesExplainer:
   def types; end
 
   # Sets the attribute types
+  #
+  # @param value the value to set the attribute types to.
   def types=(_arg0); end
 end
 
+# @private
 class YARD::Tags::TypesExplainer::FixedCollectionType < ::YARD::Tags::TypesExplainer::CollectionType
   def to_s(_singular = T.unsafe(nil)); end
 end
 
+# @private
 class YARD::Tags::TypesExplainer::HashCollectionType < ::YARD::Tags::TypesExplainer::Type
+  # @return [HashCollectionType] a new instance of HashCollectionType
   def initialize(name, key_types, value_types); end
 
   # Returns the value of attribute key_types.
   def key_types; end
 
   # Sets the attribute key_types
+  #
+  # @param value the value to set the attribute key_types to.
   def key_types=(_arg0); end
 
   def to_s(_singular = T.unsafe(nil)); end
@@ -6596,12 +11503,16 @@ class YARD::Tags::TypesExplainer::HashCollectionType < ::YARD::Tags::TypesExplai
   def value_types; end
 
   # Sets the attribute value_types
+  #
+  # @param value the value to set the attribute value_types to.
   def value_types=(_arg0); end
 end
 
+# @private
 class YARD::Tags::TypesExplainer::Parser
   include ::YARD::CodeObjects
 
+  # @return [Parser] a new instance of Parser
   def initialize(string); end
 
   def parse; end
@@ -6613,13 +11524,17 @@ end
 
 YARD::Tags::TypesExplainer::Parser::TOKENS = T.let(T.unsafe(nil), Hash)
 
+# @private
 class YARD::Tags::TypesExplainer::Type
+  # @return [Type] a new instance of Type
   def initialize(name); end
 
   # Returns the value of attribute name.
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   def to_s(singular = T.unsafe(nil)); end
@@ -6633,7 +11548,22 @@ end
 # If this directive is defined on a docstring attached to an object
 # definition, it is applied only to that object. Otherwise, it applies
 # the visibility to all future objects in the namespace.
+#
+# @example Modifying the visibility of a DSL method
+#   # @!visibility private
+#   cattr_accessor :subclasses
+# @example Modifying the visibility of a set of methods
+#   # Note that Ruby's "protected" is recommended over this directive
+#   # @!visibility protected
+#
+#   # Documentation for method1
+#   def method1; end
+#
+#   # Documentation for method2
+#   def method2; end
+# @since 0.7.0
 class YARD::Tags::VisibilityDirective < ::YARD::Tags::Directive
+  # @since 0.7.0
   def call; end
 end
 
@@ -6651,9 +11581,17 @@ module YARD::Templates::Engine
     # Passes a set of objects to the +:fulldoc+ template for full documentation generation.
     # This is called by {CLI::Yardoc} to most commonly perform HTML
     # documentation generation.
+    #
+    # @param objects [Array<CodeObjects::Base>] a list of {CodeObjects::Base}
+    #   objects to pass to the template
+    # @param options [Hash] (see {render})
+    # @return [void]
     def generate(objects, options = T.unsafe(nil)); end
 
     # Registers a new template path in {template_paths}
+    #
+    # @param path [String] a new template path
+    # @return [void]
     def register_template_path(path); end
 
     # Renders a template on a {CodeObjects::Base code object} using
@@ -6663,6 +11601,16 @@ module YARD::Templates::Engine
     # If a +:serializer+ key is provided and +:serialize+ is not set to
     # false, the rendered contents will be serialized through the {Serializers::Base}
     # object. See {with_serializer}.
+    #
+    # @example Renders an object with html formatting
+    #   Engine.render(:format => :html, :object => obj)
+    # @example Renders without an object
+    #   Engine.render(:type => :fulldoc, :otheropts => somevalue)
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] the options hash
+    # @return [String] the rendered template
     def render(options = T.unsafe(nil)); end
 
     # Creates a template module representing the path. Searches on disk
@@ -6670,34 +11618,72 @@ module YARD::Templates::Engine
     # template paths and builds a template module for. All other matching
     # directories in other template paths will be included in the
     # generated module as mixins (for overriding).
+    #
+    # @param path [Array<String, Symbol>] a list of path components
+    # @raise [ArgumentError] if the path does not exist within one of the
+    #   {template_paths} on disk.
+    # @return [Template] the module representing the template
     def template(*path); end
 
     # Forces creation of a template at +path+ within a +full_path+.
+    #
+    # @param path [String] the path name of the template
+    # @param full_paths [Array<String>] the full path on disk of the template
+    # @return [Template] the template module representing the +path+
     def template!(path, full_paths = T.unsafe(nil)); end
 
+    # @return [Array<String>] the list of registered template paths
     def template_paths; end
+
+    # @return [Array<String>] the list of registered template paths
     def template_paths=(_arg0); end
 
     # Serializes the results of a block with a +serializer+ object.
+    #
+    # @param object [CodeObjects::Base] the code object to serialize
+    # @param serializer [Serializers::Base] the serializer object
+    # @see Serializers::Base
+    # @yield a block whose result will be serialize
+    # @yieldreturn [String] the contents to serialize
     def with_serializer(object, serializer); end
 
     private
 
     # Searches through the registered {template_paths} and returns
     # all full directories that have the +path+ within them on disk.
+    #
+    # @param from_template [Template] if provided, allows a relative
+    #   path to be specified from this template's full path.
+    # @param path [String] the path component to search for in the
+    #   {template_paths}
+    # @return [Array<String>] a list of full paths that are existing
+    #   candidates for a template module
     def find_template_paths(from_template, path); end
 
     # Sets default options on the options hash
+    #
+    # @option options
+    # @option options
+    # @option options
+    # @param options [Hash] the options hash
+    # @return [void]
     def set_default_options(options = T.unsafe(nil)); end
 
     # The name of the module that represents a +path+
+    #
+    # @param path [String] the path to generate a module name for
+    # @return [String] the module name
     def template_module_name(path); end
   end
 end
 
+# @since 0.5.4
 module YARD::Templates::ErbCache
   class << self
+    # @since 0.5.4
     def clear!; end
+
+    # @since 0.5.4
     def method_for(filename); end
   end
 end
@@ -6707,17 +11693,47 @@ module YARD::Templates::Helpers; end
 
 # The base helper module included in all templates.
 module YARD::Templates::Helpers::BaseHelper
+  # @example
+  #   s = format_object_title ModuleObject.new(:root, :MyModuleName)
+  #   s # => "Module: MyModuleName"
+  # @param object [CodeObjects::Base] the object to retrieve a title for
+  # @return [String] the page title name for a given object
   def format_object_title(object); end
+
+  # @example Formatted type of an exception class
+  #   o = ClassObject.new(:root, :MyError)
+  #   o.superclass = P('RuntimeError')
+  #   format_object_type(o) # => "Exception"
+  # @example Formatted type of a method
+  #   o = MethodObject.new(:root, :to_s)
+  #   format_object_type(o) # => "Method"
+  # @param object [CodeObjects::Base] the object to retrieve the type for
+  # @return [String] the human-readable formatted {CodeObjects::Base#type #type}
+  #   for the object
   def format_object_type(object); end
 
   # Indents and formats source code
+  #
+  # @param value [String] the input source code
+  # @return [String] formatted source code
   def format_source(value); end
 
   # Formats a list of return types for output and links each type.
+  #
+  # @example Formatting types
+  #   format_types(['String', 'Array']) #=> "(String, Array)"
+  # @example Formatting types without surrounding brackets
+  #   format_types(['String', 'Array'], false) #=> "String, Array"
+  # @param list [Array<String>] a list of types
+  # @param brackets [Boolean] whether to surround the types in brackets
+  # @return [String] the formatted list of Ruby types
   def format_types(list, brackets = T.unsafe(nil)); end
 
   # An object that keeps track of global state throughout the entire template
   # rendering process (including any sub-templates).
+  #
+  # @return [OpenStruct] a struct object that stores state
+  # @since 0.6.0
   def globals; end
 
   # Escapes text. This is used a lot by the HtmlHelper and there should
@@ -6725,48 +11741,97 @@ module YARD::Templates::Helpers::BaseHelper
   def h(text); end
 
   # Links to an extra file
+  #
+  # @param filename [String] the filename to link to
+  # @param title [String] the title of the link
+  # @param anchor [String] optional anchor
+  # @return [String] the link to the file
+  # @since 0.5.5
   def link_file(filename, title = T.unsafe(nil), anchor = T.unsafe(nil)); end
 
   # Include a file as a docstring in output
+  #
+  # @param file [String] the filename to include
+  # @return [String] the file's contents
+  # @since 0.7.0
   def link_include_file(file); end
 
   # Includes an object's docstring into output.
+  #
+  # @param obj [CodeObjects::Base] the object to include
+  # @return [String] the object's docstring (no tags)
+  # @since 0.6.0
   def link_include_object(obj); end
 
   # Links to an object with an optional title
+  #
+  # @param obj [CodeObjects::Base] the object to link to
+  # @param title [String] the title to use for the link
+  # @return [String] the linked object
   def link_object(obj, title = T.unsafe(nil)); end
 
   # Links to a URL
+  #
+  # @param url [String] the URL to link to
+  # @param title [String] the optional title to display the link as
+  # @param params [Hash] optional parameters for the link
+  # @return [String] the linked URL
   def link_url(url, title = T.unsafe(nil), params = T.unsafe(nil)); end
 
   # Links objects or URLs. This method will delegate to the correct +link_+
   # method depending on the arguments passed in.
+  #
+  # @example Linking a URL
+  #   linkify('http://example.com')
+  # @example Including docstring contents of an object
+  #   linkify('include:YARD::Docstring')
+  # @example Linking to an extra file
+  #   linkify('file:README')
+  # @example Linking an object by path
+  #   linkify('YARD::Docstring')
   def linkify(*args); end
 
   # Returns the value of attribute object.
   def object; end
 
   # Sets the attribute object
+  #
+  # @param value the value to set the attribute object to.
   def object=(_arg0); end
 
+  # @return [CodeObjects::Base] the object representing the current generated
+  #   page. Might not be the current {#object} when inside sub-templates.
   def owner; end
 
   # Runs a list of objects against the {Verifier} object passed into the
   # template and returns the subset of verified objects.
+  #
+  # @param list [Array<CodeObjects::Base>] a list of code objects
+  # @return [Array<CodeObjects::Base>] a list of code objects that match
+  #   the verifier. If no verifier is supplied, all objects are returned.
   def run_verifier(list); end
 
   # Returns the value of attribute serializer.
   def serializer; end
 
   # Sets the attribute serializer
+  #
+  # @param value the value to set the attribute serializer to.
   def serializer=(_arg0); end
 end
 
 # Helpers for various object types
 module YARD::Templates::Helpers::FilterHelper
+  # @return [Boolean] whether an object is a class
   def is_class?(object); end
+
+  # @return [Boolean] whether an object is a method
   def is_method?(object); end
+
+  # @return [Boolean] whether an object is a module
   def is_module?(object); end
+
+  # @return [Boolean] whether an object is a namespace
   def is_namespace?(object); end
 end
 
@@ -6776,148 +11841,317 @@ module YARD::Templates::Helpers::HtmlHelper
   include ::YARD::Templates::Helpers::ModuleHelper
   include ::YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
 
+  # @param object [CodeObjects::Base] the object to get an anchor for
+  # @return [String] the anchor for a specific object
   def anchor_for(object); end
 
   # Returns the current character set. The default value can be overridden
   # by setting the +LANG+ environment variable or by overriding this
   # method. In Ruby 1.9 you can also modify this value by setting
   # +Encoding.default_external+.
+  #
+  # @return [String] the current character set
+  # @since 0.5.4
   def charset; end
 
   # Formats a list of objects and links them
+  #
+  # @return [String] a formatted list of objects
   def format_object_name_list(objects); end
 
   # Formats a list of types from a tag.
+  #
+  # @param typelist [Array<String>, FalseClass] the list of types to be formatted.
+  # @param brackets [Boolean] omits the surrounding
+  #   brackets if +brackets+ is set to +false+.
+  # @return [String] the list of types formatted
+  #   as [Type1, Type2, ...] with the types linked
+  #   to their respective descriptions.
   def format_types(typelist, brackets = T.unsafe(nil)); end
 
   # Escapes HTML entities
+  #
+  # @param text [String] the text to escape
+  # @return [String] the HTML with escaped entities
   def h(text); end
 
   # Converts Asciidoc to HTML
+  #
+  # @param text [String] input Asciidoc text
+  # @return [String] output HTML
   def html_markup_asciidoc(text); end
 
   # Converts HTML to HTML
+  #
+  # @param text [String] input html
+  # @return [String] output HTML
+  # @since 0.6.0
   def html_markup_html(text); end
 
   # Converts Markdown to HTML
+  #
+  # @param text [String] input Markdown text
+  # @return [String] output HTML
+  # @since 0.6.0
   def html_markup_markdown(text); end
 
+  # @return [String] the same text with no markup
+  # @since 0.6.6
   def html_markup_none(text); end
 
   # Converts org-mode to HTML
+  #
+  # @param text [String] input org-mode text
+  # @return [String] output HTML
   def html_markup_org(text); end
 
   # Converts plaintext to pre-formatted HTML
+  #
+  # @param text [String] the input text
+  # @return [String] the output HTML
+  # @since 0.6.0
   def html_markup_pre(text); end
 
   # Converts RDoc formatting (SimpleMarkup) to HTML
+  #
+  # @param text [String] the input RDoc formatted text
+  # @return [String] output HTML
+  # @since 0.6.0
   def html_markup_rdoc(text); end
 
   # Highlights Ruby source. Similar to {#html_syntax_highlight}, but
   # this method is meant to be called from {#htmlify} when markup is
   # set to "ruby".
+  #
+  # @param source [String] the Ruby source
+  # @return [String] the highlighted HTML
+  # @since 0.7.0
   def html_markup_ruby(source); end
 
   # Converts plaintext to regular HTML
+  #
+  # @param text [String] the input text
+  # @return [String] the output HTML
+  # @since 0.6.0
   def html_markup_text(text); end
 
   # Converts Textile to HTML
+  #
+  # @param text [String] the input Textile text
+  # @return [String] output HTML
+  # @since 0.6.0
   def html_markup_textile(text); end
 
   # Converts plaintext to strict Textile (hard breaks)
+  #
+  # @param text [String] the input textile data
+  # @return [String] the output HTML
+  # @since 0.6.0
   def html_markup_textile_strict(text); end
 
   # Syntax highlights +source+ in language +type+.
+  #
+  # @note To support a specific language +type+, implement the method
+  #   +html_syntax_highlight_TYPE+ in this class.
+  # @param source [String] the source code to highlight
+  # @param type [Symbol, String] the language type (:ruby, :plain, etc). Use
+  #   :plain for no syntax highlighting.
+  # @return [String] the highlighted source
   def html_syntax_highlight(source, type = T.unsafe(nil)); end
 
+  # @return [String] unhighlighted source
   def html_syntax_highlight_plain(source); end
 
   # Turns text into HTML using +markup+ style formatting.
+  #
+  # @param text [String] the text to format
+  # @param markup [Symbol] examples are +:markdown+, +:textile+, +:rdoc+.
+  #   To add a custom markup type, see {MarkupHelper}
+  # @return [String] the HTML
   def htmlify(text, markup = T.unsafe(nil)); end
 
+  # @return [String] HTMLified text as a single line (paragraphs removed)
   def htmlify_line(*args); end
 
   # Inserts an include link while respecting inlining
   def insert_include(text, markup = T.unsafe(nil)); end
 
   # Links to an extra file
+  #
+  # @param filename [String] the filename to link to
+  # @param title [String] the title of the link
+  # @param anchor [String] optional anchor
+  # @return [String] the link to the file
+  # @since 0.5.5
   def link_file(filename, title = T.unsafe(nil), anchor = T.unsafe(nil)); end
 
   # Include a file as a docstring in output
+  #
+  # @param file [String] the filename to include
+  # @return [String] the file's contents
+  # @since 0.7.0
   def link_include_file(file); end
 
   # Includes an object's docstring into output.
+  #
+  # @param obj [CodeObjects::Base] the object to include
+  # @return [String] the object's docstring (no tags)
+  # @since 0.6.0
   def link_include_object(obj); end
 
   # Links to an object with an optional title
+  #
+  # @param obj [CodeObjects::Base] the object to link to
+  # @param title [String] the title to use for the link
+  # @return [String] the linked object
   def link_object(obj, title = T.unsafe(nil), anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Links to a URL
+  #
+  # @param url [String] the URL to link to
+  # @param title [String] the optional title to display the link as
+  # @param params [Hash] optional parameters for the link
+  # @return [String] the linked URL
   def link_url(url, title = T.unsafe(nil), params = T.unsafe(nil)); end
 
   def mtime(_file); end
 
   # Returns the URL for an object.
+  #
+  # @param obj [String, CodeObjects::Base] the object (or object path) to link to
+  # @param anchor [String] the anchor to link to
+  # @param relative [Boolean] use a relative or absolute link
+  # @return [String] the URL location of the object
   def mtime_url(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Resolves any text in the form of +{Name}+ to the object specified by
   # Name. Also supports link titles in the form +{Name title}+.
+  #
+  # @example Linking to an instance method
+  #   resolve_links("{MyClass#method}") # => "<a href='...'>MyClass#method</a>"
+  # @example Linking to a class with a title
+  #   resolve_links("{A::B::C the C class}") # => "<a href='...'>the c class</a>"
+  # @param text [String] the text to resolve links in
+  # @return [String] HTML with linkified references
   def resolve_links(text); end
 
   # Formats the signature of method +meth+.
+  #
+  # @param meth [CodeObjects::MethodObject] the method object to list
+  #   the signature of
+  # @param link [Boolean] whether to link the method signature to the details view
+  # @param show_extras [Boolean] whether to show extra meta-data (visibility, attribute info)
+  # @param full_attr_name [Boolean] whether to show the full attribute name
+  #   ("name=" instead of "name")
+  # @return [String] the formatted method signature
   def signature(meth, link = T.unsafe(nil), show_extras = T.unsafe(nil), full_attr_name = T.unsafe(nil)); end
 
   # Get the return types for a method signature.
+  #
+  # @param meth [CodeObjects::MethodObject] the method object
+  # @param link [Boolean] whether to link the types
+  # @return [String] the signature types
+  # @since 0.5.3
   def signature_types(meth, link = T.unsafe(nil)); end
 
   # Returns the URL for an object.
+  #
+  # @param obj [String, CodeObjects::Base] the object (or object path) to link to
+  # @param anchor [String] the anchor to link to
+  # @param relative [Boolean] use a relative or absolute link
+  # @return [String] the URL location of the object
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Returns the URL for a specific file
+  #
+  # @param filename [String, CodeObjects::ExtraFileObject] the filename to link to
+  # @param anchor [String] optional anchor
+  # @return [String] the URL pointing to the file
   def url_for_file(filename, anchor = T.unsafe(nil)); end
 
   # Returns the URL for the frameset page
+  #
+  # @return [String] the URL pointing to the frames page
+  # @since 0.8.0
   def url_for_frameset; end
 
   # Returns the URL for the alphabetic index page
+  #
+  # @return [String] the URL pointing to the first main page the
+  #   user should see.
   def url_for_index; end
 
   # Returns the URL for a list type
+  #
+  # @param type [String, Symbol] the list type to generate a URL for
+  # @return [String] the URL pointing to the list
+  # @since 0.8.0
   def url_for_list(type); end
 
   # Returns the URL for the main page (README or alphabetic index)
+  #
+  # @return [String] the URL pointing to the first main page the
+  #   user should see.
   def url_for_main; end
 
   private
 
   # Converts a {CodeObjects::MethodObject} into an overload object
+  #
+  # @since 0.5.3
   def convert_method_to_overload(meth); end
 
   # Parses code block's HTML attributes in order to detect the programming
   # language of what's enclosed in that code block.
+  #
+  # @param pre_html_attrs [String, nil] HTML attribute list of +pre+ element
+  # @param code_html_attrs [String, nil] HTML attribute list of +code+
+  #   element
+  # @return [String, nil] detected programming language
   def detect_lang_in_codeblock_attributes(pre_html_attrs, code_html_attrs); end
 
   # Parses code blocks out of html and performs syntax highlighting
   # on code inside of the blocks.
+  #
+  # @param html [String] the html to search for code in
+  # @return [String] highlighted html
+  # @see #html_syntax_highlight
   def parse_codeblocks(html); end
 
   # Parses !!!lang out of codeblock, returning the codeblock language
   # followed by the source code.
+  #
+  # @param source [String] the source code whose language to determine
+  # @return [Array(String, String)] the language, if any, and the
+  #   remaining source
+  # @since 0.7.5
   def parse_lang_for_codeblock(source); end
 
   # Converts a set of hash options into HTML attributes for a tag
+  #
+  # @param opts [Hash{String => String}] the tag options
+  # @return [String] the tag attributes of an HTML tag
   def tag_attrs(opts = T.unsafe(nil)); end
 
   # Escapes a URL
+  #
+  # @param text [String] the URL
+  # @return [String] the escaped URL
   def urlencode(text); end
 
   class << self
     # Escapes a URL
+    #
+    # @param text [String] the URL
+    # @return [String] the escaped URL
     def urlencode(text); end
   end
 end
 
+# @private
 YARD::Templates::Helpers::HtmlHelper::ASCIIDOC_ATTRIBUTES = T.let(T.unsafe(nil), Hash)
+
+# @private
 YARD::Templates::Helpers::HtmlHelper::URLMATCH = T.let(T.unsafe(nil), Regexp)
 
 # Helper methods for syntax highlighting.
@@ -6925,6 +12159,9 @@ module YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
   include ::YARD::Templates::Helpers::ModuleHelper
 
   # Highlights Ruby source
+  #
+  # @param source [String] the Ruby source code
+  # @return [String] the highlighted Ruby source
   def html_syntax_highlight_ruby(source); end
 
   private
@@ -6938,18 +12175,22 @@ end
 module YARD::Templates::Helpers::Markup; end
 
 class YARD::Templates::Helpers::Markup::RDocMarkdown < ::YARD::Templates::Helpers::Markup::RDocMarkup
+  # @return [RDocMarkdown] a new instance of RDocMarkdown
   def initialize(text); end
 
   def fix_typewriter(html); end
 end
 
 class YARD::Templates::Helpers::Markup::RDocMarkup
+  # @return [RDocMarkup] a new instance of RDocMarkup
   def initialize(text); end
 
   # Returns the value of attribute from_path.
   def from_path; end
 
   # Sets the attribute from_path
+  #
+  # @param value the value to set the attribute from_path to.
   def from_path=(_arg0); end
 
   def to_html; end
@@ -6958,9 +12199,13 @@ class YARD::Templates::Helpers::Markup::RDocMarkup
 
   # Don't allow -- to turn into &#8212; element. The chances of this being
   # some --option is far more likely than the typographical meaning.
+  #
+  # @todo Refactor into own SimpleMarkup subclass
   def fix_dash_dash(text); end
 
   # Fixes RDoc behaviour with ++ only supporting alphanumeric text.
+  #
+  # @todo Refactor into own SimpleMarkup subclass
   def fix_typewriter(text); end
 end
 
@@ -6975,6 +12220,8 @@ class YARD::Templates::Helpers::Markup::RDocMarkupToHtml < ::RDoc::Markup::ToHtm
   def from_path; end
 
   # Sets the attribute from_path
+  #
+  # @param value the value to set the attribute from_path to.
   def from_path=(_arg0); end
 
   # Disable auto-link of URLs
@@ -6992,14 +12239,23 @@ module YARD::Templates::Helpers::MarkupHelper
   #
   # On failure this method will inform the user that no provider could be
   # found and exit the program.
+  #
+  # @return [Boolean] whether the markup provider was successfully loaded.
   def load_markup_provider(type = T.unsafe(nil)); end
 
   # Gets the markup provider class/module constant for a markup type
   # Call {#load_markup_provider} before using this method.
+  #
+  # @param type [Symbol] the markup type (:rdoc, :markdown, etc.)
+  # @return [Class] the markup class
   def markup_class(type = T.unsafe(nil)); end
 
   # Strips any shebang lines on the file contents that pertain to
   # markup or preprocessing data.
+  #
+  # @deprecated Use {CodeObjects::ExtraFileObject#contents} instead
+  # @return [String] the file contents minus any preprocessing tags
+  # @since 0.6.0
   def markup_file_contents(contents); end
 
   # Checks for a shebang or looks at the file extension to determine
@@ -7008,20 +12264,38 @@ module YARD::Templates::Helpers::MarkupHelper
   #
   # A shebang should be on the first line of a file and be in the form:
   #
-  # #!markup_type
+  #   #!markup_type
   #
   # Standard markup types are text, html, rdoc, markdown, textile
+  #
+  # @param contents [String] Unused. Was necessary prior to 0.7.0.
+  #   Newer versions of YARD use {CodeObjects::ExtraFileObject#contents}
+  # @return [Symbol] the markup type recognized for the file
+  # @see MARKUP_EXTENSIONS
+  # @since 0.6.0
   def markup_for_file(contents, filename); end
 
   # Gets the markup provider name for a markup type
   # Call {#load_markup_provider} before using this method.
+  #
+  # @param type [Symbol] the markup type (:rdoc, :markdown, etc.)
+  # @return [Symbol] the markup provider name (usually the gem name of the library)
   def markup_provider(type = T.unsafe(nil)); end
 
   class << self
     # Clears the markup provider cache information. Mainly used for testing.
+    #
+    # @return [void]
     def clear_markup_cache; end
 
+    # @private
+    # @return [Hash{Symbol=>{(:provider,:class)=>Object}}] the cached markup providers
+    # @since 0.6.4
     def markup_cache; end
+
+    # @private
+    # @return [Hash{Symbol=>{(:provider,:class)=>Object}}] the cached markup providers
+    # @since 0.6.4
     def markup_cache=(_arg0); end
   end
 end
@@ -7029,6 +12303,8 @@ end
 # Returns a list of extensions for various markup types. To register
 # extensions for a type, add them to the array of extensions for the
 # type.
+#
+# @since 0.6.0
 YARD::Templates::Helpers::MarkupHelper::MARKUP_EXTENSIONS = T.let(T.unsafe(nil), Hash)
 
 # Contains the Regexp object that matches the shebang line of extra
@@ -7040,28 +12316,56 @@ YARD::Templates::Helpers::MarkupHelper::MARKUP_PROVIDERS = T.let(T.unsafe(nil), 
 
 # Helper methods for method objects.
 module YARD::Templates::Helpers::MethodHelper
+  # @return [String] formatted arguments for a method
   def format_args(object); end
+
+  # @return [String] formatted block if one exists
   def format_block(object); end
+
+  # @return [String] formats source of an object
   def format_code(object, _show_lines = T.unsafe(nil)); end
+
+  # @return [String] formats source code of a constant value
   def format_constant(value); end
+
+  # @return [String] formats line numbers for source code of an object
   def format_lines(object); end
+
+  # @return [String] formatted and linked return types for a method
   def format_return_types(object); end
 end
 
 # Helper methods for managing module objects.
 module YARD::Templates::Helpers::ModuleHelper
   # Prunes the method listing by running the verifier and removing attributes/aliases
+  #
+  # @param list [Array<CodeObjects::Base>] a list of methods
+  # @param hide_attributes [Boolean] whether to prune attribute methods from the list
+  # @return [Array<CodeObjects::Base>] a pruned list of methods
   def prune_method_listing(list, hide_attributes = T.unsafe(nil)); end
 end
 
 # Helper methods for text template formats.
 module YARD::Templates::Helpers::TextHelper
+  # @return [String] aligns text to the right
   def align_right(text, spacer = T.unsafe(nil), col = T.unsafe(nil)); end
+
+  # @return [String] escapes text
   def h(text); end
+
+  # @return [String] returns a horizontal rule for output
   def hr(col = T.unsafe(nil), sep = T.unsafe(nil)); end
+
+  # @return [String] indents +text+ by +len+ characters.
   def indent(text, len = T.unsafe(nil)); end
+
+  # @return [String] the formatted signature for a method
   def signature(meth); end
+
+  # @return [String] aligns a title to the right
   def title_align_right(text, col = T.unsafe(nil)); end
+
+  # @return [String] wraps text at +col+ columns.
   def wrap(text, col = T.unsafe(nil)); end
 
   private
@@ -7072,39 +12376,82 @@ end
 # Helpers for UML template format
 module YARD::Templates::Helpers::UMLHelper
   # Formats the path of an object for Graphviz syntax
+  #
+  # @param object [CodeObjects::Base] an object to format the path of
+  # @return [String] the encoded path
   def format_path(object); end
 
   # Encodes text in escaped Graphviz syntax
+  #
+  # @param text [String] text to encode
+  # @return [String] the encoded text
   def h(text); end
 
   # Tidies data by formatting and indenting text
+  #
+  # @param data [String] pre-formatted text
+  # @return [String] tidied text.
   def tidy(data); end
 
   # Official UML visibility prefix syntax for an object given its visibility
+  #
+  # @param object [CodeObjects::Base] the object to retrieve visibility for
+  # @return [String] the UML visibility prefix
   def uml_visibility(object); end
 end
 
 # Abstracts the structure for a section and its subsections into an ordered
 # list of sections and subsections.
+#
+# @since 0.6.0
 class YARD::Templates::Section < ::Array
+  # @return [Section] a new instance of Section
+  # @since 0.6.0
   def initialize(name, *args); end
 
+  # @since 0.6.0
   def <<(*args); end
+
+  # @since 0.6.0
   def ==(other); end
+
+  # @since 0.6.0
   def [](*args); end
+
+  # @since 0.6.0
   def any(item); end
+
+  # @since 0.6.0
   def dup; end
+
+  # @return [Boolean]
+  # @since 0.6.0
   def eql?(other); end
+
+  # @since 0.6.0
   def inspect; end
+
+  # @since 0.6.0
   def name; end
+
+  # @since 0.6.0
   def name=(_arg0); end
+
+  # @since 0.6.0
   def place(*args); end
+
+  # @since 0.6.0
   def push(*args); end
+
+  # @since 0.6.0
   def to_a; end
+
+  # @since 0.6.0
   def unshift(*args); end
 
   private
 
+  # @since 0.6.0
   def parse_sections(args); end
 end
 
@@ -7120,14 +12467,22 @@ module YARD::Templates::Template
   # Loads a template specified by path. If +:template+ or +:format+ is
   # specified in the {#options} hash, they are prepended and appended
   # to the path respectively.
+  #
+  # @param path [Array<String, Symbol>] the path of the template
+  # @return [Template] the loaded template module
   def T(*path); end
 
   # Returns the value of attribute class.
   def class; end
 
   # Sets the attribute class
+  #
+  # @param value the value to set the attribute class to.
   def class=(_arg0); end
 
+  # @param section [String, Symbol] the section name
+  # @return [String] the contents of the ERB rendered section
+  # @yield calls subsections to be rendered
   def erb(section, &block); end
 
   # Returns the contents of a file. If +allow_inherited+ is set to +true+,
@@ -7137,14 +12492,30 @@ module YARD::Templates::Template
   # both file contents can be retrieved by having +templates/b/test.css+ look
   # like:
   #
-  # {{{__super__}}}
-  # ...
-  # body { css styles here }
-  # p.class { other styles }
+  #   {{{__super__}}}
+  #   ...
+  #   body { css styles here }
+  #   p.class { other styles }
+  #
+  # @param basename [String] the name of the file
+  # @param allow_inherited [Boolean] whether inherited templates can
+  #   be inserted with +{{{__super__}}}+
+  # @raise [ArgumentError]
+  # @return [String] the contents of a file identified by +basename+. All
+  #   template paths (including any mixed in templates) are searched for
+  #   the file
+  # @see ClassMethods#find_file
+  # @see ClassMethods#find_nth_file
   def file(basename, allow_inherited = T.unsafe(nil)); end
 
   # Initialization called on the template. Override this in a 'setup.rb'
   # file in the template's path to implement a template
+  #
+  # @example A default set of sections
+  #   def init
+  #   sections :section1, :section2, [:subsection1, :etc]
+  #   end
+  # @see #sections
   def init; end
 
   def inspect; end
@@ -7156,21 +12527,52 @@ module YARD::Templates::Template
 
   # Runs a template on +sects+ using extra options. This method should
   # not be called directly. Instead, call the class method {ClassMethods#run}
+  #
+  # @param opts [Hash, nil] any extra options to apply to sections
+  # @param sects [Section, Array] a section list of sections to render
+  # @param start_at [Fixnum] the index in the section list to start from
+  # @param break_first [Boolean] if true, renders only the first section
+  # @return [String] the rendered sections joined together
+  # @yield [opts] calls for the subsections to be rendered
+  # @yieldparam opts [Hash] any extra options to yield
   def run(opts = T.unsafe(nil), sects = T.unsafe(nil), start_at = T.unsafe(nil), break_first = T.unsafe(nil), &block); end
 
   # Returns the value of attribute section.
   def section; end
 
   # Sets the attribute section
+  #
+  # @param value the value to set the attribute section to.
   def section=(_arg0); end
 
   # Sets the sections (and subsections) to be rendered for the template
+  #
+  # @example Sets a set of erb sections
+  #   sections :a, :b, :c # searches for a.erb, b.erb, c.erb
+  # @example Sets a set of method and erb sections
+  #   sections :a, :b, :c # a is a method, the rest are erb files
+  # @example Sections with subsections
+  #   sections :header, [:name, :children]
+  #   # the above will call header.erb and only renders the subsections
+  #   # if they are yielded by the template (see #yieldall)
+  # @param args [Array<Symbol, String, Template, Array>] the sections
+  #   to use to render the template. For symbols and strings, the
+  #   section will be executed as a method (if one exists), or rendered
+  #   from the file "name.erb" where name is the section name. For
+  #   templates, they will have {Template::ClassMethods#run} called on them.
+  #   Any subsections can be yielded to using yield or {#yieldall}
   def sections(*args); end
 
   # Calls the ERB file from the last inherited template with {#section}.erb
+  #
+  # @param sect [Symbol, String] if provided, uses a specific section name
+  # @return [String] the rendered ERB file in any of the inherited template
+  #   paths.
   def superb(sect = T.unsafe(nil), &block); end
 
   # Yields all subsections with any extra options
+  #
+  # @param opts [Hash] extra options to be applied to subsections
   def yieldall(opts = T.unsafe(nil), &block); end
 
   protected
@@ -7181,7 +12583,10 @@ module YARD::Templates::Template
   private
 
   def add_options(opts = T.unsafe(nil)); end
+
+  # @raise [ArgumentError]
   def cache(section); end
+
   def cache_filename(section); end
   def render_section(section, &block); end
   def set_ivars; end
@@ -7195,6 +12600,13 @@ module YARD::Templates::Template
     # is given, the proc will be called with the {Template#options} hash containing
     # relevant template information like the object, format, and more. The proc should
     # return a module or nil if there is none.
+    #
+    # @example Adding in extra mixins to include on a template
+    #   Template.extra_includes << MyHelper
+    # @example Conditionally including a mixin if the format is html
+    #   Template.extra_includes << proc {|opts| MyHelper if opts.format == :html }
+    # @return [Array<Module, Proc>] a list of modules to be automatically included
+    #   into any new template module
     def extra_includes; end
 
     # Extra includes are mixins that are included after a template is created. These
@@ -7204,11 +12616,24 @@ module YARD::Templates::Template
     # is given, the proc will be called with the {Template#options} hash containing
     # relevant template information like the object, format, and more. The proc should
     # return a module or nil if there is none.
+    #
+    # @example Adding in extra mixins to include on a template
+    #   Template.extra_includes << MyHelper
+    # @example Conditionally including a mixin if the format is html
+    #   Template.extra_includes << proc {|opts| MyHelper if opts.format == :html }
+    # @return [Array<Module, Proc>] a list of modules to be automatically included
+    #   into any new template module
     def extra_includes=(_arg0); end
 
     # Includes the {extra_includes} modules into the template object.
+    #
+    # @param template [Template] the template object to mixin the extra includes.
+    # @param options [SymbolHash] the options hash containing all template information
+    # @return [void]
     def include_extra(template, options); end
 
+    # @private
+    # @private
     def included(klass); end
   end
 end
@@ -7217,6 +12642,9 @@ module YARD::Templates::Template::ClassMethods
   def initialize(path, full_paths); end
 
   # Alias for creating a {Section} with arguments
+  #
+  # @see Section#initialize
+  # @since 0.6.0
   def S(*args); end
 
   # Alias for creating {Engine.template}.
@@ -7225,19 +12653,36 @@ module YARD::Templates::Template::ClassMethods
   # Searches for a file identified by +basename+ in the template's
   # path as well as any mixed in template paths. Equivalent to calling
   # {ClassMethods#find_nth_file} with index of 1.
+  #
+  # @param basename [String] the filename to search for
+  # @return [String] the full path of a file on disk with filename
+  #   +basename+ in one of the template's paths.
+  # @see find_nth_file
   def find_file(basename); end
 
   # Searches for the nth file (where n = +index+) identified
   # by basename in the template's path and any mixed in template paths.
+  #
+  # @param basename [String] the filename to search for
+  # @param index [Fixnum] the nth existing file to return
+  # @return [String] the full path of the nth file on disk with
+  #   filename +basename+ in one of the template paths
   def find_nth_file(basename, index = T.unsafe(nil)); end
 
   # Returns the value of attribute full_path.
   def full_path; end
 
   # Sets the attribute full_path
+  #
+  # @param value the value to set the attribute full_path to.
   def full_path=(_arg0); end
 
+  # @note This method caches path results. Paths should not be modified
+  #   after this method is called; call {#reset_full_paths} to reset cache.
+  # @return [Array<String>] a list of full paths
   def full_paths; end
+
+  # @return [Boolean]
   def is_a?(klass); end
 
   # Creates a new template object to be rendered with {Template#run}
@@ -7247,6 +12692,8 @@ module YARD::Templates::Template::ClassMethods
   def path; end
 
   # Sets the attribute path
+  #
+  # @param value the value to set the attribute path to.
   def path=(_arg0); end
 
   # Resets cache for {#full_paths}
@@ -7263,44 +12710,139 @@ end
 
 # An Options class containing default options for base template rendering. For
 # options specific to generation of HTML output, see {CLI::YardocOptions}.
+#
+# @see CLI::YardocOptions
 class YARD::Templates::TemplateOptions < ::YARD::Options
+  # @return [OpenStruct] an open struct containing any global state across all
+  #   generated objects in a template.
   def __globals; end
+
+  # @return [String] the default return type for a method with no return tags
   def default_return; end
+
+  # @return [String] the default return type for a method with no return tags
   def default_return=(_arg0); end
+
+  # @example A list of mixin path names (including wildcards)
+  #   opts.embed_mixins #=> ['ClassMethods', '*Helper', 'YARD::*']
+  # @return [Array<String>] an array of module name wildcards to embed into
+  #   class documentation as if their methods were defined directly in the class.
+  #   Useful for modules like ClassMethods. If the name contains '::', the module
+  #   is matched against the full mixin path, otherwise only the module name is used.
   def embed_mixins; end
+
+  # @example A list of mixin path names (including wildcards)
+  #   opts.embed_mixins #=> ['ClassMethods', '*Helper', 'YARD::*']
+  # @return [Array<String>] an array of module name wildcards to embed into
+  #   class documentation as if their methods were defined directly in the class.
+  #   Useful for modules like ClassMethods. If the name contains '::', the module
+  #   is matched against the full mixin path, otherwise only the module name is used.
   def embed_mixins=(_arg0); end
+
+  # @param mixin [CodeObjects::Base] accepts any code object, but returns
+  #   nil unless the object is a module.
+  # @return [Boolean] whether a mixin matches the embed_mixins list
+  # @return [nil] if the mixin is not a module object
   def embed_mixins_match?(mixin); end
+
+  # @return [Symbol] the template output format
   def format; end
+
+  # @return [Symbol] the template output format
   def format=(_arg0); end
+
+  # @return [OpenStruct] an open struct containing any global state across all
+  #   generated objects in a template.
   def globals; end
+
+  # @return [OpenStruct] an open struct containing any global state across all
+  #   generated objects in a template.
   def globals=(_arg0); end
+
+  # @return [Boolean] whether void methods should show "void" in their signature
   def hide_void_return; end
+
+  # @return [Boolean] whether void methods should show "void" in their signature
   def hide_void_return=(_arg0); end
+
+  # @return [Boolean] whether code blocks should be syntax highlighted
   def highlight; end
+
+  # @return [Boolean] whether code blocks should be syntax highlighted
   def highlight=(_arg0); end
+
+  # @return [Boolean] whether the page is the "index"
   def index; end
+
+  # @return [Boolean] whether the page is the "index"
   def index=(_arg0); end
+
+  # @return [Symbol] the markup format to use when parsing docstrings
   def markup; end
+
+  # @return [Symbol] the markup format to use when parsing docstrings
   def markup=(_arg0); end
+
+  # @return [Class] the markup provider class for the markup format
   def markup_provider; end
+
+  # @return [Class] the markup provider class for the markup format
   def markup_provider=(_arg0); end
+
+  # @deprecated use {#highlight} instead.
+  # @return [Boolean] whether highlighting should be ignored
   def no_highlight; end
+
   def no_highlight=(value); end
+
+  # @return [CodeObjects::Base] the main object being generated in the template
   def object; end
+
+  # @return [CodeObjects::Base] the main object being generated in the template
   def object=(_arg0); end
+
+  # @return [CodeObjects::Base] the owner of the generated object
   def owner; end
+
+  # @return [CodeObjects::Base] the owner of the generated object
   def owner=(_arg0); end
+
+  # @return [String] the title of a given page
   def page_title; end
+
+  # @return [String] the title of a given page
   def page_title=(_arg0); end
+
+  # @return [Boolean] whether serialization should be performed
   def serialize; end
+
+  # @return [Boolean] whether serialization should be performed
   def serialize=(_arg0); end
+
+  # @return [Serializers::Base] the serializer used to generate links and serialize
+  #   output. Serialization output only occurs if {#serialize} is +true+.
   def serializer; end
+
+  # @return [Serializers::Base] the serializer used to generate links and serialize
+  #   output. Serialization output only occurs if {#serialize} is +true+.
   def serializer=(_arg0); end
+
+  # @return [Symbol] the template name used to render output
   def template; end
+
+  # @return [Symbol] the template name used to render output
   def template=(_arg0); end
+
+  # @return [Symbol] the template type used to generate output
   def type; end
+
+  # @return [Symbol] the template type used to generate output
   def type=(_arg0); end
+
+  # @return [Verifier] the verifier object
   def verifier; end
+
+  # @return [Verifier] the verifier object
   def verifier=(_arg0); end
 end
 
@@ -7315,17 +12857,54 @@ YARD::VERSION = T.let(T.unsafe(nil), String)
 # * +@TAGNAME+ is translated into +object.tag('TAGNAME')+
 # * +@@TAGNAME+ is translated into +object.tags('TAGNAME')+
 # * +object+ can be omitted as target for method calls (it is implied)
+#
+# @example Create a verifier to check for objects that don't have @private tags
+#   verifier = Verifier.new('!@private')
+#   verifier.call(object) # => true (no @private tag)
+# @example Create a verifier to find any return tag with an empty description
+#   Verifier.new('@return.text.empty?')
+#   # Equivalent to:
+#   Verifier.new('object.tag(:return).text.empty?')
+# @example Check if there are any @param tags
+#   Verifier.new('@@param.empty?')
+#   # Equivalent to:
+#   Verifier.new('object.tags(:param).empty?')
+# @example Using +object+ or +o+ to look up object attributes directly
+#   Verifier.new('object.docstring == "hello world"')
+#   # Equivalent to:
+#   Verifier.new('o.docstring == "hello world"')
+# @example Without using +object+ or +o+
+#   Verifier.new('tag(:return).size == 1 || has_tag?(:author)')
+# @example Specifying multiple expressions
+#   Verifier.new('@return', '@param', '@yield')
+#   # Equivalent to:
+#   Verifier.new('@return && @param && @yield')
 class YARD::Verifier
   # Creates a verifier from a set of expressions
+  #
+  # @param expressions [Array<String>] a list of Ruby expressions to
+  #   parse.
+  # @return [Verifier] a new instance of Verifier
   def initialize(*expressions); end
 
   # Adds a set of expressions and recompiles the verifier
+  #
+  # @param expressions [Array<String>] a list of expressions
+  # @return [void]
+  # @since 0.5.6
   def add_expressions(*expressions); end
 
   # Tests the expressions on the object.
+  #
+  # @note If the object is a {CodeObjects::Proxy} the result will always be true.
+  # @param object [CodeObjects::Base] the object to verify
+  # @return [Boolean] the result of the expressions
   def call(object); end
 
+  # @return [Array<String>] a list of all expressions the verifier checks for
+  # @since 0.5.6
   def expressions; end
+
   def expressions=(value); end
 
   # Passes any method calls to the object from the {#call}
@@ -7333,33 +12912,49 @@ class YARD::Verifier
 
   # Runs a list of objects against the verifier and returns the subset
   # of verified objects.
+  #
+  # @param list [Array<CodeObjects::Base>] a list of code objects
+  # @return [Array<CodeObjects::Base>] a list of code objects that match
+  #   the verifier.
   def run(list); end
 
   protected
 
+  # @return [CodeObjects::Base] the current object being tested
   def o; end
+
+  # @return [CodeObjects::Base] the current object being tested
   def object; end
 
   private
 
   # Creates the +__execute+ method by evaluating the expressions
   # as Ruby code
+  #
+  # @return [void]
   def create_method_from_expressions; end
 
   # Modifies nil to not throw NoMethodErrors. This allows
   # syntax like object.tag(:return).text to work if the #tag
   # call returns nil, which means users don't need to perform
   # stringent nil checking
+  #
+  # @return [void]
   def modify_nilclass; end
 
   # Parses a single expression, handling some of the DSL syntax.
   #
   # The syntax "@tag" should be turned into object.tag(:tag),
   # and "@@tag" should be turned into object.tags(:tag)
+  #
+  # @return [String] the parsed expression
   def parse_expression(expr); end
 
   # Returns the state of NilClass back to normal
+  #
+  # @return [void]
   def unmodify_nilclass; end
 end
 
+# @private
 YARD::Verifier::NILCLASS_METHODS = T.let(T.unsafe(nil), Array)

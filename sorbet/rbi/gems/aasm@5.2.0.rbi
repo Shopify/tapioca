@@ -36,6 +36,7 @@ end
 
 # Persistence
 class AASM::Base
+  # @return [Base] a new instance of Base
   def initialize(klass, name, state_machine, options = T.unsafe(nil), &block); end
 
   def after_all_events(*callbacks, &block); end
@@ -89,12 +90,18 @@ class AASM::Base
 
   def configure(key, default_value); end
   def create_scope(name); end
+
+  # @return [Boolean]
   def create_scope?(name); end
+
   def create_scopes(name); end
   def default_column; end
   def interpret_state_args(args); end
   def namespace; end
+
+  # @return [Boolean]
   def namespace?; end
+
   def safely_define_method(klass, method_name, method_definition); end
   def setup_no_direct_assignment(aasm_name); end
   def setup_timestamps(aasm_name); end
@@ -103,6 +110,8 @@ end
 
 module AASM::ClassMethods
   # this is the entry point for all state and event definitions
+  #
+  # @raise [ArgumentError]
   def aasm(*args, &block); end
 
   # make sure inheritance (aka subclassing) works with AASM
@@ -126,6 +135,8 @@ class AASM::Configuration
   def enum; end
 
   # Sets the attribute enum
+  #
+  # @param value the value to set the attribute enum to.
   def enum=(_arg0); end
 
   # Configure a logger, with default being a Logger to STDERR
@@ -199,6 +210,8 @@ class AASM::Configuration
     def hide_warnings; end
 
     # Sets the attribute hide_warnings
+    #
+    # @param value the value to set the attribute hide_warnings to.
     def hide_warnings=(_arg0); end
   end
 end
@@ -208,6 +221,7 @@ module AASM::Core; end
 class AASM::Core::Event
   include ::AASM::DslHelper
 
+  # @return [Event] a new instance of Event
   def initialize(name, state_machine, options = T.unsafe(nil), &block); end
 
   def ==(event); end
@@ -224,6 +238,8 @@ class AASM::Core::Event
   # a neutered version of fire - it doesn't actually fire the event, it just
   # executes the transition guards to determine if a transition is even
   # an option given current conditions.
+  #
+  # @return [Boolean]
   def may_fire?(obj, to_state = T.unsafe(nil), *args); end
 
   # Returns the value of attribute name.
@@ -241,8 +257,13 @@ class AASM::Core::Event
   def transitions(definitions = T.unsafe(nil), &block); end
 
   def transitions_from_state(state); end
+
+  # @return [Boolean]
   def transitions_from_state?(state); end
+
   def transitions_to_state(state); end
+
+  # @return [Boolean]
   def transitions_to_state?(state); end
 
   private
@@ -263,14 +284,16 @@ end
 class AASM::Core::Invoker
   # Initialize a new invoker instance.
   # NOTE that invoker must be used per-subject/record
-  # (one instance per subject/record)
+  #      (one instance per subject/record)
   #
   # ==Options:
   #
   # +subject+ - invoking subject, may be Proc,
-  # Class, String, Symbol or Array
+  #             Class, String, Symbol or Array
   # +record+  - invoking record
   # +args+    - arguments which will be passed to the callback
+  #
+  # @return [Invoker] a new instance of Invoker
   def initialize(subject, record, args); end
 
   def invoke; end
@@ -297,7 +320,7 @@ class AASM::Core::Invoker
   # ==Options:
   #
   # +options+ - hash of options which will be passed to
-  # concrete invokers
+  #             concrete invokers
   #
   # ==Example:
   #
@@ -342,13 +365,15 @@ module AASM::Core::Invokers; end
 class AASM::Core::Invokers::BaseInvoker
   # Initialize a new concrete invoker instance.
   # NOTE that concrete invoker must be used per-subject/record
-  # (one instance per subject/record)
+  #      (one instance per subject/record)
   #
   # ==Options:
   #
   # +subject+ - invoking subject comparable with this invoker
   # +record+  - invoking record
   # +args+    - arguments which will be passed to the callback
+  #
+  # @return [BaseInvoker] a new instance of BaseInvoker
   def initialize(subject, record, args); end
 
   # Returns the value of attribute args.
@@ -361,12 +386,19 @@ class AASM::Core::Invokers::BaseInvoker
   def invoke; end
 
   # Execute concrete invoker
+  #
+  # @raise [NoMethodError]
   def invoke_subject; end
 
   # Log failed invoking
+  #
+  # @raise [NoMethodError]
   def log_failure; end
 
   # Check if concrete invoker may be invoked for a specified subject
+  #
+  # @raise [NoMethodError]
+  # @return [Boolean]
   def may_invoke?; end
 
   # Returns the value of attribute record.
@@ -391,6 +423,8 @@ end
 class AASM::Core::Invokers::ClassInvoker < ::AASM::Core::Invokers::BaseInvoker
   def invoke_subject; end
   def log_failure; end
+
+  # @return [Boolean]
   def may_invoke?; end
 
   private
@@ -407,6 +441,8 @@ end
 class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
   def invoke_subject; end
   def log_failure; end
+
+  # @return [Boolean]
   def may_invoke?; end
 
   private
@@ -421,6 +457,8 @@ end
 class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
   def invoke_subject; end
   def log_failure; end
+
+  # @return [Boolean]
   def may_invoke?; end
 
   private
@@ -429,10 +467,13 @@ class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
   def log_proc_info; end
   def log_source_location; end
   def parameters_to_arity; end
+
+  # @return [Boolean]
   def support_parameters?; end
 end
 
 class AASM::Core::State
+  # @return [State] a new instance of State
   def initialize(name, klass, state_machine, options = T.unsafe(nil)); end
 
   def <=>(state); end
@@ -471,9 +512,12 @@ end
 class AASM::Core::Transition
   include ::AASM::DslHelper
 
+  # @return [Transition] a new instance of Transition
   def initialize(event, opts, &block); end
 
   def ==(obj); end
+
+  # @return [Boolean]
   def allowed?(obj, *args); end
 
   # Returns the value of attribute event.
@@ -487,7 +531,9 @@ class AASM::Core::Transition
   # Returns the value of attribute from.
   def from; end
 
+  # @return [Boolean]
   def from?(value); end
+
   def invoke_success_callbacks(obj, *args); end
 
   # Returns the value of attribute opts.
@@ -514,6 +560,7 @@ module AASM::DslHelper
 end
 
 class AASM::DslHelper::Proxy
+  # @return [Proxy] a new instance of Proxy
   def initialize(options, valid_keys, source); end
 
   def method_missing(name, *args, &block); end
@@ -522,17 +569,23 @@ class AASM::DslHelper::Proxy
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 end
 
 class AASM::InstanceBase
   # instance of the class including AASM, name of the state machine
+  #
+  # @return [InstanceBase] a new instance of InstanceBase
   def initialize(instance, name = T.unsafe(nil)); end
 
   # Returns the value of attribute current_event.
   def current_event; end
 
   # Sets the attribute current_event
+  #
+  # @param value the value to set the attribute current_event to.
   def current_event=(_arg0); end
 
   def current_state; end
@@ -547,23 +600,34 @@ class AASM::InstanceBase
   def from_state; end
 
   # Sets the attribute from_state
+  #
+  # @param value the value to set the attribute from_state to.
   def from_state=(_arg0); end
 
   def human_state; end
+
+  # @return [Boolean]
   def may_fire_event?(name, *args); end
+
   def permitted_transitions; end
   def set_current_state_with_persistence(state); end
+
+  # @raise [AASM::UndefinedState]
   def state_object_for_name(name); end
+
   def states(options = T.unsafe(nil), *args); end
 
   # Returns the value of attribute to_state.
   def to_state; end
 
   # Sets the attribute to_state
+  #
+  # @param value the value to set the attribute to_state to.
   def to_state=(_arg0); end
 end
 
 class AASM::InvalidTransition < ::RuntimeError
+  # @return [InvalidTransition] a new instance of InvalidTransition
   def initialize(object, event_name, state_machine_name, failures = T.unsafe(nil)); end
 
   # Returns the value of attribute event_name.
@@ -626,6 +690,7 @@ end
 module AASM::Persistence::Base
   mixes_in_class_methods ::AASM::Persistence::Base::ClassMethods
 
+  # @return [Boolean]
   def aasm_new_record?; end
 
   # Returns the value of the aasm.attribute_name - called from <tt>aasm.current_state</tt>
@@ -633,23 +698,23 @@ module AASM::Persistence::Base
   # If it's a new record, and the aasm state column is blank it returns the initial state
   # (example provided here for ActiveRecord, but it's true for Mongoid as well):
   #
-  # class Foo < ActiveRecord::Base
-  # include AASM
-  # aasm :column => :status do
-  # state :opened
-  # state :closed
-  # end
-  # end
+  #   class Foo < ActiveRecord::Base
+  #     include AASM
+  #     aasm :column => :status do
+  #       state :opened
+  #       state :closed
+  #     end
+  #   end
   #
-  # foo = Foo.new
-  # foo.current_state # => :opened
-  # foo.close
-  # foo.current_state # => :closed
+  #   foo = Foo.new
+  #   foo.current_state # => :opened
+  #   foo.close
+  #   foo.current_state # => :closed
   #
-  # foo = Foo.find(1)
-  # foo.current_state # => :opened
-  # foo.aasm_state = nil
-  # foo.current_state # => nil
+  #   foo = Foo.find(1)
+  #   foo.current_state # => :opened
+  #   foo.aasm_state = nil
+  #   foo.current_state # => nil
   #
   # NOTE: intended to be called from an event
   #
@@ -677,6 +742,7 @@ module AASM::Persistence::PlainPersistence
 end
 
 class AASM::StateMachine
+  # @return [StateMachine] a new instance of StateMachine
   def initialize(name); end
 
   def add_event(name, options, &block); end
@@ -728,6 +794,7 @@ class AASM::StateMachine
 end
 
 class AASM::StateMachineStore
+  # @return [StateMachineStore] a new instance of StateMachineStore
   def initialize; end
 
   def [](name); end

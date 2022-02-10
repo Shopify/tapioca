@@ -32,7 +32,9 @@ module IdentityCache
   def fetch_read_only_records=(val); end
 
   class << self
+    # @raise [AlreadyIncludedError]
     def append_features(base); end
+
     def cache; end
 
     # Sets the cache adaptor IdentityCache will be using
@@ -66,6 +68,8 @@ module IdentityCache
     def logger; end
 
     # Sets the attribute logger
+    #
+    # @param value the value to set the attribute logger to.
     def logger=(_arg0); end
 
     def map_cached_nil_for(value); end
@@ -74,10 +78,16 @@ module IdentityCache
     def readonly; end
 
     # Sets the attribute readonly
+    #
+    # @param value the value to set the attribute readonly to.
     def readonly=(_arg0); end
 
+    # @return [Boolean]
     def should_fill_cache?; end
+
+    # @return [Boolean]
     def should_use_cache?; end
+
     def unmap_cached_nil_for(value); end
     def with_fetch_read_only_records(value = T.unsafe(nil)); end
 
@@ -161,12 +171,15 @@ IdentityCache::CACHED_NIL = T.let(T.unsafe(nil), Symbol)
 IdentityCache::CACHE_VERSION = T.let(T.unsafe(nil), Integer)
 
 class IdentityCache::CacheFetcher
+  # @return [CacheFetcher] a new instance of CacheFetcher
   def initialize(cache_backend); end
 
   # Returns the value of attribute cache_backend.
   def cache_backend; end
 
   # Sets the attribute cache_backend
+  #
+  # @param value the value to set the attribute cache_backend to.
   def cache_backend=(_arg0); end
 
   def clear; end
@@ -224,22 +237,30 @@ IdentityCache::CacheKeyGeneration::DEFAULT_NAMESPACE = T.let(T.unsafe(nil), Stri
 #
 # ```
 # interface _CacheFetcher[DbKey, DbValue, CacheableValue]
-# def cache_key: (DbKey) -> String
-# def cache_encode: (DbValue) -> CacheableValue
-# def cache_decode: (CacheableValue) -> DbValue
-# def load_one_from_db: (DbKey) -> DbValue
-# def load_multi_from_db: (Array[DbKey]) -> Hash[DbKey, DbValue]
+#   def cache_key: (DbKey) -> String
+#   def cache_encode: (DbValue) -> CacheableValue
+#   def cache_decode: (CacheableValue) -> DbValue
+#   def load_one_from_db: (DbKey) -> DbValue
+#   def load_multi_from_db: (Array[DbKey]) -> Hash[DbKey, DbValue]
 # end
 # ```
 module IdentityCache::CacheKeyLoader
   class << self
     # Load a single key for a cache fetcher.
+    #
+    # @param cache_fetcher [_CacheFetcher]
+    # @param db_key Reference to what to load from the database.
+    # @return The database value corresponding to the database key.
     def load(cache_fetcher, db_key); end
 
     # Load multiple keys for multiple cache fetchers
     def load_batch(cache_fetcher_to_db_keys_hash); end
 
     # Load multiple keys for a cache fetcher.
+    #
+    # @param cache_fetcher [_CacheFetcher]
+    # @param db_key [Array] Reference to what to load from the database.
+    # @return [Hash] A hash mapping each database key to its corresponding value
     def load_multi(cache_fetcher, db_keys); end
 
     private
@@ -254,24 +275,41 @@ module IdentityCache::Cached; end
 class IdentityCache::Cached::Association
   include ::IdentityCache::Cached::EmbeddedFetching
 
+  # @return [Association] a new instance of Association
   def initialize(name, reflection:); end
 
+  # @raise [NotImplementedError]
   def build; end
 
   # Returns the value of attribute cached_accessor_name.
   def cached_accessor_name; end
 
+  # @raise [NotImplementedError]
   def clear(_record); end
+
+  # @return [Boolean]
   def embedded?; end
+
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def embedded_by_reference?; end
+
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def embedded_recursively?; end
+
+  # @raise [NotImplementedError]
   def fetch(_records); end
+
+  # @raise [NotImplementedError]
   def fetch_async(_load_strategy, _records); end
+
   def inverse_name; end
 
   # Returns the value of attribute name.
   def name; end
 
+  # @raise [NotImplementedError]
   def read(_record); end
 
   # Returns the value of attribute records_variable_name.
@@ -281,10 +319,14 @@ class IdentityCache::Cached::Association
   def reflection; end
 
   def validate; end
+
+  # @raise [NotImplementedError]
   def write(_record, _value); end
 end
 
+# @abstract
 class IdentityCache::Cached::Attribute
+  # @return [Attribute] a new instance of Attribute
   def initialize(model, attribute_or_proc, alias_name, key_fields, unique); end
 
   # Returns the value of attribute alias_name.
@@ -308,14 +350,28 @@ class IdentityCache::Cached::Attribute
 
   private
 
+  # @abstract
+  # @raise [NotImplementedError]
   def cache_key_from_key_values(_key_values); end
+
   def cache_key_prefix; end
+
+  # @abstract
+  # @raise [NotImplementedError]
   def cast_db_key(_index_key); end
+
   def fetch_method_suffix; end
   def field_types; end
+
+  # @abstract
+  # @raise [NotImplementedError]
   def load_from_db_where_conditions(_index_key_or_keys); end
+
   def new_cache_key(record); end
   def old_cache_key(record); end
+
+  # @abstract
+  # @raise [NotImplementedError]
   def unhashed_values_cache_key_string(_index_key); end
 end
 
@@ -333,6 +389,7 @@ class IdentityCache::Cached::AttributeByMulti < ::IdentityCache::Cached::Attribu
 end
 
 class IdentityCache::Cached::AttributeByOne < ::IdentityCache::Cached::Attribute
+  # @return [AttributeByOne] a new instance of AttributeByOne
   def initialize(*_arg0); end
 
   def build; end
@@ -359,8 +416,13 @@ end
 class IdentityCache::Cached::BelongsTo < ::IdentityCache::Cached::Association
   def build; end
   def clear(record); end
+
+  # @return [Boolean]
   def embedded_by_reference?; end
+
+  # @return [Boolean]
   def embedded_recursively?; end
+
   def fetch(records); end
   def fetch_async(load_strategy, records); end
 
@@ -373,7 +435,9 @@ end
 module IdentityCache::Cached::EmbeddedFetching
   private
 
+  # @return [Boolean]
   def embedded_fetched?(records); end
+
   def fetch_embedded(records); end
   def fetch_embedded_async(load_strategy, records); end
 end
@@ -392,6 +456,7 @@ end
 IdentityCache::Cached::Prefetcher::ASSOCIATION_FETCH_EVENT = T.let(T.unsafe(nil), String)
 
 class IdentityCache::Cached::PrimaryIndex
+  # @return [PrimaryIndex] a new instance of PrimaryIndex
   def initialize(model); end
 
   def cache_decode(cache_value); end
@@ -417,6 +482,7 @@ end
 module IdentityCache::Cached::Recursive; end
 
 class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::Association
+  # @return [Association] a new instance of Association
   def initialize(name, reflection:); end
 
   def build; end
@@ -425,8 +491,12 @@ class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::A
   # Returns the value of attribute dehydrated_variable_name.
   def dehydrated_variable_name; end
 
+  # @return [Boolean]
   def embedded_by_reference?; end
+
+  # @return [Boolean]
   def embedded_recursively?; end
+
   def fetch(records); end
   def fetch_async(load_strategy, records); end
   def read(record); end
@@ -435,7 +505,9 @@ class IdentityCache::Cached::Recursive::Association < ::IdentityCache::Cached::A
 
   private
 
+  # @return [Boolean]
   def embedded_fetched?(records); end
+
   def hydrate_association_target(associated_class, dehydrated_value); end
   def set_inverse(record, association_target); end
 end
@@ -445,11 +517,15 @@ class IdentityCache::Cached::Recursive::HasOne < ::IdentityCache::Cached::Recurs
 module IdentityCache::Cached::Reference; end
 
 class IdentityCache::Cached::Reference::Association < ::IdentityCache::Cached::Association
+  # @return [Boolean]
   def embedded_by_reference?; end
+
+  # @return [Boolean]
   def embedded_recursively?; end
 end
 
 class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Reference::Association
+  # @return [HasMany] a new instance of HasMany
   def initialize(name, reflection:); end
 
   def build; end
@@ -469,13 +545,16 @@ class IdentityCache::Cached::Reference::HasMany < ::IdentityCache::Cached::Refer
 
   private
 
+  # @return [Boolean]
   def embedded_fetched?(records); end
+
   def ids_cached_reader_name; end
   def ids_name; end
   def singular_name; end
 end
 
 class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Reference::Association
+  # @return [HasOne] a new instance of HasOne
   def initialize(name, reflection:); end
 
   def build; end
@@ -495,7 +574,9 @@ class IdentityCache::Cached::Reference::HasOne < ::IdentityCache::Cached::Refere
 
   private
 
+  # @return [Boolean]
   def embedded_fetched?(records); end
+
   def id_cached_reader_name; end
   def id_name; end
 end
@@ -537,11 +618,11 @@ module IdentityCache::ConfigurationDSL::ClassMethods
   # fetch_attribute_by_id (or the value of the by option).
   #
   # == Example:
-  # class Product
-  # include IdentityCache
-  # cache_attribute :quantity, by: :name
-  # cache_attribute :quantity, by: [:name, :vendor]
-  # end
+  #   class Product
+  #     include IdentityCache
+  #     cache_attribute :quantity, by: :name
+  #     cache_attribute :quantity, by: [:name, :vendor]
+  #   end
   #
   # == Parameters
   # +attribute+ Symbol with the name of the attribute being cached
@@ -561,13 +642,13 @@ module IdentityCache::ConfigurationDSL::ClassMethods
   # whole entry expire when any of the embedded members change.
   #
   # == Example:
-  # class Product
-  # include IdentityCache
-  # has_many :options
-  # has_many :orders
-  # cache_has_many :options, embed: :ids
-  # cache_has_many :orders
-  # end
+  #   class Product
+  #     include IdentityCache
+  #     has_many :options
+  #     has_many :orders
+  #     cache_has_many :options, embed: :ids
+  #     cache_has_many :orders
+  #   end
   #
   # == Parameters
   # +association+ Name of the association being cached as a symbol
@@ -575,10 +656,10 @@ module IdentityCache::ConfigurationDSL::ClassMethods
   # == Options
   #
   # * embed: If `true`, IdentityCache will embed the associated records
-  # in the cache entries for this model, as well as all the embedded
-  # associations for the associated record recursively.
-  # If `:ids` (the default), it will only embed the ids for the associated
-  # records.
+  #   in the cache entries for this model, as well as all the embedded
+  #   associations for the associated record recursively.
+  #   If `:ids` (the default), it will only embed the ids for the associated
+  #   records.
   def cache_has_many(association, embed: T.unsafe(nil)); end
 
   # Will cache an association to the class including IdentityCache.
@@ -586,10 +667,10 @@ module IdentityCache::ConfigurationDSL::ClassMethods
   # as the parent.
   #
   # == Example:
-  # class Product
-  # cache_has_one :store, embed: true
-  # cache_has_one :vendor, embed: :id
-  # end
+  #   class Product
+  #     cache_has_one :store, embed: true
+  #     cache_has_one :vendor, embed: :id
+  #   end
   #
   # == Parameters
   # +association+ Symbol with the name of the association being cached
@@ -597,9 +678,9 @@ module IdentityCache::ConfigurationDSL::ClassMethods
   # == Options
   #
   # * embed: If `true`, IdentityCache will embed the associated record
-  # in the cache entries for this model, as well as all the embedded
-  # associations for the associated record recursively.
-  # If `:id`, it will only embed the id for the associated record.
+  #   in the cache entries for this model, as well as all the embedded
+  #   associations for the associated record recursively.
+  #   If `:id`, it will only embed the id for the associated record.
   def cache_has_one(association, embed:); end
 
   private
@@ -630,6 +711,7 @@ IdentityCache::Encoder::DEHYDRATE_EVENT = T.let(T.unsafe(nil), String)
 IdentityCache::Encoder::HYDRATE_EVENT = T.let(T.unsafe(nil), String)
 
 class IdentityCache::ExpiryHook
+  # @return [ExpiryHook] a new instance of ExpiryHook
   def initialize(cached_association); end
 
   def install; end
@@ -641,17 +723,23 @@ class IdentityCache::ExpiryHook
 
   def child_class; end
   def inverse_name; end
+
+  # @return [Boolean]
   def only_on_foreign_key_change?; end
+
   def parent_class; end
 end
 
 class IdentityCache::FallbackFetcher
+  # @return [FallbackFetcher] a new instance of FallbackFetcher
   def initialize(cache_backend); end
 
   # Returns the value of attribute cache_backend.
   def cache_backend; end
 
   # Sets the attribute cache_backend
+  #
+  # @param value the value to set the attribute cache_backend to.
   def cache_backend=(_arg0); end
 
   def clear; end
@@ -667,16 +755,27 @@ module IdentityCache::LoadStrategy; end
 module IdentityCache::LoadStrategy::Eager
   extend ::IdentityCache::LoadStrategy::Eager
 
+  # @yield [lazy_loader]
   def lazy_load; end
+
+  # @yield [CacheKeyLoader.load(cache_fetcher, db_key)]
   def load(cache_fetcher, db_key); end
+
+  # @yield [CacheKeyLoader.load_batch(db_keys_by_cache_fetcher)]
   def load_batch(db_keys_by_cache_fetcher); end
+
+  # @yield [CacheKeyLoader.load_multi(cache_fetcher, db_keys)]
   def load_multi(cache_fetcher, db_keys); end
 end
 
 class IdentityCache::LoadStrategy::Lazy
+  # @return [Lazy] a new instance of Lazy
   def initialize; end
 
+  # @yield [_self]
+  # @yieldparam _self [IdentityCache::LoadStrategy::Lazy] the object that the method was called on
   def lazy_load; end
+
   def load(cache_fetcher, db_key); end
   def load_batch(db_keys_by_cache_fetcher); end
   def load_multi(cache_fetcher, db_keys, &callback); end
@@ -688,6 +787,7 @@ class IdentityCache::LoadStrategy::Lazy
 end
 
 class IdentityCache::LoadStrategy::LoadRequest
+  # @return [LoadRequest] a new instance of LoadRequest
   def initialize(db_keys, callback); end
 
   def after_load(results); end
@@ -697,6 +797,7 @@ class IdentityCache::LoadStrategy::LoadRequest
 end
 
 class IdentityCache::LoadStrategy::MultiLoadRequest
+  # @return [MultiLoadRequest] a new instance of MultiLoadRequest
   def initialize(load_requests); end
 
   def after_load(all_results); end
@@ -704,6 +805,7 @@ class IdentityCache::LoadStrategy::MultiLoadRequest
 end
 
 class IdentityCache::MemoizedCacheProxy
+  # @return [MemoizedCacheProxy] a new instance of MemoizedCacheProxy
   def initialize(cache_adaptor = T.unsafe(nil)); end
 
   def cache_backend=(cache_adaptor); end
@@ -726,7 +828,10 @@ class IdentityCache::MemoizedCacheProxy
   def fetch_multi_memoized(keys); end
   def instrument_duration(payload, key); end
   def log_multi_result(keys, memo_miss_keys, cache_miss_keys); end
+
+  # @return [Boolean]
   def memoizing?; end
+
   def set_instrumentation_payload(payload, num_keys:, memo_misses:, cache_misses:); end
 end
 
@@ -743,6 +848,8 @@ module IdentityCache::ParentModelExpiration
   def add_record_to_cache_expiry_set(parents_to_expire, record); end
   def expire_parent_caches; end
   def parents_to_expire_on_changes(parents_to_expire, association_name, cached_associations); end
+
+  # @return [Boolean]
   def should_expire_identity_cache_parent?(foreign_key, only_on_foreign_key_change); end
 
   class << self
@@ -783,6 +890,8 @@ module IdentityCache::QueryAPI
   # Invalidate the cache data associated with the record.
   def expire_cache; end
 
+  # @api private
+  # @return [Boolean]
   def was_new_record?; end
 
   private
@@ -791,7 +900,10 @@ module IdentityCache::QueryAPI
 end
 
 module IdentityCache::QueryAPI::ClassMethods
+  # @api private
   def all_cached_associations; end
+
+  # @api private
   def cached_association(name); end
 
   # Prefetches cached associations on a collection of records
@@ -821,6 +933,7 @@ module IdentityCache::ShouldUseCache
 end
 
 module IdentityCache::ShouldUseCache::ClassMethods
+  # @return [Boolean]
   def should_use_cache?; end
 end
 
@@ -849,7 +962,11 @@ module IdentityCache::WithPrimaryIndex
   mixes_in_class_methods ::IdentityCache::WithPrimaryIndex::ClassMethods
 
   def expire_cache; end
+
+  # @api private
   def expire_primary_index; end
+
+  # @api private
   def primary_cache_index_key; end
 
   module GeneratedClassMethods
@@ -904,10 +1021,10 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   #
   # == Example:
   #
-  # class Product
-  # include IdentityCache
-  # cache_index :name, :vendor
-  # end
+  #  class Product
+  #    include IdentityCache
+  #    cache_index :name, :vendor
+  #  end
   #
   # Will add Product.fetch_by_name_and_vendor
   #
@@ -919,10 +1036,13 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # * unique: if the index would only have unique values. Default is false
   def cache_index(*fields, unique: T.unsafe(nil)); end
 
+  # @api private
   def cached_primary_index; end
 
   # Similar to ActiveRecord::Base#exists? will return true if the id can be
   # found in the cache or in the DB.
+  #
+  # @return [Boolean]
   def exists_with_identity_cache?(id); end
 
   # Invalidates the primary cache index for the associated record. Will not invalidate cached attributes.
@@ -965,6 +1085,7 @@ module IdentityCache::WithoutPrimaryIndex
   mixes_in_class_methods ::IdentityCache::WithoutPrimaryIndex::ClassMethods
 
   class << self
+    # @raise [AlreadyIncludedError]
     def append_features(base); end
   end
 

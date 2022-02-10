@@ -172,6 +172,8 @@ class Spoom::Cli::Main < ::Thor
 
   class << self
     # Utils
+    #
+    # @return [Boolean]
     def exit_on_failure?; end
   end
 end
@@ -244,6 +246,7 @@ class Spoom::Coverage::Cards::Card < ::Spoom::Coverage::Template
   sig { params(template: String, title: T.nilable(String), body: T.nilable(String)).void }
   def initialize(template: T.unsafe(nil), title: T.unsafe(nil), body: T.unsafe(nil)); end
 
+  # @return [String, nil]
   def body; end
 
   sig { returns(T.nilable(String)) }
@@ -252,12 +255,14 @@ end
 
 Spoom::Coverage::Cards::Card::TEMPLATE = T.let(T.unsafe(nil), String)
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Cards::Erb < ::Spoom::Coverage::Cards::Card
   abstract!
 
   sig { void }
   def initialize; end
 
+  # @abstract
   sig { abstract.returns(String) }
   def erb; end
 
@@ -342,6 +347,7 @@ module Spoom::Coverage::D3
   end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Base
   abstract!
 
@@ -354,6 +360,7 @@ class Spoom::Coverage::D3::Base
   sig { returns(String) }
   def id; end
 
+  # @abstract
   sig { abstract.returns(String) }
   def script; end
 
@@ -414,6 +421,7 @@ class Spoom::Coverage::D3::ColorPalette < ::T::Struct
   end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Pie < ::Spoom::Coverage::D3::Base
   abstract!
 
@@ -456,6 +464,7 @@ class Spoom::Coverage::D3::Pie::Sigs < ::Spoom::Coverage::D3::Pie
   def tooltip; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   abstract!
 
@@ -468,6 +477,7 @@ class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
   sig { params(y: String, color: String, curve: String).returns(String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
 
+  # @abstract
   sig { abstract.returns(String) }
   def plot; end
 
@@ -550,10 +560,11 @@ class Spoom::Coverage::D3::Timeline::Sigs < ::Spoom::Coverage::D3::Timeline::Sta
   def tooltip; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
-  def initialize(*args, **_arg1, &blk); end
+  def initialize(*args, &blk); end
 
   sig { override.params(y: String, color: String, curve: String).returns(String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
@@ -576,6 +587,7 @@ class Spoom::Coverage::D3::Timeline::Versions < ::Spoom::Coverage::D3::Timeline
   def tooltip; end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Page < ::Spoom::Coverage::Template
   abstract!
 
@@ -585,6 +597,7 @@ class Spoom::Coverage::Page < ::Spoom::Coverage::Template
   sig { returns(String) }
   def body_html; end
 
+  # @abstract
   sig { abstract.returns(T::Array[Spoom::Coverage::Cards::Card]) }
   def cards; end
 
@@ -686,6 +699,7 @@ class Spoom::Coverage::SnapshotPrinter < ::Spoom::Printer
   def print_map(hash, total); end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Coverage::Template
   abstract!
 
@@ -846,6 +860,7 @@ end
 module Spoom::LSP; end
 
 class Spoom::LSP::Client
+  # @return [Client] a new instance of Client
   def initialize(sorbet_bin, *sorbet_args, path: T.unsafe(nil)); end
 
   def close; end
@@ -855,10 +870,15 @@ class Spoom::LSP::Client
   def next_id; end
 
   # LSP requests
+  #
+  # @raise [Error::AlreadyOpen]
   def open(workspace_path); end
 
   def read; end
+
+  # @raise [Error::BadHeaders]
   def read_raw; end
+
   def references(uri, line, column, include_decl = T.unsafe(nil)); end
   def send(message); end
   def send_raw(json_string); end
@@ -914,6 +934,7 @@ class Spoom::LSP::Error::AlreadyOpen < ::Spoom::LSP::Error; end
 class Spoom::LSP::Error::BadHeaders < ::Spoom::LSP::Error; end
 
 class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
+  # @return [Diagnostics] a new instance of Diagnostics
   def initialize(uri, diagnostics); end
 
   # Returns the value of attribute diagnostics.
@@ -965,6 +986,7 @@ end
 #
 # The language server protocol always uses `"2.0"` as the `jsonrpc` version.
 class Spoom::LSP::Message
+  # @return [Message] a new instance of Message
   def initialize; end
 
   def as_json; end
@@ -979,6 +1001,7 @@ end
 #
 # A processed notification message must not send a response back. They work like events.
 class Spoom::LSP::Notification < ::Spoom::LSP::Message
+  # @return [Notification] a new instance of Notification
   def initialize(method, params); end
 
   # Returns the value of attribute method.
@@ -1005,9 +1028,11 @@ class Spoom::LSP::Position < ::T::Struct
   end
 end
 
+# @abstract Subclasses must implement the `abstract` methods below.
 module Spoom::LSP::PrintableSymbol
   interface!
 
+  # @abstract
   sig { abstract.params(printer: Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 end
@@ -1033,6 +1058,7 @@ end
 #
 # Every processed request must send a response back to the sender of the request.
 class Spoom::LSP::Request < ::Spoom::LSP::Message
+  # @return [Request] a new instance of Request
   def initialize(id, method, params); end
 
   # Returns the value of attribute id.
@@ -1046,6 +1072,7 @@ class Spoom::LSP::Request < ::Spoom::LSP::Message
 end
 
 class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
+  # @return [ResponseError] a new instance of ResponseError
   def initialize(code, message, data); end
 
   # Returns the value of attribute code.
@@ -1091,6 +1118,8 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   def prefix; end
 
   # Sets the attribute prefix
+  #
+  # @param value the value to set the attribute prefix to.
   def prefix=(_arg0); end
 
   sig { params(objects: T::Array[Spoom::LSP::PrintableSymbol]).void }
@@ -1106,9 +1135,12 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   def seen; end
 
   # Sets the attribute seen
+  #
+  # @param value the value to set the attribute seen to.
   def seen=(_arg0); end
 end
 
+# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Printer
   include ::Spoom::Colorize
 
@@ -1132,6 +1164,7 @@ class Spoom::Printer
   sig { returns(T.any(IO, StringIO)) }
   def out; end
 
+  # @return [IO, StringIO]
   def out=(_arg0); end
 
   # Print `string` into `out`
@@ -1201,9 +1234,9 @@ Spoom::Sorbet::CONFIG_PATH = T.let(T.unsafe(nil), String)
 #
 # ```ruby
 # config = Spoom::Sorbet::Config.parse_string(<<~CONFIG)
-# a
-# --file=b
-# --ignore=c
+#   a
+#   --file=b
+#   --ignore=c
 # CONFIG
 # puts config.paths   # "a", "b"
 # puts config.ignore  # "c"
@@ -1212,16 +1245,19 @@ class Spoom::Sorbet::Config
   sig { void }
   def initialize; end
 
+  # @return [Array<String>]
   def allowed_extensions; end
 
   sig { returns(Spoom::Sorbet::Config) }
   def copy; end
 
+  # @return [Array<String>]
   def ignore; end
 
   sig { returns(T::Boolean) }
   def no_stdlib; end
 
+  # @return [Boolean]
   def no_stdlib=(_arg0); end
 
   # Returns self as a string of options that can be passed to Sorbet
@@ -1275,6 +1311,7 @@ class Spoom::Sorbet::Errors::Error
   sig { params(other: T.untyped).returns(Integer) }
   def <=>(other); end
 
+  # @return [Integer, nil]
   def code; end
 
   sig { returns(T.nilable(String)) }
@@ -1283,6 +1320,7 @@ class Spoom::Sorbet::Errors::Error
   sig { returns(T.nilable(Integer)) }
   def line; end
 
+  # @return [String, nil]
   def message; end
 
   sig { returns(T::Array[String]) }

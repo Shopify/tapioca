@@ -28,6 +28,8 @@ class Erubi::Engine
   # +:regexp+ :: The regexp to use for scanning.
   # +:src+ :: The initial value to use for the source code, an empty string by default.
   # +:trim+ :: Whether to trim leading and trailing whitespace, true by default.
+  #
+  # @return [Engine] a new instance of Engine
   def initialize(input, properties = T.unsafe(nil)); end
 
   # The variable name used for the buffer variable.
@@ -63,6 +65,8 @@ class Erubi::Engine
   def add_text(text); end
 
   # Raise an exception, as the base engine class does not support handling other indicators.
+  #
+  # @raise [ArgumentError]
   def handle(indicator, code, tailch, rspace, lspace); end
 end
 

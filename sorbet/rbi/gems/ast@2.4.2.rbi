@@ -62,19 +62,29 @@ class AST::Node
   # your code does not expect the argument to be frozen, use `#dup`.
   #
   # The `properties` hash is passed to {#assign_properties}.
+  #
+  # @return [Node] a new instance of Node
   def initialize(type, children = T.unsafe(nil), properties = T.unsafe(nil)); end
 
   # Concatenates `array` with `children` and returns the resulting node.
+  #
+  # @return [AST::Node]
   def +(array); end
 
   # Appends `element` to `children` and returns the resulting node.
+  #
+  # @return [AST::Node]
   def <<(element); end
 
   # Compares `self` to `other`, possibly converting with `to_ast`. Only
   # `type` and `children` are compared; metadata is deliberately ignored.
+  #
+  # @return [Boolean]
   def ==(other); end
 
   # Appends `element` to `children` and returns the resulting node.
+  #
+  # @return [AST::Node]
   def append(element); end
 
   # Returns the children of this node.
@@ -82,37 +92,55 @@ class AST::Node
   # The to_a alias is useful for decomposing nodes concisely.
   # For example:
   #
-  # node = s(:gasgn, :$foo, s(:integer, 1))
-  # var_name, value = *node
-  # p var_name # => :$foo
-  # p value    # => (integer 1)
+  #     node = s(:gasgn, :$foo, s(:integer, 1))
+  #     var_name, value = *node
+  #     p var_name # => :$foo
+  #     p value    # => (integer 1)
+  #
+  # @return [Array]
   def children; end
 
   # Nodes are already frozen, so there is no harm in returning the
   # current node as opposed to initializing from scratch and freezing
   # another one.
+  #
+  # @return self
   def clone; end
 
   # Concatenates `array` with `children` and returns the resulting node.
+  #
+  # @return [AST::Node]
   def concat(array); end
 
   # Enables matching for Node, where type is the first element
   # and the children are remaining items.
+  #
+  # @return [Array]
   def deconstruct; end
 
   # Nodes are already frozen, so there is no harm in returning the
   # current node as opposed to initializing from scratch and freezing
   # another one.
+  #
+  # @return self
   def dup; end
 
   # Test if other object is equal to
+  #
+  # @param other [Object]
+  # @return [Boolean]
   def eql?(other); end
 
   # Returns the precomputed hash value for this node
+  #
+  # @return [Fixnum]
   def hash; end
 
   # Converts `self` to a s-expression ruby string.
   # The code return will recreate the node, using the sexp module s()
+  #
+  # @param indent [Integer] Base indentation level.
+  # @return [String]
   def inspect(indent = T.unsafe(nil)); end
 
   # Returns the children of this node.
@@ -120,25 +148,38 @@ class AST::Node
   # The to_a alias is useful for decomposing nodes concisely.
   # For example:
   #
-  # node = s(:gasgn, :$foo, s(:integer, 1))
-  # var_name, value = *node
-  # p var_name # => :$foo
-  # p value    # => (integer 1)
+  #     node = s(:gasgn, :$foo, s(:integer, 1))
+  #     var_name, value = *node
+  #     p var_name # => :$foo
+  #     p value    # => (integer 1)
+  #
+  # @return [Array]
   def to_a; end
 
+  # @return [AST::Node] self
   def to_ast; end
 
   # Converts `self` to a pretty-printed s-expression.
+  #
+  # @param indent [Integer] Base indentation level.
+  # @return [String]
   def to_s(indent = T.unsafe(nil)); end
 
   # Converts `self` to a pretty-printed s-expression.
+  #
+  # @param indent [Integer] Base indentation level.
+  # @return [String]
   def to_sexp(indent = T.unsafe(nil)); end
 
   # Converts `self` to an Array where the first element is the type as a Symbol,
   # and subsequent elements are the same representation of its children.
+  #
+  # @return [Array<Symbol, [...Array]>]
   def to_sexp_array; end
 
   # Returns the type of this node.
+  #
+  # @return [Symbol]
   def type; end
 
   # Returns a new instance of Node where non-nil arguments replace the
@@ -149,6 +190,11 @@ class AST::Node
   # yield `(foo)`.
   #
   # If the resulting node would be identical to `self`, does nothing.
+  #
+  # @param type [Symbol, nil]
+  # @param children [Array, nil]
+  # @param properties [Hash, nil]
+  # @return [AST::Node]
   def updated(type = T.unsafe(nil), children = T.unsafe(nil), properties = T.unsafe(nil)); end
 
   protected
@@ -158,11 +204,15 @@ class AST::Node
   # attribute readers for such variables. The values passed in the hash
   # are not frozen or whitelisted; such behavior can also be implemented
   # by subclassing Node and overriding this method.
+  #
+  # @return [nil]
   def assign_properties(properties); end
 
   # Returns `@type` with all underscores replaced by dashes. This allows
   # to write symbol literals without quotes in Ruby sources and yet have
   # nicely looking s-expressions.
+  #
+  # @return [String]
   def fancy_type; end
 
   private
@@ -174,6 +224,8 @@ end
 # deprecated, since the module defines all of the behaviors that
 # the processor includes.  Any new libraries should use
 # {AST::Processor::Mixin} instead of subclassing this.
+#
+# @deprecated Use {AST::Processor::Mixin} instead.
 class AST::Processor
   include ::AST::Processor::Mixin
 end
@@ -189,20 +241,20 @@ end
 #
 # Terminals (AST nodes which do not have other AST nodes inside):
 #
-# * `(integer <int-literal>)`,
+#   * `(integer <int-literal>)`,
 #
 # Nonterminals (AST nodes with other nodes as children):
 #
-# * `(add <node> <node>)`,
-# * `(multiply <node> <node>)`,
-# * `(divide <node> <node>)`,
-# * `(negate <node>)`,
-# * `(store <node> <string-literal>)`: stores value of `<node>`
-# into a variable named `<string-literal>`,
-# * `(load <string-literal>)`: loads value of a variable named
-# `<string-literal>`,
-# * `(each <node> ...)`: computes each of the `<node>`s and
-# prints the result.
+#   * `(add <node> <node>)`,
+#   * `(multiply <node> <node>)`,
+#   * `(divide <node> <node>)`,
+#   * `(negate <node>)`,
+#   * `(store <node> <string-literal>)`: stores value of `<node>`
+#     into a variable named `<string-literal>`,
+#   * `(load <string-literal>)`: loads value of a variable named
+#     `<string-literal>`,
+#   * `(each <node> ...)`: computes each of the `<node>`s and
+#     prints the result.
 #
 # All AST nodes have the same Ruby class, and therefore they don't
 # know how to traverse themselves. (A solution which dynamically
@@ -212,127 +264,127 @@ end
 # have a handler for each nonterminal node which recursively
 # processes children nodes:
 #
-# require 'ast'
+#     require 'ast'
 #
-# class ArithmeticsProcessor
-# include AST::Processor::Mixin
-# # This method traverses any binary operators such as (add)
-# # or (multiply).
-# def process_binary_op(node)
-# # Children aren't decomposed automatically; it is
-# # suggested to use Ruby multiple assignment expansion,
-# # as it is very convenient here.
-# left_expr, right_expr = *node
+#     class ArithmeticsProcessor
+#       include AST::Processor::Mixin
+#       # This method traverses any binary operators such as (add)
+#       # or (multiply).
+#       def process_binary_op(node)
+#         # Children aren't decomposed automatically; it is
+#         # suggested to use Ruby multiple assignment expansion,
+#         # as it is very convenient here.
+#         left_expr, right_expr = *node
 #
-# # AST::Node#updated won't change node type if nil is
-# # passed as a first argument, which allows to reuse the
-# # same handler for multiple node types using `alias'
-# # (below).
-# node.updated(nil, [
-# process(left_expr),
-# process(right_expr)
-# ])
-# end
-# alias_method :on_add,      :process_binary_op
-# alias_method :on_multiply, :process_binary_op
-# alias_method :on_divide,   :process_binary_op
+#         # AST::Node#updated won't change node type if nil is
+#         # passed as a first argument, which allows to reuse the
+#         # same handler for multiple node types using `alias'
+#         # (below).
+#         node.updated(nil, [
+#           process(left_expr),
+#           process(right_expr)
+#         ])
+#       end
+#       alias_method :on_add,      :process_binary_op
+#       alias_method :on_multiply, :process_binary_op
+#       alias_method :on_divide,   :process_binary_op
 #
-# def on_negate(node)
-# # It is also possible to use #process_all for more
-# # compact code if every child is a Node.
-# node.updated(nil, process_all(node))
-# end
+#       def on_negate(node)
+#         # It is also possible to use #process_all for more
+#         # compact code if every child is a Node.
+#         node.updated(nil, process_all(node))
+#       end
 #
-# def on_store(node)
-# expr, variable_name = *node
+#       def on_store(node)
+#         expr, variable_name = *node
 #
-# # Note that variable_name is not a Node and thus isn't
-# # passed to #process.
-# node.updated(nil, [
-# process(expr),
-# variable_name
-# ])
-# end
+#         # Note that variable_name is not a Node and thus isn't
+#         # passed to #process.
+#         node.updated(nil, [
+#           process(expr),
+#           variable_name
+#         ])
+#       end
 #
-# # (load) is effectively a terminal node, and so it does
-# # not need an explicit handler, as the following is the
-# # default behavior.  Essentially, for any nodes that don't
-# # have a defined handler, the node remains unchanged.
-# def on_load(node)
-# nil
-# end
+#       # (load) is effectively a terminal node, and so it does
+#       # not need an explicit handler, as the following is the
+#       # default behavior.  Essentially, for any nodes that don't
+#       # have a defined handler, the node remains unchanged.
+#       def on_load(node)
+#         nil
+#       end
 #
-# def on_each(node)
-# node.updated(nil, process_all(node))
-# end
-# end
+#       def on_each(node)
+#         node.updated(nil, process_all(node))
+#       end
+#     end
 #
 # Let's test our ArithmeticsProcessor:
 #
-# include AST::Sexp
-# expr = s(:add, s(:integer, 2), s(:integer, 2))
+#     include AST::Sexp
+#     expr = s(:add, s(:integer, 2), s(:integer, 2))
 #
-# p ArithmeticsProcessor.new.process(expr) == expr # => true
+#     p ArithmeticsProcessor.new.process(expr) == expr # => true
 #
 # As expected, it does not change anything at all. This isn't
 # actually very useful, so let's now define a Calculator, which
 # will compute the expression values:
 #
-# # This Processor folds nonterminal nodes and returns an
-# # (integer) terminal node.
-# class ArithmeticsCalculator < ArithmeticsProcessor
-# def compute_op(node)
-# # First, node children are processed and then unpacked
-# # to local variables.
-# nodes = process_all(node)
+#     # This Processor folds nonterminal nodes and returns an
+#     # (integer) terminal node.
+#     class ArithmeticsCalculator < ArithmeticsProcessor
+#       def compute_op(node)
+#         # First, node children are processed and then unpacked
+#         # to local variables.
+#         nodes = process_all(node)
 #
-# if nodes.all? { |node| node.type == :integer }
-# # If each of those nodes represents a literal, we can
-# # fold this node!
-# values = nodes.map { |node| node.children.first }
-# AST::Node.new(:integer, [
-# yield(values)
-# ])
-# else
-# # Otherwise, we can just leave the current node in the
-# # tree and only update it with processed children
-# # nodes, which can be partially folded.
-# node.updated(nil, nodes)
-# end
-# end
+#         if nodes.all? { |node| node.type == :integer }
+#           # If each of those nodes represents a literal, we can
+#           # fold this node!
+#           values = nodes.map { |node| node.children.first }
+#           AST::Node.new(:integer, [
+#             yield(values)
+#           ])
+#         else
+#           # Otherwise, we can just leave the current node in the
+#           # tree and only update it with processed children
+#           # nodes, which can be partially folded.
+#           node.updated(nil, nodes)
+#         end
+#       end
 #
-# def on_add(node)
-# compute_op(node) { |left, right| left + right }
-# end
+#       def on_add(node)
+#         compute_op(node) { |left, right| left + right }
+#       end
 #
-# def on_multiply(node)
-# compute_op(node) { |left, right| left * right }
-# end
-# end
+#       def on_multiply(node)
+#         compute_op(node) { |left, right| left * right }
+#       end
+#     end
 #
 # Let's check:
 #
-# p ArithmeticsCalculator.new.process(expr) # => (integer 4)
+#     p ArithmeticsCalculator.new.process(expr) # => (integer 4)
 #
 # Excellent, the calculator works! Now, a careful reader could
 # notice that the ArithmeticsCalculator does not know how to
 # divide numbers. What if we pass an expression with division to
 # it?
 #
-# expr_with_division = \
-# s(:add,
-# s(:integer, 1),
-# s(:divide,
-# s(:add, s(:integer, 8), s(:integer, 4)),
-# s(:integer, 3))) # 1 + (8 + 4) / 3
+#     expr_with_division = \
+#       s(:add,
+#         s(:integer, 1),
+#         s(:divide,
+#           s(:add, s(:integer, 8), s(:integer, 4)),
+#           s(:integer, 3))) # 1 + (8 + 4) / 3
 #
-# folded_expr_with_division = ArithmeticsCalculator.new.process(expr_with_division)
-# p folded_expr_with_division
-# # => (add
-# #      (integer 1)
-# #      (divide
-# #        (integer 12)
-# #        (integer 3)))
+#     folded_expr_with_division = ArithmeticsCalculator.new.process(expr_with_division)
+#     p folded_expr_with_division
+#     # => (add
+#     #      (integer 1)
+#     #      (divide
+#     #        (integer 12)
+#     #        (integer 3)))
 #
 # As you can see, the expression was folded _partially_: the inner
 # `(add)` node which could be computed was folded to
@@ -347,22 +399,22 @@ end
 #
 # Let's extend our ArithmeticsCalculator class further.
 #
-# class ArithmeticsCalculator
-# def on_divide(node)
-# compute_op(node) { |left, right| left / right }
-# end
+#     class ArithmeticsCalculator
+#       def on_divide(node)
+#         compute_op(node) { |left, right| left / right }
+#       end
 #
-# def on_negate(node)
-# # Note how #compute_op works regardless of the operator
-# # arity.
-# compute_op(node) { |value| -value }
-# end
-# end
+#       def on_negate(node)
+#         # Note how #compute_op works regardless of the operator
+#         # arity.
+#         compute_op(node) { |value| -value }
+#       end
+#     end
 #
 # Now, let's apply our renewed ArithmeticsCalculator to a partial
 # result of previous evaluation:
 #
-# p ArithmeticsCalculator.new.process(expr_with_division) # => (integer 5)
+#     p ArithmeticsCalculator.new.process(expr_with_division) # => (integer 5)
 #
 # Five! Excellent. This is also pretty much how CRuby 1.8 executed
 # its programs.
@@ -372,51 +424,54 @@ end
 # by zero before the program is even run, that could save some
 # debugging time.
 #
-# class DivisionByZeroVerifier < ArithmeticsProcessor
-# class VerificationFailure < Exception; end
+#     class DivisionByZeroVerifier < ArithmeticsProcessor
+#       class VerificationFailure < Exception; end
 #
-# def on_divide(node)
-# # You need to process the children to handle nested divisions
-# # such as:
-# # (divide
-# #   (integer 1)
-# #   (divide (integer 1) (integer 0))
-# left, right = process_all(node)
+#       def on_divide(node)
+#         # You need to process the children to handle nested divisions
+#         # such as:
+#         # (divide
+#         #   (integer 1)
+#         #   (divide (integer 1) (integer 0))
+#         left, right = process_all(node)
 #
-# if right.type == :integer &&
-# right.children.first == 0
-# raise VerificationFailure, "Ouch! This code divides by zero."
-# end
-# end
+#         if right.type == :integer &&
+#            right.children.first == 0
+#           raise VerificationFailure, "Ouch! This code divides by zero."
+#         end
+#       end
 #
-# def divides_by_zero?(ast)
-# process(ast)
-# false
-# rescue VerificationFailure
-# true
-# end
-# end
+#       def divides_by_zero?(ast)
+#         process(ast)
+#         false
+#       rescue VerificationFailure
+#         true
+#       end
+#     end
 #
-# nice_expr = \
-# s(:divide,
-# s(:add, s(:integer, 10), s(:integer, 2)),
-# s(:integer, 4))
+#     nice_expr = \
+#       s(:divide,
+#         s(:add, s(:integer, 10), s(:integer, 2)),
+#         s(:integer, 4))
 #
-# p DivisionByZeroVerifier.new.divides_by_zero?(nice_expr)
-# # => false. Good.
+#     p DivisionByZeroVerifier.new.divides_by_zero?(nice_expr)
+#     # => false. Good.
 #
-# bad_expr = \
-# s(:add, s(:integer, 10),
-# s(:divide, s(:integer, 1), s(:integer, 0)))
+#     bad_expr = \
+#       s(:add, s(:integer, 10),
+#         s(:divide, s(:integer, 1), s(:integer, 0)))
 #
-# p DivisionByZeroVerifier.new.divides_by_zero?(bad_expr)
-# # => true. WHOOPS. DO NOT RUN THIS.
+#     p DivisionByZeroVerifier.new.divides_by_zero?(bad_expr)
+#     # => true. WHOOPS. DO NOT RUN THIS.
 #
 # Of course, this won't detect more complex cases... unless you
 # use some partial evaluation before! The possibilites are
 # endless. Have fun.
 module AST::Processor::Mixin
   # Default handler. Does nothing.
+  #
+  # @param node [AST::Node]
+  # @return [AST::Node, nil]
   def handler_missing(node); end
 
   # Dispatches `node`. If a node has type `:foo`, then a handler
@@ -426,10 +481,16 @@ module AST::Processor::Mixin
   #
   # If the handler returns `nil`, `node` is returned; otherwise,
   # the return value of the handler is passed along.
+  #
+  # @param node [AST::Node, nil]
+  # @return [AST::Node, nil]
   def process(node); end
 
   # {#process}es each node from `nodes` and returns an array of
   # results.
+  #
+  # @param nodes [Array<AST::Node>]
+  # @return [Array<AST::Node>]
   def process_all(nodes); end
 end
 
@@ -437,18 +498,18 @@ end
 # to define deeply nested ASTs from Ruby code, for example, in
 # tests. It should be used like this:
 #
-# describe YourLanguage::AST do
-# include Sexp
+#     describe YourLanguage::AST do
+#       include Sexp
 #
-# it "should correctly parse expressions" do
-# YourLanguage.parse("1 + 2 * 3").should ==
-# s(:add,
-# s(:integer, 1),
-# s(:multiply,
-# s(:integer, 2),
-# s(:integer, 3)))
-# end
-# end
+#       it "should correctly parse expressions" do
+#         YourLanguage.parse("1 + 2 * 3").should ==
+#             s(:add,
+#               s(:integer, 1),
+#               s(:multiply,
+#                 s(:integer, 2),
+#                 s(:integer, 3)))
+#       end
+#     end
 #
 # This way the amount of boilerplate code is greatly reduced.
 module AST::Sexp

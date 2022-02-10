@@ -12,6 +12,8 @@ module SQLite3
     def threadsafe; end
 
     # Was sqlite3 compiled with thread safety on?
+    #
+    # @return [Boolean]
     def threadsafe?; end
   end
 end
@@ -152,13 +154,13 @@ class SQLite3::CorruptException < ::SQLite3::Exception; end
 # The Database class encapsulates a single connection to a SQLite3 database.
 # Its usage is very straightforward:
 #
-# require 'sqlite3'
+#   require 'sqlite3'
 #
-# SQLite3::Database.new( "data.db" ) do |db|
-# db.execute( "select * from table" ) do |row|
-# p row
-# end
-# end
+#   SQLite3::Database.new( "data.db" ) do |db|
+#     db.execute( "select * from table" ) do |row|
+#       p row
+#     end
+#   end
 #
 # It wraps the lower-level methods provides by the selected driver, and
 # includes the Pragmas module for access to various pragma convenience
@@ -184,6 +186,8 @@ class SQLite3::Database
   #
   # By default, the new database will return result rows as arrays
   # (#results_as_hash) and has type translation disabled (#type_translation=).
+  #
+  # @return [Database] a new instance of Database
   def initialize(file, options = T.unsafe(nil), zvfs = T.unsafe(nil)); end
 
   # Installs (or removes) a block that will be invoked for every access
@@ -233,18 +237,18 @@ class SQLite3::Database
   #
   # Example:
   #
-  # db.create_aggregate( "lengths", 1 ) do
-  # step do |func, value|
-  # func[ :total ] ||= 0
-  # func[ :total ] += ( value ? value.length : 0 )
-  # end
+  #   db.create_aggregate( "lengths", 1 ) do
+  #     step do |func, value|
+  #       func[ :total ] ||= 0
+  #       func[ :total ] += ( value ? value.length : 0 )
+  #     end
   #
-  # finalize do |func|
-  # func.result = func[ :total ] || 0
-  # end
-  # end
+  #     finalize do |func|
+  #       func.result = func[ :total ] || 0
+  #     end
+  #   end
   #
-  # puts db.get_first_value( "select lengths(name) from table" )
+  #   puts db.get_first_value( "select lengths(name) from table" )
   #
   # See also #create_aggregate_handler for a more object-oriented approach to
   # aggregate functions.
@@ -257,46 +261,46 @@ class SQLite3::Database
   # handler should respond to the following messages:
   #
   # +arity+:: corresponds to the +arity+ parameter of #create_aggregate. This
-  # message is optional, and if the handler does not respond to it,
-  # the function will have an arity of -1.
+  #           message is optional, and if the handler does not respond to it,
+  #           the function will have an arity of -1.
   # +name+:: this is the name of the function. The handler _must_ implement
-  # this message.
+  #          this message.
   # +new+:: this must be implemented by the handler. It should return a new
-  # instance of the object that will handle a specific invocation of
-  # the function.
+  #         instance of the object that will handle a specific invocation of
+  #         the function.
   #
   # The handler instance (the object returned by the +new+ message, described
   # above), must respond to the following messages:
   #
   # +step+:: this is the method that will be called for each step of the
-  # aggregate function's evaluation. It should implement the same
-  # signature as the +step+ callback for #create_aggregate.
+  #          aggregate function's evaluation. It should implement the same
+  #          signature as the +step+ callback for #create_aggregate.
   # +finalize+:: this is the method that will be called to finalize the
-  # aggregate function's evaluation. It should implement the
-  # same signature as the +finalize+ callback for
-  # #create_aggregate.
+  #              aggregate function's evaluation. It should implement the
+  #              same signature as the +finalize+ callback for
+  #              #create_aggregate.
   #
   # Example:
   #
-  # class LengthsAggregateHandler
-  # def self.arity; 1; end
-  # def self.name; 'lengths'; end
+  #   class LengthsAggregateHandler
+  #     def self.arity; 1; end
+  #     def self.name; 'lengths'; end
   #
-  # def initialize
-  # @total = 0
-  # end
+  #     def initialize
+  #       @total = 0
+  #     end
   #
-  # def step( ctx, name )
-  # @total += ( name ? name.length : 0 )
-  # end
+  #     def step( ctx, name )
+  #       @total += ( name ? name.length : 0 )
+  #     end
   #
-  # def finalize( ctx )
-  # ctx.result = @total
-  # end
-  # end
+  #     def finalize( ctx )
+  #       ctx.result = @total
+  #     end
+  #   end
   #
-  # db.create_aggregate_handler( LengthsAggregateHandler )
-  # puts db.get_first_value( "select lengths(name) from A" )
+  #   db.create_aggregate_handler( LengthsAggregateHandler )
+  #   puts db.get_first_value( "select lengths(name) from A" )
   def create_aggregate_handler(handler); end
 
   # Creates a new function for use in SQL statements. It will be added as
@@ -313,15 +317,15 @@ class SQLite3::Database
   #
   # Example:
   #
-  # db.create_function( "maim", 1 ) do |func, value|
-  # if value.nil?
-  # func.result = nil
-  # else
-  # func.result = value.split(//).sort.join
-  # end
-  # end
+  #   db.create_function( "maim", 1 ) do |func, value|
+  #     if value.nil?
+  #       func.result = nil
+  #     else
+  #       func.result = value.split(//).sort.join
+  #     end
+  #   end
   #
-  # puts db.get_first_value( "select maim(name) from table" )
+  #   puts db.get_first_value( "select maim(name) from table" )
   def create_function(name, arity, text_rep = T.unsafe(nil), &block); end
 
   # Define an aggregate function named +name+ using a object template
@@ -432,9 +436,9 @@ class SQLite3::Database
   # This is a convenience method for creating a statement, binding
   # paramters to it, and calling execute:
   #
-  # result = db.query( "select * from foo where a=?", [5])
-  # # is the same as
-  # result = db.prepare( "select * from foo where a=?" ).execute( 5 )
+  #   result = db.query( "select * from foo where a=?", [5])
+  #   # is the same as
+  #   result = db.prepare( "select * from foo where a=?" ).execute( 5 )
   #
   # You must be sure to call +close+ on the ResultSet instance that is
   # returned, or you could have problems with locks on the table. If called
@@ -444,6 +448,8 @@ class SQLite3::Database
 
   # Returns +true+ if the database has been open in readonly mode
   # A helper to check before performing any operation
+  #
+  # @return [Boolean]
   def readonly?; end
 
   # A boolean that indicates whether rows in result sets should be returned
@@ -529,6 +535,8 @@ class SQLite3::Database::FunctionProxy
   # If context is non-nil, the functions context will be set to that. If
   # it is non-nil, it must quack like a Hash. If it is nil, then none of
   # the context functions will be available.
+  #
+  # @return [FunctionProxy] a new instance of FunctionProxy
   def initialize; end
 
   # Returns the value with the given key from the context. This is only
@@ -548,6 +556,8 @@ class SQLite3::Database::FunctionProxy
   def result; end
 
   # Sets the attribute result
+  #
+  # @param value the value to set the attribute result to.
   def result=(_arg0); end
 
   # Set the result of the function to the given error message.
@@ -714,6 +724,8 @@ module SQLite3::Pragmas
   # the array is another array comprised of elements in the enumeration that
   # have duplicate values. See #synchronous, #default_synchronous,
   # #temp_store, and #default_temp_store for usage examples.
+  #
+  # @raise [Exception]
   def set_enum_pragma(name, mode, enums); end
 
   # Set the value of the given pragma to the integer value of the +value+
@@ -800,6 +812,8 @@ class SQLite3::ResultSet
 
   # Create a new ResultSet attached to the given database, using the
   # given sql text.
+  #
+  # @return [ResultSet] a new instance of ResultSet
   def initialize(db, stmt); end
 
   # Closes the statement that spawned this result set.
@@ -808,6 +822,8 @@ class SQLite3::ResultSet
   def close; end
 
   # Queries whether the underlying statement has been closed or not.
+  #
+  # @return [Boolean]
   def closed?; end
 
   # Returns the names of the columns returned by this result set.
@@ -822,6 +838,8 @@ class SQLite3::ResultSet
   def each_hash; end
 
   # Query whether the cursor has reached the end of the result set or not.
+  #
+  # @return [Boolean]
   def eof?; end
 
   # Obtain the next row from the cursor. If there are no more rows to be
@@ -855,6 +873,8 @@ class SQLite3::ResultSet::ArrayWithTypes < ::Array
   def types; end
 
   # Sets the attribute types
+  #
+  # @param value the value to set the attribute types to.
   def types=(_arg0); end
 end
 
@@ -862,11 +882,15 @@ class SQLite3::ResultSet::ArrayWithTypesAndFields < ::Array
   def fields; end
 
   # Sets the attribute fields
+  #
+  # @param value the value to set the attribute fields to.
   def fields=(_arg0); end
 
   def types; end
 
   # Sets the attribute types
+  #
+  # @param value the value to set the attribute types to.
   def types=(_arg0); end
 end
 
@@ -877,6 +901,8 @@ class SQLite3::ResultSet::HashWithTypesAndFields < ::Hash
   def fields; end
 
   # Sets the attribute fields
+  #
+  # @param value the value to set the attribute fields to.
   def fields=(_arg0); end
 
   def types; end
@@ -898,6 +924,8 @@ class SQLite3::Statement
 
   # Returns true if the statement is currently active, meaning it has an
   # open result set.
+  #
+  # @return [Boolean]
   def active?; end
 
   def bind_param(_arg0, _arg1); end
@@ -911,8 +939,8 @@ class SQLite3::Statement
   #
   # Example:
   #
-  # stmt = db.prepare( "select * from table where a=? and b=?" )
-  # stmt.bind_params( 15, "hello" )
+  #   stmt = db.prepare( "select * from table where a=? and b=?" )
+  #   stmt.bind_params( 15, "hello" )
   #
   # See also #execute, #bind_param, Statement#bind_param, and
   # Statement#bind_params.
@@ -942,12 +970,14 @@ class SQLite3::Statement
   #
   # Example:
   #
-  # stmt = db.prepare( "select * from table" )
-  # stmt.execute do |result|
-  # ...
-  # end
+  #   stmt = db.prepare( "select * from table" )
+  #   stmt.execute do |result|
+  #     ...
+  #   end
   #
   # See also #bind_params, #execute!.
+  #
+  # @yield [@results]
   def execute(*bind_vars); end
 
   # Execute the statement. If no block was given, this returns an array of
@@ -958,10 +988,10 @@ class SQLite3::Statement
   #
   # Example:
   #
-  # stmt = db.prepare( "select * from table" )
-  # stmt.execute! do |row|
-  # ...
-  # end
+  #   stmt = db.prepare( "select * from table" )
+  #   stmt.execute! do |row|
+  #     ...
+  #   end
   #
   # See also #bind_params, #execute.
   def execute!(*bind_vars, &block); end
@@ -1004,6 +1034,8 @@ class SQLite3::TooBigException < ::SQLite3::Exception; end
 class SQLite3::Translator
   # Create a new Translator instance. It will be preinitialized with default
   # translators for most SQL data types.
+  #
+  # @return [Translator] a new instance of Translator
   def initialize; end
 
   # Add a new translator block, which will be invoked to process type
@@ -1042,13 +1074,17 @@ class SQLite3::UnsupportedException < ::SQLite3::Exception; end
 SQLite3::VERSION = T.let(T.unsafe(nil), String)
 
 class SQLite3::Value
+  # @return [Value] a new instance of Value
   def initialize(db, handle); end
 
   # Returns the value of attribute handle.
   def handle; end
 
   def length(utf16 = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def null?; end
+
   def to_blob; end
   def to_f; end
   def to_i; end
@@ -1068,8 +1104,8 @@ SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 
 # Allows Writing of '100'.to_money for +String+ types
 # Excess characters will be discarded
-# '100'.to_money => #<Money @cents=10000>
-# '100.37'.to_money => #<Money @cents=10037>
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
   include ::JSON::Ext::Generator::GeneratorMethods::String

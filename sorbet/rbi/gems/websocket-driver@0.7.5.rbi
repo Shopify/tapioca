@@ -9,6 +9,7 @@ module WebSocket; end
 class WebSocket::Driver
   include ::WebSocket::Driver::EventEmitter
 
+  # @return [Driver] a new instance of Driver
   def initialize(socket, options = T.unsafe(nil)); end
 
   def add_extension(extension); end
@@ -37,15 +38,18 @@ class WebSocket::Driver
 
   class << self
     def client(socket, options = T.unsafe(nil)); end
-    def encode(string, encoding = T.unsafe(nil)); end
+    def encode(data, encoding = T.unsafe(nil)); end
     def rack(socket, options = T.unsafe(nil)); end
     def server(socket, options = T.unsafe(nil)); end
     def validate_options(options, valid_keys); end
+
+    # @return [Boolean]
     def websocket?(env); end
   end
 end
 
 class WebSocket::Driver::Client < ::WebSocket::Driver::Hybi
+  # @return [Client] a new instance of Client
   def initialize(socket, options = T.unsafe(nil)); end
 
   # Returns the value of attribute headers.
@@ -75,21 +79,30 @@ WebSocket::Driver::Client::VALID_SCHEMES = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Driver::CloseEvent < ::Struct
   # Returns the value of attribute code
+  #
+  # @return [Object] the current value of code
   def code; end
 
   # Sets the attribute code
+  #
+  # @param value [Object] the value to set the attribute code to.
+  # @return [Object] the newly set value
   def code=(_); end
 
   # Returns the value of attribute reason
+  #
+  # @return [Object] the current value of reason
   def reason; end
 
   # Sets the attribute reason
+  #
+  # @param value [Object] the value to set the attribute reason to.
+  # @return [Object] the newly set value
   def reason=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -101,13 +114,13 @@ class WebSocket::Driver::ConnectEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
 end
 
 class WebSocket::Driver::Draft75 < ::WebSocket::Driver
+  # @return [Draft75] a new instance of Draft75
   def initialize(socket, options = T.unsafe(nil)); end
 
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
@@ -122,6 +135,7 @@ class WebSocket::Driver::Draft75 < ::WebSocket::Driver
 end
 
 class WebSocket::Driver::Draft76 < ::WebSocket::Driver::Draft75
+  # @return [Draft76] a new instance of Draft76
   def initialize(socket, options = T.unsafe(nil)); end
 
   def close(reason = T.unsafe(nil), code = T.unsafe(nil)); end
@@ -130,7 +144,9 @@ class WebSocket::Driver::Draft76 < ::WebSocket::Driver::Draft75
 
   private
 
+  # @raise [ProtocolError]
   def handshake_response; end
+
   def handshake_signature; end
   def number_from_key(key); end
   def parse_leading_byte(octet); end
@@ -153,6 +169,7 @@ module WebSocket::Driver::EventEmitter
 end
 
 class WebSocket::Driver::Headers
+  # @return [Headers] a new instance of Headers
   def initialize(received = T.unsafe(nil)); end
 
   def [](name); end
@@ -166,6 +183,7 @@ end
 WebSocket::Driver::Headers::ALLOWED_DUPLICATES = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Driver::Hybi < ::WebSocket::Driver
+  # @return [Hybi] a new instance of Hybi
   def initialize(socket, options = T.unsafe(nil)); end
 
   def add_extension(extension); end
@@ -206,60 +224,80 @@ class WebSocket::Driver::Hybi::Frame
   def final; end
 
   # Sets the attribute final
+  #
+  # @param value the value to set the attribute final to.
   def final=(_arg0); end
 
   # Returns the value of attribute length.
   def length; end
 
   # Sets the attribute length
+  #
+  # @param value the value to set the attribute length to.
   def length=(_arg0); end
 
   # Returns the value of attribute length_bytes.
   def length_bytes; end
 
   # Sets the attribute length_bytes
+  #
+  # @param value the value to set the attribute length_bytes to.
   def length_bytes=(_arg0); end
 
   # Returns the value of attribute masked.
   def masked; end
 
   # Sets the attribute masked
+  #
+  # @param value the value to set the attribute masked to.
   def masked=(_arg0); end
 
   # Returns the value of attribute masking_key.
   def masking_key; end
 
   # Sets the attribute masking_key
+  #
+  # @param value the value to set the attribute masking_key to.
   def masking_key=(_arg0); end
 
   # Returns the value of attribute opcode.
   def opcode; end
 
   # Sets the attribute opcode
+  #
+  # @param value the value to set the attribute opcode to.
   def opcode=(_arg0); end
 
   # Returns the value of attribute payload.
   def payload; end
 
   # Sets the attribute payload
+  #
+  # @param value the value to set the attribute payload to.
   def payload=(_arg0); end
 
   # Returns the value of attribute rsv1.
   def rsv1; end
 
   # Sets the attribute rsv1
+  #
+  # @param value the value to set the attribute rsv1 to.
   def rsv1=(_arg0); end
 
   # Returns the value of attribute rsv2.
   def rsv2; end
 
   # Sets the attribute rsv2
+  #
+  # @param value the value to set the attribute rsv2 to.
   def rsv2=(_arg0); end
 
   # Returns the value of attribute rsv3.
   def rsv3; end
 
   # Sets the attribute rsv3
+  #
+  # @param value the value to set the attribute rsv3 to.
   def rsv3=(_arg0); end
 end
 
@@ -271,6 +309,7 @@ WebSocket::Driver::Hybi::MESSAGE_OPCODES = T.let(T.unsafe(nil), Array)
 WebSocket::Driver::Hybi::MIN_RESERVED_ERROR = T.let(T.unsafe(nil), Integer)
 
 class WebSocket::Driver::Hybi::Message
+  # @return [Message] a new instance of Message
   def initialize; end
 
   def <<(frame); end
@@ -279,30 +318,40 @@ class WebSocket::Driver::Hybi::Message
   def data; end
 
   # Sets the attribute data
+  #
+  # @param value the value to set the attribute data to.
   def data=(_arg0); end
 
   # Returns the value of attribute opcode.
   def opcode; end
 
   # Sets the attribute opcode
+  #
+  # @param value the value to set the attribute opcode to.
   def opcode=(_arg0); end
 
   # Returns the value of attribute rsv1.
   def rsv1; end
 
   # Sets the attribute rsv1
+  #
+  # @param value the value to set the attribute rsv1 to.
   def rsv1=(_arg0); end
 
   # Returns the value of attribute rsv2.
   def rsv2; end
 
   # Sets the attribute rsv2
+  #
+  # @param value the value to set the attribute rsv2 to.
   def rsv2=(_arg0); end
 
   # Returns the value of attribute rsv3.
   def rsv3; end
 
   # Sets the attribute rsv3
+  #
+  # @param value the value to set the attribute rsv3 to.
   def rsv3=(_arg0); end
 end
 
@@ -319,15 +368,19 @@ WebSocket::Driver::MAX_LENGTH = T.let(T.unsafe(nil), Integer)
 
 class WebSocket::Driver::MessageEvent < ::Struct
   # Returns the value of attribute data
+  #
+  # @return [Object] the current value of data
   def data; end
 
   # Sets the attribute data
+  #
+  # @param value [Object] the value to set the attribute data to.
+  # @return [Object] the newly set value
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -337,7 +390,6 @@ class WebSocket::Driver::OpenEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -345,15 +397,19 @@ end
 
 class WebSocket::Driver::PingEvent < ::Struct
   # Returns the value of attribute data
+  #
+  # @return [Object] the current value of data
   def data; end
 
   # Sets the attribute data
+  #
+  # @param value [Object] the value to set the attribute data to.
+  # @return [Object] the newly set value
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -361,15 +417,19 @@ end
 
 class WebSocket::Driver::PongEvent < ::Struct
   # Returns the value of attribute data
+  #
+  # @return [Object] the current value of data
   def data; end
 
   # Sets the attribute data
+  #
+  # @param value [Object] the value to set the attribute data to.
+  # @return [Object] the newly set value
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -380,6 +440,7 @@ class WebSocket::Driver::ProtocolError < ::StandardError; end
 class WebSocket::Driver::Proxy
   include ::WebSocket::Driver::EventEmitter
 
+  # @return [Proxy] a new instance of Proxy
   def initialize(client, origin, options); end
 
   # Returns the value of attribute headers.
@@ -397,6 +458,7 @@ WebSocket::Driver::Proxy::PORTS = T.let(T.unsafe(nil), Hash)
 WebSocket::Driver::STATES = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Driver::Server < ::WebSocket::Driver
+  # @return [Server] a new instance of Server
   def initialize(socket, options = T.unsafe(nil)); end
 
   def add_extension(*args, &block); end
@@ -423,6 +485,7 @@ end
 WebSocket::Driver::Server::EVENTS = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Driver::StreamReader
+  # @return [StreamReader] a new instance of StreamReader
   def initialize; end
 
   def each_byte; end
@@ -450,7 +513,10 @@ end
 module WebSocket::HTTP::Headers
   def initialize; end
 
+  # @return [Boolean]
   def complete?; end
+
+  # @return [Boolean]
   def error?; end
 
   # Returns the value of attribute headers.
@@ -470,30 +536,30 @@ WebSocket::HTTP::Headers::CR = T.let(T.unsafe(nil), Integer)
 
 # RFC 2616 grammar rules:
 #
-# CHAR           = <any US-ASCII character (octets 0 - 127)>
+#       CHAR           = <any US-ASCII character (octets 0 - 127)>
 #
-# CTL            = <any US-ASCII control character
-# (octets 0 - 31) and DEL (127)>
+#       CTL            = <any US-ASCII control character
+#                        (octets 0 - 31) and DEL (127)>
 #
-# SP             = <US-ASCII SP, space (32)>
+#       SP             = <US-ASCII SP, space (32)>
 #
-# HT             = <US-ASCII HT, horizontal-tab (9)>
+#       HT             = <US-ASCII HT, horizontal-tab (9)>
 #
-# token          = 1*<any CHAR except CTLs or separators>
+#       token          = 1*<any CHAR except CTLs or separators>
 #
-# separators     = "(" | ")" | "<" | ">" | "@"
-# | "," | ";" | ":" | "\" | <">
-# | "/" | "[" | "]" | "?" | "="
-# | "{" | "}" | SP | HT
+#       separators     = "(" | ")" | "<" | ">" | "@"
+#                      | "," | ";" | ":" | "\" | <">
+#                      | "/" | "[" | "]" | "?" | "="
+#                      | "{" | "}" | SP | HT
 #
 # Or, as redefined in RFC 7230:
 #
-# token          = 1*tchar
+#       token          = 1*tchar
 #
-# tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
-# / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
-# / DIGIT / ALPHA
-# ; any VCHAR, except delimiters
+#       tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+#                      / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+#                      / DIGIT / ALPHA
+#                      ; any VCHAR, except delimiters
 WebSocket::HTTP::Headers::HEADER_LINE = T.let(T.unsafe(nil), Regexp)
 
 WebSocket::HTTP::Headers::LF = T.let(T.unsafe(nil), Integer)

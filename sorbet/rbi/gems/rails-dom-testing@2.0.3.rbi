@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem rails-dom-testing`.
 
 class HTMLSelector
+  # @return [HTMLSelector] a new instance of HTMLSelector
   def initialize(values, previous_selection = T.unsafe(nil), &root_fallback); end
 
   def context; end
@@ -16,6 +17,8 @@ class HTMLSelector
   def message; end
 
   def select; end
+
+  # @return [Boolean]
   def selecting_no_body?; end
 
   # Returns the value of attribute tests.
@@ -52,8 +55,8 @@ module Rails
     def env=(environment); end
     def gem_version; end
     def groups(*groups); end
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
     def logger; end
     def logger=(_arg0); end
     def public_path; end
@@ -75,21 +78,27 @@ end
 module Rails::Dom::Testing::Assertions::DomAssertions
   # \Test two HTML strings for equivalency (e.g., equal even when attributes are in another order)
   #
-  # # assert that the referenced method generates the appropriate HTML string
-  # assert_dom_equal '<a href="http://www.example.com">Apples</a>', link_to("Apples", "http://www.example.com")
+  #   # assert that the referenced method generates the appropriate HTML string
+  #   assert_dom_equal '<a href="http://www.example.com">Apples</a>', link_to("Apples", "http://www.example.com")
   def assert_dom_equal(expected, actual, message = T.unsafe(nil)); end
 
   # The negated form of +assert_dom_equal+.
   #
-  # # assert that the referenced method does not generate the specified HTML string
-  # assert_dom_not_equal '<a href="http://www.example.com">Apples</a>', link_to("Oranges", "http://www.example.com")
+  #   # assert that the referenced method does not generate the specified HTML string
+  #   assert_dom_not_equal '<a href="http://www.example.com">Apples</a>', link_to("Oranges", "http://www.example.com")
   def assert_dom_not_equal(expected, actual, message = T.unsafe(nil)); end
 
   protected
 
   def compare_doms(expected, actual); end
+
+  # @return [Boolean]
   def equal_attribute?(attr, other_attr); end
+
+  # @return [Boolean]
   def equal_attribute_nodes?(nodes, other_nodes); end
+
+  # @return [Boolean]
   def equal_children?(child, other_child); end
 
   private
@@ -133,16 +142,16 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   #
   # ==== Example
   # If the response contains two ordered lists, each with four list elements then:
-  # assert_select "ol" do |elements|
-  # elements.each do |element|
-  # assert_select element, "li", 4
-  # end
-  # end
+  #   assert_select "ol" do |elements|
+  #     elements.each do |element|
+  #       assert_select element, "li", 4
+  #     end
+  #   end
   #
   # will pass, as will:
-  # assert_select "ol" do
-  # assert_select "li", 8
-  # end
+  #   assert_select "ol" do
+  #     assert_select "li", 8
+  #   end
   #
   # The selector may be a CSS selector expression (String) or an expression
   # with substitution values (Array).
@@ -157,72 +166,72 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   # * <tt>true</tt> - Assertion is true if at least one element selected.
   # * <tt>false</tt> - Assertion is true if no element selected.
   # * <tt>String/Regexp</tt> - Assertion is true if the text value of at least
-  # one element matches the string or regular expression.
+  #   one element matches the string or regular expression.
   # * <tt>Integer</tt> - Assertion is true if exactly that number of
-  # elements are selected.
+  #   elements are selected.
   # * <tt>Range</tt> - Assertion is true if the number of selected
-  # elements fit the range.
+  #   elements fit the range.
   # If no equality test specified, the assertion is true if at least one
   # element selected.
   #
   # To perform more than one equality tests, use a hash with the following keys:
   # * <tt>:text</tt> - Narrow the selection to elements that have this text
-  # value (string or regexp).
+  #   value (string or regexp).
   # * <tt>:html</tt> - Narrow the selection to elements that have this HTML
-  # content (string or regexp).
+  #   content (string or regexp).
   # * <tt>:count</tt> - Assertion is true if the number of selected elements
-  # is equal to this value.
+  #   is equal to this value.
   # * <tt>:minimum</tt> - Assertion is true if the number of selected
-  # elements is at least this value.
+  #   elements is at least this value.
   # * <tt>:maximum</tt> - Assertion is true if the number of selected
-  # elements is at most this value.
+  #   elements is at most this value.
   #
   # If the method is called with a block, once all equality tests are
   # evaluated the block is called with an array of all matched elements.
   #
-  # # At least one form element
-  # assert_select "form"
+  #   # At least one form element
+  #   assert_select "form"
   #
-  # # Form element includes four input fields
-  # assert_select "form input", 4
+  #   # Form element includes four input fields
+  #   assert_select "form input", 4
   #
-  # # Page title is "Welcome"
-  # assert_select "title", "Welcome"
+  #   # Page title is "Welcome"
+  #   assert_select "title", "Welcome"
   #
-  # # Page title is "Welcome" and there is only one title element
-  # assert_select "title", {count: 1, text: "Welcome"},
-  # "Wrong title or more than one title element"
+  #   # Page title is "Welcome" and there is only one title element
+  #   assert_select "title", {count: 1, text: "Welcome"},
+  #       "Wrong title or more than one title element"
   #
-  # # Page contains no forms
-  # assert_select "form", false, "This page must contain no forms"
+  #   # Page contains no forms
+  #   assert_select "form", false, "This page must contain no forms"
   #
-  # # Test the content and style
-  # assert_select "body div.header ul.menu"
+  #   # Test the content and style
+  #   assert_select "body div.header ul.menu"
   #
-  # # Use substitution values
-  # assert_select "ol>li:match('id', ?)", /item-\d+/
+  #   # Use substitution values
+  #   assert_select "ol>li:match('id', ?)", /item-\d+/
   #
-  # # All input fields in the form have a name
-  # assert_select "form input" do
-  # assert_select ":match('name', ?)", /.+/  # Not empty
-  # end
+  #   # All input fields in the form have a name
+  #   assert_select "form input" do
+  #     assert_select ":match('name', ?)", /.+/  # Not empty
+  #   end
   def assert_select(*args, &block); end
 
   # Extracts the body of an email and runs nested assertions on it.
   #
   # You must enable deliveries for this assertion to work, use:
-  # ActionMailer::Base.perform_deliveries = true
+  #   ActionMailer::Base.perform_deliveries = true
   #
-  # assert_select_email do
-  # assert_select "h1", "Email alert"
-  # end
+  #  assert_select_email do
+  #    assert_select "h1", "Email alert"
+  #  end
   #
-  # assert_select_email do
-  # items = assert_select "ol>li"
-  # items.each do
-  # # Work with items here...
-  # end
-  # end
+  #  assert_select_email do
+  #    items = assert_select "ol>li"
+  #    items.each do
+  #       # Work with items here...
+  #    end
+  #  end
   def assert_select_email(&block); end
 
   # Extracts the content of an element, treats it as encoded HTML and runs
@@ -235,28 +244,28 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   # The content of each element is un-encoded, and wrapped in the root
   # element +encoded+. It then calls the block with all un-encoded elements.
   #
-  # # Selects all bold tags from within the title of an Atom feed's entries (perhaps to nab a section name prefix)
-  # assert_select "feed[xmlns='http://www.w3.org/2005/Atom']" do
-  # # Select each entry item and then the title item
-  # assert_select "entry>title" do
-  # # Run assertions on the encoded title elements
-  # assert_select_encoded do
-  # assert_select "b"
-  # end
-  # end
-  # end
+  #   # Selects all bold tags from within the title of an Atom feed's entries (perhaps to nab a section name prefix)
+  #   assert_select "feed[xmlns='http://www.w3.org/2005/Atom']" do
+  #     # Select each entry item and then the title item
+  #     assert_select "entry>title" do
+  #       # Run assertions on the encoded title elements
+  #       assert_select_encoded do
+  #         assert_select "b"
+  #       end
+  #     end
+  #   end
   #
   #
-  # # Selects all paragraph tags from within the description of an RSS feed
-  # assert_select "rss[version=2.0]" do
-  # # Select description element of each feed item.
-  # assert_select "channel>item>description" do
-  # # Run assertions on the encoded elements.
-  # assert_select_encoded do
-  # assert_select "p"
-  # end
-  # end
-  # end
+  #   # Selects all paragraph tags from within the description of an RSS feed
+  #   assert_select "rss[version=2.0]" do
+  #     # Select description element of each feed item.
+  #     assert_select "channel>item>description" do
+  #       # Run assertions on the encoded elements.
+  #       assert_select_encoded do
+  #         assert_select "p"
+  #       end
+  #     end
+  #   end
   def assert_select_encoded(element = T.unsafe(nil), &block); end
 
   # Select and return all matching elements.
@@ -277,24 +286,26 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   # The selector may be a CSS selector expression (String).
   # css_select returns nil if called with an invalid css selector.
   #
-  # # Selects all div tags
-  # divs = css_select("div")
+  #   # Selects all div tags
+  #   divs = css_select("div")
   #
-  # # Selects all paragraph tags and does something interesting
-  # pars = css_select("p")
-  # pars.each do |par|
-  # # Do something fun with paragraphs here...
-  # end
+  #   # Selects all paragraph tags and does something interesting
+  #   pars = css_select("p")
+  #   pars.each do |par|
+  #     # Do something fun with paragraphs here...
+  #   end
   #
-  # # Selects all list items in unordered lists
-  # items = css_select("ul>li")
+  #   # Selects all list items in unordered lists
+  #   items = css_select("ul>li")
   #
-  # # Selects all form tags and then all inputs inside the form
-  # forms = css_select("form")
-  # forms.each do |form|
-  # inputs = css_select(form, "input")
-  # ...
-  # end
+  #   # Selects all form tags and then all inputs inside the form
+  #   forms = css_select("form")
+  #   forms.each do |form|
+  #     inputs = css_select(form, "input")
+  #     ...
+  #   end
+  #
+  # @raise [ArgumentError]
   def css_select(*args); end
 
   private
@@ -302,7 +313,9 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   # +equals+ must contain :minimum, :maximum and :count keys
   def assert_size_match!(size, equals, css_selector, message = T.unsafe(nil)); end
 
+  # @raise [NotImplementedError]
   def document_root_element; end
+
   def nest_selection(selection); end
   def nodeset(node); end
 end
@@ -317,6 +330,7 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
 end
 
 class SubstitutionContext
+  # @return [SubstitutionContext] a new instance of SubstitutionContext
   def initialize; end
 
   def match(matches, attribute, matcher); end
@@ -325,5 +339,7 @@ class SubstitutionContext
   private
 
   def matcher_for(value, format_for_presentation); end
+
+  # @return [Boolean]
   def substitutable?(value); end
 end

@@ -34,7 +34,10 @@ module ActiveJob::Arguments
   private
 
   def convert_to_global_id_hash(argument); end
+
+  # @return [Boolean]
   def custom_serialized?(hash); end
+
   def deserialize_argument(argument); end
   def deserialize_global_id(hash); end
   def deserialize_hash(serialized_hash); end
@@ -42,7 +45,10 @@ module ActiveJob::Arguments
   def serialize_hash(argument); end
   def serialize_hash_key(key); end
   def serialize_indifferent_hash(indifferent_hash); end
+
+  # @return [Boolean]
   def serialized_global_id?(hash); end
+
   def transform_symbol_keys(hash, symbol_keys); end
 end
 
@@ -59,7 +65,7 @@ ActiveJob::Arguments::WITH_INDIFFERENT_ACCESS_KEY = T.let(T.unsafe(nil), String)
 # Active Job objects can be configured to work with different backend
 # queuing frameworks. To specify a queue adapter to use:
 #
-# ActiveJob::Base.queue_adapter = :inline
+#   ActiveJob::Base.queue_adapter = :inline
 #
 # A list of supported adapters can be found in QueueAdapters.
 #
@@ -69,31 +75,31 @@ ActiveJob::Arguments::WITH_INDIFFERENT_ACCESS_KEY = T.let(T.unsafe(nil), String)
 #
 # To define an Active Job object:
 #
-# class ProcessPhotoJob < ActiveJob::Base
-# def perform(photo)
-# photo.watermark!('Rails')
-# photo.rotate!(90.degrees)
-# photo.resize_to_fit!(300, 300)
-# photo.upload!
-# end
-# end
+#   class ProcessPhotoJob < ActiveJob::Base
+#     def perform(photo)
+#       photo.watermark!('Rails')
+#       photo.rotate!(90.degrees)
+#       photo.resize_to_fit!(300, 300)
+#       photo.upload!
+#     end
+#   end
 #
 # Records that are passed in are serialized/deserialized using Global
 # ID. More information can be found in Arguments.
 #
 # To enqueue a job to be performed as soon as the queuing system is free:
 #
-# ProcessPhotoJob.perform_later(photo)
+#   ProcessPhotoJob.perform_later(photo)
 #
 # To enqueue a job to be processed at some point in the future:
 #
-# ProcessPhotoJob.set(wait_until: Date.tomorrow.noon).perform_later(photo)
+#   ProcessPhotoJob.set(wait_until: Date.tomorrow.noon).perform_later(photo)
 #
 # More information can be found in ActiveJob::Core::ClassMethods#set
 #
 # A job can also be processed immediately without sending to the queue:
 #
-# ProcessPhotoJob.perform_now(photo)
+#  ProcessPhotoJob.perform_now(photo)
 #
 # == Exceptions
 #
@@ -136,7 +142,7 @@ class ActiveJob::Base
   def _run_perform_callbacks(&block); end
   def logger; end
   def logger=(val); end
-  def queue_adapter(*_arg0, **_arg1, &_arg2); end
+  def queue_adapter(*_arg0, &_arg1); end
   def queue_name_prefix; end
   def queue_name_prefix=(_arg0); end
   def queue_name_prefix?; end
@@ -180,8 +186,8 @@ class ActiveJob::Base
     def rescue_handlers?; end
     def retry_jitter; end
     def retry_jitter=(value); end
-    def return_false_on_aborted_enqueue(*args, **_arg1, &block); end
-    def return_false_on_aborted_enqueue=(*args, **_arg1, &block); end
+    def return_false_on_aborted_enqueue(*args, &block); end
+    def return_false_on_aborted_enqueue=(*args, &block); end
     def skip_after_callbacks_if_terminated; end
     def skip_after_callbacks_if_terminated=(val); end
   end
@@ -242,123 +248,124 @@ module ActiveJob::Callbacks::ClassMethods
   # Defines a callback that will get called right after the
   # job is enqueued.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # after_enqueue do |job|
-  # $statsd.increment "enqueue-video-job.success"
-  # end
+  #     after_enqueue do |job|
+  #       $statsd.increment "enqueue-video-job.success"
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   def after_enqueue(*filters, &blk); end
 
   # Defines a callback that will get called right after the
   # job's perform method has finished.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # after_perform do |job|
-  # UserMailer.notify_video_processed(job.arguments.first)
-  # end
+  #     after_perform do |job|
+  #       UserMailer.notify_video_processed(job.arguments.first)
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   def after_perform(*filters, &blk); end
 
   # Defines a callback that will get called around the enqueuing
   # of the job.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # around_enqueue do |job, block|
-  # $statsd.time "video-job.process" do
-  # block.call
-  # end
-  # end
+  #     around_enqueue do |job, block|
+  #       $statsd.time "video-job.process" do
+  #         block.call
+  #       end
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   def around_enqueue(*filters, &blk); end
 
   # Defines a callback that will get called around the job's perform method.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # around_perform do |job, block|
-  # UserMailer.notify_video_started_processing(job.arguments.first)
-  # block.call
-  # UserMailer.notify_video_processed(job.arguments.first)
-  # end
+  #     around_perform do |job, block|
+  #       UserMailer.notify_video_started_processing(job.arguments.first)
+  #       block.call
+  #       UserMailer.notify_video_processed(job.arguments.first)
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   #
   # You can access the return value of the job only if the execution wasn't halted.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # around_perform do |job, block|
-  # value = block.call
-  # puts value # => "Hello World!"
-  # end
+  #   class VideoProcessJob < ActiveJob::Base
+  #     around_perform do |job, block|
+  #       value = block.call
+  #       puts value # => "Hello World!"
+  #     end
   #
-  # def perform
-  # "Hello World!"
-  # end
-  # end
+  #     def perform
+  #       "Hello World!"
+  #     end
+  #   end
   def around_perform(*filters, &blk); end
 
   # Defines a callback that will get called right before the
   # job is enqueued.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # before_enqueue do |job|
-  # $statsd.increment "enqueue-video-job.try"
-  # end
+  #     before_enqueue do |job|
+  #       $statsd.increment "enqueue-video-job.try"
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   def before_enqueue(*filters, &blk); end
 
   # Defines a callback that will get called right before the
   # job's perform method is executed.
   #
-  # class VideoProcessJob < ActiveJob::Base
-  # queue_as :default
+  #   class VideoProcessJob < ActiveJob::Base
+  #     queue_as :default
   #
-  # before_perform do |job|
-  # UserMailer.notify_video_started_processing(job.arguments.first)
-  # end
+  #     before_perform do |job|
+  #       UserMailer.notify_video_started_processing(job.arguments.first)
+  #     end
   #
-  # def perform(video_id)
-  # Video.find(video_id).process
-  # end
-  # end
+  #     def perform(video_id)
+  #       Video.find(video_id).process
+  #     end
+  #   end
   def before_perform(*filters, &blk); end
 
   def inherited(klass); end
 end
 
 class ActiveJob::ConfiguredJob
+  # @return [ConfiguredJob] a new instance of ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
-  def perform_later(*args, **_arg1); end
-  def perform_now(*args, **_arg1); end
+  def perform_later(*args); end
+  def perform_now(*args); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -370,7 +377,7 @@ module ActiveJob::Core
 
   # Creates a new job instance. Takes the arguments that will be
   # passed to the perform method.
-  def initialize(*arguments, **_arg1); end
+  def initialize(*arguments); end
 
   # Job arguments
   def arguments; end
@@ -383,27 +390,27 @@ module ActiveJob::Core
   #
   # ==== Examples
   #
-  # class DeliverWebhookJob < ActiveJob::Base
-  # attr_writer :attempt_number
+  #    class DeliverWebhookJob < ActiveJob::Base
+  #      attr_writer :attempt_number
   #
-  # def attempt_number
-  # @attempt_number ||= 0
-  # end
+  #      def attempt_number
+  #        @attempt_number ||= 0
+  #      end
   #
-  # def serialize
-  # super.merge('attempt_number' => attempt_number + 1)
-  # end
+  #      def serialize
+  #        super.merge('attempt_number' => attempt_number + 1)
+  #      end
   #
-  # def deserialize(job_data)
-  # super
-  # self.attempt_number = job_data['attempt_number']
-  # end
+  #      def deserialize(job_data)
+  #        super
+  #        self.attempt_number = job_data['attempt_number']
+  #      end
   #
-  # rescue_from(Timeout::Error) do |exception|
-  # raise exception if attempt_number > 5
-  # retry_job(wait: 10)
-  # end
-  # end
+  #      rescue_from(Timeout::Error) do |exception|
+  #        raise exception if attempt_number > 5
+  #        retry_job(wait: 10)
+  #      end
+  #    end
   def deserialize(job_data); end
 
   # Track when a job was enqueued
@@ -465,6 +472,8 @@ module ActiveJob::Core
   def serialize; end
 
   # Sets the attribute serialized_arguments
+  #
+  # @param value the value to set the attribute serialized_arguments to.
   def serialized_arguments=(_arg0); end
 
   # Timezone to be used during the job.
@@ -475,7 +484,9 @@ module ActiveJob::Core
 
   private
 
+  # @return [Boolean]
   def arguments_serialized?; end
+
   def deserialize_arguments(serialized_args); end
   def deserialize_arguments_if_needed; end
   def serialize_arguments(arguments); end
@@ -500,12 +511,12 @@ module ActiveJob::Core::ClassMethods
   #
   # ==== Examples
   #
-  # VideoJob.set(queue: :some_queue).perform_later(Video.last)
-  # VideoJob.set(wait: 5.minutes).perform_later(Video.last)
-  # VideoJob.set(wait_until: Time.now.tomorrow).perform_later(Video.last)
-  # VideoJob.set(queue: :some_queue, wait: 5.minutes).perform_later(Video.last)
-  # VideoJob.set(queue: :some_queue, wait_until: Time.now.tomorrow).perform_later(Video.last)
-  # VideoJob.set(queue: :some_queue, wait: 5.minutes, priority: 10).perform_later(Video.last)
+  #    VideoJob.set(queue: :some_queue).perform_later(Video.last)
+  #    VideoJob.set(wait: 5.minutes).perform_later(Video.last)
+  #    VideoJob.set(wait_until: Time.now.tomorrow).perform_later(Video.last)
+  #    VideoJob.set(queue: :some_queue, wait: 5.minutes).perform_later(Video.last)
+  #    VideoJob.set(queue: :some_queue, wait_until: Time.now.tomorrow).perform_later(Video.last)
+  #    VideoJob.set(queue: :some_queue, wait: 5.minutes, priority: 10).perform_later(Video.last)
   def set(options = T.unsafe(nil)); end
 end
 
@@ -513,6 +524,7 @@ end
 #
 # Wraps the original exception raised as +cause+.
 class ActiveJob::DeserializationError < ::StandardError
+  # @return [DeserializationError] a new instance of DeserializationError
   def initialize; end
 end
 
@@ -532,11 +544,11 @@ module ActiveJob::Enqueuing
   #
   # ==== Examples
   #
-  # my_job_instance.enqueue
-  # my_job_instance.enqueue wait: 5.minutes
-  # my_job_instance.enqueue queue: :important
-  # my_job_instance.enqueue wait_until: Date.tomorrow.midnight
-  # my_job_instance.enqueue priority: 10
+  #    my_job_instance.enqueue
+  #    my_job_instance.enqueue wait: 5.minutes
+  #    my_job_instance.enqueue queue: :important
+  #    my_job_instance.enqueue wait_until: Date.tomorrow.midnight
+  #    my_job_instance.enqueue priority: 10
   def enqueue(options = T.unsafe(nil)); end
 end
 
@@ -551,11 +563,11 @@ module ActiveJob::Enqueuing::ClassMethods
   #
   # Returns an instance of the job class queued with arguments available in
   # Job#arguments.
-  def perform_later(*args, **_arg1); end
+  def perform_later(*args); end
 
   private
 
-  def job_or_instantiate(*args, **_arg1); end
+  def job_or_instantiate(*args); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -578,15 +590,15 @@ module ActiveJob::Exceptions
   #
   # ==== Examples
   #
-  # class SiteScraperJob < ActiveJob::Base
-  # rescue_from(ErrorLoadingSite) do
-  # retry_job queue: :low_priority
-  # end
+  #  class SiteScraperJob < ActiveJob::Base
+  #    rescue_from(ErrorLoadingSite) do
+  #      retry_job queue: :low_priority
+  #    end
   #
-  # def perform(*args)
-  # # raise ErrorLoadingSite if cannot scrape
-  # end
-  # end
+  #    def perform(*args)
+  #      # raise ErrorLoadingSite if cannot scrape
+  #    end
+  #  end
   def retry_job(options = T.unsafe(nil)); end
 
   private
@@ -611,17 +623,17 @@ module ActiveJob::Exceptions::ClassMethods
   #
   # ==== Example
   #
-  # class SearchIndexingJob < ActiveJob::Base
-  # discard_on ActiveJob::DeserializationError
-  # discard_on(CustomAppException) do |job, error|
-  # ExceptionNotifier.caught(error)
-  # end
+  #  class SearchIndexingJob < ActiveJob::Base
+  #    discard_on ActiveJob::DeserializationError
+  #    discard_on(CustomAppException) do |job, error|
+  #      ExceptionNotifier.caught(error)
+  #    end
   #
-  # def perform(record)
-  # # Will raise ActiveJob::DeserializationError if the record can't be deserialized
-  # # Might raise CustomAppException for something domain specific
-  # end
-  # end
+  #    def perform(record)
+  #      # Will raise ActiveJob::DeserializationError if the record can't be deserialized
+  #      # Might raise CustomAppException for something domain specific
+  #    end
+  #  end
   def discard_on(*exceptions); end
 
   # Catch the exception and reschedule job for re-execution after so many seconds, for a specific number of attempts.
@@ -634,9 +646,9 @@ module ActiveJob::Exceptions::ClassMethods
   #
   # ==== Options
   # * <tt>:wait</tt> - Re-enqueues the job with a delay specified either in seconds (default: 3 seconds),
-  # as a computing proc that takes the number of executions so far as an argument, or as a symbol reference of
-  # <tt>:exponentially_longer</tt>, which applies the wait algorithm of <tt>((executions**4) + (Kernel.rand * (executions**4) * jitter)) + 2</tt>
-  # (first wait ~3s, then ~18s, then ~83s, etc)
+  #   as a computing proc that takes the number of executions so far as an argument, or as a symbol reference of
+  #   <tt>:exponentially_longer</tt>, which applies the wait algorithm of <tt>((executions**4) + (Kernel.rand * (executions**4) * jitter)) + 2</tt>
+  #   (first wait ~3s, then ~18s, then ~83s, etc)
   # * <tt>:attempts</tt> - Re-enqueues the job the specified number of times (default: 5 attempts)
   # * <tt>:queue</tt> - Re-enqueues the job on a different queue
   # * <tt>:priority</tt> - Re-enqueues the job with a different priority
@@ -644,27 +656,27 @@ module ActiveJob::Exceptions::ClassMethods
   #
   # ==== Examples
   #
-  # class RemoteServiceJob < ActiveJob::Base
-  # retry_on CustomAppException # defaults to ~3s wait, 5 attempts
-  # retry_on AnotherCustomAppException, wait: ->(executions) { executions * 2 }
+  #  class RemoteServiceJob < ActiveJob::Base
+  #    retry_on CustomAppException # defaults to ~3s wait, 5 attempts
+  #    retry_on AnotherCustomAppException, wait: ->(executions) { executions * 2 }
   #
-  # retry_on ActiveRecord::Deadlocked, wait: 5.seconds, attempts: 3
-  # retry_on Net::OpenTimeout, Timeout::Error, wait: :exponentially_longer, attempts: 10 # retries at most 10 times for Net::OpenTimeout and Timeout::Error combined
-  # # To retry at most 10 times for each individual exception:
-  # # retry_on Net::OpenTimeout, wait: :exponentially_longer, attempts: 10
-  # # retry_on Net::ReadTimeout, wait: 5.seconds, jitter: 0.30, attempts: 10
-  # # retry_on Timeout::Error, wait: :exponentially_longer, attempts: 10
+  #    retry_on ActiveRecord::Deadlocked, wait: 5.seconds, attempts: 3
+  #    retry_on Net::OpenTimeout, Timeout::Error, wait: :exponentially_longer, attempts: 10 # retries at most 10 times for Net::OpenTimeout and Timeout::Error combined
+  #    # To retry at most 10 times for each individual exception:
+  #    # retry_on Net::OpenTimeout, wait: :exponentially_longer, attempts: 10
+  #    # retry_on Net::ReadTimeout, wait: 5.seconds, jitter: 0.30, attempts: 10
+  #    # retry_on Timeout::Error, wait: :exponentially_longer, attempts: 10
   #
-  # retry_on(YetAnotherCustomAppException) do |job, error|
-  # ExceptionNotifier.caught(error)
-  # end
+  #    retry_on(YetAnotherCustomAppException) do |job, error|
+  #      ExceptionNotifier.caught(error)
+  #    end
   #
-  # def perform(*args)
-  # # Might raise CustomAppException, AnotherCustomAppException, or YetAnotherCustomAppException for something domain specific
-  # # Might raise ActiveRecord::Deadlocked when a local db deadlock is detected
-  # # Might raise Net::OpenTimeout or Timeout::Error when the remote service is down
-  # end
-  # end
+  #    def perform(*args)
+  #      # Might raise CustomAppException, AnotherCustomAppException, or YetAnotherCustomAppException for something domain specific
+  #      # Might raise ActiveRecord::Deadlocked when a local db deadlock is detected
+  #      # Might raise Net::OpenTimeout or Timeout::Error when the remote service is down
+  #    end
+  #  end
   def retry_on(*exceptions, wait: T.unsafe(nil), attempts: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil), jitter: T.unsafe(nil)); end
 end
 
@@ -685,13 +697,13 @@ module ActiveJob::Execution
   # but directly executed by blocking the execution of others until it's finished.
   # +perform_now+ returns the value of your job's +perform+ method.
   #
-  # class MyJob < ActiveJob::Base
-  # def perform
-  # "Hello World!"
-  # end
-  # end
+  #   class MyJob < ActiveJob::Base
+  #     def perform
+  #       "Hello World!"
+  #     end
+  #   end
   #
-  # puts MyJob.new(*args).perform_now # => "Hello World!"
+  #   puts MyJob.new(*args).perform_now # => "Hello World!"
   def perform_now; end
 
   module GeneratedClassMethods
@@ -713,8 +725,8 @@ module ActiveJob::Execution::ClassMethods
 
   # Performs the job immediately.
   #
-  # MyJob.perform_now("mike")
-  def perform_now(*args, **_arg1); end
+  #   MyJob.perform_now("mike")
+  def perform_now(*args); end
 end
 
 module ActiveJob::Instrumentation
@@ -752,7 +764,9 @@ module ActiveJob::Logging
 
   private
 
+  # @return [Boolean]
   def logger_tagged_by_active_job?; end
+
   def tag_logger(*tags); end
 
   module GeneratedClassMethods
@@ -801,6 +815,8 @@ module ActiveJob::QueueAdapter::ClassMethods
   private
 
   def assign_adapter(adapter_name, queue_adapter); end
+
+  # @return [Boolean]
   def queue_adapter?(object); end
 end
 
@@ -824,18 +840,18 @@ ActiveJob::QueueAdapter::ClassMethods::QUEUE_ADAPTER_METHODS = T.let(T.unsafe(ni
 #
 # === Backends Features
 #
-# |                   | Async | Queues | Delayed    | Priorities | Timeout | Retries |
-# |-------------------|-------|--------|------------|------------|---------|---------|
-# | Backburner        | Yes   | Yes    | Yes        | Yes        | Job     | Global  |
-# | Delayed Job       | Yes   | Yes    | Yes        | Job        | Global  | Global  |
-# | Que               | Yes   | Yes    | Yes        | Job        | No      | Job     |
-# | queue_classic     | Yes   | Yes    | Yes*       | No         | No      | No      |
-# | Resque            | Yes   | Yes    | Yes (Gem)  | Queue      | Global  | Yes     |
-# | Sidekiq           | Yes   | Yes    | Yes        | Queue      | No      | Job     |
-# | Sneakers          | Yes   | Yes    | No         | Queue      | Queue   | No      |
-# | Sucker Punch      | Yes   | Yes    | Yes        | No         | No      | No      |
-# | Active Job Async  | Yes   | Yes    | Yes        | No         | No      | No      |
-# | Active Job Inline | No    | Yes    | N/A        | N/A        | N/A     | N/A     |
+#   |                   | Async | Queues | Delayed    | Priorities | Timeout | Retries |
+#   |-------------------|-------|--------|------------|------------|---------|---------|
+#   | Backburner        | Yes   | Yes    | Yes        | Yes        | Job     | Global  |
+#   | Delayed Job       | Yes   | Yes    | Yes        | Job        | Global  | Global  |
+#   | Que               | Yes   | Yes    | Yes        | Job        | No      | Job     |
+#   | queue_classic     | Yes   | Yes    | Yes*       | No         | No      | No      |
+#   | Resque            | Yes   | Yes    | Yes (Gem)  | Queue      | Global  | Yes     |
+#   | Sidekiq           | Yes   | Yes    | Yes        | Queue      | No      | Job     |
+#   | Sneakers          | Yes   | Yes    | No         | Queue      | Queue   | No      |
+#   | Sucker Punch      | Yes   | Yes    | Yes        | No         | No      | No      |
+#   | Active Job Async  | Yes   | Yes    | Yes        | No         | No      | No      |
+#   | Active Job Inline | No    | Yes    | N/A        | N/A        | N/A     | N/A     |
 #
 # ==== Async
 #
@@ -921,8 +937,8 @@ module ActiveJob::QueueAdapters
   class << self
     # Returns adapter for specified name.
     #
-    # ActiveJob::QueueAdapters.lookup(:sidekiq)
-    # # => ActiveJob::QueueAdapters::SidekiqAdapter
+    #   ActiveJob::QueueAdapters.lookup(:sidekiq)
+    #   # => ActiveJob::QueueAdapters::SidekiqAdapter
     def lookup(name); end
   end
 end
@@ -939,21 +955,23 @@ ActiveJob::QueueAdapters::ADAPTER = T.let(T.unsafe(nil), String)
 #
 # To use this adapter, set queue adapter to +:async+:
 #
-# config.active_job.queue_adapter = :async
+#   config.active_job.queue_adapter = :async
 #
 # To configure the adapter's thread pool, instantiate the adapter and
 # pass your own config:
 #
-# config.active_job.queue_adapter = ActiveJob::QueueAdapters::AsyncAdapter.new \
-# min_threads: 1,
-# max_threads: 2 * Concurrent.processor_count,
-# idletime: 600.seconds
+#   config.active_job.queue_adapter = ActiveJob::QueueAdapters::AsyncAdapter.new \
+#     min_threads: 1,
+#     max_threads: 2 * Concurrent.processor_count,
+#     idletime: 600.seconds
 #
 # The adapter uses a {Concurrent Ruby}[https://github.com/ruby-concurrency/concurrent-ruby] thread pool to schedule and execute
 # jobs. Since jobs share a single thread pool, long-running jobs will block
 # short-lived jobs. Fine for dev/test; bad for production.
 class ActiveJob::QueueAdapters::AsyncAdapter
   # See {Concurrent::ThreadPoolExecutor}[https://ruby-concurrency.github.io/concurrent-ruby/master/Concurrent/ThreadPoolExecutor.html] for executor options.
+  #
+  # @return [AsyncAdapter] a new instance of AsyncAdapter
   def initialize(**executor_options); end
 
   def enqueue(job); end
@@ -973,12 +991,14 @@ end
 # adapters and deployment environments. Otherwise, serialization bugs
 # may creep in undetected.
 class ActiveJob::QueueAdapters::AsyncAdapter::JobWrapper
+  # @return [JobWrapper] a new instance of JobWrapper
   def initialize(job); end
 
   def perform; end
 end
 
 class ActiveJob::QueueAdapters::AsyncAdapter::Scheduler
+  # @return [Scheduler] a new instance of Scheduler
   def initialize(**options); end
 
   def enqueue(job, queue_name:); end
@@ -989,6 +1009,8 @@ class ActiveJob::QueueAdapters::AsyncAdapter::Scheduler
   def immediate; end
 
   # Sets the attribute immediate
+  #
+  # @param value the value to set the attribute immediate to.
   def immediate=(_arg0); end
 
   def shutdown(wait: T.unsafe(nil)); end
@@ -1003,9 +1025,11 @@ ActiveJob::QueueAdapters::AsyncAdapter::Scheduler::DEFAULT_EXECUTOR_OPTIONS = T.
 #
 # To use the Inline set the queue_adapter config to +:inline+.
 #
-# Rails.application.config.active_job.queue_adapter = :inline
+#   Rails.application.config.active_job.queue_adapter = :inline
 class ActiveJob::QueueAdapters::InlineAdapter
   def enqueue(job); end
+
+  # @raise [NotImplementedError]
   def enqueue_at(*_arg0); end
 end
 
@@ -1020,7 +1044,7 @@ end
 #
 # To use Sidekiq set the queue_adapter config to +:sidekiq+.
 #
-# Rails.application.config.active_job.queue_adapter = :sidekiq
+#   Rails.application.config.active_job.queue_adapter = :sidekiq
 class ActiveJob::QueueAdapters::SidekiqAdapter
   def enqueue(job); end
   def enqueue_at(job, timestamp); end
@@ -1064,12 +1088,14 @@ end
 #
 # To use the test adapter set queue_adapter config to +:test+.
 #
-# Rails.application.config.active_job.queue_adapter = :test
+#   Rails.application.config.active_job.queue_adapter = :test
 class ActiveJob::QueueAdapters::TestAdapter
   # Returns the value of attribute at.
   def at; end
 
   # Sets the attribute at
+  #
+  # @param value the value to set the attribute at to.
   def at=(_arg0); end
 
   def enqueue(job); end
@@ -1079,51 +1105,74 @@ class ActiveJob::QueueAdapters::TestAdapter
   def enqueued_jobs; end
 
   # Sets the attribute enqueued_jobs
+  #
+  # @param value the value to set the attribute enqueued_jobs to.
   def enqueued_jobs=(_arg0); end
 
   # Returns the value of attribute filter.
   def filter; end
 
   # Sets the attribute filter
+  #
+  # @param value the value to set the attribute filter to.
   def filter=(_arg0); end
 
   # Returns the value of attribute perform_enqueued_at_jobs.
   def perform_enqueued_at_jobs; end
 
   # Sets the attribute perform_enqueued_at_jobs
+  #
+  # @param value the value to set the attribute perform_enqueued_at_jobs to.
   def perform_enqueued_at_jobs=(_arg0); end
 
   # Returns the value of attribute perform_enqueued_jobs.
   def perform_enqueued_jobs; end
 
   # Sets the attribute perform_enqueued_jobs
+  #
+  # @param value the value to set the attribute perform_enqueued_jobs to.
   def perform_enqueued_jobs=(_arg0); end
 
   # Provides a store of all the performed jobs with the TestAdapter so you can check them.
   def performed_jobs; end
 
   # Sets the attribute performed_jobs
+  #
+  # @param value the value to set the attribute performed_jobs to.
   def performed_jobs=(_arg0); end
 
   # Returns the value of attribute queue.
   def queue; end
 
   # Sets the attribute queue
+  #
+  # @param value the value to set the attribute queue to.
   def queue=(_arg0); end
 
   # Returns the value of attribute reject.
   def reject; end
 
   # Sets the attribute reject
+  #
+  # @param value the value to set the attribute reject to.
   def reject=(_arg0); end
 
   private
 
   def filter_as_proc(filter); end
+
+  # @return [Boolean]
   def filtered?(job); end
+
+  # @return [Boolean]
   def filtered_job_class?(job); end
+
+  # @return [Boolean]
   def filtered_queue?(job); end
+
+  # @return [Boolean]
   def filtered_time?(job); end
+
   def job_to_hash(job, extras = T.unsafe(nil)); end
   def perform_or_enqueue(perform, job, job_data); end
 end
@@ -1164,33 +1213,33 @@ module ActiveJob::QueueName::ClassMethods
 
   # Specifies the name of the queue to process the job on.
   #
-  # class PublishToFeedJob < ActiveJob::Base
-  # queue_as :feeds
+  #   class PublishToFeedJob < ActiveJob::Base
+  #     queue_as :feeds
   #
-  # def perform(post)
-  # post.to_feed!
-  # end
-  # end
+  #     def perform(post)
+  #       post.to_feed!
+  #     end
+  #   end
   #
   # Can be given a block that will evaluate in the context of the job
   # allowing +self.arguments+ to be accessed so that a dynamic queue name
   # can be applied:
   #
-  # class PublishToFeedJob < ApplicationJob
-  # queue_as do
-  # post = self.arguments.first
+  #   class PublishToFeedJob < ApplicationJob
+  #     queue_as do
+  #       post = self.arguments.first
   #
-  # if post.paid?
-  # :paid_feeds
-  # else
-  # :feeds
-  # end
-  # end
+  #       if post.paid?
+  #         :paid_feeds
+  #       else
+  #         :feeds
+  #       end
+  #     end
   #
-  # def perform(post)
-  # post.to_feed!
-  # end
-  # end
+  #     def perform(post)
+  #       post.to_feed!
+  #     end
+  #   end
   def queue_as(part_name = T.unsafe(nil), &block); end
 
   def queue_name_from_part(part_name); end
@@ -1227,13 +1276,13 @@ module ActiveJob::QueuePriority::ClassMethods
 
   # Specifies the priority of the queue to create the job with.
   #
-  # class PublishToFeedJob < ActiveJob::Base
-  # queue_with_priority 50
+  #   class PublishToFeedJob < ActiveJob::Base
+  #     queue_with_priority 50
   #
-  # def perform(post)
-  # post.to_feed!
-  # end
-  # end
+  #     def perform(post)
+  #       post.to_feed!
+  #     end
+  #   end
   #
   # Specify either an argument or a block.
   def queue_with_priority(priority = T.unsafe(nil), &block); end
@@ -1276,11 +1325,15 @@ module ActiveJob::Serializers
     # Returns deserialized object.
     # Will look up through all known serializers.
     # If no serializer found will raise <tt>ArgumentError</tt>.
+    #
+    # @raise [ArgumentError]
     def deserialize(argument); end
 
     # Returns serialized representative of the passed object.
     # Will look up through all known serializers.
     # Raises <tt>ActiveJob::SerializationError</tt> if it can't find a proper serializer.
+    #
+    # @raise [SerializationError]
     def serialize(argument); end
 
     # Returns list of known serializers.
@@ -1327,43 +1380,49 @@ end
 #
 # Example:
 #
-# class MoneySerializer < ActiveJob::Serializers::ObjectSerializer
-# def serialize(money)
-# super("amount" => money.amount, "currency" => money.currency)
-# end
+#   class MoneySerializer < ActiveJob::Serializers::ObjectSerializer
+#     def serialize(money)
+#       super("amount" => money.amount, "currency" => money.currency)
+#     end
 #
-# def deserialize(hash)
-# Money.new(hash["amount"], hash["currency"])
-# end
+#     def deserialize(hash)
+#       Money.new(hash["amount"], hash["currency"])
+#     end
 #
-# private
+#     private
 #
-# def klass
-# Money
-# end
-# end
+#       def klass
+#         Money
+#       end
+#   end
 class ActiveJob::Serializers::ObjectSerializer
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
   # Deserializes an argument from a JSON primitive type.
+  #
+  # @raise [NotImplementedError]
   def deserialize(json); end
 
   # Serializes an argument to a JSON primitive type.
   def serialize(hash); end
 
   # Determines if an argument should be serialized by a serializer.
+  #
+  # @return [Boolean]
   def serialize?(argument); end
 
   private
 
   # The class of the object that will be serialized.
+  #
+  # @raise [NotImplementedError]
   def klass; end
 
   class << self
-    def deserialize(*_arg0, **_arg1, &_arg2); end
-    def serialize(*_arg0, **_arg1, &_arg2); end
-    def serialize?(*_arg0, **_arg1, &_arg2); end
+    def deserialize(*_arg0, &_arg1); end
+    def serialize(*_arg0, &_arg1); end
+    def serialize?(*_arg0, &_arg1); end
   end
 end
 
@@ -1410,190 +1469,190 @@ module ActiveJob::TestHelper
 
   # Asserts that the number of enqueued jobs matches the given number.
   #
-  # def test_jobs
-  # assert_enqueued_jobs 0
-  # HelloJob.perform_later('david')
-  # assert_enqueued_jobs 1
-  # HelloJob.perform_later('abdelkader')
-  # assert_enqueued_jobs 2
-  # end
+  #   def test_jobs
+  #     assert_enqueued_jobs 0
+  #     HelloJob.perform_later('david')
+  #     assert_enqueued_jobs 1
+  #     HelloJob.perform_later('abdelkader')
+  #     assert_enqueued_jobs 2
+  #   end
   #
   # If a block is passed, asserts that the block will cause the specified number of
   # jobs to be enqueued.
   #
-  # def test_jobs_again
-  # assert_enqueued_jobs 1 do
-  # HelloJob.perform_later('cristian')
-  # end
+  #   def test_jobs_again
+  #     assert_enqueued_jobs 1 do
+  #       HelloJob.perform_later('cristian')
+  #     end
   #
-  # assert_enqueued_jobs 2 do
-  # HelloJob.perform_later('aaron')
-  # HelloJob.perform_later('rafael')
-  # end
-  # end
+  #     assert_enqueued_jobs 2 do
+  #       HelloJob.perform_later('aaron')
+  #       HelloJob.perform_later('rafael')
+  #     end
+  #   end
   #
   # Asserts the number of times a specific job was enqueued by passing +:only+ option.
   #
-  # def test_logging_job
-  # assert_enqueued_jobs 1, only: LoggingJob do
-  # LoggingJob.perform_later
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_logging_job
+  #     assert_enqueued_jobs 1, only: LoggingJob do
+  #       LoggingJob.perform_later
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # Asserts the number of times a job except specific class was enqueued by passing +:except+ option.
   #
-  # def test_logging_job
-  # assert_enqueued_jobs 1, except: HelloJob do
-  # LoggingJob.perform_later
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_logging_job
+  #     assert_enqueued_jobs 1, except: HelloJob do
+  #       LoggingJob.perform_later
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts the number of times a job is enqueued to a specific queue by passing +:queue+ option.
   #
-  # def test_logging_job
-  # assert_enqueued_jobs 2, queue: 'default' do
-  # LoggingJob.perform_later
-  # HelloJob.perform_later('elfassy')
-  # end
-  # end
+  #   def test_logging_job
+  #     assert_enqueued_jobs 2, queue: 'default' do
+  #       LoggingJob.perform_later
+  #       HelloJob.perform_later('elfassy')
+  #     end
+  #   end
   def assert_enqueued_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   # Asserts that the job has been enqueued with the given arguments.
   #
-  # def test_assert_enqueued_with
-  # MyJob.perform_later(1,2,3)
-  # assert_enqueued_with(job: MyJob, args: [1,2,3])
+  #   def test_assert_enqueued_with
+  #     MyJob.perform_later(1,2,3)
+  #     assert_enqueued_with(job: MyJob, args: [1,2,3])
   #
-  # MyJob.set(wait_until: Date.tomorrow.noon, queue: "my_queue").perform_later
-  # assert_enqueued_with(at: Date.tomorrow.noon, queue: "my_queue")
-  # end
+  #     MyJob.set(wait_until: Date.tomorrow.noon, queue: "my_queue").perform_later
+  #     assert_enqueued_with(at: Date.tomorrow.noon, queue: "my_queue")
+  #   end
   #
   # The given arguments may also be specified as matcher procs that return a
   # boolean value indicating whether a job's attribute meets certain criteria.
   #
   # For example, a proc can be used to match a range of times:
   #
-  # def test_assert_enqueued_with
-  # at_matcher = ->(job_at) { (Date.yesterday..Date.tomorrow).cover?(job_at) }
+  #   def test_assert_enqueued_with
+  #     at_matcher = ->(job_at) { (Date.yesterday..Date.tomorrow).cover?(job_at) }
   #
-  # MyJob.set(wait_until: Date.today.noon).perform_later
+  #     MyJob.set(wait_until: Date.today.noon).perform_later
   #
-  # assert_enqueued_with(job: MyJob, at: at_matcher)
-  # end
+  #     assert_enqueued_with(job: MyJob, at: at_matcher)
+  #   end
   #
   # A proc can also be used to match a subset of a job's args:
   #
-  # def test_assert_enqueued_with
-  # args_matcher = ->(job_args) { job_args[0].key?(:foo) }
+  #   def test_assert_enqueued_with
+  #     args_matcher = ->(job_args) { job_args[0].key?(:foo) }
   #
-  # MyJob.perform_later(foo: "bar", other_arg: "No need to check in the test")
+  #     MyJob.perform_later(foo: "bar", other_arg: "No need to check in the test")
   #
-  # assert_enqueued_with(job: MyJob, args: args_matcher)
-  # end
+  #     assert_enqueued_with(job: MyJob, args: args_matcher)
+  #   end
   #
   # If a block is passed, asserts that the block will cause the job to be
   # enqueued with the given arguments.
   #
-  # def test_assert_enqueued_with
-  # assert_enqueued_with(job: MyJob, args: [1,2,3]) do
-  # MyJob.perform_later(1,2,3)
-  # end
+  #   def test_assert_enqueued_with
+  #     assert_enqueued_with(job: MyJob, args: [1,2,3]) do
+  #       MyJob.perform_later(1,2,3)
+  #     end
   #
-  # assert_enqueued_with(job: MyJob, at: Date.tomorrow.noon) do
-  # MyJob.set(wait_until: Date.tomorrow.noon).perform_later
-  # end
-  # end
+  #     assert_enqueued_with(job: MyJob, at: Date.tomorrow.noon) do
+  #       MyJob.set(wait_until: Date.tomorrow.noon).perform_later
+  #     end
+  #   end
   def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   # Asserts that no jobs have been enqueued.
   #
-  # def test_jobs
-  # assert_no_enqueued_jobs
-  # HelloJob.perform_later('jeremy')
-  # assert_enqueued_jobs 1
-  # end
+  #   def test_jobs
+  #     assert_no_enqueued_jobs
+  #     HelloJob.perform_later('jeremy')
+  #     assert_enqueued_jobs 1
+  #   end
   #
   # If a block is passed, asserts that the block will not cause any job to be enqueued.
   #
-  # def test_jobs_again
-  # assert_no_enqueued_jobs do
-  # # No job should be enqueued from this block
-  # end
-  # end
+  #   def test_jobs_again
+  #     assert_no_enqueued_jobs do
+  #       # No job should be enqueued from this block
+  #     end
+  #   end
   #
   # Asserts that no jobs of a specific kind are enqueued by passing +:only+ option.
   #
-  # def test_no_logging
-  # assert_no_enqueued_jobs only: LoggingJob do
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_no_logging
+  #     assert_no_enqueued_jobs only: LoggingJob do
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # Asserts that no jobs except specific class are enqueued by passing +:except+ option.
   #
-  # def test_no_logging
-  # assert_no_enqueued_jobs except: HelloJob do
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_no_logging
+  #     assert_no_enqueued_jobs except: HelloJob do
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts that no jobs are enqueued to a specific queue by passing +:queue+ option
   #
-  # def test_no_logging
-  # assert_no_enqueued_jobs queue: 'default' do
-  # LoggingJob.set(queue: :some_queue).perform_later
-  # end
-  # end
+  #   def test_no_logging
+  #     assert_no_enqueued_jobs queue: 'default' do
+  #       LoggingJob.set(queue: :some_queue).perform_later
+  #     end
+  #   end
   #
   # Note: This assertion is simply a shortcut for:
   #
-  # assert_enqueued_jobs 0, &block
+  #   assert_enqueued_jobs 0, &block
   def assert_no_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   # Asserts that no jobs have been performed.
   #
-  # def test_jobs
-  # assert_no_performed_jobs
+  #   def test_jobs
+  #     assert_no_performed_jobs
   #
-  # perform_enqueued_jobs do
-  # HelloJob.perform_later('matthew')
-  # assert_performed_jobs 1
-  # end
-  # end
+  #     perform_enqueued_jobs do
+  #       HelloJob.perform_later('matthew')
+  #       assert_performed_jobs 1
+  #     end
+  #   end
   #
   # If a block is passed, asserts that the block will not cause any job to be performed.
   #
-  # def test_jobs_again
-  # assert_no_performed_jobs do
-  # # No job should be performed from this block
-  # end
-  # end
+  #   def test_jobs_again
+  #     assert_no_performed_jobs do
+  #       # No job should be performed from this block
+  #     end
+  #   end
   #
   # The block form supports filtering. If the +:only+ option is specified,
   # then only the listed job(s) will not be performed.
   #
-  # def test_no_logging
-  # assert_no_performed_jobs only: LoggingJob do
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_no_logging
+  #     assert_no_performed_jobs only: LoggingJob do
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # Also if the +:except+ option is specified,
   # then the job(s) except specific class will not be performed.
   #
-  # def test_no_logging
-  # assert_no_performed_jobs except: HelloJob do
-  # HelloJob.perform_later('jeremy')
-  # end
-  # end
+  #   def test_no_logging
+  #     assert_no_performed_jobs except: HelloJob do
+  #       HelloJob.perform_later('jeremy')
+  #     end
+  #   end
   #
   # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
@@ -1601,207 +1660,207 @@ module ActiveJob::TestHelper
   # If the +:queue+ option is specified,
   # then only the job(s) enqueued to a specific queue will not be performed.
   #
-  # def test_assert_no_performed_jobs_with_queue_option
-  # assert_no_performed_jobs queue: :some_queue do
-  # HelloJob.set(queue: :other_queue).perform_later("jeremy")
-  # end
-  # end
+  #   def test_assert_no_performed_jobs_with_queue_option
+  #     assert_no_performed_jobs queue: :some_queue do
+  #       HelloJob.set(queue: :other_queue).perform_later("jeremy")
+  #     end
+  #   end
   #
   # Note: This assertion is simply a shortcut for:
   #
-  # assert_performed_jobs 0, &block
+  #   assert_performed_jobs 0, &block
   def assert_no_performed_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   # Asserts that the number of performed jobs matches the given number.
   # If no block is passed, <tt>perform_enqueued_jobs</tt>
   # must be called around or after the job call.
   #
-  # def test_jobs
-  # assert_performed_jobs 0
+  #   def test_jobs
+  #     assert_performed_jobs 0
   #
-  # perform_enqueued_jobs do
-  # HelloJob.perform_later('xavier')
-  # end
-  # assert_performed_jobs 1
+  #     perform_enqueued_jobs do
+  #       HelloJob.perform_later('xavier')
+  #     end
+  #     assert_performed_jobs 1
   #
-  # HelloJob.perform_later('yves')
+  #     HelloJob.perform_later('yves')
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_jobs 2
-  # end
+  #     assert_performed_jobs 2
+  #   end
   #
   # If a block is passed, asserts that the block will cause the specified number of
   # jobs to be performed.
   #
-  # def test_jobs_again
-  # assert_performed_jobs 1 do
-  # HelloJob.perform_later('robin')
-  # end
+  #   def test_jobs_again
+  #     assert_performed_jobs 1 do
+  #       HelloJob.perform_later('robin')
+  #     end
   #
-  # assert_performed_jobs 2 do
-  # HelloJob.perform_later('carlos')
-  # HelloJob.perform_later('sean')
-  # end
-  # end
+  #     assert_performed_jobs 2 do
+  #       HelloJob.perform_later('carlos')
+  #       HelloJob.perform_later('sean')
+  #     end
+  #   end
   #
   # This method also supports filtering. If the +:only+ option is specified,
   # then only the listed job(s) will be performed.
   #
-  # def test_hello_job
-  # assert_performed_jobs 1, only: HelloJob do
-  # HelloJob.perform_later('jeremy')
-  # LoggingJob.perform_later
-  # end
-  # end
+  #     def test_hello_job
+  #       assert_performed_jobs 1, only: HelloJob do
+  #         HelloJob.perform_later('jeremy')
+  #         LoggingJob.perform_later
+  #       end
+  #     end
   #
   # Also if the +:except+ option is specified,
   # then the job(s) except specific class will be performed.
   #
-  # def test_hello_job
-  # assert_performed_jobs 1, except: LoggingJob do
-  # HelloJob.perform_later('jeremy')
-  # LoggingJob.perform_later
-  # end
-  # end
+  #     def test_hello_job
+  #       assert_performed_jobs 1, except: LoggingJob do
+  #         HelloJob.perform_later('jeremy')
+  #         LoggingJob.perform_later
+  #       end
+  #     end
   #
   # An array may also be specified, to support testing multiple jobs.
   #
-  # def test_hello_and_logging_jobs
-  # assert_nothing_raised do
-  # assert_performed_jobs 2, only: [HelloJob, LoggingJob] do
-  # HelloJob.perform_later('jeremy')
-  # LoggingJob.perform_later('stewie')
-  # RescueJob.perform_later('david')
-  # end
-  # end
-  # end
+  #     def test_hello_and_logging_jobs
+  #       assert_nothing_raised do
+  #         assert_performed_jobs 2, only: [HelloJob, LoggingJob] do
+  #           HelloJob.perform_later('jeremy')
+  #           LoggingJob.perform_later('stewie')
+  #           RescueJob.perform_later('david')
+  #         end
+  #       end
+  #     end
   #
   # A proc may also be specified. When passed a Proc, the job's instance will be passed as argument.
   #
-  # def test_hello_and_logging_jobs
-  # assert_nothing_raised do
-  # assert_performed_jobs(1, only: ->(job) { job.is_a?(HelloJob) }) do
-  # HelloJob.perform_later('jeremy')
-  # LoggingJob.perform_later('stewie')
-  # RescueJob.perform_later('david')
-  # end
-  # end
-  # end
+  #     def test_hello_and_logging_jobs
+  #       assert_nothing_raised do
+  #         assert_performed_jobs(1, only: ->(job) { job.is_a?(HelloJob) }) do
+  #           HelloJob.perform_later('jeremy')
+  #           LoggingJob.perform_later('stewie')
+  #           RescueJob.perform_later('david')
+  #         end
+  #       end
+  #     end
   #
   # If the +:queue+ option is specified,
   # then only the job(s) enqueued to a specific queue will be performed.
   #
-  # def test_assert_performed_jobs_with_queue_option
-  # assert_performed_jobs 1, queue: :some_queue do
-  # HelloJob.set(queue: :some_queue).perform_later("jeremy")
-  # HelloJob.set(queue: :other_queue).perform_later("bogdan")
-  # end
-  # end
+  #     def test_assert_performed_jobs_with_queue_option
+  #       assert_performed_jobs 1, queue: :some_queue do
+  #         HelloJob.set(queue: :some_queue).perform_later("jeremy")
+  #         HelloJob.set(queue: :other_queue).perform_later("bogdan")
+  #       end
+  #     end
   def assert_performed_jobs(number, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   # Asserts that the job has been performed with the given arguments.
   #
-  # def test_assert_performed_with
-  # MyJob.perform_later(1,2,3)
+  #   def test_assert_performed_with
+  #     MyJob.perform_later(1,2,3)
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_with(job: MyJob, args: [1,2,3])
+  #     assert_performed_with(job: MyJob, args: [1,2,3])
   #
-  # MyJob.set(wait_until: Date.tomorrow.noon, queue: "my_queue").perform_later
+  #     MyJob.set(wait_until: Date.tomorrow.noon, queue: "my_queue").perform_later
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_with(at: Date.tomorrow.noon, queue: "my_queue")
-  # end
+  #     assert_performed_with(at: Date.tomorrow.noon, queue: "my_queue")
+  #   end
   #
   # The given arguments may also be specified as matcher procs that return a
   # boolean value indicating whether a job's attribute meets certain criteria.
   #
   # For example, a proc can be used to match a range of times:
   #
-  # def test_assert_performed_with
-  # at_matcher = ->(job_at) { (Date.yesterday..Date.tomorrow).cover?(job_at) }
+  #   def test_assert_performed_with
+  #     at_matcher = ->(job_at) { (Date.yesterday..Date.tomorrow).cover?(job_at) }
   #
-  # MyJob.set(wait_until: Date.today.noon).perform_later
+  #     MyJob.set(wait_until: Date.today.noon).perform_later
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_with(job: MyJob, at: at_matcher)
-  # end
+  #     assert_performed_with(job: MyJob, at: at_matcher)
+  #   end
   #
   # A proc can also be used to match a subset of a job's args:
   #
-  # def test_assert_performed_with
-  # args_matcher = ->(job_args) { job_args[0].key?(:foo) }
+  #   def test_assert_performed_with
+  #     args_matcher = ->(job_args) { job_args[0].key?(:foo) }
   #
-  # MyJob.perform_later(foo: "bar", other_arg: "No need to check in the test")
+  #     MyJob.perform_later(foo: "bar", other_arg: "No need to check in the test")
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_with(job: MyJob, args: args_matcher)
-  # end
+  #     assert_performed_with(job: MyJob, args: args_matcher)
+  #   end
   #
   # If a block is passed, that block performs all of the jobs that were
   # enqueued throughout the duration of the block and asserts that
   # the job has been performed with the given arguments in the block.
   #
-  # def test_assert_performed_with
-  # assert_performed_with(job: MyJob, args: [1,2,3]) do
-  # MyJob.perform_later(1,2,3)
-  # end
+  #   def test_assert_performed_with
+  #     assert_performed_with(job: MyJob, args: [1,2,3]) do
+  #       MyJob.perform_later(1,2,3)
+  #     end
   #
-  # assert_performed_with(job: MyJob, at: Date.tomorrow.noon) do
-  # MyJob.set(wait_until: Date.tomorrow.noon).perform_later
-  # end
-  # end
+  #     assert_performed_with(job: MyJob, at: Date.tomorrow.noon) do
+  #       MyJob.set(wait_until: Date.tomorrow.noon).perform_later
+  #     end
+  #   end
   def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   def before_setup; end
-  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
+  def enqueued_jobs(*_arg0, &_arg1); end
   def enqueued_jobs=(arg); end
 
   # Performs all enqueued jobs. If a block is given, performs all of the jobs
   # that were enqueued throughout the duration of the block. If a block is
   # not given, performs all of the enqueued jobs up to this point in the test.
   #
-  # def test_perform_enqueued_jobs
-  # perform_enqueued_jobs do
-  # MyJob.perform_later(1, 2, 3)
-  # end
-  # assert_performed_jobs 1
-  # end
+  #   def test_perform_enqueued_jobs
+  #     perform_enqueued_jobs do
+  #       MyJob.perform_later(1, 2, 3)
+  #     end
+  #     assert_performed_jobs 1
+  #   end
   #
-  # def test_perform_enqueued_jobs_without_block
-  # MyJob.perform_later(1, 2, 3)
+  #   def test_perform_enqueued_jobs_without_block
+  #     MyJob.perform_later(1, 2, 3)
   #
-  # perform_enqueued_jobs
+  #     perform_enqueued_jobs
   #
-  # assert_performed_jobs 1
-  # end
+  #     assert_performed_jobs 1
+  #   end
   #
   # This method also supports filtering. If the +:only+ option is specified,
   # then only the listed job(s) will be performed.
   #
-  # def test_perform_enqueued_jobs_with_only
-  # perform_enqueued_jobs(only: MyJob) do
-  # MyJob.perform_later(1, 2, 3) # will be performed
-  # HelloJob.perform_later(1, 2, 3) # will not be performed
-  # end
-  # assert_performed_jobs 1
-  # end
+  #   def test_perform_enqueued_jobs_with_only
+  #     perform_enqueued_jobs(only: MyJob) do
+  #       MyJob.perform_later(1, 2, 3) # will be performed
+  #       HelloJob.perform_later(1, 2, 3) # will not be performed
+  #     end
+  #     assert_performed_jobs 1
+  #   end
   #
   # Also if the +:except+ option is specified,
   # then the job(s) except specific class will be performed.
   #
-  # def test_perform_enqueued_jobs_with_except
-  # perform_enqueued_jobs(except: HelloJob) do
-  # MyJob.perform_later(1, 2, 3) # will be performed
-  # HelloJob.perform_later(1, 2, 3) # will not be performed
-  # end
-  # assert_performed_jobs 1
-  # end
+  #   def test_perform_enqueued_jobs_with_except
+  #     perform_enqueued_jobs(except: HelloJob) do
+  #       MyJob.perform_later(1, 2, 3) # will be performed
+  #       HelloJob.perform_later(1, 2, 3) # will not be performed
+  #     end
+  #     assert_performed_jobs 1
+  #   end
   #
   # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
@@ -1809,26 +1868,26 @@ module ActiveJob::TestHelper
   # If the +:queue+ option is specified,
   # then only the job(s) enqueued to a specific queue will be performed.
   #
-  # def test_perform_enqueued_jobs_with_queue
-  # perform_enqueued_jobs queue: :some_queue do
-  # MyJob.set(queue: :some_queue).perform_later(1, 2, 3) # will be performed
-  # HelloJob.set(queue: :other_queue).perform_later(1, 2, 3) # will not be performed
-  # end
-  # assert_performed_jobs 1
-  # end
+  #   def test_perform_enqueued_jobs_with_queue
+  #     perform_enqueued_jobs queue: :some_queue do
+  #       MyJob.set(queue: :some_queue).perform_later(1, 2, 3) # will be performed
+  #       HelloJob.set(queue: :other_queue).perform_later(1, 2, 3) # will not be performed
+  #     end
+  #     assert_performed_jobs 1
+  #   end
   #
   # If the +:at+ option is specified, then only run jobs enqueued to run
   # immediately or before the given time
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
-  def performed_jobs(*_arg0, **_arg1, &_arg2); end
+  def performed_jobs(*_arg0, &_arg1); end
   def performed_jobs=(arg); end
 
   # Accesses the queue_adapter set by ActiveJob::Base.
   #
-  # def test_assert_job_has_custom_queue_adapter_set
-  # assert_instance_of CustomQueueAdapter, HelloJob.queue_adapter
-  # end
+  #   def test_assert_job_has_custom_queue_adapter_set
+  #     assert_instance_of CustomQueueAdapter, HelloJob.queue_adapter
+  #   end
   def queue_adapter; end
 
   # Specifies the queue adapter to use with all Active Job test helpers.
@@ -1855,6 +1914,8 @@ module ActiveJob::TestHelper
   def performed_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def prepare_args_for_assertion(args); end
   def queue_adapter_changed_jobs; end
+
+  # @raise [ArgumentError]
   def validate_option(only: T.unsafe(nil), except: T.unsafe(nil)); end
 end
 

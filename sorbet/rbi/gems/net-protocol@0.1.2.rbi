@@ -5,25 +5,34 @@
 # Please instead update this file by running `bin/tapioca gem net-protocol`.
 
 class Net::BufferedIO
+  # @return [BufferedIO] a new instance of BufferedIO
   def initialize(io, read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), continue_timeout: T.unsafe(nil), debug_output: T.unsafe(nil)); end
 
   def <<(*strs); end
   def close; end
+
+  # @return [Boolean]
   def closed?; end
 
   # Returns the value of attribute continue_timeout.
   def continue_timeout; end
 
   # Sets the attribute continue_timeout
+  #
+  # @param value the value to set the attribute continue_timeout to.
   def continue_timeout=(_arg0); end
 
   # Returns the value of attribute debug_output.
   def debug_output; end
 
   # Sets the attribute debug_output
+  #
+  # @param value the value to set the attribute debug_output to.
   def debug_output=(_arg0); end
 
+  # @return [Boolean]
   def eof?; end
+
   def inspect; end
 
   # Returns the value of attribute io.
@@ -36,6 +45,8 @@ class Net::BufferedIO
   def read_timeout; end
 
   # Sets the attribute read_timeout
+  #
+  # @param value the value to set the attribute read_timeout to.
   def read_timeout=(_arg0); end
 
   def readline; end
@@ -46,6 +57,8 @@ class Net::BufferedIO
   def write_timeout; end
 
   # Sets the attribute write_timeout
+  #
+  # @param value the value to set the attribute write_timeout to.
   def write_timeout=(_arg0); end
 
   def writeline(str); end
@@ -62,6 +75,7 @@ class Net::BufferedIO
 end
 
 class Net::InternetMessageIO < ::Net::BufferedIO
+  # @return [InternetMessageIO] a new instance of InternetMessageIO
   def initialize(*_arg0, **_arg1); end
 
   # *library private* (cannot handle 'break')
@@ -100,6 +114,7 @@ end
 Net::Protocol::VERSION = T.let(T.unsafe(nil), String)
 
 class Net::ReadAdapter
+  # @return [ReadAdapter] a new instance of ReadAdapter
   def initialize(block); end
 
   def <<(str); end
@@ -110,12 +125,15 @@ class Net::ReadAdapter
   # This method is needed because @block must be called by yield,
   # not Proc#call.  You can see difference when using `break' in
   # the block.
+  #
+  # @yield [str]
   def call_block(str); end
 end
 
 # ReadTimeout, a subclass of Timeout::Error, is raised if a chunk of the
 # response cannot be read within the read_timeout.
 class Net::ReadTimeout < ::Timeout::Error
+  # @return [ReadTimeout] a new instance of ReadTimeout
   def initialize(io = T.unsafe(nil)); end
 
   # Returns the value of attribute io.
@@ -126,6 +144,7 @@ end
 
 # The writer adapter class
 class Net::WriteAdapter
+  # @return [WriteAdapter] a new instance of WriteAdapter
   def initialize(writer); end
 
   def <<(str); end
@@ -139,6 +158,7 @@ end
 # WriteTimeout, a subclass of Timeout::Error, is raised if a chunk of the
 # response cannot be written within the write_timeout.  Not raised on Windows.
 class Net::WriteTimeout < ::Timeout::Error
+  # @return [WriteTimeout] a new instance of WriteTimeout
   def initialize(io = T.unsafe(nil)); end
 
   # Returns the value of attribute io.

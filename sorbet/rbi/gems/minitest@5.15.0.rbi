@@ -17,20 +17,20 @@ module Kernel
   # from the surrounding describe's class. The surrounding class may
   # subclass Minitest::Spec manually in order to easily share code:
   #
-  # class MySpec < Minitest::Spec
-  # # ... shared code ...
-  # end
+  #     class MySpec < Minitest::Spec
+  #       # ... shared code ...
+  #     end
   #
-  # class TestStuff < MySpec
-  # it "does stuff" do
-  # # shared code available here
-  # end
-  # describe "inner stuff" do
-  # it "still does stuff" do
-  # # ...and here
-  # end
-  # end
-  # end
+  #     class TestStuff < MySpec
+  #       it "does stuff" do
+  #         # shared code available here
+  #       end
+  #       describe "inner stuff" do
+  #         it "still does stuff" do
+  #           # ...and here
+  #         end
+  #       end
+  #     end
   #
   # For more information on getting started with writing specs, see:
   #
@@ -57,7 +57,7 @@ module Minitest
     # A simple hook allowing you to run a block of code after everything
     # is done running. Eg:
     #
-    # Minitest.after_run { p $debugging_info }
+    #   Minitest.after_run { p $debugging_info }
     def after_run(&block); end
 
     # Registers Minitest to run at process exit
@@ -85,15 +85,15 @@ module Minitest
     #
     # The overall structure of a run looks like this:
     #
-    # Minitest.autorun
-    # Minitest.run(args)
-    # Minitest.__run(reporter, options)
-    # Runnable.runnables.each
-    # runnable.run(reporter, options)
-    # self.runnable_methods.each
-    # self.run_one_method(self, runnable_method, reporter)
-    # Minitest.run_one_method(klass, runnable_method)
-    # klass.new(runnable_method).run
+    #   Minitest.autorun
+    #     Minitest.run(args)
+    #       Minitest.__run(reporter, options)
+    #         Runnable.runnables.each
+    #           runnable.run(reporter, options)
+    #             self.runnable_methods.each
+    #               self.run_one_method(self, runnable_method, reporter)
+    #                 Minitest.run_one_method(klass, runnable_method)
+    #                   klass.new(runnable_method).run
     def run(args = T.unsafe(nil)); end
 
     def run_one_method(klass, method_name); end
@@ -109,6 +109,8 @@ class Minitest::AbstractReporter
   def locked?; end
 
   # Did this run pass?
+  #
+  # @return [Boolean]
   def passed?; end
 
   # About to start running a test. This allows a reporter to show
@@ -176,7 +178,7 @@ module Minitest::Assertions
   # For comparing Floats.  Fails unless +exp+ and +act+ are within +delta+
   # of each other.
   #
-  # assert_in_delta Math::PI, (22.0 / 7.0), 0.01
+  #   assert_in_delta Math::PI, (22.0 / 7.0), 0.01
   def assert_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # For comparing Floats.  Fails unless +exp+ and +act+ have a relative
@@ -200,7 +202,7 @@ module Minitest::Assertions
 
   # For testing with binary operators. Eg:
   #
-  # assert_operator 5, :<=, 4
+  #   assert_operator 5, :<=, 4
   def assert_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # Fails if stdout or stderr do not output the expected results.
@@ -208,7 +210,7 @@ module Minitest::Assertions
   # "" if you require it to be silent. Pass in a regexp if you want
   # to pattern match.
   #
-  # assert_output(/hey/) { method_with_output }
+  #   assert_output(/hey/) { method_with_output }
   #
   # NOTE: this uses #capture_io, not #capture_subprocess_io.
   #
@@ -220,11 +222,11 @@ module Minitest::Assertions
 
   # For testing with predicates. Eg:
   #
-  # assert_predicate str, :empty?
+  #   assert_predicate str, :empty?
   #
   # This is really meant for specs and is front-ended by assert_operator:
   #
-  # str.must_be :empty?
+  #   str.must_be :empty?
   def assert_predicate(o1, op, msg = T.unsafe(nil)); end
 
   # Fails unless the block raises one of +exp+. Returns the
@@ -234,19 +236,19 @@ module Minitest::Assertions
   # failures and defaults to StandardError if no exception class is
   # passed. Eg:
   #
-  # assert_raises(CustomError) { method_with_custom_error }
+  #   assert_raises(CustomError) { method_with_custom_error }
   #
   # With custom error message:
   #
-  # assert_raises(CustomError, 'This should have raised CustomError') { method_with_custom_error }
+  #   assert_raises(CustomError, 'This should have raised CustomError') { method_with_custom_error }
   #
   # Using the returned object:
   #
-  # error = assert_raises(CustomError) do
-  # raise CustomError, 'This is really bad'
-  # end
+  #   error = assert_raises(CustomError) do
+  #     raise CustomError, 'This is really bad'
+  #   end
   #
-  # assert_equal 'This is really bad', error.message
+  #   assert_equal 'This is really bad', error.message
   def assert_raises(*exp); end
 
   # Fails unless +obj+ responds to +meth+.
@@ -270,13 +272,13 @@ module Minitest::Assertions
 
   # Captures $stdout and $stderr into strings:
   #
-  # out, err = capture_io do
-  # puts "Some info"
-  # warn "You did a bad thing"
-  # end
+  #   out, err = capture_io do
+  #     puts "Some info"
+  #     warn "You did a bad thing"
+  #   end
   #
-  # assert_match %r%info%, out
-  # assert_match %r%bad%, err
+  #   assert_match %r%info%, out
+  #   assert_match %r%bad%, err
   #
   # NOTE: For efficiency, this method uses StringIO and does not
   # capture IO for subprocesses. Use #capture_subprocess_io for
@@ -286,13 +288,13 @@ module Minitest::Assertions
   # Captures $stdout and $stderr into strings, using Tempfile to
   # ensure that subprocess IO is captured as well.
   #
-  # out, err = capture_subprocess_io do
-  # system "echo Some info"
-  # system "echo You did a bad thing 1>&2"
-  # end
+  #   out, err = capture_subprocess_io do
+  #     system "echo Some info"
+  #     system "echo You did a bad thing 1>&2"
+  #   end
   #
-  # assert_match %r%info%, out
-  # assert_match %r%bad%, err
+  #   assert_match %r%info%, out
+  #   assert_match %r%bad%, err
   #
   # NOTE: This method is approximately 10x slower than #capture_io so
   # only use it when you need to test the output of a subprocess.
@@ -349,7 +351,7 @@ module Minitest::Assertions
 
   # For comparing Floats.  Fails if +exp+ is within +delta+ of +act+.
   #
-  # refute_in_delta Math::PI, (22.0 / 7.0)
+  #   refute_in_delta Math::PI, (22.0 / 7.0)
   def refute_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # For comparing Floats.  Fails if +exp+ and +act+ have a relative error
@@ -373,8 +375,8 @@ module Minitest::Assertions
 
   # Fails if +o1+ is not +op+ +o2+. Eg:
   #
-  # refute_operator 1, :>, 2 #=> pass
-  # refute_operator 1, :<, 2 #=> fail
+  #   refute_operator 1, :>, 2 #=> pass
+  #   refute_operator 1, :<, 2 #=> fail
   def refute_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # Fails if +path+ exists.
@@ -382,11 +384,11 @@ module Minitest::Assertions
 
   # For testing with predicates.
   #
-  # refute_predicate str, :empty?
+  #   refute_predicate str, :empty?
   #
   # This is really meant for specs and is front-ended by refute_operator:
   #
-  # str.wont_be :empty?
+  #   str.wont_be :empty?
   def refute_predicate(o1, op, msg = T.unsafe(nil)); end
 
   # Fails if +obj+ responds to the message +meth+.
@@ -398,6 +400,8 @@ module Minitest::Assertions
   # Skips the current run. If run in verbose-mode, the skipped run
   # gets listed at the end of the run but doesn't cause a failure
   # exit code.
+  #
+  # @raise [Minitest::Skip]
   def skip(msg = T.unsafe(nil), bt = T.unsafe(nil)); end
 
   # Skips the current run until a given date (in the local time
@@ -407,6 +411,8 @@ module Minitest::Assertions
   def skip_until(y, m, d, msg); end
 
   # Was this testcase skipped? Meant for #teardown.
+  #
+  # @return [Boolean]
   def skipped?; end
 
   # Returns things to diff [expect, butwas], or [nil, nil] if nothing to diff.
@@ -445,13 +451,17 @@ Minitest::BacktraceFilter::MT_RE = T.let(T.unsafe(nil), Regexp)
 
 # Dispatch to multiple reporters as one.
 class Minitest::CompositeReporter < ::Minitest::AbstractReporter
+  # @return [CompositeReporter] a new instance of CompositeReporter
   def initialize(*reporters); end
 
   # Add another reporter to the mix.
   def <<(reporter); end
 
   def io; end
+
+  # @return [Boolean]
   def passed?; end
+
   def prerecord(klass, name); end
   def record(result); end
   def report; end
@@ -508,7 +518,6 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -522,15 +531,15 @@ end
 # the specs themselves, you're better off using assertions or the new
 # _(value) wrapper. For example:
 #
-# it "should still work in threads" do
-# my_threaded_thingy do
-# (1+1).must_equal 2                  # bad
-# assert_equal 2, 1+1                 # good
-# _(1 + 1).must_equal 2               # good
-# value(1 + 1).must_equal 2           # good, also #expect
-# _ { 1 + "1" }.must_raise TypeError  # good
-# end
-# end
+#     it "should still work in threads" do
+#       my_threaded_thingy do
+#         (1+1).must_equal 2                  # bad
+#         assert_equal 2, 1+1                 # good
+#         _(1 + 1).must_equal 2               # good
+#         value(1 + 1).must_equal 2           # good, also #expect
+#         _ { 1 + "1" }.must_raise TypeError  # good
+#       end
+#     end
 module Minitest::Expectations
   def must_be(*args); end
   def must_be_close_to(*args); end
@@ -571,31 +580,43 @@ end
 # mixed into Test as both instance and class methods so you
 # can use them inside or outside of the test methods.
 #
-# def test_something_for_mri
-# skip "bug 1234"  if jruby?
-# # ...
-# end
+#   def test_something_for_mri
+#     skip "bug 1234"  if jruby?
+#     # ...
+#   end
 #
-# if windows? then
-# # ... lots of test methods ...
-# end
+#   if windows? then
+#     # ... lots of test methods ...
+#   end
 module Minitest::Guard
   # Is this running on jruby?
+  #
+  # @return [Boolean]
   def jruby?(platform = T.unsafe(nil)); end
 
   # Is this running on maglev?
+  #
+  # @return [Boolean]
   def maglev?(platform = T.unsafe(nil)); end
 
   # Is this running on mri?
+  #
+  # @return [Boolean]
   def mri?(platform = T.unsafe(nil)); end
 
   # Is this running on macOS?
+  #
+  # @return [Boolean]
   def osx?(platform = T.unsafe(nil)); end
 
   # Is this running on rubinius?
+  #
+  # @return [Boolean]
   def rubinius?(platform = T.unsafe(nil)); end
 
   # Is this running on windows?
+  #
+  # @return [Boolean]
   def windows?(platform = T.unsafe(nil)); end
 end
 
@@ -604,6 +625,8 @@ module Minitest::Parallel; end
 # The engine used to run multiple tests in parallel.
 class Minitest::Parallel::Executor
   # Create a parallel test executor of with +size+ workers.
+  #
+  # @return [Executor] a new instance of Executor
   def initialize(size); end
 
   # Add a job to the queue
@@ -644,9 +667,12 @@ end
 # Shared code for anything that can get passed to a Reporter. See
 # Minitest::Test & Minitest::Result.
 module Minitest::Reportable
+  # @raise [NotImplementedError]
   def class_name; end
 
   # Did this run error?
+  #
+  # @return [Boolean]
   def error?; end
 
   # The location identifier of this test. Depends on a method
@@ -657,16 +683,21 @@ module Minitest::Reportable
   #
   # Note: skipped runs are not considered passing, but they don't
   # cause the process to exit non-zero.
+  #
+  # @return [Boolean]
   def passed?; end
 
   # Returns ".", "F", or "E" based on the result of the run.
   def result_code; end
 
   # Was this run skipped?
+  #
+  # @return [Boolean]
   def skipped?; end
 end
 
 class Minitest::Reporter < ::Minitest::AbstractReporter
+  # @return [Reporter] a new instance of Reporter
   def initialize(io = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # The IO used to report.
@@ -714,6 +745,7 @@ end
 
 # re-open
 class Minitest::Runnable
+  # @return [Runnable] a new instance of Runnable
   def initialize(name); end
 
   # Number of assertions executed in this run.
@@ -743,17 +775,27 @@ class Minitest::Runnable
   #
   # Note: skipped runs are not considered passing, but they don't
   # cause the process to exit non-zero.
+  #
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def passed?; end
 
   # Returns a single character string to print based on the result
   # of the run. One of <tt>"."</tt>, <tt>"F"</tt>,
   # <tt>"E"</tt> or <tt>"S"</tt>.
+  #
+  # @raise [NotImplementedError]
   def result_code; end
 
   # Runs a single method. Needs to return self.
+  #
+  # @raise [NotImplementedError]
   def run; end
 
   # Was this run skipped? See #passed? for more information.
+  #
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def skipped?; end
 
   # The time it took to run.
@@ -786,6 +828,8 @@ class Minitest::Runnable
 
     # Each subclass of Runnable is responsible for overriding this
     # method to return all runnable methods. See #methods_matching.
+    #
+    # @raise [NotImplementedError]
     def runnable_methods; end
 
     # Returns all subclasses of Runnable.
@@ -809,6 +853,7 @@ class Minitest::Spec < ::Minitest::Test
   include ::Minitest::Spec::DSL::InstanceMethods
   extend ::Minitest::Spec::DSL
 
+  # @return [Spec] a new instance of Spec
   def initialize(name); end
 
   class << self
@@ -851,6 +896,8 @@ module Minitest::Spec::DSL
   # Essentially, define an accessor for +name+ with +block+.
   #
   # Why use let instead of def? I honestly don't know.
+  #
+  # @raise [ArgumentError]
   def let(name, &block); end
 
   def name; end
@@ -863,18 +910,18 @@ module Minitest::Spec::DSL
   #
   # Eg:
   #
-  # register_spec_type(/Controller$/, Minitest::Spec::Rails)
+  #     register_spec_type(/Controller$/, Minitest::Spec::Rails)
   #
   # or:
   #
-  # register_spec_type(Minitest::Spec::RailsModel) do |desc|
-  # desc.superclass == ActiveRecord::Base
-  # end
+  #     register_spec_type(Minitest::Spec::RailsModel) do |desc|
+  #       desc.superclass == ActiveRecord::Base
+  #     end
   def register_spec_type(*args, &block); end
 
   # Figure out the spec class to use based on a spec's description. Eg:
   #
-  # spec_type("BlahController") # => Minitest::Spec::Rails
+  #     spec_type("BlahController") # => Minitest::Spec::Rails
   def spec_type(desc, *additional); end
 
   # Define an expectation with name +desc+. Name gets morphed to a
@@ -904,11 +951,11 @@ module Minitest::Spec::DSL::InstanceMethods
   # Takes a value or a block and returns a value monad that has
   # all of Expectations methods available to it.
   #
-  # _(1 + 1).must_equal 2
+  #   _(1 + 1).must_equal 2
   #
   # And for blocks:
   #
-  # _ { 1 + "1" }.must_raise TypeError
+  #   _ { 1 + "1" }.must_raise TypeError
   #
   # This method of expectation-based testing is preferable to
   # straight-expectation methods (on Object) because it stores its
@@ -920,9 +967,9 @@ module Minitest::Spec::DSL::InstanceMethods
   # It is also aliased to #value and #expect for your aesthetic
   # pleasure:
   #
-  # _(1 + 1).must_equal 2
-  # value(1 + 1).must_equal 2
-  # expect(1 + 1).must_equal 2
+  #         _(1 + 1).must_equal 2
+  #     value(1 + 1).must_equal 2
+  #    expect(1 + 1).must_equal 2
   def _(value = T.unsafe(nil), &block); end
 
   def before_setup; end
@@ -930,11 +977,11 @@ module Minitest::Spec::DSL::InstanceMethods
   # Takes a value or a block and returns a value monad that has
   # all of Expectations methods available to it.
   #
-  # _(1 + 1).must_equal 2
+  #   _(1 + 1).must_equal 2
   #
   # And for blocks:
   #
-  # _ { 1 + "1" }.must_raise TypeError
+  #   _ { 1 + "1" }.must_raise TypeError
   #
   # This method of expectation-based testing is preferable to
   # straight-expectation methods (on Object) because it stores its
@@ -946,19 +993,19 @@ module Minitest::Spec::DSL::InstanceMethods
   # It is also aliased to #value and #expect for your aesthetic
   # pleasure:
   #
-  # _(1 + 1).must_equal 2
-  # value(1 + 1).must_equal 2
-  # expect(1 + 1).must_equal 2
+  #         _(1 + 1).must_equal 2
+  #     value(1 + 1).must_equal 2
+  #    expect(1 + 1).must_equal 2
   def expect(value = T.unsafe(nil), &block); end
 
   # Takes a value or a block and returns a value monad that has
   # all of Expectations methods available to it.
   #
-  # _(1 + 1).must_equal 2
+  #   _(1 + 1).must_equal 2
   #
   # And for blocks:
   #
-  # _ { 1 + "1" }.must_raise TypeError
+  #   _ { 1 + "1" }.must_raise TypeError
   #
   # This method of expectation-based testing is preferable to
   # straight-expectation methods (on Object) because it stores its
@@ -970,9 +1017,9 @@ module Minitest::Spec::DSL::InstanceMethods
   # It is also aliased to #value and #expect for your aesthetic
   # pleasure:
   #
-  # _(1 + 1).must_equal 2
-  # value(1 + 1).must_equal 2
-  # expect(1 + 1).must_equal 2
+  #         _(1 + 1).must_equal 2
+  #     value(1 + 1).must_equal 2
+  #    expect(1 + 1).must_equal 2
   def value(value = T.unsafe(nil), &block); end
 end
 
@@ -994,17 +1041,18 @@ Minitest::Spec::TYPES = T.let(T.unsafe(nil), Array)
 #
 # Example:
 #
-# class JenkinsCIReporter < StatisticsReporter
-# def report
-# super  # Needed to calculate some statistics
+#   class JenkinsCIReporter < StatisticsReporter
+#     def report
+#       super  # Needed to calculate some statistics
 #
-# print "<testsuite "
-# print "tests='#{count}' "
-# print "failures='#{failures}' "
-# # Remaining XML...
-# end
-# end
+#       print "<testsuite "
+#       print "tests='#{count}' "
+#       print "failures='#{failures}' "
+#       # Remaining XML...
+#     end
+#   end
 class Minitest::StatisticsReporter < ::Minitest::Reporter
+  # @return [StatisticsReporter] a new instance of StatisticsReporter
   def initialize(io = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Total number of assertions.
@@ -1031,7 +1079,9 @@ class Minitest::StatisticsReporter < ::Minitest::Reporter
   # Total number of tests that failed.
   def failures=(_arg0); end
 
+  # @return [Boolean]
   def passed?; end
+
   def record(result); end
 
   # Report on the tracked statistics.
@@ -1084,6 +1134,8 @@ class Minitest::SummaryReporter < ::Minitest::StatisticsReporter
   def old_sync; end
 
   # Sets the attribute old_sync
+  #
+  # @param value the value to set the attribute old_sync to.
   def old_sync=(_arg0); end
 
   def report; end
@@ -1139,6 +1191,8 @@ class Minitest::Test < ::Minitest::Runnable
     def io_lock; end
 
     # Sets the attribute io_lock
+    #
+    # @param value the value to set the attribute io_lock to.
     def io_lock=(_arg0); end
 
     # Make diffs for this Test use #pretty_inspect so that diff
@@ -1187,31 +1241,31 @@ module Minitest::Test::LifecycleHooks
   #
   # As a simplistic example:
   #
-  # module MyMinitestPlugin
-  # def before_setup
-  # super
-  # # ... stuff to do before setup is run
-  # end
+  #   module MyMinitestPlugin
+  #     def before_setup
+  #       super
+  #       # ... stuff to do before setup is run
+  #     end
   #
-  # def after_setup
-  # # ... stuff to do after setup is run
-  # super
-  # end
+  #     def after_setup
+  #       # ... stuff to do after setup is run
+  #       super
+  #     end
   #
-  # def before_teardown
-  # super
-  # # ... stuff to do before teardown is run
-  # end
+  #     def before_teardown
+  #       super
+  #       # ... stuff to do before teardown is run
+  #     end
   #
-  # def after_teardown
-  # # ... stuff to do after teardown is run
-  # super
-  # end
-  # end
+  #     def after_teardown
+  #       # ... stuff to do after teardown is run
+  #       super
+  #     end
+  #   end
   #
-  # class MiniTest::Test
-  # include MyMinitestPlugin
-  # end
+  #   class MiniTest::Test
+  #     include MyMinitestPlugin
+  #   end
   def before_setup; end
 
   # Runs after every test, before teardown. This hook is meant for
@@ -1235,6 +1289,7 @@ Minitest::Test::TEARDOWN_METHODS = T.let(T.unsafe(nil), Array)
 
 # Assertion wrapping an unexpected error that was raised during a run.
 class Minitest::UnexpectedError < ::Minitest::Assertion
+  # @return [UnexpectedError] a new instance of UnexpectedError
   def initialize(error); end
 
   def backtrace; end
