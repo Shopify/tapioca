@@ -3192,13 +3192,16 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             #
             # This method does not have a signature
             #
-            # @param a [String]
+            # @param a [String, Integer]
             # @return [void]
             def no_sig(a); end
 
             sig { void }
-            def no_yard_docs; end
+            def no_yard_docs_but_sig; end
 
+            def no_yard_docs_nor_sig; end
+
+            # @deprecated Do not use me!
             # Method only_docs
             #
             # This method only has documentation
@@ -3208,8 +3211,14 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             #
             # This is a singleton method
             #
-            # @param t [Integer]
+            # @param t [Integer, String]
             # @return [void]
+            # @example My example
+            #   a = "hello world"
+            #   a.reverse
+            # @deprecated Use something else instead of this method because
+            #   it uses a library that is no longer supported in Ruby 1.9.
+            #   The new method accepts the same parameters.
             sig { params(t: Integer).void }
             def self.baz(t); end
 
@@ -3246,20 +3255,34 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           # Method no_sig
           #
           # This method does not have a signature
+          #
+          # @param a [String, Integer]
+          # @return [void]
           def no_sig(a); end
 
           sig { void }
-          def no_yard_docs; end
+          def no_yard_docs_but_sig; end
+
+          def no_yard_docs_nor_sig; end
 
           # Method only_docs
           #
           # This method only has documentation
+          #
+          # @deprecated Do not use me!
           def only_docs(a); end
 
           class << self
             # Method baz
             #
             # This is a singleton method
+            #
+            # @deprecated Use something else instead of this method because
+            #   it uses a library that is no longer supported in Ruby 1.9.
+            #   The new method accepts the same parameters.
+            # @example My example
+            #   a = "hello world"
+            #   a.reverse
             sig { params(t: Integer).void }
             def baz(t); end
 
