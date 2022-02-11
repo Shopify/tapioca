@@ -8,6 +8,7 @@ module Tapioca
     class SymbolTableCompiler
       extend T::Sig
       include Reflection
+      include RBIHelper
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
 
@@ -79,15 +80,6 @@ module Tapioca
       end
       def push_method(symbol, constant, node, signature, parameters)
         @events << Gem::MethodNodeAdded.new(symbol, constant, node, signature, parameters)
-      end
-
-      sig { params(sig_string: String).returns(String) }
-      def sanitize_signature_types(sig_string)
-        sig_string
-          .gsub(".returns(<VOID>)", ".void")
-          .gsub("<VOID>", "void")
-          .gsub("<NOT-TYPED>", "T.untyped")
-          .gsub(".params()", "")
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }
