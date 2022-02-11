@@ -115,8 +115,14 @@ module Tapioca
               constant.attribute_aliases.each do |attribute_name, column_name|
                 attribute_name = attribute_name.to_s
                 column_name = column_name.to_s
-                new_method_names = constant.attribute_method_matchers.map { |m| m.method_name(attribute_name) }
-                old_method_names = constant.attribute_method_matchers.map { |m| m.method_name(column_name) }
+                patterns = if constant.respond_to?(:attribute_method_patterns)
+                  # https://github.com/rails/rails/pull/44367
+                  T.unsafe(constant).attribute_method_patterns
+                else
+                  constant.attribute_method_matchers
+                end
+                new_method_names = patterns.map { |m| m.method_name(attribute_name) }
+                old_method_names = patterns.map { |m| m.method_name(column_name) }
                 methods_to_add = new_method_names - old_method_names
 
                 add_methods_for_attribute(mod, constant, column_name, attribute_name, methods_to_add)
