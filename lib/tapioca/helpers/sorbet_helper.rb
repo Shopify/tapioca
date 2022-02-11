@@ -9,8 +9,8 @@ module Tapioca
     extend T::Sig
 
     SORBET_GEM_SPEC = T.let(
-      Gem::Specification.find_by_name("sorbet-static"),
-      Gem::Specification
+      ::Gem::Specification.find_by_name("sorbet-static"),
+      ::Gem::Specification
     )
 
     SORBET_BIN = T.let(
@@ -22,8 +22,8 @@ module Tapioca
 
     FEATURE_REQUIREMENTS = T.let({
       # First tag that includes https://github.com/sorbet/sorbet/pull/4706
-      to_ary_nil_support: Gem::Requirement.new(">= 0.5.9220"),
-    }.freeze, T::Hash[Symbol, Gem::Requirement])
+      to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),
+    }.freeze, T::Hash[Symbol, ::Gem::Requirement])
 
     class CmdResult < T::Struct
       const :out, String
@@ -44,7 +44,7 @@ module Tapioca
       sorbet_path.to_s.shellescape
     end
 
-    sig { params(feature: Symbol, version: T.nilable(Gem::Version)).returns(T::Boolean) }
+    sig { params(feature: Symbol, version: T.nilable(::Gem::Version)).returns(T::Boolean) }
     def sorbet_supports?(feature, version: nil)
       version = SORBET_GEM_SPEC.version unless version
       requirement = FEATURE_REQUIREMENTS[feature]

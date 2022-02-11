@@ -4,7 +4,7 @@
 require "pathname"
 
 module Tapioca
-  module Compilers
+  module Gem
     class SymbolTableCompiler
       extend T::Sig
       include Runtime::Reflection
