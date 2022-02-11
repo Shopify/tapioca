@@ -72,7 +72,6 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -81,9 +80,13 @@ end
 # Filters backtraces of exceptions that may arise when running tests.
 class Minitest::ExtensibleBacktraceFilter
   # Creates a new backtrace filter.
+  #
+  # @return [ExtensibleBacktraceFilter] a new instance of ExtensibleBacktraceFilter
   def initialize; end
 
   # Adds a filter.
+  #
+  # @param regex [Regex] the filter
   def add_filter(regex); end
 
   # Filters a backtrace.
@@ -94,9 +97,16 @@ class Minitest::ExtensibleBacktraceFilter
   # resulting in an empty backtrace, it returns all lines that would have
   # been unfiltered. If that in turn does not contain any lines, it returns
   # the original backtrace.
+  #
+  # @note This logic is based off of Minitest's #filter_backtrace.
+  # @param backtrace [Array] the backtrace to filter
+  # @return [Array] the filtered backtrace
   def filter(backtrace); end
 
   # Determines if the string would be filtered.
+  #
+  # @param str [String]
+  # @return [Boolean]
   def filters?(str); end
 
   class << self
@@ -104,6 +114,8 @@ class Minitest::ExtensibleBacktraceFilter
     #
     # The default filter will filter out all Minitest and minitest-reporters
     # lines.
+    #
+    # @return [Minitest::ExtensibleBacktraceFilter]
     def default_filter; end
   end
 end
@@ -132,6 +144,8 @@ module Minitest::Reporters
     def reporters; end
 
     # Sets the attribute reporters
+    #
+    # @param value the value to set the attribute reporters to.
     def reporters=(_arg0); end
 
     def use!(console_reporters = T.unsafe(nil), env = T.unsafe(nil), backtrace_filter = T.unsafe(nil)); end
@@ -150,11 +164,13 @@ module Minitest::Reporters::ANSI::Code
   extend ::ANSI::Code
 
   class << self
+    # @return [Boolean]
     def color?; end
   end
 end
 
 class Minitest::Reporters::BaseReporter < ::Minitest::StatisticsReporter
+  # @return [BaseReporter] a new instance of BaseReporter
   def initialize(options = T.unsafe(nil)); end
 
   def add_defaults(defaults); end
@@ -172,6 +188,8 @@ class Minitest::Reporters::BaseReporter < ::Minitest::StatisticsReporter
   def tests; end
 
   # Sets the attribute tests
+  #
+  # @param value the value to set the attribute tests to.
   def tests=(_arg0); end
 
   protected
@@ -195,6 +213,7 @@ class Minitest::Reporters::DefaultReporter < ::Minitest::Reporters::BaseReporter
   include ::Minitest::Reporters::ANSI::Code
   include ::Minitest::RelativePosition
 
+  # @return [DefaultReporter] a new instance of DefaultReporter
   def initialize(options = T.unsafe(nil)); end
 
   def after_suite(suite); end
@@ -214,7 +233,9 @@ class Minitest::Reporters::DefaultReporter < ::Minitest::Reporters::BaseReporter
 
   private
 
+  # @return [Boolean]
   def color?; end
+
   def colored_for(result, string); end
   def get_source_location(result); end
   def green(string); end
@@ -248,6 +269,8 @@ class Minitest::Reporters::HtmlReporter < ::Minitest::Reporters::BaseReporter
   # :erb_template - the path to a custom ERB template, defaults to the supplied ERB template
   # :mode - Useful for debugging, :terse suppresses errors and is the default, :verbose lets errors bubble up
   # :output_filename - the report's filename, defaults to 'index.html'
+  #
+  # @return [HtmlReporter] a new instance of HtmlReporter
   def initialize(args = T.unsafe(nil)); end
 
   # Trims off the number prefix on test names when using Minitest Specs
@@ -299,7 +322,9 @@ class Minitest::Reporters::HtmlReporter < ::Minitest::Reporters::BaseReporter
   # based on analyze_suite from the JUnit reporter
   def summarize_suite(suite, tests); end
 
+  # @return [Boolean]
   def test_fail_or_error?(test); end
+
   def total_time_to_hms; end
 end
 
@@ -310,6 +335,7 @@ end
 # Also inspired by Marc Seeger's attempt at producing a JUnitReporter (see https://github.com/rb2k/minitest-reporters/commit/e13d95b5f884453a9c77f62bc5cba3fa1df30ef5)
 # Also inspired by minitest-ci (see https://github.com/bhenderson/minitest-ci)
 class Minitest::Reporters::JUnitReporter < ::Minitest::Reporters::BaseReporter
+  # @return [JUnitReporter] a new instance of JUnitReporter
   def initialize(reports_dir = T.unsafe(nil), empty = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def get_relative_path(result); end
@@ -336,9 +362,9 @@ Minitest::Reporters::JUnitReporter::DEFAULT_REPORTS_DIR = T.let(T.unsafe(nil), S
 # allow you to:
 #
 # 1) Identify the slowest running tests over time as potential candidates
-# for improvements or refactoring.
+#    for improvements or refactoring.
 # 2) Identify (and fix) regressions in test run speed caused by changes to
-# your tests or algorithms in your code.
+#    your tests or algorithms in your code.
 # 3) Provide an abundance of statistics to enjoy.
 #
 # This is achieved by creating a (configurable) 'previous runs' statistics
@@ -346,13 +372,31 @@ Minitest::Reporters::JUnitReporter::DEFAULT_REPORTS_DIR = T.let(T.unsafe(nil), S
 # (configurable) report. These statistics can be reset at any time by using
 # a simple rake task:
 #
-# rake reset_statistics
+#     rake reset_statistics
 class Minitest::Reporters::MeanTimeReporter < ::Minitest::Reporters::DefaultReporter
+  # @option previous_runs_filename
+  # @option show_count
+  # @option show_progress
+  # @option show_all_runs
+  # @option sort_column
+  # @option order
+  # @option report_filename
+  # @param order [Hash] a customizable set of options
+  # @param previous_runs_filename [Hash] a customizable set of options
+  # @param options [Hash]
+  # @param report_filename [Hash] a customizable set of options
+  # @param show_count [Hash] a customizable set of options
+  # @param show_progress [Hash] a customizable set of options
+  # @param show_all_runs [Hash] a customizable set of options
+  # @param sort_column [Hash] a customizable set of options
+  # @return [Minitest::Reporters::MeanTimeReporter]
   def initialize(options = T.unsafe(nil)); end
 
   # Copies the suite times from the
   # {Minitest::Reporters::DefaultReporter#after_suite} method, making them
   # available to this class.
+  #
+  # @return [Hash<String => Float>]
   def after_suite(suite); end
 
   def on_record(test); end
@@ -367,6 +411,8 @@ class Minitest::Reporters::MeanTimeReporter < ::Minitest::Reporters::DefaultRepo
 
   # Resets the 'previous runs' file, essentially removing all previous
   # statistics gathered.
+  #
+  # @return [void]
   def reset_statistics!; end
 
   protected
@@ -375,12 +421,20 @@ class Minitest::Reporters::MeanTimeReporter < ::Minitest::Reporters::DefaultRepo
   def all_suite_times; end
 
   # Sets the attribute all_suite_times
+  #
+  # @param value the value to set the attribute all_suite_times to.
   def all_suite_times=(_arg0); end
 
   private
 
+  # @return [Boolean] Whether the given :order option is :asc.
   def asc?; end
+
+  # @return [String] A yellow 'Avg:' label.
   def avg_label; end
+
+  # @return [Array<Hash<Symbol => String>>] All of the results sorted by
+  #   the :sort_column option. (Defaults to :avg).
   def column_sorted_body; end
 
   # Creates a new report file in the 'report_filename'. This file contains
@@ -398,39 +452,88 @@ class Minitest::Reporters::MeanTimeReporter < ::Minitest::Reporters::DefaultRepo
   # on whether the last run was faster (bright green) or slower (bright red)
   # or inconclusive (purple). This helps to identify changes on a per run
   # basis.
+  #
+  # @return [void]
   def create_new_report!; end
 
   # Creates a new 'previous runs' file, or updates the existing one with
   # the latest timings.
+  #
+  # @return [void]
   def create_or_update_previous_runs!; end
 
+  # @return [Hash<String => Float>]
   def current_run; end
+
+  # @return [Hash] Sets default values for the filenames used by this class,
+  #   and the number of tests to output to output to the screen after each
+  #   run.
   def defaults; end
+
+  # @return [String] A blue 'Description:' label.
   def des_label; end
+
+  # @return [Boolean] Whether the given :order option is :desc (default).
   def desc?; end
+
+  # @return [String] A red 'Max:' label.
   def max_label; end
+
+  # @return [String] A green 'Min:' label.
   def min_label; end
+
+  # @return [Hash]
   def options; end
+
+  # @raise [Minitest::Reporters::MeanTimeReporter::InvalidOrder] When the given :order option is invalid.
+  # @return [Symbol] The :order option, or by default; :desc.
   def order; end
+
+  # @return [String] All of the column-sorted results sorted by the :order
+  #   option. (Defaults to :desc).
   def order_sorted_body; end
+
+  # @return [Hash<String => Array<Float>]] Hash<String => Array<Float>]
   def previous_run; end
+
+  # @return [String] The path to the file which contains all the durations
+  #   for each test run. The previous runs file is in YAML format, using the
+  #   test name for the key and an array containing the time taken to run
+  #   this test for values.
   def previous_runs_filename; end
 
   # Returns a boolean indicating whether a previous runs file exists.
+  #
+  # @return [Boolean]
   def previously_ran?; end
 
+  # @param run [Float] The last run time.
+  # @param min [Float] The minimum run time.
+  # @param max [Float] The maximum run time.
+  # @return [Symbol] One of :faster, :slower or :inconclusive.
   def rate(run, min, max); end
 
   # The report itself. Displays statistics about all runs, ideal for use
   # with the Unix 'head' command. Listed in slowest average descending
   # order.
+  #
+  # @return [String]
   def report_body; end
 
+  # @return [String] The path to the file which contains the parsed test
+  #   results. The results file contains a line for each test with the
+  #   average time of the test, the minimum time the test took to run,
+  #   the maximum time the test took to run and a description of the test
+  #   (which is the test name as emitted by Minitest).
   def report_filename; end
 
   # Added to the top of the report file and to the screen output.
+  #
+  # @return [String]
   def report_title; end
 
+  # @param rating [Symbol] One of :faster, :slower or :inconclusive.
+  # @return [String] A purple 'Last:' label.
   def run_label(rating); end
 
   # A barbaric way to find out how many runs are in the previous runs file;
@@ -440,21 +543,32 @@ class Minitest::Reporters::MeanTimeReporter < ::Minitest::Reporters::DefaultRepo
   # to restart the statistics by removing the 'previous runs' file. A rake
   # task is provided to make this more convenient.
   #
-  # rake reset_statistics
+  #    rake reset_statistics
+  #
+  # @return [Fixnum]
   def samples; end
 
+  # @return [Fixnum] The number of tests to output to output to the screen
+  #   after each run.
   def show_count; end
+
+  # @raise [Minitest::Reporters::MeanTimeReporter::InvalidSortColumn] When the given :sort_column option is invalid.
+  # @return [Symbol] The :sort_column option, or by default; :avg.
   def sort_column; end
 
   # Writes a number of tests (configured via the 'show_count' option) to the
   # screen after creating the report. See '#create_new_report!' for example
   # output information.
+  #
+  # @return [void]
   def write_to_screen!; end
 
   class << self
     # Reset the statistics file for this reporter. Called via a rake task:
     #
-    # rake reset_statistics
+    #     rake reset_statistics
+    #
+    # @return [Boolean]
     def reset_statistics!; end
   end
 end
@@ -468,6 +582,7 @@ class Minitest::Reporters::ProgressReporter < ::Minitest::Reporters::BaseReporte
   include ::ANSI::Code
   include ::Minitest::Reporters::ANSI::Code
 
+  # @return [ProgressReporter] a new instance of ProgressReporter
   def initialize(options = T.unsafe(nil)); end
 
   def before_test(test); end
@@ -523,10 +638,14 @@ class Minitest::Reporters::SpecReporter < ::Minitest::Reporters::BaseReporter
 end
 
 class Minitest::Reporters::Suite
+  # @return [Suite] a new instance of Suite
   def initialize(name); end
 
   def ==(other); end
+
+  # @return [Boolean]
   def eql?(other); end
+
   def hash; end
 
   # Returns the value of attribute name.

@@ -41,22 +41,22 @@ end
 # +ApplicationMailbox+ instead, as that's where the app-specific routing is configured. This routing
 # is specified in the following ways:
 #
-# class ApplicationMailbox < ActionMailbox::Base
-# # Any of the recipients of the mail (whether to, cc, bcc) are matched against the regexp.
-# routing /^replies@/i => :replies
+#   class ApplicationMailbox < ActionMailbox::Base
+#     # Any of the recipients of the mail (whether to, cc, bcc) are matched against the regexp.
+#     routing /^replies@/i => :replies
 #
-# # Any of the recipients of the mail (whether to, cc, bcc) needs to be an exact match for the string.
-# routing "help@example.com" => :help
+#     # Any of the recipients of the mail (whether to, cc, bcc) needs to be an exact match for the string.
+#     routing "help@example.com" => :help
 #
-# # Any callable (proc, lambda, etc) object is passed the inbound_email record and is a match if true.
-# routing ->(inbound_email) { inbound_email.mail.to.size > 2 } => :multiple_recipients
+#     # Any callable (proc, lambda, etc) object is passed the inbound_email record and is a match if true.
+#     routing ->(inbound_email) { inbound_email.mail.to.size > 2 } => :multiple_recipients
 #
-# # Any object responding to #match? is called with the inbound_email record as an argument. Match if true.
-# routing CustomAddress.new => :custom
+#     # Any object responding to #match? is called with the inbound_email record as an argument. Match if true.
+#     routing CustomAddress.new => :custom
 #
-# # Any inbound_email that has not been already matched will be sent to the BackstopMailbox.
-# routing :all => :backstop
-# end
+#     # Any inbound_email that has not been already matched will be sent to the BackstopMailbox.
+#     routing :all => :backstop
+#   end
 #
 # Application mailboxes need to overwrite the +#process+ method, which is invoked by the framework after
 # callbacks have been run. The callbacks available are: +before_processing+, +after_processing+, and
@@ -69,16 +69,16 @@ end
 # an actual bounce email. This is done using the +#bounce_with+ method, which takes the mail object returned
 # by an Action Mailer method, like so:
 #
-# class ForwardsMailbox < ApplicationMailbox
-# before_processing :ensure_sender_is_a_user
+#   class ForwardsMailbox < ApplicationMailbox
+#     before_processing :ensure_sender_is_a_user
 #
-# private
-# def ensure_sender_is_a_user
-# unless User.exist?(email_address: mail.from)
-# bounce_with UserRequiredMailer.missing(inbound_email)
-# end
-# end
-# end
+#     private
+#       def ensure_sender_is_a_user
+#         unless User.exist?(email_address: mail.from)
+#           bounce_with UserRequiredMailer.missing(inbound_email)
+#         end
+#       end
+#   end
 #
 # During the processing of the inbound email, the status will be tracked. Before processing begins,
 # the email will normally have the +pending+ status. Once processing begins, just before callbacks
@@ -88,9 +88,9 @@ end
 #
 # Exceptions can be handled at the class level using the familiar +Rescuable+ approach:
 #
-# class ForwardsMailbox < ApplicationMailbox
-# rescue_from(ApplicationSpecificVerificationError) { bounced! }
-# end
+#   class ForwardsMailbox < ApplicationMailbox
+#     rescue_from(ApplicationSpecificVerificationError) { bounced! }
+#   end
 class ActionMailbox::Base
   include ::ActiveSupport::Rescuable
   include ::ActionMailbox::Routing
@@ -102,6 +102,7 @@ class ActionMailbox::Base
   extend ::ActiveSupport::DescendantsTracker
   extend ::ActionMailbox::Callbacks::ClassMethods
 
+  # @return [Base] a new instance of Base
   def initialize(inbound_email); end
 
   def __callbacks; end
@@ -112,15 +113,17 @@ class ActionMailbox::Base
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
   def bounce_with(message); end
 
-  def bounced!(*_arg0, **_arg1, &_arg2); end
-  def delivered!(*_arg0, **_arg1, &_arg2); end
+  def bounced!(*_arg0, &_arg1); end
+  def delivered!(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def finished_processing?; end
 
   # Returns the value of attribute inbound_email.
   def inbound_email; end
 
-  def logger(*_arg0, **_arg1, &_arg2); end
-  def mail(*_arg0, **_arg1, &_arg2); end
+  def logger(*_arg0, &_arg1); end
+  def mail(*_arg0, &_arg1); end
   def perform_processing; end
   def process; end
   def rescue_handlers; end
@@ -274,6 +277,7 @@ module ActionMailbox::Record::GeneratedAttributeMethods; end
 # Encapsulates the routes that live on the ApplicationMailbox and performs the actual routing when
 # an inbound_email is received.
 class ActionMailbox::Router
+  # @return [Router] a new instance of Router
   def initialize; end
 
   def add_route(address, to:); end
@@ -337,14 +341,14 @@ module ActionMailbox::TestHelper
   # ==== Options
   #
   # * <tt>:status</tt> - The +status+ to set for the created +InboundEmail+.
-  # For possible statuses, see {its documentation}[rdoc-ref:ActionMailbox::InboundEmail].
+  #   For possible statuses, see {its documentation}[rdoc-ref:ActionMailbox::InboundEmail].
   #
   # ==== Creating a simple email
   #
   # When you only need to set basic fields like +from+, +to+, +subject+, and
   # +body+, you can pass them directly as options.
   #
-  # create_inbound_email_from_mail(from: "david@loudthinking.com", subject: "Hello!")
+  #   create_inbound_email_from_mail(from: "david@loudthinking.com", subject: "Hello!")
   #
   # ==== Creating a multi-part email
   #
@@ -352,36 +356,36 @@ module ActionMailbox::TestHelper
   # that contains both a plaintext version and an HTML version, you can pass a
   # block.
   #
-  # create_inbound_email_from_mail do
-  # to "David Heinemeier Hansson <david@loudthinking.com>"
-  # from "Bilbo Baggins <bilbo@bagend.com>"
-  # subject "Come down to the Shire!"
+  #   create_inbound_email_from_mail do
+  #     to "David Heinemeier Hansson <david@loudthinking.com>"
+  #     from "Bilbo Baggins <bilbo@bagend.com>"
+  #     subject "Come down to the Shire!"
   #
-  # text_part do
-  # body "Please join us for a party at Bag End"
-  # end
+  #     text_part do
+  #       body "Please join us for a party at Bag End"
+  #     end
   #
-  # html_part do
-  # body "<h1>Please join us for a party at Bag End</h1>"
-  # end
-  # end
+  #     html_part do
+  #       body "<h1>Please join us for a party at Bag End</h1>"
+  #     end
+  #   end
   #
   # As with +Mail.new+, you can also use a block parameter to define the parts
   # of the message:
   #
-  # create_inbound_email_from_mail do |mail|
-  # mail.to "David Heinemeier Hansson <david@loudthinking.com>"
-  # mail.from "Bilbo Baggins <bilbo@bagend.com>"
-  # mail.subject "Come down to the Shire!"
+  #   create_inbound_email_from_mail do |mail|
+  #     mail.to "David Heinemeier Hansson <david@loudthinking.com>"
+  #     mail.from "Bilbo Baggins <bilbo@bagend.com>"
+  #     mail.subject "Come down to the Shire!"
   #
-  # mail.text_part do |part|
-  # part.body "Please join us for a party at Bag End"
-  # end
+  #     mail.text_part do |part|
+  #       part.body "Please join us for a party at Bag End"
+  #     end
   #
-  # mail.html_part do |part|
-  # part.body "<h1>Please join us for a party at Bag End</h1>"
-  # end
-  # end
+  #     mail.html_part do |part|
+  #       part.body "<h1>Please join us for a party at Bag End</h1>"
+  #     end
+  #   end
   def create_inbound_email_from_mail(status: T.unsafe(nil), **mail_options, &block); end
 
   # Create an +InboundEmail+ using the raw rfc822 +source+ as text.
@@ -705,8 +709,8 @@ module Rails
     def env=(environment); end
     def gem_version; end
     def groups(*groups); end
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
     def logger; end
     def logger=(_arg0); end
     def public_path; end

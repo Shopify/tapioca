@@ -59,6 +59,8 @@ module Byebug
   def raised_exception; end
 
   # List of folders to load rc files from
+  #
+  # @note Files will be loaded in the order specified here.
   def rc_dirs; end
 
   # Runs a initialization script file
@@ -168,8 +170,8 @@ class Byebug::PryProcessor < ::Byebug::CommandProcessor
   # Called when the debugger wants to stop right before a method return
   def at_return(_return_value); end
 
-  def bold(*args, **_arg1, &block); end
-  def output(*args, **_arg1, &block); end
+  def bold(*args, &block); end
+  def output(*args, &block); end
 
   # Set up a number of navigational commands to be performed by Byebug.
   def perform(action, options = T.unsafe(nil)); end
@@ -178,6 +180,8 @@ class Byebug::PryProcessor < ::Byebug::CommandProcessor
   def pry; end
 
   # Sets the attribute pry
+  #
+  # @param value the value to set the attribute pry to.
   def pry=(_arg0); end
 
   # Wrap a Pry REPL to catch navigational commands and act on them.
@@ -215,34 +219,34 @@ class Pry
   def backtrace=(_arg0); end
   def binding_stack; end
   def binding_stack=(_arg0); end
-  def color(*args, **_arg1, &block); end
-  def color=(*args, **_arg1, &block); end
-  def commands(*args, **_arg1, &block); end
-  def commands=(*args, **_arg1, &block); end
+  def color(*args, &block); end
+  def color=(*args, &block); end
+  def commands(*args, &block); end
+  def commands=(*args, &block); end
   def complete(str); end
   def config; end
   def current_binding; end
   def current_context; end
   def custom_completions; end
   def custom_completions=(_arg0); end
-  def editor(*args, **_arg1, &block); end
-  def editor=(*args, **_arg1, &block); end
+  def editor(*args, &block); end
+  def editor=(*args, &block); end
   def eval(line, options = T.unsafe(nil)); end
   def eval_string; end
   def eval_string=(_arg0); end
   def evaluate_ruby(code); end
-  def exception_handler(*args, **_arg1, &block); end
-  def exception_handler=(*args, **_arg1, &block); end
+  def exception_handler(*args, &block); end
+  def exception_handler=(*args, &block); end
   def exec_hook(name, *args, &block); end
   def exit_value; end
-  def extra_sticky_locals(*args, **_arg1, &block); end
-  def extra_sticky_locals=(*args, **_arg1, &block); end
-  def hooks(*args, **_arg1, &block); end
-  def hooks=(*args, **_arg1, &block); end
+  def extra_sticky_locals(*args, &block); end
+  def extra_sticky_locals=(*args, &block); end
+  def hooks(*args, &block); end
+  def hooks=(*args, &block); end
   def inject_local(name, value, binding); end
   def inject_sticky_locals!; end
-  def input(*args, **_arg1, &block); end
-  def input=(*args, **_arg1, &block); end
+  def input(*args, &block); end
+  def input=(*args, &block); end
   def input_ring; end
   def last_dir; end
   def last_dir=(_arg0); end
@@ -256,13 +260,13 @@ class Pry
   def memory_size; end
   def memory_size=(size); end
   def output; end
-  def output=(*args, **_arg1, &block); end
+  def output=(*args, &block); end
   def output_ring; end
   def pager; end
-  def pager=(*args, **_arg1, &block); end
+  def pager=(*args, &block); end
   def pop_prompt; end
-  def print(*args, **_arg1, &block); end
-  def print=(*args, **_arg1, &block); end
+  def print(*args, &block); end
+  def print=(*args, &block); end
   def process_command(val); end
   def process_command_safely(val); end
   def prompt; end
@@ -301,10 +305,10 @@ class Pry
     def binding_for(target); end
     def cli; end
     def cli=(_arg0); end
-    def color(*args, **_arg1, &block); end
-    def color=(*args, **_arg1, &block); end
-    def commands(*args, **_arg1, &block); end
-    def commands=(*args, **_arg1, &block); end
+    def color(*args, &block); end
+    def color=(*args, &block); end
+    def commands(*args, &block); end
+    def commands=(*args, &block); end
     def config; end
     def config=(_arg0); end
     def configure; end
@@ -314,25 +318,25 @@ class Pry
     def current_line=(_arg0); end
     def custom_completions; end
     def custom_completions=(_arg0); end
-    def editor(*args, **_arg1, &block); end
-    def editor=(*args, **_arg1, &block); end
+    def editor(*args, &block); end
+    def editor=(*args, &block); end
     def eval_path; end
     def eval_path=(_arg0); end
-    def exception_handler(*args, **_arg1, &block); end
-    def exception_handler=(*args, **_arg1, &block); end
-    def extra_sticky_locals(*args, **_arg1, &block); end
-    def extra_sticky_locals=(*args, **_arg1, &block); end
+    def exception_handler(*args, &block); end
+    def exception_handler=(*args, &block); end
+    def extra_sticky_locals(*args, &block); end
+    def extra_sticky_locals=(*args, &block); end
     def final_session_setup; end
-    def history(*args, **_arg1, &block); end
-    def history=(*args, **_arg1, &block); end
-    def hooks(*args, **_arg1, &block); end
-    def hooks=(*args, **_arg1, &block); end
+    def history(*args, &block); end
+    def history=(*args, &block); end
+    def hooks(*args, &block); end
+    def hooks=(*args, &block); end
     def in_critical_section?; end
     def init; end
     def initial_session?; end
     def initial_session_setup; end
-    def input(*args, **_arg1, &block); end
-    def input=(*args, **_arg1, &block); end
+    def input(*args, &block); end
+    def input=(*args, &block); end
     def last_internal_error; end
     def last_internal_error=(_arg0); end
     def line_buffer; end
@@ -340,24 +344,24 @@ class Pry
     def load_file_at_toplevel(file); end
     def load_file_through_repl(file_name); end
     def load_history; end
-    def load_plugins(*args, **_arg1, &block); end
+    def load_plugins(*args, &block); end
     def load_rc_files; end
     def load_requires; end
     def load_traps; end
     def load_win32console; end
-    def locate_plugins(*args, **_arg1, &block); end
+    def locate_plugins(*args, &block); end
     def main; end
-    def memory_size(*args, **_arg1, &block); end
-    def memory_size=(*args, **_arg1, &block); end
-    def output(*args, **_arg1, &block); end
-    def output=(*args, **_arg1, &block); end
-    def pager(*args, **_arg1, &block); end
-    def pager=(*args, **_arg1, &block); end
-    def plugins(*args, **_arg1, &block); end
-    def print(*args, **_arg1, &block); end
-    def print=(*args, **_arg1, &block); end
-    def prompt(*args, **_arg1, &block); end
-    def prompt=(*args, **_arg1, &block); end
+    def memory_size(*args, &block); end
+    def memory_size=(*args, &block); end
+    def output(*args, &block); end
+    def output=(*args, &block); end
+    def pager(*args, &block); end
+    def pager=(*args, &block); end
+    def plugins(*args, &block); end
+    def print(*args, &block); end
+    def print=(*args, &block); end
+    def prompt(*args, &block); end
+    def prompt=(*args, &block); end
     def quiet; end
     def quiet=(_arg0); end
     def rc_files_to_load; end
@@ -383,6 +387,8 @@ module Pry::Byebug::Breakpoints
   extend ::Pry::Byebug::Breakpoints
 
   # Adds a file breakpoint.
+  #
+  # @raise [ArgumentError]
   def add_file(file, line, expression = T.unsafe(nil)); end
 
   # Adds a method breakpoint.
@@ -394,6 +400,8 @@ module Pry::Byebug::Breakpoints
   def change(id, expression = T.unsafe(nil)); end
 
   # Deletes an existing breakpoint with the given ID.
+  #
+  # @raise [ArgumentError]
   def delete(id); end
 
   # Deletes all breakpoints.
@@ -410,7 +418,9 @@ module Pry::Byebug::Breakpoints
   # Enables a disabled breakpoint with the given ID.
   def enable(id); end
 
+  # @raise [ArgumentError]
   def find_by_id(id); end
+
   def last; end
   def size; end
   def to_a; end
@@ -429,6 +439,7 @@ end
 
 # Breakpoint in a Class#method location
 class Pry::Byebug::Breakpoints::MethodBreakpoint < ::SimpleDelegator
+  # @return [MethodBreakpoint] a new instance of MethodBreakpoint
   def initialize(byebug_bp, method); end
 
   def source_code; end
@@ -458,9 +469,13 @@ module PryByebug
 
   class << self
     # Ensures that a command is executed in a local file context.
+    #
+    # @raise [Pry::CommandError]
     def check_file_context(target, msg = T.unsafe(nil)); end
 
     # Checks that a target binding is in a local file context.
+    #
+    # @return [Boolean]
     def file_context?(target); end
   end
 end

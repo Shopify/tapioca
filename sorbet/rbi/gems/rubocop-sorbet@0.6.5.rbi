@@ -13,26 +13,54 @@ module RuboCop::Cop::Sorbet; end
 # Substitution Principle, meaning that a subclass is not a valid
 # subtype of it's superclass. This Cop prevents these design smells
 # from occurring.
+#
+# @example
+#
+#   # bad
+#   sig.override(allow_incompatible: true)
+#
+#   # good
+#   sig.override
 class RuboCop::Cop::Sorbet::AllowIncompatibleOverride < ::RuboCop::Cop::Cop
   def allow_incompatible?(param0); end
   def allow_incompatible_override?(param0 = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def not_nil?(node); end
+
   def on_send(node); end
   def sig?(param0); end
 end
 
 # This cop disallows binding the return value of `T.any`, `T.all`, `T.enum`
 # to a constant directly. To bind the value, one must use `T.type_alias`.
+#
+# @example
+#
+#   # bad
+#   FooOrBar = T.any(Foo, Bar)
+#
+#   # good
+#   FooOrBar = T.type_alias { T.any(Foo, Bar) }
 class RuboCop::Cop::Sorbet::BindingConstantWithoutTypeAlias < ::RuboCop::Cop::Cop
   def autocorrect(node); end
   def binding_unaliased_type?(param0 = T.unsafe(nil)); end
   def dynamic_type_creation_with_block?(param0 = T.unsafe(nil)); end
   def generic_parameter_decl?(param0 = T.unsafe(nil)); end
   def method_needing_aliasing_on_t?(param0); end
+
+  # @return [Boolean]
   def not_dynamic_type_creation_with_block?(node); end
+
+  # @return [Boolean]
   def not_generic_parameter_decl?(node); end
+
+  # @return [Boolean]
   def not_nil?(node); end
+
+  # @return [Boolean]
   def not_t_let?(node); end
+
   def on_casgn(node); end
   def t_let?(param0 = T.unsafe(nil)); end
   def using_deprecated_type_alias_syntax?(param0 = T.unsafe(nil)); end
@@ -45,6 +73,29 @@ end
 # Auto-correction is unsafe because other libraries define similar style callbacks as Rails, but don't always need
 # binding to the attached class. Auto-correcting those usages can lead to false positives and auto-correction
 # introduces new typing errors.
+#
+# @example
+#
+#   # bad
+#   class Post < ApplicationRecord
+#   before_create :do_it, if: -> { should_do_it? }
+#
+#   def should_do_it?
+#   true
+#   end
+#   end
+#
+#   # good
+#   class Post < ApplicationRecord
+#   before_create :do_it, if: -> {
+#   T.bind(self, Post)
+#   should_do_it?
+#   }
+#
+#   def should_do_it?
+#   true
+#   end
+#   end
 class RuboCop::Cop::Sorbet::CallbackConditionalsBinding < ::RuboCop::Cop::Cop
   def autocorrect(node); end
   def on_send(node); end
@@ -57,6 +108,14 @@ RuboCop::Cop::Sorbet::CallbackConditionalsBinding::CALLBACKS = T.let(T.unsafe(ni
 # even if runtime checks have not been enabled on the class or globally.
 # Additionally, in the event where checks are enabled, `checked(true)` would
 # be redundant; only `checked(false)` or `soft` would change the behaviour.
+#
+# @example
+#
+#   # bad
+#   sig { void.checked(true) }
+#
+#   # good
+#   sig { void }
 class RuboCop::Cop::Sorbet::CheckedTrueInSignature < ::RuboCop::Cop::Sorbet::SignatureCop
   include ::RuboCop::Cop::RangeHelp
 
@@ -72,6 +131,28 @@ RuboCop::Cop::Sorbet::CheckedTrueInSignature::MESSAGE = T.let(T.unsafe(nil), Str
 # The goal of this cop is to make the code easier to statically analyze,
 # more IDE-friendly, and more predictable. It leads to code that clearly
 # expresses which values the constant can have.
+#
+# @example
+#
+#   # bad
+#   class_name.constantize
+#
+#   # bad
+#   constants.detect { |c| c.name == "User" }
+#
+#   # bad
+#   const_get(class_name)
+#
+#   # good
+#   case class_name
+#   when "User"
+#   User
+#   else
+#   raise ArgumentError
+#   end
+#
+#   # good
+#   { "User" => User }.fetch(class_name)
 class RuboCop::Cop::Sorbet::ConstantsFromStrings < ::RuboCop::Cop::Cop
   def constant_from_string?(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -136,6 +217,7 @@ RuboCop::Cop::Sorbet::EnforceSigilOrder::PREFERRED_ORDER = T.let(T.unsafe(nil), 
 # * `ParameterTypePlaceholder`: placeholders used for parameter types (default: 'T.untyped')
 # * `ReturnTypePlaceholder`: placeholders used for return types (default: 'T.untyped')
 class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Sorbet::SignatureCop
+  # @return [EnforceSignatures] a new instance of EnforceSignatures
   def initialize(config = T.unsafe(nil), options = T.unsafe(nil)); end
 
   def accessor?(param0 = T.unsafe(nil)); end
@@ -154,18 +236,23 @@ class RuboCop::Cop::Sorbet::EnforceSignatures < ::RuboCop::Cop::Sorbet::Signatur
 end
 
 class RuboCop::Cop::Sorbet::EnforceSignatures::SigSuggestion
+  # @return [SigSuggestion] a new instance of SigSuggestion
   def initialize(indent, param_placeholder, return_placeholder); end
 
   # Returns the value of attribute params.
   def params; end
 
   # Sets the attribute params
+  #
+  # @param value the value to set the attribute params to.
   def params=(_arg0); end
 
   # Returns the value of attribute returns.
   def returns; end
 
   # Sets the attribute returns
+  #
+  # @param value the value to set the attribute returns to.
   def returns=(_arg0); end
 
   def to_autocorrect; end
@@ -209,6 +296,23 @@ end
 
 # This cop ensures RBI shims do not include a call to extend T::Sig
 # or to extend T::Helpers
+#
+# @example
+#
+#   # bad
+#   module SomeModule
+#   extend T::Sig
+#   extend T::Helpers
+#
+#   sig { returns(String) }
+#   def foo; end
+#   end
+#
+#   # good
+#   module SomeModule
+#   sig { returns(String) }
+#   def foo; end
+#   end
 class RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims < ::RuboCop::Cop::Cop
   include ::RuboCop::Cop::RangeHelp
 
@@ -222,6 +326,7 @@ RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims::MSG = T.let(T.unsafe(nil),
 RuboCop::Cop::Sorbet::ForbidExtendTSigHelpersInShims::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 class RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral < ::RuboCop::Cop::Cop
+  # @return [ForbidIncludeConstLiteral] a new instance of ForbidIncludeConstLiteral
   def initialize(*_arg0); end
 
   def autocorrect(node); end
@@ -232,6 +337,8 @@ class RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral < ::RuboCop::Cop::Cop
   def used_names; end
 
   # Sets the attribute used_names
+  #
+  # @param value the value to set the attribute used_names to.
   def used_names=(_arg0); end
 end
 
@@ -242,6 +349,15 @@ RuboCop::Cop::Sorbet::ForbidIncludeConstLiteral::MSG = T.let(T.unsafe(nil), Stri
 # Options:
 #
 # * `AllowedPaths`: A list of the paths where RBI files are allowed (default: ["sorbet/rbi/**"])
+#
+# @example
+#   # bad
+#   # lib/some_file.rbi
+#   # other_file.rbi
+#
+#   # good
+#   # sorbet/rbi/some_file.rbi
+#   # sorbet/rbi/any/path/for/file.rbi
 class RuboCop::Cop::Sorbet::ForbidRBIOutsideOfAllowedPaths < ::RuboCop::Cop::Cop
   include ::RuboCop::Cop::RangeHelp
 
@@ -260,6 +376,14 @@ end
 RuboCop::Cop::Sorbet::ForbidSuperclassConstLiteral::MSG = T.let(T.unsafe(nil), String)
 
 # This cop disallows using `T.unsafe` anywhere.
+#
+# @example
+#
+#   # bad
+#   T.unsafe(foo)
+#
+#   # good
+#   foo
 class RuboCop::Cop::Sorbet::ForbidTUnsafe < ::RuboCop::Cop::Cop
   def on_send(node); end
   def t_unsafe?(param0 = T.unsafe(nil)); end
@@ -267,6 +391,20 @@ end
 
 # This cop disallows use of `T.untyped` or `T.nilable(T.untyped)`
 # as a prop type for `T::Struct`.
+#
+# @example
+#
+#   # bad
+#   class SomeClass
+#   const :foo, T.untyped
+#   prop :bar, T.nilable(T.untyped)
+#   end
+#
+#   # good
+#   class SomeClass
+#   const :foo, Integer
+#   prop :bar, T.nilable(String)
+#   end
 class RuboCop::Cop::Sorbet::ForbidUntypedStructProps < ::RuboCop::Cop::Cop
   def on_class(node); end
   def subclass_of_t_struct?(param0 = T.unsafe(nil)); end
@@ -287,6 +425,7 @@ RuboCop::Cop::Sorbet::ForbidUntypedStructProps::MSG = T.let(T.unsafe(nil), Strin
 #
 # If a `MinimumStrictness` level is specified, it will be used in offense messages and autocorrect.
 class RuboCop::Cop::Sorbet::HasSigil < ::RuboCop::Cop::Sorbet::ValidSigil
+  # @return [Boolean]
   def require_sigil_on_all_files?; end
 end
 
@@ -299,6 +438,16 @@ end
 # sorbet-runtime. The ordering requires that all keyword arguments
 # are at the end of the parameters list, and all keyword arguments
 # with a default value must be after those without default values.
+#
+# @example
+#
+#   # bad
+#   sig { params(a: Integer, b: String).void }
+#   def foo(a: 1, b:); end
+#
+#   # good
+#   sig { params(b: String, a: Integer).void }
+#   def foo(b:, a: 1); end
 class RuboCop::Cop::Sorbet::KeywordArgumentOrdering < ::RuboCop::Cop::Sorbet::SignatureCop
   def on_signature(node); end
 
@@ -309,6 +458,19 @@ end
 
 # This cop ensures one ancestor per requires_ancestor line
 # rather than chaining them as a comma-separated list.
+#
+# @example
+#
+#   # bad
+#   module SomeModule
+#   requires_ancestor Kernel, Minitest::Assertions
+#   end
+#
+#   # good
+#   module SomeModule
+#   requires_ancestor Kernel
+#   requires_ancestor Minitest::Assertions
+#   end
 class RuboCop::Cop::Sorbet::OneAncestorPerLine < ::RuboCop::Cop::Cop
   def abstract?(param0); end
   def autocorrect(node); end
@@ -333,6 +495,8 @@ class RuboCop::Cop::Sorbet::SignatureBuildOrder < ::RuboCop::Cop::Sorbet::Signat
   private
 
   def call_chain(sig_child_node); end
+
+  # @return [Boolean]
   def can_autocorrect?; end
 
   # This method exists to reparse the current node with modern features enabled.
@@ -361,6 +525,15 @@ end
 
 # This cop ensures empty class/module definitions in RBI files are
 # done on a single line rather than being split across multiple lines.
+#
+# @example
+#
+#   # bad
+#   module SomeModule
+#   end
+#
+#   # good
+#   module SomeModule; end
 class RuboCop::Cop::Sorbet::SingleLineRbiClassModuleDefinitions < ::RuboCop::Cop::Cop
   def autocorrect(node); end
   def on_class(node); end
@@ -421,6 +594,8 @@ class RuboCop::Cop::Sorbet::ValidSigil < ::RuboCop::Cop::Cop
   def minimum_strictness; end
 
   # Default is `false`
+  #
+  # @return [Boolean]
   def require_sigil_on_all_files?; end
 
   # Default is `'false'`

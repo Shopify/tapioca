@@ -21,6 +21,8 @@ class Thor
     def check_unknown_options!(options = T.unsafe(nil)); end
 
     # Overwrite check_unknown_options? to take subcommands and options into account.
+    #
+    # @return [Boolean]
     def check_unknown_options?(config); end
 
     # Prints help information for the given command.
@@ -60,6 +62,7 @@ class Thor
     # Symbol ...:: A list of commands that should be affected.
     def disable_required_check!(*command_names); end
 
+    # @return [Boolean]
     def disable_required_check?(command); end
 
     # Prints help information for this class.
@@ -76,11 +79,11 @@ class Thor
 
     # Maps an input to a command. If you define:
     #
-    # map "-T" => "list"
+    #   map "-T" => "list"
     #
     # Running:
     #
-    # thor -T
+    #   thor -T
     #
     # Will invoke the list command.
     #
@@ -91,15 +94,15 @@ class Thor
     # Adds an option to the set of method options. If :for is given as option,
     # it allows you to change the options from a previous defined command.
     #
-    # def previous_command
-    # # magic
-    # end
+    #   def previous_command
+    #     # magic
+    #   end
     #
-    # method_option :foo => :bar, :for => :previous_command
+    #   method_option :foo => :bar, :for => :previous_command
     #
-    # def next_command
-    # # magic
-    # end
+    #   def next_command
+    #     # magic
+    #   end
     #
     # ==== Parameters
     # name<Symbol>:: The name of the argument.
@@ -126,15 +129,15 @@ class Thor
     # Adds an option to the set of method options. If :for is given as option,
     # it allows you to change the options from a previous defined command.
     #
-    # def previous_command
-    # # magic
-    # end
+    #   def previous_command
+    #     # magic
+    #   end
     #
-    # method_option :foo => :bar, :for => :previous_command
+    #   method_option :foo => :bar, :for => :previous_command
     #
-    # def next_command
-    # # magic
-    # end
+    #   def next_command
+    #     # magic
+    #   end
     #
     # ==== Parameters
     # name<Symbol>:: The name of the argument.
@@ -193,33 +196,35 @@ class Thor
     # arguments to that command.  The command itself also accepts some options,
     # which should be handled by Thor.
     #
-    # class_option "verbose",  :type => :boolean
-    # stop_on_unknown_option! :exec
-    # check_unknown_options!  :except => :exec
+    #   class_option "verbose",  :type => :boolean
+    #   stop_on_unknown_option! :exec
+    #   check_unknown_options!  :except => :exec
     #
-    # desc "exec", "Run a shell command"
-    # def exec(*args)
-    # puts "diagnostic output" if options[:verbose]
-    # Kernel.exec(*args)
-    # end
+    #   desc "exec", "Run a shell command"
+    #   def exec(*args)
+    #     puts "diagnostic output" if options[:verbose]
+    #     Kernel.exec(*args)
+    #   end
     #
     # Here +exec+ can be called with +--verbose+ to get diagnostic output,
     # e.g.:
     #
-    # $ thor exec --verbose echo foo
-    # diagnostic output
-    # foo
+    #   $ thor exec --verbose echo foo
+    #   diagnostic output
+    #   foo
     #
     # But if +--verbose+ is given after +echo+, it is passed to +echo+ instead:
     #
-    # $ thor exec echo --verbose foo
-    # --verbose foo
+    #   $ thor exec echo --verbose foo
+    #   --verbose foo
     #
     # ==== Parameters
     # Symbol ...:: A list of commands that should be affected.
     def stop_on_unknown_option!(*command_names); end
 
+    # @return [Boolean]
     def stop_on_unknown_option?(command); end
+
     def subcommand(subcommand, subcommand_class); end
     def subcommand_classes; end
     def subcommands; end
@@ -249,6 +254,8 @@ class Thor
     def disable_required_check; end
 
     # The method responsible for dispatching given the args.
+    #
+    # @yield [instance]
     def dispatch(meth, given_args, given_opts, config); end
 
     def dynamic_command_class; end
@@ -272,6 +279,8 @@ class Thor
     #
     # +normalize_command_name+ also converts names like +animal-prison+
     # into +animal_prison+.
+    #
+    # @raise [AmbiguousTaskError]
     def normalize_command_name(meth); end
 
     # receives a (possibly nil) command name and returns a name that is in
@@ -281,6 +290,8 @@ class Thor
     #
     # +normalize_command_name+ also converts names like +animal-prison+
     # into +animal_prison+.
+    #
+    # @raise [AmbiguousTaskError]
     def normalize_task_name(meth); end
 
     # Retrieve the command name from given args.
@@ -302,8 +313,8 @@ module Thor::Actions
   #
   # ==== Configuration
   # behavior<Symbol>:: The actions default behavior. Can be :invoke or :revoke.
-  # It also accepts :force, :skip and :pretend to set the behavior
-  # and the respective option.
+  #                    It also accepts :force, :skip and :pretend to set the behavior
+  #                    and the respective option.
   #
   # destination_root<String>:: The root directory needed for some actions.
   def initialize(args = T.unsafe(nil), options = T.unsafe(nil), config = T.unsafe(nil)); end
@@ -321,12 +332,12 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # create_file "lib/fun_party.rb" do
-  # hostname = ask("What is the virtual hostname I should use?")
-  # "vhost.name = #{hostname}"
-  # end
+  #   create_file "lib/fun_party.rb" do
+  #     hostname = ask("What is the virtual hostname I should use?")
+  #     "vhost.name = #{hostname}"
+  #   end
   #
-  # create_file "config/apache.conf", "your apache config"
+  #   create_file "config/apache.conf", "your apache config"
   def add_file(destination, *args, &block); end
 
   # Create a new file relative to the destination root from the given source.
@@ -335,11 +346,11 @@ module Thor::Actions
   # destination<String>:: the relative path to the destination root.
   # source<String|NilClass>:: the relative path to the source root.
   # config<Hash>:: give :verbose => false to not log the status.
-  # :: give :symbolic => false for hard link.
+  #   :: give :symbolic => false for hard link.
   #
   # ==== Examples
   #
-  # create_link "config/apache.conf", "/etc/apache.conf"
+  #   create_link "config/apache.conf", "/etc/apache.conf"
   def add_link(destination, *args); end
 
   # Append text to a file. Since it depends on insert_into_file, it's reversible.
@@ -351,11 +362,11 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # append_to_file 'config/environments/test.rb', 'config.gem "rspec"'
+  #   append_to_file 'config/environments/test.rb', 'config.gem "rspec"'
   #
-  # append_to_file 'config/environments/test.rb' do
-  # 'config.gem "rspec"'
-  # end
+  #   append_to_file 'config/environments/test.rb' do
+  #     'config.gem "rspec"'
+  #   end
   def append_file(path, *args, &block); end
 
   # Append text to a file. Since it depends on insert_into_file, it's reversible.
@@ -367,30 +378,32 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # append_to_file 'config/environments/test.rb', 'config.gem "rspec"'
+  #   append_to_file 'config/environments/test.rb', 'config.gem "rspec"'
   #
-  # append_to_file 'config/environments/test.rb' do
-  # 'config.gem "rspec"'
-  # end
+  #   append_to_file 'config/environments/test.rb' do
+  #     'config.gem "rspec"'
+  #   end
   def append_to_file(path, *args, &block); end
 
   # Loads an external file and execute it in the instance binding.
   #
   # ==== Parameters
   # path<String>:: The path to the file to execute. Can be a web address or
-  # a relative path from the source root.
+  #                a relative path from the source root.
   #
   # ==== Examples
   #
-  # apply "http://gist.github.com/103208"
+  #   apply "http://gist.github.com/103208"
   #
-  # apply "recipes/jquery.rb"
+  #   apply "recipes/jquery.rb"
   def apply(path, config = T.unsafe(nil)); end
 
   # Returns the value of attribute behavior.
   def behavior; end
 
   # Sets the attribute behavior
+  #
+  # @param value the value to set the attribute behavior to.
   def behavior=(_arg0); end
 
   # Changes the mode of the given file or directory.
@@ -402,7 +415,7 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # chmod "script/server", 0755
+  #   chmod "script/server", 0755
   def chmod(path, mode, config = T.unsafe(nil)); end
 
   # Comment all lines matching a given regex.  It will leave the space
@@ -416,14 +429,14 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # comment_lines 'config/initializers/session_store.rb', /cookie_store/
+  #   comment_lines 'config/initializers/session_store.rb', /cookie_store/
   def comment_lines(path, flag, *args); end
 
   # ==== Examples
   #
-  # copy_file "README", "doc/README"
+  #   copy_file "README", "doc/README"
   #
-  # copy_file "doc/README"
+  #   copy_file "doc/README"
   def copy_file(source, *args, &block); end
 
   # Create a new file relative to the destination root with the given data,
@@ -436,12 +449,12 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # create_file "lib/fun_party.rb" do
-  # hostname = ask("What is the virtual hostname I should use?")
-  # "vhost.name = #{hostname}"
-  # end
+  #   create_file "lib/fun_party.rb" do
+  #     hostname = ask("What is the virtual hostname I should use?")
+  #     "vhost.name = #{hostname}"
+  #   end
   #
-  # create_file "config/apache.conf", "your apache config"
+  #   create_file "config/apache.conf", "your apache config"
   def create_file(destination, *args, &block); end
 
   # Create a new file relative to the destination root from the given source.
@@ -450,11 +463,11 @@ module Thor::Actions
   # destination<String>:: the relative path to the destination root.
   # source<String|NilClass>:: the relative path to the source root.
   # config<Hash>:: give :verbose => false to not log the status.
-  # :: give :symbolic => false for hard link.
+  #   :: give :symbolic => false for hard link.
   #
   # ==== Examples
   #
-  # create_link "config/apache.conf", "/etc/apache.conf"
+  #   create_link "config/apache.conf", "/etc/apache.conf"
   def create_link(destination, *args); end
 
   # Returns the root for this thor class (also aliased as destination root).
@@ -472,24 +485,24 @@ module Thor::Actions
   # the % signs will be executed as a method and replaced with the returned
   # value. Let's suppose a doc directory with the following files:
   #
-  # doc/
-  # components/.empty_directory
-  # README
-  # rdoc.rb.tt
-  # %app_name%.rb
+  #   doc/
+  #     components/.empty_directory
+  #     README
+  #     rdoc.rb.tt
+  #     %app_name%.rb
   #
   # When invoked as:
   #
-  # directory "doc"
+  #   directory "doc"
   #
   # It will create a doc directory in the destination with the following
   # files (assuming that the `app_name` method returns the value "blog"):
   #
-  # doc/
-  # components/
-  # README
-  # rdoc.rb
-  # blog.rb
+  #   doc/
+  #     components/
+  #     README
+  #     rdoc.rb
+  #     blog.rb
   #
   # <b>Encoded path note:</b> Since Thor internals use Object#respond_to? to check if it can
   # expand %something%, this `something` should be a public method in the class calling
@@ -499,14 +512,14 @@ module Thor::Actions
   # source<String>:: the relative path to the source root.
   # destination<String>:: the relative path to the destination root.
   # config<Hash>:: give :verbose => false to not log the status.
-  # If :recursive => false, does not look for paths recursively.
-  # If :mode => :preserve, preserve the file mode from the source.
-  # If :exclude_pattern => /regexp/, prevents copying files that match that regexp.
+  #                If :recursive => false, does not look for paths recursively.
+  #                If :mode => :preserve, preserve the file mode from the source.
+  #                If :exclude_pattern => /regexp/, prevents copying files that match that regexp.
   #
   # ==== Examples
   #
-  # directory "doc"
-  # directory "doc", "docs", :recursive => false
+  #   directory "doc"
+  #   directory "doc", "docs", :recursive => false
   def directory(source, *args, &block); end
 
   # Creates an empty directory.
@@ -517,10 +530,12 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # empty_directory "doc"
+  #   empty_directory "doc"
   def empty_directory(destination, config = T.unsafe(nil)); end
 
   # Receives a file or directory and search for it in the source paths.
+  #
+  # @raise [Error]
   def find_in_source_paths(file); end
 
   # Gets the content at the given address and places it at the given relative
@@ -537,11 +552,11 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # get "http://gist.github.com/103208", "doc/README"
+  #   get "http://gist.github.com/103208", "doc/README"
   #
-  # get "http://gist.github.com/103208" do |content|
-  # content.split("\n").first
-  # end
+  #   get "http://gist.github.com/103208" do |content|
+  #     content.split("\n").first
+  #   end
   def get(source, *args, &block); end
 
   # Run a regular expression replacement on a file.
@@ -551,15 +566,15 @@ module Thor::Actions
   # flag<Regexp|String>:: the regexp or string to be replaced
   # replacement<String>:: the replacement, can be also given as a block
   # config<Hash>:: give :verbose => false to not log the status, and
-  # :force => true, to force the replacement regardles of runner behavior.
+  #                :force => true, to force the replacement regardles of runner behavior.
   #
   # ==== Example
   #
-  # gsub_file 'app/controllers/application_controller.rb', /#\s*(filter_parameter_logging :password)/, '\1'
+  #   gsub_file 'app/controllers/application_controller.rb', /#\s*(filter_parameter_logging :password)/, '\1'
   #
-  # gsub_file 'README', /rake/, :green do |match|
-  # match << " no more. Use thor!"
-  # end
+  #   gsub_file 'README', /rake/, :green do |match|
+  #     match << " no more. Use thor!"
+  #   end
   def gsub_file(path, flag, *args, &block); end
 
   # Goes to the root and execute the given block.
@@ -576,11 +591,11 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # inject_into_class "app/controllers/application_controller.rb", "ApplicationController", "  filter_parameter :password\n"
+  #   inject_into_class "app/controllers/application_controller.rb", "ApplicationController", "  filter_parameter :password\n"
   #
-  # inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
-  # "  filter_parameter :password\n"
-  # end
+  #   inject_into_class "app/controllers/application_controller.rb", "ApplicationController" do
+  #     "  filter_parameter :password\n"
+  #   end
   def inject_into_class(path, klass, *args, &block); end
 
   def inject_into_file(destination, *args, &block); end
@@ -596,11 +611,11 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper", "  def help; 'help'; end\n"
+  #   inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper", "  def help; 'help'; end\n"
   #
-  # inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper" do
-  # "  def help; 'help'; end\n"
-  # end
+  #   inject_into_module "app/helpers/application_helper.rb", "ApplicationHelper" do
+  #     "  def help; 'help'; end\n"
+  #   end
   def inject_into_module(path, module_name, *args, &block); end
 
   def insert_into_file(destination, *args, &block); end
@@ -627,9 +642,9 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # link_file "README", "doc/README"
+  #   link_file "README", "doc/README"
   #
-  # link_file "doc/README"
+  #   link_file "doc/README"
   def link_file(source, *args); end
 
   # Prepend text to a file. Since it depends on insert_into_file, it's reversible.
@@ -641,11 +656,11 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # prepend_to_file 'config/environments/test.rb', 'config.gem "rspec"'
+  #   prepend_to_file 'config/environments/test.rb', 'config.gem "rspec"'
   #
-  # prepend_to_file 'config/environments/test.rb' do
-  # 'config.gem "rspec"'
-  # end
+  #   prepend_to_file 'config/environments/test.rb' do
+  #     'config.gem "rspec"'
+  #   end
   def prepend_file(path, *args, &block); end
 
   # Prepend text to a file. Since it depends on insert_into_file, it's reversible.
@@ -657,11 +672,11 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # prepend_to_file 'config/environments/test.rb', 'config.gem "rspec"'
+  #   prepend_to_file 'config/environments/test.rb', 'config.gem "rspec"'
   #
-  # prepend_to_file 'config/environments/test.rb' do
-  # 'config.gem "rspec"'
-  # end
+  #   prepend_to_file 'config/environments/test.rb' do
+  #     'config.gem "rspec"'
+  #   end
   def prepend_to_file(path, *args, &block); end
 
   # Returns the given path relative to the absolute root (ie, root where
@@ -676,8 +691,8 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # remove_file 'README'
-  # remove_file 'app/controllers/application_controller.rb'
+  #   remove_file 'README'
+  #   remove_file 'app/controllers/application_controller.rb'
   def remove_dir(path, config = T.unsafe(nil)); end
 
   # Removes a file at the given location.
@@ -688,8 +703,8 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # remove_file 'README'
-  # remove_file 'app/controllers/application_controller.rb'
+  #   remove_file 'README'
+  #   remove_file 'app/controllers/application_controller.rb'
   def remove_file(path, config = T.unsafe(nil)); end
 
   # Executes a command returning the contents of the command.
@@ -697,13 +712,13 @@ module Thor::Actions
   # ==== Parameters
   # command<String>:: the command to be executed.
   # config<Hash>:: give :verbose => false to not log the status, :capture => true to hide to output. Specify :with
-  # to append an executable to command execution.
+  #                to append an executable to command execution.
   #
   # ==== Example
   #
-  # inside('vendor') do
-  # run('ln -s ~/edge rails')
-  # end
+  #   inside('vendor') do
+  #     run('ln -s ~/edge rails')
+  #   end
   def run(command, config = T.unsafe(nil)); end
 
   # Executes a ruby script (taking into account WIN32 platform quirks).
@@ -727,9 +742,9 @@ module Thor::Actions
   #
   # ==== Examples
   #
-  # template "README", "doc/README"
+  #   template "README", "doc/README"
   #
-  # template "doc/README"
+  #   template "doc/README"
   def template(source, *args, &block); end
 
   # Run a thor command. A hash of options can be given and it's converted to
@@ -739,16 +754,16 @@ module Thor::Actions
   # command<String>:: the command to be invoked
   # args<Array>:: arguments to the command
   # config<Hash>:: give :verbose => false to not log the status, :capture => true to hide to output.
-  # Other options are given as parameter to Thor.
+  #                Other options are given as parameter to Thor.
   #
   #
   # ==== Examples
   #
-  # thor :install, "http://gist.github.com/103208"
-  # #=> thor install http://gist.github.com/103208
+  #   thor :install, "http://gist.github.com/103208"
+  #   #=> thor install http://gist.github.com/103208
   #
-  # thor :list, :all => true, :substring => 'rails'
-  # #=> thor list --all --substring=rails
+  #   thor :list, :all => true, :substring => 'rails'
+  #   #=> thor list --all --substring=rails
   def thor(command, *args); end
 
   # Uncomment all lines matching a given regex.  It will leave the space
@@ -762,7 +777,7 @@ module Thor::Actions
   #
   # ==== Example
   #
-  # uncomment_lines 'config/initializers/session_store.rb', /active_record/
+  #   uncomment_lines 'config/initializers/session_store.rb', /active_record/
   def uncomment_lines(path, flag, *args); end
 
   protected
@@ -781,6 +796,8 @@ module Thor::Actions
   def output_buffer; end
 
   # Sets the attribute output_buffer
+  #
+  # @param value the value to set the attribute output_buffer to.
   def output_buffer=(_arg0); end
 
   def with_output_buffer(buf = T.unsafe(nil)); end
@@ -807,9 +824,9 @@ module Thor::Actions::ClassMethods
 
   # Returns the source paths in the following order:
   #
-  # 1) This class source paths
-  # 2) Source root
-  # 3) Parents source paths
+  #   1) This class source paths
+  #   2) Source root
+  #   3) Parents source paths
   def source_paths_for_search; end
 
   # Stores and return the source root for this class
@@ -819,6 +836,7 @@ end
 # CreateFile is a subset of Template, which instead of rendering a file with
 # ERB, it gets the content from the user.
 class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
+  # @return [CreateFile] a new instance of CreateFile
   def initialize(base, destination, data, config = T.unsafe(nil)); end
 
   def data; end
@@ -827,6 +845,8 @@ class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
   #
   # ==== Returns
   # Boolean:: true if it is identical, false otherwise.
+  #
+  # @return [Boolean]
   def identical?; end
 
   def invoke!; end
@@ -837,6 +857,8 @@ class Thor::Actions::CreateFile < ::Thor::Actions::EmptyDirectory
   protected
 
   # Shows the file collision menu to the user and gets the result.
+  #
+  # @return [Boolean]
   def force_on_collision?; end
 
   # If force is true, run the action, otherwise check if it's not being
@@ -852,18 +874,23 @@ end
 # data, just takes a source string from the user.
 class Thor::Actions::CreateLink < ::Thor::Actions::CreateFile
   def data; end
+
+  # @return [Boolean]
   def exists?; end
 
   # Checks if the content of the file at the destination is identical to the rendered result.
   #
   # ==== Returns
   # Boolean:: true if it is identical, false otherwise.
+  #
+  # @return [Boolean]
   def identical?; end
 
   def invoke!; end
 end
 
 class Thor::Actions::Directory < ::Thor::Actions::EmptyDirectory
+  # @return [Directory] a new instance of Directory
   def initialize(base, source, destination = T.unsafe(nil), config = T.unsafe(nil), &block); end
 
   def invoke!; end
@@ -887,6 +914,8 @@ class Thor::Actions::EmptyDirectory
   # source<String>:: Relative path to the source of this file
   # destination<String>:: Relative path to the destination of this file
   # config<Hash>:: give :verbose => false to not log the status.
+  #
+  # @return [EmptyDirectory] a new instance of EmptyDirectory
   def initialize(base, destination, config = T.unsafe(nil)); end
 
   def base; end
@@ -897,6 +926,8 @@ class Thor::Actions::EmptyDirectory
   #
   # ==== Returns
   # Boolean:: true if the file exists, false otherwise.
+  #
+  # @return [Boolean]
   def exists?; end
 
   def given_destination; end
@@ -908,12 +939,12 @@ class Thor::Actions::EmptyDirectory
 
   # Filenames in the encoded form are converted. If you have a file:
   #
-  # %file_name%.rb
+  #   %file_name%.rb
   #
   # It calls #file_name from the base and replaces %-string with the
   # return value (should be String) of #file_name:
   #
-  # user.rb
+  #   user.rb
   #
   # The method referenced can be either public or private.
   def convert_encoded_instructions(filename); end
@@ -924,13 +955,13 @@ class Thor::Actions::EmptyDirectory
   # "dest". The destination, given_destination and relative_destination
   # are related in the following way:
   #
-  # inside "bar" do
-  # empty_directory "baz"
-  # end
+  #   inside "bar" do
+  #     empty_directory "baz"
+  #   end
   #
-  # destination          #=> dest/bar/baz
-  # relative_destination #=> bar/baz
-  # given_destination    #=> baz
+  #   destination          #=> dest/bar/baz
+  #   relative_destination #=> bar/baz
+  #   given_destination    #=> baz
   def destination=(destination); end
 
   # Receives a hash of options and just execute the block if some
@@ -943,6 +974,8 @@ class Thor::Actions::EmptyDirectory
   def on_file_clash_behavior; end
 
   # Shortcut for pretend.
+  #
+  # @return [Boolean]
   def pretend?; end
 
   # Shortcut to say_status shell method.
@@ -950,6 +983,7 @@ class Thor::Actions::EmptyDirectory
 end
 
 class Thor::Actions::InjectIntoFile < ::Thor::Actions::EmptyDirectory
+  # @return [InjectIntoFile] a new instance of InjectIntoFile
   def initialize(base, destination, data, config); end
 
   # Returns the value of attribute behavior.
@@ -980,23 +1014,25 @@ end
 # destination<String>:: Relative path to the destination root
 # data<String>:: Data to add to the file. Can be given as a block.
 # config<Hash>:: give :verbose => false to not log the status and the flag
-# for injection (:after or :before) or :force => true for
-# insert two or more times the same content.
+#                for injection (:after or :before) or :force => true for
+#                insert two or more times the same content.
 #
 # ==== Examples
 #
-# insert_into_file "config/environment.rb", "config.gem :thor", :after => "Rails::Initializer.run do |config|\n"
+#   insert_into_file "config/environment.rb", "config.gem :thor", :after => "Rails::Initializer.run do |config|\n"
 #
-# insert_into_file "config/environment.rb", :after => "Rails::Initializer.run do |config|\n" do
-# gems = ask "Which gems would you like to add?"
-# gems.split(" ").map{ |gem| "  config.gem :#{gem}" }.join("\n")
-# end
+#   insert_into_file "config/environment.rb", :after => "Rails::Initializer.run do |config|\n" do
+#     gems = ask "Which gems would you like to add?"
+#     gems.split(" ").map{ |gem| "  config.gem :#{gem}" }.join("\n")
+#   end
 Thor::Actions::WARNINGS = T.let(T.unsafe(nil), Hash)
 
 class Thor::AmbiguousCommandError < ::Thor::Error; end
 Thor::AmbiguousTaskError = Thor::AmbiguousCommandError
 
 class Thor::Argument
+  # @raise [ArgumentError]
+  # @return [Argument] a new instance of Argument
   def initialize(name, options = T.unsafe(nil)); end
 
   # Returns the value of attribute banner.
@@ -1020,7 +1056,10 @@ class Thor::Argument
   # Returns the value of attribute required.
   def required; end
 
+  # @return [Boolean]
   def required?; end
+
+  # @return [Boolean]
   def show_default?; end
 
   # Returns the value of attribute type.
@@ -1031,7 +1070,11 @@ class Thor::Argument
   protected
 
   def default_banner; end
+
+  # @return [Boolean]
   def valid_type?(type); end
+
+  # @raise [ArgumentError]
   def validate!; end
 end
 
@@ -1039,6 +1082,8 @@ Thor::Argument::VALID_TYPES = T.let(T.unsafe(nil), Array)
 
 class Thor::Arguments
   # Takes an array of Thor::Argument objects.
+  #
+  # @return [Arguments] a new instance of Arguments
   def initialize(arguments = T.unsafe(nil)); end
 
   def parse(args); end
@@ -1047,30 +1092,37 @@ class Thor::Arguments
   private
 
   # Raises an error if @non_assigned_required array is not empty.
+  #
+  # @raise [RequiredArgumentMissingError]
   def check_requirement!; end
 
+  # @return [Boolean]
   def current_is_value?; end
+
+  # @return [Boolean]
   def last?; end
+
+  # @return [Boolean]
   def no_or_skip?(arg); end
 
   # Runs through the argument array getting all strings until no string is
   # found or a switch is found.
   #
-  # ["a", "b", "c"]
+  #   ["a", "b", "c"]
   #
   # And returns it as an array:
   #
-  # ["a", "b", "c"]
+  #   ["a", "b", "c"]
   def parse_array(name); end
 
   # Runs through the argument array getting strings that contains ":" and
   # mark it as a hash:
   #
-  # [ "name:string", "age:integer" ]
+  #   [ "name:string", "age:integer" ]
   #
   # Becomes:
   #
-  # { "name" => "string", "age" => "integer" }
+  #   { "name" => "string", "age" => "integer" }
   def parse_hash(name); end
 
   # Check if the peek is numeric format and return a Float or Integer.
@@ -1114,11 +1166,11 @@ module Thor::Base
   #
   # ==== Parameters
   # args<Array[Object]>:: An array of objects. The objects are applied to their
-  # respective accessors declared with <tt>argument</tt>.
+  #                       respective accessors declared with <tt>argument</tt>.
   #
   # options<Hash>:: An options hash that will be available as self.options.
-  # The hash given is converted to a hash with indifferent
-  # access, magic predicates (options.skip?) and then frozen.
+  #                 The hash given is converted to a hash with indifferent
+  #                 access, magic predicates (options.skip?) and then frozen.
   #
   # config<Hash>:: Configuration for this Thor class.
   def initialize(args = T.unsafe(nil), local_options = T.unsafe(nil), config = T.unsafe(nil)); end
@@ -1127,18 +1179,24 @@ module Thor::Base
   def args; end
 
   # Sets the attribute args
+  #
+  # @param value the value to set the attribute args to.
   def args=(_arg0); end
 
   # Returns the value of attribute options.
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   # Returns the value of attribute parent_options.
   def parent_options; end
 
   # Sets the attribute parent_options
+  #
+  # @param value the value to set the attribute parent_options to.
   def parent_options=(_arg0); end
 
   class << self
@@ -1153,6 +1211,8 @@ module Thor::Base
     def shell; end
 
     # Sets the attribute shell
+    #
+    # @param value the value to set the attribute shell to.
     def shell=(_arg0); end
 
     # Returns the files where the subclasses are kept.
@@ -1174,14 +1234,14 @@ module Thor::Base::ClassMethods
   #
   # ==== Returns
   # Hash:: An ordered hash with commands names as keys and Thor::Command
-  # objects as values.
+  #        objects as values.
   def all_commands; end
 
   # Returns the commands for this Thor class and all subclasses.
   #
   # ==== Returns
   # Hash:: An ordered hash with commands names as keys and Thor::Command
-  # objects as values.
+  #        objects as values.
   def all_tasks; end
 
   # If you want to use defaults that don't match the type of an option,
@@ -1194,11 +1254,11 @@ module Thor::Base::ClassMethods
   # is how they are parsed from the command line, arguments are retrieved
   # from position:
   #
-  # thor command NAME
+  #   thor command NAME
   #
   # Instead of:
   #
-  # thor command --name=NAME
+  #   thor command --name=NAME
   #
   # Besides, arguments are used inside your code as an accessor (self.argument),
   # while options are all kept in a hash (self.options).
@@ -1246,6 +1306,7 @@ module Thor::Base::ClassMethods
   # This is disabled by default to allow dynamic invocations.
   def check_unknown_options!; end
 
+  # @return [Boolean]
   def check_unknown_options?(config); end
 
   # Adds an option to the set of class options
@@ -1267,7 +1328,7 @@ module Thor::Base::ClassMethods
 
   # Adds a bunch of options to the set of class options.
   #
-  # class_options :foo => false, :bar => :required, :baz => :string
+  #   class_options :foo => false, :bar => :required, :baz => :string
   #
   # If you prefer more detailed declaration, check class_option.
   #
@@ -1279,14 +1340,18 @@ module Thor::Base::ClassMethods
   #
   # ==== Returns
   # Hash:: An ordered hash with commands names as keys and Thor::Command
-  # objects as values.
+  #        objects as values.
   def commands; end
 
   # If true, option set will not suspend the execution of the command when
   # a required option is not provided.
+  #
+  # @return [Boolean]
   def disable_required_check?(command_name); end
 
   # A flag that makes the process exit with status 1 if any error happens.
+  #
+  # @return [Boolean]
   def exit_on_failure?; end
 
   # Defines the group. This is used when thor list is invoked so you can specify
@@ -1296,96 +1361,103 @@ module Thor::Base::ClassMethods
   # name<String|Symbol>
   def group(name = T.unsafe(nil)); end
 
+  # @raise [InvocationError]
   def handle_argument_error(command, error, args, arity); end
+
+  # @raise [UndefinedCommandError]
   def handle_no_command_error(command, has_namespace = T.unsafe(nil)); end
+
+  # @raise [UndefinedCommandError]
   def handle_no_task_error(command, has_namespace = T.unsafe(nil)); end
 
   # Sets the namespace for the Thor or Thor::Group class. By default the
   # namespace is retrieved from the class name. If your Thor class is named
   # Scripts::MyScript, the help method, for example, will be called as:
   #
-  # thor scripts:my_script -h
+  #   thor scripts:my_script -h
   #
   # If you change the namespace:
   #
-  # namespace :my_scripts
+  #   namespace :my_scripts
   #
   # You change how your commands are invoked:
   #
-  # thor my_scripts -h
+  #   thor my_scripts -h
   #
   # Finally, if you change your namespace to default:
   #
-  # namespace :default
+  #   namespace :default
   #
   # Your commands can be invoked with a shortcut. Instead of:
   #
-  # thor :my_command
+  #   thor :my_command
   def namespace(name = T.unsafe(nil)); end
 
   # All methods defined inside the given block are not added as commands.
   #
   # So you can do:
   #
-  # class MyScript < Thor
-  # no_commands do
-  # def this_is_not_a_command
-  # end
-  # end
-  # end
+  #   class MyScript < Thor
+  #     no_commands do
+  #       def this_is_not_a_command
+  #       end
+  #     end
+  #   end
   #
   # You can also add the method and remove it from the command list:
   #
-  # class MyScript < Thor
-  # def this_is_not_a_command
-  # end
-  # remove_command :this_is_not_a_command
-  # end
+  #   class MyScript < Thor
+  #     def this_is_not_a_command
+  #     end
+  #     remove_command :this_is_not_a_command
+  #   end
   def no_commands(&block); end
 
+  # @return [Boolean]
   def no_commands?; end
+
   def no_commands_context; end
 
   # All methods defined inside the given block are not added as commands.
   #
   # So you can do:
   #
-  # class MyScript < Thor
-  # no_commands do
-  # def this_is_not_a_command
-  # end
-  # end
-  # end
+  #   class MyScript < Thor
+  #     no_commands do
+  #       def this_is_not_a_command
+  #       end
+  #     end
+  #   end
   #
   # You can also add the method and remove it from the command list:
   #
-  # class MyScript < Thor
-  # def this_is_not_a_command
-  # end
-  # remove_command :this_is_not_a_command
-  # end
+  #   class MyScript < Thor
+  #     def this_is_not_a_command
+  #     end
+  #     remove_command :this_is_not_a_command
+  #   end
   def no_tasks(&block); end
 
   # Allows to use private methods from parent in child classes as commands.
   #
   # ==== Parameters
-  # names<Array>:: Method names to be used as commands
+  #   names<Array>:: Method names to be used as commands
   #
   # ==== Examples
   #
-  # public_command :foo
-  # public_command :foo, :bar, :baz
+  #   public_command :foo
+  #   public_command :foo, :bar, :baz
   def public_command(*names); end
 
   # Allows to use private methods from parent in child classes as commands.
   #
   # ==== Parameters
-  # names<Array>:: Method names to be used as commands
+  #   names<Array>:: Method names to be used as commands
   #
   # ==== Examples
   #
-  # public_command :foo
-  # public_command :foo, :bar, :baz
+  #   public_command :foo
+  #   public_command :foo, :bar, :baz
   def public_task(*names); end
 
   # Removes a previous defined argument. If :undefine is given, undefine
@@ -1396,8 +1468,8 @@ module Thor::Base::ClassMethods
   #
   # ==== Examples
   #
-  # remove_argument :foo
-  # remove_argument :foo, :bar, :baz, :undefine => true
+  #   remove_argument :foo
+  #   remove_argument :foo, :bar, :baz, :undefine => true
   def remove_argument(*names); end
 
   # Removes a previous defined class option.
@@ -1407,8 +1479,8 @@ module Thor::Base::ClassMethods
   #
   # ==== Examples
   #
-  # remove_class_option :foo
-  # remove_class_option :foo, :bar, :baz
+  #   remove_class_option :foo
+  #   remove_class_option :foo, :bar, :baz
   def remove_class_option(*names); end
 
   # Removes a given command from this Thor class. This is usually done if you
@@ -1421,7 +1493,7 @@ module Thor::Base::ClassMethods
   # ==== Parameters
   # name<Symbol|String>:: The name of the command to be removed
   # options<Hash>:: You can give :undefine => true if you want commands the method
-  # to be undefined from the class as well.
+  #                 to be undefined from the class as well.
   def remove_command(*names); end
 
   # Removes a given command from this Thor class. This is usually done if you
@@ -1434,7 +1506,7 @@ module Thor::Base::ClassMethods
   # ==== Parameters
   # name<Symbol|String>:: The name of the command to be removed
   # options<Hash>:: You can give :undefine => true if you want commands the method
-  # to be undefined from the class as well.
+  #                 to be undefined from the class as well.
   def remove_task(*names); end
 
   # Parses the command and options from the given args, instantiate the class
@@ -1442,13 +1514,15 @@ module Thor::Base::ClassMethods
   # from an array. If you are inside Ruby and want to use a Thor class, you
   # can simply initialize it:
   #
-  # script = MyScript.new(args, options, config)
-  # script.invoke(:command, first_arg, second_arg, third_arg)
+  #   script = MyScript.new(args, options, config)
+  #   script.invoke(:command, first_arg, second_arg, third_arg)
   def start(given_args = T.unsafe(nil), config = T.unsafe(nil)); end
 
   # If true, option parsing is suspended as soon as an unknown option or a
   # regular argument is encountered.  All remaining arguments are passed to
   # the command as regular arguments.
+  #
+  # @return [Boolean]
   def stop_on_unknown_option?(command_name); end
 
   def strict_args_position; end
@@ -1458,13 +1532,14 @@ module Thor::Base::ClassMethods
   # invocations.
   def strict_args_position!; end
 
+  # @return [Boolean]
   def strict_args_position?(config); end
 
   # Returns the commands for this Thor class.
   #
   # ==== Returns
   # Hash:: An ordered hash with commands names as keys and Thor::Command
-  # objects as values.
+  #        objects as values.
   def tasks; end
 
   protected
@@ -1487,7 +1562,7 @@ module Thor::Base::ClassMethods
   # Receives a hash of options, parse them and add to the scope. This is a
   # fast way to set a bunch of options:
   #
-  # build_options :foo => true, :bar => :required, :baz => :string
+  #   build_options :foo => true, :bar => :required, :baz => :string
   #
   # ==== Parameters
   # Hash[Symbol => Object]
@@ -1506,6 +1581,8 @@ module Thor::Base::ClassMethods
   def create_task(meth); end
 
   # SIGNATURE: The hook invoked by start.
+  #
+  # @raise [NotImplementedError]
   def dispatch(command, given_args, given_opts, config); end
 
   # Finds a command with the given name. If the command belongs to the current
@@ -1531,6 +1608,8 @@ module Thor::Base::ClassMethods
   def initialize_added; end
 
   # Raises an error if the word given is a Thor reserved word.
+  #
+  # @return [Boolean]
   def is_thor_reserved_word?(word, type); end
 
   # Fire this callback whenever a method is added. Added methods are
@@ -1542,12 +1621,14 @@ module Thor::Base::ClassMethods
 end
 
 class Thor::Command < ::Struct
+  # @return [Command] a new instance of Command
   def initialize(name, description, long_description, usage, options = T.unsafe(nil)); end
 
   # Returns the formatted usage by injecting given required arguments
   # and required options into the given usage.
   def formatted_usage(klass, namespace = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def hidden?; end
 
   # By default, a command invokes a method in the thor class. You can change this
@@ -1556,13 +1637,24 @@ class Thor::Command < ::Struct
 
   protected
 
+  # @return [Boolean]
   def handle_argument_error?(instance, error, caller); end
+
+  # @return [Boolean]
   def handle_no_method_error?(instance, error, caller); end
+
+  # @return [Boolean]
   def local_method?(instance, name); end
+
+  # @return [Boolean]
   def not_debugging?(instance); end
+
+  # @return [Boolean]
   def private_method?(instance); end
 
   # Given a target, checks if this class name is a public method.
+  #
+  # @return [Boolean]
   def public_method?(instance); end
 
   # Add usage with required arguments
@@ -1581,12 +1673,13 @@ module Thor::CoreExt; end
 
 # A hash with indifferent access and magic predicates.
 #
-# hash = Thor::CoreExt::HashWithIndifferentAccess.new 'foo' => 'bar', 'baz' => 'bee', 'force' => true
+#   hash = Thor::CoreExt::HashWithIndifferentAccess.new 'foo' => 'bar', 'baz' => 'bee', 'force' => true
 #
-# hash[:foo]  #=> 'bar'
-# hash['foo'] #=> 'bar'
-# hash.foo?   #=> true
+#   hash[:foo]  #=> 'bar'
+#   hash['foo'] #=> 'bar'
+#   hash.foo?   #=> true
 class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
+  # @return [HashWithIndifferentAccess] a new instance of HashWithIndifferentAccess
   def initialize(hash = T.unsafe(nil)); end
 
   def [](key); end
@@ -1594,7 +1687,10 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
   def delete(key); end
   def except(*keys); end
   def fetch(key, *args); end
+
+  # @return [Boolean]
   def key?(key); end
+
   def merge(other); end
   def merge!(other); end
   def replace(other_hash); end
@@ -1612,9 +1708,9 @@ class Thor::CoreExt::HashWithIndifferentAccess < ::Hash
 
   # Magic predicates. For instance:
   #
-  # options.force?                  # => !!options['force']
-  # options.shebang                 # => "/usr/lib/local/ruby"
-  # options.test_framework?(:rspec) # => options[:test_framework] == :rspec
+  #   options.force?                  # => !!options['force']
+  #   options.shebang                 # => "/usr/lib/local/ruby"
+  #   options.test_framework?(:rspec) # => options[:test_framework] == :rspec
   def method_missing(method, *args); end
 end
 
@@ -1622,6 +1718,7 @@ Thor::Correctable = DidYouMean::Correctable
 
 # A dynamic command that handles method missing scenarios.
 class Thor::DynamicCommand < ::Thor::Command
+  # @return [DynamicCommand] a new instance of DynamicCommand
   def initialize(name, options = T.unsafe(nil)); end
 
   def run(instance, args = T.unsafe(nil)); end
@@ -1672,6 +1769,7 @@ class Thor::Group
     # in base_options are not added twice.
     def get_options_from_invocations(group_options, base_options); end
 
+    # @raise [error]
     def handle_argument_error(command, error, _args, arity); end
 
     # Prints help information.
@@ -1700,10 +1798,10 @@ class Thor::Group
     #
     # ==== Examples
     #
-    # class GemGenerator < Thor::Group
-    # class_option :test_framework, :type => :string
-    # invoke_from_option :test_framework
-    # end
+    #   class GemGenerator < Thor::Group
+    #     class_option :test_framework, :type => :string
+    #     invoke_from_option :test_framework
+    #   end
     #
     # ==== Boolean options
     #
@@ -1735,7 +1833,7 @@ class Thor::Group
     #
     # ==== Examples
     #
-    # remove_invocation :test_framework
+    #   remove_invocation :test_framework
     def remove_invocation(*names); end
 
     protected
@@ -1749,6 +1847,8 @@ class Thor::Group
     def create_task(meth); end
 
     # The method responsible for dispatching given the args.
+    #
+    # @yield [instance]
     def dispatch(command, given_args, given_opts, config); end
 
     # Represents the whole class as a command.
@@ -1764,6 +1864,7 @@ Thor::HELP_MAPPINGS = T.let(T.unsafe(nil), Array)
 
 # A command that is hidden in help messages but still invocable.
 class Thor::HiddenCommand < ::Thor::Command
+  # @return [Boolean]
   def hidden?; end
 end
 
@@ -1790,22 +1891,22 @@ module Thor::Invocation
   #
   # ==== Examples
   #
-  # class A < Thor
-  # def foo
-  # invoke :bar
-  # invoke "b:hello", ["Erik"]
-  # end
+  #   class A < Thor
+  #     def foo
+  #       invoke :bar
+  #       invoke "b:hello", ["Erik"]
+  #     end
   #
-  # def bar
-  # invoke "b:hello", ["Erik"]
-  # end
-  # end
+  #     def bar
+  #       invoke "b:hello", ["Erik"]
+  #     end
+  #   end
   #
-  # class B < Thor
-  # def hello(name)
-  # puts "hello #{name}"
-  # end
-  # end
+  #   class B < Thor
+  #     def hello(name)
+  #       puts "hello #{name}"
+  #     end
+  #   end
   #
   # You can notice that the method "foo" above invokes two commands: "bar",
   # which belongs to the same class and "hello" which belongs to the class B.
@@ -1818,20 +1919,20 @@ module Thor::Invocation
   # supplied to B. This allows lazy parse of options. Let's suppose you have
   # some rspec commands:
   #
-  # class Rspec < Thor::Group
-  # class_option :mock_framework, :type => :string, :default => :rr
+  #   class Rspec < Thor::Group
+  #     class_option :mock_framework, :type => :string, :default => :rr
   #
-  # def invoke_mock_framework
-  # invoke "rspec:#{options[:mock_framework]}"
-  # end
-  # end
+  #     def invoke_mock_framework
+  #       invoke "rspec:#{options[:mock_framework]}"
+  #     end
+  #   end
   #
   # As you noticed, it invokes the given mock framework, which might have its
   # own options:
   #
-  # class Rspec::RR < Thor::Group
-  # class_option :style, :type => :string, :default => :mock
-  # end
+  #   class Rspec::RR < Thor::Group
+  #     class_option :style, :type => :string, :default => :mock
+  #   end
   #
   # Since it's not rspec concern to parse mock framework options, when RR
   # is invoked all options are parsed again, so RR can extract only the options
@@ -1840,11 +1941,11 @@ module Thor::Invocation
   # If you want Rspec::RR to be initialized with its own set of options, you
   # have to do that explicitly:
   #
-  # invoke "rspec:rr", [], :style => :foo
+  #   invoke "rspec:rr", [], :style => :foo
   #
   # Besides giving an instance, you can also give a class to invoke:
   #
-  # invoke Rspec::RR, [], :style => :foo
+  #   invoke Rspec::RR, [], :style => :foo
   def invoke(name = T.unsafe(nil), *args); end
 
   # Invoke all commands for the current instance.
@@ -1902,6 +2003,7 @@ module Thor::LineEditor
 end
 
 class Thor::LineEditor::Basic
+  # @return [Basic] a new instance of Basic
   def initialize(prompt, options); end
 
   # Returns the value of attribute options.
@@ -1914,10 +2016,13 @@ class Thor::LineEditor::Basic
 
   private
 
+  # @return [Boolean]
   def echo?; end
+
   def get_input; end
 
   class << self
+    # @return [Boolean]
     def available?; end
   end
 end
@@ -1927,17 +2032,23 @@ class Thor::LineEditor::Readline < ::Thor::LineEditor::Basic
 
   private
 
+  # @return [Boolean]
   def add_to_history?; end
+
   def completion_options; end
   def completion_proc; end
+
+  # @return [Boolean]
   def use_path_completion?; end
 
   class << self
+    # @return [Boolean]
     def available?; end
   end
 end
 
 class Thor::LineEditor::Readline::PathCompletion
+  # @return [PathCompletion] a new instance of PathCompletion
   def initialize(text); end
 
   def matches; end
@@ -1956,9 +2067,12 @@ end
 class Thor::MalformattedArgumentError < ::Thor::InvocationError; end
 
 class Thor::NestedContext
+  # @return [NestedContext] a new instance of NestedContext
   def initialize; end
 
   def enter; end
+
+  # @return [Boolean]
   def entered?; end
 
   private
@@ -1972,6 +2086,7 @@ class Thor::NoKwargSpellChecker < ::DidYouMean::SpellChecker
 end
 
 class Thor::Option < ::Thor::Argument
+  # @return [Option] a new instance of Option
   def initialize(name, options = T.unsafe(nil)); end
 
   # Returns the value of attribute aliases.
@@ -2005,32 +2120,38 @@ class Thor::Option < ::Thor::Argument
   protected
 
   def dasherize(str); end
+
+  # @return [Boolean]
   def dasherized?; end
+
   def undasherize(str); end
+
+  # @raise [ArgumentError]
   def validate!; end
+
   def validate_default_type!; end
 
   class << self
     # This parse quick options given as method_options. It makes several
     # assumptions, but you can be more specific using the option method.
     #
-    # parse :foo => "bar"
-    # #=> Option foo with default value bar
+    #   parse :foo => "bar"
+    #   #=> Option foo with default value bar
     #
-    # parse [:foo, :baz] => "bar"
-    # #=> Option foo with default value bar and alias :baz
+    #   parse [:foo, :baz] => "bar"
+    #   #=> Option foo with default value bar and alias :baz
     #
-    # parse :foo => :required
-    # #=> Required option foo without default value
+    #   parse :foo => :required
+    #   #=> Required option foo without default value
     #
-    # parse :foo => 2
-    # #=> Option foo with default value 2 and type numeric
+    #   parse :foo => 2
+    #   #=> Option foo with default value 2 and type numeric
     #
-    # parse :foo => :numeric
-    # #=> Option foo without default value and type numeric
+    #   parse :foo => :numeric
+    #   #=> Option foo without default value and type numeric
     #
-    # parse :foo => true
-    # #=> Option foo with default value true and type boolean
+    #   parse :foo => true
+    #   #=> Option foo with default value true and type boolean
     #
     # The valid types are :boolean, :numeric, :hash, :array and :string. If none
     # is given a default type is assumed. This default type accepts arguments as
@@ -2048,9 +2169,13 @@ class Thor::Options < ::Thor::Arguments
   #
   # If +stop_on_unknown+ is true, #parse will stop as soon as it encounters
   # an unknown option or a regular argument.
+  #
+  # @return [Options] a new instance of Options
   def initialize(hash_options = T.unsafe(nil), defaults = T.unsafe(nil), stop_on_unknown = T.unsafe(nil), disable_required_check = T.unsafe(nil)); end
 
+  # @raise [UnknownArgumentError]
   def check_unknown!; end
+
   def parse(args); end
   def peek; end
   def remaining; end
@@ -2065,9 +2190,14 @@ class Thor::Options < ::Thor::Arguments
   #
   # Two booleans are returned.  The first is true if the current value
   # starts with a hyphen; the second is true if it is a registered switch.
+  #
+  # @return [Boolean]
   def current_is_switch?; end
 
+  # @return [Boolean]
   def current_is_switch_formatted?; end
+
+  # @return [Boolean]
   def current_is_value?; end
 
   # Check if the given argument is actually a shortcut.
@@ -2079,8 +2209,12 @@ class Thor::Options < ::Thor::Arguments
   # Parse the value at the peek analyzing if it requires an input or not.
   def parse_peek(switch, option); end
 
+  # @return [Boolean]
   def parsing_options?; end
+
+  # @return [Boolean]
   def switch?(arg); end
+
   def switch_option(arg); end
 
   class << self
@@ -2101,17 +2235,17 @@ Thor::Options::SHORT_SQ_RE = T.let(T.unsafe(nil), Regexp)
 # Adds a compatibility layer to your Thor classes which allows you to use
 # rake package tasks. For example, to use rspec rake tasks, one can do:
 #
-# require 'thor/rake_compat'
-# require 'rspec/core/rake_task'
+#   require 'thor/rake_compat'
+#   require 'rspec/core/rake_task'
 #
-# class Default < Thor
-# include Thor::RakeCompat
+#   class Default < Thor
+#     include Thor::RakeCompat
 #
-# RSpec::Core::RakeTask.new(:spec) do |t|
-# t.spec_opts = ['--options', './.rspec']
-# t.spec_files = FileList['spec/**/*_spec.rb']
-# end
-# end
+#     RSpec::Core::RakeTask.new(:spec) do |t|
+#       t.spec_opts = ['--options', './.rspec']
+#       t.spec_files = FileList['spec/**/*_spec.rb']
+#     end
+#   end
 module Thor::RakeCompat
   include ::FileUtils::StreamUtils_
   include ::FileUtils
@@ -2119,7 +2253,9 @@ module Thor::RakeCompat
   include ::Rake::DSL
 
   class << self
+    # @private
     def included(base); end
+
     def rake_classes; end
   end
 end
@@ -2135,11 +2271,11 @@ module Thor::Shell
   #
   # ==== Examples
   #
-  # class MyScript < Thor
-  # argument :first, :type => :numeric
-  # end
+  #   class MyScript < Thor
+  #     argument :first, :type => :numeric
+  #   end
   #
-  # MyScript.new [1.0], { :foo => :bar }, :shell => Thor::Shell::Basic.new
+  #   MyScript.new [1.0], { :foo => :bar }, :shell => Thor::Shell::Basic.new
   def initialize(args = T.unsafe(nil), options = T.unsafe(nil), config = T.unsafe(nil)); end
 
   def ask(*args, &block); end
@@ -2159,6 +2295,8 @@ module Thor::Shell
   def shell; end
 
   # Sets the attribute shell
+  #
+  # @param value the value to set the attribute shell to.
   def shell=(_arg0); end
 
   def terminal_width(*args, &block); end
@@ -2176,6 +2314,8 @@ end
 
 class Thor::Shell::Basic
   # Initialize base, mute and padding to nil.
+  #
+  # @return [Basic] a new instance of Basic
   def initialize; end
 
   # Asks something to the user and receives a response.
@@ -2213,6 +2353,8 @@ class Thor::Shell::Basic
   def base; end
 
   # Sets the attribute base
+  #
+  # @param value the value to set the attribute base to.
   def base=(_arg0); end
 
   # Called if something goes wrong during the execution. This is used by Thor
@@ -2237,10 +2379,14 @@ class Thor::Shell::Basic
   def mute; end
 
   # Check if base is muted
+  #
+  # @return [Boolean]
   def mute?; end
 
   # Make a question the to user and returns true if the user replies "n" or
   # "no".
+  #
+  # @return [Boolean]
   def no?(statement, color = T.unsafe(nil)); end
 
   # Returns the value of attribute padding.
@@ -2305,6 +2451,8 @@ class Thor::Shell::Basic
 
   # Make a question the to user and returns true if the user replies "y" or
   # "yes".
+  #
+  # @return [Boolean]
   def yes?(statement, color = T.unsafe(nil)); end
 
   protected
@@ -2313,6 +2461,8 @@ class Thor::Shell::Basic
   def as_unicode; end
   def ask_filtered(statement, color, options); end
   def ask_simply(statement, color, options); end
+
+  # @return [Boolean]
   def can_display_colors?; end
 
   # Calculate the dynamic width of the terminal
@@ -2322,16 +2472,24 @@ class Thor::Shell::Basic
   def dynamic_width_tput; end
   def file_collision_help; end
   def git_merge_tool; end
+
+  # @return [Boolean]
   def is?(value); end
+
   def lookup_color(color); end
   def merge(destination, content); end
   def merge_tool; end
   def prepare_message(message, *color); end
+
+  # @return [Boolean]
   def quiet?; end
+
   def show_diff(destination, content); end
   def stderr; end
   def stdout; end
   def truncate(string, width); end
+
+  # @return [Boolean]
   def unix?; end
 end
 
@@ -2350,37 +2508,44 @@ class Thor::Shell::Color < ::Thor::Shell::Basic
   #
   # Example:
   #
-  # set_color "Hi!", :red, :on_white, :bold
+  #   set_color "Hi!", :red, :on_white, :bold
   #
   # The available colors are:
   #
-  # :bold
-  # :black
-  # :red
-  # :green
-  # :yellow
-  # :blue
-  # :magenta
-  # :cyan
-  # :white
-  # :on_black
-  # :on_red
-  # :on_green
-  # :on_yellow
-  # :on_blue
-  # :on_magenta
-  # :on_cyan
-  # :on_white
+  #   :bold
+  #   :black
+  #   :red
+  #   :green
+  #   :yellow
+  #   :blue
+  #   :magenta
+  #   :cyan
+  #   :white
+  #   :on_black
+  #   :on_red
+  #   :on_green
+  #   :on_yellow
+  #   :on_blue
+  #   :on_magenta
+  #   :on_cyan
+  #   :on_white
   def set_color(string, *colors); end
 
   protected
 
+  # @return [Boolean]
   def are_colors_disabled?; end
+
+  # @return [Boolean]
   def are_colors_supported?; end
+
+  # @return [Boolean]
   def can_display_colors?; end
 
   # Check if Diff::LCS is loaded. If it is, use it to create pretty output
   # for diff.
+  #
+  # @return [Boolean]
   def diff_lcs_loaded?; end
 
   def output_diff_line(diff); end
@@ -2453,6 +2618,8 @@ class Thor::Shell::HTML < ::Thor::Shell::Basic
   # ask("What is your name?")
   #
   # TODO: Implement #ask for Thor::Shell::HTML
+  #
+  # @raise [NotImplementedError]
   def ask(statement, color = T.unsafe(nil)); end
 
   # Set color by using a string or one of the defined constants. If a third
@@ -2463,10 +2630,13 @@ class Thor::Shell::HTML < ::Thor::Shell::Basic
 
   protected
 
+  # @return [Boolean]
   def can_display_colors?; end
 
   # Check if Diff::LCS is loaded. If it is, use it to create pretty output
   # for diff.
+  #
+  # @return [Boolean]
   def diff_lcs_loaded?; end
 
   def output_diff_line(diff); end
@@ -2539,6 +2709,7 @@ Thor::Task = Thor::Command
 class Thor::UndefinedCommandError < ::Thor::Error
   include ::DidYouMean::Correctable
 
+  # @return [UndefinedCommandError] a new instance of UndefinedCommandError
   def initialize(command, all_commands, namespace); end
 
   # Returns the value of attribute all_commands.
@@ -2549,6 +2720,7 @@ class Thor::UndefinedCommandError < ::Thor::Error
 end
 
 class Thor::UndefinedCommandError::SpellChecker
+  # @return [SpellChecker] a new instance of SpellChecker
   def initialize(error); end
 
   def corrections; end
@@ -2564,6 +2736,7 @@ Thor::UndefinedTaskError = Thor::UndefinedCommandError
 class Thor::UnknownArgumentError < ::Thor::Error
   include ::DidYouMean::Correctable
 
+  # @return [UnknownArgumentError] a new instance of UnknownArgumentError
   def initialize(switches, unknown); end
 
   # Returns the value of attribute switches.
@@ -2574,6 +2747,7 @@ class Thor::UnknownArgumentError < ::Thor::Error
 end
 
 class Thor::UnknownArgumentError::SpellChecker
+  # @return [SpellChecker] a new instance of SpellChecker
   def initialize(error); end
 
   def corrections; end
@@ -2588,11 +2762,11 @@ end
 #
 # 1) Methods to convert thor namespaces to constants and vice-versa.
 #
-# Thor::Util.namespace_from_thor_class(Foo::Bar::Baz) #=> "foo:bar:baz"
+#   Thor::Util.namespace_from_thor_class(Foo::Bar::Baz) #=> "foo:bar:baz"
 #
 # 2) Loading thor files and sandboxing:
 #
-# Thor::Util.load_thorfile("~/.thor/foo")
+#   Thor::Util.load_thorfile("~/.thor/foo")
 module Thor::Util
   class << self
     # Receives a string and convert it to camel case. camel_case returns CamelCase.
@@ -2609,7 +2783,7 @@ module Thor::Util
     #
     # ==== Examples
     #
-    # Thor::Util.escape_globs('[apps]')   # => '\[apps\]'
+    #   Thor::Util.escape_globs('[apps]')   # => '\[apps\]'
     #
     # ==== Parameters
     # String
@@ -2622,7 +2796,7 @@ module Thor::Util
     #
     # ==== Examples
     #
-    # Thor::Util.escape_html('<div>')   # => "&lt;div&gt;"
+    #   Thor::Util.escape_html('<div>')   # => "&lt;div&gt;"
     #
     # ==== Parameters
     # String
@@ -2644,17 +2818,17 @@ module Thor::Util
     #
     # ==== Examples
     #
-    # class Foo::Bar < Thor
-    # def baz
-    # end
-    # end
+    #   class Foo::Bar < Thor
+    #     def baz
+    #     end
+    #   end
     #
-    # class Baz::Foo < Thor::Group
-    # end
+    #   class Baz::Foo < Thor::Group
+    #   end
     #
-    # Thor::Util.namespace_to_thor_class("foo:bar")     #=> Foo::Bar, nil # will invoke default command
-    # Thor::Util.namespace_to_thor_class("baz:foo")     #=> Baz::Foo, nil
-    # Thor::Util.namespace_to_thor_class("foo:bar:baz") #=> Foo::Bar, "baz"
+    #   Thor::Util.namespace_to_thor_class("foo:bar")     #=> Foo::Bar, nil # will invoke default command
+    #   Thor::Util.namespace_to_thor_class("baz:foo")     #=> Baz::Foo, nil
+    #   Thor::Util.namespace_to_thor_class("foo:bar:baz") #=> Foo::Bar, "baz"
     #
     # ==== Parameters
     # namespace<String>
@@ -2667,17 +2841,17 @@ module Thor::Util
     #
     # ==== Examples
     #
-    # class Foo::Bar < Thor
-    # def baz
-    # end
-    # end
+    #   class Foo::Bar < Thor
+    #     def baz
+    #     end
+    #   end
     #
-    # class Baz::Foo < Thor::Group
-    # end
+    #   class Baz::Foo < Thor::Group
+    #   end
     #
-    # Thor::Util.namespace_to_thor_class("foo:bar")     #=> Foo::Bar, nil # will invoke default command
-    # Thor::Util.namespace_to_thor_class("baz:foo")     #=> Baz::Foo, nil
-    # Thor::Util.namespace_to_thor_class("foo:bar:baz") #=> Foo::Bar, "baz"
+    #   Thor::Util.namespace_to_thor_class("foo:bar")     #=> Foo::Bar, nil # will invoke default command
+    #   Thor::Util.namespace_to_thor_class("baz:foo")     #=> Baz::Foo, nil
+    #   Thor::Util.namespace_to_thor_class("foo:bar:baz") #=> Foo::Bar, "baz"
     #
     # ==== Parameters
     # namespace<String>
@@ -2737,7 +2911,7 @@ module Thor::Util
     # Returns the files in the thor root. On Windows thor_root will be something
     # like this:
     #
-    # C:\Documents and Settings\james\.thor
+    #   C:\Documents and Settings\james\.thor
     #
     # If we don't #gsub the \ character, Dir.glob will fail.
     def thor_root_glob; end

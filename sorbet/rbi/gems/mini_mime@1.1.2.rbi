@@ -18,17 +18,22 @@ module MiniMime::Configuration
     def content_type_db_path; end
 
     # Sets the attribute content_type_db_path
+    #
+    # @param value the value to set the attribute content_type_db_path to.
     def content_type_db_path=(_arg0); end
 
     # Returns the value of attribute ext_db_path.
     def ext_db_path; end
 
     # Sets the attribute ext_db_path
+    #
+    # @param value the value to set the attribute ext_db_path to.
     def ext_db_path=(_arg0); end
   end
 end
 
 class MiniMime::Db
+  # @return [Db] a new instance of Db
   def initialize; end
 
   def lookup_by_content_type(content_type); end
@@ -42,6 +47,7 @@ class MiniMime::Db
 end
 
 class MiniMime::Db::Cache
+  # @return [Cache] a new instance of Cache
   def initialize(size); end
 
   def []=(key, val); end
@@ -51,6 +57,7 @@ end
 MiniMime::Db::LOCK = T.let(T.unsafe(nil), Thread::Mutex)
 
 class MiniMime::Db::RandomAccessDb
+  # @return [RandomAccessDb] a new instance of RandomAccessDb
   def initialize(path, sort_order); end
 
   def lookup(val); end
@@ -64,27 +71,36 @@ end
 MiniMime::Db::RandomAccessDb::MAX_CACHED = T.let(T.unsafe(nil), Integer)
 
 class MiniMime::Info
+  # @return [Info] a new instance of Info
   def initialize(buffer); end
 
   def [](idx); end
+
+  # @return [Boolean]
   def binary?; end
 
   # Returns the value of attribute content_type.
   def content_type; end
 
   # Sets the attribute content_type
+  #
+  # @param value the value to set the attribute content_type to.
   def content_type=(_arg0); end
 
   # Returns the value of attribute encoding.
   def encoding; end
 
   # Sets the attribute encoding
+  #
+  # @param value the value to set the attribute encoding to.
   def encoding=(_arg0); end
 
   # Returns the value of attribute extension.
   def extension; end
 
   # Sets the attribute extension
+  #
+  # @param value the value to set the attribute extension to.
   def extension=(_arg0); end
 end
 

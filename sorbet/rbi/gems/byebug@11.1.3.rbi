@@ -59,6 +59,8 @@ module Byebug
   def raised_exception; end
 
   # List of folders to load rc files from
+  #
+  # @note Files will be loaded in the order specified here.
   def rc_dirs; end
 
   # Runs a initialization script file
@@ -144,6 +146,7 @@ end
 
 # Setting for automatically invoking IRB on every stop.
 class Byebug::AutoirbSetting < ::Byebug::Setting
+  # @return [AutoirbSetting] a new instance of AutoirbSetting
   def initialize; end
 
   def banner; end
@@ -155,6 +158,7 @@ Byebug::AutoirbSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 
 # Setting for automatically listing source code on every stop.
 class Byebug::AutolistSetting < ::Byebug::Setting
+  # @return [AutolistSetting] a new instance of AutolistSetting
   def initialize; end
 
   def banner; end
@@ -166,6 +170,7 @@ Byebug::AutolistSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 
 # Setting for automatically invoking Pry on every stop.
 class Byebug::AutoprySetting < ::Byebug::Setting
+  # @return [AutoprySetting] a new instance of AutoprySetting
   def initialize; end
 
   def banner; end
@@ -236,6 +241,10 @@ class Byebug::Breakpoint
 
   class << self
     # Adds a new breakpoint
+    #
+    # @param file [String]
+    # @param line [Fixnum]
+    # @param expr [String]
     def add(file, line, expr = T.unsafe(nil)); end
 
     # First breakpoint, in order of creation
@@ -245,19 +254,27 @@ class Byebug::Breakpoint
     def last; end
 
     # True if there's no breakpoints
+    #
+    # @return [Boolean]
     def none?; end
 
     # Returns true if a breakpoint could be set in line number +lineno+ in file
     # name +filename.
+    #
+    # @return [Boolean]
     def potential_line?(filename, lineno); end
 
     # Returns an array of line numbers in file named +filename+ where
     # breakpoints could be set. The list will contain an entry for each
     # distinct line event call so it is possible (and possibly useful) for a
     # line number appear more than once.
+    #
+    # @param filename [String] File name to inspect for possible breakpoints
     def potential_lines(filename); end
 
     # Removes a breakpoint
+    #
+    # @param id [integer] breakpoint number
     def remove(id); end
 
     private
@@ -303,44 +320,47 @@ end
 # your own custom command.
 #
 # class MyCustomCommand < Command
-# def self.regexp
-# /custom_regexp/
+#   def self.regexp
+#     /custom_regexp/
+#   end
+#
+#   def self.description
+#     "Custom long desc"
+#   end
+#
+#   def.short_description
+#     "Custom short desc"
+#   end
+#
+#   def execute
+#     # My command's implementation
+#   end
 # end
 #
-# def self.description
-# "Custom long desc"
-# end
-#
-# def.short_description
-# "Custom short desc"
-# end
-#
-# def execute
-# # My command's implementation
-# end
-# end
+# @example Define a custom command
 class Byebug::Command
   extend ::Forwardable
   extend ::Byebug::Helpers::StringHelper
 
+  # @return [Command] a new instance of Command
   def initialize(processor, input = T.unsafe(nil)); end
 
   def arguments; end
-  def confirm(*args, **_arg1, &block); end
+  def confirm(*args, &block); end
   def context; end
-  def errmsg(*args, **_arg1, &block); end
+  def errmsg(*args, &block); end
   def frame; end
-  def help(*args, **_arg1, &block); end
-  def match(*args, **_arg1, &block); end
-  def pr(*args, **_arg1, &block); end
-  def prc(*args, **_arg1, &block); end
-  def print(*args, **_arg1, &block); end
+  def help(*args, &block); end
+  def match(*args, &block); end
+  def pr(*args, &block); end
+  def prc(*args, &block); end
+  def print(*args, &block); end
 
   # Returns the value of attribute processor.
   def processor; end
 
-  def prv(*args, **_arg1, &block); end
-  def puts(*args, **_arg1, &block); end
+  def prv(*args, &block); end
+  def puts(*args, &block); end
 
   class << self
     # Special methods to allow command filtering in processors
@@ -358,6 +378,8 @@ class Byebug::Command
     def always_run; end
 
     # Sets the attribute always_run
+    #
+    # @param value the value to set the attribute always_run to.
     def always_run=(_arg0); end
 
     def columnize(width); end
@@ -377,6 +399,7 @@ end
 class Byebug::CommandList
   include ::Enumerable
 
+  # @return [CommandList] a new instance of CommandList
   def initialize(commands); end
 
   def each; end
@@ -390,6 +413,7 @@ end
 
 # Custom exception exception to signal "command not found" errors
 class Byebug::CommandNotFound < ::NoMethodError
+  # @return [CommandNotFound] a new instance of CommandNotFound
   def initialize(input, parent = T.unsafe(nil)); end
 
   private
@@ -403,10 +427,13 @@ end
 #
 # You can override this class to create your own command processor that, for
 # example, whitelists only certain commands to be executed.
+#
+# @see PostMortemProcessor for a example
 class Byebug::CommandProcessor
   include ::Byebug::Helpers::EvalHelper
   extend ::Forwardable
 
+  # @return [CommandProcessor] a new instance of CommandProcessor
   def initialize(context, interface = T.unsafe(nil)); end
 
   def at_breakpoint(brkpt); end
@@ -419,25 +446,27 @@ class Byebug::CommandProcessor
   # Available commands
   def command_list; end
 
-  def commands(*args, **_arg1, &block); end
-  def confirm(*args, **_arg1, &block); end
+  def commands(*args, &block); end
+  def confirm(*args, &block); end
 
   # Returns the value of attribute context.
   def context; end
 
-  def errmsg(*args, **_arg1, &block); end
-  def frame(*args, **_arg1, &block); end
+  def errmsg(*args, &block); end
+  def frame(*args, &block); end
 
   # Returns the value of attribute interface.
   def interface; end
 
-  def pr(*args, **_arg1, &block); end
-  def prc(*args, **_arg1, &block); end
+  def pr(*args, &block); end
+  def prc(*args, &block); end
 
   # Returns the value of attribute prev_line.
   def prev_line; end
 
   # Sets the attribute prev_line
+  #
+  # @param value the value to set the attribute prev_line to.
   def prev_line=(_arg0); end
 
   def printer; end
@@ -448,8 +477,8 @@ class Byebug::CommandProcessor
   # Handle byebug commands.
   def process_commands; end
 
-  def prv(*args, **_arg1, &block); end
-  def puts(*args, **_arg1, &block); end
+  def prv(*args, &block); end
+  def puts(*args, &block); end
 
   protected
 
@@ -521,7 +550,7 @@ class Byebug::Context
 
   def backtrace; end
   def dead?; end
-  def file(*args, **_arg1, &block); end
+  def file(*args, &block); end
 
   # Reader for the current frame
   def frame; end
@@ -541,7 +570,7 @@ class Byebug::Context
 
   def ignored?; end
   def interrupt; end
-  def line(*args, **_arg1, &block); end
+  def line(*args, &block); end
 
   # Current file & line information
   def location; end
@@ -566,6 +595,9 @@ class Byebug::Context
   private
 
   # Tells whether a file is ignored by the debugger.
+  #
+  # @param path [String] filename to be checked.
+  # @return [Boolean]
   def ignored_file?(path); end
 
   def processor; end
@@ -575,16 +607,22 @@ class Byebug::Context
     def ignored_files; end
 
     # Sets the attribute ignored_files
+    #
+    # @param value the value to set the attribute ignored_files to.
     def ignored_files=(_arg0); end
 
     def interface; end
 
     # Sets the attribute interface
+    #
+    # @param value the value to set the attribute interface to.
     def interface=(_arg0); end
 
     def processor; end
 
     # Sets the attribute processor
+    #
+    # @param value the value to set the attribute processor to.
     def processor=(_arg0); end
   end
 end
@@ -601,7 +639,11 @@ class Byebug::ContinueCommand < ::Byebug::Command
   private
 
   def modifier; end
+
+  # @return [Boolean]
   def unconditionally?; end
+
+  # @return [Boolean]
   def until_line?; end
 
   class << self
@@ -807,6 +849,7 @@ end
 class Byebug::Frame
   include ::Byebug::Helpers::FileHelper
 
+  # @return [Frame] a new instance of Frame
   def initialize(context, pos); end
 
   def _binding; end
@@ -818,8 +861,11 @@ class Byebug::Frame
   def args; end
 
   # Checks whether the frame is a c-frame
+  #
+  # @return [Boolean]
   def c_frame?; end
 
+  # @return [Boolean]
   def current?; end
 
   # Builds a string containing all available args in the frame number, in a
@@ -854,7 +900,7 @@ class Byebug::Frame
   #
   # --> marks the current frame
   # ͱ-- marks c-frames
-  # marks regular frames
+  #     marks regular frames
   def mark; end
 
   # Returns the value of attribute pos.
@@ -867,6 +913,8 @@ class Byebug::Frame
   def c_args; end
   def prefix_and_default(arg_type); end
   def ruby_args; end
+
+  # @return [Boolean]
   def use_short_style?(arg); end
 end
 
@@ -898,7 +946,10 @@ class Byebug::HelpCommand < ::Byebug::Command
   private
 
   def command; end
+
+  # @raise [CommandNotFound]
   def help_for(input, cmd); end
+
   def help_for_all; end
   def subcommand; end
 
@@ -915,7 +966,10 @@ module Byebug::Helpers; end
 module Byebug::Helpers::BinHelper
   def executable_file_extensions; end
   def find_executable(path, cmd); end
+
+  # @return [Boolean]
   def real_executable?(file); end
+
   def search_paths; end
 
   # Cross-platform way of finding an executable in the $PATH.
@@ -934,9 +988,14 @@ module Byebug::Helpers::EvalHelper
   #
   # "frozen" so that nothing gets run. So we need to unlock threads prior
   # to evaluation or we will run into a deadlock.
+  #
+  # @note This is necessary because when in byebug's prompt, every thread is
+  # @param expression [String] Expression to evaluate
   def multiple_thread_eval(expression); end
 
   # Evaluates an +expression+ in a separate thread.
+  #
+  # @param expression [String] Expression to evaluate
   def separate_thread_eval(expression); end
 
   # Evaluates a string containing Ruby code in a specific binding,
@@ -988,6 +1047,8 @@ module Byebug::Helpers::FileHelper
   def shortpath(fullpath); end
 
   # True for special files like -e, false otherwise
+  #
+  # @return [Boolean]
   def virtual_file?(name); end
 end
 
@@ -999,14 +1060,22 @@ module Byebug::Helpers::FrameHelper
   private
 
   def adjust_frame(new_frame); end
+
+  # @param step [Integer] A positive or negative integer
+  # @return [Integer] +1 if step is positive / -1 if negative
   def direction(step); end
+
   def frame_err(msg); end
 
   # Convert a possibly negative index to a positive index from the start
   # of the callstack. -1 is the last position in the stack and so on.
+  #
+  # @param i [Integer] Integer to be converted in a proper positive index.
   def index_from_start(index); end
 
   def navigate_to_frame(jump_no); end
+
+  # @return [Boolean]
   def out_of_bounds?(pos); end
 end
 
@@ -1017,9 +1086,14 @@ module Byebug::Helpers::ParseHelper
   # If either +min+ or +max+ is nil, that value has no bound.
   #
   # purpose.
+  #
+  # @todo Remove the `cmd` parameter. It has nothing to do with the method's
   def get_int(str, cmd, min = T.unsafe(nil), max = T.unsafe(nil)); end
 
+  # @return +str+ as an integer or 1 if +str+ is empty.
   def parse_steps(str, cmd); end
+
+  # @return [Boolean] true if code is syntactically correct for Ruby, false otherwise
   def syntax_valid?(code); end
 
   private
@@ -1065,14 +1139,20 @@ end
 # Utilities for thread subcommands
 module Byebug::Helpers::ThreadHelper
   def context_from_thread(thnum); end
+
+  # @return [Boolean]
   def current_thread?(ctx); end
+
   def display_context(ctx); end
   def thread_arguments(ctx); end
 
   private
 
   def debug_flag(ctx); end
+
+  # @todo Check whether it is Byebug.current_context or context
   def location(ctx); end
+
   def status_flag(ctx); end
 end
 
@@ -1110,6 +1190,7 @@ Byebug::HistfileSetting::DEFAULT = T.let(T.unsafe(nil), String)
 
 # Handles byebug's history of commands.
 class Byebug::History
+  # @return [History] a new instance of History
   def initialize; end
 
   # Array holding the list of commands in history
@@ -1126,6 +1207,8 @@ class Byebug::History
   # Whether a specific command should not be stored in history.
   #
   # For now, empty lines and consecutive duplicates.
+  #
+  # @return [Boolean]
   def ignore?(buf); end
 
   # Array of ids of the last +number+ commands.
@@ -1147,6 +1230,8 @@ class Byebug::History
   def size; end
 
   # Sets the attribute size
+  #
+  # @param value the value to set the attribute size to.
   def size=(_arg0); end
 
   # Max number of commands to be displayed when a size has been specified.
@@ -1271,6 +1356,7 @@ end
 class Byebug::Interface
   include ::Byebug::Helpers::FileHelper
 
+  # @return [Interface] a new instance of Interface
   def initialize; end
 
   # Restores history according to +autosave+ setting.
@@ -1285,6 +1371,8 @@ class Byebug::Interface
   def command_queue; end
 
   # Sets the attribute command_queue
+  #
+  # @param value the value to set the attribute command_queue to.
   def command_queue=(_arg0); end
 
   # Confirms user introduced an affirmative response to the input stream.
@@ -1300,6 +1388,8 @@ class Byebug::Interface
   def history; end
 
   # Sets the attribute history
+  #
+  # @param value the value to set the attribute history to.
   def history=(_arg0); end
 
   # Returns the value of attribute input.
@@ -1313,6 +1403,8 @@ class Byebug::Interface
   # Reads a new line from the interface's input stream.
   #
   # read now was empty.
+  #
+  # @return [String] New string read or the previous string if the string
   def prepare_input(prompt); end
 
   # Prints an output message to the output stream without a final "\n".
@@ -1329,6 +1421,8 @@ class Byebug::Interface
 
   # Reads a new line from the interface's input stream, parses it into
   # commands and saves it to history.
+  #
+  # @return [String] Representing something to be run by the debugger.
   def read_input(prompt, save_hist = T.unsafe(nil)); end
 
   private
@@ -1387,20 +1481,29 @@ class Byebug::ListCommand < ::Byebug::Command
   include ::Byebug::Helpers::FileHelper
   include ::Byebug::Helpers::ParseHelper
 
-  def amend_final(*args, **_arg1, &block); end
+  def amend_final(*args, &block); end
   def execute; end
-  def max_line(*args, **_arg1, &block); end
-  def size(*args, **_arg1, &block); end
+  def max_line(*args, &block); end
+  def size(*args, &block); end
 
   private
 
   # Set line range to be printed by list
+  #
+  # @return first line number to list
+  # @return last line number to list
   def auto_range(direction); end
 
   # Show a range of lines in the current file.
+  #
+  # @param min [Integer] Lower bound
+  # @param max [Integer] Upper bound
   def display_lines(min, max); end
 
+  # @param range [String] A string with an integer range format
+  # @return [String] The lower bound of the given range
   def lower_bound(range); end
+
   def move(line, size, direction = T.unsafe(nil)); end
   def parse_range(input); end
 
@@ -1412,8 +1515,16 @@ class Byebug::ListCommand < ::Byebug::Command
   def range(input); end
 
   def source_file_formatter; end
+
+  # @param str [String] A string with an integer range format
+  # @return [Array] The upper & lower bounds of the given range
   def split_range(str); end
+
+  # @param range [String] A string with an integer range format
+  # @return [String] The upper bound of the given range
   def upper_bound(range); end
+
+  # @return [Boolean]
   def valid_range?(first, last); end
 
   class << self
@@ -1434,15 +1545,20 @@ Byebug::ListsizeSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 
 # Interface class for standard byebug use.
 class Byebug::LocalInterface < ::Byebug::Interface
+  # @return [LocalInterface] a new instance of LocalInterface
   def initialize; end
 
   # Reads a single line of input using Readline. If Ctrl-D is pressed, it
   # returns "continue", meaning that program's execution will go on.
+  #
+  # @param prompt Prompt to be displayed.
   def readline(prompt); end
 
   # Yields the block handling Ctrl-C the following way: if pressed while
   # waiting for input, the line is reset to only the prompt and we ask for
   # input again.
+  #
+  # @note Any external 'INT' traps are overriden during this method.
   def with_repl_like_sigint; end
 
   # Disable any Readline completion procs.
@@ -1496,6 +1612,7 @@ end
 # Setting to enable/disable post_mortem mode, i.e., a debugger prompt after
 # program termination by unhandled exception.
 class Byebug::PostMortemSetting < ::Byebug::Setting
+  # @return [PostMortemSetting] a new instance of PostMortemSetting
   def initialize; end
 
   def banner; end
@@ -1514,7 +1631,10 @@ class Byebug::Printers::Base
   def array_of_args(collection, &_block); end
   def contents; end
   def contents_files; end
+
+  # @raise [MissedPath]
   def locate(path); end
+
   def parts(path); end
   def translate(string, args = T.unsafe(nil)); end
 end
@@ -1560,6 +1680,7 @@ module Byebug::Remote; end
 
 # Client for remote debugging
 class Byebug::Remote::Client
+  # @return [Client] a new instance of Client
   def initialize(interface); end
 
   # Returns the value of attribute interface.
@@ -1571,6 +1692,7 @@ class Byebug::Remote::Client
   # Connects to the remote byebug
   def start(host = T.unsafe(nil), port = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def started?; end
 
   private
@@ -1580,6 +1702,7 @@ end
 
 # Server for remote debugging
 class Byebug::Remote::Server
+  # @return [Server] a new instance of Server
   def initialize(wait_connection:, &block); end
 
   # Returns the value of attribute actual_port.
@@ -1594,6 +1717,7 @@ end
 
 # Interface class for remote use of byebug.
 class Byebug::RemoteInterface < ::Byebug::Interface
+  # @return [RemoteInterface] a new instance of RemoteInterface
   def initialize(socket); end
 
   def close; end
@@ -1651,6 +1775,7 @@ Byebug::SavefileSetting::DEFAULT = T.let(T.unsafe(nil), String)
 
 # Interface class for command execution from script files.
 class Byebug::ScriptInterface < ::Byebug::Interface
+  # @return [ScriptInterface] a new instance of ScriptInterface
   def initialize(file, verbose = T.unsafe(nil)); end
 
   def close; end
@@ -1695,11 +1820,17 @@ end
 
 # Parent class for all byebug settings.
 class Byebug::Setting
+  # @return [Setting] a new instance of Setting
   def initialize; end
 
+  # @return [Boolean]
   def boolean?; end
+
   def help; end
+
+  # @return [Boolean]
   def integer?; end
+
   def to_s; end
   def to_sym; end
 
@@ -1707,13 +1838,18 @@ class Byebug::Setting
   def value; end
 
   # Sets the attribute value
+  #
+  # @param value the value to set the attribute value to.
   def value=(_arg0); end
 
   class << self
     def [](name); end
     def []=(name, value); end
     def find(shortcut); end
+
+    # @todo DRY this up. Very similar code exists in the CommandList class
     def help_all; end
+
     def settings; end
   end
 end
@@ -1746,11 +1882,15 @@ class Byebug::SkipCommand < ::Byebug::Command
     def file_line; end
 
     # Sets the attribute file_line
+    #
+    # @param value the value to set the attribute file_line to.
     def file_line=(_arg0); end
 
     def file_path; end
 
     # Sets the attribute file_path
+    #
+    # @param value the value to set the attribute file_path to.
     def file_path=(_arg0); end
 
     # Returns the value of attribute previous_autolist.
@@ -1780,6 +1920,7 @@ end
 class Byebug::SourceFileFormatter
   include ::Byebug::Helpers::FileHelper
 
+  # @return [SourceFileFormatter] a new instance of SourceFileFormatter
   def initialize(file, annotator); end
 
   def amend(line, ceiling); end
@@ -1830,11 +1971,14 @@ module Byebug::Subcommands
   mixes_in_class_methods ::Byebug::Subcommands::ClassMethods
 
   # Delegates to subcommands or prints help if no subcommand specified.
+  #
+  # @raise [CommandNotFound]
   def execute; end
 
-  def subcommand_list(*args, **_arg1, &block); end
+  def subcommand_list(*args, &block); end
 
   class << self
+    # @private
     def included(command); end
   end
 end

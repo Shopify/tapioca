@@ -13,14 +13,14 @@ module Diff::LCS
   # Returns an Array containing the longest common subsequence(s) between
   # +self+ and +other+. See Diff::LCS#lcs.
   #
-  # lcs = seq1.lcs(seq2)
+  #   lcs = seq1.lcs(seq2)
   #
   # A note when using objects: Diff::LCS only works properly when each object
   # can be used as a key in a Hash, which typically means that the objects must
   # implement Object#eql? in a way that two identical values compare
   # identically for key purposes. That is:
   #
-  # O.new('a').eql?(O.new('a')) == true
+  #   O.new('a').eql?(O.new('a')) == true
   def lcs(other, &block); end
 
   # Attempts to patch +self+ with the provided +patchset+. A new sequence based
@@ -95,19 +95,19 @@ module Diff::LCS
     # A +patchset+ can be considered to apply forward (<tt>:patch</tt>) if the
     # following expression is true:
     #
-    # patch(s1, diff(s1, s2)) -> s2
+    #     patch(s1, diff(s1, s2)) -> s2
     #
     # A +patchset+ can be considered to apply backward (<tt>:unpatch</tt>) if the
     # following expression is true:
     #
-    # patch(s2, diff(s1, s2)) -> s1
+    #     patch(s2, diff(s1, s2)) -> s1
     #
     # If the +patchset+ contains no changes, the +src+ value will be returned as
     # either <tt>src.dup</tt> or +src+. A +patchset+ can be deemed as having no
     # changes if the following predicate returns true:
     #
-    # patchset.empty? or
-    # patchset.flatten(1).all? { |change| change.unchanged? }
+    #     patchset.empty? or
+    #       patchset.flatten(1).all? { |change| change.unchanged? }
     #
     # === Patchsets
     #
@@ -115,12 +115,12 @@ module Diff::LCS
     # or a mix of the two. A hunk of changes is an enumerable sequence of
     # changes:
     #
-    # [ # patchset
-    # # change
-    # [ # hunk
-    # # change
-    # ]
-    # ]
+    #     [ # patchset
+    #       # change
+    #       [ # hunk
+    #         # change
+    #       ]
+    #     ]
     #
     # The +patch+ method accepts <tt>patchset</tt>s that are enumerable sequences
     # containing either Diff::LCS::Change objects (or a subclass) or the array
@@ -136,10 +136,10 @@ module Diff::LCS
     # minimized differences side by side, just like the Unix utility
     # <em>sdiff</em> does:
     #
-    # old        <     -
-    # same             same
-    # before     |     after
-    # -          >     new
+    #     old        <     -
+    #     same             same
+    #     before     |     after
+    #     -          >     new
     #
     # See Diff::LCS::SDiffCallbacks for the default behaviour. An alternate
     # behaviour may be implemented with Diff::LCS::ContextDiffCallbacks. If a
@@ -150,16 +150,16 @@ module Diff::LCS
     # Each element of a returned array is a Diff::LCS::ContextChange object,
     # which can be implicitly converted to an array.
     #
-    # Diff::LCS.sdiff(a, b).each do |action, (old_pos, old_element), (new_pos, new_element)|
-    # case action
-    # when '!'
-    # # replace
-    # when '-'
-    # # delete
-    # when '+'
-    # # insert
-    # end
-    # end
+    #   Diff::LCS.sdiff(a, b).each do |action, (old_pos, old_element), (new_pos, new_element)|
+    #     case action
+    #     when '!'
+    #       # replace
+    #     when '-'
+    #       # delete
+    #     when '+'
+    #       # insert
+    #     end
+    #   end
     def sdiff(seq1, seq2, callbacks = T.unsafe(nil), &block); end
 
     # #traverse_balanced is an alternative to #traverse_sequences. It uses a
@@ -171,7 +171,7 @@ module Diff::LCS
     # The arguments to #traverse_balanced are the two sequences to traverse and a
     # callback object, like this:
     #
-    # traverse_balanced(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
+    #   traverse_balanced(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
     #
     # #sdiff is implemented with #traverse_balanced.
     #
@@ -180,28 +180,28 @@ module Diff::LCS
     # Optional callback methods are <em>emphasized</em>.
     #
     # callbacks#match::               Called when +a+ and +b+ are pointing to
-    # common elements in +A+ and +B+.
+    #                                 common elements in +A+ and +B+.
     # callbacks#discard_a::           Called when +a+ is pointing to an
-    # element not in +B+.
+    #                                 element not in +B+.
     # callbacks#discard_b::           Called when +b+ is pointing to an
-    # element not in +A+.
+    #                                 element not in +A+.
     # <em>callbacks#change</em>::     Called when +a+ and +b+ are pointing to
-    # the same relative position, but
-    # <tt>A[a]</tt> and <tt>B[b]</tt> are not
-    # the same; a <em>change</em> has
-    # occurred.
+    #                                 the same relative position, but
+    #                                 <tt>A[a]</tt> and <tt>B[b]</tt> are not
+    #                                 the same; a <em>change</em> has
+    #                                 occurred.
     #
     # #traverse_balanced might be a bit slower than #traverse_sequences,
     # noticable only while processing huge amounts of data.
     #
     # == Algorithm
     #
-    # a---+
-    # v
-    # A = a b c e h j l m n p
-    # B = b c d e f j k l m r s t
-    # ^
-    # b---+
+    #       a---+
+    #           v
+    #       A = a b c e h j l m n p
+    #       B = b c d e f j k l m r s t
+    #           ^
+    #       b---+
     #
     # === Matches
     #
@@ -251,31 +251,31 @@ module Diff::LCS
     # The arguments to #traverse_sequences are the two sequences to traverse, and
     # a callback object, like this:
     #
-    # traverse_sequences(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
+    #   traverse_sequences(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
     #
     # == Callback Methods
     #
     # Optional callback methods are <em>emphasized</em>.
     #
     # callbacks#match::               Called when +a+ and +b+ are pointing to
-    # common elements in +A+ and +B+.
+    #                                 common elements in +A+ and +B+.
     # callbacks#discard_a::           Called when +a+ is pointing to an
-    # element not in +B+.
+    #                                 element not in +B+.
     # callbacks#discard_b::           Called when +b+ is pointing to an
-    # element not in +A+.
+    #                                 element not in +A+.
     # <em>callbacks#finished_a</em>:: Called when +a+ has reached the end of
-    # sequence +A+.
+    #                                 sequence +A+.
     # <em>callbacks#finished_b</em>:: Called when +b+ has reached the end of
-    # sequence +B+.
+    #                                 sequence +B+.
     #
     # == Algorithm
     #
-    # a---+
-    # v
-    # A = a b c e h j l m n p
-    # B = b c d e f j k l m r s t
-    # ^
-    # b---+
+    #       a---+
+    #           v
+    #       A = a b c e h j l m n p
+    #       B = b c d e f j k l m r s t
+    #           ^
+    #       b---+
     #
     # If there are two arrows (+a+ and +b+) pointing to elements of sequences +A+
     # and +B+, the arrows will initially point to the first elements of their
@@ -338,12 +338,17 @@ module Diff::LCS
   end
 end
 
+# An alias for DefaultCallbacks that is used in
+# Diff::LCS#traverse_balanced.
+#
+#     Diff::LCS.LCS(seq1, seq2, Diff::LCS::BalancedCallbacks)
 Diff::LCS::BalancedCallbacks = Diff::LCS::DefaultCallbacks
 
 # A block is an operation removing, adding, or changing a group of items.
 # Basically, this is just a list of changes, where each change adds or
 # deletes a single item. Used by bin/ldiff.
 class Diff::LCS::Block
+  # @return [Block] a new instance of Block
   def initialize(chunk); end
 
   # Returns the value of attribute changes.
@@ -366,6 +371,7 @@ end
 class Diff::LCS::Change
   include ::Comparable
 
+  # @return [Change] a new instance of Change
   def initialize(*args); end
 
   def <=>(other); end
@@ -374,15 +380,24 @@ class Diff::LCS::Change
   # Returns the action this Change represents.
   def action; end
 
+  # @return [Boolean]
   def adding?; end
+
+  # @return [Boolean]
   def changed?; end
+
+  # @return [Boolean]
   def deleting?; end
 
   # Returns the sequence element of the Change.
   def element; end
 
+  # @return [Boolean]
   def finished_a?; end
+
+  # @return [Boolean]
   def finished_b?; end
+
   def inspect(*_args); end
 
   # Returns the position of the Change.
@@ -390,10 +405,14 @@ class Diff::LCS::Change
 
   def to_a; end
   def to_ary; end
+
+  # @return [Boolean]
   def unchanged?; end
 
   class << self
     def from_a(arr); end
+
+    # @return [Boolean]
     def valid_action?(action); end
   end
 end
@@ -410,6 +429,7 @@ Diff::LCS::Change::VALID_ACTIONS = T.let(T.unsafe(nil), Array)
 # elements in the old and the new sequenced enumerables as well as the action
 # taken.
 class Diff::LCS::ContextChange < ::Diff::LCS::Change
+  # @return [ContextChange] a new instance of ContextChange
   def initialize(*args); end
 
   def <=>(other); end
@@ -447,21 +467,21 @@ end
 # will be presented for changed objects. +nil+ will be substituted for a
 # discarded object.
 #
-# seq1 = %w(a b c e h j l m n p)
-# seq2 = %w(b c d e f j k l m r s t)
+#     seq1 = %w(a b c e h j l m n p)
+#     seq2 = %w(b c d e f j k l m r s t)
 #
-# diffs = Diff::LCS.diff(seq1, seq2, Diff::LCS::ContextDiffCallbacks)
-# # This example shows a simplified array format.
-# # [ [ [ '-', [  0, 'a' ], [  0, nil ] ] ],   # 1
-# #   [ [ '+', [  3, nil ], [  2, 'd' ] ] ],   # 2
-# #   [ [ '-', [  4, 'h' ], [  4, nil ] ],     # 3
-# #     [ '+', [  5, nil ], [  4, 'f' ] ] ],
-# #   [ [ '+', [  6, nil ], [  6, 'k' ] ] ],   # 4
-# #   [ [ '-', [  8, 'n' ], [  9, nil ] ],     # 5
-# #     [ '+', [  9, nil ], [  9, 'r' ] ],
-# #     [ '-', [  9, 'p' ], [ 10, nil ] ],
-# #     [ '+', [ 10, nil ], [ 10, 's' ] ],
-# #     [ '+', [ 10, nil ], [ 11, 't' ] ] ] ]
+#     diffs = Diff::LCS.diff(seq1, seq2, Diff::LCS::ContextDiffCallbacks)
+#       # This example shows a simplified array format.
+#       # [ [ [ '-', [  0, 'a' ], [  0, nil ] ] ],   # 1
+#       #   [ [ '+', [  3, nil ], [  2, 'd' ] ] ],   # 2
+#       #   [ [ '-', [  4, 'h' ], [  4, nil ] ],     # 3
+#       #     [ '+', [  5, nil ], [  4, 'f' ] ] ],
+#       #   [ [ '+', [  6, nil ], [  6, 'k' ] ] ],   # 4
+#       #   [ [ '-', [  8, 'n' ], [  9, nil ] ],     # 5
+#       #     [ '+', [  9, nil ], [  9, 'r' ] ],
+#       #     [ '-', [  9, 'p' ], [ 10, nil ] ],
+#       #     [ '+', [ 10, nil ], [ 10, 's' ] ],
+#       #     [ '+', [ 10, nil ], [ 11, 't' ] ] ] ]
 #
 # The five hunks shown are comprised of individual changes; if there is a
 # related set of changes, they are still shown individually.
@@ -469,15 +489,15 @@ end
 # This callback can also be used with Diff::LCS#sdiff, which will produce
 # results like:
 #
-# diffs = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextCallbacks)
-# # This example shows a simplified array format.
-# # [ [ [ "-", [  0, "a" ], [  0, nil ] ] ],  # 1
-# #   [ [ "+", [  3, nil ], [  2, "d" ] ] ],  # 2
-# #   [ [ "!", [  4, "h" ], [  4, "f" ] ] ],  # 3
-# #   [ [ "+", [  6, nil ], [  6, "k" ] ] ],  # 4
-# #   [ [ "!", [  8, "n" ], [  9, "r" ] ],    # 5
-# #     [ "!", [  9, "p" ], [ 10, "s" ] ],
-# #     [ "+", [ 10, nil ], [ 11, "t" ] ] ] ]
+#     diffs = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextCallbacks)
+#       # This example shows a simplified array format.
+#       # [ [ [ "-", [  0, "a" ], [  0, nil ] ] ],  # 1
+#       #   [ [ "+", [  3, nil ], [  2, "d" ] ] ],  # 2
+#       #   [ [ "!", [  4, "h" ], [  4, "f" ] ] ],  # 3
+#       #   [ [ "+", [  6, nil ], [  6, "k" ] ] ],  # 4
+#       #   [ [ "!", [  8, "n" ], [  9, "r" ] ],    # 5
+#       #     [ "!", [  9, "p" ], [ 10, "s" ] ],
+#       #     [ "+", [ 10, nil ], [ 11, "t" ] ] ] ]
 #
 # The five hunks are still present, but are significantly shorter in total
 # presentation, because changed items are shown as changes ("!") instead of
@@ -486,24 +506,24 @@ end
 # The result of this operation is similar to that of
 # Diff::LCS::SDiffCallbacks. They may be compared as:
 #
-# s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
-# c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
+#     s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
+#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
 #
-# s == c # -> true
+#     s == c # -> true
 #
 # === Use
 #
 # This callback object must be initialised and can be used by the
 # Diff::LCS#diff or Diff::LCS#sdiff methods.
 #
-# cbo = Diff::LCS::ContextDiffCallbacks.new
-# Diff::LCS.LCS(seq1, seq2, cbo)
-# cbo.finish
+#     cbo = Diff::LCS::ContextDiffCallbacks.new
+#     Diff::LCS.LCS(seq1, seq2, cbo)
+#     cbo.finish
 #
 # Note that the call to #finish is absolutely necessary, or the last set of
 # changes will not be visible. Alternatively, can be used as:
 #
-# cbo = Diff::LCS::ContextDiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
+#     cbo = Diff::LCS::ContextDiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
 #
 # The necessary #finish call will be made.
 #
@@ -512,8 +532,8 @@ end
 # The simplified array format used in the example above can be obtained
 # with:
 #
-# require 'pp'
-# pp diffs.map { |e| e.map { |f| f.to_a } }
+#     require 'pp'
+#     pp diffs.map { |e| e.map { |f| f.to_a } }
 class Diff::LCS::ContextDiffCallbacks < ::Diff::LCS::DiffCallbacks
   def change(event); end
   def discard_a(event); end
@@ -527,7 +547,7 @@ end
 #
 # Note that this is intended to be called as is, e.g.,
 #
-# Diff::LCS.LCS(seq1, seq2, Diff::LCS::DefaultCallbacks)
+#     Diff::LCS.LCS(seq1, seq2, Diff::LCS::DefaultCallbacks)
 class Diff::LCS::DefaultCallbacks
   class << self
     # Called when both the old and new values have changed.
@@ -550,18 +570,18 @@ end
 # addition or removal of a single element from one of the two tested
 # sequences. The +hunk+ provides the full context for the changes.
 #
-# diffs = Diff::LCS.diff(seq1, seq2)
-# # This example shows a simplified array format.
-# # [ [ [ '-',  0, 'a' ] ],   # 1
-# #   [ [ '+',  2, 'd' ] ],   # 2
-# #   [ [ '-',  4, 'h' ],     # 3
-# #     [ '+',  4, 'f' ] ],
-# #   [ [ '+',  6, 'k' ] ],   # 4
-# #   [ [ '-',  8, 'n' ],     # 5
-# #     [ '-',  9, 'p' ],
-# #     [ '+',  9, 'r' ],
-# #     [ '+', 10, 's' ],
-# #     [ '+', 11, 't' ] ] ]
+#     diffs = Diff::LCS.diff(seq1, seq2)
+#       # This example shows a simplified array format.
+#       # [ [ [ '-',  0, 'a' ] ],   # 1
+#       #   [ [ '+',  2, 'd' ] ],   # 2
+#       #   [ [ '-',  4, 'h' ],     # 3
+#       #     [ '+',  4, 'f' ] ],
+#       #   [ [ '+',  6, 'k' ] ],   # 4
+#       #   [ [ '-',  8, 'n' ],     # 5
+#       #     [ '-',  9, 'p' ],
+#       #     [ '+',  9, 'r' ],
+#       #     [ '+', 10, 's' ],
+#       #     [ '+', 11, 't' ] ] ]
 #
 # There are five hunks here. The first hunk says that the +a+ at position 0
 # of the first sequence should be deleted (<tt>'-'</tt>). The second hunk
@@ -575,14 +595,14 @@ end
 # This callback object must be initialised and is used by the Diff::LCS#diff
 # method.
 #
-# cbo = Diff::LCS::DiffCallbacks.new
-# Diff::LCS.LCS(seq1, seq2, cbo)
-# cbo.finish
+#     cbo = Diff::LCS::DiffCallbacks.new
+#     Diff::LCS.LCS(seq1, seq2, cbo)
+#     cbo.finish
 #
 # Note that the call to #finish is absolutely necessary, or the last set of
 # changes will not be visible. Alternatively, can be used as:
 #
-# cbo = Diff::LCS::DiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
+#     cbo = Diff::LCS::DiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
 #
 # The necessary #finish call will be made.
 #
@@ -591,10 +611,12 @@ end
 # The simplified array format used in the example above can be obtained
 # with:
 #
-# require 'pp'
-# pp diffs.map { |e| e.map { |f| f.to_a } }
+#     require 'pp'
+#     pp diffs.map { |e| e.map { |f| f.to_a } }
 class Diff::LCS::DiffCallbacks
   # :yields self:
+  #
+  # @return [DiffCallbacks] a new instance of DiffCallbacks
   def initialize; end
 
   # Returns the difference set collected during the diff process.
@@ -620,6 +642,8 @@ end
 class Diff::LCS::Hunk
   # Create a hunk using references to both the old and new data, as well as the
   # piece of data.
+  #
+  # @return [Hunk] a new instance of Hunk
   def initialize(data_old, data_new, piece, flag_context, file_length_difference); end
 
   # Returns the value of attribute blocks.
@@ -648,11 +672,14 @@ class Diff::LCS::Hunk
   # was skipped.
   def merge(hunk); end
 
+  # @return [Boolean]
   def missing_last_newline?(data); end
 
   # Determines whether there is an overlap between this hunk and the
   # provided hunk. This will be true if the difference between the two hunks
   # start or end positions is within one position of each other.
+  #
+  # @return [Boolean]
   def overlaps?(hunk); end
 
   # Returns the value of attribute start_new.
@@ -714,10 +741,10 @@ module Diff::LCS::Internals
     # Enumerables +a+ and +b+. The result is an array whose contents is such
     # that
     #
-    # result = Diff::LCS::Internals.lcs(a, b)
-    # result.each_with_index do |e, i|
-    # assert_equal(a[i], b[e]) unless e.nil?
-    # end
+    #     result = Diff::LCS::Internals.lcs(a, b)
+    #     result.each_with_index do |e, i|
+    #       assert_equal(a[i], b[e]) unless e.nil?
+    #     end
     def lcs(a, b); end
 
     private
@@ -755,61 +782,65 @@ end
 # and their minimized differences side by side, just like the Unix utility
 # +sdiff+.
 #
-# same             same
-# before     |     after
-# old        <     -
-# -          >     new
+#     same             same
+#     before     |     after
+#     old        <     -
+#     -          >     new
 #
-# seq1 = %w(a b c e h j l m n p)
-# seq2 = %w(b c d e f j k l m r s t)
+#     seq1 = %w(a b c e h j l m n p)
+#     seq2 = %w(b c d e f j k l m r s t)
 #
-# diffs = Diff::LCS.sdiff(seq1, seq2)
-# # This example shows a simplified array format.
-# # [ [ "-", [  0, "a"], [  0, nil ] ],
-# #   [ "=", [  1, "b"], [  0, "b" ] ],
-# #   [ "=", [  2, "c"], [  1, "c" ] ],
-# #   [ "+", [  3, nil], [  2, "d" ] ],
-# #   [ "=", [  3, "e"], [  3, "e" ] ],
-# #   [ "!", [  4, "h"], [  4, "f" ] ],
-# #   [ "=", [  5, "j"], [  5, "j" ] ],
-# #   [ "+", [  6, nil], [  6, "k" ] ],
-# #   [ "=", [  6, "l"], [  7, "l" ] ],
-# #   [ "=", [  7, "m"], [  8, "m" ] ],
-# #   [ "!", [  8, "n"], [  9, "r" ] ],
-# #   [ "!", [  9, "p"], [ 10, "s" ] ],
-# #   [ "+", [ 10, nil], [ 11, "t" ] ] ]
+#     diffs = Diff::LCS.sdiff(seq1, seq2)
+#       # This example shows a simplified array format.
+#       # [ [ "-", [  0, "a"], [  0, nil ] ],
+#       #   [ "=", [  1, "b"], [  0, "b" ] ],
+#       #   [ "=", [  2, "c"], [  1, "c" ] ],
+#       #   [ "+", [  3, nil], [  2, "d" ] ],
+#       #   [ "=", [  3, "e"], [  3, "e" ] ],
+#       #   [ "!", [  4, "h"], [  4, "f" ] ],
+#       #   [ "=", [  5, "j"], [  5, "j" ] ],
+#       #   [ "+", [  6, nil], [  6, "k" ] ],
+#       #   [ "=", [  6, "l"], [  7, "l" ] ],
+#       #   [ "=", [  7, "m"], [  8, "m" ] ],
+#       #   [ "!", [  8, "n"], [  9, "r" ] ],
+#       #   [ "!", [  9, "p"], [ 10, "s" ] ],
+#       #   [ "+", [ 10, nil], [ 11, "t" ] ] ]
 #
 # The result of this operation is similar to that of
 # Diff::LCS::ContextDiffCallbacks. They may be compared as:
 #
-# s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
-# c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
+#     s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == "=" }
+#     c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten(1)
 #
-# s == c # -> true
+#     s == c # -> true
 #
 # === Use
 #
 # This callback object must be initialised and is used by the Diff::LCS#sdiff
 # method.
 #
-# cbo = Diff::LCS::SDiffCallbacks.new
-# Diff::LCS.LCS(seq1, seq2, cbo)
+#     cbo = Diff::LCS::SDiffCallbacks.new
+#     Diff::LCS.LCS(seq1, seq2, cbo)
 #
 # As with the other initialisable callback objects,
 # Diff::LCS::SDiffCallbacks can be initialised with a block. As there is no
 # "fininishing" to be done, this has no effect on the state of the object.
 #
-# cbo = Diff::LCS::SDiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
+#     cbo = Diff::LCS::SDiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
 #
 # === Simplified Array Format
 #
 # The simplified array format used in the example above can be obtained
 # with:
 #
-# require 'pp'
-# pp diffs.map { |e| e.to_a }
+#     require 'pp'
+#     pp diffs.map { |e| e.to_a }
 class Diff::LCS::SDiffCallbacks
   # :yields self:
+  #
+  # @return [SDiffCallbacks] a new instance of SDiffCallbacks
+  # @yield [_self]
+  # @yieldparam _self [Diff::LCS::SDiffCallbacks] the object that the method was called on
   def initialize; end
 
   def change(event); end
@@ -822,5 +853,10 @@ class Diff::LCS::SDiffCallbacks
   def match(event); end
 end
 
+# An alias for DefaultCallbacks that is used in
+# Diff::LCS#traverse_sequences.
+#
+#     Diff::LCS.LCS(seq1, seq2, Diff::LCS::SequenceCallbacks)
 Diff::LCS::SequenceCallbacks = Diff::LCS::DefaultCallbacks
+
 Diff::LCS::VERSION = T.let(T.unsafe(nil), String)

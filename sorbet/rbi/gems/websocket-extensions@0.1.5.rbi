@@ -7,6 +7,7 @@
 module WebSocket; end
 
 class WebSocket::Extensions
+  # @return [Extensions] a new instance of Extensions
   def initialize; end
 
   def activate(header); end
@@ -22,6 +23,8 @@ class WebSocket::Extensions
   private
 
   def reserve(ext); end
+
+  # @return [Boolean]
   def reserved?(ext); end
 end
 
@@ -29,6 +32,7 @@ class WebSocket::Extensions::ExtensionError < ::ArgumentError; end
 WebSocket::Extensions::MESSAGE_OPCODES = T.let(T.unsafe(nil), Array)
 
 class WebSocket::Extensions::Offers
+  # @return [Offers] a new instance of Offers
   def initialize; end
 
   def by_name(name); end

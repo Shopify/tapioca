@@ -86,55 +86,55 @@ module ActionView::Helpers::SanitizeHelper
   # * <tt>:tags</tt> - An array of allowed tags.
   # * <tt>:attributes</tt> - An array of allowed attributes.
   # * <tt>:scrubber</tt> - A {Rails::Html scrubber}[https://github.com/rails/rails-html-sanitizer]
-  # or {Loofah::Scrubber}[https://github.com/flavorjones/loofah] object that
-  # defines custom sanitization rules. A custom scrubber takes precedence over
-  # custom tags and attributes.
+  #   or {Loofah::Scrubber}[https://github.com/flavorjones/loofah] object that
+  #   defines custom sanitization rules. A custom scrubber takes precedence over
+  #   custom tags and attributes.
   #
   # ==== Examples
   #
   # Normal use:
   #
-  # <%= sanitize @comment.body %>
+  #   <%= sanitize @comment.body %>
   #
   # Providing custom lists of permitted tags and attributes:
   #
-  # <%= sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) %>
+  #   <%= sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) %>
   #
   # Providing a custom Rails::Html scrubber:
   #
-  # class CommentScrubber < Rails::Html::PermitScrubber
-  # def initialize
-  # super
-  # self.tags = %w( form script comment blockquote )
-  # self.attributes = %w( style )
-  # end
+  #   class CommentScrubber < Rails::Html::PermitScrubber
+  #     def initialize
+  #       super
+  #       self.tags = %w( form script comment blockquote )
+  #       self.attributes = %w( style )
+  #     end
   #
-  # def skip_node?(node)
-  # node.text?
-  # end
-  # end
+  #     def skip_node?(node)
+  #       node.text?
+  #     end
+  #   end
   #
-  # <%= sanitize @comment.body, scrubber: CommentScrubber.new %>
+  #   <%= sanitize @comment.body, scrubber: CommentScrubber.new %>
   #
   # See {Rails HTML Sanitizer}[https://github.com/rails/rails-html-sanitizer] for
   # documentation about Rails::Html scrubbers.
   #
   # Providing a custom Loofah::Scrubber:
   #
-  # scrubber = Loofah::Scrubber.new do |node|
-  # node.remove if node.name == 'script'
-  # end
+  #   scrubber = Loofah::Scrubber.new do |node|
+  #     node.remove if node.name == 'script'
+  #   end
   #
-  # <%= sanitize @comment.body, scrubber: scrubber %>
+  #   <%= sanitize @comment.body, scrubber: scrubber %>
   #
   # See {Loofah's documentation}[https://github.com/flavorjones/loofah] for more
   # information about defining custom Loofah::Scrubber objects.
   #
   # To set the default allowed tags or attributes across your application:
   #
-  # # In config/application.rb
-  # config.action_view.sanitized_allowed_tags = ['strong', 'em', 'a']
-  # config.action_view.sanitized_allowed_attributes = ['href', 'title']
+  #   # In config/application.rb
+  #   config.action_view.sanitized_allowed_tags = ['strong', 'em', 'a']
+  #   config.action_view.sanitized_allowed_attributes = ['href', 'title']
   def sanitize(html, options = T.unsafe(nil)); end
 
   # Sanitizes a block of CSS code. Used by +sanitize+ when it comes across a style attribute.
@@ -142,32 +142,32 @@ module ActionView::Helpers::SanitizeHelper
 
   # Strips all link tags from +html+ leaving just the link text.
   #
-  # strip_links('<a href="http://www.rubyonrails.org">Ruby on Rails</a>')
-  # # => Ruby on Rails
+  #   strip_links('<a href="http://www.rubyonrails.org">Ruby on Rails</a>')
+  #   # => Ruby on Rails
   #
-  # strip_links('Please e-mail me at <a href="mailto:me@email.com">me@email.com</a>.')
-  # # => Please e-mail me at me@email.com.
+  #   strip_links('Please e-mail me at <a href="mailto:me@email.com">me@email.com</a>.')
+  #   # => Please e-mail me at me@email.com.
   #
-  # strip_links('Blog: <a href="http://www.myblog.com/" class="nav" target=\"_blank\">Visit</a>.')
-  # # => Blog: Visit.
+  #   strip_links('Blog: <a href="http://www.myblog.com/" class="nav" target=\"_blank\">Visit</a>.')
+  #   # => Blog: Visit.
   #
-  # strip_links('<<a href="https://example.org">malformed & link</a>')
-  # # => &lt;malformed &amp; link
+  #   strip_links('<<a href="https://example.org">malformed & link</a>')
+  #   # => &lt;malformed &amp; link
   def strip_links(html); end
 
   # Strips all HTML tags from +html+, including comments and special characters.
   #
-  # strip_tags("Strip <i>these</i> tags!")
-  # # => Strip these tags!
+  #   strip_tags("Strip <i>these</i> tags!")
+  #   # => Strip these tags!
   #
-  # strip_tags("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
-  # # => Bold no more!  See more here...
+  #   strip_tags("<b>Bold</b> no more!  <a href='more.html'>See more here</a>...")
+  #   # => Bold no more!  See more here...
   #
-  # strip_tags("<div id='top-bar'>Welcome to my website!</div>")
-  # # => Welcome to my website!
+  #   strip_tags("<div id='top-bar'>Welcome to my website!</div>")
+  #   # => Welcome to my website!
   #
-  # strip_tags("> A quote from Smith & Wesson")
-  # # => &gt; A quote from Smith &amp; Wesson
+  #   strip_tags("> A quote from Smith & Wesson")
+  #   # => &gt; A quote from Smith &amp; Wesson
   def strip_tags(html); end
 end
 
@@ -175,43 +175,49 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # Gets the Rails::Html::FullSanitizer instance used by +strip_tags+. Replace with
   # any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.full_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.full_sanitizer = MySpecialSanitizer.new
+  #   end
   def full_sanitizer; end
 
   # Sets the attribute full_sanitizer
+  #
+  # @param value the value to set the attribute full_sanitizer to.
   def full_sanitizer=(_arg0); end
 
   # Gets the Rails::Html::LinkSanitizer instance used by +strip_links+.
   # Replace with any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.link_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.link_sanitizer = MySpecialSanitizer.new
+  #   end
   def link_sanitizer; end
 
   # Sets the attribute link_sanitizer
+  #
+  # @param value the value to set the attribute link_sanitizer to.
   def link_sanitizer=(_arg0); end
 
   # Gets the Rails::Html::SafeListSanitizer instance used by sanitize and +sanitize_css+.
   # Replace with any object that responds to +sanitize+.
   #
-  # class Application < Rails::Application
-  # config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
+  #   end
   def safe_list_sanitizer; end
 
   # Sets the attribute safe_list_sanitizer
+  #
+  # @param value the value to set the attribute safe_list_sanitizer to.
   def safe_list_sanitizer=(_arg0); end
 
   def sanitized_allowed_attributes; end
 
   # Replaces the allowed HTML attributes for the +sanitize+ helper.
   #
-  # class Application < Rails::Application
-  # config.action_view.sanitized_allowed_attributes = ['onclick', 'longdesc']
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.sanitized_allowed_attributes = ['onclick', 'longdesc']
+  #   end
   def sanitized_allowed_attributes=(attributes); end
 
   def sanitized_allowed_css_keywords; end
@@ -224,9 +230,9 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
 
   # Replaces the allowed tags for the +sanitize+ helper.
   #
-  # class Application < Rails::Application
-  # config.action_view.sanitized_allowed_tags = 'table', 'tr', 'td'
-  # end
+  #   class Application < Rails::Application
+  #     config.action_view.sanitized_allowed_tags = 'table', 'tr', 'td'
+  #   end
   def sanitized_allowed_tags=(tags); end
 
   def sanitized_bad_tags; end
@@ -263,8 +269,8 @@ module Rails
     def env=(environment); end
     def gem_version; end
     def groups(*groups); end
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
     def logger; end
     def logger=(_arg0); end
     def public_path; end
@@ -288,11 +294,12 @@ end
 # === Rails::Html::LinkSanitizer
 # Removes +a+ tags and +href+ attributes leaving only the link text.
 #
-# link_sanitizer = Rails::Html::LinkSanitizer.new
-# link_sanitizer.sanitize('<a href="example.com">Only the link text will be kept.</a>')
+#  link_sanitizer = Rails::Html::LinkSanitizer.new
+#  link_sanitizer.sanitize('<a href="example.com">Only the link text will be kept.</a>')
 #
-# => 'Only the link text will be kept.'
+#  => 'Only the link text will be kept.'
 class Rails::Html::LinkSanitizer < ::Rails::Html::Sanitizer
+  # @return [LinkSanitizer] a new instance of LinkSanitizer
   def initialize; end
 
   def sanitize(html, options = T.unsafe(nil)); end
@@ -325,24 +332,25 @@ end
 # If set, attributes excluded will be removed.
 # If not, attributes are removed based on Loofahs +HTML5::Scrub.scrub_attributes+.
 #
-# class CommentScrubber < Html::PermitScrubber
-# def initialize
-# super
-# self.tags = %w(form script comment blockquote)
-# end
+#  class CommentScrubber < Html::PermitScrubber
+#    def initialize
+#      super
+#      self.tags = %w(form script comment blockquote)
+#    end
 #
-# def skip_node?(node)
-# node.text?
-# end
+#    def skip_node?(node)
+#      node.text?
+#    end
 #
-# def scrub_attribute?(name)
-# name == "style"
-# end
-# end
+#    def scrub_attribute?(name)
+#      name == "style"
+#    end
+#  end
 #
 # See the documentation for +Nokogiri::XML::Node+ to understand what's possible
 # with nodes: https://nokogiri.org/rdoc/Nokogiri/XML/Node.html
 class Rails::Html::PermitScrubber < ::Loofah::Scrubber
+  # @return [PermitScrubber] a new instance of PermitScrubber
   def initialize; end
 
   # Returns the value of attribute attributes.
@@ -358,14 +366,24 @@ class Rails::Html::PermitScrubber < ::Loofah::Scrubber
 
   protected
 
+  # @return [Boolean]
   def allowed_node?(node); end
+
+  # @return [Boolean]
   def keep_node?(node); end
+
   def scrub_attribute(node, attr_node); end
+
+  # @return [Boolean]
   def scrub_attribute?(name); end
+
   def scrub_attributes(node); end
   def scrub_css_attribute(node); end
   def scrub_node(node); end
+
+  # @return [Boolean]
   def skip_node?(node); end
+
   def validate!(var, name); end
 end
 
@@ -412,6 +430,7 @@ end
 # Safe list via a custom scrubber
 # safe_list_sanitizer.sanitize(@article.body, scrubber: ArticleScrubber.new)
 class Rails::Html::SafeListSanitizer < ::Rails::Html::Sanitizer
+  # @return [SafeListSanitizer] a new instance of SafeListSanitizer
   def initialize; end
 
   def sanitize(html, options = T.unsafe(nil)); end
@@ -427,17 +446,22 @@ class Rails::Html::SafeListSanitizer < ::Rails::Html::Sanitizer
     def allowed_attributes; end
 
     # Sets the attribute allowed_attributes
+    #
+    # @param value the value to set the attribute allowed_attributes to.
     def allowed_attributes=(_arg0); end
 
     # Returns the value of attribute allowed_tags.
     def allowed_tags; end
 
     # Sets the attribute allowed_tags
+    #
+    # @param value the value to set the attribute allowed_tags to.
     def allowed_tags=(_arg0); end
   end
 end
 
 class Rails::Html::Sanitizer
+  # @raise [NotImplementedError]
   def sanitize(html, options = T.unsafe(nil)); end
 
   private
@@ -466,7 +490,10 @@ Rails::Html::Sanitizer::VERSION = T.let(T.unsafe(nil), String)
 # +attributes=+
 # If set, attributes included will be removed.
 class Rails::Html::TargetScrubber < ::Rails::Html::PermitScrubber
+  # @return [Boolean]
   def allowed_node?(node); end
+
+  # @return [Boolean]
   def scrub_attribute?(name); end
 end
 
@@ -476,6 +503,7 @@ end
 #
 # Unallowed elements will be stripped, i.e. element is removed but its subtree kept.
 class Rails::Html::TextOnlyScrubber < ::Loofah::Scrubber
+  # @return [TextOnlyScrubber] a new instance of TextOnlyScrubber
   def initialize; end
 
   def scrub(node); end

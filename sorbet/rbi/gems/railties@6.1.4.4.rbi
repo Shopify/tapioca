@@ -5,15 +5,15 @@
 # Please instead update this file by running `bin/tapioca gem railties`.
 
 module ActionController::Base::HelperMethods
-  def alert(*args, **_arg1, &block); end
-  def combined_fragment_cache_key(*args, **_arg1, &block); end
-  def content_security_policy?(*args, **_arg1, &block); end
-  def content_security_policy_nonce(*args, **_arg1, &block); end
-  def cookies(*args, **_arg1, &block); end
-  def form_authenticity_token(*args, **_arg1, &block); end
-  def notice(*args, **_arg1, &block); end
-  def protect_against_forgery?(*args, **_arg1, &block); end
-  def view_cache_dependencies(*args, **_arg1, &block); end
+  def alert(*args, &block); end
+  def combined_fragment_cache_key(*args, &block); end
+  def content_security_policy?(*args, &block); end
+  def content_security_policy_nonce(*args, &block); end
+  def cookies(*args, &block); end
+  def form_authenticity_token(*args, &block); end
+  def notice(*args, &block); end
+  def protect_against_forgery?(*args, &block); end
+  def view_cache_dependencies(*args, &block); end
 end
 
 module Rails
@@ -24,11 +24,15 @@ module Rails
     def app_class; end
 
     # Sets the attribute app_class
+    #
+    # @param value the value to set the attribute app_class to.
     def app_class=(_arg0); end
 
     def application; end
 
     # Sets the attribute application
+    #
+    # @param value the value to set the attribute application to.
     def application=(_arg0); end
 
     def autoloaders; end
@@ -38,6 +42,8 @@ module Rails
     def cache; end
 
     # Sets the attribute cache
+    #
+    # @param value the value to set the attribute cache to.
     def cache=(_arg0); end
 
     # The Configuration instance used to configure the Rails environment
@@ -45,14 +51,14 @@ module Rails
 
     # Returns the current Rails environment.
     #
-    # Rails.env # => "development"
-    # Rails.env.development? # => true
-    # Rails.env.production? # => false
+    #   Rails.env # => "development"
+    #   Rails.env.development? # => true
+    #   Rails.env.production? # => false
     def env; end
 
     # Sets the Rails environment.
     #
-    # Rails.env = "staging" # => "staging"
+    #   Rails.env = "staging" # => "staging"
     def env=(environment); end
 
     # Returns the version of the currently loaded Rails as a <tt>Gem::Version</tt>
@@ -64,32 +70,34 @@ module Rails
     # * The environment variable RAILS_GROUPS;
     # * The optional envs given as argument and the hash with group dependencies;
     #
-    # Rails.groups assets: [:development, :test]
-    # # => [:default, "development", :assets] for Rails.env == "development"
-    # # => [:default, "production"]           for Rails.env == "production"
+    #  Rails.groups assets: [:development, :test]
+    #  # => [:default, "development", :assets] for Rails.env == "development"
+    #  # => [:default, "production"]           for Rails.env == "production"
     def groups(*groups); end
 
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
 
     # Returns the value of attribute logger.
     def logger; end
 
     # Sets the attribute logger
+    #
+    # @param value the value to set the attribute logger to.
     def logger=(_arg0); end
 
     # Returns a Pathname object of the public folder of the current
     # Rails project, otherwise it returns +nil+ if there is no project:
     #
-    # Rails.public_path
-    # # => #<Pathname:/Users/someuser/some/path/project/public>
+    #   Rails.public_path
+    #     # => #<Pathname:/Users/someuser/some/path/project/public>
     def public_path; end
 
     # Returns a Pathname object of the current Rails project,
     # otherwise it returns +nil+ if there is no project:
     #
-    # Rails.root
-    # # => #<Pathname:/Users/someuser/some/path/project>
+    #   Rails.root
+    #     # => #<Pathname:/Users/someuser/some/path/project>
     def root; end
 
     # Returns the version of the currently loaded Rails as a string.
@@ -130,18 +138,18 @@ end
 # process. From the moment you require "config/application.rb" in your app,
 # the booting process goes like this:
 #
-# 1)  require "config/boot.rb" to set up load paths
-# 2)  require railties and engines
-# 3)  Define Rails.application as "class MyApp::Application < Rails::Application"
-# 4)  Run config.before_configuration callbacks
-# 5)  Load config/environments/ENV.rb
-# 6)  Run config.before_initialize callbacks
-# 7)  Run Railtie#initializer defined by railties, engines and application.
-# One by one, each engine sets up its load paths, routes and runs its config/initializers/* files.
-# 8)  Custom Railtie#initializers added by railties, engines and applications are executed
-# 9)  Build the middleware stack and run to_prepare callbacks
-# 10) Run config.before_eager_load and eager_load! if eager_load is true
-# 11) Run config.after_initialize callbacks
+#   1)  require "config/boot.rb" to set up load paths
+#   2)  require railties and engines
+#   3)  Define Rails.application as "class MyApp::Application < Rails::Application"
+#   4)  Run config.before_configuration callbacks
+#   5)  Load config/environments/ENV.rb
+#   6)  Run config.before_initialize callbacks
+#   7)  Run Railtie#initializer defined by railties, engines and application.
+#       One by one, each engine sets up its load paths, routes and runs its config/initializers/* files.
+#   8)  Custom Railtie#initializers added by railties, engines and applications are executed
+#   9)  Build the middleware stack and run to_prepare callbacks
+#   10) Run config.before_eager_load and eager_load! if eager_load is true
+#   11) Run config.after_initialize callbacks
 #
 # == Multiple Applications
 #
@@ -152,11 +160,11 @@ end
 # To create a new application, you can instantiate a new instance of a class
 # that has already been created:
 #
-# class Application < Rails::Application
-# end
+#   class Application < Rails::Application
+#   end
 #
-# first_application  = Application.new
-# second_application = Application.new(config: first_application.config)
+#   first_application  = Application.new
+#   second_application = Application.new(config: first_application.config)
 #
 # In the above example, the configuration from the first application was used
 # to initialize the second application. You can also use the +initialize_copy+
@@ -166,6 +174,7 @@ end
 # If you decide to define Rake tasks, runners, or initializers in an
 # application other than +Rails.application+, then you must run them manually.
 class Rails::Application < ::Rails::Engine
+  # @return [Application] a new instance of Application
   def initialize(initial_variable_values = T.unsafe(nil), &block); end
 
   def asset_precompiled?(logical_path); end
@@ -174,6 +183,8 @@ class Rails::Application < ::Rails::Engine
   def assets; end
 
   # Sets the attribute assets
+  #
+  # @param value the value to set the attribute assets to.
   def assets=(_arg0); end
 
   def assets_manifest; end
@@ -182,43 +193,45 @@ class Rails::Application < ::Rails::Engine
   def config; end
 
   # Sets the attribute config
+  #
+  # @param value the value to set the attribute config to.
   def config=(_arg0); end
 
   # Convenience for loading config/foo.yml for the current Rails env.
   #
   # Examples:
   #
-  # # config/exception_notification.yml:
-  # production:
-  # url: http://127.0.0.1:8080
-  # namespace: my_app_production
+  #     # config/exception_notification.yml:
+  #     production:
+  #       url: http://127.0.0.1:8080
+  #       namespace: my_app_production
   #
-  # development:
-  # url: http://localhost:3001
-  # namespace: my_app_development
+  #     development:
+  #       url: http://localhost:3001
+  #       namespace: my_app_development
   #
-  # # config/environments/production.rb
-  # Rails.application.configure do
-  # config.middleware.use ExceptionNotifier, config_for(:exception_notification)
-  # end
+  #     # config/environments/production.rb
+  #     Rails.application.configure do
+  #       config.middleware.use ExceptionNotifier, config_for(:exception_notification)
+  #     end
   #
-  # # You can also store configurations in a shared section which will be
-  # # merged with the environment configuration
+  #     # You can also store configurations in a shared section which will be
+  #     # merged with the environment configuration
   #
-  # # config/example.yml
-  # shared:
-  # foo:
-  # bar:
-  # baz: 1
+  #     # config/example.yml
+  #     shared:
+  #       foo:
+  #         bar:
+  #           baz: 1
   #
-  # development:
-  # foo:
-  # bar:
-  # qux: 2
+  #     development:
+  #       foo:
+  #         bar:
+  #           qux: 2
   #
-  # # development environment
-  # Rails.application.config_for(:example)[:foo][:bar]
-  # # => { baz: 1, qux: 2 }
+  #     # development environment
+  #     Rails.application.config_for(:example)[:foo][:bar]
+  #     # => { baz: 1, qux: 2 }
   def config_for(name, env: T.unsafe(nil)); end
 
   # Sends any console called in the instance of a new application up
@@ -235,9 +248,11 @@ class Rails::Application < ::Rails::Engine
   def credentials; end
 
   # Sets the attribute credentials
+  #
+  # @param value the value to set the attribute credentials to.
   def credentials=(_arg0); end
 
-  def default_url_options(*_arg0, **_arg1, &_arg2); end
+  def default_url_options(*_arg0, &_arg1); end
   def default_url_options=(arg); end
 
   # Eager loads the application code.
@@ -249,27 +264,27 @@ class Rails::Application < ::Rails::Engine
   # the file with the master key.
   # The master key is either stored in +config/master.key+ or <tt>ENV["RAILS_MASTER_KEY"]</tt>.
   #
-  # Rails.application.encrypted("config/mystery_man.txt.enc").read
-  # # => "We've met before, haven't we?"
+  #   Rails.application.encrypted("config/mystery_man.txt.enc").read
+  #   # => "We've met before, haven't we?"
   #
   # It's also possible to interpret encrypted YAML files with +config+.
   #
-  # Rails.application.encrypted("config/credentials.yml.enc").config
-  # # => { next_guys_line: "I don't think so. Where was it you think we met?" }
+  #   Rails.application.encrypted("config/credentials.yml.enc").config
+  #   # => { next_guys_line: "I don't think so. Where was it you think we met?" }
   #
   # Any top-level configs are also accessible directly on the return value:
   #
-  # Rails.application.encrypted("config/credentials.yml.enc").next_guys_line
-  # # => "I don't think so. Where was it you think we met?"
+  #   Rails.application.encrypted("config/credentials.yml.enc").next_guys_line
+  #   # => "I don't think so. Where was it you think we met?"
   #
   # The files or configs can also be encrypted with a custom key. To decrypt with
   # a key in the +ENV+, use:
   #
-  # Rails.application.encrypted("config/special_tokens.yml.enc", env_key: "SPECIAL_TOKENS")
+  #   Rails.application.encrypted("config/special_tokens.yml.enc", env_key: "SPECIAL_TOKENS")
   #
   # Or to decrypt with a file, that should be version control ignored, relative to +Rails.root+:
   #
-  # Rails.application.encrypted("config/special_tokens.yml.enc", key_path: "config/special_tokens.key")
+  #   Rails.application.encrypted("config/special_tokens.yml.enc", key_path: "config/special_tokens.key")
   def encrypted(path, key_path: T.unsafe(nil), env_key: T.unsafe(nil)); end
 
   # Stores some of the Rails initial environment parameters which
@@ -290,6 +305,8 @@ class Rails::Application < ::Rails::Engine
   def initialize!(group = T.unsafe(nil)); end
 
   # Returns true if the application is initialized.
+  #
+  # @return [Boolean]
   def initialized?; end
 
   # Sends the initializers to the +initializer+ method defined in the
@@ -318,9 +335,9 @@ class Rails::Application < ::Rails::Engine
   #
   # ==== Examples
   #
-  # message = Rails.application.message_verifier('sensitive_data').generate('my sensible data')
-  # Rails.application.message_verifier('sensitive_data').verify(message)
-  # # => 'my sensible data'
+  #     message = Rails.application.message_verifier('sensitive_data').generate('my sensible data')
+  #     Rails.application.message_verifier('sensitive_data').verify(message)
+  #     # => 'my sensible data'
   #
   # See the +ActiveSupport::MessageVerifier+ documentation for more information.
   def message_verifier(verifier_name); end
@@ -360,6 +377,8 @@ class Rails::Application < ::Rails::Engine
   def sandbox; end
 
   # Sets the attribute sandbox
+  #
+  # @param value the value to set the attribute sandbox to.
   def sandbox=(_arg0); end
 
   # Returns the value of attribute sandbox.
@@ -379,6 +398,8 @@ class Rails::Application < ::Rails::Engine
   def secrets; end
 
   # Sets the attribute secrets
+  #
+  # @param value the value to set the attribute secrets to.
   def secrets=(_arg0); end
 
   # Sends any server called in the instance of a new application up
@@ -419,10 +440,10 @@ class Rails::Application < ::Rails::Engine
     # allowing the developer to load classes in lib and use them during application
     # configuration.
     #
-    # class MyApplication < Rails::Application
-    # require "my_backend" # in lib/my_backend
-    # config.i18n.backend = MyBackend
-    # end
+    #   class MyApplication < Rails::Application
+    #     require "my_backend" # in lib/my_backend
+    #     config.i18n.backend = MyBackend
+    #   end
     #
     # Notice this method takes into consideration the default root path. So if you
     # are changing config.root inside your application definition or having a custom
@@ -432,7 +453,10 @@ class Rails::Application < ::Rails::Engine
 
     def create(initial_variable_values = T.unsafe(nil), &block); end
     def find_root(from); end
+
+    # @private
     def inherited(base); end
+
     def instance; end
   end
 end
@@ -443,18 +467,23 @@ module Rails::Application::Bootstrap
 end
 
 class Rails::Application::Configuration < ::Rails::Engine::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize(*_arg0); end
 
   # Returns the value of attribute add_autoload_paths_to_load_path.
   def add_autoload_paths_to_load_path; end
 
   # Sets the attribute add_autoload_paths_to_load_path
+  #
+  # @param value the value to set the attribute add_autoload_paths_to_load_path to.
   def add_autoload_paths_to_load_path=(_arg0); end
 
   # Returns the value of attribute allow_concurrency.
   def allow_concurrency; end
 
   # Sets the attribute allow_concurrency
+  #
+  # @param value the value to set the attribute allow_concurrency to.
   def allow_concurrency=(_arg0); end
 
   def annotations; end
@@ -468,12 +497,16 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def asset_host; end
 
   # Sets the attribute asset_host
+  #
+  # @param value the value to set the attribute asset_host to.
   def asset_host=(_arg0); end
 
   # Returns the value of attribute autoflush_log.
   def autoflush_log; end
 
   # Sets the attribute autoflush_log
+  #
+  # @param value the value to set the attribute autoflush_log to.
   def autoflush_log=(_arg0); end
 
   # Returns the value of attribute autoloader.
@@ -485,18 +518,24 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def beginning_of_week; end
 
   # Sets the attribute beginning_of_week
+  #
+  # @param value the value to set the attribute beginning_of_week to.
   def beginning_of_week=(_arg0); end
 
   # Returns the value of attribute cache_classes.
   def cache_classes; end
 
   # Sets the attribute cache_classes
+  #
+  # @param value the value to set the attribute cache_classes to.
   def cache_classes=(_arg0); end
 
   # Returns the value of attribute cache_store.
   def cache_store; end
 
   # Sets the attribute cache_store
+  #
+  # @param value the value to set the attribute cache_store to.
   def cache_store=(_arg0); end
 
   def colorize_logging; end
@@ -506,12 +545,16 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def consider_all_requests_local; end
 
   # Sets the attribute consider_all_requests_local
+  #
+  # @param value the value to set the attribute consider_all_requests_local to.
   def consider_all_requests_local=(_arg0); end
 
   # Returns the value of attribute console.
   def console; end
 
   # Sets the attribute console
+  #
+  # @param value the value to set the attribute console to.
   def console=(_arg0); end
 
   def content_security_policy(&block); end
@@ -520,24 +563,32 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def content_security_policy_nonce_directives; end
 
   # Sets the attribute content_security_policy_nonce_directives
+  #
+  # @param value the value to set the attribute content_security_policy_nonce_directives to.
   def content_security_policy_nonce_directives=(_arg0); end
 
   # Returns the value of attribute content_security_policy_nonce_generator.
   def content_security_policy_nonce_generator; end
 
   # Sets the attribute content_security_policy_nonce_generator
+  #
+  # @param value the value to set the attribute content_security_policy_nonce_generator to.
   def content_security_policy_nonce_generator=(_arg0); end
 
   # Returns the value of attribute content_security_policy_report_only.
   def content_security_policy_report_only; end
 
   # Sets the attribute content_security_policy_report_only
+  #
+  # @param value the value to set the attribute content_security_policy_report_only to.
   def content_security_policy_report_only=(_arg0); end
 
   # Returns the value of attribute credentials.
   def credentials; end
 
   # Sets the attribute credentials
+  #
+  # @param value the value to set the attribute credentials to.
   def credentials=(_arg0); end
 
   # Loads and returns the entire raw configuration of database from
@@ -547,6 +598,8 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def debug_exception_response_format; end
 
   # Sets the attribute debug_exception_response_format
+  #
+  # @param value the value to set the attribute debug_exception_response_format to.
   def debug_exception_response_format=(_arg0); end
 
   def default_log_file; end
@@ -555,18 +608,24 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def disable_sandbox; end
 
   # Sets the attribute disable_sandbox
+  #
+  # @param value the value to set the attribute disable_sandbox to.
   def disable_sandbox=(_arg0); end
 
   # Returns the value of attribute eager_load.
   def eager_load; end
 
   # Sets the attribute eager_load
+  #
+  # @param value the value to set the attribute eager_load to.
   def eager_load=(_arg0); end
 
   # Returns the value of attribute enable_dependency_loading.
   def enable_dependency_loading; end
 
   # Sets the attribute enable_dependency_loading
+  #
+  # @param value the value to set the attribute enable_dependency_loading to.
   def enable_dependency_loading=(_arg0); end
 
   # Returns the value of attribute encoding.
@@ -578,48 +637,64 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def exceptions_app; end
 
   # Sets the attribute exceptions_app
+  #
+  # @param value the value to set the attribute exceptions_app to.
   def exceptions_app=(_arg0); end
 
   # Returns the value of attribute file_watcher.
   def file_watcher; end
 
   # Sets the attribute file_watcher
+  #
+  # @param value the value to set the attribute file_watcher to.
   def file_watcher=(_arg0); end
 
   # Returns the value of attribute filter_parameters.
   def filter_parameters; end
 
   # Sets the attribute filter_parameters
+  #
+  # @param value the value to set the attribute filter_parameters to.
   def filter_parameters=(_arg0); end
 
   # Returns the value of attribute filter_redirect.
   def filter_redirect; end
 
   # Sets the attribute filter_redirect
+  #
+  # @param value the value to set the attribute filter_redirect to.
   def filter_redirect=(_arg0); end
 
   # Returns the value of attribute force_ssl.
   def force_ssl; end
 
   # Sets the attribute force_ssl
+  #
+  # @param value the value to set the attribute force_ssl to.
   def force_ssl=(_arg0); end
 
   # Returns the value of attribute helpers_paths.
   def helpers_paths; end
 
   # Sets the attribute helpers_paths
+  #
+  # @param value the value to set the attribute helpers_paths to.
   def helpers_paths=(_arg0); end
 
   # Returns the value of attribute host_authorization.
   def host_authorization; end
 
   # Sets the attribute host_authorization
+  #
+  # @param value the value to set the attribute host_authorization to.
   def host_authorization=(_arg0); end
 
   # Returns the value of attribute hosts.
   def hosts; end
 
   # Sets the attribute hosts
+  #
+  # @param value the value to set the attribute hosts to.
   def hosts=(_arg0); end
 
   # Load the database YAML without evaluating ERB. This allows us to
@@ -641,24 +716,32 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def log_formatter; end
 
   # Sets the attribute log_formatter
+  #
+  # @param value the value to set the attribute log_formatter to.
   def log_formatter=(_arg0); end
 
   # Returns the value of attribute log_level.
   def log_level; end
 
   # Sets the attribute log_level
+  #
+  # @param value the value to set the attribute log_level to.
   def log_level=(_arg0); end
 
   # Returns the value of attribute log_tags.
   def log_tags; end
 
   # Sets the attribute log_tags
+  #
+  # @param value the value to set the attribute log_tags to.
   def log_tags=(_arg0); end
 
   # Returns the value of attribute logger.
   def logger; end
 
   # Sets the attribute logger
+  #
+  # @param value the value to set the attribute logger to.
   def logger=(_arg0); end
 
   def paths; end
@@ -668,95 +751,126 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def public_file_server; end
 
   # Sets the attribute public_file_server
+  #
+  # @param value the value to set the attribute public_file_server to.
   def public_file_server=(_arg0); end
 
   # Returns the value of attribute railties_order.
   def railties_order; end
 
   # Sets the attribute railties_order
+  #
+  # @param value the value to set the attribute railties_order to.
   def railties_order=(_arg0); end
 
   # Returns the value of attribute rake_eager_load.
   def rake_eager_load; end
 
   # Sets the attribute rake_eager_load
+  #
+  # @param value the value to set the attribute rake_eager_load to.
   def rake_eager_load=(_arg0); end
 
   # Returns the value of attribute read_encrypted_secrets.
   def read_encrypted_secrets; end
 
   # Sets the attribute read_encrypted_secrets
+  #
+  # @param value the value to set the attribute read_encrypted_secrets to.
   def read_encrypted_secrets=(_arg0); end
 
   # Returns the value of attribute relative_url_root.
   def relative_url_root; end
 
   # Sets the attribute relative_url_root
+  #
+  # @param value the value to set the attribute relative_url_root to.
   def relative_url_root=(_arg0); end
 
   # Returns the value of attribute reload_classes_only_on_change.
   def reload_classes_only_on_change; end
 
   # Sets the attribute reload_classes_only_on_change
+  #
+  # @param value the value to set the attribute reload_classes_only_on_change to.
   def reload_classes_only_on_change=(_arg0); end
 
   # Returns the value of attribute require_master_key.
   def require_master_key; end
 
   # Sets the attribute require_master_key
+  #
+  # @param value the value to set the attribute require_master_key to.
   def require_master_key=(_arg0); end
 
   # Returns the value of attribute secret_key_base.
   def secret_key_base; end
 
   # Sets the attribute secret_key_base
+  #
+  # @param value the value to set the attribute secret_key_base to.
   def secret_key_base=(_arg0); end
 
   # Returns the value of attribute session_options.
   def session_options; end
 
   # Sets the attribute session_options
+  #
+  # @param value the value to set the attribute session_options to.
   def session_options=(_arg0); end
 
   def session_store(new_session_store = T.unsafe(nil), **options); end
+
+  # @return [Boolean]
   def session_store?; end
 
   # Returns the value of attribute ssl_options.
   def ssl_options; end
 
   # Sets the attribute ssl_options
+  #
+  # @param value the value to set the attribute ssl_options to.
   def ssl_options=(_arg0); end
 
   # Returns the value of attribute time_zone.
   def time_zone; end
 
   # Sets the attribute time_zone
+  #
+  # @param value the value to set the attribute time_zone to.
   def time_zone=(_arg0); end
 
   # Returns the value of attribute x.
   def x; end
 
   # Sets the attribute x
+  #
+  # @param value the value to set the attribute x to.
   def x=(_arg0); end
 
   private
 
+  # @return [Boolean]
   def credentials_available_for_current_env?; end
+
   def default_credentials_content_path; end
   def default_credentials_key_path; end
 end
 
 class Rails::Application::Configuration::Custom
+  # @return [Custom] a new instance of Custom
   def initialize; end
 
   def method_missing(method, *args); end
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(symbol, *_arg1); end
 end
 
 class Rails::Application::DefaultMiddlewareStack
+  # @return [DefaultMiddlewareStack] a new instance of DefaultMiddlewareStack
   def initialize(app, config, paths); end
 
   # Returns the value of attribute app.
@@ -789,6 +903,7 @@ module Rails::Application::Finisher::InterlockHook
 end
 
 class Rails::Application::Finisher::MutexHook
+  # @return [MutexHook] a new instance of MutexHook
   def initialize(mutex = T.unsafe(nil)); end
 
   def complete(_state); end
@@ -798,16 +913,19 @@ end
 Rails::Application::INITIAL_VARIABLES = T.let(T.unsafe(nil), Array)
 
 class Rails::Application::RoutesReloader
+  # @return [RoutesReloader] a new instance of RoutesReloader
   def initialize; end
 
   # Returns the value of attribute eager_load.
   def eager_load; end
 
   # Sets the attribute eager_load
+  #
+  # @param value the value to set the attribute eager_load to.
   def eager_load=(_arg0); end
 
-  def execute(*_arg0, **_arg1, &_arg2); end
-  def execute_if_updated(*_arg0, **_arg1, &_arg2); end
+  def execute(*_arg0, &_arg1); end
+  def execute_if_updated(*_arg0, &_arg1); end
 
   # Returns the value of attribute external_routes.
   def external_routes; end
@@ -820,7 +938,7 @@ class Rails::Application::RoutesReloader
   # Returns the value of attribute route_sets.
   def route_sets; end
 
-  def updated?(*_arg0, **_arg1, &_arg2); end
+  def updated?(*_arg0, &_arg1); end
 
   private
 
@@ -836,7 +954,10 @@ class Rails::ApplicationController < ::ActionController::Base
 
   def _layout(lookup_context, formats); end
   def disable_content_security_policy_nonce!; end
+
+  # @return [Boolean]
   def local_request?; end
+
   def require_local!; end
 
   class << self
@@ -856,6 +977,8 @@ module Rails::Autoloaders
     def logger=(logger); end
     def main; end
     def once; end
+
+    # @return [Boolean]
     def zeitwerk_enabled?; end
   end
 end
@@ -873,11 +996,11 @@ module Rails::Command
     # Command names must end with "_command.rb". This is required because Rails
     # looks in load paths and loads the command just before it's going to be used.
     #
-    # find_by_namespace :webrat, :rails, :integration
+    #   find_by_namespace :webrat, :rails, :integration
     #
     # Will search for the following commands:
     #
-    # "rails:webrat", "webrat:integration", "webrat"
+    #   "rails:webrat", "webrat:integration", "webrat"
     #
     # Notice that "rails:commands:webrat" could be loaded as well, what
     # Rails looks for is the first and last parts of the namespace.
@@ -926,12 +1049,12 @@ class Rails::Command::Base < ::Thor
 
     # Sets the base_name taking into account the current class namespace.
     #
-    # Rails::Command::TestCommand.base_name # => 'rails'
+    #   Rails::Command::TestCommand.base_name # => 'rails'
     def base_name; end
 
     # Return command name without namespaces.
     #
-    # Rails::Command::TestCommand.command_name # => 'test'
+    #   Rails::Command::TestCommand.command_name # => 'test'
     def command_name; end
 
     # Default file root to place extra files a command might need, placed
@@ -946,9 +1069,13 @@ class Rails::Command::Base < ::Thor
     def desc(usage = T.unsafe(nil), description = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # Returns true when the app is a Rails engine.
+    #
+    # @return [Boolean]
     def engine?; end
 
     def executable; end
+
+    # @return [Boolean]
     def exit_on_failure?; end
 
     # Convenience method to hide this command from the available ones when
@@ -1015,6 +1142,7 @@ end
 module Rails::Configuration; end
 
 class Rails::Configuration::Generators
+  # @return [Generators] a new instance of Generators
   def initialize; end
 
   def after_generate(&block); end
@@ -1026,24 +1154,32 @@ class Rails::Configuration::Generators
   def aliases; end
 
   # Sets the attribute aliases
+  #
+  # @param value the value to set the attribute aliases to.
   def aliases=(_arg0); end
 
   # Returns the value of attribute api_only.
   def api_only; end
 
   # Sets the attribute api_only
+  #
+  # @param value the value to set the attribute api_only to.
   def api_only=(_arg0); end
 
   # Returns the value of attribute colorize_logging.
   def colorize_logging; end
 
   # Sets the attribute colorize_logging
+  #
+  # @param value the value to set the attribute colorize_logging to.
   def colorize_logging=(_arg0); end
 
   # Returns the value of attribute fallbacks.
   def fallbacks; end
 
   # Sets the attribute fallbacks
+  #
+  # @param value the value to set the attribute fallbacks to.
   def fallbacks=(_arg0); end
 
   # Returns the value of attribute hidden_namespaces.
@@ -1056,12 +1192,16 @@ class Rails::Configuration::Generators
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   # Returns the value of attribute templates.
   def templates; end
 
   # Sets the attribute templates
+  #
+  # @param value the value to set the attribute templates to.
   def templates=(_arg0); end
 
   private
@@ -1077,48 +1217,49 @@ end
 #
 # You can add your own middlewares by using the +config.middleware.use+ method:
 #
-# config.middleware.use Magical::Unicorns
+#     config.middleware.use Magical::Unicorns
 #
 # This will put the <tt>Magical::Unicorns</tt> middleware on the end of the stack.
 # You can use +insert_before+ if you wish to add a middleware before another:
 #
-# config.middleware.insert_before Rack::Head, Magical::Unicorns
+#     config.middleware.insert_before Rack::Head, Magical::Unicorns
 #
 # There's also +insert_after+ which will insert a middleware after another:
 #
-# config.middleware.insert_after Rack::Head, Magical::Unicorns
+#     config.middleware.insert_after Rack::Head, Magical::Unicorns
 #
 # Middlewares can also be completely swapped out and replaced with others:
 #
-# config.middleware.swap ActionDispatch::Flash, Magical::Unicorns
+#     config.middleware.swap ActionDispatch::Flash, Magical::Unicorns
 #
 # Middlewares can be moved from one place to another:
 #
-# config.middleware.move_before ActionDispatch::Flash, Magical::Unicorns
+#     config.middleware.move_before ActionDispatch::Flash, Magical::Unicorns
 #
 # This will move the <tt>Magical::Unicorns</tt> middleware before the
 # <tt>ActionDispatch::Flash</tt>. You can also move it after:
 #
-# config.middleware.move_after ActionDispatch::Flash, Magical::Unicorns
+#     config.middleware.move_after ActionDispatch::Flash, Magical::Unicorns
 #
 # And finally they can also be removed from the stack completely:
 #
-# config.middleware.delete ActionDispatch::Flash
+#     config.middleware.delete ActionDispatch::Flash
 class Rails::Configuration::MiddlewareStackProxy
+  # @return [MiddlewareStackProxy] a new instance of MiddlewareStackProxy
   def initialize(operations = T.unsafe(nil), delete_operations = T.unsafe(nil)); end
 
   def +(other); end
   def delete(*args, &block); end
-  def insert(*args, **_arg1, &block); end
-  def insert_after(*args, **_arg1, &block); end
-  def insert_before(*args, **_arg1, &block); end
+  def insert(*args, &block); end
+  def insert_after(*args, &block); end
+  def insert_before(*args, &block); end
   def merge_into(other); end
   def move(*args, &block); end
   def move_after(*args, &block); end
   def move_before(*args, &block); end
-  def swap(*args, **_arg1, &block); end
-  def unshift(*args, **_arg1, &block); end
-  def use(*args, **_arg1, &block); end
+  def swap(*args, &block); end
+  def unshift(*args, &block); end
+  def use(*args, &block); end
 
   protected
 
@@ -1144,11 +1285,11 @@ end
 # for it somewhere inside your plugin's +lib+ folder (similar to how we
 # specify a +Railtie+):
 #
-# # lib/my_engine.rb
-# module MyEngine
-# class Engine < Rails::Engine
-# end
-# end
+#   # lib/my_engine.rb
+#   module MyEngine
+#     class Engine < Rails::Engine
+#     end
+#   end
 #
 # Then ensure that this file is loaded at the top of your <tt>config/application.rb</tt>
 # (or in your +Gemfile+) and it will automatically load models, controllers and helpers
@@ -1162,34 +1303,34 @@ end
 # Additionally, each engine can access <tt>autoload_paths</tt>, <tt>eager_load_paths</tt> and
 # <tt>autoload_once_paths</tt> settings which are scoped to that engine.
 #
-# class MyEngine < Rails::Engine
-# # Add a load path for this specific Engine
-# config.autoload_paths << File.expand_path("lib/some/path", __dir__)
+#   class MyEngine < Rails::Engine
+#     # Add a load path for this specific Engine
+#     config.autoload_paths << File.expand_path("lib/some/path", __dir__)
 #
-# initializer "my_engine.add_middleware" do |app|
-# app.middleware.use MyEngine::Middleware
-# end
-# end
+#     initializer "my_engine.add_middleware" do |app|
+#       app.middleware.use MyEngine::Middleware
+#     end
+#   end
 #
 # == Generators
 #
 # You can set up generators for engines with <tt>config.generators</tt> method:
 #
-# class MyEngine < Rails::Engine
-# config.generators do |g|
-# g.orm             :active_record
-# g.template_engine :erb
-# g.test_framework  :test_unit
-# end
-# end
+#   class MyEngine < Rails::Engine
+#     config.generators do |g|
+#       g.orm             :active_record
+#       g.template_engine :erb
+#       g.test_framework  :test_unit
+#     end
+#   end
 #
 # You can also set generators for an application by using <tt>config.app_generators</tt>:
 #
-# class MyEngine < Rails::Engine
-# # note that you can also pass block to app_generators in the same way you
-# # can pass it to generators method
-# config.app_generators.orm :datamapper
-# end
+#   class MyEngine < Rails::Engine
+#     # note that you can also pass block to app_generators in the same way you
+#     # can pass it to generators method
+#     config.app_generators.orm :datamapper
+#   end
 #
 # == Paths
 #
@@ -1200,32 +1341,32 @@ end
 # For example, let's suppose you want to place your controllers in <tt>lib/controllers</tt>.
 # You can set that as an option:
 #
-# class MyEngine < Rails::Engine
-# paths["app/controllers"] = "lib/controllers"
-# end
+#   class MyEngine < Rails::Engine
+#     paths["app/controllers"] = "lib/controllers"
+#   end
 #
 # You can also have your controllers loaded from both <tt>app/controllers</tt> and
 # <tt>lib/controllers</tt>:
 #
-# class MyEngine < Rails::Engine
-# paths["app/controllers"] << "lib/controllers"
-# end
+#   class MyEngine < Rails::Engine
+#     paths["app/controllers"] << "lib/controllers"
+#   end
 #
 # The available paths in an engine are:
 #
-# class MyEngine < Rails::Engine
-# paths["app"]                 # => ["app"]
-# paths["app/controllers"]     # => ["app/controllers"]
-# paths["app/helpers"]         # => ["app/helpers"]
-# paths["app/models"]          # => ["app/models"]
-# paths["app/views"]           # => ["app/views"]
-# paths["lib"]                 # => ["lib"]
-# paths["lib/tasks"]           # => ["lib/tasks"]
-# paths["config"]              # => ["config"]
-# paths["config/initializers"] # => ["config/initializers"]
-# paths["config/locales"]      # => ["config/locales"]
-# paths["config/routes.rb"]    # => ["config/routes.rb"]
-# end
+#   class MyEngine < Rails::Engine
+#     paths["app"]                 # => ["app"]
+#     paths["app/controllers"]     # => ["app/controllers"]
+#     paths["app/helpers"]         # => ["app/helpers"]
+#     paths["app/models"]          # => ["app/models"]
+#     paths["app/views"]           # => ["app/views"]
+#     paths["lib"]                 # => ["lib"]
+#     paths["lib/tasks"]           # => ["lib/tasks"]
+#     paths["config"]              # => ["config"]
+#     paths["config/initializers"] # => ["config/initializers"]
+#     paths["config/locales"]      # => ["config/locales"]
+#     paths["config/routes.rb"]    # => ["config/routes.rb"]
+#   end
 #
 # The <tt>Application</tt> class adds a couple more paths to this set. And as in your
 # <tt>Application</tt>, all folders under +app+ are automatically added to the load path.
@@ -1238,58 +1379,58 @@ end
 #
 # To do that, use the +endpoint+ method:
 #
-# module MyEngine
-# class Engine < Rails::Engine
-# endpoint MyRackApplication
-# end
-# end
+#   module MyEngine
+#     class Engine < Rails::Engine
+#       endpoint MyRackApplication
+#     end
+#   end
 #
 # Now you can mount your engine in application's routes:
 #
-# Rails.application.routes.draw do
-# mount MyEngine::Engine => "/engine"
-# end
+#   Rails.application.routes.draw do
+#     mount MyEngine::Engine => "/engine"
+#   end
 #
 # == Middleware stack
 #
 # As an engine can now be a Rack endpoint, it can also have a middleware
 # stack. The usage is exactly the same as in <tt>Application</tt>:
 #
-# module MyEngine
-# class Engine < Rails::Engine
-# middleware.use SomeMiddleware
-# end
-# end
+#   module MyEngine
+#     class Engine < Rails::Engine
+#       middleware.use SomeMiddleware
+#     end
+#   end
 #
 # == Routes
 #
 # If you don't specify an endpoint, routes will be used as the default
 # endpoint. You can use them just like you use an application's routes:
 #
-# # ENGINE/config/routes.rb
-# MyEngine::Engine.routes.draw do
-# get "/" => "posts#index"
-# end
+#   # ENGINE/config/routes.rb
+#   MyEngine::Engine.routes.draw do
+#     get "/" => "posts#index"
+#   end
 #
 # == Mount priority
 #
 # Note that now there can be more than one router in your application, and it's better to avoid
 # passing requests through many routers. Consider this situation:
 #
-# Rails.application.routes.draw do
-# mount MyEngine::Engine => "/blog"
-# get "/blog/omg" => "main#omg"
-# end
+#   Rails.application.routes.draw do
+#     mount MyEngine::Engine => "/blog"
+#     get "/blog/omg" => "main#omg"
+#   end
 #
 # +MyEngine+ is mounted at <tt>/blog</tt>, and <tt>/blog/omg</tt> points to application's
 # controller. In such a situation, requests to <tt>/blog/omg</tt> will go through +MyEngine+,
 # and if there is no such route in +Engine+'s routes, it will be dispatched to <tt>main#omg</tt>.
 # It's much better to swap that:
 #
-# Rails.application.routes.draw do
-# get "/blog/omg" => "main#omg"
-# mount MyEngine::Engine => "/blog"
-# end
+#   Rails.application.routes.draw do
+#     get "/blog/omg" => "main#omg"
+#     mount MyEngine::Engine => "/blog"
+#   end
 #
 # Now, +Engine+ will get only requests that were not handled by +Application+.
 #
@@ -1298,17 +1439,17 @@ end
 # There are some places where an Engine's name is used:
 #
 # * routes: when you mount an Engine with <tt>mount(MyEngine::Engine => '/my_engine')</tt>,
-# it's used as default <tt>:as</tt> option
+#   it's used as default <tt>:as</tt> option
 # * rake task for installing migrations <tt>my_engine:install:migrations</tt>
 #
 # Engine name is set by default based on class name. For <tt>MyEngine::Engine</tt> it will be
 # <tt>my_engine_engine</tt>. You can change it manually using the <tt>engine_name</tt> method:
 #
-# module MyEngine
-# class Engine < Rails::Engine
-# engine_name "my_engine"
-# end
-# end
+#   module MyEngine
+#     class Engine < Rails::Engine
+#       engine_name "my_engine"
+#     end
+#   end
 #
 # == Isolated Engine
 #
@@ -1320,21 +1461,21 @@ end
 # has its own router. To do that, you simply need to call +isolate_namespace+. This method requires
 # you to pass a module where all your controllers, helpers and models should be nested to:
 #
-# module MyEngine
-# class Engine < Rails::Engine
-# isolate_namespace MyEngine
-# end
-# end
+#   module MyEngine
+#     class Engine < Rails::Engine
+#       isolate_namespace MyEngine
+#     end
+#   end
 #
 # With such an engine, everything that is inside the +MyEngine+ module will be isolated from
 # the application.
 #
 # Consider this controller:
 #
-# module MyEngine
-# class FooController < ActionController::Base
-# end
-# end
+#   module MyEngine
+#     class FooController < ActionController::Base
+#     end
+#   end
 #
 # If the +MyEngine+ engine is marked as isolated, +FooController+ only has
 # access to helpers from +MyEngine+, and <tt>url_helpers</tt> from
@@ -1346,9 +1487,9 @@ end
 # automatically applied, so you don't need to specify it explicitly in your
 # routes:
 #
-# MyEngine::Engine.routes.draw do
-# resources :articles
-# end
+#   MyEngine::Engine.routes.draw do
+#     resources :articles
+#   end
 #
 # If +MyEngine+ is isolated, the routes above will point to
 # <tt>MyEngine::ArticlesController</tt>. You also don't need to use longer
@@ -1362,12 +1503,12 @@ end
 # names with the prefix "namespace". In an isolated engine, the prefix will
 # be omitted in URL helpers and form fields, for convenience.
 #
-# polymorphic_url(MyEngine::Article.new)
-# # => "articles_path" # not "my_engine_articles_path"
+#   polymorphic_url(MyEngine::Article.new)
+#   # => "articles_path" # not "my_engine_articles_path"
 #
-# form_for(MyEngine::Article.new) do
-# text_field :title # => <input type="text" name="article[title]" id="article_title" />
-# end
+#   form_for(MyEngine::Article.new) do
+#     text_field :title # => <input type="text" name="article[title]" id="article_title" />
+#   end
 #
 # Additionally, an isolated engine will set its own name according to its
 # namespace, so <tt>MyEngine::Engine.engine_name</tt> will return
@@ -1381,29 +1522,29 @@ end
 # <tt>url_helpers</tt> inside +Application+. When you mount an engine in an application's routes, a special helper is
 # created to allow you to do that. Consider such a scenario:
 #
-# # config/routes.rb
-# Rails.application.routes.draw do
-# mount MyEngine::Engine => "/my_engine", as: "my_engine"
-# get "/foo" => "foo#index"
-# end
+#   # config/routes.rb
+#   Rails.application.routes.draw do
+#     mount MyEngine::Engine => "/my_engine", as: "my_engine"
+#     get "/foo" => "foo#index"
+#   end
 #
 # Now, you can use the <tt>my_engine</tt> helper inside your application:
 #
-# class FooController < ApplicationController
-# def index
-# my_engine.root_url # => /my_engine/
-# end
-# end
+#   class FooController < ApplicationController
+#     def index
+#       my_engine.root_url # => /my_engine/
+#     end
+#   end
 #
 # There is also a <tt>main_app</tt> helper that gives you access to application's routes inside Engine:
 #
-# module MyEngine
-# class BarController
-# def index
-# main_app.foo_path # => /foo
-# end
-# end
-# end
+#   module MyEngine
+#     class BarController
+#       def index
+#         main_app.foo_path # => /foo
+#       end
+#     end
+#   end
 #
 # Note that the <tt>:as</tt> option given to mount takes the <tt>engine_name</tt> as default, so most of the time
 # you can simply omit it.
@@ -1414,7 +1555,7 @@ end
 # All you need to do is pass the helper as the first element in array with
 # attributes for URL:
 #
-# form_for([my_engine, @user])
+#   form_for([my_engine, @user])
 #
 # This code will use <tt>my_engine.user_path(@user)</tt> to generate the proper route.
 #
@@ -1424,16 +1565,16 @@ end
 # If you want to share just a few specific helpers you can add them to application's
 # helpers in ApplicationController:
 #
-# class ApplicationController < ActionController::Base
-# helper MyEngine::SharedEngineHelper
-# end
+#   class ApplicationController < ActionController::Base
+#     helper MyEngine::SharedEngineHelper
+#   end
 #
 # If you want to include all of the engine's helpers, you can use the #helper method on an engine's
 # instance:
 #
-# class ApplicationController < ActionController::Base
-# helper MyEngine::Engine.helpers
-# end
+#   class ApplicationController < ActionController::Base
+#     helper MyEngine::Engine.helpers
+#   end
 #
 # It will include all of the helpers from engine's directory. Take into account this does
 # not include helpers defined in controllers with helper_method or other similar solutions,
@@ -1447,7 +1588,7 @@ end
 # To use engine's migrations in application you can use the rake task below, which copies them to
 # application's dir:
 #
-# rake ENGINE_NAME:install:migrations
+#   rake ENGINE_NAME:install:migrations
 #
 # Note that some of the migrations may be skipped if a migration with the same name already exists
 # in application. In such a situation you must decide whether to leave that migration or rename the
@@ -1456,7 +1597,7 @@ end
 # If your engine has migrations, you may also want to prepare data for the database in
 # the <tt>db/seeds.rb</tt> file. You can load that data using the <tt>load_seed</tt> method, e.g.
 #
-# MyEngine::Engine.load_seed
+#   MyEngine::Engine.load_seed
 #
 # == Loading priority
 #
@@ -1464,12 +1605,13 @@ end
 # It will affect the priority of loading views, helpers, assets, and all the other files
 # related to engine or application.
 #
-# # load Blog::Engine with highest priority, followed by application and other railties
-# config.railties_order = [Blog::Engine, :main_app, :all]
+#   # load Blog::Engine with highest priority, followed by application and other railties
+#   config.railties_order = [Blog::Engine, :main_app, :all]
 class Rails::Engine < ::Rails::Railtie
   include ::ActiveSupport::Callbacks
   extend ::ActiveSupport::Callbacks::ClassMethods
 
+  # @return [Engine] a new instance of Engine
   def initialize; end
 
   def __callbacks; end
@@ -1492,7 +1634,7 @@ class Rails::Engine < ::Rails::Railtie
   # defaults to an ActionDispatch::Routing::RouteSet.
   def endpoint; end
 
-  def engine_name(*_arg0, **_arg1, &_arg2); end
+  def engine_name(*_arg0, &_arg1); end
 
   # Defines additional Rack env configuration that is added on each call.
   def env_config; end
@@ -1503,7 +1645,7 @@ class Rails::Engine < ::Rails::Railtie
   # Returns all registered helpers paths.
   def helpers_paths; end
 
-  def isolated?(*_arg0, **_arg1, &_arg2); end
+  def isolated?(*_arg0, &_arg1); end
 
   # Load console and invoke the registered hooks.
   # Check <tt>Rails::Railtie.console</tt> for more info.
@@ -1531,15 +1673,16 @@ class Rails::Engine < ::Rails::Railtie
   # Check <tt>Rails::Railtie.rake_tasks</tt> for more info.
   def load_tasks(app = T.unsafe(nil)); end
 
-  def middleware(*_arg0, **_arg1, &_arg2); end
-  def paths(*_arg0, **_arg1, &_arg2); end
+  def middleware(*_arg0, &_arg1); end
+  def paths(*_arg0, &_arg1); end
   def railties; end
-  def root(*_arg0, **_arg1, &_arg2); end
+  def root(*_arg0, &_arg1); end
 
   # Defines the routes for this engine. If a block is given to
   # routes, it is appended to the engine.
   def routes(&block); end
 
+  # @return [Boolean]
   def routes?; end
 
   protected
@@ -1554,7 +1697,10 @@ class Rails::Engine < ::Rails::Railtie
   def build_middleware; end
   def build_request(env); end
   def default_middleware_stack; end
+
+  # @return [Boolean]
   def has_migrations?; end
+
   def load_config_initializer(initializer); end
 
   class << self
@@ -1568,9 +1714,11 @@ class Rails::Engine < ::Rails::Railtie
     def called_from; end
 
     # Sets the attribute called_from
+    #
+    # @param value the value to set the attribute called_from to.
     def called_from=(_arg0); end
 
-    def eager_load!(*_arg0, **_arg1, &_arg2); end
+    def eager_load!(*_arg0, &_arg1); end
     def endpoint(endpoint = T.unsafe(nil)); end
     def engine_name(name = T.unsafe(nil)); end
 
@@ -1579,13 +1727,18 @@ class Rails::Engine < ::Rails::Railtie
 
     def find_root(from); end
     def find_root_with_flag(flag, root_path, default = T.unsafe(nil)); end
+
+    # @private
     def inherited(base); end
+
     def isolate_namespace(mod); end
 
     # Returns the value of attribute isolated.
     def isolated; end
 
     # Sets the attribute isolated
+    #
+    # @param value the value to set the attribute isolated to.
     def isolated=(_arg0); end
 
     # Returns the value of attribute isolated.
@@ -1594,46 +1747,59 @@ class Rails::Engine < ::Rails::Railtie
 end
 
 class Rails::Engine::Configuration < ::Rails::Railtie::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize(root = T.unsafe(nil)); end
 
   def autoload_once_paths; end
 
   # Sets the attribute autoload_once_paths
+  #
+  # @param value the value to set the attribute autoload_once_paths to.
   def autoload_once_paths=(_arg0); end
 
   def autoload_paths; end
 
   # Sets the attribute autoload_paths
+  #
+  # @param value the value to set the attribute autoload_paths to.
   def autoload_paths=(_arg0); end
 
   def eager_load_paths; end
 
   # Sets the attribute eager_load_paths
+  #
+  # @param value the value to set the attribute eager_load_paths to.
   def eager_load_paths=(_arg0); end
 
   # Holds generators configuration:
   #
-  # config.generators do |g|
-  # g.orm             :data_mapper, migration: true
-  # g.template_engine :haml
-  # g.test_framework  :rspec
-  # end
+  #   config.generators do |g|
+  #     g.orm             :data_mapper, migration: true
+  #     g.template_engine :haml
+  #     g.test_framework  :rspec
+  #   end
   #
   # If you want to disable color in console, do:
   #
-  # config.generators.colorize_logging = false
+  #   config.generators.colorize_logging = false
+  #
+  # @yield [@generators]
   def generators; end
 
   # Returns the value of attribute javascript_path.
   def javascript_path; end
 
   # Sets the attribute javascript_path
+  #
+  # @param value the value to set the attribute javascript_path to.
   def javascript_path=(_arg0); end
 
   # Returns the value of attribute middleware.
   def middleware; end
 
   # Sets the attribute middleware
+  #
+  # @param value the value to set the attribute middleware to.
   def middleware=(_arg0); end
 
   def paths; end
@@ -1647,6 +1813,7 @@ end
 class Rails::Engine::Railties
   include ::Enumerable
 
+  # @return [Railties] a new instance of Railties
   def initialize; end
 
   def -(others); end
@@ -1688,7 +1855,7 @@ module Rails::Generators
     # Shoulda then can tell generators to search for test_unit generators when
     # some of them are not available by adding a fallback:
     #
-    # Rails::Generators.fallbacks[:shoulda] = :test_unit
+    #   Rails::Generators.fallbacks[:shoulda] = :test_unit
     def fallbacks; end
 
     # Rails finds namespaces similar to Thor, it only adds one rule:
@@ -1696,11 +1863,11 @@ module Rails::Generators
     # Generators names must end with "_generator.rb". This is required because Rails
     # looks in load paths and loads the generator just before it's going to be used.
     #
-    # find_by_namespace :webrat, :rails, :integration
+    #   find_by_namespace :webrat, :rails, :integration
     #
     # Will search for the following generators:
     #
-    # "rails:webrat", "webrat:integration", "webrat"
+    #   "rails:webrat", "webrat:integration", "webrat"
     #
     # Notice that "rails:generators:webrat" could be loaded as well, what
     # Rails looks for is the first and last parts of the namespace.
@@ -1753,11 +1920,11 @@ module Rails::Generators::Actions
   #
   # If block is given, gem entries in block are wrapped into the source group.
   #
-  # add_source "http://gems.github.com/"
+  #   add_source "http://gems.github.com/"
   #
-  # add_source "http://gems.github.com/" do
-  # gem "rspec-rails"
-  # end
+  #   add_source "http://gems.github.com/" do
+  #     gem "rspec-rails"
+  #   end
   def add_source(source, options = T.unsafe(nil), &block); end
 
   # Adds a line inside the Application class for <tt>config/application.rb</tt>.
@@ -1765,13 +1932,13 @@ module Rails::Generators::Actions
   # If options <tt>:env</tt> is specified, the line is appended to the corresponding
   # file in <tt>config/environments</tt>.
   #
-  # environment do
-  # "config.asset_host = 'cdn.provider.com'"
-  # end
+  #   environment do
+  #     "config.asset_host = 'cdn.provider.com'"
+  #   end
   #
-  # environment(nil, env: "development") do
-  # "config.asset_host = 'localhost:3000'"
-  # end
+  #   environment(nil, env: "development") do
+  #     "config.asset_host = 'localhost:3000'"
+  #   end
   def application(data = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Adds a line inside the Application class for <tt>config/application.rb</tt>.
@@ -1779,124 +1946,124 @@ module Rails::Generators::Actions
   # If options <tt>:env</tt> is specified, the line is appended to the corresponding
   # file in <tt>config/environments</tt>.
   #
-  # environment do
-  # "config.asset_host = 'cdn.provider.com'"
-  # end
+  #   environment do
+  #     "config.asset_host = 'cdn.provider.com'"
+  #   end
   #
-  # environment(nil, env: "development") do
-  # "config.asset_host = 'localhost:3000'"
-  # end
+  #   environment(nil, env: "development") do
+  #     "config.asset_host = 'localhost:3000'"
+  #   end
   def environment(data = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Adds an entry into +Gemfile+ for the supplied gem.
   #
-  # gem "rspec", group: :test
-  # gem "technoweenie-restful-authentication", lib: "restful-authentication", source: "http://gems.github.com/"
-  # gem "rails", "3.0", git: "https://github.com/rails/rails"
-  # gem "RedCloth", ">= 4.1.0", "< 4.2.0"
+  #   gem "rspec", group: :test
+  #   gem "technoweenie-restful-authentication", lib: "restful-authentication", source: "http://gems.github.com/"
+  #   gem "rails", "3.0", git: "https://github.com/rails/rails"
+  #   gem "RedCloth", ">= 4.1.0", "< 4.2.0"
   def gem(*args); end
 
   # Wraps gem entries inside a group.
   #
-  # gem_group :development, :test do
-  # gem "rspec-rails"
-  # end
+  #   gem_group :development, :test do
+  #     gem "rspec-rails"
+  #   end
   def gem_group(*names, &block); end
 
   # Generate something using a generator from Rails or a plugin.
   # The second parameter is the argument string that is passed to
   # the generator or an Array that is joined.
   #
-  # generate(:authenticated, "user session")
+  #   generate(:authenticated, "user session")
   def generate(what, *args); end
 
   # Run a command in git.
   #
-  # git :init
-  # git add: "this.file that.rb"
-  # git add: "onefile.rb", rm: "badfile.cxx"
+  #   git :init
+  #   git add: "this.file that.rb"
+  #   git add: "onefile.rb", rm: "badfile.cxx"
   def git(commands = T.unsafe(nil)); end
 
   def github(repo, options = T.unsafe(nil), &block); end
 
   # Create a new initializer with the provided code (either in a block or a string).
   #
-  # initializer("globals.rb") do
-  # data = ""
+  #   initializer("globals.rb") do
+  #     data = ""
   #
-  # ['MY_WORK', 'ADMINS', 'BEST_COMPANY_EVAR'].each do |const|
-  # data << "#{const} = :entp\n"
-  # end
+  #     ['MY_WORK', 'ADMINS', 'BEST_COMPANY_EVAR'].each do |const|
+  #       data << "#{const} = :entp\n"
+  #     end
   #
-  # data
-  # end
+  #     data
+  #   end
   #
-  # initializer("api.rb", "API_KEY = '123456'")
+  #   initializer("api.rb", "API_KEY = '123456'")
   def initializer(filename, data = T.unsafe(nil)); end
 
   # Create a new file in the <tt>lib/</tt> directory. Code can be specified
   # in a block or a data string can be given.
   #
-  # lib("crypto.rb") do
-  # "crypted_special_value = '#{rand}--#{Time.now}--#{rand(1337)}--'"
-  # end
+  #   lib("crypto.rb") do
+  #     "crypted_special_value = '#{rand}--#{Time.now}--#{rand(1337)}--'"
+  #   end
   #
-  # lib("foreign.rb", "# Foreign code is fun")
+  #   lib("foreign.rb", "# Foreign code is fun")
   def lib(filename, data = T.unsafe(nil)); end
 
   # Runs the supplied rake task (invoked with 'rails ...')
   #
-  # rails_command("db:migrate")
-  # rails_command("db:migrate", env: "production")
-  # rails_command("gems:install", sudo: true)
-  # rails_command("gems:install", capture: true)
+  #   rails_command("db:migrate")
+  #   rails_command("db:migrate", env: "production")
+  #   rails_command("gems:install", sudo: true)
+  #   rails_command("gems:install", capture: true)
   def rails_command(command, options = T.unsafe(nil)); end
 
   # Runs the supplied rake task (invoked with 'rake ...')
   #
-  # rake("db:migrate")
-  # rake("db:migrate", env: "production")
-  # rake("gems:install", sudo: true)
-  # rake("gems:install", capture: true)
+  #   rake("db:migrate")
+  #   rake("db:migrate", env: "production")
+  #   rake("gems:install", sudo: true)
+  #   rake("gems:install", capture: true)
   def rake(command, options = T.unsafe(nil)); end
 
   # Create a new +Rakefile+ with the provided code (either in a block or a string).
   #
-  # rakefile("bootstrap.rake") do
-  # project = ask("What is the UNIX name of your project?")
+  #   rakefile("bootstrap.rake") do
+  #     project = ask("What is the UNIX name of your project?")
   #
-  # <<-TASK
-  # namespace :#{project} do
-  # task :bootstrap do
-  # puts "I like boots!"
-  # end
-  # end
-  # TASK
-  # end
+  #     <<-TASK
+  #       namespace :#{project} do
+  #         task :bootstrap do
+  #           puts "I like boots!"
+  #         end
+  #       end
+  #     TASK
+  #   end
   #
-  # rakefile('seed.rake', 'puts "Planting seeds"')
+  #   rakefile('seed.rake', 'puts "Planting seeds"')
   def rakefile(filename, data = T.unsafe(nil)); end
 
   # Reads the given file at the source root and prints it in the console.
   #
-  # readme "README"
+  #   readme "README"
   def readme(path); end
 
   # Make an entry in Rails routing file <tt>config/routes.rb</tt>
   #
-  # route "root 'welcome#index'"
-  # route "root 'admin#index'", namespace: :admin
+  #   route "root 'welcome#index'"
+  #   route "root 'admin#index'", namespace: :admin
   def route(routing_code, namespace: T.unsafe(nil)); end
 
   # Create a new file in the <tt>vendor/</tt> directory. Code can be specified
   # in a block or a data string can be given.
   #
-  # vendor("sekrit.rb") do
-  # sekrit_salt = "#{Time.now}--#{3.years.ago}--#{rand}--"
-  # "salt = '#{sekrit_salt}'"
-  # end
+  #   vendor("sekrit.rb") do
+  #     sekrit_salt = "#{Time.now}--#{3.years.ago}--#{rand}--"
+  #     "salt = '#{sekrit_salt}'"
+  #   end
   #
-  # vendor("foreign.rb", "# Foreign code is fun")
+  #   vendor("foreign.rb", "# Foreign code is fun")
   def vendor(filename, data = T.unsafe(nil)); end
 
   private
@@ -1933,7 +2100,10 @@ end
 class Rails::Generators::Actions::CreateMigration < ::Thor::Actions::CreateFile
   def existing_migration; end
   def exists?; end
+
+  # @return [Boolean]
   def identical?; end
+
   def invoke!; end
   def migration_dir; end
   def migration_file_name; end
@@ -1954,21 +2124,22 @@ end
 #
 # For example:
 #
-# ActiveRecord::Generators::ActiveModel.find(Foo, "params[:id]")
-# # => "Foo.find(params[:id])"
+#   ActiveRecord::Generators::ActiveModel.find(Foo, "params[:id]")
+#   # => "Foo.find(params[:id])"
 #
-# DataMapper::Generators::ActiveModel.find(Foo, "params[:id]")
-# # => "Foo.get(params[:id])"
+#   DataMapper::Generators::ActiveModel.find(Foo, "params[:id]")
+#   # => "Foo.get(params[:id])"
 #
 # On initialization, the ActiveModel accepts the instance name that will
 # receive the calls:
 #
-# builder = ActiveRecord::Generators::ActiveModel.new "@foo"
-# builder.save # => "@foo.save"
+#   builder = ActiveRecord::Generators::ActiveModel.new "@foo"
+#   builder.save # => "@foo.save"
 #
 # The only exception in ActiveModel for ActiveRecord is the use of self.build
 # instead of self.new.
 class Rails::Generators::ActiveModel
+  # @return [ActiveModel] a new instance of ActiveModel
   def initialize(name); end
 
   # DELETE destroy
@@ -2007,6 +2178,7 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   include ::Rails::Generators::Database
   include ::Rails::Generators::AppName
 
+  # @return [AppBase] a new instance of AppBase
   def initialize(positional_argv, option_argv, *_arg2); end
 
   def app_path; end
@@ -2016,6 +2188,8 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def rails_template; end
 
   # Sets the attribute rails_template
+  #
+  # @param value the value to set the attribute rails_template to.
   def rails_template=(_arg0); end
 
   def shebang; end
@@ -2028,39 +2202,73 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def build(meth, *args); end
   def builder; end
   def bundle_command(command, env = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def bundle_install?; end
+
   def cable_gemfile_entry; end
   def comment_if(value); end
   def create_root; end
   def database_gemfile_entry; end
+
+  # @return [Boolean]
   def depend_on_bootsnap?; end
+
+  # @return [Boolean]
   def depend_on_listen?; end
+
+  # @return [Boolean]
   def depends_on_system_test?; end
+
   def empty_directory_with_keep_file(destination, config = T.unsafe(nil)); end
   def exec_bundle_command(bundle_command, command, env); end
   def gemfile_entries; end
   def gemfile_entry(name, *args); end
   def generate_bundler_binstub; end
+
+  # @return [Boolean]
   def include_all_railties?; end
+
   def javascript_gemfile_entry; end
   def jbuilder_gemfile_entry; end
   def keep_file(destination); end
+
+  # @return [Boolean]
   def keeps?; end
+
+  # @return [Boolean]
   def os_supports_listen_out_of_the_box?; end
+
   def psych_gemfile_entry; end
   def rails_gemfile_entry; end
   def rails_version_specifier(gem_version = T.unsafe(nil)); end
   def run_bundle; end
   def run_webpack; end
   def set_default_accessors!; end
+
+  # @return [Boolean]
   def skip_action_mailbox?; end
+
+  # @return [Boolean]
   def skip_action_text?; end
+
+  # @return [Boolean]
   def skip_active_storage?; end
+
+  # @return [Boolean]
   def skip_dev_gems?; end
+
+  # @return [Boolean]
   def spring_install?; end
+
+  # @return [Boolean]
   def sqlite3?; end
+
   def web_server_gemfile_entry; end
+
+  # @return [Boolean]
   def webpack_install?; end
+
   def webpacker_gemfile_entry; end
 
   class << self
@@ -2070,9 +2278,12 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
 end
 
 class Rails::Generators::AppBase::GemfileEntry < ::Struct
+  # @return [GemfileEntry] a new instance of GemfileEntry
   def initialize(name, version, comment, options = T.unsafe(nil), commented_out = T.unsafe(nil)); end
 
   # Returns the value of attribute version
+  #
+  # @return [Object] the current value of version
   def version; end
 
   class << self
@@ -2093,6 +2304,8 @@ module Rails::Generators::AppName
   def defined_app_const_base?; end
   def defined_app_name; end
   def original_app_name; end
+
+  # @return [Boolean]
   def valid_const?; end
 end
 
@@ -2120,7 +2333,10 @@ class Rails::Generators::Base < ::Thor::Group
 
   def namespace; end
   def namespace_dirs; end
+
+  # @return [Boolean]
   def namespaced?; end
+
   def namespaced_path; end
   def wrap_with_namespace(content); end
 
@@ -2164,6 +2380,7 @@ class Rails::Generators::Base < ::Thor::Group
     # root otherwise uses a default description.
     def desc(description = T.unsafe(nil)); end
 
+    # @return [Boolean]
     def exit_on_failure?; end
 
     # Removes the namespaces and get the generator name. For example,
@@ -2180,22 +2397,22 @@ class Rails::Generators::Base < ::Thor::Group
     #
     # ==== Examples
     #
-    # module Rails::Generators
-    # class ControllerGenerator < Base
-    # hook_for :test_framework, aliases: "-t"
-    # end
-    # end
+    #   module Rails::Generators
+    #     class ControllerGenerator < Base
+    #       hook_for :test_framework, aliases: "-t"
+    #     end
+    #   end
     #
     # The example above will create a test framework option and will invoke
     # a generator based on the user supplied value.
     #
     # For example, if the user invoke the controller generator as:
     #
-    # bin/rails generate controller Account --test-framework=test_unit
+    #   bin/rails generate controller Account --test-framework=test_unit
     #
     # The controller generator will then try to invoke the following generators:
     #
-    # "rails:test_unit", "test_unit:controller", "test_unit"
+    #   "rails:test_unit", "test_unit:controller", "test_unit"
     #
     # Notice that "rails:generators:test_unit" could be loaded as well, what
     # Rails looks for is the first and last parts of the namespace. This is what
@@ -2211,46 +2428,46 @@ class Rails::Generators::Base < ::Thor::Group
     # Let's suppose you are creating a generator that needs to invoke the
     # controller generator from test unit. Your first attempt is:
     #
-    # class AwesomeGenerator < Rails::Generators::Base
-    # hook_for :test_framework
-    # end
+    #   class AwesomeGenerator < Rails::Generators::Base
+    #     hook_for :test_framework
+    #   end
     #
     # The lookup in this case for test_unit as input is:
     #
-    # "test_unit:awesome", "test_unit"
+    #   "test_unit:awesome", "test_unit"
     #
     # Which is not the desired lookup. You can change it by providing the
     # :as option:
     #
-    # class AwesomeGenerator < Rails::Generators::Base
-    # hook_for :test_framework, as: :controller
-    # end
+    #   class AwesomeGenerator < Rails::Generators::Base
+    #     hook_for :test_framework, as: :controller
+    #   end
     #
     # And now it will look up at:
     #
-    # "test_unit:controller", "test_unit"
+    #   "test_unit:controller", "test_unit"
     #
     # Similarly, if you want it to also look up in the rails namespace, you
     # just need to provide the :in value:
     #
-    # class AwesomeGenerator < Rails::Generators::Base
-    # hook_for :test_framework, in: :rails, as: :controller
-    # end
+    #   class AwesomeGenerator < Rails::Generators::Base
+    #     hook_for :test_framework, in: :rails, as: :controller
+    #   end
     #
     # And the lookup is exactly the same as previously:
     #
-    # "rails:test_unit", "test_unit:controller", "test_unit"
+    #   "rails:test_unit", "test_unit:controller", "test_unit"
     #
     # ==== Switches
     #
     # All hooks come with switches for user interface. If you do not want
     # to use any test framework, you can do:
     #
-    # bin/rails generate controller Account --skip-test-framework
+    #   bin/rails generate controller Account --skip-test-framework
     #
     # Or similarly:
     #
-    # bin/rails generate controller Account --no-test-framework
+    #   bin/rails generate controller Account --no-test-framework
     #
     # ==== Boolean hooks
     #
@@ -2258,15 +2475,15 @@ class Rails::Generators::Base < ::Thor::Group
     # developers might want to have webrat available on controller generator.
     # This can be achieved as:
     #
-    # Rails::Generators::ControllerGenerator.hook_for :webrat, type: :boolean
+    #   Rails::Generators::ControllerGenerator.hook_for :webrat, type: :boolean
     #
     # Then, if you want webrat to be invoked, just supply:
     #
-    # bin/rails generate controller Account --webrat
+    #   bin/rails generate controller Account --webrat
     #
     # The hooks lookup is similar as above:
     #
-    # "rails:generators:webrat", "webrat:generators:controller", "webrat"
+    #   "rails:generators:webrat", "webrat:generators:controller", "webrat"
     #
     # ==== Custom invocations
     #
@@ -2279,9 +2496,9 @@ class Rails::Generators::Base < ::Thor::Group
     # name as the resource generator, which is singular. To change this, we
     # can give a block to customize how the controller can be invoked.
     #
-    # hook_for :resource_controller do |instance, controller|
-    # instance.invoke controller, [ instance.name.pluralize ]
-    # end
+    #   hook_for :resource_controller do |instance, controller|
+    #     instance.invoke controller, [ instance.name.pluralize ]
+    #   end
     def hook_for(*names, &block); end
 
     # Keep hooks configuration that are used on prepare_for_invocation.
@@ -2302,7 +2519,7 @@ class Rails::Generators::Base < ::Thor::Group
 
     # Remove a previously added hook.
     #
-    # remove_hook_for :orm
+    #   remove_hook_for :orm
     def remove_hook_for(*names); end
 
     # Returns the source root for this generator using default_source_root as default.
@@ -2331,9 +2548,13 @@ Rails::Generators::Database::JDBC_DATABASES = T.let(T.unsafe(nil), Array)
 class Rails::Generators::Error < ::Thor::Error; end
 
 class Rails::Generators::GeneratedAttribute
+  # @return [GeneratedAttribute] a new instance of GeneratedAttribute
   def initialize(name, type = T.unsafe(nil), index_type = T.unsafe(nil), attr_options = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def attachment?; end
+
+  # @return [Boolean]
   def attachments?; end
 
   # Returns the value of attribute attr_options.
@@ -2342,13 +2563,22 @@ class Rails::Generators::GeneratedAttribute
   def column_name; end
   def default; end
   def field_type; end
+
+  # @return [Boolean]
   def foreign_key?; end
+
+  # @return [Boolean]
   def has_index?; end
+
+  # @return [Boolean]
   def has_uniq_index?; end
+
   def human_name; end
   def index_name; end
 
   # Sets the attribute index_name
+  #
+  # @param value the value to set the attribute index_name to.
   def index_name=(_arg0); end
 
   def inject_index_options; end
@@ -2358,28 +2588,49 @@ class Rails::Generators::GeneratedAttribute
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   def options_for_migration; end
+
+  # @return [Boolean]
   def password_digest?; end
+
   def plural_name; end
+
+  # @return [Boolean]
   def polymorphic?; end
+
+  # @return [Boolean]
   def reference?; end
+
+  # @return [Boolean]
   def required?; end
+
+  # @return [Boolean]
   def rich_text?; end
+
   def singular_name; end
+
+  # @return [Boolean]
   def token?; end
 
   # Returns the value of attribute type.
   def type; end
 
   # Sets the attribute type
+  #
+  # @param value the value to set the attribute type to.
   def type=(_arg0); end
 
+  # @return [Boolean]
   def virtual?; end
 
   class << self
     def parse(column_definition); end
+
+    # @return [Boolean]
     def reference?(type); end
 
     private
@@ -2419,7 +2670,7 @@ module Rails::Generators::Migration
   # The migration version, migration file name, migration class name are
   # available as instance variables in the template to be rendered.
   #
-  # migration_template "migration.rb", "db/migrate/add_foo_to_bar.rb"
+  #   migration_template "migration.rb", "db/migrate/add_foo_to_bar.rb"
   def migration_template(source, destination, config = T.unsafe(nil)); end
 
   def set_migration_assigns!(destination); end
@@ -2427,8 +2678,13 @@ end
 
 module Rails::Generators::Migration::ClassMethods
   def current_migration_number(dirname); end
+
+  # @return [Boolean]
   def migration_exists?(dirname, file_name); end
+
   def migration_lookup_at(dirname); end
+
+  # @raise [NotImplementedError]
   def next_migration_number(dirname); end
 end
 
@@ -2440,8 +2696,13 @@ module Rails::Generators::ModelHelpers
 
   private
 
+  # @return [Boolean]
   def inflection_impossible?(name); end
+
+  # @return [Boolean]
   def irregular_model_name?(name); end
+
+  # @return [Boolean]
   def plural_model_name?(name); end
 
   class << self
@@ -2456,6 +2717,7 @@ Rails::Generators::ModelHelpers::IRREGULAR_MODEL_NAME_WARN_MESSAGE = T.let(T.uns
 Rails::Generators::ModelHelpers::PLURAL_MODEL_NAME_WARN_MESSAGE = T.let(T.unsafe(nil), String)
 
 class Rails::Generators::NamedBase < ::Rails::Generators::Base
+  # @return [NamedBase] a new instance of NamedBase
   def initialize(args, *options); end
 
   # Returns the value of attribute file_name.
@@ -2482,9 +2744,15 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def i18n_scope; end
   def index_helper; end
   def inside_template; end
+
+  # @return [Boolean]
   def inside_template?; end
+
   def model_resource_name(prefix: T.unsafe(nil)); end
+
+  # @return [Boolean]
   def mountable_engine?; end
+
   def namespaced_class_path; end
   def new_helper; end
 
@@ -2495,7 +2763,10 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def plural_name; end
   def plural_route_name; end
   def plural_table_name; end
+
+  # @return [Boolean]
   def pluralize_table_names?; end
+
   def redirect_resource_name; end
   def regular_class_path; end
   def route_url; end
@@ -2508,7 +2779,10 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def singular_route_name; end
   def singular_table_name; end
   def table_name; end
+
+  # @return [Boolean]
   def uncountable?; end
+
   def url_helper_prefix; end
 
   class << self
@@ -2517,7 +2791,7 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
     #
     # ==== Examples
     #
-    # check_class_collision suffix: "Decorator"
+    #   check_class_collision suffix: "Decorator"
     #
     # If the generator is invoked with class name Admin, it will check for
     # the presence of "AdminDecorator".
@@ -2564,19 +2838,19 @@ end
 # This class provides a TestCase for testing generators. To set up, you need
 # just to configure the destination and set which generator is being tested:
 #
-# class AppGeneratorTest < Rails::Generators::TestCase
-# tests AppGenerator
-# destination File.expand_path("../tmp", __dir__)
-# end
+#   class AppGeneratorTest < Rails::Generators::TestCase
+#     tests AppGenerator
+#     destination File.expand_path("../tmp", __dir__)
+#   end
 #
 # If you want to ensure your destination root is clean before running each test,
 # you can set a setup callback:
 #
-# class AppGeneratorTest < Rails::Generators::TestCase
-# tests AppGenerator
-# destination File.expand_path("../tmp", __dir__)
-# setup :prepare_destination
-# end
+#   class AppGeneratorTest < Rails::Generators::TestCase
+#     tests AppGenerator
+#     destination File.expand_path("../tmp", __dir__)
+#     setup :prepare_destination
+#   end
 class Rails::Generators::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::Stream
   include ::Rails::Generators::Testing::Behaviour
@@ -2622,93 +2896,93 @@ module Rails::Generators::Testing::Assertions
   # class methods inside (class << self), only class methods which starts with "self.".
   # When a block is given, it yields the content of the method.
   #
-  # assert_migration "db/migrate/create_products.rb" do |migration|
-  # assert_class_method :up, migration do |up|
-  # assert_match(/create_table/, up)
-  # end
-  # end
+  #   assert_migration "db/migrate/create_products.rb" do |migration|
+  #     assert_class_method :up, migration do |up|
+  #       assert_match(/create_table/, up)
+  #     end
+  #   end
   def assert_class_method(method, content, &block); end
 
   # Asserts a given file exists. You need to supply an absolute path or a path relative
   # to the configured destination:
   #
-  # assert_file "config/environment.rb"
+  #   assert_file "config/environment.rb"
   #
   # You can also give extra arguments. If the argument is a regexp, it will check if the
   # regular expression matches the given file content. If it's a string, it compares the
   # file with the given string:
   #
-  # assert_file "config/environment.rb", /initialize/
+  #   assert_file "config/environment.rb", /initialize/
   #
   # Finally, when a block is given, it yields the file content:
   #
-  # assert_file "app/controllers/products_controller.rb" do |controller|
-  # assert_instance_method :index, controller do |index|
-  # assert_match(/Product\.all/, index)
-  # end
-  # end
+  #   assert_file "app/controllers/products_controller.rb" do |controller|
+  #     assert_instance_method :index, controller do |index|
+  #       assert_match(/Product\.all/, index)
+  #     end
+  #   end
   def assert_directory(relative, *contents); end
 
   # Asserts the given attribute type gets a proper default value:
   #
-  # assert_field_default_value :string, "MyString"
+  #   assert_field_default_value :string, "MyString"
   def assert_field_default_value(attribute_type, value); end
 
   # Asserts the given attribute type gets translated to a field type
   # properly:
   #
-  # assert_field_type :date, :date_select
+  #   assert_field_type :date, :date_select
   def assert_field_type(attribute_type, field_type); end
 
   # Asserts a given file exists. You need to supply an absolute path or a path relative
   # to the configured destination:
   #
-  # assert_file "config/environment.rb"
+  #   assert_file "config/environment.rb"
   #
   # You can also give extra arguments. If the argument is a regexp, it will check if the
   # regular expression matches the given file content. If it's a string, it compares the
   # file with the given string:
   #
-  # assert_file "config/environment.rb", /initialize/
+  #   assert_file "config/environment.rb", /initialize/
   #
   # Finally, when a block is given, it yields the file content:
   #
-  # assert_file "app/controllers/products_controller.rb" do |controller|
-  # assert_instance_method :index, controller do |index|
-  # assert_match(/Product\.all/, index)
-  # end
-  # end
+  #   assert_file "app/controllers/products_controller.rb" do |controller|
+  #     assert_instance_method :index, controller do |index|
+  #       assert_match(/Product\.all/, index)
+  #     end
+  #   end
   def assert_file(relative, *contents); end
 
   # Asserts the given method exists in the given content. When a block is given,
   # it yields the content of the method.
   #
-  # assert_file "app/controllers/products_controller.rb" do |controller|
-  # assert_instance_method :index, controller do |index|
-  # assert_match(/Product\.all/, index)
-  # end
-  # end
+  #   assert_file "app/controllers/products_controller.rb" do |controller|
+  #     assert_instance_method :index, controller do |index|
+  #       assert_match(/Product\.all/, index)
+  #     end
+  #   end
   def assert_instance_method(method, content); end
 
   # Asserts the given method exists in the given content. When a block is given,
   # it yields the content of the method.
   #
-  # assert_file "app/controllers/products_controller.rb" do |controller|
-  # assert_instance_method :index, controller do |index|
-  # assert_match(/Product\.all/, index)
-  # end
-  # end
+  #   assert_file "app/controllers/products_controller.rb" do |controller|
+  #     assert_instance_method :index, controller do |index|
+  #       assert_match(/Product\.all/, index)
+  #     end
+  #   end
   def assert_method(method, content); end
 
   # Asserts a given migration exists. You need to supply an absolute path or a
   # path relative to the configured destination:
   #
-  # assert_migration "db/migrate/create_products.rb"
+  #   assert_migration "db/migrate/create_products.rb"
   #
   # This method manipulates the given path and tries to find any migration which
   # matches the migration name. For example, the call above is converted to:
   #
-  # assert_file "db/migrate/003_create_products.rb"
+  #   assert_file "db/migrate/003_create_products.rb"
   #
   # Consequently, assert_migration accepts the same arguments has assert_file.
   def assert_migration(relative, *contents, &block); end
@@ -2716,19 +2990,19 @@ module Rails::Generators::Testing::Assertions
   # Asserts a given file does not exist. You need to supply an absolute path or a
   # path relative to the configured destination:
   #
-  # assert_no_file "config/random.rb"
+  #   assert_no_file "config/random.rb"
   def assert_no_directory(relative); end
 
   # Asserts a given file does not exist. You need to supply an absolute path or a
   # path relative to the configured destination:
   #
-  # assert_no_file "config/random.rb"
+  #   assert_no_file "config/random.rb"
   def assert_no_file(relative); end
 
   # Asserts a given migration does not exist. You need to supply an absolute path or a
   # path relative to the configured destination:
   #
-  # assert_no_migration "db/migrate/create_products.rb"
+  #   assert_no_migration "db/migrate/create_products.rb"
   def assert_no_migration(relative); end
 end
 
@@ -2743,7 +3017,7 @@ module Rails::Generators::Testing::Behaviour
   # Create a Rails::Generators::GeneratedAttribute by supplying the
   # attribute type and, optionally, the attribute name:
   #
-  # create_generated_attribute(:string, 'name')
+  #   create_generated_attribute(:string, 'name')
   def create_generated_attribute(attribute_type, name = T.unsafe(nil), index = T.unsafe(nil)); end
 
   # Instantiate the generator.
@@ -2752,16 +3026,16 @@ module Rails::Generators::Testing::Behaviour
   # Runs the generator configured for this class. The first argument is an array like
   # command line arguments:
   #
-  # class AppGeneratorTest < Rails::Generators::TestCase
-  # tests AppGenerator
-  # destination File.expand_path("../tmp", __dir__)
-  # setup :prepare_destination
+  #   class AppGeneratorTest < Rails::Generators::TestCase
+  #     tests AppGenerator
+  #     destination File.expand_path("../tmp", __dir__)
+  #     setup :prepare_destination
   #
-  # test "database.yml is not created when skipping Active Record" do
-  # run_generator %w(myapp --skip-active-record)
-  # assert_no_file "config/database.yml"
-  # end
-  # end
+  #     test "database.yml is not created when skipping Active Record" do
+  #       run_generator %w(myapp --skip-active-record)
+  #       assert_no_file "config/database.yml"
+  #     end
+  #   end
   #
   # You can provide a configuration hash as second argument. This method returns the output
   # printed by the generator.
@@ -2769,7 +3043,9 @@ module Rails::Generators::Testing::Behaviour
 
   private
 
+  # @return [Boolean]
   def destination_root_is_set?; end
+
   def ensure_current_path; end
   def migration_file_name(relative); end
 
@@ -2811,17 +3087,17 @@ module Rails::Generators::Testing::Behaviour::ClassMethods
   # Sets default arguments on generator invocation. This can be overwritten when
   # invoking it.
   #
-  # arguments %w(app_name --skip-active-record)
+  #   arguments %w(app_name --skip-active-record)
   def arguments(array); end
 
   # Sets the destination of generator files:
   #
-  # destination File.expand_path("../tmp", __dir__)
+  #   destination File.expand_path("../tmp", __dir__)
   def destination(path); end
 
   # Sets which generator should be tested:
   #
-  # tests AppGenerator
+  #   tests AppGenerator
   def tests(klass); end
 end
 
@@ -2879,7 +3155,9 @@ module Rails::Initializable
 end
 
 module Rails::Initializable::ClassMethods
+  # @raise [ArgumentError]
   def initializer(name, opts = T.unsafe(nil), &blk); end
+
   def initializers; end
   def initializers_chain; end
   def initializers_for(binding); end
@@ -2894,11 +3172,15 @@ class Rails::Initializable::Collection < ::Array
 end
 
 class Rails::Initializable::Initializer
+  # @return [Initializer] a new instance of Initializer
   def initialize(name, context, options, &block); end
 
   def after; end
   def before; end
+
+  # @return [Boolean]
   def belongs_to?(group); end
+
   def bind(context); end
 
   # Returns the value of attribute block.
@@ -2929,6 +3211,8 @@ class Rails::MailersController < ::Rails::ApplicationController
   def locale_query(locale); end
   def part_query(mime_type); end
   def set_locale; end
+
+  # @return [Boolean]
   def show_previews?; end
 
   class << self
@@ -2941,8 +3225,8 @@ end
 module Rails::MailersController::HelperMethods
   include ::ActionController::Base::HelperMethods
 
-  def locale_query(*args, **_arg1, &block); end
-  def part_query(*args, **_arg1, &block); end
+  def locale_query(*args, &block); end
+  def part_query(*args, &block); end
 end
 
 module Rails::Paths; end
@@ -2950,6 +3234,7 @@ module Rails::Paths; end
 class Rails::Paths::Path
   include ::Enumerable
 
+  # @return [Path] a new instance of Path
   def initialize(root, current, paths, options = T.unsafe(nil)); end
 
   def <<(path); end
@@ -2979,6 +3264,8 @@ class Rails::Paths::Path
   def glob; end
 
   # Sets the attribute glob
+  #
+  # @param value the value to set the attribute glob to.
   def glob=(_arg0); end
 
   def last; end
@@ -3006,44 +3293,45 @@ end
 # It allows you to collect information about how you want to structure your application
 # paths through a Hash-like API. It requires you to give a physical path on initialization.
 #
-# root = Root.new "/rails"
-# root.add "app/controllers", eager_load: true
+#   root = Root.new "/rails"
+#   root.add "app/controllers", eager_load: true
 #
 # The above command creates a new root object and adds "app/controllers" as a path.
 # This means we can get a <tt>Rails::Paths::Path</tt> object back like below:
 #
-# path = root["app/controllers"]
-# path.eager_load?               # => true
-# path.is_a?(Rails::Paths::Path) # => true
+#   path = root["app/controllers"]
+#   path.eager_load?               # => true
+#   path.is_a?(Rails::Paths::Path) # => true
 #
 # The +Path+ object is simply an enumerable and allows you to easily add extra paths:
 #
-# path.is_a?(Enumerable) # => true
-# path.to_ary.inspect    # => ["app/controllers"]
+#   path.is_a?(Enumerable) # => true
+#   path.to_ary.inspect    # => ["app/controllers"]
 #
-# path << "lib/controllers"
-# path.to_ary.inspect    # => ["app/controllers", "lib/controllers"]
+#   path << "lib/controllers"
+#   path.to_ary.inspect    # => ["app/controllers", "lib/controllers"]
 #
 # Notice that when you add a path using +add+, the path object created already
 # contains the path with the same path value given to +add+. In some situations,
 # you may not want this behavior, so you can give <tt>:with</tt> as option.
 #
-# root.add "config/routes", with: "config/routes.rb"
-# root["config/routes"].inspect # => ["config/routes.rb"]
+#   root.add "config/routes", with: "config/routes.rb"
+#   root["config/routes"].inspect # => ["config/routes.rb"]
 #
 # The +add+ method accepts the following options as arguments:
 # eager_load, autoload, autoload_once, and glob.
 #
 # Finally, the +Path+ object also provides a few helpers:
 #
-# root = Root.new "/rails"
-# root.add "app/controllers"
+#   root = Root.new "/rails"
+#   root.add "app/controllers"
 #
-# root["app/controllers"].expanded # => ["/rails/app/controllers"]
-# root["app/controllers"].existent # => ["/rails/app/controllers"]
+#   root["app/controllers"].expanded # => ["/rails/app/controllers"]
+#   root["app/controllers"].existent # => ["/rails/app/controllers"]
 #
 # Check the <tt>Rails::Paths::Path</tt> documentation for more information.
 class Rails::Paths::Root
+  # @return [Root] a new instance of Root
   def initialize(path); end
 
   def [](path); end
@@ -3060,6 +3348,8 @@ class Rails::Paths::Root
   def path; end
 
   # Sets the attribute path
+  #
+  # @param value the value to set the attribute path to.
   def path=(_arg0); end
 
   def values; end
@@ -3078,6 +3368,7 @@ module Rails::Rack; end
 # object responds to, objects that respond to +to_s+ or Proc objects that accept
 # an instance of the +request+ object.
 class Rails::Rack::Logger < ::ActiveSupport::LogSubscriber
+  # @return [Logger] a new instance of Logger
   def initialize(app, taggers = T.unsafe(nil)); end
 
   def call(env); end
@@ -3122,34 +3413,34 @@ end
 # The following example demonstrates an extension which can be used with or
 # without Rails.
 #
-# # lib/my_gem/railtie.rb
-# module MyGem
-# class Railtie < Rails::Railtie
-# end
-# end
+#   # lib/my_gem/railtie.rb
+#   module MyGem
+#     class Railtie < Rails::Railtie
+#     end
+#   end
 #
-# # lib/my_gem.rb
-# require "my_gem/railtie" if defined?(Rails::Railtie)
+#   # lib/my_gem.rb
+#   require "my_gem/railtie" if defined?(Rails::Railtie)
 #
 # == Initializers
 #
 # To add an initialization step to the Rails boot process from your railtie, just
 # define the initialization code with the +initializer+ macro:
 #
-# class MyRailtie < Rails::Railtie
-# initializer "my_railtie.configure_rails_initialization" do
-# # some initialization behavior
-# end
-# end
+#   class MyRailtie < Rails::Railtie
+#     initializer "my_railtie.configure_rails_initialization" do
+#       # some initialization behavior
+#     end
+#   end
 #
 # If specified, the block can also receive the application object, in case you
 # need to access some application-specific configuration, like middleware:
 #
-# class MyRailtie < Rails::Railtie
-# initializer "my_railtie.configure_rails_initialization" do |app|
-# app.middleware.use MyRailtie::Middleware
-# end
-# end
+#   class MyRailtie < Rails::Railtie
+#     initializer "my_railtie.configure_rails_initialization" do |app|
+#       app.middleware.use MyRailtie::Middleware
+#     end
+#   end
 #
 # Finally, you can also pass <tt>:before</tt> and <tt>:after</tt> as options to
 # +initializer+, in case you want to couple it with a specific step in the
@@ -3160,37 +3451,37 @@ end
 # Railties can access a config object which contains configuration shared by all
 # railties and the application:
 #
-# class MyRailtie < Rails::Railtie
-# # Customize the ORM
-# config.app_generators.orm :my_railtie_orm
+#   class MyRailtie < Rails::Railtie
+#     # Customize the ORM
+#     config.app_generators.orm :my_railtie_orm
 #
-# # Add a to_prepare block which is executed once in production
-# # and before each request in development.
-# config.to_prepare do
-# MyRailtie.setup!
-# end
-# end
+#     # Add a to_prepare block which is executed once in production
+#     # and before each request in development.
+#     config.to_prepare do
+#       MyRailtie.setup!
+#     end
+#   end
 #
 # == Loading Rake Tasks and Generators
 #
 # If your railtie has Rake tasks, you can tell Rails to load them through the method
 # +rake_tasks+:
 #
-# class MyRailtie < Rails::Railtie
-# rake_tasks do
-# load "path/to/my_railtie.tasks"
-# end
-# end
+#   class MyRailtie < Rails::Railtie
+#     rake_tasks do
+#       load "path/to/my_railtie.tasks"
+#     end
+#   end
 #
 # By default, Rails loads generators from your load path. However, if you want to place
 # your generators at a different location, you can specify in your railtie a block which
 # will load them during normal generators lookup:
 #
-# class MyRailtie < Rails::Railtie
-# generators do
-# require "path/to/my_railtie_generator"
-# end
-# end
+#   class MyRailtie < Rails::Railtie
+#     generators do
+#       require "path/to/my_railtie_generator"
+#     end
+#   end
 #
 # Since filenames on the load path are shared across gems, be sure that files you load
 # through a railtie have unique names.
@@ -3206,11 +3497,11 @@ end
 # this less confusing for everyone.
 # It can be used like this:
 #
-# class MyRailtie < Rails::Railtie
-# server do
-# WebpackServer.start
-# end
-# end
+#   class MyRailtie < Rails::Railtie
+#     server do
+#       WebpackServer.start
+#     end
+#   end
 #
 # == Application and Engine
 #
@@ -3224,6 +3515,7 @@ class Rails::Railtie
   extend ::ActiveSupport::DescendantsTracker
   extend ::Rails::Initializable::ClassMethods
 
+  # @return [Railtie] a new instance of Railtie
   def initialize; end
 
   # This is used to create the <tt>config</tt> object on Railties, an instance of
@@ -3232,7 +3524,7 @@ class Rails::Railtie
   def config; end
 
   def configure(&block); end
-  def railtie_name(*_arg0, **_arg1, &_arg2); end
+  def railtie_name(*_arg0, &_arg1); end
   def railtie_namespace; end
 
   protected
@@ -3249,8 +3541,10 @@ class Rails::Railtie
   def each_registered_block(type, &block); end
 
   class << self
+    # @return [Boolean]
     def abstract_railtie?; end
-    def config(*_arg0, **_arg1, &_arg2); end
+
+    def config(*_arg0, &_arg1); end
 
     # Allows you to configure the railtie. This is the same method seen in
     # Railtie::Configurable, but this module is no longer required for all
@@ -3276,13 +3570,14 @@ class Rails::Railtie
 
     # If the class method does not have a method, then send the method call
     # to the Railtie instance.
-    def method_missing(name, *args, **_arg2, &block); end
+    def method_missing(name, *args, &block); end
 
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in
     # `#each_registered_block(type, &block)`
     def register_block_for(type, &blk); end
 
+    # @return [Boolean]
     def respond_to_missing?(name, _); end
   end
 end
@@ -3290,6 +3585,7 @@ end
 Rails::Railtie::ABSTRACT_RAILTIES = T.let(T.unsafe(nil), Array)
 
 class Rails::Railtie::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
   # Last configurable block to run. Called after frameworks initialize.
@@ -3299,6 +3595,8 @@ class Rails::Railtie::Configuration
   #
   # Values set on app_generators will become defaults for application, unless
   # application overwrites them.
+  #
+  # @yield [@@app_generators]
   def app_generators; end
 
   # This allows you to modify the application's middlewares from Engines.
@@ -3321,6 +3619,7 @@ class Rails::Railtie::Configuration
   # All namespaces that are eager loaded
   def eager_load_namespaces; end
 
+  # @return [Boolean]
   def respond_to?(name, include_private = T.unsafe(nil)); end
 
   # Defines generic callbacks to run before #after_initialize. Useful for
@@ -3359,6 +3658,8 @@ class Rails::Secrets
     def read_for_editing(&block); end
 
     # Sets the attribute root
+    #
+    # @param value the value to set the attribute root to.
     def root=(_arg0); end
 
     def write(contents); end
@@ -3366,7 +3667,10 @@ class Rails::Secrets
     private
 
     def encryptor; end
+
+    # @raise [MissingKeyError]
     def handle_missing_key; end
+
     def key_path; end
     def path; end
     def preprocess(path); end
@@ -3376,6 +3680,7 @@ class Rails::Secrets
 end
 
 class Rails::Secrets::MissingKeyError < ::RuntimeError
+  # @return [MissingKeyError] a new instance of MissingKeyError
   def initialize; end
 end
 
@@ -3389,6 +3694,7 @@ end
 # start with the tag optionally followed by a colon. Everything up to the end
 # of the line (or closing ERB comment tag) is considered to be their text.
 class Rails::SourceAnnotationExtractor
+  # @return [SourceAnnotationExtractor] a new instance of SourceAnnotationExtractor
   def initialize(tag); end
 
   # Prints the mapping from filenames to annotations in +results+ ordered by filename.
@@ -3421,7 +3727,7 @@ class Rails::SourceAnnotationExtractor
     #
     # Specific directories can be explicitly set using the <tt>:dirs</tt> key in +options+.
     #
-    # Rails::SourceAnnotationExtractor.enumerate 'TODO|FIXME', dirs: %w(app lib), tag: true
+    #   Rails::SourceAnnotationExtractor.enumerate 'TODO|FIXME', dirs: %w(app lib), tag: true
     #
     # If +options+ has a <tt>:tag</tt> flag, it will be passed to each annotation's +to_s+.
     #
@@ -3435,7 +3741,7 @@ end
 class Rails::SourceAnnotationExtractor::Annotation < ::Struct
   # Returns a representation of the annotation that looks like this:
   #
-  # [126] [TODO] This algorithm is simple and clearly correct, make it faster.
+  #   [126] [TODO] This algorithm is simple and clearly correct, make it faster.
   #
   # If +options+ has a flag <tt>:tag</tt> the tag is shown as in the example above.
   # Otherwise the string contains just line and text.
@@ -3446,15 +3752,15 @@ class Rails::SourceAnnotationExtractor::Annotation < ::Struct
     def extensions; end
 
     # Registers additional directories to be included
-    # Rails::SourceAnnotationExtractor::Annotation.register_directories("spec", "another")
+    #   Rails::SourceAnnotationExtractor::Annotation.register_directories("spec", "another")
     def register_directories(*dirs); end
 
     # Registers new Annotations File Extensions
-    # Rails::SourceAnnotationExtractor::Annotation.register_extensions("css", "scss", "sass", "less", "js") { |tag| /\/\/\s*(#{tag}):?\s*(.*)$/ }
+    #   Rails::SourceAnnotationExtractor::Annotation.register_extensions("css", "scss", "sass", "less", "js") { |tag| /\/\/\s*(#{tag}):?\s*(.*)$/ }
     def register_extensions(*exts, &block); end
 
     # Registers additional tags
-    # Rails::SourceAnnotationExtractor::Annotation.register_tags("TESTME", "DEPRECATEME")
+    #   Rails::SourceAnnotationExtractor::Annotation.register_tags("TESTME", "DEPRECATEME")
     def register_tags(*additional_tags); end
 
     def tags; end
@@ -3464,6 +3770,7 @@ end
 module Rails::TestUnit; end
 
 class Rails::TestUnit::CompositeFilter
+  # @return [CompositeFilter] a new instance of CompositeFilter
   def initialize(runnable, filter, patterns); end
 
   # minitest uses === to find matching filters.
@@ -3479,6 +3786,7 @@ class Rails::TestUnit::CompositeFilter
 end
 
 class Rails::TestUnit::Filter
+  # @return [Filter] a new instance of Filter
   def initialize(runnable, file, line); end
 
   def ===(method); end
@@ -3505,7 +3813,11 @@ class Rails::TestUnit::Runner
     def default_test_exclude_glob; end
     def default_test_glob; end
     def extract_filters(argv); end
+
+    # @return [Boolean]
     def path_argument?(arg); end
+
+    # @return [Boolean]
     def regexp_filter?(arg); end
   end
 end

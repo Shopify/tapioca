@@ -11,6 +11,8 @@ module ANSI
 end
 
 # Table of codes used throughout the system.
+#
+# @see http://en.wikipedia.org/wiki/ANSI_escape_code
 ANSI::CHART = T.let(T.unsafe(nil), Hash)
 
 # ANSI Codes
@@ -18,11 +20,11 @@ ANSI::CHART = T.let(T.unsafe(nil), Hash)
 # Ansi::Code module makes it very easy to use ANSI codes.
 # These are especially nice for beautifying shell output.
 #
-# Ansi::Code.red + "Hello" + Ansi::Code.blue + "World"
-# => "\e[31mHello\e[34mWorld"
+#   Ansi::Code.red + "Hello" + Ansi::Code.blue + "World"
+#   => "\e[31mHello\e[34mWorld"
 #
-# Ansi::Code.red{ "Hello" } + Ansi::Code.blue{ "World" }
-# => "\e[31mHello\e[0m\e[34mWorld\e[0m"
+#   Ansi::Code.red{ "Hello" } + Ansi::Code.blue{ "World" }
+#   => "\e[31mHello\e[0m\e[34mWorld\e[0m"
 #
 # IMPORTANT! Do not mixin Ansi::Code, instead use {ANSI::Mixin}.
 #
@@ -36,6 +38,12 @@ module ANSI::Code
   def [](*codes); end
 
   # Apply ANSI codes to a first argument or block value.
+  #
+  # @example
+  #   ansi("Valentine", :red, :on_white)
+  # @example
+  #   ansi(:red, :on_white){ "Valentine" }
+  # @return [String] String wrapped ANSI code.
   def ansi(*codes); end
 
   # Move cursor left a specified number of spaces.
@@ -60,10 +68,22 @@ module ANSI::Code
 
   # Look-up code from chart, or if Integer simply pass through.
   # Also resolves :random and :on_random.
+  #
+  # @param codes [Array<Symbol,Integer]
+  # Symbols or integers to convert to ANSI code.] odes [Array<Symbol,Integer]
+  #   Symbols or integers to convert to ANSI code.
+  # @return [String] ANSI code
   def code(*codes); end
 
   # Apply ANSI codes to a first argument or block value.
   # Alternate term for #ansi.
+  #
+  # @deprecated May change in future definition.
+  # @example
+  #   ansi("Valentine", :red, :on_white)
+  # @example
+  #   ansi(:red, :on_white){ "Valentine" }
+  # @return [String] String wrapped ANSI code.
   def color(*codes); end
 
   def cyan_on_black(string = T.unsafe(nil)); end
@@ -95,6 +115,9 @@ module ANSI::Code
   def green_on_yellow(string = T.unsafe(nil)); end
 
   # Creates an xterm-256 color code from a CSS-style color string.
+  #
+  # @param string [String] Hex string in CSS style, .e.g. `#5FA0C2`.
+  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
   def hex_code(string, background = T.unsafe(nil)); end
 
   # Move cursor left a specified number of spaces.
@@ -116,6 +139,9 @@ module ANSI::Code
   def move(line, column = T.unsafe(nil)); end
 
   # Provides a random primary ANSI color.
+  #
+  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
+  # @return [Integer] ANSI color number
   def random(background = T.unsafe(nil)); end
 
   def red_on_black(string = T.unsafe(nil)); end
@@ -131,13 +157,19 @@ module ANSI::Code
   # RGB value can be three arguments red, green and blue respectively
   # each from 0 to 255, or the RGB value can be a single CSS-style
   # hex string.
+  #
+  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
   def rgb(*args); end
 
   # Given red, green and blue values between 0 and 255, this method
   # returns the closest XTerm 256 color value.
+  #
+  # @raise [ArgumentError]
   def rgb_256(r, g, b); end
 
   # Creates an xterm-256 color from rgb value.
+  #
+  # @param background [Boolean] Use `true` for background color, otherwise foreground color.
   def rgb_code(red, green, blue, background = T.unsafe(nil)); end
 
   # Move cursor right a specified number of spaces.
@@ -145,17 +177,35 @@ module ANSI::Code
 
   # Apply ANSI codes to a first argument or block value.
   # Alias for #ansi method.
+  #
+  # @deprecated Here for backward compatibility.
+  # @example
+  #   ansi("Valentine", :red, :on_white)
+  # @example
+  #   ansi(:red, :on_white){ "Valentine" }
+  # @return [String] String wrapped ANSI code.
   def style(*codes); end
 
   # Remove ANSI codes from string or block value.
+  #
+  # @param string [String] String from which to remove ANSI codes.
+  # @return [String] String wrapped ANSI code.
   def unansi(string = T.unsafe(nil)); end
 
   # Remove ANSI codes from string or block value.
   # Alias for unansi.
+  #
+  # @deprecated May change in future definition.
+  # @param string [String] String from which to remove ANSI codes.
+  # @return [String] String wrapped ANSI code.
   def uncolor(string = T.unsafe(nil)); end
 
   # Remove ANSI codes from string or block value.
   # Alias for #unansi method.
+  #
+  # @deprecated Here for backwards compatibility.
+  # @param string [String] String from which to remove ANSI codes.
+  # @return [String] String wrapped ANSI code.
   def unstyle(string = T.unsafe(nil)); end
 
   # Move cursor up a specified number of spaces.
@@ -196,7 +246,7 @@ ANSI::Code::PATTERN = T.let(T.unsafe(nil), Regexp)
 # Converts {CHART} and {SPECIAL_CHART} entries into constants.
 # So for example, the CHART entry for :red becomes:
 #
-# ANSI::Constants::RED  #=> "\e[31m"
+#   ANSI::Constants::RED  #=> "\e[31m"
 #
 # The ANSI Constants are include into ANSI::Code and can be included
 # any where will they would be of use.

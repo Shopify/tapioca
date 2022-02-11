@@ -674,12 +674,14 @@ module Google::Protobuf::Internal; end
 class Google::Protobuf::Internal::Arena; end
 
 class Google::Protobuf::Internal::AtomicCounter
+  # @return [AtomicCounter] a new instance of AtomicCounter
   def initialize; end
 
   def get_and_increment; end
 end
 
 class Google::Protobuf::Internal::Builder
+  # @return [Builder] a new instance of Builder
   def initialize(pool); end
 
   def add_enum(name, &block); end
@@ -696,12 +698,14 @@ class Google::Protobuf::Internal::Builder
 end
 
 class Google::Protobuf::Internal::EnumBuilder
+  # @return [EnumBuilder] a new instance of EnumBuilder
   def initialize(name, file_proto); end
 
   def value(name, number); end
 end
 
 class Google::Protobuf::Internal::FileBuilder
+  # @return [FileBuilder] a new instance of FileBuilder
   def initialize(pool, name, options = T.unsafe(nil)); end
 
   def add_enum(name, &block); end
@@ -740,30 +744,30 @@ class Google::Protobuf::Internal::FileBuilder
   #
   # package foo;
   # message Bar {
-  # message Baz {}
+  #   message Baz {}
   # }
   #
   # The descriptor for this must look like this:
   #
   # file {
-  # name: "test.proto"
-  # package: "foo"
-  # message_type {
-  # name: "Bar"
-  # nested_type {
-  # name: "Baz"
-  # }
-  # }
+  #   name: "test.proto"
+  #   package: "foo"
+  #   message_type {
+  #     name: "Bar"
+  #     nested_type {
+  #       name: "Baz"
+  #     }
+  #   }
   # }
   #
   # However, the Ruby generated code has always generated messages in a flat,
   # non-nested way:
   #
   # Google::Protobuf::DescriptorPool.generated_pool.build do
-  # add_message "foo.Bar" do
-  # end
-  # add_message "foo.Bar.Baz" do
-  # end
+  #   add_message "foo.Bar" do
+  #   end
+  #   add_message "foo.Bar.Baz" do
+  #   end
   # end
   #
   # Here we need to do a translation where we turn this generated code into the
@@ -773,6 +777,7 @@ class Google::Protobuf::Internal::FileBuilder
 end
 
 class Google::Protobuf::Internal::MessageBuilder
+  # @return [MessageBuilder] a new instance of MessageBuilder
   def initialize(name, file_builder, file_proto); end
 
   def internal_add_field(label, name, type, number, type_class, options, oneof_index: T.unsafe(nil), proto3_optional: T.unsafe(nil)); end
@@ -798,6 +803,7 @@ class Google::Protobuf::Internal::MessageBuilder
 end
 
 class Google::Protobuf::Internal::OneofBuilder
+  # @return [OneofBuilder] a new instance of OneofBuilder
   def initialize(name, msg_builder); end
 
   def optional(name, type, number, type_class = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -1031,82 +1037,84 @@ class Google::Protobuf::RepeatedField
 
   def initialize(*_arg0); end
 
-  def &(*args, **_arg1, &block); end
-  def *(*args, **_arg1, &block); end
+  def &(*args, &block); end
+  def *(*args, &block); end
   def +(_arg0); end
-  def -(*args, **_arg1, &block); end
+  def -(*args, &block); end
   def <<(_arg0); end
-  def <=>(*args, **_arg1, &block); end
+  def <=>(*args, &block); end
   def ==(_arg0); end
   def [](*_arg0); end
   def []=(_arg0, _arg1); end
-  def assoc(*args, **_arg1, &block); end
+  def assoc(*args, &block); end
   def at(*_arg0); end
-  def bsearch(*args, **_arg1, &block); end
-  def bsearch_index(*args, **_arg1, &block); end
+  def bsearch(*args, &block); end
+  def bsearch_index(*args, &block); end
   def clear; end
   def clone; end
   def collect!(*args, &block); end
-  def combination(*args, **_arg1, &block); end
-  def compact(*args, **_arg1, &block); end
+  def combination(*args, &block); end
+  def compact(*args, &block); end
   def compact!(*args, &block); end
   def concat(_arg0); end
-  def count(*args, **_arg1, &block); end
-  def cycle(*args, **_arg1, &block); end
+  def count(*args, &block); end
+  def cycle(*args, &block); end
   def delete(*args, &block); end
   def delete_at(*args, &block); end
   def delete_if(*args, &block); end
-  def dig(*args, **_arg1, &block); end
-  def drop(*args, **_arg1, &block); end
-  def drop_while(*args, **_arg1, &block); end
+  def dig(*args, &block); end
+  def drop(*args, &block); end
+  def drop_while(*args, &block); end
   def dup; end
   def each; end
 
   # array aliases into enumerable
   def each_index(*_arg0); end
 
+  # @return [Boolean]
   def empty?; end
-  def eql?(*args, **_arg1, &block); end
-  def fetch(*args, **_arg1, &block); end
+
+  def eql?(*args, &block); end
+  def fetch(*args, &block); end
   def fill(*args, &block); end
-  def find_index(*args, **_arg1, &block); end
+  def find_index(*args, &block); end
   def first(n = T.unsafe(nil)); end
-  def flatten(*args, **_arg1, &block); end
+  def flatten(*args, &block); end
   def flatten!(*args, &block); end
   def freeze; end
   def hash; end
-  def include?(*args, **_arg1, &block); end
-  def index(*args, **_arg1, &block); end
+  def include?(*args, &block); end
+  def index(*args, &block); end
   def insert(*args, &block); end
-  def inspect(*args, **_arg1, &block); end
-  def join(*args, **_arg1, &block); end
+  def inspect(*args, &block); end
+  def join(*args, &block); end
   def keep_if(*args, &block); end
   def last(n = T.unsafe(nil)); end
   def length; end
   def map; end
   def map!(*args, &block); end
-  def pack(*args, **_arg1, &block); end
-  def permutation(*args, **_arg1, &block); end
+  def pack(*args, &block); end
+  def permutation(*args, &block); end
   def pop(n = T.unsafe(nil)); end
-  def pretty_print(*args, **_arg1, &block); end
-  def pretty_print_cycle(*args, **_arg1, &block); end
-  def product(*args, **_arg1, &block); end
+  def pretty_print(*args, &block); end
+  def pretty_print_cycle(*args, &block); end
+  def product(*args, &block); end
   def push(*_arg0); end
-  def rassoc(*args, **_arg1, &block); end
+  def rassoc(*args, &block); end
   def reject!(*args, &block); end
-  def repeated_combination(*args, **_arg1, &block); end
-  def repeated_permutation(*args, **_arg1, &block); end
+  def repeated_combination(*args, &block); end
+  def repeated_permutation(*args, &block); end
   def replace(_arg0); end
-  def reverse(*args, **_arg1, &block); end
+  def reverse(*args, &block); end
   def reverse!(*args, &block); end
-  def rindex(*args, **_arg1, &block); end
-  def rotate(*args, **_arg1, &block); end
+  def rindex(*args, &block); end
+  def rotate(*args, &block); end
   def rotate!(*args, &block); end
-  def sample(*args, **_arg1, &block); end
+  def sample(*args, &block); end
   def select!(*args, &block); end
-  def shelljoin(*args, **_arg1, &block); end
+  def shelljoin(*args, &block); end
   def shift(*args, &block); end
-  def shuffle(*args, **_arg1, &block); end
+  def shuffle(*args, &block); end
   def shuffle!(*args, &block); end
   def size; end
   def slice(*_arg0); end
@@ -1114,13 +1122,13 @@ class Google::Protobuf::RepeatedField
   def sort!(*args, &block); end
   def sort_by!(*args, &block); end
   def to_ary; end
-  def to_s(*args, **_arg1, &block); end
-  def transpose(*args, **_arg1, &block); end
-  def uniq(*args, **_arg1, &block); end
+  def to_s(*args, &block); end
+  def transpose(*args, &block); end
+  def uniq(*args, &block); end
   def uniq!(*args, &block); end
   def unshift(*args, &block); end
   def values_at; end
-  def |(*args, **_arg1, &block); end
+  def |(*args, &block); end
 
   private
 

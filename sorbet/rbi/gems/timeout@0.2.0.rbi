@@ -11,12 +11,12 @@ module Timeout
   # +sec+ seconds to complete.
   #
   # +sec+:: Number of seconds to wait for the block to terminate. Any number
-  # may be used, including Floats to specify fractional seconds. A
-  # value of 0 or +nil+ will execute the block without any timeout.
+  #         may be used, including Floats to specify fractional seconds. A
+  #         value of 0 or +nil+ will execute the block without any timeout.
   # +klass+:: Exception Class to raise if the block fails to terminate
-  # in +sec+ seconds.  Omitting will use the default, Timeout::Error
+  #           in +sec+ seconds.  Omitting will use the default, Timeout::Error
   # +message+:: Error message to raise with Exception Class.
-  # Omitting will use the default, "execution expired"
+  #             Omitting will use the default, "execution expired"
   #
   # Returns the result of the block *if* the block completed before
   # +sec+ seconds, otherwise throws an exception, based on the value of +klass+.
@@ -32,6 +32,8 @@ module Timeout
   # Note that this is both a method of module Timeout, so you can <tt>include
   # Timeout</tt> into your classes so they have a #timeout method, as well as
   # a module method, so you can call it directly as Timeout.timeout().
+  #
+  # @raise [e]
   def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
 
   class << self
@@ -39,12 +41,12 @@ module Timeout
     # +sec+ seconds to complete.
     #
     # +sec+:: Number of seconds to wait for the block to terminate. Any number
-    # may be used, including Floats to specify fractional seconds. A
-    # value of 0 or +nil+ will execute the block without any timeout.
+    #         may be used, including Floats to specify fractional seconds. A
+    #         value of 0 or +nil+ will execute the block without any timeout.
     # +klass+:: Exception Class to raise if the block fails to terminate
-    # in +sec+ seconds.  Omitting will use the default, Timeout::Error
+    #           in +sec+ seconds.  Omitting will use the default, Timeout::Error
     # +message+:: Error message to raise with Exception Class.
-    # Omitting will use the default, "execution expired"
+    #             Omitting will use the default, "execution expired"
     #
     # Returns the result of the block *if* the block completed before
     # +sec+ seconds, otherwise throws an exception, based on the value of +klass+.
@@ -60,6 +62,8 @@ module Timeout
     # Note that this is both a method of module Timeout, so you can <tt>include
     # Timeout</tt> into your classes so they have a #timeout method, as well as
     # a module method, so you can call it directly as Timeout.timeout().
+    #
+    # @raise [e]
     def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
   end
 end

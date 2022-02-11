@@ -14,6 +14,8 @@ class Money
   include ::Comparable
   extend ::Forwardable
 
+  # @raise [ArgumentError]
+  # @return [Money] a new instance of Money
   def initialize(value, currency); end
 
   def *(numeric); end
@@ -24,21 +26,39 @@ class Money
   def <=>(other); end
   def ==(other); end
   def abs; end
+
+  # @see Money::Allocator#allocate
   def allocate(splits, strategy = T.unsafe(nil)); end
+
+  # @see Money::Allocator#allocate_max_amounts
   def allocate_max_amounts(maximums); end
+
   def as_json(*args); end
 
   # Calculate the splits evenly without losing pennies.
   # Returns the number of high and low splits and the value of the high and low splits.
   # Where high represents the Money value with the extra penny
   # and low a Money without the extra penny.
+  #
+  # @example
+  #   Money.new(100, "USD").calculate_splits(3) #=> {Money.new(34) => 1, Money.new(33) => 2}
+  # @param number [2] of parties.
+  # @raise [ArgumentError]
+  # @return [Hash<Money, Integer>]
   def calculate_splits(num); end
 
   # Clamps the value to be within the specified minimum and maximum. Returns
   # self if the value is within bounds, otherwise a new Money object with the
   # closest min or max value.
+  #
+  # @example
+  #   Money.new(50, "CAD").clamp(1, 100) #=> Money.new(50, "CAD")
+  #
+  #   Money.new(120, "CAD").clamp(0, 100) #=> Money.new(100, "CAD")
+  # @raise [ArgumentError]
   def clamp(min, max); end
 
+  # @raise [TypeError]
   def coerce(other); end
 
   # Returns the value of attribute currency.
@@ -47,26 +67,39 @@ class Money
   def encode_with(coder); end
 
   # TODO: Remove once cross-currency mathematical operations are no longer allowed
+  #
+  # @return [Boolean]
   def eql?(other); end
 
   def floor; end
+
+  # @raise [ArgumentError]
   def fraction(rate); end
-  def hash(*args, **_arg1, &block); end
+
+  def hash(*args, &block); end
   def init_with(coder); end
   def inspect; end
-  def negative?(*args, **_arg1, &block); end
+  def negative?(*args, &block); end
+
+  # @return [Boolean]
   def no_currency?; end
-  def nonzero?(*args, **_arg1, &block); end
-  def positive?(*args, **_arg1, &block); end
+
+  def nonzero?(*args, &block); end
+  def positive?(*args, &block); end
   def round(ndigits = T.unsafe(nil)); end
 
   # Split money amongst parties evenly without losing pennies.
+  #
+  # @example
+  #   Money.new(100, "USD").split(3) #=> [Money.new(34), Money.new(33), Money.new(33)]
+  # @param number [2] of parties.
+  # @return [Array<Money, Money, Money>]
   def split(num); end
 
   def subunits(format: T.unsafe(nil)); end
   def to_d; end
-  def to_f(*args, **_arg1, &block); end
-  def to_i(*args, **_arg1, &block); end
+  def to_f(*args, &block); end
+  def to_i(*args, &block); end
   def to_json(options = T.unsafe(nil)); end
   def to_money(curr = T.unsafe(nil)); end
   def to_s(style = T.unsafe(nil)); end
@@ -74,11 +107,14 @@ class Money
   # Returns the value of attribute value.
   def value; end
 
-  def zero?(*args, **_arg1, &block); end
+  def zero?(*args, &block); end
 
   private
 
+  # @raise [TypeError]
+  # @yield [other]
   def arithmetic(money_or_numeric); end
+
   def calculated_currency(other); end
 
   class << self
@@ -90,6 +126,8 @@ class Money
     def default_currency; end
 
     # Sets the attribute default_currency
+    #
+    # @param value the value to set the attribute default_currency to.
     def default_currency=(_arg0); end
 
     def default_settings; end
@@ -103,6 +141,8 @@ class Money
     def parser; end
 
     # Sets the attribute parser
+    #
+    # @param value the value to set the attribute parser to.
     def parser=(_arg0); end
 
     def rational(money1, money2); end
@@ -116,27 +156,57 @@ class Money
 end
 
 class Money::Allocator < ::SimpleDelegator
+  # @return [Allocator] a new instance of Allocator
   def initialize(money); end
 
+  # @example left over pennies distributed reverse order when using roundrobin_reverse strategy
+  #   Money.new(10.01, "USD").allocate([0.5, 0.5], :roundrobin_reverse)
+  #   #=> [#<Money value:5.00 currency:USD>, #<Money value:5.01 currency:USD>]
   def allocate(splits, strategy = T.unsafe(nil)); end
 
   # Allocates money between different parties up to the maximum amounts specified.
   # Left over pennies will be assigned round-robin up to the maximum specified.
   # Pennies are dropped when the maximums are attained.
+  #
+  # @example
+  #   Money.new(30.75).allocate_max_amounts([Money.new(26), Money.new(4.75)])
+  #   #=> [Money.new(26), Money.new(4.75)]
+  #
+  #   Money.new(30.75).allocate_max_amounts([Money.new(26), Money.new(4.74)]
+  #   #=> [Money.new(26), Money.new(4.74)]
+  #
+  #   Money.new(30).allocate_max_amounts([Money.new(15), Money.new(15)]
+  #   #=> [Money.new(15), Money.new(15)]
+  #
+  #   Money.new(1).allocate_max_amounts([Money.new(33), Money.new(33), Money.new(33)])
+  #   #=> [Money.new(0.34), Money.new(0.33), Money.new(0.33)]
+  #
+  #   Money.new(100).allocate_max_amounts([Money.new(5), Money.new(2)])
+  #   #=> [Money.new(5), Money.new(2)]
   def allocate_max_amounts(maximums); end
 
   private
 
+  # @return [Boolean]
   def all_rational?(splits); end
+
   def allocation_index_for(strategy, length, idx); end
+
+  # @raise [ArgumentError]
   def amounts_from_splits(allocations, splits, subunits_to_split = T.unsafe(nil)); end
+
   def extract_currency(money_array); end
 end
 
 class Money::Currency
+  # @raise [UnknownCurrency]
+  # @return [Currency] a new instance of Currency
   def initialize(currency_iso); end
 
+  # @return [Boolean]
   def ==(other); end
+
+  # @return [Boolean]
   def compatible?(other); end
 
   # Returns the value of attribute decimal_mark.
@@ -145,7 +215,9 @@ class Money::Currency
   # Returns the value of attribute disambiguate_symbol.
   def disambiguate_symbol; end
 
+  # @return [Boolean]
   def eql?(other); end
+
   def hash; end
 
   # Returns the value of attribute iso_code.
@@ -178,7 +250,11 @@ class Money::Currency
   class << self
     def currencies; end
     def find(currency_iso); end
+
+    # @raise [UnknownCurrency]
     def find!(currency_iso); end
+
+    # @raise [UnknownCurrency]
     def new(currency_iso); end
   end
 end
@@ -236,10 +312,21 @@ Money::NULL_CURRENCY = T.let(T.unsafe(nil), Money::NullCurrency)
 # Unlike other currencies, it is allowed to calculate a Money object with
 # NullCurrency with another currency. The resulting Money object will have
 # the other currency.
+#
+# @example
+#   Money.new(1, 'CAD').positive? #=> true
+#   Money.new(2, 'CAD') >= 0      #=> true
+# @example
+#   Money.new(0, Money::NULL_CURRENCY) + Money.new(5, 'CAD')
+#   #=> #<Money value:5.00 currency:CAD>
 class Money::NullCurrency
+  # @return [NullCurrency] a new instance of NullCurrency
   def initialize; end
 
+  # @return [Boolean]
   def ==(other); end
+
+  # @return [Boolean]
   def compatible?(other); end
 
   # Returns the value of attribute decimal_mark.
@@ -248,6 +335,7 @@ class Money::NullCurrency
   # Returns the value of attribute disambiguate_symbol.
   def disambiguate_symbol; end
 
+  # @return [Boolean]
   def eql?(other); end
 
   # Returns the value of attribute iso_code.
@@ -280,6 +368,7 @@ end
 class Money::ReverseOperationProxy
   include ::Comparable
 
+  # @return [ReverseOperationProxy] a new instance of ReverseOperationProxy
   def initialize(value); end
 
   def *(other); end
@@ -304,6 +393,7 @@ module MoneyColumn::ActiveRecordHooks
   def write_money_attribute(column, money); end
 
   class << self
+    # @private
     def included(base); end
   end
 end
@@ -318,6 +408,8 @@ module MoneyColumn::ActiveRecordHooks::ClassMethods
 
   def clear_cache_on_currency_change(currency_column); end
   def inherited(subclass); end
+
+  # @raise [ArgumentError]
   def normalize_money_column_options(options); end
 end
 
@@ -333,8 +425,12 @@ class MoneyParser
 
   private
 
+  # @raise [MoneyFormatError]
   def extract_amount_from_string(input, currency, strict); end
+
+  # @return [Boolean]
   def last_digits_decimals?(digits, marks, currency); end
+
   def normalize_number(number, marks, currency); end
 
   class << self
@@ -364,8 +460,8 @@ class MoneyParser::MoneyFormatError < ::ArgumentError; end
 MoneyParser::NUMERIC_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Allows Writing of 100.to_money for +Numeric+ types
-# 100.to_money => #<Money @cents=10000>
-# 100.37.to_money => #<Money @cents=10037>
+#   100.to_money => #<Money @cents=10000>
+#   100.37.to_money => #<Money @cents=10037>
 class Numeric
   include ::Comparable
 
@@ -415,6 +511,14 @@ end
 # Money.default_currency and should effectively be the same. The cop
 # can be configured with a ReplacementCurrency in case that is more
 # appropriate for your application.
+#
+# @example
+#
+#   # bad
+#   Money.zero
+#
+#   # good when configured with `ReplacementCurrency: CAD`
+#   Money.new(0, 'CAD')
 RuboCop::Cop::Money::ZeroMoney::MSG = T.let(T.unsafe(nil), String)
 
 RuboCop::NodePattern = RuboCop::AST::NodePattern
@@ -423,8 +527,8 @@ RuboCop::Token = RuboCop::AST::Token
 
 # Allows Writing of '100'.to_money for +String+ types
 # Excess characters will be discarded
-# '100'.to_money => #<Money @cents=10000>
-# '100.37'.to_money => #<Money @cents=10037>
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
   include ::JSON::Ext::Generator::GeneratorMethods::String

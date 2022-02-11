@@ -25,12 +25,15 @@ module Rack::Auth; end
 #
 # +realm+ should be set for all handlers.
 class Rack::Auth::AbstractHandler
+  # @return [AbstractHandler] a new instance of AbstractHandler
   def initialize(app, realm = T.unsafe(nil), &authenticator); end
 
   # Returns the value of attribute realm.
   def realm; end
 
   # Sets the attribute realm
+  #
+  # @param value the value to set the attribute realm to.
   def realm=(_arg0); end
 
   private
@@ -40,13 +43,19 @@ class Rack::Auth::AbstractHandler
 end
 
 class Rack::Auth::AbstractRequest
+  # @return [AbstractRequest] a new instance of AbstractRequest
   def initialize(env); end
 
   def params; end
   def parts; end
+
+  # @return [Boolean]
   def provided?; end
+
   def request; end
   def scheme; end
+
+  # @return [Boolean]
   def valid?; end
 
   private
@@ -68,11 +77,15 @@ class Rack::Auth::Basic < ::Rack::Auth::AbstractHandler
   private
 
   def challenge; end
+
+  # @return [Boolean]
   def valid?(auth); end
 end
 
 class Rack::Auth::Basic::Request < ::Rack::Auth::AbstractRequest
+  # @return [Boolean]
   def basic?; end
+
   def credentials; end
   def username; end
 end
@@ -87,6 +100,7 @@ module Rack::Auth::Digest; end
 #
 # +opaque+ needs to be set to a constant base64/hexadecimal string.
 class Rack::Auth::Digest::MD5 < ::Rack::Auth::AbstractHandler
+  # @return [MD5] a new instance of MD5
   def initialize(app, realm = T.unsafe(nil), opaque = T.unsafe(nil), &authenticator); end
 
   def call(env); end
@@ -95,11 +109,16 @@ class Rack::Auth::Digest::MD5 < ::Rack::Auth::AbstractHandler
   def opaque; end
 
   # Sets the attribute opaque
+  #
+  # @param value the value to set the attribute opaque to.
   def opaque=(_arg0); end
 
   # Sets the attribute passwords_hashed
+  #
+  # @param value the value to set the attribute passwords_hashed to.
   def passwords_hashed=(_arg0); end
 
+  # @return [Boolean]
   def passwords_hashed?; end
 
   private
@@ -112,10 +131,20 @@ class Rack::Auth::Digest::MD5 < ::Rack::Auth::AbstractHandler
   def digest(auth, password); end
   def md5(data); end
   def params(hash = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def valid?(auth); end
+
+  # @return [Boolean]
   def valid_digest?(auth); end
+
+  # @return [Boolean]
   def valid_nonce?(auth); end
+
+  # @return [Boolean]
   def valid_opaque?(auth); end
+
+  # @return [Boolean]
   def valid_qop?(auth); end
 end
 
@@ -129,12 +158,20 @@ Rack::Auth::Digest::MD5::QOP = T.let(T.unsafe(nil), String)
 # +time_limit+ can be optionally set to an integer (number of seconds),
 # to limit the validity of the generated nonces.
 class Rack::Auth::Digest::Nonce
+  # @return [Nonce] a new instance of Nonce
   def initialize(timestamp = T.unsafe(nil), given_digest = T.unsafe(nil)); end
 
   def digest; end
+
+  # @return [Boolean]
   def fresh?; end
+
+  # @return [Boolean]
   def stale?; end
+
   def to_s; end
+
+  # @return [Boolean]
   def valid?; end
 
   class << self
@@ -144,17 +181,24 @@ class Rack::Auth::Digest::Nonce
     def private_key; end
 
     # Sets the attribute private_key
+    #
+    # @param value the value to set the attribute private_key to.
     def private_key=(_arg0); end
 
     # Returns the value of attribute time_limit.
     def time_limit; end
 
     # Sets the attribute time_limit
+    #
+    # @param value the value to set the attribute time_limit to.
     def time_limit=(_arg0); end
   end
 end
 
 class Rack::Auth::Digest::Params < ::Hash
+  # @return [Params] a new instance of Params
+  # @yield [_self]
+  # @yieldparam _self [Rack::Auth::Digest::Params] the object that the method was called on
   def initialize; end
 
   def [](k); end
@@ -177,12 +221,21 @@ end
 Rack::Auth::Digest::Params::UNQUOTED = T.let(T.unsafe(nil), Array)
 
 class Rack::Auth::Digest::Request < ::Rack::Auth::AbstractRequest
+  # @return [Boolean]
   def correct_uri?; end
+
+  # @return [Boolean]
   def digest?; end
+
   def method; end
+
+  # @raise [ArgumentError]
   def method_missing(sym, *args); end
+
   def nonce; end
   def params; end
+
+  # @return [Boolean]
   def respond_to?(sym, *_arg1); end
 end
 
@@ -192,6 +245,8 @@ end
 class Rack::BodyProxy
   # Set the response body to wrap, and the block to call when the
   # response has been fully sent.
+  #
+  # @return [BodyProxy] a new instance of BodyProxy
   def initialize(body, &block); end
 
   # If not already closed, close the wrapped body and
@@ -200,14 +255,18 @@ class Rack::BodyProxy
 
   # Whether the proxy is closed.  The proxy starts as not closed,
   # and becomes closed on the first call to close.
+  #
+  # @return [Boolean]
   def closed?; end
 
   # Delegate missing methods to the wrapped body.
-  def method_missing(method_name, *args, **_arg2, &block); end
+  def method_missing(method_name, *args, &block); end
 
   private
 
   # Return whether the wrapped body responds to the method.
+  #
+  # @return [Boolean]
   def respond_to_missing?(method_name, include_all = T.unsafe(nil)); end
 end
 
@@ -216,26 +275,26 @@ end
 #
 # Example:
 #
-# require 'rack/lobster'
-# app = Rack::Builder.new do
-# use Rack::CommonLogger
-# use Rack::ShowExceptions
-# map "/lobster" do
-# use Rack::Lint
-# run Rack::Lobster.new
-# end
-# end
+#  require 'rack/lobster'
+#  app = Rack::Builder.new do
+#    use Rack::CommonLogger
+#    use Rack::ShowExceptions
+#    map "/lobster" do
+#      use Rack::Lint
+#      run Rack::Lobster.new
+#    end
+#  end
 #
-# run app
+#  run app
 #
 # Or
 #
-# app = Rack::Builder.app do
-# use Rack::CommonLogger
-# run lambda { |env| [200, {'Content-Type' => 'text/plain'}, ['OK']] }
-# end
+#  app = Rack::Builder.app do
+#    use Rack::CommonLogger
+#    run lambda { |env| [200, {'Content-Type' => 'text/plain'}, ['OK']] }
+#  end
 #
-# run app
+#  run app
 #
 # +use+ adds middleware to the stack, +run+ dispatches to an application.
 # You can use +map+ to construct a Rack::URLMap in a convenient way.
@@ -243,6 +302,8 @@ class Rack::Builder
   # Initialize a new Rack::Builder instance.  +default_app+ specifies the
   # default application if +run+ is not called later.  If a block
   # is given, it is evaluted in the context of the instance.
+  #
+  # @return [Builder] a new instance of Builder
   def initialize(default_app = T.unsafe(nil), &block); end
 
   # Call the Rack application generated by this builder instance. Note that
@@ -258,22 +319,22 @@ class Rack::Builder
   # the Rack application specified by run inside the block.  Other requests will be sent to the
   # default application specified by run outside the block.
   #
-  # Rack::Builder.app do
-  # map '/heartbeat' do
-  # run Heartbeat
-  # end
-  # run App
-  # end
+  #   Rack::Builder.app do
+  #     map '/heartbeat' do
+  #       run Heartbeat
+  #     end
+  #     run App
+  #   end
   #
   # The +use+ method can also be used inside the block to specify middleware to run under a specific path:
   #
-  # Rack::Builder.app do
-  # map '/heartbeat' do
-  # use Middleware
-  # run Heartbeat
-  # end
-  # run App
-  # end
+  #   Rack::Builder.app do
+  #     map '/heartbeat' do
+  #       use Middleware
+  #       run Heartbeat
+  #     end
+  #     run App
+  #   end
   #
   # This example includes a piece of middleware which will run before +/heartbeat+ requests hit +Heartbeat+.
   #
@@ -284,17 +345,17 @@ class Rack::Builder
   # Takes an argument that is an object that responds to #call and returns a Rack response.
   # The simplest form of this is a lambda object:
   #
-  # run lambda { |env| [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+  #   run lambda { |env| [200, { "Content-Type" => "text/plain" }, ["OK"]] }
   #
   # However this could also be a class:
   #
-  # class Heartbeat
-  # def self.call(env)
-  # [200, { "Content-Type" => "text/plain" }, ["OK"]]
-  # end
-  # end
+  #   class Heartbeat
+  #     def self.call(env)
+  #      [200, { "Content-Type" => "text/plain" }, ["OK"]]
+  #     end
+  #   end
   #
-  # run Heartbeat
+  #   run Heartbeat
   def run(app); end
 
   # Return the Rack application generated by this instance.
@@ -302,35 +363,35 @@ class Rack::Builder
 
   # Specifies middleware to use in a stack.
   #
-  # class Middleware
-  # def initialize(app)
-  # @app = app
-  # end
+  #   class Middleware
+  #     def initialize(app)
+  #       @app = app
+  #     end
   #
-  # def call(env)
-  # env["rack.some_header"] = "setting an example"
-  # @app.call(env)
-  # end
-  # end
+  #     def call(env)
+  #       env["rack.some_header"] = "setting an example"
+  #       @app.call(env)
+  #     end
+  #   end
   #
-  # use Middleware
-  # run lambda { |env| [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+  #   use Middleware
+  #   run lambda { |env| [200, { "Content-Type" => "text/plain" }, ["OK"]] }
   #
   # All requests through to this application will first be processed by the middleware class.
   # The +call+ method in this example sets an additional environment key which then can be
   # referenced in the application if required.
-  def use(middleware, *args, **_arg2, &block); end
+  def use(middleware, *args, &block); end
 
   # Takes a lambda or block that is used to warm-up the application. This block is called
   # before the Rack application is returned by to_app.
   #
-  # warmup do |app|
-  # client = Rack::MockRequest.new(app)
-  # client.get('/')
-  # end
+  #   warmup do |app|
+  #     client = Rack::MockRequest.new(app)
+  #     client.get('/')
+  #   end
   #
-  # use SomeMiddleware
-  # run MyApp
+  #   use SomeMiddleware
+  #   run MyApp
   def warmup(prc = T.unsafe(nil), &block); end
 
   private
@@ -356,13 +417,13 @@ class Rack::Builder
     #
     # Example config.ru file:
     #
-    # $ cat config.ru
+    #   $ cat config.ru
     #
-    # #\ -p 9393
+    #   #\ -p 9393
     #
-    # use Rack::ContentLength
-    # require './app.rb'
-    # run App
+    #   use Rack::ContentLength
+    #   require './app.rb'
+    #   run App
     def load_file(path, opts = T.unsafe(nil)); end
 
     # Evaluate the given +builder_script+ string in the context of
@@ -383,18 +444,18 @@ class Rack::Builder
     #
     # Examples:
     #
-    # Rack::Builder.parse_file('config.ru')
-    # # Rack application built using Rack::Builder.new
+    #   Rack::Builder.parse_file('config.ru')
+    #   # Rack application built using Rack::Builder.new
     #
-    # Rack::Builder.parse_file('app.rb')
-    # # requires app.rb, which can be anywhere in Ruby's
-    # # load path. After requiring, assumes App constant
-    # # contains Rack application
+    #   Rack::Builder.parse_file('app.rb')
+    #   # requires app.rb, which can be anywhere in Ruby's
+    #   # load path. After requiring, assumes App constant
+    #   # contains Rack application
     #
-    # Rack::Builder.parse_file('./my_app.rb')
-    # # requires ./my_app.rb, which should be in the
-    # # process's current directory.  After requiring,
-    # # assumes MyApp constant contains Rack application
+    #   Rack::Builder.parse_file('./my_app.rb')
+    #   # requires ./my_app.rb, which should be in the
+    #   # process's current directory.  After requiring,
+    #   # assumes MyApp constant contains Rack application
     def parse_file(config, opts = T.unsafe(nil)); end
   end
 end
@@ -416,7 +477,9 @@ class Rack::Cascade
   #
   # apps: An enumerable of rack applications.
   # cascade_for: The statuses to use cascading for.  If a response is received
-  # from an app, the next app is tried.
+  #              from an app, the next app is tried.
+  #
+  # @return [Cascade] a new instance of Cascade
   def initialize(apps, cascade_for = T.unsafe(nil)); end
 
   # Append an app to the list of apps to cascade.  This app will
@@ -436,6 +499,8 @@ class Rack::Cascade
   def call(env); end
 
   # Whether the given app is one of the apps to cascade to.
+  #
+  # @return [Boolean]
   def include?(app); end
 end
 
@@ -449,18 +514,19 @@ Rack::Cascade::NotFound = T.let(T.unsafe(nil), Array)
 # headers in the chunked encoding.  However, using this requires you manually
 # specify a response body that supports a +trailers+ method.  Example:
 #
-# [200, { 'Trailer' => 'Expires'}, ["Hello", "World"]]
-# # error raised
+#   [200, { 'Trailer' => 'Expires'}, ["Hello", "World"]]
+#   # error raised
 #
-# body = ["Hello", "World"]
-# def body.trailers
-# { 'Expires' => Time.now.to_s }
-# end
-# [200, { 'Trailer' => 'Expires'}, body]
-# # No exception raised
+#   body = ["Hello", "World"]
+#   def body.trailers
+#     { 'Expires' => Time.now.to_s }
+#   end
+#   [200, { 'Trailer' => 'Expires'}, body]
+#   # No exception raised
 class Rack::Chunked
   include ::Rack::Utils
 
+  # @return [Chunked] a new instance of Chunked
   def initialize(app); end
 
   # If the rack app returns a response that should have a body,
@@ -469,12 +535,16 @@ class Rack::Chunked
   def call(env); end
 
   # Whether the HTTP version supports chunked encoding (HTTP 1.1 does).
+  #
+  # @return [Boolean]
   def chunkable_version?(ver); end
 end
 
 # A body wrapper that emits chunked responses.
 class Rack::Chunked::Body
   # Store the response body to be chunked.
+  #
+  # @return [Body] a new instance of Body
   def initialize(body); end
 
   # Close the response body if the response body supports it.
@@ -482,6 +552,8 @@ class Rack::Chunked::Body
 
   # For each element yielded by the response body, yield
   # the element in chunked encoding.
+  #
+  # @yield [TAIL]
   def each(&block); end
 
   private
@@ -515,6 +587,8 @@ class Rack::CommonLogger
   # which includes the standard library Logger.  These methods are called
   # with a single string argument, the log message.
   # If +logger+ is nil, CommonLogger will fall back <tt>env['rack.errors']</tt>.
+  #
+  # @return [CommonLogger] a new instance of CommonLogger
   def initialize(app, logger = T.unsafe(nil)); end
 
   # Log all requests in common_log format after a response has been
@@ -538,9 +612,9 @@ end
 
 # Common Log Format: http://httpd.apache.org/docs/1.3/logs.html#common
 #
-# lilith.local - - [07/Aug/2006 23:58:02 -0400] "GET / HTTP/1.1" 500 -
+#   lilith.local - - [07/Aug/2006 23:58:02 -0400] "GET / HTTP/1.1" 500 -
 #
-# %{%s - %s [%s] "%s %s%s %s" %d %s\n} %
+#   %{%s - %s [%s] "%s %s%s %s" %d %s\n} %
 #
 # The actual format is slightly different than the above due to the
 # separation of SCRIPT_NAME and PATH_INFO, and because the elapsed
@@ -560,6 +634,7 @@ Rack::CommonLogger::FORMAT = T.let(T.unsafe(nil), String)
 # Adapted from Michael Klishin's Merb implementation:
 # https://github.com/wycats/merb/blob/master/merb-core/lib/merb-core/rack/middleware/conditional_get.rb
 class Rack::ConditionalGet
+  # @return [ConditionalGet] a new instance of ConditionalGet
   def initialize(app); end
 
   # Return empty 304 response if the response has not been
@@ -570,14 +645,20 @@ class Rack::ConditionalGet
 
   # Whether the ETag response header matches the If-None-Match request header.
   # If so, the request has not been modified.
+  #
+  # @return [Boolean]
   def etag_matches?(none_match, headers); end
 
   # Return whether the response has not been modified since the
   # last request.
+  #
+  # @return [Boolean]
   def fresh?(env, headers); end
 
   # Whether the Last-Modified response header matches the If-Modified-Since
   # request header.  If so, the request has not been modified.
+  #
+  # @return [Boolean]
   def modified_since?(modified_since, headers); end
 
   # Return a Time object for the given string (which should be in RFC2822
@@ -589,10 +670,11 @@ end
 # initialization.
 #
 # Example:
-# use Rack::Config do |env|
-# env['my-key'] = 'some-value'
-# end
+#     use Rack::Config do |env|
+#       env['my-key'] = 'some-value'
+#     end
 class Rack::Config
+  # @return [Config] a new instance of Config
   def initialize(app, &block); end
 
   def call(env); end
@@ -605,6 +687,7 @@ end
 class Rack::ContentLength
   include ::Rack::Utils
 
+  # @return [ContentLength] a new instance of ContentLength
   def initialize(app); end
 
   def call(env); end
@@ -613,13 +696,14 @@ end
 # Sets the Content-Type header on responses which don't have one.
 #
 # Builder Usage:
-# use Rack::ContentType, "text/plain"
+#   use Rack::ContentType, "text/plain"
 #
 # When no content type argument is provided, "text/html" is the
 # default.
 class Rack::ContentType
   include ::Rack::Utils
 
+  # @return [ContentType] a new instance of ContentType
   def initialize(app, content_type = T.unsafe(nil)); end
 
   def call(env); end
@@ -647,13 +731,15 @@ class Rack::Deflater
   # Creates Rack::Deflater middleware. Options:
   #
   # :if :: a lambda enabling / disabling deflation based on returned boolean value
-  # (e.g <tt>use Rack::Deflater, :if => lambda { |*, body| sum=0; body.each { |i| sum += i.length }; sum > 512 }</tt>).
-  # However, be aware that calling `body.each` inside the block will break cases where `body.each` is not idempotent,
-  # such as when it is an +IO+ instance.
+  #        (e.g <tt>use Rack::Deflater, :if => lambda { |*, body| sum=0; body.each { |i| sum += i.length }; sum > 512 }</tt>).
+  #        However, be aware that calling `body.each` inside the block will break cases where `body.each` is not idempotent,
+  #        such as when it is an +IO+ instance.
   # :include :: a list of content types that should be compressed. By default, all content types are compressed.
   # :sync :: determines if the stream is going to be flushed after every chunk.  Flushing after every chunk reduces
-  # latency for time-sensitive streaming applications, but hurts compression and throughput.
-  # Defaults to +true+.
+  #          latency for time-sensitive streaming applications, but hurts compression and throughput.
+  #          Defaults to +true+.
+  #
+  # @return [Deflater] a new instance of Deflater
   def initialize(app, options = T.unsafe(nil)); end
 
   def call(env); end
@@ -661,6 +747,8 @@ class Rack::Deflater
   private
 
   # Whether the body should be compressed.
+  #
+  # @return [Boolean]
   def should_deflate?(env, status, headers, body); end
 end
 
@@ -669,8 +757,10 @@ class Rack::Deflater::GzipStream
   # Initialize the gzip stream.  Arguments:
   # body :: Response body to compress with gzip
   # mtime :: The modification time of the body, used to set the
-  # modification time in the gzip header.
+  #          modification time in the gzip header.
   # sync :: Whether to flush each gzip chunk as soon as it is ready.
+  #
+  # @return [GzipStream] a new instance of GzipStream
   def initialize(body, mtime, sync); end
 
   # Close the original body if possible.
@@ -691,6 +781,8 @@ end
 # If +app+ is not specified, a Rack::Files of the same +root+ will be used.
 class Rack::Directory
   # Set the root directory and application for serving files.
+  #
+  # @return [Directory] a new instance of Directory
   def initialize(root, app = T.unsafe(nil)); end
 
   def call(env); end
@@ -734,6 +826,8 @@ Rack::Directory::DIR_PAGE_HEADER = T.let(T.unsafe(nil), String)
 # to each file.
 class Rack::Directory::DirectoryBody < ::Struct
   # Yield strings for each part of the directory entry
+  #
+  # @yield [DIR_PAGE_HEADER % [ show_path, show_path ]]
   def each; end
 
   private
@@ -757,6 +851,7 @@ Rack::ETAG = T.let(T.unsafe(nil), String)
 # used when Etag is absent and a directive when it is present. The first
 # defaults to nil, while the second defaults to "max-age=0, private, must-revalidate"
 class Rack::ETag
+  # @return [ETag] a new instance of ETag
   def initialize(app, no_cache_control = T.unsafe(nil), cache_control = T.unsafe(nil)); end
 
   def call(env); end
@@ -764,8 +859,14 @@ class Rack::ETag
   private
 
   def digest_body(body); end
+
+  # @return [Boolean]
   def etag_body?(body); end
+
+  # @return [Boolean]
   def etag_status?(status); end
+
+  # @return [Boolean]
   def skip_caching?(headers); end
 end
 
@@ -782,40 +883,40 @@ Rack::EXPIRES = T.let(T.unsafe(nil), String)
 #
 # * on_start(request, response)
 #
-# This event is sent at the start of the request, before the next
-# middleware in the chain is called.  This method is called with a request
-# object, and a response object.  Right now, the response object is always
-# nil, but in the future it may actually be a real response object.
+#   This event is sent at the start of the request, before the next
+#   middleware in the chain is called.  This method is called with a request
+#   object, and a response object.  Right now, the response object is always
+#   nil, but in the future it may actually be a real response object.
 #
 # * on_commit(request, response)
 #
-# The response has been committed.  The application has returned, but the
-# response has not been sent to the webserver yet.  This method is always
-# called with a request object and the response object.  The response
-# object is constructed from the rack triple that the application returned.
-# Changes may still be made to the response object at this point.
+#   The response has been committed.  The application has returned, but the
+#   response has not been sent to the webserver yet.  This method is always
+#   called with a request object and the response object.  The response
+#   object is constructed from the rack triple that the application returned.
+#   Changes may still be made to the response object at this point.
 #
 # * on_send(request, response)
 #
-# The webserver has started iterating over the response body and presumably
-# has started sending data over the wire. This method is always called with
-# a request object and the response object.  The response object is
-# constructed from the rack triple that the application returned.  Changes
-# SHOULD NOT be made to the response object as the webserver has already
-# started sending data.  Any mutations will likely result in an exception.
+#   The webserver has started iterating over the response body and presumably
+#   has started sending data over the wire. This method is always called with
+#   a request object and the response object.  The response object is
+#   constructed from the rack triple that the application returned.  Changes
+#   SHOULD NOT be made to the response object as the webserver has already
+#   started sending data.  Any mutations will likely result in an exception.
 #
 # * on_finish(request, response)
 #
-# The webserver has closed the response, and all data has been written to
-# the response socket.  The request and response object should both be
-# read-only at this point.  The body MAY NOT be available on the response
-# object as it may have been flushed to the socket.
+#   The webserver has closed the response, and all data has been written to
+#   the response socket.  The request and response object should both be
+#   read-only at this point.  The body MAY NOT be available on the response
+#   object as it may have been flushed to the socket.
 #
 # * on_error(request, response, error)
 #
-# An exception has occurred in the application or an `on_commit` event.
-# This method will get the request, the response (if available) and the
-# exception that was raised.
+#   An exception has occurred in the application or an `on_commit` event.
+#   This method will get the request, the response (if available) and the
+#   exception that was raised.
 #
 # ## Order
 #
@@ -826,6 +927,7 @@ Rack::EXPIRES = T.let(T.unsafe(nil), String)
 # raises an exception.  If something raises an exception in a `on_finish`
 # method, then nothing is guaranteed.
 class Rack::Events
+  # @return [Events] a new instance of Events
   def initialize(app, handlers); end
 
   def call(env); end
@@ -849,6 +951,7 @@ module Rack::Events::Abstract
 end
 
 class Rack::Events::BufferedResponse < ::Rack::Response::Raw
+  # @return [BufferedResponse] a new instance of BufferedResponse
   def initialize(status, headers, body); end
 
   # Returns the value of attribute body.
@@ -858,6 +961,7 @@ class Rack::Events::BufferedResponse < ::Rack::Response::Raw
 end
 
 class Rack::Events::EventedBodyProxy < ::Rack::BodyProxy
+  # @return [EventedBodyProxy] a new instance of EventedBodyProxy
   def initialize(body, request, response, handlers, &block); end
 
   def each; end
@@ -879,6 +983,7 @@ Rack::File = Rack::Files
 # Handlers can detect if bodies are a Rack::Files, and use mechanisms
 # like sendfile on the +path+.
 class Rack::Files
+  # @return [Files] a new instance of Files
   def initialize(root, headers = T.unsafe(nil), default_mime = T.unsafe(nil)); end
 
   def call(env); end
@@ -898,6 +1003,7 @@ class Rack::Files
   def mime_type(path, default_mime); end
 
   class << self
+    # @todo remove in 3.0
     def method_added(name); end
   end
 end
@@ -906,6 +1012,7 @@ Rack::Files::ALLOWED_VERBS = T.let(T.unsafe(nil), Array)
 Rack::Files::ALLOW_HEADER = T.let(T.unsafe(nil), String)
 
 class Rack::Files::BaseIterator
+  # @return [BaseIterator] a new instance of BaseIterator
   def initialize(path, ranges, options); end
 
   def bytesize; end
@@ -924,7 +1031,10 @@ class Rack::Files::BaseIterator
   private
 
   def each_range_part(file, range); end
+
+  # @return [Boolean]
   def multipart?; end
+
   def multipart_heading(range); end
 end
 
@@ -937,8 +1047,9 @@ Rack::Files::MULTIPART_BOUNDARY = T.let(T.unsafe(nil), String)
 # Rack::ForwardRequest gets caught by Rack::Recursive and redirects
 # the current request to the app at +url+.
 #
-# raise ForwardRequest.new("/not-found")
+#   raise ForwardRequest.new("/not-found")
 class Rack::ForwardRequest < ::Exception
+  # @return [ForwardRequest] a new instance of ForwardRequest
   def initialize(url, env = T.unsafe(nil)); end
 
   # Returns the value of attribute env.
@@ -974,8 +1085,10 @@ module Rack::Handler
     # Select first available Rack handler given an `Array` of server names.
     # Raises `LoadError` if no handler was found.
     #
-    # > pick ['thin', 'webrick']
-    # => Rack::Handler::WEBrick
+    #   > pick ['thin', 'webrick']
+    #   => Rack::Handler::WEBrick
+    #
+    # @raise [LoadError]
     def pick(server_names); end
 
     def register(server, klass); end
@@ -985,12 +1098,12 @@ module Rack::Handler
     #
     # Naming convention:
     #
-    # Foo # => 'foo'
-    # FooBar # => 'foo_bar.rb'
-    # FooBAR # => 'foobar.rb'
-    # FOObar # => 'foobar.rb'
-    # FOOBAR # => 'foobar.rb'
-    # FooBarBaz # => 'foo_bar_baz.rb'
+    #   Foo # => 'foo'
+    #   FooBar # => 'foo_bar.rb'
+    #   FooBAR # => 'foobar.rb'
+    #   FOObar # => 'foobar.rb'
+    #   FOOBAR # => 'foobar.rb'
+    #   FooBarBaz # => 'foo_bar_baz.rb'
     def try_require(prefix, const_name); end
   end
 end
@@ -1007,12 +1120,15 @@ end
 Rack::Handler::SERVER_NAMES = T.let(T.unsafe(nil), Array)
 
 class Rack::Handler::WEBrick < ::WEBrick::HTTPServlet::AbstractServlet
+  # @return [WEBrick] a new instance of WEBrick
   def initialize(server, app); end
 
   def service(req, res); end
 
   class << self
+    # @yield [@server]
     def run(app, **options); end
+
     def shutdown; end
     def valid_options; end
   end
@@ -1021,6 +1137,7 @@ end
 # Rack::Head returns an empty body for all HEAD requests. It leaves
 # all other requests unchanged.
 class Rack::Head
+  # @return [Head] a new instance of Head
   def initialize(app); end
 
   def call(env); end
@@ -1033,6 +1150,7 @@ Rack::LINK = T.let(T.unsafe(nil), String)
 class Rack::Lint
   include ::Rack::Lint::Assertion
 
+  # @return [Lint] a new instance of Lint
   def initialize(app); end
 
   def _call(env); end
@@ -1094,13 +1212,14 @@ end
 class Rack::Lint::ErrorWrapper
   include ::Rack::Lint::Assertion
 
+  # @return [ErrorWrapper] a new instance of ErrorWrapper
   def initialize(error); end
 
   # * +close+ must never be called on the error stream.
   def close(*args); end
 
   # * +flush+ must be called without arguments and must be called
-  # in order to make the error appear for sure.
+  #   in order to make the error appear for sure.
   def flush; end
 
   # * +puts+ must be called with a single argument that responds to +to_s+.
@@ -1114,17 +1233,18 @@ class Rack::Lint::HijackWrapper
   include ::Rack::Lint::Assertion
   extend ::Forwardable
 
+  # @return [HijackWrapper] a new instance of HijackWrapper
   def initialize(io); end
 
-  def close(*args, **_arg1, &block); end
-  def close_read(*args, **_arg1, &block); end
-  def close_write(*args, **_arg1, &block); end
-  def closed?(*args, **_arg1, &block); end
-  def flush(*args, **_arg1, &block); end
-  def read(*args, **_arg1, &block); end
-  def read_nonblock(*args, **_arg1, &block); end
-  def write(*args, **_arg1, &block); end
-  def write_nonblock(*args, **_arg1, &block); end
+  def close(*args, &block); end
+  def close_read(*args, &block); end
+  def close_write(*args, &block); end
+  def closed?(*args, &block); end
+  def flush(*args, &block); end
+  def read(*args, &block); end
+  def read_nonblock(*args, &block); end
+  def write(*args, &block); end
+  def write_nonblock(*args, &block); end
 end
 
 Rack::Lint::HijackWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
@@ -1132,6 +1252,7 @@ Rack::Lint::HijackWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
 class Rack::Lint::InputWrapper
   include ::Rack::Lint::Assertion
 
+  # @return [InputWrapper] a new instance of InputWrapper
   def initialize(input); end
 
   # * +close+ must never be called on the input stream.
@@ -1141,33 +1262,33 @@ class Rack::Lint::InputWrapper
   def each(*args); end
 
   # * +gets+ must be called without arguments and return a string,
-  # or +nil+ on EOF.
+  #   or +nil+ on EOF.
   def gets(*args); end
 
   # * +read+ behaves like IO#read.
-  # Its signature is <tt>read([length, [buffer]])</tt>.
+  #   Its signature is <tt>read([length, [buffer]])</tt>.
   #
-  # If given, +length+ must be a non-negative Integer (>= 0) or +nil+,
-  # and +buffer+ must be a String and may not be nil.
+  #   If given, +length+ must be a non-negative Integer (>= 0) or +nil+,
+  #   and +buffer+ must be a String and may not be nil.
   #
-  # If +length+ is given and not nil, then this method reads at most
-  # +length+ bytes from the input stream.
+  #   If +length+ is given and not nil, then this method reads at most
+  #   +length+ bytes from the input stream.
   #
-  # If +length+ is not given or nil, then this method reads
-  # all data until EOF.
+  #   If +length+ is not given or nil, then this method reads
+  #   all data until EOF.
   #
-  # When EOF is reached, this method returns nil if +length+ is given
-  # and not nil, or "" if +length+ is not given or is nil.
+  #   When EOF is reached, this method returns nil if +length+ is given
+  #   and not nil, or "" if +length+ is not given or is nil.
   #
-  # If +buffer+ is given, then the read data will be placed
-  # into +buffer+ instead of a newly created String object.
+  #   If +buffer+ is given, then the read data will be placed
+  #   into +buffer+ instead of a newly created String object.
   def read(*args); end
 
   # * +rewind+ must be called without arguments. It rewinds the input
-  # stream back to the beginning. It must not raise Errno::ESPIPE:
-  # that is, it may not be a pipe or a socket. Therefore, handler
-  # developers must buffer the input data into some rewindable object
-  # if the underlying input stream is not rewindable.
+  #   stream back to the beginning. It must not raise Errno::ESPIPE:
+  #   that is, it may not be a pipe or a socket. Therefore, handler
+  #   developers must buffer the input data into some rewindable object
+  #   if the underlying input stream is not rewindable.
   def rewind(*args); end
 end
 
@@ -1177,6 +1298,7 @@ class Rack::Lint::LintError < ::RuntimeError; end
 # Rack::Lock locks every request inside a mutex, so that every request
 # will effectively be executed synchronously.
 class Rack::Lock
+  # @return [Lock] a new instance of Lock
   def initialize(app, mutex = T.unsafe(nil)); end
 
   def call(env); end
@@ -1188,6 +1310,7 @@ end
 
 # Sets up rack.logger to write to rack.errors stream
 class Rack::Logger
+  # @return [Logger] a new instance of Logger
   def initialize(app, level = T.unsafe(nil)); end
 
   def call(env); end
@@ -1200,7 +1323,7 @@ class Rack::MediaType
     # an empty Hash if no CONTENT_TYPE or media-type parameters were
     # provided.  e.g., when the CONTENT_TYPE is "text/plain;charset=utf-8",
     # this method responds with the following Hash:
-    # { 'charset' => 'utf-8' }
+    #   { 'charset' => 'utf-8' }
     def params(content_type); end
 
     # The media type (type/subtype) portion of the CONTENT_TYPE header
@@ -1220,6 +1343,7 @@ end
 Rack::MediaType::SPLIT_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 class Rack::MethodOverride
+  # @return [MethodOverride] a new instance of MethodOverride
   def initialize(app); end
 
   def call(env); end
@@ -1242,46 +1366,50 @@ module Rack::Mime
   # Returns true if the given value is a mime match for the given mime match
   # specification, false otherwise.
   #
-  # Rack::Mime.match?('text/html', 'text/*') => true
-  # Rack::Mime.match?('text/plain', '*') => true
-  # Rack::Mime.match?('text/html', 'application/json') => false
+  #    Rack::Mime.match?('text/html', 'text/*') => true
+  #    Rack::Mime.match?('text/plain', '*') => true
+  #    Rack::Mime.match?('text/html', 'application/json') => false
+  #
+  # @return [Boolean]
   def match?(value, matcher); end
 
   # Returns String with mime type if found, otherwise use +fallback+.
   # +ext+ should be filename extension in the '.ext' format that
-  # File.extname(file) returns.
+  #       File.extname(file) returns.
   # +fallback+ may be any object
   #
   # Also see the documentation for MIME_TYPES
   #
   # Usage:
-  # Rack::Mime.mime_type('.foo')
+  #     Rack::Mime.mime_type('.foo')
   #
   # This is a shortcut for:
-  # Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
+  #     Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
   def mime_type(ext, fallback = T.unsafe(nil)); end
 
   class << self
     # Returns true if the given value is a mime match for the given mime match
     # specification, false otherwise.
     #
-    # Rack::Mime.match?('text/html', 'text/*') => true
-    # Rack::Mime.match?('text/plain', '*') => true
-    # Rack::Mime.match?('text/html', 'application/json') => false
+    #    Rack::Mime.match?('text/html', 'text/*') => true
+    #    Rack::Mime.match?('text/plain', '*') => true
+    #    Rack::Mime.match?('text/html', 'application/json') => false
+    #
+    # @return [Boolean]
     def match?(value, matcher); end
 
     # Returns String with mime type if found, otherwise use +fallback+.
     # +ext+ should be filename extension in the '.ext' format that
-    # File.extname(file) returns.
+    #       File.extname(file) returns.
     # +fallback+ may be any object
     #
     # Also see the documentation for MIME_TYPES
     #
     # Usage:
-    # Rack::Mime.mime_type('.foo')
+    #     Rack::Mime.mime_type('.foo')
     #
     # This is a shortcut for:
-    # Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
+    #     Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
     def mime_type(ext, fallback = T.unsafe(nil)); end
   end
 end
@@ -1292,9 +1420,9 @@ end
 #
 # To amend this list with your local mime.types list you can use:
 #
-# require 'webrick/httputils'
-# list = WEBrick::HTTPUtils.load_mime_types('/etc/mime.types')
-# Rack::Mime::MIME_TYPES.merge!(list)
+#     require 'webrick/httputils'
+#     list = WEBrick::HTTPUtils.load_mime_types('/etc/mime.types')
+#     Rack::Mime::MIME_TYPES.merge!(list)
 #
 # N.B. On Ubuntu the mime.types file does not include the leading period, so
 # users may need to modify the data before merging into the hash.
@@ -1313,6 +1441,7 @@ Rack::Mime::MIME_TYPES = T.let(T.unsafe(nil), Hash)
 # <tt>:fatal</tt>:: Raise a FatalWarning if the app writes to rack.errors.
 # <tt>:lint</tt>:: If true, wrap the application in a Rack::Lint.
 class Rack::MockRequest
+  # @return [MockRequest] a new instance of MockRequest
   def initialize(app); end
 
   # Make a DELETE request and return a MockResponse. See #request.
@@ -1362,8 +1491,13 @@ Rack::MockRequest::DEFAULT_ENV = T.let(T.unsafe(nil), Hash)
 
 class Rack::MockRequest::FatalWarner
   def flush; end
+
+  # @raise [FatalWarning]
   def puts(warning); end
+
   def string; end
+
+  # @raise [FatalWarning]
   def write(warning); end
 end
 
@@ -1373,6 +1507,7 @@ class Rack::MockRequest::FatalWarning < ::RuntimeError; end
 # Usually, you don't create the MockResponse on your own, but use
 # MockRequest.
 class Rack::MockResponse < ::Rack::Response
+  # @return [MockResponse] a new instance of MockResponse
   def initialize(status, headers, body, errors = T.unsafe(nil)); end
 
   def =~(other); end
@@ -1382,6 +1517,7 @@ class Rack::MockResponse < ::Rack::Response
   # Headers
   def cookies; end
 
+  # @return [Boolean]
   def empty?; end
 
   # Errors
@@ -1435,6 +1571,7 @@ Rack::Multipart::EXTENDED_OTHER_VALUE = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::EXTENDED_PARAMETER = T.let(T.unsafe(nil), Regexp)
 
 class Rack::Multipart::Generator
+  # @return [Generator] a new instance of Generator
   def initialize(params, first = T.unsafe(nil)); end
 
   def dump; end
@@ -1444,6 +1581,8 @@ class Rack::Multipart::Generator
   def content_for_other(file, name); end
   def content_for_tempfile(io, file, name); end
   def flattened_params; end
+
+  # @return [Boolean]
   def multipart?; end
 end
 
@@ -1455,6 +1594,7 @@ Rack::Multipart::MULTIPART_CONTENT_TYPE = T.let(T.unsafe(nil), Regexp)
 class Rack::Multipart::MultipartPartLimitError < ::Errno::EMFILE; end
 
 class Rack::Multipart::Parser
+  # @return [Parser] a new instance of Parser
   def initialize(boundary, tempfile, bufsize, query_parser); end
 
   def on_read(content); end
@@ -1486,6 +1626,7 @@ Rack::Multipart::Parser::BOUNDARY_REGEX = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::Parser::BUFSIZE = T.let(T.unsafe(nil), Integer)
 
 class Rack::Multipart::Parser::BoundedIO
+  # @return [BoundedIO] a new instance of BoundedIO
   def initialize(io, content_length); end
 
   def read(size, outbuf = T.unsafe(nil)); end
@@ -1497,6 +1638,7 @@ Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 class Rack::Multipart::Parser::Collector
   include ::Enumerable
 
+  # @return [Collector] a new instance of Collector
   def initialize(tempfile); end
 
   def each; end
@@ -1511,15 +1653,20 @@ end
 
 class Rack::Multipart::Parser::Collector::BufferPart < ::Rack::Multipart::Parser::Collector::MimePart
   def close; end
+
+  # @return [Boolean]
   def file?; end
 end
 
 class Rack::Multipart::Parser::Collector::MimePart < ::Struct
+  # @yield [data]
   def get_data; end
 end
 
 class Rack::Multipart::Parser::Collector::TempfilePart < ::Rack::Multipart::Parser::Collector::MimePart
   def close; end
+
+  # @return [Boolean]
   def file?; end
 end
 
@@ -1527,21 +1674,30 @@ Rack::Multipart::Parser::EMPTY = T.let(T.unsafe(nil), Rack::Multipart::Parser::M
 
 class Rack::Multipart::Parser::MultipartInfo < ::Struct
   # Returns the value of attribute params
+  #
+  # @return [Object] the current value of params
   def params; end
 
   # Sets the attribute params
+  #
+  # @param value [Object] the value to set the attribute params to.
+  # @return [Object] the newly set value
   def params=(_); end
 
   # Returns the value of attribute tmp_files
+  #
+  # @return [Object] the current value of tmp_files
   def tmp_files; end
 
   # Sets the attribute tmp_files
+  #
+  # @param value [Object] the value to set the attribute tmp_files to.
+  # @return [Object] the newly set value
   def tmp_files=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1556,6 +1712,7 @@ Rack::Multipart::SECTION = T.let(T.unsafe(nil), Regexp)
 Rack::Multipart::TOKEN = T.let(T.unsafe(nil), Regexp)
 
 class Rack::Multipart::UploadedFile
+  # @return [UploadedFile] a new instance of UploadedFile
   def initialize(filepath = T.unsafe(nil), ct = T.unsafe(nil), bin = T.unsafe(nil), path: T.unsafe(nil), content_type: T.unsafe(nil), binary: T.unsafe(nil), filename: T.unsafe(nil), io: T.unsafe(nil)); end
 
   # The content type of the "uploaded" file
@@ -1571,12 +1728,15 @@ class Rack::Multipart::UploadedFile
   def original_filename; end
 
   def path; end
+
+  # @return [Boolean]
   def respond_to?(*args); end
 end
 
 Rack::Multipart::VALUE = T.let(T.unsafe(nil), Regexp)
 
 class Rack::NullLogger
+  # @return [NullLogger] a new instance of NullLogger
   def initialize(app); end
 
   def <<(msg); end
@@ -1586,15 +1746,27 @@ class Rack::NullLogger
   def datetime_format; end
   def datetime_format=(datetime_format); end
   def debug(progname = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def debug?; end
+
   def error(progname = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def error?; end
+
   def fatal(progname = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def fatal?; end
+
   def formatter; end
   def formatter=(formatter); end
   def info(progname = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def info?; end
+
   def level; end
   def level=(level); end
   def progname; end
@@ -1603,6 +1775,8 @@ class Rack::NullLogger
   def sev_threshold=(sev_threshold); end
   def unknown(progname = T.unsafe(nil), &block); end
   def warn(progname = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def warn?; end
 end
 
@@ -1614,6 +1788,7 @@ Rack::PUT = T.let(T.unsafe(nil), String)
 Rack::QUERY_STRING = T.let(T.unsafe(nil), String)
 
 class Rack::QueryParser
+  # @return [QueryParser] a new instance of QueryParser
   def initialize(params_class, key_space_limit, param_depth_limit); end
 
   # Returns the value of attribute key_space_limit.
@@ -1626,6 +1801,8 @@ class Rack::QueryParser
   # normalize_params recursively expands parameters into structural types. If
   # the structural types represented by two different parameter names are in
   # conflict, a ParameterTypeError is raised.
+  #
+  # @raise [RangeError]
   def normalize_params(params, name, v, depth); end
 
   # Returns the value of attribute param_depth_limit.
@@ -1647,8 +1824,12 @@ class Rack::QueryParser
 
   private
 
+  # @return [Boolean]
   def params_hash_has_key?(hash, key); end
+
+  # @return [Boolean]
   def params_hash_type?(obj); end
+
   def unescape(s); end
 
   class << self
@@ -1669,10 +1850,15 @@ class Rack::QueryParser::InvalidParameterError < ::ArgumentError; end
 class Rack::QueryParser::ParameterTypeError < ::TypeError; end
 
 class Rack::QueryParser::Params
+  # @return [Params] a new instance of Params
   def initialize(limit); end
 
   def [](key); end
+
+  # @raise [RangeError]
   def []=(key, value); end
+
+  # @return [Boolean]
   def key?(key); end
 
   # Recursively unwraps nested `Params` objects and constructs an object
@@ -1680,18 +1866,18 @@ class Rack::QueryParser::Params
   # (Ruby hashes) in place of the objects. The result is a hash consisting
   # purely of Ruby primitives.
   #
-  # Mutation warning!
+  #   Mutation warning!
   #
-  # 1. This method mutates the internal representation of the `Params`
-  # objects in order to save object allocations.
+  #   1. This method mutates the internal representation of the `Params`
+  #      objects in order to save object allocations.
   #
-  # 2. The value you get back is a reference to the internal hash
-  # representation, not a copy.
+  #   2. The value you get back is a reference to the internal hash
+  #      representation, not a copy.
   #
-  # 3. Because the `Params` object's internal representation is mutable
-  # through the `#[]=` method, it is not thread safe. The result of
-  # getting the hash representation while another thread is adding a
-  # key to it is non-deterministic.
+  #   3. Because the `Params` object's internal representation is mutable
+  #      through the `#[]=` method, it is not thread safe. The result of
+  #      getting the hash representation while another thread is adding a
+  #      key to it is non-deterministic.
   def to_h; end
 
   # Recursively unwraps nested `Params` objects and constructs an object
@@ -1699,18 +1885,18 @@ class Rack::QueryParser::Params
   # (Ruby hashes) in place of the objects. The result is a hash consisting
   # purely of Ruby primitives.
   #
-  # Mutation warning!
+  #   Mutation warning!
   #
-  # 1. This method mutates the internal representation of the `Params`
-  # objects in order to save object allocations.
+  #   1. This method mutates the internal representation of the `Params`
+  #      objects in order to save object allocations.
   #
-  # 2. The value you get back is a reference to the internal hash
-  # representation, not a copy.
+  #   2. The value you get back is a reference to the internal hash
+  #      representation, not a copy.
   #
-  # 3. Because the `Params` object's internal representation is mutable
-  # through the `#[]=` method, it is not thread safe. The result of
-  # getting the hash representation while another thread is adding a
-  # key to it is non-deterministic.
+  #   3. Because the `Params` object's internal representation is mutable
+  #      through the `#[]=` method, it is not thread safe. The result of
+  #      getting the hash representation while another thread is adding a
+  #      key to it is non-deterministic.
   def to_params_hash; end
 end
 
@@ -1753,6 +1939,7 @@ Rack::REQUEST_PATH = T.let(T.unsafe(nil), String)
 # <tt>rack['rack.recursive.include'][...]</tt> or raise a
 # ForwardRequest to redirect internally.
 class Rack::Recursive
+  # @return [Recursive] a new instance of Recursive
   def initialize(app); end
 
   def _call(env); end
@@ -1774,6 +1961,7 @@ end
 # It is performing a check/reload cycle at the start of every request, but
 # also respects a cool down time, during which nothing will be done.
 class Rack::Reloader
+  # @return [Reloader] a new instance of Reloader
   def initialize(app, cooldown = T.unsafe(nil), backend = T.unsafe(nil)); end
 
   def call(env); end
@@ -1797,13 +1985,14 @@ end
 # environment.  It is stateless, the environment +env+ passed to the
 # constructor will be directly modified.
 #
-# req = Rack::Request.new(env)
-# req.post?
-# req.params["data"]
+#   req = Rack::Request.new(env)
+#   req.post?
+#   req.params["data"]
 class Rack::Request
   include ::Rack::Request::Env
   include ::Rack::Request::Helpers
 
+  # @return [Request] a new instance of Request
   def initialize(env); end
 
   def delete_param(k); end
@@ -1819,6 +2008,8 @@ class Rack::Request
     def ip_filter; end
 
     # Sets the attribute ip_filter
+    #
+    # @param value the value to set the attribute ip_filter to.
     def ip_filter=(_arg0); end
   end
 end
@@ -1831,10 +2022,10 @@ module Rack::Request::Env
   # Add a header that may have multiple values.
   #
   # Example:
-  # request.add_header 'Accept', 'image/png'
-  # request.add_header 'Accept', '*/*'
+  #   request.add_header 'Accept', 'image/png'
+  #   request.add_header 'Accept', '*/*'
   #
-  # assert_equal 'image/png,*/*', request.get_header('Accept')
+  #   assert_equal 'image/png,*/*', request.get_header('Accept')
   #
   # http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
   def add_header(key, v); end
@@ -1857,6 +2048,8 @@ module Rack::Request::Env
 
   # Predicate method to test to see if `name` has been set as request
   # specific data
+  #
+  # @return [Boolean]
   def has_header?(name); end
 
   # Set a request specific value for `name` to `v`
@@ -1909,6 +2102,8 @@ module Rack::Request::Helpers
   def cookies; end
 
   # Checks the HTTP request method (or verb) to see if it was of type DELETE
+  #
+  # @return [Boolean]
   def delete?; end
 
   # Destructively delete a parameter, whether it's in GET or POST. Returns the value of the deleted parameter.
@@ -1926,6 +2121,8 @@ module Rack::Request::Helpers
   #
   # A request body is also assumed to contain form-data when no
   # Content-Type header is provided and the request_method is POST.
+  #
+  # @return [Boolean]
   def form_data?; end
 
   def forwarded_authority; end
@@ -1934,9 +2131,13 @@ module Rack::Request::Helpers
   def fullpath; end
 
   # Checks the HTTP request method (or verb) to see if it was of type GET
+  #
+  # @return [Boolean]
   def get?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type HEAD
+  #
+  # @return [Boolean]
   def head?; end
 
   # Returns a formatted host, suitable for being used in a URI.
@@ -1956,6 +2157,8 @@ module Rack::Request::Helpers
   def ip; end
 
   # Checks the HTTP request method (or verb) to see if it was of type LINK
+  #
+  # @return [Boolean]
   def link?; end
 
   def logger; end
@@ -1972,12 +2175,15 @@ module Rack::Request::Helpers
   # an empty Hash if no CONTENT_TYPE or media-type parameters were
   # provided.  e.g., when the CONTENT_TYPE is "text/plain;charset=utf-8",
   # this method responds with the following Hash:
-  # { 'charset' => 'utf-8' }
+  #   { 'charset' => 'utf-8' }
   def media_type_params; end
 
+  # @return [Boolean]
   def multithread?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type OPTIONS
+  #
+  # @return [Boolean]
   def options?; end
 
   # The union of GET and POST data.
@@ -1987,9 +2193,13 @@ module Rack::Request::Helpers
 
   # Determine whether the request body contains data by checking
   # the request media_type against registered parse-data media-types
+  #
+  # @return [Boolean]
   def parseable_data?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type PATCH
+  #
+  # @return [Boolean]
   def patch?; end
 
   def path; end
@@ -1998,9 +2208,13 @@ module Rack::Request::Helpers
   def port; end
 
   # Checks the HTTP request method (or verb) to see if it was of type POST
+  #
+  # @return [Boolean]
   def post?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type PUT
+  #
+  # @return [Boolean]
   def put?; end
 
   def query_string; end
@@ -2024,14 +2238,21 @@ module Rack::Request::Helpers
   def server_port; end
   def session; end
   def session_options; end
+
+  # @return [Boolean]
   def ssl?; end
 
   # Checks the HTTP request method (or verb) to see if it was of type TRACE
+  #
+  # @return [Boolean]
   def trace?; end
 
+  # @return [Boolean]
   def trusted_proxy?(ip); end
 
   # Checks the HTTP request method (or verb) to see if it was of type UNLINK
+  #
+  # @return [Boolean]
   def unlink?; end
 
   # Destructively update a parameter, whether it's in GET and/or POST. Returns nil.
@@ -2049,6 +2270,7 @@ module Rack::Request::Helpers
   # like Hash#values_at
   def values_at(*keys); end
 
+  # @return [Boolean]
   def xhr?; end
 
   private
@@ -2127,6 +2349,13 @@ class Rack::Response
   # conform to the HTTP protocol RFCs.
   #
   # Providing a body which responds to #to_str is legacy behaviour.
+  #
+  # @param body [nil, #each, #to_str] the response body.
+  # @param status [Integer] the integer status as defined by the
+  # @param headers [#each] a list of key-value header pairs which
+  # @return [Response] a new instance of Response
+  # @yield [_self]
+  # @yieldparam _self [Rack::Response] the object that the method was called on
   def initialize(body = T.unsafe(nil), status = T.unsafe(nil), headers = T.unsafe(nil)); end
 
   def [](key); end
@@ -2136,22 +2365,34 @@ class Rack::Response
   def body; end
 
   # Sets the attribute body
+  #
+  # @param value the value to set the attribute body to.
   def body=(_arg0); end
 
+  # @return [Boolean]
   def chunked?; end
+
   def close; end
   def delete_header(key); end
   def each(&callback); end
+
+  # @return [Boolean]
   def empty?; end
 
   # Generate a response array consistent with the requirements of the SPEC.
   # which is suitable to be returned from the middleware `#call(env)` method.
+  #
+  # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   def finish(&block); end
 
   def get_header(key); end
+
+  # @return [Boolean]
   def has_header?(key); end
 
   # Returns the value of attribute headers.
+  #
+  # @deprecated Use {#headers} instead.
   def header; end
 
   # Returns the value of attribute headers.
@@ -2161,6 +2402,8 @@ class Rack::Response
   def length; end
 
   # Sets the attribute length
+  #
+  # @param value the value to set the attribute length to.
   def length=(_arg0); end
 
   def redirect(target, status = T.unsafe(nil)); end
@@ -2170,11 +2413,15 @@ class Rack::Response
   def status; end
 
   # Sets the attribute status
+  #
+  # @param value the value to set the attribute status to.
   def status=(_arg0); end
 
   # Generate a response array consistent with the requirements of the SPEC.
   # which is suitable to be returned from the middleware `#call(env)` method.
   # For *response
+  #
+  # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   def to_a(&block); end
 
   # Append to body and update Content-Length.
@@ -2190,27 +2437,36 @@ end
 Rack::Response::CHUNKED = T.let(T.unsafe(nil), String)
 
 module Rack::Response::Helpers
+  # @return [Boolean]
   def accepted?; end
 
   # Add a header that may have multiple values.
   #
   # Example:
-  # response.add_header 'Vary', 'Accept-Encoding'
-  # response.add_header 'Vary', 'Cookie'
+  #   response.add_header 'Vary', 'Accept-Encoding'
+  #   response.add_header 'Vary', 'Cookie'
   #
-  # assert_equal 'Accept-Encoding,Cookie', response.get_header('Vary')
+  #   assert_equal 'Accept-Encoding,Cookie', response.get_header('Vary')
   #
   # http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
   def add_header(key, v); end
 
+  # @return [Boolean]
   def bad_request?; end
 
   # Specify that the content should be cached.
+  #
+  # @option directive
+  # @param duration [Integer] The number of seconds until the cache expires.
+  # @param directive [Hash] a customizable set of options
   def cache!(duration = T.unsafe(nil), directive: T.unsafe(nil)); end
 
   def cache_control; end
   def cache_control=(v); end
+
+  # @return [Boolean]
   def client_error?; end
+
   def content_length; end
 
   # Get the content type of the response.
@@ -2219,7 +2475,9 @@ module Rack::Response::Helpers
   # Set the content type of the response.
   def content_type=(content_type); end
 
+  # @return [Boolean]
   def created?; end
+
   def delete_cookie(key, value = T.unsafe(nil)); end
 
   # Specifies that the content shouldn't be cached. Overrides `cache!` if already called.
@@ -2227,28 +2485,62 @@ module Rack::Response::Helpers
 
   def etag; end
   def etag=(v); end
+
+  # @return [Boolean]
   def forbidden?; end
+
+  # @return [Boolean]
   def include?(header); end
+
+  # @return [Boolean]
   def informational?; end
+
+  # @return [Boolean]
   def invalid?; end
+
   def location; end
   def location=(location); end
   def media_type; end
   def media_type_params; end
+
+  # @return [Boolean]
   def method_not_allowed?; end
+
+  # @return [Boolean]
   def moved_permanently?; end
+
+  # @return [Boolean]
   def no_content?; end
+
+  # @return [Boolean]
   def not_found?; end
+
+  # @return [Boolean]
   def ok?; end
+
+  # @return [Boolean]
   def precondition_failed?; end
+
+  # @return [Boolean]
   def redirect?; end
+
+  # @return [Boolean]
   def redirection?; end
+
+  # @return [Boolean]
   def server_error?; end
+
   def set_cookie(key, value); end
   def set_cookie_header; end
   def set_cookie_header=(v); end
+
+  # @return [Boolean]
   def successful?; end
+
+  # @return [Boolean]
   def unauthorized?; end
+
+  # @return [Boolean]
   def unprocessable?; end
 
   protected
@@ -2260,10 +2552,13 @@ end
 class Rack::Response::Raw
   include ::Rack::Response::Helpers
 
+  # @return [Raw] a new instance of Raw
   def initialize(status, headers); end
 
   def delete_header(key); end
   def get_header(key); end
+
+  # @return [Boolean]
   def has_header?(key); end
 
   # Returns the value of attribute headers.
@@ -2275,6 +2570,8 @@ class Rack::Response::Raw
   def status; end
 
   # Sets the attribute status
+  #
+  # @param value the value to set the attribute status to.
   def status=(_arg0); end
 end
 
@@ -2290,6 +2587,7 @@ Rack::Response::STATUS_WITH_NO_ENTITY_BODY = T.let(T.unsafe(nil), Hash)
 # Don't forget to call #close when you're done. This frees up temporary resources that
 # RewindableInput uses, though it does *not* close the original IO object.
 class Rack::RewindableInput
+  # @return [RewindableInput] a new instance of RewindableInput
   def initialize(io); end
 
   # Closes this RewindableInput object without closing the originally
@@ -2306,7 +2604,9 @@ class Rack::RewindableInput
 
   private
 
+  # @return [Boolean]
   def filesystem_has_posix_semantics?; end
+
   def make_rewindable; end
 end
 
@@ -2317,6 +2617,7 @@ end
 # time, or before all the other middlewares to include time for them,
 # too.
 class Rack::Runtime
+  # @return [Runtime] a new instance of Runtime
   def initialize(app, name = T.unsafe(nil)); end
 
   def call(env); end
@@ -2356,23 +2657,23 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # a private "/files/" area, enable X-Accel-Redirect, and pass the special
 # X-Sendfile-Type and X-Accel-Mapping headers to the backend:
 #
-# location ~ /files/(.*) {
-# internal;
-# alias /var/www/$1;
-# }
+#   location ~ /files/(.*) {
+#     internal;
+#     alias /var/www/$1;
+#   }
 #
-# location / {
-# proxy_redirect     off;
+#   location / {
+#     proxy_redirect     off;
 #
-# proxy_set_header   Host                $host;
-# proxy_set_header   X-Real-IP           $remote_addr;
-# proxy_set_header   X-Forwarded-For     $proxy_add_x_forwarded_for;
+#     proxy_set_header   Host                $host;
+#     proxy_set_header   X-Real-IP           $remote_addr;
+#     proxy_set_header   X-Forwarded-For     $proxy_add_x_forwarded_for;
 #
-# proxy_set_header   X-Sendfile-Type     X-Accel-Redirect;
-# proxy_set_header   X-Accel-Mapping     /var/www/=/files/;
+#     proxy_set_header   X-Sendfile-Type     X-Accel-Redirect;
+#     proxy_set_header   X-Accel-Mapping     /var/www/=/files/;
 #
-# proxy_pass         http://127.0.0.1:8080/;
-# }
+#     proxy_pass         http://127.0.0.1:8080/;
+#   }
 #
 # Note that the X-Sendfile-Type header must be set exactly as shown above.
 # The X-Accel-Mapping header should specify the location on the file system,
@@ -2388,20 +2689,20 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # time, although only recent version support X-Sendfile in a reverse proxy
 # configuration.
 #
-# $HTTP["host"] == "example.com" {
-# proxy-core.protocol = "http"
-# proxy-core.balancer = "round-robin"
-# proxy-core.backends = (
-# "127.0.0.1:8000",
-# "127.0.0.1:8001",
-# ...
-# )
+#   $HTTP["host"] == "example.com" {
+#      proxy-core.protocol = "http"
+#      proxy-core.balancer = "round-robin"
+#      proxy-core.backends = (
+#        "127.0.0.1:8000",
+#        "127.0.0.1:8001",
+#        ...
+#      )
 #
-# proxy-core.allow-x-sendfile = "enable"
-# proxy-core.rewrite-request = (
-# "X-Sendfile-Type" => (".*" => "X-Sendfile")
-# )
-# }
+#      proxy-core.allow-x-sendfile = "enable"
+#      proxy-core.rewrite-request = (
+#        "X-Sendfile-Type" => (".*" => "X-Sendfile")
+#      )
+#    }
 #
 # See Also: http://redmine.lighttpd.net/wiki/lighttpd/Docs:ModProxyCore
 #
@@ -2414,9 +2715,9 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # Once the module is compiled and installed, you can enable it using
 # XSendFile config directive:
 #
-# RequestHeader Set X-Sendfile-Type X-Sendfile
-# ProxyPassReverse / http://localhost:8001/
-# XSendFile on
+#   RequestHeader Set X-Sendfile-Type X-Sendfile
+#   ProxyPassReverse / http://localhost:8001/
+#   XSendFile on
 #
 # === Mapping parameter
 #
@@ -2425,6 +2726,7 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # external. The internal values may contain regular expression syntax, they
 # will be matched with case indifference.
 class Rack::Sendfile
+  # @return [Sendfile] a new instance of Sendfile
   def initialize(app, variation = T.unsafe(nil), mappings = T.unsafe(nil)); end
 
   def call(env); end
@@ -2438,46 +2740,48 @@ end
 class Rack::Server
   # Options may include:
   # * :app
-  # a rack application to run (overrides :config and :builder)
+  #     a rack application to run (overrides :config and :builder)
   # * :builder
-  # a string to evaluate a Rack::Builder from
+  #     a string to evaluate a Rack::Builder from
   # * :config
-  # a rackup configuration file path to load (.ru)
+  #     a rackup configuration file path to load (.ru)
   # * :environment
-  # this selects the middleware that will be wrapped around
-  # your application. Default options available are:
-  # - development: CommonLogger, ShowExceptions, and Lint
-  # - deployment: CommonLogger
-  # - none: no extra middleware
-  # note: when the server is a cgi server, CommonLogger is not included.
+  #     this selects the middleware that will be wrapped around
+  #     your application. Default options available are:
+  #       - development: CommonLogger, ShowExceptions, and Lint
+  #       - deployment: CommonLogger
+  #       - none: no extra middleware
+  #     note: when the server is a cgi server, CommonLogger is not included.
   # * :server
-  # choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
+  #     choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
   # * :daemonize
-  # if true, the server will daemonize itself (fork, detach, etc)
+  #     if true, the server will daemonize itself (fork, detach, etc)
   # * :pid
-  # path to write a pid file after daemonize
+  #     path to write a pid file after daemonize
   # * :Host
-  # the host address to bind to (used by supporting Rack::Handler)
+  #     the host address to bind to (used by supporting Rack::Handler)
   # * :Port
-  # the port to bind to (used by supporting Rack::Handler)
+  #     the port to bind to (used by supporting Rack::Handler)
   # * :AccessLog
-  # webrick access log options (or supporting Rack::Handler)
+  #     webrick access log options (or supporting Rack::Handler)
   # * :debug
-  # turn on debug output ($DEBUG = true)
+  #     turn on debug output ($DEBUG = true)
   # * :warn
-  # turn on warnings ($-w = true)
+  #     turn on warnings ($-w = true)
   # * :include
-  # add given paths to $LOAD_PATH
+  #     add given paths to $LOAD_PATH
   # * :require
-  # require the given libraries
+  #     require the given libraries
   #
   # Additional options for profiling app initialization include:
   # * :heapfile
-  # location for ObjectSpace.dump_all to write the output to
+  #     location for ObjectSpace.dump_all to write the output to
   # * :profile_file
-  # location for CPU/Memory (StackProf) profile output (defaults to a tempfile)
+  #     location for CPU/Memory (StackProf) profile output (defaults to a tempfile)
   # * :profile_mode
-  # StackProf profile mode (cpu|wall|object)
+  #     StackProf profile mode (cpu|wall|object)
+  #
+  # @return [Server] a new instance of Server
   def initialize(options = T.unsafe(nil)); end
 
   def app; end
@@ -2486,6 +2790,8 @@ class Rack::Server
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   def server; end
@@ -2520,12 +2826,12 @@ class Rack::Server
     # This method can be used to very easily launch a CGI application, for
     # example:
     #
-    # Rack::Server.start(
-    # :app => lambda do |e|
-    # [200, {'Content-Type' => 'text/html'}, ['hello world']]
-    # end,
-    # :server => 'cgi'
-    # )
+    #  Rack::Server.start(
+    #    :app => lambda do |e|
+    #      [200, {'Content-Type' => 'text/html'}, ['hello world']]
+    #    end,
+    #    :server => 'cgi'
+    #  )
     #
     # Further options available here are documented on Rack::Server#initialize
     def start(options = T.unsafe(nil)); end
@@ -2557,6 +2863,7 @@ class Rack::Session::Abstract::ID < ::Rack::Session::Abstract::Persisted
   def write_session(req, sid, session, options); end
 
   class << self
+    # @private
     def inherited(klass); end
   end
 end
@@ -2568,17 +2875,17 @@ end
 #
 # All parameters are optional.
 # * :key determines the name of the cookie, by default it is
-# 'rack.session'
+#   'rack.session'
 # * :path, :domain, :expire_after, :secure, and :httponly set the related
-# cookie options as by Rack::Response#set_cookie
+#   cookie options as by Rack::Response#set_cookie
 # * :skip will not a set a cookie in the response nor update the session state
 # * :defer will not set a cookie in the response but still update the session
-# state if it is used with a backend
+#   state if it is used with a backend
 # * :renew (implementation dependent) will prompt the generation of a new
-# session id, and migration of data to be referenced at the new id. If
-# :defer is set, it will be overridden and the cookie will be set.
+#   session id, and migration of data to be referenced at the new id. If
+#   :defer is set, it will be overridden and the cookie will be set.
 # * :sidbits sets the number of bits in length that a generated session
-# id will be.
+#   id will be.
 #
 # These options can be set on a per request basis, at the location of
 # <tt>env['rack.session.options']</tt>. Additionally the id of the
@@ -2590,6 +2897,7 @@ end
 # Not included by default; you must require 'rack/session/abstract/id'
 # to use.
 class Rack::Session::Abstract::Persisted
+  # @return [Persisted] a new instance of Persisted
   def initialize(app, options = T.unsafe(nil)); end
 
   def call(env); end
@@ -2615,6 +2923,8 @@ class Rack::Session::Abstract::Persisted
 
   # Session should be committed if it was loaded, any of specific options like :renew, :drop
   # or :expire_after was given and the security permissions match. Skips if skip is given.
+  #
+  # @return [Boolean]
   def commit_session?(req, session, options); end
 
   def cookie_value(data); end
@@ -2635,7 +2945,10 @@ class Rack::Session::Abstract::Persisted
   # should occur within.
   def find_session(env, sid); end
 
+  # @return [Boolean]
   def force_options?(options); end
+
+  # @return [Boolean]
   def forced_session_update?(session, options); end
 
   # Generate a new session id using Ruby #rand.  The size of the
@@ -2649,19 +2962,24 @@ class Rack::Session::Abstract::Persisted
   # environment to #find_session.
   def load_session(req); end
 
+  # @return [Boolean]
   def loaded_session?(session); end
+
   def make_request(env); end
 
   # Sets the lazy session at 'rack.session' and places options and session
   # metadata into 'rack.session.options'.
   def prepare_session(req); end
 
+  # @return [Boolean]
   def security_matches?(request, options); end
 
   # Allow subclasses to prepare_session for different Session classes
   def session_class; end
 
   # Check if the session exists or not.
+  #
+  # @return [Boolean]
   def session_exists?(req); end
 
   # Sets the cookie back to the client with session id. We skip the cookie
@@ -2694,6 +3012,7 @@ end
 class Rack::Session::Abstract::SessionHash
   include ::Enumerable
 
+  # @return [SessionHash] a new instance of SessionHash
   def initialize(store, req); end
 
   def [](key); end
@@ -2703,20 +3022,38 @@ class Rack::Session::Abstract::SessionHash
   def destroy; end
   def dig(key, *keys); end
   def each(&block); end
+
+  # @return [Boolean]
   def empty?; end
+
+  # @return [Boolean]
   def exists?; end
+
   def fetch(key, default = T.unsafe(nil), &block); end
+
+  # @return [Boolean]
   def has_key?(key); end
+
   def id; end
 
   # Sets the attribute id
+  #
+  # @param value the value to set the attribute id to.
   def id=(_arg0); end
 
+  # @return [Boolean]
   def include?(key); end
+
   def inspect; end
+
+  # @return [Boolean]
   def key?(key); end
+
   def keys; end
+
+  # @return [Boolean]
   def loaded?; end
+
   def merge!(hash); end
   def options; end
   def replace(hash); end
@@ -2752,28 +3089,29 @@ Rack::Session::Abstract::SessionHash::Unspecified = T.let(T.unsafe(nil), Object)
 #
 # Example:
 #
-# use Rack::Session::Cookie, :key => 'rack.session',
-# :domain => 'foo.com',
-# :path => '/',
-# :expire_after => 2592000,
-# :secret => 'change_me',
-# :old_secret => 'also_change_me'
+#     use Rack::Session::Cookie, :key => 'rack.session',
+#                                :domain => 'foo.com',
+#                                :path => '/',
+#                                :expire_after => 2592000,
+#                                :secret => 'change_me',
+#                                :old_secret => 'also_change_me'
 #
-# All parameters are optional.
-#
-#
-# Rack::Session::Cookie.new(application, {
-# :coder => Rack::Session::Cookie::Identity.new
-# })
+#     All parameters are optional.
 #
 #
-# Rack::Session::Cookie.new(application, {
-# :coder => Class.new {
-# def encode(str); str.reverse; end
-# def decode(str); str.reverse; end
-# }.new
-# })
+#   Rack::Session::Cookie.new(application, {
+#     :coder => Rack::Session::Cookie::Identity.new
+#   })
+#
+#
+#   Rack::Session::Cookie.new(application, {
+#     :coder => Class.new {
+#       def encode(str); str.reverse; end
+#       def decode(str); str.reverse; end
+#     }.new
+#   })
 class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
+  # @return [Cookie] a new instance of Cookie
   def initialize(app, options = T.unsafe(nil)); end
 
   # Returns the value of attribute coder.
@@ -2782,12 +3120,18 @@ class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   private
 
   def delete_session(req, session_id, options); end
+
+  # @return [Boolean]
   def digest_match?(data, digest); end
+
   def extract_session_id(request); end
   def find_session(req, sid); end
   def generate_hmac(data, secret); end
   def persistent_session_id!(data, sid = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def secure?(options); end
+
   def unpacked_cookie_data(request); end
   def write_session(req, session_id, session, options); end
 end
@@ -2823,6 +3167,7 @@ class Rack::Session::Cookie::Identity
 end
 
 class Rack::Session::Cookie::SessionId
+  # @return [SessionId] a new instance of SessionId
   def initialize(session_id, cookie_value); end
 
   # Returns the value of attribute cookie_value.
@@ -2838,13 +3183,14 @@ end
 # explicitly remove the session from the session cache.
 #
 # Example:
-# myapp = MyRackApp.new
-# sessioned = Rack::Session::Pool.new(myapp,
-# :domain => 'foo.com',
-# :expire_after => 2592000
-# )
-# Rack::Handler::WEBrick.run sessioned
+#   myapp = MyRackApp.new
+#   sessioned = Rack::Session::Pool.new(myapp,
+#     :domain => 'foo.com',
+#     :expire_after => 2592000
+#   )
+#   Rack::Handler::WEBrick.run sessioned
 class Rack::Session::Pool < ::Rack::Session::Abstract::PersistedSecure
+  # @return [Pool] a new instance of Pool
   def initialize(app, options = T.unsafe(nil)); end
 
   def delete_session(req, session_id, options); end
@@ -2868,12 +3214,15 @@ end
 Rack::Session::Pool::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 class Rack::Session::SessionId
+  # @return [SessionId] a new instance of SessionId
   def initialize(public_id); end
 
   # Returns the value of attribute public_id.
   def cookie_value; end
 
+  # @return [Boolean]
   def empty?; end
+
   def inspect; end
   def private_id; end
 
@@ -2898,17 +3247,22 @@ Rack::Session::SessionId::ID_VERSION = T.let(T.unsafe(nil), Integer)
 # Be careful when you use this on public-facing sites as it could
 # reveal information helpful to attackers.
 class Rack::ShowExceptions
+  # @return [ShowExceptions] a new instance of ShowExceptions
   def initialize(app); end
 
   def call(env); end
   def dump_exception(exception); end
   def h(obj); end
+
+  # @return [Boolean]
   def prefers_plaintext?(env); end
+
   def pretty(env, exception); end
   def template; end
 
   private
 
+  # @return [Boolean]
   def accepts_html?(env); end
 end
 
@@ -2922,6 +3276,7 @@ Rack::ShowExceptions::TEMPLATE = T.let(T.unsafe(nil), ERB)
 # and will be shown as HTML.  If such details exist, the error page
 # is always rendered, even if the reply was not empty.
 class Rack::ShowStatus
+  # @return [ShowStatus] a new instance of ShowStatus
   def initialize(app); end
 
   def call(env); end
@@ -2940,81 +3295,83 @@ Rack::ShowStatus::TEMPLATE = T.let(T.unsafe(nil), String)
 # Serve all requests beginning with /media from the "media" folder located
 # in the current directory (ie media/*):
 #
-# use Rack::Static, :urls => ["/media"]
+#     use Rack::Static, :urls => ["/media"]
 #
 # Same as previous, but instead of returning 404 for missing files under
 # /media, call the next middleware:
 #
-# use Rack::Static, :urls => ["/media"], :cascade => true
+#     use Rack::Static, :urls => ["/media"], :cascade => true
 #
 # Serve all requests beginning with /css or /images from the folder "public"
 # in the current directory (ie public/css/* and public/images/*):
 #
-# use Rack::Static, :urls => ["/css", "/images"], :root => "public"
+#     use Rack::Static, :urls => ["/css", "/images"], :root => "public"
 #
 # Serve all requests to / with "index.html" from the folder "public" in the
 # current directory (ie public/index.html):
 #
-# use Rack::Static, :urls => {"/" => 'index.html'}, :root => 'public'
+#     use Rack::Static, :urls => {"/" => 'index.html'}, :root => 'public'
 #
 # Serve all requests normally from the folder "public" in the current
 # directory but uses index.html as default route for "/"
 #
-# use Rack::Static, :urls => [""], :root => 'public', :index =>
-# 'index.html'
+#     use Rack::Static, :urls => [""], :root => 'public', :index =>
+#     'index.html'
 #
 # Set custom HTTP Headers for based on rules:
 #
-# use Rack::Static, :root => 'public',
-# :header_rules => [
-# [rule, {header_field => content, header_field => content}],
-# [rule, {header_field => content}]
-# ]
+#     use Rack::Static, :root => 'public',
+#         :header_rules => [
+#           [rule, {header_field => content, header_field => content}],
+#           [rule, {header_field => content}]
+#         ]
 #
-# Rules for selecting files:
+#  Rules for selecting files:
 #
-# 1) All files
-# Provide the :all symbol
-# :all => Matches every file
+#  1) All files
+#     Provide the :all symbol
+#     :all => Matches every file
 #
-# 2) Folders
-# Provide the folder path as a string
-# '/folder' or '/folder/subfolder' => Matches files in a certain folder
+#  2) Folders
+#     Provide the folder path as a string
+#     '/folder' or '/folder/subfolder' => Matches files in a certain folder
 #
-# 3) File Extensions
-# Provide the file extensions as an array
-# ['css', 'js'] or %w(css js) => Matches files ending in .css or .js
+#  3) File Extensions
+#     Provide the file extensions as an array
+#     ['css', 'js'] or %w(css js) => Matches files ending in .css or .js
 #
-# 4) Regular Expressions / Regexp
-# Provide a regular expression
-# %r{\.(?:css|js)\z} => Matches files ending in .css or .js
-# /\.(?:eot|ttf|otf|woff2|woff|svg)\z/ => Matches files ending in
-# the most common web font formats (.eot, .ttf, .otf, .woff2, .woff, .svg)
-# Note: This Regexp is available as a shortcut, using the :fonts rule
+#  4) Regular Expressions / Regexp
+#     Provide a regular expression
+#     %r{\.(?:css|js)\z} => Matches files ending in .css or .js
+#     /\.(?:eot|ttf|otf|woff2|woff|svg)\z/ => Matches files ending in
+#       the most common web font formats (.eot, .ttf, .otf, .woff2, .woff, .svg)
+#       Note: This Regexp is available as a shortcut, using the :fonts rule
 #
-# 5) Font Shortcut
-# Provide the :fonts symbol
-# :fonts => Uses the Regexp rule stated right above to match all common web font endings
+#  5) Font Shortcut
+#     Provide the :fonts symbol
+#     :fonts => Uses the Regexp rule stated right above to match all common web font endings
 #
-# Rule Ordering:
-# Rules are applied in the order that they are provided.
-# List rather general rules above special ones.
+#  Rule Ordering:
+#    Rules are applied in the order that they are provided.
+#    List rather general rules above special ones.
 #
-# Complete example use case including HTTP header rules:
+#  Complete example use case including HTTP header rules:
 #
-# use Rack::Static, :root => 'public',
-# :header_rules => [
-# # Cache all static files in public caches (e.g. Rack::Cache)
-# #  as well as in the browser
-# [:all, {'Cache-Control' => 'public, max-age=31536000'}],
+#     use Rack::Static, :root => 'public',
+#         :header_rules => [
+#           # Cache all static files in public caches (e.g. Rack::Cache)
+#           #  as well as in the browser
+#           [:all, {'Cache-Control' => 'public, max-age=31536000'}],
 #
-# # Provide web fonts with cross-origin access-control-headers
-# #  Firefox requires this when serving assets using a Content Delivery Network
-# [:fonts, {'Access-Control-Allow-Origin' => '*'}]
-# ]
+#           # Provide web fonts with cross-origin access-control-headers
+#           #  Firefox requires this when serving assets using a Content Delivery Network
+#           [:fonts, {'Access-Control-Allow-Origin' => '*'}]
+#         ]
 class Rack::Static
+  # @return [Static] a new instance of Static
   def initialize(app, options = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def add_index_root?(path); end
 
   # Convert HTTP header rules to HTTP headers
@@ -3033,6 +3390,7 @@ Rack::TRANSFER_ENCODING = T.let(T.unsafe(nil), String)
 # Ideas/strategy based on posts by Eric Wong and Charles Oliver Nutter
 # https://groups.google.com/forum/#!searchin/rack-devel/temp/rack-devel/brK8eh-MByw/sw61oJJCGRMJ
 class Rack::TempfileReaper
+  # @return [TempfileReaper] a new instance of TempfileReaper
   def initialize(app); end
 
   def call(env); end
@@ -3052,6 +3410,7 @@ Rack::UNLINK = T.let(T.unsafe(nil), String)
 # URLMap dispatches in such a way that the longest paths are tried
 # first, since they are most specific.
 class Rack::URLMap
+  # @return [URLMap] a new instance of URLMap
   def initialize(map = T.unsafe(nil)); end
 
   def call(env); end
@@ -3059,6 +3418,7 @@ class Rack::URLMap
 
   private
 
+  # @return [Boolean]
   def casecmp?(v1, v2); end
 end
 
@@ -3174,6 +3534,8 @@ module Rack::Utils
     def default_query_parser; end
 
     # Sets the attribute default_query_parser
+    #
+    # @param value the value to set the attribute default_query_parser to.
     def default_query_parser=(_arg0); end
 
     def delete_cookie_header!(header, key, value = T.unsafe(nil)); end
@@ -3197,6 +3559,8 @@ module Rack::Utils
     def multipart_part_limit; end
 
     # Sets the attribute multipart_part_limit
+    #
+    # @param value the value to set the attribute multipart_part_limit to.
     def multipart_part_limit=(_arg0); end
 
     def param_depth_limit; end
@@ -3239,6 +3603,7 @@ module Rack::Utils
     # unescaping query parameters or form components.
     def unescape_path(s); end
 
+    # @return [Boolean]
     def valid_path?(path); end
   end
 end
@@ -3251,6 +3616,7 @@ Rack::Utils::COMMON_SEP = T.let(T.unsafe(nil), Hash)
 # would be the request environment. The second of which would be the rack
 # application that the request would be forwarded to.
 class Rack::Utils::Context
+  # @return [Context] a new instance of Context
   def initialize(app_f, app_r); end
 
   # Returns the value of attribute app.
@@ -3271,43 +3637,79 @@ Rack::Utils::ESCAPE_HTML_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # Every standard HTTP code mapped to the appropriate message.
 # Generated with:
-# curl -s https://www.iana.org/assignments/http-status-codes/http-status-codes-1.csv | \
-# ruby -ne 'm = /^(\d{3}),(?!Unassigned|\(Unused\))([^,]+)/.match($_) and \
-# puts "#{m[1]} => \x27#{m[2].strip}\x27,"'
+#   curl -s https://www.iana.org/assignments/http-status-codes/http-status-codes-1.csv | \
+#     ruby -ne 'm = /^(\d{3}),(?!Unassigned|\(Unused\))([^,]+)/.match($_) and \
+#               puts "#{m[1]} => \x27#{m[2].strip}\x27,"'
 Rack::Utils::HTTP_STATUS_CODES = T.let(T.unsafe(nil), Hash)
 
 # A case-insensitive Hash that preserves the original case of a
 # header when set.
+#
+# @api private
 class Rack::Utils::HeaderHash < ::Hash
+  # @api private
+  # @return [HeaderHash] a new instance of HeaderHash
   def initialize(hash = T.unsafe(nil)); end
 
+  # @api private
   def [](k); end
+
+  # @api private
   def []=(k, v); end
 
   # on clear, we need to clear @names hash
+  #
+  # @api private
   def clear; end
 
+  # @api private
   def delete(k); end
+
+  # @api private
   def each; end
+
+  # @api private
+  # @return [Boolean]
   def has_key?(k); end
+
+  # @api private
+  # @return [Boolean]
   def include?(k); end
+
+  # @api private
+  # @return [Boolean]
   def key?(k); end
+
+  # @api private
+  # @return [Boolean]
   def member?(k); end
+
+  # @api private
   def merge(other); end
+
+  # @api private
   def merge!(other); end
+
+  # @api private
   def replace(other); end
+
+  # @api private
   def to_hash; end
 
   protected
 
+  # @api private
   def names; end
 
   private
 
   # on dup/clone, we need to duplicate @names hash
+  #
+  # @api private
   def initialize_copy(other); end
 
   class << self
+    # @api private
     def [](headers); end
   end
 end
@@ -3333,6 +3735,8 @@ class WEBrick::HTTPResponse
   def rack; end
 
   # Sets the attribute rack
+  #
+  # @param value the value to set the attribute rack to.
   def rack=(_arg0); end
 
   def setup_header; end

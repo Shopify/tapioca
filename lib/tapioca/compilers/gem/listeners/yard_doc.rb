@@ -77,7 +77,10 @@ module Tapioca
               tag_text = tag.text
               if tag_text && !tag_text.empty?
                 text_lines = tag_text.lines
-                line << " #{text_lines.shift&.strip}" unless tag_name
+
+                # Example are a special case because we want the text to start on the next line
+                line << " #{text_lines.shift&.strip}" unless tag.tag_name == "example"
+
                 text_lines.each do |text_line|
                   line << "\n  #{text_line.strip}"
                 end

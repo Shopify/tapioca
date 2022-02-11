@@ -18,6 +18,9 @@ module Config
     def local_setting_files(config_root, env); end
     def reload!; end
     def setting_files(config_root, env); end
+
+    # @yield [_self]
+    # @yieldparam _self [Config] the object that the method was called on
     def setup; end
   end
 end
@@ -27,6 +30,8 @@ class Config::Configuration < ::Module
   # Accepts configuration options,
   # initializing a module that can be used to extend
   # the necessary class with the provided config methods
+  #
+  # @return [Configuration] a new instance of Configuration
   def initialize(**attributes); end
 
   private
@@ -56,10 +61,18 @@ class Config::Options < ::OpenStruct
   def collect; end
   def count; end
   def each(*args, &block); end
+
+  # @return [Boolean]
   def empty?; end
+
   def exit!; end
+
+  # @return [Boolean]
   def has_key?(key); end
+
+  # @return [Boolean]
   def key?(key); end
+
   def keys; end
 
   # look through all our sources and rebuild the configuration
@@ -91,6 +104,7 @@ class Config::Options < ::OpenStruct
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(*args); end
 end
 
@@ -101,6 +115,7 @@ module Config::Sources; end
 
 # Allows settings to be loaded from a "flat" hash with string keys, like ENV.
 class Config::Sources::EnvSource
+  # @return [EnvSource] a new instance of EnvSource
   def initialize(env, prefix: T.unsafe(nil), separator: T.unsafe(nil), converter: T.unsafe(nil), parse_values: T.unsafe(nil)); end
 
   # Returns the value of attribute converter.
@@ -124,12 +139,15 @@ class Config::Sources::EnvSource
 end
 
 class Config::Sources::HashSource
+  # @return [HashSource] a new instance of HashSource
   def initialize(hash); end
 
   # Returns the value of attribute hash.
   def hash; end
 
   # Sets the attribute hash
+  #
+  # @param value the value to set the attribute hash to.
   def hash=(_arg0); end
 
   # returns hash that was passed in to initialize
@@ -137,6 +155,7 @@ class Config::Sources::HashSource
 end
 
 class Config::Sources::YAMLSource
+  # @return [YAMLSource] a new instance of YAMLSource
   def initialize(path, evaluate_erb: T.unsafe(nil)); end
 
   # Returns the value of attribute evaluate_erb.
@@ -149,6 +168,8 @@ class Config::Sources::YAMLSource
   def path; end
 
   # Sets the attribute path
+  #
+  # @param value the value to set the attribute path to.
   def path=(_arg0); end
 end
 

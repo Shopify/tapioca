@@ -8,29 +8,58 @@
 module Unparser
   class << self
     # Construct a parser buffer from string
+    #
+    # @param source [String]
+    # @return [Parser::Source::Buffer]
     def buffer(source, identification = T.unsafe(nil)); end
 
     # Parse string into AST
+    #
+    # @param source [String]
+    # @return [Parser::AST::Node, nil]
     def parse(source); end
 
     # Parse string into either syntax error or AST
+    #
+    # @param source [String]
+    # @return [Either<Parser::SyntaxError, (Parser::ASTNode, nil)>]
     def parse_either(source); end
 
     # Parse string into AST, with comments
+    #
+    # @param source [String]
+    # @return [Parser::AST::Node]
     def parse_with_comments(source); end
 
     # Parser instance that produces AST unparser understands
+    #
+    # @api private
+    # @return [Parser::Base]
     def parser; end
 
     # Unparse an AST (and, optionally, comments) into a string
+    #
+    # @api public
+    # @param node [Parser::AST::Node, nil]
+    # @param comment_array [Array]
+    # @raise InvalidNodeError
+    #   if the node passed is invalid
+    # @return [String]
     def unparse(node, comment_array = T.unsafe(nil)); end
 
     # Unparse capturing errors
     #
     # This is mostly useful for writing testing tools against unparser.
+    #
+    # @param node [Parser::AST::Node, nil]
+    # @return [Either<Exception, String>]
     def unparse_either(node); end
 
     # Unparse with validation
+    #
+    # @param node [Parser::AST::Node, nil]
+    # @param comment_array [Array]
+    # @return [Either<Validation,String>]
     def unparse_validate(node, comment_array = T.unsafe(nil)); end
   end
 end
@@ -39,15 +68,31 @@ end
 module Unparser::AST
   class << self
     # Return local variables that get assigned in scope
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [Set<Symbol>]
     def local_variable_assignments(node); end
 
     # Return local variables read
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [Set<Symbol>]
     def local_variable_reads(node); end
 
     # Test for local variable inherited scope reset
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [Boolean]
     def not_close_scope?(node); end
 
     # Test for local variable scope reset
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [Boolean]
     def not_reset_scope?(node); end
   end
 end
@@ -67,24 +112,50 @@ class Unparser::AST::Enumerator
   extend ::Unparser::Adamantium::ClassMethods
 
   # Return each node
+  #
+  # @api private
+  # @return [Enumerator<Parser::AST::Node>] if no block given
+  # @return [self] otherwise
   def each(&block); end
 
   # Return nodes selected by type
+  #
+  # @api private
+  # @param type [Symbol]
+  # @return [Enumerable<Parser::AST::Node>]
   def type(type); end
 
   # Return nodes selected by types
+  #
+  # @api private
+  # @param types [Enumerable<Symbol>]
+  # @return [Enumerable<Parser::AST::Node>]
   def types(types); end
 
   class << self
     # Return new instance
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @param controller [#call(node)]
+    # @return [Enumerator]
     def new(node, controller = T.unsafe(nil)); end
 
     private
 
     # Return frozne set of objects
+    #
+    # @api private
+    # @param enumerable [Enumerable]
+    # @return [Set]
     def set(enumerable); end
 
     # Return nodes of type
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @param type [Symbol]
+    # @return [Enumerable<Parser::AST::Node]] Enumerable<Parser::AST::Node]
     def type(node, type); end
   end
 end
@@ -102,15 +173,33 @@ class Unparser::AST::LocalVariableScope
   extend ::Unparser::Adamantium::ClassMethods
 
   # Initialize object
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @return [undefined]
   def initialize(node); end
 
   # Test if local variable was first at given assignment
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @return [Boolean]
   def first_assignment?(node); end
 
   # Test if local variables where first assigned in body and read by conditional
+  #
+  # @api private
+  # @param body [Parser::AST::Node]
+  # @param condition [Parser::AST::Node]
+  # @return [Boolean]
   def first_assignment_in?(left, right); end
 
   # Test if local variable is defined for given node
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @param name [Symbol]
+  # @return [Boolean]
   def local_variable_defined_for_node?(node, name); end
 
   private
@@ -123,9 +212,17 @@ class Unparser::AST::LocalVariableScopeEnumerator
   include ::Enumerable
 
   # Initialize object
+  #
+  # @api private
+  # @return [undefined]
   def initialize; end
 
   # Enumerate local variable scope scope
+  #
+  # @api private
+  # @return [self] if block given
+  # @return [Enumerator<Array<Symbol>>] ]
+  #   otherwise
   def each(node, &block); end
 
   private
@@ -137,10 +234,16 @@ class Unparser::AST::LocalVariableScopeEnumerator
   def pop; end
   def push_inherit; end
   def push_reset; end
+
+  # @yield [node, current.dup, before]
   def visit(node, &block); end
 
   class << self
     # Enumerate each node with its local variable scope
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [self]
     def each(node, &block); end
   end
 end
@@ -153,10 +256,18 @@ class Unparser::AST::Walker
   include ::Unparser::Equalizer::Methods
 
   # Call walker with node
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @return [undefined]
   def call(node); end
 
   class << self
     # Call ast walker
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @return [self]
     def call(node, controller = T.unsafe(nil), &block); end
   end
 end
@@ -174,26 +285,64 @@ module Unparser::AbstractType
     #
     # Ensures that the instance cannot be of the abstract type
     # and must be a descendant.
+    #
+    # @api private
+    # @param abstract_class [Class]
+    # @return [undefined]
     def create_new_method(abstract_class); end
 
     # Hook called when module is included
+    #
+    # @api private
+    # @param descendant [Module] the module or class including AbstractType
+    # @return [undefined]
     def included(descendant); end
   end
 end
 
 module Unparser::AbstractType::AbstractMethodDeclarations
   # Create abstract instance methods
+  #
+  # @api public
+  # @example
+  #   class Foo
+  #   include AbstractType
+  #
+  #   # Create an abstract instance method
+  #   abstract_method :some_method
+  #   end
+  # @param names [Array<#to_s>]
+  # @return [self]
   def abstract_method(*names); end
 
   # Create abstract singleton methods
+  #
+  # @api private
+  # @example
+  #   class Foo
+  #   include AbstractType
+  #
+  #   # Create an abstract instance method
+  #   abstract_singleton_method :some_method
+  #   end
+  # @param names [Array<#to_s>]
+  # @return [self]
   def abstract_singleton_method(*names); end
 
   private
 
   # Create abstract instance method
+  #
+  # @api private
+  # @param name [#to_s] the name of the method to create
+  # @return [undefined]
   def create_abstract_instance_method(name); end
 
   # Create abstract singleton method
+  #
+  # @api private
+  # @param name [#to_s] the name of the method to create
+  # @return [undefined]
   def create_abstract_singleton_method(name); end
 end
 
@@ -217,14 +366,23 @@ end
 # Methods mixed in to adamantium classes
 module Unparser::Adamantium::ClassMethods
   # Instantiate a new frozen object
+  #
+  # @api public
+  # @return [Object]
   def new(*_arg0); end
 end
 
 module Unparser::Adamantium::InstanceMethods
   # A noop #dup for immutable objects
+  #
+  # @api public
+  # @return [self]
   def dup; end
 
   # Freeze the object
+  #
+  # @api public
+  # @return [Object]
   def freeze; end
 
   private
@@ -235,18 +393,35 @@ end
 # Storage for memoized methods
 class Unparser::Adamantium::Memory
   # Initialize the memory storage for memoized methods
+  #
+  # @api private
+  # @return [undefined]
   def initialize(values); end
 
   # Fetch the value from memory, or evaluate if it does not exist
+  #
+  # @api public
+  # @param name [Symbol]
+  # @yieldreturn [Object] the value to memoize
   def fetch(name); end
 end
 
 # Build the memoized method
 class Unparser::Adamantium::MethodBuilder
   # Initialize an object to build a memoized method
+  #
+  # @api private
+  # @param descendant [Module]
+  # @param method_name [Symbol]
+  # @return [undefined]
   def initialize(descendant, method_name); end
 
   # Build a new memoized method
+  #
+  # @api public
+  # @example
+  #   method_builder.call  # => creates new method
+  # @return [UnboundMethod]
   def call; end
 
   private
@@ -261,24 +436,47 @@ end
 # Raised when a block is passed to a memoized method
 class Unparser::Adamantium::MethodBuilder::BlockNotAllowedError < ::ArgumentError
   # Initialize a block not allowed exception
+  #
+  # @api private
+  # @param descendant [Module]
+  # @param method [Symbol]
+  # @return [BlockNotAllowedError] a new instance of BlockNotAllowedError
   def initialize(descendant, method); end
 end
 
 # Raised when the method arity is invalid
 class Unparser::Adamantium::MethodBuilder::InvalidArityError < ::ArgumentError
   # Initialize an invalid arity exception
+  #
+  # @api private
+  # @param descendant [Module]
+  # @param method [Symbol]
+  # @param arity [Integer]
+  # @return [InvalidArityError] a new instance of InvalidArityError
   def initialize(descendant, method, arity); end
 end
 
 # Methods mixed in to adamantium modules
 module Unparser::Adamantium::ModuleMethods
   # Memoize a list of methods
+  #
+  # @api public
+  # @param methods [Array<#to_s>] a list of methods to memoize
+  # @return [self]
   def memoize(*methods); end
 
   # Test if method is memoized
+  #
+  # @param name [Symbol]
+  # @return [Bool]
   def memoized?(method_name); end
 
   # Return unmemoized instance method
+  #
+  # @api public
+  # @param name [Symbol]
+  # @raise [NameError] raised if the method is unknown
+  # @return [UnboundMethod] the memoized method
   def unmemoized_instance_method(method_name); end
 
   private
@@ -297,35 +495,69 @@ class Unparser::Anima < ::Module
 
   # Initialize object
   #
+  #
+  # @return [undefined]
   def initialize(*names); end
 
   # Return new anima with attributes added
+  #
+  # @example
+  #   anima = Anima.new(:foo)
+  #   anima.add(:bar) # equals Anima.new(:foo, :bar)
+  # @return [Anima]
   def add(*names); end
 
   # Return attribute names
+  #
+  # @return [Enumerable<Symbol>]
   def attribute_names(&block); end
 
   # Return names
+  #
+  # @return [AttributeSet]
   def attributes; end
 
   # Return attributes hash for instance
+  #
+  # @param object [Object]
+  # @return [Hash]
   def attributes_hash(object); end
 
   # Initialize instance
+  #
+  # @param object [Object]
+  # @param attribute_hash [Hash]
+  # @return [self]
   def initialize_instance(object, attribute_hash); end
 
   # Return new anima with attributes removed
+  #
+  # @example
+  #   anima = Anima.new(:foo, :bar)
+  #   anima.remove(:bar) # equals Anima.new(:foo)
+  # @return [Anima]
   def remove(*names); end
 
   private
 
   # Fail unless keys in +attribute_hash+ matches #attribute_names
+  #
+  # @param klass [Class] the class being initialized
+  # @param attribute_hash [Hash] the attributes to initialize +object+ with
+  # @raise [Error]
+  # @return [undefined]
   def assert_known_attributes(klass, attribute_hash); end
 
   # Infect the instance with anima
+  #
+  # @param scope [Class, Module]
+  # @return [undefined]
   def included(descendant); end
 
   # Return new instance
+  #
+  # @param attributes [Enumerable<Symbol>]
+  # @return [Anima]
   def new(attributes); end
 end
 
@@ -338,27 +570,50 @@ class Unparser::Anima::Attribute
   extend ::Unparser::Adamantium::ClassMethods
 
   # Initialize attribute
+  #
+  # @param name [Symbol]
+  # @return [Attribute] a new instance of Attribute
   def initialize(name); end
 
   # Get attribute value from object
+  #
+  # @param object [Object]
+  # @return [Object]
   def get(object); end
 
   # Return instance variable name
+  #
+  # @return [Symbol]
   def instance_variable_name; end
 
   # Load attribute
+  #
+  # @param object [Object]
+  # @param attributes [Hash]
+  # @return [self]
   def load(object, attributes); end
 
   # Return attribute name
+  #
+  # @return [Symbol]
   def name; end
 
   # Set attribute value in object
+  #
+  # @param object [Object]
+  # @param value [Object]
+  # @return [self]
   def set(object, value); end
 end
 
 # Abstract base class for anima errors
 class Unparser::Anima::Error < ::RuntimeError
   # Initialize object
+  #
+  # @param klass [Class] the class being initialized
+  # @param missing [Enumerable<Symbol>]
+  # @param unknown [Enumerable<Symbol>]
+  # @return [undefined]
   def initialize(klass, missing, unknown); end
 end
 
@@ -368,49 +623,102 @@ Unparser::Anima::Error::FORMAT = T.let(T.unsafe(nil), String)
 module Unparser::Anima::InstanceMethods
   # Initialize an anima infected object
   #
+  #
+  # @param attributes [#to_h] a hash that matches anima defined attributes
+  # @return [undefined]
   def initialize(attributes); end
 
   # Return a hash representation of an anima infected object
+  #
+  # @api public
+  # @example
+  #   anima.to_h # => { :foo => : bar }
+  # @return [Hash]
   def to_h; end
 
   # Return updated instance
+  #
+  # @api public
+  # @example
+  #   klass = Class.new do
+  #   include Anima.new(:foo, :bar)
+  #   end
+  #
+  #   foo = klass.new(:foo => 1, :bar => 2)
+  #   updated = foo.with(:foo => 3)
+  #   updated.foo # => 3
+  #   updated.bar # => 2
+  # @param attributes [Hash]
+  # @return [Anima]
   def with(attributes); end
 end
 
 # Buffer used to emit into
 class Unparser::Buffer
   # Initialize object
+  #
+  # @api private
+  # @return [undefined]
   def initialize; end
 
   # Append string
+  #
+  # @api private
+  # @param string [String]
+  # @return [self]
   def append(string); end
 
   # Append a string without an indentation prefix
+  #
+  # @api private
+  # @param string [String]
+  # @return [self]
   def append_without_prefix(string); end
 
   # Capture the content written to the buffer within the block
+  #
+  # @api private
+  # @return [String]
   def capture_content; end
 
   # Return content of buffer
+  #
+  # @api private
+  # @return [String]
   def content; end
 
   # Test for a fresh line
+  #
+  # @api private
+  # @return [Boolean]
   def fresh_line?; end
 
   # Increase indent
+  #
+  # @api private
+  # @return [self]
   def indent; end
 
   # Write newline
+  #
+  # @api private
+  # @return [self]
   def nl; end
 
   def root_indent; end
 
   # Decrease indent
+  #
+  # @api private
+  # @return [self]
   def unindent; end
 
   # Write raw fragment to buffer
   #
   # Does not do indentation logic.
+  #
+  # @param fragment [String]
+  # @return [self]
   def write(fragment); end
 
   private
@@ -423,19 +731,31 @@ Unparser::Buffer::NL = T.let(T.unsafe(nil), String)
 
 # Unparser specific AST builder defaulting to modern AST format
 class Unparser::Builder < ::Parser::Builders::Default
+  # @return [Builder] a new instance of Builder
   def initialize; end
 end
 
 # Unparser CLI implementation
 class Unparser::CLI
   # Initialize object
+  #
+  # @api private
+  # @param arguments [Array<String>]
+  # @return [undefined]
   def initialize(arguments); end
 
   # Add options
   #
+  #
+  # @api private
+  # @param builder [OptionParser]
+  # @return [undefined]
   def add_options(builder); end
 
   # Return exit status
+  #
+  # @api private
+  # @return [Integer]
   def exit_status; end
 
   private
@@ -446,6 +766,10 @@ class Unparser::CLI
 
   class << self
     # Run CLI
+    #
+    # @api private
+    # @param arguments [Array<String>]
+    # @return [Integer] the exit status
     def run(*arguments); end
   end
 end
@@ -467,9 +791,13 @@ class Unparser::CLI::Target::Path < ::Unparser::CLI::Target
   include ::Unparser::Equalizer::Methods
 
   # Literal for this target
+  #
+  # @return [Validation]
   def literal_validation; end
 
   # Validation for this target
+  #
+  # @return [Validation]
   def validation; end
 end
 
@@ -478,9 +806,13 @@ class Unparser::CLI::Target::String
   include ::Unparser::Equalizer::Methods
 
   # Literal for this target
+  #
+  # @return [Validation]
   def literal_validation; end
 
   # Validation for this target
+  #
+  # @return [Validation]
   def validation; end
 end
 
@@ -493,6 +825,9 @@ class Unparser::Color
   extend ::Unparser::Adamantium::ClassMethods
 
   # Format text with color
+  #
+  # @param text [String]
+  # @return [String]
   def format(text); end
 end
 
@@ -503,25 +838,48 @@ Unparser::Color::RED = T.let(T.unsafe(nil), Unparser::Color)
 # Holds the comments that remain to be emitted
 class Unparser::Comments
   # Initialize object
+  #
+  # @api private
+  # @param comments [Array]
+  # @return [undefined]
   def initialize(comments); end
 
   # Consume part or all of the node
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @param source_part [Symbol]
+  # @return [undefined]
   def consume(node, source_part = T.unsafe(nil)); end
 
   # Proxy to singleton
   #
   # NOTICE:
-  # Delegating to stateless helpers is a pattern I saw many times in our code.
-  # Maybe we should make another helper module? include SingletonDelegator.new(:source_range) ?
+  #   Delegating to stateless helpers is a pattern I saw many times in our code.
+  #   Maybe we should make another helper module? include SingletonDelegator.new(:source_range) ?
+  #
+  # @api private
+  # @return [undefined]
   def source_range(*arguments); end
 
   # Take all remaining comments
+  #
+  # @api private
+  # @return [Array]
   def take_all; end
 
   # Take comments appear in the source before the specified part of the node
+  #
+  # @api private
+  # @param node [Parser::AST::Node]
+  # @param source_part [Symbol]
+  # @return [Array]
   def take_before(node, source_part); end
 
   # Take end-of-line comments
+  #
+  # @api private
+  # @return [Array]
   def take_eol_comments; end
 
   private
@@ -536,6 +894,12 @@ class Unparser::Comments
     # FIXME: This method should not be needed. It does to much inline signalling.
     #
     # :reek:ManualDispatch
+    #
+    # @api private
+    # @param node [Parser::AST::Node]
+    # @param part [Symbol]
+    # @return [Parser::Source::Range] if present
+    # @return [nil] otherwise
     def source_range(node, part); end
   end
 end
@@ -552,23 +916,41 @@ class Unparser::Concord < ::Module
 
   # Initialize object
   #
+  #
+  # @api private
+  # @return [undefined]
   def initialize(*names); end
 
   # Return names
+  #
+  # @api private
+  # @return [Enumerable<Symbol>]
   def names; end
 
   private
 
   # Define equalizer
+  #
+  # @api private
+  # @return [undefined]
   def define_equalizer; end
 
   # Define initialize method
+  #
+  # @api private
+  # @return [undefined]
   def define_initialize; end
 
   # Define readers
+  #
+  # @api private
+  # @return [undefined]
   def define_readers; end
 
   # Return instance variable names
+  #
+  # @api private
+  # @return [String]
   def instance_variable_names; end
 end
 
@@ -578,6 +960,10 @@ Unparser::Concord::MAX_NR_OF_OBJECTS = T.let(T.unsafe(nil), Integer)
 # Mixin for public attribute readers
 class Unparser::Concord::Public < ::Unparser::Concord
   # Hook called when module is included
+  #
+  # @api private
+  # @param descendant [Class, Module]
+  # @return [undefined]
   def included(descendant); end
 end
 
@@ -656,9 +1042,15 @@ class Unparser::Diff
   extend ::Unparser::Adamantium::ClassMethods
 
   # Colorized unified source diff between old and new
+  #
+  # @return [String] if there is a diff
+  # @return [nil] otherwise
   def colorized_diff(&block); end
 
   # Unified source diff between old and new
+  #
+  # @return [String] if there is exactly one diff
+  # @return [nil] otherwise
   def diff(&block); end
 
   private
@@ -670,6 +1062,10 @@ class Unparser::Diff
 
   class << self
     # Build new object from source strings
+    #
+    # @param old [String]
+    # @param new [String]
+    # @return [Diff]
     def build(old, new); end
 
     private
@@ -677,6 +1073,9 @@ class Unparser::Diff
     def colorize_line(line); end
 
     # Break up source into lines
+    #
+    # @param source [String]
+    # @return [Array<String>]
     def lines(source); end
   end
 end
@@ -697,55 +1096,89 @@ class Unparser::Either
   extend ::Unparser::Adamantium::ClassMethods
 
   # Test for left constructor
+  #
+  # @return [Boolean]
   def left?; end
 
   # Test for right constructor
+  #
+  # @return [Boolean]
   def right?; end
 
   class << self
     # Execute block and wrap error in left
+    #
+    # @param exception [Class<Exception>]
+    # @return [Either<Exception, Object>]
     def wrap_error(*exceptions); end
   end
 end
 
 class Unparser::Either::Left < ::Unparser::Either
   # Evaluate applicative block
+  #
+  # @return [Either::Left<Object>]
   def bind(&block); end
 
   # Evaluate left side of branch
+  #
+  # @param left [#call]
+  # @param _right [#call]
   def either(left, _right); end
 
   # Evaluate functor block
+  #
+  # @return [Either::Left<Object>]
   def fmap(&block); end
 
   # Unwrap value from left
+  #
+  # @return [Object]
   def from_left; end
 
   # Unwrap value from right
+  #
+  # @return [Object]
   def from_right; end
 
   # Map over left value
+  #
+  # @return [Either::Right<Object>]
   def lmap; end
 end
 
 # Left
 class Unparser::Either::Right < ::Unparser::Either
   # Evaluate applicative block
+  #
+  # @return [Either<Object>]
+  # @yield [value]
   def bind; end
 
   # Evaluate right side of branch
+  #
+  # @param _left [#call]
+  # @param right [#call]
   def either(_left, right); end
 
   # Evaluate functor block
+  #
+  # @return [Either::Right<Object>]
   def fmap; end
 
   # Unwrap value from left
+  #
+  # @return [Object]
   def from_left; end
 
   # Unwrap value from right
+  #
+  # @return [Object]
   def from_right; end
 
   # Map over left value
+  #
+  # @return [Either::Right<Object>]
   def lmap(&block); end
 end
 
@@ -768,6 +1201,9 @@ class Unparser::Emitter
   def comments; end
 
   # Dispatch node write as statement
+  #
+  # @api private
+  # @return [undefined]
   def dispatch(*_arg0); end
 
   def emit_mlhs; end
@@ -782,6 +1218,9 @@ class Unparser::Emitter
 
     # Return emitter
     #
+    #
+    # @api private
+    # @return [Emitter]
     def emitter(buffer:, comments:, node:, local_variable_scope:); end
 
     def new(*args, &block); end
@@ -789,6 +1228,10 @@ class Unparser::Emitter
     private
 
     # Register emitter for type
+    #
+    # @api private
+    # @param types [Symbol]
+    # @return [undefined]
     def handle(*types); end
   end
 end
@@ -922,8 +1365,13 @@ class Unparser::Emitter::Block < ::Unparser::Emitter
   def emit_lambda_arguments; end
   def emit_send_target; end
   def emit_target; end
+
+  # @return [Boolean]
   def need_do?; end
+
+  # @return [Boolean]
   def numblock?; end
+
   def remaining_children; end
   def target; end
   def target_writer(&block); end
@@ -945,6 +1393,9 @@ class Unparser::Emitter::CBase < ::Unparser::Emitter
   private
 
   # Perform dispatch
+  #
+  # @api private
+  # @return [undefined]
   def dispatch; end
 end
 
@@ -1074,6 +1525,8 @@ class Unparser::Emitter::Def::Singleton < ::Unparser::Emitter::Def
   def name; end
   def remaining_children; end
   def subject; end
+
+  # @return [Boolean]
   def subject_without_parens?; end
 end
 
@@ -1190,8 +1643,13 @@ class Unparser::Emitter::If < ::Unparser::Emitter
   def emit_postcondition; end
   def if_branch; end
   def keyword; end
+
+  # @return [Boolean]
   def postcondition?; end
+
   def remaining_children; end
+
+  # @return [Boolean]
   def unless?; end
 end
 
@@ -1295,9 +1753,13 @@ end
 
 module Unparser::Emitter::LocalVariableRoot
   # Return local variable root
+  #
+  # @api private
+  # @return [Parser::AST::Node]
   def local_variable_scope; end
 
   class << self
+    # @private
     def included(descendant); end
   end
 end
@@ -1459,7 +1921,9 @@ end
 class Unparser::Emitter::Pair < ::Unparser::Emitter
   private
 
+  # @return [Boolean]
   def colon?(key); end
+
   def dispatch; end
   def key; end
   def remaining_children; end
@@ -1538,6 +2002,8 @@ class Unparser::Emitter::Procarg < ::Unparser::Emitter
   private
 
   def dispatch; end
+
+  # @return [Boolean]
   def needs_parens?; end
 end
 
@@ -1581,7 +2047,10 @@ class Unparser::Emitter::Repetition < ::Unparser::Emitter
   def emit_keyword; end
   def emit_normal; end
   def emit_postcontrol; end
+
+  # @return [Boolean]
   def postcontrol?; end
+
   def remaining_children; end
 end
 
@@ -1697,6 +2166,8 @@ class Unparser::Emitter::XStr < ::Unparser::Emitter
   def emit_string(value); end
   def emit_xstr; end
   def escape_xstr(input); end
+
+  # @return [Boolean]
   def heredoc?; end
 end
 
@@ -1716,6 +2187,10 @@ class Unparser::Equalizer < ::Module
   # Will use the keys with which it is initialized to define #cmp?,
   # #hash, and #inspect
   #
+  #
+  # @api private
+  # @param keys [Array<Symbol>]
+  # @return [undefined]
   def initialize(*keys); end
 
   private
@@ -1730,9 +2205,21 @@ end
 # The comparison methods
 module Unparser::Equalizer::Methods
   # Compare the object with other object for equivalency
+  #
+  # @api public
+  # @example
+  #   object == other  # => true or false
+  # @param other [Object] the other object to compare with
+  # @return [Boolean]
   def ==(other); end
 
   # Compare the object with other object for equality
+  #
+  # @api public
+  # @example
+  #   object.eql?(other)  # => true or false
+  # @param other [Object] the other object to compare with
+  # @return [Boolean]
   def eql?(other); end
 end
 
@@ -1779,6 +2266,7 @@ Unparser::Generation::EXTRA_NL = T.let(T.unsafe(nil), Array)
 
 # Error raised when unparser encounters an invalid AST
 class Unparser::InvalidNodeError < ::RuntimeError
+  # @return [InvalidNodeError] a new instance of InvalidNodeError
   def initialize(message, node); end
 
   # Returns the value of attribute node.
@@ -1794,6 +2282,7 @@ module Unparser::NodeDetails
   def children; end
 
   class << self
+    # @private
     def included(descendant); end
   end
 end
@@ -1810,15 +2299,29 @@ class Unparser::NodeDetails::Send
   extend ::Unparser::DSL
 
   def arguments(&block); end
+
+  # @return [Boolean]
   def arguments?; end
+
+  # @return [Boolean]
   def assignment?(&block); end
+
+  # @return [Boolean]
   def assignment_operator?; end
+
+  # @return [Boolean]
   def binary_syntax_allowed?; end
+
   def non_assignment_selector; end
   def receiver; end
   def selector; end
+
+  # @return [Boolean]
   def selector_binary_operator?; end
+
+  # @return [Boolean]
   def selector_unary_operator?; end
+
   def string_selector(&block); end
 
   private
@@ -1831,11 +2334,22 @@ Unparser::NodeDetails::Send::NON_ASSIGN_RANGE = T.let(T.unsafe(nil), Range)
 
 module Unparser::NodeHelpers
   # Helper for building nodes
+  #
+  # @api private
+  # @param type [Symbol]
+  # @param children [Array]
+  # @return [Parser::AST::Node]
   def n(type, children = T.unsafe(nil)); end
 
+  # @return [Boolean]
   def n?(type, node); end
 
   # Helper for building nodes
+  #
+  # @api private
+  # @param type [Symbol]
+  # @param children [Parser::AST::Node]
+  # @return [Parser::AST::Node]
   def s(type, *children); end
 
   def unwrap_single_begin(node); end
@@ -1876,6 +2390,9 @@ module Unparser::RequireBlock
   private
 
   # Raise error unless block is provided
+  #
+  # @raise [MissingBlockError] if no block is given
+  # @return [self]
   def require_block; end
 end
 
@@ -1897,9 +2414,15 @@ class Unparser::Validation
   def original_source; end
 
   # Return error report
+  #
+  # @api private
+  # @return [String]
   def report(&block); end
 
   # Test if source could be unparsed successfully
+  #
+  # @api private
+  # @return [Boolean]
   def success?; end
 
   private
@@ -1912,12 +2435,21 @@ class Unparser::Validation
     def anima; end
 
     # Create validator from node
+    #
+    # @param original_node [Parser::AST::Node]
+    # @return [Validator]
     def from_node(original_node); end
 
     # Create validator from file
+    #
+    # @param path [Pathname]
+    # @return [Validator]
     def from_path(path); end
 
     # Create validator from string
+    #
+    # @param original_source [String]
+    # @return [Validator]
     def from_string(original_source); end
 
     private
@@ -1928,6 +2460,8 @@ end
 
 class Unparser::Validation::Literal < ::Unparser::Validation
   def report; end
+
+  # @return [Boolean]
   def success?; end
 
   private
@@ -1944,6 +2478,7 @@ module Unparser::Writer
   mixes_in_class_methods ::Unparser::DSL
 
   class << self
+    # @private
     def included(descendant); end
   end
 end
@@ -2013,7 +2548,9 @@ class Unparser::Writer::DynamicString
 
   private
 
+  # @return [Boolean]
   def breakpoint?(child, current); end
+
   def classify(node); end
   def classify_str(node); end
   def emit_body(children); end
@@ -2027,15 +2564,33 @@ class Unparser::Writer::DynamicString
   def emit_segment(children, index); end
   def emit_squiggly_heredoc_body; end
   def escape_dynamic(string); end
+
+  # @return [Boolean]
   def heredoc?; end
+
   def heredoc_header; end
+
+  # @return [Boolean]
   def heredoc_pattern?; end
+
+  # @return [Boolean]
   def heredoc_pattern_2?; end
+
+  # @return [Boolean]
   def heredoc_pattern_3?; end
+
+  # @return [Boolean]
   def nl_last_child?; end
+
   def segments; end
+
+  # @return [Boolean]
   def str_empty?(node); end
+
+  # @return [Boolean]
   def str_nl?(node); end
+
+  # @return [Boolean]
   def str_ws?(node); end
 
   class << self
@@ -2137,7 +2692,10 @@ class Unparser::Writer::Send
   private
 
   def arguments; end
+
+  # @return [Boolean]
   def avoid_clash?; end
+
   def details(&block); end
   def effective_writer(&block); end
   def effective_writer_class; end
@@ -2146,11 +2704,18 @@ class Unparser::Writer::Send
   def emit_normal_arguments; end
   def emit_operator; end
   def emit_send_regular(node); end
+
+  # @return [Boolean]
   def local_variable_clash?; end
+
+  # @return [Boolean]
   def parses_as_constant?; end
+
   def receiver; end
   def remaining_children; end
   def selector; end
+
+  # @return [Boolean]
   def write_as_attribute_assignment?; end
 
   class << self

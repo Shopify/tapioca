@@ -13,31 +13,39 @@
 #
 # Here is an example:
 #
-# require 'nokogiri'
-# require 'open-uri'
+#     require 'nokogiri'
+#     require 'open-uri'
 #
-# # Get a Nokogiri::HTML4::Document for the page we’re interested in...
+#     # Get a Nokogiri::HTML4::Document for the page we’re interested in...
 #
-# doc = Nokogiri::HTML4(URI.open('http://www.google.com/search?q=tenderlove'))
+#     doc = Nokogiri::HTML4(URI.open('http://www.google.com/search?q=tenderlove'))
 #
-# # Do funky things with it using Nokogiri::XML::Node methods...
+#     # Do funky things with it using Nokogiri::XML::Node methods...
 #
-# ####
-# # Search for nodes by css
-# doc.css('h3.r a.l').each do |link|
-# puts link.content
-# end
+#     ####
+#     # Search for nodes by css
+#     doc.css('h3.r a.l').each do |link|
+#       puts link.content
+#     end
 #
-# See Nokogiri::XML::Searchable#css for more information about CSS searching.
-# See Nokogiri::XML::Searchable#xpath for more information about XPath searching.
+# See also:
+#
+# - Nokogiri::XML::Searchable#css for more information about CSS searching
+# - Nokogiri::XML::Searchable#xpath for more information about XPath searching
 module Nokogiri
   class << self
-    # Parse HTML. Convenience method for Nokogiri::HTML4::Document.parse
     def HTML(input, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
+    # :call-seq:
+    #   HTML4(input, url = nil, encoding = nil, options = XML::ParseOptions::DEFAULT_HTML, &block) → Nokogiri::HTML4::Document
+    #
     # Parse HTML. Convenience method for Nokogiri::HTML4::Document.parse
     def HTML4(input, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
+    # Since v1.12.0
+    #
+    # ⚠ HTML5 functionality is not available when running JRuby.
+    #
     # Parse an HTML5 document. Convenience method for {Nokogiri::HTML5::Document.parse}
     def HTML5(input, url = T.unsafe(nil), encoding = T.unsafe(nil), **options, &block); end
 
@@ -45,15 +53,15 @@ module Nokogiri
     # implements method_missing such that methods may be used instead of CSS
     # or XPath.  For example:
     #
-    # doc = Nokogiri::Slop(<<-eohtml)
-    # <html>
-    # <body>
-    # <p>first</p>
-    # <p>second</p>
-    # </body>
-    # </html>
-    # eohtml
-    # assert_equal('second', doc.html.body.p[1].text)
+    #   doc = Nokogiri::Slop(<<-eohtml)
+    #     <html>
+    #       <body>
+    #         <p>first</p>
+    #         <p>second</p>
+    #       </body>
+    #     </html>
+    #   eohtml
+    #   assert_equal('second', doc.html.body.p[1].text)
     def Slop(*args, &block); end
 
     # Parse XML.  Convenience method for Nokogiri::XML::Document.parse
@@ -63,11 +71,15 @@ module Nokogiri
     #
     # Example:
     #
-    # xslt = Nokogiri::XSLT(File.read(ARGV[0]))
+    #   xslt = Nokogiri::XSLT(File.read(ARGV[0]))
     def XSLT(stylesheet, modules = T.unsafe(nil)); end
 
     def install_default_aliases; end
+
+    # @return [Boolean]
     def jruby?; end
+
+    def libxml2_patches; end
 
     # Create a new Nokogiri::XML::DocumentFragment
     def make(input = T.unsafe(nil), opts = T.unsafe(nil), &blk); end
@@ -75,23 +87,56 @@ module Nokogiri
     # Parse an HTML or XML document.  +string+ contains the document.
     def parse(string, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil)); end
 
+    # @return [Boolean]
     def uses_gumbo?; end
+
+    # @return [Boolean]
     def uses_libxml?(requirement = T.unsafe(nil)); end
   end
 end
 
+# Translate a CSS selector into an XPath 1.0 query
 module Nokogiri::CSS
   class << self
-    # Parse this CSS selector in +selector+.  Returns an AST.
+    # TODO: Deprecate this method ahead of 2.0 and delete it in 2.0.
+    # It is not used by Nokogiri and shouldn't be part of the public API.
     def parse(selector); end
 
-    # Get the XPath for +selector+.
+    # :call-seq:
+    #   xpath_for(selector) → String
+    #   xpath_for(selector [, prefix:] [, visitor:] [, ns:]) → String
+    #
+    # Translate a CSS selector to the equivalent XPath query.
+    #
+    # [Parameters]
+    # - +selector+ (String) The CSS selector to be translated into XPath
+    #
+    # - +prefix:+ (String)
+    #
+    #   The XPath prefix for the query, see Nokogiri::XML::XPath for some options. Default is
+    #   +XML::XPath::GLOBAL_SEARCH_PREFIX+.
+    #
+    # - +visitor:+ (Nokogiri::CSS::XPathVisitor)
+    #
+    #   The visitor class to use to transform the AST into XPath. Default is
+    #   +Nokogiri::CSS::XPathVisitor.new+.
+    #
+    # - +ns:+ (Hash<String ⇒ String>)
+    #
+    #   The namespaces that are referenced in the query, if any. This is a hash where the keys are
+    #   the namespace prefix and the values are the namespace URIs. Default is an empty Hash.
+    #
+    # [Returns] (String) The equivalent XPath query for +selector+
+    #
+    # 💡 Note that translated queries are cached for performance concerns.
     def xpath_for(selector, options = T.unsafe(nil)); end
   end
 end
 
 class Nokogiri::CSS::Node
   # Create a new Node with +type+ and +value+
+  #
+  # @return [Node] a new instance of Node
   def initialize(type, value); end
 
   # Accept +visitor+
@@ -107,7 +152,7 @@ class Nokogiri::CSS::Node
   def to_type; end
 
   # Convert this CSS node to xpath with +prefix+ using +visitor+
-  def to_xpath(prefix = T.unsafe(nil), visitor = T.unsafe(nil)); end
+  def to_xpath(prefix, visitor); end
 
   # Get the type of this node
   def type; end
@@ -126,96 +171,112 @@ Nokogiri::CSS::Node::ALLOW_COMBINATOR_ON_SELF = T.let(T.unsafe(nil), Array)
 
 class Nokogiri::CSS::Parser < ::Racc::Parser
   # Create a new CSS parser with respect to +namespaces+
+  #
+  # @return [Parser] a new instance of Parser
   def initialize(namespaces = T.unsafe(nil)); end
 
   # reduce 0 omitted
   def _reduce_1(val, _values, result); end
 
-  # reduce 10 omitted
+  def _reduce_10(val, _values, result); end
   def _reduce_11(val, _values, result); end
 
-  def _reduce_12(val, _values, result); end
+  # reduce 12 omitted
   def _reduce_13(val, _values, result); end
+
   def _reduce_14(val, _values, result); end
   def _reduce_15(val, _values, result); end
-  def _reduce_16(val, _values, result); end
 
-  # reduce 17 omitted
+  # reduce 16 omitted
+  def _reduce_17(val, _values, result); end
+
   def _reduce_18(val, _values, result); end
-
+  def _reduce_19(val, _values, result); end
   def _reduce_2(val, _values, result); end
 
-  # reduce 19 omitted
-  def _reduce_20(val, _values, result); end
-
+  # reduce 20 omitted
   def _reduce_21(val, _values, result); end
-  def _reduce_22(val, _values, result); end
+
+  # reduce 22 omitted
   def _reduce_23(val, _values, result); end
 
-  # reduce 24 omitted
+  def _reduce_24(val, _values, result); end
   def _reduce_25(val, _values, result); end
-
   def _reduce_26(val, _values, result); end
-  def _reduce_27(val, _values, result); end
+
+  # reduce 27 omitted
   def _reduce_28(val, _values, result); end
+
   def _reduce_29(val, _values, result); end
   def _reduce_3(val, _values, result); end
   def _reduce_30(val, _values, result); end
   def _reduce_31(val, _values, result); end
   def _reduce_32(val, _values, result); end
-  def _reduce_33(val, _values, result); end
+
+  # reduce 33 omitted
   def _reduce_34(val, _values, result); end
+
   def _reduce_35(val, _values, result); end
   def _reduce_36(val, _values, result); end
   def _reduce_37(val, _values, result); end
+  def _reduce_38(val, _values, result); end
+  def _reduce_39(val, _values, result); end
   def _reduce_4(val, _values, result); end
-
-  # reduce 39 omitted
   def _reduce_40(val, _values, result); end
-
   def _reduce_41(val, _values, result); end
   def _reduce_42(val, _values, result); end
-  def _reduce_43(val, _values, result); end
-  def _reduce_44(val, _values, result); end
+
+  # reduce 44 omitted
   def _reduce_45(val, _values, result); end
 
-  # reduce 47 omitted
-  def _reduce_48(val, _values, result); end
+  # reduce 46 omitted
+  def _reduce_47(val, _values, result); end
 
+  def _reduce_48(val, _values, result); end
   def _reduce_49(val, _values, result); end
   def _reduce_5(val, _values, result); end
   def _reduce_50(val, _values, result); end
   def _reduce_51(val, _values, result); end
-  def _reduce_52(val, _values, result); end
 
-  # reduce 57 omitted
+  # reduce 53 omitted
+  def _reduce_54(val, _values, result); end
+
+  def _reduce_55(val, _values, result); end
+  def _reduce_56(val, _values, result); end
+  def _reduce_57(val, _values, result); end
   def _reduce_58(val, _values, result); end
-
-  def _reduce_59(val, _values, result); end
   def _reduce_6(val, _values, result); end
-  def _reduce_60(val, _values, result); end
-  def _reduce_61(val, _values, result); end
 
-  # reduce 62 omitted
-  def _reduce_63(val, _values, result); end
-
+  # reduce 63 omitted
   def _reduce_64(val, _values, result); end
+
   def _reduce_65(val, _values, result); end
   def _reduce_66(val, _values, result); end
   def _reduce_67(val, _values, result); end
-  def _reduce_68(val, _values, result); end
+
+  # reduce 68 omitted
   def _reduce_69(val, _values, result); end
+
   def _reduce_7(val, _values, result); end
   def _reduce_70(val, _values, result); end
+  def _reduce_71(val, _values, result); end
+  def _reduce_72(val, _values, result); end
+  def _reduce_73(val, _values, result); end
+  def _reduce_74(val, _values, result); end
+  def _reduce_75(val, _values, result); end
+  def _reduce_76(val, _values, result); end
   def _reduce_8(val, _values, result); end
   def _reduce_9(val, _values, result); end
 
-  # reduce 75 omitted
+  # reduce 81 omitted
   def _reduce_none(val, _values, result); end
 
+  def cache_key(query, prefix, visitor); end
   def next_token; end
 
   # On CSS parser error, raise an exception
+  #
+  # @raise [SyntaxError]
   def on_error(error_token_id, error_value, value_stack); end
 
   def parse(string); end
@@ -223,7 +284,7 @@ class Nokogiri::CSS::Parser < ::Racc::Parser
   def unescape_css_string(str); end
 
   # Get the xpath for +string+ using +options+
-  def xpath_for(string, options = T.unsafe(nil)); end
+  def xpath_for(string, prefix, visitor); end
 
   class << self
     # Get the css selector in +string+ from the cache
@@ -233,6 +294,8 @@ class Nokogiri::CSS::Parser < ::Racc::Parser
     def []=(string, value); end
 
     # Return a thread-local boolean indicating whether the CSS-to-XPath cache is active. (Default is `true`.)
+    #
+    # @return [Boolean]
     def cache_on?; end
 
     # Clear the cache
@@ -272,13 +335,40 @@ class Nokogiri::CSS::Tokenizer
   def state; end
 
   # Sets the attribute state
+  #
+  # @param value the value to set the attribute state to.
   def state=(_arg0); end
 end
 
 class Nokogiri::CSS::Tokenizer::ScanError < ::StandardError; end
 
+# When translating CSS selectors to XPath queries with Nokogiri::CSS.xpath_for, the XPathVisitor
+# class allows for changing some of the behaviors related to builtin xpath functions and quirks
+# of HTML5.
 class Nokogiri::CSS::XPathVisitor
+  # :call-seq:
+  #   new() → XPathVisitor
+  #   new(builtins:, doctype:) → XPathVisitor
+  #
+  # [Parameters]
+  # - +builtins:+ (BuiltinsConfig) Determine when to use Nokogiri's built-in xpath functions for performance improvements.
+  # - +doctype:+ (DoctypeConfig) Make document-type-specific accommodations for CSS queries.
+  #
+  # [Returns] XPathVisitor
+  #
+  # @return [XPathVisitor] a new instance of XPathVisitor
+  def initialize(builtins: T.unsafe(nil), doctype: T.unsafe(nil)); end
+
   def accept(node); end
+
+  # :call-seq: config() → Hash
+  #
+  # [Returns]
+  #   a Hash representing the configuration of the XPathVisitor, suitable for use as
+  #   part of the CSS cache key.
+  def config; end
+
+  def visit_attrib_name(node); end
   def visit_attribute_condition(node); end
   def visit_child_selector(node); end
   def visit_class_condition(node); end
@@ -288,38 +378,113 @@ class Nokogiri::CSS::XPathVisitor
   def visit_direct_adjacent_selector(node); end
   def visit_element_name(node); end
   def visit_following_selector(node); end
+
+  # :stopdoc:
   def visit_function(node); end
+
   def visit_id(node); end
   def visit_not(node); end
   def visit_pseudo_class(node); end
 
   private
 
-  # use only ordinary xpath functions
   def css_class(hay, needle); end
+  def html5_element_name_needs_namespace_handling(node); end
 
-  # use the builtin implementation
-  def css_class_builtin(hay, needle); end
-
-  # use only ordinary xpath functions
-  def css_class_standard(hay, needle); end
-
+  # @return [Boolean]
   def is_of_type_pseudo_class?(node); end
+
+  # @raise [ArgumentError]
   def nth(node, options = T.unsafe(nil)); end
+
   def read_a_and_positive_b(values); end
 end
 
-class Nokogiri::CSS::XPathVisitorAlwaysUseBuiltins < ::Nokogiri::CSS::XPathVisitor
-  private
+# Enum to direct XPathVisitor when to use Nokogiri builtin XPath functions.
+module Nokogiri::CSS::XPathVisitor::BuiltinsConfig; end
 
-  def css_class(hay, needle); end
+# Always use Nokogiri builtin functions whenever possible. This is probably only useful for testing.
+Nokogiri::CSS::XPathVisitor::BuiltinsConfig::ALWAYS = T.let(T.unsafe(nil), Symbol)
+
+# Never use Nokogiri builtin functions, always generate vanilla XPath 1.0 queries. This is
+# the default when calling Nokogiri::CSS.xpath_for directly.
+Nokogiri::CSS::XPathVisitor::BuiltinsConfig::NEVER = T.let(T.unsafe(nil), Symbol)
+
+# Only use Nokogiri builtin functions when they will be faster than vanilla XPath. This is
+# the behavior chosen when searching for CSS selectors on a Nokogiri document, fragment, or
+# node.
+Nokogiri::CSS::XPathVisitor::BuiltinsConfig::OPTIMAL = T.let(T.unsafe(nil), Symbol)
+
+Nokogiri::CSS::XPathVisitor::BuiltinsConfig::VALUES = T.let(T.unsafe(nil), Array)
+
+# Enum to direct XPathVisitor when to tweak the XPath query to suit the nature of the document
+# being searched. Note that searches for CSS selectors from a Nokogiri document, fragment, or
+# node will choose the correct option automatically.
+module Nokogiri::CSS::XPathVisitor::DoctypeConfig; end
+
+# The document being searched is an HTML4 document.
+Nokogiri::CSS::XPathVisitor::DoctypeConfig::HTML4 = T.let(T.unsafe(nil), Symbol)
+
+# The document being searched is an HTML5 document.
+Nokogiri::CSS::XPathVisitor::DoctypeConfig::HTML5 = T.let(T.unsafe(nil), Symbol)
+
+Nokogiri::CSS::XPathVisitor::DoctypeConfig::VALUES = T.let(T.unsafe(nil), Array)
+
+# The document being searched is an XML document. This is the default.
+Nokogiri::CSS::XPathVisitor::DoctypeConfig::XML = T.let(T.unsafe(nil), Symbol)
+
+Nokogiri::CSS::XPathVisitor::WILDCARD_NAMESPACES = T.let(T.unsafe(nil), TrueClass)
+
+module Nokogiri::CSS::XPathVisitorAlwaysUseBuiltins
+  class << self
+    def new; end
+  end
 end
 
-class Nokogiri::CSS::XPathVisitorOptimallyUseBuiltins < ::Nokogiri::CSS::XPathVisitor
-  private
-
-  def css_class(hay, needle); end
+module Nokogiri::CSS::XPathVisitorOptimallyUseBuiltins
+  class << self
+    def new; end
+  end
 end
+
+# Some classes in Nokogiri are namespaced as a group, for example
+# Document, DocumentFragment, and Builder.
+#
+# It's sometimes necessary to look up the related class, e.g.:
+#
+#   XML::Builder → XML::Document
+#   HTML4::Builder → HTML4::Document
+#   HTML5::Document → HTML5::DocumentFragment
+#
+# This module is included into those key classes who need to do this.
+module Nokogiri::ClassResolver
+  # :call-seq:
+  #   related_class(class_name) → Class
+  #
+  # Find a class constant within the
+  #
+  # Some examples:
+  #
+  #   Nokogiri::XML::Document.new.related_class("DocumentFragment")
+  #   # => Nokogiri::XML::DocumentFragment
+  #   Nokogiri::HTML4::Document.new.related_class("DocumentFragment")
+  #   # => Nokogiri::HTML4::DocumentFragment
+  #
+  # Note this will also work for subclasses that follow the same convention, e.g.:
+  #
+  #   Loofah::HTML::Document.new.related_class("DocumentFragment")
+  #   # => Loofah::HTML::DocumentFragment
+  #
+  # And even if it's a subclass, this will iterate through the superclasses:
+  #
+  #   class ThisIsATopLevelClass < Nokogiri::HTML4::Builder ; end
+  #   ThisIsATopLevelClass.new.related_class("Document")
+  #   # => Nokogiri::HTML4::Document
+  def related_class(class_name); end
+end
+
+# #related_class restricts matching namespaces to those matching this set.
+Nokogiri::ClassResolver::VALID_NAMESPACES = T.let(T.unsafe(nil), Set)
 
 module Nokogiri::Decorators; end
 
@@ -331,6 +496,7 @@ module Nokogiri::Decorators::Slop
 
   private
 
+  # @return [Boolean]
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -365,12 +531,19 @@ Nokogiri::Gumbo::DEFAULT_MAX_ERRORS = T.let(T.unsafe(nil), Integer)
 # or fragment.
 Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH = T.let(T.unsafe(nil), Integer)
 
+# 💡 This module/namespace is an alias for Nokogiri::HTML4 as of v1.12.0. Before v1.12.0,
+#   Nokogiri::HTML4 did not exist, and this was the module/namespace for all HTML-related
+#   classes.
 Nokogiri::HTML = Nokogiri::HTML4
 
+# Since v1.12.0
+#
+# 💡 Before v1.12.0, Nokogiri::HTML4 did not exist, and Nokogiri::HTML was the module/namespace
+# for parsing HTML.
 module Nokogiri::HTML4
   class << self
     # Parse a fragment from +string+ in to a NodeSet.
-    def fragment(string, encoding = T.unsafe(nil)); end
+    def fragment(string, encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
     # Parse HTML. Convenience method for Nokogiri::HTML4::Document.parse
     def parse(input, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
@@ -387,16 +560,16 @@ end
 # Create an HTML document with a body that has an onload attribute, and a
 # span tag with a class of "bold" that has content of "Hello world".
 #
-# builder = Nokogiri::HTML4::Builder.new do |doc|
-# doc.html {
-# doc.body(:onload => 'some_func();') {
-# doc.span.bold {
-# doc.text "Hello world"
-# }
-# }
-# }
-# end
-# puts builder.to_html
+#   builder = Nokogiri::HTML4::Builder.new do |doc|
+#     doc.html {
+#       doc.body(:onload => 'some_func();') {
+#         doc.span.bold {
+#           doc.text "Hello world"
+#         }
+#       }
+#     }
+#   end
+#   puts builder.to_html
 #
 # The HTML builder inherits from the XML builder, so make sure to read the
 # Nokogiri::XML::Builder documentation.
@@ -435,13 +608,13 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   #
   # These two statements are equivalent:
   #
-  # node.serialize(:encoding => 'UTF-8', :save_with => FORMAT | AS_XML)
+  #  node.serialize(:encoding => 'UTF-8', :save_with => FORMAT | AS_XML)
   #
   # or
   #
-  # node.serialize(:encoding => 'UTF-8') do |config|
-  # config.format.as_xml
-  # end
+  #   node.serialize(:encoding => 'UTF-8') do |config|
+  #     config.format.as_xml
+  #   end
   def serialize(options = T.unsafe(nil)); end
 
   # Get the title string of this document.  Return nil if there is
@@ -462,6 +635,14 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
 
   def type; end
 
+  # :call-seq:
+  #   xpath_doctype() → Nokogiri::CSS::XPathVisitor::DoctypeConfig
+  #
+  # [Returns] The document type which determines CSS-to-XPath translation.
+  #
+  # See XPathVisitor for more information.
+  def xpath_doctype; end
+
   private
 
   def meta_content_type; end
@@ -477,6 +658,8 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
     # is a number that sets options in the parser, such as
     # Nokogiri::XML::ParseOptions::RECOVER.  See the constants in
     # Nokogiri::XML::ParseOptions.
+    #
+    # @yield [options]
     def parse(string_or_io, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil)); end
 
     def read_io(_arg0, _arg1, _arg2, _arg3); end
@@ -485,6 +668,7 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
 end
 
 class Nokogiri::HTML4::Document::EncodingFound < ::StandardError
+  # @return [EncodingFound] a new instance of EncodingFound
   def initialize(encoding); end
 
   # Returns the value of attribute found_encoding.
@@ -492,6 +676,7 @@ class Nokogiri::HTML4::Document::EncodingFound < ::StandardError
 end
 
 class Nokogiri::HTML4::Document::EncodingReader
+  # @return [EncodingReader] a new instance of EncodingReader
   def initialize(io); end
 
   # This method is used by the C extension so that
@@ -507,12 +692,14 @@ class Nokogiri::HTML4::Document::EncodingReader
 end
 
 class Nokogiri::HTML4::Document::EncodingReader::JumpSAXHandler < ::Nokogiri::HTML4::Document::EncodingReader::SAXHandler
+  # @return [JumpSAXHandler] a new instance of JumpSAXHandler
   def initialize(jumptag); end
 
   def start_element(name, attrs = T.unsafe(nil)); end
 end
 
 class Nokogiri::HTML4::Document::EncodingReader::SAXHandler < ::Nokogiri::XML::SAX::Document
+  # @return [SAXHandler] a new instance of SAXHandler
   def initialize; end
 
   # Returns the value of attribute encoding.
@@ -522,25 +709,37 @@ class Nokogiri::HTML4::Document::EncodingReader::SAXHandler < ::Nokogiri::XML::S
 end
 
 class Nokogiri::HTML4::DocumentFragment < ::Nokogiri::XML::DocumentFragment
-  def initialize(document, tags = T.unsafe(nil), ctx = T.unsafe(nil)); end
+  # @return [DocumentFragment] a new instance of DocumentFragment
+  # @yield [options]
+  def initialize(document, tags = T.unsafe(nil), ctx = T.unsafe(nil), options = T.unsafe(nil)); end
 
   class << self
     # Create a Nokogiri::XML::DocumentFragment from +tags+, using +encoding+
-    def parse(tags, encoding = T.unsafe(nil)); end
+    def parse(tags, encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
   end
 end
 
 class Nokogiri::HTML4::ElementDescription
   # Is this element a block element?
+  #
+  # @return [Boolean]
   def block?; end
 
   def default_sub_element; end
+
+  # @return [Boolean]
   def deprecated?; end
+
   def deprecated_attributes; end
   def description; end
   def empty?; end
+
+  # @return [Boolean]
   def implied_end_tag?; end
+
+  # @return [Boolean]
   def implied_start_tag?; end
+
   def inline?; end
 
   # Inspection information
@@ -549,7 +748,10 @@ class Nokogiri::HTML4::ElementDescription
   def name; end
   def optional_attributes; end
   def required_attributes; end
+
+  # @return [Boolean]
   def save_end_tag?; end
+
   def sub_elements; end
 
   # Convert this description to a string
@@ -596,7 +798,12 @@ Nokogiri::HTML4::ElementDescription::DL_CONTENTS = T.let(T.unsafe(nil), Array)
 # This is filled in down below.
 Nokogiri::HTML4::ElementDescription::DefaultDescriptions = T.let(T.unsafe(nil), Hash)
 
+# Methods are defined protected by method_defined? because at
+# this point the C-library or Java library is already loaded,
+# and we don't want to clobber any methods that have been
+# defined there.
 Nokogiri::HTML4::ElementDescription::Desc = Struct
+
 Nokogiri::HTML4::ElementDescription::EDIT_ATTRS = T.let(T.unsafe(nil), Array)
 Nokogiri::HTML4::ElementDescription::EMBED_ATTRS = T.let(T.unsafe(nil), Array)
 Nokogiri::HTML4::ElementDescription::EMPTY = T.let(T.unsafe(nil), Array)
@@ -702,24 +909,32 @@ module Nokogiri::HTML4::SAX; end
 #
 # Here is a basic usage example:
 #
-# class MyDoc < Nokogiri::XML::SAX::Document
-# def start_element name, attributes = []
-# puts "found a #{name}"
-# end
-# end
+#   class MyDoc < Nokogiri::XML::SAX::Document
+#     def start_element name, attributes = []
+#       puts "found a #{name}"
+#     end
+#   end
 #
-# parser = Nokogiri::HTML4::SAX::Parser.new(MyDoc.new)
-# parser.parse(File.read(ARGV[0], mode: 'rb'))
+#   parser = Nokogiri::HTML4::SAX::Parser.new(MyDoc.new)
+#   parser.parse(File.read(ARGV[0], mode: 'rb'))
 #
 # For more information on SAX parsers, see Nokogiri::XML::SAX
 class Nokogiri::HTML4::SAX::Parser < ::Nokogiri::XML::SAX::Parser
   # Parse a file with +filename+
+  #
+  # @raise [ArgumentError]
+  # @yield [ctx]
   def parse_file(filename, encoding = T.unsafe(nil)); end
 
   # Parse given +io+
+  #
+  # @yield [ctx]
   def parse_io(io, encoding = T.unsafe(nil)); end
 
   # Parse html stored in +data+ using +encoding+
+  #
+  # @raise [ArgumentError]
+  # @yield [ctx]
   def parse_memory(data, encoding = T.unsafe(nil)); end
 end
 
@@ -736,6 +951,7 @@ class Nokogiri::HTML4::SAX::ParserContext < ::Nokogiri::XML::SAX::ParserContext
 end
 
 class Nokogiri::HTML4::SAX::PushParser < ::Nokogiri::XML::SAX::PushParser
+  # @return [PushParser] a new instance of PushParser
   def initialize(doc = T.unsafe(nil), file_name = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # Write a +chunk+ of HTML to the PushParser.  Any callback methods
@@ -766,13 +982,15 @@ end
 
 # == Usage
 #
+# ⚠ HTML5 functionality is not available when running JRuby.
+#
 # Parse an HTML5 document:
 #
-# doc = Nokogiri.HTML5(string)
+#   doc = Nokogiri.HTML5(string)
 #
 # Parse an HTML5 fragment:
 #
-# fragment = Nokogiri::HTML5.fragment(string)
+#   fragment = Nokogiri::HTML5.fragment(string)
 #
 # == Parsing options
 #
@@ -795,25 +1013,25 @@ end
 #
 # For example, this script:
 #
-# doc = Nokogiri::HTML5.parse('<span/>Hi there!</span foo=bar />', max_errors: 10)
-# doc.errors.each do |err|
-# puts(err)
-# end
+#   doc = Nokogiri::HTML5.parse('<span/>Hi there!</span foo=bar />', max_errors: 10)
+#   doc.errors.each do |err|
+#     puts(err)
+#   end
 #
 # Emits:
 #
-# 1:1: ERROR: Expected a doctype token
-# <span/>Hi there!</span foo=bar />
-# ^
-# 1:1: ERROR: Start tag of nonvoid HTML element ends with '/>', use '>'.
-# <span/>Hi there!</span foo=bar />
-# ^
-# 1:17: ERROR: End tag ends with '/>', use '>'.
-# <span/>Hi there!</span foo=bar />
-# ^
-# 1:17: ERROR: End tag contains attributes.
-# <span/>Hi there!</span foo=bar />
-# ^
+#   1:1: ERROR: Expected a doctype token
+#   <span/>Hi there!</span foo=bar />
+#   ^
+#   1:1: ERROR: Start tag of nonvoid HTML element ends with '/>', use '>'.
+#   <span/>Hi there!</span foo=bar />
+#   ^
+#   1:17: ERROR: End tag ends with '/>', use '>'.
+#   <span/>Hi there!</span foo=bar />
+#                   ^
+#   1:17: ERROR: End tag contains attributes.
+#   <span/>Hi there!</span foo=bar />
+#                   ^
 #
 # Using <tt>max_errors: -1</tt> results in an unlimited number of errors being returned.
 #
@@ -827,14 +1045,14 @@ end
 # As a convenience to Nokogiri users, the defined error codes are available via
 # {Nokogiri::XML::SyntaxError#str1} method.
 #
-# doc = Nokogiri::HTML5.parse('<span/>Hi there!</span foo=bar />', max_errors: 10)
-# doc.errors.each do |err|
-# puts("#{err.line}:#{err.column}: #{err.str1}")
-# end
-# # => 1:1: generic-parser
-# #    1:1: non-void-html-element-start-tag-with-trailing-solidus
-# #    1:17: end-tag-with-trailing-solidus
-# #    1:17: end-tag-with-attributes
+#   doc = Nokogiri::HTML5.parse('<span/>Hi there!</span foo=bar />', max_errors: 10)
+#   doc.errors.each do |err|
+#     puts("#{err.line}:#{err.column}: #{err.str1}")
+#   end
+#   # => 1:1: generic-parser
+#   #    1:1: non-void-html-element-start-tag-with-trailing-solidus
+#   #    1:17: end-tag-with-trailing-solidus
+#   #    1:17: end-tag-with-attributes
 #
 # Note that the first error is +generic-parser+ because it's an error from the tree construction
 # stage and doesn't have a standardized error code.
@@ -852,10 +1070,10 @@ end
 # This limit (which defaults to <tt>Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH = 400</tt>) can be
 # removed by giving the option <tt>max_tree_depth: -1</tt>.
 #
-# html = '<!DOCTYPE html>' + '<div>' * 1000
-# doc = Nokogiri.HTML5(html)
-# # raises ArgumentError: Document tree depth limit exceeded
-# doc = Nokogiri.HTML5(html, max_tree_depth: -1)
+#   html = '<!DOCTYPE html>' + '<div>' * 1000
+#   doc = Nokogiri.HTML5(html)
+#   # raises ArgumentError: Document tree depth limit exceeded
+#   doc = Nokogiri.HTML5(html, max_tree_depth: -1)
 #
 # === Attribute limit per element
 #
@@ -865,11 +1083,11 @@ end
 # This limit (which defaults to <tt>Nokogiri::Gumbo::DEFAULT_MAX_ATTRIBUTES = 400</tt>) can be
 # removed by giving the option <tt>max_attributes: -1</tt>.
 #
-# html = '<!DOCTYPE html><div ' + (1..1000).map { |x| "attr-#{x}" }.join(' ') + '>'
-# # "<!DOCTYPE html><div attr-1 attr-2 attr-3 ... attr-1000>"
-# doc = Nokogiri.HTML5(html)
-# # raises ArgumentError: Attributes per element limit exceeded
-# doc = Nokogiri.HTML5(html, max_attributes: -1)
+#   html = '<!DOCTYPE html><div ' + (1..1000).map { |x| "attr-#{x}" }.join(' ') + '>'
+#   # "<!DOCTYPE html><div attr-1 attr-2 attr-3 ... attr-1000>"
+#   doc = Nokogiri.HTML5(html)
+#   # raises ArgumentError: Attributes per element limit exceeded
+#   doc = Nokogiri.HTML5(html, max_attributes: -1)
 #
 # == HTML Serialization
 #
@@ -879,9 +1097,9 @@ end
 # +Element.outerHTML+.) Similarly, {XML::Node#inner_html} will serialize the children of a given
 # node. (This is the equivalent of JavaScript's +Element.innerHTML+.)
 #
-# doc = Nokogiri::HTML5("<!DOCTYPE html><span>Hello world!</span>")
-# puts doc.serialize
-# # => <!DOCTYPE html><html><head></head><body><span>Hello world!</span></body></html>
+#   doc = Nokogiri::HTML5("<!DOCTYPE html><span>Hello world!</span>")
+#   puts doc.serialize
+#   # => <!DOCTYPE html><html><head></head><body><span>Hello world!</span></body></html>
 #
 # Due to quirks in how HTML is parsed and serialized, it's possible for a DOM tree to be
 # serialized and then re-parsed, resulting in a different DOM.  Mostly, this happens with DOMs
@@ -891,13 +1109,13 @@ end
 # In particular, a newline at the start of +pre+, +listing+, and +textarea+ elements is ignored by
 # the parser.
 #
-# doc = Nokogiri::HTML5(<<-EOF)
-# <!DOCTYPE html>
-# <pre>
-# Content</pre>
-# EOF
-# puts doc.at('/html/body/pre').serialize
-# # => <pre>Content</pre>
+#   doc = Nokogiri::HTML5(<<-EOF)
+#   <!DOCTYPE html>
+#   <pre>
+#   Content</pre>
+#   EOF
+#   puts doc.at('/html/body/pre').serialize
+#   # => <pre>Content</pre>
 #
 # In this case, the original HTML is semantically equivalent to the serialized version. If the
 # +pre+, +listing+, or +textarea+ content starts with two newlines, the first newline will be
@@ -905,16 +1123,16 @@ end
 # semantically different DOMs. Passing the parameter <tt>preserve_newline: true</tt> will cause
 # two or more newlines to be preserved. (A single leading newline will still be removed.)
 #
-# doc = Nokogiri::HTML5(<<-EOF)
-# <!DOCTYPE html>
-# <listing>
+#   doc = Nokogiri::HTML5(<<-EOF)
+#   <!DOCTYPE html>
+#   <listing>
 #
-# Content</listing>
-# EOF
-# puts doc.at('/html/body/listing').serialize(preserve_newline: true)
-# # => <listing>
-# #
-# #    Content</listing>
+#   Content</listing>
+#   EOF
+#   puts doc.at('/html/body/listing').serialize(preserve_newline: true)
+#   # => <listing>
+#   #
+#   #    Content</listing>
 #
 # == Encodings
 #
@@ -927,12 +1145,12 @@ end
 # as {https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references HTML numeric
 # entities}.
 #
-# frag = Nokogiri::HTML5.fragment('<span>아는 길도 물어가라</span>')
-# puts html
-# # => <span>&#xc544;&#xb294; &#xae38;&#xb3c4; &#xbb3c;&#xc5b4;&#xac00;&#xb77c;</span>
-# frag = Nokogiri::HTML5.fragment(html)
-# puts frag.serialize
-# # => <span>아는 길도 물어가라</span>
+#   frag = Nokogiri::HTML5.fragment('<span>아는 길도 물어가라</span>')
+#   puts html
+#   # => <span>&#xc544;&#xb294; &#xae38;&#xb3c4; &#xbb3c;&#xc5b4;&#xac00;&#xb77c;</span>
+#   frag = Nokogiri::HTML5.fragment(html)
+#   puts frag.serialize
+#   # => <span>아는 길도 물어가라</span>
 #
 # (There's a {https://bugs.ruby-lang.org/issues/15033 bug} in all current versions of Ruby that
 # can cause the entity encoding to fail. Of the mandated supported encodings for HTML, the only
@@ -942,18 +1160,20 @@ end
 # == Notes
 #
 # * The {Nokogiri::HTML5.fragment} function takes a string and parses it
-# as a HTML5 document.  The +<html>+, +<head>+, and +<body>+ elements are
-# removed from this document, and any children of these elements that remain
-# are returned as a {Nokogiri::HTML5::DocumentFragment}.
+#   as a HTML5 document.  The +<html>+, +<head>+, and +<body>+ elements are
+#   removed from this document, and any children of these elements that remain
+#   are returned as a {Nokogiri::HTML5::DocumentFragment}.
 #
 # * The {Nokogiri::HTML5.parse} function takes a string and passes it to the
-# <code>gumbo_parse_with_options</code> method, using the default options.
-# The resulting Gumbo parse tree is then walked.
+#   <code>gumbo_parse_with_options</code> method, using the default options.
+#   The resulting Gumbo parse tree is then walked.
 #
 # * Instead of uppercase element names, lowercase element names are produced.
 #
 # * Instead of returning +unknown+ as the element name for unknown tags, the
-# original tag name is returned verbatim.
+#   original tag name is returned verbatim.
+#
+# Since v1.12.0
 module Nokogiri::HTML5
   class << self
     def escape_text(text, encoding, attribute_mode); end
@@ -967,8 +1187,8 @@ module Nokogiri::HTML5
     # rules.  +uri+ may be a +String+ or a +URI+.  +options+ contains
     # http headers and special options.  Everything which is not a
     # special option is considered a header.  Special options include:
-    # * :follow_limit => number of redirects which are followed
-    # * :basic_auth => [username, password]
+    #  * :follow_limit => number of redirects which are followed
+    #  * :basic_auth => [username, password]
     def get(uri, options = T.unsafe(nil)); end
 
     def get_impl(uri, options = T.unsafe(nil)); end
@@ -976,7 +1196,9 @@ module Nokogiri::HTML5
     # Parse an HTML 5 document. Convenience method for {Nokogiri::HTML5::Document.parse}
     def parse(string, url = T.unsafe(nil), encoding = T.unsafe(nil), **options, &block); end
 
+    # @return [Boolean]
     def prepend_newline?(node); end
+
     def read_and_encode(string, encoding); end
 
     # Charset sniffing is a complex and controversial topic that understandably isn't done _by
@@ -996,26 +1218,60 @@ module Nokogiri::HTML5
   end
 end
 
+# Since v1.12.0
+#
+# 💡 HTML5 functionality is not available when running JRuby.
 class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
   def fragment(tags = T.unsafe(nil)); end
   def to_xml(options = T.unsafe(nil), &block); end
 
+  # :call-seq:
+  #   xpath_doctype() → Nokogiri::CSS::XPathVisitor::DoctypeConfig
+  #
+  # [Returns] The document type which determines CSS-to-XPath translation.
+  #
+  # See XPathVisitor for more information.
+  def xpath_doctype; end
+
   class << self
     def do_parse(string_or_io, url, encoding, options); end
+
+    # @yield [options]
     def parse(string_or_io, url = T.unsafe(nil), encoding = T.unsafe(nil), **options, &block); end
+
+    # @raise [ArgumentError]
     def read_io(io, url = T.unsafe(nil), encoding = T.unsafe(nil), **options); end
+
+    # @raise [ArgumentError]
     def read_memory(string, url = T.unsafe(nil), encoding = T.unsafe(nil), **options); end
   end
 end
 
+# Since v1.12.0
+#
+# 💡 HTML5 functionality is not available when running JRuby.
 class Nokogiri::HTML5::DocumentFragment < ::Nokogiri::HTML4::DocumentFragment
   # Create a document fragment.
+  #
+  # @return [DocumentFragment] a new instance of DocumentFragment
   def initialize(doc, tags = T.unsafe(nil), ctx = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # Returns the value of attribute document.
   def document; end
+
+  # Sets the attribute document
+  #
+  # @param value the value to set the attribute document to.
   def document=(_arg0); end
+
+  # Returns the value of attribute errors.
   def errors; end
+
+  # Sets the attribute errors
+  #
+  # @param value the value to set the attribute errors to.
   def errors=(_arg0); end
+
   def extract_params(params); end
   def serialize(options = T.unsafe(nil), &block); end
 
@@ -1030,9 +1286,14 @@ Nokogiri::HTML5::HTML_NAMESPACE = T.let(T.unsafe(nil), String)
 
 Nokogiri::HTML5::MATHML_NAMESPACE = T.let(T.unsafe(nil), String)
 
+# Since v1.12.0
+#
+# 💡 HTML5 functionality is not available when running JRuby.
 module Nokogiri::HTML5::Node
   def fragment(tags); end
   def inner_html(options = T.unsafe(nil)); end
+
+  # @yield [config]
   def write_to(io, *options); end
 
   private
@@ -1060,6 +1321,7 @@ Nokogiri::LIBXSLT_LOADED_VERSION = T.let(T.unsafe(nil), String)
 Nokogiri::LIBXSLT_PATCHES = T.let(T.unsafe(nil), Array)
 Nokogiri::OTHER_LIBRARY_VERSIONS = T.let(T.unsafe(nil), String)
 Nokogiri::PACKAGED_LIBRARIES = T.let(T.unsafe(nil), TrueClass)
+Nokogiri::PRECOMPILED_LIBRARIES = T.let(T.unsafe(nil), TrueClass)
 class Nokogiri::SyntaxError < ::StandardError; end
 
 module Nokogiri::Test
@@ -1071,7 +1333,7 @@ end
 # The version of Nokogiri you are using
 Nokogiri::VERSION = T.let(T.unsafe(nil), String)
 
-# More complete version information about libxml
+# Detailed version info about Nokogiri and the installed extension dependencies.
 Nokogiri::VERSION_INFO = T.let(T.unsafe(nil), Hash)
 
 class Nokogiri::VersionInfo
@@ -1081,19 +1343,36 @@ class Nokogiri::VersionInfo
   def compiled_libxml_version; end
   def compiled_libxslt_version; end
   def engine; end
+
+  # @return [Boolean]
   def jruby?; end
+
+  # @return [Boolean]
   def libxml2?; end
+
+  # @return [Boolean]
   def libxml2_has_iconv?; end
+
+  # @return [Boolean]
   def libxml2_precompiled?; end
+
+  # @return [Boolean]
   def libxml2_using_packaged?; end
+
+  # @return [Boolean]
   def libxml2_using_system?; end
+
+  # @return [Boolean]
   def libxslt_has_datetime?; end
+
   def loaded_libxml_version; end
   def loaded_libxslt_version; end
   def ruby_minor; end
   def to_hash; end
   def to_markdown; end
   def warnings; end
+
+  # @return [Boolean]
   def windows?; end
 end
 
@@ -1101,6 +1380,8 @@ module Nokogiri::XML
   class << self
     # Parse an XML document using the Nokogiri::XML::Reader API.  See
     # Nokogiri::XML::Reader for mor information
+    #
+    # @yield [options]
     def Reader(string_or_io, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # Create a new Nokogiri::XML::RelaxNG document from +string_or_io+.
@@ -1112,7 +1393,7 @@ module Nokogiri::XML
     def Schema(string_or_io, options = T.unsafe(nil)); end
 
     # Parse a fragment from +string+ in to a NodeSet.
-    def fragment(string); end
+    def fragment(string, options = T.unsafe(nil), &block); end
 
     # Parse XML.  Convenience method for Nokogiri::XML::Document.parse
     def parse(thing, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil), &block); end
@@ -1146,29 +1427,29 @@ end
 #
 # == Synopsis:
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.root {
-# xml.products {
-# xml.widget {
-# xml.id_ "10"
-# xml.name "Awesome widget"
-# }
-# }
-# }
-# end
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.root {
+#       xml.products {
+#         xml.widget {
+#           xml.id_ "10"
+#           xml.name "Awesome widget"
+#         }
+#       }
+#     }
+#   end
+#   puts builder.to_xml
 #
 # Will output:
 #
-# <?xml version="1.0"?>
-# <root>
-# <products>
-# <widget>
-# <id>10</id>
-# <name>Awesome widget</name>
-# </widget>
-# </products>
-# </root>
+#   <?xml version="1.0"?>
+#   <root>
+#     <products>
+#       <widget>
+#         <id>10</id>
+#         <name>Awesome widget</name>
+#       </widget>
+#     </products>
+#   </root>
 #
 #
 # === Builder scope
@@ -1179,16 +1460,16 @@ end
 # outside scope, you can use the builder without the "xml" prefix like
 # this:
 #
-# builder = Nokogiri::XML::Builder.new do
-# root {
-# products {
-# widget {
-# id_ "10"
-# name "Awesome widget"
-# }
-# }
-# }
-# end
+#   builder = Nokogiri::XML::Builder.new do
+#     root {
+#       products {
+#         widget {
+#           id_ "10"
+#           name "Awesome widget"
+#         }
+#       }
+#     }
+#   end
 #
 # == Special Tags
 #
@@ -1201,64 +1482,64 @@ end
 # Here is an example of using the underscore to disambiguate tag names from
 # ruby methods:
 #
-# @objects = [Object.new, Object.new, Object.new]
+#   @objects = [Object.new, Object.new, Object.new]
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.root {
-# xml.objects {
-# @objects.each do |o|
-# xml.object {
-# xml.type_   o.type
-# xml.class_  o.class.name
-# xml.id_     o.id
-# }
-# end
-# }
-# }
-# end
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.root {
+#       xml.objects {
+#         @objects.each do |o|
+#           xml.object {
+#             xml.type_   o.type
+#             xml.class_  o.class.name
+#             xml.id_     o.id
+#           }
+#         end
+#       }
+#     }
+#   end
+#   puts builder.to_xml
 #
 # The underscore may be used with any tag name, and the last underscore
 # will just be removed.  This code will output the following XML:
 #
-# <?xml version="1.0"?>
-# <root>
-# <objects>
-# <object>
-# <type>Object</type>
-# <class>Object</class>
-# <id>48390</id>
-# </object>
-# <object>
-# <type>Object</type>
-# <class>Object</class>
-# <id>48380</id>
-# </object>
-# <object>
-# <type>Object</type>
-# <class>Object</class>
-# <id>48370</id>
-# </object>
-# </objects>
-# </root>
+#   <?xml version="1.0"?>
+#   <root>
+#     <objects>
+#       <object>
+#         <type>Object</type>
+#         <class>Object</class>
+#         <id>48390</id>
+#       </object>
+#       <object>
+#         <type>Object</type>
+#         <class>Object</class>
+#         <id>48380</id>
+#       </object>
+#       <object>
+#         <type>Object</type>
+#         <class>Object</class>
+#         <id>48370</id>
+#       </object>
+#     </objects>
+#   </root>
 #
 # == Tag Attributes
 #
 # Tag attributes may be supplied as method arguments.  Here is our
 # previous example, but using attributes rather than tags:
 #
-# @objects = [Object.new, Object.new, Object.new]
+#   @objects = [Object.new, Object.new, Object.new]
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.root {
-# xml.objects {
-# @objects.each do |o|
-# xml.object(:type => o.type, :class => o.class, :id => o.id)
-# end
-# }
-# }
-# end
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.root {
+#       xml.objects {
+#         @objects.each do |o|
+#           xml.object(:type => o.type, :class => o.class, :id => o.id)
+#         end
+#       }
+#     }
+#   end
+#   puts builder.to_xml
 #
 # === Tag Attribute Short Cuts
 #
@@ -1268,23 +1549,23 @@ end
 # This example builds an "object" tag with the class attribute "classy"
 # and the id of "thing":
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.root {
-# xml.objects {
-# xml.object.classy.thing!
-# }
-# }
-# end
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.root {
+#       xml.objects {
+#         xml.object.classy.thing!
+#       }
+#     }
+#   end
+#   puts builder.to_xml
 #
 # Which will output:
 #
-# <?xml version="1.0"?>
-# <root>
-# <objects>
-# <object class="classy" id="thing"/>
-# </objects>
-# </root>
+#   <?xml version="1.0"?>
+#   <root>
+#     <objects>
+#       <object class="classy" id="thing"/>
+#     </objects>
+#   </root>
 #
 # All other options are still supported with this syntax, including
 # blocks and extra tag attributes.
@@ -1295,19 +1576,19 @@ end
 # assumes that when an attribute starts with "xmlns", it is meant to be
 # a namespace:
 #
-# builder = Nokogiri::XML::Builder.new { |xml|
-# xml.root('xmlns' => 'default', 'xmlns:foo' => 'bar') do
-# xml.tenderlove
-# end
-# }
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new { |xml|
+#     xml.root('xmlns' => 'default', 'xmlns:foo' => 'bar') do
+#       xml.tenderlove
+#     end
+#   }
+#   puts builder.to_xml
 #
 # Will output XML like this:
 #
-# <?xml version="1.0"?>
-# <root xmlns:foo="bar" xmlns="default">
-# <tenderlove/>
-# </root>
+#   <?xml version="1.0"?>
+#   <root xmlns:foo="bar" xmlns="default">
+#     <tenderlove/>
+#   </root>
 #
 # === Referencing declared namespaces
 #
@@ -1316,23 +1597,23 @@ end
 #
 # For example:
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.root('xmlns:foo' => 'bar') {
-# xml.objects {
-# xml['foo'].object.classy.thing!
-# }
-# }
-# end
-# puts builder.to_xml
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.root('xmlns:foo' => 'bar') {
+#       xml.objects {
+#         xml['foo'].object.classy.thing!
+#       }
+#     }
+#   end
+#   puts builder.to_xml
 #
 # Will output this XML:
 #
-# <?xml version="1.0"?>
-# <root xmlns:foo="bar">
-# <objects>
-# <foo:object class="classy" id="thing"/>
-# </objects>
-# </root>
+#   <?xml version="1.0"?>
+#   <root xmlns:foo="bar">
+#     <objects>
+#       <foo:object class="classy" id="thing"/>
+#     </objects>
+#   </root>
 #
 # Note the "foo:object" tag.
 #
@@ -1341,32 +1622,32 @@ end
 # In the Builder context, children will inherit their parent's namespace. This is the same
 # behavior as if the underlying {XML::Document} set +namespace_inheritance+ to +true+:
 #
-# result = Nokogiri::XML::Builder.new do |xml|
-# xml["soapenv"].Envelope("xmlns:soapenv" => "http://schemas.xmlsoap.org/soap/envelope/") do
-# xml.Header
-# end
-# end
-# result.doc.to_xml
-# # => <?xml version="1.0" encoding="utf-8"?>
-# #    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-# #      <soapenv:Header/>
-# #    </soapenv:Envelope>
+#   result = Nokogiri::XML::Builder.new do |xml|
+#     xml["soapenv"].Envelope("xmlns:soapenv" => "http://schemas.xmlsoap.org/soap/envelope/") do
+#       xml.Header
+#     end
+#   end
+#   result.doc.to_xml
+#   # => <?xml version="1.0" encoding="utf-8"?>
+#   #    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+#   #      <soapenv:Header/>
+#   #    </soapenv:Envelope>
 #
 # Users may turn this behavior off by passing a keyword argument +namespace_inheritance:false+
 # to the initializer:
 #
-# result = Nokogiri::XML::Builder.new(namespace_inheritance: false) do |xml|
-# xml["soapenv"].Envelope("xmlns:soapenv" => "http://schemas.xmlsoap.org/soap/envelope/") do
-# xml.Header
-# xml["soapenv"].Body # users may explicitly opt into the namespace
-# end
-# end
-# result.doc.to_xml
-# # => <?xml version="1.0" encoding="utf-8"?>
-# #    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-# #      <Header/>
-# #      <soapenv:Body/>
-# #    </soapenv:Envelope>
+#   result = Nokogiri::XML::Builder.new(namespace_inheritance: false) do |xml|
+#     xml["soapenv"].Envelope("xmlns:soapenv" => "http://schemas.xmlsoap.org/soap/envelope/") do
+#       xml.Header
+#       xml["soapenv"].Body # users may explicitly opt into the namespace
+#     end
+#   end
+#   result.doc.to_xml
+#   # => <?xml version="1.0" encoding="utf-8"?>
+#   #    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+#   #      <Header/>
+#   #      <soapenv:Body/>
+#   #    </soapenv:Envelope>
 #
 # For more information on namespace inheritance, please see {XML::Document#namespace_inheritance}
 #
@@ -1379,35 +1660,39 @@ end
 #
 # For example, this Ruby:
 #
-# builder = Nokogiri::XML::Builder.new do |xml|
-# xml.doc.create_internal_subset(
-# 'html',
-# "-//W3C//DTD HTML 4.01 Transitional//EN",
-# "http://www.w3.org/TR/html4/loose.dtd"
-# )
-# xml.root do
-# xml.foo
-# end
-# end
+#   builder = Nokogiri::XML::Builder.new do |xml|
+#     xml.doc.create_internal_subset(
+#       'html',
+#       "-//W3C//DTD HTML 4.01 Transitional//EN",
+#       "http://www.w3.org/TR/html4/loose.dtd"
+#     )
+#     xml.root do
+#       xml.foo
+#     end
+#   end
 #
-# puts builder.to_xml
+#   puts builder.to_xml
 #
 # Will output this xml:
 #
-# <?xml version="1.0"?>
-# <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-# <root>
-# <foo/>
-# </root>
+#   <?xml version="1.0"?>
+#   <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+#   <root>
+#     <foo/>
+#   </root>
 class Nokogiri::XML::Builder
+  include ::Nokogiri::ClassResolver
+
   # Create a new Builder object.  +options+ are sent to the top level
   # Document that is being built.
   #
   # Building a document with a particular encoding for example:
   #
-  # Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-  # ...
-  # end
+  #   Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+  #     ...
+  #   end
+  #
+  # @return [Builder] a new instance of Builder
   def initialize(options = T.unsafe(nil), root = T.unsafe(nil), &block); end
 
   # Append the given raw XML +string+ to the document
@@ -1465,11 +1750,11 @@ class Nokogiri::XML::Builder
     #
     # For example:
     #
-    # doc = Nokogiri::XML(File.read('somedoc.xml'))
-    # Nokogiri::XML::Builder.with(doc.at_css('some_tag')) do |xml|
-    # # ... Use normal builder methods here ...
-    # xml.awesome # add the "awesome" tag below "some_tag"
-    # end
+    #   doc = Nokogiri::XML(File.read('somedoc.xml'))
+    #   Nokogiri::XML::Builder.with(doc.at_css('some_tag')) do |xml|
+    #     # ... Use normal builder methods here ...
+    #     xml.awesome # add the "awesome" tag below "some_tag"
+    #   end
     def with(root, &block); end
   end
 end
@@ -1477,6 +1762,7 @@ end
 Nokogiri::XML::Builder::DEFAULT_DOCUMENT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 class Nokogiri::XML::Builder::NodeBuilder
+  # @return [NodeBuilder] a new instance of NodeBuilder
   def initialize(node, doc_builder); end
 
   def [](k); end
@@ -1509,21 +1795,27 @@ class Nokogiri::XML::DTD < ::Nokogiri::XML::Node
   def elements; end
   def entities; end
   def external_id; end
+
+  # @return [Boolean]
   def html5_dtd?; end
+
+  # @return [Boolean]
   def html_dtd?; end
+
   def keys; end
   def notations; end
   def system_id; end
   def validate(_arg0); end
 end
 
-# Nokogiri::XML::Document is the main entry point for dealing with
-# XML documents.  The Document is created by parsing an XML document.
-# See Nokogiri::XML::Document.parse() for more information on parsing.
+# Nokogiri::XML::Document is the main entry point for dealing with XML documents.  The Document
+# is created by parsing an XML document.  See Nokogiri::XML::Document.parse for more information
+# on parsing.
 #
 # For searching a Document, see Nokogiri::XML::Searchable#css and
 # Nokogiri::XML::Searchable#xpath
 class Nokogiri::XML::Document < ::Nokogiri::XML::Node
+  # @return [Document] a new instance of Document
   def initialize(*args); end
 
   def <<(node_or_tags); end
@@ -1531,34 +1823,41 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   def canonicalize(*_arg0); end
   def clone(*_arg0); end
 
-  # Recursively get all namespaces from this node and its subtree and
-  # return them as a hash.
+  # :call-seq:
+  #   collect_namespaces() → Hash<String(Namespace#prefix) ⇒ String(Namespace#href)>
   #
-  # For example, given this document:
+  # Recursively get all namespaces from this node and its subtree and return them as a
+  # hash.
   #
-  # <root xmlns:foo="bar">
-  # <bar xmlns:hello="world" />
-  # </root>
+  # ⚠ This method will not handle duplicate namespace prefixes, since the return value is a hash.
+  #
+  # Note that this method does an xpath lookup for nodes with namespaces, and as a result the
+  # order (and which duplicate prefix "wins") may be dependent on the implementation of the
+  # underlying XML library.
+  #
+  # *Example:* Basic usage
+  #
+  # Given this document:
+  #
+  #   <root xmlns="default" xmlns:foo="bar">
+  #     <bar xmlns:hello="world" />
+  #   </root>
   #
   # This method will return:
   #
-  # { 'xmlns:foo' => 'bar', 'xmlns:hello' => 'world' }
+  #   {"xmlns:foo"=>"bar", "xmlns"=>"default", "xmlns:hello"=>"world"}
   #
-  # WARNING: this method will clobber duplicate names in the keys.
-  # For example, given this document:
+  # *Example:* Duplicate prefixes
   #
-  # <root xmlns:foo="bar">
-  # <bar xmlns:foo="baz" />
-  # </root>
+  # Given this document:
   #
-  # The hash returned will look like this: { 'xmlns:foo' => 'bar' }
+  #   <root xmlns:foo="bar">
+  #     <bar xmlns:foo="baz" />
+  #   </root>
   #
-  # Non-prefixed default namespaces (as in "xmlns=") are not included
-  # in the hash.
+  # The hash returned will be something like:
   #
-  # Note that this method does an xpath lookup for nodes with
-  # namespaces, and as a result the order may be dependent on the
-  # implementation of the underlying XML library.
+  #   {"xmlns:foo" => "baz"}
   def collect_namespaces; end
 
   # Create a CDATA Node containing +string+
@@ -1567,14 +1866,53 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # Create a Comment Node containing +string+
   def create_comment(string, &block); end
 
-  # Create a new +Element+ with +name+ sharing GC lifecycle with the document, optionally
-  # setting contents or attributes.
+  # :call-seq:
+  #   create_element(name, *contents_or_attrs, &block) → Nokogiri::XML::Element
+  #
+  # Create a new Element with `name` belonging to this document, optionally setting contents or
+  # attributes.
+  #
+  # This method is _not_ the most user-friendly option if your intention is to add a node to the
+  # document tree. Prefer one of the Nokogiri::XML::Node methods like Node#add_child,
+  # Node#add_next_sibling, Node#replace, etc. which will both create an element (or subtree) and
+  # place it in the document tree.
   #
   # Arguments may be passed to initialize the element:
-  # - a +Hash+ argument will be used to set attributes
-  # - a non-Hash object that responds to +#to_s+ will be used to set the new node's contents
+  #
+  # - a Hash argument will be used to set attributes
+  # - a non-Hash object that responds to \#to_s will be used to set the new node's contents
   #
   # A block may be passed to mutate the node.
+  #
+  # [Parameters]
+  # - `name` (String)
+  # - `contents_or_attrs` (\#to_s, Hash)
+  # [Yields] `node` (Nokogiri::XML::Element)
+  # [Returns] Nokogiri::XML::Element
+  #
+  # *Example:* An empty element without attributes
+  #
+  #   doc.create_element("div")
+  #   # => <div></div>
+  #
+  # *Example:* An element with contents
+  #
+  #   doc.create_element("div", "contents")
+  #   # => <div>contents</div>
+  #
+  # *Example:* An element with attributes
+  #
+  #   doc.create_element("div", {"class" => "container"})
+  #   # => <div class='container'></div>
+  #
+  # *Example:* An element with contents and attributes
+  #
+  #   doc.create_element("div", "contents", {"class" => "container"})
+  #   # => <div class='container'>contents</div>
+  #
+  # *Example:* Passing a block to mutate the element
+  #
+  #   doc.create_element("div") { |node| node["class"] = "blue" if before_noon? }
   def create_element(name, *contents_or_attrs, &block); end
 
   def create_entity(*_arg0); end
@@ -1595,10 +1933,14 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   def encoding; end
   def encoding=(_arg0); end
 
-  # A list of Nokogiri::XML::SyntaxError found when parsing a document
+  # The errors found while parsing a document.
+  #
+  # [Returns] Array<Nokogiri::XML::SyntaxError>
   def errors; end
 
-  # A list of Nokogiri::XML::SyntaxError found when parsing a document
+  # The errors found while parsing a document.
+  #
+  # [Returns] Array<Nokogiri::XML::SyntaxError>
   def errors=(_arg0); end
 
   # Create a Nokogiri::XML::DocumentFragment from +tags+
@@ -1608,12 +1950,98 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # The name of this document.  Always returns "document"
   def name; end
 
-  # When true, reparented elements without a namespace will inherit their new parent's
-  # namespace (if one exists). Defaults to +false+.
+  # When `true`, reparented elements without a namespace will inherit their new parent's
+  # namespace (if one exists). Defaults to `false`.
+  #
+  # [Returns] Boolean
+  #
+  # *Example:* Default behavior of namespace inheritance
+  #
+  #   xml = <<~EOF
+  #           <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #             <foo:parent>
+  #             </foo:parent>
+  #           </root>
+  #         EOF
+  #   doc = Nokogiri::XML(xml)
+  #   parent = doc.at_xpath("//foo:parent", "foo" => "http://nokogiri.org/default_ns/test/foo")
+  #   parent.add_child("<child></child>")
+  #   doc.to_xml
+  #   # => <?xml version="1.0"?>
+  #   #    <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #   #      <foo:parent>
+  #   #        <child/>
+  #   #      </foo:parent>
+  #   #    </root>
+  #
+  # *Example:* Setting namespace inheritance to `true`
+  #
+  #   xml = <<~EOF
+  #           <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #             <foo:parent>
+  #             </foo:parent>
+  #           </root>
+  #         EOF
+  #   doc = Nokogiri::XML(xml)
+  #   doc.namespace_inheritance = true
+  #   parent = doc.at_xpath("//foo:parent", "foo" => "http://nokogiri.org/default_ns/test/foo")
+  #   parent.add_child("<child></child>")
+  #   doc.to_xml
+  #   # => <?xml version="1.0"?>
+  #   #    <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #   #      <foo:parent>
+  #   #        <foo:child/>
+  #   #      </foo:parent>
+  #   #    </root>
+  #
+  # Since v1.12.4
   def namespace_inheritance; end
 
-  # When true, reparented elements without a namespace will inherit their new parent's
-  # namespace (if one exists). Defaults to +false+.
+  # When `true`, reparented elements without a namespace will inherit their new parent's
+  # namespace (if one exists). Defaults to `false`.
+  #
+  # [Returns] Boolean
+  #
+  # *Example:* Default behavior of namespace inheritance
+  #
+  #   xml = <<~EOF
+  #           <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #             <foo:parent>
+  #             </foo:parent>
+  #           </root>
+  #         EOF
+  #   doc = Nokogiri::XML(xml)
+  #   parent = doc.at_xpath("//foo:parent", "foo" => "http://nokogiri.org/default_ns/test/foo")
+  #   parent.add_child("<child></child>")
+  #   doc.to_xml
+  #   # => <?xml version="1.0"?>
+  #   #    <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #   #      <foo:parent>
+  #   #        <child/>
+  #   #      </foo:parent>
+  #   #    </root>
+  #
+  # *Example:* Setting namespace inheritance to `true`
+  #
+  #   xml = <<~EOF
+  #           <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #             <foo:parent>
+  #             </foo:parent>
+  #           </root>
+  #         EOF
+  #   doc = Nokogiri::XML(xml)
+  #   doc.namespace_inheritance = true
+  #   parent = doc.at_xpath("//foo:parent", "foo" => "http://nokogiri.org/default_ns/test/foo")
+  #   parent.add_child("<child></child>")
+  #   doc.to_xml
+  #   # => <?xml version="1.0"?>
+  #   #    <root xmlns:foo="http://nokogiri.org/default_ns/test/foo">
+  #   #      <foo:parent>
+  #   #        <foo:child/>
+  #   #      </foo:parent>
+  #   #    </root>
+  #
+  # Since v1.12.4
   def namespace_inheritance=(_arg0); end
 
   # Get the hash of namespaces on the root Nokogiri::XML::Node
@@ -1629,14 +2057,14 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # is called will not be decorated with sloppy behavior. So, if you're in
   # irb, the preferred idiom is:
   #
-  # irb> doc = Nokogiri::Slop my_markup
+  #   irb> doc = Nokogiri::Slop my_markup
   #
   # and not
   #
-  # irb> doc = Nokogiri::HTML my_markup
-  # ... followed by irb's implicit inspect (and therefore instantiation of every node) ...
-  # irb> doc.slop!
-  # ... which does absolutely nothing.
+  #   irb> doc = Nokogiri::HTML my_markup
+  #   ... followed by irb's implicit inspect (and therefore instantiation of every node) ...
+  #   irb> doc.slop!
+  #   ... which does absolutely nothing.
   def slop!; end
 
   def to_xml(*args, &block); end
@@ -1648,12 +2076,22 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
 
   def version; end
 
+  # :call-seq:
+  #   xpath_doctype() → Nokogiri::CSS::XPathVisitor::DoctypeConfig
+  #
+  # [Returns] The document type which determines CSS-to-XPath translation.
+  #
+  # See XPathVisitor for more information.
+  def xpath_doctype; end
+
   private
 
   def inspect_attributes; end
 
   class << self
+    # @return [Boolean]
     def empty_doc?(string_or_io); end
+
     def new(*_arg0); end
 
     # Parse an XML file.
@@ -1680,6 +2118,8 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
     # set) by default.
     #
     # Nokogiri.XML() is a convenience method which will call this method.
+    #
+    # @yield [options]
     def parse(string_or_io, url = T.unsafe(nil), encoding = T.unsafe(nil), options = T.unsafe(nil)); end
 
     def read_io(_arg0, _arg1, _arg2, _arg3); end
@@ -1699,10 +2139,13 @@ Nokogiri::XML::Document::NCNAME_START_CHAR = T.let(T.unsafe(nil), String)
 class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # Create a new DocumentFragment from +tags+.
   #
-  # If +ctx+ is present, it is used as a context node for the
-  # subtree created, e.g., namespaces will be resolved relative
-  # to +ctx+.
-  def initialize(document, tags = T.unsafe(nil), ctx = T.unsafe(nil)); end
+  #  If +ctx+ is present, it is used as a context node for the
+  #  subtree created, e.g., namespaces will be resolved relative
+  #  to +ctx+.
+  #
+  # @return [DocumentFragment] a new instance of DocumentFragment
+  # @yield [options]
+  def initialize(document, tags = T.unsafe(nil), ctx = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # call-seq: css *rules, [namespace-bindings, custom-pseudo-class]
   #
@@ -1757,7 +2200,7 @@ class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
     def new(*_arg0); end
 
     # Create a Nokogiri::XML::DocumentFragment from +tags+
-    def parse(tags); end
+    def parse(tags, options = T.unsafe(nil), &block); end
   end
 end
 
@@ -1765,11 +2208,11 @@ class Nokogiri::XML::Element < ::Nokogiri::XML::Node; end
 
 # Represents the allowed content in an Element Declaration inside a DTD:
 #
-# <?xml version="1.0"?><?TEST-STYLE PIDATA?>
-# <!DOCTYPE staff SYSTEM "staff.dtd" [
-# <!ELEMENT div1 (head, (p | list | note)*, div2*)>
-# ]>
-# </root>
+#   <?xml version="1.0"?><?TEST-STYLE PIDATA?>
+#   <!DOCTYPE staff SYSTEM "staff.dtd" [
+#      <!ELEMENT div1 (head, (p | list | note)*, div2*)>
+#   ]>
+#   </root>
 #
 # ElementContent represents the tree inside the <!ELEMENT> tag shown above
 # that lists the possible content for the div1 tag.
@@ -1856,47 +2299,81 @@ class Nokogiri::XML::Namespace
   def inspect_attributes; end
 end
 
-# {Nokogiri::XML::Node} is your window to the fun filled world of dealing with XML and HTML
-# tags. A {Nokogiri::XML::Node} may be treated similarly to a hash with regard to attributes. For
+# Nokogiri::XML::Node is the primary API you'll use to interact with your Document.
+#
+# == Attributes
+#
+# A Nokogiri::XML::Node may be treated similarly to a hash with regard to attributes. For
 # example:
 #
-# node = Nokogiri::XML::DocumentFragment.parse("<a href='#foo' id='link'>link</a>").at_css("a")
-# node.to_html # => "<a href=\"#foo\" id=\"link\">link</a>"
-# node['href'] # => "#foo"
-# node.keys # => ["href", "id"]
-# node.values # => ["#foo", "link"]
-# node['class'] = 'green' # => "green"
-# node.to_html # => "<a href=\"#foo\" id=\"link\" class=\"green\">link</a>"
+#   node = Nokogiri::XML::DocumentFragment.parse("<a href='#foo' id='link'>link</a>").at_css("a")
+#   node.to_html # => "<a href=\"#foo\" id=\"link\">link</a>"
+#   node['href'] # => "#foo"
+#   node.keys # => ["href", "id"]
+#   node.values # => ["#foo", "link"]
+#   node['class'] = 'green' # => "green"
+#   node.to_html # => "<a href=\"#foo\" id=\"link\" class=\"green\">link</a>"
 #
-# See the method group entitled "Working With Node Attributes" for the full set of methods.
+# See the method group entitled Node@Working+With+Node+Attributes for the full set of methods.
 #
-# {Nokogiri::XML::Node} also has methods that let you move around your
-# tree.  For navigating your tree, see:
+# == Navigation
 #
-# * {#parent}
-# * {#children}
-# * {#next}
-# * {#previous}
+# Nokogiri::XML::Node also has methods that let you move around your tree:
 #
-# When printing or otherwise emitting a document or a node (and
-# its subtree), there are a few methods you might want to use:
+# [#parent, #children, #next, #previous]
+#   Navigate up, down, or through siblings.
 #
-# * {#content}, {#text}, {#inner_text}, {#to_str}: These methods will all <b>emit plaintext</b>,
-# meaning that entities will be replaced (e.g., "&lt;" will be replaced with "<"), meaning
-# that any sanitizing will likely be un-done in the output.
+# See the method group entitled Node@Traversing+Document+Structure for the full set of methods.
 #
-# * {#to_s}, {#to_xml}, {#to_html}, {#inner_html}: These methods will all <b>emit
-# properly-escaped markup</b>, meaning that it's suitable for consumption by browsers,
-# parsers, etc.
+# == Serialization
 #
-# You may search this node's subtree using {#xpath} and {#css}
+# When printing or otherwise emitting a document or a node (and its subtree), there are a few
+# methods you might want to use:
+#
+# [#content, #text, #inner_text, #to_str]
+#   These methods will all **emit plaintext**,
+#   meaning that entities will be replaced (e.g., +&lt;+ will be replaced with +<+), meaning
+#   that any sanitizing will likely be un-done in the output.
+#
+# [#to_s, #to_xml, #to_html, #inner_html]
+#   These methods will all **emit properly-escaped markup**, meaning that it's suitable for
+#   consumption by browsers, parsers, etc.
+#
+# See the method group entitled Node@Serialization+and+Generating+Output for the full set of methods.
+#
+# == Searching
+#
+# You may search this node's subtree using methods like #xpath and #css.
+#
+# See the method group entitled Node@Searching+via+XPath+or+CSS+Queries for the full set of methods.
 class Nokogiri::XML::Node
   include ::Nokogiri::HTML5::Node
   include ::Nokogiri::XML::PP::Node
   include ::Nokogiri::XML::Searchable
+  include ::Nokogiri::ClassResolver
   include ::Enumerable
 
-  # Create a new node with +name+ sharing GC lifecycle with +document+.
+  # :call-seq:
+  #   new(name, document) -> Nokogiri::XML::Node
+  #   new(name, document) { |node| ... } -> Nokogiri::XML::Node
+  #
+  # Create a new node with +name+ that belongs to +document+.
+  #
+  # If you intend to add a node to a document tree, it's likely that you will prefer one of the
+  # Nokogiri::XML::Node methods like #add_child, #add_next_sibling, #replace, etc. which will
+  # both create an element (or subtree) and place it in the document tree.
+  #
+  # Another alternative, if you are concerned about performance, is
+  # Nokogiri::XML::Document#create_element which accepts additional arguments for contents or
+  # attributes but (like this method) avoids parsing markup.
+  #
+  # [Parameters]
+  # - +name+ (String)
+  # - +document+ (Nokogiri::XML::Document) The document to which the the returned node will belong.
+  # [Yields] Nokogiri::XML::Node
+  # [Returns] Nokogiri::XML::Node
+  #
+  # @return [Node] a new instance of Node
   def initialize(name, document); end
 
   # Add +node_or_tags+ as a child of this Node.
@@ -1914,13 +2391,70 @@ class Nokogiri::XML::Node
   # Test to see if this Node is equal to +other+
   def ==(other); end
 
-  # Search this node's immediate children using CSS selector +selector+
-  def >(selector); end
-
-  # Get the attribute value for the attribute +name+
+  # :call-seq: [](name) → (String, nil)
+  #
+  # Fetch an attribute from this node.
+  #
+  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
+  # namespaced attributes, use #attribute_with_ns.
+  #
+  # [Returns] (String, nil) value of the attribute +name+, or +nil+ if no matching attribute exists
+  #
+  # *Example*
+  #
+  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
+  #   child = doc.at_css("child")
+  #   child["size"] # => "large"
+  #   child["class"] # => "big wide tall"
+  #
+  # *Example:* Namespaced attributes will not be returned.
+  #
+  # ⚠ Note namespaced attributes may be accessed with #attribute or #attribute_with_ns
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'>
+  #       <child width:size='broad'/>
+  #     </root>
+  #   EOF
+  #   doc.at_css("child")["size"] # => nil
+  #   doc.at_css("child").attribute("size").value # => "broad"
+  #   doc.at_css("child").attribute_with_ns("size", "http://example.com/widths").value
+  #   # => "broad"
   def [](name); end
 
-  # Set the attribute value for the attribute +name+ to +value+
+  # :call-seq: []=(name, value) → value
+  #
+  # Update the attribute +name+ to +value+, or create the attribute if it does not exist.
+  #
+  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
+  # namespaced attributes for update, use #attribute_with_ns. To add a namespaced attribute,
+  # see the example below.
+  #
+  # [Returns] +value+
+  #
+  # *Example*
+  #
+  #   doc = Nokogiri::XML("<root><child/></root>")
+  #   child = doc.at_css("child")
+  #   child["size"] = "broad"
+  #   child.to_html
+  #   # => "<child size=\"broad\"></child>"
+  #
+  # *Example:* Add a namespaced attribute.
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'>
+  #       <child/>
+  #     </root>
+  #   EOF
+  #   child = doc.at_css("child")
+  #   child["size"] = "broad"
+  #   ns = doc.root.namespace_definitions.find { |ns| ns.prefix == "width" }
+  #   child.attribute("size").namespace = ns
+  #   doc.to_html
+  #   # => "<root xmlns:width=\"http://example.com/widths\">\n" +
+  #   #    "  <child width:size=\"broad\"></child>\n" +
+  #   #    "</root>\n"
   def []=(name, value); end
 
   # Accept a visitor.  This method calls "visit" on +visitor+ with self.
@@ -1934,14 +2468,46 @@ class Nokogiri::XML::Node
   # Also see related method +<<+.
   def add_child(node_or_tags); end
 
-  # Ensure HTML CSS classes are present on a +Node+. Any CSS
-  # classes in +names+ that already exist in the +Node+'s +class+
-  # attribute are _not_ added. Note that any existing duplicates
-  # in the +class+ attribute are not removed. Compare with
-  # {#append_class}.
+  # :call-seq: add_class(names) → self
+  #
+  # Ensure HTML CSS classes are present on +self+. Any CSS classes in +names+ that already exist
+  # in the "class" attribute are _not_ added. Note that any existing duplicates in the
+  # "class" attribute are not removed. Compare with #append_class.
   #
   # This is a convenience function and is equivalent to:
-  # node.kwattr_add("class", names)
+  #
+  #   node.kwattr_add("class", names)
+  #
+  # See related: #kwattr_add, #classes, #append_class, #remove_class
+  #
+  # [Parameters]
+  # - +names+ (String, Array<String>)
+  #
+  #   CSS class names to be added to the Node's "class" attribute. May be a string containing
+  #   whitespace-delimited names, or an Array of String names. Any class names already present
+  #   will not be added. Any class names not present will be added. If no "class" attribute
+  #   exists, one is created.
+  #
+  # [Returns] +self+ (Node) for ease of chaining method calls.
+  #
+  # *Example:* Ensure that the node has CSS class "section"
+  #
+  #   node                      # => <div></div>
+  #   node.add_class("section") # => <div class="section"></div>
+  #   node.add_class("section") # => <div class="section"></div> # duplicate not added
+  #
+  # *Example:* Ensure that the node has CSS classes "section" and "header", via a String argument
+  #
+  # Note that the CSS class "section" is not added because it is already present.
+  # Note also that the pre-existing duplicate CSS class "section" is not removed.
+  #
+  #   node                             # => <div class="section section"></div>
+  #   node.add_class("section header") # => <div class="section section header"></div>
+  #
+  # *Example:* Ensure that the node has CSS classes "section" and "header", via an Array argument
+  #
+  #   node                                  # => <div></div>
+  #   node.add_class(["section", "header"]) # => <div class="section header"></div>
   def add_class(names); end
 
   def add_namespace(_arg0, _arg1); end
@@ -1953,6 +2519,8 @@ class Nokogiri::XML::Node
   # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is a DocumentFragment, NodeSet, or string).
   #
   # Also see related method +after+.
+  #
+  # @raise [ArgumentError]
   def add_next_sibling(node_or_tags); end
 
   # Insert +node_or_tags+ before this Node (as a sibling).
@@ -1961,6 +2529,8 @@ class Nokogiri::XML::Node
   # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is a DocumentFragment, NodeSet, or string).
   #
   # Also see related method +before+.
+  #
+  # @raise [ArgumentError]
   def add_previous_sibling(node_or_tags); end
 
   # Insert +node_or_tags+ after this node (as a sibling).
@@ -1975,25 +2545,134 @@ class Nokogiri::XML::Node
   # the ancestors must match +selector+
   def ancestors(selector = T.unsafe(nil)); end
 
-  # Add HTML CSS classes to a +Node+, regardless of
-  # duplication. Compare with {#add_class}.
+  # :call-seq: append_class(names) → self
+  #
+  # Add HTML CSS classes to +self+, regardless of duplication. Compare with #add_class.
   #
   # This is a convenience function and is equivalent to:
-  # node.kwattr_append("class", names)
+  #
+  #   node.kwattr_append("class", names)
+  #
+  # See related: #kwattr_append, #classes, #add_class, #remove_class
+  #
+  # [Parameters]
+  # - +names+ (String, Array<String>)
+  #
+  #   CSS class names to be appended to the Node's "class" attribute. May be a string containing
+  #   whitespace-delimited names, or an Array of String names. All class names passed in will be
+  #   appended to the "class" attribute even if they are already present in the attribute
+  #   value. If no "class" attribute exists, one is created.
+  #
+  # [Returns] +self+ (Node) for ease of chaining method calls.
+  #
+  # *Example:* Append "section" to the node's CSS "class" attribute
+  #
+  #   node                         # => <div></div>
+  #   node.append_class("section") # => <div class="section"></div>
+  #   node.append_class("section") # => <div class="section section"></div> # duplicate added!
+  #
+  # *Example:* Append "section" and "header" to the noded's CSS "class" attribute, via a String argument
+  #
+  # Note that the CSS class "section" is appended even though it is already present
+  #
+  #   node                                # => <div class="section section"></div>
+  #   node.append_class("section header") # => <div class="section section section header"></div>
+  #
+  # *Example:* Append "section" and "header" to the node's CSS "class" attribute, via an Array argument
+  #
+  #   node                                     # => <div></div>
+  #   node.append_class(["section", "header"]) # => <div class="section header"></div>
+  #   node.append_class(["section", "header"]) # => <div class="section header section header"></div>
   def append_class(names); end
 
-  # Get the attribute value for the attribute +name+
+  # :call-seq: [](name) → (String, nil)
+  #
+  # Fetch an attribute from this node.
+  #
+  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
+  # namespaced attributes, use #attribute_with_ns.
+  #
+  # [Returns] (String, nil) value of the attribute +name+, or +nil+ if no matching attribute exists
+  #
+  # *Example*
+  #
+  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
+  #   child = doc.at_css("child")
+  #   child["size"] # => "large"
+  #   child["class"] # => "big wide tall"
+  #
+  # *Example:* Namespaced attributes will not be returned.
+  #
+  # ⚠ Note namespaced attributes may be accessed with #attribute or #attribute_with_ns
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'>
+  #       <child width:size='broad'/>
+  #     </root>
+  #   EOF
+  #   doc.at_css("child")["size"] # => nil
+  #   doc.at_css("child").attribute("size").value # => "broad"
+  #   doc.at_css("child").attribute_with_ns("size", "http://example.com/widths").value
+  #   # => "broad"
   def attr(name); end
 
   def attribute(_arg0); end
   def attribute_nodes; end
   def attribute_with_ns(_arg0, _arg1); end
 
-  # Returns a hash containing the node's attributes.  The key is
-  # the attribute name without any namespace, the value is a Nokogiri::XML::Attr
-  # representing the attribute.
-  # If you need to distinguish attributes with the same name, with different namespaces
-  # use #attribute_nodes instead.
+  # :call-seq: attributes() → Hash<String ⇒ Nokogiri::XML::Attr>
+  #
+  # Fetch this node's attributes.
+  #
+  # ⚠ Because the keys do not include any namespace information for the attribute, in case of a
+  # simple name collision, not all attributes will be returned. In this case, you will need to
+  # use #attribute_nodes.
+  #
+  # [Returns]
+  #   Hash containing attributes belonging to +self+. The hash keys are String attribute
+  #   names (without the namespace), and the hash values are Nokogiri::XML::Attr.
+  #
+  # *Example* with no namespaces:
+  #
+  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
+  #   doc.at_css("child").attributes
+  #   # => {"size"=>#(Attr:0x550 { name = "size", value = "large" }),
+  #   #     "class"=>#(Attr:0x564 { name = "class", value = "big wide tall" })}
+  #
+  # *Example* with a namespace:
+  #
+  #   doc = Nokogiri::XML("<root xmlns:desc='http://example.com/sizes'><child desc:size='large'/></root>")
+  #   doc.at_css("child").attributes
+  #   # => {"size"=>
+  #   #      #(Attr:0x550 {
+  #   #        name = "size",
+  #   #        namespace = #(Namespace:0x564 {
+  #   #          prefix = "desc",
+  #   #          href = "http://example.com/sizes"
+  #   #          }),
+  #   #        value = "large"
+  #   #        })}
+  #
+  # *Example* with an attribute name collision:
+  #
+  # ⚠ Note that only one of the attributes is returned in the Hash.
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'
+  #           xmlns:height='http://example.com/heights'>
+  #       <child width:size='broad' height:size='tall'/>
+  #     </root>
+  #   EOF
+  #   doc.at_css("child").attributes
+  #   # => {"size"=>
+  #   #      #(Attr:0x550 {
+  #   #        name = "size",
+  #   #        namespace = #(Namespace:0x564 {
+  #   #          prefix = "height",
+  #   #          href = "http://example.com/heights"
+  #   #          }),
+  #   #        value = "tall"
+  #   #        })}
   def attributes; end
 
   # Insert +node_or_tags+ before this node (as a sibling).
@@ -2008,6 +2687,8 @@ class Nokogiri::XML::Node
   def canonicalize(mode = T.unsafe(nil), inclusive_namespaces = T.unsafe(nil), with_comments = T.unsafe(nil)); end
 
   # Returns true if this is a CDATA
+  #
+  # @return [Boolean]
   def cdata?; end
 
   def child; end
@@ -2016,20 +2697,34 @@ class Nokogiri::XML::Node
   # Set the inner html for this Node +node_or_tags+
   # +node_or_tags+ can be a Nokogiri::XML::Node, a Nokogiri::XML::DocumentFragment, or a string containing markup.
   #
-  # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is a DocumentFragment, NodeSet, or string).
-  #
   # Also see related method +inner_html=+
   def children=(node_or_tags); end
 
-  # Get the CSS class names of a Node.
+  # :call-seq: classes() → Array<String>
+  #
+  # Fetch CSS class names of a Node.
   #
   # This is a convenience function and is equivalent to:
-  # node.kwattr_values("class")
+  #
+  #   node.kwattr_values("class")
+  #
+  # See related: #kwattr_values, #add_class, #append_class, #remove_class
+  #
+  # [Returns]
+  #   The CSS classes (Array of String) present in the Node's "class" attribute. If the
+  #   attribute is empty or non-existent, the return value is an empty array.
+  #
+  # *Example*
+  #
+  #   node         # => <div class="section title header"></div>
+  #   node.classes # => ["section", "title", "header"]
   def classes; end
 
   def clone(*_arg0); end
 
   # Returns true if this is a Comment
+  #
+  # @return [Boolean]
   def comment?; end
 
   def content; end
@@ -2063,11 +2758,15 @@ class Nokogiri::XML::Node
   # Do xinclude substitution on the subtree below node. If given a block, a
   # Nokogiri::XML::ParseOptions object initialized from +options+, will be
   # passed to it, allowing more convenient modification of the parser options.
+  #
+  # @yield [options]
   def do_xinclude(options = T.unsafe(nil)); end
 
   def document; end
 
   # Returns true if this is a Document
+  #
+  # @return [Boolean]
   def document?; end
 
   def dup(*_arg0); end
@@ -2076,9 +2775,13 @@ class Nokogiri::XML::Node
   def each; end
 
   # Returns true if this is an Element node
+  #
+  # @return [Boolean]
   def elem?; end
 
   # Returns true if this is an Element node
+  #
+  # @return [Boolean]
   def element?; end
 
   def element_children; end
@@ -2088,76 +2791,224 @@ class Nokogiri::XML::Node
   def first_element_child; end
 
   # Returns true if this is a DocumentFragment
+  #
+  # @return [Boolean]
   def fragment?; end
 
-  # Get the attribute value for the attribute +name+
+  # :call-seq: [](name) → (String, nil)
+  #
+  # Fetch an attribute from this node.
+  #
+  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
+  # namespaced attributes, use #attribute_with_ns.
+  #
+  # [Returns] (String, nil) value of the attribute +name+, or +nil+ if no matching attribute exists
+  #
+  # *Example*
+  #
+  #   doc = Nokogiri::XML("<root><child size='large' class='big wide tall'/></root>")
+  #   child = doc.at_css("child")
+  #   child["size"] # => "large"
+  #   child["class"] # => "big wide tall"
+  #
+  # *Example:* Namespaced attributes will not be returned.
+  #
+  # ⚠ Note namespaced attributes may be accessed with #attribute or #attribute_with_ns
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'>
+  #       <child width:size='broad'/>
+  #     </root>
+  #   EOF
+  #   doc.at_css("child")["size"] # => nil
+  #   doc.at_css("child").attribute("size").value # => "broad"
+  #   doc.at_css("child").attribute_with_ns("size", "http://example.com/widths").value
+  #   # => "broad"
   def get_attribute(name); end
 
   def has_attribute?(_arg0); end
 
-  # Returns true if this is an HTML4::Document node
+  # Returns true if this is an HTML4::Document or HTML5::Document node
+  #
+  # @return [Boolean]
   def html?; end
 
   # Set the inner html for this Node to +node_or_tags+
   # +node_or_tags+ can be a Nokogiri::XML::Node, a Nokogiri::XML::DocumentFragment, or a string containing markup.
   #
-  # Returns self.
-  #
   # Also see related method +children=+
   def inner_html=(node_or_tags); end
 
+  # :section:
   def inner_text; end
+
   def internal_subset; end
   def key?(_arg0); end
 
   # Get the attribute names for this Node.
   def keys; end
 
+  # :call-seq:
+  #   kwattr_add(attribute_name, keywords) → self
+  #
   # Ensure that values are present in a keyword attribute.
   #
-  # Any values in +keywords+ that already exist in the +Node+'s
-  # attribute values are _not_ added. Note that any existing
-  # duplicates in the attribute values are not removed. Compare
-  # with {#kwattr_append}.
+  # Any values in +keywords+ that already exist in the Node's attribute values are _not_
+  # added. Note that any existing duplicates in the attribute values are not removed. Compare
+  # with #kwattr_append.
   #
-  # A "keyword attribute" is a node attribute that contains a set
-  # of space-delimited values. Perhaps the most familiar example
-  # of this is the HTML +class+ attribute used to contain CSS
-  # classes. But other keyword attributes exist, for instance
-  # [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel).
+  # A "keyword attribute" is a node attribute that contains a set of space-delimited
+  # values. Perhaps the most familiar example of this is the HTML "class" attribute used to
+  # contain CSS classes. But other keyword attributes exist, for instance
+  # {the "rel" attribute}[https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel].
+  #
+  # See also #add_class, #kwattr_values, #kwattr_append, #kwattr_remove
+  #
+  # [Parameters]
+  # - +attribute_name+ (String) The name of the keyword attribute to be modified.
+  # - +keywords+ (String, Array<String>)
+  #   Keywords to be added to the attribute named +attribute_name+. May be a string containing
+  #   whitespace-delimited values, or an Array of String values. Any values already present will
+  #   not be added. Any values not present will be added. If the named attribute does not exist,
+  #   it is created.
+  #
+  # [Returns] +self+ (Nokogiri::XML::Node) for ease of chaining method calls.
+  #
+  # *Example:* Ensure that a +Node+ has "nofollow" in its +rel+ attribute.
+  #
+  # Note that duplicates are not added.
+  #
+  #   node                               # => <a></a>
+  #   node.kwattr_add("rel", "nofollow") # => <a rel="nofollow"></a>
+  #   node.kwattr_add("rel", "nofollow") # => <a rel="nofollow"></a>
+  #
+  # *Example:* Ensure that a +Node+ has "nofollow" and "noreferrer" in its +rel+ attribute, via a
+  # String argument.
+  #
+  #  Note that "nofollow" is not added because it is already present. Note also that the
+  #  pre-existing duplicate "nofollow" is not removed.
+  #
+  #   node                                          # => <a rel="nofollow nofollow"></a>
+  #   node.kwattr_add("rel", "nofollow noreferrer") # => <a rel="nofollow nofollow noreferrer"></a>
+  #
+  # *Example:* Ensure that a +Node+ has "nofollow" and "noreferrer" in its +rel+ attribute, via
+  # an Array argument.
+  #
+  #   node                                               # => <a></a>
+  #   node.kwattr_add("rel", ["nofollow", "noreferrer"]) # => <a rel="nofollow noreferrer"></a>
+  #
+  # Since v1.11.0
   def kwattr_add(attribute_name, keywords); end
 
-  # Add keywords to a Node's keyword attribute, regardless of
-  # duplication. Compare with {#kwattr_add}.
+  # :call-seq:
+  #   kwattr_append(attribute_name, keywords) → self
   #
-  # A "keyword attribute" is a node attribute that contains a set
-  # of space-delimited values. Perhaps the most familiar example
-  # of this is the HTML +class+ attribute used to contain CSS
-  # classes. But other keyword attributes exist, for instance
-  # [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel).
+  # Add keywords to a Node's keyword attribute, regardless of duplication. Compare with
+  # #kwattr_add.
+  #
+  # A "keyword attribute" is a node attribute that contains a set of space-delimited
+  # values. Perhaps the most familiar example of this is the HTML "class" attribute used to
+  # contain CSS classes. But other keyword attributes exist, for instance
+  # {the "rel" attribute}[https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel].
+  #
+  # See also #append_class, #kwattr_values, #kwattr_add, #kwattr_remove
+  #
+  # [Parameters]
+  # - +attribute_name+ (String) The name of the keyword attribute to be modified.
+  # - +keywords+ (String, Array<String>)
+  #   Keywords to be added to the attribute named +attribute_name+. May be a string containing
+  #   whitespace-delimited values, or an Array of String values. All values passed in will be
+  #   appended to the named attribute even if they are already present in the attribute. If the
+  #   named attribute does not exist, it is created.
+  #
+  # [Returns] +self+ (Node) for ease of chaining method calls.
+  #
+  # *Example:* Append "nofollow" to the +rel+ attribute.
+  #
+  # Note that duplicates are added.
+  #
+  #   node                                  # => <a></a>
+  #   node.kwattr_append("rel", "nofollow") # => <a rel="nofollow"></a>
+  #   node.kwattr_append("rel", "nofollow") # => <a rel="nofollow nofollow"></a>
+  #
+  # *Example:* Append "nofollow" and "noreferrer" to the +rel+ attribute, via a String argument.
+  #
+  # Note that "nofollow" is appended even though it is already present.
+  #
+  #   node                                             # => <a rel="nofollow"></a>
+  #   node.kwattr_append("rel", "nofollow noreferrer") # => <a rel="nofollow nofollow noreferrer"></a>
+  #
+  #
+  # *Example:* Append "nofollow" and "noreferrer" to the +rel+ attribute, via an Array argument.
+  #
+  #   node                                                  # => <a></a>
+  #   node.kwattr_append("rel", ["nofollow", "noreferrer"]) # => <a rel="nofollow noreferrer"></a>
+  #
+  # Since v1.11.0
   def kwattr_append(attribute_name, keywords); end
 
-  # Remove keywords from a keyword attribute. Any matching
-  # keywords that exist in the named attribute are removed,
-  # including any multiple entries.
+  # :call-seq:
+  #   kwattr_remove(attribute_name, keywords) → self
   #
-  # If no keywords remain after this operation, or if +keywords+
-  # is +nil+, the attribute is deleted from the node.
+  # Remove keywords from a keyword attribute. Any matching keywords that exist in the named
+  # attribute are removed, including any multiple entries.
   #
-  # A "keyword attribute" is a node attribute that contains a set
-  # of space-delimited values. Perhaps the most familiar example
-  # of this is the HTML +class+ attribute used to contain CSS
-  # classes. But other keyword attributes exist, for instance
-  # [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel).
+  # If no keywords remain after this operation, or if +keywords+ is +nil+, the attribute is
+  # deleted from the node.
+  #
+  # A "keyword attribute" is a node attribute that contains a set of space-delimited
+  # values. Perhaps the most familiar example of this is the HTML "class" attribute used to
+  # contain CSS classes. But other keyword attributes exist, for instance
+  # {the "rel" attribute}[https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel].
+  #
+  # See also #remove_class, #kwattr_values, #kwattr_add, #kwattr_append
+  #
+  # [Parameters]
+  # - +attribute_name+ (String) The name of the keyword attribute to be modified.
+  # - +keywords+ (String, Array<String>)
+  #   Keywords to be removed from the attribute named +attribute_name+. May be a string
+  #   containing whitespace-delimited values, or an Array of String values. Any keywords present
+  #   in the named attribute will be removed. If no keywords remain, or if +keywords+ is nil,
+  #   the attribute is deleted.
+  #
+  # [Returns] +self+ (Node) for ease of chaining method calls.
+  #
+  # *Example:*
+  #
+  # Note that the +rel+ attribute is deleted when empty.
+  #
+  #   node                                    # => <a rel="nofollow noreferrer">link</a>
+  #   node.kwattr_remove("rel", "nofollow")   # => <a rel="noreferrer">link</a>
+  #   node.kwattr_remove("rel", "noreferrer") # => <a>link</a>
+  #
+  # Since v1.11.0
   def kwattr_remove(attribute_name, keywords); end
 
-  # Retrieve values from a keyword attribute of a Node.
+  # :call-seq:
+  #   kwattr_values(attribute_name) → Array<String>
   #
-  # A "keyword attribute" is a node attribute that contains a set
-  # of space-delimited values. Perhaps the most familiar example
-  # of this is the HTML +class+ attribute used to contain CSS
-  # classes. But other keyword attributes exist, for instance
-  # [`rel`](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel).
+  # Fetch values from a keyword attribute of a Node.
+  #
+  # A "keyword attribute" is a node attribute that contains a set of space-delimited
+  # values. Perhaps the most familiar example of this is the HTML "class" attribute used to
+  # contain CSS classes. But other keyword attributes exist, for instance
+  # {the "rel" attribute}[https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel].
+  #
+  # See also #classes, #kwattr_add, #kwattr_append, #kwattr_remove
+  #
+  # [Parameters]
+  # - +attribute_name+ (String) The name of the keyword attribute to be inspected.
+  #
+  # [Returns]
+  #   (Array<String>) The values present in the Node's +attribute_name+ attribute. If the
+  #   attribute is empty or non-existent, the return value is an empty array.
+  #
+  # *Example:*
+  #
+  #   node                      # => <a rel="nofollow noopener external">link</a>
+  #   node.kwattr_values("rel") # => ["nofollow", "noopener", "external"]
+  #
+  # Since v1.11.0
   def kwattr_values(attribute_name); end
 
   def lang; end
@@ -2167,6 +3018,8 @@ class Nokogiri::XML::Node
   def line=(_arg0); end
 
   # Returns true if this Node matches +selector+
+  #
+  # @return [Boolean]
   def matches?(selector); end
 
   def name; end
@@ -2184,19 +3037,41 @@ class Nokogiri::XML::Node
   def namespace_scopes; end
   def namespaced_key?(_arg0, _arg1); end
 
-  # Returns a Hash of +{prefix => value}+ for all namespaces on this
-  # node and its ancestors.
+  # :call-seq:
+  #   namespaces() → Hash<String(Namespace#prefix) ⇒ String(Namespace#href)>
   #
-  # This method returns the same namespaces as #namespace_scopes.
+  # Fetch all the namespaces on this node and its ancestors.
   #
-  # Returns namespaces in scope for self -- those defined on self
-  # element directly or any ancestor node -- as a Hash of
-  # attribute-name/value pairs. Note that the keys in this hash
-  # XML attributes that would be used to define this namespace,
-  # such as "xmlns:prefix", not just the prefix. Default namespace
-  # set on self will be included with key "xmlns". However,
-  # default namespaces set on ancestor will NOT be, even if self
-  # has no explicit default namespace.
+  # Note that the keys in this hash XML attributes that would be used to define this namespace,
+  # such as "xmlns:prefix", not just the prefix.
+  #
+  # The default namespace for this node will be included with key "xmlns".
+  #
+  # See also #namespace_scopes
+  #
+  # [Returns]
+  #   Hash containing all the namespaces on this node and its ancestors. The hash keys are the
+  #   namespace prefix, and the hash value for each key is the namespace URI.
+  #
+  # *Example:*
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns="http://example.com/root" xmlns:in_scope="http://example.com/in_scope">
+  #       <first/>
+  #       <second xmlns="http://example.com/child"/>
+  #       <third xmlns:foo="http://example.com/foo"/>
+  #     </root>
+  #   EOF
+  #   doc.at_xpath("//root:first", "root" => "http://example.com/root").namespaces
+  #   # => {"xmlns"=>"http://example.com/root",
+  #   #     "xmlns:in_scope"=>"http://example.com/in_scope"}
+  #   doc.at_xpath("//child:second", "child" => "http://example.com/child").namespaces
+  #   # => {"xmlns"=>"http://example.com/child",
+  #   #     "xmlns:in_scope"=>"http://example.com/in_scope"}
+  #   doc.at_xpath("//root:third", "root" => "http://example.com/root").namespaces
+  #   # => {"xmlns:foo"=>"http://example.com/foo",
+  #   #     "xmlns"=>"http://example.com/root",
+  #   #     "xmlns:in_scope"=>"http://example.com/in_scope"}
   def namespaces; end
 
   def native_content=(_arg0); end
@@ -2208,6 +3083,8 @@ class Nokogiri::XML::Node
   # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is a DocumentFragment, NodeSet, or string).
   #
   # Also see related method +after+.
+  #
+  # @raise [ArgumentError]
   def next=(node_or_tags); end
 
   def next_element; end
@@ -2223,6 +3100,8 @@ class Nokogiri::XML::Node
   # Parse +string_or_io+ as a document fragment within the context of
   # *this* node.  Returns a XML::NodeSet containing the nodes parsed from
   # +string_or_io+.
+  #
+  # @yield [options]
   def parse(string_or_io, options = T.unsafe(nil)); end
 
   def path; end
@@ -2244,15 +3123,21 @@ class Nokogiri::XML::Node
   # Returns the reparented node (if +node_or_tags+ is a Node), or NodeSet (if +node_or_tags+ is a DocumentFragment, NodeSet, or string).
   #
   # Also see related method +before+.
+  #
+  # @raise [ArgumentError]
   def previous=(node_or_tags); end
 
   def previous_element; end
   def previous_sibling; end
 
   # Returns true if this is a ProcessingInstruction node
+  #
+  # @return [Boolean]
   def processing_instruction?; end
 
   # Is this a read only node?
+  #
+  # @return [Boolean]
   def read_only?; end
 
   def remove; end
@@ -2260,15 +3145,51 @@ class Nokogiri::XML::Node
   # Remove the attribute named +name+
   def remove_attribute(name); end
 
-  # Remove HTML CSS classes from a +Node+. Any CSS classes in +names+ that
-  # exist in the +Node+'s +class+ attribute are removed, including any
-  # multiple entries.
+  # :call-seq:
+  #   remove_class(css_classes) → self
   #
-  # If no CSS classes remain after this operation, or if +names+ is
-  # +nil+, the +class+ attribute is deleted from the node.
+  # Remove HTML CSS classes from this node. Any CSS class names in +css_classes+ that exist in
+  # this node's "class" attribute are removed, including any multiple entries.
+  #
+  # If no CSS classes remain after this operation, or if +css_classes+ is +nil+, the "class"
+  # attribute is deleted from the node.
   #
   # This is a convenience function and is equivalent to:
-  # node.kwattr_remove("class", names)
+  #
+  #   node.kwattr_remove("class", css_classes)
+  #
+  # Also see #kwattr_remove, #classes, #add_class, #append_class
+  #
+  # [Parameters]
+  # - +css_classes+ (String, Array<String>)
+  #
+  #   CSS class names to be removed from the Node's
+  #   "class" attribute. May be a string containing whitespace-delimited names, or an Array of
+  #   String names. Any class names already present will be removed. If no CSS classes remain,
+  #   the "class" attribute is deleted.
+  #
+  # [Returns] +self+ (Nokogiri::XML::Node) for ease of chaining method calls.
+  #
+  # *Example*: Deleting a CSS class
+  #
+  # Note that all instances of the class "section" are removed from the "class" attribute.
+  #
+  #   node                         # => <div class="section header section"></div>
+  #   node.remove_class("section") # => <div class="header"></div>
+  #
+  # *Example*: Deleting the only remaining CSS class
+  #
+  # Note that the attribute is removed once there are no remaining classes.
+  #
+  #   node                         # => <div class="section"></div>
+  #   node.remove_class("section") # => <div></div>
+  #
+  # *Example*: Deleting multiple CSS classes
+  #
+  # Note that the "class" attribute is deleted once it's empty.
+  #
+  #   node                                    # => <div class="section header float"></div>
+  #   node.remove_class(["section", "float"]) # => <div class="header"></div>
   def remove_class(names = T.unsafe(nil)); end
 
   # Replace this Node with +node_or_tags+.
@@ -2284,16 +3205,48 @@ class Nokogiri::XML::Node
   #
   # These two statements are equivalent:
   #
-  # node.serialize(:encoding => 'UTF-8', :save_with => FORMAT | AS_XML)
+  #  node.serialize(:encoding => 'UTF-8', :save_with => FORMAT | AS_XML)
   #
   # or
   #
-  # node.serialize(:encoding => 'UTF-8') do |config|
-  # config.format.as_xml
-  # end
+  #   node.serialize(:encoding => 'UTF-8') do |config|
+  #     config.format.as_xml
+  #   end
   def serialize(*args, &block); end
 
-  # Set the attribute value for the attribute +name+ to +value+
+  # :call-seq: []=(name, value) → value
+  #
+  # Update the attribute +name+ to +value+, or create the attribute if it does not exist.
+  #
+  # ⚠ Note that attributes with namespaces cannot be accessed with this method. To access
+  # namespaced attributes for update, use #attribute_with_ns. To add a namespaced attribute,
+  # see the example below.
+  #
+  # [Returns] +value+
+  #
+  # *Example*
+  #
+  #   doc = Nokogiri::XML("<root><child/></root>")
+  #   child = doc.at_css("child")
+  #   child["size"] = "broad"
+  #   child.to_html
+  #   # => "<child size=\"broad\"></child>"
+  #
+  # *Example:* Add a namespaced attribute.
+  #
+  #   doc = Nokogiri::XML(<<~EOF)
+  #     <root xmlns:width='http://example.com/widths'>
+  #       <child/>
+  #     </root>
+  #   EOF
+  #   child = doc.at_css("child")
+  #   child["size"] = "broad"
+  #   ns = doc.root.namespace_definitions.find { |ns| ns.prefix == "width" }
+  #   child.attribute("size").namespace = ns
+  #   doc.to_html
+  #   # => "<root xmlns:width=\"http://example.com/widths\">\n" +
+  #   #    "  <child width:size=\"broad\"></child>\n" +
+  #   #    "</root>\n"
   def set_attribute(name, value); end
 
   # Swap this Node for +node_or_tags+
@@ -2307,11 +3260,13 @@ class Nokogiri::XML::Node
   def text; end
 
   # Returns true if this is a Text node
+  #
+  # @return [Boolean]
   def text?; end
 
   # Serialize this Node to HTML
   #
-  # doc.to_html
+  #   doc.to_html
   #
   # See Node#write_to for a list of +options+.  For formatted output,
   # use Node#to_xhtml instead.
@@ -2325,25 +3280,30 @@ class Nokogiri::XML::Node
 
   # Serialize this Node to XHTML using +options+
   #
-  # doc.to_xhtml(:indent => 5, :encoding => 'UTF-8')
+  #   doc.to_xhtml(:indent => 5, :encoding => 'UTF-8')
   #
   # See Node#write_to for a list of +options+
   def to_xhtml(options = T.unsafe(nil)); end
 
   # Serialize this Node to XML using +options+
   #
-  # doc.to_xml(:indent => 5, :encoding => 'UTF-8')
+  #   doc.to_xml(:indent => 5, :encoding => 'UTF-8')
   #
   # See Node#write_to for a list of +options+
   def to_xml(options = T.unsafe(nil)); end
 
   # Yields self and all children to +block+ recursively.
+  #
+  # @yield [_self]
+  # @yieldparam _self [Nokogiri::XML::Node] the object that the method was called on
   def traverse(&block); end
 
   def type; end
   def unlink; end
 
   # Does this Node's attributes include <value>
+  #
+  # @return [Boolean]
   def value?(value); end
 
   # Get the attribute values for this Node.
@@ -2366,16 +3326,19 @@ class Nokogiri::XML::Node
 
   # Write Node as XML to +io+ with +options+
   #
-  # doc.write_xml_to io, :encoding => 'UTF-8'
+  #   doc.write_xml_to io, :encoding => 'UTF-8'
   #
   # See Node#write_to for a list of options
   def write_xml_to(io, options = T.unsafe(nil)); end
 
   # Returns true if this is an XML::Document node
+  #
+  # @return [Boolean]
   def xml?; end
 
   protected
 
+  # @raise [ArgumentError]
   def coerce(data); end
 
   private
@@ -2409,10 +3372,10 @@ Nokogiri::XML::Node::ATTRIBUTE_DECL = T.let(T.unsafe(nil), Integer)
 # Attribute node type
 Nokogiri::XML::Node::ATTRIBUTE_NODE = T.let(T.unsafe(nil), Integer)
 
-# CDATA node type, see {Nokogiri::XML::Node#cdata?}
+# CDATA node type, see Nokogiri::XML::Node#cdata?
 Nokogiri::XML::Node::CDATA_SECTION_NODE = T.let(T.unsafe(nil), Integer)
 
-# Comment node type, see {Nokogiri::XML::Node#comment?}
+# Comment node type, see Nokogiri::XML::Node#comment?
 Nokogiri::XML::Node::COMMENT_NODE = T.let(T.unsafe(nil), Integer)
 
 # DOCB document node type
@@ -2421,7 +3384,7 @@ Nokogiri::XML::Node::DOCB_DOCUMENT_NODE = T.let(T.unsafe(nil), Integer)
 # Document fragment node type
 Nokogiri::XML::Node::DOCUMENT_FRAG_NODE = T.let(T.unsafe(nil), Integer)
 
-# Document node type, see {Nokogiri::XML::Node#xml?}
+# Document node type, see Nokogiri::XML::Node#xml?
 Nokogiri::XML::Node::DOCUMENT_NODE = T.let(T.unsafe(nil), Integer)
 
 # Document type node type
@@ -2433,7 +3396,7 @@ Nokogiri::XML::Node::DTD_NODE = T.let(T.unsafe(nil), Integer)
 # Element declaration type
 Nokogiri::XML::Node::ELEMENT_DECL = T.let(T.unsafe(nil), Integer)
 
-# Element node type, see {Nokogiri::XML::Node#element?}
+# Element node type, see Nokogiri::XML::Node#element?
 Nokogiri::XML::Node::ELEMENT_NODE = T.let(T.unsafe(nil), Integer)
 
 # Entity declaration type
@@ -2445,7 +3408,7 @@ Nokogiri::XML::Node::ENTITY_NODE = T.let(T.unsafe(nil), Integer)
 # Entity reference node type
 Nokogiri::XML::Node::ENTITY_REF_NODE = T.let(T.unsafe(nil), Integer)
 
-# HTML document node type, see {Nokogiri::XML::Node#html?}
+# HTML document node type, see Nokogiri::XML::Node#html?
 Nokogiri::XML::Node::HTML_DOCUMENT_NODE = T.let(T.unsafe(nil), Integer)
 
 Nokogiri::XML::Node::IMPLIED_XPATH_CONTEXTS = T.let(T.unsafe(nil), Array)
@@ -2462,6 +3425,8 @@ Nokogiri::XML::Node::PI_NODE = T.let(T.unsafe(nil), Integer)
 # Save options for serializing nodes
 class Nokogiri::XML::Node::SaveOptions
   # Create a new SaveOptions object with +options+
+  #
+  # @return [SaveOptions] a new instance of SaveOptions
   def initialize(options = T.unsafe(nil)); end
 
   def as_html; end
@@ -2522,7 +3487,7 @@ Nokogiri::XML::Node::SaveOptions::NO_EMPTY_TAGS = T.let(T.unsafe(nil), Integer)
 # Do not save XHTML
 Nokogiri::XML::Node::SaveOptions::NO_XHTML = T.let(T.unsafe(nil), Integer)
 
-# Text node type, see {Nokogiri::XML::Node#text?}
+# Text node type, see Nokogiri::XML::Node#text?
 Nokogiri::XML::Node::TEXT_NODE = T.let(T.unsafe(nil), Integer)
 
 # XInclude end type
@@ -2539,6 +3504,10 @@ class Nokogiri::XML::NodeSet
   include ::Enumerable
 
   # Create a NodeSet with +document+ defaulting to +list+
+  #
+  # @return [NodeSet] a new instance of NodeSet
+  # @yield [_self]
+  # @yieldparam _self [Nokogiri::XML::NodeSet] the object that the method was called on
   def initialize(document, list = T.unsafe(nil)); end
 
   # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
@@ -2550,7 +3519,7 @@ class Nokogiri::XML::NodeSet
   #
   # Or, if passed an integer, index into the NodeSet:
   #
-  # node_set.at(3) # same as node_set[3]
+  #   node_set.at(3) # same as node_set[3]
   def %(*args); end
 
   def &(_arg0); end
@@ -2562,9 +3531,6 @@ class Nokogiri::XML::NodeSet
   # of elements and if each element is equal to the corresponding
   # element in the other NodeSet
   def ==(other); end
-
-  # Search this NodeSet's nodes' immediate children using CSS selector +selector+
-  def >(selector); end
 
   def [](*_arg0); end
 
@@ -2592,7 +3558,7 @@ class Nokogiri::XML::NodeSet
   #
   # Or, if passed an integer, index into the NodeSet:
   #
-  # node_set.at(3) # same as node_set[3]
+  #   node_set.at(3) # same as node_set[3]
   def at(*args); end
 
   # Set attributes on each Node in the NodeSet, or get an
@@ -2600,7 +3566,7 @@ class Nokogiri::XML::NodeSet
   #
   # To get an attribute from the first Node in a NodeSet:
   #
-  # node_set.attr("href") # => "https://www.nokogiri.org"
+  #   node_set.attr("href") # => "https://www.nokogiri.org"
   #
   # Note that an empty NodeSet will return nil when +#attr+ is called as a getter.
   #
@@ -2614,18 +3580,18 @@ class Nokogiri::XML::NodeSet
   # If +key+ is a Hash then attributes will be set for each
   # key/value pair:
   #
-  # node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
+  #   node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
   #
   # If +value+ is passed, it will be used as the attribute value
   # for all nodes:
   #
-  # node_set.attr("href", "https://www.nokogiri.org")
+  #   node_set.attr("href", "https://www.nokogiri.org")
   #
   # If +block+ is passed, it will be called on each Node object in
   # the NodeSet and the return value used as the attribute value
   # for that node:
   #
-  # node_set.attr("class") { |node| node.name }
+  #   node_set.attr("class") { |node| node.name }
   def attr(key, value = T.unsafe(nil), &block); end
 
   # Set attributes on each Node in the NodeSet, or get an
@@ -2633,7 +3599,7 @@ class Nokogiri::XML::NodeSet
   #
   # To get an attribute from the first Node in a NodeSet:
   #
-  # node_set.attr("href") # => "https://www.nokogiri.org"
+  #   node_set.attr("href") # => "https://www.nokogiri.org"
   #
   # Note that an empty NodeSet will return nil when +#attr+ is called as a getter.
   #
@@ -2647,18 +3613,18 @@ class Nokogiri::XML::NodeSet
   # If +key+ is a Hash then attributes will be set for each
   # key/value pair:
   #
-  # node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
+  #   node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
   #
   # If +value+ is passed, it will be used as the attribute value
   # for all nodes:
   #
-  # node_set.attr("href", "https://www.nokogiri.org")
+  #   node_set.attr("href", "https://www.nokogiri.org")
   #
   # If +block+ is passed, it will be called on each Node object in
   # the NodeSet and the return value used as the attribute value
   # for that node:
   #
-  # node_set.attr("class") { |node| node.name }
+  #   node_set.attr("class") { |node| node.name }
   def attribute(key, value = T.unsafe(nil), &block); end
 
   # Insert +datum+ before the first Node in this NodeSet
@@ -2692,6 +3658,8 @@ class Nokogiri::XML::NodeSet
   def each; end
 
   # Is this NodeSet empty?
+  #
+  # @return [Boolean]
   def empty?; end
 
   # Filter this list for nodes that match +expr+
@@ -2712,12 +3680,12 @@ class Nokogiri::XML::NodeSet
   #
   # Note: This joins the text of all Node objects in the NodeSet:
   #
-  # doc = Nokogiri::XML('<xml><a><d>foo</d><d>bar</d></a></xml>')
-  # doc.css('d').text # => "foobar"
+  #    doc = Nokogiri::XML('<xml><a><d>foo</d><d>bar</d></a></xml>')
+  #    doc.css('d').text # => "foobar"
   #
   # Instead, if you want to return the text of all nodes in the NodeSet:
   #
-  # doc.css('d').map(&:text) # => ["foo", "bar"]
+  #    doc.css('d').map(&:text) # => ["foo", "bar"]
   #
   # See Nokogiri::XML::Node#content for more information.
   def inner_text; end
@@ -2758,7 +3726,7 @@ class Nokogiri::XML::NodeSet
   #
   # To get an attribute from the first Node in a NodeSet:
   #
-  # node_set.attr("href") # => "https://www.nokogiri.org"
+  #   node_set.attr("href") # => "https://www.nokogiri.org"
   #
   # Note that an empty NodeSet will return nil when +#attr+ is called as a getter.
   #
@@ -2772,18 +3740,18 @@ class Nokogiri::XML::NodeSet
   # If +key+ is a Hash then attributes will be set for each
   # key/value pair:
   #
-  # node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
+  #   node_set.attr("href" => "https://www.nokogiri.org", "class" => "member")
   #
   # If +value+ is passed, it will be used as the attribute value
   # for all nodes:
   #
-  # node_set.attr("href", "https://www.nokogiri.org")
+  #   node_set.attr("href", "https://www.nokogiri.org")
   #
   # If +block+ is passed, it will be called on each Node object in
   # the NodeSet and the return value used as the attribute value
   # for that node:
   #
-  # node_set.attr("class") { |node| node.name }
+  #   node_set.attr("class") { |node| node.name }
   def set(key, value = T.unsafe(nil), &block); end
 
   # Returns the first element of the NodeSet and removes it.  Returns
@@ -2797,12 +3765,12 @@ class Nokogiri::XML::NodeSet
   #
   # Note: This joins the text of all Node objects in the NodeSet:
   #
-  # doc = Nokogiri::XML('<xml><a><d>foo</d><d>bar</d></a></xml>')
-  # doc.css('d').text # => "foobar"
+  #    doc = Nokogiri::XML('<xml><a><d>foo</d><d>bar</d></a></xml>')
+  #    doc.css('d').text # => "foobar"
   #
   # Instead, if you want to return the text of all nodes in the NodeSet:
   #
-  # doc.css('d').map(&:text) # => ["foo", "bar"]
+  #    doc.css('d').map(&:text) # => ["foo", "bar"]
   #
   # See Nokogiri::XML::Node#content for more information.
   def text; end
@@ -2839,7 +3807,10 @@ class Nokogiri::XML::NodeSet
 end
 
 Nokogiri::XML::NodeSet::IMPLIED_XPATH_CONTEXTS = T.let(T.unsafe(nil), Array)
+
+# Struct representing an {XML Schema Notation}[https://www.w3.org/TR/xml/#Notations]
 class Nokogiri::XML::Notation < ::Struct; end
+
 module Nokogiri::XML::PP; end
 
 module Nokogiri::XML::PP::CharacterData
@@ -2858,26 +3829,29 @@ end
 # You can build your own combinations of these parse options by using any of the following methods:
 # *Note*: All examples attempt to set the +RECOVER+ & +NOENT+ options.
 # [Ruby's bitwise operators] You can use the Ruby bitwise operators to set various combinations.
-# Nokogiri.XML('<content>Chapter 1</content', nil, nil, Nokogiri::XML::ParseOptions.new((1 << 0) | (1 << 1)))
+#   Nokogiri.XML('<content>Chapter 1</content', nil, nil, Nokogiri::XML::ParseOptions.new((1 << 0) | (1 << 1)))
 # [Method chaining] Every option has an equivalent method in lowercase. You can chain these methods together to set various combinations.
-# Nokogiri.XML('<content>Chapter 1</content', nil, nil, Nokogiri::XML::ParseOptions.new.recover.noent)
+#   Nokogiri.XML('<content>Chapter 1</content', nil, nil, Nokogiri::XML::ParseOptions.new.recover.noent)
 # [Using Ruby Blocks] You can also setup parse combinations in the block passed to Nokogiri.XML or Nokogiri.HTML
-# Nokogiri.XML('<content>Chapter 1</content') {|config| config.recover.noent}
+#   Nokogiri.XML('<content>Chapter 1</content') {|config| config.recover.noent}
 #
 # == Removing particular parse options
 # You can also remove options from an instance of +ParseOptions+ dynamically.
 # Every option has an equivalent <code>no{option}</code> method in lowercase. You can call these methods on an instance of +ParseOptions+ to remove the option.
 # Note that this is not available for +STRICT+.
 #
-# # Setting the RECOVER & NOENT options...
-# options = Nokogiri::XML::ParseOptions.new.recover.noent
-# # later...
-# options.norecover # Removes the Nokogiri::XML::ParseOptions::RECOVER option
-# options.nonoent # Removes the Nokogiri::XML::ParseOptions::NOENT option
+#   # Setting the RECOVER & NOENT options...
+#   options = Nokogiri::XML::ParseOptions.new.recover.noent
+#   # later...
+#   options.norecover # Removes the Nokogiri::XML::ParseOptions::RECOVER option
+#   options.nonoent # Removes the Nokogiri::XML::ParseOptions::NOENT option
 class Nokogiri::XML::ParseOptions
+  # @return [ParseOptions] a new instance of ParseOptions
   def initialize(options = T.unsafe(nil)); end
 
   def ==(other); end
+  def big_lines; end
+  def big_lines?; end
   def compact; end
   def compact?; end
   def default_html; end
@@ -2899,6 +3873,7 @@ class Nokogiri::XML::ParseOptions
   def inspect; end
   def nobasefix; end
   def nobasefix?; end
+  def nobig_lines; end
   def noblanks; end
   def noblanks?; end
   def nocdata; end
@@ -2948,6 +3923,8 @@ class Nokogiri::XML::ParseOptions
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   def pedantic; end
@@ -2957,6 +3934,8 @@ class Nokogiri::XML::ParseOptions
   def sax1; end
   def sax1?; end
   def strict; end
+
+  # @return [Boolean]
   def strict?; end
 
   # Returns the value of attribute options.
@@ -2965,6 +3944,9 @@ class Nokogiri::XML::ParseOptions
   def xinclude; end
   def xinclude?; end
 end
+
+# line numbers stored as long int (instead of a short int)
+Nokogiri::XML::ParseOptions::BIG_LINES = T.let(T.unsafe(nil), Integer)
 
 # compact small text nodes; no modification of the tree allowed afterwards (will possibly crash if you try to modify the tree)
 Nokogiri::XML::ParseOptions::COMPACT = T.let(T.unsafe(nil), Integer)
@@ -3042,6 +4024,7 @@ Nokogiri::XML::ParseOptions::STRICT = T.let(T.unsafe(nil), Integer)
 Nokogiri::XML::ParseOptions::XINCLUDE = T.let(T.unsafe(nil), Integer)
 
 class Nokogiri::XML::ProcessingInstruction < ::Nokogiri::XML::Node
+  # @return [ProcessingInstruction] a new instance of ProcessingInstruction
   def initialize(document, name, content); end
 
   class << self
@@ -3055,18 +4038,18 @@ end
 #
 # Here is an example of usage:
 #
-# reader = Nokogiri::XML::Reader(<<-eoxml)
-# <x xmlns:tenderlove='http://tenderlovemaking.com/'>
-# <tenderlove:foo awesome='true'>snuggles!</tenderlove:foo>
-# </x>
-# eoxml
+#     reader = Nokogiri::XML::Reader(<<-eoxml)
+#       <x xmlns:tenderlove='http://tenderlovemaking.com/'>
+#         <tenderlove:foo awesome='true'>snuggles!</tenderlove:foo>
+#       </x>
+#     eoxml
 #
-# reader.each do |node|
+#     reader.each do |node|
 #
-# # node is an instance of Nokogiri::XML::Reader
-# puts node.name
+#       # node is an instance of Nokogiri::XML::Reader
+#       puts node.name
 #
-# end
+#     end
 #
 # Note that Nokogiri::XML::Reader#each can only be called once!!  Once
 # the cursor moves through the entire document, you must parse the
@@ -3078,6 +4061,7 @@ end
 class Nokogiri::XML::Reader
   include ::Enumerable
 
+  # @return [Reader] a new instance of Reader
   def initialize(source, url = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   def attribute(_arg0); end
@@ -3086,6 +4070,8 @@ class Nokogiri::XML::Reader
   def attribute_nodes; end
 
   # Get the attributes of the current node as a Hash
+  #
+  # [Returns] (Hash<String, String>) Attribute names and values
   def attributes; end
 
   def attributes?; end
@@ -3097,8 +4083,6 @@ class Nokogiri::XML::Reader
   def each; end
 
   def empty_element?; end
-
-  # The encoding for the document
   def encoding; end
 
   # A list of errors encountered while parsing
@@ -3194,12 +4178,12 @@ Nokogiri::XML::Reader::TYPE_XML_DECLARATION = T.let(T.unsafe(nil), Integer)
 # Validate an XML document against a RelaxNG schema.  Loop over the errors
 # that are returned and print them out:
 #
-# schema  = Nokogiri::XML::RelaxNG(File.open(ADDRESS_SCHEMA_FILE))
-# doc     = Nokogiri::XML(File.open(ADDRESS_XML_FILE))
+#   schema  = Nokogiri::XML::RelaxNG(File.open(ADDRESS_SCHEMA_FILE))
+#   doc     = Nokogiri::XML(File.open(ADDRESS_XML_FILE))
 #
-# schema.validate(doc).each do |error|
-# puts error.message
-# end
+#   schema.validate(doc).each do |error|
+#     puts error.message
+#   end
 #
 # The list of errors are Nokogiri::XML::SyntaxError objects.
 #
@@ -3231,23 +4215,23 @@ end
 # For example, if I want to be notified when a document ends, and when an element starts, I
 # would write a class like this:
 #
-# class MyDocument < Nokogiri::XML::SAX::Document
-# def end_document
-# puts "the document has ended"
-# end
+#   class MyDocument < Nokogiri::XML::SAX::Document
+#     def end_document
+#       puts "the document has ended"
+#     end
 #
-# def start_element name, attributes = []
-# puts "#{name} started"
-# end
-# end
+#     def start_element name, attributes = []
+#       puts "#{name} started"
+#     end
+#   end
 #
 # Then I would instantiate a SAX parser with this document, and feed the parser some XML
 #
-# # Create a new parser
-# parser = Nokogiri::XML::SAX::Parser.new(MyDocument.new)
+#   # Create a new parser
+#   parser = Nokogiri::XML::SAX::Parser.new(MyDocument.new)
 #
-# # Feed the parser some XML
-# parser.parse(File.open(ARGV[0]))
+#   # Feed the parser some XML
+#   parser.parse(File.open(ARGV[0]))
 #
 # Now my document handler will be called when each node starts, and when then document ends. To
 # see what kinds of events are available, take a look at Nokogiri::XML::SAX::Document.
@@ -3265,15 +4249,15 @@ module Nokogiri::XML::SAX; end
 #
 # To only be notified about start and end element events, write a class like this:
 #
-# class MyDocument < Nokogiri::XML::SAX::Document
-# def start_element name, attrs = []
-# puts "#{name} started!"
-# end
+#   class MyDocument < Nokogiri::XML::SAX::Document
+#     def start_element name, attrs = []
+#       puts "#{name} started!"
+#     end
 #
-# def end_element name
-# puts "#{name} ended"
-# end
-# end
+#     def end_element name
+#       puts "#{name} ended"
+#     end
+#   end
 #
 # You can use this event handler for any SAX style parser included with Nokogiri. See
 # Nokogiri::XML::SAX, and Nokogiri::HTML4::SAX.
@@ -3320,7 +4304,7 @@ class Nokogiri::XML::SAX::Document
   # Called at the beginning of an element
   # * +name+ is the name of the tag
   # * +attrs+ are an assoc list of namespaces and attributes, e.g.:
-  # [ ["xmlns:foo", "http://sample.net"], ["size", "large"] ]
+  #     [ ["xmlns:foo", "http://sample.net"], ["size", "large"] ]
   def start_element(name, attrs = T.unsafe(nil)); end
 
   # Called at the beginning of an element
@@ -3346,28 +4330,30 @@ end
 #
 # Here is an example of using this parser:
 #
-# # Create a subclass of Nokogiri::XML::SAX::Document and implement
-# # the events we care about:
-# class MyDoc < Nokogiri::XML::SAX::Document
-# def start_element name, attrs = []
-# puts "starting: #{name}"
-# end
+#   # Create a subclass of Nokogiri::XML::SAX::Document and implement
+#   # the events we care about:
+#   class MyDoc < Nokogiri::XML::SAX::Document
+#     def start_element name, attrs = []
+#       puts "starting: #{name}"
+#     end
 #
-# def end_element name
-# puts "ending: #{name}"
-# end
-# end
+#     def end_element name
+#       puts "ending: #{name}"
+#     end
+#   end
 #
-# # Create our parser
-# parser = Nokogiri::XML::SAX::Parser.new(MyDoc.new)
+#   # Create our parser
+#   parser = Nokogiri::XML::SAX::Parser.new(MyDoc.new)
 #
-# # Send some XML to the parser
-# parser.parse(File.open(ARGV[0]))
+#   # Send some XML to the parser
+#   parser.parse(File.open(ARGV[0]))
 #
 # For more information about SAX parsers, see Nokogiri::XML::SAX.  Also
 # see Nokogiri::XML::SAX::Document for the available events.
 class Nokogiri::XML::SAX::Parser
   # Create a new Parser with +doc+ and +encoding+
+  #
+  # @return [Parser] a new instance of Parser
   def initialize(doc = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # The Nokogiri::XML::SAX::Document where events will be sent.
@@ -3387,11 +4373,17 @@ class Nokogiri::XML::SAX::Parser
   def parse(thing, &block); end
 
   # Parse a file with +filename+
+  #
+  # @raise [ArgumentError]
+  # @yield [ctx]
   def parse_file(filename); end
 
   # Parse given +io+
+  #
+  # @yield [ctx]
   def parse_io(io, encoding = T.unsafe(nil)); end
 
+  # @yield [ctx]
   def parse_memory(data); end
 
   private
@@ -3436,17 +4428,19 @@ end
 #
 # Example:
 #
-# parser = PushParser.new(Class.new(XML::SAX::Document) {
-# def start_document
-# puts "start document called"
-# end
-# }.new)
-# parser << "<div>hello<"
-# parser << "/div>"
-# parser.finish
+#   parser = PushParser.new(Class.new(XML::SAX::Document) {
+#     def start_document
+#       puts "start document called"
+#     end
+#   }.new)
+#   parser << "<div>hello<"
+#   parser << "/div>"
+#   parser.finish
 class Nokogiri::XML::SAX::PushParser
   # Create a new PushParser with +doc+ as the SAX Document, providing
   # an optional +file_name+ and +encoding+
+  #
+  # @return [PushParser] a new instance of PushParser
   def initialize(doc = T.unsafe(nil), file_name = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # Write a +chunk+ of XML to the PushParser.  Any callback methods
@@ -3488,12 +4482,12 @@ end
 # Validate an XML document against a Schema.  Loop over the errors that
 # are returned and print them out:
 #
-# xsd = Nokogiri::XML::Schema(File.read(PO_SCHEMA_FILE))
-# doc = Nokogiri::XML(File.read(PO_XML_FILE))
+#   xsd = Nokogiri::XML::Schema(File.read(PO_SCHEMA_FILE))
+#   doc = Nokogiri::XML(File.read(PO_XML_FILE))
 #
-# xsd.validate(doc).each do |error|
-# puts error.message
-# end
+#   xsd.validate(doc).each do |error|
+#     puts error.message
+#   end
 #
 # The list of errors are Nokogiri::XML::SyntaxError objects.
 #
@@ -3517,6 +4511,8 @@ class Nokogiri::XML::Schema
 
   # Returns true if +thing+ is a valid Nokogiri::XML::Document or
   # file.
+  #
+  # @return [Boolean]
   def valid?(thing); end
 
   # Validate +thing+ against this schema.  +thing+ can be a
@@ -3543,11 +4539,12 @@ end
 
 # The Searchable module declares the interface used for searching your DOM.
 #
-# It implements the public methods `search`, `css`, and `xpath`,
-# as well as allowing specific implementations to specialize some
-# of the important behaviors.
+#  It implements the public methods #search, #css, and #xpath,
+#  as well as allowing specific implementations to specialize some
+#  of the important behaviors.
 module Nokogiri::XML::Searchable
-  # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
+  # call-seq:
+  #   at(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
   #
   # Search this object for +paths+, and return only the first
   # result. +paths+ must be one or more XPath or CSS queries.
@@ -3555,41 +4552,46 @@ module Nokogiri::XML::Searchable
   # See Searchable#search for more information.
   def %(*args); end
 
-  # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
+  # call-seq:
+  #   search(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
   #
   # Search this object for +paths+. +paths+ must be one or more XPath or CSS queries:
   #
-  # node.search("div.employee", ".//title")
+  #   node.search("div.employee", ".//title")
   #
   # A hash of namespace bindings may be appended:
   #
-  # node.search('.//bike:tire', {'bike' => 'http://schwinn.com/'})
-  # node.search('bike|tire', {'bike' => 'http://schwinn.com/'})
+  #   node.search('.//bike:tire', {'bike' => 'http://schwinn.com/'})
+  #   node.search('bike|tire', {'bike' => 'http://schwinn.com/'})
   #
-  # For XPath queries, a hash of variable bindings may also be
-  # appended to the namespace bindings. For example:
+  # For XPath queries, a hash of variable bindings may also be appended to the namespace
+  # bindings. For example:
   #
-  # node.search('.//address[@domestic=$value]', nil, {:value => 'Yes'})
+  #   node.search('.//address[@domestic=$value]', nil, {:value => 'Yes'})
   #
-  # Custom XPath functions and CSS pseudo-selectors may also be
-  # defined. To define custom functions create a class and
-  # implement the function you want to define.  The first argument
-  # to the method will be the current matching NodeSet.  Any other
-  # arguments are ones that you pass in.  Note that this class may
-  # appear anywhere in the argument list.  For example:
+  # 💡 Custom XPath functions and CSS pseudo-selectors may also be defined. To define custom
+  # functions create a class and implement the function you want to define. The first argument
+  # to the method will be the current matching NodeSet. Any other arguments are ones that you
+  # pass in. Note that this class may appear anywhere in the argument list. For example:
   #
-  # node.search('.//title[regex(., "\w+")]', 'div.employee:regex("[0-9]+")'
-  # Class.new {
-  # def regex node_set, regex
-  # node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
-  # end
-  # }.new
-  # )
+  #   handler = Class.new {
+  #     def regex node_set, regex
+  #       node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
+  #     end
+  #   }.new
+  #   node.search('.//title[regex(., "\w+")]', 'div.employee:regex("[0-9]+")', handler)
   #
   # See Searchable#xpath and Searchable#css for further usage help.
   def /(*args); end
 
-  # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
+  # :call-seq:
+  #   >(selector) → NodeSet
+  #
+  # Search this node's immediate children using CSS selector +selector+
+  def >(selector); end
+
+  # call-seq:
+  #   at(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
   #
   # Search this object for +paths+, and return only the first
   # result. +paths+ must be one or more XPath or CSS queries.
@@ -3597,7 +4599,8 @@ module Nokogiri::XML::Searchable
   # See Searchable#search for more information.
   def at(*args); end
 
-  # call-seq: css *rules, [namespace-bindings, custom-pseudo-class]
+  # call-seq:
+  #   at_css(*rules, [namespace-bindings, custom-pseudo-class])
   #
   # Search this object for CSS +rules+, and return only the first
   # match. +rules+ must be one or more CSS selectors.
@@ -3605,7 +4608,8 @@ module Nokogiri::XML::Searchable
   # See Searchable#css for more information.
   def at_css(*args); end
 
-  # call-seq: xpath *paths, [namespace-bindings, variable-bindings, custom-handler-class]
+  # call-seq:
+  #   at_xpath(*paths, [namespace-bindings, variable-bindings, custom-handler-class])
   #
   # Search this node for XPath +paths+, and return only the first
   # match. +paths+ must be one or more XPath queries.
@@ -3613,101 +4617,116 @@ module Nokogiri::XML::Searchable
   # See Searchable#xpath for more information.
   def at_xpath(*args); end
 
-  # call-seq: css *rules, [namespace-bindings, custom-pseudo-class]
+  # call-seq:
+  #   css(*rules, [namespace-bindings, custom-pseudo-class])
   #
   # Search this object for CSS +rules+. +rules+ must be one or more CSS
   # selectors. For example:
   #
-  # node.css('title')
-  # node.css('body h1.bold')
-  # node.css('div + p.green', 'div#one')
+  #   node.css('title')
+  #   node.css('body h1.bold')
+  #   node.css('div + p.green', 'div#one')
   #
   # A hash of namespace bindings may be appended. For example:
   #
-  # node.css('bike|tire', {'bike' => 'http://schwinn.com/'})
+  #   node.css('bike|tire', {'bike' => 'http://schwinn.com/'})
   #
-  # Custom CSS pseudo classes may also be defined.  To define
-  # custom pseudo classes, create a class and implement the custom
-  # pseudo class you want defined.  The first argument to the
-  # method will be the current matching NodeSet.  Any other
-  # arguments are ones that you pass in.  For example:
+  # 💡 Custom CSS pseudo classes may also be defined which are mapped to a custom XPath
+  # function.  To define custom pseudo classes, create a class and implement the custom pseudo
+  # class you want defined. The first argument to the method will be the matching context
+  # NodeSet. Any other arguments are ones that you pass in. For example:
   #
-  # node.css('title:regex("\w+")', Class.new {
-  # def regex node_set, regex
-  # node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
-  # end
-  # }.new)
+  #   handler = Class.new {
+  #     def regex(node_set, regex)
+  #       node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
+  #     end
+  #   }.new
+  #   node.css('title:regex("\w+")', handler)
   #
-  # Note that the CSS query string is case-sensitive with regards
-  # to your document type. That is, if you're looking for "H1" in
-  # an HTML document, you'll never find anything, since HTML tags
-  # will match only lowercase CSS queries. However, "H1" might be
-  # found in an XML document, where tags names are case-sensitive
-  # (e.g., "H1" is distinct from "h1").
+  # 💡 Some XPath syntax is supported in CSS queries. For example, to query for an attribute:
+  #
+  #   node.css('img > @href') # returns all +href+ attributes on an +img+ element
+  #   node.css('img / @href') # same
+  #
+  #   # ⚠ this returns +class+ attributes from all +div+ elements AND THEIR CHILDREN!
+  #   node.css('div @class')
+  #
+  #   node.css
+  #
+  # 💡 Array-like syntax is supported in CSS queries as an alternative to using +:nth-child()+.
+  #
+  # ⚠ NOTE that indices are 1-based like +:nth-child+ and not 0-based like Ruby Arrays. For
+  # example:
+  #
+  #   # equivalent to 'li:nth-child(2)'
+  #   node.css('li[2]') # retrieve the second li element in a list
+  #
+  # ⚠ NOTE that the CSS query string is case-sensitive with regards to your document type. HTML
+  # tags will match only lowercase CSS queries, so if you search for "H1" in an HTML document,
+  # you'll never find anything. However, "H1" might be found in an XML document, where tags
+  # names are case-sensitive (e.g., "H1" is distinct from "h1").
   def css(*args); end
 
-  # call-seq: search *paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class]
+  # call-seq:
+  #   search(*paths, [namespace-bindings, xpath-variable-bindings, custom-handler-class])
   #
   # Search this object for +paths+. +paths+ must be one or more XPath or CSS queries:
   #
-  # node.search("div.employee", ".//title")
+  #   node.search("div.employee", ".//title")
   #
   # A hash of namespace bindings may be appended:
   #
-  # node.search('.//bike:tire', {'bike' => 'http://schwinn.com/'})
-  # node.search('bike|tire', {'bike' => 'http://schwinn.com/'})
+  #   node.search('.//bike:tire', {'bike' => 'http://schwinn.com/'})
+  #   node.search('bike|tire', {'bike' => 'http://schwinn.com/'})
   #
-  # For XPath queries, a hash of variable bindings may also be
-  # appended to the namespace bindings. For example:
+  # For XPath queries, a hash of variable bindings may also be appended to the namespace
+  # bindings. For example:
   #
-  # node.search('.//address[@domestic=$value]', nil, {:value => 'Yes'})
+  #   node.search('.//address[@domestic=$value]', nil, {:value => 'Yes'})
   #
-  # Custom XPath functions and CSS pseudo-selectors may also be
-  # defined. To define custom functions create a class and
-  # implement the function you want to define.  The first argument
-  # to the method will be the current matching NodeSet.  Any other
-  # arguments are ones that you pass in.  Note that this class may
-  # appear anywhere in the argument list.  For example:
+  # 💡 Custom XPath functions and CSS pseudo-selectors may also be defined. To define custom
+  # functions create a class and implement the function you want to define. The first argument
+  # to the method will be the current matching NodeSet. Any other arguments are ones that you
+  # pass in. Note that this class may appear anywhere in the argument list. For example:
   #
-  # node.search('.//title[regex(., "\w+")]', 'div.employee:regex("[0-9]+")'
-  # Class.new {
-  # def regex node_set, regex
-  # node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
-  # end
-  # }.new
-  # )
+  #   handler = Class.new {
+  #     def regex node_set, regex
+  #       node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
+  #     end
+  #   }.new
+  #   node.search('.//title[regex(., "\w+")]', 'div.employee:regex("[0-9]+")', handler)
   #
   # See Searchable#xpath and Searchable#css for further usage help.
   def search(*args); end
 
-  # call-seq: xpath *paths, [namespace-bindings, variable-bindings, custom-handler-class]
+  # call-seq:
+  #   xpath(*paths, [namespace-bindings, variable-bindings, custom-handler-class])
   #
   # Search this node for XPath +paths+. +paths+ must be one or more XPath
   # queries.
   #
-  # node.xpath('.//title')
+  #   node.xpath('.//title')
   #
   # A hash of namespace bindings may be appended. For example:
   #
-  # node.xpath('.//foo:name', {'foo' => 'http://example.org/'})
-  # node.xpath('.//xmlns:name', node.root.namespaces)
+  #   node.xpath('.//foo:name', {'foo' => 'http://example.org/'})
+  #   node.xpath('.//xmlns:name', node.root.namespaces)
   #
   # A hash of variable bindings may also be appended to the namespace bindings. For example:
   #
-  # node.xpath('.//address[@domestic=$value]', nil, {:value => 'Yes'})
+  #   node.xpath('.//address[@domestic=$value]', nil, {:value => 'Yes'})
   #
-  # Custom XPath functions may also be defined.  To define custom
-  # functions create a class and implement the function you want
-  # to define.  The first argument to the method will be the
-  # current matching NodeSet.  Any other arguments are ones that
-  # you pass in.  Note that this class may appear anywhere in the
-  # argument list.  For example:
+  # 💡 Custom XPath functions may also be defined. To define custom functions create a class and
+  # implement the function you want to define. The first argument to the method will be the
+  # current matching NodeSet. Any other arguments are ones that you pass in. Note that this
+  # class may appear anywhere in the argument list. For example:
   #
-  # node.xpath('.//title[regex(., "\w+")]', Class.new {
-  # def regex node_set, regex
-  # node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
-  # end
-  # }.new)
+  #   handler = Class.new {
+  #     def regex(node_set, regex)
+  #       node_set.find_all { |node| node['some_attribute'] =~ /#{regex}/ }
+  #     end
+  #   }.new
+  #   node.xpath('.//title[regex(., "\w+")]', handler)
   def xpath(*args); end
 
   private
@@ -3737,9 +4756,13 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   def domain; end
 
   # return true if this is an error
+  #
+  # @return [Boolean]
   def error?; end
 
   # return true if this error is fatal
+  #
+  # @return [Boolean]
   def fatal?; end
 
   # Returns the value of attribute file.
@@ -3755,6 +4778,8 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   def line; end
 
   # return true if this is a non error
+  #
+  # @return [Boolean]
   def none?; end
 
   # Returns the value of attribute str1.
@@ -3769,12 +4794,16 @@ class Nokogiri::XML::SyntaxError < ::Nokogiri::SyntaxError
   def to_s; end
 
   # return true if this is a warning
+  #
+  # @return [Boolean]
   def warning?; end
 
   private
 
   def level_to_s; end
   def location_to_s; end
+
+  # @return [Boolean]
   def nil_or_zero?(attribute); end
 end
 
@@ -3796,6 +4825,18 @@ Nokogiri::XML::XML_C14N_1_1 = T.let(T.unsafe(nil), Integer)
 Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0 = T.let(T.unsafe(nil), Integer)
 
 module Nokogiri::XML::XPath; end
+
+# The XPath search prefix to search direct descendants of the current element, +./+
+Nokogiri::XML::XPath::CURRENT_SEARCH_PREFIX = T.let(T.unsafe(nil), String)
+
+# The XPath search prefix to search globally, +//+
+Nokogiri::XML::XPath::GLOBAL_SEARCH_PREFIX = T.let(T.unsafe(nil), String)
+
+# The XPath search prefix to search direct descendants of the root element, +/+
+Nokogiri::XML::XPath::ROOT_SEARCH_PREFIX = T.let(T.unsafe(nil), String)
+
+# The XPath search prefix to search anywhere in the current element's subtree, +.//+
+Nokogiri::XML::XPath::SUBTREE_SEARCH_PREFIX = T.let(T.unsafe(nil), String)
 
 class Nokogiri::XML::XPath::SyntaxError < ::Nokogiri::XML::SyntaxError
   def to_s; end
@@ -3822,7 +4863,16 @@ module Nokogiri::XSLT
     # Parse the stylesheet in +string+, register any +modules+
     def parse(string, modules = T.unsafe(nil)); end
 
-    # Quote parameters in +params+ for stylesheet safety
+    # :call-seq:
+    #   quote_params(params) → Array
+    #
+    # Quote parameters in +params+ for stylesheet safety.
+    # See Nokogiri::XSLT::Stylesheet.transform for example usage.
+    #
+    # [Parameters]
+    # - +params+ (Hash, Array) XSLT parameters (key->value, or tuples of [key, value])
+    #
+    # [Returns] Array of string parameters, with quotes correctly escaped for use with XSLT::Stylesheet.transform
     def quote_params(params); end
 
     def register(_arg0, _arg1); end
@@ -3833,10 +4883,10 @@ end
 # is done through Nokogiri.XSLT.  Here is an example of transforming
 # an XML::Document with a Stylesheet:
 #
-# doc   = Nokogiri::XML(File.read('some_file.xml'))
-# xslt  = Nokogiri::XSLT(File.read('some_transformer.xslt'))
+#   doc   = Nokogiri::XML(File.read('some_file.xml'))
+#   xslt  = Nokogiri::XSLT(File.read('some_transformer.xslt'))
 #
-# puts xslt.transform(doc)
+#   puts xslt.transform(doc)
 #
 # See Nokogiri::XSLT::Stylesheet#transform for more transformation
 # information.

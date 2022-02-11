@@ -8,8 +8,12 @@ module Parallel
   extend ::Parallel::ProcessorCount
 
   class << self
+    # @return [Boolean]
     def all?(*args, &block); end
+
+    # @return [Boolean]
     def any?(*args, &block); end
+
     def each(array, options = T.unsafe(nil), &block); end
     def each_with_index(array, options = T.unsafe(nil), &block); end
     def flat_map(*args, &block); end
@@ -42,6 +46,7 @@ module Parallel
 end
 
 class Parallel::Break < ::StandardError
+  # @return [Break] a new instance of Break
   def initialize(value = T.unsafe(nil)); end
 
   # Returns the value of attribute value.
@@ -51,6 +56,7 @@ end
 class Parallel::DeadWorker < ::StandardError; end
 
 class Parallel::ExceptionWrapper
+  # @return [ExceptionWrapper] a new instance of ExceptionWrapper
   def initialize(exception); end
 
   # Returns the value of attribute exception.
@@ -58,6 +64,7 @@ class Parallel::ExceptionWrapper
 end
 
 class Parallel::JobFactory
+  # @return [JobFactory] a new instance of JobFactory
   def initialize(source, mutex); end
 
   def next; end
@@ -73,7 +80,9 @@ class Parallel::JobFactory
 
   private
 
+  # @return [Boolean]
   def producer?; end
+
   def queue_wrapper(array); end
 end
 
@@ -91,6 +100,7 @@ end
 Parallel::Stop = T.let(T.unsafe(nil), Object)
 
 class Parallel::UndumpableException < ::StandardError
+  # @return [UndumpableException] a new instance of UndumpableException
   def initialize(original); end
 
   # Returns the value of attribute backtrace.
@@ -116,6 +126,7 @@ Parallel::VERSION = T.let(T.unsafe(nil), String)
 Parallel::Version = T.let(T.unsafe(nil), String)
 
 class Parallel::Worker
+  # @return [Worker] a new instance of Worker
   def initialize(read, write, pid); end
 
   # might be passed to started_processes and simultaneously closed by another thread
@@ -134,6 +145,8 @@ class Parallel::Worker
   def thread; end
 
   # Sets the attribute thread
+  #
+  # @param value the value to set the attribute thread to.
   def thread=(_arg0); end
 
   def work(data); end

@@ -23,21 +23,25 @@ class REXML::AttlistDecl < ::REXML::Child
   # have to format it yourself, and then have the initializer parse it.
   # Sorry, but for the foreseeable future, DTD support in REXML is pretty
   # weak on convenience.  Have I mentioned how much I hate DTDs?
+  #
+  # @return [AttlistDecl] a new instance of AttlistDecl
   def initialize(source); end
 
   # Access the attlist attribute/value pairs.
-  # value = attlist_decl[ attribute_name ]
+  #  value = attlist_decl[ attribute_name ]
   def [](key); end
 
   # Iterate over the key/value pairs:
-  # attlist_decl.each { |attribute_name, attribute_value| ... }
+  #  attlist_decl.each { |attribute_name, attribute_value| ... }
   def each(&block); end
 
   # What is this?  Got me.
   def element_name; end
 
   # Whether an attlist declaration includes the given attribute definition
-  # if attlist_decl.include? "xmlns:foobar"
+  #  if attlist_decl.include? "xmlns:foobar"
+  #
+  # @return [Boolean]
   def include?(key); end
 
   def node_type; end
@@ -59,24 +63,26 @@ class REXML::Attribute
   # FIXME: The parser doesn't catch illegal characters in attributes
   #
   # first::
-  # Either: an Attribute, which this new attribute will become a
-  # clone of; or a String, which is the name of this attribute
+  #   Either: an Attribute, which this new attribute will become a
+  #   clone of; or a String, which is the name of this attribute
   # second::
-  # If +first+ is an Attribute, then this may be an Element, or nil.
-  # If nil, then the Element parent of this attribute is the parent
-  # of the +first+ Attribute.  If the first argument is a String,
-  # then this must also be a String, and is the content of the attribute.
-  # If this is the content, it must be fully normalized (contain no
-  # illegal characters).
+  #   If +first+ is an Attribute, then this may be an Element, or nil.
+  #   If nil, then the Element parent of this attribute is the parent
+  #   of the +first+ Attribute.  If the first argument is a String,
+  #   then this must also be a String, and is the content of the attribute.
+  #   If this is the content, it must be fully normalized (contain no
+  #   illegal characters).
   # parent::
-  # Ignored unless +first+ is a String; otherwise, may be the Element
-  # parent of this attribute, or nil.
+  #   Ignored unless +first+ is a String; otherwise, may be the Element
+  #   parent of this attribute, or nil.
   #
   #
-  # Attribute.new( attribute_to_clone )
-  # Attribute.new( attribute_to_clone, parent_element )
-  # Attribute.new( "attr", "attr_value" )
-  # Attribute.new( "attr", "attr_value", parent_element )
+  #  Attribute.new( attribute_to_clone )
+  #  Attribute.new( attribute_to_clone, parent_element )
+  #  Attribute.new( "attr", "attr_value" )
+  #  Attribute.new( "attr", "attr_value", parent_element )
+  #
+  # @return [Attribute] a new instance of Attribute
   def initialize(first, second = T.unsafe(nil), parent = T.unsafe(nil)); end
 
   # Returns true if other is an Attribute and has the same name and value,
@@ -104,12 +110,12 @@ class REXML::Attribute
 
   # Returns the namespace URL, if defined, or nil otherwise
   #
-  # e = Element.new("el")
-  # e.add_namespace("ns", "http://url")
-  # e.add_attribute("ns:a", "b")
-  # e.add_attribute("nsx:a", "c")
-  # e.attribute("ns:a").namespace # => "http://url"
-  # e.attribute("nsx:a").namespace # => nil
+  #  e = Element.new("el")
+  #  e.add_namespace("ns", "http://url")
+  #  e.add_attribute("ns:a", "b")
+  #  e.add_attribute("nsx:a", "c")
+  #  e.attribute("ns:a").namespace # => "http://url"
+  #  e.attribute("nsx:a").namespace # => nil
   #
   # This method always returns "" for no namespace attribute. Because
   # the default namespace doesn't apply to attribute names.
@@ -118,11 +124,11 @@ class REXML::Attribute
   #
   # > the default namespace does not apply to attribute names
   #
-  # e = REXML::Element.new("el")
-  # e.add_namespace("", "http://example.com/")
-  # e.namespace # => "http://example.com/"
-  # e.add_attribute("a", "b")
-  # e.attribute("a").namespace # => ""
+  #  e = REXML::Element.new("el")
+  #  e.add_namespace("", "http://example.com/")
+  #  e.namespace # => "http://example.com/"
+  #  e.add_attribute("a", "b")
+  #  e.attribute("a").namespace # => ""
   def namespace(arg = T.unsafe(nil)); end
 
   def node_type; end
@@ -133,13 +139,13 @@ class REXML::Attribute
 
   # Returns the namespace of the attribute.
   #
-  # e = Element.new( "elns:myelement" )
-  # e.add_attribute( "nsa:a", "aval" )
-  # e.add_attribute( "b", "bval" )
-  # e.attributes.get_attribute( "a" ).prefix   # -> "nsa"
-  # e.attributes.get_attribute( "b" ).prefix   # -> ""
-  # a = Attribute.new( "x", "y" )
-  # a.prefix                                   # -> ""
+  #  e = Element.new( "elns:myelement" )
+  #  e.add_attribute( "nsa:a", "aval" )
+  #  e.add_attribute( "b", "bval" )
+  #  e.attributes.get_attribute( "a" ).prefix   # -> "nsa"
+  #  e.attributes.get_attribute( "b" ).prefix   # -> ""
+  #  a = Attribute.new( "x", "y" )
+  #  a.prefix                                   # -> ""
   def prefix; end
 
   # Removes this Attribute from the tree, and returns true if successful
@@ -152,10 +158,10 @@ class REXML::Attribute
 
   # Returns this attribute out as XML source, expanding the name
   #
-  # a = Attribute.new( "x", "y" )
-  # a.to_string     # -> "x='y'"
-  # b = Attribute.new( "ns:x", "y" )
-  # b.to_string     # -> "ns:x='y'"
+  #  a = Attribute.new( "x", "y" )
+  #  a.to_string     # -> "x='y'"
+  #  b = Attribute.new( "ns:x", "y" )
+  #  b.to_string     # -> "ns:x='y'"
   def to_string; end
 
   # Returns the UNNORMALIZED value of this attribute.  That is, entities
@@ -172,114 +178,116 @@ end
 # operations for accessing elements in that set.
 class REXML::Attributes < ::Hash
   # :call-seq:
-  # new(element)
+  #   new(element)
   #
   # Creates and returns a new \REXML::Attributes object.
   # The element given by argument +element+ is stored,
   # but its own attributes are not modified:
   #
-  # ele = REXML::Element.new('foo')
-  # attrs = REXML::Attributes.new(ele)
-  # attrs.object_id == ele.attributes.object_id # => false
+  #   ele = REXML::Element.new('foo')
+  #   attrs = REXML::Attributes.new(ele)
+  #   attrs.object_id == ele.attributes.object_id # => false
   #
   # Other instance methods in class \REXML::Attributes may refer to:
   #
   # - +element.document+.
   # - +element.prefix+.
   # - +element.expanded_name+.
+  #
+  # @return [Attributes] a new instance of Attributes
   def initialize(element); end
 
   # :call-seq:
-  # add(attribute) -> attribute
+  #   add(attribute) -> attribute
   #
   # Adds attribute +attribute+, replacing the previous
   # attribute of the same name if it exists;
   # returns +attribute+:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs # => {"att"=>{"foo"=>foo:att='1', "bar"=>bar:att='2', ""=>att='&lt;'}}
-  # attrs.add(REXML::Attribute.new('foo:att', '2')) # => foo:att='2'
-  # attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
-  # attrs.include?('baz') # => true
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs # => {"att"=>{"foo"=>foo:att='1', "bar"=>bar:att='2', ""=>att='&lt;'}}
+  #   attrs.add(REXML::Attribute.new('foo:att', '2')) # => foo:att='2'
+  #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
+  #   attrs.include?('baz') # => true
   def <<(attribute); end
 
   # :call-seq:
-  # [name] -> attribute_value or nil
+  #   [name] -> attribute_value or nil
   #
   # Returns the value for the attribute given by +name+,
   # if it exists; otherwise +nil+.
   # The value returned is the unnormalized attribute value,
   # with entities expanded:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # ele.attributes['att']     # => "<"
-  # ele.attributes['bar:att'] # => "2"
-  # ele.attributes['nosuch']  # => nil
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   ele.attributes['att']     # => "<"
+  #   ele.attributes['bar:att'] # => "2"
+  #   ele.attributes['nosuch']  # => nil
   #
   # Related: get_attribute (returns an \Attribute object).
   def [](name); end
 
   # :call-seq:
-  # [name] = value -> value
+  #   [name] = value -> value
   #
   # When +value+ is non-+nil+,
   # assigns that to the attribute for the given +name+,
   # overwriting the previous value if it exists:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs['foo:att'] = '2' # => "2"
-  # attrs['baz:att'] = '3' # => "3"
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs['foo:att'] = '2' # => "2"
+  #   attrs['baz:att'] = '3' # => "3"
   #
   # When +value+ is +nil+, deletes the attribute if it exists:
   #
-  # attrs['baz:att'] = nil
-  # attrs.include?('baz:att') # => false
+  #   attrs['baz:att'] = nil
+  #   attrs.include?('baz:att') # => false
   def []=(name, value); end
 
   # :call-seq:
-  # add(attribute) -> attribute
+  #   add(attribute) -> attribute
   #
   # Adds attribute +attribute+, replacing the previous
   # attribute of the same name if it exists;
   # returns +attribute+:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs # => {"att"=>{"foo"=>foo:att='1', "bar"=>bar:att='2', ""=>att='&lt;'}}
-  # attrs.add(REXML::Attribute.new('foo:att', '2')) # => foo:att='2'
-  # attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
-  # attrs.include?('baz') # => true
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs # => {"att"=>{"foo"=>foo:att='1', "bar"=>bar:att='2', ""=>att='&lt;'}}
+  #   attrs.add(REXML::Attribute.new('foo:att', '2')) # => foo:att='2'
+  #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
+  #   attrs.include?('baz') # => true
   def add(attribute); end
 
   # :call-seq:
-  # delete(name) -> element
-  # delete(attribute) -> element
+  #    delete(name) -> element
+  #    delete(attribute) -> element
   #
   # Removes a specified attribute if it exists;
   # returns the attributes' element.
@@ -287,193 +295,193 @@ class REXML::Attributes < ::Hash
   # When string argument +name+ is given,
   # removes the attribute of that name if it exists:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs.delete('foo:att') # => <ele bar:att='2' att='&lt;'/>
-  # attrs.delete('foo:att') # => <ele bar:att='2' att='&lt;'/>
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs.delete('foo:att') # => <ele bar:att='2' att='&lt;'/>
+  #   attrs.delete('foo:att') # => <ele bar:att='2' att='&lt;'/>
   #
   # When attribute argument +attribute+ is given,
   # removes that attribute if it exists:
   #
-  # attr = REXML::Attribute.new('bar:att', '2')
-  # attrs.delete(attr) # => <ele att='&lt;'/> # => <ele att='&lt;'/>
-  # attrs.delete(attr) # => <ele att='&lt;'/> # => <ele/>
+  #   attr = REXML::Attribute.new('bar:att', '2')
+  #   attrs.delete(attr) # => <ele att='&lt;'/> # => <ele att='&lt;'/>
+  #   attrs.delete(attr) # => <ele att='&lt;'/> # => <ele/>
   def delete(attribute); end
 
   # :call-seq:
-  # delete_all(name) -> array_of_removed_attributes
+  #   delete_all(name) -> array_of_removed_attributes
   #
   # Removes all attributes matching the given +name+;
   # returns an array of the removed attributes:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs.delete_all('att') # => [att='&lt;']
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs.delete_all('att') # => [att='&lt;']
   def delete_all(name); end
 
   # :call-seq:
-  # each {|expanded_name, value| ... }
+  #   each {|expanded_name, value| ... }
   #
   # Calls the given block with each expanded-name/value pair:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # ele.attributes.each do |expanded_name, value|
-  # p [expanded_name, value]
-  # end
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   ele.attributes.each do |expanded_name, value|
+  #     p [expanded_name, value]
+  #   end
   #
   # Output:
   #
-  # ["foo:att", "1"]
-  # ["bar:att", "2"]
-  # ["att", "<"]
+  #   ["foo:att", "1"]
+  #   ["bar:att", "2"]
+  #   ["att", "<"]
   def each; end
 
   # :call-seq:
-  # each_attribute {|attr| ... }
+  #   each_attribute {|attr| ... }
   #
   # Calls the given block with each \REXML::Attribute object:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # ele.attributes.each_attribute do |attr|
-  # p [attr.class, attr]
-  # end
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   ele.attributes.each_attribute do |attr|
+  #     p [attr.class, attr]
+  #   end
   #
   # Output:
   #
-  # [REXML::Attribute, foo:att='1']
-  # [REXML::Attribute, bar:att='2']
-  # [REXML::Attribute, att='&lt;']
+  #   [REXML::Attribute, foo:att='1']
+  #   [REXML::Attribute, bar:att='2']
+  #   [REXML::Attribute, att='&lt;']
   def each_attribute; end
 
   # :call-seq:
-  # get_attribute(name) -> attribute_object or nil
+  #   get_attribute(name) -> attribute_object or nil
   #
   # Returns the \REXML::Attribute object for the given +name+:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs.get_attribute('foo:att')       # => foo:att='1'
-  # attrs.get_attribute('foo:att').class # => REXML::Attribute
-  # attrs.get_attribute('bar:att')       # => bar:att='2'
-  # attrs.get_attribute('att')           # => att='&lt;'
-  # attrs.get_attribute('nosuch')        # => nil
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs.get_attribute('foo:att')       # => foo:att='1'
+  #   attrs.get_attribute('foo:att').class # => REXML::Attribute
+  #   attrs.get_attribute('bar:att')       # => bar:att='2'
+  #   attrs.get_attribute('att')           # => att='&lt;'
+  #   attrs.get_attribute('nosuch')        # => nil
   def get_attribute(name); end
 
   # :call-seq:
-  # get_attribute_ns(namespace, name)
+  #   get_attribute_ns(namespace, name)
   #
   # Returns the \REXML::Attribute object among the attributes
   # that matches the given +namespace+ and +name+:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes
-  # attrs.get_attribute_ns('http://foo', 'att')    # => foo:att='1'
-  # attrs.get_attribute_ns('http://foo', 'nosuch') # => nil
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele'] # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes
+  #   attrs.get_attribute_ns('http://foo', 'att')    # => foo:att='1'
+  #   attrs.get_attribute_ns('http://foo', 'nosuch') # => nil
   def get_attribute_ns(namespace, name); end
 
   # :call-seq:
-  # length
+  #   length
   #
   # Returns the count of attributes:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # ele.attributes.length # => 3
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   ele.attributes.length # => 3
   def length; end
 
   # :call-seq:
-  # namespaces
+  #   namespaces
   #
   # Returns a hash of name/value pairs for the namespaces:
   #
-  # xml_string = '<a xmlns="foo" xmlns:x="bar" xmlns:y="twee" z="glorp"/>'
-  # d = REXML::Document.new(xml_string)
-  # d.root.attributes.namespaces # => {"xmlns"=>"foo", "x"=>"bar", "y"=>"twee"}
+  #   xml_string = '<a xmlns="foo" xmlns:x="bar" xmlns:y="twee" z="glorp"/>'
+  #   d = REXML::Document.new(xml_string)
+  #   d.root.attributes.namespaces # => {"xmlns"=>"foo", "x"=>"bar", "y"=>"twee"}
   def namespaces; end
 
   # :call-seq:
-  # prefixes -> array_of_prefix_strings
+  #   prefixes -> array_of_prefix_strings
   #
   # Returns an array of prefix strings in the attributes.
   # The array does not include the default
   # namespace declaration, if one exists.
   #
-  # xml_string = '<a xmlns="foo" xmlns:x="bar" xmlns:y="twee" z="glorp"/>'
-  # d = REXML::Document.new(xml_string)
-  # d.root.attributes.prefixes # => ["x", "y"]
+  #   xml_string = '<a xmlns="foo" xmlns:x="bar" xmlns:y="twee" z="glorp"/>'
+  #   d = REXML::Document.new(xml_string)
+  #   d.root.attributes.prefixes # => ["x", "y"]
   def prefixes; end
 
   # :call-seq:
-  # length
+  #   length
   #
   # Returns the count of attributes:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # ele.attributes.length # => 3
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   ele.attributes.length # => 3
   def size; end
 
   # :call-seq:
-  # to_a -> array_of_attribute_objects
+  #   to_a -> array_of_attribute_objects
   #
   # Returns an array of \REXML::Attribute objects representing
   # the attributes:
   #
-  # xml_string = <<-EOT
-  # <root xmlns:foo="http://foo" xmlns:bar="http://bar">
-  # <ele foo:att='1' bar:att='2' att='&lt;'/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
-  # attrs = ele.attributes.to_a      # => [foo:att='1', bar:att='2', att='&lt;']
-  # attrs.first.class                # => REXML::Attribute
+  #   xml_string = <<-EOT
+  #     <root xmlns:foo="http://foo" xmlns:bar="http://bar">
+  #        <ele foo:att='1' bar:att='2' att='&lt;'/>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
+  #   attrs = ele.attributes.to_a      # => [foo:att='1', bar:att='2', att='&lt;']
+  #   attrs.first.class                # => REXML::Attribute
   def to_a; end
 end
 
@@ -481,24 +489,26 @@ class REXML::CData < ::REXML::Text
   # Constructor.  CData is data between <![CDATA[ ... ]]>
   #
   # _Examples_
-  # CData.new( source )
-  # CData.new( "Here is some CDATA" )
-  # CData.new( "Some unprocessed data", respect_whitespace_TF, parent_element )
+  #  CData.new( source )
+  #  CData.new( "Here is some CDATA" )
+  #  CData.new( "Some unprocessed data", respect_whitespace_TF, parent_element )
+  #
+  # @return [CData] a new instance of CData
   def initialize(first, whitespace = T.unsafe(nil), parent = T.unsafe(nil)); end
 
   # Make a copy of this object
   #
   # _Examples_
-  # c = CData.new( "Some text" )
-  # d = c.clone
-  # d.to_s        # -> "Some text"
+  #  c = CData.new( "Some text" )
+  #  d = c.clone
+  #  d.to_s        # -> "Some text"
   def clone; end
 
   # Returns the content of this CData object
   #
   # _Examples_
-  # c = CData.new( "Some text" )
-  # c.to_s        # -> "Some text"
+  #  c = CData.new( "Some text" )
+  #  c.to_s        # -> "Some text"
   def to_s; end
 
   def value; end
@@ -509,17 +519,17 @@ class REXML::CData < ::REXML::Text
   # Generates XML output of this object
   #
   # output::
-  # Where to write the string.  Defaults to $stdout
+  #   Where to write the string.  Defaults to $stdout
   # indent::
-  # The amount to indent this node by
+  #   The amount to indent this node by
   # transitive::
-  # Ignored
+  #   Ignored
   # ie_hack::
-  # Ignored
+  #   Ignored
   #
   # _Examples_
-  # c = CData.new( " Some text " )
-  # c.write( $stdout )     #->  <![CDATA[ Some text ]]>
+  #  c = CData.new( " Some text " )
+  #  c.write( $stdout )     #->  <![CDATA[ Some text ]]>
   def write(output = T.unsafe(nil), indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 end
 
@@ -532,8 +542,10 @@ class REXML::Child
   # Constructor.  Any inheritors of this class should call super to make
   # sure this method is called.
   # parent::
-  # if supplied, the parent of this child will be set to the
-  # supplied value, and self will be added to the parent
+  #   if supplied, the parent of this child will be set to the
+  #   supplied value, and self will be added to the parent
+  #
+  # @return [Child] a new instance of Child
   def initialize(parent = T.unsafe(nil)); end
 
   # This doesn't yet handle encodings
@@ -547,11 +559,11 @@ class REXML::Child
 
   # Sets the next sibling of this child.  This can be used to insert a child
   # after some other child.
-  # a = Element.new("a")
-  # b = a.add_element("b")
-  # c = Element.new("c")
-  # b.next_sibling = c
-  # # => <a><b/><c/></a>
+  #  a = Element.new("a")
+  #  b = a.add_element("b")
+  #  c = Element.new("c")
+  #  b.next_sibling = c
+  #  # => <a><b/><c/></a>
   def next_sibling=(other); end
 
   # The Parent of this object
@@ -560,10 +572,10 @@ class REXML::Child
   # Sets the parent of this child to the supplied argument.
   #
   # other::
-  # Must be a Parent object.  If this object is the same object as the
-  # existing parent of this child, no action is taken. Otherwise, this
-  # child is removed from the current parent (if one exists), and is added
-  # to the new parent.
+  #   Must be a Parent object.  If this object is the same object as the
+  #   existing parent of this child, no action is taken. Otherwise, this
+  #   child is removed from the current parent (if one exists), and is added
+  #   to the new parent.
   # Returns:: The parent added
   def parent=(other); end
 
@@ -571,11 +583,11 @@ class REXML::Child
 
   # Sets the previous sibling of this child.  This can be used to insert a
   # child before some other child.
-  # a = Element.new("a")
-  # b = a.add_element("b")
-  # c = Element.new("c")
-  # b.previous_sibling = c
-  # # => <a><b/><c/></a>
+  #  a = Element.new("a")
+  #  b = a.add_element("b")
+  #  c = Element.new("c")
+  #  b.previous_sibling = c
+  #  # => <a><b/><c/></a>
   def previous_sibling=(other); end
 
   # Removes this child from the parent.
@@ -599,6 +611,10 @@ class REXML::Comment < ::REXML::Child
   # Source, the argument is scanned for a comment.
   # should be nil, not supplied, or a Parent to be set as the parent
   # of this object
+  #
+  # @param first If String, the contents of this comment are set to the
+  # @param second If the first argument is a Source, this argument
+  # @return [Comment] a new instance of Comment
   def initialize(first, second = T.unsafe(nil)); end
 
   # Compares this Comment to another; the contents of the comment are used
@@ -625,15 +641,15 @@ class REXML::Comment < ::REXML::Child
   # See REXML::Formatters
   #
   # output::
-  # Where to write the string
+  #    Where to write the string
   # indent::
-  # An integer.    If -1, no indenting will be used; otherwise, the
-  # indentation will be this number of spaces, and children will be
-  # indented an additional amount.
+  #    An integer.    If -1, no indenting will be used; otherwise, the
+  #    indentation will be this number of spaces, and children will be
+  #    indented an additional amount.
   # transitive::
-  # Ignored by this class. The contents of comments are never modified.
+  #    Ignored by this class. The contents of comments are never modified.
   # ie_hack::
-  # Needed for conformity to the child API, but not used by this class.
+  #    Needed for conformity to the child API, but not used by this class.
   def write(output, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 end
 
@@ -642,6 +658,7 @@ module REXML::DClonable; end
 # This is an abstract class.  You never use this directly; it serves as a
 # parent class for the specific declarations.
 class REXML::Declaration < ::REXML::Child
+  # @return [Declaration] a new instance of Declaration
   def initialize(src); end
 
   def to_s; end
@@ -659,16 +676,18 @@ class REXML::DocType < ::REXML::Parent
 
   # Constructor
   #
-  # dt = DocType.new( 'foo', '-//I/Hate/External/IDs' )
-  # # <!DOCTYPE foo '-//I/Hate/External/IDs'>
-  # dt = DocType.new( doctype_to_clone )
-  # # Incomplete.  Shallow clone of doctype
+  #   dt = DocType.new( 'foo', '-//I/Hate/External/IDs' )
+  #   # <!DOCTYPE foo '-//I/Hate/External/IDs'>
+  #   dt = DocType.new( doctype_to_clone )
+  #   # Incomplete.  Shallow clone of doctype
   #
   # +Note+ that the constructor:
   #
-  # Doctype.new( Source.new( "<!DOCTYPE foo 'bar'>" ) )
+  #  Doctype.new( Source.new( "<!DOCTYPE foo 'bar'>" ) )
   #
   # is _deprecated_.  Do not use it.  It will probably disappear.
+  #
+  # @return [DocType] a new instance of DocType
   def initialize(first, parent = T.unsafe(nil)); end
 
   def add(child); end
@@ -722,15 +741,15 @@ class REXML::DocType < ::REXML::Parent
   def system; end
 
   # output::
-  # Where to write the string
+  #   Where to write the string
   # indent::
-  # An integer.  If -1, no indentation will be used; otherwise, the
-  # indentation will be this number of spaces, and children will be
-  # indented an additional amount.
+  #   An integer.  If -1, no indentation will be used; otherwise, the
+  #   indentation will be this number of spaces, and children will be
+  #   indented an additional amount.
   # transitive::
-  # Ignored
+  #   Ignored
   # ie_hack::
-  # Ignored
+  #   Ignored
   def write(output, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 end
 
@@ -753,60 +772,62 @@ end
 # {tasks page for documents}[../doc/rexml/tasks/tocs/document_toc_rdoc.html].
 class REXML::Document < ::REXML::Element
   # :call-seq:
-  # new(string = nil, context = {}) -> new_document
-  # new(io_stream = nil, context = {}) -> new_document
-  # new(document = nil, context = {}) -> new_document
+  #   new(string = nil, context = {}) -> new_document
+  #   new(io_stream = nil, context = {}) -> new_document
+  #   new(document = nil, context = {}) -> new_document
   #
   # Returns a new \REXML::Document object.
   #
   # When no arguments are given,
   # returns an empty document:
   #
-  # d = REXML::Document.new
-  # d.to_s # => ""
+  #   d = REXML::Document.new
+  #   d.to_s # => ""
   #
   # When argument +string+ is given, it must be a string
   # containing a valid XML document:
   #
-  # xml_string = '<root><foo>Foo</foo><bar>Bar</bar></root>'
-  # d = REXML::Document.new(xml_string)
-  # d.to_s # => "<root><foo>Foo</foo><bar>Bar</bar></root>"
+  #   xml_string = '<root><foo>Foo</foo><bar>Bar</bar></root>'
+  #   d = REXML::Document.new(xml_string)
+  #   d.to_s # => "<root><foo>Foo</foo><bar>Bar</bar></root>"
   #
   # When argument +io_stream+ is given, it must be an \IO object
   # that is opened for reading, and when read must return a valid XML document:
   #
-  # File.write('t.xml', xml_string)
-  # d = File.open('t.xml', 'r') do |io|
-  # REXML::Document.new(io)
-  # end
-  # d.to_s # => "<root><foo>Foo</foo><bar>Bar</bar></root>"
+  #   File.write('t.xml', xml_string)
+  #   d = File.open('t.xml', 'r') do |io|
+  #     REXML::Document.new(io)
+  #   end
+  #   d.to_s # => "<root><foo>Foo</foo><bar>Bar</bar></root>"
   #
   # When argument +document+ is given, it must be an existing
   # document object, whose context and attributes (but not chidren)
   # are cloned into the new document:
   #
-  # d = REXML::Document.new(xml_string)
-  # d.children    # => [<root> ... </>]
-  # d.context = {raw: :all, compress_whitespace: :all}
-  # d.add_attributes({'bar' => 0, 'baz' => 1})
-  # d1 = REXML::Document.new(d)
-  # d1.children   # => []
-  # d1.context    # => {:raw=>:all, :compress_whitespace=>:all}
-  # d1.attributes # => {"bar"=>bar='0', "baz"=>baz='1'}
+  #   d = REXML::Document.new(xml_string)
+  #   d.children    # => [<root> ... </>]
+  #   d.context = {raw: :all, compress_whitespace: :all}
+  #   d.add_attributes({'bar' => 0, 'baz' => 1})
+  #   d1 = REXML::Document.new(d)
+  #   d1.children   # => []
+  #   d1.context    # => {:raw=>:all, :compress_whitespace=>:all}
+  #   d1.attributes # => {"bar"=>bar='0', "baz"=>baz='1'}
   #
   # When argument +context+ is given, it must be a hash
   # containing context entries for the document;
   # see {Element Context}[../doc/rexml/context_rdoc.html]:
   #
-  # context = {raw: :all, compress_whitespace: :all}
-  # d = REXML::Document.new(xml_string, context)
-  # d.context # => {:raw=>:all, :compress_whitespace=>:all}
+  #   context = {raw: :all, compress_whitespace: :all}
+  #   d = REXML::Document.new(xml_string, context)
+  #   d.context # => {:raw=>:all, :compress_whitespace=>:all}
+  #
+  # @return [Document] a new instance of Document
   def initialize(source = T.unsafe(nil), context = T.unsafe(nil)); end
 
   # :call-seq:
-  # add(xml_decl) -> self
-  # add(doc_type) -> self
-  # add(object) -> self
+  #   add(xml_decl) -> self
+  #   add(doc_type) -> self
+  #   add(object) -> self
   #
   # Adds an object to the document; returns +self+.
   #
@@ -815,33 +836,33 @@ class REXML::Document < ::REXML::Element
   # which becomes the XML declaration for the document,
   # replacing the previous XML declaration if any:
   #
-  # d = REXML::Document.new
-  # d.xml_decl.to_s # => ""
-  # d.add(REXML::XMLDecl.new('2.0'))
-  # d.xml_decl.to_s # => "<?xml version='2.0'?>"
+  #   d = REXML::Document.new
+  #   d.xml_decl.to_s # => ""
+  #   d.add(REXML::XMLDecl.new('2.0'))
+  #   d.xml_decl.to_s # => "<?xml version='2.0'?>"
   #
   # When argument +doc_type+ is given,
   # it must be an REXML::DocType object,
   # which becomes the document type for the document,
   # replacing the previous document type, if any:
   #
-  # d = REXML::Document.new
-  # d.doctype.to_s # => ""
-  # d.add(REXML::DocType.new('foo'))
-  # d.doctype.to_s # => "<!DOCTYPE foo>"
+  #   d = REXML::Document.new
+  #   d.doctype.to_s # => ""
+  #   d.add(REXML::DocType.new('foo'))
+  #   d.doctype.to_s # => "<!DOCTYPE foo>"
   #
   # When argument +object+ (not an REXML::XMLDecl or REXML::DocType object)
   # is given it is added as the last child:
   #
-  # d = REXML::Document.new
-  # d.add(REXML::Element.new('foo'))
-  # d.to_s # => "<foo/>"
+  #   d = REXML::Document.new
+  #   d.add(REXML::Element.new('foo'))
+  #   d.to_s # => "<foo/>"
   def <<(child); end
 
   # :call-seq:
-  # add(xml_decl) -> self
-  # add(doc_type) -> self
-  # add(object) -> self
+  #   add(xml_decl) -> self
+  #   add(doc_type) -> self
+  #   add(object) -> self
   #
   # Adds an object to the document; returns +self+.
   #
@@ -850,79 +871,79 @@ class REXML::Document < ::REXML::Element
   # which becomes the XML declaration for the document,
   # replacing the previous XML declaration if any:
   #
-  # d = REXML::Document.new
-  # d.xml_decl.to_s # => ""
-  # d.add(REXML::XMLDecl.new('2.0'))
-  # d.xml_decl.to_s # => "<?xml version='2.0'?>"
+  #   d = REXML::Document.new
+  #   d.xml_decl.to_s # => ""
+  #   d.add(REXML::XMLDecl.new('2.0'))
+  #   d.xml_decl.to_s # => "<?xml version='2.0'?>"
   #
   # When argument +doc_type+ is given,
   # it must be an REXML::DocType object,
   # which becomes the document type for the document,
   # replacing the previous document type, if any:
   #
-  # d = REXML::Document.new
-  # d.doctype.to_s # => ""
-  # d.add(REXML::DocType.new('foo'))
-  # d.doctype.to_s # => "<!DOCTYPE foo>"
+  #   d = REXML::Document.new
+  #   d.doctype.to_s # => ""
+  #   d.add(REXML::DocType.new('foo'))
+  #   d.doctype.to_s # => "<!DOCTYPE foo>"
   #
   # When argument +object+ (not an REXML::XMLDecl or REXML::DocType object)
   # is given it is added as the last child:
   #
-  # d = REXML::Document.new
-  # d.add(REXML::Element.new('foo'))
-  # d.to_s # => "<foo/>"
+  #   d = REXML::Document.new
+  #   d.add(REXML::Element.new('foo'))
+  #   d.to_s # => "<foo/>"
   def add(child); end
 
   # :call-seq:
-  # add_element(name_or_element = nil, attributes = nil) -> new_element
+  #   add_element(name_or_element = nil, attributes = nil) -> new_element
   #
   # Adds an element to the document by calling REXML::Element.add_element:
   #
-  # REXML::Element.add_element(name_or_element, attributes)
+  #   REXML::Element.add_element(name_or_element, attributes)
   def add_element(arg = T.unsafe(nil), arg2 = T.unsafe(nil)); end
 
   # :call-seq:
-  # clone -> new_document
+  #   clone -> new_document
   #
   # Returns the new document resulting from executing
   # <tt>Document.new(self)</tt>.  See Document.new.
   def clone; end
 
   # :call-seq:
-  # doctype -> doc_type or nil
+  #   doctype -> doc_type or nil
   #
   # Returns the DocType object for the document, if it exists, otherwise +nil+:
   #
-  # d = REXML::Document.new('<!DOCTYPE document SYSTEM "subjects.dtd">')
-  # d.doctype.class # => REXML::DocType
-  # d = REXML::Document.new('')
-  # d.doctype.class # => nil
+  #   d = REXML::Document.new('<!DOCTYPE document SYSTEM "subjects.dtd">')
+  #   d.doctype.class # => REXML::DocType
+  #   d = REXML::Document.new('')
+  #   d.doctype.class # => nil
   def doctype; end
 
   def document; end
 
   # :call-seq:
-  # encoding -> encoding_string
+  #   encoding -> encoding_string
   #
   # Returns the XMLDecl encoding of the document,
   #
-  # d = REXML::Document.new('<?xml version="1.0" encoding="UTF-16"?>')
-  # d.encoding # => "UTF-16"
-  # d = REXML::Document.new('')
-  # d.encoding # => "UTF-8"
+  #   d = REXML::Document.new('<?xml version="1.0" encoding="UTF-16"?>')
+  #   d.encoding # => "UTF-16"
+  #   d = REXML::Document.new('')
+  #   d.encoding # => "UTF-8"
   def encoding; end
 
   # Returns the value of attribute entity_expansion_count.
   def entity_expansion_count; end
 
   # :call-seq:
-  # expanded_name -> empty_string
+  #   expanded_name -> empty_string
   #
   # Returns an empty string.
   def expanded_name; end
 
   # :call-seq:
-  # expanded_name -> empty_string
+  #   expanded_name -> empty_string
   #
   # Returns an empty string.
   # d = doc_type
@@ -930,7 +951,7 @@ class REXML::Document < ::REXML::Element
   def name; end
 
   # :call-seq:
-  # node_type -> :document
+  #   node_type -> :document
   #
   # Returns the symbol +:document+.
   def node_type; end
@@ -938,43 +959,45 @@ class REXML::Document < ::REXML::Element
   def record_entity_expansion; end
 
   # :call-seq:
-  # root -> root_element or nil
+  #   root -> root_element or nil
   #
   # Returns the root element of the document, if it exists, otherwise +nil+:
   #
-  # d = REXML::Document.new('<root></root>')
-  # d.root # => <root/>
-  # d = REXML::Document.new('')
-  # d.root # => nil
+  #   d = REXML::Document.new('<root></root>')
+  #   d.root # => <root/>
+  #   d = REXML::Document.new('')
+  #   d.root # => nil
   def root; end
 
   # :call-seq:
-  # stand_alone?
+  #   stand_alone?
   #
   # Returns the XMLDecl standalone value of the document as a string,
   # if it has been set, otherwise the default standalone value:
   #
-  # d = REXML::Document.new('<?xml standalone="yes"?>')
-  # d.stand_alone? # => "yes"
-  # d = REXML::Document.new('')
-  # d.stand_alone? # => nil
+  #   d = REXML::Document.new('<?xml standalone="yes"?>')
+  #   d.stand_alone? # => "yes"
+  #   d = REXML::Document.new('')
+  #   d.stand_alone? # => nil
+  #
+  # @return [Boolean]
   def stand_alone?; end
 
   # :call-seq:
-  # version -> version_string
+  #   version -> version_string
   #
   # Returns the XMLDecl version of this document as a string,
   # if it has been set, otherwise the default version:
   #
-  # d = REXML::Document.new('<?xml version="2.0" encoding="UTF-8"?>')
-  # d.version # => "2.0"
-  # d = REXML::Document.new('')
-  # d.version # => "1.0"
+  #   d = REXML::Document.new('<?xml version="2.0" encoding="UTF-8"?>')
+  #   d.version # => "2.0"
+  #   d = REXML::Document.new('')
+  #   d.version # => "1.0"
   def version; end
 
   # :call-seq:
-  # doc.write(output=$stdout, indent=-1, transtive=false, ie_hack=false, encoding=nil)
-  # doc.write(options={:output => $stdout, :indent => -1, :transtive => false, :ie_hack => false, :encoding => nil})
+  #    doc.write(output=$stdout, indent=-1, transtive=false, ie_hack=false, encoding=nil)
+  #    doc.write(options={:output => $stdout, :indent => -1, :transtive => false, :ie_hack => false, :encoding => nil})
   #
   # Write the XML tree out, optionally with indent.  This writes out the
   # entire XML document, including XML declarations, doctype declarations,
@@ -991,56 +1014,56 @@ class REXML::Document < ::REXML::Element
   # arguments case.
   #
   # _Examples_
-  # Document.new("<a><b/></a>").write
+  #   Document.new("<a><b/></a>").write
   #
-  # output = ""
-  # Document.new("<a><b/></a>").write(output)
+  #   output = ""
+  #   Document.new("<a><b/></a>").write(output)
   #
-  # output = ""
-  # Document.new("<a><b/></a>").write(:output => output, :indent => 2)
+  #   output = ""
+  #   Document.new("<a><b/></a>").write(:output => output, :indent => 2)
   #
   # See also the classes in the rexml/formatters package for the proper way
   # to change the default formatting of XML output.
   #
   # _Examples_
   #
-  # output = ""
-  # tr = Transitive.new
-  # tr.write(Document.new("<a><b/></a>"), output)
+  #   output = ""
+  #   tr = Transitive.new
+  #   tr.write(Document.new("<a><b/></a>"), output)
   #
   # output::
-  # output an object which supports '<< string'; this is where the
-  # document will be written.
+  #   output an object which supports '<< string'; this is where the
+  #   document will be written.
   # indent::
-  # An integer.  If -1, no indenting will be used; otherwise, the
-  # indentation will be twice this number of spaces, and children will be
-  # indented an additional amount.  For a value of 3, every item will be
-  # indented 3 more levels, or 6 more spaces (2 * 3). Defaults to -1
+  #   An integer.  If -1, no indenting will be used; otherwise, the
+  #   indentation will be twice this number of spaces, and children will be
+  #   indented an additional amount.  For a value of 3, every item will be
+  #   indented 3 more levels, or 6 more spaces (2 * 3). Defaults to -1
   # transitive::
-  # If transitive is true and indent is >= 0, then the output will be
-  # pretty-printed in such a way that the added whitespace does not affect
-  # the absolute *value* of the document -- that is, it leaves the value
-  # and number of Text nodes in the document unchanged.
+  #   If transitive is true and indent is >= 0, then the output will be
+  #   pretty-printed in such a way that the added whitespace does not affect
+  #   the absolute *value* of the document -- that is, it leaves the value
+  #   and number of Text nodes in the document unchanged.
   # ie_hack::
-  # This hack inserts a space before the /> on empty tags to address
-  # a limitation of Internet Explorer.  Defaults to false
-  # Encoding name as String. Change output encoding to specified encoding
-  # instead of encoding in XML declaration.
-  # Defaults to nil. It means encoding in XML declaration is used.
+  #   This hack inserts a space before the /> on empty tags to address
+  #   a limitation of Internet Explorer.  Defaults to false
+  #   Encoding name as String. Change output encoding to specified encoding
+  #   instead of encoding in XML declaration.
+  #   Defaults to nil. It means encoding in XML declaration is used.
   def write(*arguments); end
 
   # :call-seq:
-  # xml_decl -> xml_decl
+  #   xml_decl -> xml_decl
   #
   # Returns the XMLDecl object for the document, if it exists,
   # otherwise the default XMLDecl object:
   #
-  # d = REXML::Document.new('<?xml version="1.0" encoding="UTF-8"?>')
-  # d.xml_decl.class # => REXML::XMLDecl
-  # d.xml_decl.to_s  # => "<?xml version='1.0' encoding='UTF-8'?>"
-  # d = REXML::Document.new('')
-  # d.xml_decl.class # => REXML::XMLDecl
-  # d.xml_decl.to_s  # => ""
+  #   d = REXML::Document.new('<?xml version="1.0" encoding="UTF-8"?>')
+  #   d.xml_decl.class # => REXML::XMLDecl
+  #   d.xml_decl.to_s  # => "<?xml version='1.0' encoding='UTF-8'?>"
+  #   d = REXML::Document.new('')
+  #   d.xml_decl.class # => REXML::XMLDecl
+  #   d.xml_decl.to_s  # => ""
   def xml_decl; end
 
   private
@@ -1079,9 +1102,9 @@ end
 # - Has a name (string).
 # - May have a parent (another element).
 # - Has zero or more children
-# (other elements, text, CDATA, processing instructions, and comments).
+#   (other elements, text, CDATA, processing instructions, and comments).
 # - Has zero or more siblings
-# (other elements, text, CDATA, processing instructions, and comments).
+#   (other elements, text, CDATA, processing instructions, and comments).
 # - Has zero or more named attributes.
 #
 # == In a Hurry?
@@ -1097,13 +1120,13 @@ end
 #
 # An element has a name, which is initially set when the element is created:
 #
-# e = REXML::Element.new('foo')
-# e.name # => "foo"
+#   e = REXML::Element.new('foo')
+#   e.name # => "foo"
 #
 # The name may be changed:
 #
-# e.name = 'bar'
-# e.name # => "bar"
+#   e.name = 'bar'
+#   e.name # => "bar"
 #
 #
 # === \Parent
@@ -1112,9 +1135,9 @@ end
 #
 # Its parent may be assigned explicitly when the element is created:
 #
-# e0 = REXML::Element.new('foo')
-# e1 = REXML::Element.new('bar', e0)
-# e1.parent # => <foo> ... </>
+#   e0 = REXML::Element.new('foo')
+#   e1 = REXML::Element.new('bar', e0)
+#   e1.parent # => <foo> ... </>
 #
 # Note: the representation of an element always shows the element's name.
 # If the element has children, the representation indicates that
@@ -1122,14 +1145,14 @@ end
 #
 # The parent may be assigned explicitly at any time:
 #
-# e2 = REXML::Element.new('baz')
-# e1.parent = e2
-# e1.parent # => <baz/>
+#   e2 = REXML::Element.new('baz')
+#   e1.parent = e2
+#   e1.parent # => <baz/>
 #
 # When an element is added as a child, its parent is set automatically:
 #
-# e1.add_element(e0)
-# e0.parent # => <bar> ... </>
+#   e1.add_element(e0)
+#   e0.parent # => <bar> ... </>
 #
 # For an element that has no parent, method +parent+ returns +nil+.
 #
@@ -1144,59 +1167,59 @@ end
 # (This example keeps things clean by controlling whitespace
 # via a +context+ setting.)
 #
-# xml_string = <<-EOT
-# <root>
-# <ele_0/>
-# text 0
-# <!--comment 0-->
-# <?target_0 pi_0?>
-# <![CDATA[cdata 0]]>
-# <ele_1/>
-# text 1
-# <!--comment 1-->
-# <?target_0 pi_1?>
-# <![CDATA[cdata 1]]>
-# </root>
-# EOT
-# context = {ignore_whitespace_nodes: :all, compress_whitespace: :all}
-# d = REXML::Document.new(xml_string, context)
-# root = d.root
-# root.children.size # => 10
-# root.each {|child| p "#{child.class}: #{child}" }
+#    xml_string = <<-EOT
+#    <root>
+#      <ele_0/>
+#      text 0
+#      <!--comment 0-->
+#      <?target_0 pi_0?>
+#      <![CDATA[cdata 0]]>
+#      <ele_1/>
+#      text 1
+#      <!--comment 1-->
+#      <?target_0 pi_1?>
+#      <![CDATA[cdata 1]]>
+#    </root>
+#    EOT
+#    context = {ignore_whitespace_nodes: :all, compress_whitespace: :all}
+#    d = REXML::Document.new(xml_string, context)
+#    root = d.root
+#    root.children.size # => 10
+#    root.each {|child| p "#{child.class}: #{child}" }
 #
 # Output:
 #
-# "REXML::Element: <ele_0/>"
-# "REXML::Text: \n text 0\n "
-# "REXML::Comment: comment 0"
-# "REXML::Instruction: <?target_0 pi_0?>"
-# "REXML::CData: cdata 0"
-# "REXML::Element: <ele_1/>"
-# "REXML::Text: \n text 1\n "
-# "REXML::Comment: comment 1"
-# "REXML::Instruction: <?target_0 pi_1?>"
-# "REXML::CData: cdata 1"
+#   "REXML::Element: <ele_0/>"
+#   "REXML::Text: \n text 0\n "
+#   "REXML::Comment: comment 0"
+#   "REXML::Instruction: <?target_0 pi_0?>"
+#   "REXML::CData: cdata 0"
+#   "REXML::Element: <ele_1/>"
+#   "REXML::Text: \n text 1\n "
+#   "REXML::Comment: comment 1"
+#   "REXML::Instruction: <?target_0 pi_1?>"
+#   "REXML::CData: cdata 1"
 #
 # A child may be added using inherited methods
 # Parent#insert_before or Parent#insert_after:
 #
-# xml_string = '<root><a/><c/><d/></root>'
-# d = REXML::Document.new(xml_string)
-# root = d.root
-# c = d.root[1] # => <c/>
-# root.insert_before(c, REXML::Element.new('b'))
-# root.to_a # => [<a/>, <b/>, <c/>, <d/>]
+#   xml_string = '<root><a/><c/><d/></root>'
+#   d = REXML::Document.new(xml_string)
+#   root = d.root
+#   c = d.root[1] # => <c/>
+#   root.insert_before(c, REXML::Element.new('b'))
+#   root.to_a # => [<a/>, <b/>, <c/>, <d/>]
 #
 # A child may be replaced using Parent#replace_child:
 #
-# root.replace_child(c, REXML::Element.new('x'))
-# root.to_a # => [<a/>, <b/>, <x/>, <d/>]
+#   root.replace_child(c, REXML::Element.new('x'))
+#   root.to_a # => [<a/>, <b/>, <x/>, <d/>]
 #
 # A child may be removed using Parent#delete:
 #
-# x = root[2] # => <x/>
-# root.delete(x)
-# root.to_a # => [<a/>, <b/>, <d/>]
+#   x = root[2] # => <x/>
+#   root.delete(x)
+#   root.to_a # => [<a/>, <b/>, <d/>]
 #
 # === Siblings
 #
@@ -1206,9 +1229,9 @@ end
 # In the example above, element +ele_1+ is between a CDATA sibling
 # and a text sibling:
 #
-# ele_1 = root[5]        # => <ele_1/>
-# ele_1.previous_sibling # => "cdata 0"
-# ele_1.next_sibling     # => "\n text 1\n "
+#   ele_1 = root[5]        # => <ele_1/>
+#   ele_1.previous_sibling # => "cdata 0"
+#   ele_1.next_sibling     # => "\n text 1\n "
 #
 # === \Attributes
 #
@@ -1216,28 +1239,28 @@ end
 #
 # A new element has no attributes:
 #
-# e = REXML::Element.new('foo')
-# e.attributes      # => {}
+#   e = REXML::Element.new('foo')
+#   e.attributes      # => {}
 #
 # Attributes may be added:
 #
-# e.add_attribute('bar', 'baz')
-# e.add_attribute('bat', 'bam')
-# e.attributes.size # => 2
-# e['bar']          # => "baz"
-# e['bat']          # => "bam"
+#   e.add_attribute('bar', 'baz')
+#   e.add_attribute('bat', 'bam')
+#   e.attributes.size # => 2
+#   e['bar']          # => "baz"
+#   e['bat']          # => "bam"
 #
 # An existing attribute may be modified:
 #
-# e.add_attribute('bar', 'bad')
-# e.attributes.size # => 2
-# e['bar']          # => "bad"
+#   e.add_attribute('bar', 'bad')
+#   e.attributes.size # => 2
+#   e['bar']          # => "bad"
 #
 # An existing attribute may be deleted:
 #
-# e.delete_attribute('bar')
-# e.attributes.size # => 1
-# e['bar']          # => nil
+#   e.delete_attribute('bar')
+#   e.attributes.size # => 1
+#   e['bar']          # => nil
 #
 # == What's Here
 #
@@ -1275,11 +1298,11 @@ end
 # #delete_element:: Deletes a child element.
 # #each_element:: Calls the given block with each child element.
 # #each_element_with_attribute:: Calls the given block with each child element
-# that meets given criteria,
-# which can include the attribute name.
+#                                that meets given criteria,
+#                                which can include the attribute name.
 # #each_element_with_text:: Calls the given block with each child element
-# that meets given criteria,
-# which can include text.
+#                           that meets given criteria,
+#                           which can include text.
 # #get_elements:: Returns an array of element children that match a given xpath.
 #
 # === Methods for \Text Children
@@ -1303,7 +1326,7 @@ end
 # #namespace:: Returns the string namespace URI for the element.
 # #namespaces:: Returns a hash of all defined namespaces in the element.
 # #prefixes:: Returns an array of the string prefixes (names)
-# of all defined namespaces in the element
+#             of all defined namespaces in the element
 #
 # === Methods for Querying
 #
@@ -1311,7 +1334,7 @@ end
 # #root:: Returns the most distant element (not document) ancestor of the element.
 # #root_node:: Returns the most distant ancestor of the element.
 # #xpath:: Returns the string xpath to the element
-# relative to the most distant parent
+#          relative to the most distant parent
 # #has_attributes?:: Returns whether the element has attributes.
 # #has_elements?:: Returns whether the element has elements.
 # #has_text?:: Returns whether the element has text.
@@ -1320,7 +1343,7 @@ end
 # #raw:: Returns whether raw mode is set for the element.
 # #whitespace:: Returns whether whitespace is respected for the element.
 # #ignore_whitespace_nodes:: Returns whether whitespace nodes
-# are to be ignored for the element.
+#                            are to be ignored for the element.
 # #node_type:: Returns symbol <tt>:element</tt>.
 #
 # === One More Method
@@ -1337,85 +1360,87 @@ class REXML::Element < ::REXML::Parent
   include ::REXML::Namespace
 
   # :call-seq:
-  # Element.new(name = 'UNDEFINED', parent = nil, context = nil) -> new_element
-  # Element.new(element, parent = nil, context = nil) -> new_element
+  #   Element.new(name = 'UNDEFINED', parent = nil, context = nil) -> new_element
+  #   Element.new(element, parent = nil, context = nil) -> new_element
   #
   # Returns a new \REXML::Element object.
   #
   # When no arguments are given,
   # returns an element with name <tt>'UNDEFINED'</tt>:
   #
-  # e = REXML::Element.new # => <UNDEFINED/>
-  # e.class                # => REXML::Element
-  # e.name                 # => "UNDEFINED"
+  #   e = REXML::Element.new # => <UNDEFINED/>
+  #   e.class                # => REXML::Element
+  #   e.name                 # => "UNDEFINED"
   #
   # When only argument +name+ is given,
   # returns an element of the given name:
   #
-  # REXML::Element.new('foo') # => <foo/>
+  #   REXML::Element.new('foo') # => <foo/>
   #
   # When only argument +element+ is given, it must be an \REXML::Element object;
   # returns a shallow copy of the given element:
   #
-  # e0 = REXML::Element.new('foo')
-  # e1 = REXML::Element.new(e0) # => <foo/>
+  #   e0 = REXML::Element.new('foo')
+  #   e1 = REXML::Element.new(e0) # => <foo/>
   #
   # When argument +parent+ is also given, it must be an REXML::Parent object:
   #
-  # e = REXML::Element.new('foo', REXML::Parent.new)
-  # e.parent # => #<REXML::Parent @parent=nil, @children=[<foo/>]>
+  #   e = REXML::Element.new('foo', REXML::Parent.new)
+  #   e.parent # => #<REXML::Parent @parent=nil, @children=[<foo/>]>
   #
   # When argument +context+ is also given, it must be a hash
   # representing the context for the element;
   # see {Element Context}[../doc/rexml/context_rdoc.html]:
   #
-  # e = REXML::Element.new('foo', nil, {raw: :all})
-  # e.context # => {:raw=>:all}
+  #   e = REXML::Element.new('foo', nil, {raw: :all})
+  #   e.context # => {:raw=>:all}
+  #
+  # @return [Element] a new instance of Element
   def initialize(arg = T.unsafe(nil), parent = T.unsafe(nil), context = T.unsafe(nil)); end
 
   # :call-seq:
-  # [index] -> object
-  # [attr_name] -> attr_value
-  # [attr_sym] -> attr_value
+  #   [index] -> object
+  #   [attr_name] -> attr_value
+  #   [attr_sym] -> attr_value
   #
   # With integer argument +index+ given,
   # returns the child at offset +index+, or +nil+ if none:
   #
-  # d = REXML::Document.new '><root><a/>text<b/>more<c/></root>'
-  # root = d.root
-  # (0..root.size).each do |index|
-  # node = root[index]
-  # p "#{index}: #{node} (#{node.class})"
-  # end
+  #   d = REXML::Document.new '><root><a/>text<b/>more<c/></root>'
+  #   root = d.root
+  #   (0..root.size).each do |index|
+  #     node = root[index]
+  #     p "#{index}: #{node} (#{node.class})"
+  #   end
   #
   # Output:
   #
-  # "0: <a/> (REXML::Element)"
-  # "1: text (REXML::Text)"
-  # "2: <b/> (REXML::Element)"
-  # "3: more (REXML::Text)"
-  # "4: <c/> (REXML::Element)"
-  # "5:  (NilClass)"
+  #   "0: <a/> (REXML::Element)"
+  #   "1: text (REXML::Text)"
+  #   "2: <b/> (REXML::Element)"
+  #   "3: more (REXML::Text)"
+  #   "4: <c/> (REXML::Element)"
+  #   "5:  (NilClass)"
   #
   # With string argument +attr_name+ given,
   # returns the string value for the given attribute name if it exists,
   # otherwise +nil+:
   #
-  # d = REXML::Document.new('<root attr="value"></root>')
-  # root = d.root
-  # root['attr']   # => "value"
-  # root['nosuch'] # => nil
+  #   d = REXML::Document.new('<root attr="value"></root>')
+  #   root = d.root
+  #   root['attr']   # => "value"
+  #   root['nosuch'] # => nil
   #
   # With symbol argument +attr_sym+ given,
   # returns <tt>[attr_sym.to_s]</tt>:
   #
-  # root[:attr]   # => "value"
-  # root[:nosuch] # => nil
+  #   root[:attr]   # => "value"
+  #   root[:nosuch] # => nil
   def [](name_or_index); end
 
   # :call-seq:
-  # add_attribute(name, value) -> value
-  # add_attribute(attribute) -> attribute
+  #   add_attribute(name, value) -> value
+  #   add_attribute(attribute) -> attribute
   #
   # Adds an attribute to this element, overwriting any existing attribute
   # by the same name.
@@ -1423,26 +1448,26 @@ class REXML::Element < ::REXML::Parent
   # With string argument +name+ and object +value+ are given,
   # adds the attribute created with that name and value:
   #
-  # e = REXML::Element.new
-  # e.add_attribute('attr', 'value') # => "value"
-  # e['attr'] # => "value"
-  # e.add_attribute('attr', 'VALUE') # => "VALUE"
-  # e['attr'] # => "VALUE"
+  #   e = REXML::Element.new
+  #   e.add_attribute('attr', 'value') # => "value"
+  #   e['attr'] # => "value"
+  #   e.add_attribute('attr', 'VALUE') # => "VALUE"
+  #   e['attr'] # => "VALUE"
   #
   # With only attribute object +attribute+ given,
   # adds the given attribute:
   #
-  # a = REXML::Attribute.new('attr', 'value')
-  # e.add_attribute(a) # => attr='value'
-  # e['attr'] # => "value"
-  # a = REXML::Attribute.new('attr', 'VALUE')
-  # e.add_attribute(a) # => attr='VALUE'
-  # e['attr'] # => "VALUE"
+  #   a = REXML::Attribute.new('attr', 'value')
+  #   e.add_attribute(a) # => attr='value'
+  #   e['attr'] # => "value"
+  #   a = REXML::Attribute.new('attr', 'VALUE')
+  #   e.add_attribute(a) # => attr='VALUE'
+  #   e['attr'] # => "VALUE"
   def add_attribute(key, value = T.unsafe(nil)); end
 
   # :call-seq:
-  # add_attributes(hash) -> hash
-  # add_attributes(array)
+  #   add_attributes(hash) -> hash
+  #   add_attributes(array)
   #
   # Adds zero or more attributes to the element;
   # returns the argument.
@@ -1451,22 +1476,22 @@ class REXML::Element < ::REXML::Parent
   # each key must be a string;
   # adds each attribute created with the key/value pair:
   #
-  # e = REXML::Element.new
-  # h = {'foo' => 'bar', 'baz' => 'bat'}
-  # e.add_attributes(h)
+  #   e = REXML::Element.new
+  #   h = {'foo' => 'bar', 'baz' => 'bat'}
+  #   e.add_attributes(h)
   #
   # If argument +array+ is given,
   # each array member must be a 2-element array <tt>[name, value];
   # each name must be a string:
   #
-  # e = REXML::Element.new
-  # a = [['foo' => 'bar'], ['baz' => 'bat']]
-  # e.add_attributes(a)
+  #   e = REXML::Element.new
+  #   a = [['foo' => 'bar'], ['baz' => 'bat']]
+  #   e.add_attributes(a)
   def add_attributes(hash); end
 
   # :call-seq:
-  # add_element(name, attributes = nil) -> new_element
-  # add_element(element, attributes = nil) -> element
+  #   add_element(name, attributes = nil) -> new_element
+  #   add_element(element, attributes = nil) -> element
   #
   # Adds a child element, optionally setting attributes
   # on the added element; returns the added element.
@@ -1474,53 +1499,53 @@ class REXML::Element < ::REXML::Parent
   # With string argument +name+, creates a new element with that name
   # and adds the new element as a child:
   #
-  # e0 = REXML::Element.new('foo')
-  # e0.add_element('bar')
-  # e0[0] # => <bar/>
+  #   e0 = REXML::Element.new('foo')
+  #   e0.add_element('bar')
+  #   e0[0] # => <bar/>
   #
   #
   # With argument +name+ and hash argument +attributes+,
   # sets attributes on the new element:
   #
-  # e0.add_element('baz', {'bat' => '0', 'bam' => '1'})
-  # e0[1] # => <baz bat='0' bam='1'/>
+  #   e0.add_element('baz', {'bat' => '0', 'bam' => '1'})
+  #   e0[1] # => <baz bat='0' bam='1'/>
   #
   # With element argument +element+, adds that element as a child:
   #
-  # e0 = REXML::Element.new('foo')
-  # e1 = REXML::Element.new('bar')
-  # e0.add_element(e1)
-  # e0[0] # => <bar/>
+  #   e0 = REXML::Element.new('foo')
+  #   e1 = REXML::Element.new('bar')
+  #   e0.add_element(e1)
+  #   e0[0] # => <bar/>
   #
   # With argument +element+ and hash argument +attributes+,
   # sets attributes on the added element:
   #
-  # e0.add_element(e1, {'bat' => '0', 'bam' => '1'})
-  # e0[1] # => <bar bat='0' bam='1'/>
+  #   e0.add_element(e1, {'bat' => '0', 'bam' => '1'})
+  #   e0[1] # => <bar bat='0' bam='1'/>
   def add_element(element, attrs = T.unsafe(nil)); end
 
   # :call-seq:
-  # add_namespace(prefix, uri = nil) -> self
+  #   add_namespace(prefix, uri = nil) -> self
   #
   # Adds a namespace to the element; returns +self+.
   #
   # With the single argument +prefix+,
   # adds a namespace using the given +prefix+ and the namespace URI:
   #
-  # e = REXML::Element.new('foo')
-  # e.add_namespace('bar')
-  # e.namespaces # => {"xmlns"=>"bar"}
+  #   e = REXML::Element.new('foo')
+  #   e.add_namespace('bar')
+  #   e.namespaces # => {"xmlns"=>"bar"}
   #
   # With both arguments +prefix+ and +uri+ given,
   # adds a namespace using both arguments:
   #
-  # e.add_namespace('baz', 'bat')
-  # e.namespaces # => {"xmlns"=>"bar", "baz"=>"bat"}
+  #   e.add_namespace('baz', 'bat')
+  #   e.namespaces # => {"xmlns"=>"bar", "baz"=>"bat"}
   def add_namespace(prefix, uri = T.unsafe(nil)); end
 
   # :call-seq:
-  # add_text(string) -> nil
-  # add_text(text_node) -> self
+  #   add_text(string) -> nil
+  #   add_text(text_node) -> self
   #
   # Adds text to the element.
   #
@@ -1531,61 +1556,61 @@ class REXML::Element < ::REXML::Parent
   # honoring the current settings for whitespace and raw,
   # then adds that node to the element:
   #
-  # d = REXML::Document.new('<a><b/></a>')
-  # a = d.root
-  # a.add_text('foo')
-  # a.to_a # => [<b/>, "foo"]
+  #   d = REXML::Document.new('<a><b/></a>')
+  #   a = d.root
+  #   a.add_text('foo')
+  #   a.to_a # => [<b/>, "foo"]
   #
   # If the element has child text nodes,
   # appends the string to the _last_ text node:
   #
-  # d = REXML::Document.new('<a>foo<b/>bar</a>')
-  # a = d.root
-  # a.add_text('baz')
-  # a.to_a # => ["foo", <b/>, "barbaz"]
-  # a.add_text('baz')
-  # a.to_a # => ["foo", <b/>, "barbazbaz"]
+  #   d = REXML::Document.new('<a>foo<b/>bar</a>')
+  #   a = d.root
+  #   a.add_text('baz')
+  #   a.to_a # => ["foo", <b/>, "barbaz"]
+  #   a.add_text('baz')
+  #   a.to_a # => ["foo", <b/>, "barbazbaz"]
   #
   # When text node argument +text_node+ is given,
   # appends the node as the last text node in the element;
   # returns +self+:
   #
-  # d = REXML::Document.new('<a>foo<b/>bar</a>')
-  # a = d.root
-  # a.add_text(REXML::Text.new('baz'))
-  # a.to_a # => ["foo", <b/>, "bar", "baz"]
-  # a.add_text(REXML::Text.new('baz'))
-  # a.to_a # => ["foo", <b/>, "bar", "baz", "baz"]
+  #   d = REXML::Document.new('<a>foo<b/>bar</a>')
+  #   a = d.root
+  #   a.add_text(REXML::Text.new('baz'))
+  #   a.to_a # => ["foo", <b/>, "bar", "baz"]
+  #   a.add_text(REXML::Text.new('baz'))
+  #   a.to_a # => ["foo", <b/>, "bar", "baz", "baz"]
   def add_text(text); end
 
   # :call-seq:
-  # attribute(name, namespace = nil)
+  #   attribute(name, namespace = nil)
   #
   # Returns the string value for the given attribute name.
   #
   # With only argument +name+ given,
   # returns the value of the named attribute if it exists, otherwise +nil+:
   #
-  # xml_string = <<-EOT
-  # <root xmlns="ns0">
-  # <a xmlns="ns1" attr="value"></a>
-  # <b xmlns="ns2" attr="value"></b>
-  # <c attr="value"/>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # root = d.root
-  # a = root[1] # => <a xmlns='ns1' attr='value'/>
-  # a.attribute('attr') # => attr='value'
-  # a.attribute('nope') # => nil
+  #   xml_string = <<-EOT
+  #     <root xmlns="ns0">
+  #       <a xmlns="ns1" attr="value"></a>
+  #       <b xmlns="ns2" attr="value"></b>
+  #       <c attr="value"/>
+  #    </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   root = d.root
+  #   a = root[1] # => <a xmlns='ns1' attr='value'/>
+  #   a.attribute('attr') # => attr='value'
+  #   a.attribute('nope') # => nil
   #
   # With arguments +name+ and +namespace+ given,
   # returns the value of the named attribute if it exists, otherwise +nil+:
   #
-  # xml_string = "<root xmlns:a='a' a:x='a:x' x='x'/>"
-  # document = REXML::Document.new(xml_string)
-  # document.root.attribute("x")      # => x='x'
-  # document.root.attribute("x", "a") # => a:x='a:x'
+  #   xml_string = "<root xmlns:a='a' a:x='a:x' x='x'/>"
+  #   document = REXML::Document.new(xml_string)
+  #   document.root.attribute("x")      # => x='x'
+  #   document.root.attribute("x", "a") # => a:x='a:x'
   def attribute(name, namespace = T.unsafe(nil)); end
 
   # Mechanisms for accessing attributes and child elements of this
@@ -1593,49 +1618,49 @@ class REXML::Element < ::REXML::Parent
   def attributes; end
 
   # :call-seq:
-  # cdatas -> array_of_cdata_children
+  #   cdatas -> array_of_cdata_children
   #
   # Returns a frozen array of the REXML::CData children of the element:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <![CDATA[foo]]>
-  # <![CDATA[bar]]>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # cds = d.root.cdatas      # => ["foo", "bar"]
-  # cds.frozen?              # => true
-  # cds.map {|cd| cd.class } # => [REXML::CData, REXML::CData]
+  #   xml_string = <<-EOT
+  #     <root>
+  #       <![CDATA[foo]]>
+  #       <![CDATA[bar]]>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   cds = d.root.cdatas      # => ["foo", "bar"]
+  #   cds.frozen?              # => true
+  #   cds.map {|cd| cd.class } # => [REXML::CData, REXML::CData]
   def cdatas; end
 
   # :call-seq:
-  # clone -> new_element
+  #   clone -> new_element
   #
   # Returns a shallow copy of the element, containing the name and attributes,
   # but not the parent or children:
   #
-  # e = REXML::Element.new('foo')
-  # e.add_attributes({'bar' => 0, 'baz' => 1})
-  # e.clone # => <foo bar='0' baz='1'/>
+  #   e = REXML::Element.new('foo')
+  #   e.add_attributes({'bar' => 0, 'baz' => 1})
+  #   e.clone # => <foo bar='0' baz='1'/>
   def clone; end
 
   # :call-seq:
-  # comments -> array_of_comment_children
+  #   comments -> array_of_comment_children
   #
   # Returns a frozen array of the REXML::Comment children of the element:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <!--foo-->
-  # <!--bar-->
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # cs = d.root.comments
-  # cs.frozen?            # => true
-  # cs.map {|c| c.class } # => [REXML::Comment, REXML::Comment]
-  # cs.map {|c| c.to_s }  # => ["foo", "bar"]
+  #   xml_string = <<-EOT
+  #     <root>
+  #       <!--foo-->
+  #       <!--bar-->
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   cs = d.root.comments
+  #   cs.frozen?            # => true
+  #   cs.map {|c| c.class } # => [REXML::Comment, REXML::Comment]
+  #   cs.map {|c| c.to_s }  # => ["foo", "bar"]
   def comments; end
 
   # The context holds information about the processing environment, such as
@@ -1647,21 +1672,21 @@ class REXML::Element < ::REXML::Parent
   def context=(_arg0); end
 
   # :call-seq:
-  # delete_attribute(name) -> removed_attribute or nil
+  #   delete_attribute(name) -> removed_attribute or nil
   #
   # Removes a named attribute if it exists;
   # returns the removed attribute if found, otherwise +nil+:
   #
-  # e = REXML::Element.new('foo')
-  # e.add_attribute('bar', 'baz')
-  # e.delete_attribute('bar') # => <bar/>
-  # e.delete_attribute('bar') # => nil
+  #   e = REXML::Element.new('foo')
+  #   e.add_attribute('bar', 'baz')
+  #   e.delete_attribute('bar') # => <bar/>
+  #   e.delete_attribute('bar') # => nil
   def delete_attribute(key); end
 
   # :call-seq:
-  # delete_element(index) -> removed_element or nil
-  # delete_element(element) -> removed_element or nil
-  # delete_element(xpath) -> removed_element or nil
+  #   delete_element(index) -> removed_element or nil
+  #   delete_element(element) -> removed_element or nil
+  #   delete_element(xpath) -> removed_element or nil
   #
   # Deletes a child element.
   #
@@ -1670,190 +1695,190 @@ class REXML::Element < ::REXML::Parent
   # indexing does not include text nodes;
   # returns +nil+ if the element does not exist:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # a = d.root          # => <a> ... </>
-  # a.delete_element(1) # => <b/>
-  # a.delete_element(1) # => <c/>
-  # a.delete_element(1) # => nil
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   a = d.root          # => <a> ... </>
+  #   a.delete_element(1) # => <b/>
+  #   a.delete_element(1) # => <c/>
+  #   a.delete_element(1) # => nil
   #
   # When element argument +element+ is given,
   # removes and returns that child element if it exists,
   # otherwise returns +nil+:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # a = d.root          # => <a> ... </>
-  # c = a[2]            # => <c/>
-  # a.delete_element(c) # => <c/>
-  # a.delete_element(c) # => nil
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   a = d.root          # => <a> ... </>
+  #   c = a[2]            # => <c/>
+  #   a.delete_element(c) # => <c/>
+  #   a.delete_element(c) # => nil
   #
   # When xpath argument +xpath+ is given,
   # removes and returns the element at xpath if it exists,
   # otherwise returns +nil+:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # a = d.root              # => <a> ... </>
-  # a.delete_element('//c') # => <c/>
-  # a.delete_element('//c') # => nil
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   a = d.root              # => <a> ... </>
+  #   a.delete_element('//c') # => <c/>
+  #   a.delete_element('//c') # => nil
   def delete_element(element); end
 
   # :call-seq:
-  # delete_namespace(namespace = 'xmlns') -> self
+  #   delete_namespace(namespace = 'xmlns') -> self
   #
   # Removes a namespace from the element.
   #
   # With no argument, removes the default namespace:
   #
-  # d = REXML::Document.new "<a xmlns:foo='bar' xmlns='twiddle'/>"
-  # d.to_s # => "<a xmlns:foo='bar' xmlns='twiddle'/>"
-  # d.root.delete_namespace # => <a xmlns:foo='bar'/>
-  # d.to_s # => "<a xmlns:foo='bar'/>"
+  #   d = REXML::Document.new "<a xmlns:foo='bar' xmlns='twiddle'/>"
+  #   d.to_s # => "<a xmlns:foo='bar' xmlns='twiddle'/>"
+  #   d.root.delete_namespace # => <a xmlns:foo='bar'/>
+  #   d.to_s # => "<a xmlns:foo='bar'/>"
   #
   # With argument +namespace+, removes the specified namespace:
   #
-  # d.root.delete_namespace('foo')
-  # d.to_s # => "<a/>"
+  #   d.root.delete_namespace('foo')
+  #   d.to_s # => "<a/>"
   #
   # Does nothing if no such namespace is found:
   #
-  # d.root.delete_namespace('nosuch')
-  # d.to_s # => "<a/>"
+  #   d.root.delete_namespace('nosuch')
+  #   d.to_s # => "<a/>"
   def delete_namespace(namespace = T.unsafe(nil)); end
 
   # :call-seq:
-  # document -> document or nil
+  #   document -> document or nil
   #
   # If the element is part of a document, returns that document:
   #
-  # d = REXML::Document.new('<a><b><c/></b></a>')
-  # top_element = d.first
-  # child = top_element.first
-  # top_element.document == d # => true
-  # child.document == d       # => true
+  #   d = REXML::Document.new('<a><b><c/></b></a>')
+  #   top_element = d.first
+  #   child = top_element.first
+  #   top_element.document == d # => true
+  #   child.document == d       # => true
   #
   # If the element is not part of a document, returns +nil+:
   #
-  # REXML::Element.new.document # => nil
+  #   REXML::Element.new.document # => nil
   #
   # For a document, returns +self+:
   #
-  # d.document == d           # => true
+  #   d.document == d           # => true
   #
   # Related: #root, #root_node.
   def document; end
 
   # :call-seq:
-  # each_element {|e| ... }
+  #   each_element {|e| ... }
   #
   # Calls the given block with each child element:
   #
-  # d = REXML::Document.new '<a><b>b</b><c>b</c><d>d</d><e/></a>'
-  # a = d.root
-  # a.each_element {|e| p e }
+  #   d = REXML::Document.new '<a><b>b</b><c>b</c><d>d</d><e/></a>'
+  #   a = d.root
+  #   a.each_element {|e| p e }
   #
   # Output:
   #
-  # <b> ... </>
-  # <c> ... </>
-  # <d> ... </>
-  # <e/>
+  #   <b> ... </>
+  #   <c> ... </>
+  #   <d> ... </>
+  #   <e/>
   def each_element(xpath = T.unsafe(nil), &block); end
 
   # :call-seq:
-  # each_element_with_attribute(attr_name, value = nil, max = 0, xpath = nil) {|e| ... }
+  #   each_element_with_attribute(attr_name, value = nil, max = 0, xpath = nil) {|e| ... }
   #
   # Calls the given block with each child element that meets given criteria.
   #
   # When only string argument +attr_name+ is given,
   # calls the block with each child element that has that attribute:
   #
-  # d = REXML::Document.new '<a><b id="1"/><c id="2"/><d id="1"/><e/></a>'
-  # a = d.root
-  # a.each_element_with_attribute('id') {|e| p e }
+  #   d = REXML::Document.new '<a><b id="1"/><c id="2"/><d id="1"/><e/></a>'
+  #   a = d.root
+  #   a.each_element_with_attribute('id') {|e| p e }
   #
   # Output:
   #
-  # <b id='1'/>
-  # <c id='2'/>
-  # <d id='1'/>
+  #   <b id='1'/>
+  #   <c id='2'/>
+  #   <d id='1'/>
   #
   # With argument +attr_name+ and string argument +value+ given,
   # calls the block with each child element that has that attribute
   # with that value:
   #
-  # a.each_element_with_attribute('id', '1') {|e| p e }
+  #   a.each_element_with_attribute('id', '1') {|e| p e }
   #
   # Output:
   #
-  # <b id='1'/>
-  # <d id='1'/>
+  #   <b id='1'/>
+  #   <d id='1'/>
   #
   # With arguments +attr_name+, +value+, and integer argument +max+ given,
   # calls the block with at most +max+ child elements:
   #
-  # a.each_element_with_attribute('id', '1', 1) {|e| p e }
+  #   a.each_element_with_attribute('id', '1', 1) {|e| p e }
   #
   # Output:
   #
-  # <b id='1'/>
+  #   <b id='1'/>
   #
   # With all arguments given, including +xpath+,
   # calls the block with only those child elements
   # that meet the first three criteria,
   # and also match the given +xpath+:
   #
-  # a.each_element_with_attribute('id', '1', 2, '//d') {|e| p e }
+  #   a.each_element_with_attribute('id', '1', 2, '//d') {|e| p e }
   #
   # Output:
   #
-  # <d id='1'/>
+  #   <d id='1'/>
   def each_element_with_attribute(key, value = T.unsafe(nil), max = T.unsafe(nil), name = T.unsafe(nil), &block); end
 
   # :call-seq:
-  # each_element_with_text(text = nil, max = 0, xpath = nil) {|e| ... }
+  #   each_element_with_text(text = nil, max = 0, xpath = nil) {|e| ... }
   #
   # Calls the given block with each child element that meets given criteria.
   #
   # With no arguments, calls the block with each child element that has text:
   #
-  # d = REXML::Document.new '<a><b>b</b><c>b</c><d>d</d><e/></a>'
-  # a = d.root
-  # a.each_element_with_text {|e| p e }
+  #   d = REXML::Document.new '<a><b>b</b><c>b</c><d>d</d><e/></a>'
+  #   a = d.root
+  #   a.each_element_with_text {|e| p e }
   #
   # Output:
   #
-  # <b> ... </>
-  # <c> ... </>
-  # <d> ... </>
+  #   <b> ... </>
+  #   <c> ... </>
+  #   <d> ... </>
   #
   # With the single string argument +text+,
   # calls the block with each element that has exactly that text:
   #
-  # a.each_element_with_text('b') {|e| p e }
+  #   a.each_element_with_text('b') {|e| p e }
   #
   # Output:
   #
-  # <b> ... </>
-  # <c> ... </>
+  #   <b> ... </>
+  #   <c> ... </>
   #
   # With argument +text+ and integer argument +max+,
   # calls the block with at most +max+ elements:
   #
-  # a.each_element_with_text('b', 1) {|e| p e }
+  #   a.each_element_with_text('b', 1) {|e| p e }
   #
   # Output:
   #
-  # <b> ... </>
+  #   <b> ... </>
   #
   # With all arguments given, including +xpath+,
   # calls the block with only those child elements
   # that meet the first two criteria,
   # and also match the given +xpath+:
   #
-  # a.each_element_with_text('b', 2, '//c') {|e| p e }
+  #   a.each_element_with_text('b', 2, '//c') {|e| p e }
   #
   # Output:
   #
-  # <c> ... </>
+  #   <c> ... </>
   def each_element_with_text(text = T.unsafe(nil), max = T.unsafe(nil), name = T.unsafe(nil), &block); end
 
   # Mechanisms for accessing attributes and child elements of this
@@ -1861,78 +1886,84 @@ class REXML::Element < ::REXML::Parent
   def elements; end
 
   # :call-seq:
-  # get_elements(xpath)
+  #   get_elements(xpath)
   #
   # Returns an array of the elements that match the given +xpath+:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <a level='1'>
-  # <a level='2'/>
-  # </a>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # d.root.get_elements('//a') # => [<a level='1'> ... </>, <a level='2'/>]
+  #   xml_string = <<-EOT
+  #   <root>
+  #     <a level='1'>
+  #       <a level='2'/>
+  #     </a>
+  #   </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   d.root.get_elements('//a') # => [<a level='1'> ... </>, <a level='2'/>]
   def get_elements(xpath); end
 
   # :call-seq:
-  # get_text(xpath = nil) -> text_node or nil
+  #   get_text(xpath = nil) -> text_node or nil
   #
   # Returns the first text node child in a specified element, if it exists,
   # +nil+ otherwise.
   #
   # With no argument, returns the first text node from +self+:
   #
-  # d = REXML::Document.new "<p>some text <b>this is bold!</b> more text</p>"
-  # d.root.get_text.class # => REXML::Text
-  # d.root.get_text       # => "some text "
+  #   d = REXML::Document.new "<p>some text <b>this is bold!</b> more text</p>"
+  #   d.root.get_text.class # => REXML::Text
+  #   d.root.get_text       # => "some text "
   #
   # With argument +xpath+, returns the first text node from the element
   # that matches +xpath+:
   #
-  # d.root.get_text(1) # => "this is bold!"
+  #   d.root.get_text(1) # => "this is bold!"
   def get_text(path = T.unsafe(nil)); end
 
   # :call-seq:
-  # has_attributes? -> true or false
+  #   has_attributes? -> true or false
   #
   # Returns +true+ if the element has attributes, +false+ otherwise:
   #
-  # d = REXML::Document.new('<root><a attr="val"/><b/></root>')
-  # a, b = *d.root
-  # a.has_attributes? # => true
-  # b.has_attributes? # => false
+  #   d = REXML::Document.new('<root><a attr="val"/><b/></root>')
+  #   a, b = *d.root
+  #   a.has_attributes? # => true
+  #   b.has_attributes? # => false
+  #
+  # @return [Boolean]
   def has_attributes?; end
 
   # :call-seq:
-  # has_elements?
+  #   has_elements?
   #
   # Returns +true+ if the element has one or more element children,
   # +false+ otherwise:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # a = d.root              # => <a> ... </>
-  # a.has_elements? # => true
-  # b = a[0]        # => <b/>
-  # b.has_elements? # => false
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   a = d.root              # => <a> ... </>
+  #   a.has_elements? # => true
+  #   b = a[0]        # => <b/>
+  #   b.has_elements? # => false
+  #
+  # @return [Boolean]
   def has_elements?; end
 
   # :call-seq:
-  # has_text? -> true or false
+  #   has_text? -> true or false
   #
   # Returns +true if the element has one or more text noded,
   # +false+ otherwise:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # a = d.root
-  # a.has_text? # => true
-  # b = a[0]
-  # b.has_text? # => false
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   a = d.root
+  #   a.has_text? # => true
+  #   b = a[0]
+  #   b.has_text? # => false
+  #
+  # @return [Boolean]
   def has_text?; end
 
   # :call-seq:
-  # ignore_whitespace_nodes
+  #   ignore_whitespace_nodes
   #
   # Returns +true+ if whitespace nodes are ignored for the element.
   #
@@ -1940,140 +1971,140 @@ class REXML::Element < ::REXML::Parent
   def ignore_whitespace_nodes; end
 
   # :call-seq:
-  # inspect -> string
+  #   inspect -> string
   #
   # Returns a string representation of the element.
   #
   # For an element with no attributes and no children, shows the element name:
   #
-  # REXML::Element.new.inspect # => "<UNDEFINED/>"
+  #   REXML::Element.new.inspect # => "<UNDEFINED/>"
   #
   # Shows attributes, if any:
   #
-  # e = REXML::Element.new('foo')
-  # e.add_attributes({'bar' => 0, 'baz' => 1})
-  # e.inspect # => "<foo bar='0' baz='1'/>"
+  #   e = REXML::Element.new('foo')
+  #   e.add_attributes({'bar' => 0, 'baz' => 1})
+  #   e.inspect # => "<foo bar='0' baz='1'/>"
   #
   # Shows an ellipsis (<tt>...</tt>), if there are child elements:
   #
-  # e.add_element(REXML::Element.new('bar'))
-  # e.add_element(REXML::Element.new('baz'))
-  # e.inspect # => "<foo bar='0' baz='1'> ... </>"
+  #   e.add_element(REXML::Element.new('bar'))
+  #   e.add_element(REXML::Element.new('baz'))
+  #   e.inspect # => "<foo bar='0' baz='1'> ... </>"
   def inspect; end
 
   # :call-seq:
-  # instructions -> array_of_instruction_children
+  #   instructions -> array_of_instruction_children
   #
   # Returns a frozen array of the REXML::Instruction children of the element:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <?target0 foo?>
-  # <?target1 bar?>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # is = d.root.instructions
-  # is.frozen?             # => true
-  # is.map {|i| i.class } # => [REXML::Instruction, REXML::Instruction]
-  # is.map {|i| i.to_s }  # => ["<?target0 foo?>", "<?target1 bar?>"]
+  #   xml_string = <<-EOT
+  #     <root>
+  #       <?target0 foo?>
+  #       <?target1 bar?>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   is = d.root.instructions
+  #   is.frozen?             # => true
+  #   is.map {|i| i.class } # => [REXML::Instruction, REXML::Instruction]
+  #   is.map {|i| i.to_s }  # => ["<?target0 foo?>", "<?target1 bar?>"]
   def instructions; end
 
   # :call-seq:
-  # namespace(prefix = nil) -> string_uri or nil
+  #   namespace(prefix = nil) -> string_uri or nil
   #
   # Returns the string namespace URI for the element,
   # possibly deriving from one of its ancestors.
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <a xmlns='1' xmlns:y='2'>
-  # <b/>
-  # <c xmlns:z='3'/>
-  # </a>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # b = d.elements['//b']
-  # b.namespace      # => "1"
-  # b.namespace('y') # => "2"
-  # b.namespace('nosuch') # => nil
+  #   xml_string = <<-EOT
+  #     <root>
+  #        <a xmlns='1' xmlns:y='2'>
+  #          <b/>
+  #          <c xmlns:z='3'/>
+  #        </a>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   b = d.elements['//b']
+  #   b.namespace      # => "1"
+  #   b.namespace('y') # => "2"
+  #   b.namespace('nosuch') # => nil
   def namespace(prefix = T.unsafe(nil)); end
 
   # :call-seq:
-  # namespaces -> array_of_namespace_names
+  #    namespaces -> array_of_namespace_names
   #
   # Returns a hash of all defined namespaces
   # in the element and its ancestors:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <a xmlns:x='1' xmlns:y='2'>
-  # <b/>
-  # <c xmlns:z='3'/>
-  # </a>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string)
-  # d.elements['//a'].namespaces # => {"x"=>"1", "y"=>"2"}
-  # d.elements['//b'].namespaces # => {"x"=>"1", "y"=>"2"}
-  # d.elements['//c'].namespaces # => {"x"=>"1", "y"=>"2", "z"=>"3"}
+  #   xml_string = <<-EOT
+  #     <root>
+  #        <a xmlns:x='1' xmlns:y='2'>
+  #          <b/>
+  #          <c xmlns:z='3'/>
+  #        </a>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string)
+  #   d.elements['//a'].namespaces # => {"x"=>"1", "y"=>"2"}
+  #   d.elements['//b'].namespaces # => {"x"=>"1", "y"=>"2"}
+  #   d.elements['//c'].namespaces # => {"x"=>"1", "y"=>"2", "z"=>"3"}
   def namespaces; end
 
   # :call-seq:
-  # next_element
+  #   next_element
   #
   # Returns the next sibling that is an element if it exists,
   # +niL+ otherwise:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # d.root.elements['b'].next_element #-> <c/>
-  # d.root.elements['c'].next_element #-> nil
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   d.root.elements['b'].next_element #-> <c/>
+  #   d.root.elements['c'].next_element #-> nil
   def next_element; end
 
   # :call-seq:
-  # node_type -> :element
+  #   node_type -> :element
   #
   # Returns symbol <tt>:element</tt>:
   #
-  # d = REXML::Document.new('<a/>')
-  # a = d.root  # => <a/>
-  # a.node_type # => :element
+  #   d = REXML::Document.new('<a/>')
+  #   a = d.root  # => <a/>
+  #   a.node_type # => :element
   def node_type; end
 
   # :call-seq:
-  # prefixes -> array_of_namespace_prefixes
+  #   prefixes -> array_of_namespace_prefixes
   #
   # Returns an array of the string prefixes (names) of all defined namespaces
   # in the element and its ancestors:
   #
-  # xml_string = <<-EOT
-  # <root>
-  # <a xmlns:x='1' xmlns:y='2'>
-  # <b/>
-  # <c xmlns:z='3'/>
-  # </a>
-  # </root>
-  # EOT
-  # d = REXML::Document.new(xml_string, {compress_whitespace: :all})
-  # d.elements['//a'].prefixes # => ["x", "y"]
-  # d.elements['//b'].prefixes # => ["x", "y"]
-  # d.elements['//c'].prefixes # => ["x", "y", "z"]
+  #   xml_string = <<-EOT
+  #     <root>
+  #        <a xmlns:x='1' xmlns:y='2'>
+  #          <b/>
+  #          <c xmlns:z='3'/>
+  #        </a>
+  #     </root>
+  #   EOT
+  #   d = REXML::Document.new(xml_string, {compress_whitespace: :all})
+  #   d.elements['//a'].prefixes # => ["x", "y"]
+  #   d.elements['//b'].prefixes # => ["x", "y"]
+  #   d.elements['//c'].prefixes # => ["x", "y", "z"]
   def prefixes; end
 
   # :call-seq:
-  # previous_element
+  #   previous_element
   #
   # Returns the previous sibling that is an element if it exists,
   # +niL+ otherwise:
   #
-  # d = REXML::Document.new '<a><b/>text<c/></a>'
-  # d.root.elements['c'].previous_element #-> <b/>
-  # d.root.elements['b'].previous_element #-> nil
+  #   d = REXML::Document.new '<a><b/>text<c/></a>'
+  #   d.root.elements['c'].previous_element #-> <b/>
+  #   d.root.elements['b'].previous_element #-> nil
   def previous_element; end
 
   # :call-seq:
-  # raw
+  #   raw
   #
   # Returns +true+ if raw mode is set for the element.
   #
@@ -2084,25 +2115,25 @@ class REXML::Element < ::REXML::Parent
   def raw; end
 
   # :call-seq:
-  # root -> element
+  #   root -> element
   #
   # Returns the most distant _element_ (not document) ancestor of the element:
   #
-  # d = REXML::Document.new('<a><b><c/></b></a>')
-  # top_element = d.first
-  # child = top_element.first
-  # top_element.root == top_element # => true
-  # child.root == top_element       # => true
+  #   d = REXML::Document.new('<a><b><c/></b></a>')
+  #   top_element = d.first
+  #   child = top_element.first
+  #   top_element.root == top_element # => true
+  #   child.root == top_element       # => true
   #
   # For a document, returns the topmost element:
   #
-  # d.root == top_element # => true
+  #   d.root == top_element # => true
   #
   # Related: #root_node, #document.
   def root; end
 
   # :call-seq:
-  # root_node -> document or element
+  #   root_node -> document or element
   #
   # Returns the most distant ancestor of +self+.
   #
@@ -2111,48 +2142,48 @@ class REXML::Element < ::REXML::Parent
   # Note that the root node is different from the document element;
   # in this example +a+ is document element and the root node is its parent:
   #
-  # d = REXML::Document.new('<a><b><c/></b></a>')
-  # top_element = d.first      # => <a> ... </>
-  # child = top_element.first  # => <b> ... </>
-  # d.root_node == d           # => true
-  # top_element.root_node == d # => true
-  # child.root_node == d       # => true
+  #   d = REXML::Document.new('<a><b><c/></b></a>')
+  #   top_element = d.first      # => <a> ... </>
+  #   child = top_element.first  # => <b> ... </>
+  #   d.root_node == d           # => true
+  #   top_element.root_node == d # => true
+  #   child.root_node == d       # => true
   #
   # When the element is not part of a document, but does have ancestor elements,
   # returns the most distant ancestor element:
   #
-  # e0 = REXML::Element.new('foo')
-  # e1 = REXML::Element.new('bar')
-  # e1.parent = e0
-  # e2 = REXML::Element.new('baz')
-  # e2.parent = e1
-  # e2.root_node == e0 # => true
+  #   e0 = REXML::Element.new('foo')
+  #   e1 = REXML::Element.new('bar')
+  #   e1.parent = e0
+  #   e2 = REXML::Element.new('baz')
+  #   e2.parent = e1
+  #   e2.root_node == e0 # => true
   #
   # When the element has no ancestor elements,
   # returns +self+:
   #
-  # e = REXML::Element.new('foo')
-  # e.root_node == e # => true
+  #   e = REXML::Element.new('foo')
+  #   e.root_node == e # => true
   #
   # Related: #root, #document.
   def root_node; end
 
   # :call-seq:
-  # text(xpath = nil) -> text_string or nil
+  #   text(xpath = nil) -> text_string or nil
   #
   # Returns the text string from the first text node child
   # in a specified element, if it exists, # +nil+ otherwise.
   #
   # With no argument, returns the text from the first text node in +self+:
   #
-  # d = REXML::Document.new "<p>some text <b>this is bold!</b> more text</p>"
-  # d.root.text.class # => String
-  # d.root.text       # => "some text "
+  #   d = REXML::Document.new "<p>some text <b>this is bold!</b> more text</p>"
+  #   d.root.text.class # => String
+  #   d.root.text       # => "some text "
   #
   # With argument +xpath+, returns text from the the first text node
   # in the element that matches +xpath+:
   #
-  # d.root.text(1) # => "this is bold!"
+  #   d.root.text(1) # => "this is bold!"
   #
   # Note that an element may have multiple text nodes,
   # possibly separated by other non-text children, as above.
@@ -2163,8 +2194,8 @@ class REXML::Element < ::REXML::Parent
   def text(path = T.unsafe(nil)); end
 
   # :call-seq:
-  # text = string -> string
-  # text = nil -> nil
+  #   text = string -> string
+  #   text = nil -> nil
   #
   # Adds, replaces, or removes the first text node child in the element.
   #
@@ -2176,33 +2207,33 @@ class REXML::Element < ::REXML::Parent
   #
   # If the element has no text child, the text node is added:
   #
-  # d = REXML::Document.new '<a><b/></a>'
-  # d.root.text = 'foo' #-> '<a><b/>foo</a>'
+  #   d = REXML::Document.new '<a><b/></a>'
+  #   d.root.text = 'foo' #-> '<a><b/>foo</a>'
   #
   # If the element has a text child, it is replaced:
   #
-  # d.root.text = 'bar' #-> '<a><b/>bar</a>'
+  #   d.root.text = 'bar' #-> '<a><b/>bar</a>'
   #
   # With argument +nil+, removes the first text child:
   #
-  # d.root.text = nil   #-> '<a><b/><c/></a>'
+  #   d.root.text = nil   #-> '<a><b/><c/></a>'
   def text=(text); end
 
   # :call-seq:
-  # texts -> array_of_text_children
+  #   texts -> array_of_text_children
   #
   # Returns a frozen array of the REXML::Text children of the element:
   #
-  # xml_string = '<root><a/>text<b/>more<c/></root>'
-  # d = REXML::Document.new(xml_string)
-  # ts = d.root.texts
-  # ts.frozen?            # => true
-  # ts.map {|t| t.class } # => [REXML::Text, REXML::Text]
-  # ts.map {|t| t.to_s }  # => ["text", "more"]
+  #   xml_string = '<root><a/>text<b/>more<c/></root>'
+  #   d = REXML::Document.new(xml_string)
+  #   ts = d.root.texts
+  #   ts.frozen?            # => true
+  #   ts.map {|t| t.class } # => [REXML::Text, REXML::Text]
+  #   ts.map {|t| t.to_s }  # => ["text", "more"]
   def texts; end
 
   # :call-seq:
-  # whitespace
+  #   whitespace
   #
   # Returns +true+ if whitespace is respected for this element,
   # +false+ otherwise.
@@ -2218,44 +2249,44 @@ class REXML::Element < ::REXML::Parent
   #
   # Writes out this element, and recursively, all children.
   # output::
-  # output an object which supports '<< string'; this is where the
-  # document will be written.
+  #     output an object which supports '<< string'; this is where the
+  #   document will be written.
   # indent::
-  # An integer.  If -1, no indenting will be used; otherwise, the
-  # indentation will be this number of spaces, and children will be
-  # indented an additional amount.  Defaults to -1
+  #   An integer.  If -1, no indenting will be used; otherwise, the
+  #   indentation will be this number of spaces, and children will be
+  #   indented an additional amount.  Defaults to -1
   # transitive::
-  # If transitive is true and indent is >= 0, then the output will be
-  # pretty-printed in such a way that the added whitespace does not affect
-  # the parse tree of the document
+  #   If transitive is true and indent is >= 0, then the output will be
+  #   pretty-printed in such a way that the added whitespace does not affect
+  #   the parse tree of the document
   # ie_hack::
-  # This hack inserts a space before the /> on empty tags to address
-  # a limitation of Internet Explorer.  Defaults to false
+  #   This hack inserts a space before the /> on empty tags to address
+  #   a limitation of Internet Explorer.  Defaults to false
   #
-  # out = ''
-  # doc.write( out )     #-> doc is written to the string 'out'
-  # doc.write( $stdout ) #-> doc written to the console
+  #  out = ''
+  #  doc.write( out )     #-> doc is written to the string 'out'
+  #  doc.write( $stdout ) #-> doc written to the console
   def write(output = T.unsafe(nil), indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
   # :call-seq:
-  # xpath -> string_xpath
+  #   xpath -> string_xpath
   #
   # Returns the string xpath to the element
   # relative to the most distant parent:
   #
-  # d = REXML::Document.new('<a><b><c/></b></a>')
-  # a = d.root # => <a> ... </>
-  # b = a[0]   # => <b> ... </>
-  # c = b[0]   # => <c/>
-  # d.xpath    # => ""
-  # a.xpath    # => "/a"
-  # b.xpath    # => "/a/b"
-  # c.xpath    # => "/a/b/c"
+  #   d = REXML::Document.new('<a><b><c/></b></a>')
+  #   a = d.root # => <a> ... </>
+  #   b = a[0]   # => <b> ... </>
+  #   c = b[0]   # => <c/>
+  #   d.xpath    # => ""
+  #   a.xpath    # => "/a"
+  #   b.xpath    # => "/a/b"
+  #   c.xpath    # => "/a/b/c"
   #
   # If there is no parent, returns the expanded name of the element:
   #
-  # e = REXML::Element.new('foo')
-  # e.xpath    # => "foo"
+  #   e = REXML::Element.new('foo')
+  #   e.xpath    # => "foo"
   def xpath; end
 
   private
@@ -2267,6 +2298,7 @@ class REXML::Element < ::REXML::Parent
 end
 
 class REXML::ElementDecl < ::REXML::Declaration
+  # @return [ElementDecl] a new instance of ElementDecl
   def initialize(src); end
 end
 
@@ -2275,61 +2307,63 @@ end
 # the <tt>element.elements</tt> object.  Therefore, you are
 # _not_ expected to instantiate this yourself.
 #
-# xml_string = <<-EOT
-# <?xml version="1.0" encoding="UTF-8"?>
-# <bookstore>
-# <book category="cooking">
-# <title lang="en">Everyday Italian</title>
-# <author>Giada De Laurentiis</author>
-# <year>2005</year>
-# <price>30.00</price>
-# </book>
-# <book category="children">
-# <title lang="en">Harry Potter</title>
-# <author>J K. Rowling</author>
-# <year>2005</year>
-# <price>29.99</price>
-# </book>
-# <book category="web">
-# <title lang="en">XQuery Kick Start</title>
-# <author>James McGovern</author>
-# <author>Per Bothner</author>
-# <author>Kurt Cagle</author>
-# <author>James Linn</author>
-# <author>Vaidyanathan Nagarajan</author>
-# <year>2003</year>
-# <price>49.99</price>
-# </book>
-# <book category="web" cover="paperback">
-# <title lang="en">Learning XML</title>
-# <author>Erik T. Ray</author>
-# <year>2003</year>
-# <price>39.95</price>
-# </book>
-# </bookstore>
-# EOT
-# d = REXML::Document.new(xml_string)
-# elements = d.root.elements
-# elements # => #<REXML::Elements @element=<bookstore> ... </>>
+#   xml_string = <<-EOT
+#   <?xml version="1.0" encoding="UTF-8"?>
+#   <bookstore>
+#     <book category="cooking">
+#       <title lang="en">Everyday Italian</title>
+#       <author>Giada De Laurentiis</author>
+#       <year>2005</year>
+#       <price>30.00</price>
+#     </book>
+#     <book category="children">
+#       <title lang="en">Harry Potter</title>
+#       <author>J K. Rowling</author>
+#       <year>2005</year>
+#       <price>29.99</price>
+#     </book>
+#     <book category="web">
+#       <title lang="en">XQuery Kick Start</title>
+#       <author>James McGovern</author>
+#       <author>Per Bothner</author>
+#       <author>Kurt Cagle</author>
+#       <author>James Linn</author>
+#       <author>Vaidyanathan Nagarajan</author>
+#       <year>2003</year>
+#       <price>49.99</price>
+#     </book>
+#     <book category="web" cover="paperback">
+#       <title lang="en">Learning XML</title>
+#       <author>Erik T. Ray</author>
+#       <year>2003</year>
+#       <price>39.95</price>
+#     </book>
+#   </bookstore>
+#   EOT
+#   d = REXML::Document.new(xml_string)
+#   elements = d.root.elements
+#   elements # => #<REXML::Elements @element=<bookstore> ... </>>
 class REXML::Elements
   include ::Enumerable
 
   # :call-seq:
-  # new(parent) -> new_elements_object
+  #   new(parent) -> new_elements_object
   #
   # Returns a new \Elements object with the given +parent+.
   # Does _not_ assign <tt>parent.elements = self</tt>:
   #
-  # d = REXML::Document.new(xml_string)
-  # eles = REXML::Elements.new(d.root)
-  # eles # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles == d.root.elements # => false
+  #   d = REXML::Document.new(xml_string)
+  #   eles = REXML::Elements.new(d.root)
+  #   eles # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles == d.root.elements # => false
+  #
+  # @return [Elements] a new instance of Elements
   def initialize(parent); end
 
   # :call-seq:
-  # add -> new_element
-  # add(name) -> new_element
-  # add(element) -> element
+  #   add -> new_element
+  #   add(name) -> new_element
+  #   add(element) -> element
   #
   # Adds an element; returns the element added.
   #
@@ -2342,16 +2376,16 @@ class REXML::Elements
   #
   # Example:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # parent = elements.parent     # => <bookstore> ... </>
-  # parent.context = {raw: :all}
-  # elements.size                # => 4
-  # new_element = elements.add   # => </>
-  # elements.size                # => 5
-  # new_element.name             # => nil
-  # new_element.parent           # => <bookstore> ... </>
-  # new_element.context          # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   parent = elements.parent     # => <bookstore> ... </>
+  #   parent.context = {raw: :all}
+  #   elements.size                # => 4
+  #   new_element = elements.add   # => </>
+  #   elements.size                # => 5
+  #   new_element.name             # => nil
+  #   new_element.parent           # => <bookstore> ... </>
+  #   new_element.context          # => {:raw=>:all}
   #
   # With string argument +name+, creates and adds a new element.
   # The new element has:
@@ -2362,128 +2396,128 @@ class REXML::Elements
   #
   # Example:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # parent = elements.parent          # => <bookstore> ... </>
-  # parent.context = {raw: :all}
-  # elements.size                     # => 4
-  # new_element = elements.add('foo') # => <foo/>
-  # elements.size                     # => 5
-  # new_element.name                  # => "foo"
-  # new_element.parent                # => <bookstore> ... </>
-  # new_element.context               # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   parent = elements.parent          # => <bookstore> ... </>
+  #   parent.context = {raw: :all}
+  #   elements.size                     # => 4
+  #   new_element = elements.add('foo') # => <foo/>
+  #   elements.size                     # => 5
+  #   new_element.name                  # => "foo"
+  #   new_element.parent                # => <bookstore> ... </>
+  #   new_element.context               # => {:raw=>:all}
   #
   # With argument +element+,
   # creates and adds a clone of the given +element+.
   # The new element has name, parent, and context from the given +element+.
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.size                 # => 4
-  # e0 = REXML::Element.new('foo')
-  # e1 = REXML::Element.new('bar', e0, {raw: :all})
-  # element = elements.add(e1) # => <bar/>
-  # elements.size                 # => 5
-  # element.name                  # => "bar"
-  # element.parent                # => <bookstore> ... </>
-  # element.context               # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.size                 # => 4
+  #   e0 = REXML::Element.new('foo')
+  #   e1 = REXML::Element.new('bar', e0, {raw: :all})
+  #   element = elements.add(e1) # => <bar/>
+  #   elements.size                 # => 5
+  #   element.name                  # => "bar"
+  #   element.parent                # => <bookstore> ... </>
+  #   element.context               # => {:raw=>:all}
   def <<(element = T.unsafe(nil)); end
 
   # :call-seq:
-  # elements[index] -> element or nil
-  # elements[xpath] -> element or nil
-  # elements[n, name] -> element or nil
+  #   elements[index] -> element or nil
+  #   elements[xpath] -> element or nil
+  #   elements[n, name] -> element or nil
   #
   # Returns the first \Element object selected by the arguments,
   # if any found, or +nil+ if none found.
   #
   # Notes:
   # - The +index+ is 1-based, not 0-based, so that:
-  # - The first element has index <tt>1</tt>
-  # - The _nth_ element has index +n+.
+  #   - The first element has index <tt>1</tt>
+  #   - The _nth_ element has index +n+.
   # - The selection ignores non-\Element nodes.
   #
   # When the single argument +index+ is given,
   # returns the element given by the index, if any; otherwise, +nil+:
   #
-  # d = REXML::Document.new(xml_string)
-  # eles = d.root.elements
-  # eles # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles[1] # => <book category='cooking'> ... </>
-  # eles.size # => 4
-  # eles[4] # => <book category='web' cover='paperback'> ... </>
-  # eles[5] # => nil
+  #   d = REXML::Document.new(xml_string)
+  #   eles = d.root.elements
+  #   eles # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles[1] # => <book category='cooking'> ... </>
+  #   eles.size # => 4
+  #   eles[4] # => <book category='web' cover='paperback'> ... </>
+  #   eles[5] # => nil
   #
   # The node at this index is not an \Element, and so is not returned:
   #
-  # eles = d.root.first.first # => <title lang='en'> ... </>
-  # eles.to_a # => ["Everyday Italian"]
-  # eles[1] # => nil
+  #   eles = d.root.first.first # => <title lang='en'> ... </>
+  #   eles.to_a # => ["Everyday Italian"]
+  #   eles[1] # => nil
   #
   # When the single argument +xpath+ is given,
   # returns the first element found via that +xpath+, if any; otherwise, +nil+:
   #
-  # eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles['/bookstore']                    # => <bookstore> ... </>
-  # eles['//book']                        # => <book category='cooking'> ... </>
-  # eles['//book [@category="children"]'] # => <book category='children'> ... </>
-  # eles['/nosuch']                       # => nil
-  # eles['//nosuch']                      # => nil
-  # eles['//book [@category="nosuch"]']   # => nil
-  # eles['.']                             # => <bookstore> ... </>
-  # eles['..'].class                      # => REXML::Document
+  #   eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles['/bookstore']                    # => <bookstore> ... </>
+  #   eles['//book']                        # => <book category='cooking'> ... </>
+  #   eles['//book [@category="children"]'] # => <book category='children'> ... </>
+  #   eles['/nosuch']                       # => nil
+  #   eles['//nosuch']                      # => nil
+  #   eles['//book [@category="nosuch"]']   # => nil
+  #   eles['.']                             # => <bookstore> ... </>
+  #   eles['..'].class                      # => REXML::Document
   #
   # With arguments +n+ and +name+ given,
   # returns the _nth_ found element that has the given +name+,
   # or +nil+ if there is no such _nth_ element:
   #
-  # eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles[1, 'book'] # => <book category='cooking'> ... </>
-  # eles[4, 'book'] # => <book category='web' cover='paperback'> ... </>
-  # eles[5, 'book'] # => nil
+  #   eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles[1, 'book'] # => <book category='cooking'> ... </>
+  #   eles[4, 'book'] # => <book category='web' cover='paperback'> ... </>
+  #   eles[5, 'book'] # => nil
   def [](index, name = T.unsafe(nil)); end
 
   # :call-seq:
-  # elements[] = index, replacement_element -> replacement_element or nil
+  #  elements[] = index, replacement_element -> replacement_element or nil
   #
   # Replaces or adds an element.
   #
   # When <tt>eles[index]</tt> exists, replaces it with +replacement_element+
   # and returns +replacement_element+:
   #
-  # d = REXML::Document.new(xml_string)
-  # eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles[1] # => <book category='cooking'> ... </>
-  # eles[1] = REXML::Element.new('foo')
-  # eles[1] # => <foo/>
+  #   d = REXML::Document.new(xml_string)
+  #   eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles[1] # => <book category='cooking'> ... </>
+  #   eles[1] = REXML::Element.new('foo')
+  #   eles[1] # => <foo/>
   #
   # Does nothing (or raises an exception)
   # if +replacement_element+ is not an \Element:
-  # eles[2] # => <book category='web' cover='paperback'> ... </>
-  # eles[2] = REXML::Text.new('bar')
-  # eles[2] # => <book category='web' cover='paperback'> ... </>
+  #   eles[2] # => <book category='web' cover='paperback'> ... </>
+  #   eles[2] = REXML::Text.new('bar')
+  #   eles[2] # => <book category='web' cover='paperback'> ... </>
   #
   # When <tt>eles[index]</tt> does not exist,
   # adds +replacement_element+ to the element and returns
   #
-  # d = REXML::Document.new(xml_string)
-  # eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
-  # eles.size # => 4
-  # eles[50] = REXML::Element.new('foo') # => <foo/>
-  # eles.size # => 5
-  # eles[5] # => <foo/>
+  #   d = REXML::Document.new(xml_string)
+  #   eles = d.root.elements # => #<REXML::Elements @element=<bookstore> ... </>>
+  #   eles.size # => 4
+  #   eles[50] = REXML::Element.new('foo') # => <foo/>
+  #   eles.size # => 5
+  #   eles[5] # => <foo/>
   #
   # Does nothing (or raises an exception)
   # if +replacement_element+ is not an \Element:
   #
-  # eles[50] = REXML::Text.new('bar') # => "bar"
-  # eles.size # => 5
+  #   eles[50] = REXML::Text.new('bar') # => "bar"
+  #   eles.size # => 5
   def []=(index, element); end
 
   # :call-seq:
-  # add -> new_element
-  # add(name) -> new_element
-  # add(element) -> element
+  #   add -> new_element
+  #   add(name) -> new_element
+  #   add(element) -> element
   #
   # Adds an element; returns the element added.
   #
@@ -2496,16 +2530,16 @@ class REXML::Elements
   #
   # Example:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # parent = elements.parent     # => <bookstore> ... </>
-  # parent.context = {raw: :all}
-  # elements.size                # => 4
-  # new_element = elements.add   # => </>
-  # elements.size                # => 5
-  # new_element.name             # => nil
-  # new_element.parent           # => <bookstore> ... </>
-  # new_element.context          # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   parent = elements.parent     # => <bookstore> ... </>
+  #   parent.context = {raw: :all}
+  #   elements.size                # => 4
+  #   new_element = elements.add   # => </>
+  #   elements.size                # => 5
+  #   new_element.name             # => nil
+  #   new_element.parent           # => <bookstore> ... </>
+  #   new_element.context          # => {:raw=>:all}
   #
   # With string argument +name+, creates and adds a new element.
   # The new element has:
@@ -2516,168 +2550,170 @@ class REXML::Elements
   #
   # Example:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # parent = elements.parent          # => <bookstore> ... </>
-  # parent.context = {raw: :all}
-  # elements.size                     # => 4
-  # new_element = elements.add('foo') # => <foo/>
-  # elements.size                     # => 5
-  # new_element.name                  # => "foo"
-  # new_element.parent                # => <bookstore> ... </>
-  # new_element.context               # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   parent = elements.parent          # => <bookstore> ... </>
+  #   parent.context = {raw: :all}
+  #   elements.size                     # => 4
+  #   new_element = elements.add('foo') # => <foo/>
+  #   elements.size                     # => 5
+  #   new_element.name                  # => "foo"
+  #   new_element.parent                # => <bookstore> ... </>
+  #   new_element.context               # => {:raw=>:all}
   #
   # With argument +element+,
   # creates and adds a clone of the given +element+.
   # The new element has name, parent, and context from the given +element+.
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.size                 # => 4
-  # e0 = REXML::Element.new('foo')
-  # e1 = REXML::Element.new('bar', e0, {raw: :all})
-  # element = elements.add(e1) # => <bar/>
-  # elements.size                 # => 5
-  # element.name                  # => "bar"
-  # element.parent                # => <bookstore> ... </>
-  # element.context               # => {:raw=>:all}
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.size                 # => 4
+  #   e0 = REXML::Element.new('foo')
+  #   e1 = REXML::Element.new('bar', e0, {raw: :all})
+  #   element = elements.add(e1) # => <bar/>
+  #   elements.size                 # => 5
+  #   element.name                  # => "bar"
+  #   element.parent                # => <bookstore> ... </>
+  #   element.context               # => {:raw=>:all}
   def add(element = T.unsafe(nil)); end
 
   # :call-seq:
-  # collect(xpath = nil) {|element| ... } -> array
+  #   collect(xpath = nil) {|element| ... } -> array
   #
   # Iterates over the elements; returns the array of block return values.
   #
   # With no argument, iterates over all elements:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.collect {|element| element.size } # => [9, 9, 17, 9]
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.collect {|element| element.size } # => [9, 9, 17, 9]
   #
   # With argument +xpath+, iterates over elements that match
   # the given +xpath+:
   #
-  # xpath = '//book [@category="web"]'
-  # elements.collect(xpath) {|element| element.size } # => [17, 9]
+  #   xpath = '//book [@category="web"]'
+  #   elements.collect(xpath) {|element| element.size } # => [17, 9]
   def collect(xpath = T.unsafe(nil)); end
 
   # :call-seq:
-  # delete(index) -> removed_element or nil
-  # delete(element) -> removed_element or nil
-  # delete(xpath) -> removed_element or nil
+  #   delete(index) -> removed_element or nil
+  #   delete(element) -> removed_element or nil
+  #   delete(xpath) -> removed_element or nil
   #
   # Removes an element; returns the removed element, or +nil+ if none removed.
   #
   # With integer argument +index+ given,
   # removes the child element at that offset:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.size # => 4
-  # elements[2] # => <book category='children'> ... </>
-  # elements.delete(2) # => <book category='children'> ... </>
-  # elements.size # => 3
-  # elements[2] # => <book category='web'> ... </>
-  # elements.delete(50) # => nil
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.size # => 4
+  #   elements[2] # => <book category='children'> ... </>
+  #   elements.delete(2) # => <book category='children'> ... </>
+  #   elements.size # => 3
+  #   elements[2] # => <book category='web'> ... </>
+  #   elements.delete(50) # => nil
   #
   # With element argument +element+ given,
   # removes that child element:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # ele_1, ele_2, ele_3, ele_4 = *elements
-  # elements.size # => 4
-  # elements[2] # => <book category='children'> ... </>
-  # elements.delete(ele_2) # => <book category='children'> ... </>
-  # elements.size # => 3
-  # elements[2] # => <book category='web'> ... </>
-  # elements.delete(ele_2) # => nil
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   ele_1, ele_2, ele_3, ele_4 = *elements
+  #   elements.size # => 4
+  #   elements[2] # => <book category='children'> ... </>
+  #   elements.delete(ele_2) # => <book category='children'> ... </>
+  #   elements.size # => 3
+  #   elements[2] # => <book category='web'> ... </>
+  #   elements.delete(ele_2) # => nil
   #
   # With string argument +xpath+ given,
   # removes the first element found via that xpath:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.delete('//book') # => <book category='cooking'> ... </>
-  # elements.delete('//book [@category="children"]') # => <book category='children'> ... </>
-  # elements.delete('//nosuch') # => nil
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.delete('//book') # => <book category='cooking'> ... </>
+  #   elements.delete('//book [@category="children"]') # => <book category='children'> ... </>
+  #   elements.delete('//nosuch') # => nil
   def delete(element); end
 
   # :call-seq:
-  # delete_all(xpath)
+  #   delete_all(xpath)
   #
   # Removes all elements found via the given +xpath+;
   # returns the array of removed elements, if any, else +nil+.
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.size # => 4
-  # deleted_elements = elements.delete_all('//book [@category="web"]')
-  # deleted_elements.size # => 2
-  # elements.size # => 2
-  # deleted_elements = elements.delete_all('//book')
-  # deleted_elements.size # => 2
-  # elements.size # => 0
-  # elements.delete_all('//book') # => []
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.size # => 4
+  #   deleted_elements = elements.delete_all('//book [@category="web"]')
+  #   deleted_elements.size # => 2
+  #   elements.size # => 2
+  #   deleted_elements = elements.delete_all('//book')
+  #   deleted_elements.size # => 2
+  #   elements.size # => 0
+  #   elements.delete_all('//book') # => []
   def delete_all(xpath); end
 
   # :call-seq:
-  # each(xpath = nil) {|element| ... } -> self
+  #    each(xpath = nil) {|element| ... } -> self
   #
   # Iterates over the elements.
   #
   # With no argument, calls the block with each element:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.each {|element| p element }
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.each {|element| p element }
   #
   # Output:
   #
-  # <book category='cooking'> ... </>
-  # <book category='children'> ... </>
-  # <book category='web'> ... </>
-  # <book category='web' cover='paperback'> ... </>
+  #   <book category='cooking'> ... </>
+  #   <book category='children'> ... </>
+  #   <book category='web'> ... </>
+  #   <book category='web' cover='paperback'> ... </>
   #
   # With argument +xpath+, calls the block with each element
   # that matches the given +xpath+:
   #
-  # elements.each('//book [@category="web"]') {|element| p element }
+  #   elements.each('//book [@category="web"]') {|element| p element }
   #
   # Output:
   #
-  # <book category='web'> ... </>
-  # <book category='web' cover='paperback'> ... </>
+  #   <book category='web'> ... </>
+  #   <book category='web' cover='paperback'> ... </>
   def each(xpath = T.unsafe(nil)); end
 
   # :call-seq:
-  # empty? -> true or false
+  #   empty? -> true or false
   #
   # Returns +true+ if there are no children, +false+ otherwise.
   #
-  # d = REXML::Document.new('')
-  # d.elements.empty? # => true
-  # d = REXML::Document.new(xml_string)
-  # d.elements.empty? # => false
+  #   d = REXML::Document.new('')
+  #   d.elements.empty? # => true
+  #   d = REXML::Document.new(xml_string)
+  #   d.elements.empty? # => false
+  #
+  # @return [Boolean]
   def empty?; end
 
   # :call-seq:
-  # index(element)
+  #   index(element)
   #
   # Returns the 1-based index of the given +element+, if found;
   # otherwise, returns -1:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # ele_1, ele_2, ele_3, ele_4 = *elements
-  # elements.index(ele_4) # => 4
-  # elements.delete(ele_3)
-  # elements.index(ele_4) # => 3
-  # elements.index(ele_3) # => -1
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   ele_1, ele_2, ele_3, ele_4 = *elements
+  #   elements.index(ele_4) # => 4
+  #   elements.delete(ele_3)
+  #   elements.index(ele_4) # => 3
+  #   elements.index(ele_3) # => -1
   def index(element); end
 
   # :call-seq:
-  # inject(xpath = nil, initial = nil) -> object
+  #   inject(xpath = nil, initial = nil) -> object
   #
   # Calls the block with elements; returns the last block return value.
   #
@@ -2692,30 +2728,30 @@ class REXML::Elements
   # In this example, the block returns the passed element,
   # which is then the object argument to the next call:
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = d.root.elements
-  # elements.inject do |object, element|
-  # p [elements.index(object), elements.index(element)]
-  # element
-  # end
+  #   d = REXML::Document.new(xml_string)
+  #   elements = d.root.elements
+  #   elements.inject do |object, element|
+  #     p [elements.index(object), elements.index(element)]
+  #     element
+  #   end
   #
   # Output:
   #
-  # [1, 2]
-  # [2, 3]
-  # [3, 4]
+  #   [1, 2]
+  #   [2, 3]
+  #   [3, 4]
   #
   # With the single argument +xpath+, calls the block only with
   # elements matching that xpath:
   #
-  # elements.inject('//book [@category="web"]') do |object, element|
-  # p [elements.index(object), elements.index(element)]
-  # element
-  # end
+  #   elements.inject('//book [@category="web"]') do |object, element|
+  #     p [elements.index(object), elements.index(element)]
+  #     element
+  #   end
   #
   # Output:
   #
-  # [3, 4]
+  #  [3, 4]
   #
   # With argument +xpath+ given as +nil+
   # and argument +initial+ also given,
@@ -2728,71 +2764,71 @@ class REXML::Elements
   #
   # In this example, the first object index is <tt>-1</tt>
   #
-  # elements.inject(nil, 'Initial') do |object, element|
-  # p [elements.index(object), elements.index(element)]
-  # element
-  # end
+  #   elements.inject(nil, 'Initial') do |object, element|
+  #     p [elements.index(object), elements.index(element)]
+  #     element
+  #   end
   #
   # Output:
   #
-  # [-1, 1]
-  # [1, 2]
-  # [2, 3]
-  # [3, 4]
+  #   [-1, 1]
+  #   [1, 2]
+  #   [2, 3]
+  #   [3, 4]
   #
   # In this form the passed object can be used as an accumulator:
   #
-  # elements.inject(nil, 0) do |total, element|
-  # total += element.size
-  # end # => 44
+  #   elements.inject(nil, 0) do |total, element|
+  #     total += element.size
+  #   end # => 44
   #
   # With both arguments +xpath+ and +initial+ are given,
   # calls the block only with elements matching that xpath:
   #
-  # elements.inject('//book [@category="web"]', 0) do |total, element|
-  # total += element.size
-  # end # => 26
+  #   elements.inject('//book [@category="web"]', 0) do |total, element|
+  #     total += element.size
+  #   end # => 26
   def inject(xpath = T.unsafe(nil), initial = T.unsafe(nil)); end
 
   # :call-seq:
-  # parent
+  #   parent
   #
   # Returns the parent element cited in creating the \Elements object.
   # This element is also the default starting point for searching
   # in the \Elements object.
   #
-  # d = REXML::Document.new(xml_string)
-  # elements = REXML::Elements.new(d.root)
-  # elements.parent == d.root # => true
+  #   d = REXML::Document.new(xml_string)
+  #   elements = REXML::Elements.new(d.root)
+  #   elements.parent == d.root # => true
   def parent; end
 
   # :call-seq:
-  # size -> integer
+  #   size -> integer
   #
   # Returns the count of \Element children:
   #
-  # d = REXML::Document.new '<a>sean<b/>elliott<b/>russell<b/></a>'
-  # d.root.elements.size # => 3 # Three elements.
-  # d.root.size          # => 6 # Three elements plus three text nodes..
+  #   d = REXML::Document.new '<a>sean<b/>elliott<b/>russell<b/></a>'
+  #   d.root.elements.size # => 3 # Three elements.
+  #   d.root.size          # => 6 # Three elements plus three text nodes..
   def size; end
 
   # :call-seq:
-  # to_a(xpath = nil) -> array_of_elements
+  #   to_a(xpath = nil) -> array_of_elements
   #
   # Returns an array of element children (not including non-element children).
   #
   # With no argument, returns an array of all element children:
   #
-  # d = REXML::Document.new '<a>sean<b/>elliott<c/></a>'
-  # elements = d.root.elements
-  # elements.to_a # => [<b/>, <c/>]               # Omits non-element children.
-  # children = d.root.children
-  # children # => ["sean", <b/>, "elliott", <c/>] # Includes non-element children.
+  #   d = REXML::Document.new '<a>sean<b/>elliott<c/></a>'
+  #   elements = d.root.elements
+  #   elements.to_a # => [<b/>, <c/>]               # Omits non-element children.
+  #   children = d.root.children
+  #   children # => ["sean", <b/>, "elliott", <c/>] # Includes non-element children.
   #
   # With argument +xpath+, returns an array of element children
   # that match the xpath:
   #
-  # elements.to_a('//c') # => [<c/>]
+  #   elements.to_a('//c') # => [<c/>]
   def to_a(xpath = T.unsafe(nil)); end
 
   private
@@ -2826,7 +2862,9 @@ class REXML::Entity < ::REXML::Child
   # is read from a stream.  If you start poking around with the accessors,
   # you can easily create a non-conformant Entity.
   #
-  # e = Entity.new( 'amp', '&' )
+  #  e = Entity.new( 'amp', '&' )
+  #
+  # @return [Entity] a new instance of Entity
   def initialize(stream, value = T.unsafe(nil), parent = T.unsafe(nil), reference = T.unsafe(nil)); end
 
   # Returns the value of attribute external.
@@ -2860,30 +2898,33 @@ class REXML::Entity < ::REXML::Child
   # are processed.  If the value contains internal references (IE,
   # %blah;), those are replaced with their values.  IE, if the doctype
   # contains:
-  # <!ENTITY % foo "bar">
-  # <!ENTITY yada "nanoo %foo; nanoo>
+  #  <!ENTITY % foo "bar">
+  #  <!ENTITY yada "nanoo %foo; nanoo>
   # then:
-  # doctype.entity('yada').value   #-> "nanoo bar nanoo"
+  #  doctype.entity('yada').value   #-> "nanoo bar nanoo"
   def value; end
 
   # Write out a fully formed, correct entity definition (assuming the Entity
   # object itself is valid.)
   #
   # out::
-  # An object implementing <TT>&lt;&lt;</TT> to which the entity will be
-  # output
+  #   An object implementing <TT>&lt;&lt;</TT> to which the entity will be
+  #   output
   # indent::
-  # *DEPRECATED* and ignored
+  #   *DEPRECATED* and ignored
   def write(out, indent = T.unsafe(nil)); end
 
   class << self
     # Evaluates whether the given string matches an entity definition,
     # returning true if so, and false otherwise.
+    #
+    # @return [Boolean]
     def matches?(string); end
   end
 end
 
 class REXML::ExternalEntity < ::REXML::Child
+  # @return [ExternalEntity] a new instance of ExternalEntity
   def initialize(src); end
 
   def to_s; end
@@ -2895,17 +2936,19 @@ class REXML::Formatters::Default
   # set.
   #
   # ie_hack::
-  # If set to true, then inserts whitespace before the close of an empty
-  # tag, so that IE's bad XML parser doesn't choke.
+  #   If set to true, then inserts whitespace before the close of an empty
+  #   tag, so that IE's bad XML parser doesn't choke.
+  #
+  # @return [Default] a new instance of Default
   def initialize(ie_hack = T.unsafe(nil)); end
 
   # Writes the node to some output.
   #
   # node::
-  # The node to write
+  #   The node to write
   # output::
-  # A class implementing <TT>&lt;&lt;</TT>.  Pass in an Output object to
-  # change the output encoding.
+  #   A class implementing <TT>&lt;&lt;</TT>.  Pass in an Output object to
+  #   change the output encoding.
   def write(node, output); end
 
   protected
@@ -2926,15 +2969,17 @@ class REXML::Formatters::Pretty < ::REXML::Formatters::Default
   # Create a new pretty printer.
   #
   # output::
-  # An object implementing '<<(String)', to which the output will be written.
+  #   An object implementing '<<(String)', to which the output will be written.
   # indentation::
-  # An integer greater than 0.  The indentation of each level will be
-  # this number of spaces.  If this is < 1, the behavior of this object
-  # is undefined.  Defaults to 2.
+  #   An integer greater than 0.  The indentation of each level will be
+  #   this number of spaces.  If this is < 1, the behavior of this object
+  #   is undefined.  Defaults to 2.
   # ie_hack::
-  # If true, the printer will insert whitespace before closing empty
-  # tags, thereby allowing Internet Explorer's XML parser to
-  # function. Defaults to false.
+  #   If true, the printer will insert whitespace before closing empty
+  #   tags, thereby allowing Internet Explorer's XML parser to
+  #   function. Defaults to false.
+  #
+  # @return [Pretty] a new instance of Pretty
   def initialize(indentation = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
   # If compact is set to true, then the formatter will attempt to use as
@@ -2969,11 +3014,18 @@ end
 # documentation
 class REXML::IOSource < ::REXML::Source
   # block_size has been deprecated
+  #
+  # @return [IOSource] a new instance of IOSource
   def initialize(arg, block_size = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   def consume(pattern); end
+
+  # @return the current line in the source
   def current_line; end
+
+  # @return [Boolean]
   def empty?; end
+
   def match(pattern, cons = T.unsafe(nil)); end
   def position; end
   def read; end
@@ -2994,9 +3046,15 @@ class REXML::Instruction < ::REXML::Child
   # copied).
   # be a Parent if the target argument is a Source.  Otherwise, this
   # String is set as the content of this instruction.
+  #
+  # @param target can be one of a number of things.  If String, then
+  # @param content Must be either a String, or a Parent.  Can only
+  # @return [Instruction] a new instance of Instruction
   def initialize(target, content = T.unsafe(nil)); end
 
   # of the other matches the target and content of this object.
+  #
+  # @return true if other is an Instruction, and the content and target
   def ==(other); end
 
   def clone; end
@@ -3026,6 +3084,7 @@ class REXML::Instruction < ::REXML::Child
 end
 
 class REXML::NotationDecl < ::REXML::Child
+  # @return [NotationDecl] a new instance of NotationDecl
   def initialize(name, middle, pub, sys); end
 
   # This method retrieves the name of the notation.
@@ -3037,12 +3096,16 @@ class REXML::NotationDecl < ::REXML::Child
   def public; end
 
   # Sets the attribute public
+  #
+  # @param value the value to set the attribute public to.
   def public=(_arg0); end
 
   # Returns the value of attribute system.
   def system; end
 
   # Sets the attribute system
+  #
+  # @param value the value to set the attribute system to.
   def system=(_arg0); end
 
   def to_s; end
@@ -3052,6 +3115,7 @@ end
 class REXML::Output
   include ::REXML::Encoding
 
+  # @return [Output] a new instance of Output
   def initialize(real_IO, encd = T.unsafe(nil)); end
 
   def <<(content); end
@@ -3069,14 +3133,24 @@ class REXML::Parent < ::REXML::Child
   include ::Enumerable
 
   # Constructor
+  #
+  # @param parent if supplied, will be set as the parent of this object
+  # @return [Parent] a new instance of Parent
   def initialize(parent = T.unsafe(nil)); end
 
   def <<(object); end
 
   # Fetches a child at a given index
+  #
+  # @param index the Integer index of the child to fetch
   def [](index); end
 
   # Set an index entry.  See Array.[]=
+  #
+  # @param index the index of the element to set
+  # @param opt either the object to set, or an Integer length
+  # @param child if opt is an Integer, this is the child to set
+  # @return the parent (self)
   def []=(*args); end
 
   def add(object); end
@@ -3095,34 +3169,55 @@ class REXML::Parent < ::REXML::Child
 
   # Fetches the index of a given child
   # of this parent.
+  #
+  # @param child the child to get the index of
+  # @return the index of the child, or nil if the object is not a child
   def index(child); end
 
   # Inserts an child after another child
   # child2 will be inserted after child1 in the child list of the parent.
   # If an xpath, child2 will be inserted after the first child to match
   # the xpath.
+  #
+  # @param child1 this is either an xpath or an Element.  If an Element,
+  # @param child2 the child to insert
+  # @return the parent (self)
   def insert_after(child1, child2); end
 
   # Inserts an child before another child
   # child2 will be inserted before child1 in the child list of the parent.
   # If an xpath, child2 will be inserted before the first child to match
   # the xpath.
+  #
+  # @param child1 this is either an xpath or an Element.  If an Element,
+  # @param child2 the child to insert
+  # @return the parent (self)
   def insert_before(child1, child2); end
 
+  # @return the number of children of this parent
   def length; end
+
+  # @return [Boolean]
   def parent?; end
+
   def push(object); end
 
   # Replaces one child with another, making sure the nodelist is correct
   # Child)
+  #
+  # @param to_replace the child to replace (must be a Child)
+  # @param replacement the child to insert into the nodelist (must be a
   def replace_child(to_replace, replacement); end
 
+  # @return the number of children of this parent
   def size; end
+
   def to_a; end
   def unshift(object); end
 end
 
 class REXML::ParseException < ::RuntimeError
+  # @return [ParseException] a new instance of ParseException
   def initialize(message, source = T.unsafe(nil), parser = T.unsafe(nil), exception = T.unsafe(nil)); end
 
   def context; end
@@ -3131,6 +3226,8 @@ class REXML::ParseException < ::RuntimeError
   def continued_exception; end
 
   # Sets the attribute continued_exception
+  #
+  # @param value the value to set the attribute continued_exception to.
   def continued_exception=(_arg0); end
 
   def line; end
@@ -3139,6 +3236,8 @@ class REXML::ParseException < ::RuntimeError
   def parser; end
 
   # Sets the attribute parser
+  #
+  # @param value the value to set the attribute parser to.
   def parser=(_arg0); end
 
   def position; end
@@ -3147,6 +3246,8 @@ class REXML::ParseException < ::RuntimeError
   def source; end
 
   # Sets the attribute source
+  #
+  # @param value the value to set the attribute source to.
   def source=(_arg0); end
 
   def to_s; end
@@ -3154,34 +3255,39 @@ end
 
 # = Using the Pull Parser
 # <em>This API is experimental, and subject to change.</em>
-# parser = PullParser.new( "<a>text<b att='val'/>txet</a>" )
-# while parser.has_next?
-# res = parser.next
-# puts res[1]['att'] if res.start_tag? and res[0] == 'b'
-# end
+#  parser = PullParser.new( "<a>text<b att='val'/>txet</a>" )
+#  while parser.has_next?
+#    res = parser.next
+#    puts res[1]['att'] if res.start_tag? and res[0] == 'b'
+#  end
 # See the PullEvent class for information on the content of the results.
 # The data is identical to the arguments passed for the various events to
 # the StreamListener API.
 #
 # Notice that:
-# parser = PullParser.new( "<a>BAD DOCUMENT" )
-# while parser.has_next?
-# res = parser.next
-# raise res[1] if res.error?
-# end
+#  parser = PullParser.new( "<a>BAD DOCUMENT" )
+#  while parser.has_next?
+#    res = parser.next
+#    raise res[1] if res.error?
+#  end
 #
 # Nat Price gave me some good ideas for the API.
 class REXML::Parsers::BaseParser
+  # @return [BaseParser] a new instance of BaseParser
   def initialize(source); end
 
   def add_listener(listener); end
 
   # Returns true if there are no more events
+  #
+  # @return [Boolean]
   def empty?; end
 
   def entity(reference, entities); end
 
   # Returns true if there are more events.  Synonymous with !empty?
+  #
+  # @return [Boolean]
   def has_next?; end
 
   # Escapes all possible entities
@@ -3214,7 +3320,9 @@ class REXML::Parsers::BaseParser
 
   private
 
+  # @return [Boolean]
   def need_source_encoding_update?(xml_declaration_encoding); end
+
   def parse_attributes(prefixes, curr_ns); end
   def parse_id(base_error_message, accept_external_id:, accept_public_id:); end
   def parse_id_invalid_details(accept_external_id:, accept_public_id:); end
@@ -3230,6 +3338,7 @@ REXML::Parsers::BaseParser::QNAME = T.let(T.unsafe(nil), Regexp)
 REXML::Parsers::BaseParser::QNAME_STR = T.let(T.unsafe(nil), String)
 
 class REXML::Parsers::StreamParser
+  # @return [StreamParser] a new instance of StreamParser
   def initialize(source, listener); end
 
   def add_listener(listener); end
@@ -3237,6 +3346,7 @@ class REXML::Parsers::StreamParser
 end
 
 class REXML::Parsers::TreeParser
+  # @return [TreeParser] a new instance of TreeParser
   def initialize(source, build_context = T.unsafe(nil)); end
 
   def add_listener(listener); end
@@ -3279,9 +3389,9 @@ class REXML::Parsers::XPathParser
   def FunctionCall(rest, parsed); end
 
   # LocationPath
-  # | RelativeLocationPath
-  # | '/' RelativeLocationPath?
-  # | '//' RelativeLocationPath
+  #  | RelativeLocationPath
+  #  | '/' RelativeLocationPath?
+  #  | '//' RelativeLocationPath
   def LocationPath(path, parsed); end
 
   # | MultiplicativeExpr ('*' | S ('div' | 'mod') S) UnaryExpr
@@ -3327,17 +3437,18 @@ REXML::Parsers::XPathParser::LOCAL_NAME_WILDCARD = T.let(T.unsafe(nil), Regexp)
 
 # Returns a 1-1 map of the nodeset
 # The contents of the resulting array are either:
-# true/false, if a positive match
-# String, if a name match
+#   true/false, if a positive match
+#   String, if a name match
 # NodeTest
-# | ('*' | NCNAME ':' '*' | QNAME)                NameTest
-# | '*' ':' NCNAME                                NameTest since XPath 2.0
-# | NODE_TYPE '(' ')'                             NodeType
-# | PI '(' LITERAL ')'                            PI
-# | '[' expr ']'                                Predicate
+#  | ('*' | NCNAME ':' '*' | QNAME)                NameTest
+#  | '*' ':' NCNAME                                NameTest since XPath 2.0
+#  | NODE_TYPE '(' ')'                             NodeType
+#  | PI '(' LITERAL ')'                            PI
+#    | '[' expr ']'                                Predicate
 REXML::Parsers::XPathParser::PREFIX_WILDCARD = T.let(T.unsafe(nil), Regexp)
 
 class REXML::ReferenceWriter
+  # @return [ReferenceWriter] a new instance of ReferenceWriter
   def initialize(id_type, public_id_literal, system_literal, context = T.unsafe(nil)); end
 
   def write(output); end
@@ -3350,13 +3461,21 @@ class REXML::Source
 
   # Constructor
   # value, overriding all encoding detection
+  #
+  # @param arg must be a String, and should be a valid XML document
+  # @param encoding if non-null, sets the encoding of the source to this
+  # @return [Source] a new instance of Source
   def initialize(arg, encoding = T.unsafe(nil)); end
 
   # The current buffer (what we're going to read next)
   def buffer; end
 
   def consume(pattern); end
+
+  # @return the current line in the source
   def current_line; end
+
+  # @return [Boolean] true if the Source is exhausted
   def empty?; end
 
   # Returns the value of attribute encoding.
@@ -3388,6 +3507,10 @@ class REXML::Source
   # set.
   # everything after it in the Source.
   # pattern is not found.
+  #
+  # @param pattern must be a Regexp, and must be in the form of
+  # @param consume if true, the pattern returned will be consumed, leaving
+  # @return the pattern, if found, or nil if the Source is empty or the
   def scan(pattern, cons = T.unsafe(nil)); end
 
   private
@@ -3420,22 +3543,24 @@ class REXML::Text < ::REXML::Child
   # value for the parent, and no value is supplied, the default is false.
   # Use this field if you have entities defined for some text, and you don't
   # want REXML to escape that text in output.
-  # Text.new( "<&", false, nil, false ) #-> "&lt;&amp;"
-  # Text.new( "&lt;&amp;", false, nil, false ) #-> "&amp;lt;&amp;amp;"
-  # Text.new( "<&", false, nil, true )  #-> Parse exception
-  # Text.new( "&lt;&amp;", false, nil, true )  #-> "&lt;&amp;"
-  # # Assume that the entity "s" is defined to be "sean"
-  # # and that the entity    "r" is defined to be "russell"
-  # Text.new( "sean russell" )          #-> "&s; &r;"
-  # Text.new( "sean russell", false, nil, true ) #-> "sean russell"
+  #   Text.new( "<&", false, nil, false ) #-> "&lt;&amp;"
+  #   Text.new( "&lt;&amp;", false, nil, false ) #-> "&amp;lt;&amp;amp;"
+  #   Text.new( "<&", false, nil, true )  #-> Parse exception
+  #   Text.new( "&lt;&amp;", false, nil, true )  #-> "&lt;&amp;"
+  #   # Assume that the entity "s" is defined to be "sean"
+  #   # and that the entity    "r" is defined to be "russell"
+  #   Text.new( "sean russell" )          #-> "&s; &r;"
+  #   Text.new( "sean russell", false, nil, true ) #-> "sean russell"
   #
   # +entity_filter+ (nil) This can be an array of entities to match in the
   # supplied text.  This argument is only useful if +raw+ is set to false.
-  # Text.new( "sean russell", false, nil, false, ["s"] ) #-> "&s; russell"
-  # Text.new( "sean russell", false, nil, true, ["s"] ) #-> "sean russell"
+  #   Text.new( "sean russell", false, nil, false, ["s"] ) #-> "&s; russell"
+  #   Text.new( "sean russell", false, nil, true, ["s"] ) #-> "sean russell"
   # In the last example, the +entity_filter+ argument is ignored.
   #
   # +illegal+ INTERNAL USE ONLY
+  #
+  # @return [Text] a new instance of Text
   def initialize(arg, respect_whitespace = T.unsafe(nil), parent = T.unsafe(nil), raw = T.unsafe(nil), entity_filter = T.unsafe(nil), illegal = T.unsafe(nil)); end
 
   # Appends text to this text node.  The text is appended in the +raw+ mode
@@ -3451,7 +3576,10 @@ class REXML::Text < ::REXML::Child
 
   def clone; end
   def doctype; end
+
+  # @return [Boolean]
   def empty?; end
+
   def indent_text(string, level = T.unsafe(nil), style = T.unsafe(nil), indentfirstline = T.unsafe(nil)); end
   def inspect; end
   def node_type; end
@@ -3468,14 +3596,14 @@ class REXML::Text < ::REXML::Child
   # entities that can be escaped, have been inserted.  This method respects
   # the entity filter set in the constructor.
   #
-  # # Assume that the entity "s" is defined to be "sean", and that the
-  # # entity "r" is defined to be "russell"
-  # t = Text.new( "< & sean russell", false, nil, false, ['s'] )
-  # t.to_s   #-> "&lt; &amp; &s; russell"
-  # t = Text.new( "< & &s; russell", false, nil, false )
-  # t.to_s   #-> "&lt; &amp; &s; russell"
-  # u = Text.new( "sean russell", false, nil, true )
-  # u.to_s   #-> "sean russell"
+  #   # Assume that the entity "s" is defined to be "sean", and that the
+  #   # entity "r" is defined to be "russell"
+  #   t = Text.new( "< & sean russell", false, nil, false, ['s'] )
+  #   t.to_s   #-> "&lt; &amp; &s; russell"
+  #   t = Text.new( "< & &s; russell", false, nil, false )
+  #   t.to_s   #-> "&lt; &amp; &s; russell"
+  #   u = Text.new( "sean russell", false, nil, true )
+  #   u.to_s   #-> "sean russell"
   def to_s; end
 
   # Returns the string value of this text.  This is the text without
@@ -3483,23 +3611,23 @@ class REXML::Text < ::REXML::Child
   # console.  This ignores the 'raw' attribute setting, and any
   # entity_filter.
   #
-  # # Assume that the entity "s" is defined to be "sean", and that the
-  # # entity "r" is defined to be "russell"
-  # t = Text.new( "< & sean russell", false, nil, false, ['s'] )
-  # t.value   #-> "< & sean russell"
-  # t = Text.new( "< & &s; russell", false, nil, false )
-  # t.value   #-> "< & sean russell"
-  # u = Text.new( "sean russell", false, nil, true )
-  # u.value   #-> "sean russell"
+  #   # Assume that the entity "s" is defined to be "sean", and that the
+  #   # entity "r" is defined to be "russell"
+  #   t = Text.new( "< & sean russell", false, nil, false, ['s'] )
+  #   t.value   #-> "< & sean russell"
+  #   t = Text.new( "< & &s; russell", false, nil, false )
+  #   t.value   #-> "< & sean russell"
+  #   u = Text.new( "sean russell", false, nil, true )
+  #   u.value   #-> "sean russell"
   def value; end
 
   # Sets the contents of this text node.  This expects the text to be
   # unnormalized.  It returns self.
   #
-  # e = Element.new( "a" )
-  # e.add_text( "foo" )   # <a>foo</a>
-  # e[0].value = "bar"    # <a>bar</a>
-  # e[0].value = "<a>"    # <a>&lt;a&gt;</a>
+  #   e = Element.new( "a" )
+  #   e.add_text( "foo" )   # <a>foo</a>
+  #   e[0].value = "bar"    # <a>bar</a>
+  #   e[0].value = "<a>"    # <a>&lt;a&gt;</a>
   def value=(val); end
 
   def wrap(string, width, addnewline = T.unsafe(nil)); end
@@ -3512,16 +3640,16 @@ class REXML::Text < ::REXML::Child
   # +out+ A String, IO, or any other object supporting <<( String )
   # +input+ the text to substitute and the write out
   #
-  # z=utf8.unpack("U*")
-  # ascOut=""
-  # z.each{|r|
-  # if r <  0x100
-  # ascOut.concat(r.chr)
-  # else
-  # ascOut.concat(sprintf("&#x%x;", r))
-  # end
-  # }
-  # puts ascOut
+  #   z=utf8.unpack("U*")
+  #   ascOut=""
+  #   z.each{|r|
+  #     if r <  0x100
+  #       ascOut.concat(r.chr)
+  #     else
+  #       ascOut.concat(sprintf("&#x%x;", r))
+  #     end
+  #   }
+  #   puts ascOut
   def write_with_substitution(out, input); end
 
   # FIXME
@@ -3550,10 +3678,12 @@ class REXML::Text < ::REXML::Child
 end
 
 class REXML::UndefinedNamespaceException < ::REXML::ParseException
+  # @return [UndefinedNamespaceException] a new instance of UndefinedNamespaceException
   def initialize(prefix, source, parser); end
 end
 
 class REXML::Validation::ValidationException < ::RuntimeError
+  # @return [ValidationException] a new instance of ValidationException
   def initialize(msg); end
 end
 
@@ -3561,6 +3691,7 @@ end
 class REXML::XMLDecl < ::REXML::Child
   include ::REXML::Encoding
 
+  # @return [XMLDecl] a new instance of XMLDecl
   def initialize(version = T.unsafe(nil), encoding = T.unsafe(nil), standalone = T.unsafe(nil)); end
 
   def ==(other); end
@@ -3579,20 +3710,24 @@ class REXML::XMLDecl < ::REXML::Child
   def standalone; end
 
   # Sets the attribute standalone
+  #
+  # @param value the value to set the attribute standalone to.
   def standalone=(_arg0); end
 
   # Returns the value of attribute version.
   def version; end
 
   # Sets the attribute version
+  #
+  # @param value the value to set the attribute version to.
   def version=(_arg0); end
 
   # indent::
-  # Ignored.  There must be no whitespace before an XML declaration
+  #   Ignored.  There must be no whitespace before an XML declaration
   # transitive::
-  # Ignored
+  #   Ignored
   # ie_hack::
-  # Ignored
+  #   Ignored
   def write(writer, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
   # Returns the value of attribute writeencoding.
@@ -3617,7 +3752,9 @@ class REXML::XMLDecl < ::REXML::Child
   end
 end
 
+# @private
 class REXML::XPathNode
+  # @return [XPathNode] a new instance of XPathNode
   def initialize(node, context = T.unsafe(nil)); end
 
   # Returns the value of attribute context.
@@ -3636,6 +3773,7 @@ end
 class REXML::XPathParser
   include ::REXML::XMLTokens
 
+  # @return [XPathParser] a new instance of XPathParser
   def initialize(strict: T.unsafe(nil)); end
 
   def []=(variable_name, value); end
@@ -3675,8 +3813,8 @@ class REXML::XPathParser
   # Returns a String namespace for a node, given a prefix
   # The rules are:
   #
-  # 1. Use the supplied namespace mapping first.
-  # 2. If no mapping was supplied, use the context node to look up the namespace
+  #  1. Use the supplied namespace mapping first.
+  #  2. If no mapping was supplied, use the context node to look up the namespace
   def get_namespace(node, prefix); end
 
   def leave(tag, *args); end
@@ -3704,7 +3842,10 @@ class REXML::XPathParser
   def sort(array_of_nodes, order); end
 
   def step(path_stack, any_type: T.unsafe(nil), order: T.unsafe(nil)); end
+
+  # @return [Boolean]
   def strict?; end
+
   def trace(*args); end
   def unnode(nodeset); end
   def value_type(value); end

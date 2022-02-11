@@ -21,18 +21,32 @@ end
 class ActiveModel::Attribute
   # This method should not be called directly.
   # Use #from_database or #from_user
+  #
+  # @return [Attribute] a new instance of Attribute
   def initialize(name, value_before_type_cast, type, original_attribute = T.unsafe(nil), value = T.unsafe(nil)); end
 
   def ==(other); end
+
+  # @return [Boolean]
   def came_from_user?; end
+
+  # @return [Boolean]
   def changed?; end
+
+  # @return [Boolean]
   def changed_in_place?; end
+
   def encode_with(coder); end
   def eql?(other); end
   def forgetting_assignment; end
+
+  # @return [Boolean]
   def has_been_read?; end
+
   def hash; end
   def init_with(coder); end
+
+  # @return [Boolean]
   def initialized?; end
 
   # Returns the value of attribute name.
@@ -44,7 +58,9 @@ class ActiveModel::Attribute
   # Returns the value of attribute type.
   def type; end
 
+  # @raise [NotImplementedError]
   def type_cast(*_arg0); end
+
   def value; end
 
   # Returns the value of attribute value_before_type_cast.
@@ -63,7 +79,9 @@ class ActiveModel::Attribute
   # Returns the value of attribute original_attribute.
   def assigned?; end
 
+  # @return [Boolean]
   def changed_from_assignment?; end
+
   def initialize_dup(other); end
 
   # Returns the value of attribute original_attribute.
@@ -87,25 +105,39 @@ class ActiveModel::Attribute::FromDatabase < ::ActiveModel::Attribute
 end
 
 class ActiveModel::Attribute::FromUser < ::ActiveModel::Attribute
+  # @return [Boolean]
   def came_from_user?; end
+
   def type_cast(value); end
 end
 
 class ActiveModel::Attribute::Null < ::ActiveModel::Attribute
+  # @return [Null] a new instance of Null
   def initialize(name); end
 
   def type_cast(*_arg0); end
+
+  # @raise [ActiveModel::MissingAttributeError]
   def with_cast_value(value); end
+
   def with_type(type); end
+
+  # @raise [ActiveModel::MissingAttributeError]
   def with_value_from_database(value); end
+
+  # @raise [ActiveModel::MissingAttributeError]
   def with_value_from_user(value); end
 end
 
 class ActiveModel::Attribute::Uninitialized < ::ActiveModel::Attribute
+  # @return [Uninitialized] a new instance of Uninitialized
   def initialize(name, type); end
 
   def forgetting_assignment; end
+
+  # @return [Boolean]
   def initialized?; end
+
   def original_value; end
   def value; end
   def value_for_database; end
@@ -115,6 +147,7 @@ end
 ActiveModel::Attribute::Uninitialized::UNINITIALIZED_ORIGINAL_VALUE = T.let(T.unsafe(nil), Object)
 
 class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute::FromUser
+  # @return [UserProvidedDefault] a new instance of UserProvidedDefault
   def initialize(name, value, type, database_default); end
 
   def marshal_dump; end
@@ -129,7 +162,9 @@ class ActiveModel::Attribute::UserProvidedDefault < ::ActiveModel::Attribute::Fr
 end
 
 class ActiveModel::Attribute::WithCastValue < ::ActiveModel::Attribute
+  # @return [Boolean]
   def changed_in_place?; end
+
   def type_cast(value); end
 end
 
@@ -143,18 +178,18 @@ module ActiveModel::AttributeAssignment
   # of this method is +false+ an <tt>ActiveModel::ForbiddenAttributesError</tt>
   # exception is raised.
   #
-  # class Cat
-  # include ActiveModel::AttributeAssignment
-  # attr_accessor :name, :status
-  # end
+  #   class Cat
+  #     include ActiveModel::AttributeAssignment
+  #     attr_accessor :name, :status
+  #   end
   #
-  # cat = Cat.new
-  # cat.assign_attributes(name: "Gorby", status: "yawning")
-  # cat.name # => 'Gorby'
-  # cat.status # => 'yawning'
-  # cat.assign_attributes(status: "sleeping")
-  # cat.name # => 'Gorby'
-  # cat.status # => 'sleeping'
+  #   cat = Cat.new
+  #   cat.assign_attributes(name: "Gorby", status: "yawning")
+  #   cat.name # => 'Gorby'
+  #   cat.status # => 'yawning'
+  #   cat.assign_attributes(status: "sleeping")
+  #   cat.name # => 'Gorby'
+  #   cat.status # => 'sleeping'
   def assign_attributes(new_attributes); end
 
   # Allows you to set all the attributes by passing in a hash of attributes with
@@ -164,18 +199,18 @@ module ActiveModel::AttributeAssignment
   # of this method is +false+ an <tt>ActiveModel::ForbiddenAttributesError</tt>
   # exception is raised.
   #
-  # class Cat
-  # include ActiveModel::AttributeAssignment
-  # attr_accessor :name, :status
-  # end
+  #   class Cat
+  #     include ActiveModel::AttributeAssignment
+  #     attr_accessor :name, :status
+  #   end
   #
-  # cat = Cat.new
-  # cat.assign_attributes(name: "Gorby", status: "yawning")
-  # cat.name # => 'Gorby'
-  # cat.status # => 'yawning'
-  # cat.assign_attributes(status: "sleeping")
-  # cat.name # => 'Gorby'
-  # cat.status # => 'sleeping'
+  #   cat = Cat.new
+  #   cat.assign_attributes(name: "Gorby", status: "yawning")
+  #   cat.name # => 'Gorby'
+  #   cat.status # => 'yawning'
+  #   cat.assign_attributes(status: "sleeping")
+  #   cat.name # => 'Gorby'
+  #   cat.status # => 'sleeping'
   def attributes=(new_attributes); end
 
   private
@@ -194,43 +229,43 @@ end
 #
 # * <tt>include ActiveModel::AttributeMethods</tt> in your class.
 # * Call each of its methods you want to add, such as +attribute_method_suffix+
-# or +attribute_method_prefix+.
+#   or +attribute_method_prefix+.
 # * Call +define_attribute_methods+ after the other methods are called.
 # * Define the various generic +_attribute+ methods that you have declared.
 # * Define an +attributes+ method which returns a hash with each
-# attribute name in your model as hash key and the attribute value as hash value.
-# Hash keys must be strings.
+#   attribute name in your model as hash key and the attribute value as hash value.
+#   Hash keys must be strings.
 #
 # A minimal implementation could be:
 #
-# class Person
-# include ActiveModel::AttributeMethods
+#   class Person
+#     include ActiveModel::AttributeMethods
 #
-# attribute_method_affix  prefix: 'reset_', suffix: '_to_default!'
-# attribute_method_suffix '_contrived?'
-# attribute_method_prefix 'clear_'
-# define_attribute_methods :name
+#     attribute_method_affix  prefix: 'reset_', suffix: '_to_default!'
+#     attribute_method_suffix '_contrived?'
+#     attribute_method_prefix 'clear_'
+#     define_attribute_methods :name
 #
-# attr_accessor :name
+#     attr_accessor :name
 #
-# def attributes
-# { 'name' => @name }
-# end
+#     def attributes
+#       { 'name' => @name }
+#     end
 #
-# private
+#     private
 #
-# def attribute_contrived?(attr)
-# true
-# end
+#     def attribute_contrived?(attr)
+#       true
+#     end
 #
-# def clear_attribute(attr)
-# send("#{attr}=", nil)
-# end
+#     def clear_attribute(attr)
+#       send("#{attr}=", nil)
+#     end
 #
-# def reset_attribute_to_default!(attr)
-# send("#{attr}=", 'Default Name')
-# end
-# end
+#     def reset_attribute_to_default!(attr)
+#       send("#{attr}=", 'Default Name')
+#     end
+#   end
 module ActiveModel::AttributeMethods
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -254,8 +289,9 @@ module ActiveModel::AttributeMethods
   # It's also possible to instantiate related objects, so a <tt>Client</tt>
   # class belonging to the +clients+ table with a +master_id+ foreign key
   # can instantiate master through <tt>Client#master</tt>.
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
 
+  # @return [Boolean]
   def respond_to?(method, include_private_methods = T.unsafe(nil)); end
 
   # A +Person+ instance with a +name+ attribute can ask
@@ -266,12 +302,15 @@ module ActiveModel::AttributeMethods
   private
 
   def _read_attribute(attr); end
+
+  # @return [Boolean]
   def attribute_method?(attr_name); end
 
   # Returns a struct representing the matching attribute method.
   # The struct's attributes are prefix, base and suffix.
   def matched_attribute_method(method_name); end
 
+  # @raise [ActiveModel::MissingAttributeError]
   def missing_attribute(attr_name, stack); end
 
   module GeneratedClassMethods
@@ -321,132 +360,134 @@ ActiveModel::AttributeMethods::CALL_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Reg
 module ActiveModel::AttributeMethods::ClassMethods
   # Allows you to make aliases for attributes.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_suffix '_short?'
-  # define_attribute_methods :name
+  #     attr_accessor :name
+  #     attribute_method_suffix '_short?'
+  #     define_attribute_methods :name
   #
-  # alias_attribute :nickname, :name
+  #     alias_attribute :nickname, :name
   #
-  # private
+  #     private
   #
-  # def attribute_short?(attr)
-  # send(attr).length < 5
-  # end
-  # end
+  #     def attribute_short?(attr)
+  #       send(attr).length < 5
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'Bob'
-  # person.name            # => "Bob"
-  # person.nickname        # => "Bob"
-  # person.name_short?     # => true
-  # person.nickname_short? # => true
+  #   person = Person.new
+  #   person.name = 'Bob'
+  #   person.name            # => "Bob"
+  #   person.nickname        # => "Bob"
+  #   person.name_short?     # => true
+  #   person.nickname_short? # => true
   def alias_attribute(new_name, old_name); end
 
   # Returns the original name for the alias +name+
   def attribute_alias(name); end
 
   # Is +new_name+ an alias?
+  #
+  # @return [Boolean]
   def attribute_alias?(new_name); end
 
   # Declares a method available for all attributes with the given prefix
   # and suffix. Uses +method_missing+ and <tt>respond_to?</tt> to rewrite
   # the method.
   #
-  # #{prefix}#{attr}#{suffix}(*args, &block)
+  #   #{prefix}#{attr}#{suffix}(*args, &block)
   #
   # to
   #
-  # #{prefix}attribute#{suffix}(#{attr}, *args, &block)
+  #   #{prefix}attribute#{suffix}(#{attr}, *args, &block)
   #
   # An <tt>#{prefix}attribute#{suffix}</tt> instance method must exist and
   # accept at least the +attr+ argument.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_affix prefix: 'reset_', suffix: '_to_default!'
-  # define_attribute_methods :name
+  #     attr_accessor :name
+  #     attribute_method_affix prefix: 'reset_', suffix: '_to_default!'
+  #     define_attribute_methods :name
   #
-  # private
+  #     private
   #
-  # def reset_attribute_to_default!(attr)
-  # send("#{attr}=", 'Default Name')
-  # end
-  # end
+  #     def reset_attribute_to_default!(attr)
+  #       send("#{attr}=", 'Default Name')
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name                         # => 'Gem'
-  # person.reset_name_to_default!
-  # person.name                         # => 'Default Name'
+  #   person = Person.new
+  #   person.name                         # => 'Gem'
+  #   person.reset_name_to_default!
+  #   person.name                         # => 'Default Name'
   def attribute_method_affix(*affixes); end
 
   # Declares a method available for all attributes with the given prefix.
   # Uses +method_missing+ and <tt>respond_to?</tt> to rewrite the method.
   #
-  # #{prefix}#{attr}(*args, &block)
+  #   #{prefix}#{attr}(*args, &block)
   #
   # to
   #
-  # #{prefix}attribute(#{attr}, *args, &block)
+  #   #{prefix}attribute(#{attr}, *args, &block)
   #
   # An instance method <tt>#{prefix}attribute</tt> must exist and accept
   # at least the +attr+ argument.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_prefix 'clear_'
-  # define_attribute_methods :name
+  #     attr_accessor :name
+  #     attribute_method_prefix 'clear_'
+  #     define_attribute_methods :name
   #
-  # private
+  #     private
   #
-  # def clear_attribute(attr)
-  # send("#{attr}=", nil)
-  # end
-  # end
+  #     def clear_attribute(attr)
+  #       send("#{attr}=", nil)
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'Bob'
-  # person.name          # => "Bob"
-  # person.clear_name
-  # person.name          # => nil
+  #   person = Person.new
+  #   person.name = 'Bob'
+  #   person.name          # => "Bob"
+  #   person.clear_name
+  #   person.name          # => nil
   def attribute_method_prefix(*prefixes); end
 
   # Declares a method available for all attributes with the given suffix.
   # Uses +method_missing+ and <tt>respond_to?</tt> to rewrite the method.
   #
-  # #{attr}#{suffix}(*args, &block)
+  #   #{attr}#{suffix}(*args, &block)
   #
   # to
   #
-  # attribute#{suffix}(#{attr}, *args, &block)
+  #   attribute#{suffix}(#{attr}, *args, &block)
   #
   # An <tt>attribute#{suffix}</tt> instance method must exist and accept at
   # least the +attr+ argument.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_suffix '_short?'
-  # define_attribute_methods :name
+  #     attr_accessor :name
+  #     attribute_method_suffix '_short?'
+  #     define_attribute_methods :name
   #
-  # private
+  #     private
   #
-  # def attribute_short?(attr)
-  # send(attr).length < 5
-  # end
-  # end
+  #     def attribute_short?(attr)
+  #       send(attr).length < 5
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'Bob'
-  # person.name          # => "Bob"
-  # person.name_short?   # => true
+  #   person = Person.new
+  #   person.name = 'Bob'
+  #   person.name          # => "Bob"
+  #   person.name_short?   # => true
   def attribute_method_suffix(*suffixes); end
 
   # Declares an attribute that should be prefixed and suffixed by
@@ -456,28 +497,28 @@ module ActiveModel::AttributeMethods::ClassMethods
   # +define_attribute_method+ after you define any prefix, suffix or affix
   # method, or they will not hook in.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_suffix '_short?'
+  #     attr_accessor :name
+  #     attribute_method_suffix '_short?'
   #
-  # # Call to define_attribute_method must appear after the
-  # # attribute_method_prefix, attribute_method_suffix or
-  # # attribute_method_affix declarations.
-  # define_attribute_method :name
+  #     # Call to define_attribute_method must appear after the
+  #     # attribute_method_prefix, attribute_method_suffix or
+  #     # attribute_method_affix declarations.
+  #     define_attribute_method :name
   #
-  # private
+  #     private
   #
-  # def attribute_short?(attr)
-  # send(attr).length < 5
-  # end
-  # end
+  #     def attribute_short?(attr)
+  #       send(attr).length < 5
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'Bob'
-  # person.name        # => "Bob"
-  # person.name_short? # => true
+  #   person = Person.new
+  #   person.name = 'Bob'
+  #   person.name        # => "Bob"
+  #   person.name_short? # => true
   def define_attribute_method(attr_name, _owner: T.unsafe(nil)); end
 
   # Declares the attributes that should be prefixed and suffixed by
@@ -487,48 +528,48 @@ module ActiveModel::AttributeMethods::ClassMethods
   # +define_attribute_methods+ after you define any prefix, suffix or affix
   # methods, or they will not hook in.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name, :age, :address
-  # attribute_method_prefix 'clear_'
+  #     attr_accessor :name, :age, :address
+  #     attribute_method_prefix 'clear_'
   #
-  # # Call to define_attribute_methods must appear after the
-  # # attribute_method_prefix, attribute_method_suffix or
-  # # attribute_method_affix declarations.
-  # define_attribute_methods :name, :age, :address
+  #     # Call to define_attribute_methods must appear after the
+  #     # attribute_method_prefix, attribute_method_suffix or
+  #     # attribute_method_affix declarations.
+  #     define_attribute_methods :name, :age, :address
   #
-  # private
+  #     private
   #
-  # def clear_attribute(attr)
-  # send("#{attr}=", nil)
-  # end
-  # end
+  #     def clear_attribute(attr)
+  #       send("#{attr}=", nil)
+  #     end
+  #   end
   def define_attribute_methods(*attr_names); end
 
   # Removes all the previously dynamically defined methods from the class.
   #
-  # class Person
-  # include ActiveModel::AttributeMethods
+  #   class Person
+  #     include ActiveModel::AttributeMethods
   #
-  # attr_accessor :name
-  # attribute_method_suffix '_short?'
-  # define_attribute_method :name
+  #     attr_accessor :name
+  #     attribute_method_suffix '_short?'
+  #     define_attribute_method :name
   #
-  # private
+  #     private
   #
-  # def attribute_short?(attr)
-  # send(attr).length < 5
-  # end
-  # end
+  #     def attribute_short?(attr)
+  #       send(attr).length < 5
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'Bob'
-  # person.name_short? # => true
+  #   person = Person.new
+  #   person.name = 'Bob'
+  #   person.name_short? # => true
   #
-  # Person.undefine_attribute_methods
+  #   Person.undefine_attribute_methods
   #
-  # person.name_short? # => NoMethodError
+  #   person.name_short? # => NoMethodError
   def undefine_attribute_methods; end
 
   private
@@ -552,10 +593,13 @@ module ActiveModel::AttributeMethods::ClassMethods
   def define_proxy_call(include_private, code_generator, name, target, *extra); end
 
   def generated_attribute_methods; end
+
+  # @return [Boolean]
   def instance_method_already_implemented?(method_name); end
 end
 
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher
+  # @return [AttributeMethodMatcher] a new instance of AttributeMethodMatcher
   def initialize(options = T.unsafe(nil)); end
 
   def match(method_name); end
@@ -573,27 +617,37 @@ end
 
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher::AttributeMethodMatch < ::Struct
   # Returns the value of attribute attr_name
+  #
+  # @return [Object] the current value of attr_name
   def attr_name; end
 
   # Sets the attribute attr_name
+  #
+  # @param value [Object] the value to set the attribute attr_name to.
+  # @return [Object] the newly set value
   def attr_name=(_); end
 
   # Returns the value of attribute target
+  #
+  # @return [Object] the current value of target
   def target; end
 
   # Sets the attribute target
+  #
+  # @param value [Object] the value to set the attribute target to.
+  # @return [Object] the newly set value
   def target=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
 end
 
 class ActiveModel::AttributeMethods::ClassMethods::CodeGenerator
+  # @return [CodeGenerator] a new instance of CodeGenerator
   def initialize(owner, path, line); end
 
   def <<(source_line); end
@@ -608,13 +662,22 @@ end
 ActiveModel::AttributeMethods::NAME_COMPILABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
 class ActiveModel::AttributeMutationTracker
+  # @return [AttributeMutationTracker] a new instance of AttributeMutationTracker
   def initialize(attributes); end
 
+  # @return [Boolean]
   def any_changes?; end
+
   def change_to_attribute(attr_name); end
+
+  # @return [Boolean]
   def changed?(attr_name, from: T.unsafe(nil), to: T.unsafe(nil)); end
+
   def changed_attribute_names; end
+
+  # @return [Boolean]
   def changed_in_place?(attr_name); end
+
   def changed_values; end
   def changes; end
   def force_change(attr_name); end
@@ -624,6 +687,8 @@ class ActiveModel::AttributeMutationTracker
   private
 
   def attr_names; end
+
+  # @return [Boolean]
   def attribute_changed?(attr_name); end
 
   # Returns the value of attribute attributes.
@@ -636,6 +701,7 @@ end
 ActiveModel::AttributeMutationTracker::OPTION_NOT_GIVEN = T.let(T.unsafe(nil), Object)
 
 class ActiveModel::AttributeSet
+  # @return [AttributeSet] a new instance of AttributeSet
   def initialize(attributes); end
 
   def ==(other); end
@@ -643,12 +709,15 @@ class ActiveModel::AttributeSet
   def []=(name, value); end
   def accessed; end
   def deep_dup; end
-  def each_value(*_arg0, **_arg1, &_arg2); end
-  def except(*_arg0, **_arg1, &_arg2); end
-  def fetch(*_arg0, **_arg1, &_arg2); end
+  def each_value(*_arg0, &_arg1); end
+  def except(*_arg0, &_arg1); end
+  def fetch(*_arg0, &_arg1); end
   def fetch_value(name, &block); end
   def freeze; end
+
+  # @return [Boolean]
   def key?(name); end
+
   def keys; end
   def map(&block); end
   def reset(key); end
@@ -657,6 +726,8 @@ class ActiveModel::AttributeSet
   def values_before_type_cast; end
   def write_cast_value(name, value); end
   def write_from_database(name, value); end
+
+  # @raise [FrozenError]
   def write_from_user(name, value); end
 
   protected
@@ -672,6 +743,7 @@ class ActiveModel::AttributeSet
 end
 
 class ActiveModel::AttributeSet::Builder
+  # @return [Builder] a new instance of Builder
   def initialize(types, default_attributes = T.unsafe(nil)); end
 
   def build_from_database(values = T.unsafe(nil), additional_types = T.unsafe(nil)); end
@@ -686,6 +758,7 @@ end
 # Attempts to do more intelligent YAML dumping of an
 # ActiveModel::AttributeSet to reduce the size of the resulting string
 class ActiveModel::AttributeSet::YAMLEncoder
+  # @return [YAMLEncoder] a new instance of YAMLEncoder
   def initialize(default_types); end
 
   def decode(coder); end
@@ -710,30 +783,30 @@ module ActiveModel::Attributes
 
   # Returns an array of attribute names as strings
   #
-  # class Person
-  # include ActiveModel::Attributes
+  #   class Person
+  #     include ActiveModel::Attributes
   #
-  # attribute :name, :string
-  # attribute :age, :integer
-  # end
+  #     attribute :name, :string
+  #     attribute :age, :integer
+  #   end
   #
-  # person = Person.new
-  # person.attribute_names
-  # # => ["name", "age"]
+  #   person = Person.new
+  #   person.attribute_names
+  #   # => ["name", "age"]
   def attribute_names; end
 
   # Returns a hash of all the attributes with their names as keys and the values of the attributes as values.
   #
-  # class Person
-  # include ActiveModel::Attributes
+  #   class Person
+  #     include ActiveModel::Attributes
   #
-  # attribute :name, :string
-  # attribute :age, :integer
-  # end
+  #     attribute :name, :string
+  #     attribute :age, :integer
+  #   end
   #
-  # person = Person.new(name: 'Francesco', age: 22)
-  # person.attributes
-  # # => {"name"=>"Francesco", "age"=>22}
+  #   person = Person.new(name: 'Francesco', age: 22)
+  #   person.attributes
+  #   # => {"name"=>"Francesco", "age"=>22}
   def attributes; end
 
   def freeze; end
@@ -773,15 +846,15 @@ module ActiveModel::Attributes::ClassMethods
 
   # Returns an array of attribute names as strings
   #
-  # class Person
-  # include ActiveModel::Attributes
+  #   class Person
+  #     include ActiveModel::Attributes
   #
-  # attribute :name, :string
-  # attribute :age, :integer
-  # end
+  #     attribute :name, :string
+  #     attribute :age, :integer
+  #   end
   #
-  # Person.attribute_names
-  # # => ["name", "age"]
+  #   Person.attribute_names
+  #   # => ["name", "age"]
   def attribute_names; end
 
   private
@@ -795,6 +868,7 @@ ActiveModel::Attributes::ClassMethods::NO_DEFAULT_PROVIDED = T.let(T.unsafe(nil)
 # +BlockValidator+ is a special +EachValidator+ which receives a block on initialization
 # and call this block for each attribute being validated. +validates_each+ uses this validator.
 class ActiveModel::BlockValidator < ::ActiveModel::EachValidator
+  # @return [BlockValidator] a new instance of BlockValidator
   def initialize(options, &block); end
 
   private
@@ -811,49 +885,49 @@ end
 #
 # First, extend ActiveModel::Callbacks from the class you are creating:
 #
-# class MyModel
-# extend ActiveModel::Callbacks
-# end
+#   class MyModel
+#     extend ActiveModel::Callbacks
+#   end
 #
 # Then define a list of methods that you want callbacks attached to:
 #
-# define_model_callbacks :create, :update
+#   define_model_callbacks :create, :update
 #
 # This will provide all three standard callbacks (before, around and after)
 # for both the <tt>:create</tt> and <tt>:update</tt> methods. To implement,
 # you need to wrap the methods you want callbacks on in a block so that the
 # callbacks get a chance to fire:
 #
-# def create
-# run_callbacks :create do
-# # Your create action methods here
-# end
-# end
+#   def create
+#     run_callbacks :create do
+#       # Your create action methods here
+#     end
+#   end
 #
 # Then in your class, you can use the +before_create+, +after_create+ and
 # +around_create+ methods, just as you would in an Active Record model.
 #
-# before_create :action_before_create
+#   before_create :action_before_create
 #
-# def action_before_create
-# # Your code here
-# end
+#   def action_before_create
+#     # Your code here
+#   end
 #
 # When defining an around callback remember to yield to the block, otherwise
 # it won't be executed:
 #
-# around_create :log_status
+#  around_create :log_status
 #
-# def log_status
-# puts 'going to call the block...'
-# yield
-# puts 'block successfully called.'
-# end
+#  def log_status
+#    puts 'going to call the block...'
+#    yield
+#    puts 'block successfully called.'
+#  end
 #
 # You can choose to have only specific callbacks by passing a hash to the
 # +define_model_callbacks+ method.
 #
-# define_model_callbacks :create, only: [:after, :before]
+#   define_model_callbacks :create, only: [:after, :before]
 #
 # Would only create the +after_create+ and +before_create+ callback methods in
 # your class.
@@ -865,15 +939,15 @@ module ActiveModel::Callbacks
   # <tt>:only</tt> option, where you can choose if you want all types (before,
   # around or after) or just some.
   #
-  # define_model_callbacks :initializer, only: :after
+  #   define_model_callbacks :initializer, only: :after
   #
   # Note, the <tt>only: <type></tt> hash will apply to all callbacks defined
   # on that method call. To get around this you can call the define_model_callbacks
   # method as many times as you need.
   #
-  # define_model_callbacks :create,  only: :after
-  # define_model_callbacks :update,  only: :before
-  # define_model_callbacks :destroy, only: :around
+  #   define_model_callbacks :create,  only: :after
+  #   define_model_callbacks :update,  only: :before
+  #   define_model_callbacks :destroy, only: :around
   #
   # Would create +after_create+, +before_update+ and +around_destroy+ methods
   # only.
@@ -882,18 +956,18 @@ module ActiveModel::Callbacks
   # in which case the callback will call that class's <action>_<type> method
   # passing the object that the callback is being called on.
   #
-  # class MyModel
-  # extend ActiveModel::Callbacks
-  # define_model_callbacks :create
+  #   class MyModel
+  #     extend ActiveModel::Callbacks
+  #     define_model_callbacks :create
   #
-  # before_create AnotherClass
-  # end
+  #     before_create AnotherClass
+  #   end
   #
-  # class AnotherClass
-  # def self.before_create( obj )
-  # # obj is the MyModel instance that the callback is being called on
-  # end
-  # end
+  #   class AnotherClass
+  #     def self.before_create( obj )
+  #       # obj is the MyModel instance that the callback is being called on
+  #     end
+  #   end
   #
   # NOTE: +method_name+ passed to define_model_callbacks must not end with
   # <tt>!</tt>, <tt>?</tt> or <tt>=</tt>.
@@ -916,20 +990,20 @@ end
 #
 # Let's take for example this non-persisted object.
 #
-# class ContactMessage
-# include ActiveModel::Conversion
+#   class ContactMessage
+#     include ActiveModel::Conversion
 #
-# # ContactMessage are never persisted in the DB
-# def persisted?
-# false
-# end
-# end
+#     # ContactMessage are never persisted in the DB
+#     def persisted?
+#       false
+#     end
+#   end
 #
-# cm = ContactMessage.new
-# cm.to_model == cm  # => true
-# cm.to_key          # => nil
-# cm.to_param        # => nil
-# cm.to_partial_path # => "contact_messages/contact_message"
+#   cm = ContactMessage.new
+#   cm.to_model == cm  # => true
+#   cm.to_key          # => nil
+#   cm.to_param        # => nil
+#   cm.to_partial_path # => "contact_messages/contact_message"
 module ActiveModel::Conversion
   extend ::ActiveSupport::Concern
 
@@ -938,29 +1012,29 @@ module ActiveModel::Conversion
   # Returns an Array of all key attributes if any of the attributes is set, whether or not
   # the object is persisted. Returns +nil+ if there are no key attributes.
   #
-  # class Person
-  # include ActiveModel::Conversion
-  # attr_accessor :id
+  #   class Person
+  #     include ActiveModel::Conversion
+  #     attr_accessor :id
   #
-  # def initialize(id)
-  # @id = id
-  # end
-  # end
+  #     def initialize(id)
+  #       @id = id
+  #     end
+  #   end
   #
-  # person = Person.new(1)
-  # person.to_key # => [1]
+  #   person = Person.new(1)
+  #   person.to_key # => [1]
   def to_key; end
 
   # If your object is already designed to implement all of the \Active \Model
   # you can use the default <tt>:to_model</tt> implementation, which simply
   # returns +self+.
   #
-  # class Person
-  # include ActiveModel::Conversion
-  # end
+  #   class Person
+  #     include ActiveModel::Conversion
+  #   end
   #
-  # person = Person.new
-  # person.to_model == person # => true
+  #   person = Person.new
+  #   person.to_model == person # => true
   #
   # If your model does not act like an \Active \Model object, then you should
   # define <tt>:to_model</tt> yourself returning a proxy object that wraps
@@ -970,32 +1044,32 @@ module ActiveModel::Conversion
   # Returns a +string+ representing the object's key suitable for use in URLs,
   # or +nil+ if <tt>persisted?</tt> is +false+.
   #
-  # class Person
-  # include ActiveModel::Conversion
-  # attr_accessor :id
+  #   class Person
+  #     include ActiveModel::Conversion
+  #     attr_accessor :id
   #
-  # def initialize(id)
-  # @id = id
-  # end
+  #     def initialize(id)
+  #       @id = id
+  #     end
   #
-  # def persisted?
-  # true
-  # end
-  # end
+  #     def persisted?
+  #       true
+  #     end
+  #   end
   #
-  # person = Person.new(1)
-  # person.to_param # => "1"
+  #   person = Person.new(1)
+  #   person.to_param # => "1"
   def to_param; end
 
   # Returns a +string+ identifying the path associated with the object.
   # ActionPack uses this to find a suitable partial to represent the object.
   #
-  # class Person
-  # include ActiveModel::Conversion
-  # end
+  #   class Person
+  #     include ActiveModel::Conversion
+  #   end
   #
-  # person = Person.new
-  # person.to_partial_path # => "people/person"
+  #   person = Person.new
+  #   person.to_partial_path # => "people/person"
   def to_partial_path; end
 end
 
@@ -1006,10 +1080,12 @@ module ActiveModel::Conversion::ClassMethods
 end
 
 class ActiveModel::DeprecationHandlingDetailsHash < ::SimpleDelegator
+  # @return [DeprecationHandlingDetailsHash] a new instance of DeprecationHandlingDetailsHash
   def initialize(details); end
 end
 
 class ActiveModel::DeprecationHandlingMessageArray < ::SimpleDelegator
+  # @return [DeprecationHandlingMessageArray] a new instance of DeprecationHandlingMessageArray
   def initialize(content, errors, attribute); end
 
   def <<(message); end
@@ -1017,6 +1093,7 @@ class ActiveModel::DeprecationHandlingMessageArray < ::SimpleDelegator
 end
 
 class ActiveModel::DeprecationHandlingMessageHash < ::SimpleDelegator
+  # @return [DeprecationHandlingMessageHash] a new instance of DeprecationHandlingMessageHash
   def initialize(errors); end
 
   def []=(attribute, value); end
@@ -1036,101 +1113,101 @@ end
 #
 # * <tt>include ActiveModel::Dirty</tt> in your object.
 # * Call <tt>define_attribute_methods</tt> passing each method you want to
-# track.
+#   track.
 # * Call <tt>[attr_name]_will_change!</tt> before each change to the tracked
-# attribute.
+#   attribute.
 # * Call <tt>changes_applied</tt> after the changes are persisted.
 # * Call <tt>clear_changes_information</tt> when you want to reset the changes
-# information.
+#   information.
 # * Call <tt>restore_attributes</tt> when you want to restore previous data.
 #
 # A minimal implementation could be:
 #
-# class Person
-# include ActiveModel::Dirty
+#   class Person
+#     include ActiveModel::Dirty
 #
-# define_attribute_methods :name
+#     define_attribute_methods :name
 #
-# def initialize
-# @name = nil
-# end
+#     def initialize
+#       @name = nil
+#     end
 #
-# def name
-# @name
-# end
+#     def name
+#       @name
+#     end
 #
-# def name=(val)
-# name_will_change! unless val == @name
-# @name = val
-# end
+#     def name=(val)
+#       name_will_change! unless val == @name
+#       @name = val
+#     end
 #
-# def save
-# # do persistence work
+#     def save
+#       # do persistence work
 #
-# changes_applied
-# end
+#       changes_applied
+#     end
 #
-# def reload!
-# # get the values from the persistence layer
+#     def reload!
+#       # get the values from the persistence layer
 #
-# clear_changes_information
-# end
+#       clear_changes_information
+#     end
 #
-# def rollback!
-# restore_attributes
-# end
-# end
+#     def rollback!
+#       restore_attributes
+#     end
+#   end
 #
 # A newly instantiated +Person+ object is unchanged:
 #
-# person = Person.new
-# person.changed? # => false
+#   person = Person.new
+#   person.changed? # => false
 #
 # Change the name:
 #
-# person.name = 'Bob'
-# person.changed?       # => true
-# person.name_changed?  # => true
-# person.name_changed?(from: nil, to: "Bob") # => true
-# person.name_was       # => nil
-# person.name_change    # => [nil, "Bob"]
-# person.name = 'Bill'
-# person.name_change    # => [nil, "Bill"]
+#   person.name = 'Bob'
+#   person.changed?       # => true
+#   person.name_changed?  # => true
+#   person.name_changed?(from: nil, to: "Bob") # => true
+#   person.name_was       # => nil
+#   person.name_change    # => [nil, "Bob"]
+#   person.name = 'Bill'
+#   person.name_change    # => [nil, "Bill"]
 #
 # Save the changes:
 #
-# person.save
-# person.changed?      # => false
-# person.name_changed? # => false
+#   person.save
+#   person.changed?      # => false
+#   person.name_changed? # => false
 #
 # Reset the changes:
 #
-# person.previous_changes         # => {"name" => [nil, "Bill"]}
-# person.name_previously_changed? # => true
-# person.name_previously_changed?(from: nil, to: "Bill") # => true
-# person.name_previous_change     # => [nil, "Bill"]
-# person.name_previously_was      # => nil
-# person.reload!
-# person.previous_changes         # => {}
+#   person.previous_changes         # => {"name" => [nil, "Bill"]}
+#   person.name_previously_changed? # => true
+#   person.name_previously_changed?(from: nil, to: "Bill") # => true
+#   person.name_previous_change     # => [nil, "Bill"]
+#   person.name_previously_was      # => nil
+#   person.reload!
+#   person.previous_changes         # => {}
 #
 # Rollback the changes:
 #
-# person.name = "Uncle Bob"
-# person.rollback!
-# person.name          # => "Bill"
-# person.name_changed? # => false
+#   person.name = "Uncle Bob"
+#   person.rollback!
+#   person.name          # => "Bill"
+#   person.name_changed? # => false
 #
 # Assigning the same value leaves the attribute unchanged:
 #
-# person.name = 'Bill'
-# person.name_changed? # => false
-# person.name_change   # => nil
+#   person.name = 'Bill'
+#   person.name_changed? # => false
+#   person.name_change   # => nil
 #
 # Which attributes have changed?
 #
-# person.name = 'Bob'
-# person.changed # => ["name"]
-# person.changes # => {"name" => ["Bill", "Bob"]}
+#   person.name = 'Bob'
+#   person.changed # => ["name"]
+#   person.changes # => {"name" => ["Bill", "Bob"]}
 #
 # If an attribute is modified in-place then make use of
 # <tt>[attribute_name]_will_change!</tt> to mark that the attribute is changing.
@@ -1138,10 +1215,10 @@ end
 # that Active Record can detect in-place modifications automatically. You do
 # not need to call <tt>[attribute_name]_will_change!</tt> on Active Record models.
 #
-# person.name_will_change!
-# person.name_change # => ["Bill", "Bill"]
-# person.name << 'y'
-# person.name_change # => ["Bill", "Billy"]
+#   person.name_will_change!
+#   person.name_change # => ["Bill", "Bill"]
+#   person.name << 'y'
+#   person.name_change # => ["Bill", "Billy"]
 module ActiveModel::Dirty
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -1150,12 +1227,19 @@ module ActiveModel::Dirty
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveModel::AttributeMethods::ClassMethods
 
+  def as_json(options = T.unsafe(nil)); end
+
   # Dispatch target for <tt>*_changed?</tt> attribute methods.
+  #
+  # @return [Boolean]
   def attribute_changed?(attr_name, **options); end
 
+  # @return [Boolean]
   def attribute_changed_in_place?(attr_name); end
 
   # Dispatch target for <tt>*_previously_changed?</tt> attribute methods.
+  #
+  # @return [Boolean]
   def attribute_previously_changed?(attr_name, **options); end
 
   # Dispatch target for <tt>*_previously_was</tt> attribute methods.
@@ -1166,32 +1250,34 @@ module ActiveModel::Dirty
 
   # Returns an array with the name of the attributes with unsaved changes.
   #
-  # person.changed # => []
-  # person.name = 'bob'
-  # person.changed # => ["name"]
+  #   person.changed # => []
+  #   person.name = 'bob'
+  #   person.changed # => ["name"]
   def changed; end
 
   # Returns +true+ if any of the attributes has unsaved changes, +false+ otherwise.
   #
-  # person.changed? # => false
-  # person.name = 'bob'
-  # person.changed? # => true
+  #   person.changed? # => false
+  #   person.name = 'bob'
+  #   person.changed? # => true
+  #
+  # @return [Boolean]
   def changed?; end
 
   # Returns a hash of the attributes with unsaved changes indicating their original
   # values like <tt>attr => original value</tt>.
   #
-  # person.name # => "bob"
-  # person.name = 'robert'
-  # person.changed_attributes # => {"name" => "bob"}
+  #   person.name # => "bob"
+  #   person.name = 'robert'
+  #   person.changed_attributes # => {"name" => "bob"}
   def changed_attributes; end
 
   # Returns a hash of changed attributes indicating their original
   # and new values like <tt>attr => [original value, new value]</tt>.
   #
-  # person.changes # => {}
-  # person.name = 'bob'
-  # person.changes # => { "name" => ["bill", "bob"] }
+  #   person.changes # => {}
+  #   person.name = 'bob'
+  #   person.changes # => { "name" => ["bill", "bob"] }
   def changes; end
 
   # Clears dirty data and moves +changes+ to +previous_changes+ and
@@ -1205,10 +1291,10 @@ module ActiveModel::Dirty
 
   # Returns a hash of attributes that were changed before the model was saved.
   #
-  # person.name # => "bob"
-  # person.name = 'robert'
-  # person.save
-  # person.previous_changes # => {"name" => ["bob", "robert"]}
+  #   person.name # => "bob"
+  #   person.name = 'robert'
+  #   person.save
+  #   person.previous_changes # => {"name" => ["bob", "robert"]}
   def previous_changes; end
 
   # Restore all previous data of the provided attributes.
@@ -1260,6 +1346,9 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
   # Returns a new validator instance. All options will be available via the
   # +options+ reader, however the <tt>:attributes</tt> option will be removed
   # and instead be made available through the +attributes+ reader.
+  #
+  # @raise [ArgumentError]
+  # @return [EachValidator] a new instance of EachValidator
   def initialize(options); end
 
   def attributes; end
@@ -1276,6 +1365,8 @@ class ActiveModel::EachValidator < ::ActiveModel::Validator
 
   # Override this method in subclasses with the validation logic, adding
   # errors to the records +errors+ array where necessary.
+  #
+  # @raise [NotImplementedError]
   def validate_each(record, attribute, value); end
 
   private
@@ -1287,6 +1378,7 @@ end
 #
 # Represents one single error
 class ActiveModel::Error
+  # @return [Error] a new instance of Error
   def initialize(base, attribute, type = T.unsafe(nil), **options); end
 
   def ==(other); end
@@ -1299,25 +1391,25 @@ class ActiveModel::Error
 
   # Returns the error details.
   #
-  # error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
-  # error.details
-  # # => { error: :too_short, count: 5 }
+  #   error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
+  #   error.details
+  #   # => { error: :too_short, count: 5 }
   def detail; end
 
   # Returns the error details.
   #
-  # error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
-  # error.details
-  # # => { error: :too_short, count: 5 }
+  #   error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
+  #   error.details
+  #   # => { error: :too_short, count: 5 }
   def details; end
 
   def eql?(other); end
 
   # Returns the full error message.
   #
-  # error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
-  # error.full_message
-  # # => "Name is too short (minimum is 5 characters)"
+  #   error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
+  #   error.full_message
+  #   # => "Name is too short (minimum is 5 characters)"
   def full_message; end
 
   def hash; end
@@ -1329,13 +1421,15 @@ class ActiveModel::Error
   # See if error matches provided +attribute+, +type+ and +options+.
   #
   # Omitted params are not checked for a match.
+  #
+  # @return [Boolean]
   def match?(attribute, type = T.unsafe(nil), **options); end
 
   # Returns the error message.
   #
-  # error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
-  # error.message
-  # # => "is too short (minimum is 5 characters)"
+  #   error = ActiveModel::Error.new(person, :name, :too_short, count: 5)
+  #   error.message
+  #   # => "is too short (minimum is 5 characters)"
   def message; end
 
   # The options provided when calling +errors#add+
@@ -1348,6 +1442,8 @@ class ActiveModel::Error
   #
   # All params must be equal to Error's own attributes to be considered a
   # strict match.
+  #
+  # @return [Boolean]
   def strict_match?(attribute, type, **options); end
 
   # The type of error, defaults to +:invalid+ unless specified
@@ -1380,35 +1476,35 @@ ActiveModel::Error::MESSAGE_OPTIONS = T.let(T.unsafe(nil), Array)
 #
 # A minimal implementation could be:
 #
-# class Person
-# # Required dependency for ActiveModel::Errors
-# extend ActiveModel::Naming
+#   class Person
+#     # Required dependency for ActiveModel::Errors
+#     extend ActiveModel::Naming
 #
-# def initialize
-# @errors = ActiveModel::Errors.new(self)
-# end
+#     def initialize
+#       @errors = ActiveModel::Errors.new(self)
+#     end
 #
-# attr_accessor :name
-# attr_reader   :errors
+#     attr_accessor :name
+#     attr_reader   :errors
 #
-# def validate!
-# errors.add(:name, :blank, message: "cannot be nil") if name.nil?
-# end
+#     def validate!
+#       errors.add(:name, :blank, message: "cannot be nil") if name.nil?
+#     end
 #
-# # The following methods are needed to be minimally implemented
+#     # The following methods are needed to be minimally implemented
 #
-# def read_attribute_for_validation(attr)
-# send(attr)
-# end
+#     def read_attribute_for_validation(attr)
+#       send(attr)
+#     end
 #
-# def self.human_attribute_name(attr, options = {})
-# attr
-# end
+#     def self.human_attribute_name(attr, options = {})
+#       attr
+#     end
 #
-# def self.lookup_ancestors
-# [self]
-# end
-# end
+#     def self.lookup_ancestors
+#       [self]
+#     end
+#   end
 #
 # The last three methods are required in your object for +Errors+ to be
 # able to generate error messages correctly and also handle multiple
@@ -1419,42 +1515,44 @@ ActiveModel::Error::MESSAGE_OPTIONS = T.let(T.unsafe(nil), Array)
 #
 # The above allows you to do:
 #
-# person = Person.new
-# person.validate!            # => ["cannot be nil"]
-# person.errors.full_messages # => ["name cannot be nil"]
-# # etc..
+#   person = Person.new
+#   person.validate!            # => ["cannot be nil"]
+#   person.errors.full_messages # => ["name cannot be nil"]
+#   # etc..
 class ActiveModel::Errors
   include ::Enumerable
   extend ::Forwardable
 
   # Pass in the instance of the object that is using the errors object.
   #
-  # class Person
-  # def initialize
-  # @errors = ActiveModel::Errors.new(self)
-  # end
-  # end
+  #   class Person
+  #     def initialize
+  #       @errors = ActiveModel::Errors.new(self)
+  #     end
+  #   end
+  #
+  # @return [Errors] a new instance of Errors
   def initialize(base); end
 
   # When passed a symbol or a name of a method, returns an array of errors
   # for the method.
   #
-  # person.errors[:name]  # => ["cannot be nil"]
-  # person.errors['name'] # => ["cannot be nil"]
+  #   person.errors[:name]  # => ["cannot be nil"]
+  #   person.errors['name'] # => ["cannot be nil"]
   def [](attribute); end
 
   # Adds a new error of +type+ on +attribute+.
   # More than one error can be added to the same +attribute+.
   # If no +type+ is supplied, <tt>:invalid</tt> is assumed.
   #
-  # person.errors.add(:name)
-  # # Adds <#ActiveModel::Error attribute=name, type=invalid>
-  # person.errors.add(:name, :not_implemented, message: "must be implemented")
-  # # Adds <#ActiveModel::Error attribute=name, type=not_implemented,
-  # options={:message=>"must be implemented"}>
+  #   person.errors.add(:name)
+  #   # Adds <#ActiveModel::Error attribute=name, type=invalid>
+  #   person.errors.add(:name, :not_implemented, message: "must be implemented")
+  #   # Adds <#ActiveModel::Error attribute=name, type=not_implemented,
+  #                               options={:message=>"must be implemented"}>
   #
-  # person.errors.messages
-  # # => {:name=>["is invalid", "must be implemented"]}
+  #   person.errors.messages
+  #   # => {:name=>["is invalid", "must be implemented"]}
   #
   # If +type+ is a string, it will be used as error message.
   #
@@ -1468,60 +1566,62 @@ class ActiveModel::Errors
   # ActiveModel::StrictValidationFailed instead of adding the error.
   # <tt>:strict</tt> option can also be set to any other exception.
   #
-  # person.errors.add(:name, :invalid, strict: true)
-  # # => ActiveModel::StrictValidationFailed: Name is invalid
-  # person.errors.add(:name, :invalid, strict: NameIsInvalid)
-  # # => NameIsInvalid: Name is invalid
+  #   person.errors.add(:name, :invalid, strict: true)
+  #   # => ActiveModel::StrictValidationFailed: Name is invalid
+  #   person.errors.add(:name, :invalid, strict: NameIsInvalid)
+  #   # => NameIsInvalid: Name is invalid
   #
-  # person.errors.messages # => {}
+  #   person.errors.messages # => {}
   #
   # +attribute+ should be set to <tt>:base</tt> if the error is not
   # directly associated with a single attribute.
   #
-  # person.errors.add(:base, :name_or_email_blank,
-  # message: "either name or email must be present")
-  # person.errors.messages
-  # # => {:base=>["either name or email must be present"]}
-  # person.errors.details
-  # # => {:base=>[{error: :name_or_email_blank}]}
+  #   person.errors.add(:base, :name_or_email_blank,
+  #     message: "either name or email must be present")
+  #   person.errors.messages
+  #   # => {:base=>["either name or email must be present"]}
+  #   person.errors.details
+  #   # => {:base=>[{error: :name_or_email_blank}]}
   def add(attribute, type = T.unsafe(nil), **options); end
 
   # Returns +true+ if an error matches provided +attribute+ and +type+,
   # or +false+ otherwise. +type+ is treated the same as for +add+.
   #
-  # person.errors.add :name, :blank
-  # person.errors.added? :name, :blank           # => true
-  # person.errors.added? :name, "can't be blank" # => true
+  #   person.errors.add :name, :blank
+  #   person.errors.added? :name, :blank           # => true
+  #   person.errors.added? :name, "can't be blank" # => true
   #
   # If the error requires options, then it returns +true+ with
   # the correct options, or +false+ with incorrect or missing options.
   #
-  # person.errors.add :name, :too_long, { count: 25 }
-  # person.errors.added? :name, :too_long, count: 25                     # => true
-  # person.errors.added? :name, "is too long (maximum is 25 characters)" # => true
-  # person.errors.added? :name, :too_long, count: 24                     # => false
-  # person.errors.added? :name, :too_long                                # => false
-  # person.errors.added? :name, "is too long"                            # => false
+  #   person.errors.add :name, :too_long, { count: 25 }
+  #   person.errors.added? :name, :too_long, count: 25                     # => true
+  #   person.errors.added? :name, "is too long (maximum is 25 characters)" # => true
+  #   person.errors.added? :name, :too_long, count: 24                     # => false
+  #   person.errors.added? :name, :too_long                                # => false
+  #   person.errors.added? :name, "is too long"                            # => false
+  #
+  # @return [Boolean]
   def added?(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  def any?(*args, **_arg1, &block); end
+  def any?(*args, &block); end
 
   # Returns a Hash that can be used as the JSON representation for this
   # object. You can pass the <tt>:full_messages</tt> option. This determines
   # if the json object should contain full messages or not (false by default).
   #
-  # person.errors.as_json                      # => {:name=>["cannot be nil"]}
-  # person.errors.as_json(full_messages: true) # => {:name=>["name cannot be nil"]}
+  #   person.errors.as_json                      # => {:name=>["cannot be nil"]}
+  #   person.errors.as_json(full_messages: true) # => {:name=>["name cannot be nil"]}
   def as_json(options = T.unsafe(nil)); end
 
   # Returns all error attribute names
   #
-  # person.errors.messages        # => {:name=>["cannot be nil", "must be specified"]}
-  # person.errors.attribute_names # => [:name]
+  #   person.errors.messages        # => {:name=>["cannot be nil", "must be specified"]}
+  #   person.errors.attribute_names # => [:name]
   def attribute_names; end
 
-  def blank?(*args, **_arg1, &block); end
-  def clear(*args, **_arg1, &block); end
+  def blank?(*args, &block); end
+  def clear(*args, &block); end
 
   # Copies the errors from <tt>other</tt>.
   # For copying errors but keep <tt>@base</tt> as is.
@@ -1530,16 +1630,16 @@ class ActiveModel::Errors
   #
   # Examples
   #
-  # person.errors.copy!(other)
+  #   person.errors.copy!(other)
   def copy!(other); end
 
-  def count(*args, **_arg1, &block); end
+  def count(*args, &block); end
 
   # Delete messages for +key+. Returns the deleted messages.
   #
-  # person.errors[:name]        # => ["cannot be nil"]
-  # person.errors.delete(:name) # => ["cannot be nil"]
-  # person.errors[:name]        # => []
+  #   person.errors[:name]        # => ["cannot be nil"]
+  #   person.errors.delete(:name) # => ["cannot be nil"]
+  #   person.errors[:name]        # => []
   def delete(attribute, type = T.unsafe(nil), **options); end
 
   # Returns a Hash of attributes with an array of their error details.
@@ -1550,11 +1650,11 @@ class ActiveModel::Errors
 
   # Iterates through each error object.
   #
-  # person.errors.add(:name, :too_short, count: 2)
-  # person.errors.each do |error|
-  # # Will yield <#ActiveModel::Error attribute=name, type=too_short,
-  # options={:count=>3}>
-  # end
+  #   person.errors.add(:name, :too_short, count: 2)
+  #   person.errors.each do |error|
+  #     # Will yield <#ActiveModel::Error attribute=name, type=too_short,
+  #                                       options={:count=>3}>
+  #   end
   #
   # To be backward compatible with past deprecated hash-like behavior,
   # when block accepts two parameters instead of one, it
@@ -1562,19 +1662,19 @@ class ActiveModel::Errors
   # Yields the attribute and the error for that attribute. If the attribute
   # has more than one error message, yields once for each error message.
   #
-  # person.errors.add(:name, :blank, message: "can't be blank")
-  # person.errors.each do |attribute, message|
-  # # Will yield :name and "can't be blank"
-  # end
+  #   person.errors.add(:name, :blank, message: "can't be blank")
+  #   person.errors.each do |attribute, message|
+  #     # Will yield :name and "can't be blank"
+  #   end
   #
-  # person.errors.add(:name, :not_specified, message: "must be specified")
-  # person.errors.each do |attribute, message|
-  # # Will yield :name and "can't be blank"
-  # # then yield :name and "must be specified"
-  # end
+  #   person.errors.add(:name, :not_specified, message: "must be specified")
+  #   person.errors.each do |attribute, message|
+  #     # Will yield :name and "can't be blank"
+  #     # then yield :name and "must be specified"
+  #   end
   def each(&block); end
 
-  def empty?(*args, **_arg1, &block); end
+  def empty?(*args, &block); end
 
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
@@ -1582,31 +1682,31 @@ class ActiveModel::Errors
 
   # Returns a full message for a given attribute.
   #
-  # person.errors.full_message(:name, 'is invalid') # => "Name is invalid"
+  #   person.errors.full_message(:name, 'is invalid') # => "Name is invalid"
   def full_message(attribute, message); end
 
   # Returns all the full error messages in an array.
   #
-  # class Person
-  # validates_presence_of :name, :address, :email
-  # validates_length_of :name, in: 5..30
-  # end
+  #   class Person
+  #     validates_presence_of :name, :address, :email
+  #     validates_length_of :name, in: 5..30
+  #   end
   #
-  # person = Person.create(address: '123 First St.')
-  # person.errors.full_messages
-  # # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
+  #   person = Person.create(address: '123 First St.')
+  #   person.errors.full_messages
+  #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
   def full_messages; end
 
   # Returns all the full error messages for a given attribute in an array.
   #
-  # class Person
-  # validates_presence_of :name, :email
-  # validates_length_of :name, in: 5..30
-  # end
+  #   class Person
+  #     validates_presence_of :name, :email
+  #     validates_length_of :name, in: 5..30
+  #   end
   #
-  # person = Person.create()
-  # person.errors.full_messages_for(:name)
-  # # => ["Name is too short (minimum is 5 characters)", "Name can't be blank"]
+  #   person = Person.create()
+  #   person.errors.full_messages_for(:name)
+  #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank"]
   def full_messages_for(attribute); end
 
   # Translates an error message in its default scope
@@ -1637,16 +1737,18 @@ class ActiveModel::Errors
 
   # Returns a Hash of attributes with an array of their Error objects.
   #
-  # person.errors.group_by_attribute
-  # # => {:name=>[<#ActiveModel::Error>, <#ActiveModel::Error>]}
+  #   person.errors.group_by_attribute
+  #   # => {:name=>[<#ActiveModel::Error>, <#ActiveModel::Error>]}
   def group_by_attribute; end
 
   # Returns +true+ if the error messages include an error for the given key
   # +attribute+, +false+ otherwise.
   #
-  # person.errors.messages        # => {:name=>["cannot be nil"]}
-  # person.errors.include?(:name) # => true
-  # person.errors.include?(:age)  # => false
+  #   person.errors.messages        # => {:name=>["cannot be nil"]}
+  #   person.errors.include?(:name) # => true
+  #   person.errors.include?(:age)  # => false
+  #
+  # @return [Boolean]
   def has_key?(attribute); end
 
   # Imports one error
@@ -1655,14 +1757,20 @@ class ActiveModel::Errors
   # If attribute or type needs to be overridden, use +override_options+.
   #
   # override_options - Hash
+  #
+  # @option override_options
+  # @option override_options
+  # @param override_options [Hash] a customizable set of options
   def import(error, override_options = T.unsafe(nil)); end
 
   # Returns +true+ if the error messages include an error for the given key
   # +attribute+, +false+ otherwise.
   #
-  # person.errors.messages        # => {:name=>["cannot be nil"]}
-  # person.errors.include?(:name) # => true
-  # person.errors.include?(:age)  # => false
+  #   person.errors.messages        # => {:name=>["cannot be nil"]}
+  #   person.errors.include?(:name) # => true
+  #   person.errors.include?(:age)  # => false
+  #
+  # @return [Boolean]
   def include?(attribute); end
 
   def init_with(coder); end
@@ -1670,15 +1778,17 @@ class ActiveModel::Errors
   # Returns +true+ if the error messages include an error for the given key
   # +attribute+, +false+ otherwise.
   #
-  # person.errors.messages        # => {:name=>["cannot be nil"]}
-  # person.errors.include?(:name) # => true
-  # person.errors.include?(:age)  # => false
+  #   person.errors.messages        # => {:name=>["cannot be nil"]}
+  #   person.errors.include?(:name) # => true
+  #   person.errors.include?(:age)  # => false
+  #
+  # @return [Boolean]
   def key?(attribute); end
 
   # Returns all message keys.
   #
-  # person.errors.messages # => {:name=>["cannot be nil", "must be specified"]}
-  # person.errors.keys     # => [:name]
+  #   person.errors.messages # => {:name=>["cannot be nil", "must be specified"]}
+  #   person.errors.keys     # => [:name]
   def keys; end
 
   def marshal_load(array); end
@@ -1690,7 +1800,7 @@ class ActiveModel::Errors
   #
   # Examples
   #
-  # person.errors.merge!(other)
+  #   person.errors.merge!(other)
   def merge!(other); end
 
   # Returns a Hash of attributes with an array of their error messages.
@@ -1701,14 +1811,14 @@ class ActiveModel::Errors
 
   # Returns all the error messages for a given attribute in an array.
   #
-  # class Person
-  # validates_presence_of :name, :email
-  # validates_length_of :name, in: 5..30
-  # end
+  #   class Person
+  #     validates_presence_of :name, :email
+  #     validates_length_of :name, in: 5..30
+  #   end
   #
-  # person = Person.create()
-  # person.errors.messages_for(:name)
-  # # => ["is too short (minimum is 5 characters)", "can't be blank"]
+  #   person = Person.create()
+  #   person.errors.messages_for(:name)
+  #   # => ["is too short (minimum is 5 characters)", "can't be blank"]
   def messages_for(attribute); end
 
   # The actual array of +Error+ objects
@@ -1718,35 +1828,37 @@ class ActiveModel::Errors
   # Returns +true+ if an error on the attribute with the given type is
   # present, or +false+ otherwise. +type+ is treated the same as for +add+.
   #
-  # person.errors.add :age
-  # person.errors.add :name, :too_long, { count: 25 }
-  # person.errors.of_kind? :age                                            # => true
-  # person.errors.of_kind? :name                                           # => false
-  # person.errors.of_kind? :name, :too_long                                # => true
-  # person.errors.of_kind? :name, "is too long (maximum is 25 characters)" # => true
-  # person.errors.of_kind? :name, :not_too_long                            # => false
-  # person.errors.of_kind? :name, "is too long"                            # => false
+  #   person.errors.add :age
+  #   person.errors.add :name, :too_long, { count: 25 }
+  #   person.errors.of_kind? :age                                            # => true
+  #   person.errors.of_kind? :name                                           # => false
+  #   person.errors.of_kind? :name, :too_long                                # => true
+  #   person.errors.of_kind? :name, "is too long (maximum is 25 characters)" # => true
+  #   person.errors.of_kind? :name, :not_too_long                            # => false
+  #   person.errors.of_kind? :name, "is too long"                            # => false
+  #
+  # @return [Boolean]
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  def size(*args, **_arg1, &block); end
+  def size(*args, &block); end
 
   # Removes all errors except the given keys. Returns a hash containing the removed errors.
   #
-  # person.errors.keys                  # => [:name, :age, :gender, :city]
-  # person.errors.slice!(:age, :gender) # => { :name=>["cannot be nil"], :city=>["cannot be nil"] }
-  # person.errors.keys                  # => [:age, :gender]
+  #   person.errors.keys                  # => [:name, :age, :gender, :city]
+  #   person.errors.slice!(:age, :gender) # => { :name=>["cannot be nil"], :city=>["cannot be nil"] }
+  #   person.errors.keys                  # => [:age, :gender]
   def slice!(*keys); end
 
   # Returns all the full error messages in an array.
   #
-  # class Person
-  # validates_presence_of :name, :address, :email
-  # validates_length_of :name, in: 5..30
-  # end
+  #   class Person
+  #     validates_presence_of :name, :address, :email
+  #     validates_length_of :name, in: 5..30
+  #   end
   #
-  # person = Person.create(address: '123 First St.')
-  # person.errors.full_messages
-  # # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
+  #   person = Person.create(address: '123 First St.')
+  #   person.errors.full_messages
+  #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
   def to_a; end
 
   def to_h; end
@@ -1754,38 +1866,38 @@ class ActiveModel::Errors
   # Returns a Hash of attributes with their error messages. If +full_messages+
   # is +true+, it will contain full messages (see +full_message+).
   #
-  # person.errors.to_hash       # => {:name=>["cannot be nil"]}
-  # person.errors.to_hash(true) # => {:name=>["name cannot be nil"]}
+  #   person.errors.to_hash       # => {:name=>["cannot be nil"]}
+  #   person.errors.to_hash(true) # => {:name=>["name cannot be nil"]}
   def to_hash(full_messages = T.unsafe(nil)); end
 
   # Returns an xml formatted representation of the Errors hash.
   #
-  # person.errors.add(:name, :blank, message: "can't be blank")
-  # person.errors.add(:name, :not_specified, message: "must be specified")
-  # person.errors.to_xml
-  # # =>
-  # #  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
-  # #  <errors>
-  # #    <error>name can't be blank</error>
-  # #    <error>name must be specified</error>
-  # #  </errors>
+  #   person.errors.add(:name, :blank, message: "can't be blank")
+  #   person.errors.add(:name, :not_specified, message: "must be specified")
+  #   person.errors.to_xml
+  #   # =>
+  #   #  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+  #   #  <errors>
+  #   #    <error>name can't be blank</error>
+  #   #    <error>name must be specified</error>
+  #   #  </errors>
   def to_xml(options = T.unsafe(nil)); end
 
-  def uniq!(*args, **_arg1, &block); end
+  def uniq!(*args, &block); end
 
   # Returns all message values.
   #
-  # person.errors.messages # => {:name=>["cannot be nil", "must be specified"]}
-  # person.errors.values   # => [["cannot be nil", "must be specified"]]
+  #   person.errors.messages # => {:name=>["cannot be nil", "must be specified"]}
+  #   person.errors.values   # => [["cannot be nil", "must be specified"]]
   def values; end
 
   # Search for errors matching +attribute+, +type+ or +options+.
   #
   # Only supplied params will be matched.
   #
-  # person.errors.where(:name) # => all name errors.
-  # person.errors.where(:name, :too_short) # => all name errors being too short
-  # person.errors.where(:name, :too_short, minimum: 2) # => all name errors being too short and minimum is 2
+  #   person.errors.where(:name) # => all name errors.
+  #   person.errors.where(:name, :too_short) # => all name errors being too short
+  #   person.errors.where(:name, :too_short, minimum: 2) # => all name errors being too short and minimum is 2
   def where(attribute, type = T.unsafe(nil), **options); end
 
   private
@@ -1801,16 +1913,16 @@ ActiveModel::Errors::LEGACY_ATTRIBUTES = T.let(T.unsafe(nil), Array)
 
 # Raised when forbidden attributes are used for mass assignment.
 #
-# class Person < ActiveRecord::Base
-# end
+#   class Person < ActiveRecord::Base
+#   end
 #
-# params = ActionController::Parameters.new(name: 'Bob')
-# Person.new(params)
-# # => ActiveModel::ForbiddenAttributesError
+#   params = ActionController::Parameters.new(name: 'Bob')
+#   Person.new(params)
+#   # => ActiveModel::ForbiddenAttributesError
 #
-# params.permit!
-# Person.new(params)
-# # => #<Person id: nil, name: "Bob">
+#   params.permit!
+#   Person.new(params)
+#   # => #<Person id: nil, name: "Bob">
 class ActiveModel::ForbiddenAttributesError < ::StandardError; end
 
 module ActiveModel::ForbiddenAttributesProtection
@@ -1821,10 +1933,14 @@ module ActiveModel::ForbiddenAttributesProtection
 end
 
 class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTracker
+  # @return [ForcedMutationTracker] a new instance of ForcedMutationTracker
   def initialize(attributes); end
 
   def change_to_attribute(attr_name); end
+
+  # @return [Boolean]
   def changed_in_place?(attr_name); end
+
   def finalize_changes; end
   def force_change(attr_name); end
   def forget_change(attr_name); end
@@ -1833,7 +1949,10 @@ class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTrack
   private
 
   def attr_names; end
+
+  # @return [Boolean]
   def attribute_changed?(attr_name); end
+
   def clone_value(attr_name); end
   def fetch_value(attr_name); end
 
@@ -1842,6 +1961,7 @@ class ActiveModel::ForcedMutationTracker < ::ActiveModel::AttributeMutationTrack
 end
 
 class ActiveModel::LazyAttributeHash
+  # @return [LazyAttributeHash] a new instance of LazyAttributeHash
   def initialize(types, values, additional_types, default_attributes, delegate_hash = T.unsafe(nil)); end
 
   def ==(other); end
@@ -1849,13 +1969,16 @@ class ActiveModel::LazyAttributeHash
   def []=(key, value); end
   def deep_dup; end
   def each_key(&block); end
-  def each_value(*_arg0, **_arg1, &_arg2); end
-  def except(*_arg0, **_arg1, &_arg2); end
-  def fetch(*_arg0, **_arg1, &_arg2); end
+  def each_value(*_arg0, &_arg1); end
+  def except(*_arg0, &_arg1); end
+  def fetch(*_arg0, &_arg1); end
+
+  # @return [Boolean]
   def key?(key); end
+
   def marshal_dump; end
   def marshal_load(values); end
-  def transform_values(*_arg0, **_arg1, &_arg2); end
+  def transform_values(*_arg0, &_arg1); end
 
   protected
 
@@ -1884,10 +2007,14 @@ class ActiveModel::LazyAttributeHash
 end
 
 class ActiveModel::LazyAttributeSet < ::ActiveModel::AttributeSet
+  # @return [LazyAttributeSet] a new instance of LazyAttributeSet
   def initialize(values, types, additional_types, default_attributes, attributes = T.unsafe(nil)); end
 
   def fetch_value(name, &block); end
+
+  # @return [Boolean]
   def key?(name); end
+
   def keys; end
 
   protected
@@ -1959,6 +2086,8 @@ module ActiveModel::Lint::Tests
   # If the object is not persisted, a form for that object, for instance,
   # will route to the create action. If it is persisted, a form for the
   # object will route to the update action.
+  #
+  # @return [Boolean]
   def test_persisted?; end
 
   # Passes if the object's model responds to <tt>to_key</tt> and if calling
@@ -1995,13 +2124,13 @@ end
 
 # Raised when an attribute is not defined.
 #
-# class User < ActiveRecord::Base
-# has_many :pets
-# end
+#   class User < ActiveRecord::Base
+#     has_many :pets
+#   end
 #
-# user = User.first
-# user.pets.select(:id).first.user_id
-# # => ActiveModel::MissingAttributeError: missing attribute: user_id
+#   user = User.first
+#   user.pets.select(:id).first.user_id
+#   # => ActiveModel::MissingAttributeError: missing attribute: user_id
 class ActiveModel::MissingAttributeError < ::NoMethodError; end
 
 # == Active \Model \Basic \Model
@@ -2014,47 +2143,47 @@ class ActiveModel::MissingAttributeError < ::NoMethodError; end
 #
 # A minimal implementation could be:
 #
-# class Person
-# include ActiveModel::Model
-# attr_accessor :name, :age
-# end
+#   class Person
+#     include ActiveModel::Model
+#     attr_accessor :name, :age
+#   end
 #
-# person = Person.new(name: 'bob', age: '18')
-# person.name # => "bob"
-# person.age  # => "18"
+#   person = Person.new(name: 'bob', age: '18')
+#   person.name # => "bob"
+#   person.age  # => "18"
 #
 # Note that, by default, <tt>ActiveModel::Model</tt> implements <tt>persisted?</tt>
 # to return +false+, which is the most common case. You may want to override
 # it in your class to simulate a different scenario:
 #
-# class Person
-# include ActiveModel::Model
-# attr_accessor :id, :name
+#   class Person
+#     include ActiveModel::Model
+#     attr_accessor :id, :name
 #
-# def persisted?
-# self.id == 1
-# end
-# end
+#     def persisted?
+#       self.id == 1
+#     end
+#   end
 #
-# person = Person.new(id: 1, name: 'bob')
-# person.persisted? # => true
+#   person = Person.new(id: 1, name: 'bob')
+#   person.persisted? # => true
 #
 # Also, if for some reason you need to run code on <tt>initialize</tt>, make
 # sure you call +super+ if you want the attributes hash initialization to
 # happen.
 #
-# class Person
-# include ActiveModel::Model
-# attr_accessor :id, :name, :omg
+#   class Person
+#     include ActiveModel::Model
+#     attr_accessor :id, :name, :omg
 #
-# def initialize(attributes={})
-# super
-# @omg ||= true
-# end
-# end
+#     def initialize(attributes={})
+#       super
+#       @omg ||= true
+#     end
+#   end
 #
-# person = Person.new(id: 1, name: 'bob')
-# person.omg # => true
+#   person = Person.new(id: 1, name: 'bob')
+#   person.omg # => true
 #
 # For more detailed information on other functionalities available, please
 # refer to the specific modules included in <tt>ActiveModel::Model</tt>
@@ -2080,25 +2209,27 @@ module ActiveModel::Model
 
   # Initializes a new model with the given +params+.
   #
-  # class Person
-  # include ActiveModel::Model
-  # attr_accessor :name, :age
-  # end
+  #   class Person
+  #     include ActiveModel::Model
+  #     attr_accessor :name, :age
+  #   end
   #
-  # person = Person.new(name: 'bob', age: '18')
-  # person.name # => "bob"
-  # person.age  # => "18"
+  #   person = Person.new(name: 'bob', age: '18')
+  #   person.name # => "bob"
+  #   person.age  # => "18"
   def initialize(attributes = T.unsafe(nil)); end
 
   # Indicates if the model is persisted. Default is +false+.
   #
-  # class Person
-  # include ActiveModel::Model
-  # attr_accessor :id, :name
-  # end
+  #  class Person
+  #    include ActiveModel::Model
+  #    attr_accessor :id, :name
+  #  end
   #
-  # person = Person.new(id: 1, name: 'bob')
-  # person.persisted? # => false
+  #  person = Person.new(id: 1, name: 'bob')
+  #  person.persisted? # => false
+  #
+  # @return [Boolean]
   def persisted?; end
 
   module GeneratedClassMethods
@@ -2125,21 +2256,24 @@ class ActiveModel::Name
   # and +name+ option will take the namespace and name of the given class
   # respectively.
   #
-  # module Foo
-  # class Bar
-  # end
-  # end
+  #   module Foo
+  #     class Bar
+  #     end
+  #   end
   #
-  # ActiveModel::Name.new(Foo::Bar).to_s
-  # # => "Foo::Bar"
+  #   ActiveModel::Name.new(Foo::Bar).to_s
+  #   # => "Foo::Bar"
+  #
+  # @raise [ArgumentError]
+  # @return [Name] a new instance of Name
   def initialize(klass, namespace = T.unsafe(nil), name = T.unsafe(nil)); end
 
-  def !~(*_arg0, **_arg1, &_arg2); end
-  def <=>(*_arg0, **_arg1, &_arg2); end
+  def !~(*_arg0, &_arg1); end
+  def <=>(*_arg0, &_arg1); end
   def ==(arg); end
   def ===(arg); end
-  def =~(*_arg0, **_arg1, &_arg2); end
-  def as_json(*_arg0, **_arg1, &_arg2); end
+  def =~(*_arg0, &_arg1); end
+  def as_json(*_arg0, &_arg1); end
 
   # Returns the value of attribute collection.
   def cache_key; end
@@ -2148,24 +2282,28 @@ class ActiveModel::Name
   def collection; end
 
   # Sets the attribute collection
+  #
+  # @param value the value to set the attribute collection to.
   def collection=(_arg0); end
 
   # Returns the value of attribute element.
   def element; end
 
   # Sets the attribute element
+  #
+  # @param value the value to set the attribute element to.
   def element=(_arg0); end
 
-  def eql?(*_arg0, **_arg1, &_arg2); end
+  def eql?(*_arg0, &_arg1); end
 
   # Transform the model name into a more human format, using I18n. By default,
   # it will underscore then humanize the class name.
   #
-  # class BlogPost
-  # extend ActiveModel::Naming
-  # end
+  #   class BlogPost
+  #     extend ActiveModel::Naming
+  #   end
   #
-  # BlogPost.model_name.human # => "Blog post"
+  #   BlogPost.model_name.human # => "Blog post"
   #
   # Specify +options+ with additional translating options.
   def human(options = T.unsafe(nil)); end
@@ -2174,48 +2312,62 @@ class ActiveModel::Name
   def i18n_key; end
 
   # Sets the attribute i18n_key
+  #
+  # @param value the value to set the attribute i18n_key to.
   def i18n_key=(_arg0); end
 
-  def match?(*_arg0, **_arg1, &_arg2); end
+  def match?(*_arg0, &_arg1); end
 
   # Returns the value of attribute name.
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   # Returns the value of attribute param_key.
   def param_key; end
 
   # Sets the attribute param_key
+  #
+  # @param value the value to set the attribute param_key to.
   def param_key=(_arg0); end
 
   # Returns the value of attribute plural.
   def plural; end
 
   # Sets the attribute plural
+  #
+  # @param value the value to set the attribute plural to.
   def plural=(_arg0); end
 
   # Returns the value of attribute route_key.
   def route_key; end
 
   # Sets the attribute route_key
+  #
+  # @param value the value to set the attribute route_key to.
   def route_key=(_arg0); end
 
   # Returns the value of attribute singular.
   def singular; end
 
   # Sets the attribute singular
+  #
+  # @param value the value to set the attribute singular to.
   def singular=(_arg0); end
 
   # Returns the value of attribute singular_route_key.
   def singular_route_key; end
 
   # Sets the attribute singular_route_key
+  #
+  # @param value the value to set the attribute singular_route_key to.
   def singular_route_key=(_arg0); end
 
-  def to_s(*_arg0, **_arg1, &_arg2); end
-  def to_str(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, &_arg1); end
+  def to_str(*_arg0, &_arg1); end
 
   private
 
@@ -2228,15 +2380,15 @@ end
 #
 # To implement, just extend ActiveModel::Naming in your object:
 #
-# class BookCover
-# extend ActiveModel::Naming
-# end
+#   class BookCover
+#     extend ActiveModel::Naming
+#   end
 #
-# BookCover.model_name.name   # => "BookCover"
-# BookCover.model_name.human  # => "Book cover"
+#   BookCover.model_name.name   # => "BookCover"
+#   BookCover.model_name.human  # => "Book cover"
 #
-# BookCover.model_name.i18n_key              # => :book_cover
-# BookModule::BookCover.model_name.i18n_key  # => :"book_module/book_cover"
+#   BookCover.model_name.i18n_key              # => :book_cover
+#   BookModule::BookCover.model_name.i18n_key  # => :"book_module/book_cover"
 #
 # Providing the functionality that ActiveModel::Naming provides in your object
 # is required to pass the \Active \Model Lint test. So either extending the
@@ -2246,14 +2398,14 @@ module ActiveModel::Naming
   # used to retrieve all kinds of naming-related information
   # (See ActiveModel::Name for more information).
   #
-  # class Person
-  # extend ActiveModel::Naming
-  # end
+  #   class Person
+  #     extend ActiveModel::Naming
+  #   end
   #
-  # Person.model_name.name     # => "Person"
-  # Person.model_name.class    # => ActiveModel::Name
-  # Person.model_name.singular # => "person"
-  # Person.model_name.plural   # => "people"
+  #   Person.model_name.name     # => "Person"
+  #   Person.model_name.class    # => ActiveModel::Name
+  #   Person.model_name.singular # => "person"
+  #   Person.model_name.plural   # => "people"
   def model_name; end
 
   class << self
@@ -2262,27 +2414,27 @@ module ActiveModel::Naming
     # Returns string to use for params names. It differs for
     # namespaced models regarding whether it's inside isolated engine.
     #
-    # # For isolated engine:
-    # ActiveModel::Naming.param_key(Blog::Post) # => "post"
+    #   # For isolated engine:
+    #   ActiveModel::Naming.param_key(Blog::Post) # => "post"
     #
-    # # For shared engine:
-    # ActiveModel::Naming.param_key(Blog::Post) # => "blog_post"
+    #   # For shared engine:
+    #   ActiveModel::Naming.param_key(Blog::Post) # => "blog_post"
     def param_key(record_or_class); end
 
     # Returns the plural class name of a record or class.
     #
-    # ActiveModel::Naming.plural(post)             # => "posts"
-    # ActiveModel::Naming.plural(Highrise::Person) # => "highrise_people"
+    #   ActiveModel::Naming.plural(post)             # => "posts"
+    #   ActiveModel::Naming.plural(Highrise::Person) # => "highrise_people"
     def plural(record_or_class); end
 
     # Returns string to use while generating route names. It differs for
     # namespaced models regarding whether it's inside isolated engine.
     #
-    # # For isolated engine:
-    # ActiveModel::Naming.route_key(Blog::Post) # => "posts"
+    #   # For isolated engine:
+    #   ActiveModel::Naming.route_key(Blog::Post) # => "posts"
     #
-    # # For shared engine:
-    # ActiveModel::Naming.route_key(Blog::Post) # => "blog_posts"
+    #   # For shared engine:
+    #   ActiveModel::Naming.route_key(Blog::Post) # => "blog_posts"
     #
     # The route key also considers if the noun is uncountable and, in
     # such cases, automatically appends _index.
@@ -2290,24 +2442,26 @@ module ActiveModel::Naming
 
     # Returns the singular class name of a record or class.
     #
-    # ActiveModel::Naming.singular(post)             # => "post"
-    # ActiveModel::Naming.singular(Highrise::Person) # => "highrise_person"
+    #   ActiveModel::Naming.singular(post)             # => "post"
+    #   ActiveModel::Naming.singular(Highrise::Person) # => "highrise_person"
     def singular(record_or_class); end
 
     # Returns string to use while generating route names. It differs for
     # namespaced models regarding whether it's inside isolated engine.
     #
-    # # For isolated engine:
-    # ActiveModel::Naming.singular_route_key(Blog::Post) # => "post"
+    #   # For isolated engine:
+    #   ActiveModel::Naming.singular_route_key(Blog::Post) # => "post"
     #
-    # # For shared engine:
-    # ActiveModel::Naming.singular_route_key(Blog::Post) # => "blog_post"
+    #   # For shared engine:
+    #   ActiveModel::Naming.singular_route_key(Blog::Post) # => "blog_post"
     def singular_route_key(record_or_class); end
 
     # Identifies whether the class name of a record or class is uncountable.
     #
-    # ActiveModel::Naming.uncountable?(Sheep) # => true
-    # ActiveModel::Naming.uncountable?(Post)  # => false
+    #   ActiveModel::Naming.uncountable?(Sheep) # => true
+    #   ActiveModel::Naming.uncountable?(Post)  # => false
+    #
+    # @return [Boolean]
     def uncountable?(record_or_class); end
 
     private
@@ -2319,23 +2473,32 @@ end
 class ActiveModel::NestedError < ::ActiveModel::Error
   extend ::Forwardable
 
+  # @return [NestedError] a new instance of NestedError
   def initialize(base, inner_error, override_options = T.unsafe(nil)); end
 
   # Returns the value of attribute inner_error.
   def inner_error; end
 
-  def message(*args, **_arg1, &block); end
+  def message(*args, &block); end
 end
 
 class ActiveModel::NullMutationTracker
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
+  # @return [Boolean]
   def any_changes?; end
+
   def change_to_attribute(attr_name); end
+
+  # @return [Boolean]
   def changed?(attr_name, **_arg1); end
+
   def changed_attribute_names; end
+
+  # @return [Boolean]
   def changed_in_place?(attr_name); end
+
   def changed_values; end
   def changes; end
   def original_value(attr_name); end
@@ -2377,34 +2540,35 @@ module ActiveModel::SecurePassword::ClassMethods
   #
   # Add bcrypt (~> 3.1.7) to Gemfile to use #has_secure_password:
   #
-  # gem 'bcrypt', '~> 3.1.7'
+  #   gem 'bcrypt', '~> 3.1.7'
   #
   # Example using Active Record (which automatically includes ActiveModel::SecurePassword):
   #
-  # # Schema: User(name:string, password_digest:string, recovery_password_digest:string)
-  # class User < ActiveRecord::Base
-  # has_secure_password
-  # has_secure_password :recovery_password, validations: false
-  # end
+  #   # Schema: User(name:string, password_digest:string, recovery_password_digest:string)
+  #   class User < ActiveRecord::Base
+  #     has_secure_password
+  #     has_secure_password :recovery_password, validations: false
+  #   end
   #
-  # user = User.new(name: 'david', password: '', password_confirmation: 'nomatch')
-  # user.save                                                  # => false, password required
-  # user.password = 'mUc3m00RsqyRe'
-  # user.save                                                  # => false, confirmation doesn't match
-  # user.password_confirmation = 'mUc3m00RsqyRe'
-  # user.save                                                  # => true
-  # user.recovery_password = "42password"
-  # user.recovery_password_digest                              # => "$2a$04$iOfhwahFymCs5weB3BNH/uXkTG65HR.qpW.bNhEjFP3ftli3o5DQC"
-  # user.save                                                  # => true
-  # user.authenticate('notright')                              # => false
-  # user.authenticate('mUc3m00RsqyRe')                         # => user
-  # user.authenticate_recovery_password('42password')          # => user
-  # User.find_by(name: 'david')&.authenticate('notright')      # => false
-  # User.find_by(name: 'david')&.authenticate('mUc3m00RsqyRe') # => user
+  #   user = User.new(name: 'david', password: '', password_confirmation: 'nomatch')
+  #   user.save                                                  # => false, password required
+  #   user.password = 'mUc3m00RsqyRe'
+  #   user.save                                                  # => false, confirmation doesn't match
+  #   user.password_confirmation = 'mUc3m00RsqyRe'
+  #   user.save                                                  # => true
+  #   user.recovery_password = "42password"
+  #   user.recovery_password_digest                              # => "$2a$04$iOfhwahFymCs5weB3BNH/uXkTG65HR.qpW.bNhEjFP3ftli3o5DQC"
+  #   user.save                                                  # => true
+  #   user.authenticate('notright')                              # => false
+  #   user.authenticate('mUc3m00RsqyRe')                         # => user
+  #   user.authenticate_recovery_password('42password')          # => user
+  #   User.find_by(name: 'david')&.authenticate('notright')      # => false
+  #   User.find_by(name: 'david')&.authenticate('mUc3m00RsqyRe') # => user
   def has_secure_password(attribute = T.unsafe(nil), validations: T.unsafe(nil)); end
 end
 
 class ActiveModel::SecurePassword::InstanceMethodsOnActivation < ::Module
+  # @return [InstanceMethodsOnActivation] a new instance of InstanceMethodsOnActivation
   def initialize(attribute); end
 end
 
@@ -2419,22 +2583,22 @@ ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED = T.let(T.unsafe(nil), 
 #
 # A minimal implementation could be:
 #
-# class Person
-# include ActiveModel::Serialization
+#   class Person
+#     include ActiveModel::Serialization
 #
-# attr_accessor :name
+#     attr_accessor :name
 #
-# def attributes
-# {'name' => nil}
-# end
-# end
+#     def attributes
+#       {'name' => nil}
+#     end
+#   end
 #
 # Which would provide you with:
 #
-# person = Person.new
-# person.serializable_hash   # => {"name"=>nil}
-# person.name = "Bob"
-# person.serializable_hash   # => {"name"=>"Bob"}
+#   person = Person.new
+#   person.serializable_hash   # => {"name"=>nil}
+#   person.name = "Bob"
+#   person.serializable_hash   # => {"name"=>"Bob"}
 #
 # An +attributes+ hash must be defined and should contain any attributes you
 # need to be serialized. Attributes must be strings, not symbols.
@@ -2448,108 +2612,108 @@ ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED = T.let(T.unsafe(nil), 
 #
 # A minimal implementation including JSON would be:
 #
-# class Person
-# include ActiveModel::Serializers::JSON
+#   class Person
+#     include ActiveModel::Serializers::JSON
 #
-# attr_accessor :name
+#     attr_accessor :name
 #
-# def attributes
-# {'name' => nil}
-# end
-# end
+#     def attributes
+#       {'name' => nil}
+#     end
+#   end
 #
 # Which would provide you with:
 #
-# person = Person.new
-# person.serializable_hash   # => {"name"=>nil}
-# person.as_json             # => {"name"=>nil}
-# person.to_json             # => "{\"name\":null}"
+#   person = Person.new
+#   person.serializable_hash   # => {"name"=>nil}
+#   person.as_json             # => {"name"=>nil}
+#   person.to_json             # => "{\"name\":null}"
 #
-# person.name = "Bob"
-# person.serializable_hash   # => {"name"=>"Bob"}
-# person.as_json             # => {"name"=>"Bob"}
-# person.to_json             # => "{\"name\":\"Bob\"}"
+#   person.name = "Bob"
+#   person.serializable_hash   # => {"name"=>"Bob"}
+#   person.as_json             # => {"name"=>"Bob"}
+#   person.to_json             # => "{\"name\":\"Bob\"}"
 #
 # Valid options are <tt>:only</tt>, <tt>:except</tt>, <tt>:methods</tt> and
 # <tt>:include</tt>. The following are all valid examples:
 #
-# person.serializable_hash(only: 'name')
-# person.serializable_hash(include: :address)
-# person.serializable_hash(include: { address: { only: 'city' }})
+#   person.serializable_hash(only: 'name')
+#   person.serializable_hash(include: :address)
+#   person.serializable_hash(include: { address: { only: 'city' }})
 module ActiveModel::Serialization
   # Hook method defining how an attribute value should be retrieved for
   # serialization. By default this is assumed to be an instance named after
   # the attribute. Override this method in subclasses should you need to
   # retrieve the value for a given attribute differently:
   #
-  # class MyClass
-  # include ActiveModel::Serialization
+  #   class MyClass
+  #     include ActiveModel::Serialization
   #
-  # def initialize(data = {})
-  # @data = data
-  # end
+  #     def initialize(data = {})
+  #       @data = data
+  #     end
   #
-  # def read_attribute_for_serialization(key)
-  # @data[key]
-  # end
-  # end
+  #     def read_attribute_for_serialization(key)
+  #       @data[key]
+  #     end
+  #   end
   def read_attribute_for_serialization(*_arg0); end
 
   # Returns a serialized hash of your object.
   #
-  # class Person
-  # include ActiveModel::Serialization
+  #   class Person
+  #     include ActiveModel::Serialization
   #
-  # attr_accessor :name, :age
+  #     attr_accessor :name, :age
   #
-  # def attributes
-  # {'name' => nil, 'age' => nil}
-  # end
+  #     def attributes
+  #       {'name' => nil, 'age' => nil}
+  #     end
   #
-  # def capitalized_name
-  # name.capitalize
-  # end
-  # end
+  #     def capitalized_name
+  #       name.capitalize
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = 'bob'
-  # person.age  = 22
-  # person.serializable_hash                # => {"name"=>"bob", "age"=>22}
-  # person.serializable_hash(only: :name)   # => {"name"=>"bob"}
-  # person.serializable_hash(except: :name) # => {"age"=>22}
-  # person.serializable_hash(methods: :capitalized_name)
-  # # => {"name"=>"bob", "age"=>22, "capitalized_name"=>"Bob"}
+  #   person = Person.new
+  #   person.name = 'bob'
+  #   person.age  = 22
+  #   person.serializable_hash                # => {"name"=>"bob", "age"=>22}
+  #   person.serializable_hash(only: :name)   # => {"name"=>"bob"}
+  #   person.serializable_hash(except: :name) # => {"age"=>22}
+  #   person.serializable_hash(methods: :capitalized_name)
+  #   # => {"name"=>"bob", "age"=>22, "capitalized_name"=>"Bob"}
   #
   # Example with <tt>:include</tt> option
   #
-  # class User
-  # include ActiveModel::Serializers::JSON
-  # attr_accessor :name, :notes # Emulate has_many :notes
-  # def attributes
-  # {'name' => nil}
-  # end
-  # end
+  #   class User
+  #     include ActiveModel::Serializers::JSON
+  #     attr_accessor :name, :notes # Emulate has_many :notes
+  #     def attributes
+  #       {'name' => nil}
+  #     end
+  #   end
   #
-  # class Note
-  # include ActiveModel::Serializers::JSON
-  # attr_accessor :title, :text
-  # def attributes
-  # {'title' => nil, 'text' => nil}
-  # end
-  # end
+  #   class Note
+  #     include ActiveModel::Serializers::JSON
+  #     attr_accessor :title, :text
+  #     def attributes
+  #       {'title' => nil, 'text' => nil}
+  #     end
+  #   end
   #
-  # note = Note.new
-  # note.title = 'Battle of Austerlitz'
-  # note.text = 'Some text here'
+  #   note = Note.new
+  #   note.title = 'Battle of Austerlitz'
+  #   note.text = 'Some text here'
   #
-  # user = User.new
-  # user.name = 'Napoleon'
-  # user.notes = [note]
+  #   user = User.new
+  #   user.name = 'Napoleon'
+  #   user.notes = [note]
   #
-  # user.serializable_hash
-  # # => {"name" => "Napoleon"}
-  # user.serializable_hash(include: { notes: { only: 'title' }})
-  # # => {"name" => "Napoleon", "notes" => [{"title"=>"Battle of Austerlitz"}]}
+  #   user.serializable_hash
+  #   # => {"name" => "Napoleon"}
+  #   user.serializable_hash(include: { notes: { only: 'title' }})
+  #   # => {"name" => "Napoleon", "notes" => [{"title"=>"Battle of Austerlitz"}]}
   def serializable_hash(options = T.unsafe(nil)); end
 
   private
@@ -2557,9 +2721,9 @@ module ActiveModel::Serialization
   # Add associations specified via the <tt>:include</tt> option.
   #
   # Expects a block that takes as arguments:
-  # +association+ - name of the association
-  # +records+     - the association record(s) to be serialized
-  # +opts+        - options for the association records
+  #   +association+ - name of the association
+  #   +records+     - the association record(s) to be serialized
+  #   +opts+        - options for the association records
   def serializable_add_includes(options = T.unsafe(nil)); end
 
   def serializable_attributes(attribute_names); end
@@ -2586,112 +2750,112 @@ module ActiveModel::Serializers::JSON
   # after the object's type. The default value for <tt>include_root_in_json</tt>
   # option is +false+.
   #
-  # user = User.find(1)
-  # user.as_json
-  # # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #     "created_at" => "2006-08-01T17:27:133.000Z", "awesome" => true}
+  #   user = User.find(1)
+  #   user.as_json
+  #   # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #     "created_at" => "2006-08-01T17:27:133.000Z", "awesome" => true}
   #
-  # ActiveRecord::Base.include_root_in_json = true
+  #   ActiveRecord::Base.include_root_in_json = true
   #
-  # user.as_json
-  # # => { "user" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
+  #   user.as_json
+  #   # => { "user" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
   #
   # This behavior can also be achieved by setting the <tt>:root</tt> option
   # to +true+ as in:
   #
-  # user = User.find(1)
-  # user.as_json(root: true)
-  # # => { "user" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
+  #   user = User.find(1)
+  #   user.as_json(root: true)
+  #   # => { "user" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
   #
   # If you prefer, <tt>:root</tt> may also be set to a custom string key instead as in:
   #
-  # user = User.find(1)
-  # user.as_json(root: "author")
-  # # => { "author" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
+  #   user = User.find(1)
+  #   user.as_json(root: "author")
+  #   # => { "author" => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #                  "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true } }
   #
   # Without any +options+, the returned Hash will include all the model's
   # attributes.
   #
-  # user = User.find(1)
-  # user.as_json
-  # # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true}
+  #   user = User.find(1)
+  #   user.as_json
+  #   # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true}
   #
   # The <tt>:only</tt> and <tt>:except</tt> options can be used to limit
   # the attributes included, and work similar to the +attributes+ method.
   #
-  # user.as_json(only: [:id, :name])
-  # # => { "id" => 1, "name" => "Konata Izumi" }
+  #   user.as_json(only: [:id, :name])
+  #   # => { "id" => 1, "name" => "Konata Izumi" }
   #
-  # user.as_json(except: [:id, :created_at, :age])
-  # # => { "name" => "Konata Izumi", "awesome" => true }
+  #   user.as_json(except: [:id, :created_at, :age])
+  #   # => { "name" => "Konata Izumi", "awesome" => true }
   #
   # To include the result of some method calls on the model use <tt>:methods</tt>:
   #
-  # user.as_json(methods: :permalink)
-  # # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
-  # #      "permalink" => "1-konata-izumi" }
+  #   user.as_json(methods: :permalink)
+  #   # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
+  #   #      "permalink" => "1-konata-izumi" }
   #
   # To include associations use <tt>:include</tt>:
   #
-  # user.as_json(include: :posts)
-  # # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
-  # #      "posts" => [ { "id" => 1, "author_id" => 1, "title" => "Welcome to the weblog" },
-  # #                   { "id" => 2, "author_id" => 1, "title" => "So I was thinking" } ] }
+  #   user.as_json(include: :posts)
+  #   # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
+  #   #      "posts" => [ { "id" => 1, "author_id" => 1, "title" => "Welcome to the weblog" },
+  #   #                   { "id" => 2, "author_id" => 1, "title" => "So I was thinking" } ] }
   #
   # Second level and higher order associations work as well:
   #
-  # user.as_json(include: { posts: {
-  # include: { comments: {
-  # only: :body } },
-  # only: :title } })
-  # # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
-  # #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
-  # #      "posts" => [ { "comments" => [ { "body" => "1st post!" }, { "body" => "Second!" } ],
-  # #                     "title" => "Welcome to the weblog" },
-  # #                   { "comments" => [ { "body" => "Don't think too hard" } ],
-  # #                     "title" => "So I was thinking" } ] }
+  #   user.as_json(include: { posts: {
+  #                              include: { comments: {
+  #                                             only: :body } },
+  #                              only: :title } })
+  #   # => { "id" => 1, "name" => "Konata Izumi", "age" => 16,
+  #   #      "created_at" => "2006-08-01T17:27:13.000Z", "awesome" => true,
+  #   #      "posts" => [ { "comments" => [ { "body" => "1st post!" }, { "body" => "Second!" } ],
+  #   #                     "title" => "Welcome to the weblog" },
+  #   #                   { "comments" => [ { "body" => "Don't think too hard" } ],
+  #   #                     "title" => "So I was thinking" } ] }
   def as_json(options = T.unsafe(nil)); end
 
   # Sets the model +attributes+ from a JSON string. Returns +self+.
   #
-  # class Person
-  # include ActiveModel::Serializers::JSON
+  #   class Person
+  #     include ActiveModel::Serializers::JSON
   #
-  # attr_accessor :name, :age, :awesome
+  #     attr_accessor :name, :age, :awesome
   #
-  # def attributes=(hash)
-  # hash.each do |key, value|
-  # send("#{key}=", value)
-  # end
-  # end
+  #     def attributes=(hash)
+  #       hash.each do |key, value|
+  #         send("#{key}=", value)
+  #       end
+  #     end
   #
-  # def attributes
-  # instance_values
-  # end
-  # end
+  #     def attributes
+  #       instance_values
+  #     end
+  #   end
   #
-  # json = { name: 'bob', age: 22, awesome:true }.to_json
-  # person = Person.new
-  # person.from_json(json) # => #<Person:0x007fec5e7a0088 @age=22, @awesome=true, @name="bob">
-  # person.name            # => "bob"
-  # person.age             # => 22
-  # person.awesome         # => true
+  #   json = { name: 'bob', age: 22, awesome:true }.to_json
+  #   person = Person.new
+  #   person.from_json(json) # => #<Person:0x007fec5e7a0088 @age=22, @awesome=true, @name="bob">
+  #   person.name            # => "bob"
+  #   person.age             # => 22
+  #   person.awesome         # => true
   #
   # The default value for +include_root+ is +false+. You can change it to
   # +true+ if the given JSON string includes a single root node.
   #
-  # json = { person: { name: 'bob', age: 22, awesome:true } }.to_json
-  # person = Person.new
-  # person.from_json(json, true) # => #<Person:0x007fec5e7a0088 @age=22, @awesome=true, @name="bob">
-  # person.name                  # => "bob"
-  # person.age                   # => 22
-  # person.awesome               # => true
+  #   json = { person: { name: 'bob', age: 22, awesome:true } }.to_json
+  #   person = Person.new
+  #   person.from_json(json, true) # => #<Person:0x007fec5e7a0088 @age=22, @awesome=true, @name="bob">
+  #   person.name                  # => "bob"
+  #   person.age                   # => 22
+  #   person.awesome               # => true
   def from_json(json, include_root = T.unsafe(nil)); end
 
   module GeneratedClassMethods
@@ -2711,18 +2875,18 @@ ActiveModel::Serializers::VERSION = T.let(T.unsafe(nil), String)
 # Raised when a validation cannot be corrected by end users and are considered
 # exceptional.
 #
-# class Person
-# include ActiveModel::Validations
+#   class Person
+#     include ActiveModel::Validations
 #
-# attr_accessor :name
+#     attr_accessor :name
 #
-# validates_presence_of :name, strict: true
-# end
+#     validates_presence_of :name, strict: true
+#   end
 #
-# person = Person.new
-# person.name = nil
-# person.valid?
-# # => ActiveModel::StrictValidationFailed: Name can't be blank
+#   person = Person.new
+#   person.name = nil
+#   person.valid?
+#   # => ActiveModel::StrictValidationFailed: Name can't be blank
 class ActiveModel::StrictValidationFailed < ::StandardError; end
 
 # == Active \Model \Translation
@@ -2732,12 +2896,12 @@ class ActiveModel::StrictValidationFailed < ::StandardError; end
 #
 # A minimal implementation could be:
 #
-# class TranslatedPerson
-# extend ActiveModel::Translation
-# end
+#   class TranslatedPerson
+#     extend ActiveModel::Translation
+#   end
 #
-# TranslatedPerson.human_attribute_name('my_attribute')
-# # => "My attribute"
+#   TranslatedPerson.human_attribute_name('my_attribute')
+#   # => "My attribute"
 #
 # This also provides the required class methods for hooking into the
 # Rails internationalization API, including being able to define a
@@ -2749,7 +2913,7 @@ module ActiveModel::Translation
   # Transforms attribute names into a more human format, such as "First name"
   # instead of "first_name".
   #
-  # Person.human_attribute_name("first_name") # => "First name"
+  #   Person.human_attribute_name("first_name") # => "First name"
   #
   # Specify +options+ with additional translating options.
   def human_attribute_name(attribute, options = T.unsafe(nil)); end
@@ -2785,14 +2949,20 @@ class ActiveModel::Type::BigInteger < ::ActiveModel::Type::Integer
 end
 
 class ActiveModel::Type::Binary < ::ActiveModel::Type::Value
+  # @return [Boolean]
   def binary?; end
+
   def cast(value); end
+
+  # @return [Boolean]
   def changed_in_place?(raw_old_value, value); end
+
   def serialize(value); end
   def type; end
 end
 
 class ActiveModel::Type::Binary::Data
+  # @return [Data] a new instance of Data
   def initialize(value); end
 
   def ==(other); end
@@ -2890,6 +3060,7 @@ end
 module ActiveModel::Type::Helpers; end
 
 class ActiveModel::Type::Helpers::AcceptsMultiparameterTime < ::Module
+  # @return [AcceptsMultiparameterTime] a new instance of AcceptsMultiparameterTime
   def initialize(defaults: T.unsafe(nil)); end
 end
 
@@ -2897,6 +3068,8 @@ module ActiveModel::Type::Helpers::AcceptsMultiparameterTime::InstanceMethods
   def assert_valid_value(value); end
   def cast(value); end
   def serialize(value); end
+
+  # @return [Boolean]
   def value_constructed_by_mass_assignment?(value); end
 end
 
@@ -2906,17 +3079,25 @@ module ActiveModel::Type::Helpers::Mutable
   # +raw_old_value+ will be the `_before_type_cast` version of the
   # value (likely a string). +new_value+ will be the current, type
   # cast value.
+  #
+  # @return [Boolean]
   def changed_in_place?(raw_old_value, new_value); end
 end
 
 module ActiveModel::Type::Helpers::Numeric
   def cast(value); end
+
+  # @return [Boolean]
   def changed?(old_value, _new_value, new_value_before_type_cast); end
+
   def serialize(value); end
 
   private
 
+  # @return [Boolean]
   def non_numeric_string?(value); end
+
+  # @return [Boolean]
   def number_to_non_number?(old_value, new_value_before_type_cast); end
 end
 
@@ -2938,10 +3119,13 @@ ActiveModel::Type::Helpers::TimeValue::ISO_DATETIME = T.let(T.unsafe(nil), Regex
 
 module ActiveModel::Type::Helpers::Timezone
   def default_timezone; end
+
+  # @return [Boolean]
   def is_utc?; end
 end
 
 class ActiveModel::Type::ImmutableString < ::ActiveModel::Type::Value
+  # @return [ImmutableString] a new instance of ImmutableString
   def initialize(**args); end
 
   def serialize(value); end
@@ -2955,10 +3139,14 @@ end
 class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   include ::ActiveModel::Type::Helpers::Numeric
 
+  # @return [Integer] a new instance of Integer
   def initialize(**_arg0); end
 
   def deserialize(value); end
+
+  # @return [Boolean]
   def serializable?(value); end
+
   def serialize(value); end
   def type; end
 
@@ -2967,7 +3155,10 @@ class ActiveModel::Type::Integer < ::ActiveModel::Type::Value
   def _limit; end
   def cast_value(value); end
   def ensure_in_range(value); end
+
+  # @return [Boolean]
   def in_range?(value); end
+
   def max_value; end
   def min_value; end
 
@@ -2981,9 +3172,13 @@ ActiveModel::Type::Integer::DEFAULT_LIMIT = T.let(T.unsafe(nil), Integer)
 
 class ActiveModel::Type::Registration
   # Options must be taken because of https://bugs.ruby-lang.org/issues/10856
+  #
+  # @return [Registration] a new instance of Registration
   def initialize(name, block, **_arg2); end
 
   def call(_registry, *args, **kwargs); end
+
+  # @return [Boolean]
   def matches?(type_name, *args, **kwargs); end
 
   private
@@ -2996,6 +3191,7 @@ class ActiveModel::Type::Registration
 end
 
 class ActiveModel::Type::Registry
+  # @return [Registry] a new instance of Registry
   def initialize; end
 
   def lookup(symbol, *args, **kwargs); end
@@ -3012,7 +3208,9 @@ class ActiveModel::Type::Registry
 end
 
 class ActiveModel::Type::String < ::ActiveModel::Type::ImmutableString
+  # @return [Boolean]
   def changed_in_place?(raw_old_value, new_value); end
+
   def to_immutable_string; end
 
   private
@@ -3034,6 +3232,7 @@ class ActiveModel::Type::Time < ::ActiveModel::Type::Value
 end
 
 class ActiveModel::Type::Value
+  # @return [Value] a new instance of Value
   def initialize(precision: T.unsafe(nil), limit: T.unsafe(nil), scale: T.unsafe(nil)); end
 
   def ==(other); end
@@ -3041,6 +3240,8 @@ class ActiveModel::Type::Value
 
   # These predicates are not documented, as I need to look further into
   # their use, and see if they can be removed entirely.
+  #
+  # @return [Boolean]
   def binary?; end
 
   # Type casts a value from user input (e.g. from a setter). This value may
@@ -3058,6 +3259,8 @@ class ActiveModel::Type::Value
   # Determines whether a value has changed for dirty checking. +old_value+
   # and +new_value+ will always be type-cast. Types should not need to
   # override this method.
+  #
+  # @return [Boolean]
   def changed?(old_value, new_value, _new_value_before_type_cast); end
 
   # Determines whether the mutable value has been modified since it was
@@ -3066,17 +3269,19 @@ class ActiveModel::Type::Value
   # to either:
   #
   # - pass +new_value+ to Value#serialize and compare it to
-  # +raw_old_value+
+  #   +raw_old_value+
   #
   # or
   #
   # - pass +raw_old_value+ to Value#deserialize and compare it to
-  # +new_value+
+  #   +new_value+
   #
   # +raw_old_value+ The original value, before being passed to
   # +deserialize+.
   #
   # +new_value+ The current value, after type casting.
+  #
+  # @return [Boolean]
   def changed_in_place?(raw_old_value, new_value); end
 
   # Converts a value from database input to the appropriate ruby type. The
@@ -3088,12 +3293,16 @@ class ActiveModel::Type::Value
   def deserialize(value); end
 
   def eql?(other); end
+
+  # @return [Boolean]
   def force_equality?(_value); end
+
   def hash; end
 
   # Returns the value of attribute limit.
   def limit; end
 
+  # @yield [value]
   def map(value); end
 
   # Returns the value of attribute precision.
@@ -3106,6 +3315,8 @@ class ActiveModel::Type::Value
   # by the database.  For example a boolean type can return +true+ if the
   # value parameter is a Ruby boolean, but may return +false+ if the value
   # parameter is some other object.
+  #
+  # @return [Boolean]
   def serializable?(value); end
 
   # Casts a value from the ruby type to a type that the database knows how
@@ -3120,6 +3331,7 @@ class ActiveModel::Type::Value
   # hoping to remove it entirely.
   def type_cast_for_schema(value); end
 
+  # @return [Boolean]
   def value_constructed_by_mass_assignment?(_value); end
 
   private
@@ -3132,15 +3344,16 @@ end
 
 # Raised when unknown attributes are supplied via mass assignment.
 #
-# class Person
-# include ActiveModel::AttributeAssignment
-# include ActiveModel::Validations
-# end
+#   class Person
+#     include ActiveModel::AttributeAssignment
+#     include ActiveModel::Validations
+#   end
 #
-# person = Person.new
-# person.assign_attributes(name: 'Gorby')
-# # => ActiveModel::UnknownAttributeError: unknown attribute 'name' for Person.
+#   person = Person.new
+#   person.assign_attributes(name: 'Gorby')
+#   # => ActiveModel::UnknownAttributeError: unknown attribute 'name' for Person.
 class ActiveModel::UnknownAttributeError < ::NoMethodError
+  # @return [UnknownAttributeError] a new instance of UnknownAttributeError
   def initialize(record, attribute); end
 
   # Returns the value of attribute attribute.
@@ -3162,12 +3375,13 @@ ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 # Raised by <tt>validate!</tt> when the model is invalid. Use the
 # +model+ method to retrieve the record which did not validate.
 #
-# begin
-# complex_operation_that_internally_calls_validate!
-# rescue ActiveModel::ValidationError => invalid
-# puts invalid.model.errors
-# end
+#   begin
+#     complex_operation_that_internally_calls_validate!
+#   rescue ActiveModel::ValidationError => invalid
+#     puts invalid.model.errors
+#   end
 class ActiveModel::ValidationError < ::StandardError
+  # @return [ValidationError] a new instance of ValidationError
   def initialize(model); end
 
   # Returns the value of attribute model.
@@ -3180,27 +3394,27 @@ end
 #
 # A minimal implementation could be:
 #
-# class Person
-# include ActiveModel::Validations
+#   class Person
+#     include ActiveModel::Validations
 #
-# attr_accessor :first_name, :last_name
+#     attr_accessor :first_name, :last_name
 #
-# validates_each :first_name, :last_name do |record, attr, value|
-# record.errors.add attr, "starts with z." if value.start_with?("z")
-# end
-# end
+#     validates_each :first_name, :last_name do |record, attr, value|
+#       record.errors.add attr, "starts with z." if value.start_with?("z")
+#     end
+#   end
 #
 # Which provides you with the full standard validation stack that you
 # know from Active Record:
 #
-# person = Person.new
-# person.valid?                   # => true
-# person.invalid?                 # => false
+#   person = Person.new
+#   person.valid?                   # => true
+#   person.invalid?                 # => false
 #
-# person.first_name = 'zoolander'
-# person.valid?                   # => false
-# person.invalid?                 # => true
-# person.errors.messages          # => {first_name:["starts with z."]}
+#   person.first_name = 'zoolander'
+#   person.valid?                   # => false
+#   person.invalid?                 # => true
+#   person.errors.messages          # => {first_name:["starts with z."]}
 #
 # Note that <tt>ActiveModel::Validations</tt> automatically adds an +errors+
 # method to your instances initialized with a new <tt>ActiveModel::Errors</tt>
@@ -3222,47 +3436,49 @@ module ActiveModel::Validations
   # Returns the +Errors+ object that holds all information about attribute
   # error messages.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name
+  #   end
   #
-  # person = Person.new
-  # person.valid? # => false
-  # person.errors # => #<ActiveModel::Errors:0x007fe603816640 @messages={name:["can't be blank"]}>
+  #   person = Person.new
+  #   person.valid? # => false
+  #   person.errors # => #<ActiveModel::Errors:0x007fe603816640 @messages={name:["can't be blank"]}>
   def errors; end
 
   # Performs the opposite of <tt>valid?</tt>. Returns +true+ if errors were
   # added, +false+ otherwise.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name
+  #   end
   #
-  # person = Person.new
-  # person.name = ''
-  # person.invalid? # => true
-  # person.name = 'david'
-  # person.invalid? # => false
+  #   person = Person.new
+  #   person.name = ''
+  #   person.invalid? # => true
+  #   person.name = 'david'
+  #   person.invalid? # => false
   #
   # Context can optionally be supplied to define which callbacks to test
   # against (the context is defined on the validations using <tt>:on</tt>).
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name, on: :new
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name, on: :new
+  #   end
   #
-  # person = Person.new
-  # person.invalid?       # => false
-  # person.invalid?(:new) # => true
+  #   person = Person.new
+  #   person.invalid?       # => false
+  #   person.invalid?(:new) # => true
+  #
+  # @return [Boolean]
   def invalid?(context = T.unsafe(nil)); end
 
   # Hook method defining how an attribute value should be retrieved. By default
@@ -3270,79 +3486,83 @@ module ActiveModel::Validations
   # method in subclasses should you need to retrieve the value for a given
   # attribute differently:
   #
-  # class MyClass
-  # include ActiveModel::Validations
+  #   class MyClass
+  #     include ActiveModel::Validations
   #
-  # def initialize(data = {})
-  # @data = data
-  # end
+  #     def initialize(data = {})
+  #       @data = data
+  #     end
   #
-  # def read_attribute_for_validation(key)
-  # @data[key]
-  # end
-  # end
+  #     def read_attribute_for_validation(key)
+  #       @data[key]
+  #     end
+  #   end
   def read_attribute_for_validation(*_arg0); end
 
   # Runs all the specified validations and returns +true+ if no errors were
   # added otherwise +false+.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name
+  #   end
   #
-  # person = Person.new
-  # person.name = ''
-  # person.valid? # => false
-  # person.name = 'david'
-  # person.valid? # => true
+  #   person = Person.new
+  #   person.name = ''
+  #   person.valid? # => false
+  #   person.name = 'david'
+  #   person.valid? # => true
   #
   # Context can optionally be supplied to define which callbacks to test
   # against (the context is defined on the validations using <tt>:on</tt>).
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name, on: :new
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name, on: :new
+  #   end
   #
-  # person = Person.new
-  # person.valid?       # => true
-  # person.valid?(:new) # => false
+  #   person = Person.new
+  #   person.valid?       # => true
+  #   person.valid?(:new) # => false
+  #
+  # @return [Boolean]
   def valid?(context = T.unsafe(nil)); end
 
   # Runs all the specified validations and returns +true+ if no errors were
   # added otherwise +false+.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name
+  #   end
   #
-  # person = Person.new
-  # person.name = ''
-  # person.valid? # => false
-  # person.name = 'david'
-  # person.valid? # => true
+  #   person = Person.new
+  #   person.name = ''
+  #   person.valid? # => false
+  #   person.name = 'david'
+  #   person.valid? # => true
   #
   # Context can optionally be supplied to define which callbacks to test
   # against (the context is defined on the validations using <tt>:on</tt>).
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates_presence_of :name, on: :new
-  # end
+  #     attr_accessor :name
+  #     validates_presence_of :name, on: :new
+  #   end
   #
-  # person = Person.new
-  # person.valid?       # => true
-  # person.valid?(:new) # => false
+  #   person = Person.new
+  #   person.valid?       # => true
+  #   person.valid?(:new) # => false
+  #
+  # @return [Boolean]
   def validate(context = T.unsafe(nil)); end
 
   # Runs all the validations within the specified context. Returns +true+ if
@@ -3355,30 +3575,30 @@ module ActiveModel::Validations
   # Passes the record off to the class or classes specified and allows them
   # to add errors based on more complex conditions.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # validate :instance_validations
+  #     validate :instance_validations
   #
-  # def instance_validations
-  # validates_with MyValidator
-  # end
-  # end
+  #     def instance_validations
+  #       validates_with MyValidator
+  #     end
+  #   end
   #
   # Please consult the class method documentation for more information on
   # creating your own validator.
   #
   # You may also pass it multiple classes, like so:
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # validate :instance_validations, on: :create
+  #     validate :instance_validations, on: :create
   #
-  # def instance_validations
-  # validates_with MyValidator, MyOtherValidator
-  # end
-  # end
+  #     def instance_validations
+  #       validates_with MyValidator, MyOtherValidator
+  #     end
+  #   end
   #
   # Standard configuration options (<tt>:on</tt>, <tt>:if</tt> and
   # <tt>:unless</tt>), which are available on the class version of
@@ -3395,7 +3615,9 @@ module ActiveModel::Validations
   # Clean the +Errors+ object if instance is duped.
   def initialize_dup(other); end
 
+  # @raise [ValidationError]
   def raise_validation_error; end
+
   def run_validations!; end
 
   module GeneratedClassMethods
@@ -3421,22 +3643,28 @@ class ActiveModel::Validations::AbsenceValidator < ::ActiveModel::EachValidator
 end
 
 class ActiveModel::Validations::AcceptanceValidator < ::ActiveModel::EachValidator
+  # @return [AcceptanceValidator] a new instance of AcceptanceValidator
   def initialize(options); end
 
   def validate_each(record, attribute, value); end
 
   private
 
+  # @return [Boolean]
   def acceptable_option?(value); end
+
   def setup!(klass); end
 end
 
 class ActiveModel::Validations::AcceptanceValidator::LazilyDefineAttributes < ::Module
+  # @return [LazilyDefineAttributes] a new instance of LazilyDefineAttributes
   def initialize(attributes); end
 
   def ==(other); end
   def define_on(klass); end
   def included(klass); end
+
+  # @return [Boolean]
   def matches?(method_name); end
 
   protected
@@ -3453,12 +3681,12 @@ end
 # First, include ActiveModel::Validations::Callbacks from the class you are
 # creating:
 #
-# class MyModel
-# include ActiveModel::Validations::Callbacks
+#   class MyModel
+#     include ActiveModel::Validations::Callbacks
 #
-# before_validation :do_stuff_before_validation
-# after_validation  :do_stuff_after_validation
-# end
+#     before_validation :do_stuff_before_validation
+#     after_validation  :do_stuff_after_validation
+#   end
 #
 # Like other <tt>before_*</tt> callbacks if +before_validation+ throws
 # +:abort+ then <tt>valid?</tt> will not be called.
@@ -3492,55 +3720,55 @@ end
 module ActiveModel::Validations::Callbacks::ClassMethods
   # Defines a callback that will get called right after validation.
   #
-  # class Person
-  # include ActiveModel::Validations
-  # include ActiveModel::Validations::Callbacks
+  #   class Person
+  #     include ActiveModel::Validations
+  #     include ActiveModel::Validations::Callbacks
   #
-  # attr_accessor :name, :status
+  #     attr_accessor :name, :status
   #
-  # validates_presence_of :name
+  #     validates_presence_of :name
   #
-  # after_validation :set_status
+  #     after_validation :set_status
   #
-  # private
+  #     private
   #
-  # def set_status
-  # self.status = errors.empty?
-  # end
-  # end
+  #     def set_status
+  #       self.status = errors.empty?
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = ''
-  # person.valid? # => false
-  # person.status # => false
-  # person.name = 'bob'
-  # person.valid? # => true
-  # person.status # => true
+  #   person = Person.new
+  #   person.name = ''
+  #   person.valid? # => false
+  #   person.status # => false
+  #   person.name = 'bob'
+  #   person.valid? # => true
+  #   person.status # => true
   def after_validation(*args, &block); end
 
   # Defines a callback that will get called right before validation.
   #
-  # class Person
-  # include ActiveModel::Validations
-  # include ActiveModel::Validations::Callbacks
+  #   class Person
+  #     include ActiveModel::Validations
+  #     include ActiveModel::Validations::Callbacks
   #
-  # attr_accessor :name
+  #     attr_accessor :name
   #
-  # validates_length_of :name, maximum: 6
+  #     validates_length_of :name, maximum: 6
   #
-  # before_validation :remove_whitespaces
+  #     before_validation :remove_whitespaces
   #
-  # private
+  #     private
   #
-  # def remove_whitespaces
-  # name.strip!
-  # end
-  # end
+  #     def remove_whitespaces
+  #       name.strip!
+  #     end
+  #   end
   #
-  # person = Person.new
-  # person.name = '  bob  '
-  # person.valid? # => true
-  # person.name   # => "bob"
+  #   person = Person.new
+  #   person.name = '  bob  '
+  #   person.valid? # => true
+  #   person.name   # => "bob"
   def before_validation(*args, &block); end
 
   private
@@ -3551,14 +3779,16 @@ end
 module ActiveModel::Validations::ClassMethods
   # Returns +true+ if +attribute+ is an attribute method, +false+ otherwise.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #  class Person
+  #    include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # end
+  #    attr_accessor :name
+  #  end
   #
-  # User.attribute_method?(:name) # => true
-  # User.attribute_method?(:age)  # => false
+  #  User.attribute_method?(:name) # => true
+  #  User.attribute_method?(:age)  # => false
+  #
+  # @return [Boolean]
   def attribute_method?(attribute); end
 
   # Clears all of the validators and validations.
@@ -3569,35 +3799,35 @@ module ActiveModel::Validations::ClassMethods
   # +validates_with+ and the callbacks that are set by an invocation
   # of +validate+.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # validates_with MyValidator
-  # validates_with OtherValidator, on: :create
-  # validates_with StrictValidator, strict: true
-  # validate :cannot_be_robot
+  #     validates_with MyValidator
+  #     validates_with OtherValidator, on: :create
+  #     validates_with StrictValidator, strict: true
+  #     validate :cannot_be_robot
   #
-  # def cannot_be_robot
-  # errors.add(:base, 'A person cannot be a robot') if person_is_robot
-  # end
-  # end
+  #     def cannot_be_robot
+  #       errors.add(:base, 'A person cannot be a robot') if person_is_robot
+  #     end
+  #   end
   #
-  # Person.validators
-  # # => [
-  # #      #<MyValidator:0x007fbff403e808 @options={}>,
-  # #      #<OtherValidator:0x007fbff403d930 @options={on: :create}>,
-  # #      #<StrictValidator:0x007fbff3204a30 @options={strict:true}>
-  # #    ]
+  #   Person.validators
+  #   # => [
+  #   #      #<MyValidator:0x007fbff403e808 @options={}>,
+  #   #      #<OtherValidator:0x007fbff403d930 @options={on: :create}>,
+  #   #      #<StrictValidator:0x007fbff3204a30 @options={strict:true}>
+  #   #    ]
   #
   # If one runs <tt>Person.clear_validators!</tt> and then checks to see what
   # validators this class has, you would obtain:
   #
-  # Person.validators # => []
+  #   Person.validators # => []
   #
   # Also, the callback set by <tt>validate :cannot_be_robot</tt> will be erased
   # so that:
   #
-  # Person._validate_callbacks.empty?  # => true
+  #   Person._validate_callbacks.empty?  # => true
   def clear_validators!; end
 
   # Copy validators on inheritance.
@@ -3609,58 +3839,58 @@ module ActiveModel::Validations::ClassMethods
   #
   # This can be done with a symbol pointing to a method:
   #
-  # class Comment
-  # include ActiveModel::Validations
+  #   class Comment
+  #     include ActiveModel::Validations
   #
-  # validate :must_be_friends
+  #     validate :must_be_friends
   #
-  # def must_be_friends
-  # errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
-  # end
-  # end
+  #     def must_be_friends
+  #       errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
+  #     end
+  #   end
   #
   # With a block which is passed with the current record to be validated:
   #
-  # class Comment
-  # include ActiveModel::Validations
+  #   class Comment
+  #     include ActiveModel::Validations
   #
-  # validate do |comment|
-  # comment.must_be_friends
-  # end
+  #     validate do |comment|
+  #       comment.must_be_friends
+  #     end
   #
-  # def must_be_friends
-  # errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
-  # end
-  # end
+  #     def must_be_friends
+  #       errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
+  #     end
+  #   end
   #
   # Or with a block where self points to the current record to be validated:
   #
-  # class Comment
-  # include ActiveModel::Validations
+  #   class Comment
+  #     include ActiveModel::Validations
   #
-  # validate do
-  # errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
-  # end
-  # end
+  #     validate do
+  #       errors.add(:base, 'Must be friends to leave a comment') unless commenter.friend_of?(commentee)
+  #     end
+  #   end
   #
   # Note that the return value of validation methods is not relevant.
   # It's not possible to halt the validate callback chain.
   #
   # Options:
   # * <tt>:on</tt> - Specifies the contexts where this validation is active.
-  # Runs in all validation contexts by default +nil+. You can pass a symbol
-  # or an array of symbols. (e.g. <tt>on: :create</tt> or
-  # <tt>on: :custom_validation_context</tt> or
-  # <tt>on: [:create, :custom_validation_context]</tt>)
+  #   Runs in all validation contexts by default +nil+. You can pass a symbol
+  #   or an array of symbols. (e.g. <tt>on: :create</tt> or
+  #   <tt>on: :custom_validation_context</tt> or
+  #   <tt>on: [:create, :custom_validation_context]</tt>)
   # * <tt>:if</tt> - Specifies a method, proc or string to call to determine
-  # if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
-  # or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
-  # proc or string should return or evaluate to a +true+ or +false+ value.
+  #   if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
+  #   or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
+  #   proc or string should return or evaluate to a +true+ or +false+ value.
   # * <tt>:unless</tt> - Specifies a method, proc or string to call to
-  # determine if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
-  # or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
-  # method, proc or string should return or evaluate to a +true+ or +false+
-  # value.
+  #   determine if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
+  #   or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
+  #   method, proc or string should return or evaluate to a +true+ or +false+
+  #   value.
   #
   # NOTE: Calling +validate+ multiple times on the same method will overwrite previous definitions.
   def validate(*args, &block); end
@@ -3672,60 +3902,60 @@ module ActiveModel::Validations::ClassMethods
   #
   # Examples of using the default rails validators:
   #
-  # validates :username, absence: true
-  # validates :terms, acceptance: true
-  # validates :password, confirmation: true
-  # validates :username, exclusion: { in: %w(admin superuser) }
-  # validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create }
-  # validates :age, inclusion: { in: 0..9 }
-  # validates :first_name, length: { maximum: 30 }
-  # validates :age, numericality: true
-  # validates :username, presence: true
+  #   validates :username, absence: true
+  #   validates :terms, acceptance: true
+  #   validates :password, confirmation: true
+  #   validates :username, exclusion: { in: %w(admin superuser) }
+  #   validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create }
+  #   validates :age, inclusion: { in: 0..9 }
+  #   validates :first_name, length: { maximum: 30 }
+  #   validates :age, numericality: true
+  #   validates :username, presence: true
   #
   # The power of the +validates+ method comes when using custom validators
   # and default validators in one call for a given attribute.
   #
-  # class EmailValidator < ActiveModel::EachValidator
-  # def validate_each(record, attribute, value)
-  # record.errors.add attribute, (options[:message] || "is not an email") unless
-  # /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match?(value)
-  # end
-  # end
+  #   class EmailValidator < ActiveModel::EachValidator
+  #     def validate_each(record, attribute, value)
+  #       record.errors.add attribute, (options[:message] || "is not an email") unless
+  #         /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match?(value)
+  #     end
+  #   end
   #
-  # class Person
-  # include ActiveModel::Validations
-  # attr_accessor :name, :email
+  #   class Person
+  #     include ActiveModel::Validations
+  #     attr_accessor :name, :email
   #
-  # validates :name, presence: true, length: { maximum: 100 }
-  # validates :email, presence: true, email: true
-  # end
+  #     validates :name, presence: true, length: { maximum: 100 }
+  #     validates :email, presence: true, email: true
+  #   end
   #
   # Validator classes may also exist within the class being validated
   # allowing custom modules of validators to be included as needed.
   #
-  # class Film
-  # include ActiveModel::Validations
+  #   class Film
+  #     include ActiveModel::Validations
   #
-  # class TitleValidator < ActiveModel::EachValidator
-  # def validate_each(record, attribute, value)
-  # record.errors.add attribute, "must start with 'the'" unless /\Athe/i.match?(value)
-  # end
-  # end
+  #     class TitleValidator < ActiveModel::EachValidator
+  #       def validate_each(record, attribute, value)
+  #         record.errors.add attribute, "must start with 'the'" unless /\Athe/i.match?(value)
+  #       end
+  #     end
   #
-  # validates :name, title: true
-  # end
+  #     validates :name, title: true
+  #   end
   #
   # Additionally validator classes may be in another namespace and still
   # used within any class.
   #
-  # validates :name, :'film/title' => true
+  #   validates :name, :'film/title' => true
   #
   # The validators hash can also handle regular expressions, ranges, arrays
   # and strings in shortcut form.
   #
-  # validates :email, format: /@/
-  # validates :role, inclusion: %w(admin contributor)
-  # validates :password, length: 6..20
+  #   validates :email, format: /@/
+  #   validates :role, inclusion: %w(admin contributor)
+  #   validates :password, length: 6..20
   #
   # When using shortcut form, ranges and arrays are passed to your
   # validator's initializer as <tt>options[:in]</tt> while other types
@@ -3734,35 +3964,37 @@ module ActiveModel::Validations::ClassMethods
   # There is also a list of options that could be used along with validators:
   #
   # * <tt>:on</tt> - Specifies the contexts where this validation is active.
-  # Runs in all validation contexts by default +nil+. You can pass a symbol
-  # or an array of symbols. (e.g. <tt>on: :create</tt> or
-  # <tt>on: :custom_validation_context</tt> or
-  # <tt>on: [:create, :custom_validation_context]</tt>)
+  #   Runs in all validation contexts by default +nil+. You can pass a symbol
+  #   or an array of symbols. (e.g. <tt>on: :create</tt> or
+  #   <tt>on: :custom_validation_context</tt> or
+  #   <tt>on: [:create, :custom_validation_context]</tt>)
   # * <tt>:if</tt> - Specifies a method, proc or string to call to determine
-  # if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
-  # or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
-  # proc or string should return or evaluate to a +true+ or +false+ value.
+  #   if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
+  #   or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
+  #   proc or string should return or evaluate to a +true+ or +false+ value.
   # * <tt>:unless</tt> - Specifies a method, proc or string to call to determine
-  # if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
-  # or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
-  # method, proc or string should return or evaluate to a +true+ or
-  # +false+ value.
+  #   if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
+  #   or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
+  #   method, proc or string should return or evaluate to a +true+ or
+  #   +false+ value.
   # * <tt>:allow_nil</tt> - Skip validation if the attribute is +nil+.
   # * <tt>:allow_blank</tt> - Skip validation if the attribute is blank.
   # * <tt>:strict</tt> - If the <tt>:strict</tt> option is set to true
-  # will raise ActiveModel::StrictValidationFailed instead of adding the error.
-  # <tt>:strict</tt> option can also be set to any other exception.
+  #   will raise ActiveModel::StrictValidationFailed instead of adding the error.
+  #   <tt>:strict</tt> option can also be set to any other exception.
   #
   # Example:
   #
-  # validates :password, presence: true, confirmation: true, if: :password_required?
-  # validates :token, length: 24, strict: TokenLengthException
+  #   validates :password, presence: true, confirmation: true, if: :password_required?
+  #   validates :token, length: 24, strict: TokenLengthException
   #
   #
   # Finally, the options +:if+, +:unless+, +:on+, +:allow_blank+, +:allow_nil+, +:strict+
   # and +:message+ can be given to one specific validator, as a hash:
   #
-  # validates :password, presence: { if: :password_required?, message: 'is forgotten.' }, confirmation: true
+  #   validates :password, presence: { if: :password_required?, message: 'is forgotten.' }, confirmation: true
+  #
+  # @raise [ArgumentError]
   def validates(*attributes); end
 
   # This method is used to define validations that cannot be corrected by end
@@ -3772,147 +4004,147 @@ module ActiveModel::Validations::ClassMethods
   # when validation fails. See <tt>validates</tt> for more information about
   # the validation itself.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name
-  # validates! :name, presence: true
-  # end
+  #     attr_accessor :name
+  #     validates! :name, presence: true
+  #   end
   #
-  # person = Person.new
-  # person.name = ''
-  # person.valid?
-  # # => ActiveModel::StrictValidationFailed: Name can't be blank
+  #   person = Person.new
+  #   person.name = ''
+  #   person.valid?
+  #   # => ActiveModel::StrictValidationFailed: Name can't be blank
   def validates!(*attributes); end
 
   # Validates each attribute against a block.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :first_name, :last_name
+  #     attr_accessor :first_name, :last_name
   #
-  # validates_each :first_name, :last_name, allow_blank: true do |record, attr, value|
-  # record.errors.add attr, "starts with z." if value.start_with?("z")
-  # end
-  # end
+  #     validates_each :first_name, :last_name, allow_blank: true do |record, attr, value|
+  #       record.errors.add attr, "starts with z." if value.start_with?("z")
+  #     end
+  #   end
   #
   # Options:
   # * <tt>:on</tt> - Specifies the contexts where this validation is active.
-  # Runs in all validation contexts by default +nil+. You can pass a symbol
-  # or an array of symbols. (e.g. <tt>on: :create</tt> or
-  # <tt>on: :custom_validation_context</tt> or
-  # <tt>on: [:create, :custom_validation_context]</tt>)
+  #   Runs in all validation contexts by default +nil+. You can pass a symbol
+  #   or an array of symbols. (e.g. <tt>on: :create</tt> or
+  #   <tt>on: :custom_validation_context</tt> or
+  #   <tt>on: [:create, :custom_validation_context]</tt>)
   # * <tt>:allow_nil</tt> - Skip validation if attribute is +nil+.
   # * <tt>:allow_blank</tt> - Skip validation if attribute is blank.
   # * <tt>:if</tt> - Specifies a method, proc or string to call to determine
-  # if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
-  # or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
-  # proc or string should return or evaluate to a +true+ or +false+ value.
+  #   if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
+  #   or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>). The method,
+  #   proc or string should return or evaluate to a +true+ or +false+ value.
   # * <tt>:unless</tt> - Specifies a method, proc or string to call to
-  # determine if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
-  # or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
-  # method, proc or string should return or evaluate to a +true+ or +false+
-  # value.
+  #   determine if the validation should not occur (e.g. <tt>unless: :skip_validation</tt>,
+  #   or <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>). The
+  #   method, proc or string should return or evaluate to a +true+ or +false+
+  #   value.
   def validates_each(*attr_names, &block); end
 
   # Passes the record off to the class or classes specified and allows them
   # to add errors based on more complex conditions.
   #
-  # class Person
-  # include ActiveModel::Validations
-  # validates_with MyValidator
-  # end
+  #   class Person
+  #     include ActiveModel::Validations
+  #     validates_with MyValidator
+  #   end
   #
-  # class MyValidator < ActiveModel::Validator
-  # def validate(record)
-  # if some_complex_logic
-  # record.errors.add :base, 'This record is invalid'
-  # end
-  # end
+  #   class MyValidator < ActiveModel::Validator
+  #     def validate(record)
+  #       if some_complex_logic
+  #         record.errors.add :base, 'This record is invalid'
+  #       end
+  #     end
   #
-  # private
-  # def some_complex_logic
-  # # ...
-  # end
-  # end
+  #     private
+  #       def some_complex_logic
+  #         # ...
+  #       end
+  #   end
   #
   # You may also pass it multiple classes, like so:
   #
-  # class Person
-  # include ActiveModel::Validations
-  # validates_with MyValidator, MyOtherValidator, on: :create
-  # end
+  #   class Person
+  #     include ActiveModel::Validations
+  #     validates_with MyValidator, MyOtherValidator, on: :create
+  #   end
   #
   # Configuration options:
   # * <tt>:on</tt> - Specifies the contexts where this validation is active.
-  # Runs in all validation contexts by default +nil+. You can pass a symbol
-  # or an array of symbols. (e.g. <tt>on: :create</tt> or
-  # <tt>on: :custom_validation_context</tt> or
-  # <tt>on: [:create, :custom_validation_context]</tt>)
+  #   Runs in all validation contexts by default +nil+. You can pass a symbol
+  #   or an array of symbols. (e.g. <tt>on: :create</tt> or
+  #   <tt>on: :custom_validation_context</tt> or
+  #   <tt>on: [:create, :custom_validation_context]</tt>)
   # * <tt>:if</tt> - Specifies a method, proc or string to call to determine
-  # if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
-  # or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>).
-  # The method, proc or string should return or evaluate to a +true+ or
-  # +false+ value.
+  #   if the validation should occur (e.g. <tt>if: :allow_validation</tt>,
+  #   or <tt>if: Proc.new { |user| user.signup_step > 2 }</tt>).
+  #   The method, proc or string should return or evaluate to a +true+ or
+  #   +false+ value.
   # * <tt>:unless</tt> - Specifies a method, proc or string to call to
-  # determine if the validation should not occur
-  # (e.g. <tt>unless: :skip_validation</tt>, or
-  # <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>).
-  # The method, proc or string should return or evaluate to a +true+ or
-  # +false+ value.
+  #   determine if the validation should not occur
+  #   (e.g. <tt>unless: :skip_validation</tt>, or
+  #   <tt>unless: Proc.new { |user| user.signup_step <= 2 }</tt>).
+  #   The method, proc or string should return or evaluate to a +true+ or
+  #   +false+ value.
   # * <tt>:strict</tt> - Specifies whether validation should be strict.
-  # See <tt>ActiveModel::Validations#validates!</tt> for more information.
+  #   See <tt>ActiveModel::Validations#validates!</tt> for more information.
   #
   # If you pass any additional configuration options, they will be passed
   # to the class and available as +options+:
   #
-  # class Person
-  # include ActiveModel::Validations
-  # validates_with MyValidator, my_custom_key: 'my custom value'
-  # end
+  #   class Person
+  #     include ActiveModel::Validations
+  #     validates_with MyValidator, my_custom_key: 'my custom value'
+  #   end
   #
-  # class MyValidator < ActiveModel::Validator
-  # def validate(record)
-  # options[:my_custom_key] # => "my custom value"
-  # end
-  # end
+  #   class MyValidator < ActiveModel::Validator
+  #     def validate(record)
+  #       options[:my_custom_key] # => "my custom value"
+  #     end
+  #   end
   def validates_with(*args, &block); end
 
   # List all validators that are being used to validate the model using
   # +validates_with+ method.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # validates_with MyValidator
-  # validates_with OtherValidator, on: :create
-  # validates_with StrictValidator, strict: true
-  # end
+  #     validates_with MyValidator
+  #     validates_with OtherValidator, on: :create
+  #     validates_with StrictValidator, strict: true
+  #   end
   #
-  # Person.validators
-  # # => [
-  # #      #<MyValidator:0x007fbff403e808 @options={}>,
-  # #      #<OtherValidator:0x007fbff403d930 @options={on: :create}>,
-  # #      #<StrictValidator:0x007fbff3204a30 @options={strict:true}>
-  # #    ]
+  #   Person.validators
+  #   # => [
+  #   #      #<MyValidator:0x007fbff403e808 @options={}>,
+  #   #      #<OtherValidator:0x007fbff403d930 @options={on: :create}>,
+  #   #      #<StrictValidator:0x007fbff3204a30 @options={strict:true}>
+  #   #    ]
   def validators; end
 
   # List all validators that are being used to validate a specific attribute.
   #
-  # class Person
-  # include ActiveModel::Validations
+  #   class Person
+  #     include ActiveModel::Validations
   #
-  # attr_accessor :name , :age
+  #     attr_accessor :name , :age
   #
-  # validates_presence_of :name
-  # validates_inclusion_of :age, in: 0..99
-  # end
+  #     validates_presence_of :name
+  #     validates_inclusion_of :age, in: 0..99
+  #   end
   #
-  # Person.validators_on(:name)
-  # # => [
-  # #       #<ActiveModel::Validations::PresenceValidator:0x007fe604914e60 @attributes=[:name], @options={}>,
-  # #    ]
+  #   Person.validators_on(:name)
+  #   # => [
+  #   #       #<ActiveModel::Validations::PresenceValidator:0x007fe604914e60 @attributes=[:name], @options={}>,
+  #   #    ]
   def validators_on(*attributes); end
 
   private
@@ -3932,6 +4164,8 @@ module ActiveModel::Validations::Clusivity
   private
 
   def delimiter; end
+
+  # @return [Boolean]
   def include?(record, value); end
 
   # After Ruby 2.2, <tt>Range#include?</tt> on non-number-or-time-ish ranges checks all
@@ -3945,13 +4179,16 @@ end
 ActiveModel::Validations::Clusivity::ERROR_MESSAGE = T.let(T.unsafe(nil), String)
 
 class ActiveModel::Validations::ConfirmationValidator < ::ActiveModel::EachValidator
+  # @return [ConfirmationValidator] a new instance of ConfirmationValidator
   def initialize(options); end
 
   def validate_each(record, attribute, value); end
 
   private
 
+  # @return [Boolean]
   def confirmation_value_equal?(record, attribute, value, confirmed); end
+
   def setup!(klass); end
 end
 
@@ -3970,6 +4207,8 @@ class ActiveModel::Validations::FormatValidator < ::ActiveModel::EachValidator
   def check_options_validity(name); end
   def option_call(record, name); end
   def record_error(record, attribute, name, value); end
+
+  # @return [Boolean]
   def regexp_using_multiline_anchors?(regexp); end
 end
 
@@ -3977,9 +4216,9 @@ module ActiveModel::Validations::HelperMethods
   # Validates that the specified attributes are blank (as defined by
   # Object#present?). Happens by default on save.
   #
-  # class Person < ActiveRecord::Base
-  # validates_absence_of :first_name
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_absence_of :first_name
+  #   end
   #
   # The first_name attribute must be in the object and it must be blank.
   #
@@ -3994,10 +4233,10 @@ module ActiveModel::Validations::HelperMethods
   # Encapsulates the pattern of wanting to validate the acceptance of a
   # terms of service check box (or similar agreement).
   #
-  # class Person < ActiveRecord::Base
-  # validates_acceptance_of :terms_of_service
-  # validates_acceptance_of :eula, message: 'must be abided'
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_acceptance_of :terms_of_service
+  #     validates_acceptance_of :eula, message: 'must be abided'
+  #   end
   #
   # If the database column does not exist, the +terms_of_service+ attribute
   # is entirely virtual. This check is performed only if +terms_of_service+
@@ -4005,13 +4244,13 @@ module ActiveModel::Validations::HelperMethods
   #
   # Configuration options:
   # * <tt>:message</tt> - A custom error message (default is: "must be
-  # accepted").
+  #   accepted").
   # * <tt>:accept</tt> - Specifies a value that is considered accepted.
-  # Also accepts an array of possible values. The default value is
-  # an array ["1", true], which makes it easy to relate to an HTML
-  # checkbox. This should be set to, or include, +true+ if you are validating
-  # a database column, since the attribute is typecast from "1" to +true+
-  # before validation.
+  #   Also accepts an array of possible values. The default value is
+  #   an array ["1", true], which makes it easy to relate to an HTML
+  #   checkbox. This should be set to, or include, +true+ if you are validating
+  #   a database column, since the attribute is typecast from "1" to +true+
+  #   before validation.
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
@@ -4021,16 +4260,16 @@ module ActiveModel::Validations::HelperMethods
   # Encapsulates the pattern of wanting to validate a password or email
   # address field with a confirmation.
   #
-  # Model:
-  # class Person < ActiveRecord::Base
-  # validates_confirmation_of :user_name, :password
-  # validates_confirmation_of :email_address,
-  # message: 'should match confirmation'
-  # end
+  #   Model:
+  #     class Person < ActiveRecord::Base
+  #       validates_confirmation_of :user_name, :password
+  #       validates_confirmation_of :email_address,
+  #                                 message: 'should match confirmation'
+  #     end
   #
-  # View:
-  # <%= password_field "person", "password" %>
-  # <%= password_field "person", "password_confirmation" %>
+  #   View:
+  #     <%= password_field "person", "password" %>
+  #     <%= password_field "person", "password_confirmation" %>
   #
   # The added +password_confirmation+ attribute is virtual; it exists only
   # as an in-memory attribute for validating the password. To achieve this,
@@ -4041,13 +4280,13 @@ module ActiveModel::Validations::HelperMethods
   # +nil+. To require confirmation, make sure to add a presence check for
   # the confirmation attribute:
   #
-  # validates_presence_of :password_confirmation, if: :password_changed?
+  #   validates_presence_of :password_confirmation, if: :password_changed?
   #
   # Configuration options:
   # * <tt>:message</tt> - A custom error message (default is: "doesn't match
-  # <tt>%{translated_attribute_name}</tt>").
+  #   <tt>%{translated_attribute_name}</tt>").
   # * <tt>:case_sensitive</tt> - Looks for an exact match. Ignored by
-  # non-text columns (+true+ by default).
+  #   non-text columns (+true+ by default).
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
@@ -4057,25 +4296,25 @@ module ActiveModel::Validations::HelperMethods
   # Validates that the value of the specified attribute is not in a
   # particular enumerable object.
   #
-  # class Person < ActiveRecord::Base
-  # validates_exclusion_of :username, in: %w( admin superuser ), message: "You don't belong here"
-  # validates_exclusion_of :age, in: 30..60, message: 'This site is only for under 30 and over 60'
-  # validates_exclusion_of :format, in: %w( mov avi ), message: "extension %{value} is not allowed"
-  # validates_exclusion_of :password, in: ->(person) { [person.username, person.first_name] },
-  # message: 'should not be the same as your username or first name'
-  # validates_exclusion_of :karma, in: :reserved_karmas
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_exclusion_of :username, in: %w( admin superuser ), message: "You don't belong here"
+  #     validates_exclusion_of :age, in: 30..60, message: 'This site is only for under 30 and over 60'
+  #     validates_exclusion_of :format, in: %w( mov avi ), message: "extension %{value} is not allowed"
+  #     validates_exclusion_of :password, in: ->(person) { [person.username, person.first_name] },
+  #                            message: 'should not be the same as your username or first name'
+  #     validates_exclusion_of :karma, in: :reserved_karmas
+  #   end
   #
   # Configuration options:
   # * <tt>:in</tt> - An enumerable object of items that the value shouldn't
-  # be part of. This can be supplied as a proc, lambda or symbol which returns an
-  # enumerable. If the enumerable is a numerical, time or datetime range the test
-  # is performed with <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>. When
-  # using a proc or lambda the instance under validation is passed as an argument.
+  #   be part of. This can be supplied as a proc, lambda or symbol which returns an
+  #   enumerable. If the enumerable is a numerical, time or datetime range the test
+  #   is performed with <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>. When
+  #   using a proc or lambda the instance under validation is passed as an argument.
   # * <tt>:within</tt> - A synonym(or alias) for <tt>:in</tt>
-  # <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>.
+  #   <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>.
   # * <tt>:message</tt> - Specifies a custom error message (default is: "is
-  # reserved").
+  #   reserved").
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
@@ -4086,25 +4325,25 @@ module ActiveModel::Validations::HelperMethods
   # form, going by the regular expression provided. You can require that the
   # attribute matches the regular expression:
   #
-  # class Person < ActiveRecord::Base
-  # validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create
+  #   end
   #
   # Alternatively, you can require that the specified attribute does _not_
   # match the regular expression:
   #
-  # class Person < ActiveRecord::Base
-  # validates_format_of :email, without: /NOSPAM/
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_format_of :email, without: /NOSPAM/
+  #   end
   #
   # You can also provide a proc or lambda which will determine the regular
   # expression that will be used to validate the attribute.
   #
-  # class Person < ActiveRecord::Base
-  # # Admin can have number as a first letter in their screen name
-  # validates_format_of :screen_name,
-  # with: ->(person) { person.admin? ? /\A[a-z0-9][a-z0-9_\-]*\z/i : /\A[a-z][a-z0-9_\-]*\z/i }
-  # end
+  #   class Person < ActiveRecord::Base
+  #     # Admin can have number as a first letter in their screen name
+  #     validates_format_of :screen_name,
+  #                         with: ->(person) { person.admin? ? /\A[a-z0-9][a-z0-9_\-]*\z/i : /\A[a-z][a-z0-9_\-]*\z/i }
+  #   end
   #
   # Note: use <tt>\A</tt> and <tt>\z</tt> to match the start and end of the
   # string, <tt>^</tt> and <tt>$</tt> match the start/end of a line.
@@ -4121,15 +4360,15 @@ module ActiveModel::Validations::HelperMethods
   # Configuration options:
   # * <tt>:message</tt> - A custom error message (default is: "is invalid").
   # * <tt>:with</tt> - Regular expression that if the attribute matches will
-  # result in a successful validation. This can be provided as a proc or
-  # lambda returning regular expression which will be called at runtime.
+  #   result in a successful validation. This can be provided as a proc or
+  #   lambda returning regular expression which will be called at runtime.
   # * <tt>:without</tt> - Regular expression that if the attribute does not
-  # match will result in a successful validation. This can be provided as
-  # a proc or lambda returning regular expression which will be called at
-  # runtime.
+  #   match will result in a successful validation. This can be provided as
+  #   a proc or lambda returning regular expression which will be called at
+  #   runtime.
   # * <tt>:multiline</tt> - Set to true if your regular expression contains
-  # anchors that match the beginning or end of lines as opposed to the
-  # beginning or end of the string. These anchors are <tt>^</tt> and <tt>$</tt>.
+  #   anchors that match the beginning or end of lines as opposed to the
+  #   beginning or end of the string. These anchors are <tt>^</tt> and <tt>$</tt>.
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
@@ -4139,23 +4378,23 @@ module ActiveModel::Validations::HelperMethods
   # Validates whether the value of the specified attribute is available in a
   # particular enumerable object.
   #
-  # class Person < ActiveRecord::Base
-  # validates_inclusion_of :role, in: %w( admin contributor )
-  # validates_inclusion_of :age, in: 0..99
-  # validates_inclusion_of :format, in: %w( jpg gif png ), message: "extension %{value} is not included in the list"
-  # validates_inclusion_of :states, in: ->(person) { STATES[person.country] }
-  # validates_inclusion_of :karma, in: :available_karmas
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_inclusion_of :role, in: %w( admin contributor )
+  #     validates_inclusion_of :age, in: 0..99
+  #     validates_inclusion_of :format, in: %w( jpg gif png ), message: "extension %{value} is not included in the list"
+  #     validates_inclusion_of :states, in: ->(person) { STATES[person.country] }
+  #     validates_inclusion_of :karma, in: :available_karmas
+  #   end
   #
   # Configuration options:
   # * <tt>:in</tt> - An enumerable object of available items. This can be
-  # supplied as a proc, lambda or symbol which returns an enumerable. If the
-  # enumerable is a numerical, time or datetime range the test is performed
-  # with <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>. When using
-  # a proc or lambda the instance under validation is passed as an argument.
+  #   supplied as a proc, lambda or symbol which returns an enumerable. If the
+  #   enumerable is a numerical, time or datetime range the test is performed
+  #   with <tt>Range#cover?</tt>, otherwise with <tt>include?</tt>. When using
+  #   a proc or lambda the instance under validation is passed as an argument.
   # * <tt>:within</tt> - A synonym(or alias) for <tt>:in</tt>
   # * <tt>:message</tt> - Specifies a custom error message (default is: "is
-  # not included in the list").
+  #   not included in the list").
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
@@ -4166,31 +4405,31 @@ module ActiveModel::Validations::HelperMethods
   # supplied. Only one constraint option can be used at a time apart from
   # +:minimum+ and +:maximum+ that can be combined together:
   #
-  # class Person < ActiveRecord::Base
-  # validates_length_of :first_name, maximum: 30
-  # validates_length_of :last_name, maximum: 30, message: "less than 30 if you don't mind"
-  # validates_length_of :fax, in: 7..32, allow_nil: true
-  # validates_length_of :phone, in: 7..32, allow_blank: true
-  # validates_length_of :user_name, within: 6..20, too_long: 'pick a shorter name', too_short: 'pick a longer name'
-  # validates_length_of :zip_code, minimum: 5, too_short: 'please enter at least 5 characters'
-  # validates_length_of :smurf_leader, is: 4, message: "papa is spelled with 4 characters... don't play me."
-  # validates_length_of :words_in_essay, minimum: 100, too_short: 'Your essay must be at least 100 words.'
+  #   class Person < ActiveRecord::Base
+  #     validates_length_of :first_name, maximum: 30
+  #     validates_length_of :last_name, maximum: 30, message: "less than 30 if you don't mind"
+  #     validates_length_of :fax, in: 7..32, allow_nil: true
+  #     validates_length_of :phone, in: 7..32, allow_blank: true
+  #     validates_length_of :user_name, within: 6..20, too_long: 'pick a shorter name', too_short: 'pick a longer name'
+  #     validates_length_of :zip_code, minimum: 5, too_short: 'please enter at least 5 characters'
+  #     validates_length_of :smurf_leader, is: 4, message: "papa is spelled with 4 characters... don't play me."
+  #     validates_length_of :words_in_essay, minimum: 100, too_short: 'Your essay must be at least 100 words.'
   #
-  # private
+  #     private
   #
-  # def words_in_essay
-  # essay.scan(/\w+/)
-  # end
-  # end
+  #     def words_in_essay
+  #       essay.scan(/\w+/)
+  #     end
+  #   end
   #
   # Constraint options:
   #
   # * <tt>:minimum</tt> - The minimum size of the attribute.
   # * <tt>:maximum</tt> - The maximum size of the attribute. Allows +nil+ by
-  # default if not used with +:minimum+.
+  #   default if not used with +:minimum+.
   # * <tt>:is</tt> - The exact size of the attribute.
   # * <tt>:within</tt> - A range specifying the minimum and maximum size of
-  # the attribute.
+  #   the attribute.
   # * <tt>:in</tt> - A synonym (or alias) for <tt>:within</tt>.
   #
   # Other options:
@@ -4198,15 +4437,15 @@ module ActiveModel::Validations::HelperMethods
   # * <tt>:allow_nil</tt> - Attribute may be +nil+; skip validation.
   # * <tt>:allow_blank</tt> - Attribute may be blank; skip validation.
   # * <tt>:too_long</tt> - The error message if the attribute goes over the
-  # maximum (default is: "is too long (maximum is %{count} characters)").
+  #   maximum (default is: "is too long (maximum is %{count} characters)").
   # * <tt>:too_short</tt> - The error message if the attribute goes under the
-  # minimum (default is: "is too short (minimum is %{count} characters)").
+  #   minimum (default is: "is too short (minimum is %{count} characters)").
   # * <tt>:wrong_length</tt> - The error message if using the <tt>:is</tt>
-  # method and the attribute is the wrong size (default is: "is the wrong
-  # length (should be %{count} characters)").
+  #   method and the attribute is the wrong size (default is: "is the wrong
+  #   length (should be %{count} characters)").
   # * <tt>:message</tt> - The error message to use for a <tt>:minimum</tt>,
-  # <tt>:maximum</tt>, or <tt>:is</tt> violation. An alias of the appropriate
-  # <tt>too_long</tt>/<tt>too_short</tt>/<tt>wrong_length</tt> message.
+  #   <tt>:maximum</tt>, or <tt>:is</tt> violation. An alias of the appropriate
+  #   <tt>too_long</tt>/<tt>too_short</tt>/<tt>wrong_length</tt> message.
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+ and +:strict+.
@@ -4219,29 +4458,29 @@ module ActiveModel::Validations::HelperMethods
   # (if <tt>only_integer</tt> is set to +true+). Precision of Kernel.Float values
   # are guaranteed up to 15 digits.
   #
-  # class Person < ActiveRecord::Base
-  # validates_numericality_of :value, on: :create
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_numericality_of :value, on: :create
+  #   end
   #
   # Configuration options:
   # * <tt>:message</tt> - A custom error message (default is: "is not a number").
   # * <tt>:only_integer</tt> - Specifies whether the value has to be an
-  # integer, e.g. an integral value (default is +false+).
+  #   integer, e.g. an integral value (default is +false+).
   # * <tt>:allow_nil</tt> - Skip validation if attribute is +nil+ (default is
-  # +false+). Notice that for Integer and Float columns empty strings are
-  # converted to +nil+.
+  #   +false+). Notice that for Integer and Float columns empty strings are
+  #   converted to +nil+.
   # * <tt>:greater_than</tt> - Specifies the value must be greater than the
-  # supplied value.
+  #   supplied value.
   # * <tt>:greater_than_or_equal_to</tt> - Specifies the value must be
-  # greater than or equal the supplied value.
+  #   greater than or equal the supplied value.
   # * <tt>:equal_to</tt> - Specifies the value must be equal to the supplied
-  # value.
+  #   value.
   # * <tt>:less_than</tt> - Specifies the value must be less than the
-  # supplied value.
+  #   supplied value.
   # * <tt>:less_than_or_equal_to</tt> - Specifies the value must be less
-  # than or equal the supplied value.
+  #   than or equal the supplied value.
   # * <tt>:other_than</tt> - Specifies the value must be other than the
-  # supplied value.
+  #   supplied value.
   # * <tt>:odd</tt> - Specifies the value must be an odd number.
   # * <tt>:even</tt> - Specifies the value must be an even number.
   #
@@ -4262,18 +4501,18 @@ module ActiveModel::Validations::HelperMethods
   #
   # For example:
   #
-  # class Person < ActiveRecord::Base
-  # validates_numericality_of :width, less_than: ->(person) { person.height }
-  # validates_numericality_of :width, greater_than: :minimum_weight
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_numericality_of :width, less_than: ->(person) { person.height }
+  #     validates_numericality_of :width, greater_than: :minimum_weight
+  #   end
   def validates_numericality_of(*attr_names); end
 
   # Validates that the specified attributes are not blank (as defined by
   # Object#blank?). Happens by default on save.
   #
-  # class Person < ActiveRecord::Base
-  # validates_presence_of :first_name
-  # end
+  #   class Person < ActiveRecord::Base
+  #     validates_presence_of :first_name
+  #   end
   #
   # The first_name attribute must be in the object and it cannot be blank.
   #
@@ -4296,31 +4535,31 @@ module ActiveModel::Validations::HelperMethods
   # supplied. Only one constraint option can be used at a time apart from
   # +:minimum+ and +:maximum+ that can be combined together:
   #
-  # class Person < ActiveRecord::Base
-  # validates_length_of :first_name, maximum: 30
-  # validates_length_of :last_name, maximum: 30, message: "less than 30 if you don't mind"
-  # validates_length_of :fax, in: 7..32, allow_nil: true
-  # validates_length_of :phone, in: 7..32, allow_blank: true
-  # validates_length_of :user_name, within: 6..20, too_long: 'pick a shorter name', too_short: 'pick a longer name'
-  # validates_length_of :zip_code, minimum: 5, too_short: 'please enter at least 5 characters'
-  # validates_length_of :smurf_leader, is: 4, message: "papa is spelled with 4 characters... don't play me."
-  # validates_length_of :words_in_essay, minimum: 100, too_short: 'Your essay must be at least 100 words.'
+  #   class Person < ActiveRecord::Base
+  #     validates_length_of :first_name, maximum: 30
+  #     validates_length_of :last_name, maximum: 30, message: "less than 30 if you don't mind"
+  #     validates_length_of :fax, in: 7..32, allow_nil: true
+  #     validates_length_of :phone, in: 7..32, allow_blank: true
+  #     validates_length_of :user_name, within: 6..20, too_long: 'pick a shorter name', too_short: 'pick a longer name'
+  #     validates_length_of :zip_code, minimum: 5, too_short: 'please enter at least 5 characters'
+  #     validates_length_of :smurf_leader, is: 4, message: "papa is spelled with 4 characters... don't play me."
+  #     validates_length_of :words_in_essay, minimum: 100, too_short: 'Your essay must be at least 100 words.'
   #
-  # private
+  #     private
   #
-  # def words_in_essay
-  # essay.scan(/\w+/)
-  # end
-  # end
+  #     def words_in_essay
+  #       essay.scan(/\w+/)
+  #     end
+  #   end
   #
   # Constraint options:
   #
   # * <tt>:minimum</tt> - The minimum size of the attribute.
   # * <tt>:maximum</tt> - The maximum size of the attribute. Allows +nil+ by
-  # default if not used with +:minimum+.
+  #   default if not used with +:minimum+.
   # * <tt>:is</tt> - The exact size of the attribute.
   # * <tt>:within</tt> - A range specifying the minimum and maximum size of
-  # the attribute.
+  #   the attribute.
   # * <tt>:in</tt> - A synonym (or alias) for <tt>:within</tt>.
   #
   # Other options:
@@ -4328,15 +4567,15 @@ module ActiveModel::Validations::HelperMethods
   # * <tt>:allow_nil</tt> - Attribute may be +nil+; skip validation.
   # * <tt>:allow_blank</tt> - Attribute may be blank; skip validation.
   # * <tt>:too_long</tt> - The error message if the attribute goes over the
-  # maximum (default is: "is too long (maximum is %{count} characters)").
+  #   maximum (default is: "is too long (maximum is %{count} characters)").
   # * <tt>:too_short</tt> - The error message if the attribute goes under the
-  # minimum (default is: "is too short (minimum is %{count} characters)").
+  #   minimum (default is: "is too short (minimum is %{count} characters)").
   # * <tt>:wrong_length</tt> - The error message if using the <tt>:is</tt>
-  # method and the attribute is the wrong size (default is: "is the wrong
-  # length (should be %{count} characters)").
+  #   method and the attribute is the wrong size (default is: "is the wrong
+  #   length (should be %{count} characters)").
   # * <tt>:message</tt> - The error message to use for a <tt>:minimum</tt>,
-  # <tt>:maximum</tt>, or <tt>:is</tt> violation. An alias of the appropriate
-  # <tt>too_long</tt>/<tt>too_short</tt>/<tt>wrong_length</tt> message.
+  #   <tt>:maximum</tt>, or <tt>:is</tt> violation. An alias of the appropriate
+  #   <tt>too_long</tt>/<tt>too_short</tt>/<tt>wrong_length</tt> message.
   #
   # There is also a list of default options supported by every validator:
   # +:if+, +:unless+, +:on+ and +:strict+.
@@ -4355,6 +4594,7 @@ class ActiveModel::Validations::InclusionValidator < ::ActiveModel::EachValidato
 end
 
 class ActiveModel::Validations::LengthValidator < ::ActiveModel::EachValidator
+  # @return [LengthValidator] a new instance of LengthValidator
   def initialize(options); end
 
   def check_validity!; end
@@ -4362,6 +4602,7 @@ class ActiveModel::Validations::LengthValidator < ::ActiveModel::EachValidator
 
   private
 
+  # @return [Boolean]
   def skip_nil_check?(key); end
 end
 
@@ -4375,15 +4616,27 @@ class ActiveModel::Validations::NumericalityValidator < ::ActiveModel::EachValid
 
   private
 
+  # @return [Boolean]
   def allow_only_integer?(record); end
+
   def filtered_options(value); end
+
+  # @return [Boolean]
   def is_hexadecimal_literal?(raw_value); end
+
+  # @return [Boolean]
   def is_integer?(raw_value); end
+
+  # @return [Boolean]
   def is_number?(raw_value, precision, scale); end
+
   def parse_as_number(raw_value, precision, scale); end
   def parse_float(raw_value, precision, scale); end
   def prepare_value_for_validation(value, record, attr_name); end
+
+  # @return [Boolean]
   def record_attribute_changed_in_place?(record, attr_name); end
+
   def round(raw_value, scale); end
 end
 
@@ -4405,58 +4658,58 @@ end
 # A simple base class that can be used along with
 # ActiveModel::Validations::ClassMethods.validates_with
 #
-# class Person
-# include ActiveModel::Validations
-# validates_with MyValidator
-# end
+#   class Person
+#     include ActiveModel::Validations
+#     validates_with MyValidator
+#   end
 #
-# class MyValidator < ActiveModel::Validator
-# def validate(record)
-# if some_complex_logic
-# record.errors.add(:base, "This record is invalid")
-# end
-# end
+#   class MyValidator < ActiveModel::Validator
+#     def validate(record)
+#       if some_complex_logic
+#         record.errors.add(:base, "This record is invalid")
+#       end
+#     end
 #
-# private
-# def some_complex_logic
-# # ...
-# end
-# end
+#     private
+#       def some_complex_logic
+#         # ...
+#       end
+#   end
 #
 # Any class that inherits from ActiveModel::Validator must implement a method
 # called +validate+ which accepts a +record+.
 #
-# class Person
-# include ActiveModel::Validations
-# validates_with MyValidator
-# end
+#   class Person
+#     include ActiveModel::Validations
+#     validates_with MyValidator
+#   end
 #
-# class MyValidator < ActiveModel::Validator
-# def validate(record)
-# record # => The person instance being validated
-# options # => Any non-standard options passed to validates_with
-# end
-# end
+#   class MyValidator < ActiveModel::Validator
+#     def validate(record)
+#       record # => The person instance being validated
+#       options # => Any non-standard options passed to validates_with
+#     end
+#   end
 #
 # To cause a validation error, you must add to the +record+'s errors directly
 # from within the validators message.
 #
-# class MyValidator < ActiveModel::Validator
-# def validate(record)
-# record.errors.add :base, "This is some custom error message"
-# record.errors.add :first_name, "This is some complex validation"
-# # etc...
-# end
-# end
+#   class MyValidator < ActiveModel::Validator
+#     def validate(record)
+#       record.errors.add :base, "This is some custom error message"
+#       record.errors.add :first_name, "This is some complex validation"
+#       # etc...
+#     end
+#   end
 #
 # To add behavior to the initialize method, use the following signature:
 #
-# class MyValidator < ActiveModel::Validator
-# def initialize(options)
-# super
-# @my_custom_field = options[:field_name] || :first_name
-# end
-# end
+#   class MyValidator < ActiveModel::Validator
+#     def initialize(options)
+#       super
+#       @my_custom_field = options[:field_name] || :first_name
+#     end
+#   end
 #
 # Note that the validator is initialized only once for the whole application
 # life cycle, and not on each validation run.
@@ -4464,40 +4717,42 @@ end
 # The easiest way to add custom validators for validating individual attributes
 # is with the convenient <tt>ActiveModel::EachValidator</tt>.
 #
-# class TitleValidator < ActiveModel::EachValidator
-# def validate_each(record, attribute, value)
-# record.errors.add attribute, 'must be Mr., Mrs., or Dr.' unless %w(Mr. Mrs. Dr.).include?(value)
-# end
-# end
+#   class TitleValidator < ActiveModel::EachValidator
+#     def validate_each(record, attribute, value)
+#       record.errors.add attribute, 'must be Mr., Mrs., or Dr.' unless %w(Mr. Mrs. Dr.).include?(value)
+#     end
+#   end
 #
 # This can now be used in combination with the +validates+ method
 # (see <tt>ActiveModel::Validations::ClassMethods.validates</tt> for more on this).
 #
-# class Person
-# include ActiveModel::Validations
-# attr_accessor :title
+#   class Person
+#     include ActiveModel::Validations
+#     attr_accessor :title
 #
-# validates :title, presence: true, title: true
-# end
+#     validates :title, presence: true, title: true
+#   end
 #
 # It can be useful to access the class that is using that validator when there are prerequisites such
 # as an +attr_accessor+ being present. This class is accessible via <tt>options[:class]</tt> in the constructor.
 # To set up your validator override the constructor.
 #
-# class MyValidator < ActiveModel::Validator
-# def initialize(options={})
-# super
-# options[:class].attr_accessor :custom_attribute
-# end
-# end
+#   class MyValidator < ActiveModel::Validator
+#     def initialize(options={})
+#       super
+#       options[:class].attr_accessor :custom_attribute
+#     end
+#   end
 class ActiveModel::Validator
   # Accepts options that will be made available through the +options+ reader.
+  #
+  # @return [Validator] a new instance of Validator
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the kind for this validator.
   #
-  # PresenceValidator.new(attributes: [:username]).kind # => :presence
-  # AcceptanceValidator.new(attributes: [:terms]).kind  # => :acceptance
+  #   PresenceValidator.new(attributes: [:username]).kind # => :presence
+  #   AcceptanceValidator.new(attributes: [:terms]).kind  # => :acceptance
   def kind; end
 
   # Returns the value of attribute options.
@@ -4505,13 +4760,15 @@ class ActiveModel::Validator
 
   # Override this method in subclasses with validation logic, adding errors
   # to the records +errors+ array where necessary.
+  #
+  # @raise [NotImplementedError]
   def validate(record); end
 
   class << self
     # Returns the kind of the validator.
     #
-    # PresenceValidator.kind   # => :presence
-    # AcceptanceValidator.kind # => :acceptance
+    #   PresenceValidator.kind   # => :presence
+    #   AcceptanceValidator.kind # => :acceptance
     def kind; end
   end
 end

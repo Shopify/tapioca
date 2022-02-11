@@ -19,6 +19,8 @@ module YARDSorbet::Directives
 end
 
 # Custom YARD Handlers
+#
+# @see https://rubydoc.info/gems/yard/YARD/Handlers/Base YARD Base Handler documentation
 module YARDSorbet::Handlers; end
 
 # Apllies an `@abstract` tag to `abstract!`/`interface!` modules (if not alerady present).
@@ -31,6 +33,8 @@ end
 YARDSorbet::Handlers::AbstractDSLHandler::CLASS_TAG_TEXT = T.let(T.unsafe(nil), String)
 
 # The text accompanying the `@abstract` tag.
+#
+# @see https://github.com/lsegal/yard/blob/main/templates/default/docstring/html/abstract.erb The `@abstract` tag template
 YARDSorbet::Handlers::AbstractDSLHandler::TAG_TEXT = T.let(T.unsafe(nil), String)
 
 # Handle `enums` calls, registering enum values as constants
@@ -45,6 +49,8 @@ class YARDSorbet::Handlers::EnumsHandler < ::YARD::Handlers::Ruby::Base
 end
 
 # Extends any modules included via `mixes_in_class_methods`
+#
+# @see https://sorbet.org/docs/abstract#interfaces-and-the-included-hook Sorbet `mixes_in_class_methods` documentation
 class YARDSorbet::Handlers::IncludeHandler < ::YARD::Handlers::Ruby::Base
   sig { void }
   def process; end
@@ -56,6 +62,8 @@ class YARDSorbet::Handlers::IncludeHandler < ::YARD::Handlers::Ruby::Base
 end
 
 # Tracks modules that invoke `mixes_in_class_methods` for use in {IncludeHandler}
+#
+# @see https://sorbet.org/docs/abstract#interfaces-and-the-included-hook Sorbet `mixes_in_class_methods` documentation
 class YARDSorbet::Handlers::MixesInClassMethodsHandler < ::YARD::Handlers::Ruby::Base
   sig { void }
   def process; end
@@ -90,6 +98,8 @@ YARDSorbet::Handlers::SigHandler::ATTR_NODE_TYPES = T.let(T.unsafe(nil), Array)
 
 # Class-level handler that folds all `const` and `prop` declarations into the constructor documentation
 # this needs to be injected as a module otherwise the default Class handler will overwrite documentation
+#
+# @note this module is included in `YARD::Handlers::Ruby::ClassHandler`
 module YARDSorbet::Handlers::StructClassHandler
   sig { void }
   def process; end
@@ -140,6 +150,9 @@ end
 module YARDSorbet::NodeUtils
   class << self
     # Traverese AST nodes in breadth-first order
+    #
+    # @note This will skip over some node types.
+    # @yield [YARD::Parser::Ruby::AstNode]
     sig { params(node: YARD::Parser::Ruby::AstNode, _blk: T.proc.params(n: YARD::Parser::Ruby::AstNode).void).void }
     def bfs_traverse(node, &_blk); end
 
@@ -148,6 +161,8 @@ module YARDSorbet::NodeUtils
     def get_method_node(node); end
 
     # Find and return the adjacent node (ascending)
+    #
+    # @raise [IndexError] if the node does not have an adjacent sibling (ascending)
     sig { params(node: YARD::Parser::Ruby::AstNode).returns(YARD::Parser::Ruby::AstNode) }
     def sibling_node(node); end
   end
@@ -165,6 +180,7 @@ YARDSorbet::NodeUtils::SKIP_METHOD_CONTENTS = T.let(T.unsafe(nil), Array)
 # Translate `sig` type syntax to `YARD` type syntax.
 module YARDSorbet::SigToYARD
   class << self
+    # @see https://yardoc.org/types.html
     sig { params(node: YARD::Parser::Ruby::AstNode).returns(T::Array[String]) }
     def convert(node); end
 

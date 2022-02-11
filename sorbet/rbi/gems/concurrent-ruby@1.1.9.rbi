@@ -15,6 +15,8 @@ module Concurrent
   private
 
   # Abort a currently running transaction - see `Concurrent::atomically`.
+  #
+  # @raise [Transaction::AbortError]
   def abort_transaction; end
 
   # Run a block that reads and writes `TVar`s as a single atomic transaction.
@@ -27,23 +29,42 @@ module Concurrent
   # There are some very important and unusual semantics that you must be aware of:
   #
   # * Most importantly, the block that you pass to atomically may be executed
-  # more than once. In most cases your code should be free of
-  # side-effects, except for via TVar.
+  #     more than once. In most cases your code should be free of
+  #     side-effects, except for via TVar.
   #
   # * If an exception escapes an atomically block it will abort the transaction.
   #
   # * It is undefined behaviour to use callcc or Fiber with atomically.
   #
   # * If you create a new thread within an atomically, it will not be part of
-  # the transaction. Creating a thread counts as a side-effect.
+  #     the transaction. Creating a thread counts as a side-effect.
   #
   # Transactions within transactions are flattened to a single transaction.
+  #
+  # @example
+  #   a = new TVar(100_000)
+  #   b = new TVar(100)
+  #
+  #   Concurrent::atomically do
+  #   a.value -= 10
+  #   b.value += 10
+  #   end
+  # @raise [ArgumentError]
   def atomically; end
 
+  # @raise [ArgumentError]
   def call_dataflow(method, executor, *inputs, &block); end
 
   # Dataflow allows you to create a task that will be scheduled when all of its data dependencies are available.
   # {include:file:docs-source/dataflow.md}
+  #
+  # @param inputs [Future] zero or more `Future` operations that this dataflow depends upon
+  # @raise [ArgumentError] if no block is given
+  # @raise [ArgumentError] if any of the inputs are not `IVar`s
+  # @return [Object] the result of all the operations
+  # @yield The operation to perform once all the dependencies are met
+  # @yieldparam inputs [Future] each of the `Future` inputs to the dataflow
+  # @yieldreturn [Object] the result of the block operation
   def dataflow(*inputs, &block); end
 
   def dataflow!(*inputs, &block); end
@@ -51,13 +72,20 @@ module Concurrent
   def dataflow_with!(executor, *inputs, &block); end
 
   # Leave a transaction without committing or aborting - see `Concurrent::atomically`.
+  #
+  # @raise [Transaction::LeaveError]
   def leave_transaction; end
 
   # Returns the current time a tracked by the application monotonic clock.
+  #
+  # @return [Float] The current monotonic time since some unspecified
+  #   starting point
   def monotonic_time; end
 
   class << self
     # Abort a currently running transaction - see `Concurrent::atomically`.
+    #
+    # @raise [Transaction::AbortError]
     def abort_transaction; end
 
     # Run a block that reads and writes `TVar`s as a single atomic transaction.
@@ -70,25 +98,49 @@ module Concurrent
     # There are some very important and unusual semantics that you must be aware of:
     #
     # * Most importantly, the block that you pass to atomically may be executed
-    # more than once. In most cases your code should be free of
-    # side-effects, except for via TVar.
+    #     more than once. In most cases your code should be free of
+    #     side-effects, except for via TVar.
     #
     # * If an exception escapes an atomically block it will abort the transaction.
     #
     # * It is undefined behaviour to use callcc or Fiber with atomically.
     #
     # * If you create a new thread within an atomically, it will not be part of
-    # the transaction. Creating a thread counts as a side-effect.
+    #     the transaction. Creating a thread counts as a side-effect.
     #
     # Transactions within transactions are flattened to a single transaction.
+    #
+    # @example
+    #   a = new TVar(100_000)
+    #   b = new TVar(100)
+    #
+    #   Concurrent::atomically do
+    #   a.value -= 10
+    #   b.value += 10
+    #   end
+    # @raise [ArgumentError]
     def atomically; end
 
+    # @raise [ArgumentError]
     def call_dataflow(method, executor, *inputs, &block); end
+
+    # @return [Logger] Logger with provided level and output.
     def create_simple_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
+
+    # @deprecated
+    # @return [Logger] Logger with provided level and output.
     def create_stdlib_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
     # Dataflow allows you to create a task that will be scheduled when all of its data dependencies are available.
     # {include:file:docs-source/dataflow.md}
+    #
+    # @param inputs [Future] zero or more `Future` operations that this dataflow depends upon
+    # @raise [ArgumentError] if no block is given
+    # @raise [ArgumentError] if any of the inputs are not `IVar`s
+    # @return [Object] the result of all the operations
+    # @yield The operation to perform once all the dependencies are met
+    # @yieldparam inputs [Future] each of the `Future` inputs to the dataflow
+    # @yieldreturn [Object] the result of the block operation
     def dataflow(*inputs, &block); end
 
     def dataflow!(*inputs, &block); end
@@ -99,29 +151,56 @@ module Concurrent
     # When disabled it will be the application programmer's responsibility
     # to ensure that the handlers are shutdown properly prior to application
     # exit by calling `AtExit.run` method.
+    #
+    # @deprecated Has no effect since it is no longer needed, see https://github.com/ruby-concurrency/concurrent-ruby/pull/841.
+    # @note this option should be needed only because of `at_exit` ordering
+    #   issues which may arise when running some of the testing frameworks.
+    #   E.g. Minitest's test-suite runs itself in `at_exit` callback which
+    #   executes after the pools are already terminated. Then auto termination
+    #   needs to be disabled and called manually after test-suite ends.
+    # @note This method should *never* be called
+    #   from within a gem. It should *only* be used from within the main
+    #   application and even then it should be used only when necessary.
     def disable_at_exit_handlers!; end
 
     # General access point to global executors.
+    #
+    # @param executor_identifier [Symbol, Executor] symbols:
+    #   - :fast - {Concurrent.global_fast_executor}
+    #   - :io - {Concurrent.global_io_executor}
+    #   - :immediate - {Concurrent.global_immediate_executor}
+    # @return [Executor]
     def executor(executor_identifier); end
 
     # Global thread pool optimized for short, fast *operations*.
+    #
+    # @return [ThreadPoolExecutor] the thread pool
     def global_fast_executor; end
 
     def global_immediate_executor; end
 
     # Global thread pool optimized for long, blocking (IO) *tasks*.
+    #
+    # @return [ThreadPoolExecutor] the thread pool
     def global_io_executor; end
 
     def global_logger; end
     def global_logger=(value); end
 
     # Global thread pool user for global *timers*.
+    #
+    # @return [Concurrent::TimerSet] the thread pool
     def global_timer_set; end
 
     # Leave a transaction without committing or aborting - see `Concurrent::atomically`.
+    #
+    # @raise [Transaction::LeaveError]
     def leave_transaction; end
 
     # Returns the current time a tracked by the application monotonic clock.
+    #
+    # @return [Float] The current monotonic time since some unspecified
+    #   starting point
     def monotonic_time; end
 
     def new_fast_executor(opts = T.unsafe(nil)); end
@@ -134,11 +213,14 @@ module Concurrent
     def use_simple_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
     # Use logger created by #create_stdlib_logger to log concurrent-ruby messages.
+    #
+    # @deprecated
     def use_stdlib_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
   end
 end
 
 class Concurrent::AbstractExchanger < ::Concurrent::Synchronization::Object
+  # @return [AbstractExchanger] a new instance of AbstractExchanger
   def initialize; end
 
   # Waits for another thread to arrive at this exchange point (unless the
@@ -154,6 +236,10 @@ class Concurrent::AbstractExchanger < ::Concurrent::Synchronization::Object
   # be impossible to tell whether `nil` is the actual return value or if it
   # signifies timeout. When `nil` is a valid value in the exchange consider
   # using {#exchange!} or {#try_exchange} instead.
+  #
+  # @param value [Object] the value to exchange with another thread
+  # @param timeout [Numeric, nil] in seconds, `nil` blocks indefinitely
+  # @return [Object] the value exchanged by the other thread or `nil` on timeout
   def exchange(value, timeout = T.unsafe(nil)); end
 
   # Waits for another thread to arrive at this exchange point (unless the
@@ -165,6 +251,11 @@ class Concurrent::AbstractExchanger < ::Concurrent::Synchronization::Object
   #
   #
   # On timeout a {Concurrent::TimeoutError} exception will be raised.
+  #
+  # @param value [Object] the value to exchange with another thread
+  # @param timeout [Numeric, nil] in seconds, `nil` blocks indefinitely
+  # @raise [Concurrent::TimeoutError] on timeout
+  # @return [Object] the value exchanged by the other thread
   def exchange!(value, timeout = T.unsafe(nil)); end
 
   # Waits for another thread to arrive at this exchange point (unless the
@@ -177,6 +268,23 @@ class Concurrent::AbstractExchanger < ::Concurrent::Synchronization::Object
   #
   # The return value will be a {Concurrent::Maybe} set to `Just` on success or
   # `Nothing` on timeout.
+  #
+  # @example
+  #
+  #   exchanger = Concurrent::Exchanger.new
+  #
+  #   result = exchanger.exchange(:foo, 0.5)
+  #
+  #   if result.just?
+  #   puts result.value #=> :bar
+  #   else
+  #   puts 'timeout'
+  #   end
+  # @param value [Object] the value to exchange with another thread
+  # @param timeout [Numeric, nil] in seconds, `nil` blocks indefinitely
+  # @return [Concurrent::Maybe] on success a `Just` maybe will be returned with
+  #   the item exchanged by the other thread as `#value`; on timeout a
+  #   `Nothing` maybe will be returned with {Concurrent::TimeoutError} as `#reason`
   def try_exchange(value, timeout = T.unsafe(nil)); end
 
   private
@@ -187,6 +295,11 @@ class Concurrent::AbstractExchanger < ::Concurrent::Synchronization::Object
   # approximate number of seconds the method should block while waiting
   # for the exchange. When the timeout value is `nil` the method will
   # block indefinitely.
+  #
+  # @param value [Object] the value to exchange with another thread
+  # @param timeout [Numeric, nil] in seconds, `nil` blocks indefinitely
+  # @raise [NotImplementedError]
+  # @return [Object, CANCEL] the value exchanged by the other thread; {CANCEL} on timeout
   def do_exchange(value, timeout); end
 end
 
@@ -199,33 +312,53 @@ class Concurrent::AbstractExecutorService < ::Concurrent::Synchronization::Locka
   include ::Concurrent::Concern::Deprecation
 
   # Create a new thread pool.
+  #
+  # @return [AbstractExecutorService] a new instance of AbstractExecutorService
   def initialize(opts = T.unsafe(nil), &block); end
 
   def auto_terminate=(value); end
+
+  # @return [Boolean]
   def auto_terminate?; end
 
   # Returns the value of attribute fallback_policy.
   def fallback_policy; end
 
+  # @raise [NotImplementedError]
   def kill; end
 
   # Returns the value of attribute name.
   def name; end
 
+  # @return [Boolean]
   def running?; end
+
+  # @raise [NotImplementedError]
   def shutdown; end
+
+  # @return [Boolean]
   def shutdown?; end
+
+  # @return [Boolean]
   def shuttingdown?; end
+
   def to_s; end
+
+  # @raise [NotImplementedError]
   def wait_for_termination(timeout = T.unsafe(nil)); end
 
   private
 
   # Handler which executes the `fallback_policy` once the queue size
   # reaches `max_queue`.
+  #
+  # @param args [Array] the arguments to the task which is being handled.
   def handle_fallback(*args); end
 
+  # @return [Boolean]
   def ns_auto_terminate?; end
+
+  # @raise [NotImplementedError]
   def ns_execute(*args, &task); end
 
   # Callback method called when the executor has been killed.
@@ -241,15 +374,22 @@ end
 Concurrent::AbstractExecutorService::FALLBACK_POLICIES = T.let(T.unsafe(nil), Array)
 
 class Concurrent::AbstractThreadLocalVar
+  # @return [AbstractThreadLocalVar] a new instance of AbstractThreadLocalVar
   def initialize(default = T.unsafe(nil), &default_block); end
 
   def bind(value, &block); end
+
+  # @raise [NotImplementedError]
   def value; end
+
+  # @raise [NotImplementedError]
   def value=(value); end
 
   protected
 
+  # @raise [NotImplementedError]
   def allocate_storage; end
+
   def default; end
 end
 
@@ -272,17 +412,17 @@ end
 # the following will happen:
 #
 # 1. The given `action` will be applied to the state of the Agent and the
-# `args`, if any were supplied.
+#    `args`, if any were supplied.
 # 2. The return value of `action` will be passed to the validator lambda,
-# if one has been set on the Agent.
+#    if one has been set on the Agent.
 # 3. If the validator succeeds or if no validator was given, the return value
-# of the given `action` will become the new `#value` of the Agent. See
-# `#initialize` for details.
+#    of the given `action` will become the new `#value` of the Agent. See
+#    `#initialize` for details.
 # 4. If any observers were added to the Agent, they will be notified. See
-# `#add_observer` for details.
+#    `#add_observer` for details.
 # 5. If during the `action` execution any other dispatches are made (directly
-# or indirectly), they will be held until after the `#value` of the Agent
-# has been changed.
+#    or indirectly), they will be held until after the `#value` of the Agent
+#    has been changed.
 #
 # If any exceptions are thrown by an action function, no nested dispatches
 # will occur, and the exception will be cached in the Agent itself. When an
@@ -304,8 +444,8 @@ end
 #
 # ```
 # def next_fibonacci(set = nil)
-# return [0, 1] if set.nil?
-# set + [set[-2..-1].reduce{|sum,x| sum + x }]
+#   return [0, 1] if set.nil?
+#   set + [set[-2..-1].reduce{|sum,x| sum + x }]
 # end
 #
 # # create an agent with an initial value
@@ -313,7 +453,7 @@ end
 #
 # # send a few update requests
 # 5.times do
-# agent.send{|set| next_fibonacci(set) }
+#   agent.send{|set| next_fibonacci(set) }
 # end
 #
 # # wait for them to complete
@@ -359,8 +499,8 @@ end
 # ```
 # agent = Concurrent::Agent.new(0)
 # agent.send(agent) do |value, this|
-# this.send {|v| v + 42 }
-# 3.14
+#   this.send {|v| v + 42 }
+#   3.14
 # end
 # agent.value #=> 45.14
 # ```
@@ -370,8 +510,8 @@ end
 # ```
 # agent = Concurrent::Agent.new(0)
 # agent.send do |value|
-# agent.send {|v| v + 42 }
-# 3.14
+#   agent.send {|v| v + 42 }
+#   3.14
 # end
 # ```
 #
@@ -381,6 +521,9 @@ end
 # block/proc/lambda. The call will block the Agent and will always fail.
 # Calling either {#await} or {#wait} (with a timeout of `nil`) will
 # hopelessly deadlock the Agent with no possibility of recovery.
+#
+# @see http://clojure.org/Agents Clojure Agents
+# @see http://clojure.org/state Values and Change - Clojure's approach to Identity and State
 class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   include ::Concurrent::Concern::Observable
 
@@ -411,11 +554,22 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # accepting new action dispatches. Any previously queued actions will be
   # held until {#restart} is called. The {#value} method will still work,
   # returning the value of the Agent before the error.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param initial [Object] the initial value
+  # @param opts [Hash] the configuration options
+  # @return [Agent] a new instance of Agent
   def initialize(initial, opts = T.unsafe(nil)); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
   # in a thread from a thread pool, the {#value} will be set to the return
   # value of the action. Appropriate for actions that may block on IO.
+  #
+  # @param action [Proc] the action dispatch to be enqueued
+  # @return [Concurrent::Agent] self
+  # @see #send_off
   def <<(action); end
 
   # Blocks the current thread (indefinitely!) until all actions dispatched
@@ -435,6 +589,8 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # block/proc/lambda. The call will block the Agent and will always fail.
   # Calling either {#await} or {#wait} (with a timeout of `nil`) will
   # hopelessly deadlock the Agent with no possibility of recovery.
+  #
+  # @return [Boolean] self
   def await; end
 
   # Blocks the current thread until all actions dispatched thus far, from this
@@ -447,6 +603,9 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # block/proc/lambda. The call will block the Agent and will always fail.
   # Calling either {#await} or {#wait} (with a timeout of `nil`) will
   # hopelessly deadlock the Agent with no possibility of recovery.
+  #
+  # @param timeout [Float] the maximum number of seconds to wait
+  # @return [Boolean] true if all actions complete before timeout else false
   def await_for(timeout); end
 
   # Blocks the current thread until all actions dispatched thus far, from this
@@ -459,21 +618,32 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # block/proc/lambda. The call will block the Agent and will always fail.
   # Calling either {#await} or {#wait} (with a timeout of `nil`) will
   # hopelessly deadlock the Agent with no possibility of recovery.
+  #
+  # @param timeout [Float] the maximum number of seconds to wait
+  # @raise [Concurrent::TimeoutError] when timout is reached
+  # @return [Boolean] true if all actions complete before timeout
   def await_for!(timeout); end
 
   # The current value (state) of the Agent, irrespective of any pending or
   # in-progress actions. The value is always available and is non-blocking.
+  #
+  # @return [Object] the current value
   def deref; end
 
   # When {#failed?} and {#error_mode} is `:fail`, returns the error object
   # which caused the failure, else `nil`. When {#error_mode} is `:continue`
   # will *always* return `nil`.
+  #
+  # @return [nil, Error] the error which caused the failure when {#failed?}
   def error; end
 
   # The error mode this Agent is operating in. See {#initialize} for details.
   def error_mode; end
 
   # Is the Agent in a failed state?
+  #
+  # @return [Boolean]
+  # @see #restart
   def failed?; end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -489,14 +659,27 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @return [Boolean] true if the action is successfully enqueued, false if
+  #   the Agent is {#failed?}
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def post(*args, &action); end
 
   # When {#failed?} and {#error_mode} is `:fail`, returns the error object
   # which caused the failure, else `nil`. When {#error_mode} is `:continue`
   # will *always* return `nil`.
+  #
+  # @return [nil, Error] the error which caused the failure when {#failed?}
   def reason; end
 
   # When an Agent is {#failed?}, changes the Agent {#value} to `new_value`
@@ -507,6 +690,12 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # validator if any, or `restart` will raise an exception and the Agent will
   # remain failed with its old {#value} and {#error}. Observers, if any, will
   # not be notified of the new state.
+  #
+  # @option opts
+  # @param new_value [Object] the new value for the Agent once restarted
+  # @param opts [Hash] the configuration options
+  # @raise [Concurrent:AgentError] when not failed
+  # @return [Boolean] true
   def restart(new_value, opts = T.unsafe(nil)); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -522,9 +711,20 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @return [Boolean] true if the action is successfully enqueued, false if
+  #   the Agent is {#failed?}
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send(*args, &action); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -540,9 +740,20 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @raise [Concurrent::Agent::Error] if the Agent is {#failed?}
+  # @return [Boolean] true if the action is successfully enqueued
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send!(*args, &action); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -558,9 +769,20 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @return [Boolean] true if the action is successfully enqueued, false if
+  #   the Agent is {#failed?}
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send_off(*args, &action); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -576,9 +798,20 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @raise [Concurrent::Agent::Error] if the Agent is {#failed?}
+  # @return [Boolean] true if the action is successfully enqueued
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send_off!(*args, &action); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -594,9 +827,22 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @param executor [Concurrent::ExecutorService] the executor on which the
+  #   action is to be dispatched
+  # @return [Boolean] true if the action is successfully enqueued, false if
+  #   the Agent is {#failed?}
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send_via(executor, *args, &action); end
 
   # Dispatches an action to the Agent and returns immediately. Subsequently,
@@ -612,16 +858,34 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   #
   # * {#send} and {#send!} should be used for actions that are CPU limited
   # * {#send_off}, {#send_off!}, and {#<<} are appropriate for actions that
-  # may block on IO
+  #   may block on IO
   # * {#send_via} and {#send_via!} are used when a specific executor is to
-  # be used for the action
+  #   be used for the action
+  #
+  # @param args [Array<Object>] zero or more arguments to be passed to
+  #   the action
+  # @param action [Proc] the action dispatch to be enqueued
+  # @param executor [Concurrent::ExecutorService] the executor on which the
+  #   action is to be dispatched
+  # @raise [Concurrent::Agent::Error] if the Agent is {#failed?}
+  # @return [Boolean] true if the action is successfully enqueued
+  # @yield [agent, value, *args] process the old value and return the new
+  # @yieldparam value [Object] the current {#value} of the Agent
+  # @yieldparam args [Array<Object>] zero or more arguments to pass to the
+  #   action
+  # @yieldreturn [Object] the new value of the Agent
   def send_via!(executor, *args, &action); end
 
   # Is the Agent in a failed state?
+  #
+  # @return [Boolean]
+  # @see #restart
   def stopped?; end
 
   # The current value (state) of the Agent, irrespective of any pending or
   # in-progress actions. The value is always available and is non-blocking.
+  #
+  # @return [Object] the current value
   def value; end
 
   # Blocks the current thread until all actions dispatched thus far, from this
@@ -637,11 +901,16 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # block/proc/lambda. The call will block the Agent and will always fail.
   # Calling either {#await} or {#wait} (with a timeout of `nil`) will
   # hopelessly deadlock the Agent with no possibility of recovery.
+  #
+  # @param timeout [Float] the maximum number of seconds to wait
+  # @return [Boolean] true if all actions complete before timeout else false
   def wait(timeout = T.unsafe(nil)); end
 
   private
 
+  # @raise [ArgumentError]
   def enqueue_action_job(action, args, executor); end
+
   def enqueue_await_job(latch); end
   def execute_next_job; end
   def handle_error(error); end
@@ -664,6 +933,9 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
     # block/proc/lambda. The call will block the Agent and will always fail.
     # Calling either {#await} or {#wait} (with a timeout of `nil`) will
     # hopelessly deadlock the Agent with no possibility of recovery.
+    #
+    # @param agents [Array<Concurrent::Agent>] the Agents on which to wait
+    # @return [Boolean] true
     def await(*agents); end
 
     # Blocks the current thread until all actions dispatched thus far to all
@@ -676,6 +948,10 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
     # block/proc/lambda. The call will block the Agent and will always fail.
     # Calling either {#await} or {#wait} (with a timeout of `nil`) will
     # hopelessly deadlock the Agent with no possibility of recovery.
+    #
+    # @param timeout [Float] the maximum number of seconds to wait
+    # @param agents [Array<Concurrent::Agent>] the Agents on which to wait
+    # @return [Boolean] true if all actions complete before timeout else false
     def await_for(timeout, *agents); end
 
     # Blocks the current thread until all actions dispatched thus far to all
@@ -688,6 +964,11 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
     # block/proc/lambda. The call will block the Agent and will always fail.
     # Calling either {#await} or {#wait} (with a timeout of `nil`) will
     # hopelessly deadlock the Agent with no possibility of recovery.
+    #
+    # @param timeout [Float] the maximum number of seconds to wait
+    # @param agents [Array<Concurrent::Agent>] the Agents on which to wait
+    # @raise [Concurrent::TimeoutError] when timout is reached
+    # @return [Boolean] true if all actions complete before timeout
     def await_for!(timeout, *agents); end
   end
 end
@@ -700,38 +981,58 @@ Concurrent::Agent::ERROR_MODES = T.let(T.unsafe(nil), Array)
 
 # Raised during action processing or any other time in an Agent's lifecycle.
 class Concurrent::Agent::Error < ::StandardError
+  # @return [Error] a new instance of Error
   def initialize(message = T.unsafe(nil)); end
 end
 
 class Concurrent::Agent::Job < ::Struct
   # Returns the value of attribute action
+  #
+  # @return [Object] the current value of action
   def action; end
 
   # Sets the attribute action
+  #
+  # @param value [Object] the value to set the attribute action to.
+  # @return [Object] the newly set value
   def action=(_); end
 
   # Returns the value of attribute args
+  #
+  # @return [Object] the current value of args
   def args; end
 
   # Sets the attribute args
+  #
+  # @param value [Object] the value to set the attribute args to.
+  # @return [Object] the newly set value
   def args=(_); end
 
   # Returns the value of attribute caller
+  #
+  # @return [Object] the current value of caller
   def caller; end
 
   # Sets the attribute caller
+  #
+  # @param value [Object] the value to set the attribute caller to.
+  # @return [Object] the newly set value
   def caller=(_); end
 
   # Returns the value of attribute executor
+  #
+  # @return [Object] the current value of executor
   def executor; end
 
   # Sets the attribute executor
+  #
+  # @param value [Object] the value to set the attribute executor to.
+  # @return [Object] the newly set value
   def executor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -740,12 +1041,21 @@ end
 # Raised when a new value obtained during action processing or at `#restart`
 # fails validation.
 class Concurrent::Agent::ValidationError < ::Concurrent::Agent::Error
+  # @return [ValidationError] a new instance of ValidationError
   def initialize(message = T.unsafe(nil)); end
 end
 
 # A thread-safe subclass of Array. This version locks against the object
 # itself for every method call, ensuring only one thread can be reading
 # or writing at a time. This includes iteration methods like `#each`.
+#
+# @note `a += b` is **not** a **thread-safe** operation on
+#   `Concurrent::Array`. It reads array `a`, then it creates new `Concurrent::Array`
+#   which is concatenation of `a` and `b`, then it writes the concatenation to `a`.
+#   The read and write are independent operations they do not form a single atomic
+#   operation therefore when two `+=` operations are executed concurrently updates
+#   may be lost. Use `#concat` instead.
+# @see http://ruby-doc.org/core/Array.html Ruby standard library `Array`
 class Concurrent::Array < ::Array; end
 
 Concurrent::ArrayImplementation = Array
@@ -760,9 +1070,9 @@ Concurrent::ArrayImplementation = Array
 #
 # ```cucumber
 # Feature:
-# As a stateful, plain old Ruby class
-# I want safe, asynchronous behavior
-# So my long-running methods don't block the main thread
+#   As a stateful, plain old Ruby class
+#   I want safe, asynchronous behavior
+#   So my long-running methods don't block the main thread
 # ```
 #
 # The `Async` module is a way to mix simple yet powerful asynchronous
@@ -796,11 +1106,11 @@ Concurrent::ArrayImplementation = Array
 #
 # ```
 # class Hello
-# include Concurrent::Async
+#   include Concurrent::Async
 #
-# def hello(name)
-# "Hello, #{name}!"
-# end
+#   def hello(name)
+#     "Hello, #{name}!"
+#   end
 # end
 # ```
 #
@@ -816,22 +1126,22 @@ Concurrent::ArrayImplementation = Array
 #
 # ```
 # class Echo
-# include Concurrent::Async
+#   include Concurrent::Async
 #
-# def echo(msg)
-# print "#{msg}\n"
-# end
+#   def echo(msg)
+#     print "#{msg}\n"
+#   end
 # end
 #
 # horn = Echo.new
 # horn.echo('zero')      # synchronous, not thread-safe
-# # returns the actual return value of the method
+#                        # returns the actual return value of the method
 #
 # horn.async.echo('one') # asynchronous, non-blocking, thread-safe
-# # returns an IVar in the :pending state
+#                        # returns an IVar in the :pending state
 #
 # horn.await.echo('two') # synchronous, blocking, thread-safe
-# # returns an IVar in the :complete state
+#                        # returns an IVar in the :complete state
 # ```
 #
 # ## Let It Fail
@@ -935,6 +1245,30 @@ Concurrent::ArrayImplementation = Array
 # > `async` and `await` when the object is shared between threads. Once you
 # > call a method using `async` or `await`, you should no longer call methods
 # > directly on the object. Use `async` and `await` exclusively from then on.
+#
+# @example
+#
+#   class Echo
+#   include Concurrent::Async
+#
+#   def echo(msg)
+#   print "#{msg}\n"
+#   end
+#   end
+#
+#   horn = Echo.new
+#   horn.echo('zero')      # synchronous, not thread-safe
+#   # returns the actual return value of the method
+#
+#   horn.async.echo('one') # asynchronous, non-blocking, thread-safe
+#   # returns an IVar in the :pending state
+#
+#   horn.await.echo('two') # synchronous, blocking, thread-safe
+#   # returns an IVar in the :complete state
+# @see Concurrent::Actor
+# @see https://en.wikipedia.org/wiki/Actor_model "Actor Model" at Wikipedia
+# @see http://www.erlang.org/doc/man/gen_server.html Erlang gen_server
+# @see http://c2.com/cgi/wiki?LetItCrash "Let It Crash" at http://c2.com/
 module Concurrent::Async
   mixes_in_class_methods ::Concurrent::Async::ClassMethods
 
@@ -943,6 +1277,17 @@ module Concurrent::Async
   # `:pending` state and the method call will have been scheduled on the
   # object's thread. The final disposition of the method call can be obtained
   # by inspecting the returned future.
+  #
+  # @note The method call is guaranteed to be thread safe with respect to
+  #   all other method calls against the same object that are called with
+  #   either `async` or `await`. The mutable nature of Ruby references
+  #   (and object orientation in general) prevent any other thread safety
+  #   guarantees. Do NOT mix direct method calls with delegated method calls.
+  #   Use *only* delegated method calls when sharing the object between threads.
+  # @raise [NameError] the object does not respond to the requested method
+  # @raise [ArgumentError] the given `args` do not match the arity of
+  #   the requested method
+  # @return [Concurrent::IVar] the pending result of the asynchronous operation
   def async; end
 
   # Causes the chained method call to be performed synchronously on the
@@ -950,6 +1295,17 @@ module Concurrent::Async
   # `:fulfilled` or `:rejected` state and the delegated method will have
   # completed. The final disposition of the delegated method can be obtained
   # by inspecting the returned future.
+  #
+  # @note The method call is guaranteed to be thread safe with respect to
+  #   all other method calls against the same object that are called with
+  #   either `async` or `await`. The mutable nature of Ruby references
+  #   (and object orientation in general) prevent any other thread safety
+  #   guarantees. Do NOT mix direct method calls with delegated method calls.
+  #   Use *only* delegated method calls when sharing the object between threads.
+  # @raise [NameError] the object does not respond to the requested method
+  # @raise [ArgumentError] the given `args` do not match the arity of the
+  #   requested method
+  # @return [Concurrent::IVar] the completed result of the synchronous operation
   def await; end
 
   # Causes the chained method call to be performed synchronously on the
@@ -957,6 +1313,17 @@ module Concurrent::Async
   # `:fulfilled` or `:rejected` state and the delegated method will have
   # completed. The final disposition of the delegated method can be obtained
   # by inspecting the returned future.
+  #
+  # @note The method call is guaranteed to be thread safe with respect to
+  #   all other method calls against the same object that are called with
+  #   either `async` or `await`. The mutable nature of Ruby references
+  #   (and object orientation in general) prevent any other thread safety
+  #   guarantees. Do NOT mix direct method calls with delegated method calls.
+  #   Use *only* delegated method calls when sharing the object between threads.
+  # @raise [NameError] the object does not respond to the requested method
+  # @raise [ArgumentError] the given `args` do not match the arity of the
+  #   requested method
+  # @return [Concurrent::IVar] the completed result of the synchronous operation
   def call; end
 
   # Causes the chained method call to be performed asynchronously on the
@@ -964,16 +1331,45 @@ module Concurrent::Async
   # `:pending` state and the method call will have been scheduled on the
   # object's thread. The final disposition of the method call can be obtained
   # by inspecting the returned future.
+  #
+  # @note The method call is guaranteed to be thread safe with respect to
+  #   all other method calls against the same object that are called with
+  #   either `async` or `await`. The mutable nature of Ruby references
+  #   (and object orientation in general) prevent any other thread safety
+  #   guarantees. Do NOT mix direct method calls with delegated method calls.
+  #   Use *only* delegated method calls when sharing the object between threads.
+  # @raise [NameError] the object does not respond to the requested method
+  # @raise [ArgumentError] the given `args` do not match the arity of
+  #   the requested method
+  # @return [Concurrent::IVar] the pending result of the asynchronous operation
   def cast; end
 
   # Initialize the internal serializer and other stnchronization mechanisms.
+  #
+  # @note This method *must* be called immediately upon object construction.
+  #   This is the only way thread-safe initialization can be guaranteed.
   def init_synchronization; end
 
   class << self
+    # @private
     def included(base); end
 
     # Check for the presence of a method on an object and determine if a given
     # set of arguments matches the required arity.
+    #
+    # @note This check is imperfect because of the way Ruby reports the arity of
+    #   methods with a variable number of arguments. It is possible to determine
+    #   if too few arguments are given but impossible to determine if too many
+    #   arguments are given. This check may also fail to recognize dynamic behavior
+    #   of the object, such as methods simulated with `method_missing`.
+    # @param obj [Object] the object to check against
+    # @param method [Symbol] the method to check the object for
+    # @param args [Array] zero or more arguments for the arity check
+    # @raise [NameError] the object does not respond to `method` method
+    # @raise [ArgumentError] the given `args` do not match the arity of `method`
+    # @see http://www.ruby-doc.org/core-2.1.1/Method.html#method-i-arity Method#arity
+    # @see http://ruby-doc.org/core-2.1.0/Object.html#method-i-respond_to-3F Object#respond_to?
+    # @see http://www.ruby-doc.org/core-2.1.0/BasicObject.html#method-i-method_missing BasicObject#method_missing
     def validate_argc(obj, method, *args); end
   end
 end
@@ -981,9 +1377,18 @@ end
 # Delegates asynchronous, thread-safe method calls to the wrapped object.
 class Concurrent::Async::AsyncDelegator < ::Concurrent::Synchronization::LockableObject
   # Create a new delegator object wrapping the given delegate.
+  #
+  # @param delegate [Object] the object to wrap and delegate method calls to
+  # @return [AsyncDelegator] a new instance of AsyncDelegator
   def initialize(delegate); end
 
   # Delegates method calls to the wrapped object.
+  #
+  # @param method [Symbol] the method being called
+  # @param args [Array] zero or more arguments to the method
+  # @raise [NameError] the object does not respond to `method` method
+  # @raise [ArgumentError] the given `args` do not match the arity of `method`
+  # @return [IVar] the result of the method call
   def method_missing(method, *args, &block); end
 
   # Perform all enqueued tasks.
@@ -997,20 +1402,35 @@ class Concurrent::Async::AsyncDelegator < ::Concurrent::Synchronization::Lockabl
   private
 
   # Check whether the method is responsive
+  #
+  # @param method [Symbol] the method being called
+  # @return [Boolean]
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
 
 # Delegates synchronous, thread-safe method calls to the wrapped object.
 class Concurrent::Async::AwaitDelegator
   # Create a new delegator object wrapping the given delegate.
+  #
+  # @param delegate [AsyncDelegator] the object to wrap and delegate method calls to
+  # @return [AwaitDelegator] a new instance of AwaitDelegator
   def initialize(delegate); end
 
   # Delegates method calls to the wrapped object.
+  #
+  # @param method [Symbol] the method being called
+  # @param args [Array] zero or more arguments to the method
+  # @raise [NameError] the object does not respond to `method` method
+  # @raise [ArgumentError] the given `args` do not match the arity of `method`
+  # @return [IVar] the result of the method call
   def method_missing(method, *args, &block); end
 
   private
 
   # Check whether the method is responsive
+  #
+  # @param method [Symbol] the method being called
+  # @return [Boolean]
   def respond_to_missing?(method, include_private = T.unsafe(nil)); end
 end
 
@@ -1036,8 +1456,8 @@ end
 #
 # ```
 # def next_fibonacci(set = nil)
-# return [0, 1] if set.nil?
-# set + [set[-2..-1].reduce{|sum,x| sum + x }]
+#   return [0, 1] if set.nil?
+#   set + [set[-2..-1].reduce{|sum,x| sum + x }]
 # end
 #
 # # create an atom with an initial value
@@ -1045,7 +1465,7 @@ end
 #
 # # send a few update requests
 # 5.times do
-# atom.swap{|set| next_fibonacci(set) }
+#   atom.swap{|set| next_fibonacci(set) }
 # end
 #
 # # get the current value
@@ -1073,35 +1493,44 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
+#
+# @see http://clojure.org/atoms Clojure Atoms
+# @see http://clojure.org/state Values and Change - Clojure's approach to Identity and State
 class Concurrent::Atom < ::Concurrent::Synchronization::Object
   include ::Concurrent::Concern::Observable
 
   # Create a new atom with the given initial value.
+  #
+  # @option opts
+  # @param value [Object] The initial value
+  # @param opts [Hash] The options used to configure the atom
+  # @raise [ArgumentError] if the validator is not a `Proc` (when given)
+  # @return [Atom] a new instance of Atom
   def initialize(value, opts = T.unsafe(nil)); end
 
   def __initialize_atomic_fields__; end
@@ -1110,6 +1539,10 @@ class Concurrent::Atom < ::Concurrent::Synchronization::Object
   # current value of the atom is identical to the old value and the new
   # value successfully validates against the (optional) validator given
   # at construction.
+  #
+  # @param old_value [Object] The expected current value.
+  # @param new_value [Object] The intended new value.
+  # @return [Boolean] True if the value is changed else false.
   def compare_and_set(old_value, new_value); end
 
   def deref; end
@@ -1117,6 +1550,10 @@ class Concurrent::Atom < ::Concurrent::Synchronization::Object
   # Atomically sets the value of atom to the new value without regard for the
   # current value so long as the new value successfully validates against the
   # (optional) validator given at construction.
+  #
+  # @param new_value [Object] The intended new value.
+  # @return [Object] The final value of the atom after all operations and
+  #   validations are complete.
   def reset(new_value); end
 
   # Atomically swaps the value of atom using the given block. The current
@@ -1132,9 +1569,23 @@ class Concurrent::Atom < ::Concurrent::Synchronization::Object
   # the application of the supplied block to a current value, atomically.
   # However, because the block might be called multiple times, it must be free
   # of side effects.
+  #
+  # @note The given block may be called multiple times, and thus should be free
+  #   of side effects.
+  # @param args [Object] Zero or more arguments passed to the block.
+  # @raise [ArgumentError] When no block is given.
+  # @return [Object] The final value of the atom after all operations and
+  #   validations are complete.
+  # @yield [value, args] Calculates a new value for the atom based on the
+  #   current value and any supplied arguments.
+  # @yieldparam value [Object] The current value of the atom.
+  # @yieldparam args [Object] All arguments passed to the function, in order.
+  # @yieldreturn [Object] The intended new value of the atom.
   def swap(*args); end
 
   # The current value of the atom.
+  #
+  # @return [Object] The current value.
   def value; end
 
   private
@@ -1144,6 +1595,10 @@ class Concurrent::Atom < ::Concurrent::Synchronization::Object
   def update_value(&block); end
 
   # Is the new value valid?
+  #
+  # @param new_value [Object] The intended new value.
+  # @return [Boolean] false if the validator function returns false or raises
+  #   an exception else true
   def valid?(new_value); end
 
   def value=(value); end
@@ -1164,48 +1619,53 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # Performance:
 #
 # ```
 # Testing with ruby 2.1.2
 # Testing with Concurrent::MutexAtomicBoolean...
-# 2.790000   0.000000   2.790000 (  2.791454)
+#   2.790000   0.000000   2.790000 (  2.791454)
 # Testing with Concurrent::CAtomicBoolean...
-# 0.740000   0.000000   0.740000 (  0.740206)
+#   0.740000   0.000000   0.740000 (  0.740206)
 #
 # Testing with jruby 1.9.3
 # Testing with Concurrent::MutexAtomicBoolean...
-# 5.240000   2.520000   7.760000 (  3.683000)
+#   5.240000   2.520000   7.760000 (  3.683000)
 # Testing with Concurrent::JavaAtomicBoolean...
-# 3.340000   0.010000   3.350000 (  0.855000)
+#   3.340000   0.010000   3.350000 (  0.855000)
 # ```
+#
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicBoolean.html java.util.concurrent.atomic.AtomicBoolean
 class Concurrent::AtomicBoolean < ::Concurrent::MutexAtomicBoolean
+  # @return [String] Short string representation.
   def inspect; end
+
+  # @return [String] Short string representation.
   def to_s; end
 end
 
@@ -1215,16 +1675,39 @@ Concurrent::AtomicBooleanImplementation = Concurrent::MutexAtomicBoolean
 module Concurrent::AtomicDirectUpdate
   # Pass the current value to the given block, replacing it
   # with the block's result. Return nil if the update fails.
+  #
+  # @note This method was altered to avoid raising an exception by default.
+  #   Instead, this method now returns `nil` in case of failure. For more info,
+  #   please see: https://github.com/ruby-concurrency/concurrent-ruby/pull/336
+  # @return [Object] the new value, or nil if update failed
+  # @yield [Object] Calculate a new value for the atomic reference using
+  #   given (old) value
+  # @yieldparam old_value [Object] the starting value of the atomic reference
   def try_update; end
 
   # Pass the current value to the given block, replacing it
   # with the block's result. Raise an exception if the update
   # fails.
+  #
+  # @note This behavior mimics the behavior of the original
+  #   `AtomicReference#try_update` API. The reason this was changed was to
+  #   avoid raising exceptions (which are inherently slow) by default. For more
+  #   info: https://github.com/ruby-concurrency/concurrent-ruby/pull/336
+  # @raise [Concurrent::ConcurrentUpdateError] if the update fails
+  # @return [Object] the new value
+  # @yield [Object] Calculate a new value for the atomic reference using
+  #   given (old) value
+  # @yieldparam old_value [Object] the starting value of the atomic reference
   def try_update!; end
 
   # Pass the current value to the given block, replacing it
   # with the block's result. May retry if the value changes
   # during the block's execution.
+  #
+  # @return [Object] the new value
+  # @yield [Object] Calculate a new value for the atomic reference using
+  #   given (old) value
+  # @yieldparam old_value [Object] the starting value of the atomic reference
   def update; end
 end
 
@@ -1239,48 +1722,53 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # Performance:
 #
 # ```
 # Testing with ruby 2.1.2
 # Testing with Concurrent::MutexAtomicFixnum...
-# 3.130000   0.000000   3.130000 (  3.136505)
+#   3.130000   0.000000   3.130000 (  3.136505)
 # Testing with Concurrent::CAtomicFixnum...
-# 0.790000   0.000000   0.790000 (  0.785550)
+#   0.790000   0.000000   0.790000 (  0.785550)
 #
 # Testing with jruby 1.9.3
 # Testing with Concurrent::MutexAtomicFixnum...
-# 5.460000   2.460000   7.920000 (  3.715000)
+#   5.460000   2.460000   7.920000 (  3.715000)
 # Testing with Concurrent::JavaAtomicFixnum...
-# 4.520000   0.030000   4.550000 (  1.187000)
+#   4.520000   0.030000   4.550000 (  1.187000)
 # ```
+#
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html java.util.concurrent.atomic.AtomicLong
 class Concurrent::AtomicFixnum < ::Concurrent::MutexAtomicFixnum
+  # @return [String] Short string representation.
   def inspect; end
+
+  # @return [String] Short string representation.
   def to_s; end
 end
 
@@ -1288,59 +1776,105 @@ Concurrent::AtomicFixnumImplementation = Concurrent::MutexAtomicFixnum
 
 # An atomic reference which maintains an object reference along with a mark bit
 # that can be updated atomically.
+#
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicMarkableReference.html java.util.concurrent.atomic.AtomicMarkableReference
 class Concurrent::AtomicMarkableReference < ::Concurrent::Synchronization::Object
+  # @return [AtomicMarkableReference] a new instance of AtomicMarkableReference
   def initialize(value = T.unsafe(nil), mark = T.unsafe(nil)); end
 
   def __initialize_atomic_fields__; end
 
   # Atomically sets the value and mark to the given updated value and
   # mark given both:
-  # - the current value == the expected value &&
-  # - the current mark == the expected mark
+  #   - the current value == the expected value &&
+  #   - the current mark == the expected mark
   #
   # that the actual value was not equal to the expected value or the
   # actual mark was not equal to the expected mark
+  #
+  # @param expected_val [Object] the expected value
+  # @param new_val [Object] the new value
+  # @param expected_mark [Boolean] the expected mark
+  # @param new_mark [Boolean] the new mark
+  # @return [Boolean] `true` if successful. A `false` return indicates
   def compare_and_set(expected_val, new_val, expected_mark, new_mark); end
 
   # Atomically sets the value and mark to the given updated value and
   # mark given both:
-  # - the current value == the expected value &&
-  # - the current mark == the expected mark
+  #   - the current value == the expected value &&
+  #   - the current mark == the expected mark
   #
   # that the actual value was not equal to the expected value or the
   # actual mark was not equal to the expected mark
+  #
+  # @param expected_val [Object] the expected value
+  # @param new_val [Object] the new value
+  # @param expected_mark [Boolean] the expected mark
+  # @param new_mark [Boolean] the new mark
+  # @return [Boolean] `true` if successful. A `false` return indicates
   def compare_and_swap(expected_val, new_val, expected_mark, new_mark); end
 
   # Gets the current reference and marked values.
+  #
+  # @return [Array] the current reference and marked values
   def get; end
 
   # Gets the current marked value
+  #
+  # @return [Boolean] the current marked value
   def mark; end
 
   # Gets the current marked value
+  #
+  # @return [Boolean] the current marked value
   def marked?; end
 
   # _Unconditionally_ sets to the given value of both the reference and
   # the mark.
+  #
+  # @param new_val [Object] the new value
+  # @param new_mark [Boolean] the new mark
+  # @return [Array] both the new value and the new mark
   def set(new_val, new_mark); end
 
   # Pass the current value to the given block, replacing it with the
   # block's result. Simply return nil if update fails.
   #
   # the update failed
+  #
+  # @return [Array] the new value and marked state, or nil if
+  # @yield [Object] Calculate a new value and marked state for the atomic
+  #   reference using given (old) value and (old) marked
+  # @yieldparam old_val [Object] the starting value of the atomic reference
+  # @yieldparam old_mark [Boolean] the starting state of marked
   def try_update; end
 
   # Pass the current value to the given block, replacing it
   # with the block's result. Raise an exception if the update
   # fails.
+  #
+  # @raise [Concurrent::ConcurrentUpdateError] if the update fails
+  # @return [Array] the new value and marked state
+  # @yield [Object] Calculate a new value and marked state for the atomic
+  #   reference using given (old) value and (old) marked
+  # @yieldparam old_val [Object] the starting value of the atomic reference
+  # @yieldparam old_mark [Boolean] the starting state of marked
   def try_update!; end
 
   # Pass the current value and marked state to the given block, replacing it
   # with the block's results. May retry if the value changes during the
   # block's execution.
+  #
+  # @return [Array] the new value and new mark
+  # @yield [Object] Calculate a new value and marked state for the atomic
+  #   reference using given (old) value and (old) marked
+  # @yieldparam old_val [Object] the starting value of the atomic reference
+  # @yieldparam old_mark [Boolean] the starting state of marked
   def update; end
 
   # Gets the current value of the reference
+  #
+  # @return [Object] the current value of the reference
   def value; end
 
   private
@@ -1363,6 +1897,10 @@ module Concurrent::AtomicNumericCompareAndSetWrapper
   # the current value == the expected value.
   #
   # that the actual value was not equal to the expected value.
+  #
+  # @param old_value [Object] the expected value
+  # @param new_value [Object] the new value
+  # @return [Boolean] `true` if successful. A `false` return indicates
   def compare_and_set(old_value, new_value); end
 end
 
@@ -1376,33 +1914,39 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
+#
+# @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicReference.html
+# @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/package-summary.html
 class Concurrent::AtomicReference < ::Concurrent::MutexAtomicReference
+  # @return [String] Short string representation.
   def inspect; end
+
+  # @return [String] Short string representation.
   def to_s; end
 end
 
@@ -1499,11 +2043,22 @@ end
 # The API and behavior of this class are based on Java's `CachedThreadPool`
 class Concurrent::CachedThreadPool < ::Concurrent::ThreadPoolExecutor
   # Create a new thread pool.
+  #
+  # @option opts
+  # @param opts [Hash] the options defining pool behavior.
+  # @raise [ArgumentError] if `fallback_policy` is not a known policy
+  # @return [CachedThreadPool] a new instance of CachedThreadPool
+  # @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html#newCachedThreadPool--
   def initialize(opts = T.unsafe(nil)); end
 
   private
 
   # Create a new thread pool.
+  #
+  # @option opts
+  # @param opts [Hash] the options defining pool behavior.
+  # @raise [ArgumentError] if `fallback_policy` is not a known policy
+  # @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html#newCachedThreadPool--
   def ns_initialize(opts); end
 end
 
@@ -1516,63 +2071,118 @@ module Concurrent::Collection; end
 # observers are added and removed from a thread safe collection; every time
 # a notification is required the internal data structure is copied to
 # prevent concurrency issues
+#
+# @api private
 class Concurrent::Collection::CopyOnNotifyObserverSet < ::Concurrent::Synchronization::LockableObject
+  # @api private
+  # @return [CopyOnNotifyObserverSet] a new instance of CopyOnNotifyObserverSet
   def initialize; end
 
+  # @api private
   def add_observer(observer = T.unsafe(nil), func = T.unsafe(nil), &block); end
+
+  # @api private
   def count_observers; end
+
+  # @api private
   def delete_observer(observer); end
+
+  # @api private
   def delete_observers; end
 
   # Notifies all registered observers with optional args and deletes them.
+  #
+  # @api private
+  # @param args [Object] arguments to be passed to each observer
+  # @return [CopyOnWriteObserverSet] self
   def notify_and_delete_observers(*args, &block); end
 
   # Notifies all registered observers with optional args
+  #
+  # @api private
+  # @param args [Object] arguments to be passed to each observer
+  # @return [CopyOnWriteObserverSet] self
   def notify_observers(*args, &block); end
 
   protected
 
+  # @api private
   def ns_initialize; end
 
   private
 
+  # @api private
   def duplicate_and_clear_observers; end
+
+  # @api private
   def duplicate_observers; end
+
+  # @api private
+  # @raise [ArgumentError]
   def notify_to(observers, *args); end
 end
 
 # A thread safe observer set implemented using copy-on-write approach:
 # every time an observer is added or removed the whole internal data structure is
 # duplicated and replaced with a new one.
+#
+# @api private
 class Concurrent::Collection::CopyOnWriteObserverSet < ::Concurrent::Synchronization::LockableObject
+  # @api private
+  # @return [CopyOnWriteObserverSet] a new instance of CopyOnWriteObserverSet
   def initialize; end
 
+  # @api private
   def add_observer(observer = T.unsafe(nil), func = T.unsafe(nil), &block); end
+
+  # @api private
   def count_observers; end
+
+  # @api private
   def delete_observer(observer); end
+
+  # @api private
   def delete_observers; end
 
   # Notifies all registered observers with optional args and deletes them.
+  #
+  # @api private
+  # @param args [Object] arguments to be passed to each observer
+  # @return [CopyOnWriteObserverSet] self
   def notify_and_delete_observers(*args, &block); end
 
   # Notifies all registered observers with optional args
+  #
+  # @api private
+  # @param args [Object] arguments to be passed to each observer
+  # @return [CopyOnWriteObserverSet] self
   def notify_observers(*args, &block); end
 
   protected
 
+  # @api private
   def ns_initialize; end
 
   private
 
+  # @api private
   def clear_observers_and_return_old; end
+
+  # @api private
+  # @raise [ArgumentError]
   def notify_to(observers, *args); end
+
+  # @api private
   def observers; end
+
+  # @api private
   def observers=(new_set); end
 end
 
 Concurrent::Collection::MapImplementation = Concurrent::Collection::MriMapBackend
 
 class Concurrent::Collection::MriMapBackend < ::Concurrent::Collection::NonConcurrentMapBackend
+  # @return [MriMapBackend] a new instance of MriMapBackend
   def initialize(options = T.unsafe(nil)); end
 
   def []=(key, value); end
@@ -1593,6 +2203,8 @@ class Concurrent::Collection::NonConcurrentMapBackend
   # directly without calling each other. This is important because of the
   # SynchronizedMapBackend which uses a non-reentrant mutex for performance
   # reasons.
+  #
+  # @return [NonConcurrentMapBackend] a new instance of NonConcurrentMapBackend
   def initialize(options = T.unsafe(nil)); end
 
   def [](key); end
@@ -1606,7 +2218,10 @@ class Concurrent::Collection::NonConcurrentMapBackend
   def each_pair; end
   def get_and_set(key, value); end
   def get_or_default(key, default_value); end
+
+  # @return [Boolean]
   def key?(key); end
+
   def merge_pair(key, value); end
   def replace_if_exists(key, new_value); end
   def replace_pair(key, old_value, new_value); end
@@ -1618,7 +2233,10 @@ class Concurrent::Collection::NonConcurrentMapBackend
   def _set(key, value); end
   def dupped_backend; end
   def initialize_copy(other); end
+
+  # @return [Boolean]
   def pair?(key, expected_value); end
+
   def store_computed_value(key, new_value); end
 end
 
@@ -1640,6 +2258,13 @@ end
 #
 # When running under JRuby the class `NonConcurrentPriorityQueue` extends `JavaNonConcurrentPriorityQueue`.
 # When running under all other interpreters it extends `RubyNonConcurrentPriorityQueue`.
+#
+# @note This implementation is *not* thread safe.
+# @see http://en.wikipedia.org/wiki/Priority_queue
+# @see http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html
+# @see http://algs4.cs.princeton.edu/24pq/index.php#2.6
+# @see http://algs4.cs.princeton.edu/24pq/MaxPQ.java.html
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
 class Concurrent::Collection::NonConcurrentPriorityQueue < ::Concurrent::Collection::RubyNonConcurrentPriorityQueue
   def <<(item); end
   def deq; end
@@ -1669,71 +2294,126 @@ Concurrent::Collection::NonConcurrentPriorityQueueImplementation = Concurrent::C
 #
 # When running under JRuby the class `NonConcurrentPriorityQueue` extends `JavaNonConcurrentPriorityQueue`.
 # When running under all other interpreters it extends `RubyNonConcurrentPriorityQueue`.
+#
+# @note This implementation is *not* thread safe.
+# @see http://en.wikipedia.org/wiki/Priority_queue
+# @see http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html
+# @see http://algs4.cs.princeton.edu/24pq/index.php#2.6
+# @see http://algs4.cs.princeton.edu/24pq/MaxPQ.java.html
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
 class Concurrent::Collection::RubyNonConcurrentPriorityQueue
   # Create a new priority queue with no items.
+  #
+  # @option opts
+  # @param opts [Hash] the options for creating the queue
+  # @return [RubyNonConcurrentPriorityQueue] a new instance of RubyNonConcurrentPriorityQueue
   def initialize(opts = T.unsafe(nil)); end
 
   # Inserts the specified element into this priority queue.
+  #
+  # @param item [Object] the item to insert onto the queue
+  # @raise [ArgumentError]
   def <<(item); end
 
   # Removes all of the elements from this priority queue.
   def clear; end
 
   # Deletes all items from `self` that are equal to `item`.
+  #
+  # @param item [Object] the item to be removed from the queue
+  # @return [Object] true if the item is found else false
   def delete(item); end
 
   # Retrieves and removes the head of this queue, or returns `nil` if this
   # queue is empty.
+  #
+  # @return [Object] the head of the queue or `nil` when empty
   def deq; end
 
   # Returns `true` if `self` contains no elements.
+  #
+  # @return [Boolean] true if there are no items in the queue else false
   def empty?; end
 
   # Inserts the specified element into this priority queue.
+  #
+  # @param item [Object] the item to insert onto the queue
+  # @raise [ArgumentError]
   def enq(item); end
 
   # Returns `true` if the given item is present in `self` (that is, if any
   # element == `item`), otherwise returns false.
+  #
+  # @param item [Object] the item to search for
+  # @return [Boolean] true if the item is found else false
   def has_priority?(item); end
 
   # Returns `true` if the given item is present in `self` (that is, if any
   # element == `item`), otherwise returns false.
+  #
+  # @param item [Object] the item to search for
+  # @return [Boolean] true if the item is found else false
   def include?(item); end
 
   # The current length of the queue.
+  #
+  # @return [Fixnum] the number of items in the queue
   def length; end
 
   # Retrieves, but does not remove, the head of this queue, or returns `nil`
   # if this queue is empty.
+  #
+  # @return [Object] the head of the queue or `nil` when empty
   def peek; end
 
   # Retrieves and removes the head of this queue, or returns `nil` if this
   # queue is empty.
+  #
+  # @return [Object] the head of the queue or `nil` when empty
   def pop; end
 
   # Inserts the specified element into this priority queue.
+  #
+  # @param item [Object] the item to insert onto the queue
+  # @raise [ArgumentError]
   def push(item); end
 
   # Retrieves and removes the head of this queue, or returns `nil` if this
   # queue is empty.
+  #
+  # @return [Object] the head of the queue or `nil` when empty
   def shift; end
 
   # The current length of the queue.
+  #
+  # @return [Fixnum] the number of items in the queue
   def size; end
 
   private
 
   # Are the items at the given indexes ordered based on the priority
   # order specified at construction?
+  #
+  # @param x [Integer] the first index from which to retrieve a comparable value
+  # @param y [Integer] the second index from which to retrieve a comparable value
+  # @return [Boolean] true if the two elements are in the correct priority order
+  #   else false
   def ordered?(x, y); end
 
   # Percolate down to maintain heap invariant.
+  #
+  # @param k [Integer] the index at which to start the percolation
   def sink(k); end
 
   # Exchange the values at the given indexes within the internal array.
+  #
+  # @param x [Integer] the first index to swap
+  # @param y [Integer] the second index to swap
   def swap(x, y); end
 
   # Percolate up to maintain heap invariant.
+  #
+  # @param k [Integer] the index at which to start the percolation
   def swim(k); end
 
   class << self
@@ -1763,10 +2443,14 @@ end
 module Concurrent::Concern::Dereferenceable
   # Return the value this object represents after applying the options specified
   # by the `#set_deref_options` method.
+  #
+  # @return [Object] the current value of the object
   def deref; end
 
   # Return the value this object represents after applying the options specified
   # by the `#set_deref_options` method.
+  #
+  # @return [Object] the current value of the object
   def value; end
 
   protected
@@ -1775,13 +2459,31 @@ module Concurrent::Concern::Dereferenceable
 
   # Set the options which define the operations #value performs before
   # returning data to the caller (dereferencing).
+  #
+  # @note Most classes that include this module will call `#set_deref_options`
+  #   from within the constructor, thus allowing these options to be set at
+  #   object creation.
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] the options defining dereference behavior.
   def ns_set_deref_options(opts); end
 
   # Set the options which define the operations #value performs before
   # returning data to the caller (dereferencing).
+  #
+  # @note Most classes that include this module will call `#set_deref_options`
+  #   from within the constructor, thus allowing these options to be set at
+  #   object creation.
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] the options defining dereference behavior.
   def set_deref_options(opts = T.unsafe(nil)); end
 
   # Set the internal value of this object
+  #
+  # @param value [Object] the new value
   def value=(value); end
 end
 
@@ -1790,6 +2492,11 @@ module Concurrent::Concern::Logging
   include ::Logger::Severity
 
   # Logs through {Concurrent.global_logger}, it can be overridden by setting @logger
+  #
+  # @param level [Integer] one of Logger::Severity constants
+  # @param progname [String] e.g. a path of an Actor
+  # @param message [String, nil] when nil block is used to generate the message
+  # @yieldreturn [String] a message
   def log(level, progname, message = T.unsafe(nil), &block); end
 end
 
@@ -1797,73 +2504,121 @@ module Concurrent::Concern::Obligation
   include ::Concurrent::Concern::Dereferenceable
 
   # Has the obligation completed processing?
+  #
+  # @return [Boolean]
   def complete?; end
 
+  # @example allows Obligation to be risen
+  #   rejected_ivar = Ivar.new.fail
+  #   raise rejected_ivar
   def exception(*args); end
 
   # Has the obligation been fulfilled?
+  #
+  # @return [Boolean]
   def fulfilled?; end
 
   # Is the obligation still awaiting completion of processing?
+  #
+  # @return [Boolean]
   def incomplete?; end
 
   # Wait until obligation is complete or the timeout is reached. Will re-raise
   # any exceptions raised during processing (but will not raise an exception
   # on timeout).
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @raise [Exception] raises the reason when rejected
+  # @return [Obligation] self
   def no_error!(timeout = T.unsafe(nil)); end
 
   # Is obligation completion still pending?
+  #
+  # @return [Boolean]
   def pending?; end
 
   # Has the obligation been fulfilled?
+  #
+  # @return [Boolean]
   def realized?; end
 
   # If an exception was raised during processing this will return the
   # exception object. Will return `nil` when the state is pending or if
   # the obligation has been successfully fulfilled.
+  #
+  # @return [Exception] the exception raised during processing or `nil`
   def reason; end
 
   # Has the obligation been rejected?
+  #
+  # @return [Boolean]
   def rejected?; end
 
   # The current state of the obligation.
+  #
+  # @return [Symbol] the current state
   def state; end
 
   # Is the obligation still unscheduled?
+  #
+  # @return [Boolean]
   def unscheduled?; end
 
   # The current value of the obligation. Will be `nil` while the state is
   # pending or the operation has been rejected.
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @return [Object] see Dereferenceable#deref
   def value(timeout = T.unsafe(nil)); end
 
   # The current value of the obligation. Will be `nil` while the state is
   # pending or the operation has been rejected. Will re-raise any exceptions
   # raised during processing (but will not raise an exception on timeout).
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @raise [Exception] raises the reason when rejected
+  # @return [Object] see Dereferenceable#deref
   def value!(timeout = T.unsafe(nil)); end
 
   # Wait until obligation is complete or the timeout has been reached.
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @return [Obligation] self
   def wait(timeout = T.unsafe(nil)); end
 
   # Wait until obligation is complete or the timeout is reached. Will re-raise
   # any exceptions raised during processing (but will not raise an exception
   # on timeout).
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @raise [Exception] raises the reason when rejected
+  # @return [Obligation] self
   def wait!(timeout = T.unsafe(nil)); end
 
   protected
 
   # Atomic compare and set operation
   # State is set to `next_state` only if `current state == expected_current`.
+  #
+  # @param next_state [Symbol]
+  # @param expected_current [Symbol]
+  # @return [Boolean] true is state is changed, false otherwise
   def compare_and_set_state(next_state, *expected_current); end
 
   def event; end
   def get_arguments_from(opts = T.unsafe(nil)); end
 
   # Executes the block within mutex if current state is included in expected_states
+  #
+  # @return block value if executed, false otherwise
   def if_state(*expected_states); end
 
   def init_obligation; end
 
   # Am I in the current state?
+  #
+  # @param expected [Symbol] The state to check against
+  # @return [Boolean] true if in the expected state else false
   def ns_check_state?(expected); end
 
   def ns_set_state(value); end
@@ -1879,7 +2634,7 @@ end
 # - many `observers` can be registered to the same `subject`
 # - the `subject` notifies all registered observers when its status changes
 # - an `observer` can deregister itself when is no more interested to receive
-# event notifications
+#     event notifications
 #
 # In a single threaded environment the whole pattern is very easy: the
 # `subject` can use a simple data structure to manage all its subscribed
@@ -1897,13 +2652,13 @@ end
 # Let's take this example
 # ```
 # class Observer
-# def initialize
-# @count = 0
-# end
+#   def initialize
+#     @count = 0
+#   end
 #
-# def update
-# @count += 1
-# end
+#   def update
+#     @count += 1
+#   end
 # end
 #
 # obs = Observer.new
@@ -1917,19 +2672,35 @@ end
 module Concurrent::Concern::Observable
   # Adds an observer to this set. If a block is passed, the observer will be
   # created by this method and no other params should be passed.
+  #
+  # @param observer [Object] the observer to add
+  # @param func [Symbol] the function to call on the observer during notification.
+  #   Default is :update
+  # @return [Object] the added observer
   def add_observer(observer = T.unsafe(nil), func = T.unsafe(nil), &block); end
 
   # Return the number of observers associated with this object.
+  #
+  # @return [Integer] the observers count
   def count_observers; end
 
   # Remove `observer` as an observer on this object so that it will no
   # longer receive notifications.
+  #
+  # @param observer [Object] the observer to remove
+  # @return [Object] the deleted observer
   def delete_observer(observer); end
 
   # Remove all observers associated with this object.
+  #
+  # @return [Observable] self
   def delete_observers; end
 
   # As `#add_observer` but can be used for chaining.
+  #
+  # @param observer [Object] the observer to add
+  # @param func [Symbol] the function to call on the observer during notification.
+  # @return [Observable] self
   def with_observer(observer = T.unsafe(nil), func = T.unsafe(nil), &block); end
 
   protected
@@ -1938,6 +2709,8 @@ module Concurrent::Concern::Observable
   def observers; end
 
   # Sets the attribute observers
+  #
+  # @param value the value to set the attribute observers to.
   def observers=(_arg0); end
 end
 
@@ -1956,14 +2729,64 @@ class Concurrent::ConfigurationError < ::Concurrent::Error; end
 # method. Each of the other threads calls `#count_down` when done with its work.
 # When the latch counter reaches zero the waiting thread is unblocked and continues
 # with its work. A `CountDownLatch` can be used only once. Its value cannot be reset.
+#
+# @example Waiter and Decrementer
+#   latch = Concurrent::CountDownLatch.new(3)
+#
+#   waiter = Thread.new do
+#   latch.wait()
+#   puts ("Waiter released")
+#   end
+#
+#   decrementer = Thread.new do
+#   sleep(1)
+#   latch.count_down
+#   puts latch.count
+#
+#   sleep(1)
+#   latch.count_down
+#   puts latch.count
+#
+#   sleep(1)
+#   latch.count_down
+#   puts latch.count
+#   end
+#
+#   [waiter, decrementer].each(&:join)
 class Concurrent::CountDownLatch < ::Concurrent::MutexCountDownLatch; end
 
 Concurrent::CountDownLatchImplementation = Concurrent::MutexCountDownLatch
 
 # A synchronization aid that allows a set of threads to all wait for each
 # other to reach a common barrier point.
+#
+# @example
+#   barrier = Concurrent::CyclicBarrier.new(3)
+#   jobs    = Array.new(3) { |i| -> { sleep i; p done: i } }
+#   process = -> (i) do
+#   # waiting to start at the same time
+#   barrier.wait
+#   # execute job
+#   jobs[i].call
+#   # wait for others to finish
+#   barrier.wait
+#   end
+#   threads = 2.times.map do |i|
+#   Thread.new(i, &process)
+#   end
+#
+#   # use main as well
+#   process.call 2
+#
+#   # here we can be sure that all jobs are processed
 class Concurrent::CyclicBarrier < ::Concurrent::Synchronization::LockableObject
   # Create a new `CyclicBarrier` that waits for `parties` threads
+  #
+  # @param parties [Fixnum] the number of parties
+  # @raise [ArgumentError] if `parties` is not an integer or is less than zero
+  # @return [CyclicBarrier] a new instance of CyclicBarrier
+  # @yield an optional block that will be executed that will be executed after
+  #   the last thread arrives and before the others are released
   def initialize(parties, &block); end
 
   # A barrier can be broken when:
@@ -1971,21 +2794,33 @@ class Concurrent::CyclicBarrier < ::Concurrent::Synchronization::LockableObject
   # - at least one thread timed out on `wait` method
   #
   # A broken barrier can be restored using `reset` it's safer to create a new one
+  #
+  # @return [Boolean] true if the barrier is broken otherwise false
   def broken?; end
 
+  # @return [Fixnum] the number of threads currently waiting on the barrier
   def number_waiting; end
+
+  # @return [Fixnum] the number of threads needed to pass the barrier
   def parties; end
 
   # resets the barrier to its initial state
   # If there is at least one waiting thread, it will be woken up, the `wait`
   # method will return false and the barrier will be broken
   # If the barrier is broken, this method restores it to the original state
+  #
+  # @return [nil]
   def reset; end
 
   # Blocks on the barrier until the number of waiting threads is equal to
   # `parties` or until `timeout` is reached or `reset` is called
   # If a block has been passed to the constructor, it will be executed once by
-  # the last arrived thread before releasing the others
+  #  the last arrived thread before releasing the others
+  #
+  # @param timeout [Fixnum] the number of seconds to wait for the counter or
+  #   `nil` to block indefinitely
+  # @return [Boolean] `true` if the `count` reaches zero else false on
+  #   `timeout` or on `reset` or if the barrier is broken
   def wait(timeout = T.unsafe(nil)); end
 
   protected
@@ -1997,15 +2832,19 @@ end
 
 class Concurrent::CyclicBarrier::Generation < ::Struct
   # Returns the value of attribute status
+  #
+  # @return [Object] the current value of status
   def status; end
 
   # Sets the attribute status
+  #
+  # @param value [Object] the value to set the attribute status to.
+  # @return [Object] the newly set value
   def status=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2032,30 +2871,74 @@ end
 #
 # `Delay` includes the `Concurrent::Concern::Dereferenceable` mixin to support thread
 # safety of the reference returned by `#value`.
+#
+# @note The default behavior of `Delay` is to block indefinitely when
+#   calling either `value` or `wait`, executing the delayed operation on
+#   the current thread. This makes the `timeout` value completely
+#   irrelevant. To enable non-blocking behavior, use the `executor`
+#   constructor option. This will cause the delayed operation to be
+#   execute on the given executor, allowing the call to timeout.
+# @see Concurrent::Concern::Dereferenceable
 class Concurrent::Delay < ::Concurrent::Synchronization::LockableObject
   include ::Concurrent::Concern::Dereferenceable
   include ::Concurrent::Concern::Obligation
 
   # Create a new `Delay` in the `:pending` state.
+  #
+  # @raise [ArgumentError] if no block is given
+  # @return [Delay] a new instance of Delay
+  # @yield the delayed operation to perform
   def initialize(opts = T.unsafe(nil), &block); end
 
   # Reconfigures the block returning the value if still `#incomplete?`
+  #
+  # @return [true, false] if success
+  # @yield the delayed operation to perform
   def reconfigure(&block); end
 
   # Return the value this object represents after applying the options
   # specified by the `#set_deref_options` method. If the delayed operation
   # raised an exception this method will return nil. The execption object
   # can be accessed via the `#reason` method.
+  #
+  # @note The default behavior of `Delay` is to block indefinitely when
+  #   calling either `value` or `wait`, executing the delayed operation on
+  #   the current thread. This makes the `timeout` value completely
+  #   irrelevant. To enable non-blocking behavior, use the `executor`
+  #   constructor option. This will cause the delayed operation to be
+  #   execute on the given executor, allowing the call to timeout.
+  # @param timeout [Numeric] the maximum number of seconds to wait
+  # @return [Object] the current value of the object
   def value(timeout = T.unsafe(nil)); end
 
   # Return the value this object represents after applying the options
   # specified by the `#set_deref_options` method. If the delayed operation
   # raised an exception, this method will raise that exception (even when)
   # the operation has already been executed).
+  #
+  # @note The default behavior of `Delay` is to block indefinitely when
+  #   calling either `value` or `wait`, executing the delayed operation on
+  #   the current thread. This makes the `timeout` value completely
+  #   irrelevant. To enable non-blocking behavior, use the `executor`
+  #   constructor option. This will cause the delayed operation to be
+  #   execute on the given executor, allowing the call to timeout.
+  # @param timeout [Numeric] the maximum number of seconds to wait
+  # @raise [Exception] when `#rejected?` raises `#reason`
+  # @return [Object] the current value of the object
   def value!(timeout = T.unsafe(nil)); end
 
   # Return the value this object represents after applying the options
   # specified by the `#set_deref_options` method.
+  #
+  # @note The default behavior of `Delay` is to block indefinitely when
+  #   calling either `value` or `wait`, executing the delayed operation on
+  #   the current thread. This makes the `timeout` value completely
+  #   irrelevant. To enable non-blocking behavior, use the `executor`
+  #   constructor option. This will cause the delayed operation to be
+  #   execute on the given executor, allowing the call to timeout.
+  # @param timeout [Integer] (nil) the maximum number of seconds to wait for
+  #   the value to be computed. When `nil` the caller will block indefinitely.
+  # @return [Object] self
   def wait(timeout = T.unsafe(nil)); end
 
   protected
@@ -2068,6 +2951,7 @@ class Concurrent::Delay < ::Concurrent::Synchronization::LockableObject
 end
 
 class Concurrent::DependencyCounter
+  # @return [DependencyCounter] a new instance of DependencyCounter
   def initialize(count, &block); end
 
   def update(time, value, reason); end
@@ -2083,27 +2967,60 @@ class Concurrent::Error < ::StandardError; end
 # will then wake up all listeners. Once an `Event` has been set it remains set.
 # New threads calling `#wait` will return immediately. An `Event` may be
 # `#reset` at any time once it has been set.
+#
+# @example
+#   event = Concurrent::Event.new
+#
+#   t1 = Thread.new do
+#   puts "t1 is waiting"
+#   event.wait(1)
+#   puts "event ocurred"
+#   end
+#
+#   t2 = Thread.new do
+#   puts "t2 calling set"
+#   event.set
+#   end
+#
+#   [t1, t2].each(&:join)
+#
+#   # prints:
+#   # t2 calling set
+#   # t1 is waiting
+#   # event occurred
+# @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms682655.aspx
 class Concurrent::Event < ::Concurrent::Synchronization::LockableObject
   # Creates a new `Event` in the unset state. Threads calling `#wait` on the
   # `Event` will block.
+  #
+  # @return [Event] a new instance of Event
   def initialize; end
 
   # Reset a previously set event back to the `unset` state.
   # Has no effect if the `Event` has not yet been set.
+  #
+  # @return [Boolean] should always return `true`
   def reset; end
 
   # Trigger the event, setting the state to `set` and releasing all threads
   # waiting on the event. Has no effect if the `Event` has already been set.
+  #
+  # @return [Boolean] should always return `true`
   def set; end
 
   # Is the object in the set state?
+  #
+  # @return [Boolean] indicating whether or not the `Event` has been set
   def set?; end
 
+  # @return [Boolean]
   def try?; end
 
   # Wait a given number of seconds for the `Event` to be set by another
   # thread. Will wait forever when no `timeout` value is given. Returns
   # immediately if the `Event` has already been set.
+  #
+  # @return [Boolean] true if the `Event` was set before timeout else false
   def wait(timeout = T.unsafe(nil)); end
 
   protected
@@ -2123,37 +3040,48 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # This implementation is very simple, using only a single slot for each
 # exchanger (unlike more advanced implementations which use an "arena").
 # This approach will work perfectly fine when there are only a few threads
 # accessing a single `Exchanger`. Beyond a handful of threads the performance
 # will degrade rapidly due to contention on the single slot, but the algorithm
 # will remain correct.
+#
+# @example
+#
+#   exchanger = Concurrent::Exchanger.new
+#
+#   threads = [
+#   Thread.new { puts "first: " << exchanger.exchange('foo', 1) }, #=> "first: bar"
+#   Thread.new { puts "second: " << exchanger.exchange('bar', 1) } #=> "second: foo"
+#   ]
+#   threads.each {|t| t.join(2) }
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Exchanger.html java.util.concurrent.Exchanger
 class Concurrent::Exchanger < ::Concurrent::RubyExchanger; end
 
 Concurrent::ExchangerImplementation = Concurrent::RubyExchanger
@@ -2163,15 +3091,32 @@ module Concurrent::ExecutorService
   include ::Concurrent::Concern::Logging
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param task [Proc] the asynchronous task to perform
+  # @return [self] returns itself
   def <<(task); end
 
   # Does the task queue have a maximum size?
+  #
+  # @note Always returns `false`
+  # @return [Boolean] True if the task queue has a maximum size else false.
   def can_overflow?; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 
   # Does this executor guarantee serialization of its operations?
+  #
+  # @note Always returns `false`
+  # @return [Boolean] True if the executor guarantees that all operations
+  #   will be post in the order they are received and no two operations may
+  #   occur simultaneously. Else false.
   def serialized?; end
 end
 
@@ -2189,11 +3134,11 @@ end
 #
 # * `idletime`: The number of seconds that a thread may be idle before being reclaimed.
 # * `name`: The name of the executor (optional). Printed in the executor's `#to_s` output and
-# a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
-# implementation. `<id>` is uniq for each thread.
+#   a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
+#   implementation. `<id>` is uniq for each thread.
 # * `max_queue`: The maximum number of tasks that may be waiting in the work queue at
-# any one time. When the queue size reaches `max_queue` and no new threads can be created,
-# subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
+#   any one time. When the queue size reaches `max_queue` and no new threads can be created,
+#   subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
 # * `auto_terminate`: When true (default), the threads started will be marked as daemon.
 # * `fallback_policy`: The policy defining how rejected tasks are handled.
 #
@@ -2214,7 +3159,7 @@ end
 #
 # * Call `#shutdown` to initiate an orderly termination of all in-progress tasks
 # * Call `#wait_for_termination` with an appropriate timeout interval an allow
-# the orderly shutdown to complete
+#   the orderly shutdown to complete
 # * Call `#kill` *only when* the thread pool fails to shutdown in the allotted time
 #
 # On some runtime platforms (most notably the JVM) the application will not
@@ -2226,33 +3171,76 @@ end
 # pool1 = Concurrent::FixedThreadPool.new(5) # threads will be marked as daemon
 # pool2 = Concurrent::FixedThreadPool.new(5, auto_terminate: false) # mark threads as non-daemon
 # ```
+#
+# @note Failure to properly shutdown a thread pool can lead to unpredictable results.
+#   Please read *Shutting Down Thread Pools* for more information.
+# @see http://docs.oracle.com/javase/tutorial/essential/concurrency/pools.html Java Tutorials: Thread Pools
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html Java Executors class
+# @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html Java ExecutorService interface
+# @see https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setDaemon-boolean-
 class Concurrent::FixedThreadPool < ::Concurrent::ThreadPoolExecutor
   # Create a new thread pool.
+  #
+  # @option opts
+  # @param num_threads [Integer] the number of threads to allocate
+  # @param opts [Hash] the options defining pool behavior.
+  # @raise [ArgumentError] if `num_threads` is less than or equal to zero
+  # @raise [ArgumentError] if `fallback_policy` is not a known policy
+  # @return [FixedThreadPool] a new instance of FixedThreadPool
+  # @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html#newFixedThreadPool-int-
   def initialize(num_threads, opts = T.unsafe(nil)); end
 end
 
 # {include:file:docs-source/future.md}
+#
+# @see http://ruby-doc.org/stdlib-2.1.1/libdoc/observer/rdoc/Observable.html Ruby Observable module
+# @see http://clojuredocs.org/clojure_core/clojure.core/future Clojure's future function
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Future.html java.util.concurrent.Future
 class Concurrent::Future < ::Concurrent::IVar
   # Create a new `Future` in the `:unscheduled` state.
+  #
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @raise [ArgumentError] if no block is given
+  # @return [Future] a new instance of Future
+  # @yield the asynchronous operation to perform
   def initialize(opts = T.unsafe(nil), &block); end
 
   # Attempt to cancel the operation if it has not already processed.
   # The operation can only be cancelled while still `pending`. It cannot
   # be cancelled once it has begun processing or has completed.
+  #
+  # @return [Boolean] was the operation successfully cancelled.
   def cancel; end
 
   # Has the operation been successfully cancelled?
+  #
+  # @return [Boolean]
   def cancelled?; end
 
   # Execute an `:unscheduled` `Future`. Immediately sets the state to `:pending` and
   # passes the block to a new thread/thread pool for eventual execution.
   # Does nothing if the `Future` is in any state other than `:unscheduled`.
+  #
+  # @example Instance and execute in separate steps
+  #   future = Concurrent::Future.new{ sleep(1); 42 }
+  #   future.state #=> :unscheduled
+  #   future.execute
+  #   future.state #=> :pending
+  # @example Instance and execute in one line
+  #   future = Concurrent::Future.new{ sleep(1); 42 }.execute
+  #   future.state #=> :pending
+  # @return [Future] a reference to `self`
   def execute; end
 
   def set(value = T.unsafe(nil), &block); end
 
   # Wait the given number of seconds for the operation to complete.
   # On timeout attempt to cancel the operation.
+  #
+  # @param timeout [Numeric] the maximum time in seconds to wait.
+  # @return [Boolean] true if the operation completed before the timeout
+  #   else false
   def wait_or_cancel(timeout); end
 
   protected
@@ -2262,6 +3250,15 @@ class Concurrent::Future < ::Concurrent::IVar
   class << self
     # Create a new `Future` object with the given block, execute it, and return the
     # `:pending` object.
+    #
+    # @example
+    #   future = Concurrent::Future.execute{ sleep(1); 42 }
+    #   future.state #=> :pending
+    # @option opts
+    # @param opts [Hash] a customizable set of options
+    # @raise [ArgumentError] if no block is given
+    # @return [Future] the newly created `Future` in the `:pending` state
+    # @yield the asynchronous operation to perform
     def execute(opts = T.unsafe(nil), &block); end
   end
 end
@@ -2281,6 +3278,8 @@ Concurrent::GLOBAL_TIMER_SET = T.let(T.unsafe(nil), Concurrent::Delay)
 # itself for every method call, ensuring only one thread can be reading
 # or writing at a time. This includes iteration methods like `#each`,
 # which takes the lock repeatedly when reading an item.
+#
+# @see http://ruby-doc.org/core/Hash.html Ruby standard library `Hash`
 class Concurrent::Hash < ::Hash; end
 
 Concurrent::HashImplementation = Hash
@@ -2318,16 +3317,23 @@ Concurrent::HashImplementation = Hash
 # ## See Also
 #
 # 1. For the theory: Arvind, R. Nikhil, and K. Pingali.
-# [I-Structures: Data structures for parallel computing](http://dl.acm.org/citation.cfm?id=69562).
-# In Proceedings of Workshop on Graph Reduction, 1986.
+#    [I-Structures: Data structures for parallel computing](http://dl.acm.org/citation.cfm?id=69562).
+#    In Proceedings of Workshop on Graph Reduction, 1986.
 # 2. For recent application:
-# [DataDrivenFuture in Habanero Java from Rice](http://www.cs.rice.edu/~vs3/hjlib/doc/edu/rice/hj/api/HjDataDrivenFuture.html).
+#    [DataDrivenFuture in Habanero Java from Rice](http://www.cs.rice.edu/~vs3/hjlib/doc/edu/rice/hj/api/HjDataDrivenFuture.html).
 class Concurrent::IVar < ::Concurrent::Synchronization::LockableObject
   include ::Concurrent::Concern::Dereferenceable
   include ::Concurrent::Concern::Obligation
   include ::Concurrent::Concern::Observable
 
   # Create a new `IVar` in the `:pending` state with the (optional) initial value.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param value [Object] the initial value
+  # @param opts [Hash] the options to create a message with
+  # @return [IVar] a new instance of IVar
   def initialize(value = T.unsafe(nil), opts = T.unsafe(nil), &block); end
 
   # Add an observer on this object that will receive notification on update.
@@ -2337,16 +3343,40 @@ class Concurrent::IVar < ::Concurrent::Synchronization::LockableObject
   # `Time` at which the `Future` completed the asynchronous operation, the
   # final `value` (or `nil` on rejection), and the final `reason` (or `nil` on
   # fulfillment).
+  #
+  # @param observer [Object] the object that will be notified of changes
+  # @param func [Symbol] symbol naming the method to call when this
+  #   `Observable` has changes`
+  # @raise [ArgumentError]
   def add_observer(observer = T.unsafe(nil), func = T.unsafe(nil), &block); end
 
   # Set the `IVar` to failed due to some error and wake or notify all threads waiting on it.
+  #
+  # @param reason [Object] for the failure
+  # @raise [Concurrent::MultipleAssignmentError] if the `IVar` has already
+  #   been set or otherwise completed
+  # @return [IVar] self
   def fail(reason = T.unsafe(nil)); end
 
   # Set the `IVar` to a value and wake or notify all threads waiting on it.
+  #
+  # @param value [Object] the value to store in the `IVar`
+  # @raise [ArgumentError] if both a value and a block are given
+  # @raise [Concurrent::MultipleAssignmentError] if the `IVar` has already
+  #   been set or otherwise completed
+  # @return [IVar] self
+  # @yield A block operation to use for setting the value
   def set(value = T.unsafe(nil)); end
 
   # Attempt to set the `IVar` with the given value or block. Return a
   # boolean indicating the success or failure of the set operation.
+  #
+  # @param value [Object] the value to store in the `IVar`
+  # @raise [ArgumentError] if both a value and a block are given
+  # @raise [Concurrent::MultipleAssignmentError] if the `IVar` has already
+  #   been set or otherwise completed
+  # @return [Boolean] true if the value was set else false
+  # @yield A block operation to use for setting the value
   def try_set(value = T.unsafe(nil), &block); end
 
   protected
@@ -2355,7 +3385,10 @@ class Concurrent::IVar < ::Concurrent::Synchronization::LockableObject
   def complete(success, value, reason); end
   def complete_without_notification(success, value, reason); end
   def notify_observers(value, reason); end
+
+  # @raise [MultipleAssignmentError]
   def ns_complete_without_notification(success, value, reason); end
+
   def ns_initialize(value, opts); end
   def safe_execute(task, args = T.unsafe(nil)); end
 end
@@ -2372,13 +3405,20 @@ class Concurrent::IllegalOperationError < ::Concurrent::Error; end
 # it immediately runs every `#post` operation on the current thread, blocking
 # that thread until the operation is complete. This can be very beneficial
 # during testing because it makes all operations deterministic.
+#
+# @note Intended for use primarily in testing and debugging.
 class Concurrent::ImmediateExecutor < ::Concurrent::AbstractExecutorService
   include ::Concurrent::SerialExecutorService
 
   # Creates a new executor
+  #
+  # @return [ImmediateExecutor] a new instance of ImmediateExecutor
   def initialize; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param task [Proc] the asynchronous task to perform
+  # @return [self] returns itself
   def <<(task); end
 
   # Begin an orderly shutdown. Tasks already in the queue will be executed,
@@ -2387,9 +3427,17 @@ class Concurrent::ImmediateExecutor < ::Concurrent::AbstractExecutorService
   def kill; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 
   # Is the executor running?
+  #
+  # @return [Boolean] `true` when running, `false` when shutting down or shutdown
   def running?; end
 
   # Begin an orderly shutdown. Tasks already in the queue will be executed,
@@ -2398,13 +3446,22 @@ class Concurrent::ImmediateExecutor < ::Concurrent::AbstractExecutorService
   def shutdown; end
 
   # Is the executor shutdown?
+  #
+  # @return [Boolean] `true` when shutdown, `false` when shutting down or running
   def shutdown?; end
 
   # Is the executor shuttingdown?
+  #
+  # @return [Boolean] `true` when not running and not shutdown, else `false`
   def shuttingdown?; end
 
   # Block until executor shutdown is complete or until `timeout` seconds have
   # passed.
+  #
+  # @note Does not initiate shutdown or termination. Either `shutdown` or `kill`
+  #   must be called before this method (or on another thread).
+  # @param timeout [Integer] the maximum number of seconds to wait for shutdown to complete
+  # @return [Boolean] `true` if shutdown complete or false on `timeout`
   def wait_for_termination(timeout = T.unsafe(nil)); end
 end
 
@@ -2412,6 +3469,8 @@ end
 class Concurrent::ImmutabilityError < ::Concurrent::Error; end
 
 # A thread-safe, immutable variation of Ruby's standard `Struct`.
+#
+# @see http://ruby-doc.org/core/Struct.html Ruby standard library `Struct`
 module Concurrent::ImmutableStruct
   include ::Concurrent::Synchronization::AbstractStruct
 
@@ -2433,7 +3492,9 @@ module Concurrent::ImmutableStruct
   def initialize_copy(original); end
 
   class << self
+    # @private
     def included(base); end
+
     def new(*args, &block); end
   end
 end
@@ -2452,11 +3513,21 @@ Concurrent::ImmutableStruct::FACTORY = T.let(T.unsafe(nil), T.untyped)
 # more operations on the same executor and so on - such a situation might
 # overflow the single stack in case of an ImmediateExecutor, which is
 # inconsistent with how it would behave for a threaded executor.
+#
+# @note Intended for use primarily in testing and debugging.
 class Concurrent::IndirectImmediateExecutor < ::Concurrent::ImmediateExecutor
   # Creates a new executor
+  #
+  # @return [IndirectImmediateExecutor] a new instance of IndirectImmediateExecutor
   def initialize; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 end
 
@@ -2471,22 +3542,64 @@ class Concurrent::LifecycleError < ::Concurrent::Error; end
 class Concurrent::LockFreeStack < ::Concurrent::Synchronization::Object
   include ::Enumerable
 
+  # @param head [Node]
+  # @return [LockFreeStack] a new instance of LockFreeStack
   def initialize(head = T.unsafe(nil)); end
 
   def __initialize_atomic_fields__; end
+
+  # @return [true, false]
   def clear; end
+
+  # @return [self]
+  # @yield over the cleared stack
+  # @yieldparam value [Object]
   def clear_each(&block); end
+
+  # @param head [Node]
+  # @return [true, false]
   def clear_if(head); end
+
+  # @param head [Node]
+  # @return [true, false]
   def compare_and_clear(head); end
+
+  # @param head [Node]
+  # @return [true, false]
   def compare_and_pop(head); end
+
+  # @param head [Node]
+  # @param value [Object]
+  # @return [true, false]
   def compare_and_push(head, value); end
+
+  # @param head [Node]
+  # @return [self]
   def each(head = T.unsafe(nil)); end
+
+  # @param head [Node]
+  # @return [true, false]
   def empty?(head = T.unsafe(nil)); end
+
+  # @return [String] Short string representation.
   def inspect; end
+
+  # @return [Node]
   def peek; end
+
+  # @return [Object]
   def pop; end
+
+  # @param value [Object]
+  # @return [self]
   def push(value); end
+
+  # @param head [Node]
+  # @param new_head [Node]
+  # @return [true, false]
   def replace_if(head, new_head); end
+
+  # @return [String] Short string representation.
   def to_s; end
 
   private
@@ -2508,9 +3621,13 @@ end
 Concurrent::LockFreeStack::EMPTY = T.let(T.unsafe(nil), Concurrent::LockFreeStack::Node)
 
 class Concurrent::LockFreeStack::Node
+  # @return [Node] a new instance of Node
   def initialize(value, next_node); end
 
+  # @return [Node]
   def next_node; end
+
+  # @return [Object]
   def value; end
 
   # allow to nil-ify to free GC when the entry is no longer relevant, not synchronised
@@ -2546,40 +3663,56 @@ end
 # ## See Also
 #
 # 1. P. Barth, R. Nikhil, and Arvind. [M-Structures: Extending a parallel, non- strict, functional language with state](http://dl.acm.org/citation.cfm?id=652538). In Proceedings of the 5th
-# ACM Conference on Functional Programming Languages and Computer Architecture (FPCA), 1991.
+#    ACM Conference on Functional Programming Languages and Computer Architecture (FPCA), 1991.
 #
 # 2. S. Peyton Jones, A. Gordon, and S. Finne. [Concurrent Haskell](http://dl.acm.org/citation.cfm?id=237794).
-# In Proceedings of the 23rd Symposium on Principles of Programming Languages
-# (PoPL), 1996.
+#    In Proceedings of the 23rd Symposium on Principles of Programming Languages
+#    (PoPL), 1996.
 class Concurrent::MVar < ::Concurrent::Synchronization::Object
   include ::Concurrent::Concern::Dereferenceable
 
   # Create a new `MVar`, either empty or with an initial value.
+  #
+  # @param opts [Hash] the options controlling how the future will be processed
+  # @return [MVar] a new instance of MVar
   def initialize(value = T.unsafe(nil), opts = T.unsafe(nil)); end
 
   # acquires lock on the from an `MVAR`, yields the value to provided block,
   # and release lock. A timeout can be set to limit the time spent blocked,
   # in which case it returns `TIMEOUT` if the time is exceeded.
+  #
+  # @return [Object] the value returned by the block, or `TIMEOUT`
   def borrow(timeout = T.unsafe(nil)); end
 
   # Returns if the `MVar` is currently empty.
+  #
+  # @return [Boolean]
   def empty?; end
 
   # Returns if the `MVar` currently contains a value.
+  #
+  # @return [Boolean]
   def full?; end
 
   # Atomically `take`, yield the value to a block for transformation, and then
   # `put` the transformed value. Returns the transformed value. A timeout can
   # be set to limit the time spent blocked, in which case it returns `TIMEOUT`
   # if the time is exceeded.
+  #
+  # @raise [ArgumentError]
+  # @return [Object] the transformed value, or `TIMEOUT`
   def modify(timeout = T.unsafe(nil)); end
 
   # Non-blocking version of `modify` that will yield with `EMPTY` if there is no value yet.
+  #
+  # @raise [ArgumentError]
   def modify!; end
 
   # Put a value into an `MVar`, blocking if there is already a value until
   # it is empty. A timeout can be set to limit the time spent blocked, in
   # which case it returns `TIMEOUT` if the time is exceeded.
+  #
+  # @return [Object] the value that was put, or `TIMEOUT`
   def put(value, timeout = T.unsafe(nil)); end
 
   # Non-blocking version of `put` that will overwrite an existing value.
@@ -2588,6 +3721,8 @@ class Concurrent::MVar < ::Concurrent::Synchronization::Object
   # Remove the value from an `MVar`, leaving it empty, and blocking if there
   # isn't a value. A timeout can be set to limit the time spent blocked, in
   # which case it returns `TIMEOUT` if the time is exceeded.
+  #
+  # @return [Object] the value that was taken, or `TIMEOUT`
   def take(timeout = T.unsafe(nil)); end
 
   # Non-blocking version of `put`, that returns whether or not it was successful.
@@ -2602,8 +3737,12 @@ class Concurrent::MVar < ::Concurrent::Synchronization::Object
 
   private
 
+  # @return [Boolean]
   def unlocked_empty?; end
+
+  # @return [Boolean]
   def unlocked_full?; end
+
   def wait_for_empty(timeout); end
   def wait_for_full(timeout); end
   def wait_while(condition, timeout); end
@@ -2627,35 +3766,87 @@ Concurrent::MVar::TIMEOUT = T.let(T.unsafe(nil), Object)
 # does. For most uses it should do fine though, and we recommend you consider
 # `Concurrent::Map` instead of `Concurrent::Hash` for your concurrency-safe hash needs.
 class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
+  # @return [Map] a new instance of Map
   def initialize(options = T.unsafe(nil), &block); end
 
   # Get a value with key
+  #
+  # @param key [Object]
+  # @return [Object] the value
   def [](key); end
 
   # Set a value with key
+  #
+  # @param key [Object]
+  # @param value [Object]
+  # @return [Object] the new value
   def []=(key, value); end
 
   # Iterates over each key value pair.
   # This method is atomic.
+  #
+  # @note Atomic methods taking a block do not allow the `self` instance
+  #   to be used within the block. Doing so will cause a deadlock.
+  # @return [self]
+  # @yield for each key value pair in the map
+  # @yieldparam key [Object]
+  # @yieldparam value [Object]
   def each; end
 
   # Iterates over each key.
   # This method is atomic.
+  #
+  # @note Atomic methods taking a block do not allow the `self` instance
+  #   to be used within the block. Doing so will cause a deadlock.
+  # @return [self]
+  # @yield for each key in the map
+  # @yieldparam key [Object]
   def each_key; end
 
   # Iterates over each key value pair.
   # This method is atomic.
+  #
+  # @note Atomic methods taking a block do not allow the `self` instance
+  #   to be used within the block. Doing so will cause a deadlock.
+  # @return [self]
+  # @yield for each key value pair in the map
+  # @yieldparam key [Object]
+  # @yieldparam value [Object]
   def each_pair; end
 
   # Iterates over each value.
   # This method is atomic.
+  #
+  # @note Atomic methods taking a block do not allow the `self` instance
+  #   to be used within the block. Doing so will cause a deadlock.
+  # @return [self]
+  # @yield for each value in the map
+  # @yieldparam value [Object]
   def each_value; end
 
   # Is map empty?
+  #
+  # @return [true, false]
   def empty?; end
 
   # Get a value with key, or default_value when key is absent,
   # or fail when no default_value is given.
+  #
+  # @note The "fetch-then-act" methods of `Map` are not atomic. `Map` is intended
+  #   to be use as a concurrency primitive with strong happens-before
+  #   guarantees. It is not intended to be used as a high-level abstraction
+  #   supporting complex operations. All read and write operations are
+  #   thread safe, but no guarantees are made regarding race conditions
+  #   between the fetch operation and yielding to the block. Additionally,
+  #   this method does not support recursion. This is due to internal
+  #   constraints that are very unlikely to change in the near future.
+  # @param key [Object]
+  # @param default_value [Object]
+  # @raise [KeyError] when key is missing and no default_value is provided
+  # @return [Object] the value or default value
+  # @yield default value for a key
+  # @yieldparam key [Object]
+  # @yieldreturn [Object] default value
   def fetch(key, default_value = T.unsafe(nil)); end
 
   # Fetch value with key, or store default value when key is absent,
@@ -2663,39 +3854,74 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # therefore not atomic. The store can overwrite other concurrently
   # stored value.
   # This method is atomic.
+  #
+  # @note Atomic methods taking a block do not allow the `self` instance
+  #   to be used within the block. Doing so will cause a deadlock.
+  # @param key [Object]
+  # @param default_value [Object]
+  # @return [Object] the value or default value
+  # @yield default value for a key
+  # @yieldparam key [Object]
+  # @yieldreturn [Object] default value
   def fetch_or_store(key, default_value = T.unsafe(nil)); end
 
   # Get a value with key
+  #
+  # @param key [Object]
+  # @return [Object] the value
   def get(key); end
 
   def inspect; end
 
   # Find key of a value.
+  #
+  # @param value [Object]
+  # @return [Object, nil] key or nil when not found
   def key(value); end
 
   # All keys
+  #
+  # @return [::Array<Object>] keys
   def keys; end
 
+  # @raise [TypeError]
   def marshal_dump; end
+
   def marshal_load(hash); end
 
   # Set a value with key
+  #
+  # @param key [Object]
+  # @param value [Object]
+  # @return [Object] the new value
   def put(key, value); end
 
   # Insert value into map with key if key is absent in one atomic step.
+  #
+  # @param key [Object]
+  # @param value [Object]
+  # @return [Object, nil] the previous value when key was present or nil when there was no key
   def put_if_absent(key, value); end
 
   # Is the value stored in the map. Iterates over all values.
+  #
+  # @param value [Object]
+  # @return [true, false]
   def value?(value); end
 
   # All values
+  #
+  # @return [::Array<Object>] values
   def values; end
 
   private
 
   def initialize_copy(other); end
   def populate_from(hash); end
+
+  # @raise [KeyError]
   def raise_fetch_no_key; end
+
   def validate_options_hash!(options); end
 end
 
@@ -2723,8 +3949,8 @@ class Concurrent::MaxRestartFrequencyError < ::Concurrent::Error; end
 #
 # ```erlang
 # case file:consult("data.dat") of
-# {ok, Terms} -> do_something_useful(Terms);
-# {error, Reason} -> lager:error(Reason)
+#   {ok, Terms} -> do_something_useful(Terms);
+#   {error, Reason} -> lager:error(Reason)
 # end.
 # ```
 #
@@ -2755,42 +3981,101 @@ class Concurrent::MaxRestartFrequencyError < ::Concurrent::Error; end
 # ```ruby
 # result = MyFileUtils.consult("data.dat") # returns a Maybe
 # if result.just?
-# do_something_useful(result.value)      # or result.just
+#   do_something_useful(result.value)      # or result.just
 # else
-# logger.error(result.reason)            # or result.nothing
+#   logger.error(result.reason)            # or result.nothing
 # end
 # ```
+#
+# @example Returning a Maybe from a Function
+#   module MyFileUtils
+#   def self.consult(path)
+#   file = File.open(path, 'r')
+#   Concurrent::Maybe.just(file.read)
+#   rescue => ex
+#   return Concurrent::Maybe.nothing(ex)
+#   ensure
+#   file.close if file
+#   end
+#   end
+#
+#   maybe = MyFileUtils.consult('bogus.file')
+#   maybe.just?    #=> false
+#   maybe.nothing? #=> true
+#   maybe.reason   #=> #<Errno::ENOENT: No such file or directory @ rb_sysopen - bogus.file>
+#
+#   maybe = MyFileUtils.consult('README.md')
+#   maybe.just?    #=> true
+#   maybe.nothing? #=> false
+#   maybe.value    #=> "# Concurrent Ruby\n[![Gem Version..."
+# @example Using Maybe with a Block
+#   result = Concurrent::Maybe.from do
+#   Client.find(10) # Client is an ActiveRecord model
+#   end
+#
+#   # -- if the record was found
+#   result.just? #=> true
+#   result.value #=> #<Client id: 10, first_name: "Ryan">
+#
+#   # -- if the record was not found
+#   result.just?  #=> false
+#   result.reason #=> ActiveRecord::RecordNotFound
+# @example Using Maybe with the Null Object Pattern
+#   # In a Rails controller...
+#   result = ClientService.new(10).find    # returns a Maybe
+#   render json: result.or(NullClient.new)
+# @see https://hackage.haskell.org/package/base-4.2.0.1/docs/Data-Maybe.html Haskell Data.Maybe
+# @see https://github.com/purescript/purescript-maybe/blob/master/docs/Data.Maybe.md PureScript Data.Maybe
 class Concurrent::Maybe < ::Concurrent::Synchronization::Object
   include ::Comparable
 
   # Create a new `Maybe` with the given attributes.
+  #
+  # @param just [Object] The value when `Just` else `NONE`.
+  # @param nothing [Exception, Object] The exception when `Nothing` else `NONE`.
+  # @return [Maybe] The new `Maybe`.
   def initialize(just, nothing); end
 
   # Comparison operator.
+  #
+  # @return [Integer] 0 if self and other are both `Nothing`;
+  #   -1 if self is `Nothing` and other is `Just`;
+  #   1 if self is `Just` and other is nothing;
+  #   `self.just <=> other.just` if both self and other are `Just`.
   def <=>(other); end
 
   # Is this `Maybe` a `Just` (successfully fulfilled with a value)?
+  #
+  # @return [Boolean] True if `Just` or false if `Nothing`.
   def fulfilled?; end
 
   # The value of a `Maybe` when `Just`. Will be `NONE` when `Nothing`.
   def just; end
 
   # Is this `Maybe` a `Just` (successfully fulfilled with a value)?
+  #
+  # @return [Boolean] True if `Just` or false if `Nothing`.
   def just?; end
 
   # The reason for the `Maybe` when `Nothing`. Will be `NONE` when `Just`.
   def nothing; end
 
   # Is this `Maybe` a `nothing` (rejected with an exception upon fulfillment)?
+  #
+  # @return [Boolean] True if `Nothing` or false if `Just`.
   def nothing?; end
 
   # Return either the value of self or the given default value.
+  #
+  # @return [Object] The value of self when `Just`; else the given default.
   def or(other); end
 
   # The reason for the `Maybe` when `Nothing`. Will be `NONE` when `Just`.
   def reason; end
 
   # Is this `Maybe` a `nothing` (rejected with an exception upon fulfillment)?
+  #
+  # @return [Boolean] True if `Nothing` or false if `Just`.
   def rejected?; end
 
   # The value of a `Maybe` when `Just`. Will be `NONE` when `Nothing`.
@@ -2804,12 +4089,28 @@ class Concurrent::Maybe < ::Concurrent::Synchronization::Object
     # a new `Just` is created with the value set to the return value of the
     # block. If the block raises an exception a new `Nothing` is created with
     # the reason being set to the raised exception.
+    #
+    # @param args [Array<Object>] Zero or more arguments to pass to the block.
+    # @raise [ArgumentError] when no block given.
+    # @return [Maybe] The newly created object.
+    # @yield The block from which to create a new `Maybe`.
+    # @yieldparam args [Array<Object>] Zero or more block arguments passed as
+    #   arguments to the function.
     def from(*args); end
 
     # Create a new `Just` with the given value.
+    #
+    # @param value [Object] The value to set for the new `Maybe` object.
+    # @return [Maybe] The newly created object.
     def just(value); end
 
     # Create a new `Nothing` with the given (optional) reason.
+    #
+    # @param error [Exception] The reason to set for the new `Maybe` object.
+    #   When given a string a new `StandardError` will be created with the
+    #   argument as the message. When no argument is given a new
+    #   `StandardError` with an empty message will be created.
+    # @return [Maybe] The newly created object.
     def nothing(error = T.unsafe(nil)); end
 
     private
@@ -2826,6 +4127,7 @@ Concurrent::Maybe::NONE = T.let(T.unsafe(nil), Object)
 # Raised when an attempt is made to modify an immutable object
 # (such as an `IVar`) after its final state has been set.
 class Concurrent::MultipleAssignmentError < ::Concurrent::Error
+  # @return [MultipleAssignmentError] a new instance of MultipleAssignmentError
   def initialize(message = T.unsafe(nil), inspection_data = T.unsafe(nil)); end
 
   def inspect; end
@@ -2836,6 +4138,7 @@ end
 
 # Aggregates multiple exceptions.
 class Concurrent::MultipleErrors < ::Concurrent::Error
+  # @return [MultipleErrors] a new instance of MultipleErrors
   def initialize(errors, message = T.unsafe(nil)); end
 
   # Returns the value of attribute errors.
@@ -2844,29 +4147,55 @@ end
 
 # An thread-safe variation of Ruby's standard `Struct`. Values can be set at
 # construction or safely changed at any time during the object's lifecycle.
+#
+# @see http://ruby-doc.org/core/Struct.html Ruby standard library `Struct`
 module Concurrent::MutableStruct
   include ::Concurrent::Synchronization::AbstractStruct
 
   # Equality
+  #
+  # @return [Boolean] true if other has the same struct subclass and has
+  #   equal member values (according to `Object#==`)
   def ==(other); end
 
   # Attribute Reference
+  #
+  # @param member [Symbol, String, Integer] the string or symbol name of the member
+  #   for which to obtain the value or the member's index
+  # @raise [NameError] if the member does not exist
+  # @raise [IndexError] if the index is out of range.
+  # @return [Object] the value of the given struct member or the member at the given index.
   def [](member); end
 
   # Attribute Assignment
   #
   # Sets the value of the given struct member or the member at the given index.
+  #
+  # @param member [Symbol, String, Integer] the string or symbol name of the member
+  #   for which to obtain the value or the member's index
+  # @raise [NameError] if the name does not exist
+  # @raise [IndexError] if the index is out of range.
+  # @return [Object] the value of the given struct member or the member at the given index.
   def []=(member, value); end
 
   # Yields the value of each struct member in order. If no block is given
   # an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def each(&block); end
 
   # Yields the name and value of each struct member in order. If no block is
   # given an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member/value pair
+  # @yieldparam member [Object] each struct member (in order)
+  # @yieldparam value [Object] each struct value (in order)
   def each_pair(&block); end
 
   # Describe the contents of this struct in a string.
+  #
+  # @return [String] the contents of this struct in a string
   def inspect; end
 
   # Returns a new struct containing the contents of `other` and the contents
@@ -2874,28 +4203,50 @@ module Concurrent::MutableStruct
   # keys will be that of `other`. Otherwise the value for each duplicate key
   # is determined by calling the block with the key, its value in `self` and
   # its value in `other`.
+  #
+  # @param other [Hash] the hash from which to set the new values
+  # @raise [ArgumentError] of given a member that is not defined in the struct
+  # @return [Synchronization::AbstractStruct] a new struct with the new values
+  # @yield an options block for resolving duplicate keys
+  # @yieldparam member [String, Symbol] the name of the member which is duplicated
+  # @yieldparam selfvalue [Object] the value of the member in `self`
+  # @yieldparam othervalue [Object] the value of the member in `other`
   def merge(other, &block); end
 
   # Yields each member value from the struct to the block and returns an Array
   # containing the member values from the struct for which the given block
   # returns a true value (equivalent to `Enumerable#select`).
+  #
+  # @return [Array] an array containing each value for which the block returns true
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def select(&block); end
 
   # Returns the values for this struct as an Array.
+  #
+  # @return [Array] the values for this struct
   def to_a; end
 
   # Returns a hash containing the names and values for the struct’s members.
+  #
+  # @return [Hash] the names and values for the struct’s members
   def to_h; end
 
   # Describe the contents of this struct in a string.
+  #
+  # @return [String] the contents of this struct in a string
   def to_s; end
 
   # Returns the values for this struct as an Array.
+  #
+  # @return [Array] the values for this struct
   def values; end
 
   # Returns the struct member values for each selector as an Array.
   #
   # A selector may be either an Integer offset or a Range of offsets (as in `Array#values_at`).
+  #
+  # @param indexes [Fixnum, Range] the index(es) from which to obatin the values (in order)
   def values_at(*indexes); end
 
   private
@@ -2930,6 +4281,8 @@ module Concurrent::MutableStruct
     # parameters must be less than or equal to the number of attributes defined for the
     # struct. Unset parameters default to nil. Passing more parameters than number of attributes
     # will raise an `ArgumentError`.
+    #
+    # @see http://ruby-doc.org/core/Struct.html#method-c-new Ruby standard library `Struct#new`
     def new(*args, &block); end
   end
 end
@@ -2947,66 +4300,84 @@ Concurrent::MutableStruct::FACTORY = T.let(T.unsafe(nil), T.untyped)
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # Performance:
 #
 # ```
 # Testing with ruby 2.1.2
 # Testing with Concurrent::MutexAtomicBoolean...
-# 2.790000   0.000000   2.790000 (  2.791454)
+#   2.790000   0.000000   2.790000 (  2.791454)
 # Testing with Concurrent::CAtomicBoolean...
-# 0.740000   0.000000   0.740000 (  0.740206)
+#   0.740000   0.000000   0.740000 (  0.740206)
 #
 # Testing with jruby 1.9.3
 # Testing with Concurrent::MutexAtomicBoolean...
-# 5.240000   2.520000   7.760000 (  3.683000)
+#   5.240000   2.520000   7.760000 (  3.683000)
 # Testing with Concurrent::JavaAtomicBoolean...
-# 3.340000   0.010000   3.350000 (  0.855000)
+#   3.340000   0.010000   3.350000 (  0.855000)
 # ```
+#
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicBoolean.html java.util.concurrent.atomic.AtomicBoolean
 class Concurrent::MutexAtomicBoolean < ::Concurrent::Synchronization::LockableObject
   # Creates a new `AtomicBoolean` with the given initial value.
+  #
+  # @param initial [Boolean] the initial value
+  # @return [MutexAtomicBoolean] a new instance of MutexAtomicBoolean
   def initialize(initial = T.unsafe(nil)); end
 
   # Is the current value `false`
+  #
+  # @return [Boolean] true if the current value is `false`, else false
   def false?; end
 
   # Explicitly sets the value to false.
+  #
+  # @return [Boolean] true if value has changed, otherwise false
   def make_false; end
 
   # Explicitly sets the value to true.
+  #
+  # @return [Boolean] true if value has changed, otherwise false
   def make_true; end
 
   # Is the current value `true`
+  #
+  # @return [Boolean] true if the current value is `true`, else false
   def true?; end
 
   # Retrieves the current `Boolean` value.
+  #
+  # @return [Boolean] the current value
   def value; end
 
   # Explicitly sets the value.
+  #
+  # @param value [Boolean] the new value to be set
+  # @return [Boolean] the current value
   def value=(value); end
 
   protected
@@ -3029,75 +4400,108 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # Performance:
 #
 # ```
 # Testing with ruby 2.1.2
 # Testing with Concurrent::MutexAtomicFixnum...
-# 3.130000   0.000000   3.130000 (  3.136505)
+#   3.130000   0.000000   3.130000 (  3.136505)
 # Testing with Concurrent::CAtomicFixnum...
-# 0.790000   0.000000   0.790000 (  0.785550)
+#   0.790000   0.000000   0.790000 (  0.785550)
 #
 # Testing with jruby 1.9.3
 # Testing with Concurrent::MutexAtomicFixnum...
-# 5.460000   2.460000   7.920000 (  3.715000)
+#   5.460000   2.460000   7.920000 (  3.715000)
 # Testing with Concurrent::JavaAtomicFixnum...
-# 4.520000   0.030000   4.550000 (  1.187000)
+#   4.520000   0.030000   4.550000 (  1.187000)
 # ```
+#
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html java.util.concurrent.atomic.AtomicLong
 class Concurrent::MutexAtomicFixnum < ::Concurrent::Synchronization::LockableObject
   # Creates a new `AtomicFixnum` with the given initial value.
+  #
+  # @param initial [Fixnum] the initial value
+  # @raise [ArgumentError] if the initial value is not a `Fixnum`
+  # @return [MutexAtomicFixnum] a new instance of MutexAtomicFixnum
   def initialize(initial = T.unsafe(nil)); end
 
   # Atomically sets the value to the given updated value if the current
   # value == the expected value.
+  #
+  # @param expect [Fixnum] the expected value
+  # @param update [Fixnum] the new value
+  # @return [Boolean] true if the value was updated else false
   def compare_and_set(expect, update); end
 
   # Decreases the current value by the given amount (defaults to 1).
+  #
+  # @param delta [Fixnum] the amount by which to decrease the current value
+  # @return [Fixnum] the current value after decrementation
   def decrement(delta = T.unsafe(nil)); end
 
   # Decreases the current value by the given amount (defaults to 1).
+  #
+  # @param delta [Fixnum] the amount by which to decrease the current value
+  # @return [Fixnum] the current value after decrementation
   def down(delta = T.unsafe(nil)); end
 
   # Increases the current value by the given amount (defaults to 1).
+  #
+  # @param delta [Fixnum] the amount by which to increase the current value
+  # @return [Fixnum] the current value after incrementation
   def increment(delta = T.unsafe(nil)); end
 
   # Increases the current value by the given amount (defaults to 1).
+  #
+  # @param delta [Fixnum] the amount by which to increase the current value
+  # @return [Fixnum] the current value after incrementation
   def up(delta = T.unsafe(nil)); end
 
   # Pass the current value to the given block, replacing it
   # with the block's result. May retry if the value changes
   # during the block's execution.
+  #
+  # @return [Object] the new value
+  # @yield [Object] Calculate a new value for the atomic reference using
+  #   given (old) value
+  # @yieldparam old_value [Object] the starting value of the atomic reference
   def update; end
 
   # Retrieves the current `Fixnum` value.
+  #
+  # @return [Fixnum] the current value
   def value; end
 
   # Explicitly sets the value.
+  #
+  # @param value [Fixnum] the new value to be set
+  # @raise [ArgumentError] if the new value is not a `Fixnum`
+  # @return [Fixnum] the current value
   def value=(value); end
 
   protected
@@ -3113,32 +4517,54 @@ class Concurrent::MutexAtomicReference < ::Concurrent::Synchronization::Lockable
   include ::Concurrent::AtomicDirectUpdate
   include ::Concurrent::AtomicNumericCompareAndSetWrapper
 
+  # @param value [Object] The initial value.
+  # @return [MutexAtomicReference] a new instance of MutexAtomicReference
   def initialize(value = T.unsafe(nil)); end
 
   # Atomically sets the value to the given updated value if
   # the current value == the expected value.
   #
   # that the actual value was not equal to the expected value.
+  #
+  # @param old_value [Object] the expected value
+  # @param new_value [Object] the new value
+  # @return [Boolean] `true` if successful. A `false` return indicates
   def _compare_and_set(old_value, new_value); end
 
   def compare_and_swap(old_value, new_value); end
 
   # Gets the current value.
+  #
+  # @return [Object] the current value
   def get; end
 
   # Atomically sets to the given value and returns the old value.
+  #
+  # @param new_value [Object] the new value
+  # @return [Object] the old value
   def get_and_set(new_value); end
 
   # Sets to the given value.
+  #
+  # @param new_value [Object] the new value
+  # @return [Object] the new value
   def set(new_value); end
 
   # Atomically sets to the given value and returns the old value.
+  #
+  # @param new_value [Object] the new value
+  # @return [Object] the old value
   def swap(new_value); end
 
   # Gets the current value.
+  #
+  # @return [Object] the current value
   def value; end
 
   # Sets to the given value.
+  #
+  # @param new_value [Object] the new value
+  # @return [Object] the new value
   def value=(new_value); end
 
   protected
@@ -3155,9 +4581,15 @@ end
 # with its work. A `CountDownLatch` can be used only once. Its value cannot be reset.
 class Concurrent::MutexCountDownLatch < ::Concurrent::Synchronization::LockableObject
   # Create a new `CountDownLatch` with the initial `count`.
+  #
+  # @param count [new] the initial count
+  # @raise [ArgumentError] if `count` is not an integer or is less than zero
+  # @return [MutexCountDownLatch] a new instance of MutexCountDownLatch
   def initialize(count = T.unsafe(nil)); end
 
   # The current value of the counter.
+  #
+  # @return [Fixnum] the current value of the counter
   def count; end
 
   # Signal the latch to decrement the counter. Will signal all blocked threads when
@@ -3165,6 +4597,10 @@ class Concurrent::MutexCountDownLatch < ::Concurrent::Synchronization::LockableO
   def count_down; end
 
   # Block on the latch until the counter reaches zero or until `timeout` is reached.
+  #
+  # @param timeout [Fixnum] the number of seconds to wait for the counter or `nil`
+  #   to block indefinitely
+  # @return [Boolean] `true` if the `count` reaches zero else false on `timeout`
   def wait(timeout = T.unsafe(nil)); end
 
   protected
@@ -3173,15 +4609,23 @@ class Concurrent::MutexCountDownLatch < ::Concurrent::Synchronization::LockableO
 end
 
 class Concurrent::MutexSemaphore < ::Concurrent::Synchronization::LockableObject
+  # @return [MutexSemaphore] a new instance of MutexSemaphore
   def initialize(count); end
 
   def acquire(permits = T.unsafe(nil)); end
   def available_permits; end
 
   # Acquires and returns all permits that are immediately available.
+  #
+  # @return [Integer]
   def drain_permits; end
 
   # Shrinks the number of available permits by the indicated reduction.
+  #
+  # @param reduction [Fixnum] Number of permits to remove.
+  # @raise [ArgumentError] if `reduction` is not an integer or is negative
+  # @raise [ArgumentError] if `@free` - `@reduction` is less than zero
+  # @return [nil]
   def reduce_permits(reduction); end
 
   def release(permits = T.unsafe(nil)); end
@@ -3209,6 +4653,10 @@ module Concurrent::Options
     def executor(executor_identifier); end
 
     # Get the requested `Executor` based on the values set in the options hash.
+    #
+    # @option opts
+    # @param opts [Hash] the options defining the requested executor
+    # @return [Executor, nil] the requested thread pool, or nil when no option specified
     def executor_from_options(opts = T.unsafe(nil)); end
   end
 end
@@ -3274,9 +4722,9 @@ end
 #
 # ```ruby
 # p = Concurrent::Promise.execute do
-# # do something
-# 42
-# end
+#       # do something
+#       42
+#     end
 # ```
 #
 # Promises can be chained using the `then` method. The `then` method accepts a
@@ -3292,9 +4740,9 @@ end
 #
 # ```ruby
 # p = Concurrent::Promise.fulfill(20).
-# then{|result| result - 10 }.
-# then{|result| result * 3 }.
-# then(executor: different_executor){|result| result % 5 }.execute
+#     then{|result| result - 10 }.
+#     then{|result| result * 3 }.
+#     then(executor: different_executor){|result| result % 5 }.execute
 # ```
 #
 # The initial state of a newly created Promise depends on the state of its parent:
@@ -3390,45 +4838,99 @@ end
 # - `rescue` is aliased by `catch` and `on_error`
 class Concurrent::Promise < ::Concurrent::IVar
   # Initialize a new Promise with the provided options.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] a customizable set of options
+  # @raise [ArgumentError] if no block is given
+  # @return [Promise] a new instance of Promise
+  # @see http://wiki.commonjs.org/wiki/Promises/A
+  # @see http://promises-aplus.github.io/promises-spec/
+  # @yield The block operation to be performed asynchronously.
   def initialize(opts = T.unsafe(nil), &block); end
 
   # Chain onto this promise an action to be undertaken on failure
   # (rejection).
+  #
+  # @return [Promise] self
+  # @yield The block to execute
   def catch(&block); end
 
   # Execute an `:unscheduled` `Promise`. Immediately sets the state to `:pending` and
   # passes the block to a new thread/thread pool for eventual execution.
   # Does nothing if the `Promise` is in any state other than `:unscheduled`.
+  #
+  # @return [Promise] a reference to `self`
   def execute; end
 
   # Set the `IVar` to failed due to some error and wake or notify all threads waiting on it.
+  #
+  # @param reason [Object] for the failure
+  # @raise [Concurrent::MultipleAssignmentError] if the `IVar` has already
+  #   been set or otherwise completed
+  # @raise [Concurrent::PromiseExecutionError] if not the root promise
+  # @return [IVar] self
   def fail(reason = T.unsafe(nil)); end
 
   # Yield the successful result to the block that returns a promise. If that
   # promise is also successful the result is the result of the yielded promise.
   # If either part fails the whole also fails.
+  #
+  # @example
+  #   Promise.execute { 1 }.flat_map { |v| Promise.execute { v + 2 } }.value! #=> 3
+  # @return [Promise]
   def flat_map(&block); end
 
   # Chain onto this promise an action to be undertaken on failure
   # (rejection).
+  #
+  # @return [Promise] self
+  # @yield The block to execute
   def on_error(&block); end
 
   # Chain onto this promise an action to be undertaken on success
   # (fulfillment).
+  #
+  # @raise [ArgumentError]
+  # @return [Promise] self
+  # @yield The block to execute
   def on_success(&block); end
 
   # Chain onto this promise an action to be undertaken on failure
   # (rejection).
+  #
+  # @return [Promise] self
+  # @yield The block to execute
   def rescue(&block); end
 
   # Set the `IVar` to a value and wake or notify all threads waiting on it.
+  #
+  # @param value [Object] the value to store in the `IVar`
+  # @raise [ArgumentError] if both a value and a block are given
+  # @raise [Concurrent::MultipleAssignmentError] if the `IVar` has already
+  #   been set or otherwise completed
+  # @raise [Concurrent::PromiseExecutionError] if not the root promise
+  # @return [IVar] self
+  # @yield A block operation to use for setting the value
   def set(value = T.unsafe(nil), &block); end
 
   # Chain a new promise off the current promise.
+  #
+  # @overload then
+  # @overload then
+  # @raise [ArgumentError]
+  # @return [Promise] the new promise
+  # @yield The block operation to be performed asynchronously.
   def then(*args, &block); end
 
   # Builds a promise that produces the result of self and others in an Array
   # and fails if any of them fails.
+  #
+  # @overload zip
+  # @overload zip
+  # @return [Promise<Array>]
   def zip(*others); end
 
   protected
@@ -3439,7 +4941,10 @@ class Concurrent::Promise < ::Concurrent::IVar
   def on_fulfill(result); end
   def on_reject(reason); end
   def realize(task); end
+
+  # @return [Boolean]
   def root?; end
+
   def set_pending; end
   def set_state!(success, value, reason); end
   def synchronized_set_state!(success, value, reason); end
@@ -3462,6 +4967,10 @@ class Concurrent::Promise < ::Concurrent::IVar
     # on the aggregating promise will then be executed as appropriate. If the
     # `#rescue` handlers are executed the raises exception will be
     # `Concurrent::PromiseExecutionError`.
+    #
+    # @param promises [Array] Zero or more promises to aggregate
+    # @return [Promise] an unscheduled (not executed) promise that aggregates
+    #   the promises given as arguments
     def aggregate(method, *promises); end
 
     # Aggregates a collection of promises and executes the `then` condition
@@ -3469,6 +4978,8 @@ class Concurrent::Promise < ::Concurrent::IVar
     # a `Concurrent::PromiseExecutionError` if any of the aggregated promises
     # fail. Upon execution will execute any of the aggregate promises that
     # were not already executed.
+    #
+    # @return [Boolean]
     def all?(*promises); end
 
     # Aggregates a collection of promises and executes the `then` condition
@@ -3486,20 +4997,55 @@ class Concurrent::Promise < ::Concurrent::IVar
     # on the aggregating promise will then be executed as appropriate. If the
     # `#rescue` handlers are executed the raises exception will be
     # `Concurrent::PromiseExecutionError`.
+    #
+    # @param promises [Array] Zero or more promises to aggregate
+    # @return [Promise] an unscheduled (not executed) promise that aggregates
+    #   the promises given as arguments
     def any?(*promises); end
 
     # Create a new `Promise` object with the given block, execute it, and return the
     # `:pending` object.
+    #
+    # @example
+    #   promise = Concurrent::Promise.execute{ sleep(1); 42 }
+    #   promise.state #=> :pending
+    # @option opts
+    # @option opts
+    # @option opts
+    # @option opts
+    # @param opts [Hash] a customizable set of options
+    # @raise [ArgumentError] if no block is given
+    # @return [Promise] the newly created `Promise` in the `:pending` state
     def execute(opts = T.unsafe(nil), &block); end
 
     # Create a new `Promise` and fulfill it immediately.
+    #
+    # @option opts
+    # @option opts
+    # @option opts
+    # @option opts
+    # @param opts [Hash] a customizable set of options
+    # @raise [ArgumentError] if no block is given
+    # @return [Promise] the newly created `Promise`
     def fulfill(value, opts = T.unsafe(nil)); end
 
     # Create a new `Promise` and reject it immediately.
+    #
+    # @option opts
+    # @option opts
+    # @option opts
+    # @option opts
+    # @param opts [Hash] a customizable set of options
+    # @raise [ArgumentError] if no block is given
+    # @return [Promise] the newly created `Promise`
     def reject(reason, opts = T.unsafe(nil)); end
 
     # Builds a promise that produces the result of promises in an Array
     # and fails if any of them fails.
+    #
+    # @overload zip
+    # @overload zip
+    # @return [Promise<Array>]
     def zip(*promises); end
   end
 end
@@ -3512,12 +5058,14 @@ module Concurrent::Promises
   extend ::Concurrent::Promises::FactoryMethods
 end
 
+# @abstract
 class Concurrent::Promises::AbstractAnyPromise < ::Concurrent::Promises::BlockedPromise; end
 
 # Common ancestor of {Event} and {Future} classes, many shared methods are defined here.
 class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization::Object
   include ::Concurrent::Promises::InternalStates
 
+  # @return [AbstractEventFuture] a new instance of AbstractEventFuture
   def initialize(promise, default_executor); end
 
   def __initialize_atomic_fields__; end
@@ -3525,37 +5073,86 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
   def add_callback_notify_blocked(promise, index); end
 
   # For inspection.
+  #
+  # @return [Array<AbstractPromise>]
   def blocks; end
 
   # For inspection.
   def callbacks; end
 
   # Shortcut of {#chain_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #chain_on
   def chain(*args, &task); end
 
   # Chains the task to be executed asynchronously on executor after it is resolved.
+  #
+  # @overload an_event.chain_on
+  # @overload a_future.chain_on
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [Future]
+  # @yieldreturn will become result of the returned Future.
+  #   Its returned value becomes {Future#value} fulfilling it,
+  #   raised exception becomes {Future#reason} rejecting it.
   def chain_on(executor, *args, &task); end
 
   # Resolves the resolvable when receiver is resolved.
+  #
+  # @param resolvable [Resolvable]
+  # @return [self]
   def chain_resolvable(resolvable); end
 
   # Returns default executor.
+  #
+  # @return [Executor] default executor
+  # @see #with_default_executor
+  # @see FactoryMethods#future_on
+  # @see FactoryMethods#resolvable_future
+  # @see FactoryMethods#any_fulfilled_future_on
+  # @see similar
   def default_executor; end
 
+  # @return [String] Short string representation.
   def inspect; end
+
   def internal_state; end
 
   # Shortcut of {#on_resolution_using} with default `:io` executor supplied.
+  #
+  # @return [self]
+  # @see #on_resolution_using
   def on_resolution(*args, &callback); end
 
   # Stores the callback to be executed synchronously on resolving thread after it is
   # resolved.
+  #
+  # @overload an_event.on_resolution!
+  # @overload a_future.on_resolution!
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yieldreturn is forgotten.
   def on_resolution!(*args, &callback); end
 
   # Stores the callback to be executed asynchronously on executor after it is resolved.
+  #
+  # @overload an_event.on_resolution_using
+  # @overload a_future.on_resolution_using
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yieldreturn is forgotten.
   def on_resolution_using(executor, *args, &callback); end
 
   # Is it in pending state?
+  #
+  # @return [Boolean]
   def pending?; end
 
   # For inspection.
@@ -3564,25 +5161,45 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
   def resolve_with(state, raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Is it in resolved state?
+  #
+  # @return [Boolean]
   def resolved?; end
 
   # Returns its state.
+  #
+  # @overload an_event.state
+  # @overload a_future.state
+  # @return [Symbol]
   def state; end
 
   # Resolves the resolvable when receiver is resolved.
+  #
+  # @param resolvable [Resolvable]
+  # @return [self]
   def tangle(resolvable); end
 
+  # @return [String] Short string representation.
   def to_s; end
 
   # Propagates touch. Requests all the delayed futures, which it depends on, to be
   # executed. This method is called by any other method requiring resolved state, like {#wait}.
+  #
+  # @return [self]
   def touch; end
 
   # For inspection.
+  #
+  # @return [Boolean]
   def touched?; end
 
   # Wait (block the Thread) until receiver is {#resolved?}.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @return [self, true, false] self implies timeout was not used, true implies timeout was used
+  #   and it was resolved, false implies it was not resolved within timeout.
   def wait(timeout = T.unsafe(nil)); end
 
   # For inspection.
@@ -3590,6 +5207,12 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
 
   # Crates new object with same class with the executor set as its new default executor.
   # Any futures depending on it will use the new default executor.
+  #
+  # @abstract
+  # @raise [NotImplementedError]
+  # @return [AbstractEventFuture]
+  # @see Event#with_default_executor
+  # @see Future#with_default_executor
   def with_default_executor(executor); end
 
   def with_hidden_resolvable; end
@@ -3606,7 +5229,10 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
   def internal_state=(value); end
   def swap_internal_state(value); end
   def update_internal_state(&block); end
+
+  # @return [Boolean]
   def wait_until_resolved(timeout); end
+
   def with_async(executor, *args, &block); end
 
   class << self
@@ -3615,6 +5241,7 @@ class Concurrent::Promises::AbstractEventFuture < ::Concurrent::Synchronization:
 end
 
 class Concurrent::Promises::AbstractFlatPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [AbstractFlatPromise] a new instance of AbstractFlatPromise
   def initialize(delayed_because, blockers_count, event_or_future); end
 
   def touch; end
@@ -3623,13 +5250,20 @@ class Concurrent::Promises::AbstractFlatPromise < ::Concurrent::Promises::Blocke
 
   def add_delayed_of(future); end
   def on_resolvable(resolved_future, index); end
+
+  # @return [Boolean]
   def resolvable?(countdown, future, index); end
+
+  # @return [Boolean]
   def touched?; end
 end
 
+# @abstract
+# @private
 class Concurrent::Promises::AbstractPromise < ::Concurrent::Synchronization::Object
   include ::Concurrent::Promises::InternalStates
 
+  # @return [AbstractPromise] a new instance of AbstractPromise
   def initialize(future); end
 
   def default_executor; end
@@ -3643,7 +5277,9 @@ class Concurrent::Promises::AbstractPromise < ::Concurrent::Synchronization::Obj
 
   private
 
+  # @return [Future]
   def evaluate_to(*args, block); end
+
   def resolve_with(new_state, raise_on_reassign = T.unsafe(nil)); end
 
   class << self
@@ -3654,28 +5290,37 @@ end
 class Concurrent::Promises::AnyFulfilledFuturePromise < ::Concurrent::Promises::AnyResolvedFuturePromise
   private
 
+  # @return [Boolean]
   def resolvable?(countdown, future, index); end
 end
 
 class Concurrent::Promises::AnyResolvedEventPromise < ::Concurrent::Promises::AbstractAnyPromise
+  # @return [AnyResolvedEventPromise] a new instance of AnyResolvedEventPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
   def on_resolvable(resolved_future, index); end
+
+  # @return [Boolean]
   def resolvable?(countdown, future, index); end
 end
 
 class Concurrent::Promises::AnyResolvedFuturePromise < ::Concurrent::Promises::AbstractAnyPromise
+  # @return [AnyResolvedFuturePromise] a new instance of AnyResolvedFuturePromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
 
   def on_resolvable(resolved_future, index); end
+
+  # @return [Boolean]
   def resolvable?(countdown, future, index); end
 end
 
+# @abstract
 class Concurrent::Promises::BlockedPromise < ::Concurrent::Promises::InnerPromise
+  # @return [BlockedPromise] a new instance of BlockedPromise
   def initialize(delayed, blockers_count, future); end
 
   # for inspection only
@@ -3688,8 +5333,13 @@ class Concurrent::Promises::BlockedPromise < ::Concurrent::Promises::InnerPromis
   private
 
   def clear_and_propagate_touch(stack_or_element = T.unsafe(nil)); end
+
+  # @raise [NotImplementedError]
   def on_resolvable(resolved_future, index); end
+
   def process_on_blocker_resolution(future, index); end
+
+  # @return [true, false] if resolvable
   def resolvable?(countdown, future, index); end
 
   class << self
@@ -3700,7 +5350,10 @@ class Concurrent::Promises::BlockedPromise < ::Concurrent::Promises::InnerPromis
   end
 end
 
+# @abstract
 class Concurrent::Promises::BlockedTaskPromise < ::Concurrent::Promises::BlockedPromise
+  # @raise [ArgumentError]
+  # @return [BlockedTaskPromise] a new instance of BlockedTaskPromise
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
   def executor; end
@@ -3713,6 +5366,7 @@ class Concurrent::Promises::ChainPromise < ::Concurrent::Promises::BlockedTaskPr
 end
 
 class Concurrent::Promises::DelayPromise < ::Concurrent::Promises::InnerPromise
+  # @return [DelayPromise] a new instance of DelayPromise
   def initialize(default_executor); end
 
   def delayed_because; end
@@ -3728,31 +5382,47 @@ class Concurrent::Promises::Event < ::Concurrent::Promises::AbstractEventFuture
   # If just one of the parties is Future then the result
   # of the returned future is equal to the result of the supplied future. If both are futures
   # then the result is as described in {FactoryMethods#zip_futures_on}.
+  #
+  # @return [Future, Event]
   def &(other); end
 
   # Creates a new event which will be resolved when the first of receiver, `event_or_future`
   # resolves.
+  #
+  # @return [Event]
   def any(event_or_future); end
 
   # Creates new event dependent on receiver which will not evaluate until touched, see {#touch}.
   # In other words, it inserts delay into the chain of Futures making rest of it lazy evaluated.
+  #
+  # @return [Event]
   def delay; end
 
   # Creates new event dependent on receiver scheduled to execute on/in intended_time.
   # In time is interpreted from the moment the receiver is resolved, therefore it inserts
   # delay into the chain.
+  #
+  # @param intended_time [Numeric, Time] `Numeric` means to run in `intended_time` seconds.
+  #   `Time` means to run on `intended_time`.
+  # @return [Event]
   def schedule(intended_time); end
 
   def then(*args, &task); end
 
   # Returns self, since this is event
+  #
+  # @return [Event]
   def to_event; end
 
   # Converts event to a future. The future is fulfilled when the event is resolved, the future may never fail.
+  #
+  # @return [Future]
   def to_future; end
 
   # Crates new object with same class with the executor set as its new default executor.
   # Any futures depending on it will use the new default executor.
+  #
+  # @return [Event]
   def with_default_executor(executor); end
 
   # Creates a new event or a future which will be resolved when receiver and other are.
@@ -3760,10 +5430,14 @@ class Concurrent::Promises::Event < ::Concurrent::Promises::AbstractEventFuture
   # If just one of the parties is Future then the result
   # of the returned future is equal to the result of the supplied future. If both are futures
   # then the result is as described in {FactoryMethods#zip_futures_on}.
+  #
+  # @return [Future, Event]
   def zip(other); end
 
   # Creates a new event which will be resolved when the first of receiver, `event_or_future`
   # resolves.
+  #
+  # @return [Event]
   def |(event_or_future); end
 
   private
@@ -3773,6 +5447,7 @@ class Concurrent::Promises::Event < ::Concurrent::Promises::AbstractEventFuture
 end
 
 class Concurrent::Promises::EventWrapperPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [EventWrapperPromise] a new instance of EventWrapperPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -3789,17 +5464,32 @@ module Concurrent::Promises::FactoryMethods
   extend ::Concurrent::Promises::FactoryMethods
 
   # Shortcut of {#any_resolved_future_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #any_resolved_future_on
   def any(*futures_and_or_events); end
 
   # Shortcut of {#any_event_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #any_event_on
   def any_event(*futures_and_or_events); end
 
   # Creates new event which becomes resolved after first of the futures_and_or_events resolves.
   # If resolved it does not propagate {Concurrent::AbstractEventFuture#touch}, leaving delayed
   # futures un-executed if they are not required any more.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param futures_and_or_events [AbstractEventFuture]
+  # @return [Event]
   def any_event_on(default_executor, *futures_and_or_events); end
 
   # Shortcut of {#any_fulfilled_future_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #any_fulfilled_future_on
   def any_fulfilled_future(*futures_and_or_events); end
 
   # Creates new future which is resolved after first of futures_and_or_events is fulfilled.
@@ -3809,9 +5499,18 @@ module Concurrent::Promises::FactoryMethods
   # futures un-executed if they are not required any more.
   # If event is supplied, which does not have value and can be only resolved, it's
   # represented as `:fulfilled` with value `nil`.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param futures_and_or_events [AbstractEventFuture]
+  # @return [Future]
   def any_fulfilled_future_on(default_executor, *futures_and_or_events); end
 
   # Shortcut of {#any_resolved_future_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #any_resolved_future_on
   def any_resolved_future(*futures_and_or_events); end
 
   # Creates new future which is resolved after first futures_and_or_events is resolved.
@@ -3820,71 +5519,178 @@ module Concurrent::Promises::FactoryMethods
   # futures un-executed if they are not required any more.
   # If event is supplied, which does not have value and can be only resolved, it's
   # represented as `:fulfilled` with value `nil`.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param futures_and_or_events [AbstractEventFuture]
+  # @return [Future]
   def any_resolved_future_on(default_executor, *futures_and_or_events); end
 
   # Shortcut of {#delay_on} with default `:io` executor supplied.
+  #
+  # @return [Future, Event]
+  # @see #delay_on
   def delay(*args, &task); end
 
   # Creates new event or future which is resolved only after it is touched,
   # see {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @overload delay_on
+  # @overload delay_on
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
   def delay_on(default_executor, *args, &task); end
 
   # Creates resolved future with will be fulfilled with the given value.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param value [Object]
+  # @return [Future]
   def fulfilled_future(value, default_executor = T.unsafe(nil)); end
 
   # Shortcut of {#future_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #future_on
   def future(*args, &task); end
 
   # Constructs new Future which will be resolved after block is evaluated on default executor.
   # Evaluation begins immediately.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [Future]
+  # @yield [*args] to the task.
+  # @yieldreturn will become result of the returned Future.
+  #   Its returned value becomes {Future#value} fulfilling it,
+  #   raised exception becomes {Future#reason} rejecting it.
   def future_on(default_executor, *args, &task); end
 
   # General constructor. Behaves differently based on the argument's type. It's provided for convenience
   # but it's better to be explicit.
+  #
+  # @overload make_future
+  # @overload make_future
+  # @overload make_future
+  # @overload make_future
+  # @overload make_future
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @return [Event, Future]
+  # @see rejected_future, resolved_event, fulfilled_future
   def make_future(argument = T.unsafe(nil), default_executor = T.unsafe(nil)); end
 
   # Creates resolved future with will be rejected with the given reason.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param reason [Object]
+  # @return [Future]
   def rejected_future(reason, default_executor = T.unsafe(nil)); end
 
   # Shortcut of {#resolvable_event_on} with default `:io` executor supplied.
+  #
+  # @return [ResolvableEvent]
+  # @see #resolvable_event_on
   def resolvable_event; end
 
   # Created resolvable event, user is responsible for resolving the event once by
   # {Promises::ResolvableEvent#resolve}.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @return [ResolvableEvent]
   def resolvable_event_on(default_executor = T.unsafe(nil)); end
 
   # Shortcut of {#resolvable_future_on} with default `:io` executor supplied.
+  #
+  # @return [ResolvableFuture]
+  # @see #resolvable_future_on
   def resolvable_future; end
 
   # Creates resolvable future, user is responsible for resolving the future once by
   # {Promises::ResolvableFuture#resolve}, {Promises::ResolvableFuture#fulfill},
   # or {Promises::ResolvableFuture#reject}
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @return [ResolvableFuture]
   def resolvable_future_on(default_executor = T.unsafe(nil)); end
 
   # Creates resolved event.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @return [Event]
   def resolved_event(default_executor = T.unsafe(nil)); end
 
   # Creates resolved future with will be either fulfilled with the given value or rejection with
   # the given reason.
+  #
+  # @param fulfilled [true, false]
+  # @param value [Object]
+  # @param reason [Object]
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @return [Future]
   def resolved_future(fulfilled, value, reason, default_executor = T.unsafe(nil)); end
 
   # Shortcut of {#schedule_on} with default `:io` executor supplied.
+  #
+  # @return [Future, Event]
+  # @see #schedule_on
   def schedule(intended_time, *args, &task); end
 
   # Creates new event or future which is resolved in intended_time.
+  #
+  # @overload schedule_on
+  # @overload schedule_on
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param intended_time [Numeric, Time] `Numeric` means to run in `intended_time` seconds.
+  #   `Time` means to run on `intended_time`.
   def schedule_on(default_executor, intended_time, *args, &task); end
 
   # Shortcut of {#zip_futures_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #zip_futures_on
   def zip(*futures_and_or_events); end
 
   # Shortcut of {#zip_events_on} with default `:io` executor supplied.
+  #
+  # @return [Event]
+  # @see #zip_events_on
   def zip_events(*futures_and_or_events); end
 
   # Creates new event which is resolved after all futures_and_or_events are resolved.
   # (Future is resolved when fulfilled or rejected.)
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param futures_and_or_events [AbstractEventFuture]
+  # @return [Event]
   def zip_events_on(default_executor, *futures_and_or_events); end
 
   # Shortcut of {#zip_futures_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #zip_futures_on
   def zip_futures(*futures_and_or_events); end
 
   # Creates new future which is resolved after all futures_and_or_events are resolved.
@@ -3892,14 +5698,24 @@ module Concurrent::Promises::FactoryMethods
   # If there is an error it rejects.
   # If event is supplied, which does not have value and can be only resolved, it's
   # represented as `:fulfilled` with value `nil`.
+  #
+  # @param default_executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. Default executor propagates to chained futures unless overridden with
+  #   executor parameter or changed with {AbstractEventFuture#with_default_executor}.
+  # @param futures_and_or_events [AbstractEventFuture]
+  # @return [Future]
   def zip_futures_on(default_executor, *futures_and_or_events); end
 end
 
 module Concurrent::Promises::FactoryMethods::Configuration
+  # @return [Executor, :io, :fast] the executor which is used when none is supplied
+  #   to a factory method. The method can be overridden in the receivers of
+  #   `include FactoryMethod`
   def default_executor; end
 end
 
 class Concurrent::Promises::FlatEventPromise < ::Concurrent::Promises::AbstractFlatPromise
+  # @return [FlatEventPromise] a new instance of FlatEventPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -3908,6 +5724,8 @@ class Concurrent::Promises::FlatEventPromise < ::Concurrent::Promises::AbstractF
 end
 
 class Concurrent::Promises::FlatFuturePromise < ::Concurrent::Promises::AbstractFlatPromise
+  # @raise [ArgumentError]
+  # @return [FlatFuturePromise] a new instance of FlatFuturePromise
   def initialize(delayed, blockers_count, levels, default_executor); end
 
   private
@@ -3923,120 +5741,274 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # If just one of the parties is Future then the result
   # of the returned future is equal to the result of the supplied future. If both are futures
   # then the result is as described in {FactoryMethods#zip_futures_on}.
+  #
+  # @return [Future]
   def &(other); end
 
   # Creates a new event which will be resolved when the first of receiver, `event_or_future`
   # resolves. Returning future will have value nil if event_or_future is event and resolves
   # first.
+  #
+  # @return [Future]
   def any(event_or_future); end
 
   def apply(args, block); end
 
   # Creates new future dependent on receiver which will not evaluate until touched, see {#touch}.
   # In other words, it inserts delay into the chain of Futures making rest of it lazy evaluated.
+  #
+  # @return [Future]
   def delay; end
 
   # Allows rejected Future to be risen with `raise` method.
   # If the reason is not an exception `Runtime.new(reason)` is returned.
+  #
+  # @example
+  #   raise Promises.rejected_future(StandardError.new("boom"))
+  #   raise Promises.rejected_future("or just boom")
+  # @raise [Concurrent::Error] when raising not rejected future
+  # @return [Exception]
   def exception(*args); end
 
   # Creates new future which will have result of the future returned by receiver. If receiver
   # rejects it will have its rejection.
+  #
+  # @param level [Integer] how many levels of futures should flatten
+  # @return [Future]
   def flat(level = T.unsafe(nil)); end
 
   # Creates new event which will be resolved when the returned event by receiver is.
   # Be careful if the receiver rejects it will just resolve since Event does not hold reason.
+  #
+  # @return [Event]
   def flat_event; end
 
   # Creates new future which will have result of the future returned by receiver. If receiver
   # rejects it will have its rejection.
+  #
+  # @param level [Integer] how many levels of futures should flatten
+  # @return [Future]
   def flat_future(level = T.unsafe(nil)); end
 
   # Is it in fulfilled state?
+  #
+  # @return [Boolean]
   def fulfilled?; end
 
+  # @return [String] Short string representation.
   def inspect; end
 
   # Shortcut of {#on_fulfillment_using} with default `:io` executor supplied.
+  #
+  # @return [self]
+  # @see #on_fulfillment_using
   def on_fulfillment(*args, &callback); end
 
   # Stores the callback to be executed synchronously on resolving thread after it is
   # fulfilled. Does nothing on rejection.
+  #
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yield [value, *args] to the callback.
+  # @yieldreturn is forgotten.
   def on_fulfillment!(*args, &callback); end
 
   # Stores the callback to be executed asynchronously on executor after it is
   # fulfilled. Does nothing on rejection.
+  #
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yield [value, *args] to the callback.
+  # @yieldreturn is forgotten.
   def on_fulfillment_using(executor, *args, &callback); end
 
   # Shortcut of {#on_rejection_using} with default `:io` executor supplied.
+  #
+  # @return [self]
+  # @see #on_rejection_using
   def on_rejection(*args, &callback); end
 
   # Stores the callback to be executed synchronously on resolving thread after it is
   # rejected. Does nothing on fulfillment.
+  #
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yield [reason, *args] to the callback.
+  # @yieldreturn is forgotten.
   def on_rejection!(*args, &callback); end
 
   # Stores the callback to be executed asynchronously on executor after it is
   # rejected. Does nothing on fulfillment.
+  #
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [self]
+  # @yield [reason, *args] to the callback.
+  # @yieldreturn is forgotten.
   def on_rejection_using(executor, *args, &callback); end
 
   # Returns reason of future's rejection.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @note Make sure returned `nil` is not confused with timeout, no value when rejected,
+  #   no reason when fulfilled, etc.
+  #   Use more exact methods if needed, like {#wait}, {#value!}, {#result}, etc.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @param timeout_value [Object] a value returned by the method when it times out
+  # @return [Object, timeout_value] the reason, or timeout_value on timeout, or nil on fulfillment.
   def reason(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # Is it in rejected state?
+  #
+  # @return [Boolean]
   def rejected?; end
 
   # Shortcut of {#rescue_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #rescue_on
   def rescue(*args, &task); end
 
   # Chains the task to be executed asynchronously on executor after it rejects. Does not run
   # the task if it fulfills. It will resolve though, triggering any dependent futures.
+  #
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [Future]
+  # @yield [reason, *args] to the task.
+  # @yieldreturn will become result of the returned Future.
+  #   Its returned value becomes {Future#value} fulfilling it,
+  #   raised exception becomes {Future#reason} rejecting it.
   def rescue_on(executor, *args, &task); end
 
   # Returns triplet fulfilled?, value, reason.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @return [Array(Boolean, Object, Object), nil] triplet of fulfilled?, value, reason, or nil
+  #   on timeout.
   def result(timeout = T.unsafe(nil)); end
 
   # Allows to use futures as green threads. The receiver has to evaluate to a future which
   # represents what should be done next. It basically flattens indefinitely until non Future
   # values is returned which becomes result of the returned future. Any encountered exception
   # will become reason of the returned future.
+  #
+  # @example
+  #   body = lambda do |v|
+  #   v += 1
+  #   v < 5 ? Promises.future(v, &body) : v
+  #   end
+  #   Promises.future(0, &body).run.value! # => 5
+  # @param run_test [#call(value)] an object which when called returns either Future to keep running with
+  #   or nil, then the run completes with the value.
+  #   The run_test can be used to extract the Future from deeper structure,
+  #   or to distinguish Future which is a resulting value from a future
+  #   which is suppose to continue running.
+  # @return [Future]
   def run(run_test = T.unsafe(nil)); end
 
   # Creates new event dependent on receiver scheduled to execute on/in intended_time.
   # In time is interpreted from the moment the receiver is resolved, therefore it inserts
   # delay into the chain.
+  #
+  # @param intended_time [Numeric, Time] `Numeric` means to run in `intended_time` seconds.
+  #   `Time` means to run on `intended_time`.
+  # @return [Future]
   def schedule(intended_time); end
 
   # Shortcut of {#then_on} with default `:io` executor supplied.
+  #
+  # @return [Future]
+  # @see #then_on
   def then(*args, &task); end
 
   # Chains the task to be executed asynchronously on executor after it fulfills. Does not run
   # the task if it rejects. It will resolve though, triggering any dependent futures.
+  #
+  # @param executor [Executor, :io, :fast] Instance of an executor or a name of the
+  #   global executor. The task is executed on it, default executor remains unchanged.
+  # @param args [Object] arguments which are passed to the task when it's executed.
+  #   (It might be prepended with other arguments, see the @yeild section).
+  # @return [Future]
+  # @yield [value, *args] to the task.
+  # @yieldreturn will become result of the returned Future.
+  #   Its returned value becomes {Future#value} fulfilling it,
+  #   raised exception becomes {Future#reason} rejecting it.
   def then_on(executor, *args, &task); end
 
   # Converts future to event which is resolved when future is resolved by fulfillment or rejection.
+  #
+  # @return [Event]
   def to_event; end
 
   # Returns self, since this is a future
+  #
+  # @return [Future]
   def to_future; end
 
+  # @return [String] Short string representation.
   def to_s; end
 
   # Return value of the future.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @note Make sure returned `nil` is not confused with timeout, no value when rejected,
+  #   no reason when fulfilled, etc.
+  #   Use more exact methods if needed, like {#wait}, {#value!}, {#result}, etc.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @param timeout_value [Object] a value returned by the method when it times out
+  # @return [Object, nil, timeout_value] the value of the Future when fulfilled,
+  #   timeout_value on timeout,
+  #   nil on rejection.
   def value(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # Return value of the future.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @note Make sure returned `nil` is not confused with timeout, no value when rejected,
+  #   no reason when fulfilled, etc.
+  #   Use more exact methods if needed, like {#wait}, {#value!}, {#result}, etc.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @param timeout_value [Object] a value returned by the method when it times out
+  # @raise [Exception] {#reason} on rejection
+  # @return [Object, nil, timeout_value] the value of the Future when fulfilled,
+  #   or nil on rejection,
+  #   or timeout_value on timeout.
   def value!(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil)); end
 
   # Wait (block the Thread) until receiver is {#resolved?}.
   # Calls {Concurrent::AbstractEventFuture#touch}.
+  #
+  # @note This function potentially blocks current thread until the Future is resolved.
+  #   Be careful it can deadlock. Try to chain instead.
+  # @param timeout [Numeric] the maximum time in second to wait.
+  # @raise [Exception] {#reason} on rejection
+  # @return [self, true, false] self implies timeout was not used, true implies timeout was used
+  #   and it was resolved, false implies it was not resolved within timeout.
   def wait!(timeout = T.unsafe(nil)); end
 
   # Crates new object with same class with the executor set as its new default executor.
   # Any futures depending on it will use the new default executor.
+  #
+  # @return [Future]
   def with_default_executor(executor); end
 
   # Creates a new event or a future which will be resolved when receiver and other are.
@@ -4044,11 +6016,15 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   # If just one of the parties is Future then the result
   # of the returned future is equal to the result of the supplied future. If both are futures
   # then the result is as described in {FactoryMethods#zip_futures_on}.
+  #
+  # @return [Future]
   def zip(other); end
 
   # Creates a new event which will be resolved when the first of receiver, `event_or_future`
   # resolves. Returning future will have value nil if event_or_future is event and resolves
   # first.
+  #
+  # @return [Future]
   def |(event_or_future); end
 
   private
@@ -4060,10 +6036,13 @@ class Concurrent::Promises::Future < ::Concurrent::Promises::AbstractEventFuture
   def callback_on_resolution(state, args, callback); end
   def rejected_resolution(raise_on_reassign, state); end
   def run_test(v); end
+
+  # @raise [self]
   def wait_until_resolved!(timeout = T.unsafe(nil)); end
 end
 
 class Concurrent::Promises::FutureWrapperPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [FutureWrapperPromise] a new instance of FutureWrapperPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -4073,21 +6052,29 @@ end
 
 # will be immediately resolved
 class Concurrent::Promises::ImmediateEventPromise < ::Concurrent::Promises::InnerPromise
+  # @return [ImmediateEventPromise] a new instance of ImmediateEventPromise
   def initialize(default_executor); end
 end
 
 class Concurrent::Promises::ImmediateFuturePromise < ::Concurrent::Promises::InnerPromise
+  # @return [ImmediateFuturePromise] a new instance of ImmediateFuturePromise
   def initialize(default_executor, fulfilled, value, reason); end
 end
 
+# @abstract
 class Concurrent::Promises::InnerPromise < ::Concurrent::Promises::AbstractPromise; end
+
 module Concurrent::Promises::InternalStates; end
 
 class Concurrent::Promises::InternalStates::Fulfilled < ::Concurrent::Promises::InternalStates::ResolvedWithResult
+  # @return [Fulfilled] a new instance of Fulfilled
   def initialize(value); end
 
   def apply(args, block); end
+
+  # @return [Boolean]
   def fulfilled?; end
+
   def reason; end
   def to_sym; end
   def value; end
@@ -4100,17 +6087,23 @@ end
 Concurrent::Promises::InternalStates::PENDING = T.let(T.unsafe(nil), Concurrent::Promises::InternalStates::Pending)
 
 class Concurrent::Promises::InternalStates::PartiallyRejected < ::Concurrent::Promises::InternalStates::ResolvedWithResult
+  # @return [PartiallyRejected] a new instance of PartiallyRejected
   def initialize(value, reason); end
 
   def apply(args, block); end
+
+  # @return [Boolean]
   def fulfilled?; end
+
   def reason; end
   def to_sym; end
   def value; end
 end
 
 class Concurrent::Promises::InternalStates::Pending < ::Concurrent::Promises::InternalStates::State
+  # @return [Boolean]
   def resolved?; end
+
   def to_sym; end
 end
 
@@ -4118,10 +6111,14 @@ Concurrent::Promises::InternalStates::RESERVED = T.let(T.unsafe(nil), Concurrent
 Concurrent::Promises::InternalStates::RESOLVED = T.let(T.unsafe(nil), Concurrent::Promises::InternalStates::Fulfilled)
 
 class Concurrent::Promises::InternalStates::Rejected < ::Concurrent::Promises::InternalStates::ResolvedWithResult
+  # @return [Rejected] a new instance of Rejected
   def initialize(reason); end
 
   def apply(args, block); end
+
+  # @return [Boolean]
   def fulfilled?; end
+
   def reason; end
   def to_sym; end
   def value; end
@@ -4130,21 +6127,37 @@ end
 class Concurrent::Promises::InternalStates::Reserved < ::Concurrent::Promises::InternalStates::Pending; end
 
 class Concurrent::Promises::InternalStates::ResolvedWithResult < ::Concurrent::Promises::InternalStates::State
+  # @raise [NotImplementedError]
   def apply; end
+
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def fulfilled?; end
+
+  # @raise [NotImplementedError]
   def reason; end
+
+  # @return [Boolean]
   def resolved?; end
+
   def result; end
   def to_sym; end
+
+  # @raise [NotImplementedError]
   def value; end
 end
 
 class Concurrent::Promises::InternalStates::State
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def resolved?; end
+
+  # @raise [NotImplementedError]
   def to_sym; end
 end
 
 class Concurrent::Promises::RescuePromise < ::Concurrent::Promises::BlockedTaskPromise
+  # @return [RescuePromise] a new instance of RescuePromise
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
   private
@@ -4162,17 +6175,31 @@ class Concurrent::Promises::ResolvableEvent < ::Concurrent::Promises::Event
   include ::Concurrent::Promises::Resolvable
 
   # Makes the event resolved, which triggers all dependent futures.
+  #
+  # @param raise_on_reassign [Boolean] should method raise exception if already resolved
+  # @param reserved [true, false] Set to true if the resolvable is {#reserve}d by you,
+  #   marks resolution of reserved resolvable events and futures explicitly.
+  #   Advanced feature, ignore unless you use {Resolvable#reserve} from edge.
+  # @return [self, false] false is returner when raise_on_reassign is false and the receiver
+  #   is already resolved.
   def resolve(raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {AbstractEventFuture#wait} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [true, false] If it times out and the argument is true it will also resolve the event.
+  # @return [self, true, false]
+  # @see AbstractEventFuture#wait
   def wait(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Creates new event wrapping receiver, effectively hiding the resolve method.
+  #
+  # @return [Event]
   def with_hidden_resolvable; end
 end
 
 class Concurrent::Promises::ResolvableEventPromise < ::Concurrent::Promises::AbstractPromise
+  # @return [ResolvableEventPromise] a new instance of ResolvableEventPromise
   def initialize(default_executor); end
 end
 
@@ -4182,57 +6209,128 @@ class Concurrent::Promises::ResolvableFuture < ::Concurrent::Promises::Future
 
   # Evaluates the block and sets its result as future's value fulfilling, if the block raises
   # an exception the future rejects with it.
+  #
+  # @return [self]
+  # @yield [*args] to the block.
+  # @yieldreturn [Object] value
   def evaluate_to(*args, &block); end
 
   # Evaluates the block and sets its result as future's value fulfilling, if the block raises
   # an exception the future rejects with it.
+  #
+  # @raise [Exception] also raise reason on rejection.
+  # @return [self]
+  # @yield [*args] to the block.
+  # @yieldreturn [Object] value
   def evaluate_to!(*args, &block); end
 
   # Makes the future fulfilled with `value`,
   # which triggers all dependent futures.
+  #
+  # @param value [Object]
+  # @param raise_on_reassign [Boolean] should method raise exception if already resolved
+  # @param reserved [true, false] Set to true if the resolvable is {#reserve}d by you,
+  #   marks resolution of reserved resolvable events and futures explicitly.
+  #   Advanced feature, ignore unless you use {Resolvable#reserve} from edge.
+  # @return [self, false] false is returner when raise_on_reassign is false and the receiver
+  #   is already resolved.
   def fulfill(value, raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {Future#reason} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @return [Exception, timeout_value, nil]
+  # @see Future#reason
   def reason(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Makes the future rejected with `reason`,
   # which triggers all dependent futures.
+  #
+  # @param reason [Object]
+  # @param raise_on_reassign [Boolean] should method raise exception if already resolved
+  # @param reserved [true, false] Set to true if the resolvable is {#reserve}d by you,
+  #   marks resolution of reserved resolvable events and futures explicitly.
+  #   Advanced feature, ignore unless you use {Resolvable#reserve} from edge.
+  # @return [self, false] false is returner when raise_on_reassign is false and the receiver
+  #   is already resolved.
   def reject(reason, raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Makes the future resolved with result of triplet `fulfilled?`, `value`, `reason`,
   # which triggers all dependent futures.
+  #
+  # @param fulfilled [true, false]
+  # @param value [Object]
+  # @param reason [Object]
+  # @param raise_on_reassign [Boolean] should method raise exception if already resolved
+  # @param reserved [true, false] Set to true if the resolvable is {#reserve}d by you,
+  #   marks resolution of reserved resolvable events and futures explicitly.
+  #   Advanced feature, ignore unless you use {Resolvable#reserve} from edge.
+  # @return [self, false] false is returner when raise_on_reassign is false and the receiver
+  #   is already resolved.
   def resolve(fulfilled = T.unsafe(nil), value = T.unsafe(nil), reason = T.unsafe(nil), raise_on_reassign = T.unsafe(nil), reserved = T.unsafe(nil)); end
 
   # Behaves as {Future#result} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @return [::Array(Boolean, Object, Exception), nil]
+  # @see Future#result
   def result(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#value} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @return [Object, timeout_value, nil]
+  # @see Future#value
   def value(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#value!} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @raise [Exception] {#reason} on rejection
+  # @return [Object, timeout_value, nil]
+  # @see Future#value!
   def value!(timeout = T.unsafe(nil), timeout_value = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {AbstractEventFuture#wait} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @return [self, true, false]
+  # @see AbstractEventFuture#wait
   def wait(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Behaves as {Future#wait!} but has one additional optional argument
   # resolve_on_timeout.
+  #
+  # @param resolve_on_timeout [::Array(true, Object, nil), ::Array(false, nil, Exception), nil] If it times out and the argument is not nil it will also resolve the future
+  #   to the provided resolution.
+  # @raise [Exception] {#reason} on rejection
+  # @return [self, true, false]
+  # @see Future#wait!
   def wait!(timeout = T.unsafe(nil), resolve_on_timeout = T.unsafe(nil)); end
 
   # Creates new future wrapping receiver, effectively hiding the resolve method and similar.
+  #
+  # @return [Future]
   def with_hidden_resolvable; end
 end
 
 class Concurrent::Promises::ResolvableFuturePromise < ::Concurrent::Promises::AbstractPromise
+  # @return [ResolvableFuturePromise] a new instance of ResolvableFuturePromise
   def initialize(default_executor); end
 end
 
 class Concurrent::Promises::RunFuturePromise < ::Concurrent::Promises::AbstractFlatPromise
+  # @return [RunFuturePromise] a new instance of RunFuturePromise
   def initialize(delayed, blockers_count, default_executor, run_test); end
 
   private
@@ -4241,6 +6339,7 @@ class Concurrent::Promises::RunFuturePromise < ::Concurrent::Promises::AbstractF
 end
 
 class Concurrent::Promises::ScheduledPromise < ::Concurrent::Promises::InnerPromise
+  # @return [ScheduledPromise] a new instance of ScheduledPromise
   def initialize(default_executor, intended_time); end
 
   def inspect; end
@@ -4248,6 +6347,7 @@ class Concurrent::Promises::ScheduledPromise < ::Concurrent::Promises::InnerProm
 end
 
 class Concurrent::Promises::ThenPromise < ::Concurrent::Promises::BlockedTaskPromise
+  # @return [ThenPromise] a new instance of ThenPromise
   def initialize(delayed, blockers_count, default_executor, executor, args, &task); end
 
   private
@@ -4256,6 +6356,7 @@ class Concurrent::Promises::ThenPromise < ::Concurrent::Promises::BlockedTaskPro
 end
 
 class Concurrent::Promises::ZipEventEventPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [ZipEventEventPromise] a new instance of ZipEventEventPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -4264,6 +6365,7 @@ class Concurrent::Promises::ZipEventEventPromise < ::Concurrent::Promises::Block
 end
 
 class Concurrent::Promises::ZipEventsPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [ZipEventsPromise] a new instance of ZipEventsPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -4272,6 +6374,7 @@ class Concurrent::Promises::ZipEventsPromise < ::Concurrent::Promises::BlockedPr
 end
 
 class Concurrent::Promises::ZipFutureEventPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [ZipFutureEventPromise] a new instance of ZipFutureEventPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -4281,6 +6384,7 @@ class Concurrent::Promises::ZipFutureEventPromise < ::Concurrent::Promises::Bloc
 end
 
 class Concurrent::Promises::ZipFuturesPromise < ::Concurrent::Promises::BlockedPromise
+  # @return [ZipFuturesPromise] a new instance of ZipFuturesPromise
   def initialize(delayed, blockers_count, default_executor); end
 
   private
@@ -4292,6 +6396,34 @@ end
 # Methods form module A included to a module B, which is already included into class C,
 # will not be visible in the C class. If this module is extended to B then A's methods
 # are correctly made visible to C.
+#
+# @example
+#   module A
+#   def a
+#   :a
+#   end
+#   end
+#
+#   module B1
+#   end
+#
+#   class C1
+#   include B1
+#   end
+#
+#   module B2
+#   extend Concurrent::ReInclude
+#   end
+#
+#   class C2
+#   include B2
+#   end
+#
+#   B1.send :include, A
+#   B2.send :include, A
+#
+#   C1.new.respond_to? :a # => false
+#   C2.new.respond_to? :a # => true
 module Concurrent::ReInclude
   def extended(base); end
   def include(*modules); end
@@ -4309,43 +6441,93 @@ end
 # wait (so writers are not starved).
 #
 # This implementation is based on `java.util.concurrent.ReentrantReadWriteLock`.
+#
+# @example
+#   lock = Concurrent::ReadWriteLock.new
+#   lock.with_read_lock  { data.retrieve }
+#   lock.with_write_lock { data.modify! }
+# @note Do **not** try to acquire the write lock while already holding a read lock
+#   **or** try to acquire the write lock while you already have it.
+#   This will lead to deadlock
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html java.util.concurrent.ReentrantReadWriteLock
 class Concurrent::ReadWriteLock < ::Concurrent::Synchronization::Object
   # Create a new `ReadWriteLock` in the unlocked state.
+  #
+  # @return [ReadWriteLock] a new instance of ReadWriteLock
   def initialize; end
 
   # Acquire a read lock. If a write lock has been acquired will block until
   # it is released. Will not block if other read locks have been acquired.
+  #
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Boolean] true if the lock is successfully acquired
   def acquire_read_lock; end
 
   # Acquire a write lock. Will block and wait for all active readers and writers.
+  #
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of writers
+  #   is exceeded.
+  # @return [Boolean] true if the lock is successfully acquired
   def acquire_write_lock; end
 
   # Queries whether any threads are waiting to acquire the read or write lock.
+  #
+  # @return [Boolean] true if any threads are waiting for a lock else false
   def has_waiters?; end
 
   # Release a previously acquired read lock.
+  #
+  # @return [Boolean] true if the lock is successfully released
   def release_read_lock; end
 
   # Release a previously acquired write lock.
+  #
+  # @return [Boolean] true if the lock is successfully released
   def release_write_lock; end
 
   # Execute a block operation within a read lock.
+  #
+  # @raise [ArgumentError] when no block is given.
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Object] the result of the block operation.
+  # @yield the task to be performed within the lock.
   def with_read_lock; end
 
   # Execute a block operation within a write lock.
+  #
+  # @raise [ArgumentError] when no block is given.
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Object] the result of the block operation.
+  # @yield the task to be performed within the lock.
   def with_write_lock; end
 
   # Queries if the write lock is held by any thread.
+  #
+  # @return [Boolean] true if the write lock is held else false`
   def write_locked?; end
 
   private
 
+  # @return [Boolean]
   def max_readers?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def max_writers?(c = T.unsafe(nil)); end
+
   def running_readers(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def running_readers?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def running_writer?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def waiting_writer?(c = T.unsafe(nil)); end
+
   def waiting_writers(c = T.unsafe(nil)); end
 
   class << self
@@ -4382,45 +6564,102 @@ Concurrent::ReadWriteLock::WAITING_WRITER = T.let(T.unsafe(nil), Integer)
 # the following code is legal:
 #
 # This implementation was inspired by `java.util.concurrent.ReentrantReadWriteLock`.
+#
+# @example
+#   lock = Concurrent::ReentrantReadWriteLock.new
+#   lock.acquire_write_lock
+#   lock.acquire_read_lock
+#   lock.release_write_lock
+#   # At this point, the current thread is holding only a read lock, not a write
+#   # lock. So other threads can take read locks, but not a write lock.
+#   lock.release_read_lock
+#   # Now the current thread is not holding either a read or write lock, so
+#   # another thread could potentially acquire a write lock.
+# @example
+#   lock = Concurrent::ReentrantReadWriteLock.new
+#   lock.with_read_lock  { data.retrieve }
+#   lock.with_write_lock { data.modify! }
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html java.util.concurrent.ReentrantReadWriteLock
 class Concurrent::ReentrantReadWriteLock < ::Concurrent::Synchronization::Object
   # Create a new `ReentrantReadWriteLock` in the unlocked state.
+  #
+  # @return [ReentrantReadWriteLock] a new instance of ReentrantReadWriteLock
   def initialize; end
 
   # Acquire a read lock. If a write lock is held by another thread, will block
   # until it is released.
+  #
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Boolean] true if the lock is successfully acquired
   def acquire_read_lock; end
 
   # Acquire a write lock. Will block and wait for all active readers and writers.
+  #
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of writers
+  #   is exceeded.
+  # @return [Boolean] true if the lock is successfully acquired
   def acquire_write_lock; end
 
   # Release a previously acquired read lock.
+  #
+  # @return [Boolean] true if the lock is successfully released
   def release_read_lock; end
 
   # Release a previously acquired write lock.
+  #
+  # @return [Boolean] true if the lock is successfully released
   def release_write_lock; end
 
   # Try to acquire a read lock and return true if we succeed. If it cannot be
   # acquired immediately, return false.
+  #
+  # @return [Boolean] true if the lock is successfully acquired
   def try_read_lock; end
 
   # Try to acquire a write lock and return true if we succeed. If it cannot be
   # acquired immediately, return false.
+  #
+  # @return [Boolean] true if the lock is successfully acquired
   def try_write_lock; end
 
   # Execute a block operation within a read lock.
+  #
+  # @raise [ArgumentError] when no block is given.
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Object] the result of the block operation.
+  # @yield the task to be performed within the lock.
   def with_read_lock; end
 
   # Execute a block operation within a write lock.
+  #
+  # @raise [ArgumentError] when no block is given.
+  # @raise [Concurrent::ResourceLimitError] if the maximum number of readers
+  #   is exceeded.
+  # @return [Object] the result of the block operation.
+  # @yield the task to be performed within the lock.
   def with_write_lock; end
 
   private
 
+  # @return [Boolean]
   def max_readers?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def max_writers?(c = T.unsafe(nil)); end
+
   def running_readers(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def running_readers?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def running_writer?(c = T.unsafe(nil)); end
+
+  # @return [Boolean]
   def waiting_or_running_writer?(c = T.unsafe(nil)); end
+
   def waiting_writers(c = T.unsafe(nil)); end
 
   class << self
@@ -4453,6 +6692,7 @@ class Concurrent::RejectedExecutionError < ::Concurrent::Error; end
 class Concurrent::ResourceLimitError < ::Concurrent::Error; end
 
 class Concurrent::RubyExchanger < ::Concurrent::AbstractExchanger
+  # @return [RubyExchanger] a new instance of RubyExchanger
   def initialize; end
 
   def __initialize_atomic_fields__; end
@@ -4470,6 +6710,10 @@ class Concurrent::RubyExchanger < ::Concurrent::AbstractExchanger
   # approximate number of seconds the method should block while waiting
   # for the exchange. When the timeout value is `nil` the method will
   # block indefinitely.
+  #
+  # @param value [Object] the value to exchange with another thread
+  # @param timeout [Numeric, nil] in seconds, `nil` blocks indefinitely
+  # @return [Object, CANCEL] the value exchanged by the other thread; {CANCEL} on timeout
   def do_exchange(value, timeout); end
 
   class << self
@@ -4478,6 +6722,7 @@ class Concurrent::RubyExchanger < ::Concurrent::AbstractExchanger
 end
 
 class Concurrent::RubyExchanger::Node < ::Concurrent::Synchronization::Object
+  # @return [Node] a new instance of Node
   def initialize(item); end
 
   def __initialize_atomic_fields__; end
@@ -4495,6 +6740,7 @@ class Concurrent::RubyExchanger::Node < ::Concurrent::Synchronization::Object
 end
 
 class Concurrent::RubyExecutorService < ::Concurrent::AbstractExecutorService
+  # @return [RubyExecutorService] a new instance of RubyExecutorService
   def initialize(*args, &block); end
 
   # Begin an immediate shutdown. In-progress tasks will be allowed to
@@ -4504,6 +6750,12 @@ class Concurrent::RubyExecutorService < ::Concurrent::AbstractExecutorService
   def kill; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 
   # Begin an orderly shutdown. Tasks already in the queue will be executed,
@@ -4513,19 +6765,32 @@ class Concurrent::RubyExecutorService < ::Concurrent::AbstractExecutorService
 
   # Block until executor shutdown is complete or until `timeout` seconds have
   # passed.
+  #
+  # @note Does not initiate shutdown or termination. Either `shutdown` or `kill`
+  #   must be called before this method (or on another thread).
+  # @param timeout [Integer] the maximum number of seconds to wait for shutdown to complete
+  # @return [Boolean] `true` if shutdown complete or false on `timeout`
   def wait_for_termination(timeout = T.unsafe(nil)); end
 
   private
 
+  # @return [Boolean]
   def ns_running?; end
+
+  # @return [Boolean]
   def ns_shutdown?; end
+
   def ns_shutdown_execution; end
+
+  # @return [Boolean]
   def ns_shuttingdown?; end
+
   def stop_event; end
   def stopped_event; end
 end
 
 class Concurrent::RubySingleThreadExecutor < ::Concurrent::RubyThreadPoolExecutor
+  # @return [RubySingleThreadExecutor] a new instance of RubySingleThreadExecutor
   def initialize(opts = T.unsafe(nil)); end
 end
 
@@ -4560,23 +6825,23 @@ end
 # Each thread has a (lazily initialized) array of thread-local variable values
 # Each time a new thread-local var is created, we allocate an "index" for it
 # For example, if the allocated index is 1, that means slot #1 in EVERY
-# thread's thread-local array will be used for the value of that TLV
+#   thread's thread-local array will be used for the value of that TLV
 #
 # The good thing about using a per-THREAD structure to hold values, rather
-# than a per-TLV structure, is that no synchronization is needed when
-# reading and writing those values (since the structure is only ever
-# accessed by a single thread)
+#   than a per-TLV structure, is that no synchronization is needed when
+#    reading and writing those values (since the structure is only ever
+#    accessed by a single thread)
 #
 # Of course, when a TLV is GC'd, 1) we need to recover its index for use
-# by other new TLVs (otherwise the thread-local arrays could get bigger
-# and bigger with time), and 2) we need to null out all the references
-# held in the now-unused slots (both to avoid blocking GC of those objects,
-# and also to prevent "stale" values from being passed on to a new TLV
-# when the index is reused)
+#   by other new TLVs (otherwise the thread-local arrays could get bigger
+#   and bigger with time), and 2) we need to null out all the references
+#   held in the now-unused slots (both to avoid blocking GC of those objects,
+#   and also to prevent "stale" values from being passed on to a new TLV
+#   when the index is reused)
 # Because we need to null out freed slots, we need to keep references to
-# ALL the thread-local arrays -- ARRAYS is for that
+#   ALL the thread-local arrays -- ARRAYS is for that
 # But when a Thread is GC'd, we need to drop the reference to its thread-local
-# array, so we don't leak memory
+#   array, so we don't leak memory
 Concurrent::RubyThreadLocalVar::FREE = T.let(T.unsafe(nil), Array)
 
 Concurrent::RubyThreadLocalVar::LOCK = T.let(T.unsafe(nil), Thread::Mutex)
@@ -4590,11 +6855,11 @@ Concurrent::RubyThreadLocalVar::THREAD_LOCAL_ARRAYS = T.let(T.unsafe(nil), Hash)
 #
 # * `idletime`: The number of seconds that a thread may be idle before being reclaimed.
 # * `name`: The name of the executor (optional). Printed in the executor's `#to_s` output and
-# a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
-# implementation. `<id>` is uniq for each thread.
+#   a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
+#   implementation. `<id>` is uniq for each thread.
 # * `max_queue`: The maximum number of tasks that may be waiting in the work queue at
-# any one time. When the queue size reaches `max_queue` and no new threads can be created,
-# subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
+#   any one time. When the queue size reaches `max_queue` and no new threads can be created,
+#   subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
 # * `auto_terminate`: When true (default), the threads started will be marked as daemon.
 # * `fallback_policy`: The policy defining how rejected tasks are handled.
 #
@@ -4615,7 +6880,7 @@ Concurrent::RubyThreadLocalVar::THREAD_LOCAL_ARRAYS = T.let(T.unsafe(nil), Hash)
 #
 # * Call `#shutdown` to initiate an orderly termination of all in-progress tasks
 # * Call `#wait_for_termination` with an appropriate timeout interval an allow
-# the orderly shutdown to complete
+#   the orderly shutdown to complete
 # * Call `#kill` *only when* the thread pool fails to shutdown in the allotted time
 #
 # On some runtime platforms (most notably the JVM) the application will not
@@ -4627,50 +6892,85 @@ Concurrent::RubyThreadLocalVar::THREAD_LOCAL_ARRAYS = T.let(T.unsafe(nil), Hash)
 # pool1 = Concurrent::FixedThreadPool.new(5) # threads will be marked as daemon
 # pool2 = Concurrent::FixedThreadPool.new(5, auto_terminate: false) # mark threads as non-daemon
 # ```
+#
+# @note Failure to properly shutdown a thread pool can lead to unpredictable results.
+#   Please read *Shutting Down Thread Pools* for more information.
+# @see http://docs.oracle.com/javase/tutorial/essential/concurrency/pools.html Java Tutorials: Thread Pools
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html Java Executors class
+# @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html Java ExecutorService interface
+# @see https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setDaemon-boolean-
 class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
+  # @return [RubyThreadPoolExecutor] a new instance of RubyThreadPoolExecutor
   def initialize(opts = T.unsafe(nil)); end
 
   # Does the task queue have a maximum size?
+  #
+  # @return [Boolean] True if the task queue has a maximum size else false.
   def can_overflow?; end
 
   # The number of tasks that have been completed by the pool since construction.
+  #
+  # @return [Integer] The number of tasks that have been completed by the pool since construction.
   def completed_task_count; end
 
   # The number of seconds that a thread may be idle before being reclaimed.
+  #
+  # @return [Integer] The number of seconds that a thread may be idle before being reclaimed.
   def idletime; end
 
   # The largest number of threads that have been created in the pool since construction.
+  #
+  # @return [Integer] The largest number of threads that have been created in the pool since construction.
   def largest_length; end
 
   # The number of threads currently in the pool.
+  #
+  # @return [Integer] The number of threads currently in the pool.
   def length; end
 
   # The maximum number of threads that may be created in the pool.
+  #
+  # @return [Integer] The maximum number of threads that may be created in the pool.
   def max_length; end
 
   # The maximum number of tasks that may be waiting in the work queue at any one time.
   # When the queue size reaches `max_queue` subsequent tasks will be rejected in
   # accordance with the configured `fallback_policy`.
+  #
+  # @return [Integer] The maximum number of tasks that may be waiting in the work queue at any one time.
+  #   When the queue size reaches `max_queue` subsequent tasks will be rejected in
+  #   accordance with the configured `fallback_policy`.
   def max_queue; end
 
   # The minimum number of threads that may be retained in the pool.
+  #
+  # @return [Integer] The minimum number of threads that may be retained in the pool.
   def min_length; end
 
   # The number of tasks in the queue awaiting execution.
+  #
+  # @return [Integer] The number of tasks in the queue awaiting execution.
   def queue_length; end
 
   def ready_worker(worker); end
 
   # Number of tasks that may be enqueued before reaching `max_queue` and rejecting
   # new tasks. A value of -1 indicates that the queue may grow without bound.
+  #
+  # @return [Integer] Number of tasks that may be enqueued before reaching `max_queue` and rejecting
+  #   new tasks. A value of -1 indicates that the queue may grow without bound.
   def remaining_capacity; end
 
   def remove_busy_worker(worker); end
 
   # The number of tasks that have been scheduled for execution on the pool since construction.
+  #
+  # @return [Integer] The number of tasks that have been scheduled for execution on the pool since construction.
   def scheduled_task_count; end
 
   # Whether or not a value of 0 for :max_queue option means the queue must perform direct hand-off or rather unbounded queue.
+  #
+  # @return [true, false]
   def synchronous; end
 
   def worker_died(worker); end
@@ -4680,17 +6980,28 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   private
 
   # creates new worker which has to receive work to do after it's added
+  #
+  # @return [nil, Worker] nil of max capacity is reached
   def ns_add_busy_worker; end
 
   # tries to assign task to a worker, tries to get one from @ready or to create new one
+  #
+  # @return [true, false] if task is assigned to a worker
   def ns_assign_worker(*args, &task); end
 
   # tries to enqueue task
+  #
+  # @return [true, false] if enqueued
   def ns_enqueue(*args, &task); end
 
   def ns_execute(*args, &task); end
+
+  # @raise [ArgumentError]
   def ns_initialize(opts); end
+
   def ns_kill_execution; end
+
+  # @return [Boolean]
   def ns_limited_queue?; end
 
   # try oldest worker if it is idle for enough time, it's returned back at the start
@@ -4727,6 +7038,7 @@ class Concurrent::RubyThreadPoolExecutor::Worker
   include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
+  # @return [Worker] a new instance of Worker
   def initialize(pool, id); end
 
   def <<(message); end
@@ -4744,8 +7056,10 @@ end
 # value - filled by the callable result if it has been executed without errors, nil otherwise
 # reason - the error risen by the callable if it has been executed with errors, nil otherwise
 class Concurrent::SafeTaskExecutor < ::Concurrent::Synchronization::LockableObject
+  # @return [SafeTaskExecutor] a new instance of SafeTaskExecutor
   def initialize(task, opts = T.unsafe(nil)); end
 
+  # @return [Array]
   def execute(*args); end
 end
 
@@ -4792,10 +7106,99 @@ end
 # [Observable](http://ruby-doc.org/stdlib-2.0/libdoc/observer/rdoc/Observable.html)
 # module from the Ruby standard library. With one exception `ScheduledTask`
 # behaves identically to [Future](Observable) with regard to these modules.
+#
+# @example Basic usage
+#
+#   require 'concurrent'
+#   require 'thread'   # for Queue
+#   require 'open-uri' # for open(uri)
+#
+#   class Ticker
+#   def get_year_end_closing(symbol, year)
+#   uri = "http://ichart.finance.yahoo.com/table.csv?s=#{symbol}&a=11&b=01&c=#{year}&d=11&e=31&f=#{year}&g=m"
+#   data = open(uri) {|f| f.collect{|line| line.strip } }
+#   data[1].split(',')[4].to_f
+#   end
+#   end
+#
+#   # Future
+#   price = Concurrent::Future.execute{ Ticker.new.get_year_end_closing('TWTR', 2013) }
+#   price.state #=> :pending
+#   sleep(1)    # do other stuff
+#   price.value #=> 63.65
+#   price.state #=> :fulfilled
+#
+#   # ScheduledTask
+#   task = Concurrent::ScheduledTask.execute(2){ Ticker.new.get_year_end_closing('INTC', 2013) }
+#   task.state #=> :pending
+#   sleep(3)   # do other stuff
+#   task.value #=> 25.96
+# @example Successful task execution
+#
+#   task = Concurrent::ScheduledTask.new(2){ 'What does the fox say?' }
+#   task.state         #=> :unscheduled
+#   task.execute
+#   task.state         #=> pending
+#
+#   # wait for it...
+#   sleep(3)
+#
+#   task.unscheduled? #=> false
+#   task.pending?     #=> false
+#   task.fulfilled?   #=> true
+#   task.rejected?    #=> false
+#   task.value        #=> 'What does the fox say?'
+# @example One line creation and execution
+#
+#   task = Concurrent::ScheduledTask.new(2){ 'What does the fox say?' }.execute
+#   task.state         #=> pending
+#
+#   task = Concurrent::ScheduledTask.execute(2){ 'What do you get when you multiply 6 by 9?' }
+#   task.state         #=> pending
+# @example Failed task execution
+#
+#   task = Concurrent::ScheduledTask.execute(2){ raise StandardError.new('Call me maybe?') }
+#   task.pending?      #=> true
+#
+#   # wait for it...
+#   sleep(3)
+#
+#   task.unscheduled? #=> false
+#   task.pending?     #=> false
+#   task.fulfilled?   #=> false
+#   task.rejected?    #=> true
+#   task.value        #=> nil
+#   task.reason       #=> #<StandardError: Call me maybe?>
+# @example Task execution with observation
+#
+#   observer = Class.new{
+#   def update(time, value, reason)
+#   puts "The task completed at #{time} with value '#{value}'"
+#   end
+#   }.new
+#
+#   task = Concurrent::ScheduledTask.new(2){ 'What does the fox say?' }
+#   task.add_observer(observer)
+#   task.execute
+#   task.pending?      #=> true
+#
+#   # wait for it...
+#   sleep(3)
+#
+#   #>> The task completed at 2013-11-07 12:26:09 -0500 with value 'What does the fox say?'
+# @see Concurrent.timer
 class Concurrent::ScheduledTask < ::Concurrent::IVar
   include ::Comparable
 
   # Schedule a task for execution at a specified future time.
+  #
+  # @option opts
+  # @param delay [Float] the number of seconds to wait for before executing the task
+  # @param opts [Hash] a customizable set of options
+  # @raise [ArgumentError] When no block is given
+  # @raise [ArgumentError] When given a time that is in the past
+  # @return [ScheduledTask] a new instance of ScheduledTask
+  # @yield the task to be performed
   def initialize(delay, opts = T.unsafe(nil), &task); end
 
   # Comparator which orders by schedule time.
@@ -4803,51 +7206,79 @@ class Concurrent::ScheduledTask < ::Concurrent::IVar
 
   # Cancel this task and prevent it from executing. A task can only be
   # cancelled if it is pending or unscheduled.
+  #
+  # @return [Boolean] true if successfully cancelled else false
   def cancel; end
 
   # Has the task been cancelled?
+  #
+  # @return [Boolean] true if the task is in the given state else false
   def cancelled?; end
 
   # Execute an `:unscheduled` `ScheduledTask`. Immediately sets the state to `:pending`
   # and starts counting down toward execution. Does nothing if the `ScheduledTask` is
   # in any state other than `:unscheduled`.
+  #
+  # @return [ScheduledTask] a reference to `self`
   def execute; end
 
   # The executor on which to execute the task.
   def executor; end
 
   # The `delay` value given at instanciation.
+  #
+  # @return [Float] the initial delay.
   def initial_delay; end
 
   # Execute the task.
   def process_task; end
 
   # In the task execution in progress?
+  #
+  # @return [Boolean] true if the task is in the given state else false
   def processing?; end
 
   # Reschedule the task using the given delay and the current time.
   # A task can only be reset while it is `:pending`.
+  #
+  # @param delay [Float] the number of seconds to wait for before executing the task
+  # @raise [ArgumentError] When given a time that is in the past
+  # @return [Boolean] true if successfully rescheduled else false
   def reschedule(delay); end
 
   # Reschedule the task using the original delay and the current time.
   # A task can only be reset while it is `:pending`.
+  #
+  # @return [Boolean] true if successfully rescheduled else false
   def reset; end
 
   # The monotonic time at which the the task is scheduled to be executed.
+  #
+  # @return [Float] the schedule time or nil if `unscheduled`
   def schedule_time; end
 
   protected
 
   # Reschedule the task using the given delay and the current time.
   # A task can only be reset while it is `:pending`.
+  #
+  # @param delay [Float] the number of seconds to wait for before executing the task
+  # @return [Boolean] true if successfully rescheduled else false
   def ns_reschedule(delay); end
 
   # Schedule the task using the given delay and the current time.
+  #
+  # @param delay [Float] the number of seconds to wait for before executing the task
+  # @return [Boolean] true if successfully rescheduled else false
   def ns_schedule(delay); end
 
   class << self
     # Create a new `ScheduledTask` object with the given block, execute it, and return the
     # `:pending` object.
+    #
+    # @param delay [Float] the number of seconds to wait for before executing the task
+    # @raise [ArgumentError] if no block is given
+    # @return [ScheduledTask] the newly created `ScheduledTask` in the `:pending` state
     def execute(delay, opts = T.unsafe(nil), &task); end
   end
 end
@@ -4858,6 +7289,38 @@ end
 # releasing a blocking acquirer.
 # However, no actual permit objects are used; the Semaphore just keeps a
 # count of the number available and acts accordingly.
+#
+# @example
+#   semaphore = Concurrent::Semaphore.new(2)
+#
+#   t1 = Thread.new do
+#   semaphore.acquire
+#   puts "Thread 1 acquired semaphore"
+#   end
+#
+#   t2 = Thread.new do
+#   semaphore.acquire
+#   puts "Thread 2 acquired semaphore"
+#   end
+#
+#   t3 = Thread.new do
+#   semaphore.acquire
+#   puts "Thread 3 acquired semaphore"
+#   end
+#
+#   t4 = Thread.new do
+#   sleep(2)
+#   puts "Thread 4 releasing semaphore"
+#   semaphore.release
+#   end
+#
+#   [t1, t2, t3, t4].each(&:join)
+#
+#   # prints:
+#   # Thread 3 acquired semaphore
+#   # Thread 2 acquired semaphore
+#   # Thread 4 releasing semaphore
+#   # Thread 1 acquired semaphore
 class Concurrent::Semaphore < ::Concurrent::MutexSemaphore; end
 
 Concurrent::SemaphoreImplementation = Concurrent::MutexSemaphore
@@ -4868,12 +7331,28 @@ Concurrent::SemaphoreImplementation = Concurrent::MutexSemaphore
 # functionality and provides no guarantees. That is the responsibility
 # of the including class. This module exists solely to allow the including
 # object to be interrogated for its serialization status.
+#
+# @example
+#   class Foo
+#   include Concurrent::SerialExecutor
+#   end
+#
+#   foo = Foo.new
+#
+#   foo.is_a? Concurrent::ExecutorService #=> true
+#   foo.is_a? Concurrent::SerialExecutor  #=> true
+#   foo.serialized?                       #=> true
 module Concurrent::SerialExecutorService
   include ::Logger::Severity
   include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
 
   # Does this executor guarantee serialization of its operations?
+  #
+  # @note Always returns `true`
+  # @return [Boolean] True if the executor guarantees that all operations
+  #   will be post in the order they are received and no two operations may
+  #   occur simultaneously. Else false.
   def serialized?; end
 end
 
@@ -4882,13 +7361,24 @@ class Concurrent::SerializedExecution < ::Concurrent::Synchronization::LockableO
   include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
+  # @return [SerializedExecution] a new instance of SerializedExecution
   def initialize; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param executor [Executor] to be used for this job
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(executor, *args, &task); end
 
   # As {#post} but allows to submit multiple tasks at once, it's guaranteed that they will not
   # be interleaved by other tasks.
+  #
+  # @param posts [Array<Array(ExecutorService, Array<Object>, Proc)>] array of triplets where
+  #   first is a {ExecutorService}, second is array of args for task, third is a task (Proc)
   def posts(posts); end
 
   private
@@ -4902,29 +7392,43 @@ end
 
 class Concurrent::SerializedExecution::Job < ::Struct
   # Returns the value of attribute args
+  #
+  # @return [Object] the current value of args
   def args; end
 
   # Sets the attribute args
+  #
+  # @param value [Object] the value to set the attribute args to.
+  # @return [Object] the newly set value
   def args=(_); end
 
   # Returns the value of attribute block
+  #
+  # @return [Object] the current value of block
   def block; end
 
   # Sets the attribute block
+  #
+  # @param value [Object] the value to set the attribute block to.
+  # @return [Object] the newly set value
   def block=(_); end
 
   def call; end
 
   # Returns the value of attribute executor
+  #
+  # @return [Object] the current value of executor
   def executor; end
 
   # Sets the attribute executor
+  #
+  # @param value [Object] the value to set the attribute executor to.
+  # @return [Object] the newly set value
   def executor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4932,21 +7436,39 @@ end
 
 # A wrapper/delegator for any `ExecutorService` that
 # guarantees serialized execution of tasks.
+#
+# @see [SimpleDelegator](http://www.ruby-doc.org/stdlib-2.1.2/libdoc/delegate/rdoc/SimpleDelegator.html)
+# @see Concurrent::SerializedExecution
 class Concurrent::SerializedExecutionDelegator < ::SimpleDelegator
   include ::Logger::Severity
   include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
   include ::Concurrent::SerialExecutorService
 
+  # @return [SerializedExecutionDelegator] a new instance of SerializedExecutionDelegator
   def initialize(executor); end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 end
 
 # A thread-safe subclass of Set. This version locks against the object
 # itself for every method call, ensuring only one thread can be reading
 # or writing at a time. This includes iteration methods like `#each`.
+#
+# @note `a += b` is **not** a **thread-safe** operation on
+#   `Concurrent::Set`. It reads Set `a`, then it creates new `Concurrent::Set`
+#   which is union of `a` and `b`, then it writes the union to `a`.
+#   The read and write are independent operations they do not form a single atomic
+#   operation therefore when two `+=` operations are executed concurrently updates
+#   may be lost. Use `#merge` instead.
+# @see http://ruby-doc.org/stdlib-2.4.0/libdoc/set/rdoc/Set.html Ruby standard library `Set`
 class Concurrent::Set < ::Concurrent::CRubySet; end
 
 Concurrent::SetImplementation = Concurrent::CRubySet
@@ -4955,29 +7477,57 @@ Concurrent::SetImplementation = Concurrent::CRubySet
 # Each member can have its value set at most once, either at construction
 # or any time thereafter. Attempting to assign a value to a member
 # that has already been set will result in a `Concurrent::ImmutabilityError`.
+#
+# @see http://ruby-doc.org/core/Struct.html Ruby standard library `Struct`
+# @see http://en.wikipedia.org/wiki/Final_(Java) Java `final` keyword
 module Concurrent::SettableStruct
   include ::Concurrent::Synchronization::AbstractStruct
 
   # Equality
+  #
+  # @return [Boolean] true if other has the same struct subclass and has
+  #   equal member values (according to `Object#==`)
   def ==(other); end
 
   # Attribute Reference
+  #
+  # @param member [Symbol, String, Integer] the string or symbol name of the member
+  #   for which to obtain the value or the member's index
+  # @raise [NameError] if the member does not exist
+  # @raise [IndexError] if the index is out of range.
+  # @return [Object] the value of the given struct member or the member at the given index.
   def [](member); end
 
   # Attribute Assignment
   #
   # Sets the value of the given struct member or the member at the given index.
+  #
+  # @param member [Symbol, String, Integer] the string or symbol name of the member
+  #   for which to obtain the value or the member's index
+  # @raise [NameError] if the name does not exist
+  # @raise [IndexError] if the index is out of range.
+  # @raise [Concurrent::ImmutabilityError] if the given member has already been set
+  # @return [Object] the value of the given struct member or the member at the given index.
   def []=(member, value); end
 
   # Yields the value of each struct member in order. If no block is given
   # an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def each(&block); end
 
   # Yields the name and value of each struct member in order. If no block is
   # given an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member/value pair
+  # @yieldparam member [Object] each struct member (in order)
+  # @yieldparam value [Object] each struct value (in order)
   def each_pair(&block); end
 
   # Describe the contents of this struct in a string.
+  #
+  # @return [String] the contents of this struct in a string
   def inspect; end
 
   # Returns a new struct containing the contents of `other` and the contents
@@ -4985,28 +7535,50 @@ module Concurrent::SettableStruct
   # keys will be that of `other`. Otherwise the value for each duplicate key
   # is determined by calling the block with the key, its value in `self` and
   # its value in `other`.
+  #
+  # @param other [Hash] the hash from which to set the new values
+  # @raise [ArgumentError] of given a member that is not defined in the struct
+  # @return [Synchronization::AbstractStruct] a new struct with the new values
+  # @yield an options block for resolving duplicate keys
+  # @yieldparam member [String, Symbol] the name of the member which is duplicated
+  # @yieldparam selfvalue [Object] the value of the member in `self`
+  # @yieldparam othervalue [Object] the value of the member in `other`
   def merge(other, &block); end
 
   # Yields each member value from the struct to the block and returns an Array
   # containing the member values from the struct for which the given block
   # returns a true value (equivalent to `Enumerable#select`).
+  #
+  # @return [Array] an array containing each value for which the block returns true
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def select(&block); end
 
   # Returns the values for this struct as an Array.
+  #
+  # @return [Array] the values for this struct
   def to_a; end
 
   # Returns a hash containing the names and values for the struct’s members.
+  #
+  # @return [Hash] the names and values for the struct’s members
   def to_h; end
 
   # Describe the contents of this struct in a string.
+  #
+  # @return [String] the contents of this struct in a string
   def to_s; end
 
   # Returns the values for this struct as an Array.
+  #
+  # @return [Array] the values for this struct
   def values; end
 
   # Returns the struct member values for each selector as an Array.
   #
   # A selector may be either an Integer offset or a Range of offsets (as in `Array#values_at`).
+  #
+  # @param indexes [Fixnum, Range] the index(es) from which to obatin the values (in order)
   def values_at(*indexes); end
 
   private
@@ -5041,6 +7613,8 @@ module Concurrent::SettableStruct
     # parameters must be less than or equal to the number of attributes defined for the
     # struct. Unset parameters default to nil. Passing more parameters than number of attributes
     # will raise an `ArgumentError`.
+    #
+    # @see http://ruby-doc.org/core/Struct.html#method-c-new Ruby standard library `Struct#new`
     def new(*args, &block); end
   end
 end
@@ -5057,8 +7631,13 @@ Concurrent::SettableStruct::FACTORY = T.let(T.unsafe(nil), T.untyped)
 # debugging because it decouples the using code from the underlying
 # executor implementation. In production this executor will likely
 # lead to suboptimal performance.
+#
+# @note Intended for use primarily in testing and debugging.
 class Concurrent::SimpleExecutorService < ::Concurrent::RubyExecutorService
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param task [Proc] the asynchronous task to perform
+  # @return [self] returns itself
   def <<(task); end
 
   # Begin an immediate shutdown. In-progress tasks will be allowed to
@@ -5068,9 +7647,17 @@ class Concurrent::SimpleExecutorService < ::Concurrent::RubyExecutorService
   def kill; end
 
   # Submit a task to the executor for asynchronous processing.
+  #
+  # @param args [Array] zero or more arguments to be passed to the task
+  # @raise [ArgumentError] if no task is given
+  # @return [Boolean] `true` if the task is queued, `false` if the executor
+  #   is not running
+  # @yield the asynchronous task to perform
   def post(*args, &task); end
 
   # Is the executor running?
+  #
+  # @return [Boolean] `true` when running, `false` when shutting down or shutdown
   def running?; end
 
   # Begin an orderly shutdown. Tasks already in the queue will be executed,
@@ -5079,13 +7666,22 @@ class Concurrent::SimpleExecutorService < ::Concurrent::RubyExecutorService
   def shutdown; end
 
   # Is the executor shutdown?
+  #
+  # @return [Boolean] `true` when shutdown, `false` when shutting down or running
   def shutdown?; end
 
   # Is the executor shuttingdown?
+  #
+  # @return [Boolean] `true` when not running and not shutdown, else `false`
   def shuttingdown?; end
 
   # Block until executor shutdown is complete or until `timeout` seconds have
   # passed.
+  #
+  # @note Does not initiate shutdown or termination. Either `shutdown` or `kill`
+  #   must be called before this method (or on another thread).
+  # @param timeout [Integer] the maximum number of seconds to wait for shutdown to complete
+  # @return [Boolean] `true` if shutdown complete or false on `timeout`
   def wait_for_termination(timeout = T.unsafe(nil)); end
 
   private
@@ -5094,9 +7690,18 @@ class Concurrent::SimpleExecutorService < ::Concurrent::RubyExecutorService
 
   class << self
     # Submit a task to the executor for asynchronous processing.
+    #
+    # @param task [Proc] the asynchronous task to perform
+    # @return [self] returns itself
     def <<(task); end
 
     # Submit a task to the executor for asynchronous processing.
+    #
+    # @param args [Array] zero or more arguments to be passed to the task
+    # @raise [ArgumentError] if no task is given
+    # @return [Boolean] `true` if the task is queued, `false` if the executor
+    #   is not running
+    # @yield the asynchronous task to perform
     def post(*args); end
   end
 end
@@ -5128,28 +7733,81 @@ class Concurrent::Synchronization::AbstractLockableObject < ::Concurrent::Synchr
   protected
 
   # Broadcast to all waiting threads.
+  #
+  # @note only to be used inside synchronized block
+  # @note to provide direct access to this method in a descendant add method
+  #   ```
+  #   def broadcast
+  #   synchronize { ns_broadcast }
+  #   end
+  #   ```
+  # @raise [NotImplementedError]
+  # @return [self]
   def ns_broadcast; end
 
   # Signal one waiting thread.
+  #
+  # @note only to be used inside synchronized block
+  # @note to provide direct access to this method in a descendant add method
+  #   ```
+  #   def signal
+  #   synchronize { ns_signal }
+  #   end
+  #   ```
+  # @raise [NotImplementedError]
+  # @return [self]
   def ns_signal; end
 
   # Wait until another thread calls #signal or #broadcast,
   # spurious wake-ups can happen.
+  #
+  # @note only to be used inside synchronized block
+  # @note to provide direct access to this method in a descendant add method
+  #   ```
+  #   def wait(timeout = nil)
+  #   synchronize { ns_wait(timeout) }
+  #   end
+  #   ```
+  # @param timeout [Numeric, nil] in seconds, `nil` means no timeout
+  # @raise [NotImplementedError]
+  # @return [self]
   def ns_wait(timeout = T.unsafe(nil)); end
 
   # Wait until condition is met or timeout passes,
   # protects against spurious wake-ups.
+  #
+  # @note only to be used inside synchronized block
+  # @note to provide direct access to this method in a descendant add method
+  #   ```
+  #   def wait_until(timeout = nil, &condition)
+  #   synchronize { ns_wait_until(timeout, &condition) }
+  #   end
+  #   ```
+  # @param timeout [Numeric, nil] in seconds, `nil` means no timeout
+  # @return [true, false] if condition met
+  # @yield condition to be met
+  # @yieldreturn [true, false]
   def ns_wait_until(timeout = T.unsafe(nil), &condition); end
 
+  # @note can by made public in descendants if required by `public :synchronize`
+  # @raise [NotImplementedError]
+  # @yield runs the block synchronized against this object,
+  #   equivalent of java's `synchronize(this) {}`
   def synchronize; end
 end
 
 class Concurrent::Synchronization::AbstractObject
+  # @abstract has to be implemented based on Ruby runtime
+  # @raise [NotImplementedError]
+  # @return [AbstractObject] a new instance of AbstractObject
   def initialize; end
 
+  # @abstract
+  # @raise [NotImplementedError]
   def full_memory_barrier; end
 
   class << self
+    # @raise [NotImplementedError]
     def attr_volatile(*names); end
   end
 end
@@ -5158,33 +7816,57 @@ module Concurrent::Synchronization::AbstractStruct
   def initialize(*values); end
 
   # Returns the number of struct members.
+  #
+  # @return [Fixnum] the number of struct members
   def length; end
 
   # Returns the struct members as an array of symbols.
+  #
+  # @return [Array] the struct members as an array of symbols
   def members; end
 
   # Returns the number of struct members.
+  #
+  # @return [Fixnum] the number of struct members
   def size; end
 
   protected
 
   # Yields the value of each struct member in order. If no block is given
   # an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def ns_each; end
 
   # Yields the name and value of each struct member in order. If no block is
   # given an enumerator is returned.
+  #
+  # @yield the operation to be performed on each struct member/value pair
+  # @yieldparam member [Object] each struct member (in order)
+  # @yieldparam value [Object] each struct value (in order)
   def ns_each_pair; end
 
   # Equality
+  #
+  # @return [Boolean] true if other has the same struct subclass and has
+  #   equal member values (according to `Object#==`)
   def ns_equality(other); end
 
   # Attribute Reference
+  #
+  # @param member [Symbol, String, Integer] the string or symbol name of the member
+  #   for which to obtain the value or the member's index
+  # @raise [NameError] if the member does not exist
+  # @raise [IndexError] if the index is out of range.
+  # @return [Object] the value of the given struct member or the member at the given index.
   def ns_get(member); end
 
   def ns_initialize_copy; end
 
   # Describe the contents of this struct in a string.
+  #
+  # @return [String] the contents of this struct in a string
   def ns_inspect; end
 
   # Returns a new struct containing the contents of `other` and the contents
@@ -5192,22 +7874,40 @@ module Concurrent::Synchronization::AbstractStruct
   # keys will be that of `other`. Otherwise the value for each duplicate key
   # is determined by calling the block with the key, its value in `self` and
   # its value in `other`.
+  #
+  # @param other [Hash] the hash from which to set the new values
+  # @raise [ArgumentError] of given a member that is not defined in the struct
+  # @return [Synchronization::AbstractStruct] a new struct with the new values
+  # @yield an options block for resolving duplicate keys
+  # @yieldparam member [String, Symbol] the name of the member which is duplicated
+  # @yieldparam selfvalue [Object] the value of the member in `self`
+  # @yieldparam othervalue [Object] the value of the member in `other`
   def ns_merge(other, &block); end
 
   # Yields each member value from the struct to the block and returns an Array
   # containing the member values from the struct for which the given block
   # returns a true value (equivalent to `Enumerable#select`).
+  #
+  # @return [Array] an array containing each value for which the block returns true
+  # @yield the operation to be performed on each struct member
+  # @yieldparam value [Object] each struct value (in order)
   def ns_select; end
 
   # Returns a hash containing the names and values for the struct’s members.
+  #
+  # @return [Hash] the names and values for the struct’s members
   def ns_to_h; end
 
   # Returns the values for this struct as an Array.
+  #
+  # @return [Array] the values for this struct
   def ns_values; end
 
   # Returns the struct member values for each selector as an Array.
   #
   # A selector may be either an Integer offset or a Range of offsets (as in `Array#values_at`).
+  #
+  # @param indexes [Fixnum, Range] the index(es) from which to obatin the values (in order)
   def ns_values_at(indexes); end
 
   def pr_underscore(clazz); end
@@ -5219,6 +7919,7 @@ end
 
 # TODO (pitr-ch 04-Dec-2016): should be in edge
 class Concurrent::Synchronization::Condition < ::Concurrent::Synchronization::LockableObject
+  # @return [Condition] a new instance of Condition
   def initialize(lock); end
 
   def broadcast; end
@@ -5251,29 +7952,29 @@ class Concurrent::Synchronization::Lock < ::Concurrent::Synchronization::Lockabl
 end
 
 # Safe synchronization under any Ruby implementation.
-# It provides methods like {#synchronize}, {#wait}, {#signal} and {#broadcast}.
-# Provides a single layer which can improve its implementation over time without changes needed to
-# the classes using it. Use {Synchronization::Object} not this abstract class.
+#   It provides methods like {#synchronize}, {#wait}, {#signal} and {#broadcast}.
+#   Provides a single layer which can improve its implementation over time without changes needed to
+#   the classes using it. Use {Synchronization::Object} not this abstract class.
 #
-# @note this object does not support usage together with
-# [`Thread#wakeup`](http://ruby-doc.org/core/Thread.html#method-i-wakeup)
-# and [`Thread#raise`](http://ruby-doc.org/core/Thread.html#method-i-raise).
-# `Thread#sleep` and `Thread#wakeup` will work as expected but mixing `Synchronization::Object#wait` and
-# `Thread#wakeup` will not work on all platforms.
+#   @note this object does not support usage together with
+#     [`Thread#wakeup`](http://ruby-doc.org/core/Thread.html#method-i-wakeup)
+#     and [`Thread#raise`](http://ruby-doc.org/core/Thread.html#method-i-raise).
+#     `Thread#sleep` and `Thread#wakeup` will work as expected but mixing `Synchronization::Object#wait` and
+#     `Thread#wakeup` will not work on all platforms.
 #
-# @see Event implementation as an example of this class use
+#   @see Event implementation as an example of this class use
 #
-# @example simple
-# class AnClass < Synchronization::Object
-# def initialize
-# super
-# synchronize { @value = 'asd' }
-# end
+#   @example simple
+#     class AnClass < Synchronization::Object
+#       def initialize
+#         super
+#         synchronize { @value = 'asd' }
+#       end
 #
-# def value
-# synchronize { @value }
-# end
-# end
+#       def value
+#         synchronize { @value }
+#       end
+#     end
 class Concurrent::Synchronization::LockableObject < ::Concurrent::Synchronization::MutexLockableObject
   def new_condition; end
 end
@@ -5283,6 +7984,7 @@ Concurrent::Synchronization::LockableObjectImplementation = Concurrent::Synchron
 class Concurrent::Synchronization::MonitorLockableObject < ::Concurrent::Synchronization::AbstractLockableObject
   include ::Concurrent::Synchronization::ConditionSignalling
 
+  # @return [MonitorLockableObject] a new instance of MonitorLockableObject
   def initialize(*defaults); end
 
   protected
@@ -5307,6 +8009,7 @@ module Concurrent::Synchronization::MriAttrVolatile
   def full_memory_barrier; end
 
   class << self
+    # @private
     def included(base); end
   end
 end
@@ -5319,12 +8022,14 @@ class Concurrent::Synchronization::MriObject < ::Concurrent::Synchronization::Ab
   include ::Concurrent::Synchronization::MriAttrVolatile
   extend ::Concurrent::Synchronization::MriAttrVolatile::ClassMethods
 
+  # @return [MriObject] a new instance of MriObject
   def initialize; end
 end
 
 class Concurrent::Synchronization::MutexLockableObject < ::Concurrent::Synchronization::AbstractLockableObject
   include ::Concurrent::Synchronization::ConditionSignalling
 
+  # @return [MutexLockableObject] a new instance of MutexLockableObject
   def initialize(*defaults); end
 
   protected
@@ -5347,6 +8052,8 @@ end
 # - volatile instance variables see {Object.attr_atomic}
 class Concurrent::Synchronization::Object < ::Concurrent::Synchronization::MriObject
   # Has to be called by children.
+  #
+  # @return [Object] a new instance of Object
   def initialize; end
 
   private
@@ -5354,7 +8061,11 @@ class Concurrent::Synchronization::Object < ::Concurrent::Synchronization::MriOb
   def __initialize_atomic_fields__; end
 
   class << self
+    # @return [true, false] is the attribute with name atomic?
     def atomic_attribute?(name); end
+
+    # @param inherited [true, false] should inherited volatile with CAS fields be returned?
+    # @return [::Array<Symbol>] Returns defined volatile with CAS fields on this class.
     def atomic_attributes(inherited = T.unsafe(nil)); end
 
     # Creates methods for reading and writing to a instance variable with
@@ -5363,17 +8074,34 @@ class Concurrent::Synchronization::Object < ::Concurrent::Synchronization::MriOb
     # This method generates following methods: `value`, `value=(new_value) #=> new_value`,
     # `swap_value(new_value) #=> old_value`,
     # `compare_and_set_value(expected, value) #=> true || false`, `update_value(&block)`.
+    #
+    # @param names [::Array<Symbol>] of the instance variables to be volatile with CAS.
+    # @return [::Array<Symbol>] names of defined method names.
     def attr_atomic(*names); end
 
     # For testing purposes, quite slow. Injects assert code to new method which will raise if class instance contains
     # any instance variables with CamelCase names and isn't {.safe_initialization?}.
+    #
+    # @raise when offend found
+    # @return [true]
     def ensure_safe_initialization_when_final_fields_are_present; end
 
     # By calling this method on a class, it and all its children are marked to be constructed safely. Meaning that
     # all writes (ivar initializations) are made visible to all readers of newly constructed object. It ensures
     # same behaviour as Java's final fields.
+    #
+    # @example
+    #   class AClass < Concurrent::Synchronization::Object
+    #   safe_initialization!
+    #
+    #   def initialize
+    #   @AFinalValue = 'value' # published safely, does not have to be synchronized
+    #   end
+    #   end
+    # @return [true]
     def safe_initialization!; end
 
+    # @return [true, false] if this class is safely initialized.
     def safe_initialization?; end
 
     private
@@ -5390,6 +8118,7 @@ module Concurrent::Synchronization::RbxAttrVolatile
   def full_memory_barrier; end
 
   class << self
+    # @private
     def included(base); end
   end
 end
@@ -5399,6 +8128,7 @@ module Concurrent::Synchronization::RbxAttrVolatile::ClassMethods
 end
 
 class Concurrent::Synchronization::RbxLockableObject < ::Concurrent::Synchronization::AbstractLockableObject
+  # @return [RbxLockableObject] a new instance of RbxLockableObject
   def initialize(*defaults); end
 
   protected
@@ -5421,6 +8151,7 @@ class Concurrent::Synchronization::RbxObject < ::Concurrent::Synchronization::Ab
   include ::Concurrent::Synchronization::RbxAttrVolatile
   extend ::Concurrent::Synchronization::RbxAttrVolatile::ClassMethods
 
+  # @return [RbxObject] a new instance of RbxObject
   def initialize; end
 end
 
@@ -5430,6 +8161,7 @@ module Concurrent::Synchronization::TruffleRubyAttrVolatile
   def full_memory_barrier; end
 
   class << self
+    # @private
     def included(base); end
   end
 end
@@ -5442,17 +8174,36 @@ class Concurrent::Synchronization::TruffleRubyObject < ::Concurrent::Synchroniza
   include ::Concurrent::Synchronization::TruffleRubyAttrVolatile
   extend ::Concurrent::Synchronization::TruffleRubyAttrVolatile::ClassMethods
 
+  # @return [TruffleRubyObject] a new instance of TruffleRubyObject
   def initialize; end
 end
 
+# Volatile adds the attr_volatile class method when included.
+#
+#  foo = Foo.new
+#  foo.bar
+#  => 1
+#  foo.bar = 2
+#  => 2
+#
+# @example
+#   class Foo
+#   include Concurrent::Synchronization::Volatile
+#
+#   attr_volatile :bar
+#
+#   def initialize
+#   self.bar = 1
+#   end
+#   end
 Concurrent::Synchronization::Volatile = Concurrent::Synchronization::MriAttrVolatile
 
 # This class provides a trivial way to synchronize all calls to a given object
 # by wrapping it with a `Delegator` that performs `Monitor#enter/exit` calls
 # around the delegated `#send`. Example:
 #
-# array = [] # not thread-safe on many impls
-# array = SynchronizedDelegator.new([]) # thread-safe
+#   array = [] # not thread-safe on many impls
+#   array = SynchronizedDelegator.new([]) # thread-safe
 #
 # A simple `Monitor` provides a very coarse-grained way to synchronize a given
 # object, in that it will cause synchronization for methods that have no need
@@ -5462,6 +8213,7 @@ Concurrent::Synchronization::Volatile = Concurrent::Synchronization::MriAttrVola
 # This class is currently being considered for inclusion into stdlib, via
 # https://bugs.ruby-lang.org/issues/8556
 class Concurrent::SynchronizedDelegator < ::SimpleDelegator
+  # @return [SynchronizedDelegator] a new instance of SynchronizedDelegator
   def initialize(obj); end
 
   def method_missing(method, *args, &block); end
@@ -5479,34 +8231,36 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
 # {include:file:docs-source/tvar.md}
 class Concurrent::TVar < ::Concurrent::Synchronization::Object
   # Create a new `TVar` with an initial value.
+  #
+  # @return [TVar] a new instance of TVar
   def initialize(value); end
 
   def unsafe_increment_version; end
@@ -5537,31 +8291,54 @@ end
 # problem. In general:
 #
 # * *{Concurrent::Agent}:* Shared, mutable variable providing independent,
-# uncoordinated, *asynchronous* change of individual values. Best used when
-# the value will undergo frequent, complex updates. Suitable when the result
-# of an update does not need to be known immediately.
+#   uncoordinated, *asynchronous* change of individual values. Best used when
+#   the value will undergo frequent, complex updates. Suitable when the result
+#   of an update does not need to be known immediately.
 # * *{Concurrent::Atom}:* Shared, mutable variable providing independent,
-# uncoordinated, *synchronous* change of individual values. Best used when
-# the value will undergo frequent reads but only occasional, though complex,
-# updates. Suitable when the result of an update must be known immediately.
+#   uncoordinated, *synchronous* change of individual values. Best used when
+#   the value will undergo frequent reads but only occasional, though complex,
+#   updates. Suitable when the result of an update must be known immediately.
 # * *{Concurrent::AtomicReference}:* A simple object reference that can be updated
-# atomically. Updates are synchronous but fast. Best used when updates a
-# simple set operations. Not suitable when updates are complex.
-# {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
-# but optimized for the given data type.
+#   atomically. Updates are synchronous but fast. Best used when updates a
+#   simple set operations. Not suitable when updates are complex.
+#   {Concurrent::AtomicBoolean} and {Concurrent::AtomicFixnum} are similar
+#   but optimized for the given data type.
 # * *{Concurrent::Exchanger}:* Shared, stateless synchronization point. Used
-# when two or more threads need to exchange data. The threads will pair then
-# block on each other until the exchange is complete.
+#   when two or more threads need to exchange data. The threads will pair then
+#   block on each other until the exchange is complete.
 # * *{Concurrent::MVar}:* Shared synchronization point. Used when one thread
-# must give a value to another, which must take the value. The threads will
-# block on each other until the exchange is complete.
+#   must give a value to another, which must take the value. The threads will
+#   block on each other until the exchange is complete.
 # * *{Concurrent::ThreadLocalVar}:* Shared, mutable, isolated variable which
-# holds a different value for each thread which has access. Often used as
-# an instance variable in objects which must maintain different state
-# for different threads.
+#   holds a different value for each thread which has access. Often used as
+#   an instance variable in objects which must maintain different state
+#   for different threads.
 # * *{Concurrent::TVar}:* Shared, mutable variables which provide
-# *coordinated*, *synchronous*, change of *many* stated. Used when multiple
-# value must change together, in an all-or-nothing transaction.
+#   *coordinated*, *synchronous*, change of *many* stated. Used when multiple
+#   value must change together, in an all-or-nothing transaction.
+#
+# @example
+#   v = ThreadLocalVar.new(14)
+#   v.value #=> 14
+#   v.value = 2
+#   v.value #=> 2
+# @example
+#   v = ThreadLocalVar.new(14)
+#
+#   t1 = Thread.new do
+#   v.value #=> 14
+#   v.value = 1
+#   v.value #=> 1
+#   end
+#
+#   t2 = Thread.new do
+#   v.value #=> 14
+#   v.value = 2
+#   v.value #=> 2
+#   end
+#
+#   v.value #=> 14
+# @see https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html Java ThreadLocal
 class Concurrent::ThreadLocalVar < ::Concurrent::RubyThreadLocalVar; end
 
 Concurrent::ThreadLocalVarImplementation = Concurrent::RubyThreadLocalVar
@@ -5605,11 +8382,11 @@ Concurrent::ThreadLocalVarImplementation = Concurrent::RubyThreadLocalVar
 #
 # * `idletime`: The number of seconds that a thread may be idle before being reclaimed.
 # * `name`: The name of the executor (optional). Printed in the executor's `#to_s` output and
-# a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
-# implementation. `<id>` is uniq for each thread.
+#   a `<name>-worker-<id>` name is given to its threads if supported by used Ruby
+#   implementation. `<id>` is uniq for each thread.
 # * `max_queue`: The maximum number of tasks that may be waiting in the work queue at
-# any one time. When the queue size reaches `max_queue` and no new threads can be created,
-# subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
+#   any one time. When the queue size reaches `max_queue` and no new threads can be created,
+#   subsequent tasks will be rejected in accordance with the configured `fallback_policy`.
 # * `auto_terminate`: When true (default), the threads started will be marked as daemon.
 # * `fallback_policy`: The policy defining how rejected tasks are handled.
 #
@@ -5630,7 +8407,7 @@ Concurrent::ThreadLocalVarImplementation = Concurrent::RubyThreadLocalVar
 #
 # * Call `#shutdown` to initiate an orderly termination of all in-progress tasks
 # * Call `#wait_for_termination` with an appropriate timeout interval an allow
-# the orderly shutdown to complete
+#   the orderly shutdown to complete
 # * Call `#kill` *only when* the thread pool fails to shutdown in the allotted time
 #
 # On some runtime platforms (most notably the JVM) the application will not
@@ -5642,6 +8419,13 @@ Concurrent::ThreadLocalVarImplementation = Concurrent::RubyThreadLocalVar
 # pool1 = Concurrent::FixedThreadPool.new(5) # threads will be marked as daemon
 # pool2 = Concurrent::FixedThreadPool.new(5, auto_terminate: false) # mark threads as non-daemon
 # ```
+#
+# @note Failure to properly shutdown a thread pool can lead to unpredictable results.
+#   Please read *Shutting Down Thread Pools* for more information.
+# @see http://docs.oracle.com/javase/tutorial/essential/concurrency/pools.html Java Tutorials: Thread Pools
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executors.html Java Executors class
+# @see http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html Java ExecutorService interface
+# @see https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setDaemon-boolean-
 class Concurrent::ThreadPoolExecutor < ::Concurrent::RubyThreadPoolExecutor; end
 
 Concurrent::ThreadPoolExecutorImplementation = Concurrent::RubyThreadPoolExecutor
@@ -5670,8 +8454,14 @@ class Concurrent::TimeoutError < ::Concurrent::Error; end
 # monitors the set and schedules each task for execution at the appropriate
 # time. Tasks are run on the global thread pool or on the supplied executor.
 # Each task is represented as a `ScheduledTask`.
+#
+# @see Concurrent::ScheduledTask
 class Concurrent::TimerSet < ::Concurrent::RubyExecutorService
   # Create a new set of timed tasks.
+  #
+  # @option opts
+  # @param opts [Hash] the options used to specify the executor on which to perform actions
+  # @return [TimerSet] a new instance of TimerSet
   def initialize(opts = T.unsafe(nil)); end
 
   # Begin an immediate shutdown. In-progress tasks will be allowed to
@@ -5683,11 +8473,21 @@ class Concurrent::TimerSet < ::Concurrent::RubyExecutorService
   # Post a task to be execute run after a given delay (in seconds). If the
   # delay is less than 1/100th of a second the task will be immediately post
   # to the executor.
+  #
+  # @param delay [Float] the number of seconds to wait for before executing the task.
+  # @param args [Array<Object>] the arguments passed to the task on execution.
+  # @raise [ArgumentError] if the intended execution time is not in the future.
+  # @raise [ArgumentError] if no block is given.
+  # @return [Concurrent::ScheduledTask, false] IVar representing the task if the post
+  #   is successful; false after shutdown.
+  # @yield the task to be performed.
   def post(delay, *args, &task); end
 
   private
 
   # Initialize the object.
+  #
+  # @param opts [Hash] the options to create the object with.
   def ns_initialize(opts); end
 
   def ns_post_task(task); end
@@ -5697,6 +8497,10 @@ class Concurrent::TimerSet < ::Concurrent::RubyExecutorService
   def ns_shutdown_execution; end
 
   # Post the task to the internal queue.
+  #
+  # @note This is intended as a callback method from ScheduledTask
+  #   only. It is not intended to be used directly. Post a task
+  #   by using the `SchedulesTask#execute` method.
   def post_task(task); end
 
   # Run a loop and execute tasks in the scheduled order and at the approximate
@@ -5706,6 +8510,10 @@ class Concurrent::TimerSet < ::Concurrent::RubyExecutorService
   def process_tasks; end
 
   # Remove the given task from the queue.
+  #
+  # @note This is intended as a callback method from `ScheduledTask`
+  #   only. It is not intended to be used directly. Cancel a task
+  #   by using the `ScheduledTask#cancel` method.
   def remove_task(task); end
 end
 
@@ -5751,23 +8559,152 @@ end
 # failure), and any raised exceptions (or nil on success). If the timeout
 # interval is exceeded the observer will receive a `Concurrent::TimeoutError`
 # object as the third argument.
+#
+# @example Basic usage
+#   task = Concurrent::TimerTask.new{ puts 'Boom!' }
+#   task.execute
+#
+#   task.execution_interval #=> 60 (default)
+#   task.timeout_interval   #=> 30 (default)
+#
+#   # wait 60 seconds...
+#   #=> 'Boom!'
+#
+#   task.shutdown #=> true
+# @example Configuring `:execution_interval` and `:timeout_interval`
+#   task = Concurrent::TimerTask.new(execution_interval: 5, timeout_interval: 5) do
+#   puts 'Boom!'
+#   end
+#
+#   task.execution_interval #=> 5
+#   task.timeout_interval   #=> 5
+# @example Immediate execution with `:run_now`
+#   task = Concurrent::TimerTask.new(run_now: true){ puts 'Boom!' }
+#   task.execute
+#
+#   #=> 'Boom!'
+# @example Last `#value` and `Dereferenceable` mixin
+#   task = Concurrent::TimerTask.new(
+#   dup_on_deref: true,
+#   execution_interval: 5
+#   ){ Time.now }
+#
+#   task.execute
+#   Time.now   #=> 2013-11-07 18:06:50 -0500
+#   sleep(10)
+#   task.value #=> 2013-11-07 18:06:55 -0500
+# @example Controlling execution from within the block
+#   timer_task = Concurrent::TimerTask.new(execution_interval: 1) do |task|
+#   task.execution_interval.times{ print 'Boom! ' }
+#   print "\n"
+#   task.execution_interval += 1
+#   if task.execution_interval > 5
+#   puts 'Stopping...'
+#   task.shutdown
+#   end
+#   end
+#
+#   timer_task.execute # blocking call - this task will stop itself
+#   #=> Boom!
+#   #=> Boom! Boom!
+#   #=> Boom! Boom! Boom!
+#   #=> Boom! Boom! Boom! Boom!
+#   #=> Boom! Boom! Boom! Boom! Boom!
+#   #=> Stopping...
+# @example Observation
+#   class TaskObserver
+#   def update(time, result, ex)
+#   if result
+#   print "(#{time}) Execution successfully returned #{result}\n"
+#   elsif ex.is_a?(Concurrent::TimeoutError)
+#   print "(#{time}) Execution timed out\n"
+#   else
+#   print "(#{time}) Execution failed with error #{ex}\n"
+#   end
+#   end
+#   end
+#
+#   task = Concurrent::TimerTask.new(execution_interval: 1, timeout_interval: 1){ 42 }
+#   task.add_observer(TaskObserver.new)
+#   task.execute
+#   sleep 4
+#
+#   #=> (2013-10-13 19:08:58 -0400) Execution successfully returned 42
+#   #=> (2013-10-13 19:08:59 -0400) Execution successfully returned 42
+#   #=> (2013-10-13 19:09:00 -0400) Execution successfully returned 42
+#   task.shutdown
+#
+#   task = Concurrent::TimerTask.new(execution_interval: 1, timeout_interval: 1){ sleep }
+#   task.add_observer(TaskObserver.new)
+#   task.execute
+#
+#   #=> (2013-10-13 19:07:25 -0400) Execution timed out
+#   #=> (2013-10-13 19:07:27 -0400) Execution timed out
+#   #=> (2013-10-13 19:07:29 -0400) Execution timed out
+#   task.shutdown
+#
+#   task = Concurrent::TimerTask.new(execution_interval: 1){ raise StandardError }
+#   task.add_observer(TaskObserver.new)
+#   task.execute
+#
+#   #=> (2013-10-13 19:09:37 -0400) Execution failed with error StandardError
+#   #=> (2013-10-13 19:09:38 -0400) Execution failed with error StandardError
+#   #=> (2013-10-13 19:09:39 -0400) Execution failed with error StandardError
+#   task.shutdown
+# @see http://ruby-doc.org/stdlib-2.0/libdoc/observer/rdoc/Observable.html
+# @see http://docs.oracle.com/javase/7/docs/api/java/util/TimerTask.html
 class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
   include ::Concurrent::Concern::Dereferenceable
   include ::Concurrent::Concern::Observable
 
   # Create a new TimerTask with the given task and configuration.
+  #
+  # @option opts
+  # @option opts
+  # @option opts
+  # @param opts [Hash] the options defining task execution.
+  # @raise ArgumentError when no block is given.
+  # @return [TimerTask] the new `TimerTask`
+  # @yield to the block after :execution_interval seconds have passed since
+  #   the last yield
+  # @yieldparam task a reference to the `TimerTask` instance so that the
+  #   block can control its own lifecycle. Necessary since `self` will
+  #   refer to the execution context of the block rather than the running
+  #   `TimerTask`.
   def initialize(opts = T.unsafe(nil), &task); end
 
   # Execute a previously created `TimerTask`.
+  #
+  # @example Instance and execute in separate steps
+  #   task = Concurrent::TimerTask.new(execution_interval: 10){ print "Hello World\n" }
+  #   task.running? #=> false
+  #   task.execute
+  #   task.running? #=> true
+  # @example Instance and execute in one line
+  #   task = Concurrent::TimerTask.new(execution_interval: 10){ print "Hello World\n" }.execute
+  #   task.running? #=> true
+  # @return [TimerTask] a reference to `self`
   def execute; end
 
+  # @return [Fixnum] Number of seconds after the task completes before the
+  #   task is performed again.
   def execution_interval; end
+
+  # @return [Fixnum] Number of seconds after the task completes before the
+  #   task is performed again.
   def execution_interval=(value); end
 
   # Is the executor running?
+  #
+  # @return [Boolean] `true` when running, `false` when shutting down or shutdown
   def running?; end
 
+  # @return [Fixnum] Number of seconds the task can run before it is
+  #   considered to have failed.
   def timeout_interval; end
+
+  # @return [Fixnum] Number of seconds the task can run before it is
+  #   considered to have failed.
   def timeout_interval=(value); end
 
   private
@@ -5781,6 +8718,22 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
 
   class << self
     # Create and execute a new `TimerTask`.
+    #
+    # @example
+    #   task = Concurrent::TimerTask.execute(execution_interval: 10){ print "Hello World\n" }
+    #   task.running? #=> true
+    # @option opts
+    # @option opts
+    # @option opts
+    # @param opts [Hash] the options defining task execution.
+    # @raise ArgumentError when no block is given.
+    # @return [TimerTask] the new `TimerTask`
+    # @yield to the block after :execution_interval seconds have passed since
+    #   the last yield
+    # @yieldparam task a reference to the `TimerTask` instance so that the
+    #   block can control its own lifecycle. Necessary since `self` will
+    #   refer to the execution context of the block rather than the running
+    #   `TimerTask`.
     def execute(opts = T.unsafe(nil), &task); end
   end
 end
@@ -5792,13 +8745,17 @@ Concurrent::TimerTask::EXECUTION_INTERVAL = T.let(T.unsafe(nil), Integer)
 Concurrent::TimerTask::TIMEOUT_INTERVAL = T.let(T.unsafe(nil), Integer)
 
 class Concurrent::Transaction
+  # @return [Transaction] a new instance of Transaction
   def initialize; end
 
   def abort; end
   def commit; end
   def read(tvar); end
   def unlock; end
+
+  # @return [Boolean]
   def valid?; end
+
   def write(tvar, value); end
 
   class << self
@@ -5813,21 +8770,30 @@ class Concurrent::Transaction::LeaveError < ::StandardError; end
 
 class Concurrent::Transaction::ReadLogEntry < ::Struct
   # Returns the value of attribute tvar
+  #
+  # @return [Object] the current value of tvar
   def tvar; end
 
   # Sets the attribute tvar
+  #
+  # @param value [Object] the value to set the attribute tvar to.
+  # @return [Object] the newly set value
   def tvar=(_); end
 
   # Returns the value of attribute version
+  #
+  # @return [Object] the current value of version
   def version; end
 
   # Sets the attribute version
+  #
+  # @param value [Object] the value to set the attribute version to.
+  # @return [Object] the newly set value
   def version=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5835,36 +8801,77 @@ end
 
 # A fixed size array with volatile (synchronized, thread safe) getters/setters.
 # Mixes in Ruby's `Enumerable` module for enhanced search, sort, and traversal.
+#
+# @example
+#   tuple = Concurrent::Tuple.new(16)
+#
+#   tuple.set(0, :foo)                   #=> :foo  | volatile write
+#   tuple.get(0)                         #=> :foo  | volatile read
+#   tuple.compare_and_set(0, :foo, :bar) #=> true  | strong CAS
+#   tuple.cas(0, :foo, :baz)             #=> false | strong CAS
+#   tuple.get(0)                         #=> :bar  | volatile read
+# @see https://en.wikipedia.org/wiki/Tuple Tuple entry at Wikipedia
+# @see http://www.erlang.org/doc/reference_manual/data_types.html#id70396 Erlang Tuple
+# @see http://ruby-doc.org/core-2.2.2/Enumerable.html Enumerable
 class Concurrent::Tuple
   include ::Enumerable
 
   # Create a new tuple of the given size.
+  #
+  # @param size [Integer] the number of elements in the tuple
+  # @return [Tuple] a new instance of Tuple
   def initialize(size); end
 
   # Set the value at the given index to the new value if and only if the current
   # value matches the given old value.
+  #
+  # @param i [Integer] the index for the element to set
+  # @param old_value [Object] the value to compare against the current value
+  # @param new_value [Object] the value to set at the given index
+  # @return [Boolean] true if the value at the given element was set else false
   def cas(i, old_value, new_value); end
 
   # Set the value at the given index to the new value if and only if the current
   # value matches the given old value.
+  #
+  # @param i [Integer] the index for the element to set
+  # @param old_value [Object] the value to compare against the current value
+  # @param new_value [Object] the value to set at the given index
+  # @return [Boolean] true if the value at the given element was set else false
   def compare_and_set(i, old_value, new_value); end
 
   # Calls the given block once for each element in self, passing that element as a parameter.
+  #
+  # @yieldparam ref [Object] the `Concurrent::AtomicReference` object at the current index
   def each; end
 
   # Get the value of the element at the given index.
+  #
+  # @param i [Integer] the index from which to retrieve the value
+  # @return [Object] the value at the given index or nil if the index is out of bounds
   def get(i); end
 
   # Set the element at the given index to the given value
+  #
+  # @param i [Integer] the index for the element to set
+  # @param value [Object] the value to set at the given index
+  # @return [Object] the new value of the element at the given index or nil if the index is out of bounds
   def set(i, value); end
 
   # The (fixed) size of the tuple.
   def size; end
 
   # Get the value of the element at the given index.
+  #
+  # @param i [Integer] the index from which to retrieve the value
+  # @return [Object] the value at the given index or nil if the index is out of bounds
   def volatile_get(i); end
 
   # Set the element at the given index to the given value
+  #
+  # @param i [Integer] the index for the element to set
+  # @param value [Object] the value to set at the given index
+  # @return [Object] the new value of the element at the given index or nil if the index is out of bounds
   def volatile_set(i, value); end
 end
 
@@ -5872,22 +8879,44 @@ Concurrent::Tuple::Tuple = Array
 module Concurrent::Utility; end
 
 module Concurrent::Utility::EngineDetector
+  # @return [Boolean]
   def on_cruby?; end
+
+  # @return [Boolean]
   def on_jruby?; end
+
+  # @return [Boolean]
   def on_jruby_9000?; end
+
+  # @return [Boolean]
   def on_linux?; end
+
+  # @return [Boolean]
   def on_osx?; end
+
+  # @return [Boolean]
   def on_rbx?; end
+
+  # @return [Boolean]
   def on_truffleruby?; end
+
+  # @return [Boolean]
   def on_windows?; end
+
   def ruby_engine; end
   def ruby_version(version = T.unsafe(nil), comparison, major, minor, patch); end
 end
 
 module Concurrent::Utility::NativeExtensionLoader
+  # @return [Boolean]
   def allow_c_extensions?; end
+
+  # @return [Boolean]
   def c_extensions_loaded?; end
+
+  # @return [Boolean]
   def java_extensions_loaded?; end
+
   def load_native_extensions; end
 
   private
@@ -5898,6 +8927,7 @@ module Concurrent::Utility::NativeExtensionLoader
   def try_load_c_extension(path); end
 end
 
+# @private
 module Concurrent::Utility::NativeInteger
   extend ::Concurrent::Utility::NativeInteger
 
@@ -5915,6 +8945,7 @@ Concurrent::Utility::NativeInteger::MAX_VALUE = T.let(T.unsafe(nil), Integer)
 Concurrent::Utility::NativeInteger::MIN_VALUE = T.let(T.unsafe(nil), Integer)
 
 class Concurrent::Utility::ProcessorCounter
+  # @return [ProcessorCounter] a new instance of ProcessorCounter
   def initialize; end
 
   # Number of physical processor cores on the current system. For performance
@@ -5926,6 +8957,12 @@ class Concurrent::Utility::ProcessorCounter
   # the `hwprefs` or `sysctl` utility will be called in a subshell and the
   # returned value will be used. In the rare case where none of these methods
   # work or an exception is raised the function will simply return 1.
+  #
+  # @return [Integer] number physical processor cores on the current system
+  # @see https://github.com/grosser/parallel/blob/4fc8b89d08c7091fe0419ca8fba1ec3ce5a8d185/lib/parallel.rb
+  # @see http://msdn.microsoft.com/en-us/library/aa394373(v=vs.85).aspx
+  # @see http://www.unix.com/man-page/osx/1/HWPREFS/
+  # @see http://linux.die.net/man/8/sysctl
   def physical_processor_count; end
 
   # Number of processors seen by the OS and used for process scheduling. For
@@ -5958,6 +8995,11 @@ class Concurrent::Utility::ProcessorCounter
   # * Solaris: /usr/sbin/psrinfo
   # * Tru64 UNIX: /usr/sbin/psrinfo
   # * UnixWare: /usr/sbin/psrinfo
+  #
+  # @return [Integer] number of processors seen by the OS or Java runtime
+  # @see https://github.com/grosser/parallel/blob/4fc8b89d08c7091fe0419ca8fba1ec3ce5a8d185/lib/parallel.rb
+  # @see http://docs.oracle.com/javase/6/docs/api/java/lang/Runtime.html#availableProcessors()
+  # @see http://msdn.microsoft.com/en-us/library/aa394373(v=vs.85).aspx
   def processor_count; end
 
   private

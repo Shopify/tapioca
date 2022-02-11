@@ -27,7 +27,7 @@ end
 # to the bottom of a css or JS file that is serving a source
 # map. An example of a comment might look like this
 #
-# //# application.js-80af0efcc960fc2ac93eda2f7b12e3db40ab360bf6ea269ceed3bea3678326f9.map
+#    //# application.js-80af0efcc960fc2ac93eda2f7b12e3db40ab360bf6ea269ceed3bea3678326f9.map
 #
 # As an asset is built it gets source map information added
 # to the `asset.to_hash[:metadata][:map]` key. This contains all the
@@ -61,6 +61,8 @@ class Sprockets::Asset
   # attributes - Hash of ivars
   #
   # Returns Asset.
+  #
+  # @return [Asset] a new instance of Asset
   def initialize(attributes = T.unsafe(nil)); end
 
   # Public: Compare assets.
@@ -68,6 +70,8 @@ class Sprockets::Asset
   # Assets are equal if they share the same path and digest.
   #
   # Returns true or false.
+  #
+  # @return [Boolean]
   def ==(other); end
 
   # Public: Returns String base64 digest of source.
@@ -89,7 +93,7 @@ class Sprockets::Asset
 
   # Public: Return logical path with digest spliced in.
   #
-  # "foo/bar-37b51d194a7513e45b56f6524f2d51f2.js"
+  #   "foo/bar-37b51d194a7513e45b56f6524f2d51f2.js"
   #
   # Returns String.
   def digest_path; end
@@ -98,9 +102,11 @@ class Sprockets::Asset
   # compatible body objects.
   #
   # block
-  # part - String body chunk
+  #   part - String body chunk
   #
   # Returns nothing.
+  #
+  # @yield [to_s]
   def each; end
 
   # Private: Return the version of the environment where the asset was generated.
@@ -111,6 +117,8 @@ class Sprockets::Asset
   # Assets are equal if they share the same path and digest.
   #
   # Returns true or false.
+  #
+  # @return [Boolean]
   def eql?(other); end
 
   # Pubic: ETag String of Asset.
@@ -201,6 +209,7 @@ end
 module Sprockets::Autoload; end
 
 class Sprockets::BabelProcessor
+  # @return [BabelProcessor] a new instance of BabelProcessor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
@@ -244,7 +253,7 @@ class Sprockets::Base
 
   # Preferred `find_asset` shorthand.
   #
-  # environment['application.js']
+  #     environment['application.js']
   def [](*args, **options); end
 
   # Get persistent cache store
@@ -258,6 +267,8 @@ class Sprockets::Base
   def cache=(cache); end
 
   # Return an `CachedEnvironment`. Must be implemented by the subclass.
+  #
+  # @raise [NotImplementedError]
   def cached; end
 
   def compress_from_root(uri); end
@@ -270,6 +281,7 @@ class Sprockets::Base
   # Returns a String digest or nil.
   def file_digest(path); end
 
+  # @yield [asset]
   def find_all_linked_assets(*args); end
 
   # Find asset by logical path or expanded path.
@@ -281,6 +293,8 @@ class Sprockets::Base
   def find_asset!(*args); end
 
   # Return an `CachedEnvironment`. Must be implemented by the subclass.
+  #
+  # @raise [NotImplementedError]
   def index; end
 
   # Pretty inspect
@@ -315,8 +329,8 @@ Sprockets::Bower::POSSIBLE_BOWER_JSONS = T.let(T.unsafe(nil), Array)
 #
 # Uses pipeline metadata:
 #
-# :required - Ordered Set of asset URIs to prepend
-# :stubbed  - Set of asset URIs to substract from the required set.
+#   :required - Ordered Set of asset URIs to prepend
+#   :stubbed  - Set of asset URIs to substract from the required set.
 #
 # Also see DirectiveProcessor.
 class Sprockets::Bundle
@@ -349,7 +363,7 @@ end
 #
 # Always assign the backend store instance to Environment#cache=.
 #
-# environment.cache = Sprockets::Cache::MemoryStore.new(1000)
+#     environment.cache = Sprockets::Cache::MemoryStore.new(1000)
 #
 # Environment#cache will always return a wrapped Cache interface. See the
 # methods marked public on this class.
@@ -361,26 +375,26 @@ end
 #
 # get(key)
 #
-# key - An opaque String with a length less than 250 characters.
+#   key - An opaque String with a length less than 250 characters.
 #
-# Returns an JSON serializable object.
+#   Returns an JSON serializable object.
 #
 # set(key, value)
 #
-# Will only be called once per key. Setting a key "foo" with value "bar",
-# then later key "foo" with value "baz" is an undefined behavior.
+#   Will only be called once per key. Setting a key "foo" with value "bar",
+#   then later key "foo" with value "baz" is an undefined behavior.
 #
-# key   - An opaque String with a length less than 250 characters.
-# value - A JSON serializable object.
+#   key   - An opaque String with a length less than 250 characters.
+#   value - A JSON serializable object.
 #
-# Returns argument value.
+#   Returns argument value.
 #
 # clear(options)
 #
-# Clear the entire cache. Be careful with this method since it could
-# affect other processes if shared cache is being used.
+#   Clear the entire cache. Be careful with this method since it could
+#   affect other processes if shared cache is being used.
 #
-# The options hash is passed to the underlying cache implementation.
+#   The options hash is passed to the underlying cache implementation.
 class Sprockets::Cache
   # Internal: Wrap a backend cache store.
   #
@@ -388,6 +402,8 @@ class Sprockets::Cache
   # use Environment#cache to retreive a wrapped interface.
   #
   # cache - A compatible backend cache store instance.
+  #
+  # @return [Cache] a new instance of Cache
   def initialize(cache = T.unsafe(nil), logger = T.unsafe(nil)); end
 
   # Public: Clear cache
@@ -399,11 +415,11 @@ class Sprockets::Cache
   #
   # key   - JSON serializable key
   # block -
-  # Must return a consistent JSON serializable object for the given key.
+  #   Must return a consistent JSON serializable object for the given key.
   #
   # Examples
   #
-  # cache.fetch("foo") { "bar" }
+  #   cache.fetch("foo") { "bar" }
   #
   # Returns a JSON serializable object.
   def fetch(key); end
@@ -434,7 +450,7 @@ class Sprockets::Cache
   #
   # key   - JSON serializable key
   # value - A consistent JSON serializable object for the given key. Setting
-  # a different value for the given key has undefined behavior.
+  #         a different value for the given key has undefined behavior.
   # local - Set on local cache (default: false)
   #
   # Returns the value argument.
@@ -468,19 +484,21 @@ end
 #
 # Assign the instance to the Environment#cache.
 #
-# environment.cache = Sprockets::Cache::FileStore.new("/tmp")
+#     environment.cache = Sprockets::Cache::FileStore.new("/tmp")
 #
 # See Also
 #
-# ActiveSupport::Cache::FileStore
+#   ActiveSupport::Cache::FileStore
 class Sprockets::Cache::FileStore
   # Public: Initialize the cache store.
   #
   # root     - A String path to a directory to persist cached values to.
   # max_size - A Integer of the maximum size the store will hold (in bytes).
-  # (default: 25MB).
+  #            (default: 25MB).
   # logger   - The logger to which some info will be printed.
-  # (default logger level is FATAL and won't output anything).
+  #            (default logger level is FATAL and won't output anything).
+  #
+  # @return [FileStore] a new instance of FileStore
   def initialize(root, max_size = T.unsafe(nil), logger = T.unsafe(nil)); end
 
   # Public: Clear the cache
@@ -563,16 +581,18 @@ end
 #
 # Assign the instance to the Environment#cache.
 #
-# environment.cache = Sprockets::Cache::MemoryStore.new(1000)
+#     environment.cache = Sprockets::Cache::MemoryStore.new(1000)
 #
 # See Also
 #
-# ActiveSupport::Cache::MemoryStore
+#   ActiveSupport::Cache::MemoryStore
 class Sprockets::Cache::MemoryStore
   # Public: Initialize the cache store.
   #
   # max_size - A Integer of the maximum number of keys the store will hold.
-  # (default: 1000).
+  #            (default: 1000).
+  #
+  # @return [MemoryStore] a new instance of MemoryStore
   def initialize(max_size = T.unsafe(nil)); end
 
   # Public: Clear the cache
@@ -613,11 +633,11 @@ Sprockets::Cache::MemoryStore::DEFAULT_MAX_SIZE = T.let(T.unsafe(nil), Integer)
 #
 # Assign the instance to the Environment#cache.
 #
-# environment.cache = Sprockets::Cache::NullStore.new
+#     environment.cache = Sprockets::Cache::NullStore.new
 #
 # See Also
 #
-# ActiveSupport::Cache::NullStore
+#   ActiveSupport::Cache::NullStore
 class Sprockets::Cache::NullStore
   # Public: Simulate clearing the cache
   #
@@ -674,6 +694,7 @@ class Sprockets::Cache::Wrapper < ::Struct; end
 # `CachedEnvironment` should not be initialized directly. Instead use
 # `Environment#cached`.
 class Sprockets::CachedEnvironment < ::Sprockets::Base
+  # @return [CachedEnvironment] a new instance of CachedEnvironment
   def initialize(environment); end
 
   # No-op return self as cached environment.
@@ -701,6 +722,8 @@ class Sprockets::CachedEnvironment < ::Sprockets::Base
 
   # Cache is immutable, any methods that try to change the runtime config
   # should bomb.
+  #
+  # @raise [RuntimeError]
   def config=(config); end
 end
 
@@ -708,14 +731,15 @@ end
 #
 # To accept the default options
 #
-# environment.register_bundle_processor 'application/javascript',
-# Sprockets::ClosureCompressor
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::ClosureCompressor
 #
 # Or to pass options to the Closure::Compiler class.
 #
-# environment.register_bundle_processor 'application/javascript',
-# Sprockets::ClosureCompressor.new({ ... })
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::ClosureCompressor.new({ ... })
 class Sprockets::ClosureCompressor
+  # @return [ClosureCompressor] a new instance of ClosureCompressor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
@@ -741,7 +765,7 @@ Sprockets::ClosureCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 # For more infomation see:
 #
-# https://github.com/rails/ruby-coffee-script
+#   https://github.com/rails/ruby-coffee-script
 module Sprockets::CoffeeScriptProcessor
   class << self
     def cache_key; end
@@ -770,17 +794,19 @@ module Sprockets::Compressing
   #
   # To disable gzip generation set to a falsey value:
   #
-  # environment.gzip = false
+  #     environment.gzip = false
   #
   # To enable set to a truthy value. By default zlib wil
   # be used to gzip assets. If you have the Zopfli gem
   # installed you can specify the zopfli algorithm to be used
   # instead:
   #
-  # environment.gzip = :zopfli
+  #     environment.gzip = :zopfli
   def gzip=(gzip); end
 
   # Public: Checks if Gzip is enabled.
+  #
+  # @return [Boolean]
   def gzip?; end
 
   # Return JS compressor or nil if none is set
@@ -801,8 +827,8 @@ module Sprockets::Compressing
   #
   # Examples
   #
-  # register_compressor 'text/css', :my_sass, MySassCompressor
-  # css_compressor = :my_sass
+  #     register_compressor 'text/css', :my_sass, MySassCompressor
+  #     css_compressor = :my_sass
   #
   # mime_type - String MIME Type (one of: 'test/css' or 'application/javascript').
   # sym       - Symbol registration address.
@@ -812,6 +838,8 @@ module Sprockets::Compressing
   def register_compressor(mime_type, sym, klass); end
 
   # Public: Checks if Gzip is disabled.
+  #
+  # @return [Boolean]
   def skip_gzip?; end
 end
 
@@ -834,14 +862,15 @@ module Sprockets::Configuration
   # Returns the value of attribute config.
   def config; end
 
+  # @raise [TypeError]
   def config=(config); end
 
   # This class maybe mutated and mixed in with custom helpers.
   #
-  # environment.context_class.instance_eval do
-  # include MyHelpers
-  # def asset_url; end
-  # end
+  #     environment.context_class.instance_eval do
+  #       include MyHelpers
+  #       def asset_url; end
+  #     end
   def context_class; end
 
   # Public: Returns a `Digest` implementation class.
@@ -853,7 +882,7 @@ module Sprockets::Configuration
   # `Digest::` implementation such as `Digest::SHA256` or
   # `Digest::MD5`.
   #
-  # environment.digest_class = Digest::MD5
+  #     environment.digest_class = Digest::MD5
   def digest_class=(klass); end
 
   def initialize_configuration(parent); end
@@ -878,7 +907,7 @@ module Sprockets::Configuration
 
   # Assign an environment version.
   #
-  # environment.version = '2.0'
+  #     environment.version = '2.0'
   def version=(version); end
 end
 
@@ -888,16 +917,17 @@ class Sprockets::ContentTypeMismatch < ::Sprockets::Error; end
 # by injecting them into `Environment#context_class`. Do not mix them into
 # `Context` directly.
 #
-# environment.context_class.class_eval do
-# include MyHelper
-# def asset_url; end
-# end
+#     environment.context_class.class_eval do
+#       include MyHelper
+#       def asset_url; end
+#     end
 #
-# <%= asset_url "foo.png" %>
+#     <%= asset_url "foo.png" %>
 #
 # The `Context` also collects dependencies declared by
 # assets. See `DirectiveProcessor` for an example of this.
 class Sprockets::Context
+  # @return [Context] a new instance of Context
   def initialize(input); end
 
   # Returns a `data:` URI with the contents of the asset at the specified
@@ -907,9 +937,9 @@ class Sprockets::Context
   #
   # Use `asset_data_uri` from ERB with CSS or JavaScript assets:
   #
-  # #logo { background: url(<%= asset_data_uri 'logo.png' %>) }
+  #     #logo { background: url(<%= asset_data_uri 'logo.png' %>) }
   #
-  # $('<img>').attr('src', '<%= asset_data_uri 'avatar.jpg' %>')
+  #     $('<img>').attr('src', '<%= asset_data_uri 'avatar.jpg' %>')
   def asset_data_uri(path); end
 
   # Expands logical path to full url to asset.
@@ -918,6 +948,8 @@ class Sprockets::Context
   # customized by the application. Though, in the future, some
   # basics implemention may be provided with different methods that
   # are required to be overridden.
+  #
+  # @raise [NotImplementedError]
   def asset_path(path, options = T.unsafe(nil)); end
 
   # Expand logical audio asset path.
@@ -925,8 +957,8 @@ class Sprockets::Context
 
   # Returns content type of file
   #
-  # 'application/javascript'
-  # 'text/css'
+  #     'application/javascript'
+  #     'text/css'
   def content_type; end
 
   # `depend_on` allows you to state a dependency on a file without
@@ -993,8 +1025,8 @@ class Sprockets::Context
 
   # Returns logical path without any file extensions.
   #
-  # 'app/javascripts/application.js'
-  # # => 'application'
+  #     'app/javascripts/application.js'
+  #     # => 'application'
   def logical_path; end
 
   def metadata; end
@@ -1006,18 +1038,18 @@ class Sprockets::Context
   # If ERB processing is enabled, you can use it to dynamically
   # require assets.
   #
-  # <%= require_asset "#{framework}.js" %>
+  #     <%= require_asset "#{framework}.js" %>
   def require_asset(path); end
 
   # Public: Given a logical path, `resolve` will find and return an Asset URI.
   # Relative paths will also be resolved. An accept type maybe given to
   # restrict the search.
   #
-  # resolve("foo.js")
-  # # => "file:///path/to/app/javascripts/foo.js?type=application/javascript"
+  #     resolve("foo.js")
+  #     # => "file:///path/to/app/javascripts/foo.js?type=application/javascript"
   #
-  # resolve("./bar.js")
-  # # => "file:///path/to/app/javascripts/bar.js?type=application/javascript"
+  #     resolve("./bar.js")
+  #     # => "file:///path/to/app/javascripts/bar.js?type=application/javascript"
   #
   # path   - String logical or absolute path
   # accept - String content accept type
@@ -1066,6 +1098,7 @@ end
 
 # Internal: Proxy for ENV that keeps track of the environment variables used
 class Sprockets::Context::ENVProxy < ::SimpleDelegator
+  # @return [ENVProxy] a new instance of ENVProxy
   def initialize(context); end
 
   def [](key); end
@@ -1113,8 +1146,8 @@ module Sprockets::Dependencies
   #
   # scheme - String scheme
   # block  -
-  # environment - Environment
-  # uri - String dependency URI
+  #   environment - Environment
+  #   uri - String dependency URI
   #
   # Returns nothing.
   def register_dependency_resolver(scheme, &block); end
@@ -1224,15 +1257,15 @@ Sprockets::DigestUtils::HASH_ALGORITHMS = T.let(T.unsafe(nil), Hash)
 # A directive comment starts with a comment prefix, followed by an "=",
 # then the directive name, then any arguments.
 #
-# // JavaScript
-# //= require "foo"
+#     // JavaScript
+#     //= require "foo"
 #
-# # CoffeeScript
-# #= require "bar"
+#     # CoffeeScript
+#     #= require "bar"
 #
-# /* CSS
-# *= require "baz"
-# */
+#     /* CSS
+#      *= require "baz"
+#      */
 #
 # This makes it possible to disable or modify the processor to do whatever
 # you'd like. You could add your own custom directives or invent your own
@@ -1242,13 +1275,14 @@ Sprockets::DigestUtils::HASH_ALGORITHMS = T.let(T.unsafe(nil), Hash)
 #
 # To remove the processor entirely:
 #
-# env.unregister_processor('text/css', Sprockets::DirectiveProcessor)
-# env.unregister_processor('application/javascript', Sprockets::DirectiveProcessor)
+#     env.unregister_processor('text/css', Sprockets::DirectiveProcessor)
+#     env.unregister_processor('application/javascript', Sprockets::DirectiveProcessor)
 #
 # Then inject your own preprocessor:
 #
-# env.register_processor('text/css', MyProcessor)
+#     env.register_processor('text/css', MyProcessor)
 class Sprockets::DirectiveProcessor
+  # @return [DirectiveProcessor] a new instance of DirectiveProcessor
   def initialize(comments: T.unsafe(nil)); end
 
   def _call(input); end
@@ -1269,7 +1303,7 @@ class Sprockets::DirectiveProcessor
   # directive name as the second element, followed by any
   # arguments.
   #
-  # [[1, "require", "foo"], [2, "require", "bar"]]
+  #     [[1, "require", "foo"], [2, "require", "bar"]]
   def extract_directives(header); end
 
   # Allows you to state a dependency on an asset without including
@@ -1281,7 +1315,7 @@ class Sprockets::DirectiveProcessor
   #
   # Unlike `depend_on`, the path must be a requirable asset.
   #
-  # //= depend_on_asset "bar.js"
+  #     //= depend_on_asset "bar.js"
   def process_depend_on_asset_directive(path); end
 
   # Allows you to state a dependency on a file without
@@ -1294,7 +1328,7 @@ class Sprockets::DirectiveProcessor
   # This is useful if you are using ERB and File.read to pull
   # in contents from another file.
   #
-  # //= depend_on "foo.png"
+  #     //= depend_on "foo.png"
   def process_depend_on_directive(path); end
 
   # Gathers comment directives in the source and processes them.
@@ -1306,18 +1340,18 @@ class Sprockets::DirectiveProcessor
   # `Sprockets::DirectiveProcessor`, then add a method called
   # `process_require_glob_directive`.
   #
-  # class DirectiveProcessor < Sprockets::DirectiveProcessor
-  # def process_require_glob_directive(glob)
-  # Dir["#{dirname}/#{glob}"].sort.each do |filename|
-  # require(filename)
-  # end
-  # end
-  # end
+  #     class DirectiveProcessor < Sprockets::DirectiveProcessor
+  #       def process_require_glob_directive(glob)
+  #         Dir["#{dirname}/#{glob}"].sort.each do |filename|
+  #           require(filename)
+  #         end
+  #       end
+  #     end
   #
   # Replace the current processor on the environment with your own:
   #
-  # env.unregister_processor('text/css', Sprockets::DirectiveProcessor)
-  # env.register_processor('text/css', DirectiveProcessor)
+  #     env.unregister_processor('text/css', Sprockets::DirectiveProcessor)
+  #     env.register_processor('text/css', DirectiveProcessor)
   def process_directives(directives); end
 
   # Declares a linked dependency on the target asset.
@@ -1326,30 +1360,30 @@ class Sprockets::DirectiveProcessor
   # bundle. Any linked assets will automatically be compiled along with the
   # current.
   #
-  # /*= link "logo.png" */
+  #   /*= link "logo.png" */
   def process_link_directive(path); end
 
   # `link_directory` links all the files inside a single
   # directory. It's similar to `path/*` since it does not follow
   # nested directories.
   #
-  # //= link_directory "./fonts"
+  #     //= link_directory "./fonts"
   #
   # Use caution when linking against JS or CSS assets. Include an explicit
   # extension or content type in these cases.
   #
-  # //= link_directory "./scripts" .js
+  #     //= link_directory "./scripts" .js
   def process_link_directory_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
 
   # `link_tree` links all the nested files in a directory.
   # Its glob equivalent is `path/**/*`.
   #
-  # //= link_tree "./images"
+  #     //= link_tree "./images"
   #
   # Use caution when linking against JS or CSS assets. Include an explicit
   # extension or content type in these cases.
   #
-  # //= link_tree "./styles" .css
+  #     //= link_tree "./styles" .css
   def process_link_tree_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
 
   # The `require` directive functions similar to Ruby's own `require`.
@@ -1358,24 +1392,24 @@ class Sprockets::DirectiveProcessor
   #
   # `require` works with files in the environment path:
   #
-  # //= require "foo.js"
+  #     //= require "foo.js"
   #
   # Extensions are optional. If your source file is ".js", it
   # assumes you are requiring another ".js".
   #
-  # //= require "foo"
+  #     //= require "foo"
   #
   # Relative paths work too. Use a leading `./` to denote a relative
   # path:
   #
-  # //= require "./bar"
+  #     //= require "./bar"
   def process_require_directive(path); end
 
   # `require_directory` requires all the files inside a single
   # directory. It's similar to `path/*` since it does not follow
   # nested directories.
   #
-  # //= require_directory "./javascripts"
+  #     //= require_directory "./javascripts"
   def process_require_directory_directive(path = T.unsafe(nil)); end
 
   # `require_self` causes the body of the current file to be inserted
@@ -1383,16 +1417,16 @@ class Sprockets::DirectiveProcessor
   # it's common for the index file to contain global styles that need to
   # be defined before other dependencies are loaded.
   #
-  # /*= require "reset"
-  # *= require_self
-  # *= require_tree .
-  # */
+  #     /*= require "reset"
+  #      *= require_self
+  #      *= require_tree .
+  #      */
   def process_require_self_directive; end
 
   # `require_tree` requires all the nested files in a directory.
   # Its glob equivalent is `path/**/*`.
   #
-  # //= require_tree "./public"
+  #     //= require_tree "./public"
   def process_require_tree_directive(path = T.unsafe(nil)); end
 
   def process_source(source); end
@@ -1403,7 +1437,7 @@ class Sprockets::DirectiveProcessor
   # be part of the bundle. Once stubbed, it is blacklisted and
   # can't be brought back by any other `require`.
   #
-  # //= stub "jquery"
+  #     //= stub "jquery"
   def process_stub_directive(path); end
 
   private
@@ -1427,16 +1461,18 @@ end
 #
 # A few different styles are allowed:
 #
-# // =require foo
-# //= require foo
-# //= require "foo"
+#     // =require foo
+#     //= require foo
+#     //= require "foo"
 Sprockets::DirectiveProcessor::DIRECTIVE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 class Sprockets::DoubleLinkError < ::Sprockets::Error
+  # @return [DoubleLinkError] a new instance of DoubleLinkError
   def initialize(parent_filename:, logical_path:, last_filename:, filename:); end
 end
 
 class Sprockets::ERBProcessor
+  # @return [ERBProcessor] a new instance of ERBProcessor
   def initialize(&block); end
 
   def call(input); end
@@ -1455,8 +1491,8 @@ end
 #
 # For more infomation see:
 #
-# https://github.com/sstephenson/ruby-eco
-# https://github.com/sstephenson/eco
+#   https://github.com/sstephenson/ruby-eco
+#   https://github.com/sstephenson/eco
 module Sprockets::EcoProcessor
   class << self
     def cache_key; end
@@ -1466,7 +1502,7 @@ module Sprockets::EcoProcessor
     # Returns a JS function definition String. The result should be
     # assigned to a JS variable.
     #
-    # # => "function(...) {...}"
+    #     # => "function(...) {...}"
     def call(input); end
   end
 end
@@ -1477,7 +1513,7 @@ Sprockets::EcoProcessor::VERSION = T.let(T.unsafe(nil), String)
 #
 # For more infomation see:
 #
-# https://github.com/sstephenson/ruby-ejs
+#   https://github.com/sstephenson/ruby-ejs
 module Sprockets::EjsProcessor
   class << self
     def cache_key; end
@@ -1487,7 +1523,7 @@ module Sprockets::EjsProcessor
     # Returns a JS function definition String. The result should be
     # assigned to a JS variable.
     #
-    # # => "function(obj){...}"
+    #     # => "function(obj){...}"
     def call(input); end
   end
 end
@@ -1605,7 +1641,11 @@ class Sprockets::Environment < ::Sprockets::Base
   # `Environment` should be initialized with your application's root
   # directory. This should be the same as your Rails or Rack root.
   #
-  # env = Environment.new(Rails.root)
+  #     env = Environment.new(Rails.root)
+  #
+  # @return [Environment] a new instance of Environment
+  # @yield [_self]
+  # @yieldparam _self [Sprockets::Environment] the object that the method was called on
   def initialize(root = T.unsafe(nil)); end
 
   # Returns a cached version of the environment.
@@ -1651,6 +1691,8 @@ class Sprockets::Exporters::Base
   # These will all be stored as accessible values. In addition a
   # +target+ will be available which is the target directory and
   # the asset's digest path combined.
+  #
+  # @return [Base] a new instance of Base
   def initialize(asset: T.unsafe(nil), environment: T.unsafe(nil), directory: T.unsafe(nil)); end
 
   # Returns the value of attribute asset.
@@ -1682,6 +1724,8 @@ class Sprockets::Exporters::Base
   # takes a `logger` that responds to +debug+ and +info+.  The `skip?`
   # method is the only place expected to write to a logger, any other
   # messages may produce jumbled logs.
+  #
+  # @return [Boolean]
   def skip?(logger); end
 
   # Returns the value of attribute target.
@@ -1697,6 +1741,8 @@ end
 # Writes a an asset file to disk
 class Sprockets::Exporters::FileExporter < ::Sprockets::Exporters::Base
   def call; end
+
+  # @return [Boolean]
   def skip?(logger); end
 end
 
@@ -1705,6 +1751,8 @@ end
 class Sprockets::Exporters::ZlibExporter < ::Sprockets::Exporters::Base
   def call; end
   def setup; end
+
+  # @return [Boolean]
   def skip?(logger); end
 end
 
@@ -1724,7 +1772,7 @@ module Sprockets::Exporting
   #
   # Defaults to true.
   #
-  # environment.export_concurrent = false
+  #     environment.export_concurrent = false
   def export_concurrent=(export_concurrent); end
 
   # Exporters are ran on the assets:precompile task
@@ -1735,7 +1783,7 @@ module Sprockets::Exporting
   # If your exporter depends on one or more other exporters you can
   # specify this via the `depend_on` keyword.
   #
-  # register_exporter '*/*', Sprockets::Exporters::ZlibExporter
+  #     register_exporter '*/*', Sprockets::Exporters::ZlibExporter
   #
   # This ensures that `Sprockets::Exporters::File` will always execute before
   # `Sprockets::Exporters::Zlib`
@@ -1743,11 +1791,11 @@ module Sprockets::Exporting
 
   # Public: Remove Exporting processor `klass` for `mime_type`.
   #
-  # environment.unregister_exporter '*/*', Sprockets::Exporters::Zlib
+  #     environment.unregister_exporter '*/*', Sprockets::Exporters::Zlib
   #
   # Can be called without a mime type
   #
-  # environment.unregister_exporter Sprockets::Exporters::Zlib
+  #     environment.unregister_exporter Sprockets::Exporters::Zlib
   #
   # Does not remove any exporters that depend on `klass`.
   def unregister_exporter(mime_types, exporter = T.unsafe(nil)); end
@@ -1801,12 +1849,14 @@ module Sprockets::HTTPUtils
 
   # Public: Test mime type against mime range.
   #
-  # match_mime_type?('text/html', 'text/*') => true
-  # match_mime_type?('text/plain', '*') => true
-  # match_mime_type?('text/html', 'application/json') => false
+  #    match_mime_type?('text/html', 'text/*') => true
+  #    match_mime_type?('text/plain', '*') => true
+  #    match_mime_type?('text/html', 'application/json') => false
   #
   # Returns true if the given value is a mime match for the given mime match
   # specification, false otherwise.
+  #
+  # @return [Boolean]
   def match_mime_type?(value, matcher); end
 
   # Public: Return values from Hash where the key matches the mime type.
@@ -1824,23 +1874,24 @@ module Sprockets::HTTPUtils
   # Adapted from Rack::Utils#q_values. Quality values are
   # described in http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
   #
-  # parse_q_values("application/javascript")
-  # # => [["application/javascript", 1.0]]
+  #    parse_q_values("application/javascript")
+  #      # => [["application/javascript", 1.0]]
   #
-  # parse_q_values("*/*")
-  # # => [["*/*", 1.0]]
+  #    parse_q_values("*/*")
+  #      # => [["*/*", 1.0]]
   #
-  # parse_q_values("text/plain; q=0.5, image/*")
-  # # => [["text/plain", 0.5], ["image/*", 1.0]]
+  #    parse_q_values("text/plain; q=0.5, image/*")
+  #      # => [["text/plain", 0.5], ["image/*", 1.0]]
   #
-  # parse_q_values("application/javascript, text/css")
-  # # => [["application/javascript", 1.0], ["text/css", 1.0]]
+  #    parse_q_values("application/javascript, text/css")
+  #      # => [["application/javascript", 1.0], ["text/css", 1.0]]
   #
   # Returns an Array of [String, Float].
   def parse_q_values(values); end
 end
 
 class Sprockets::JSMincCompressor
+  # @return [JSMincCompressor] a new instance of JSMincCompressor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
@@ -1865,16 +1916,17 @@ Sprockets::JSMincCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 # To accept the default options
 #
-# environment.register_transformer
-# 'application/javascript+function',
-# 'application/javascript', JstProcessor
+#     environment.register_transformer
+#       'application/javascript+function',
+#       'application/javascript', JstProcessor
 #
 # Change the default namespace.
 #
-# environment.register_transformer
-# 'application/javascript+function',
-# 'application/javascript', JstProcessor.new(namespace: 'App.templates')
+#     environment.register_transformer
+#       'application/javascript+function',
+#       'application/javascript', JstProcessor.new(namespace: 'App.templates')
 class Sprockets::JstProcessor
+  # @return [JstProcessor] a new instance of JstProcessor
   def initialize(namespace: T.unsafe(nil)); end
 
   def call(input); end
@@ -1908,8 +1960,8 @@ module Sprockets::Loader
   # Public: Load Asset by Asset URI.
   #
   # uri - A String containing complete URI to a file including schema
-  # and full path such as:
-  # "file:///Path/app/assets/js/app.js?type=application/javascript"
+  #       and full path such as:
+  #       "file:///Path/app/assets/js/app.js?type=application/javascript"
   #
   # Returns Asset.
   def load(uri); end
@@ -1931,7 +1983,7 @@ module Sprockets::Loader
   #
   # unloaded - An UnloadedAsset
   # limit    - A Fixnum which sets the maximum number of versions of "histories"
-  # stored in the cache
+  #            stored in the cache
   #
   # This method attempts to retrieve the last `limit` number of histories of an asset
   # from the cache a "history" which is an array of unresolved "dependencies" that the asset needs
@@ -1942,10 +1994,10 @@ module Sprockets::Loader
   #
   # For example a history array may look something like this
   #
-  # [["environment-version", "environment-paths", "processors:type=text/css&file_type=text/css",
-  # "file-digest:///Full/path/app/assets/stylesheets/application.css",
-  # "processors:type=text/css&file_digesttype=text/css&pipeline=self",
-  # "file-digest:///Full/path/app/assets/stylesheets"]]
+  #   [["environment-version", "environment-paths", "processors:type=text/css&file_type=text/css",
+  #     "file-digest:///Full/path/app/assets/stylesheets/application.css",
+  #     "processors:type=text/css&file_digesttype=text/css&pipeline=self",
+  #     "file-digest:///Full/path/app/assets/stylesheets"]]
   #
   # Where the first entry is a Set of dependencies for last generated version of that asset.
   # Multiple versions are stored since Sprockets keeps the last `limit` number of assets
@@ -1972,10 +2024,10 @@ module Sprockets::Loader
   # Internal: Resolve set of dependency URIs.
   #
   # uris - An Array of "dependencies" for example:
-  # ["environment-version", "environment-paths", "processors:type=text/css&file_type=text/css",
-  # "file-digest:///Full/path/app/assets/stylesheets/application.css",
-  # "processors:type=text/css&file_type=text/css&pipeline=self",
-  # "file-digest:///Full/path/app/assets/stylesheets"]
+  #        ["environment-version", "environment-paths", "processors:type=text/css&file_type=text/css",
+  #           "file-digest:///Full/path/app/assets/stylesheets/application.css",
+  #           "processors:type=text/css&file_type=text/css&pipeline=self",
+  #           "file-digest:///Full/path/app/assets/stylesheets"]
   #
   # Returns back array of things that the given uri depends on
   # For example the environment version, if you're using a different version of sprockets
@@ -2016,16 +2068,18 @@ class Sprockets::Manifest
   # Otherwise, if the path is a directory, the filename will default a random
   # ".sprockets-manifest-*.json" file in that directory.
   #
-  # Manifest.new(environment, "./public/assets/manifest.json")
+  #   Manifest.new(environment, "./public/assets/manifest.json")
+  #
+  # @return [Manifest] a new instance of Manifest
   def initialize(*args); end
 
   # Returns internal assets mapping. Keys are logical paths which
   # map to the latest fingerprinted filename.
   #
-  # Logical path (String): Fingerprint path (String)
+  #   Logical path (String): Fingerprint path (String)
   #
-  # { "application.js" => "application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js",
-  # "jquery.js"      => "jquery-ae0908555a245f8266f77df5a8edca2e.js" }
+  #   { "application.js" => "application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js",
+  #     "jquery.js"      => "jquery-ae0908555a245f8266f77df5a8edca2e.js" }
   def assets; end
 
   # Cleanup old assets in the compile directory. By default it will
@@ -2033,10 +2087,10 @@ class Sprockets::Manifest
   #
   # Examples
   #
-  # To force only 1 backup to be kept, set count=1 and age=0.
+  #   To force only 1 backup to be kept, set count=1 and age=0.
   #
-  # To only keep files created within the last 10 minutes, set count=0 and
-  # age=600.
+  #   To only keep files created within the last 10 minutes, set count=0 and
+  #   age=600.
   def clean(count = T.unsafe(nil), age = T.unsafe(nil)); end
 
   # Wipe directive
@@ -2047,7 +2101,7 @@ class Sprockets::Manifest
   # `application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js`. An entry is
   # also inserted into the manifest file.
   #
-  # compile("application.js")
+  #   compile("application.js")
   def compile(*args); end
 
   # Returns the value of attribute directory.
@@ -2065,15 +2119,15 @@ class Sprockets::Manifest
   # Returns internal file directory listing. Keys are filenames
   # which map to an attributes array.
   #
-  # Fingerprint path (String):
-  # logical_path: Logical path (String)
-  # mtime: ISO8601 mtime (String)
-  # digest: Base64 hex digest (String)
+  #   Fingerprint path (String):
+  #     logical_path: Logical path (String)
+  #     mtime: ISO8601 mtime (String)
+  #     digest: Base64 hex digest (String)
   #
-  # { "application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js" =>
-  # { 'logical_path' => "application.js",
-  # 'mtime' => "2011-12-13T21:47:08-06:00",
-  # 'digest' => "2e8e9a7c6b0aafa0c9bdeec90ea30213" } }
+  #  { "application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js" =>
+  #      { 'logical_path' => "application.js",
+  #        'mtime' => "2011-12-13T21:47:08-06:00",
+  #        'digest' => "2e8e9a7c6b0aafa0c9bdeec90ea30213" } }
   def files; end
 
   # Public: Find all assets matching pattern set in environment.
@@ -2092,7 +2146,7 @@ class Sprockets::Manifest
   # Removes file from directory and from manifest. `filename` must
   # be the name with any directory path.
   #
-  # manifest.remove("application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js")
+  #   manifest.remove("application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js")
   def remove(filename); end
 
   # Persist manfiest back to FS
@@ -2107,12 +2161,12 @@ class Sprockets::Manifest
   #
   # Will yield each expoter to the passed in block.
   #
-  # array = []
-  # puts asset.content_type # => "application/javascript"
-  # exporters_for_asset(asset) do |exporter|
-  # array << exporter
-  # end
-  # # puts array => [Exporters::FileExporter, Exporters::ZlibExporter]
+  #     array = []
+  #     puts asset.content_type # => "application/javascript"
+  #     exporters_for_asset(asset) do |exporter|
+  #       array << exporter
+  #     end
+  #     # puts array => [Exporters::FileExporter, Exporters::ZlibExporter]
   def exporters_for_asset(asset); end
 
   def json_decode(obj); end
@@ -2130,8 +2184,8 @@ module Sprockets::ManifestUtils
   #
   # Examples
   #
-  # find_directory_manifest("/app/public/assets")
-  # # => "/app/public/assets/.sprockets-manifest-abc123.json"
+  #     find_directory_manifest("/app/public/assets")
+  #     # => "/app/public/assets/.sprockets-manifest-abc123.json"
   #
   # Returns String filename.
   def find_directory_manifest(dirname, logger = T.unsafe(nil)); end
@@ -2162,7 +2216,7 @@ module Sprockets::Mime
   #
   # Examples:
   #
-  # mime_exts['.js'] #=> 'application/javascript'
+  #   mime_exts['.js'] #=> 'application/javascript'
   #
   # key   - MIME extension String
   # value - MIME Type String
@@ -2181,8 +2235,8 @@ module Sprockets::Mime
   #
   # key   - MIME Type String
   # value - Hash
-  # extensions - Array of extnames
-  # charset    - Default Encoding or function to detect encoding
+  #   extensions - Array of extnames
+  #   charset    - Default Encoding or function to detect encoding
   #
   # Returns Hash.
   def mime_types; end
@@ -2201,7 +2255,7 @@ module Sprockets::Mime
   # mime_type  - String MIME Type
   # extensions - Array of String extnames
   # charset    - Proc/Method that detects the charset of a file.
-  # See EncodingUtils.
+  #              See EncodingUtils.
   #
   # Returns nothing.
   def register_mime_type(mime_type, extensions: T.unsafe(nil), charset: T.unsafe(nil)); end
@@ -2217,6 +2271,8 @@ module Sprockets::Npm
   # filename - String path to package.json.
   #
   # Returns nothing.
+  #
+  # @yield [File.expand_path(package['style'], dirname)]
   def read_package_directives(dirname, filename); end
 
   # Internal: Override resolve_alternates to install package.json behavior.
@@ -2233,25 +2289,25 @@ end
 # return value and a Set of cache dependency URIs that can be used in the
 # future to see if the returned value should be invalidated from cache.
 #
-# entries_with_dependencies("app/assets/javascripts")
-# # => [
-# #   ["application.js", "projects.js", "users.js", ...]
-# #    #<Set: {"file-digest:/path/to/app/assets/javascripts"}>
-# # ]
+#     entries_with_dependencies("app/assets/javascripts")
+#     # => [
+#     #   ["application.js", "projects.js", "users.js", ...]
+#     #    #<Set: {"file-digest:/path/to/app/assets/javascripts"}>
+#     # ]
 #
 # The returned dependency set can be passed to resolve_dependencies(deps)
 # to check if the returned result is still fresh. In this case, entry always
 # returns a single path, but multiple calls should accumulate dependencies
 # into a single set thats saved off and checked later.
 #
-# resolve_dependencies(deps)
-# # => "\x01\x02\x03"
+#     resolve_dependencies(deps)
+#     # => "\x01\x02\x03"
 #
 # Later, resolving the same set again will produce a different hash if
 # something on the file system has changed.
 #
-# resolve_dependencies(deps)
-# # => "\x03\x04\x05"
+#     resolve_dependencies(deps)
+#     # => "\x03\x04\x05"
 module Sprockets::PathDependencyUtils
   include ::Sprockets::PathUtils
   include ::Sprockets::URIUtils
@@ -2324,14 +2380,16 @@ module Sprockets::PathUtils
 
   # On Windows, ALT_SEPARATOR is \
   # Delegate to Pathname since the logic gets complex.
+  #
+  # @return [Boolean]
   def absolute_path?(path); end
 
   # Public: Write to a file atomically. Useful for situations where you
   # don't want other processes or threads to see half-written files.
   #
-  # Utils.atomic_write('important.file') do |file|
-  # file.write('hello')
-  # end
+  #   Utils.atomic_write('important.file') do |file|
+  #     file.write('hello')
+  #   end
   #
   # Returns nothing.
   def atomic_write(filename); end
@@ -2341,6 +2399,8 @@ module Sprockets::PathUtils
   # path - String file path.
   #
   # Returns true path exists and is a directory.
+  #
+  # @return [Boolean]
   def directory?(path); end
 
   # Public: A version of `Dir.entries` that filters out `.` files and `~`
@@ -2356,6 +2416,8 @@ module Sprockets::PathUtils
   # path - String file path.
   #
   # Returns true path exists and is a file.
+  #
+  # @return [Boolean]
   def file?(path); end
 
   # Internal: Match paths in a directory against available extensions.
@@ -2366,9 +2428,9 @@ module Sprockets::PathUtils
   #
   # Examples
   #
-  # exts = { ".js" => "application/javascript" }
-  # find_matching_path_for_extensions("app/assets", "application", exts)
-  # # => ["app/assets/application.js", "application/javascript"]
+  #     exts = { ".js" => "application/javascript" }
+  #     find_matching_path_for_extensions("app/assets", "application", exts)
+  #     # => ["app/assets/application.js", "application/javascript"]
   #
   # Returns an Array of [String path, Object value] matches.
   def find_matching_path_for_extensions(path, basename, extensions); end
@@ -2389,8 +2451,8 @@ module Sprockets::PathUtils
   #
   # Example
   #
-  # join('base/path/', '../file.js')
-  # # => 'base/file.js'
+  #     join('base/path/', '../file.js')
+  #     # => 'base/file.js'
   #
   # Returns string path starting from base and ending at path
   def join(base, path); end
@@ -2432,6 +2494,8 @@ module Sprockets::PathUtils
   # path - String path.
   #
   # Returns true if path is relative, otherwise false.
+  #
+  # @return [Boolean]
   def relative_path?(path); end
 
   # Public: Get relative path from `start` to `dest`.
@@ -2450,11 +2514,11 @@ module Sprockets::PathUtils
   #
   # Examples
   #
-  # set_pipeline('path/file.js.erb', config[:mime_exts], config[:pipeline_exts], :source)
-  # # => 'path/file.source.js.erb'
+  #     set_pipeline('path/file.js.erb', config[:mime_exts], config[:pipeline_exts], :source)
+  #     # => 'path/file.source.js.erb'
   #
-  # set_pipeline('path/some.file.source.js.erb', config[:mime_exts], config[:pipeline_exts], :debug)
-  # # => 'path/some.file.debug.js.erb'
+  #     set_pipeline('path/some.file.source.js.erb', config[:mime_exts], config[:pipeline_exts], :debug)
+  #     # => 'path/some.file.debug.js.erb'
   #
   # Returns string path with pipeline parsed in
   def set_pipeline(path, mime_exts, pipeline_exts, pipeline); end
@@ -2589,11 +2653,11 @@ module Sprockets::Processing
   #
   # Examples
   #
-  # Sprockets.register_bundle_metadata_reducer 'application/javascript', :jshint_errors, [], :+
+  #   Sprockets.register_bundle_metadata_reducer 'application/javascript', :jshint_errors, [], :+
   #
-  # Sprockets.register_bundle_metadata_reducer 'text/css', :selector_count, 0 { |total, count|
-  # total + count
-  # }
+  #   Sprockets.register_bundle_metadata_reducer 'text/css', :selector_count, 0 { |total, count|
+  #     total + count
+  #   }
   #
   # mime_type - String MIME Type. Use '*/*' applies to all types.
   # key       - Symbol metadata key
@@ -2605,13 +2669,13 @@ module Sprockets::Processing
 
   # Registers a new Bundle Processor `klass` for `mime_type`.
   #
-  # register_bundle_processor  'application/javascript', Sprockets::DirectiveProcessor
+  #     register_bundle_processor  'application/javascript', Sprockets::DirectiveProcessor
   #
   # A block can be passed for to create a shorthand processor.
   #
-  # register_bundle_processor 'application/javascript' do |input|
-  # input[:data].gsub(...)
-  # end
+  #     register_bundle_processor 'application/javascript' do |input|
+  #       input[:data].gsub(...)
+  #     end
   def register_bundle_processor(*args, &block); end
 
   # Registers a pipeline that will be called by `call_processor` method.
@@ -2619,55 +2683,55 @@ module Sprockets::Processing
 
   # Registers a new Postprocessor `klass` for `mime_type`.
   #
-  # register_postprocessor 'application/javascript', Sprockets::DirectiveProcessor
+  #     register_postprocessor 'application/javascript', Sprockets::DirectiveProcessor
   #
   # A block can be passed for to create a shorthand processor.
   #
-  # register_postprocessor 'application/javascript' do |input|
-  # input[:data].gsub(...)
-  # end
+  #     register_postprocessor 'application/javascript' do |input|
+  #       input[:data].gsub(...)
+  #     end
   def register_postprocessor(*args, &block); end
 
   # Registers a new Preprocessor `klass` for `mime_type`.
   #
-  # register_preprocessor 'text/css', Sprockets::DirectiveProcessor
+  #     register_preprocessor 'text/css', Sprockets::DirectiveProcessor
   #
   # A block can be passed for to create a shorthand processor.
   #
-  # register_preprocessor 'text/css' do |input|
-  # input[:data].gsub(...)
-  # end
+  #     register_preprocessor 'text/css' do |input|
+  #       input[:data].gsub(...)
+  #     end
   def register_preprocessor(*args, &block); end
 
   # Registers a new Preprocessor `klass` for `mime_type`.
   #
-  # register_preprocessor 'text/css', Sprockets::DirectiveProcessor
+  #     register_preprocessor 'text/css', Sprockets::DirectiveProcessor
   #
   # A block can be passed for to create a shorthand processor.
   #
-  # register_preprocessor 'text/css' do |input|
-  # input[:data].gsub(...)
-  # end
+  #     register_preprocessor 'text/css' do |input|
+  #       input[:data].gsub(...)
+  #     end
   def register_processor(*args, &block); end
 
   # Remove Bundle Processor `klass` for `mime_type`.
   #
-  # unregister_bundle_processor 'application/javascript', Sprockets::DirectiveProcessor
+  #     unregister_bundle_processor 'application/javascript', Sprockets::DirectiveProcessor
   def unregister_bundle_processor(*args); end
 
   # Remove Postprocessor `klass` for `mime_type`.
   #
-  # unregister_postprocessor 'text/css', Sprockets::DirectiveProcessor
+  #     unregister_postprocessor 'text/css', Sprockets::DirectiveProcessor
   def unregister_postprocessor(*args); end
 
   # Remove Preprocessor `klass` for `mime_type`.
   #
-  # unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
+  #     unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
   def unregister_preprocessor(*args); end
 
   # Remove Preprocessor `klass` for `mime_type`.
   #
-  # unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
+  #     unregister_preprocessor 'text/css', Sprockets::DirectiveProcessor
   def unregister_processor(*args); end
 
   protected
@@ -2712,7 +2776,7 @@ module Sprockets::ProcessorUtils
   # The right to left order processing mirrors standard function composition.
   # Think about:
   #
-  # bundle.call(uglify.call(coffee.call(input)))
+  #   bundle.call(uglify.call(coffee.call(input)))
   #
   # processors - Array of processor callables
   # input - Hash of input data to pass to each processor
@@ -2788,14 +2852,14 @@ module Sprockets::Resolve
   # Public: Find Asset URI for given a logical path by searching the
   # environment's load paths.
   #
-  # resolve("application.js")
-  # # => "file:///path/to/app/javascripts/application.js?type=application/javascript"
+  #     resolve("application.js")
+  #     # => "file:///path/to/app/javascripts/application.js?type=application/javascript"
   #
   # An accept content type can be given if the logical path doesn't have a
   # format extension.
   #
-  # resolve("application", accept: "application/javascript")
-  # # => "file:///path/to/app/javascripts/application.coffee?type=application/javascript"
+  #     resolve("application", accept: "application/javascript")
+  #     # => "file:///path/to/app/javascripts/application.coffee?type=application/javascript"
   #
   # The String Asset URI is returned or nil if no results are found.
   def resolve(path, load_paths: T.unsafe(nil), accept: T.unsafe(nil), pipeline: T.unsafe(nil), base_path: T.unsafe(nil)); end
@@ -2816,19 +2880,19 @@ module Sprockets::Resolve
   #
   # Returns Array of Array
   #
-  # [["application/javascript", 1.0]]
-  # [["*/*", 1.0]]
-  # []
+  #     [["application/javascript", 1.0]]
+  #     [["*/*", 1.0]]
+  #     []
   def parse_accept_options(mime_type, explicit_type); end
 
   # Internal: Finds a file in a set of given paths
   #
   # paths    - Array of Strings.
   # filename - String containing absolute path to a file including extension.
-  # e.g. "/Users/schneems/sprockets/test/fixtures/asset/application.js"
+  #            e.g. "/Users/schneems/sprockets/test/fixtures/asset/application.js"
   # accept   - String. A Quality value incoded set of
-  # mime types that we are looking for. Can be nil.
-  # e.g. "application/javascript" or "text/css, */*"
+  #            mime types that we are looking for. Can be nil.
+  #            e.g. "application/javascript" or "text/css, */*"
   #
   # Returns Array. Filename, type, path_pipeline, deps, index_alias
   def resolve_absolute_path(paths, filename, accept); end
@@ -2839,8 +2903,8 @@ module Sprockets::Resolve
   # Internal: Finds an asset given a URI
   #
   # uri - String. Contains file:// scheme, absolute path to
-  # file.
-  # e.g. "file:///Users/schneems/sprockets/test/fixtures/default/gallery.js?type=application/javascript"
+  #       file.
+  #       e.g. "file:///Users/schneems/sprockets/test/fixtures/default/gallery.js?type=application/javascript"
   #
   # Returns Array. Contains a String uri and Set of dependencies
   def resolve_asset_uri(uri); end
@@ -2849,9 +2913,9 @@ module Sprockets::Resolve
   #
   # load_path    - String. An absolute path to a directory
   # logical_name - String. A filename without extension
-  # e.g. "application" or "coffee/foo"
+  #                e.g. "application" or "coffee/foo"
   # mime_exts    - Hash of file extensions and their mime types
-  # e.g. {".xml.builder"=>"application/xml+builder"}
+  #                e.g. {".xml.builder"=>"application/xml+builder"}
   #
   # Looking in the given `load_path` this method will find all files under the `logical_name` directory
   # that are named `index` and have a matching mime type in `mime_exts`.
@@ -2863,10 +2927,10 @@ module Sprockets::Resolve
   #
   # paths        - Array of Strings.
   # logical_path - String. A filename with extension
-  # e.g. "coffee/foo.js" or "foo.js"
+  #                e.g. "coffee/foo.js" or "foo.js"
   # accept       - String. A Quality value incoded set of
-  # mime types that we are looking for. Can be nil.
-  # e.g. "application/javascript" or "text/css, */*"
+  #                mime types that we are looking for. Can be nil.
+  #                e.g. "application/javascript" or "text/css, */*"
   #
   # Finds a file on the given paths.
   #
@@ -2877,9 +2941,9 @@ module Sprockets::Resolve
   #
   # load_path    - String. An absolute path to a directory
   # logical_name - String. A filename without extension
-  # e.g. "application" or "coffee/foo"
+  #                e.g. "application" or "coffee/foo"
   # mime_exts    - Hash of file extensions and their mime types
-  # e.g. {".xml.builder"=>"application/xml+builder"}
+  #                e.g. {".xml.builder"=>"application/xml+builder"}
   #
   # Finds files that match a given `logical_name` with an acceptable
   # mime type that is included in `mime_exts` on the `load_path`.
@@ -2891,11 +2955,11 @@ module Sprockets::Resolve
   #
   # paths   - Array of Strings.
   # path    - String. A relative filename with or without extension
-  # e.g. "./jquery" or "../foo.js"
+  #           e.g. "./jquery" or "../foo.js"
   # dirname - String. Base path where we start looking for the given file.
   # accept  - String. A Quality value incoded set of
-  # mime types that we are looking for. Can be nil.
-  # e.g. "application/javascript" or "text/css, */*"
+  #           mime types that we are looking for. Can be nil.
+  #           e.g. "application/javascript" or "text/css, */*"
   #
   # Returns Array. Filename, type, path_pipeline, deps, index_alias
   def resolve_relative_path(paths, path, dirname, accept); end
@@ -2904,9 +2968,9 @@ module Sprockets::Resolve
   #
   # paths        - Array of Strings.
   # logical_name - String. A filename without extension
-  # e.g. "application" or "coffee/foo"
+  #                e.g. "application" or "coffee/foo"
   # accepts      - Array of array containing mime/version pairs
-  # e.g. [["application/javascript", 1.0]]
+  #                e.g. [["application/javascript", 1.0]]
   #
   # Finds a file with the same name as `logical_name` or "index" inside
   # of the `logical_name` directory that matches a valid mime-type/version from
@@ -2920,14 +2984,15 @@ end
 #
 # To accept the default options
 #
-# environment.register_bundle_processor 'text/css',
-# Sprockets::SassCompressor
+#     environment.register_bundle_processor 'text/css',
+#       Sprockets::SassCompressor
 #
 # Or to pass options to the Sass::Engine class.
 #
-# environment.register_bundle_processor 'text/css',
-# Sprockets::SassCompressor.new({ ... })
+#     environment.register_bundle_processor 'text/css',
+#       Sprockets::SassCompressor.new({ ... })
 class Sprockets::SassCompressor
+  # @return [SassCompressor] a new instance of SassCompressor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
@@ -2952,14 +3017,15 @@ Sprockets::SassCompressor::VERSION = T.let(T.unsafe(nil), String)
 #
 # To accept the default options
 #
-# environment.register_bundle_processor 'text/css',
-# Sprockets::SasscCompressor
+#     environment.register_bundle_processor 'text/css',
+#       Sprockets::SasscCompressor
 #
 # Or to pass options to the Sass::Engine class.
 #
-# environment.register_bundle_processor 'text/css',
-# Sprockets::SasscCompressor.new({ ... })
+#     environment.register_bundle_processor 'text/css',
+#       Sprockets::SasscCompressor.new({ ... })
 class Sprockets::SasscCompressor
+  # @return [SasscCompressor] a new instance of SasscCompressor
   def initialize(options = T.unsafe(nil)); end
 
   def call(input); end
@@ -2978,9 +3044,10 @@ end
 #
 # For more infomation see:
 #
-# https://github.com/sass/sassc-ruby
-# https://github.com/sass/sassc-rails
+#   https://github.com/sass/sassc-ruby
+#   https://github.com/sass/sassc-rails
 class Sprockets::SasscProcessor
+  # @return [SasscProcessor] a new instance of SasscProcessor
   def initialize(options = T.unsafe(nil), &block); end
 
   # Returns the value of attribute cache_key.
@@ -3015,8 +3082,8 @@ end
 # is preferred.
 #
 # module Sprockets::SasscProcessor::Functions
-# def asset_path(path, options = {})
-# end
+#   def asset_path(path, options = {})
+#   end
 # end
 module Sprockets::SasscProcessor::Functions
   # Public: Generate a data URI for asset path.
@@ -3164,9 +3231,9 @@ module Sprockets::Server
   # Mapping your environment at a url prefix will serve all assets
   # in the path.
   #
-  # map "/assets" do
-  # run Sprockets::Environment.new
-  # end
+  #     map "/assets" do
+  #       run Sprockets::Environment.new
+  #     end
   #
   # A request for `"/assets/foo/bar.js"` will search your
   # environment for `"foo/bar.js"`.
@@ -3186,12 +3253,15 @@ module Sprockets::Server
   # Escape special characters for use inside a CSS content("...") string
   def escape_css_content(content); end
 
+  # @return [Boolean]
   def forbidden_request?(path); end
 
   # Returns a 403 Forbidden response tuple
   def forbidden_response(env); end
 
+  # @return [Boolean]
   def head_request?(env); end
+
   def headers(env, asset, length); end
 
   # Returns a JavaScript response that re-throws a Ruby exception
@@ -3211,8 +3281,8 @@ module Sprockets::Server
 
   # Gets ETag fingerprint.
   #
-  # "foo-0aa2105d29558f3eb790d411d7d8fb66.js"
-  # # => "0aa2105d29558f3eb790d411d7d8fb66"
+  #     "foo-0aa2105d29558f3eb790d411d7d8fb66.js"
+  #     # => "0aa2105d29558f3eb790d411d7d8fb66"
   def path_fingerprint(path); end
 
   def precondition_failed_response(env); end
@@ -3233,12 +3303,12 @@ Sprockets::Server::ALLOWED_REQUEST_METHODS = T.let(T.unsafe(nil), Set)
 #
 # The output is an asset with a properly formatted source map file:
 #
-# {
-# "version": 3,
-# "sources": ["foo.js"],
-# "names":   [ ],
-# "mappings": "AAAA,GAAIA"
-# }
+#   {
+#     "version": 3,
+#     "sources": ["foo.js"],
+#     "names":   [ ],
+#     "mappings": "AAAA,GAAIA"
+#   }
 class Sprockets::SourceMapProcessor
   class << self
     def call(input); end
@@ -3289,8 +3359,8 @@ module Sprockets::SourceMapUtils
   #
   # Examples
   #
-  # script3 = "#{script1}#{script2}"
-  # map3    = concat_source_maps(map1, map2)
+  #     script3 = "#{script1}#{script2}"
+  #     map3    = concat_source_maps(map1, map2)
   #
   # a - Source map hash
   # b - Source map hash
@@ -3302,16 +3372,16 @@ module Sprockets::SourceMapUtils
   #
   # Example:
   #
-  # decode_source_map(map)
-  # # => {
-  # version:  3,
-  # file:     "..",
-  # mappings: [
-  # { source: "..", generated: [0, 0], original: [0, 0], name: ".."}, ..
-  # ],
-  # sources:  [..],
-  # names:    [..]
-  # }
+  #     decode_source_map(map)
+  #     # => {
+  #       version:  3,
+  #       file:     "..",
+  #       mappings: [
+  #         { source: "..", generated: [0, 0], original: [0, 0], name: ".."}, ..
+  #       ],
+  #       sources:  [..],
+  #       names:    [..]
+  #     }
   #
   # map - Source map hash (v3 spec)
   #
@@ -3331,14 +3401,14 @@ module Sprockets::SourceMapUtils
   #
   # Example:
   #
-  # encode_source_map(map)
-  # # => {
-  # "version"  => 3,
-  # "file"     => "..",
-  # "mappings" => "AAAA;AACA;..;AACA",
-  # "sources"  => [..],
-  # "names"    => [..]
-  # }
+  #     encode_source_map(map)
+  #     # => {
+  #       "version"  => 3,
+  #       "file"     => "..",
+  #       "mappings" => "AAAA;AACA;..;AACA",
+  #       "sources"  => [..],
+  #       "names"    => [..]
+  #     }
   #
   # map - Source map hash (uncompressed)
   #
@@ -3362,57 +3432,57 @@ module Sprockets::SourceMapUtils
   # file    => logical path
   # sources => relative from filename
   #
-  # Unnecessary attributes are removed
+  #   Unnecessary attributes are removed
   #
   # Example
   #
-  # map
-  # #=> {
-  # #  "version"        => 3,
-  # #  "file"           => "stdin",
-  # #  "sourceRoot"     => "",
-  # #  "sourceContents" => "blah blah blah",
-  # #  "sources"        => [/root/logical/path.js],
-  # #  "names"          => [..],
-  # #}
-  # format_source_map(map, input)
-  # #=> {
-  # #  "version"        => 3,
-  # #  "file"           => "logical/path.js",
-  # #  "sources"        => ["path.js"],
-  # #  "names"          => [..],
-  # #}
+  #     map
+  #     #=> {
+  #     #  "version"        => 3,
+  #     #  "file"           => "stdin",
+  #     #  "sourceRoot"     => "",
+  #     #  "sourceContents" => "blah blah blah",
+  #     #  "sources"        => [/root/logical/path.js],
+  #     #  "names"          => [..],
+  #     #}
+  #     format_source_map(map, input)
+  #     #=> {
+  #     #  "version"        => 3,
+  #     #  "file"           => "logical/path.js",
+  #     #  "sources"        => ["path.js"],
+  #     #  "names"          => [..],
+  #     #}
   def format_source_map(map, input); end
 
   # Public: Converts source map to index map
   #
   # Example:
   #
-  # map
-  # # => {
-  # "version"  => 3,
-  # "file"     => "..",
-  # "mappings" => "AAAA;AACA;..;AACA",
-  # "sources"  => [..],
-  # "names"    => [..]
-  # }
-  # make_index_map(map)
-  # # => {
-  # "version"  => 3,
-  # "file"     => "..",
-  # "sections" => [
-  # {
-  # "offset" => { "line" => 0, "column" => 0 },
-  # "map"    => {
-  # "version"  => 3,
-  # "file"     => "..",
-  # "mappings" => "AAAA;AACA;..;AACA",
-  # "sources"  => [..],
-  # "names"    => [..]
-  # }
-  # }
-  # ]
-  # }
+  #     map
+  #     # => {
+  #       "version"  => 3,
+  #       "file"     => "..",
+  #       "mappings" => "AAAA;AACA;..;AACA",
+  #       "sources"  => [..],
+  #       "names"    => [..]
+  #     }
+  #     make_index_map(map)
+  #     # => {
+  #       "version"  => 3,
+  #       "file"     => "..",
+  #       "sections" => [
+  #         {
+  #           "offset" => { "line" => 0, "column" => 0 },
+  #           "map"    => {
+  #             "version"  => 3,
+  #             "file"     => "..",
+  #             "mappings" => "AAAA;AACA;..;AACA",
+  #             "sources"  => [..],
+  #             "names"    => [..]
+  #           }
+  #         }
+  #       ]
+  #     }
   def make_index_map(map); end
 
   # Public: Decode a VLQ string.
@@ -3452,13 +3522,13 @@ Sprockets::SourceMapUtils::VLQ_BASE_MASK = T.let(T.unsafe(nil), Integer)
 # Public: Base64 VLQ encoding
 #
 # Adopted from ConradIrwin/ruby-source_map
-# https://github.com/ConradIrwin/ruby-source_map/blob/master/lib/source_map/vlq.rb
+#   https://github.com/ConradIrwin/ruby-source_map/blob/master/lib/source_map/vlq.rb
 #
 # Resources
 #
-# http://en.wikipedia.org/wiki/Variable-length_quantity
-# https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit
-# https://github.com/mozilla/source-map/blob/master/lib/source-map/base64-vlq.js
+#   http://en.wikipedia.org/wiki/Variable-length_quantity
+#   https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit
+#   https://github.com/mozilla/source-map/blob/master/lib/source-map/base64-vlq.js
 Sprockets::SourceMapUtils::VLQ_BASE_SHIFT = T.let(T.unsafe(nil), Integer)
 
 Sprockets::SourceMapUtils::VLQ_CONTINUATION_BIT = T.let(T.unsafe(nil), Integer)
@@ -3483,8 +3553,8 @@ module Sprockets::Transformers
   #
   # Examples
   #
-  # expand_transform_accepts([['application/javascript', 1.0]])
-  # # => [['application/javascript', 1.0], ['text/coffeescript', 0.8]]
+  #   expand_transform_accepts([['application/javascript', 1.0]])
+  #   # => [['application/javascript', 1.0], ['text/coffeescript', 0.8]]
   #
   # Returns an expanded Array of q values.
   def expand_transform_accepts(parsed_accepts); end
@@ -3497,10 +3567,10 @@ module Sprockets::Transformers
   #
   # Examples
   #
-  # register_transformer 'text/coffeescript', 'application/javascript',
-  # ConvertCoffeeScriptToJavaScript
+  #   register_transformer 'text/coffeescript', 'application/javascript',
+  #     ConvertCoffeeScriptToJavaScript
   #
-  # register_transformer 'image/svg+xml', 'image/png', ConvertSvgToPng
+  #   register_transformer 'image/svg+xml', 'image/png', ConvertSvgToPng
   #
   # Returns nothing.
   def register_transformer(from, to, proc); end
@@ -3523,25 +3593,25 @@ module Sprockets::Transformers
   #
   # Examples
   #
-  # resolve_transform_type('text/plain', 'text/plain')
-  # # => 'text/plain'
+  #   resolve_transform_type('text/plain', 'text/plain')
+  #   # => 'text/plain'
   #
-  # resolve_transform_type('image/svg+xml', 'image/png, image/*')
-  # # => 'image/png'
+  #   resolve_transform_type('image/svg+xml', 'image/png, image/*')
+  #   # => 'image/png'
   #
-  # resolve_transform_type('text/css', 'image/png')
-  # # => nil
+  #   resolve_transform_type('text/css', 'image/png')
+  #   # => nil
   #
   # Returns String mime type or nil is no type satisfied the accept value.
   def resolve_transform_type(type, accept); end
 
   # Public: Two level mapping of a source mime type to a target mime type.
   #
-  # environment.transformers
-  # # => { 'text/coffeescript' => {
-  # 'application/javascript' => ConvertCoffeeScriptToJavaScript
-  # }
-  # }
+  #   environment.transformers
+  #   # => { 'text/coffeescript' => {
+  #            'application/javascript' => ConvertCoffeeScriptToJavaScript
+  #          }
+  #        }
   def transformers; end
 
   private
@@ -3552,27 +3622,41 @@ end
 
 class Sprockets::Transformers::Transformer < ::Struct
   # Returns the value of attribute from
+  #
+  # @return [Object] the current value of from
   def from; end
 
   # Sets the attribute from
+  #
+  # @param value [Object] the value to set the attribute from to.
+  # @return [Object] the newly set value
   def from=(_); end
 
   # Returns the value of attribute proc
+  #
+  # @return [Object] the current value of proc
   def proc; end
 
   # Sets the attribute proc
+  #
+  # @param value [Object] the value to set the attribute proc to.
+  # @return [Object] the newly set value
   def proc=(_); end
 
   # Returns the value of attribute to
+  #
+  # @return [Object] the current value of to
   def to; end
 
   # Sets the attribute to
+  #
+  # @param value [Object] the value to set the attribute to to.
+  # @return [Object] the newly set value
   def to=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -3584,6 +3668,8 @@ class Sprockets::URITar
   #
   # uri - A String containing URI that may or may not contain the scheme
   # env - The current "environment" that assets are being loaded into.
+  #
+  # @return [URITar] a new instance of URITar
   def initialize(uri, env); end
 
   # Internal: Tells us if we are using an absolute path
@@ -3591,6 +3677,8 @@ class Sprockets::URITar
   # Nix* systems start with a `/` like /Users/schneems.
   # Windows systems start with a drive letter than colon and slash
   # like C:/Schneems.
+  #
+  # @return [Boolean]
   def absolute_path?; end
 
   # Internal: Converts full uri to a "compressed" uri
@@ -3620,11 +3708,11 @@ class Sprockets::URITar
   # If a uri is inside of the environment's root it will not
   # start with a slash for example:
   #
-  # file://this/is/a/relative/path
+  #   file://this/is/a/relative/path
   #
   # If a uri is outside the root, it will start with a slash:
   #
-  # file:///This/is/an/absolute/path
+  #   file:///This/is/an/absolute/path
   #
   # Returns String
   def expand; end
@@ -3647,11 +3735,11 @@ end
 # Other query parameters
 #
 # type - String output content type. Otherwise assumed from file extension.
-# This maybe different than the extension if the asset is transformed
-# from one content type to another. For an example .coffee -> .js.
+#        This maybe different than the extension if the asset is transformed
+#        from one content type to another. For an example .coffee -> .js.
 #
 # id - Unique fingerprint of the entire asset and all its metadata. Assets
-# will only have the same id if they serialize to an identical value.
+#      will only have the same id if they serialize to an identical value.
 #
 # pipeline - String name of pipeline.
 module Sprockets::URIUtils
@@ -3661,8 +3749,8 @@ module Sprockets::URIUtils
   #
   # Examples
   #
-  # build("/tmp/js/application.coffee", type: "application/javascript")
-  # # => "file:///tmp/js/application.coffee?type=application/javascript"
+  #   build("/tmp/js/application.coffee", type: "application/javascript")
+  #   # => "file:///tmp/js/application.coffee?type=application/javascript"
   #
   # path   - String file path
   # params - Hash of optional parameters
@@ -3674,8 +3762,8 @@ module Sprockets::URIUtils
   #
   # Examples
   #
-  # build("/tmp/js/application.js")
-  # # => "file-digest:/tmp/js/application.js"
+  #   build("/tmp/js/application.js")
+  #   # => "file-digest:/tmp/js/application.js"
   #
   # path - String file path
   #
@@ -3703,8 +3791,8 @@ module Sprockets::URIUtils
   #
   # Examples
   #
-  # parse("file:///tmp/js/application.coffee?type=application/javascript")
-  # # => "/tmp/js/application.coffee", {type: "application/javascript"}
+  #   parse("file:///tmp/js/application.coffee?type=application/javascript")
+  #   # => "/tmp/js/application.coffee", {type: "application/javascript"}
   #
   # uri - String asset URI
   #
@@ -3715,8 +3803,8 @@ module Sprockets::URIUtils
   #
   # Examples
   #
-  # parse("file-digest:/tmp/js/application.js")
-  # # => "/tmp/js/application.js"
+  #   parse("file-digest:/tmp/js/application.js")
+  #   # => "/tmp/js/application.js"
   #
   # uri - String file-digest URI
   #
@@ -3749,10 +3837,13 @@ module Sprockets::URIUtils
   # str - Possible String asset URI.
   #
   # Returns true or false.
+  #
+  # @return [Boolean]
   def valid_asset_uri?(str); end
 end
 
 class Sprockets::UglifierCompressor
+  # @return [UglifierCompressor] a new instance of UglifierCompressor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.
@@ -3779,15 +3870,17 @@ class Sprockets::UnloadedAsset
   # Internal: Initialize object for generating cache keys
   #
   # uri - A String containing complete URI to a file including scheme
-  # and full path such as
-  # "file:///Path/app/assets/js/app.js?type=application/javascript"
+  #       and full path such as
+  #       "file:///Path/app/assets/js/app.js?type=application/javascript"
   # env - The current "environment" that assets are being loaded into.
-  # We need it so we know where the +root+ (directory where Sprockets
-  # is being invoked). We also need it for the `file_digest` method,
-  # since, for some strange reason, memoization is provided by
-  # overriding methods such as `stat` in the `PathUtils` module.
+  #       We need it so we know where the +root+ (directory where Sprockets
+  #       is being invoked). We also need it for the `file_digest` method,
+  #       since, for some strange reason, memoization is provided by
+  #       overriding methods such as `stat` in the `PathUtils` module.
   #
   # Returns UnloadedAsset.
+  #
+  # @return [UnloadedAsset] a new instance of UnloadedAsset
   def initialize(uri, env); end
 
   # Internal: Key of asset
@@ -3815,9 +3908,9 @@ class Sprockets::UnloadedAsset
   # For example a history array with one Set of dependencies may look like:
   #
   # [["environment-version", "environment-paths", "processors:type=text/css&file_type=text/css",
-  # "file-digest:///Full/path/app/assets/stylesheets/application.css",
-  # "processors:type=text/css&file_type=text/css&pipeline=self",
-  # "file-digest:///Full/path/app/assets/stylesheets"]]
+  #   "file-digest:///Full/path/app/assets/stylesheets/application.css",
+  #   "processors:type=text/css&file_type=text/css&pipeline=self",
+  #   "file-digest:///Full/path/app/assets/stylesheets"]]
   #
   # This method of asset lookup is used to ensure that none of the dependencies have been modified
   # since last lookup. If one of them has, the key will be different and a new entry must be stored.
@@ -3906,7 +3999,7 @@ module Sprockets::Utils
   #
   # initial - Initial Array of nodes to traverse.
   # block   -
-  # node  - Current node to get children of
+  #   node  - Current node to get children of
   #
   # Returns a Set of nodes.
   def dfs(initial); end
@@ -3918,7 +4011,7 @@ module Sprockets::Utils
   #
   # path   - Initial Array node path
   # block  -
-  # node - Current node to get children of
+  #   node - Current node to get children of
   #
   # Returns an Array of node Arrays.
   def dfs_paths(path); end
@@ -3930,6 +4023,8 @@ module Sprockets::Utils
   # obj - Any Object
   #
   # Returns false if .dup would raise a TypeError, otherwise true.
+  #
+  # @return [Boolean]
   def duplicable?(obj); end
 
   # Internal: Duplicate and store key/value on new frozen hash.
@@ -3943,10 +4038,10 @@ module Sprockets::Utils
   #
   # Examples
   #
-  # config = {paths: ["/bin", "/sbin"]}.freeze
-  # new_config = hash_reassoc(config, :paths) do |paths|
-  # paths << "/usr/local/bin"
-  # end
+  #     config = {paths: ["/bin", "/sbin"]}.freeze
+  #     new_config = hash_reassoc(config, :paths) do |paths|
+  #       paths << "/usr/local/bin"
+  #     end
   #
   # Returns duplicated frozen Hash.
   def hash_reassoc(hash, key_a, key_b = T.unsafe(nil), &block); end
@@ -3973,11 +4068,15 @@ module Sprockets::Utils
   # str - String
   #
   # Returns true or false.
+  #
+  # @return [Boolean]
   def string_end_with_semicolon?(str); end
 end
 
 class Sprockets::Utils::Gzip
   # Private: Generates a gzipped file based off of reference file.
+  #
+  # @return [Gzip] a new instance of Gzip
   def initialize(asset, archiver: T.unsafe(nil)); end
 
   # Returns the value of attribute archiver.
@@ -3991,11 +4090,15 @@ class Sprockets::Utils::Gzip
   # through a compression algorithm would make them larger.
   #
   # Return Boolean.
+  #
+  # @return [Boolean]
   def can_compress?; end
 
   # Private: Opposite of `can_compress?`.
   #
   # Returns Boolean.
+  #
+  # @return [Boolean]
   def cannot_compress?; end
 
   # Returns the value of attribute charset.
@@ -4023,7 +4126,7 @@ Sprockets::Utils::Gzip::COMPRESSABLE_MIME_TYPES = T.let(T.unsafe(nil), Hash)
 
 # Private: Generates a gzipped file based off of reference asset.
 #
-# ZlibArchiver.call(file, source, mtime)
+#     ZlibArchiver.call(file, source, mtime)
 #
 # Compresses a given `source` using stdlib Zlib algorithm
 # writes contents to the `file` passed in. Sets `mtime` of
@@ -4036,7 +4139,7 @@ end
 
 # Private: Generates a gzipped file based off of reference asset.
 #
-# ZopfliArchiver.call(file, source, mtime)
+#     ZopfliArchiver.call(file, source, mtime)
 #
 # Compresses a given `source` using the zopfli gem
 # writes contents to the `file` passed in. Sets `mtime` of
@@ -4054,14 +4157,15 @@ Sprockets::VERSION = T.let(T.unsafe(nil), String)
 #
 # To accept the default options
 #
-# environment.register_bundle_processor 'application/javascript',
-# Sprockets::YUICompressor
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::YUICompressor
 #
 # Or to pass options to the YUI::JavaScriptCompressor class.
 #
-# environment.register_bundle_processor 'application/javascript',
-# Sprockets::YUICompressor.new(munge: true)
+#     environment.register_bundle_processor 'application/javascript',
+#       Sprockets::YUICompressor.new(munge: true)
 class Sprockets::YUICompressor
+  # @return [YUICompressor] a new instance of YUICompressor
   def initialize(options = T.unsafe(nil)); end
 
   # Returns the value of attribute cache_key.

@@ -7,19 +7,20 @@
 class GlobalID
   extend ::ActiveSupport::Autoload
 
+  # @return [GlobalID] a new instance of GlobalID
   def initialize(gid, options = T.unsafe(nil)); end
 
   def ==(other); end
-  def app(*_arg0, **_arg1, &_arg2); end
+  def app(*_arg0, &_arg1); end
   def eql?(other); end
   def find(options = T.unsafe(nil)); end
   def hash; end
   def model_class; end
-  def model_id(*_arg0, **_arg1, &_arg2); end
-  def model_name(*_arg0, **_arg1, &_arg2); end
-  def params(*_arg0, **_arg1, &_arg2); end
+  def model_id(*_arg0, &_arg1); end
+  def model_name(*_arg0, &_arg1); end
+  def params(*_arg0, &_arg1); end
   def to_param; end
-  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, &_arg1); end
 
   # Returns the value of attribute uri.
   def uri; end
@@ -58,10 +59,10 @@ module GlobalID::Locator
     #
     # Options:
     # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
-    # allowed to be located.  Passing one or more classes limits instances of returned
-    # classes to those classes or their subclasses.  Passing one or more modules in limits
-    # instances of returned classes to those including that module.  If no classes or
-    # modules match, +nil+ is returned.
+    #   allowed to be located.  Passing one or more classes limits instances of returned
+    #   classes to those classes or their subclasses.  Passing one or more modules in limits
+    #   instances of returned classes to those including that module.  If no classes or
+    #   modules match, +nil+ is returned.
     def locate(gid, options = T.unsafe(nil)); end
 
     # Takes an array of GlobalIDs or strings that can be turned into a GlobalIDs.
@@ -76,14 +77,14 @@ module GlobalID::Locator
     #
     # Options:
     # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
-    # allowed to be located.  Passing one or more classes limits instances of returned
-    # classes to those classes or their subclasses.  Passing one or more modules in limits
-    # instances of returned classes to those including that module.  If no classes or
-    # modules match, +nil+ is returned.
+    #   allowed to be located.  Passing one or more classes limits instances of returned
+    #   classes to those classes or their subclasses.  Passing one or more modules in limits
+    #   instances of returned classes to those including that module.  If no classes or
+    #   modules match, +nil+ is returned.
     # * <tt>:ignore_missing</tt> - By default, locate_many will call #find on the model to locate the
-    # ids extracted from the GIDs. In Active Record (and other data stores following the same pattern),
-    # #find will raise an exception if a named ID can't be found. When you set this option to true,
-    # we will use #where(id: ids) instead, which does not raise on missing records.
+    #   ids extracted from the GIDs. In Active Record (and other data stores following the same pattern),
+    #   #find will raise an exception if a named ID can't be found. When you set this option to true,
+    #   we will use #where(id: ids) instead, which does not raise on missing records.
     def locate_many(gids, options = T.unsafe(nil)); end
 
     # Takes an array of SignedGlobalIDs or strings that can be turned into a SignedGlobalIDs.
@@ -95,20 +96,20 @@ module GlobalID::Locator
     #
     # Options:
     # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
-    # allowed to be located.  Passing one or more classes limits instances of returned
-    # classes to those classes or their subclasses.  Passing one or more modules in limits
-    # instances of returned classes to those including that module.  If no classes or
-    # modules match, +nil+ is returned.
+    #   allowed to be located.  Passing one or more classes limits instances of returned
+    #   classes to those classes or their subclasses.  Passing one or more modules in limits
+    #   instances of returned classes to those including that module.  If no classes or
+    #   modules match, +nil+ is returned.
     def locate_many_signed(sgids, options = T.unsafe(nil)); end
 
     # Takes either a SignedGlobalID or a string that can be turned into a SignedGlobalID
     #
     # Options:
     # * <tt>:only</tt> - A class, module or Array of classes and/or modules that are
-    # allowed to be located.  Passing one or more classes limits instances of returned
-    # classes to those classes or their subclasses.  Passing one or more modules in limits
-    # instances of returned classes to those including that module.  If no classes or
-    # modules match, +nil+ is returned.
+    #   allowed to be located.  Passing one or more classes limits instances of returned
+    #   classes to those classes or their subclasses.  Passing one or more modules in limits
+    #   instances of returned classes to those including that module.  If no classes or
+    #   modules match, +nil+ is returned.
     def locate_signed(sgid, options = T.unsafe(nil)); end
 
     # Tie a locator to an app.
@@ -118,24 +119,28 @@ module GlobalID::Locator
     #
     # Using a block:
     #
-    # GlobalID::Locator.use :foo do |gid|
-    # FooRemote.const_get(gid.model_name).find(gid.model_id)
-    # end
+    #   GlobalID::Locator.use :foo do |gid|
+    #     FooRemote.const_get(gid.model_name).find(gid.model_id)
+    #   end
     #
     # Using a class:
     #
-    # GlobalID::Locator.use :bar, BarLocator.new
+    #   GlobalID::Locator.use :bar, BarLocator.new
     #
-    # class BarLocator
-    # def locate(gid)
-    # @search_client.search name: gid.model_name, id: gid.model_id
-    # end
-    # end
+    #   class BarLocator
+    #     def locate(gid)
+    #       @search_client.search name: gid.model_name, id: gid.model_id
+    #     end
+    #   end
+    #
+    # @raise [ArgumentError]
     def use(app, locator = T.unsafe(nil), &locator_block); end
 
     private
 
+    # @return [Boolean]
     def find_allowed?(model_class, only = T.unsafe(nil)); end
+
     def locator_for(gid); end
     def normalize_app(app); end
     def parse_allowed(gids, only = T.unsafe(nil)); end
@@ -152,6 +157,7 @@ class GlobalID::Locator::BaseLocator
 end
 
 class GlobalID::Locator::BlockLocator
+  # @return [BlockLocator] a new instance of BlockLocator
   def initialize(block); end
 
   def locate(gid); end
@@ -179,6 +185,7 @@ class GlobalID::Verifier < ::ActiveSupport::MessageVerifier
 end
 
 class SignedGlobalID < ::GlobalID
+  # @return [SignedGlobalID] a new instance of SignedGlobalID
   def initialize(gid, options = T.unsafe(nil)); end
 
   def ==(other); end
@@ -206,6 +213,8 @@ class SignedGlobalID < ::GlobalID
     def expires_in; end
 
     # Sets the attribute expires_in
+    #
+    # @param value the value to set the attribute expires_in to.
     def expires_in=(_arg0); end
 
     def parse(sgid, options = T.unsafe(nil)); end
@@ -219,6 +228,8 @@ class SignedGlobalID < ::GlobalID
     def verifier; end
 
     # Sets the attribute verifier
+    #
+    # @param value the value to set the attribute verifier to.
     def verifier=(_arg0); end
 
     private
@@ -286,7 +297,11 @@ class URI::GID < ::URI::Generic
   def check_scheme(scheme); end
   def parse_query_params(query); end
   def set_model_components(path, validate = T.unsafe(nil)); end
+
+  # @raise [URI::InvalidComponentError]
   def validate_component(component); end
+
+  # @raise [MissingModelIdError]
   def validate_model_id(model_id, model_name); end
 
   class << self
@@ -297,37 +312,37 @@ class URI::GID < ::URI::Generic
     #
     # Using a hash:
     #
-    # URI::GID.build(app: 'bcx', model_name: 'Person', model_id: '1', params: { key: 'value' })
+    #   URI::GID.build(app: 'bcx', model_name: 'Person', model_id: '1', params: { key: 'value' })
     #
     # Using an array, the arguments must be in order [app, model_name, model_id, params]:
     #
-    # URI::GID.build(['bcx', 'Person', '1', key: 'value'])
+    #   URI::GID.build(['bcx', 'Person', '1', key: 'value'])
     def build(args); end
 
     # Shorthand to build a URI::GID from an app, a model and optional params.
     #
-    # URI::GID.create('bcx', Person.find(5), database: 'superhumans')
+    #   URI::GID.create('bcx', Person.find(5), database: 'superhumans')
     def create(app, model, params = T.unsafe(nil)); end
 
     # Create a new URI::GID by parsing a gid string with argument check.
     #
-    # URI::GID.parse 'gid://bcx/Person/1?key=value'
+    #   URI::GID.parse 'gid://bcx/Person/1?key=value'
     #
     # This differs from URI() and URI.parse which do not check arguments.
     #
-    # URI('gid://bcx')             # => URI::GID instance
-    # URI.parse('gid://bcx')       # => URI::GID instance
-    # URI::GID.parse('gid://bcx/') # => raises URI::InvalidComponentError
+    #   URI('gid://bcx')             # => URI::GID instance
+    #   URI.parse('gid://bcx')       # => URI::GID instance
+    #   URI::GID.parse('gid://bcx/') # => raises URI::InvalidComponentError
     def parse(uri); end
 
     # Validates +app+'s as URI hostnames containing only alphanumeric characters
     # and hyphens. An ArgumentError is raised if +app+ is invalid.
     #
-    # URI::GID.validate_app('bcx')     # => 'bcx'
-    # URI::GID.validate_app('foo-bar') # => 'foo-bar'
+    #   URI::GID.validate_app('bcx')     # => 'bcx'
+    #   URI::GID.validate_app('foo-bar') # => 'foo-bar'
     #
-    # URI::GID.validate_app(nil)       # => ArgumentError
-    # URI::GID.validate_app('foo/bar') # => ArgumentError
+    #   URI::GID.validate_app(nil)       # => ArgumentError
+    #   URI::GID.validate_app('foo/bar') # => ArgumentError
     def validate_app(app); end
   end
 end

@@ -41,6 +41,8 @@ module ActiveStorage
   def variant_processor=(val); end
   def verifier; end
   def verifier=(val); end
+  def video_preview_arguments; end
+  def video_preview_arguments=(val); end
   def web_image_content_types; end
   def web_image_content_types=(val); end
 
@@ -92,6 +94,8 @@ module ActiveStorage
     # Returns the version of the currently loaded ActiveStorage as a <tt>Gem::Version</tt>
     def version; end
 
+    def video_preview_arguments; end
+    def video_preview_arguments=(val); end
     def web_image_content_types; end
     def web_image_content_types=(val); end
   end
@@ -109,12 +113,15 @@ end
 # This is an abstract base class for analyzers, which extract metadata from blobs. See
 # ActiveStorage::Analyzer::ImageAnalyzer for an example of a concrete subclass.
 class ActiveStorage::Analyzer
+  # @return [Analyzer] a new instance of Analyzer
   def initialize(blob); end
 
   # Returns the value of attribute blob.
   def blob; end
 
   # Override this method in a concrete subclass. Have it return a Hash of metadata.
+  #
+  # @raise [NotImplementedError]
   def metadata; end
 
   private
@@ -128,10 +135,14 @@ class ActiveStorage::Analyzer
   class << self
     # Implement this method in a concrete subclass. Have it return true when given a blob from which
     # the analyzer can extract metadata.
+    #
+    # @return [Boolean]
     def accept?(blob); end
 
     # Implement this method in concrete subclasses. It will determine if blob analysis
     # should be done in a job or performed inline. By default, analysis is enqueued in a job.
+    #
+    # @return [Boolean]
     def analyze_later?; end
   end
 end
@@ -189,6 +200,7 @@ end
 # Abstract base class for the concrete ActiveStorage::Attached::One and ActiveStorage::Attached::Many
 # classes that both provide proxy access to the blob association for a record.
 class ActiveStorage::Attached
+  # @return [Attached] a new instance of Attached
   def initialize(name, record); end
 
   # Returns the value of attribute name.
@@ -277,7 +289,7 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def attachments; end
   def blobs; end
   def detach; end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
 
   private
 
@@ -313,7 +325,7 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   def attachment; end
   def blank?; end
   def detach; end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
   def purge; end
   def purge_later; end
 
@@ -329,10 +341,10 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
 
   def autosave_associated_records_for_blob(*args); end
   def autosave_associated_records_for_record(*args); end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
   def purge; end
   def purge_later; end
-  def signed_id(*_arg0, **_arg1, &_arg2); end
+  def signed_id(*_arg0, &_arg1); end
   def validate_associated_records_for_blob(*args); end
 
   private
@@ -479,6 +491,7 @@ class ActiveStorage::DiskController < ::ActiveStorage::BaseController
 end
 
 class ActiveStorage::Downloader
+  # @return [Downloader] a new instance of Downloader
   def initialize(service); end
 
   def open(key, checksum:, name: T.unsafe(nil), tmpdir: T.unsafe(nil)); end
@@ -572,7 +585,7 @@ class ActiveStorage::Preview
   def image; end
   def key; end
   def processed; end
-  def service_url(*args, **_arg1, &block); end
+  def service_url(*args, &block); end
   def url(**options); end
   def variation; end
 
@@ -587,10 +600,14 @@ end
 
 class ActiveStorage::Preview::UnprocessedError < ::StandardError; end
 
+# Raised when a Previewer is unable to generate a preview image.
+class ActiveStorage::PreviewError < ::ActiveStorage::Error; end
+
 # This is an abstract base class for previewers, which generate images from blobs. See
 # ActiveStorage::Previewer::MuPDFPreviewer and ActiveStorage::Previewer::VideoPreviewer for
 # examples of concrete subclasses.
 class ActiveStorage::Previewer
+  # @return [Previewer] a new instance of Previewer
   def initialize(blob); end
 
   # Returns the value of attribute blob.
@@ -599,6 +616,8 @@ class ActiveStorage::Previewer
   # Override this method in a concrete subclass. Have it yield an attachable preview image (i.e.
   # anything accepted by ActiveStorage::Attached::One#attach). Pass the additional options to
   # the underlying blob that is created.
+  #
+  # @raise [NotImplementedError]
   def preview(**options); end
 
   private
@@ -613,13 +632,13 @@ class ActiveStorage::Previewer
   # Use this method to shell out to a system library (e.g. muPDF or FFmpeg) for preview image
   # generation. The resulting tempfile can be used as the +:io+ value in an attachable Hash:
   #
-  # def preview
-  # download_blob_to_tempfile do |input|
-  # draw "my-drawing-command", input.path, "--format", "png", "-" do |output|
-  # yield io: output, filename: "#{blob.filename.base}.png", content_type: "image/png"
-  # end
-  # end
-  # end
+  #   def preview
+  #     download_blob_to_tempfile do |input|
+  #       draw "my-drawing-command", input.path, "--format", "png", "-" do |output|
+  #         yield io: output, filename: "#{blob.filename.base}.png", content_type: "image/png"
+  #       end
+  #     end
+  #   end
   #
   # The output tempfile is opened in the directory returned by #tmpdir.
   def draw(*argv); end
@@ -632,6 +651,8 @@ class ActiveStorage::Previewer
   class << self
     # Implement this method in a concrete subclass. Have it return true when given a blob from which
     # the previewer can generate an image.
+    #
+    # @return [Boolean]
     def accept?(blob); end
   end
 end
@@ -727,8 +748,8 @@ module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
 
   # Returns the reflection object for the named +attachment+.
   #
-  # User.reflect_on_attachment(:avatar)
-  # # => the avatar reflection
+  #    User.reflect_on_attachment(:avatar)
+  #    # => the avatar reflection
   def reflect_on_attachment(attachment); end
 end
 
@@ -766,40 +787,51 @@ end
 # generated <tt>config/storage.yml</tt> file and reference one
 # of the aforementioned constant under the +service+ key. For example:
 #
-# local:
-# service: Disk
-# root: <%= Rails.root.join("storage") %>
+#   local:
+#     service: Disk
+#     root: <%= Rails.root.join("storage") %>
 #
 # You can checkout the service's constructor to know which keys are required.
 #
 # Then, in your application's configuration, you can specify the service to
 # use like this:
 #
-# config.active_storage.service = :local
+#   config.active_storage.service = :local
 #
 # If you are using Active Storage outside of a Ruby on Rails application, you
 # can configure the service to use like this:
 #
-# ActiveStorage::Blob.service = ActiveStorage::Service.configure(
-# :Disk,
-# root: Pathname("/foo/bar/storage")
-# )
+#   ActiveStorage::Blob.service = ActiveStorage::Service.configure(
+#     :Disk,
+#     root: Pathname("/foo/bar/storage")
+#   )
 class ActiveStorage::Service
   extend ::ActiveSupport::Autoload
 
   # Delete the file at the +key+.
+  #
+  # @raise [NotImplementedError]
   def delete(key); end
 
   # Delete files at keys starting with the +prefix+.
+  #
+  # @raise [NotImplementedError]
   def delete_prefixed(prefix); end
 
   # Return the content of the file at the +key+.
+  #
+  # @raise [NotImplementedError]
   def download(key); end
 
   # Return the partial content in the byte +range+ of the file at the +key+.
+  #
+  # @raise [NotImplementedError]
   def download_chunk(key, range); end
 
   # Return +true+ if a file exists at the +key+.
+  #
+  # @raise [NotImplementedError]
+  # @return [Boolean]
   def exist?(key); end
 
   # Returns a Hash of headers for +url_for_direct_upload+ requests.
@@ -809,9 +841,13 @@ class ActiveStorage::Service
   def name; end
 
   # Sets the attribute name
+  #
+  # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
   def open(*args, **options, &block); end
+
+  # @return [Boolean]
   def public?; end
 
   # Update metadata for the file identified by +key+ in the service.
@@ -821,6 +857,8 @@ class ActiveStorage::Service
 
   # Upload the +io+ to the +key+ specified. If a +checksum+ is provided, the service will
   # ensure a match when the upload has completed or raise an ActiveStorage::IntegrityError.
+  #
+  # @raise [NotImplementedError]
   def upload(key, io, checksum: T.unsafe(nil), **options); end
 
   # Returns the URL for the file at the +key+. This returns a permanent URL for public files, and returns a
@@ -833,14 +871,21 @@ class ActiveStorage::Service
   # The URL will be valid for the amount of seconds specified in +expires_in+.
   # You must also provide the +content_type+, +content_length+, and +checksum+ of the file
   # that will be uploaded. All these attributes will be validated by the service upon upload.
+  #
+  # @raise [NotImplementedError]
   def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
 
   private
 
   def content_disposition_with(filename:, type: T.unsafe(nil)); end
   def instrument(operation, payload = T.unsafe(nil), &block); end
+
+  # @raise [NotImplementedError]
   def private_url(key, expires_in:, filename:, disposition:, content_type:, **_arg5); end
+
+  # @raise [NotImplementedError]
   def public_url(key, **_arg1); end
+
   def service_name; end
 
   class << self
@@ -916,8 +961,9 @@ end
 # The following concrete subclasses are included in Active Storage:
 #
 # * ActiveStorage::Transformers::ImageProcessingTransformer:
-# backed by ImageProcessing, a common interface for MiniMagick and ruby-vips
+#   backed by ImageProcessing, a common interface for MiniMagick and ruby-vips
 class ActiveStorage::Transformers::Transformer
+  # @return [Transformer] a new instance of Transformer
   def initialize(transformations); end
 
   # Applies the transformations to the source image in +file+, producing a target image in the
@@ -932,6 +978,8 @@ class ActiveStorage::Transformers::Transformer
 
   # Returns an open Tempfile containing a transformed image in the given +format+.
   # All subclasses implement this method.
+  #
+  # @raise [NotImplementedError]
   def process(file, format:); end
 end
 
@@ -954,16 +1002,16 @@ class ActiveStorage::Variant
   def initialize(blob, variation_or_variation_key); end
 
   def blob; end
-  def content_type(*_arg0, **_arg1, &_arg2); end
-  def content_type_for_serving(*_arg0, **_arg1, &_arg2); end
+  def content_type(*_arg0, &_arg1); end
+  def content_type_for_serving(*_arg0, &_arg1); end
   def download(&block); end
   def filename; end
   def forced_disposition_for_serving; end
   def image; end
   def key; end
   def processed; end
-  def service(*_arg0, **_arg1, &_arg2); end
-  def service_url(*args, **_arg1, &block); end
+  def service(*_arg0, &_arg1); end
+  def service_url(*args, &block); end
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
   def variation; end
 
@@ -1002,14 +1050,14 @@ class ActiveStorage::VariantWithRecord
   def initialize(blob, variation); end
 
   def blob; end
-  def download(*_arg0, **_arg1, &_arg2); end
+  def download(*_arg0, &_arg1); end
   def image; end
-  def key(*_arg0, **_arg1, &_arg2); end
+  def key(*_arg0, &_arg1); end
   def process; end
   def processed; end
   def processed?; end
-  def service_url(*args, **_arg1, &block); end
-  def url(*_arg0, **_arg1, &_arg2); end
+  def service_url(*args, &block); end
+  def url(*_arg0, &_arg1); end
   def variation; end
 
   private

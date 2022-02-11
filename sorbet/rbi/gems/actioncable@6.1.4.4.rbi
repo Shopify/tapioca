@@ -43,15 +43,15 @@ end
 # The upside of long-lived channel instances is that you can use instance variables to keep reference to objects that future subscriber requests
 # can interact with. Here's a quick example:
 #
-# class ChatChannel < ApplicationCable::Channel
-# def subscribed
-# @room = Chat::Room[params[:room_number]]
-# end
+#   class ChatChannel < ApplicationCable::Channel
+#     def subscribed
+#       @room = Chat::Room[params[:room_number]]
+#     end
 #
-# def speak(data)
-# @room.speak data, user: current_user
-# end
-# end
+#     def speak(data)
+#       @room.speak data, user: current_user
+#     end
+#   end
 #
 # The #speak action simply uses the Chat::Room object that was created when the channel was first subscribed to by the consumer when that
 # subscriber wants to say something in the room.
@@ -66,28 +66,28 @@ end
 #
 # Example:
 #
-# class AppearanceChannel < ApplicationCable::Channel
-# def subscribed
-# @connection_token = generate_connection_token
-# end
+#   class AppearanceChannel < ApplicationCable::Channel
+#     def subscribed
+#       @connection_token = generate_connection_token
+#     end
 #
-# def unsubscribed
-# current_user.disappear @connection_token
-# end
+#     def unsubscribed
+#       current_user.disappear @connection_token
+#     end
 #
-# def appear(data)
-# current_user.appear @connection_token, on: data['appearing_on']
-# end
+#     def appear(data)
+#       current_user.appear @connection_token, on: data['appearing_on']
+#     end
 #
-# def away
-# current_user.away @connection_token
-# end
+#     def away
+#       current_user.away @connection_token
+#     end
 #
-# private
-# def generate_connection_token
-# SecureRandom.hex(36)
-# end
-# end
+#     private
+#       def generate_connection_token
+#         SecureRandom.hex(36)
+#       end
+#   end
 #
 # In this example, the subscribed and unsubscribed methods are not callable methods, as they
 # were already declared in ActionCable::Channel::Base, but <tt>#appear</tt>
@@ -106,12 +106,12 @@ end
 # A channel can reject a subscription request in the #subscribed callback by
 # invoking the #reject method:
 #
-# class ChatChannel < ApplicationCable::Channel
-# def subscribed
-# @room = Chat::Room[params[:room_number]]
-# reject unless current_user.can_access?(@room)
-# end
-# end
+#   class ChatChannel < ApplicationCable::Channel
+#     def subscribed
+#       @room = Chat::Room[params[:room_number]]
+#       reject unless current_user.can_access?(@room)
+#     end
+#   end
 #
 # In this example, the subscription will be rejected if the
 # <tt>current_user</tt> does not have access to the chat room. On the
@@ -133,6 +133,7 @@ class ActionCable::Channel::Base
   extend ::ActionCable::Channel::Broadcasting::ClassMethods
   extend ::ActiveSupport::Rescuable::ClassMethods
 
+  # @return [Base] a new instance of Base
   def initialize(connection, identifier, params = T.unsafe(nil)); end
 
   def __callbacks; end
@@ -148,7 +149,7 @@ class ActionCable::Channel::Base
   # Returns the value of attribute identifier.
   def identifier; end
 
-  def logger(*_arg0, **_arg1, &_arg2); end
+  def logger(*_arg0, &_arg1); end
 
   # Returns the value of attribute params.
   def params; end
@@ -175,12 +176,18 @@ class ActionCable::Channel::Base
 
   def action_signature(action, data); end
   def defer_subscription_confirmation!; end
+
+  # @return [Boolean]
   def defer_subscription_confirmation?; end
+
   def delegate_connection_identifiers; end
   def dispatch_action(action, data); end
   def ensure_confirmation_sent; end
   def extract_action(data); end
+
+  # @return [Boolean]
   def processable_action?(action); end
+
   def reject; end
   def reject_subscription; end
 
@@ -188,7 +195,10 @@ class ActionCable::Channel::Base
   # you want this channel to be sending to the subscriber.
   def subscribed; end
 
+  # @return [Boolean]
   def subscription_confirmation_sent?; end
+
+  # @return [Boolean]
   def subscription_rejected?; end
 
   # Transmit a hash of data to the subscriber. The hash will automatically be wrapped in a JSON envelope with
@@ -245,8 +255,8 @@ module ActionCable::Channel::Broadcasting
 
   mixes_in_class_methods ::ActionCable::Channel::Broadcasting::ClassMethods
 
-  def broadcast_to(*_arg0, **_arg1, &_arg2); end
-  def broadcasting_for(*_arg0, **_arg1, &_arg2); end
+  def broadcast_to(*_arg0, &_arg1); end
+  def broadcasting_for(*_arg0, &_arg1); end
 end
 
 module ActionCable::Channel::Broadcasting::ClassMethods
@@ -255,7 +265,7 @@ module ActionCable::Channel::Broadcasting::ClassMethods
 
   # Returns a unique broadcasting identifier for this <tt>model</tt> in this channel:
   #
-  # CommentsChannel.broadcasting_for("all") # => "comments:all"
+  #    CommentsChannel.broadcasting_for("all") # => "comments:all"
   #
   # You can pass any object as a target (e.g. Active Record model), and it
   # would be serialized into a string under the hood.
@@ -299,7 +309,10 @@ end
 # Add public aliases for +subscription_confirmation_sent?+ and
 # +subscription_rejected?+.
 module ActionCable::Channel::ChannelStub
+  # @return [Boolean]
   def confirmed?; end
+
+  # @return [Boolean]
   def rejected?; end
 
   # Make periodic timers no-op
@@ -315,6 +328,7 @@ module ActionCable::Channel::ChannelStub
 end
 
 class ActionCable::Channel::ConnectionStub
+  # @return [ConnectionStub] a new instance of ConnectionStub
   def initialize(identifiers = T.unsafe(nil)); end
 
   # Returns the value of attribute identifiers.
@@ -337,7 +351,7 @@ module ActionCable::Channel::Naming
 
   mixes_in_class_methods ::ActionCable::Channel::Naming::ClassMethods
 
-  def channel_name(*_arg0, **_arg1, &_arg2); end
+  def channel_name(*_arg0, &_arg1); end
 end
 
 module ActionCable::Channel::Naming::ClassMethods
@@ -345,13 +359,14 @@ module ActionCable::Channel::Naming::ClassMethods
   # If the channel is in a namespace, then the namespaces are represented by single
   # colon separators in the channel name.
   #
-  # ChatChannel.channel_name # => 'chat'
-  # Chats::AppearancesChannel.channel_name # => 'chats:appearances'
-  # FooChats::BarAppearancesChannel.channel_name # => 'foo_chats:bar_appearances'
+  #   ChatChannel.channel_name # => 'chat'
+  #   Chats::AppearancesChannel.channel_name # => 'chats:appearances'
+  #   FooChats::BarAppearancesChannel.channel_name # => 'foo_chats:bar_appearances'
   def channel_name; end
 end
 
 class ActionCable::Channel::NonInferrableChannelError < ::StandardError
+  # @return [NonInferrableChannelError] a new instance of NonInferrableChannelError
   def initialize(name); end
 end
 
@@ -390,11 +405,11 @@ module ActionCable::Channel::PeriodicTimers::ClassMethods
   # Specify the calling period in seconds using the <tt>every:</tt>
   # keyword argument.
   #
-  # periodically :transmit_progress, every: 5.seconds
+  #     periodically :transmit_progress, every: 5.seconds
   #
-  # periodically every: 3.minutes do
-  # transmit action: :update_count, count: current_count
-  # end
+  #     periodically every: 3.minutes do
+  #       transmit action: :update_count, count: current_count
+  #     end
   def periodically(callback_or_method_name = T.unsafe(nil), every:, &block); end
 end
 
@@ -406,62 +421,62 @@ end
 # the two parties (the broadcaster and the channel subscriber). Here's an example of a channel that allows subscribers to get all new
 # comments on a given page:
 #
-# class CommentsChannel < ApplicationCable::Channel
-# def follow(data)
-# stream_from "comments_for_#{data['recording_id']}"
-# end
+#   class CommentsChannel < ApplicationCable::Channel
+#     def follow(data)
+#       stream_from "comments_for_#{data['recording_id']}"
+#     end
 #
-# def unfollow
-# stop_all_streams
-# end
-# end
+#     def unfollow
+#       stop_all_streams
+#     end
+#   end
 #
 # Based on the above example, the subscribers of this channel will get whatever data is put into the,
 # let's say, <tt>comments_for_45</tt> broadcasting as soon as it's put there.
 #
 # An example broadcasting for this channel looks like so:
 #
-# ActionCable.server.broadcast "comments_for_45", { author: 'DHH', content: 'Rails is just swell' }
+#   ActionCable.server.broadcast "comments_for_45", { author: 'DHH', content: 'Rails is just swell' }
 #
 # If you have a stream that is related to a model, then the broadcasting used can be generated from the model and channel.
 # The following example would subscribe to a broadcasting like <tt>comments:Z2lkOi8vVGVzdEFwcC9Qb3N0LzE</tt>.
 #
-# class CommentsChannel < ApplicationCable::Channel
-# def subscribed
-# post = Post.find(params[:id])
-# stream_for post
-# end
-# end
+#   class CommentsChannel < ApplicationCable::Channel
+#     def subscribed
+#       post = Post.find(params[:id])
+#       stream_for post
+#     end
+#   end
 #
 # You can then broadcast to this channel using:
 #
-# CommentsChannel.broadcast_to(@post, @comment)
+#   CommentsChannel.broadcast_to(@post, @comment)
 #
 # If you don't just want to parlay the broadcast unfiltered to the subscriber, you can also supply a callback that lets you alter what is sent out.
 # The below example shows how you can use this to provide performance introspection in the process:
 #
-# class ChatChannel < ApplicationCable::Channel
-# def subscribed
-# @room = Chat::Room[params[:room_number]]
+#   class ChatChannel < ApplicationCable::Channel
+#     def subscribed
+#       @room = Chat::Room[params[:room_number]]
 #
-# stream_for @room, coder: ActiveSupport::JSON do |message|
-# if message['originated_at'].present?
-# elapsed_time = (Time.now.to_f - message['originated_at']).round(2)
+#       stream_for @room, coder: ActiveSupport::JSON do |message|
+#         if message['originated_at'].present?
+#           elapsed_time = (Time.now.to_f - message['originated_at']).round(2)
 #
-# ActiveSupport::Notifications.instrument :performance, measurement: 'Chat.message_delay', value: elapsed_time, action: :timing
-# logger.info "Message took #{elapsed_time}s to arrive"
-# end
+#           ActiveSupport::Notifications.instrument :performance, measurement: 'Chat.message_delay', value: elapsed_time, action: :timing
+#           logger.info "Message took #{elapsed_time}s to arrive"
+#         end
 #
-# transmit message
-# end
-# end
-# end
+#         transmit message
+#       end
+#     end
+#   end
 #
 # You can stop streaming from all broadcasts by calling #stop_all_streams.
 module ActionCable::Channel::Streams
   extend ::ActiveSupport::Concern
 
-  def pubsub(*_arg0, **_arg1, &_arg2); end
+  def pubsub(*_arg0, &_arg1); end
 
   # Unsubscribes all streams associated with this channel from the pubsub queue.
   def stop_all_streams; end
@@ -528,49 +543,49 @@ end
 # Functional tests are written as follows:
 # 1. First, one uses the +subscribe+ method to simulate subscription creation.
 # 2. Then, one asserts whether the current state is as expected. "State" can be anything:
-# transmitted messages, subscribed streams, etc.
+#    transmitted messages, subscribed streams, etc.
 #
 # For example:
 #
-# class ChatChannelTest < ActionCable::Channel::TestCase
-# def test_subscribed_with_room_number
-# # Simulate a subscription creation
-# subscribe room_number: 1
+#   class ChatChannelTest < ActionCable::Channel::TestCase
+#     def test_subscribed_with_room_number
+#       # Simulate a subscription creation
+#       subscribe room_number: 1
 #
-# # Asserts that the subscription was successfully created
-# assert subscription.confirmed?
+#       # Asserts that the subscription was successfully created
+#       assert subscription.confirmed?
 #
-# # Asserts that the channel subscribes connection to a stream
-# assert_has_stream "chat_1"
+#       # Asserts that the channel subscribes connection to a stream
+#       assert_has_stream "chat_1"
 #
-# # Asserts that the channel subscribes connection to a specific
-# # stream created for a model
-# assert_has_stream_for Room.find(1)
-# end
+#       # Asserts that the channel subscribes connection to a specific
+#       # stream created for a model
+#       assert_has_stream_for Room.find(1)
+#     end
 #
-# def test_does_not_stream_with_incorrect_room_number
-# subscribe room_number: -1
+#     def test_does_not_stream_with_incorrect_room_number
+#       subscribe room_number: -1
 #
-# # Asserts that not streams was started
-# assert_no_streams
-# end
+#       # Asserts that not streams was started
+#       assert_no_streams
+#     end
 #
-# def test_does_not_subscribe_without_room_number
-# subscribe
+#     def test_does_not_subscribe_without_room_number
+#       subscribe
 #
-# # Asserts that the subscription was rejected
-# assert subscription.rejected?
-# end
-# end
+#       # Asserts that the subscription was rejected
+#       assert subscription.rejected?
+#     end
+#   end
 #
 # You can also perform actions:
-# def test_perform_speak
-# subscribe room_number: 1
+#   def test_perform_speak
+#     subscribe room_number: 1
 #
-# perform :speak, message: "Hello, Rails!"
+#     perform :speak, message: "Hello, Rails!"
 #
-# assert_equal "Hello, Rails!", transmissions.last["text"]
-# end
+#     assert_equal "Hello, Rails!", transmissions.last["text"]
+#   end
 #
 # == Special methods
 #
@@ -578,11 +593,11 @@ end
 # methods for use in the tests:
 #
 # <b>connection</b>::
-# An ActionCable::Channel::ConnectionStub, representing the current HTTP connection.
+#      An ActionCable::Channel::ConnectionStub, representing the current HTTP connection.
 # <b>subscription</b>::
-# An instance of the current channel, created when you call +subscribe+.
+#      An instance of the current channel, created when you call +subscribe+.
 # <b>transmissions</b>::
-# A list of all messages that have been transmitted into the channel.
+#      A list of all messages that have been transmitted into the channel.
 #
 #
 # == Channel is automatically inferred
@@ -591,16 +606,16 @@ end
 # from the test class name. If the channel cannot be inferred from the test
 # class name, you can explicitly set it with +tests+.
 #
-# class SpecialEdgeCaseChannelTest < ActionCable::Channel::TestCase
-# tests SpecialChannel
-# end
+#   class SpecialEdgeCaseChannelTest < ActionCable::Channel::TestCase
+#     tests SpecialChannel
+#   end
 #
 # == Specifying connection identifiers
 #
 # You need to set up your connection manually to provide values for the identifiers.
 # To do this just use:
 #
-# stub_connection(user: users(:john))
+#   stub_connection(user: users(:john))
 #
 # == Testing broadcasting
 #
@@ -608,18 +623,18 @@ end
 # +assert_broadcasts+) to handle broadcasting to models:
 #
 #
-# # in your channel
-# def speak(data)
-# broadcast_to room, text: data["message"]
-# end
+#  # in your channel
+#  def speak(data)
+#    broadcast_to room, text: data["message"]
+#  end
 #
-# def test_speak
-# subscribe room_id: rooms(:chat).id
+#  def test_speak
+#    subscribe room_id: rooms(:chat).id
 #
-# assert_broadcast_on(rooms(:chat), text: "Hello, Rails!") do
-# perform :speak, message: "Hello, Rails!"
-# end
-# end
+#    assert_broadcast_on(rooms(:chat), text: "Hello, Rails!") do
+#      perform :speak, message: "Hello, Rails!"
+#    end
+#  end
 class ActionCable::Channel::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::ConstantLookup
   include ::ActionCable::TestHelper
@@ -658,26 +673,26 @@ module ActionCable::Channel::TestCase::Behavior
 
   # Asserts that the specified stream has been started.
   #
-  # def test_assert_started_stream
-  # subscribe
-  # assert_has_stream 'messages'
-  # end
+  #   def test_assert_started_stream
+  #     subscribe
+  #     assert_has_stream 'messages'
+  #   end
   def assert_has_stream(stream); end
 
   # Asserts that the specified stream for a model has started.
   #
-  # def test_assert_started_stream_for
-  # subscribe id: 42
-  # assert_has_stream_for User.find(42)
-  # end
+  #   def test_assert_started_stream_for
+  #     subscribe id: 42
+  #     assert_has_stream_for User.find(42)
+  #   end
   def assert_has_stream_for(object); end
 
   # Asserts that no streams have been started.
   #
-  # def test_assert_no_started_stream
-  # subscribe
-  # assert_no_streams
-  # end
+  #   def test_assert_no_started_stream
+  #     subscribe
+  #     assert_no_streams
+  #   end
   def assert_no_streams; end
 
   # Perform action on a channel.
@@ -687,11 +702,11 @@ module ActionCable::Channel::TestCase::Behavior
 
   # Set up test connection with the specified identifiers:
   #
-  # class ApplicationCable < ActionCable::Connection::Base
-  # identified_by :user, :token
-  # end
+  #   class ApplicationCable < ActionCable::Connection::Base
+  #     identified_by :user, :token
+  #   end
   #
-  # stub_connection(user: users[:john], token: 'my-secret-token')
+  #   stub_connection(user: users[:john], token: 'my-secret-token')
   def stub_connection(identifiers = T.unsafe(nil)); end
 
   # Subscribe to the channel under test. Optionally pass subscription parameters as a Hash.
@@ -725,7 +740,10 @@ ActionCable::Channel::TestCase::Behavior::CHANNEL_IDENTIFIER = T.let(T.unsafe(ni
 
 module ActionCable::Channel::TestCase::Behavior::ClassMethods
   def channel_class; end
+
+  # @raise [NonInferrableChannelError]
   def determine_default_channel(name); end
+
   def tests(channel); end
 end
 
@@ -736,13 +754,15 @@ end
 module ActionCable::Connection::Assertions
   # Asserts that the connection is rejected (via +reject_unauthorized_connection+).
   #
-  # # Asserts that connection without user_id fails
-  # assert_reject_connection { connect params: { user_id: '' } }
+  #   # Asserts that connection without user_id fails
+  #   assert_reject_connection { connect params: { user_id: '' } }
   def assert_reject_connection(&block); end
 end
 
 module ActionCable::Connection::Authorization
   # Closes the WebSocket connection if it is open and returns a 404 "File not Found" response.
+  #
+  # @raise [UnauthorizedError]
   def reject_unauthorized_connection; end
 end
 
@@ -755,26 +775,26 @@ class ActionCable::Connection::Authorization::UnauthorizedError < ::StandardErro
 #
 # Here's a basic example:
 #
-# module ApplicationCable
-# class Connection < ActionCable::Connection::Base
-# identified_by :current_user
+#   module ApplicationCable
+#     class Connection < ActionCable::Connection::Base
+#       identified_by :current_user
 #
-# def connect
-# self.current_user = find_verified_user
-# logger.add_tags current_user.name
-# end
+#       def connect
+#         self.current_user = find_verified_user
+#         logger.add_tags current_user.name
+#       end
 #
-# def disconnect
-# # Any cleanup work needed when the cable connection is cut.
-# end
+#       def disconnect
+#         # Any cleanup work needed when the cable connection is cut.
+#       end
 #
-# private
-# def find_verified_user
-# User.find_by_identity(cookies.encrypted[:identity_id]) ||
-# reject_unauthorized_connection
-# end
-# end
-# end
+#       private
+#         def find_verified_user
+#           User.find_by_identity(cookies.encrypted[:identity_id]) ||
+#             reject_unauthorized_connection
+#         end
+#     end
+#   end
 #
 # First, we declare that this connection can be identified by its current_user. This allows us to later be able to find all connections
 # established for that current_user (and potentially disconnect them). You can declare as many
@@ -794,6 +814,7 @@ class ActionCable::Connection::Base
   extend ::ActionCable::Connection::Identification::ClassMethods
   extend ::ActiveSupport::Rescuable::ClassMethods
 
+  # @return [Base] a new instance of Base
   def initialize(server, env, coder: T.unsafe(nil)); end
 
   def beat; end
@@ -806,7 +827,7 @@ class ActionCable::Connection::Base
   # Returns the value of attribute env.
   def env; end
 
-  def event_loop(*_arg0, **_arg1, &_arg2); end
+  def event_loop(*_arg0, &_arg1); end
   def identifiers; end
   def identifiers=(_arg0); end
   def identifiers?; end
@@ -826,7 +847,7 @@ class ActionCable::Connection::Base
   # Returns the value of attribute protocol.
   def protocol; end
 
-  def pubsub(*_arg0, **_arg1, &_arg2); end
+  def pubsub(*_arg0, &_arg1); end
 
   # Decodes WebSocket messages and dispatches them to subscribed channels.
   # WebSocket message transfer encoding is always JSON.
@@ -856,6 +877,7 @@ class ActionCable::Connection::Base
 
   private
 
+  # @return [Boolean]
   def allow_request_origin?; end
 
   # The cookies of the request that initiated the WebSocket connection. Useful for performing authorization checks.
@@ -897,9 +919,12 @@ class ActionCable::Connection::Base
 end
 
 class ActionCable::Connection::ClientSocket
+  # @return [ClientSocket] a new instance of ClientSocket
   def initialize(env, event_target, event_loop, protocols); end
 
+  # @return [Boolean]
   def alive?; end
+
   def client_gone; end
   def close(code = T.unsafe(nil), reason = T.unsafe(nil)); end
 
@@ -927,6 +952,8 @@ class ActionCable::Connection::ClientSocket
 
   class << self
     def determine_url(env); end
+
+    # @return [Boolean]
     def secure_request?(env); end
   end
 end
@@ -986,10 +1013,13 @@ end
 
 # Allows us to buffer messages received from the WebSocket before the Connection has been fully initialized, and is ready to receive them.
 class ActionCable::Connection::MessageBuffer
+  # @return [MessageBuffer] a new instance of MessageBuffer
   def initialize(connection); end
 
   def append(message); end
   def process!; end
+
+  # @return [Boolean]
   def processing?; end
 
   private
@@ -1004,14 +1034,18 @@ class ActionCable::Connection::MessageBuffer
 
   def receive(message); end
   def receive_buffered_messages; end
+
+  # @return [Boolean]
   def valid?(message); end
 end
 
 class ActionCable::Connection::NonInferrableConnectionError < ::StandardError
+  # @return [NonInferrableConnectionError] a new instance of NonInferrableConnectionError
   def initialize(name); end
 end
 
 class ActionCable::Connection::Stream
+  # @return [Stream] a new instance of Stream
   def initialize(event_loop, socket); end
 
   def close; end
@@ -1028,6 +1062,7 @@ class ActionCable::Connection::Stream
 end
 
 class ActionCable::Connection::StreamEventLoop
+  # @return [StreamEventLoop] a new instance of StreamEventLoop
   def initialize; end
 
   def attach(io, stream); end
@@ -1047,12 +1082,13 @@ end
 # Collection class for all the channel subscriptions established on a given connection. Responsible for routing incoming commands that arrive on
 # the connection to the proper channel.
 class ActionCable::Connection::Subscriptions
+  # @return [Subscriptions] a new instance of Subscriptions
   def initialize(connection); end
 
   def add(data); end
   def execute_command(data); end
   def identifiers; end
-  def logger(*_arg0, **_arg1, &_arg2); end
+  def logger(*_arg0, &_arg1); end
   def perform_action(data); end
   def remove(data); end
   def remove_subscription(subscription); end
@@ -1073,6 +1109,7 @@ end
 # <tt>ActiveSupport::TaggedLogging</tt> enhanced Rails.logger, as that logger will reset the tags between requests.
 # The connection is long-lived, so it needs its own set of tags for its independent duration.
 class ActionCable::Connection::TaggedLoggerProxy
+  # @return [TaggedLoggerProxy] a new instance of TaggedLoggerProxy
   def initialize(logger, tags:); end
 
   def add_tags(*tags); end
@@ -1106,52 +1143,52 @@ end
 # 2. Assert state, e.g. identifiers, has been assigned.
 #
 #
-# class ApplicationCable::ConnectionTest < ActionCable::Connection::TestCase
-# def test_connects_with_proper_cookie
-# # Simulate the connection request with a cookie.
-# cookies["user_id"] = users(:john).id
+#   class ApplicationCable::ConnectionTest < ActionCable::Connection::TestCase
+#     def test_connects_with_proper_cookie
+#       # Simulate the connection request with a cookie.
+#       cookies["user_id"] = users(:john).id
 #
-# connect
+#       connect
 #
-# # Assert the connection identifier matches the fixture.
-# assert_equal users(:john).id, connection.user.id
-# end
+#       # Assert the connection identifier matches the fixture.
+#       assert_equal users(:john).id, connection.user.id
+#     end
 #
-# def test_rejects_connection_without_proper_cookie
-# assert_reject_connection { connect }
-# end
-# end
+#     def test_rejects_connection_without_proper_cookie
+#       assert_reject_connection { connect }
+#     end
+#   end
 #
 # +connect+ accepts additional information about the HTTP request with the
 # +params+, +headers+, +session+ and Rack +env+ options.
 #
-# def test_connect_with_headers_and_query_string
-# connect params: { user_id: 1 }, headers: { "X-API-TOKEN" => "secret-my" }
+#   def test_connect_with_headers_and_query_string
+#     connect params: { user_id: 1 }, headers: { "X-API-TOKEN" => "secret-my" }
 #
-# assert_equal "1", connection.user.id
-# assert_equal "secret-my", connection.token
-# end
+#     assert_equal "1", connection.user.id
+#     assert_equal "secret-my", connection.token
+#   end
 #
-# def test_connect_with_params
-# connect params: { user_id: 1 }
+#   def test_connect_with_params
+#     connect params: { user_id: 1 }
 #
-# assert_equal "1", connection.user.id
-# end
+#     assert_equal "1", connection.user.id
+#   end
 #
 # You can also set up the correct cookies before the connection request:
 #
-# def test_connect_with_cookies
-# # Plain cookies:
-# cookies["user_id"] = 1
+#   def test_connect_with_cookies
+#     # Plain cookies:
+#     cookies["user_id"] = 1
 #
-# # Or signed/encrypted:
-# # cookies.signed["user_id"] = 1
-# # cookies.encrypted["user_id"] = 1
+#     # Or signed/encrypted:
+#     # cookies.signed["user_id"] = 1
+#     # cookies.encrypted["user_id"] = 1
 #
-# connect
+#     connect
 #
-# assert_equal "1", connection.user_id
-# end
+#     assert_equal "1", connection.user_id
+#   end
 #
 # == Connection is automatically inferred
 #
@@ -1159,9 +1196,9 @@ end
 # from the test class name. If the channel cannot be inferred from the test
 # class name, you can explicitly set it with +tests+.
 #
-# class ConnectionTest < ActionCable::Connection::TestCase
-# tests ApplicationCable::Connection
-# end
+#   class ConnectionTest < ActionCable::Connection::TestCase
+#     tests ApplicationCable::Connection
+#   end
 class ActionCable::Connection::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::ConstantLookup
   include ::ActionCable::Connection::Assertions
@@ -1225,7 +1262,10 @@ end
 
 module ActionCable::Connection::TestCase::Behavior::ClassMethods
   def connection_class; end
+
+  # @raise [NonInferrableConnectionError]
   def determine_default_connection(name); end
+
   def tests(connection); end
 end
 
@@ -1254,22 +1294,32 @@ class ActionCable::Connection::TestRequest < ::ActionDispatch::TestRequest
   def cookie_jar; end
 
   # Sets the attribute cookie_jar
+  #
+  # @param value the value to set the attribute cookie_jar to.
   def cookie_jar=(_arg0); end
 
   # Returns the value of attribute session.
   def session; end
 
   # Sets the attribute session
+  #
+  # @param value the value to set the attribute session to.
   def session=(_arg0); end
 end
 
 # Wrap the real socket to minimize the externally-presented API
 class ActionCable::Connection::WebSocket
+  # @return [WebSocket] a new instance of WebSocket
   def initialize(env, event_target, event_loop, protocols: T.unsafe(nil)); end
 
+  # @return [Boolean]
   def alive?; end
+
   def close; end
+
+  # @return [Boolean]
   def possible?; end
+
   def protocol; end
   def rack_response; end
   def transmit(data); end
@@ -1287,29 +1337,29 @@ module ActionCable::Helpers::ActionCableHelper
   # Returns an "action-cable-url" meta tag with the value of the URL specified in your
   # configuration. Ensure this is above your JavaScript tag:
   #
-  # <head>
-  # <%= action_cable_meta_tag %>
-  # <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
-  # </head>
+  #   <head>
+  #     <%= action_cable_meta_tag %>
+  #     <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
+  #   </head>
   #
   # This is then used by Action Cable to determine the URL of your WebSocket server.
   # Your JavaScript can then connect to the server without needing to specify the
   # URL directly:
   #
-  # window.Cable = require("@rails/actioncable")
-  # window.App = {}
-  # App.cable = Cable.createConsumer()
+  #   window.Cable = require("@rails/actioncable")
+  #   window.App = {}
+  #   App.cable = Cable.createConsumer()
   #
   # Make sure to specify the correct server location in each of your environment
   # config files:
   #
-  # config.action_cable.mount_path = "/cable123"
-  # <%= action_cable_meta_tag %> would render:
-  # => <meta name="action-cable-url" content="/cable123" />
+  #   config.action_cable.mount_path = "/cable123"
+  #   <%= action_cable_meta_tag %> would render:
+  #   => <meta name="action-cable-url" content="/cable123" />
   #
-  # config.action_cable.url = "ws://actioncable.com"
-  # <%= action_cable_meta_tag %> would render:
-  # => <meta name="action-cable-url" content="ws://actioncable.com" />
+  #   config.action_cable.url = "ws://actioncable.com"
+  #   <%= action_cable_meta_tag %> would render:
+  #   => <meta name="action-cable-url" content="ws://actioncable.com" />
   def action_cable_meta_tag; end
 end
 
@@ -1319,19 +1369,20 @@ ActionCable::INTERNAL = T.let(T.unsafe(nil), Hash)
 # RemoteConnections. You can find the connections you're looking for by
 # searching for the identifier declared on the connection. For example:
 #
-# module ApplicationCable
-# class Connection < ActionCable::Connection::Base
-# identified_by :current_user
-# ....
-# end
-# end
+#   module ApplicationCable
+#     class Connection < ActionCable::Connection::Base
+#       identified_by :current_user
+#       ....
+#     end
+#   end
 #
-# ActionCable.server.remote_connections.where(current_user: User.find(1)).disconnect
+#   ActionCable.server.remote_connections.where(current_user: User.find(1)).disconnect
 #
 # This will disconnect all the connections established for
 # <tt>User.find(1)</tt>, across all servers running on all machines, because
 # it uses the internal channel that all of these servers are subscribed to.
 class ActionCable::RemoteConnections
+  # @return [RemoteConnections] a new instance of RemoteConnections
   def initialize(server); end
 
   # Returns the value of attribute server.
@@ -1347,6 +1398,7 @@ class ActionCable::RemoteConnections::RemoteConnection
   include ::ActionCable::Connection::Identification
   extend ::ActionCable::Connection::Identification::ClassMethods
 
+  # @return [RemoteConnection] a new instance of RemoteConnection
   def initialize(server, ids); end
 
   # Uses the internal channel to disconnect the connection.
@@ -1363,7 +1415,10 @@ class ActionCable::RemoteConnections::RemoteConnection
 
   private
 
+  # @raise [InvalidIdentifiersError]
   def set_identifier_instance_vars(ids); end
+
+  # @return [Boolean]
   def valid_identifiers?(ids); end
 
   class << self
@@ -1387,6 +1442,7 @@ class ActionCable::Server::Base
   include ::ActionCable::Server::Broadcasting
   include ::ActionCable::Server::Connections
 
+  # @return [Base] a new instance of Base
   def initialize(config: T.unsafe(nil)); end
 
   # Called by Rack to set up the server.
@@ -1402,7 +1458,7 @@ class ActionCable::Server::Base
   def disconnect(identifiers); end
 
   def event_loop; end
-  def logger(*_arg0, **_arg1, &_arg2); end
+  def logger(*_arg0, &_arg1); end
 
   # Returns the value of attribute mutex.
   def mutex; end
@@ -1438,20 +1494,20 @@ end
 # Broadcasting is how other parts of your application can send messages to a channel's subscribers. As explained in Channel, most of the time, these
 # broadcastings are streamed directly to the clients subscribed to the named broadcasting. Let's explain with a full-stack example:
 #
-# class WebNotificationsChannel < ApplicationCable::Channel
-# def subscribed
-# stream_from "web_notifications_#{current_user.id}"
-# end
-# end
+#   class WebNotificationsChannel < ApplicationCable::Channel
+#     def subscribed
+#       stream_from "web_notifications_#{current_user.id}"
+#     end
+#   end
 #
-# # Somewhere in your app this is called, perhaps from a NewCommentJob:
-# ActionCable.server.broadcast \
-# "web_notifications_1", { title: "New things!", body: "All that's fit for print" }
+#   # Somewhere in your app this is called, perhaps from a NewCommentJob:
+#   ActionCable.server.broadcast \
+#     "web_notifications_1", { title: "New things!", body: "All that's fit for print" }
 #
-# # Client-side CoffeeScript, which assumes you've already requested the right to send web notifications:
-# App.cable.subscriptions.create "WebNotificationsChannel",
-# received: (data) ->
-# new Notification data['title'], body: data['body']
+#   # Client-side CoffeeScript, which assumes you've already requested the right to send web notifications:
+#   App.cable.subscriptions.create "WebNotificationsChannel",
+#     received: (data) ->
+#       new Notification data['title'], body: data['body']
 module ActionCable::Server::Broadcasting
   # Broadcast a hash directly to a named <tt>broadcasting</tt>. This will later be JSON encoded.
   def broadcast(broadcasting, message, coder: T.unsafe(nil)); end
@@ -1462,6 +1518,7 @@ module ActionCable::Server::Broadcasting
 end
 
 class ActionCable::Server::Broadcasting::Broadcaster
+  # @return [Broadcaster] a new instance of Broadcaster
   def initialize(server, broadcasting, coder:); end
 
   def broadcast(message); end
@@ -1479,54 +1536,71 @@ end
 # An instance of this configuration object is available via ActionCable.server.config, which allows you to tweak Action Cable configuration
 # in a Rails config initializer.
 class ActionCable::Server::Configuration
+  # @return [Configuration] a new instance of Configuration
   def initialize; end
 
   # Returns the value of attribute allow_same_origin_as_host.
   def allow_same_origin_as_host; end
 
   # Sets the attribute allow_same_origin_as_host
+  #
+  # @param value the value to set the attribute allow_same_origin_as_host to.
   def allow_same_origin_as_host=(_arg0); end
 
   # Returns the value of attribute allowed_request_origins.
   def allowed_request_origins; end
 
   # Sets the attribute allowed_request_origins
+  #
+  # @param value the value to set the attribute allowed_request_origins to.
   def allowed_request_origins=(_arg0); end
 
   # Returns the value of attribute cable.
   def cable; end
 
   # Sets the attribute cable
+  #
+  # @param value the value to set the attribute cable to.
   def cable=(_arg0); end
 
   # Returns the value of attribute connection_class.
   def connection_class; end
 
   # Sets the attribute connection_class
+  #
+  # @param value the value to set the attribute connection_class to.
   def connection_class=(_arg0); end
 
   # Returns the value of attribute disable_request_forgery_protection.
   def disable_request_forgery_protection; end
 
   # Sets the attribute disable_request_forgery_protection
+  #
+  # @param value the value to set the attribute disable_request_forgery_protection to.
   def disable_request_forgery_protection=(_arg0); end
 
   # Returns the value of attribute log_tags.
   def log_tags; end
 
   # Sets the attribute log_tags
+  #
+  # @param value the value to set the attribute log_tags to.
   def log_tags=(_arg0); end
 
   # Returns the value of attribute logger.
   def logger; end
 
   # Sets the attribute logger
+  #
+  # @param value the value to set the attribute logger to.
   def logger=(_arg0); end
 
   # Returns the value of attribute mount_path.
   def mount_path; end
 
   # Sets the attribute mount_path
+  #
+  # @param value the value to set the attribute mount_path to.
   def mount_path=(_arg0); end
 
   # Returns constant of subscription adapter specified in config/cable.yml.
@@ -1538,12 +1612,16 @@ class ActionCable::Server::Configuration
   def url; end
 
   # Sets the attribute url
+  #
+  # @param value the value to set the attribute url to.
   def url=(_arg0); end
 
   # Returns the value of attribute worker_pool_size.
   def worker_pool_size; end
 
   # Sets the attribute worker_pool_size
+  #
+  # @param value the value to set the attribute worker_pool_size to.
   def worker_pool_size=(_arg0); end
 end
 
@@ -1570,6 +1648,7 @@ class ActionCable::Server::Worker
   extend ::ActiveSupport::Callbacks::ClassMethods
   extend ::ActiveSupport::DescendantsTracker
 
+  # @return [Worker] a new instance of Worker
   def initialize(max_size: T.unsafe(nil)); end
 
   def __callbacks; end
@@ -1589,7 +1668,10 @@ class ActionCable::Server::Worker
   def halt; end
 
   def invoke(receiver, method, *args, connection:, &block); end
+
+  # @return [Boolean]
   def stopping?; end
+
   def work(connection); end
 
   private
@@ -1624,6 +1706,7 @@ class ActionCable::SubscriptionAdapter::Async < ::ActionCable::SubscriptionAdapt
 end
 
 class ActionCable::SubscriptionAdapter::Async::AsyncSubscriberMap < ::ActionCable::SubscriptionAdapter::SubscriberMap
+  # @return [AsyncSubscriberMap] a new instance of AsyncSubscriberMap
   def initialize(event_loop); end
 
   def add_subscriber(*_arg0); end
@@ -1631,9 +1714,12 @@ class ActionCable::SubscriptionAdapter::Async::AsyncSubscriberMap < ::ActionCabl
 end
 
 class ActionCable::SubscriptionAdapter::Base
+  # @return [Base] a new instance of Base
   def initialize(server); end
 
+  # @raise [NotImplementedError]
   def broadcast(channel, payload); end
+
   def identifier; end
 
   # Returns the value of attribute logger.
@@ -1642,8 +1728,13 @@ class ActionCable::SubscriptionAdapter::Base
   # Returns the value of attribute server.
   def server; end
 
+  # @raise [NotImplementedError]
   def shutdown; end
+
+  # @raise [NotImplementedError]
   def subscribe(channel, message_callback, success_callback = T.unsafe(nil)); end
+
+  # @raise [NotImplementedError]
   def unsubscribe(channel, message_callback); end
 end
 
@@ -1659,6 +1750,7 @@ module ActionCable::SubscriptionAdapter::ChannelPrefix
 end
 
 class ActionCable::SubscriptionAdapter::Inline < ::ActionCable::SubscriptionAdapter::Base
+  # @return [Inline] a new instance of Inline
   def initialize(*_arg0); end
 
   def broadcast(channel, payload); end
@@ -1673,6 +1765,7 @@ class ActionCable::SubscriptionAdapter::Inline < ::ActionCable::SubscriptionAdap
 end
 
 class ActionCable::SubscriptionAdapter::SubscriberMap
+  # @return [SubscriberMap] a new instance of SubscriberMap
   def initialize; end
 
   def add_channel(channel, on_success); end
@@ -1713,69 +1806,69 @@ module ActionCable::TestHelper
 
   # Asserts that the specified message has been sent to the stream.
   #
-  # def test_assert_transmitted_message
-  # ActionCable.server.broadcast 'messages', text: 'hello'
-  # assert_broadcast_on('messages', text: 'hello')
-  # end
+  #   def test_assert_transmitted_message
+  #     ActionCable.server.broadcast 'messages', text: 'hello'
+  #     assert_broadcast_on('messages', text: 'hello')
+  #   end
   #
   # If a block is passed, that block should cause a message with the specified data to be sent.
   #
-  # def test_assert_broadcast_on_again
-  # assert_broadcast_on('messages', text: 'hello') do
-  # ActionCable.server.broadcast 'messages', text: 'hello'
-  # end
-  # end
+  #   def test_assert_broadcast_on_again
+  #     assert_broadcast_on('messages', text: 'hello') do
+  #       ActionCable.server.broadcast 'messages', text: 'hello'
+  #     end
+  #   end
   def assert_broadcast_on(stream, data, &block); end
 
   # Asserts that the number of broadcasted messages to the stream matches the given number.
   #
-  # def test_broadcasts
-  # assert_broadcasts 'messages', 0
-  # ActionCable.server.broadcast 'messages', { text: 'hello' }
-  # assert_broadcasts 'messages', 1
-  # ActionCable.server.broadcast 'messages', { text: 'world' }
-  # assert_broadcasts 'messages', 2
-  # end
+  #   def test_broadcasts
+  #     assert_broadcasts 'messages', 0
+  #     ActionCable.server.broadcast 'messages', { text: 'hello' }
+  #     assert_broadcasts 'messages', 1
+  #     ActionCable.server.broadcast 'messages', { text: 'world' }
+  #     assert_broadcasts 'messages', 2
+  #   end
   #
   # If a block is passed, that block should cause the specified number of
   # messages to be broadcasted.
   #
-  # def test_broadcasts_again
-  # assert_broadcasts('messages', 1) do
-  # ActionCable.server.broadcast 'messages', { text: 'hello' }
-  # end
+  #   def test_broadcasts_again
+  #     assert_broadcasts('messages', 1) do
+  #       ActionCable.server.broadcast 'messages', { text: 'hello' }
+  #     end
   #
-  # assert_broadcasts('messages', 2) do
-  # ActionCable.server.broadcast 'messages', { text: 'hi' }
-  # ActionCable.server.broadcast 'messages', { text: 'how are you?' }
-  # end
-  # end
+  #     assert_broadcasts('messages', 2) do
+  #       ActionCable.server.broadcast 'messages', { text: 'hi' }
+  #       ActionCable.server.broadcast 'messages', { text: 'how are you?' }
+  #     end
+  #   end
   def assert_broadcasts(stream, number, &block); end
 
   # Asserts that no messages have been sent to the stream.
   #
-  # def test_no_broadcasts
-  # assert_no_broadcasts 'messages'
-  # ActionCable.server.broadcast 'messages', { text: 'hi' }
-  # assert_broadcasts 'messages', 1
-  # end
+  #   def test_no_broadcasts
+  #     assert_no_broadcasts 'messages'
+  #     ActionCable.server.broadcast 'messages', { text: 'hi' }
+  #     assert_broadcasts 'messages', 1
+  #   end
   #
   # If a block is passed, that block should not cause any message to be sent.
   #
-  # def test_broadcasts_again
-  # assert_no_broadcasts 'messages' do
-  # # No job messages should be sent from this block
-  # end
-  # end
+  #   def test_broadcasts_again
+  #     assert_no_broadcasts 'messages' do
+  #       # No job messages should be sent from this block
+  #     end
+  #   end
   #
   # Note: This assertion is simply a shortcut for:
   #
-  # assert_broadcasts 'messages', 0, &block
+  #   assert_broadcasts 'messages', 0, &block
   def assert_no_broadcasts(stream, &block); end
 
   def before_setup; end
-  def broadcasts(*_arg0, **_arg1, &_arg2); end
-  def clear_messages(*_arg0, **_arg1, &_arg2); end
+  def broadcasts(*_arg0, &_arg1); end
+  def clear_messages(*_arg0, &_arg1); end
   def pubsub_adapter; end
 
   private

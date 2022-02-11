@@ -17,19 +17,19 @@ end
 class ActiveRecord::MigrationProxy < ::Struct
   def initialize(name, version, filename, scope); end
 
-  def announce(*_arg0, **_arg1, &_arg2); end
+  def announce(*_arg0, &_arg1); end
   def basename; end
-  def disable_ddl_transaction(*_arg0, **_arg1, &_arg2); end
+  def disable_ddl_transaction(*_arg0, &_arg1); end
   def filename; end
   def filename=(_); end
-  def migrate(*_arg0, **_arg1, &_arg2); end
+  def migrate(*_arg0, &_arg1); end
   def name; end
   def name=(_); end
   def scope; end
   def scope=(_); end
   def version; end
   def version=(_); end
-  def write(*_arg0, **_arg1, &_arg2); end
+  def write(*_arg0, &_arg1); end
 
   private
 
@@ -39,7 +39,6 @@ class ActiveRecord::MigrationProxy < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -52,7 +51,9 @@ module ActiveRecord::TypedStore::Behavior
 
   mixes_in_class_methods ::ActiveRecord::TypedStore::Behavior::ClassMethods
 
+  # @return [Boolean]
   def attribute?(attr_name); end
+
   def changes; end
   def clear_attribute_change(attr_name); end
   def read_attribute(attr_name); end
@@ -66,6 +67,9 @@ module ActiveRecord::TypedStore::Behavior::ClassMethods
 end
 
 class ActiveRecord::TypedStore::DSL
+  # @return [DSL] a new instance of DSL
+  # @yield [_self]
+  # @yieldparam _self [ActiveRecord::TypedStore::DSL] the object that the method was called on
   def initialize(attribute_name, options); end
 
   def accessors; end
@@ -86,7 +90,7 @@ class ActiveRecord::TypedStore::DSL
 
   def float(name, **options); end
   def integer(name, **options); end
-  def keys(*_arg0, **_arg1, &_arg2); end
+  def keys(*_arg0, &_arg1); end
   def string(name, **options); end
   def text(name, **options); end
   def time(name, **options); end
@@ -99,6 +103,7 @@ module ActiveRecord::TypedStore::Extension
 end
 
 class ActiveRecord::TypedStore::Field
+  # @return [Field] a new instance of Field
   def initialize(name, type, options = T.unsafe(nil)); end
 
   # Returns the value of attribute accessor.
@@ -115,6 +120,7 @@ class ActiveRecord::TypedStore::Field
   # Returns the value of attribute default.
   def default; end
 
+  # @return [Boolean]
   def has_default?; end
 
   # Returns the value of attribute name.
@@ -146,10 +152,15 @@ module ActiveRecord::TypedStore::IdentityCoder
 end
 
 class ActiveRecord::TypedStore::Type < ::ActiveRecord::Type::Serialized
+  # @return [Type] a new instance of Type
   def initialize(typed_hash_klass, coder, subtype); end
 
+  # @return [Boolean]
   def changed_in_place?(raw_old_value, value); end
+
+  # @return [Boolean]
   def default_value?(value); end
+
   def defaults; end
   def deserialize(value); end
   def serialize(value); end
@@ -159,18 +170,19 @@ class ActiveRecord::TypedStore::Type < ::ActiveRecord::Type::Serialized
 end
 
 class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferentAccess
+  # @return [TypedHash] a new instance of TypedHash
   def initialize(constructor = T.unsafe(nil)); end
 
   def []=(key, value); end
-  def defaults_hash(*_arg0, **_arg1, &_arg2); end
-  def except(*_arg0, **_arg1, &_arg2); end
-  def fields(*_arg0, **_arg1, &_arg2); end
+  def defaults_hash(*_arg0, &_arg1); end
+  def except(*_arg0, &_arg1); end
+  def fields(*_arg0, &_arg1); end
   def merge!(other_hash); end
-  def slice(*_arg0, **_arg1, &_arg2); end
+  def slice(*_arg0, &_arg1); end
   def store(key, value); end
   def update(other_hash); end
-  def with_indifferent_access(*_arg0, **_arg1, &_arg2); end
-  def without(*_arg0, **_arg1, &_arg2); end
+  def with_indifferent_access(*_arg0, &_arg1); end
+  def without(*_arg0, &_arg1); end
 
   private
 

@@ -7,6 +7,7 @@
 module Unicode; end
 
 class Unicode::DisplayWidth
+  # @return [DisplayWidth] a new instance of DisplayWidth
   def initialize(ambiguous: T.unsafe(nil), overwrite: T.unsafe(nil), emoji: T.unsafe(nil)); end
 
   def get_config(**kwargs); end

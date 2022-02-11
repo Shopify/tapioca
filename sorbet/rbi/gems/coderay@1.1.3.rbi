@@ -35,28 +35,28 @@
 #
 # === Highlight Ruby code in a string as html
 #
-# require 'coderay'
-# print CodeRay.scan('puts "Hello, world!"', :ruby).html
+#   require 'coderay'
+#   print CodeRay.scan('puts "Hello, world!"', :ruby).html
 #
-# # prints something like this:
-# puts <span class="s">&quot;Hello, world!&quot;</span>
+#   # prints something like this:
+#   puts <span class="s">&quot;Hello, world!&quot;</span>
 #
 #
 # === Highlight C code from a file in a html div
 #
-# require 'coderay'
-# print CodeRay.scan(File.read('ruby.h'), :c).div
-# print CodeRay.scan_file('ruby.h').html.div
+#   require 'coderay'
+#   print CodeRay.scan(File.read('ruby.h'), :c).div
+#   print CodeRay.scan_file('ruby.h').html.div
 #
 # You can include this div in your page. The used CSS styles can be printed with
 #
-# % coderay_stylesheet
+#   % coderay_stylesheet
 #
 # === Highlight without typing too much
 #
 # If you are one of the hasty (or lazy, or extremely curious) people, just run this file:
 #
-# % ruby -rubygems /path/to/coderay/coderay.rb > example.html
+#   % ruby -rubygems /path/to/coderay/coderay.rb > example.html
 #
 # and look at the file it created in your browser.
 #
@@ -65,11 +65,11 @@
 # The CodeRay module provides convenience methods for the engine.
 #
 # * The +lang+ and +format+ arguments select Scanner and Encoder to use. These are
-# simply lower-case symbols, like <tt>:python</tt> or <tt>:html</tt>.
+#   simply lower-case symbols, like <tt>:python</tt> or <tt>:html</tt>.
 # * All methods take an optional hash as last parameter, +options+, that is send to
-# the Encoder / Scanner.
+#   the Encoder / Scanner.
 # * Input and language are always sorted in this order: +code+, +lang+.
-# (This is in alphabetical order, if you need a mnemonic ;)
+#   (This is in alphabetical order, if you need a mnemonic ;)
 #
 # You should be able to highlight everything you want just using these methods;
 # so there is no need to dive into CodeRay's deep class hierarchy.
@@ -89,7 +89,7 @@
 # handled by CodeRay::Scanners::Ruby.
 #
 # CodeRay.scan:: Scan a string in a given language into Tokens.
-# This is the most common method to use.
+#                This is the most common method to use.
 # CodeRay.scan_file:: Scan a file and guess the language using FileType.
 #
 # The Tokens object you get from these methods can encode itself; see Tokens.
@@ -146,34 +146,34 @@ module CodeRay
     # Notice that the second argument is the output +format+, not the input language.
     #
     # Example:
-    # require 'coderay'
-    # page = CodeRay.encode_file 'some_c_code.c', :html
+    #  require 'coderay'
+    #  page = CodeRay.encode_file 'some_c_code.c', :html
     def encode_file(filename, format, options = T.unsafe(nil)); end
 
     # Encode pre-scanned Tokens.
     # Use this together with CodeRay.scan:
     #
-    # require 'coderay'
+    #  require 'coderay'
     #
-    # # Highlight a short Ruby code example in a HTML span
-    # tokens = CodeRay.scan '1 + 2', :ruby
-    # puts CodeRay.encode_tokens(tokens, :span)
+    #  # Highlight a short Ruby code example in a HTML span
+    #  tokens = CodeRay.scan '1 + 2', :ruby
+    #  puts CodeRay.encode_tokens(tokens, :span)
     def encode_tokens(tokens, format, options = T.unsafe(nil)); end
 
     # Finds the Encoder class for +format+ and creates an instance, passing
     # +options+ to it.
     #
     # Example:
-    # require 'coderay'
+    #  require 'coderay'
     #
-    # stats = CodeRay.encoder(:statistic)
-    # stats.encode("puts 17 + 4\n", :ruby)
+    #  stats = CodeRay.encoder(:statistic)
+    #  stats.encode("puts 17 + 4\n", :ruby)
     #
-    # puts '%d out of %d tokens have the kind :integer.' % [
-    # stats.type_stats[:integer].count,
-    # stats.real_token_count
-    # ]
-    # #-> 2 out of 4 tokens have the kind :integer.
+    #  puts '%d out of %d tokens have the kind :integer.' % [
+    #    stats.type_stats[:integer].count,
+    #    stats.real_token_count
+    #  ]
+    #  #-> 2 out of 4 tokens have the kind :integer.
     def encoder(format, options = T.unsafe(nil)); end
 
     # Extract the options for the scanner from the +options+ hash.
@@ -203,8 +203,8 @@ module CodeRay
     # Scans the given +code+ (a String) with the Scanner for +lang+.
     #
     # This is a simple way to use CodeRay. Example:
-    # require 'coderay'
-    # page = CodeRay.scan("puts 'Hello, world!'", :ruby).html
+    #  require 'coderay'
+    #  page = CodeRay.scan("puts 'Hello, world!'", :ruby).html
     #
     # See also demo/demo_simple.
     def scan(code, lang, options = T.unsafe(nil), &block); end
@@ -218,8 +218,8 @@ module CodeRay
     # Calls CodeRay.scan.
     #
     # Example:
-    # require 'coderay'
-    # page = CodeRay.scan_file('some_c_code.c').html
+    #  require 'coderay'
+    #  page = CodeRay.scan_file('some_c_code.c').html
     def scan_file(filename, lang = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
     # Finds the Scanner class for +lang+ and creates an instance, passing
@@ -241,8 +241,8 @@ CodeRay::CODERAY_PATH = T.let(T.unsafe(nil), String)
 # Duo makes it easy to re-use both scanner and encoder for a repetitive
 # task. It also provides a very easy interface syntax:
 #
-# require 'coderay'
-# CodeRay::Duo[:python, :div].highlight 'import this'
+#   require 'coderay'
+#   CodeRay::Duo[:python, :div].highlight 'import this'
 #
 # Until you want to do uncommon things with CodeRay, I recommend to use
 # this method, since it takes care of everything.
@@ -250,29 +250,31 @@ class CodeRay::Duo
   # Create a new Duo, holding a lang and a format to highlight code.
   #
   # simple:
-  # CodeRay::Duo[:ruby, :html].highlight 'bla 42'
+  #   CodeRay::Duo[:ruby, :html].highlight 'bla 42'
   #
   # with options:
-  # CodeRay::Duo[:ruby, :html, :hint => :debug].highlight '????::??'
+  #   CodeRay::Duo[:ruby, :html, :hint => :debug].highlight '????::??'
   #
   # alternative syntax without options:
-  # CodeRay::Duo[:ruby => :statistic].encode 'class << self; end'
+  #   CodeRay::Duo[:ruby => :statistic].encode 'class << self; end'
   #
   # alternative syntax with options:
-  # CodeRay::Duo[{ :ruby => :statistic }, :do => :something].encode 'abc'
+  #   CodeRay::Duo[{ :ruby => :statistic }, :do => :something].encode 'abc'
   #
   # The options are forwarded to scanner and encoder
   # (see CodeRay.get_scanner_options).
+  #
+  # @return [Duo] a new instance of Duo
   def initialize(lang = T.unsafe(nil), format = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Tokenize and highlight the code using +scanner+ and +encoder+.
   # Allows to use Duo like a proc object:
   #
-  # CodeRay::Duo[:python => :yaml].call(code)
+  #  CodeRay::Duo[:python => :yaml].call(code)
   #
   # or, in Ruby 1.9 and later:
   #
-  # CodeRay::Duo[:python => :yaml].(code)
+  #  CodeRay::Duo[:python => :yaml].(code)
   def call(code, options = T.unsafe(nil)); end
 
   # Tokenize and highlight the code using +scanner+ and +encoder+.
@@ -285,6 +287,8 @@ class CodeRay::Duo
   def format; end
 
   # Sets the attribute format
+  #
+  # @param value the value to set the attribute format to.
   def format=(_arg0); end
 
   # Tokenize and highlight the code using +scanner+ and +encoder+.
@@ -294,12 +298,16 @@ class CodeRay::Duo
   def lang; end
 
   # Sets the attribute lang
+  #
+  # @param value the value to set the attribute lang to.
   def lang=(_arg0); end
 
   # Returns the value of attribute options.
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   # The scanner of the duo. Only created once.
@@ -327,8 +335,8 @@ end
 # Alias: +remove_comments+
 #
 # Usage:
-# CodeRay.scan('print # foo', :ruby).comment_filter.text
-# #-> "print "
+#  CodeRay.scan('print # foo', :ruby).comment_filter.text
+#  #-> "print "
 #
 # See also: TokenKindFilter, LinesOfCode
 class CodeRay::Encoders::CommentFilter < ::CodeRay::Encoders::TokenKindFilter; end
@@ -384,8 +392,14 @@ CodeRay::Encoders::Debug::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 class CodeRay::Encoders::DebugLint < ::CodeRay::Encoders::Debug
   def begin_group(kind); end
   def begin_line(kind); end
+
+  # @raise [Lint::IncorrectTokenGroupNesting]
   def end_group(kind); end
+
+  # @raise [Lint::IncorrectTokenGroupNesting]
   def end_line(kind); end
+
+  # @raise [Lint::EmptyToken]
   def text_token(text, kind); end
 
   protected
@@ -427,6 +441,8 @@ class CodeRay::Encoders::Encoder
   #
   # Each method has an optional +options+ parameter. These are
   # added to the options you passed at creation.
+  #
+  # @return [Encoder] a new instance of Encoder
   def initialize(options = T.unsafe(nil)); end
 
   def <<(token); end
@@ -557,17 +573,17 @@ end
 #
 # == Usage
 #
-# require 'coderay'
-# puts CodeRay.scan('Some /code/', :ruby).html  #-> a HTML page
-# puts CodeRay.scan('Some /code/', :ruby).html(:wrap => :span)
-# #-> <span class="CodeRay"><span class="co">Some</span> /code/</span>
-# puts CodeRay.scan('Some /code/', :ruby).span  #-> the same
+#  require 'coderay'
+#  puts CodeRay.scan('Some /code/', :ruby).html  #-> a HTML page
+#  puts CodeRay.scan('Some /code/', :ruby).html(:wrap => :span)
+#  #-> <span class="CodeRay"><span class="co">Some</span> /code/</span>
+#  puts CodeRay.scan('Some /code/', :ruby).span  #-> the same
 #
-# puts CodeRay.scan('Some code', :ruby).html(
-# :wrap => nil,
-# :line_numbers => :inline,
-# :css => :style
-# )
+#  puts CodeRay.scan('Some code', :ruby).html(
+#    :wrap => nil,
+#    :line_numbers => :inline,
+#    :css => :style
+#  )
 #
 # == Options
 #
@@ -678,6 +694,7 @@ class CodeRay::Encoders::HTML < ::CodeRay::Encoders::Encoder
 end
 
 class CodeRay::Encoders::HTML::CSS
+  # @return [CSS] a new instance of CSS
   def initialize(style = T.unsafe(nil)); end
 
   def get_style_for_css_classes(css_classes); end
@@ -721,6 +738,8 @@ module CodeRay::Encoders::HTML::Output
   def css; end
 
   # Sets the attribute css
+  #
+  # @param value the value to set the attribute css to.
   def css=(_arg0); end
 
   def stylesheet(in_tag = T.unsafe(nil)); end
@@ -729,8 +748,11 @@ module CodeRay::Encoders::HTML::Output
   def wrapped_in; end
 
   # Sets the attribute wrapped_in
+  #
+  # @param value the value to set the attribute wrapped_in to.
   def wrapped_in=(_arg0); end
 
+  # @return [Boolean]
   def wrapped_in?(element); end
 
   class << self
@@ -763,17 +785,17 @@ CodeRay::Encoders::HTML::TRANSPARENT_TOKEN_KINDS = T.let(T.unsafe(nil), Set)
 # A simple JSON Encoder.
 #
 # Example:
-# CodeRay.scan('puts "Hello world!"', :ruby).json
+#  CodeRay.scan('puts "Hello world!"', :ruby).json
 # yields
-# [
-# {"type"=>"text", "text"=>"puts", "kind"=>"ident"},
-# {"type"=>"text", "text"=>" ", "kind"=>"space"},
-# {"type"=>"block", "action"=>"open", "kind"=>"string"},
-# {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
-# {"type"=>"text", "text"=>"Hello world!", "kind"=>"content"},
-# {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
-# {"type"=>"block", "action"=>"close", "kind"=>"string"},
-# ]
+#  [
+#    {"type"=>"text", "text"=>"puts", "kind"=>"ident"},
+#    {"type"=>"text", "text"=>" ", "kind"=>"space"},
+#    {"type"=>"block", "action"=>"open", "kind"=>"string"},
+#    {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
+#    {"type"=>"text", "text"=>"Hello world!", "kind"=>"content"},
+#    {"type"=>"text", "text"=>"\"", "kind"=>"delimiter"},
+#    {"type"=>"block", "action"=>"close", "kind"=>"string"},
+#  ]
 class CodeRay::Encoders::JSON < ::CodeRay::Encoders::Encoder
   def begin_group(kind); end
   def begin_line(kind); end
@@ -825,8 +847,14 @@ CodeRay::Encoders::LinesOfCode::NON_EMPTY_LINE = T.let(T.unsafe(nil), Regexp)
 class CodeRay::Encoders::Lint < ::CodeRay::Encoders::Debug
   def begin_group(kind); end
   def begin_line(kind); end
+
+  # @raise [IncorrectTokenGroupNesting]
   def end_group(kind); end
+
+  # @raise [IncorrectTokenGroupNesting]
   def end_line(kind); end
+
+  # @raise [EmptyToken]
   def text_token(text, kind); end
 
   protected
@@ -888,21 +916,30 @@ CodeRay::Encoders::Statistic::TOKEN_TYPES_ROW = T.let(T.unsafe(nil), String)
 
 class CodeRay::Encoders::Statistic::TypeStats < ::Struct
   # Returns the value of attribute count
+  #
+  # @return [Object] the current value of count
   def count; end
 
   # Sets the attribute count
+  #
+  # @param value [Object] the value to set the attribute count to.
+  # @return [Object] the newly set value
   def count=(_); end
 
   # Returns the value of attribute size
+  #
+  # @return [Object] the current value of size
   def size; end
 
   # Sets the attribute size
+  #
+  # @param value [Object] the value to set the attribute size to.
+  # @return [Object] the newly set value
   def size=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -990,8 +1027,12 @@ class CodeRay::Encoders::TokenKindFilter < ::CodeRay::Encoders::Filter
 
   protected
 
+  # @return [Boolean]
   def include_group?(kind); end
+
+  # @return [Boolean]
   def include_text_token?(text, kind); end
+
   def setup(options); end
 end
 
@@ -1038,14 +1079,14 @@ CodeRay::Encoders::YAML::FILE_EXTENSION = T.let(T.unsafe(nil), String)
 #
 # == Usage
 #
-# # determine the type of the given
-# lang = FileType[file_name]
+#  # determine the type of the given
+#  lang = FileType[file_name]
 #
-# # return :text if the file type is unknown
-# lang = FileType.fetch file_name, :text
+#  # return :text if the file type is unknown
+#  lang = FileType.fetch file_name, :text
 #
-# # try the shebang line, too
-# lang = FileType.fetch file_name, :text, true
+#  # try the shebang line, too
+#  lang = FileType.fetch file_name, :text, true
 module CodeRay::FileType
   class << self
     # Try to determine the file type of the file.
@@ -1075,11 +1116,11 @@ class CodeRay::FileType::UnknownFileType < ::Exception; end
 
 # = Plugin
 #
-# Plugins have to include this module.
+#  Plugins have to include this module.
 #
-# IMPORTANT: Use extend for this module.
+#  IMPORTANT: Use extend for this module.
 #
-# See CodeRay::PluginHost for examples.
+#  See CodeRay::PluginHost for examples.
 module CodeRay::Plugin
   def aliases; end
 
@@ -1092,10 +1133,10 @@ module CodeRay::Plugin
   # Register this class for the given +id+.
   #
   # Example:
-  # class MyPlugin < PluginHost::BaseClass
-  # register_for :my_id
-  # ...
-  # end
+  #   class MyPlugin < PluginHost::BaseClass
+  #     register_for :my_id
+  #     ...
+  #   end
   #
   # See PluginHost.register.
   def register_for(id); end
@@ -1110,30 +1151,30 @@ end
 # A simple subclass/subfolder plugin system.
 #
 # Example:
-# class Generators
-# extend PluginHost
-# plugin_path 'app/generators'
-# end
+#  class Generators
+#    extend PluginHost
+#    plugin_path 'app/generators'
+#  end
 #
-# class Generator
-# extend Plugin
-# PLUGIN_HOST = Generators
-# end
+#  class Generator
+#    extend Plugin
+#    PLUGIN_HOST = Generators
+#  end
 #
-# class FancyGenerator < Generator
-# register_for :fancy
-# end
+#  class FancyGenerator < Generator
+#    register_for :fancy
+#  end
 #
-# Generators[:fancy]  #-> FancyGenerator
-# # or
-# CodeRay.require_plugin 'Generators/fancy'
-# # or
-# Generators::Fancy
+#  Generators[:fancy]  #-> FancyGenerator
+#  # or
+#  CodeRay.require_plugin 'Generators/fancy'
+#  # or
+#  Generators::Fancy
 module CodeRay::PluginHost
   # Returns the Plugin for +id+.
   #
   # Example:
-  # yaml_plugin = MyPluginHost[:yaml]
+  #  yaml_plugin = MyPluginHost[:yaml]
   def [](id, *args, &blk); end
 
   # Returns an array of all Plugins.
@@ -1150,12 +1191,12 @@ module CodeRay::PluginHost
   #
   # See also map.
   #
-  # class MyColorHost < PluginHost
-  # map :navy => :dark_blue
-  # default :gray
-  # end
+  #  class MyColorHost < PluginHost
+  #    map :navy => :dark_blue
+  #    default :gray
+  #  end
   #
-  # MyColorHost.default  # loads and returns the Gray plugin
+  #  MyColorHost.default  # loads and returns the Gray plugin
   def default(id = T.unsafe(nil)); end
 
   # Returns an array of all .rb files in the plugin path.
@@ -1166,7 +1207,7 @@ module CodeRay::PluginHost
   # Returns the Plugin for +id+.
   #
   # Example:
-  # yaml_plugin = MyPluginHost[:yaml]
+  #  yaml_plugin = MyPluginHost[:yaml]
   def load(id, *args, &blk); end
 
   # Loads all plugins using list and load.
@@ -1181,11 +1222,11 @@ module CodeRay::PluginHost
   #
   # Usage: Put this in a file plugin_path/_map.rb.
   #
-  # class MyColorHost < PluginHost
-  # map :navy => :dark_blue,
-  # :maroon => :brown,
-  # :luna => :moon
-  # end
+  #  class MyColorHost < PluginHost
+  #    map :navy => :dark_blue,
+  #      :maroon => :brown,
+  #      :luna => :moon
+  #  end
   def map(hash); end
 
   # A Hash of plugion_id => Plugin pairs.
@@ -1260,6 +1301,10 @@ CodeRay::Scanners::C::KEYWORDS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::C::PREDEFINED_CONSTANTS = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::C::PREDEFINED_TYPES = T.let(T.unsafe(nil), Array)
 CodeRay::Scanners::C::UNICODE_ESCAPE = T.let(T.unsafe(nil), Regexp)
+
+# Scanner for C++.
+#
+# Aliases: +cplusplus+, c++
 CodeRay::Scanners::CPlusPlus = CodeRay::Scanners::Text
 
 class CodeRay::Scanners::CSS < ::CodeRay::Scanners::Scanner
@@ -1731,6 +1776,7 @@ CodeRay::Scanners::Ruby::Patterns::VALUE_FOLLOWS = T.let(T.unsafe(nil), Regexp)
 CodeRay::Scanners::Ruby::Patterns::VARIABLE = T.let(T.unsafe(nil), Regexp)
 
 class CodeRay::Scanners::Ruby::StringState < ::Struct
+  # @return [StringState] a new instance of StringState
   def initialize(kind, interpreted, delim, heredoc = T.unsafe(nil)); end
 
   def heredoc_pattern(delim, interpreted, indented); end
@@ -1779,15 +1825,15 @@ end
 # It is also +Enumerable+, so you can use it like an Array of
 # Tokens:
 #
-# require 'coderay'
+#   require 'coderay'
 #
-# c_scanner = CodeRay::Scanners[:c].new "if (*p == '{') nest++;"
+#   c_scanner = CodeRay::Scanners[:c].new "if (*p == '{') nest++;"
 #
-# for text, kind in c_scanner
-# puts text if kind == :operator
-# end
+#   for text, kind in c_scanner
+#     puts text if kind == :operator
+#   end
 #
-# # prints: (*==)++;
+#   # prints: (*==)++;
 #
 # OK, this is a very simple example :)
 # You can also use +map+, +any?+, +find+ and even +sort_by+,
@@ -1799,12 +1845,14 @@ class CodeRay::Scanners::Scanner < ::StringScanner
   # Create a new Scanner.
   #
   # * +code+ is the input String and is handled by the superclass
-  # StringScanner.
+  #   StringScanner.
   # * +options+ is a Hash with Symbols as keys.
-  # It is merged with the default options of the class (you can
-  # overwrite default options here.)
+  #   It is merged with the default options of the class (you can
+  #   overwrite default options here.)
   #
   # Else, a Tokens object is used.
+  #
+  # @return [Scanner] a new instance of Scanner
   def initialize(code = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # The string in binary encoding.
@@ -1841,6 +1889,8 @@ class CodeRay::Scanners::Scanner < ::StringScanner
   def state; end
 
   # Sets the attribute state
+  #
+  # @param value the value to set the attribute state to.
   def state=(_arg0); end
 
   # Set a new string to be scanned.
@@ -1855,6 +1905,8 @@ class CodeRay::Scanners::Scanner < ::StringScanner
   protected
 
   # Scanner error with additional status information
+  #
+  # @raise [ScanError]
   def raise_inspect(message, tokens, state = T.unsafe(nil), ambit = T.unsafe(nil), backtrace = T.unsafe(nil)); end
 
   def raise_inspect_arguments(message, tokens, state, ambit); end
@@ -1871,6 +1923,8 @@ class CodeRay::Scanners::Scanner < ::StringScanner
   #
   # Subclasses must implement this method; it must return +tokens+
   # and must only use Tokens#<< for storing scanned tokens!
+  #
+  # @raise [NotImplementedError]
   def scan_tokens(tokens, options); end
 
   def scanner_state_info(state); end
@@ -1989,35 +2043,35 @@ CodeRay::TokenKinds = T.let(T.unsafe(nil), Hash)
 #
 # A token itself is not a special object, just two elements in an Array:
 # * the _token_ _text_ (the original source of the token in a String) or
-# a _token_ _action_ (begin_group, end_group, begin_line, end_line)
+#   a _token_ _action_ (begin_group, end_group, begin_line, end_line)
 # * the _token_ _kind_ (a Symbol representing the type of the token)
 #
 # It looks like this:
 #
-# ..., '# It looks like this', :comment, ...
-# ..., '3.1415926', :float, ...
-# ..., '$^', :error, ...
+#   ..., '# It looks like this', :comment, ...
+#   ..., '3.1415926', :float, ...
+#   ..., '$^', :error, ...
 #
 # Some scanners also yield sub-tokens, represented by special
 # token actions, for example :begin_group and :end_group.
 #
 # The Ruby scanner, for example, splits "a string" into:
 #
-# [
-# :begin_group, :string,
-# '"',          :delimiter,
-# 'a string',   :content,
-# '"',          :delimiter,
-# :end_group,   :string
-# ]
+#  [
+#   :begin_group, :string,
+#   '"',          :delimiter,
+#   'a string',   :content,
+#   '"',          :delimiter,
+#   :end_group,   :string
+#  ]
 #
 # Tokens can be used to save the output of a Scanners in a simple
 # Ruby object that can be send to an Encoder later:
 #
-# tokens = CodeRay.scan('price = 2.59', :ruby).tokens
-# tokens.encode(:html)
-# tokens.html
-# CodeRay.encoder(:html).encode_tokens(tokens)
+#   tokens = CodeRay.scan('price = 2.59', :ruby).tokens
+#   tokens.encode(:html)
+#   tokens.html
+#   CodeRay.encoder(:html).encode_tokens(tokens)
 #
 # Tokens gives you the power to handle pre-scanned code very easily:
 # You can serialize it to a JSON string and store it in a database, pass it
@@ -2078,12 +2132,16 @@ end
 # while still providing the benefits of direct streaming.
 class CodeRay::TokensProxy
   # Create a new TokensProxy with the arguments of CodeRay.scan.
+  #
+  # @return [TokensProxy] a new instance of TokensProxy
   def initialize(input, lang, options = T.unsafe(nil), block = T.unsafe(nil)); end
 
   # Returns the value of attribute block.
   def block; end
 
   # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
   def block=(_arg0); end
 
   # Overwrite Struct#each.
@@ -2097,12 +2155,16 @@ class CodeRay::TokensProxy
   def input; end
 
   # Sets the attribute input
+  #
+  # @param value the value to set the attribute input to.
   def input=(_arg0); end
 
   # Returns the value of attribute lang.
   def lang; end
 
   # Sets the attribute lang
+  #
+  # @param value the value to set the attribute lang to.
   def lang=(_arg0); end
 
   # Tries to call encode;
@@ -2113,6 +2175,8 @@ class CodeRay::TokensProxy
   def options; end
 
   # Sets the attribute options
+  #
+  # @param value the value to set the attribute options to.
   def options=(_arg0); end
 
   # A (cached) scanner instance to use for the scan task.
@@ -2138,31 +2202,33 @@ CodeRay::VERSION = T.let(T.unsafe(nil), String)
 #
 # Example:
 #
-# # define word arrays
-# RESERVED_WORDS = %w[
-# asm break case continue default do else
-# ]
+#  # define word arrays
+#  RESERVED_WORDS = %w[
+#    asm break case continue default do else
+#  ]
 #
-# PREDEFINED_TYPES = %w[
-# int long short char void
-# ]
+#  PREDEFINED_TYPES = %w[
+#    int long short char void
+#  ]
 #
-# # make a WordList
-# IDENT_KIND = WordList.new(:ident).
-# add(RESERVED_WORDS, :reserved).
-# add(PREDEFINED_TYPES, :predefined_type)
+#  # make a WordList
+#  IDENT_KIND = WordList.new(:ident).
+#    add(RESERVED_WORDS, :reserved).
+#    add(PREDEFINED_TYPES, :predefined_type)
 #
-# ...
+#  ...
 #
-# def scan_tokens tokens, options
-# ...
+#  def scan_tokens tokens, options
+#    ...
 #
-# elsif scan(/[A-Za-z_][A-Za-z_0-9]*/)
-# # use it
-# kind = IDENT_KIND[match]
-# ...
+#    elsif scan(/[A-Za-z_][A-Za-z_0-9]*/)
+#      # use it
+#      kind = IDENT_KIND[match]
+#      ...
 class CodeRay::WordList < ::Hash
   # Create a new WordList with +default+ as default value.
+  #
+  # @return [WordList] a new instance of WordList
   def initialize(default = T.unsafe(nil)); end
 
   # Add words to the list and associate them with +value+.
