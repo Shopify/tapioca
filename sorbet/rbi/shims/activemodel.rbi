@@ -3,6 +3,8 @@
 module ActiveModel
   module Attributes
     module ClassMethods
+      requires_ancestor { Kernel }
+
       sig { returns(T::Hash[String, ActiveModel::Type::Value]) }
       def attribute_types; end
 
