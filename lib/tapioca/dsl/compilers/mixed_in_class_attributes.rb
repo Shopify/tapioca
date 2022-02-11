@@ -53,7 +53,7 @@ module Tapioca
 
         sig { override.params(root: RBI::Tree, constant: Module).void }
         def decorate(root, constant)
-          mixin_compiler = DynamicMixinCompiler.new(constant)
+          mixin_compiler = Runtime::DynamicMixinCompiler.new(constant)
           return if mixin_compiler.empty_attributes?
 
           root.create_path(constant) do |mod|
