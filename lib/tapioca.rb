@@ -44,7 +44,7 @@ module Tapioca
 end
 
 require "tapioca/runtime/reflection"
-require "tapioca/trackers"
+require "tapioca/runtime/trackers"
 require "tapioca/dsl/compiler"
 require "tapioca/compilers/dynamic_mixin_compiler"
 require "tapioca/version"
