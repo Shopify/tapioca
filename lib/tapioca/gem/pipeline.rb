@@ -5,7 +5,7 @@ require "pathname"
 
 module Tapioca
   module Gem
-    class SymbolTableCompiler
+    class Pipeline
       extend T::Sig
       include Runtime::Reflection
       include RBIHelper

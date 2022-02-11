@@ -66,7 +66,7 @@ module Tapioca
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method.owner == constant
-          return if @compiler.symbol_in_payload?(symbol_name) && !@compiler.method_in_gem?(method)
+          return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
           signature = signature_of(method)
           method = T.let(signature.method, UnboundMethod) if signature
@@ -137,7 +137,7 @@ module Tapioca
             end
           end
 
-          @compiler.push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
+          @pipeline.push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
         end
 

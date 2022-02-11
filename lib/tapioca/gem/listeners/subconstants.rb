@@ -14,7 +14,7 @@ module Tapioca
         sig { override.params(event: ScopeNodeAdded).void }
         def on_scope(event)
           symbol = event.symbol
-          return if @compiler.symbol_in_payload?(symbol) && event.node.empty?
+          return if @pipeline.symbol_in_payload?(symbol) && event.node.empty?
 
           prefix = symbol == "Object" ? "" : symbol
 
@@ -28,7 +28,7 @@ module Tapioca
             next if (Object == constant || BasicObject == constant) && Module === subconstant
             next unless subconstant
 
-            @compiler.push_constant(name, subconstant)
+            @pipeline.push_constant(name, subconstant)
           end
         end
       end
