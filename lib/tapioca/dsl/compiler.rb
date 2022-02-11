@@ -1,7 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "rbi"
 require "tapioca/rbi_ext/model"
+require "tapioca/rbi_formatter"
 require "tapioca/dsl/helpers/param_helper"
 require "tapioca/dsl/pipeline"
 

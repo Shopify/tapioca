@@ -23,5 +23,12 @@ module Tapioca
         super(message, color)
       end
     end
+
+    sig { params(options: T::Hash[Symbol, T.untyped]).returns(RBIFormatter) }
+    def rbi_formatter(options)
+      rbi_formatter = DEFAULT_RBI_FORMATTER
+      rbi_formatter.max_line_length = options[:rbi_max_line_length]
+      rbi_formatter
+    end
   end
 end

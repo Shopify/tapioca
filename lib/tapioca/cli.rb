@@ -99,6 +99,10 @@ module Tapioca
       type: :numeric,
       desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
       default: 1
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: 120
     def dsl(*constants)
       generator = Generators::Dsl.new(
         requested_constants: constants,
@@ -112,7 +116,8 @@ module Tapioca
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
-        number_of_workers: options[:workers]
+        number_of_workers: options[:workers],
+        rbi_formatter: rbi_formatter(options)
       )
 
       if options[:workers] != 1
@@ -189,6 +194,10 @@ module Tapioca
       banner: "directory",
       desc: "The DSL directory used to correct gems strictnesses",
       default: DEFAULT_DSL_DIR
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: 120
     def gem(*gems)
       Tapioca.silence_warnings do
         all = options[:all]
@@ -207,7 +216,8 @@ module Tapioca
           include_exported_rbis: options[:exported_gem_rbis],
           number_of_workers: options[:workers],
           auto_strictness: options[:auto_strictness],
-          dsl_dir: options[:dsl_dir]
+          dsl_dir: options[:dsl_dir],
+          rbi_formatter: rbi_formatter(options)
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify

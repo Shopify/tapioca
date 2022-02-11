@@ -40,14 +40,14 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      rbi = RBI::File.new(strictness: "true")
-      rbi.root = Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile
-      rbi.transform_rbi!
-      # NOTE: This is not using the standard helper method `transformed_string`.
+      tree = Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile
+
+      # NOTE: This is not returning a `RBI::File`.
       # The following test suite is based on the string output of the `RBI::Tree` rather
       # than the, now used, `RBI::File`. The file output includes the sigils, comments, etc.
       # We should eventually update these tests to be based on the `RBI::File`.
-      rbi.root.string
+      Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+      tree.string
     end
 
     it "compiles DelegateClass" do

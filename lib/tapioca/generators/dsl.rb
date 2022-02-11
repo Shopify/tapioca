@@ -19,6 +19,7 @@ module Tapioca
           quiet: T::Boolean,
           verbose: T::Boolean,
           number_of_workers: T.nilable(Integer),
+          rbi_formatter: RBIFormatter
         ).void
       end
       def initialize(
@@ -34,7 +35,8 @@ module Tapioca
         should_verify: false,
         quiet: false,
         verbose: false,
-        number_of_workers: nil
+        number_of_workers: nil,
+        rbi_formatter: DEFAULT_RBI_FORMATTER
       )
         @requested_constants = requested_constants
         @outpath = outpath
@@ -47,6 +49,7 @@ module Tapioca
         @quiet = quiet
         @verbose = verbose
         @number_of_workers = number_of_workers
+        @rbi_formatter = rbi_formatter
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -217,13 +220,14 @@ module Tapioca
 
         filename = outpath / rbi_filename_for(constant_name)
 
-        rbi.set_file_header(
+        @rbi_formatter.write_header!(
+          rbi,
           generate_command_for(constant_name),
-          reason: "dynamic methods in `#{constant_name}`",
-          display_heading: @file_header
-        )
+          reason: "dynamic methods in `#{constant_name}`"
+        ) if @file_header
 
-        create_file(filename, rbi.transformed_string, verbose: !quiet)
+        rbi_string = @rbi_formatter.print_file(rbi)
+        create_file(filename, rbi_string, verbose: !quiet)
 
         filename
       end

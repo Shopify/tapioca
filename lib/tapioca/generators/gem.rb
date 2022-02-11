@@ -21,7 +21,8 @@ module Tapioca
           file_writer: Thor::Actions,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
-          dsl_dir: String
+          dsl_dir: String,
+          rbi_formatter: RBIFormatter
         ).void
       end
       def initialize(
@@ -38,7 +39,8 @@ module Tapioca
         file_writer: FileWriter.new,
         number_of_workers: nil,
         auto_strictness: true,
-        dsl_dir: DEFAULT_DSL_DIR
+        dsl_dir: DEFAULT_DSL_DIR,
+        rbi_formatter: DEFAULT_RBI_FORMATTER
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -50,6 +52,7 @@ module Tapioca
         @number_of_workers = number_of_workers
         @auto_strictness = auto_strictness
         @dsl_dir = dsl_dir
+        @rbi_formatter = rbi_formatter
 
         super(default_command: default_command, file_writer: file_writer)
 
@@ -165,24 +168,24 @@ module Tapioca
         gem_name = set_color(gem.name, :yellow, :bold)
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
-        rbi.set_file_header(
+
+        @rbi_formatter.write_header!(rbi,
           "#{@default_command} gem #{gem.name}",
-          reason: "types exported from the `#{gem.name}` gem",
-          display_heading: @file_header
-        )
+          reason: "types exported from the `#{gem.name}` gem",) if @file_header
 
         rbi.root = Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 
         if rbi.empty?
-          rbi.set_empty_body_content
+          @rbi_formatter.write_empty_body_comment!(rbi)
           say("Compiled #{gem_name} (empty output)", :yellow)
         else
           say("Compiled #{gem_name}", :green)
         end
 
-        create_file(@outpath / gem.rbi_file_name, rbi.transformed_string)
+        rbi_string = @rbi_formatter.print_file(rbi)
+        create_file(@outpath / gem.rbi_file_name, rbi_string)
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove_file(file) unless file.basename.to_s == gem.rbi_file_name

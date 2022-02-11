@@ -93,7 +93,7 @@ module Tapioca
 
             compiler.decorate(file.root, constant)
 
-            file.transformed_string
+            Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
           end
 
           sig { returns(T::Array[String]) }

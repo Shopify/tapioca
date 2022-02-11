@@ -127,6 +127,8 @@ Options:
                                                               # Default: true
   --dsl-dir, [--dsl-dir=directory]                            # The DSL directory used to correct gems strictnesses
                                                               # Default: sorbet/rbi/dsl
+          [--rbi-max-line-length=N]                           # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
+                                                              # Default: 120
   -c, [--config=<config file path>]                           # Path to the Tapioca configuration file
                                                               # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
@@ -181,6 +183,8 @@ Options:
   -q, [--quiet], [--no-quiet]                  # Supresses file creation output
   -w, [--workers=N]                            # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
                                                # Default: 1
+          [--rbi-max-line-length=N]            # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
+                                               # Default: 120
   -c, [--config=<config file path>]            # Path to the Tapioca configuration file
                                                # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
@@ -232,6 +236,7 @@ dsl:
   verify: false
   quiet: false
   workers: 1
+  rbi_max_line_length: 120
 gem:
   outdir: sorbet/rbi/gems
   file_header: true
@@ -247,6 +252,7 @@ gem:
   workers: 1
   auto_strictness: true
   dsl_dir: sorbet/rbi/dsl
+  rbi_max_line_length: 120
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
