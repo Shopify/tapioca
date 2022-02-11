@@ -7,7 +7,7 @@ module Tapioca
   module Compilers
     class SymbolTableCompiler
       extend T::Sig
-      include Reflection
+      include Runtime::Reflection
       include RBIHelper
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])

@@ -6,7 +6,7 @@ module T
     class Simple
       module NamePatch
         def name
-          @name ||= ::Tapioca::Reflection.name_of(@raw_type).freeze
+          @name ||= ::Tapioca::Runtime::Reflection.name_of(@raw_type).freeze
         end
       end
 

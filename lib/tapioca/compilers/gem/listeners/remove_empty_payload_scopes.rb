@@ -8,8 +8,6 @@ module Tapioca
         class RemoveEmptyPayloadScopes < Base
           extend T::Sig
 
-          include Reflection
-
           private
 
           sig { override.params(event: ScopeNodeAdded).void }

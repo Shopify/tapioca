@@ -43,7 +43,7 @@ module Tapioca
   }.freeze, T::Hash[String, String])
 end
 
-require "tapioca/reflection"
+require "tapioca/runtime/reflection"
 require "tapioca/trackers"
 require "tapioca/dsl/compiler"
 require "tapioca/compilers/dynamic_mixin_compiler"

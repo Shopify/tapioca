@@ -15,7 +15,7 @@ module Tapioca
       extend T::Sig
       extend T::Helpers
 
-      include Reflection
+      include Runtime::Reflection
 
       abstract!
 

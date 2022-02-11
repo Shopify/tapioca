@@ -7,8 +7,7 @@ module Tapioca
       module Listeners
         class SorbetSignatures < Base
           extend T::Sig
-
-          include Reflection
+          include Runtime::Reflection
           include RBIHelper
 
           TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/

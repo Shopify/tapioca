@@ -49,8 +49,8 @@ module Tapioca
       end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
-          .select { |c| Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
-          .sort_by! { |c| T.must(Reflection.name_of(c)) }
+          .select { |c| Runtime::Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
+          .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
         if constants_to_process.empty?
           report_error(<<~ERROR)
@@ -94,7 +94,7 @@ module Tapioca
         ).returns(T::Enumerable[Compiler])
       end
       def gather_compilers(requested_compilers, excluded_compilers)
-        compiler_klasses = ::Tapioca::Reflection.descendants_of(Compiler).select do |klass|
+        compiler_klasses = ::Tapioca::Runtime::Reflection.descendants_of(Compiler).select do |klass|
           (requested_compilers.empty? || requested_compilers.include?(klass)) &&
             !excluded_compilers.include?(klass)
         end.sort_by { |klass| T.must(klass.name) }

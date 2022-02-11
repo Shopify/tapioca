@@ -20,7 +20,7 @@ module Tapioca
               # Grab the next constant name
               constant_name = T.must(@constant_names_registered_for_autoload.shift)
               # Trigger autoload by constantizing the registered name
-              Reflection.constantize(constant_name, inherit: true)
+              Runtime::Reflection.constantize(constant_name, inherit: true)
             end
           end
         end

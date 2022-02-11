@@ -10,7 +10,7 @@ module Tapioca
     # correspondence between classes/modules and files, as this information isn't
     # available in the ruby runtime without extra accounting.
     module ConstantDefinition
-      extend Reflection
+      extend Runtime::Reflection
 
       @class_files = {}
 

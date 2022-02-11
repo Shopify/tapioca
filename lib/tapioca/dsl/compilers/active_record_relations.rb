@@ -169,7 +169,7 @@ module Tapioca
           extend T::Sig
           include Helpers::ParamHelper
           include SorbetHelper
-          include Reflection
+          include Runtime::Reflection
           include Helpers::ActiveRecordConstantsHelper
 
           sig do

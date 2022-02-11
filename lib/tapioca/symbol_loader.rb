@@ -9,7 +9,7 @@ module Tapioca
     class << self
       extend T::Sig
       include SorbetHelper
-      include Reflection
+      include Runtime::Reflection
 
       sig { returns(T::Set[String]) }
       def payload_symbols
