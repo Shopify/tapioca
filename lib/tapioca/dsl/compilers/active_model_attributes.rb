@@ -62,26 +62,35 @@ module Tapioca
 
         sig { params(constant: ::ActiveModel::Attributes::ClassMethods).returns(T::Array[[::String, ::String]]) }
         def attribute_methods_for(constant)
-          constant.attribute_method_matchers.flat_map do |matcher|
+          patterns = if constant.respond_to?(:attribute_method_patterns)
+            # https://github.com/rails/rails/pull/44367
+            T.unsafe(constant).attribute_method_patterns
+          else
+            constant.attribute_method_matchers
+          end
+          patterns.flat_map do |pattern|
             constant.attribute_types.map do |name, value|
-              next unless handle_method_matcher?(matcher)
+              next unless handle_method_pattern?(pattern)
 
-              [matcher.method_name(name), type_for(value)]
+              [pattern.method_name(name), type_for(value)]
             end.compact
           end
         end
 
         sig do
-          params(matcher: ::ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher)
+          params(pattern: T.untyped)
             .returns(T::Boolean)
         end
-        def handle_method_matcher?(matcher)
-          target = if matcher.respond_to?(:method_missing_target)
+        def handle_method_pattern?(pattern)
+          target = if pattern.respond_to?(:method_missing_target)
             # Pre-Rails 6.0, the field is named "method_missing_target"
-            T.unsafe(matcher).method_missing_target
-          else
+            T.unsafe(pattern).method_missing_target
+          elsif pattern.respond_to?(:target)
             # Rails 6.0+ has renamed the field to "target"
-            matcher.target
+            pattern.target
+          else
+            # https://github.com/rails/rails/pull/44367/files
+            T.unsafe(pattern).proxy_target
           end
 
           HANDLED_METHOD_TARGETS.include?(target.to_s)
