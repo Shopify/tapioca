@@ -77,10 +77,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(pattern: T.untyped)
-            .returns(T::Boolean)
-        end
+        sig { params(pattern: T.untyped).returns(T::Boolean) }
         def handle_method_pattern?(pattern)
           target = if pattern.respond_to?(:method_missing_target)
             # Pre-Rails 6.0, the field is named "method_missing_target"
