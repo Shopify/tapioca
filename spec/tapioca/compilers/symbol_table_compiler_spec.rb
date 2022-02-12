@@ -2318,6 +2318,58 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles constants and methods marked as final properly" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          extend T::Sig
+          extend T::Helpers
+
+          final!
+
+          sig(:final) { void }
+          def foo
+          end
+
+          sig(:final) { params(a: Integer, b: String).returns(Integer) }
+          def bar(a, b:)
+          end
+
+          sig(:final) { returns(T.proc.params(x: String).void) }
+          attr_reader :some_attribute
+
+          class << self
+            extend(T::Sig)
+
+            sig(:final) { void }
+            def quux
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          final!
+
+          sig(:final) { params(a: Integer, b: String).returns(Integer) }
+          def bar(a, b:); end
+
+          sig(:final) { void }
+          def foo; end
+
+          sig(:final) { returns(T.proc.params(x: String).void) }
+          def some_attribute; end
+
+          class << self
+            sig(:final) { void }
+            def quux; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles signatures and structs in source files" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo

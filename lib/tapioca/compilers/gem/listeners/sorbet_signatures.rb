@@ -60,7 +60,19 @@ module Tapioca
               sig.is_overridable = true
             end
 
+            sig.is_final = signature_final?(signature)
+
             sig
+          end
+
+          sig { params(signature: T.untyped).returns(T::Boolean) }
+          def signature_final?(signature)
+            modules_with_final = T::Private::Methods.instance_variable_get(:@modules_with_final)
+            final_methods = modules_with_final[signature.owner.object_id]
+
+            return false unless final_methods
+
+            final_methods.include?(signature.method_name)
           end
         end
       end
