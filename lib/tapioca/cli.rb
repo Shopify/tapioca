@@ -23,25 +23,23 @@ module Tapioca
 
     desc "init", "initializes folder structure"
     def init
-      generator = Generators::Init.new(
+      command = Commands::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: TAPIOCA_CONFIG_FILE,
-        default_postrequire: DEFAULT_POSTREQUIRE_FILE,
-        default_command: DEFAULT_COMMAND
+        default_postrequire: DEFAULT_POSTREQUIRE_FILE
       )
-      generator.generate
+      command.execute
     end
 
     desc "require", "generate the list of files to be required by tapioca"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def require
-      generator = Generators::Require.new(
+      command = Commands::Require.new(
         requires_path: options[:postrequire],
-        sorbet_config_path: SORBET_CONFIG_FILE,
-        default_command: DEFAULT_COMMAND
+        sorbet_config_path: SORBET_CONFIG_FILE
       )
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
@@ -55,13 +53,12 @@ module Tapioca
       desc: FILE_HEADER_OPTION_DESC,
       default: true
     def todo
-      generator = Generators::Todo.new(
+      command = Commands::Todo.new(
         todo_file: options[:todo_file],
-        file_header: options[:file_header],
-        default_command: DEFAULT_COMMAND
+        file_header: options[:file_header]
       )
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
@@ -104,7 +101,7 @@ module Tapioca
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: 120
     def dsl(*constants)
-      generator = Generators::Dsl.new(
+      command = Commands::Dsl.new(
         requested_constants: constants,
         outpath: Pathname.new(options[:outdir]),
         only: options[:only],
@@ -112,7 +109,6 @@ module Tapioca
         file_header: options[:file_header],
         compiler_path: Tapioca::Dsl::DSL_COMPILERS_DIR,
         tapioca_path: TAPIOCA_DIR,
-        default_command: DEFAULT_COMMAND,
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
@@ -128,7 +124,7 @@ module Tapioca
       end
 
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
@@ -203,13 +199,12 @@ module Tapioca
         all = options[:all]
         verify = options[:verify]
 
-        generator = Generators::Gem.new(
+        command = Commands::Gem.new(
           gem_names: all ? [] : gems,
           exclude: options[:exclude],
           prerequire: options[:prerequire],
           postrequire: options[:postrequire],
           typed_overrides: options[:typed_overrides],
-          default_command: DEFAULT_COMMAND,
           outpath: Pathname.new(options[:outdir]),
           file_header: options[:file_header],
           doc: options[:doc],
@@ -235,9 +230,9 @@ module Tapioca
         end
 
         if gems.empty? && !all
-          generator.sync(should_verify: verify)
+          command.sync(should_verify: verify)
         else
-          generator.generate
+          command.execute
         end
       end
     end

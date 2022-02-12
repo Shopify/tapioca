@@ -2,25 +2,23 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
-    class Require < Base
+  module Commands
+    class Require < Command
       sig do
         params(
           requires_path: String,
-          sorbet_config_path: String,
-          default_command: String,
-          file_writer: Thor::Actions
+          sorbet_config_path: String
         ).void
       end
-      def initialize(requires_path:, sorbet_config_path:, default_command:, file_writer: FileWriter.new)
+      def initialize(requires_path:, sorbet_config_path:)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
 
-        super(default_command: default_command, file_writer: file_writer)
+        super()
       end
 
       sig { override.void }
-      def generate
+      def execute
         compiler = Compilers::RequiresCompiler.new(@sorbet_config_path)
         name = set_color(@requires_path, :yellow, :bold)
         say("Compiling #{name}, this may take a few seconds... ")
@@ -44,7 +42,7 @@ module Tapioca
         say("Done", :green)
 
         say("All requires from this application have been written to #{name}.", [:green, :bold])
-        cmd = set_color("#{@default_command} gem", :yellow, :bold)
+        cmd = set_color(default_command(:gem), :yellow, :bold)
         say("Please review changes and commit them, then run `#{cmd}`.", [:green, :bold])
       end
     end

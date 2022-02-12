@@ -2,27 +2,25 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
-    class Todo < Base
+  module Commands
+    class Todo < Command
       include SorbetHelper
 
       sig do
         params(
           todo_file: String,
-          file_header: T::Boolean,
-          default_command: String,
-          file_writer: Thor::Actions
+          file_header: T::Boolean
         ).void
       end
-      def initialize(todo_file:, file_header:, default_command:, file_writer: FileWriter.new)
+      def initialize(todo_file:, file_header:)
         @todo_file = todo_file
         @file_header = file_header
 
-        super(default_command: default_command, file_writer: file_writer)
+        super()
       end
 
       sig { override.void }
-      def generate
+      def execute
         say("Finding all unresolved constants, this may take a few seconds... ")
 
         # Clean all existing unresolved constants before regenerating the list
@@ -37,7 +35,7 @@ module Tapioca
         end
 
         say("Done", :green)
-        contents = rbi(constants, command: "#{@default_command} todo")
+        contents = rbi(constants, command: default_command(:todo))
         create_file(@todo_file, contents.string, verbose: false)
 
         name = set_color(@todo_file, :yellow, :bold)

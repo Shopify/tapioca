@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
-    class Base
+  module Commands
+    class Command
       extend T::Sig
       extend T::Helpers
 
@@ -16,16 +16,23 @@ module Tapioca
 
       abstract!
 
-      sig { params(default_command: String, file_writer: Thor::Actions).void }
-      def initialize(default_command:, file_writer: FileWriter.new)
-        @file_writer = file_writer
-        @default_command = default_command
+      sig { void }
+      def initialize
+        @file_writer = T.let(FileWriter.new, Thor::Actions)
       end
 
       sig { abstract.void }
-      def generate; end
+      def execute; end
 
       private
+
+      sig { params(command: Symbol, args: String).returns(String) }
+      def default_command(command, *args)
+        [Tapioca::BINARY_FILE, command.to_s, *args].join(" ")
+      end
+
+      sig { returns(Thor::Actions) }
+      attr_reader :file_writer
 
       sig do
         params(
@@ -37,7 +44,7 @@ module Tapioca
         ).void
       end
       def create_file(path, content, force: true, skip: false, verbose: true)
-        @file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
+        file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
       end
 
       sig do
@@ -47,7 +54,7 @@ module Tapioca
         ).void
       end
       def remove_file(path, verbose: true)
-        @file_writer.remove_file(path, verbose: verbose)
+        file_writer.remove_file(path, verbose: verbose)
       end
     end
   end

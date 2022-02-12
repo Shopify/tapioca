@@ -28,7 +28,7 @@ module Tapioca
   TAPIOCA_DIR = T.let("#{SORBET_DIR}/tapioca", String)
   TAPIOCA_CONFIG_FILE = T.let("#{TAPIOCA_DIR}/config.yml", String)
 
-  DEFAULT_COMMAND = T.let("bin/tapioca", String)
+  BINARY_FILE = T.let("bin/tapioca", String)
   DEFAULT_POSTREQUIRE_FILE = T.let("#{TAPIOCA_DIR}/require.rb", String)
   DEFAULT_RBI_DIR = T.let("#{SORBET_DIR}/rbi", String)
   DEFAULT_DSL_DIR = T.let("#{DEFAULT_RBI_DIR}/dsl", String)

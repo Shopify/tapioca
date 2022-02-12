@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Generators
-    class Dsl < Base
+  module Commands
+    class Dsl < Command
       sig do
         params(
           requested_constants: T::Array[String],
@@ -13,8 +13,6 @@ module Tapioca
           file_header: T::Boolean,
           compiler_path: String,
           tapioca_path: String,
-          default_command: String,
-          file_writer: Thor::Actions,
           should_verify: T::Boolean,
           quiet: T::Boolean,
           verbose: T::Boolean,
@@ -30,8 +28,6 @@ module Tapioca
         file_header:,
         compiler_path:,
         tapioca_path:,
-        default_command:,
-        file_writer: FileWriter.new,
         should_verify: false,
         quiet: false,
         verbose: false,
@@ -51,13 +47,13 @@ module Tapioca
         @number_of_workers = number_of_workers
         @rbi_formatter = rbi_formatter
 
-        super(default_command: default_command, file_writer: file_writer)
+        super()
 
         @loader = T.let(nil, T.nilable(Loader))
       end
 
       sig { override.void }
-      def generate
+      def execute
         load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
@@ -236,7 +232,7 @@ module Tapioca
       def perform_dsl_verification(dir)
         diff = verify_dsl_rbi(tmp_dir: dir)
 
-        report_diff_and_exit_if_out_of_date(diff, "dsl")
+        report_diff_and_exit_if_out_of_date(diff, :dsl)
       ensure
         FileUtils.remove_entry(dir)
       end
@@ -299,13 +295,13 @@ module Tapioca
         "  File(s) #{cause}:\n  - #{filenames}"
       end
 
-      sig { params(diff: T::Hash[String, Symbol], command: String).void }
+      sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
       def report_diff_and_exit_if_out_of_date(diff, command)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
           say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{@default_command} #{command}`", [:green, :bold])
+          say("  `#{default_command(command)}`", [:green, :bold])
           say("Once it is complete, be sure to commit and push any changes", :green)
 
           say("")
@@ -350,7 +346,7 @@ module Tapioca
 
       sig { params(constant: String).returns(String) }
       def generate_command_for(constant)
-        "#{@default_command} dsl #{constant}"
+        default_command(:dsl, constant)
       end
 
       sig { void }
