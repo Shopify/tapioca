@@ -117,7 +117,7 @@ module Tapioca
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
-                    sig { params(user_id: Integer).void }
+                    sig { params(user_id: ::Integer).void }
                     def authenticate(user_id); end
 
                     sig { returns(T.untyped) }

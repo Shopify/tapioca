@@ -112,7 +112,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         Bar::Arr = T.let(T.unsafe(nil), Array)
-        Bar::Foo = T.type_alias { T.any(String, Symbol) }
+        Bar::Foo = T.type_alias { T.any(::String, ::Symbol) }
 
         module Base
           include ::T::Props
@@ -273,7 +273,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module Bar; end
         module Bar::A; end
         class Bar::A::B; end
-        Bar::A::Foo = T.type_alias { T.any(Bar::A, Bar::A::B, String, Symbol) }
+        Bar::A::Foo = T.type_alias { T.any(::Bar::A, ::Bar::A::B, ::String, ::Symbol) }
       RBI
 
       assert_equal(output, compile)
@@ -712,6 +712,54 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module Foo; end
         class Foo::Bar < ::Foo::Baz; end
         class Foo::Baz; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not drop absolute namespacing" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Bar; end
+
+        class Foo
+          extend T::Sig
+
+          class Bar; end
+          class String; end
+
+          sig { params(x: T.any(::String, ::Bar)).returns(::Bar) }
+          def bar(x); end
+
+          sig { params(x: ::String).returns(::String) }
+          def string(x); end
+
+          sig { params(x: Bar).returns(Bar) }
+          def local_bar(x); end
+
+          sig { params(x: String).returns(String) }
+          def local_string(x); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar; end
+
+        class Foo
+          sig { params(x: T.any(::Bar, ::String)).returns(::Bar) }
+          def bar(x); end
+
+          sig { params(x: ::Foo::Bar).returns(::Foo::Bar) }
+          def local_bar(x); end
+
+          sig { params(x: ::Foo::String).returns(::Foo::String) }
+          def local_string(x); end
+
+          sig { params(x: ::String).returns(::String) }
+          def string(x); end
+        end
+
+        class Foo::Bar; end
+        class Foo::String; end
       RBI
 
       assert_equal(output, compile)
@@ -2351,13 +2399,13 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         class Foo
           final!
 
-          sig(:final) { params(a: Integer, b: String).returns(Integer) }
+          sig(:final) { params(a: ::Integer, b: ::String).returns(::Integer) }
           def bar(a, b:); end
 
           sig(:final) { void }
           def foo; end
 
-          sig(:final) { returns(T.proc.params(x: String).void) }
+          sig(:final) { returns(T.proc.params(x: ::String).void) }
           def some_attribute; end
 
           class << self
@@ -2550,9 +2598,9 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         end
 
         class Bar < ::T::Struct
-          prop :bar, String
-          const :baz, T::Hash[String, T.untyped]
-          const :foo, Integer
+          prop :bar, ::String
+          const :baz, T::Hash[::String, T.untyped]
+          const :foo, ::Integer
           prop :quux, T.untyped, default: T.unsafe(nil)
 
           class << self
@@ -2582,25 +2630,25 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           extend ::T::Props::ClassMethods
           extend ::T::Props::Plugin::ClassMethods
 
-          prop :bar, String
-          const :baz, T.proc.params(arg0: String).void
-          const :foo, Integer
+          prop :bar, ::String
+          const :baz, T.proc.params(arg0: ::String).void
+          const :foo, ::Integer
         end
 
         class Foo
-          sig { params(a: Integer, b: String).returns(Integer) }
+          sig { params(a: ::Integer, b: ::String).returns(::Integer) }
           def bar(a, b:); end
 
           sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
           def baz(a); end
 
-          sig { params(a: Integer, b: String).void }
+          sig { params(a: ::Integer, b: ::String).void }
           def foo(a, b:); end
 
-          sig { params(a: Integer, b: Integer, c: Integer, d: Integer, e: Integer, f: Integer, blk: T.proc.void).void }
+          sig { params(a: ::Integer, b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, blk: T.proc.void).void }
           def many_kinds_of_args(*a, b, c, d:, e: T.unsafe(nil), **f, &blk); end
 
-          sig { returns(T.proc.params(x: String).void) }
+          sig { returns(T.proc.params(x: ::String).void) }
           def some_attribute; end
 
           class << self
@@ -2618,8 +2666,8 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           B = type_template(:out)
           C = type_template
           D = type_member(fixed: Integer)
-          E = type_member(fixed: Integer, upper: T::Array[Numeric])
-          F = type_member(fixed: Integer, lower: T.any(Complex, T::Hash[Symbol, T::Array[Integer]]), upper: T.nilable(Numeric))
+          E = type_member(fixed: Integer, upper: T::Array[::Numeric])
+          F = type_member(fixed: Integer, lower: T.any(::Complex, T::Hash[::Symbol, T::Array[::Integer]]), upper: T.nilable(::Numeric))
 
           class << self
             extend T::Generic
@@ -2649,30 +2697,30 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def something(foo); end
         end
 
-        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[Integer])
+        Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[::Integer])
 
         module Quux
           interface!
 
-          sig { abstract.returns(Integer) }
+          sig { abstract.returns(::Integer) }
           def something; end
         end
 
         class Quux::Concrete
           include ::Quux
 
-          sig { returns(String) }
+          sig { returns(::String) }
           def bar; end
 
-          sig { params(baz: T::Hash[String, Object]).returns(T::Hash[String, Object]) }
+          sig { params(baz: T::Hash[::String, ::Object]).returns(T::Hash[::String, ::Object]) }
           def baz=(baz); end
 
-          sig { returns(T::Array[Integer]) }
+          sig { returns(T::Array[::Integer]) }
           def foo; end
 
           def foo=(_arg0); end
 
-          sig { override.returns(Integer) }
+          sig { override.returns(::Integer) }
           def something; end
         end
       RBI
@@ -2693,7 +2741,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          sig { params(params: {"foo" => Integer, bar: String, :"foo bar" => Class}).void }
+          sig { params(params: {"foo" => ::Integer, bar: ::String, :"foo bar" => ::Class}).void }
           def foo(params); end
         end
       RBI
@@ -2895,10 +2943,10 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
           Elem = type_member(fixed: Integer)
 
-          sig { override.returns(T::Array[Node[Integer]]) }
+          sig { override.returns(T::Array[Node[::Integer]]) }
           def children; end
 
-          sig { override.returns(T::Array[Node[Integer]]) }
+          sig { override.returns(T::Array[Node[::Integer]]) }
           def non_abstract_but_overriden_children; end
         end
 
@@ -2950,19 +2998,19 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo < ::T::Struct
-          prop :a, T.nilable(Integer), default: T.unsafe(nil)
+          prop :a, T.nilable(::Integer), default: T.unsafe(nil)
           prop :b, T::Boolean, default: T.unsafe(nil)
           prop :c, T::Boolean, default: T.unsafe(nil)
-          prop :d, Symbol, default: T.unsafe(nil)
-          prop :e, String, default: T.unsafe(nil)
-          prop :f, Integer, default: T.unsafe(nil)
-          prop :g, Float, default: T.unsafe(nil)
-          prop :h, T::Array[String], default: T.unsafe(nil)
-          prop :i, T::Hash[String, Integer], default: T.unsafe(nil)
-          prop :k, Foo, default: T.unsafe(nil)
-          prop :l, T::Array[Foo], default: T.unsafe(nil)
-          prop :m, T::Hash[Foo, Foo], default: T.unsafe(nil)
-          prop :n, Foo, default: T.unsafe(nil)
+          prop :d, ::Symbol, default: T.unsafe(nil)
+          prop :e, ::String, default: T.unsafe(nil)
+          prop :f, ::Integer, default: T.unsafe(nil)
+          prop :g, ::Float, default: T.unsafe(nil)
+          prop :h, T::Array[::String], default: T.unsafe(nil)
+          prop :i, T::Hash[::String, ::Integer], default: T.unsafe(nil)
+          prop :k, ::Foo, default: T.unsafe(nil)
+          prop :l, T::Array[::Foo], default: T.unsafe(nil)
+          prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
+          prop :n, ::Foo, default: T.unsafe(nil)
 
           class << self
             def inherited(s); end
@@ -3116,7 +3164,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
             def b; end
 
-            sig { returns(Foo::FooAttachedClass) }
+            sig { returns(::Foo::FooAttachedClass) }
             def c; end
           end
         end
@@ -3301,7 +3349,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           # Method bar
           #
           # This method does something really important
-          sig { params(a: String).void }
+          sig { params(a: ::String).void }
           def bar(a); end
 
           # Method no_sig
@@ -3335,7 +3383,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
             # @example My example
             #   a = "hello world"
             #   a.reverse
-            sig { params(t: Integer).void }
+            sig { params(t: ::Integer).void }
             def baz(t); end
 
             # Method something
@@ -3420,7 +3468,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
         module Namespace; end
 
         class Namespace::Foo
-          sig { params(a: String).void }
+          sig { params(a: ::String).void }
           def bar(a); end
 
           def no_sig(a); end
@@ -3431,7 +3479,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
           def only_docs(a); end
 
           class << self
-            sig { params(t: Integer).void }
+            sig { params(t: ::Integer).void }
             def baz(t); end
 
             sig { void }
