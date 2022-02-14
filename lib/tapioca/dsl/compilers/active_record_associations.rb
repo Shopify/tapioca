@@ -119,18 +119,16 @@ module Tapioca
           end
         end
 
-        ReflectionType = T.type_alias do
-          T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
-        end
+        Elem = type_member(fixed: T.class_of(ActiveRecord::Base))
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(ActiveRecord::Base)).void }
-        def decorate(root, constant)
+        sig { override.void }
+        def decorate
           return if constant.reflections.empty?
 
           root.create_path(constant) do |model|
             model.create_module(AssociationMethodsModuleName) do |mod|
-              populate_nested_attribute_writers(mod, constant)
-              populate_associations(mod, constant)
+              populate_nested_attribute_writers(mod)
+              populate_associations(mod)
             end
 
             model.create_include(AssociationMethodsModuleName)
@@ -138,14 +136,14 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
         end
 
         private
 
-        sig { params(mod: RBI::Scope, constant: T.class_of(ActiveRecord::Base)).void }
-        def populate_nested_attribute_writers(mod, constant)
+        sig { params(mod: RBI::Scope).void }
+        def populate_nested_attribute_writers(mod)
           constant.nested_attributes_options.keys.each do |association_name|
             mod.create_method(
               "#{association_name}_attributes=",
@@ -155,13 +153,13 @@ module Tapioca
           end
         end
 
-        sig { params(mod: RBI::Scope, constant: T.class_of(ActiveRecord::Base)).void }
-        def populate_associations(mod, constant)
+        sig { params(mod: RBI::Scope).void }
+        def populate_associations(mod)
           constant.reflections.each do |association_name, reflection|
             if reflection.collection?
-              populate_collection_assoc_getter_setter(mod, constant, association_name, reflection)
+              populate_collection_assoc_getter_setter(mod, association_name, reflection)
             else
-              populate_single_assoc_getter_setter(mod, constant, association_name, reflection)
+              populate_single_assoc_getter_setter(mod, association_name, reflection)
             end
           rescue SourceReflectionError
             add_error(<<~MSG.strip)
@@ -177,13 +175,12 @@ module Tapioca
         sig do
           params(
             klass: RBI::Scope,
-            constant: T.class_of(ActiveRecord::Base),
             association_name: T.any(String, Symbol),
             reflection: ReflectionType
           ).void
         end
-        def populate_single_assoc_getter_setter(klass, constant, association_name, reflection)
-          association_class = type_for(constant, reflection)
+        def populate_single_assoc_getter_setter(klass, association_name, reflection)
+          association_class = type_for(reflection)
           association_type = as_nilable_type(association_class)
 
           klass.create_method(
@@ -230,14 +227,13 @@ module Tapioca
         sig do
           params(
             klass: RBI::Scope,
-            constant: T.class_of(ActiveRecord::Base),
             association_name: T.any(String, Symbol),
             reflection: ReflectionType
           ).void
         end
-        def populate_collection_assoc_getter_setter(klass, constant, association_name, reflection)
-          association_class = type_for(constant, reflection)
-          relation_class = relation_type_for(constant, reflection)
+        def populate_collection_assoc_getter_setter(klass, association_name, reflection)
+          association_class = type_for(reflection)
+          relation_class = relation_type_for(reflection)
 
           klass.create_method(
             association_name.to_s,
@@ -261,11 +257,10 @@ module Tapioca
 
         sig do
           params(
-            constant: T.class_of(ActiveRecord::Base),
             reflection: ReflectionType
           ).returns(String)
         end
-        def type_for(constant, reflection)
+        def type_for(reflection)
           validate_reflection!(reflection)
 
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
@@ -323,11 +318,10 @@ module Tapioca
 
         sig do
           params(
-            constant: T.class_of(ActiveRecord::Base),
             reflection: ReflectionType
           ).returns(String)
         end
-        def relation_type_for(constant, reflection)
+        def relation_type_for(reflection)
           validate_reflection!(reflection)
 
           relations_enabled = compiler_enabled?("ActiveRecordRelations")

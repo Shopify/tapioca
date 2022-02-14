@@ -49,8 +49,10 @@ module Tapioca
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
-        sig { override.params(root: RBI::Tree, constant: Module).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: Module)
+
+        sig { override.void }
+        def decorate
           # The constant we are given is the specialized config options type
           option_class_name = constant.name
           return unless option_class_name
@@ -95,7 +97,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           name = ::Config.const_name
           return [] unless Object.const_defined?(name)
 

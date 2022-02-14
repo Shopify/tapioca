@@ -87,15 +87,17 @@ module Tapioca
       class UrlHelpers < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: Module).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: Module)
+
+        sig { override.void }
+        def decorate
           case constant
           when GeneratedPathHelpersModule.singleton_class, GeneratedUrlHelpersModule.singleton_class
             generate_module_for(root, constant)
           else
             root.create_path(constant) do |mod|
-              create_mixins_for(mod, constant, GeneratedUrlHelpersModule)
-              create_mixins_for(mod, constant, GeneratedPathHelpersModule)
+              create_mixins_for(mod, GeneratedUrlHelpersModule)
+              create_mixins_for(mod, GeneratedPathHelpersModule)
             end
           end
         end
@@ -106,7 +108,7 @@ module Tapioca
         ], T::Array[Module])
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
@@ -140,8 +142,8 @@ module Tapioca
           end
         end
 
-        sig { params(mod: RBI::Scope, constant: Module, helper_module: Module).void }
-        def create_mixins_for(mod, constant, helper_module)
+        sig { params(mod: RBI::Scope, helper_module: Module).void }
+        def create_mixins_for(mod, helper_module)
           include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
           extend_helper = constant.singleton_class.ancestors.include?(helper_module)
 
@@ -150,7 +152,7 @@ module Tapioca
         end
 
         sig { params(mod: Module, helper: Module).returns(T::Boolean) }
-        def includes_helper?(mod, helper)
+        private_class_method def self.includes_helper?(mod, helper)
           superclass_ancestors = []
 
           if Class === mod

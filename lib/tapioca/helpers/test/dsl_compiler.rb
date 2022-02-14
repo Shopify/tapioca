@@ -62,8 +62,8 @@ module Tapioca
           def initialize(compiler_class)
             @compiler_class = compiler_class
             @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Dsl::Compiler)])
-            @compiler = T.let(nil, T.nilable(Tapioca::Dsl::Compiler))
             @pipeline = T.let(nil, T.nilable(Tapioca::Dsl::Pipeline))
+            @errors = T.let([], T::Array[String])
           end
 
           sig { params(compiler_classes: T::Array[T.class_of(Tapioca::Dsl::Compiler)]).void }
@@ -78,7 +78,7 @@ module Tapioca
 
           sig { returns(T::Array[String]) }
           def gathered_constants
-            compiler.processable_constants.map(&:name).compact.sort
+            compiler_class.processable_constants.map(&:name).compact.sort
           end
 
           sig { params(constant_name: T.any(Symbol, String)).returns(String) }
@@ -91,22 +91,18 @@ module Tapioca
             file = RBI::File.new(strictness: "strong")
             constant = Object.const_get(constant_name)
 
-            compiler.decorate(file.root, constant)
+            compiler = compiler_class.new(pipeline, file.root, constant)
+            compiler.decorate
 
             Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
           end
 
           sig { returns(T::Array[String]) }
           def errors
-            compiler.errors
+            pipeline.errors
           end
 
           private
-
-          sig { returns(Tapioca::Dsl::Compiler) }
-          def compiler
-            @compiler ||= T.must(pipeline.compilers.grep(compiler_class).first)
-          end
 
           sig { returns(Tapioca::Dsl::Pipeline) }
           def pipeline

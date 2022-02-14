@@ -40,8 +40,10 @@ module Tapioca
       class ActiveJob < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::ActiveJob::Base)).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::ActiveJob::Base))
+
+        sig { override.void }
+        def decorate
           return unless constant.instance_methods(false).include?(:perform)
 
           root.create_path(constant) do |job|
@@ -52,7 +54,7 @@ module Tapioca
             job.create_method(
               "perform_later",
               parameters: parameters,
-              return_type: "T.any(#{constant.name}, FalseClass)",
+              return_type: "T.any(#{name_of(constant)}, FalseClass)",
               class_method: true
             )
 
@@ -66,7 +68,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActiveJob::Base)
         end
       end

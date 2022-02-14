@@ -70,8 +70,10 @@ module Tapioca
 
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: Module).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: Module)
+
+        sig { override.void }
+        def decorate
           root.create_path(constant) do |klass|
             if constant == Google::Protobuf::RepeatedField
               create_type_members(klass, "Elem")
@@ -92,7 +94,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           marker = Google::Protobuf::MessageExts::ClassMethods
           results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module])
           results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []

@@ -68,12 +68,10 @@ module Tapioca
       class ActionControllerHelpers < Compiler
         extend T::Sig
 
-        sig do
-          override
-            .params(root: RBI::Tree, constant: T.class_of(::ActionController::Base))
-            .void
-        end
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::ActionController::Base))
+
+        sig { override.void }
+        def decorate
           helpers_module = constant._helpers
           proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
 
@@ -103,7 +101,7 @@ module Tapioca
               # helper method defined via the `helper_method` call in the controller.
               helpers_module.instance_methods(false).each do |method_name|
                 method = if proxied_helper_methods.include?(method_name)
-                  helper_method_proxy_target(constant, method_name)
+                  helper_method_proxy_target(method_name)
                 else
                   helpers_module.instance_method(method_name)
                 end
@@ -124,19 +122,14 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActionController::Base).reject(&:abstract?).select(&:name)
         end
 
         private
 
-        sig do
-          params(
-            constant: T.class_of(::ActionController::Base),
-            method_name: Symbol
-          ).returns(T.nilable(UnboundMethod))
-        end
-        def helper_method_proxy_target(constant, method_name)
+        sig { params(method_name: Symbol).returns(T.nilable(UnboundMethod)) }
+        def helper_method_proxy_target(method_name)
           # Lookup the proxy target method only if it is defined as a public/protected or private method.
           if constant.method_defined?(method_name) || constant.private_method_defined?(method_name)
             constant.instance_method(method_name)

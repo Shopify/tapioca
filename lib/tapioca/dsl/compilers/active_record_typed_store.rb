@@ -90,15 +90,10 @@ module Tapioca
       class ActiveRecordTypedStore < Compiler
         extend T::Sig
 
-        sig do
-          override
-            .params(
-              root: RBI::Tree,
-              constant: T.class_of(::ActiveRecord::Base)
-            )
-            .void
-        end
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::ActiveRecord::Base))
+
+        sig { override.void }
+        def decorate
           stores = constant.typed_stores
           return if stores.values.flat_map(&:accessors).empty?
 
@@ -118,7 +113,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           descendants_of(::ActiveRecord::Base).select do |klass|
             klass.include?(ActiveRecord::TypedStore::Behavior)
           end

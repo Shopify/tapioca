@@ -7,6 +7,10 @@ module Tapioca
       module ActiveRecordConstantsHelper
         extend T::Sig
 
+        ReflectionType = T.type_alias do
+          T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
+        end
+
         AttributeMethodsModuleName = T.let("GeneratedAttributeMethods", String)
         AssociationMethodsModuleName = T.let("GeneratedAssociationMethods", String)
 

@@ -63,8 +63,10 @@ module Tapioca
       class SmartProperties < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.class_of(::SmartProperties)).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.class_of(::SmartProperties))
+
+        sig { override.void }
+        def decorate
           properties = T.let(
             T.unsafe(constant).properties,
             ::SmartProperties::PropertyCollection
@@ -84,7 +86,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           all_modules.select do |c|
             name_of(c) &&
               c != ::SmartProperties::Validations::Ancestor &&

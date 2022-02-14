@@ -49,8 +49,10 @@ module Tapioca
             T::Array[String]
           )
 
-        sig { override.params(root: RBI::Tree, constant: T.all(::AASM::ClassMethods, Class)).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.all(::AASM::ClassMethods, Class))
+
+        sig { override.void }
+        def decorate
           aasm = constant.aasm
           return if !aasm || aasm.states.empty?
 
@@ -103,7 +105,7 @@ module Tapioca
                   event.create_method(
                     method,
                     parameters: [
-                      create_block_param("block", type: "T.proc.bind(#{constant.name}).void"),
+                      create_block_param("block", type: "T.proc.bind(#{name_of(constant)}).void"),
                     ]
                   )
                 end
@@ -113,7 +115,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[Module])
         end
       end

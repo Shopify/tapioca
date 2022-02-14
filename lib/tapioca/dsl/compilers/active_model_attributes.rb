@@ -39,9 +39,11 @@ module Tapioca
       class ActiveModelAttributes < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: T.all(Class, ::ActiveModel::Attributes::ClassMethods)).void }
-        def decorate(root, constant)
-          attribute_methods = attribute_methods_for(constant)
+        Elem = type_member(fixed: T.all(Class, ::ActiveModel::Attributes::ClassMethods))
+
+        sig { override.void }
+        def decorate
+          attribute_methods = attribute_methods_for_constant
           return if attribute_methods.empty?
 
           root.create_path(constant) do |klass|
@@ -52,7 +54,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           all_classes.grep(::ActiveModel::Attributes::ClassMethods)
         end
 
@@ -60,8 +62,8 @@ module Tapioca
 
         HANDLED_METHOD_TARGETS = T.let(["attribute", "attribute="], T::Array[String])
 
-        sig { params(constant: ::ActiveModel::Attributes::ClassMethods).returns(T::Array[[::String, ::String]]) }
-        def attribute_methods_for(constant)
+        sig { returns(T::Array[[::String, ::String]]) }
+        def attribute_methods_for_constant
           patterns = if constant.respond_to?(:attribute_method_patterns)
             # https://github.com/rails/rails/pull/44367
             T.unsafe(constant).attribute_method_patterns

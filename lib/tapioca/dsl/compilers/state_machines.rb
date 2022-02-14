@@ -118,8 +118,10 @@ module Tapioca
       class StateMachines < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: ::StateMachines::ClassMethods).void }
-        def decorate(root, constant)
+        Elem = type_member(fixed: T.all(Module, ::StateMachines::ClassMethods))
+
+        sig { override.void }
+        def decorate
           return if constant.state_machines.empty?
 
           root.create_path(T.unsafe(constant)) do |klass|
@@ -159,7 +161,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           all_classes.select { |mod| mod < ::StateMachines::InstanceMethods }
         end
 

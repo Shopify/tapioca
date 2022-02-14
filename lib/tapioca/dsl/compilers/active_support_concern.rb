@@ -44,9 +44,11 @@ module Tapioca
       class ActiveSupportConcern < Compiler
         extend T::Sig
 
-        sig { override.params(root: RBI::Tree, constant: Module).void }
-        def decorate(root, constant)
-          dependencies = linearized_dependencies_of(constant)
+        Elem = type_member(fixed: Module)
+
+        sig { override.void }
+        def decorate
+          dependencies = linearized_dependencies
 
           mixed_in_class_methods = dependencies
             .uniq # Deduplicate
@@ -65,7 +67,7 @@ module Tapioca
         end
 
         sig { override.returns(T::Enumerable[Module]) }
-        def gather_constants
+        def self.gather_constants
           # Find all Modules that are:
           all_modules.select do |mod|
             # named (i.e. not anonymous)
@@ -79,15 +81,20 @@ module Tapioca
           end
         end
 
+        sig { params(concern: Module).returns(T::Array[Module]) }
+        def self.dependencies_of(concern)
+          concern.instance_variable_get(:@_dependencies)
+        end
+
         private
 
         sig { params(concern: Module).returns(T::Array[Module]) }
         def dependencies_of(concern)
-          concern.instance_variable_get(:@_dependencies)
+          self.class.dependencies_of(concern)
         end
 
         sig { params(concern: Module).returns(T::Array[Module]) }
-        def linearized_dependencies_of(concern)
+        def linearized_dependencies(concern = constant)
           # Grab all the dependencies of the concern
           dependencies = dependencies_of(concern)
 
@@ -95,7 +102,7 @@ module Tapioca
           dependencies.flat_map do |dependency|
             # Linearize dependencies of the current dependency,
             # which, itself, is a concern
-            linearized_dependencies_of(dependency) << dependency
+            linearized_dependencies(dependency) << dependency
           end
         end
       end
