@@ -98,32 +98,32 @@ module Tapioca
                     def event(name, options = nil, &block); end
 
                     class PrivateAASMEvent < AASM::Core::Event
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def after(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def after(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def after_commit(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def after_commit(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def after_transaction(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def after_transaction(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def before(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def before(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def before_success(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def before_success(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def before_transaction(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def before_transaction(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def ensure(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def ensure(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def error(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def error(symbol = nil, &block); end
 
-                      sig { params(block: T.proc.bind(StateMachine).void).returns(T.untyped) }
-                      def success(&block); end
+                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                      def success(symbol = nil, &block); end
                     end
                   end
 
