@@ -78,7 +78,7 @@ module Tapioca
         sig { params(column_type: Object).returns(String) }
         def handle_unknown_type(column_type)
           return "T.untyped" unless ActiveModel::Type::Value === column_type
-          return "T.untyped" if Tapioca::GenericTypeRegistry.generic_type_instance?(column_type)
+          return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(column_type)
 
           lookup_return_type_of_method(column_type, :deserialize) ||
             lookup_return_type_of_method(column_type, :cast) ||
