@@ -7,7 +7,7 @@ module Tapioca
       class RemoveEmptyPayloadScopes < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 

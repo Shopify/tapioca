@@ -55,7 +55,7 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          mixin_compiler = DynamicMixinCompiler.new(constant)
+          mixin_compiler = Runtime::DynamicMixinCompiler.new(constant)
           return if mixin_compiler.empty_attributes?
 
           root.create_path(constant) do |mod|
@@ -67,7 +67,7 @@ module Tapioca
         def self.gather_constants
           # Select all non-anonymous modules that have overridden Module.included
           all_modules.select do |mod|
-            !mod.is_a?(Class) && name_of(mod) && Tapioca::Reflection.method_of(mod, :included).owner != Module
+            !mod.is_a?(Class) && name_of(mod) && Runtime::Reflection.method_of(mod, :included).owner != Module
           end
         end
       end

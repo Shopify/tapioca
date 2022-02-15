@@ -7,7 +7,7 @@ module Tapioca
       class DynamicMixins < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 
@@ -17,7 +17,7 @@ module Tapioca
           return if constant.is_a?(Class)
 
           node = event.node
-          mixin_compiler = DynamicMixinCompiler.new(constant)
+          mixin_compiler = Runtime::DynamicMixinCompiler.new(constant)
           mixin_compiler.compile_class_attributes(node)
           dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(node)
 

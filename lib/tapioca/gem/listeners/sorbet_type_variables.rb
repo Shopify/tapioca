@@ -7,7 +7,7 @@ module Tapioca
       class SorbetTypeVariables < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 
@@ -26,7 +26,7 @@ module Tapioca
         sig { params(tree: RBI::Tree, constant: Module).void }
         def compile_type_variable_declarations(tree, constant)
           # Try to find the type variables defined on this constant, bail if we can't
-          type_variables = GenericTypeRegistry.lookup_type_variables(constant)
+          type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
           return unless type_variables
 
           # Map each type variable to its string representation.

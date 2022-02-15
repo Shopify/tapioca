@@ -17,7 +17,7 @@ module T
         constant = super
         # `register_type` method builds and returns an instantiated clone of the generic type
         # so, we just return that from this method as well.
-        Tapioca::GenericTypeRegistry.register_type(constant, types)
+        Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
       end
 
       def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
@@ -31,7 +31,7 @@ module T
           lower,
           upper
         ).tap do |type_variable|
-          Tapioca::GenericTypeRegistry.register_type_variable(self, type_variable)
+          Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
 
@@ -46,7 +46,7 @@ module T
           lower,
           upper
         ).tap do |type_variable|
-          Tapioca::GenericTypeRegistry.register_type_variable(self, type_variable)
+          Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
     end

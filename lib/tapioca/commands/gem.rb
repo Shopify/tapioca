@@ -52,7 +52,7 @@ module Tapioca
 
         super()
 
-        @loader = T.let(nil, T.nilable(Loader))
+        @loader = T.let(nil, T.nilable(Runtime::Loader))
         @bundle = T.let(nil, T.nilable(Gemfile))
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
@@ -115,9 +115,9 @@ module Tapioca
 
       private
 
-      sig { returns(Loader) }
+      sig { returns(Runtime::Loader) }
       def loader
-        @loader ||= Loader.new
+        @loader ||= Runtime::Loader.new
       end
 
       sig { returns(Gemfile) }
@@ -135,7 +135,7 @@ module Tapioca
           exit(1)
         end
 
-        Tapioca::Trackers::Autoload.eager_load_all!
+        Runtime::Trackers::Autoload.eager_load_all!
 
         say(" Done", :green)
         unless bundle.missing_specs.empty?
