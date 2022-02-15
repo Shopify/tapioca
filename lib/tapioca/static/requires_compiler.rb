@@ -4,7 +4,7 @@
 require "spoom"
 
 module Tapioca
-  module Compilers
+  module Static
     class RequiresCompiler
       extend T::Sig
 
