@@ -13,7 +13,7 @@ module Tapioca
 
         sig { override.params(event: ScopeNodeAdded).void }
         def on_scope(event)
-          event.node.detach if @compiler.symbol_in_payload?(event.symbol) && event.node.empty?
+          event.node.detach if @pipeline.symbol_in_payload?(event.symbol) && event.node.empty?
         end
       end
     end

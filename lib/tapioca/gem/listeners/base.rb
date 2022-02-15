@@ -10,9 +10,9 @@ module Tapioca
 
         abstract!
 
-        sig { params(compiler: Tapioca::Compilers::SymbolTableCompiler).void }
-        def initialize(compiler)
-          @compiler = compiler
+        sig { params(pipeline: Pipeline).void }
+        def initialize(pipeline)
+          @pipeline = pipeline
         end
 
         sig { params(event: NodeAdded).void }

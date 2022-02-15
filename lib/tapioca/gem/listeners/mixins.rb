@@ -41,13 +41,13 @@ module Tapioca
         def add_mixins(tree, mods, mixin_type)
           mods
             .select do |mod|
-              name = @compiler.name_of(mod)
+              name = @pipeline.name_of(mod)
 
               name && !filtered_mixin?(name)
             end
             .map do |mod|
-              name = @compiler.name_of(mod)
-              @compiler.push_symbol(name) if name
+              name = @pipeline.name_of(mod)
+              @pipeline.push_symbol(name) if name
 
               qname = qualified_name_of(mod)
               case mixin_type

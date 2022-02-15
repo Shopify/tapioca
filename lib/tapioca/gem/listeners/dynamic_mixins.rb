@@ -22,8 +22,8 @@ module Tapioca
           dynamic_extends, dynamic_includes = mixin_compiler.compile_mixes_in_class_methods(node)
 
           (dynamic_includes + dynamic_extends).each do |mod|
-            name = @compiler.name_of(mod)
-            @compiler.push_symbol(name) if name
+            name = @pipeline.name_of(mod)
+            @pipeline.push_symbol(name) if name
           end
         end
       end

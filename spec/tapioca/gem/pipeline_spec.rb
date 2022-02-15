@@ -6,7 +6,7 @@ require "pathname"
 require "tmpdir"
 require "bundler"
 
-class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
+class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Content
   include Tapioca::Helpers::Test::Template
   include Tapioca::Helpers::Test::Isolation
@@ -26,7 +26,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
     end
   end
 
-  describe Tapioca::Compilers::SymbolTableCompiler do
+  describe Tapioca::Gem::Pipeline do
     sig { params(include_doc: T::Boolean).returns(String) }
     def compile(include_doc: false)
       stub = GemStub.new(
@@ -40,7 +40,7 @@ class Tapioca::Compilers::SymbolTableCompilerSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      tree = Tapioca::Compilers::SymbolTableCompiler.new(gem, include_doc: include_doc).compile
+      tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc).compile
 
       # NOTE: This is not returning a `RBI::File`.
       # The following test suite is based on the string output of the `RBI::Tree` rather

@@ -20,10 +20,10 @@ module Tapioca
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 
-        sig { params(compiler: Compilers::SymbolTableCompiler).void }
-        def initialize(compiler)
-          super(compiler)
-          compiler.gem.parse_yard_docs
+        sig { params(pipeline: Pipeline).void }
+        def initialize(pipeline)
+          super(pipeline)
+          pipeline.gem.parse_yard_docs
         end
 
         private
