@@ -46,5 +46,5 @@ end
 require "tapioca/reflection"
 require "tapioca/trackers"
 require "tapioca/dsl/compiler"
-require "tapioca/compilers/dynamic_mixin_compiler"
+require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/version"
