@@ -7,7 +7,7 @@ module Tapioca
   module Gem
     class Pipeline
       extend T::Sig
-      include Reflection
+      include Runtime::Reflection
       include RBIHelper
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])

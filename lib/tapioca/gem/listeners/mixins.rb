@@ -7,7 +7,7 @@ module Tapioca
       class Mixins < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 

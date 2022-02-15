@@ -3,7 +3,7 @@
 
 require "yard"
 require "tapioca"
-require "tapioca/reflection"
+require "tapioca/runtime/reflection"
 
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
   task.files = ["lib/tapioca/dsl/compilers/**/*.rb"]
@@ -77,7 +77,7 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
       require File.expand_path(compiler)
     end
 
-    Tapioca::Reflection.descendants_of(Tapioca::Dsl::Compiler)
+    Tapioca::Runtime::Reflection.descendants_of(Tapioca::Dsl::Compiler)
       .map do |compiler|
         code_object = YARD::Registry.at(compiler.name)
         RegistryEntry.new(code_object.name.to_s, compiler, code_object)

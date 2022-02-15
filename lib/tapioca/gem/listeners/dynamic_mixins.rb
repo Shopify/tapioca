@@ -7,7 +7,7 @@ module Tapioca
       class DynamicMixins < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 

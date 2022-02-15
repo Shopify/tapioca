@@ -7,7 +7,7 @@ module Tapioca
       class SorbetTypeVariables < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 

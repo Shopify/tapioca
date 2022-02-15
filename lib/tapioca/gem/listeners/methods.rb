@@ -7,7 +7,7 @@ module Tapioca
       class Methods < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         SPECIAL_METHOD_NAMES = T.let([
           "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",

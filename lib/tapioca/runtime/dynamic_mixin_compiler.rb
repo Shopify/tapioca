@@ -5,7 +5,7 @@ module Tapioca
   module Runtime
     class DynamicMixinCompiler
       extend T::Sig
-      include Tapioca::Reflection
+      include Runtime::Reflection
 
       sig { returns(T::Array[Module]) }
       attr_reader :dynamic_extends, :dynamic_includes

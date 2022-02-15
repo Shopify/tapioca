@@ -88,7 +88,7 @@ module Tapioca
 
         sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_return_type_of_method(column_type, method)
-          signature = Reflection.signature_of(column_type.method(method))
+          signature = Runtime::Reflection.signature_of(column_type.method(method))
           return unless signature
 
           return_type = signature.return_type
@@ -99,7 +99,7 @@ module Tapioca
 
         sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
         def lookup_arg_type_of_method(column_type, method)
-          signature = Reflection.signature_of(column_type.method(method))
+          signature = Runtime::Reflection.signature_of(column_type.method(method))
           return unless signature
 
           # Arg types is an array [name, type] entries, so we desctructure the type of

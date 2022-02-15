@@ -7,7 +7,7 @@ module Tapioca
       class SorbetHelpers < Base
         extend T::Sig
 
-        include Reflection
+        include Runtime::Reflection
 
         private
 

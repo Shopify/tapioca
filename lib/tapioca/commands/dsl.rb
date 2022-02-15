@@ -80,7 +80,7 @@ module Tapioca
         )
 
         processed_files = pipeline.run do |constant, contents|
-          constant_name = T.must(Reflection.name_of(constant))
+          constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
 
           if @verbose && !@quiet
             say_status(:processing, constant_name, :yellow)

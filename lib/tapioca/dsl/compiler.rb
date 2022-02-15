@@ -14,8 +14,8 @@ module Tapioca
       extend T::Helpers
       extend T::Generic
 
-      include Reflection
-      extend Reflection
+      include Runtime::Reflection
+      extend Runtime::Reflection
 
       Elem = type_member(upper: Module)
 
