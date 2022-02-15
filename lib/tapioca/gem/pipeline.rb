@@ -293,7 +293,7 @@ module Tapioca
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
         files = Set.new(get_file_candidates(constant))
-          .merge(Tapioca::Trackers::ConstantDefinition.files_for(constant))
+          .merge(Runtime::Trackers::ConstantDefinition.files_for(constant))
 
         return !strict if files.empty?
 

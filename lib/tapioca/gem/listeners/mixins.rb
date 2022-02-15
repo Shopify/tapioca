@@ -26,16 +26,16 @@ module Tapioca
           end
 
           node = event.node
-          add_mixins(node, prepends.reverse, Trackers::Mixin::Type::Prepend)
-          add_mixins(node, includes.reverse, Trackers::Mixin::Type::Include)
-          add_mixins(node, extends.reverse, Trackers::Mixin::Type::Extend)
+          add_mixins(node, prepends.reverse, Runtime::Trackers::Mixin::Type::Prepend)
+          add_mixins(node, includes.reverse, Runtime::Trackers::Mixin::Type::Include)
+          add_mixins(node, extends.reverse, Runtime::Trackers::Mixin::Type::Extend)
         end
 
         sig do
           params(
             tree: RBI::Tree,
             mods: T::Array[Module],
-            mixin_type: Trackers::Mixin::Type
+            mixin_type: Runtime::Trackers::Mixin::Type
           ).void
         end
         def add_mixins(tree, mods, mixin_type)
@@ -54,9 +54,9 @@ module Tapioca
               # TODO: Sorbet currently does not handle prepend
               # properly for method resolution, so we generate an
               # include statement instead
-              when Trackers::Mixin::Type::Include, Trackers::Mixin::Type::Prepend
+              when Runtime::Trackers::Mixin::Type::Include, Runtime::Trackers::Mixin::Type::Prepend
                 tree << RBI::Include.new(T.must(qname))
-              when Trackers::Mixin::Type::Extend
+              when Runtime::Trackers::Mixin::Type::Extend
                 tree << RBI::Extend.new(T.must(qname))
               end
             end

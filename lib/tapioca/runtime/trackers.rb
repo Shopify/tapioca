@@ -9,7 +9,7 @@
 # catch and filter those mixins as coming from Tapioca, we need
 # the mixin tracker to be in place, before any mixin operations
 # are performed.
-require "tapioca/trackers/mixin"
-require "tapioca/trackers/constant_definition"
-require "tapioca/trackers/autoload"
-require "tapioca/trackers/required_ancestor"
+require "tapioca/runtime/trackers/mixin"
+require "tapioca/runtime/trackers/constant_definition"
+require "tapioca/runtime/trackers/autoload"
+require "tapioca/runtime/trackers/required_ancestor"
