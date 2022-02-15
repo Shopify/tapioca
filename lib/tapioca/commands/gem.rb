@@ -169,7 +169,7 @@ module Tapioca
           default_command(:gem, gem.name),
           reason: "types exported from the `#{gem.name}` gem",) if @file_header
 
-        rbi.root = Compilers::SymbolTableCompiler.new(gem, include_doc: @doc).compile
+        rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @doc).compile
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 

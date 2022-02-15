@@ -18,7 +18,7 @@ module Tapioca
 
         sig { params(selector: String).returns(T::Boolean) }
         def ruby_version(selector)
-          Gem::Requirement.new(selector).satisfied_by?(Gem::Version.new(RUBY_VERSION))
+          ::Gem::Requirement.new(selector).satisfied_by?(::Gem::Version.new(RUBY_VERSION))
         end
 
         sig { params(src: String).returns(String) }

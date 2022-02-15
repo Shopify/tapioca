@@ -76,7 +76,7 @@ module Tapioca
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
-        Gem.install("bundler", bundler_version)
+        ::Gem.install("bundler", bundler_version)
         out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "install"].join(" "), opts)
         ExecResult.new(out: out, err: err, status: T.must(status.success?))
       end
