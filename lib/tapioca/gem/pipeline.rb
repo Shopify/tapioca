@@ -24,8 +24,9 @@ module Tapioca
 
         @events = T.let([], T::Array[Gem::Event])
 
-        @payload_symbols = T.let(SymbolLoader.payload_symbols, T::Set[String])
-        @bootstrap_symbols = T.let(SymbolLoader.gem_symbols(@gem).union(SymbolLoader.engine_symbols), T::Set[String])
+        @payload_symbols = T.let(Static::SymbolLoader.payload_symbols, T::Set[String])
+        @bootstrap_symbols = T.let(Static::SymbolLoader.gem_symbols(@gem).union(Static::SymbolLoader.engine_symbols),
+          T::Set[String])
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
         @node_listeners = T.let([], T::Array[Gem::Listeners::Base])

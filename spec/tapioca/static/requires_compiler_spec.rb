@@ -2,10 +2,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "tapioca/compilers/requires_compiler"
+require "tapioca/static/requires_compiler"
 
 module Tapioca
-  module Compilers
+  module Static
     class RequiresCompilerSpec < Tapioca::SpecWithProject
       describe RequiresCompiler do
         after do
@@ -19,7 +19,7 @@ module Tapioca
             .
           CONFIG
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_empty(compiler.compile)
         end
 
@@ -47,7 +47,7 @@ module Tapioca
             end
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "a"
             require "b"
@@ -89,7 +89,7 @@ module Tapioca
             require "e"
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "a"
             require "b"
@@ -114,7 +114,7 @@ module Tapioca
             require "lib-#{1 + 2}"
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "a"
             require "b"
@@ -148,7 +148,7 @@ module Tapioca
             require "e"
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "c"
             require "d"
@@ -178,7 +178,7 @@ module Tapioca
             require "libd"
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "liba"
             require "libb"
@@ -207,7 +207,7 @@ module Tapioca
             require "c" # やあ
           RB
 
-          compiler = Tapioca::Compilers::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
+          compiler = Static::RequiresCompiler.new(@project.absolute_path("sorbet/config"))
           assert_equal(<<~REQ, compiler.compile)
             require "a"
             require "b"

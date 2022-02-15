@@ -19,7 +19,7 @@ module Tapioca
 
       sig { override.void }
       def execute
-        compiler = Compilers::RequiresCompiler.new(@sorbet_config_path)
+        compiler = Static::RequiresCompiler.new(@sorbet_config_path)
         name = set_color(@requires_path, :yellow, :bold)
         say("Compiling #{name}, this may take a few seconds... ")
 
