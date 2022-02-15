@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca"
-require "tapioca/loader"
+require "tapioca/runtime/loader"
 require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/sorbet_ext/fixed_hash_patch"
 require "tapioca/runtime/generic_type_registry"

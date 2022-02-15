@@ -49,7 +49,7 @@ module Tapioca
 
         super()
 
-        @loader = T.let(nil, T.nilable(Loader))
+        @loader = T.let(nil, T.nilable(Runtime::Loader))
       end
 
       sig { override.void }
@@ -335,9 +335,9 @@ module Tapioca
         end.sort
       end
 
-      sig { returns(Loader) }
+      sig { returns(Runtime::Loader) }
       def loader
-        @loader ||= Loader.new
+        @loader ||= Runtime::Loader.new
       end
 
       sig { params(class_name: String).returns(String) }
