@@ -2870,8 +2870,6 @@ module ActiveModel::Serializers::JSON
   end
 end
 
-ActiveModel::Serializers::VERSION = T.let(T.unsafe(nil), String)
-
 # Raised when a validation cannot be corrected by end users and are considered
 # exceptional.
 #

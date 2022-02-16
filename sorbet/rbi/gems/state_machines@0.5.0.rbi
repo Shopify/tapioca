@@ -23,6 +23,16 @@ class Hash
   #
   # @raise [ArgumentError]
   def assert_exclusive_keys(*exclusive_keys); end
+
+  # Validate all keys in a hash match <tt>*valid_keys</tt>, raising ArgumentError
+  # on a mismatch. Note that keys are NOT treated indifferently, meaning if you
+  # use strings for keys but assert symbols as keys, this will fail.
+  #
+  #   { name: 'Rob', years: '28' }.assert_valid_keys(:name, :age) # => raises "ArgumentError: Unknown key: :years. Valid keys are: :name, :age"
+  #   { name: 'Rob', age: '28' }.assert_valid_keys('name', 'age') # => raises "ArgumentError: Unknown key: :name. Valid keys are: 'name', 'age'"
+  #   { name: 'Rob', age: '28' }.assert_valid_keys(:name, :age)   # => passes, raises nothing
+  # Code from ActiveSupport
+  def assert_valid_keys(*valid_keys); end
 end
 
 # A state machine is a model of behavior composed of states, events, and
