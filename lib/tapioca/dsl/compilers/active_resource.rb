@@ -61,7 +61,7 @@ module Tapioca
       class ActiveResource < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::ActiveResource::Base))
+        ConstantType = type_member(fixed: T.class_of(::ActiveResource::Base))
 
         sig { override.void }
         def decorate

@@ -62,7 +62,7 @@ module Tapioca
       class ActiveSupportCurrentAttributes < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::ActiveSupport::CurrentAttributes))
+        ConstantType = type_member(fixed: T.class_of(::ActiveSupport::CurrentAttributes))
 
         sig { override.void }
         def decorate

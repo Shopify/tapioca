@@ -17,17 +17,17 @@ module Tapioca
       include Runtime::Reflection
       extend Runtime::Reflection
 
-      Elem = type_member(upper: Module)
+      ConstantType = type_member(upper: Module)
 
       abstract!
 
-      sig { returns(Elem) }
+      sig { returns(ConstantType) }
       attr_reader :constant
 
       sig { returns(RBI::Tree) }
       attr_reader :root
 
-      sig { params(pipeline: Tapioca::Dsl::Pipeline, root: RBI::Tree, constant: Elem).void }
+      sig { params(pipeline: Tapioca::Dsl::Pipeline, root: RBI::Tree, constant: ConstantType).void }
       def initialize(pipeline, root, constant)
         @pipeline = pipeline
         @root = root

@@ -63,7 +63,7 @@ module Tapioca
       class SmartProperties < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::SmartProperties))
+        ConstantType = type_member(fixed: T.class_of(::SmartProperties))
 
         sig { override.void }
         def decorate

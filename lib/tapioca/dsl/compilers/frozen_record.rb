@@ -65,7 +65,7 @@ module Tapioca
       class FrozenRecord < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::FrozenRecord::Base))
+        ConstantType = type_member(fixed: T.class_of(::FrozenRecord::Base))
 
         sig { override.void }
         def decorate
