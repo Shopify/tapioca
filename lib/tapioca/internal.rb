@@ -2,6 +2,9 @@
 # frozen_string_literal: true
 
 require "tapioca"
+require "tapioca/runtime/reflection"
+require "tapioca/runtime/trackers"
+require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/runtime/loader"
 require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/sorbet_ext/fixed_hash_patch"
@@ -20,5 +23,6 @@ require "tapioca/static/symbol_loader"
 require "tapioca/gem/events"
 require "tapioca/gem/listeners"
 require "tapioca/gem/pipeline"
-require "tapioca/static/requires_compiler"
+require "tapioca/dsl/compiler"
 require "tapioca/dsl/pipeline"
+require "tapioca/static/requires_compiler"
