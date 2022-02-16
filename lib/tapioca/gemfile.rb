@@ -16,6 +16,26 @@ module Tapioca
       )
     end
 
+    # This is a module that gets prepended to `Bundler::Dependency` and
+    # makes sure even gems marked as `require: false` are required during
+    # `Bundler.require`.
+    module AutoRequireHook
+      extend T::Sig
+
+      sig { void.checked(:never) }
+      def autorequire
+        # If a gem is marked as `require: false`, then its `autorequire`
+        # value will be `[]`. But, we want those gems to be loaded for our
+        # purposes as well, so we return `nil` in those cases, instead, which
+        # means `require: true`.
+        super.tap do |value|
+          return nil if value == []
+        end
+      end
+
+      ::Bundler::Dependency.prepend(self)
+    end
+
     sig { returns(Bundler::Definition) }
     attr_reader(:definition)
 
