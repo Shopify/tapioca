@@ -36,7 +36,7 @@ module Tapioca
       class ActionMailer < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::ActionMailer::Base))
+        ConstantType = type_member(fixed: T.class_of(::ActionMailer::Base))
 
         sig { override.void }
         def decorate

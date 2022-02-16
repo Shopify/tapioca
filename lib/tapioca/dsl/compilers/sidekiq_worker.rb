@@ -43,7 +43,7 @@ module Tapioca
       class SidekiqWorker < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::Sidekiq::Worker))
+        ConstantType = type_member(fixed: T.class_of(::Sidekiq::Worker))
 
         sig { override.void }
         def decorate

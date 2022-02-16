@@ -46,7 +46,8 @@ module Tapioca
       class ActiveStorage < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.all(Module, ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods))
+        ConstantType = type_member(fixed: T.all(Module,
+          ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods))
 
         sig { override.void }
         def decorate

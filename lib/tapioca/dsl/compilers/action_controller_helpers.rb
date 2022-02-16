@@ -68,7 +68,7 @@ module Tapioca
       class ActionControllerHelpers < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.class_of(::ActionController::Base))
+        ConstantType = type_member(fixed: T.class_of(::ActionController::Base))
 
         sig { override.void }
         def decorate

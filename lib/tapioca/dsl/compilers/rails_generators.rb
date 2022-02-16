@@ -46,7 +46,7 @@ module Tapioca
           Regexp
         )
 
-        Elem = type_member(fixed: T.class_of(::Rails::Generators::Base))
+        ConstantType = type_member(fixed: T.class_of(::Rails::Generators::Base))
 
         sig { override.void }
         def decorate

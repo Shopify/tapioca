@@ -60,7 +60,7 @@ module Tapioca
       class ActiveModelSecurePassword < Compiler
         extend T::Sig
 
-        Elem = type_member(fixed: T.all(Class, ::ActiveModel::SecurePassword::ClassMethods))
+        ConstantType = type_member(fixed: T.all(Class, ::ActiveModel::SecurePassword::ClassMethods))
 
         sig { override.void }
         def decorate
