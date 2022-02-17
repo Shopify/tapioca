@@ -57,18 +57,6 @@ module T
   module Types
     class Simple
       module GenericPatch
-        def valid?(obj)
-          # Since `Tapioca::TypeVariable` is a `Module`, it will be wrapped by a
-          # `Simple` type. We want to always make type variable types valid, so we
-          # need to explicitly check that `raw_type` is a `Tapioca::TypeVariable`
-          # and return `true`
-          if defined?(Tapioca::TypeVariableModule) && Tapioca::TypeVariableModule === @raw_type
-            return true
-          end
-
-          obj.is_a?(@raw_type)
-        end
-
         # This method intercepts calls to the `name` method for simple types, so that
         # it can ask the name to the type if the type is generic, since, by this point,
         # we've created a clone of that type with the `name` method returning the
@@ -88,9 +76,34 @@ module T
       prepend GenericPatch
     end
   end
+
+  module Utils
+    module CoercePatch
+      def coerce(val)
+        if val.is_a?(Tapioca::TypeVariableModule)
+          val.coerce_to_type_variable
+        else
+          super
+        end
+      end
+    end
+
+    class << self
+      prepend(CoercePatch)
+    end
+  end
 end
 
 module Tapioca
+  class TypeVariable < ::T::Types::TypeVariable
+    def initialize(name, variance)
+      @name = name
+      super(variance)
+    end
+
+    attr_reader :name
+  end
+
   # This is subclassing from `Module` so that instances of this type will be modules.
   # The reason why we want that is because that means those instances will automatically
   # get bound to the constant names they are assigned to by Ruby. As a result, we don't
@@ -151,6 +164,11 @@ module Tapioca
       serialized = @type.serialize.dup
       serialized << "(#{parameters})" unless parameters.empty?
       serialized
+    end
+
+    sig { returns(Tapioca::TypeVariable) }
+    def coerce_to_type_variable
+      TypeVariable.new(name, @variance)
     end
 
     private
