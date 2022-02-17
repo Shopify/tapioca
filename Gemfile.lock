@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    tapioca (0.6.2)
+    tapioca (0.7.0)
       bundler (>= 1.17.3)
       pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.12)
