@@ -137,19 +137,19 @@ end
 class ActiveRecord::MigrationProxy < ::Struct
   def initialize(name, version, filename, scope); end
 
-  def announce(*_arg0, &_arg1); end
+  def announce(*_arg0, **_arg1, &_arg2); end
   def basename; end
-  def disable_ddl_transaction(*_arg0, &_arg1); end
+  def disable_ddl_transaction(*_arg0, **_arg1, &_arg2); end
   def filename; end
   def filename=(_); end
-  def migrate(*_arg0, &_arg1); end
+  def migrate(*_arg0, **_arg1, &_arg2); end
   def name; end
   def name=(_); end
   def scope; end
   def scope=(_); end
   def version; end
   def version=(_); end
-  def write(*_arg0, &_arg1); end
+  def write(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -159,6 +159,7 @@ class ActiveRecord::MigrationProxy < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

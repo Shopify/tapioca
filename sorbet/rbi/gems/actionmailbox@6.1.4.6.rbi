@@ -113,8 +113,8 @@ class ActionMailbox::Base
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
   def bounce_with(message); end
 
-  def bounced!(*_arg0, &_arg1); end
-  def delivered!(*_arg0, &_arg1); end
+  def bounced!(*_arg0, **_arg1, &_arg2); end
+  def delivered!(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def finished_processing?; end
@@ -122,8 +122,8 @@ class ActionMailbox::Base
   # Returns the value of attribute inbound_email.
   def inbound_email; end
 
-  def logger(*_arg0, &_arg1); end
-  def mail(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
+  def mail(*_arg0, **_arg1, &_arg2); end
   def perform_processing; end
   def process; end
   def rescue_handlers; end
@@ -709,8 +709,8 @@ module Rails
     def env=(environment); end
     def gem_version; end
     def groups(*groups); end
-    def initialize!(*_arg0, &_arg1); end
-    def initialized?(*_arg0, &_arg1); end
+    def initialize!(*_arg0, **_arg1, &_arg2); end
+    def initialized?(*_arg0, **_arg1, &_arg2); end
     def logger; end
     def logger=(_arg0); end
     def public_path; end

@@ -9,11 +9,11 @@ module Config
 
   class << self
     # Loads and sets the settings constant!
-    def load_and_set_settings(*files); end
+    def load_and_set_settings(*sources); end
 
     # Create a populated Options instance from a settings file. If a second file is given, then the sections of that
     # file will overwrite existing sections of the first file.
-    def load_files(*files); end
+    def load_files(*sources); end
 
     def local_setting_files(config_root, env); end
     def reload!; end

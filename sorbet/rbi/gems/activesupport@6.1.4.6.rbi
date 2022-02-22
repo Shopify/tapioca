@@ -18,23 +18,23 @@ module ActiveSupport
 
   class << self
     def eager_load!; end
-    def escape_html_entities_in_json(*_arg0, &_arg1); end
+    def escape_html_entities_in_json(*_arg0, **_arg1, &_arg2); end
     def escape_html_entities_in_json=(arg); end
 
     # Returns the version of the currently loaded Active Support as a <tt>Gem::Version</tt>.
     def gem_version; end
 
-    def json_encoder(*_arg0, &_arg1); end
+    def json_encoder(*_arg0, **_arg1, &_arg2); end
     def json_encoder=(arg); end
     def parse_json_times; end
     def parse_json_times=(val); end
     def test_order; end
     def test_order=(val); end
-    def time_precision(*_arg0, &_arg1); end
+    def time_precision(*_arg0, **_arg1, &_arg2); end
     def time_precision=(arg); end
     def to_time_preserves_timezone; end
     def to_time_preserves_timezone=(value); end
-    def use_standard_json_time_format(*_arg0, &_arg1); end
+    def use_standard_json_time_format(*_arg0, **_arg1, &_arg2); end
     def use_standard_json_time_format=(arg); end
     def utc_to_local_returns_utc_offset_times; end
     def utc_to_local_returns_utc_offset_times=(value); end
@@ -1647,6 +1647,7 @@ class ActiveSupport::Callbacks::Filters::Environment < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2216,13 +2217,13 @@ class ActiveSupport::CurrentAttributes
     # Returns singleton instance for this class in this thread. If none exists, one is created.
     def instance; end
 
-    def reset(*_arg0, &_arg1); end
+    def reset(*_arg0, **_arg1, &_arg2); end
     def reset_all; end
 
     # Calls this block after #reset is called on the instance. Used for resetting external collaborators, like Time.zone.
     def resets(&block); end
 
-    def set(*_arg0, &_arg1); end
+    def set(*_arg0, **_arg1, &_arg2); end
 
     private
 
@@ -2663,22 +2664,22 @@ class ActiveSupport::Deprecation
   def deprecation_horizon=(_arg0); end
 
   class << self
-    def allow(*_arg0, &_arg1); end
-    def behavior(*_arg0, &_arg1); end
+    def allow(*_arg0, **_arg1, &_arg2); end
+    def behavior(*_arg0, **_arg1, &_arg2); end
     def behavior=(arg); end
-    def debug(*_arg0, &_arg1); end
+    def debug(*_arg0, **_arg1, &_arg2); end
     def debug=(arg); end
-    def deprecate_methods(*_arg0, &_arg1); end
-    def deprecation_horizon(*_arg0, &_arg1); end
+    def deprecate_methods(*_arg0, **_arg1, &_arg2); end
+    def deprecation_horizon(*_arg0, **_arg1, &_arg2); end
     def deprecation_horizon=(arg); end
-    def disallowed_behavior(*_arg0, &_arg1); end
+    def disallowed_behavior(*_arg0, **_arg1, &_arg2); end
     def disallowed_behavior=(arg); end
-    def disallowed_warnings(*_arg0, &_arg1); end
+    def disallowed_warnings(*_arg0, **_arg1, &_arg2); end
     def disallowed_warnings=(arg); end
-    def gem_name(*_arg0, &_arg1); end
+    def gem_name(*_arg0, **_arg1, &_arg2); end
     def gem_name=(arg); end
-    def silence(*_arg0, &_arg1); end
-    def silenced(*_arg0, &_arg1); end
+    def silence(*_arg0, **_arg1, &_arg2); end
+    def silenced(*_arg0, **_arg1, &_arg2); end
     def silenced=(arg); end
   end
 end
@@ -2803,15 +2804,15 @@ class ActiveSupport::Deprecation::DeprecatedConstantProxy < ::Module
   #   PLANETS.class # => Array
   def class; end
 
-  def hash(*_arg0, &_arg1); end
+  def hash(*_arg0, **_arg1, &_arg2); end
 
   # Don't give a deprecation warning on inspect since test/unit and error
   # logs rely on it for diagnostics.
   def inspect; end
 
-  def instance_methods(*_arg0, &_arg1); end
-  def name(*_arg0, &_arg1); end
-  def respond_to?(*_arg0, &_arg1); end
+  def instance_methods(*_arg0, **_arg1, &_arg2); end
+  def name(*_arg0, **_arg1, &_arg2); end
+  def respond_to?(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -3479,9 +3480,9 @@ class ActiveSupport::Duration::Scalar < ::Numeric
   def /(other); end
   def <=>(other); end
   def coerce(other); end
-  def to_f(*_arg0, &_arg1); end
-  def to_i(*_arg0, &_arg1); end
-  def to_s(*_arg0, &_arg1); end
+  def to_f(*_arg0, **_arg1, &_arg2); end
+  def to_i(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute value.
   def value; end
@@ -3508,10 +3509,10 @@ class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
   # @return [EncryptedConfiguration] a new instance of EncryptedConfiguration
   def initialize(config_path:, key_path:, env_key:, raise_if_missing_key:); end
 
-  def [](*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
   def config; end
-  def fetch(*_arg0, &_arg1); end
-  def method_missing(method, *args, &block); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # Allow a config to be started without a file present
   def read; end
@@ -3660,7 +3661,7 @@ class ActiveSupport::ExecutionWrapper
     # after the work has been performed.
     #
     # Where possible, prefer +wrap+.
-    def run!; end
+    def run!(reset: T.unsafe(nil)); end
 
     def to_complete(*args, &block); end
     def to_run(*args, &block); end
@@ -3688,6 +3689,7 @@ class ActiveSupport::ExecutionWrapper::CompleteHook < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -3712,6 +3714,7 @@ class ActiveSupport::ExecutionWrapper::RunHook < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -3802,13 +3805,13 @@ module ActiveSupport::ForkTracker
 end
 
 module ActiveSupport::ForkTracker::CoreExt
-  def fork(*_arg0); end
+  def fork(*_arg0, **_arg1); end
 end
 
 module ActiveSupport::ForkTracker::CoreExtPrivate
   private
 
-  def fork(*_arg0); end
+  def fork(*_arg0, **_arg1); end
 end
 
 # A convenient wrapper for the zlib standard library that allows
@@ -5491,9 +5494,9 @@ class ActiveSupport::Multibyte::Chars
   # @return [Chars] a new instance of Chars
   def initialize(string); end
 
-  def <=>(*_arg0, &_arg1); end
-  def =~(*_arg0, &_arg1); end
-  def acts_like_string?(*_arg0, &_arg1); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
+  def =~(*_arg0, **_arg1, &_arg2); end
+  def acts_like_string?(*_arg0, **_arg1, &_arg2); end
   def as_json(options = T.unsafe(nil)); end
 
   # Performs composition on all the characters.
@@ -5521,7 +5524,7 @@ class ActiveSupport::Multibyte::Chars
   #   'こんにちは'.mb_chars.limit(7).to_s # => "こん"
   def limit(limit); end
 
-  def match?(*_arg0, &_arg1); end
+  def match?(*_arg0, **_arg1, &_arg2); end
 
   # Forward all undefined methods to the wrapped string.
   def method_missing(method, *args, &block); end
@@ -6947,7 +6950,7 @@ class ActiveSupport::Reloader < ::ActiveSupport::ExecutionWrapper
     def reload!; end
 
     def reloaded!; end
-    def run!; end
+    def run!(reset: T.unsafe(nil)); end
 
     # Registers a callback that will run once at application startup and every time the code is reloaded.
     def to_prepare(*args, &block); end
@@ -7332,10 +7335,10 @@ end
 # it easy to stamp log lines with subdomains, request ids, and anything else
 # to aid debugging of multi-user production applications.
 module ActiveSupport::TaggedLogging
-  def clear_tags!(*_arg0, &_arg1); end
+  def clear_tags!(*_arg0, **_arg1, &_arg2); end
   def flush; end
-  def pop_tags(*_arg0, &_arg1); end
-  def push_tags(*_arg0, &_arg1); end
+  def pop_tags(*_arg0, **_arg1, &_arg2); end
+  def push_tags(*_arg0, **_arg1, &_arg2); end
   def tagged(*tags); end
 
   class << self
@@ -7920,6 +7923,7 @@ class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -8878,8 +8882,8 @@ module ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module ActiveSupport::Tryable
-  def try(method_name = T.unsafe(nil), *args, &b); end
-  def try!(method_name = T.unsafe(nil), *args, &b); end
+  def try(method_name = T.unsafe(nil), *args, **_arg2, &b); end
+  def try!(method_name = T.unsafe(nil), *args, **_arg2, &b); end
 end
 
 module ActiveSupport::VERSION; end
@@ -8952,7 +8956,7 @@ module ActiveSupport::XmlMini
   # @param value the value to set the attribute depth to.
   def depth=(_arg0); end
 
-  def parse(*_arg0, &_arg1); end
+  def parse(*_arg0, **_arg1, &_arg2); end
   def rename_key(key, options = T.unsafe(nil)); end
   def to_tag(key, value, options); end
   def with_backend(name); end
@@ -9706,6 +9710,7 @@ class Date
 end
 
 Date::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
+Date::VERSION = T.let(T.unsafe(nil), String)
 module DateAndTime; end
 
 module DateAndTime::Calculations
@@ -11153,6 +11158,63 @@ class IO
   def as_json(options = T.unsafe(nil)); end
 end
 
+class IO::Buffer
+  include ::Comparable
+
+  def initialize(*_arg0); end
+
+  def <=>(_arg0); end
+  def clear(*_arg0); end
+  def copy(*_arg0); end
+  def empty?; end
+  def external?; end
+  def free; end
+  def get_string(*_arg0); end
+  def get_value(_arg0, _arg1); end
+  def hexdump; end
+  def inspect; end
+  def internal?; end
+  def locked; end
+  def locked?; end
+  def mapped?; end
+  def null?; end
+  def pread(_arg0, _arg1, _arg2); end
+  def pwrite(_arg0, _arg1, _arg2); end
+  def read(_arg0, _arg1); end
+  def readonly?; end
+  def resize(_arg0); end
+  def set_string(*_arg0); end
+  def set_value(_arg0, _arg1, _arg2); end
+  def size; end
+  def slice(_arg0, _arg1); end
+  def to_s; end
+  def transfer; end
+  def valid?; end
+  def write(_arg0, _arg1); end
+
+  class << self
+    def for(_arg0); end
+    def map(*_arg0); end
+  end
+end
+
+class IO::Buffer::AccessError < ::RuntimeError; end
+class IO::Buffer::AllocationError < ::RuntimeError; end
+IO::Buffer::BIG_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::DEFAULT_SIZE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::EXTERNAL = T.let(T.unsafe(nil), Integer)
+IO::Buffer::HOST_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::INTERNAL = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::InvalidatedError < ::RuntimeError; end
+IO::Buffer::LITTLE_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::LOCKED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::LockedError < ::RuntimeError; end
+IO::Buffer::MAPPED = T.let(T.unsafe(nil), Integer)
+IO::Buffer::NETWORK_ENDIAN = T.let(T.unsafe(nil), Integer)
+IO::Buffer::PAGE_SIZE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
+IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
+
 class IO::ConsoleMode
   def echo=(_arg0); end
   def raw(*_arg0); end
@@ -11190,6 +11252,8 @@ class IPAddr
 
   def as_json(options = T.unsafe(nil)); end
 end
+
+IPAddr::VERSION = T.let(T.unsafe(nil), String)
 
 class Integer < ::Numeric
   include ::JSON::Ext::Generator::GeneratorMethods::Integer
@@ -12300,6 +12364,7 @@ class Module::DelegationError < ::NoMethodError; end
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 class NameError < ::StandardError
+  include ::ErrorHighlight::CoreExt
   include ::DidYouMean::Correctable
 
   # Extract the name of the missing constant from the exception message.
@@ -12825,6 +12890,7 @@ class Regexp::Token < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -13724,11 +13790,11 @@ class Time
 
     # Layers additional behavior on Time.at so that ActiveSupport::TimeWithZone and DateTime
     # instances can be used when called with a single argument
-    def at(*args); end
+    def at(*args, **_arg1); end
 
     # Layers additional behavior on Time.at so that ActiveSupport::TimeWithZone and DateTime
     # instances can be used when called with a single argument
-    def at_with_coercion(*args); end
+    def at_with_coercion(*args, **_arg1); end
 
     # Returns <tt>Time.zone.now</tt> when <tt>Time.zone</tt> or <tt>config.time_zone</tt> are set, otherwise just returns <tt>Time.now</tt>.
     def current; end

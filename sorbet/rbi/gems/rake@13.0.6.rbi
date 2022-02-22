@@ -743,6 +743,7 @@ class Rake::FileList
   def inject(*args, &block); end
   def insert(*args, &block); end
   def inspect(*args, &block); end
+  def intersect?(*args, &block); end
   def intersection(*args, &block); end
 
   # Lie about our class.
