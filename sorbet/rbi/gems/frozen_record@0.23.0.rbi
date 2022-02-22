@@ -73,7 +73,7 @@ class FrozenRecord::Base
   def id; end
   def include_root_in_json; end
   def include_root_in_json?; end
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def persisted?; end
@@ -112,50 +112,50 @@ class FrozenRecord::Base
     def auto_reloading; end
     def auto_reloading=(value); end
     def auto_reloading?; end
-    def average(*_arg0, &_arg1); end
+    def average(*_arg0, **_arg1, &_arg2); end
     def backend; end
     def backend=(value); end
     def backend?; end
     def base_path; end
     def base_path=(base_path); end
     def base_path?; end
-    def count(*_arg0, &_arg1); end
+    def count(*_arg0, **_arg1, &_arg2); end
     def current_scope; end
     def current_scope=(scope); end
     def default_attributes; end
     def default_attributes=(default_attributes); end
     def default_attributes?; end
-    def each(*_arg0, &_arg1); end
+    def each(*_arg0, **_arg1, &_arg2); end
     def eager_load!; end
 
     # @raise [ArgumentError]
     def file_path; end
 
-    def find(*_arg0, &_arg1); end
-    def find_by(*_arg0, &_arg1); end
-    def find_by!(*_arg0, &_arg1); end
-    def find_by_id(*_arg0, &_arg1); end
-    def find_each(*_arg0, &_arg1); end
-    def first(*_arg0, &_arg1); end
-    def first!(*_arg0, &_arg1); end
-    def ids(*_arg0, &_arg1); end
+    def find(*_arg0, **_arg1, &_arg2); end
+    def find_by(*_arg0, **_arg1, &_arg2); end
+    def find_by!(*_arg0, **_arg1, &_arg2); end
+    def find_by_id(*_arg0, **_arg1, &_arg2); end
+    def find_each(*_arg0, **_arg1, &_arg2); end
+    def first(*_arg0, **_arg1, &_arg2); end
+    def first!(*_arg0, **_arg1, &_arg2); end
+    def ids(*_arg0, **_arg1, &_arg2); end
     def include_root_in_json; end
     def include_root_in_json=(value); end
     def include_root_in_json?; end
     def index_definitions; end
     def index_definitions=(value); end
     def index_definitions?; end
-    def last(*_arg0, &_arg1); end
-    def last!(*_arg0, &_arg1); end
-    def limit(*_arg0, &_arg1); end
+    def last(*_arg0, **_arg1, &_arg2); end
+    def last!(*_arg0, **_arg1, &_arg2); end
+    def limit(*_arg0, **_arg1, &_arg2); end
     def load_records(force: T.unsafe(nil)); end
-    def maximum(*_arg0, &_arg1); end
+    def maximum(*_arg0, **_arg1, &_arg2); end
     def memsize(object = T.unsafe(nil), seen = T.unsafe(nil)); end
-    def minimum(*_arg0, &_arg1); end
+    def minimum(*_arg0, **_arg1, &_arg2); end
     def new(attrs = T.unsafe(nil)); end
-    def offset(*_arg0, &_arg1); end
-    def order(*_arg0, &_arg1); end
-    def pluck(*_arg0, &_arg1); end
+    def offset(*_arg0, **_arg1, &_arg2); end
+    def order(*_arg0, **_arg1, &_arg2); end
+    def pluck(*_arg0, **_arg1, &_arg2); end
     def primary_key; end
     def primary_key=(primary_key); end
     def primary_key?; end
@@ -164,8 +164,8 @@ class FrozenRecord::Base
     def respond_to_missing?(name, *_arg1); end
 
     def scope(name, body); end
-    def sum(*_arg0, &_arg1); end
-    def where(*_arg0, &_arg1); end
+    def sum(*_arg0, **_arg1, &_arg2); end
+    def where(*_arg0, **_arg1, &_arg2); end
 
     private
 
@@ -256,12 +256,12 @@ class FrozenRecord::Scope
   def initialize(klass); end
 
   def ==(other); end
-  def all?(*_arg0, &_arg1); end
-  def as_json(*_arg0, &_arg1); end
+  def all?(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
   def average(attribute); end
-  def collect(*_arg0, &_arg1); end
-  def count(*_arg0, &_arg1); end
-  def each(*_arg0, &_arg1); end
+  def collect(*_arg0, **_arg1, &_arg2); end
+  def count(*_arg0, **_arg1, &_arg2); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def exists?; end
@@ -272,17 +272,17 @@ class FrozenRecord::Scope
   def find_by(criterias); end
   def find_by!(criterias); end
   def find_by_id(id); end
-  def find_each(*_arg0, &_arg1); end
-  def first(*_arg0, &_arg1); end
+  def find_each(*_arg0, **_arg1, &_arg2); end
+  def first(*_arg0, **_arg1, &_arg2); end
   def first!; end
   def hash; end
   def ids; end
-  def include?(*_arg0, &_arg1); end
-  def last(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
+  def last(*_arg0, **_arg1, &_arg2); end
   def last!; end
-  def length(*_arg0, &_arg1); end
+  def length(*_arg0, **_arg1, &_arg2); end
   def limit(amount); end
-  def map(*_arg0, &_arg1); end
+  def map(*_arg0, **_arg1, &_arg2); end
   def maximum(attribute); end
   def minimum(attribute); end
   def offset(amount); end
@@ -290,8 +290,8 @@ class FrozenRecord::Scope
   def pluck(*attributes); end
   def sum(attribute); end
   def to_a; end
-  def to_ary(*_arg0, &_arg1); end
-  def to_json(*_arg0, &_arg1); end
+  def to_ary(*_arg0, **_arg1, &_arg2); end
+  def to_json(*_arg0, **_arg1, &_arg2); end
   def where(criterias = T.unsafe(nil)); end
   def where_not(criterias); end
 
@@ -306,7 +306,7 @@ class FrozenRecord::Scope
   def delegate_to_class(*args, &block); end
   def limit!(amount); end
   def matching_records; end
-  def method_missing(method_name, *args, &block); end
+  def method_missing(method_name, *args, **_arg2, &block); end
   def offset!(amount); end
   def order!(*ordering); end
   def query_results; end

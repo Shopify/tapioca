@@ -493,27 +493,6 @@ class WEBrick::HTTPAuth::DigestAuth
   end
 end
 
-# Struct containing the opaque portion of the digest authentication
-class WEBrick::HTTPAuth::DigestAuth::OpaqueInfo < ::Struct
-  # Sets the attribute nc
-  #
-  # @param value [Object] the value to set the attribute nc to.
-  # @return [Object] the newly set value
-  def nc=(_); end
-
-  # Sets the attribute nonce
-  #
-  # @param value [Object] the value to set the attribute nonce to.
-  # @return [Object] the newly set value
-  def nonce=(_); end
-
-  # Sets the attribute time
-  #
-  # @param value [Object] the value to set the attribute time to.
-  # @return [Object] the newly set value
-  def time=(_); end
-end
-
 # Htdigest accesses apache-compatible digest password files.  Passwords are
 # matched to a realm where they are valid.  For security, the path for a
 # digest password database should be stored outside of the paths available

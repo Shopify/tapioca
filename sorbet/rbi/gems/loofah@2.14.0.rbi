@@ -66,6 +66,11 @@ end
 module Loofah::Elements; end
 Loofah::Elements::BLOCK_LEVEL = T.let(T.unsafe(nil), Set)
 
+# Elements that aren't block but should generate a newline in #to_text
+Loofah::Elements::INLINE_LINE_BREAK = T.let(T.unsafe(nil), Set)
+
+Loofah::Elements::LINEBREAKERS = T.let(T.unsafe(nil), Set)
+
 # The following elements may also be considered block-level
 # elements since they may contain block-level elements
 Loofah::Elements::LOOSE_BLOCK_LEVEL = T.let(T.unsafe(nil), Set)
@@ -600,11 +605,11 @@ module Loofah::TextBehavior
   # Returns a plain-text version of the markup contained by the
   #  fragment, with HTML entities encoded.
   #
-  #  This method is slower than #to_text, but is clever about
-  #  whitespace around block elements.
+  #  This method is slower than #text, but is clever about
+  #  whitespace around block elements and line break elements.
   #
-  #    Loofah.document("<h1>Title</h1><div>Content</div>").to_text
-  #    # => "\nTitle\n\nContent\n"
+  #    Loofah.document("<h1>Title</h1><div>Content<br>Next line</div>").to_text
+  #    # => "\nTitle\n\nContent\nNext line\n"
   def to_text(options = T.unsafe(nil)); end
 end
 
