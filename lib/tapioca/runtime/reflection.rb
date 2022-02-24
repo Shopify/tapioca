@@ -140,7 +140,11 @@ module Tapioca
       #
       #   class D < C; end
       #   descendants_of(C) # => [B, A, D]
-      sig { type_parameters(:U).params(klass: T.type_parameter(:U)).returns(T::Array[T.type_parameter(:U)]) }
+      sig do
+        type_parameters(:U)
+          .params(klass: T.all(Class, T.type_parameter(:U)))
+          .returns(T::Array[T.type_parameter(:U)])
+      end
       def descendants_of(klass)
         result = ObjectSpace.each_object(klass.singleton_class).reject do |k|
           T.cast(k, Module).singleton_class? || T.unsafe(k) == klass
