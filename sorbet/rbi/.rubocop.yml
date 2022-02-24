@@ -3,3 +3,7 @@ inherit_gem:
 
 Lint/EmptyFile:
   Enabled: false
+
+Sorbet/TypeAliasName:
+  Excludes:
+  - "sorbet/rbi/gems/**/*.rbi"
