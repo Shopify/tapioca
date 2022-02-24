@@ -3,3 +3,6 @@ inherit_gem:
 
 Lint/EmptyFile:
   Enabled: false
+
+Sorbet/TypeAliasName:
+  Enabled: false
