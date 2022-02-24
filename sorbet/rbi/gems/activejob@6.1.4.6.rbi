@@ -142,7 +142,7 @@ class ActiveJob::Base
   def _run_perform_callbacks(&block); end
   def logger; end
   def logger=(val); end
-  def queue_adapter(*_arg0, **_arg1, &_arg2); end
+  def queue_adapter(*_arg0, &_arg1); end
   def queue_name_prefix; end
   def queue_name_prefix=(_arg0); end
   def queue_name_prefix?; end
@@ -186,8 +186,8 @@ class ActiveJob::Base
     def rescue_handlers?; end
     def retry_jitter; end
     def retry_jitter=(value); end
-    def return_false_on_aborted_enqueue(*args, **_arg1, &block); end
-    def return_false_on_aborted_enqueue=(*args, **_arg1, &block); end
+    def return_false_on_aborted_enqueue(*args, &block); end
+    def return_false_on_aborted_enqueue=(*args, &block); end
     def skip_after_callbacks_if_terminated; end
     def skip_after_callbacks_if_terminated=(val); end
   end
@@ -364,8 +364,8 @@ class ActiveJob::ConfiguredJob
   # @return [ConfiguredJob] a new instance of ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
-  def perform_later(*args, **_arg1); end
-  def perform_now(*args, **_arg1); end
+  def perform_later(*args); end
+  def perform_now(*args); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -377,7 +377,7 @@ module ActiveJob::Core
 
   # Creates a new job instance. Takes the arguments that will be
   # passed to the perform method.
-  def initialize(*arguments, **_arg1); end
+  def initialize(*arguments); end
 
   # Job arguments
   def arguments; end
@@ -563,11 +563,11 @@ module ActiveJob::Enqueuing::ClassMethods
   #
   # Returns an instance of the job class queued with arguments available in
   # Job#arguments.
-  def perform_later(*args, **_arg1); end
+  def perform_later(*args); end
 
   private
 
-  def job_or_instantiate(*args, **_arg1); end
+  def job_or_instantiate(*args); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -726,7 +726,7 @@ module ActiveJob::Execution::ClassMethods
   # Performs the job immediately.
   #
   #   MyJob.perform_now("mike")
-  def perform_now(*args, **_arg1); end
+  def perform_now(*args); end
 end
 
 module ActiveJob::Instrumentation
@@ -1420,9 +1420,9 @@ class ActiveJob::Serializers::ObjectSerializer
   def klass; end
 
   class << self
-    def deserialize(*_arg0, **_arg1, &_arg2); end
-    def serialize(*_arg0, **_arg1, &_arg2); end
-    def serialize?(*_arg0, **_arg1, &_arg2); end
+    def deserialize(*_arg0, &_arg1); end
+    def serialize(*_arg0, &_arg1); end
+    def serialize?(*_arg0, &_arg1); end
   end
 end
 
@@ -1818,7 +1818,7 @@ module ActiveJob::TestHelper
   def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
 
   def before_setup; end
-  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
+  def enqueued_jobs(*_arg0, &_arg1); end
   def enqueued_jobs=(arg); end
 
   # Performs all enqueued jobs. If a block is given, performs all of the jobs
@@ -1880,7 +1880,7 @@ module ActiveJob::TestHelper
   # immediately or before the given time
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
-  def performed_jobs(*_arg0, **_arg1, &_arg2); end
+  def performed_jobs(*_arg0, &_arg1); end
   def performed_jobs=(arg); end
 
   # Accesses the queue_adapter set by ActiveJob::Base.

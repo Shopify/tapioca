@@ -289,7 +289,7 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def attachments; end
   def blobs; end
   def detach; end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
 
   private
 
@@ -325,7 +325,7 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   def attachment; end
   def blank?; end
   def detach; end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
   def purge; end
   def purge_later; end
 
@@ -341,10 +341,10 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
 
   def autosave_associated_records_for_blob(*args); end
   def autosave_associated_records_for_record(*args); end
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
   def purge; end
   def purge_later; end
-  def signed_id(*_arg0, **_arg1, &_arg2); end
+  def signed_id(*_arg0, &_arg1); end
   def validate_associated_records_for_blob(*args); end
 
   private
@@ -585,7 +585,7 @@ class ActiveStorage::Preview
   def image; end
   def key; end
   def processed; end
-  def service_url(*args, **_arg1, &block); end
+  def service_url(*args, &block); end
   def url(**options); end
   def variation; end
 
@@ -1002,16 +1002,16 @@ class ActiveStorage::Variant
   def initialize(blob, variation_or_variation_key); end
 
   def blob; end
-  def content_type(*_arg0, **_arg1, &_arg2); end
-  def content_type_for_serving(*_arg0, **_arg1, &_arg2); end
+  def content_type(*_arg0, &_arg1); end
+  def content_type_for_serving(*_arg0, &_arg1); end
   def download(&block); end
   def filename; end
   def forced_disposition_for_serving; end
   def image; end
   def key; end
   def processed; end
-  def service(*_arg0, **_arg1, &_arg2); end
-  def service_url(*args, **_arg1, &block); end
+  def service(*_arg0, &_arg1); end
+  def service_url(*args, &block); end
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
   def variation; end
 
@@ -1050,14 +1050,14 @@ class ActiveStorage::VariantWithRecord
   def initialize(blob, variation); end
 
   def blob; end
-  def download(*_arg0, **_arg1, &_arg2); end
+  def download(*_arg0, &_arg1); end
   def image; end
-  def key(*_arg0, **_arg1, &_arg2); end
+  def key(*_arg0, &_arg1); end
   def process; end
   def processed; end
   def processed?; end
-  def service_url(*args, **_arg1, &block); end
-  def url(*_arg0, **_arg1, &_arg2); end
+  def service_url(*args, &block); end
+  def url(*_arg0, &_arg1); end
   def variation; end
 
   private

@@ -1033,7 +1033,6 @@ class Concurrent::Agent::Job < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2846,7 +2845,6 @@ class Concurrent::CyclicBarrier::Generation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7431,7 +7429,6 @@ class Concurrent::SerializedExecution::Job < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -8797,7 +8794,6 @@ class Concurrent::Transaction::ReadLogEntry < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

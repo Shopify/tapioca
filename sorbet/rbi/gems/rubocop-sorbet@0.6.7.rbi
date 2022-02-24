@@ -562,6 +562,22 @@ class RuboCop::Cop::Sorbet::TrueSigil < ::RuboCop::Cop::Sorbet::HasSigil
   def minimum_strictness; end
 end
 
+# This cop ensures all constants used as `T.type_alias` are using CamelCase.
+#
+# @example
+#
+#   # bad
+#   FOO_OR_BAR = T.type_alias { T.any(Foo, Bar) }
+#
+#   # good
+#   FooOrBar = T.type_alias { T.any(Foo, Bar) }
+class RuboCop::Cop::Sorbet::TypeAliasName < ::RuboCop::Cop::Cop
+  def casgn_type_alias?(param0 = T.unsafe(nil)); end
+  def on_casgn(node); end
+end
+
+RuboCop::Cop::Sorbet::TypeAliasName::MSG = T.let(T.unsafe(nil), String)
+
 # This cop checks that every Ruby file contains a valid Sorbet sigil.
 # Adapted from: https://gist.github.com/clarkdave/85aca4e16f33fd52aceb6a0a29936e52
 #

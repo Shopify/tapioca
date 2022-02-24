@@ -16,7 +16,7 @@ class ProgressBar::Base
   # @return [Base] a new instance of Base
   def initialize(options = T.unsafe(nil)); end
 
-  def clear(*args, **_arg1, &block); end
+  def clear(*args, &block); end
   def decrement; end
   def finish; end
 
@@ -27,16 +27,16 @@ class ProgressBar::Base
   def format=(other); end
   def increment; end
   def inspect; end
-  def log(*args, **_arg1, &block); end
+  def log(*args, &block); end
   def pause; end
 
   # @return [Boolean]
   def paused?; end
 
-  def progress(*args, **_arg1, &block); end
+  def progress(*args, &block); end
   def progress=(new_progress); end
   def progress_mark=(mark); end
-  def refresh(*args, **_arg1, &block); end
+  def refresh(*args, &block); end
   def remainder_mark=(mark); end
   def reset; end
   def resume; end
@@ -54,7 +54,7 @@ class ProgressBar::Base
   def title=(title); end
   def to_h; end
   def to_s(new_format = T.unsafe(nil)); end
-  def total(*args, **_arg1, &block); end
+  def total(*args, &block); end
   def total=(new_total); end
 
   protected

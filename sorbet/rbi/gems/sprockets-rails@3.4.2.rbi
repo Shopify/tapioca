@@ -63,8 +63,8 @@ module Rails
     #  # => [:default, "production"]           for Rails.env == "production"
     def groups(*groups); end
 
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
 
     # Returns the value of attribute logger.
     def logger; end
@@ -246,7 +246,7 @@ class Rails::Application < ::Rails::Engine
   # @param value the value to set the attribute credentials to.
   def credentials=(_arg0); end
 
-  def default_url_options(*_arg0, **_arg1, &_arg2); end
+  def default_url_options(*_arg0, &_arg1); end
   def default_url_options=(arg); end
 
   # Eager loads the application code.
@@ -1217,7 +1217,7 @@ class Rails::Engine < ::Rails::Railtie
   # defaults to an ActionDispatch::Routing::RouteSet.
   def endpoint; end
 
-  def engine_name(*_arg0, **_arg1, &_arg2); end
+  def engine_name(*_arg0, &_arg1); end
 
   # Defines additional Rack env configuration that is added on each call.
   def env_config; end
@@ -1228,7 +1228,7 @@ class Rails::Engine < ::Rails::Railtie
   # Returns all registered helpers paths.
   def helpers_paths; end
 
-  def isolated?(*_arg0, **_arg1, &_arg2); end
+  def isolated?(*_arg0, &_arg1); end
 
   # Load console and invoke the registered hooks.
   # Check <tt>Rails::Railtie.console</tt> for more info.
@@ -1256,10 +1256,10 @@ class Rails::Engine < ::Rails::Railtie
   # Check <tt>Rails::Railtie.rake_tasks</tt> for more info.
   def load_tasks(app = T.unsafe(nil)); end
 
-  def middleware(*_arg0, **_arg1, &_arg2); end
-  def paths(*_arg0, **_arg1, &_arg2); end
+  def middleware(*_arg0, &_arg1); end
+  def paths(*_arg0, &_arg1); end
   def railties; end
-  def root(*_arg0, **_arg1, &_arg2); end
+  def root(*_arg0, &_arg1); end
 
   # Defines the routes for this engine. If a block is given to
   # routes, it is appended to the engine.
@@ -1301,7 +1301,7 @@ class Rails::Engine < ::Rails::Railtie
     # @param value the value to set the attribute called_from to.
     def called_from=(_arg0); end
 
-    def eager_load!(*_arg0, **_arg1, &_arg2); end
+    def eager_load!(*_arg0, &_arg1); end
     def endpoint(endpoint = T.unsafe(nil)); end
     def engine_name(name = T.unsafe(nil)); end
 

@@ -876,7 +876,7 @@ class Parser::CurrentArgStack
   def top; end
 end
 
-Parser::CurrentRuby = Parser::Ruby31
+Parser::CurrentRuby = Parser::Ruby30
 
 # @api private
 module Parser::Deprecation
@@ -1697,16 +1697,14 @@ end
 # @api public
 Parser::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
-class Parser::Ruby31 < ::Parser::Base
+class Parser::Ruby30 < ::Parser::Base
   # reduce 0 omitted
   def _reduce_1(val, _values, result); end
 
   def _reduce_10(val, _values, result); end
   def _reduce_100(val, _values, result); end
-
-  # reduce 101 omitted
+  def _reduce_101(val, _values, result); end
   def _reduce_102(val, _values, result); end
-
   def _reduce_103(val, _values, result); end
   def _reduce_104(val, _values, result); end
   def _reduce_105(val, _values, result); end
@@ -1728,26 +1726,22 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_12(val, _values, result); end
   def _reduce_120(val, _values, result); end
   def _reduce_121(val, _values, result); end
-  def _reduce_122(val, _values, result); end
+
+  # reduce 122 omitted
   def _reduce_123(val, _values, result); end
+
   def _reduce_124(val, _values, result); end
   def _reduce_125(val, _values, result); end
-
-  # reduce 126 omitted
-  def _reduce_127(val, _values, result); end
-
-  def _reduce_128(val, _values, result); end
-  def _reduce_129(val, _values, result); end
   def _reduce_13(val, _values, result); end
 
-  # reduce 134 omitted
+  # reduce 130 omitted
+  def _reduce_131(val, _values, result); end
+
+  # reduce 132 omitted
+  def _reduce_133(val, _values, result); end
+
+  def _reduce_134(val, _values, result); end
   def _reduce_135(val, _values, result); end
-
-  # reduce 136 omitted
-  def _reduce_137(val, _values, result); end
-
-  def _reduce_138(val, _values, result); end
-  def _reduce_139(val, _values, result); end
   def _reduce_14(val, _values, result); end
   def _reduce_15(val, _values, result); end
   def _reduce_16(val, _values, result); end
@@ -1758,11 +1752,15 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_19(val, _values, result); end
   def _reduce_2(val, _values, result); end
   def _reduce_20(val, _values, result); end
+
+  # reduce 206 omitted
+  def _reduce_207(val, _values, result); end
+
+  def _reduce_208(val, _values, result); end
+  def _reduce_209(val, _values, result); end
   def _reduce_21(val, _values, result); end
-
-  # reduce 210 omitted
+  def _reduce_210(val, _values, result); end
   def _reduce_211(val, _values, result); end
-
   def _reduce_212(val, _values, result); end
   def _reduce_213(val, _values, result); end
   def _reduce_214(val, _values, result); end
@@ -1788,15 +1786,15 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_232(val, _values, result); end
   def _reduce_233(val, _values, result); end
   def _reduce_234(val, _values, result); end
-  def _reduce_235(val, _values, result); end
+
+  # reduce 235 omitted
   def _reduce_236(val, _values, result); end
+
   def _reduce_237(val, _values, result); end
   def _reduce_238(val, _values, result); end
+  def _reduce_239(val, _values, result); end
   def _reduce_24(val, _values, result); end
-
-  # reduce 239 omitted
   def _reduce_240(val, _values, result); end
-
   def _reduce_241(val, _values, result); end
   def _reduce_242(val, _values, result); end
   def _reduce_243(val, _values, result); end
@@ -1810,11 +1808,11 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_250(val, _values, result); end
   def _reduce_251(val, _values, result); end
   def _reduce_252(val, _values, result); end
-  def _reduce_253(val, _values, result); end
-  def _reduce_254(val, _values, result); end
-  def _reduce_255(val, _values, result); end
-  def _reduce_256(val, _values, result); end
-  def _reduce_257(val, _values, result); end
+
+  # reduce 257 omitted
+  def _reduce_258(val, _values, result); end
+
+  def _reduce_259(val, _values, result); end
   def _reduce_26(val, _values, result); end
 
   # reduce 262 omitted
@@ -1822,28 +1820,27 @@ class Parser::Ruby31 < ::Parser::Base
 
   def _reduce_264(val, _values, result); end
 
-  # reduce 267 omitted
-  def _reduce_268(val, _values, result); end
+  # reduce 265 omitted
+  def _reduce_266(val, _values, result); end
 
+  def _reduce_267(val, _values, result); end
+  def _reduce_268(val, _values, result); end
   def _reduce_269(val, _values, result); end
   def _reduce_27(val, _values, result); end
+  def _reduce_270(val, _values, result); end
 
-  # reduce 270 omitted
-  def _reduce_271(val, _values, result); end
-
+  # reduce 271 omitted
   def _reduce_272(val, _values, result); end
-  def _reduce_273(val, _values, result); end
-  def _reduce_274(val, _values, result); end
+
+  # reduce 274 omitted
   def _reduce_275(val, _values, result); end
 
-  # reduce 276 omitted
+  def _reduce_276(val, _values, result); end
   def _reduce_277(val, _values, result); end
-
+  def _reduce_278(val, _values, result); end
+  def _reduce_279(val, _values, result); end
   def _reduce_28(val, _values, result); end
-
-  # reduce 279 omitted
   def _reduce_280(val, _values, result); end
-
   def _reduce_281(val, _values, result); end
   def _reduce_282(val, _values, result); end
   def _reduce_283(val, _values, result); end
@@ -1856,24 +1853,24 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_29(val, _values, result); end
   def _reduce_290(val, _values, result); end
   def _reduce_291(val, _values, result); end
-  def _reduce_292(val, _values, result); end
+
+  # reduce 292 omitted
   def _reduce_293(val, _values, result); end
+
   def _reduce_294(val, _values, result); end
   def _reduce_295(val, _values, result); end
-  def _reduce_296(val, _values, result); end
-  def _reduce_297(val, _values, result); end
-
-  # reduce 298 omitted
-  def _reduce_299(val, _values, result); end
-
   def _reduce_3(val, _values, result); end
   def _reduce_30(val, _values, result); end
-  def _reduce_300(val, _values, result); end
-  def _reduce_301(val, _values, result); end
 
-  # reduce 311 omitted
+  # reduce 305 omitted
+  def _reduce_306(val, _values, result); end
+
+  def _reduce_307(val, _values, result); end
+  def _reduce_308(val, _values, result); end
+  def _reduce_309(val, _values, result); end
+  def _reduce_310(val, _values, result); end
+  def _reduce_311(val, _values, result); end
   def _reduce_312(val, _values, result); end
-
   def _reduce_313(val, _values, result); end
   def _reduce_314(val, _values, result); end
   def _reduce_315(val, _values, result); end
@@ -1891,21 +1888,21 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_323(val, _values, result); end
   def _reduce_324(val, _values, result); end
   def _reduce_325(val, _values, result); end
-  def _reduce_326(val, _values, result); end
+
+  # reduce 326 omitted
   def _reduce_327(val, _values, result); end
-  def _reduce_328(val, _values, result); end
+
+  # reduce 328 omitted
   def _reduce_329(val, _values, result); end
+
   def _reduce_33(val, _values, result); end
   def _reduce_330(val, _values, result); end
   def _reduce_331(val, _values, result); end
   def _reduce_332(val, _values, result); end
-
-  # reduce 333 omitted
+  def _reduce_333(val, _values, result); end
   def _reduce_334(val, _values, result); end
-
-  # reduce 335 omitted
+  def _reduce_335(val, _values, result); end
   def _reduce_336(val, _values, result); end
-
   def _reduce_337(val, _values, result); end
   def _reduce_338(val, _values, result); end
   def _reduce_339(val, _values, result); end
@@ -1919,50 +1916,52 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_346(val, _values, result); end
   def _reduce_347(val, _values, result); end
   def _reduce_348(val, _values, result); end
-  def _reduce_349(val, _values, result); end
   def _reduce_35(val, _values, result); end
+
+  # reduce 349 omitted
   def _reduce_350(val, _values, result); end
+
   def _reduce_351(val, _values, result); end
   def _reduce_352(val, _values, result); end
   def _reduce_353(val, _values, result); end
-  def _reduce_354(val, _values, result); end
-  def _reduce_355(val, _values, result); end
 
-  # reduce 356 omitted
-  def _reduce_357(val, _values, result); end
+  # reduce 355 omitted
+  def _reduce_356(val, _values, result); end
 
-  def _reduce_358(val, _values, result); end
-  def _reduce_359(val, _values, result); end
+  # reduce 359 omitted
   def _reduce_360(val, _values, result); end
 
-  # reduce 362 omitted
-  def _reduce_363(val, _values, result); end
+  # reduce 361 omitted
+  def _reduce_362(val, _values, result); end
 
-  # reduce 366 omitted
+  # reduce 364 omitted
+  def _reduce_365(val, _values, result); end
+
+  def _reduce_366(val, _values, result); end
   def _reduce_367(val, _values, result); end
-
-  # reduce 368 omitted
-  def _reduce_369(val, _values, result); end
+  def _reduce_368(val, _values, result); end
 
   # reduce 36 omitted
   def _reduce_37(val, _values, result); end
 
-  # reduce 371 omitted
-  def _reduce_372(val, _values, result); end
+  # reduce 369 omitted
+  def _reduce_370(val, _values, result); end
 
+  def _reduce_371(val, _values, result); end
+  def _reduce_372(val, _values, result); end
   def _reduce_373(val, _values, result); end
   def _reduce_374(val, _values, result); end
   def _reduce_375(val, _values, result); end
 
-  # reduce 376 omitted
-  def _reduce_377(val, _values, result); end
-
+  # reduce 377 omitted
   def _reduce_378(val, _values, result); end
+
   def _reduce_379(val, _values, result); end
   def _reduce_38(val, _values, result); end
   def _reduce_380(val, _values, result); end
   def _reduce_381(val, _values, result); end
   def _reduce_382(val, _values, result); end
+  def _reduce_383(val, _values, result); end
 
   # reduce 384 omitted
   def _reduce_385(val, _values, result); end
@@ -1972,13 +1971,13 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_388(val, _values, result); end
   def _reduce_389(val, _values, result); end
   def _reduce_39(val, _values, result); end
-  def _reduce_390(val, _values, result); end
+
+  # reduce 390 omitted
   def _reduce_391(val, _values, result); end
+
   def _reduce_392(val, _values, result); end
-
-  # reduce 393 omitted
+  def _reduce_393(val, _values, result); end
   def _reduce_394(val, _values, result); end
-
   def _reduce_395(val, _values, result); end
   def _reduce_396(val, _values, result); end
   def _reduce_397(val, _values, result); end
@@ -1996,12 +1995,12 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_405(val, _values, result); end
   def _reduce_406(val, _values, result); end
   def _reduce_407(val, _values, result); end
-
-  # reduce 408 omitted
-  def _reduce_409(val, _values, result); end
-
+  def _reduce_408(val, _values, result); end
   def _reduce_41(val, _values, result); end
+
+  # reduce 409 omitted
   def _reduce_410(val, _values, result); end
+
   def _reduce_411(val, _values, result); end
   def _reduce_412(val, _values, result); end
   def _reduce_413(val, _values, result); end
@@ -2009,10 +2008,8 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_415(val, _values, result); end
   def _reduce_416(val, _values, result); end
   def _reduce_417(val, _values, result); end
-
-  # reduce 418 omitted
+  def _reduce_418(val, _values, result); end
   def _reduce_419(val, _values, result); end
-
   def _reduce_42(val, _values, result); end
   def _reduce_420(val, _values, result); end
   def _reduce_421(val, _values, result); end
@@ -2041,14 +2038,17 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_442(val, _values, result); end
   def _reduce_443(val, _values, result); end
   def _reduce_444(val, _values, result); end
-  def _reduce_445(val, _values, result); end
+
+  # reduce 445 omitted
   def _reduce_446(val, _values, result); end
+
   def _reduce_447(val, _values, result); end
   def _reduce_448(val, _values, result); end
   def _reduce_449(val, _values, result); end
-  def _reduce_45(val, _values, result); end
-  def _reduce_450(val, _values, result); end
+
+  # reduce 450 omitted
   def _reduce_451(val, _values, result); end
+
   def _reduce_452(val, _values, result); end
   def _reduce_453(val, _values, result); end
 
@@ -2058,39 +2058,36 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_456(val, _values, result); end
   def _reduce_457(val, _values, result); end
   def _reduce_458(val, _values, result); end
+  def _reduce_459(val, _values, result); end
+
+  # reduce 45 omitted
   def _reduce_46(val, _values, result); end
 
-  # reduce 459 omitted
-  def _reduce_460(val, _values, result); end
-
+  # reduce 460 omitted
   def _reduce_461(val, _values, result); end
-  def _reduce_462(val, _values, result); end
 
-  # reduce 463 omitted
-  def _reduce_464(val, _values, result); end
+  # reduce 462 omitted
+  def _reduce_463(val, _values, result); end
 
+  # reduce 464 omitted
   def _reduce_465(val, _values, result); end
+
   def _reduce_466(val, _values, result); end
-  def _reduce_467(val, _values, result); end
+
+  # reduce 467 omitted
   def _reduce_468(val, _values, result); end
-  def _reduce_47(val, _values, result); end
 
-  # reduce 469 omitted
+  def _reduce_469(val, _values, result); end
   def _reduce_470(val, _values, result); end
-
-  # reduce 471 omitted
+  def _reduce_471(val, _values, result); end
   def _reduce_472(val, _values, result); end
-
-  # reduce 473 omitted
+  def _reduce_473(val, _values, result); end
   def _reduce_474(val, _values, result); end
-
   def _reduce_475(val, _values, result); end
-
-  # reduce 477 omitted
+  def _reduce_476(val, _values, result); end
+  def _reduce_477(val, _values, result); end
   def _reduce_478(val, _values, result); end
-
   def _reduce_479(val, _values, result); end
-  def _reduce_48(val, _values, result); end
   def _reduce_480(val, _values, result); end
   def _reduce_481(val, _values, result); end
   def _reduce_482(val, _values, result); end
@@ -2101,9 +2098,15 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_487(val, _values, result); end
   def _reduce_488(val, _values, result); end
   def _reduce_489(val, _values, result); end
+
+  # reduce 48 omitted
+  def _reduce_49(val, _values, result); end
+
   def _reduce_490(val, _values, result); end
-  def _reduce_491(val, _values, result); end
+
+  # reduce 491 omitted
   def _reduce_492(val, _values, result); end
+
   def _reduce_493(val, _values, result); end
   def _reduce_494(val, _values, result); end
   def _reduce_495(val, _values, result); end
@@ -2112,10 +2115,7 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_498(val, _values, result); end
   def _reduce_499(val, _values, result); end
   def _reduce_5(val, _values, result); end
-
-  # reduce 49 omitted
   def _reduce_50(val, _values, result); end
-
   def _reduce_500(val, _values, result); end
 
   # reduce 501 omitted
@@ -2128,74 +2128,70 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_507(val, _values, result); end
   def _reduce_508(val, _values, result); end
   def _reduce_509(val, _values, result); end
+  def _reduce_51(val, _values, result); end
   def _reduce_510(val, _values, result); end
-
-  # reduce 511 omitted
+  def _reduce_511(val, _values, result); end
   def _reduce_512(val, _values, result); end
-
   def _reduce_513(val, _values, result); end
   def _reduce_514(val, _values, result); end
-  def _reduce_515(val, _values, result); end
-  def _reduce_516(val, _values, result); end
-  def _reduce_517(val, _values, result); end
+
+  # reduce 517 omitted
   def _reduce_518(val, _values, result); end
+
   def _reduce_519(val, _values, result); end
+  def _reduce_52(val, _values, result); end
   def _reduce_520(val, _values, result); end
   def _reduce_521(val, _values, result); end
-  def _reduce_522(val, _values, result); end
-  def _reduce_523(val, _values, result); end
-  def _reduce_524(val, _values, result); end
 
-  # reduce 527 omitted
-  def _reduce_528(val, _values, result); end
+  # reduce 524 omitted
+  def _reduce_525(val, _values, result); end
 
-  def _reduce_529(val, _values, result); end
-
-  # reduce 52 omitted
+  def _reduce_526(val, _values, result); end
   def _reduce_53(val, _values, result); end
-
-  def _reduce_530(val, _values, result); end
-  def _reduce_531(val, _values, result); end
 
   # reduce 534 omitted
   def _reduce_535(val, _values, result); end
 
-  def _reduce_536(val, _values, result); end
-  def _reduce_54(val, _values, result); end
+  # reduce 536 omitted
+  def _reduce_537(val, _values, result); end
 
-  # reduce 544 omitted
-  def _reduce_545(val, _values, result); end
+  def _reduce_538(val, _values, result); end
+  def _reduce_539(val, _values, result); end
+  def _reduce_54(val, _values, result); end
+  def _reduce_540(val, _values, result); end
+  def _reduce_541(val, _values, result); end
+  def _reduce_542(val, _values, result); end
+  def _reduce_543(val, _values, result); end
+  def _reduce_544(val, _values, result); end
 
   # reduce 546 omitted
   def _reduce_547(val, _values, result); end
 
-  def _reduce_548(val, _values, result); end
+  # reduce 548 omitted
   def _reduce_549(val, _values, result); end
+
   def _reduce_55(val, _values, result); end
-  def _reduce_550(val, _values, result); end
-  def _reduce_551(val, _values, result); end
-  def _reduce_552(val, _values, result); end
+
+  # reduce 552 omitted
   def _reduce_553(val, _values, result); end
+
   def _reduce_554(val, _values, result); end
   def _reduce_555(val, _values, result); end
   def _reduce_556(val, _values, result); end
-
-  # reduce 558 omitted
+  def _reduce_557(val, _values, result); end
+  def _reduce_558(val, _values, result); end
   def _reduce_559(val, _values, result); end
-
   def _reduce_56(val, _values, result); end
-
-  # reduce 560 omitted
+  def _reduce_560(val, _values, result); end
   def _reduce_561(val, _values, result); end
-
-  # reduce 564 omitted
+  def _reduce_562(val, _values, result); end
+  def _reduce_563(val, _values, result); end
+  def _reduce_564(val, _values, result); end
   def _reduce_565(val, _values, result); end
-
   def _reduce_566(val, _values, result); end
   def _reduce_567(val, _values, result); end
   def _reduce_568(val, _values, result); end
   def _reduce_569(val, _values, result); end
-  def _reduce_57(val, _values, result); end
   def _reduce_570(val, _values, result); end
   def _reduce_571(val, _values, result); end
   def _reduce_572(val, _values, result); end
@@ -2206,7 +2202,6 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_577(val, _values, result); end
   def _reduce_578(val, _values, result); end
   def _reduce_579(val, _values, result); end
-  def _reduce_58(val, _values, result); end
   def _reduce_580(val, _values, result); end
   def _reduce_581(val, _values, result); end
   def _reduce_582(val, _values, result); end
@@ -2215,11 +2210,13 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_585(val, _values, result); end
   def _reduce_586(val, _values, result); end
   def _reduce_587(val, _values, result); end
-  def _reduce_588(val, _values, result); end
-  def _reduce_589(val, _values, result); end
+
+  # reduce 58 omitted
   def _reduce_59(val, _values, result); end
-  def _reduce_590(val, _values, result); end
+
+  # reduce 590 omitted
   def _reduce_591(val, _values, result); end
+
   def _reduce_592(val, _values, result); end
   def _reduce_593(val, _values, result); end
   def _reduce_594(val, _values, result); end
@@ -2230,16 +2227,17 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_599(val, _values, result); end
   def _reduce_6(val, _values, result); end
   def _reduce_60(val, _values, result); end
-
-  # reduce 602 omitted
+  def _reduce_600(val, _values, result); end
+  def _reduce_601(val, _values, result); end
+  def _reduce_602(val, _values, result); end
   def _reduce_603(val, _values, result); end
-
   def _reduce_604(val, _values, result); end
   def _reduce_605(val, _values, result); end
   def _reduce_606(val, _values, result); end
   def _reduce_607(val, _values, result); end
   def _reduce_608(val, _values, result); end
   def _reduce_609(val, _values, result); end
+  def _reduce_61(val, _values, result); end
   def _reduce_610(val, _values, result); end
   def _reduce_611(val, _values, result); end
   def _reduce_612(val, _values, result); end
@@ -2250,34 +2248,32 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_617(val, _values, result); end
   def _reduce_618(val, _values, result); end
   def _reduce_619(val, _values, result); end
-  def _reduce_620(val, _values, result); end
+  def _reduce_62(val, _values, result); end
+
+  # reduce 620 omitted
   def _reduce_621(val, _values, result); end
+
   def _reduce_622(val, _values, result); end
   def _reduce_623(val, _values, result); end
   def _reduce_624(val, _values, result); end
-  def _reduce_625(val, _values, result); end
+
+  # reduce 625 omitted
   def _reduce_626(val, _values, result); end
+
   def _reduce_627(val, _values, result); end
   def _reduce_628(val, _values, result); end
   def _reduce_629(val, _values, result); end
-
-  # reduce 62 omitted
   def _reduce_63(val, _values, result); end
-
   def _reduce_630(val, _values, result); end
   def _reduce_631(val, _values, result); end
   def _reduce_632(val, _values, result); end
   def _reduce_633(val, _values, result); end
   def _reduce_634(val, _values, result); end
-
-  # reduce 635 omitted
+  def _reduce_635(val, _values, result); end
   def _reduce_636(val, _values, result); end
-
   def _reduce_637(val, _values, result); end
-
-  # reduce 638 omitted
+  def _reduce_638(val, _values, result); end
   def _reduce_639(val, _values, result); end
-
   def _reduce_64(val, _values, result); end
   def _reduce_640(val, _values, result); end
   def _reduce_641(val, _values, result); end
@@ -2289,18 +2285,18 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_647(val, _values, result); end
   def _reduce_648(val, _values, result); end
   def _reduce_649(val, _values, result); end
-  def _reduce_65(val, _values, result); end
   def _reduce_650(val, _values, result); end
   def _reduce_651(val, _values, result); end
   def _reduce_652(val, _values, result); end
   def _reduce_653(val, _values, result); end
-  def _reduce_654(val, _values, result); end
+
+  # reduce 654 omitted
   def _reduce_655(val, _values, result); end
+
   def _reduce_656(val, _values, result); end
   def _reduce_657(val, _values, result); end
   def _reduce_658(val, _values, result); end
   def _reduce_659(val, _values, result); end
-  def _reduce_66(val, _values, result); end
   def _reduce_660(val, _values, result); end
   def _reduce_661(val, _values, result); end
   def _reduce_662(val, _values, result); end
@@ -2309,14 +2305,12 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_665(val, _values, result); end
   def _reduce_666(val, _values, result); end
   def _reduce_667(val, _values, result); end
-
-  # reduce 668 omitted
+  def _reduce_668(val, _values, result); end
   def _reduce_669(val, _values, result); end
 
-  def _reduce_67(val, _values, result); end
-  def _reduce_670(val, _values, result); end
-  def _reduce_671(val, _values, result); end
+  # reduce 671 omitted
   def _reduce_672(val, _values, result); end
+
   def _reduce_673(val, _values, result); end
   def _reduce_674(val, _values, result); end
   def _reduce_675(val, _values, result); end
@@ -2324,77 +2318,65 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_677(val, _values, result); end
   def _reduce_678(val, _values, result); end
   def _reduce_679(val, _values, result); end
+
+  # reduce 67 omitted
   def _reduce_68(val, _values, result); end
+
   def _reduce_680(val, _values, result); end
-  def _reduce_681(val, _values, result); end
-  def _reduce_682(val, _values, result); end
+
+  # reduce 682 omitted
   def _reduce_683(val, _values, result); end
 
-  # reduce 685 omitted
-  def _reduce_686(val, _values, result); end
+  def _reduce_684(val, _values, result); end
 
+  # reduce 686 omitted
   def _reduce_687(val, _values, result); end
+
   def _reduce_688(val, _values, result); end
   def _reduce_689(val, _values, result); end
-  def _reduce_690(val, _values, result); end
+  def _reduce_69(val, _values, result); end
+
+  # reduce 690 omitted
   def _reduce_691(val, _values, result); end
+
   def _reduce_692(val, _values, result); end
-  def _reduce_693(val, _values, result); end
+
+  # reduce 693 omitted
   def _reduce_694(val, _values, result); end
 
-  # reduce 696 omitted
+  def _reduce_695(val, _values, result); end
+  def _reduce_696(val, _values, result); end
   def _reduce_697(val, _values, result); end
-
   def _reduce_698(val, _values, result); end
+  def _reduce_699(val, _values, result); end
   def _reduce_7(val, _values, result); end
+  def _reduce_70(val, _values, result); end
 
-  # reduce 700 omitted
-  def _reduce_701(val, _values, result); end
-
-  def _reduce_702(val, _values, result); end
-  def _reduce_703(val, _values, result); end
-  def _reduce_704(val, _values, result); end
-
-  # reduce 705 omitted
-  def _reduce_706(val, _values, result); end
-
-  def _reduce_707(val, _values, result); end
-
-  # reduce 708 omitted
-  def _reduce_709(val, _values, result); end
-
-  def _reduce_710(val, _values, result); end
-  def _reduce_711(val, _values, result); end
+  # reduce 711 omitted
   def _reduce_712(val, _values, result); end
+
   def _reduce_713(val, _values, result); end
-  def _reduce_714(val, _values, result); end
-  def _reduce_715(val, _values, result); end
+
+  # reduce 717 omitted
+  def _reduce_718(val, _values, result); end
+
+  def _reduce_719(val, _values, result); end
 
   # reduce 71 omitted
   def _reduce_72(val, _values, result); end
 
+  def _reduce_720(val, _values, result); end
+
+  # reduce 723 omitted
+  def _reduce_724(val, _values, result); end
+
   # reduce 727 omitted
   def _reduce_728(val, _values, result); end
 
-  def _reduce_729(val, _values, result); end
   def _reduce_73(val, _values, result); end
-
-  # reduce 733 omitted
-  def _reduce_734(val, _values, result); end
-
-  def _reduce_735(val, _values, result); end
-  def _reduce_736(val, _values, result); end
   def _reduce_74(val, _values, result); end
-
-  # reduce 739 omitted
-  def _reduce_740(val, _values, result); end
-
-  # reduce 743 omitted
-  def _reduce_744(val, _values, result); end
-
-  # reduce 75 omitted
+  def _reduce_75(val, _values, result); end
   def _reduce_76(val, _values, result); end
-
   def _reduce_77(val, _values, result); end
   def _reduce_78(val, _values, result); end
   def _reduce_79(val, _values, result); end
@@ -2405,24 +2387,26 @@ class Parser::Ruby31 < ::Parser::Base
   def _reduce_84(val, _values, result); end
   def _reduce_85(val, _values, result); end
   def _reduce_86(val, _values, result); end
-  def _reduce_87(val, _values, result); end
+
+  # reduce 87 omitted
   def _reduce_88(val, _values, result); end
+
   def _reduce_89(val, _values, result); end
 
   # reduce 8 omitted
   def _reduce_9(val, _values, result); end
 
   def _reduce_90(val, _values, result); end
-
-  # reduce 91 omitted
+  def _reduce_91(val, _values, result); end
   def _reduce_92(val, _values, result); end
-
   def _reduce_93(val, _values, result); end
   def _reduce_94(val, _values, result); end
   def _reduce_95(val, _values, result); end
   def _reduce_96(val, _values, result); end
-  def _reduce_97(val, _values, result); end
+
+  # reduce 97 omitted
   def _reduce_98(val, _values, result); end
+
   def _reduce_99(val, _values, result); end
   def _reduce_none(val, _values, result); end
   def default_encoding; end
@@ -2433,8 +2417,8 @@ class Parser::Ruby31 < ::Parser::Base
   def version; end
 end
 
-Parser::Ruby31::Racc_arg = T.let(T.unsafe(nil), Array)
-Parser::Ruby31::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
+Parser::Ruby30::Racc_arg = T.let(T.unsafe(nil), Array)
+Parser::Ruby30::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
 # @api public
 module Parser::Source; end
