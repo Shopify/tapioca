@@ -260,7 +260,7 @@ class Rack::BodyProxy
   def closed?; end
 
   # Delegate missing methods to the wrapped body.
-  def method_missing(method_name, *args, **_arg2, &block); end
+  def method_missing(method_name, *args, &block); end
 
   private
 
@@ -380,7 +380,7 @@ class Rack::Builder
   # All requests through to this application will first be processed by the middleware class.
   # The +call+ method in this example sets an additional environment key which then can be
   # referenced in the application if required.
-  def use(middleware, *args, **_arg2, &block); end
+  def use(middleware, *args, &block); end
 
   # Takes a lambda or block that is used to warm-up the application. This block is called
   # before the Rack application is returned by to_app.
@@ -1236,15 +1236,15 @@ class Rack::Lint::HijackWrapper
   # @return [HijackWrapper] a new instance of HijackWrapper
   def initialize(io); end
 
-  def close(*args, **_arg1, &block); end
-  def close_read(*args, **_arg1, &block); end
-  def close_write(*args, **_arg1, &block); end
-  def closed?(*args, **_arg1, &block); end
-  def flush(*args, **_arg1, &block); end
-  def read(*args, **_arg1, &block); end
-  def read_nonblock(*args, **_arg1, &block); end
-  def write(*args, **_arg1, &block); end
-  def write_nonblock(*args, **_arg1, &block); end
+  def close(*args, &block); end
+  def close_read(*args, &block); end
+  def close_write(*args, &block); end
+  def closed?(*args, &block); end
+  def flush(*args, &block); end
+  def read(*args, &block); end
+  def read_nonblock(*args, &block); end
+  def write(*args, &block); end
+  def write_nonblock(*args, &block); end
 end
 
 Rack::Lint::HijackWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
@@ -1698,7 +1698,6 @@ class Rack::Multipart::Parser::MultipartInfo < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

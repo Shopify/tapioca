@@ -1307,7 +1307,7 @@ class ActionController::Base < ::ActionController::Metal
   def etaggers; end
   def etaggers=(_arg0); end
   def etaggers?; end
-  def flash(*_arg0, **_arg1, &_arg2); end
+  def flash(*_arg0, &_arg1); end
   def forgery_protection_origin_check; end
   def forgery_protection_origin_check=(value); end
   def forgery_protection_strategy; end
@@ -1455,15 +1455,15 @@ class ActionController::Base < ::ActionController::Metal
 end
 
 module ActionController::Base::HelperMethods
-  def alert(*args, **_arg1, &block); end
-  def combined_fragment_cache_key(*args, **_arg1, &block); end
-  def content_security_policy?(*args, **_arg1, &block); end
-  def content_security_policy_nonce(*args, **_arg1, &block); end
-  def cookies(*args, **_arg1, &block); end
-  def form_authenticity_token(*args, **_arg1, &block); end
-  def notice(*args, **_arg1, &block); end
-  def protect_against_forgery?(*args, **_arg1, &block); end
-  def view_cache_dependencies(*args, **_arg1, &block); end
+  def alert(*args, &block); end
+  def combined_fragment_cache_key(*args, &block); end
+  def content_security_policy?(*args, &block); end
+  def content_security_policy_nonce(*args, &block); end
+  def cookies(*args, &block); end
+  def form_authenticity_token(*args, &block); end
+  def notice(*args, &block); end
+  def protect_against_forgery?(*args, &block); end
+  def view_cache_dependencies(*args, &block); end
 end
 
 ActionController::Base::MODULES = T.let(T.unsafe(nil), Array)
@@ -3011,17 +3011,17 @@ class ActionController::Metal < ::AbstractController::Base
   # @return [Metal] a new instance of Metal
   def initialize; end
 
-  def content_type(*_arg0, **_arg1, &_arg2); end
+  def content_type(*_arg0, &_arg1); end
   def content_type=(arg); end
 
   # Delegates to the class' <tt>controller_name</tt>.
   def controller_name; end
 
   def dispatch(name, request, response); end
-  def headers(*_arg0, **_arg1, &_arg2); end
-  def location(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, &_arg1); end
+  def location(*_arg0, &_arg1); end
   def location=(arg); end
-  def media_type(*_arg0, **_arg1, &_arg2); end
+  def media_type(*_arg0, &_arg1); end
   def middleware_stack; end
   def middleware_stack=(_arg0); end
   def middleware_stack?; end
@@ -3039,11 +3039,11 @@ class ActionController::Metal < ::AbstractController::Base
   def response; end
   def response=(_arg0); end
   def response_body=(body); end
-  def response_code(*_arg0, **_arg1, &_arg2); end
-  def session(*_arg0, **_arg1, &_arg2); end
+  def response_code(*_arg0, &_arg1); end
+  def session(*_arg0, &_arg1); end
   def set_request!(request); end
   def set_response!(response); end
-  def status(*_arg0, **_arg1, &_arg2); end
+  def status(*_arg0, &_arg1); end
   def status=(arg); end
   def to_a; end
 
@@ -3080,7 +3080,7 @@ class ActionController::Metal < ::AbstractController::Base
 
     # Pushes the given Rack middleware and its arguments to the bottom of the
     # middleware stack.
-    def use(*args, **_arg1, &block); end
+    def use(*args, &block); end
   end
 end
 
@@ -3581,7 +3581,7 @@ class ActionController::Parameters
 
   def always_permitted_parameters; end
   def always_permitted_parameters=(val); end
-  def as_json(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, &_arg1); end
 
   # Returns a new instance of <tt>ActionController::Parameters</tt> with +nil+ values removed.
   def compact; end
@@ -3643,7 +3643,7 @@ class ActionController::Parameters
   # the same way as <tt>Hash#each_pair</tt>.
   def each(&block); end
 
-  def each_key(*_arg0, **_arg1, &_arg2); end
+  def each_key(*_arg0, &_arg1); end
 
   # Convert all hashes in values into parameters, then yield each pair in
   # the same way as <tt>Hash#each_pair</tt>.
@@ -3653,7 +3653,7 @@ class ActionController::Parameters
   # the same way as <tt>Hash#each_value</tt>.
   def each_value(&block); end
 
-  def empty?(*_arg0, **_arg1, &_arg2); end
+  def empty?(*_arg0, &_arg1); end
 
   # Returns true if another +Parameters+ object contains the same content and
   # permitted flag.
@@ -3689,17 +3689,17 @@ class ActionController::Parameters
   #   params.fetch(:none) { "Francesco" } # => "Francesco"
   def fetch(key, *args); end
 
-  def has_key?(*_arg0, **_arg1, &_arg2); end
-  def has_value?(*_arg0, **_arg1, &_arg2); end
+  def has_key?(*_arg0, &_arg1); end
+  def has_value?(*_arg0, &_arg1); end
   def hash; end
-  def include?(*_arg0, **_arg1, &_arg2); end
+  def include?(*_arg0, &_arg1); end
   def init_with(coder); end
   def inspect; end
 
   # Equivalent to Hash#keep_if, but returns +nil+ if no changes were made.
   def keep_if(&block); end
 
-  def key?(*_arg0, **_arg1, &_arg2); end
+  def key?(*_arg0, &_arg1); end
 
   # :method: values
   #
@@ -3707,9 +3707,9 @@ class ActionController::Parameters
   #   values()
   #
   # Returns a new array of the values of the parameters.
-  def keys(*_arg0, **_arg1, &_arg2); end
+  def keys(*_arg0, &_arg1); end
 
-  def member?(*_arg0, **_arg1, &_arg2); end
+  def member?(*_arg0, &_arg1); end
 
   # Returns a new <tt>ActionController::Parameters</tt> with all keys from
   # +other_hash+ merged into current hash.
@@ -4056,7 +4056,7 @@ class ActionController::Parameters
   # This method is also aliased as +to_param+.
   def to_query(*args); end
 
-  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, &_arg1); end
 
   # Returns an unsafe, unfiltered
   # <tt>ActiveSupport::HashWithIndifferentAccess</tt> representation of the
@@ -4102,8 +4102,8 @@ class ActionController::Parameters
   # <tt>ActionController::Parameters</tt> instance.
   def transform_values!; end
 
-  def value?(*_arg0, **_arg1, &_arg2); end
-  def values(*_arg0, **_arg1, &_arg2); end
+  def value?(*_arg0, &_arg1); end
+  def values(*_arg0, &_arg1); end
 
   # Returns values that were assigned to the given +keys+. Note that all the
   # +Hash+ objects will be converted to <tt>ActionController::Parameters</tt>.
@@ -4870,7 +4870,7 @@ end
 
 module ActionController::Rendering::ClassMethods
   def inherited(klass); end
-  def render(*_arg0, **_arg1, &_arg2); end
+  def render(*_arg0, &_arg1); end
 
   # Returns a renderer instance (inherited from ActionController::Renderer)
   # for the controller.
@@ -7783,9 +7783,9 @@ module ActionDispatch::Integration::Runner
 
   def assertions; end
   def assertions=(assertions); end
-  def assigns(*_arg0, **_arg1, &_arg2); end
+  def assigns(*_arg0, &_arg1); end
   def before_setup; end
-  def cookies(*_arg0, **_arg1, &_arg2); end
+  def cookies(*_arg0, &_arg1); end
 
   # Copy the instance variables from the current session instance into the
   # test instance.
@@ -7794,10 +7794,10 @@ module ActionDispatch::Integration::Runner
   def create_session(app); end
   def default_url_options; end
   def default_url_options=(options); end
-  def delete(*_arg0, **_arg1, &_arg2); end
-  def follow_redirect!(*_arg0, **_arg1, &_arg2); end
-  def get(*_arg0, **_arg1, &_arg2); end
-  def head(*_arg0, **_arg1, &_arg2); end
+  def delete(*_arg0, &_arg1); end
+  def follow_redirect!(*_arg0, &_arg1); end
+  def get(*_arg0, &_arg1); end
+  def head(*_arg0, &_arg1); end
   def integration_session; end
 
   # Open a new session instance. If a block is given, the new session is
@@ -7812,9 +7812,9 @@ module ActionDispatch::Integration::Runner
   # simultaneously.
   def open_session; end
 
-  def patch(*_arg0, **_arg1, &_arg2); end
-  def post(*_arg0, **_arg1, &_arg2); end
-  def put(*_arg0, **_arg1, &_arg2); end
+  def patch(*_arg0, &_arg1); end
+  def post(*_arg0, &_arg1); end
+  def put(*_arg0, &_arg1); end
   def remove!; end
 
   # Reset the current session. This is useful for testing multiple sessions
@@ -7827,7 +7827,7 @@ module ActionDispatch::Integration::Runner
   private
 
   # Delegate unhandled messages to the current session instance.
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *args, &block); end
 
   # @return [Boolean]
   def respond_to_missing?(method, _); end
@@ -7869,7 +7869,7 @@ class ActionDispatch::Integration::Session
   # The Accept header to send.
   def accept=(_arg0); end
 
-  def body(*_arg0, **_arg1, &_arg2); end
+  def body(*_arg0, &_arg1); end
 
   # A reference to the controller instance used by the last request.
   def controller; end
@@ -7881,7 +7881,7 @@ class ActionDispatch::Integration::Session
   def default_url_options; end
   def default_url_options=(_arg0); end
   def default_url_options?; end
-  def headers(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, &_arg1); end
 
   # The hostname used in the last request.
   def host; end
@@ -7914,7 +7914,7 @@ class ActionDispatch::Integration::Session
   # @return [Boolean]
   def https?; end
 
-  def path(*_arg0, **_arg1, &_arg2); end
+  def path(*_arg0, &_arg1); end
 
   # Performs the actual request.
   #
@@ -7951,7 +7951,7 @@ class ActionDispatch::Integration::Session
   #   process :get, '/author', params: { since: 201501011400 }
   def process(method, path, params: T.unsafe(nil), headers: T.unsafe(nil), env: T.unsafe(nil), xhr: T.unsafe(nil), as: T.unsafe(nil)); end
 
-  def redirect?(*_arg0, **_arg1, &_arg2); end
+  def redirect?(*_arg0, &_arg1); end
 
   # The remote_addr used in the last request.
   def remote_addr; end
@@ -7978,8 +7978,8 @@ class ActionDispatch::Integration::Session
   # A reference to the response instance used by the last request.
   def response; end
 
-  def status(*_arg0, **_arg1, &_arg2); end
-  def status_message(*_arg0, **_arg1, &_arg2); end
+  def status(*_arg0, &_arg1); end
+  def status_message(*_arg0, &_arg1); end
   def url_options; end
 
   private
@@ -8288,7 +8288,6 @@ class ActionDispatch::Journey::Format::Parameter < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -9149,9 +9148,9 @@ class ActionDispatch::MiddlewareStack
   def build(app = T.unsafe(nil), &block); end
   def delete(target); end
   def each; end
-  def insert(index, klass, *args, **_arg3, &block); end
-  def insert_after(index, *args, **_arg2, &block); end
-  def insert_before(index, klass, *args, **_arg3, &block); end
+  def insert(index, klass, *args, &block); end
+  def insert_after(index, *args, &block); end
+  def insert_before(index, klass, *args, &block); end
   def last; end
 
   # Returns the value of attribute middlewares.
@@ -9166,9 +9165,9 @@ class ActionDispatch::MiddlewareStack
   def move_after(target, source); end
   def move_before(target, source); end
   def size; end
-  def swap(target, *args, **_arg2, &block); end
-  def unshift(klass, *args, **_arg2, &block); end
-  def use(klass, *args, **_arg2, &block); end
+  def swap(target, *args, &block); end
+  def unshift(klass, *args, &block); end
+  def use(klass, *args, &block); end
 
   private
 
@@ -10004,8 +10003,8 @@ class ActionDispatch::Response
   # @yieldparam _self [ActionDispatch::Response] the object that the method was called on
   def initialize(status = T.unsafe(nil), header = T.unsafe(nil), body = T.unsafe(nil)); end
 
-  def [](*_arg0, **_arg1, &_arg2); end
-  def []=(*_arg0, **_arg1, &_arg2); end
+  def [](*_arg0, &_arg1); end
+  def []=(*_arg0, &_arg1); end
 
   # Aliasing these off because AD::Http::Cache::Response defines them.
   def _cache_control; end
@@ -10233,7 +10232,6 @@ class ActionDispatch::Response::ContentTypeHeader < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -12274,7 +12272,6 @@ class ActionDispatch::Routing::RouteSet::Config < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -12680,7 +12677,7 @@ module ActionDispatch::Routing::UrlFor
 
   mixes_in_class_methods GeneratedClassMethods
 
-  def initialize(*_arg0, **_arg1); end
+  def initialize(*_arg0); end
 
   def full_url_for(options = T.unsafe(nil)); end
 

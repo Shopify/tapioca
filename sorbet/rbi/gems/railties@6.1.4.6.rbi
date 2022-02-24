@@ -5,15 +5,15 @@
 # Please instead update this file by running `bin/tapioca gem railties`.
 
 module ActionController::Base::HelperMethods
-  def alert(*args, **_arg1, &block); end
-  def combined_fragment_cache_key(*args, **_arg1, &block); end
-  def content_security_policy?(*args, **_arg1, &block); end
-  def content_security_policy_nonce(*args, **_arg1, &block); end
-  def cookies(*args, **_arg1, &block); end
-  def form_authenticity_token(*args, **_arg1, &block); end
-  def notice(*args, **_arg1, &block); end
-  def protect_against_forgery?(*args, **_arg1, &block); end
-  def view_cache_dependencies(*args, **_arg1, &block); end
+  def alert(*args, &block); end
+  def combined_fragment_cache_key(*args, &block); end
+  def content_security_policy?(*args, &block); end
+  def content_security_policy_nonce(*args, &block); end
+  def cookies(*args, &block); end
+  def form_authenticity_token(*args, &block); end
+  def notice(*args, &block); end
+  def protect_against_forgery?(*args, &block); end
+  def view_cache_dependencies(*args, &block); end
 end
 
 module Rails
@@ -75,8 +75,8 @@ module Rails
     #  # => [:default, "production"]           for Rails.env == "production"
     def groups(*groups); end
 
-    def initialize!(*_arg0, **_arg1, &_arg2); end
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
+    def initialized?(*_arg0, &_arg1); end
 
     # Returns the value of attribute logger.
     def logger; end
@@ -252,7 +252,7 @@ class Rails::Application < ::Rails::Engine
   # @param value the value to set the attribute credentials to.
   def credentials=(_arg0); end
 
-  def default_url_options(*_arg0, **_arg1, &_arg2); end
+  def default_url_options(*_arg0, &_arg1); end
   def default_url_options=(arg); end
 
   # Eager loads the application code.
@@ -924,8 +924,8 @@ class Rails::Application::RoutesReloader
   # @param value the value to set the attribute eager_load to.
   def eager_load=(_arg0); end
 
-  def execute(*_arg0, **_arg1, &_arg2); end
-  def execute_if_updated(*_arg0, **_arg1, &_arg2); end
+  def execute(*_arg0, &_arg1); end
+  def execute_if_updated(*_arg0, &_arg1); end
 
   # Returns the value of attribute external_routes.
   def external_routes; end
@@ -938,7 +938,7 @@ class Rails::Application::RoutesReloader
   # Returns the value of attribute route_sets.
   def route_sets; end
 
-  def updated?(*_arg0, **_arg1, &_arg2); end
+  def updated?(*_arg0, &_arg1); end
 
   private
 
@@ -1250,16 +1250,16 @@ class Rails::Configuration::MiddlewareStackProxy
 
   def +(other); end
   def delete(*args, &block); end
-  def insert(*args, **_arg1, &block); end
-  def insert_after(*args, **_arg1, &block); end
-  def insert_before(*args, **_arg1, &block); end
+  def insert(*args, &block); end
+  def insert_after(*args, &block); end
+  def insert_before(*args, &block); end
   def merge_into(other); end
   def move(*args, &block); end
   def move_after(*args, &block); end
   def move_before(*args, &block); end
-  def swap(*args, **_arg1, &block); end
-  def unshift(*args, **_arg1, &block); end
-  def use(*args, **_arg1, &block); end
+  def swap(*args, &block); end
+  def unshift(*args, &block); end
+  def use(*args, &block); end
 
   protected
 
@@ -1634,7 +1634,7 @@ class Rails::Engine < ::Rails::Railtie
   # defaults to an ActionDispatch::Routing::RouteSet.
   def endpoint; end
 
-  def engine_name(*_arg0, **_arg1, &_arg2); end
+  def engine_name(*_arg0, &_arg1); end
 
   # Defines additional Rack env configuration that is added on each call.
   def env_config; end
@@ -1645,7 +1645,7 @@ class Rails::Engine < ::Rails::Railtie
   # Returns all registered helpers paths.
   def helpers_paths; end
 
-  def isolated?(*_arg0, **_arg1, &_arg2); end
+  def isolated?(*_arg0, &_arg1); end
 
   # Load console and invoke the registered hooks.
   # Check <tt>Rails::Railtie.console</tt> for more info.
@@ -1673,10 +1673,10 @@ class Rails::Engine < ::Rails::Railtie
   # Check <tt>Rails::Railtie.rake_tasks</tt> for more info.
   def load_tasks(app = T.unsafe(nil)); end
 
-  def middleware(*_arg0, **_arg1, &_arg2); end
-  def paths(*_arg0, **_arg1, &_arg2); end
+  def middleware(*_arg0, &_arg1); end
+  def paths(*_arg0, &_arg1); end
   def railties; end
-  def root(*_arg0, **_arg1, &_arg2); end
+  def root(*_arg0, &_arg1); end
 
   # Defines the routes for this engine. If a block is given to
   # routes, it is appended to the engine.
@@ -1718,7 +1718,7 @@ class Rails::Engine < ::Rails::Railtie
     # @param value the value to set the attribute called_from to.
     def called_from=(_arg0); end
 
-    def eager_load!(*_arg0, **_arg1, &_arg2); end
+    def eager_load!(*_arg0, &_arg1); end
     def endpoint(endpoint = T.unsafe(nil)); end
     def engine_name(name = T.unsafe(nil)); end
 
@@ -3225,8 +3225,8 @@ end
 module Rails::MailersController::HelperMethods
   include ::ActionController::Base::HelperMethods
 
-  def locale_query(*args, **_arg1, &block); end
-  def part_query(*args, **_arg1, &block); end
+  def locale_query(*args, &block); end
+  def part_query(*args, &block); end
 end
 
 module Rails::Paths; end
@@ -3524,7 +3524,7 @@ class Rails::Railtie
   def config; end
 
   def configure(&block); end
-  def railtie_name(*_arg0, **_arg1, &_arg2); end
+  def railtie_name(*_arg0, &_arg1); end
   def railtie_namespace; end
 
   protected
@@ -3544,7 +3544,7 @@ class Rails::Railtie
     # @return [Boolean]
     def abstract_railtie?; end
 
-    def config(*_arg0, **_arg1, &_arg2); end
+    def config(*_arg0, &_arg1); end
 
     # Allows you to configure the railtie. This is the same method seen in
     # Railtie::Configurable, but this module is no longer required for all
@@ -3570,7 +3570,7 @@ class Rails::Railtie
 
     # If the class method does not have a method, then send the method call
     # to the Railtie instance.
-    def method_missing(name, *args, **_arg2, &block); end
+    def method_missing(name, *args, &block); end
 
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in

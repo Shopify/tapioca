@@ -1647,6 +1647,88 @@ end
 
 Mail::Header::LIMITED_FIELDS = T.let(T.unsafe(nil), Array)
 
+# The IMAP retriever allows to get the last, first or all emails from a IMAP server.
+# Each email retrieved (RFC2822) is given as an instance of +Message+.
+#
+# While being retrieved, emails can be yielded if a block is given.
+#
+# === Example of retrieving Emails from GMail:
+#
+#   Mail.defaults do
+#     retriever_method :imap, { :address             => "imap.googlemail.com",
+#                               :port                => 993,
+#                               :user_name           => '<username>',
+#                               :password            => '<password>',
+#                               :enable_ssl          => true }
+#   end
+#
+#   Mail.all    #=> Returns an array of all emails
+#   Mail.first  #=> Returns the first unread email
+#   Mail.last   #=> Returns the last unread email
+#
+# You can also pass options into Mail.find to locate an email in your imap mailbox
+# with the following options:
+#
+#   mailbox: name of the mailbox used for email retrieval. The default is 'INBOX'.
+#   what:    last or first emails. The default is :first.
+#   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+#   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+#            instance of Message, not an array of Message instances.
+#   keys:    are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
+#            or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+#            The default is 'ALL'
+#
+#   Mail.find(:what => :first, :count => 10, :order => :asc, :keys=>'ALL')
+#   #=> Returns the first 10 emails in ascending order
+class Mail::IMAP < ::Mail::Retriever
+  # @return [IMAP] a new instance of IMAP
+  def initialize(values); end
+
+  # Returns the connection object of the retrievable (IMAP or POP3)
+  #
+  # @raise [ArgumentError]
+  def connection(&block); end
+
+  # Delete all emails from a IMAP mailbox
+  def delete_all(mailbox = T.unsafe(nil)); end
+
+  # Find emails in a IMAP mailbox. Without any options, the 10 last received emails are returned.
+  #
+  # Possible options:
+  #   mailbox: mailbox to search the email(s) in. The default is 'INBOX'.
+  #   what:    last or first emails. The default is :first.
+  #   order:   order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  #   count:   number of emails to retrieve. The default value is 10. A value of 1 returns an
+  #            instance of Message, not an array of Message instances.
+  #   read_only: will ensure that no writes are made to the inbox during the session.  Specifically, if this is
+  #              set to true, the code will use the EXAMINE command to retrieve the mail.  If set to false, which
+  #              is the default, a SELECT command will be used to retrieve the mail
+  #              This is helpful when you don't want your messages to be set to read automatically. Default is false.
+  #   delete_after_find: flag for whether to delete each retreived email after find. Default
+  #           is false. Use #find_and_delete if you would like this to default to true.
+  #   keys:   are passed as criteria to the SEARCH command.  They can either be a string holding the entire search string,
+  #           or a single-dimension array of search keywords and arguments.  Refer to  [IMAP] section 6.4.4 for a full list
+  #           The default is 'ALL'
+  #   search_charset: charset to pass to IMAP server search. Omitted by default. Example: 'UTF-8' or 'ASCII'.
+  def find(options = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute settings.
+  def settings; end
+
+  # Sets the attribute settings
+  #
+  # @param value the value to set the attribute settings to.
+  def settings=(_arg0); end
+
+  private
+
+  # Start an IMAP session and ensures that it will be closed in any case.
+  def start(config = T.unsafe(nil), &block); end
+
+  # Set default options
+  def validate_options(options); end
+end
+
 class Mail::InReplyToField < ::Mail::StructuredField
   include ::Mail::CommonMessageId
 
@@ -3904,6 +3986,77 @@ class Mail::OptionalField < ::Mail::UnstructuredField
   def do_encode; end
 end
 
+# The Pop3 retriever allows to get the last, first or all emails from a POP3 server.
+# Each email retrieved (RFC2822) is given as an instance of +Message+.
+#
+# While being retrieved, emails can be yielded if a block is given.
+#
+# === Example of retrieving Emails from GMail:
+#
+#   Mail.defaults do
+#     retriever_method :pop3, { :address             => "pop.gmail.com",
+#                               :port                => 995,
+#                               :user_name           => '<username>',
+#                               :password            => '<password>',
+#                               :enable_ssl          => true }
+#   end
+#
+#   Mail.all    #=> Returns an array of all emails
+#   Mail.first  #=> Returns the first unread email
+#   Mail.last   #=> Returns the last unread email
+#
+# You can also pass options into Mail.find to locate an email in your pop mailbox
+# with the following options:
+#
+#   what:  last or first emails. The default is :first.
+#   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+#   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+#          instance of Message, not an array of Message instances.
+#
+#   Mail.find(:what => :first, :count => 10, :order => :asc)
+#   #=> Returns the first 10 emails in ascending order
+class Mail::POP3 < ::Mail::Retriever
+  # @return [POP3] a new instance of POP3
+  def initialize(values); end
+
+  # Returns the connection object of the retrievable (IMAP or POP3)
+  #
+  # @raise [ArgumentError]
+  def connection(&block); end
+
+  # Delete all emails from a POP3 server
+  def delete_all; end
+
+  # Find emails in a POP3 mailbox. Without any options, the 5 last received emails are returned.
+  #
+  # Possible options:
+  #   what:  last or first emails. The default is :first.
+  #   order: order of emails returned. Possible values are :asc or :desc. Default value is :asc.
+  #   count: number of emails to retrieve. The default value is 10. A value of 1 returns an
+  #          instance of Message, not an array of Message instances.
+  #   delete_after_find: flag for whether to delete each retreived email after find. Default
+  #           is false. Use #find_and_delete if you would like this to default to true.
+  def find(options = T.unsafe(nil), &block); end
+
+  # Returns the value of attribute settings.
+  def settings; end
+
+  # Sets the attribute settings
+  #
+  # @param value the value to set the attribute settings to.
+  def settings=(_arg0); end
+
+  private
+
+  # Start a POP3 session and ensure that it will be closed in any case. Any messages
+  # marked for deletion via #find_and_delete or with the :delete_after_find option
+  # will be deleted when the session is closed.
+  def start(config = T.unsafe(nil), &block); end
+
+  # Set default options
+  def validate_options(options); end
+end
+
 # ParameterHash is an intelligent Hash that allows you to add
 # parameter values including the MIME extension paramaters that
 # have the name*0="blah", name*1="bleh" keys, and will just return
@@ -4069,7 +4222,6 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4167,7 +4319,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4316,7 +4467,6 @@ class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Stru
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4454,7 +4604,6 @@ class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4592,7 +4741,6 @@ class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruc
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4752,7 +4900,6 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4902,7 +5049,6 @@ class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5051,7 +5197,6 @@ class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5190,7 +5335,6 @@ class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5339,7 +5483,6 @@ class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5478,7 +5621,6 @@ class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5639,7 +5781,6 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
