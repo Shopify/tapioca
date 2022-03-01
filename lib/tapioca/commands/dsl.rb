@@ -4,6 +4,9 @@
 module Tapioca
   module Commands
     class Dsl < Command
+      include SorbetHelper
+      include RBIHelper
+
       sig do
         params(
           requested_constants: T::Array[String],
@@ -17,6 +20,8 @@ module Tapioca
           quiet: T::Boolean,
           verbose: T::Boolean,
           number_of_workers: T.nilable(Integer),
+          auto_strictness: T::Boolean,
+          gem_dir: String,
           rbi_formatter: RBIFormatter
         ).void
       end
@@ -32,6 +37,8 @@ module Tapioca
         quiet: false,
         verbose: false,
         number_of_workers: nil,
+        auto_strictness: true,
+        gem_dir: DEFAULT_GEM_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER
       )
         @requested_constants = requested_constants
@@ -45,6 +52,8 @@ module Tapioca
         @quiet = quiet
         @verbose = verbose
         @number_of_workers = number_of_workers
+        @auto_strictness = auto_strictness
+        @gem_dir = gem_dir
         @rbi_formatter = rbi_formatter
 
         super()
@@ -102,8 +111,13 @@ module Tapioca
           perform_dsl_verification(outpath)
         else
           purge_stale_dsl_rbi_files(rbi_files_to_purge)
-
           say("Done", :green)
+
+          if @auto_strictness
+            say("")
+            update_gem_rbis_strictnesses([], gem_dir: @gem_dir, dsl_dir: @outpath.to_s)
+            say("")
+          end
 
           say("All operations performed in working directory.", [:green, :bold])
           say("Please review changes and commit them.", [:green, :bold])

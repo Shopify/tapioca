@@ -93,6 +93,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -202,6 +206,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -281,6 +289,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/foo/role.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -344,6 +356,10 @@ module Tapioca
                   create  rbis/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -392,6 +408,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -423,6 +443,10 @@ module Tapioca
 
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -492,6 +516,10 @@ module Tapioca
                   remove  sorbet/rbi/dsl/to_be_deleted/foo.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -603,6 +631,10 @@ module Tapioca
                   remove  sorbet/rbi/dsl/user.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -681,6 +713,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -769,6 +805,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/job.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -872,6 +912,10 @@ module Tapioca
                   create  sorbet/rbi/dsl/post.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -983,6 +1027,10 @@ module Tapioca
                    force  sorbet/rbi/dsl/image.rbi
 
             Done
+
+            Typechecking RBI files...  Done
+            No error found
+
             All operations performed in working directory.
             Please review changes and commit them.
           OUT
@@ -1178,6 +1226,57 @@ module Tapioca
 
           assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
           refute_success_status(result)
+        end
+      end
+
+      describe "strictness" do
+        it "must turn the strictness of gem RBI files with errors to false" do
+          @project.require_real_gem("smart_properties", "1.15.0")
+          @project.bundle_install
+
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            module Post::SmartPropertiesGeneratedMethods
+              def foo; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/gems/bar@1.0.0.rbi", <<~RBI)
+            # typed: true
+
+            module Post::SmartPropertiesGeneratedMethods
+              sig { params(title: T.nilable(::String), subtitle: T.nilable(::String)).returns(T.nilable(::String)) }
+              def title=(title, subtitle); end
+            end
+          RBI
+
+          @project.write("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl Post")
+
+          assert_includes(result.out, <<~OUT)
+            Typechecking RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/bar@1.0.0.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/bar@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/post.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("sorbet/rbi/gems")
+          @project.remove("sorbet/rbi/dsl")
         end
       end
     end
