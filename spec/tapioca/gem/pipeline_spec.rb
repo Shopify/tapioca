@@ -2819,6 +2819,44 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "can compile generics in type variable arguments" do
+      add_ruby_file("service.rb", <<~RUBY)
+        class Result
+          extend T::Generic
+
+          OkType = type_member
+          ErrType = type_member
+        end
+
+        class Service
+          extend T::Generic
+
+          InputType = type_member(upper: Result[Integer, String])
+          ReturnType = type_member(fixed: Result[Integer, String])
+          TempType = type_member(lower: Result[Integer, String])
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Result
+          extend T::Generic
+
+          OkType = type_member
+          ErrType = type_member
+        end
+
+        class Service
+          extend T::Generic
+
+          InputType = type_member(upper: Result[::Integer, ::String])
+          ReturnType = type_member(fixed: Result[::Integer, ::String])
+          TempType = type_member(lower: Result[::Integer, ::String])
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "can compile typed struct generics" do
       add_ruby_file("tstruct_generic.rb", <<~RUBY)
         class Foo < T::Struct
