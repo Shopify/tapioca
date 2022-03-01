@@ -111,8 +111,10 @@ module Tapioca
             constant.clone
           end
 
-          # Let's set the `name` method to return the proper generic name
-          generic_type.define_singleton_method(:name) { name }
+          # Let's set the `name` and `to_s` methods to return the proper generic name
+          name_proc = -> { name }
+          generic_type.define_singleton_method(:name, name_proc)
+          generic_type.define_singleton_method(:to_s, name_proc)
 
           # We need to define a `<=` method on the cloned constant, so that Sorbet
           # can do covariance/contravariance checks on the type variables.
