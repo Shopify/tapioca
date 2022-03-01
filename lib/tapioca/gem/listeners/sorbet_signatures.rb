@@ -8,7 +8,7 @@ module Tapioca
         extend T::Sig
 
         include Runtime::Reflection
-        include RBIHelper
+        include SignaturesHelper
 
         TYPE_PARAMETER_MATCHER = /T\.type_parameter\(:?([[:word:]]+)\)/
 
