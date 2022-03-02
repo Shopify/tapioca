@@ -124,7 +124,7 @@ module Tapioca
 
       sig { returns(Gemfile) }
       def bundle
-        @bundle ||= Gemfile.new
+        @bundle ||= Gemfile.new(@exclude)
       end
 
       sig { void }

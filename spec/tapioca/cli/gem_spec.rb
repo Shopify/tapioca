@@ -484,19 +484,33 @@ module Tapioca
             write("lib/foo/secret.rb", "class Foo::Secret; end")
           end
 
+          bar = mock_gem("bar", "1.0.0") do
+            write("lib/bar.rb", <<~RUBY)
+              module Foo
+                MY_CONSTANT = 42
+              end
+            RUBY
+          end
+
           @project.require_mock_gem(foo, require: false)
+          @project.require_mock_gem(bar, require: false)
           @project.bundle_install
 
           @project.write("sorbet/tapioca/require.rb", <<~RB)
             require "foo/secret"
           RB
 
-          result = @project.tapioca("gem foo")
+          result = @project.tapioca("gem --exclude bar")
+
+          refute_includes(result.out, <<~OUT)
+            Compiled bar
+          OUT
 
           assert_includes(result.out, <<~OUT)
             Compiled foo
           OUT
 
+          refute_project_file_exist("sorbet/rbi/gems/bar@1.0.0.rbi")
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
             #{FOO_RBI.rstrip}
             class Foo::Secret; end
