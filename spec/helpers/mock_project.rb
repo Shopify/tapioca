@@ -19,17 +19,20 @@ module Tapioca
     end
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
-    sig { params(gem: MockGem).void }
-    def require_mock_gem(gem)
-      gemfile("#{gem.gemfile_line}\n", append: true)
+    sig { params(gem: MockGem, require: T.nilable(T.any(FalseClass, String))).void }
+    def require_mock_gem(gem, require: nil)
+      line = gem.gemfile_line.dup
+      line << ", require: #{require.inspect}" unless require.nil?
+      line << "\n"
+      gemfile(line, append: true)
     end
 
     # Add a gem requirement to this project's gemfile from a real gem
-    sig { params(name: String, version: T.nilable(String)).void }
-    def require_real_gem(name, version = nil)
-      line = String.new
-      line << "gem \"#{name}\""
+    sig { params(name: String, version: T.nilable(String), require: T.nilable(T.any(FalseClass, String))).void }
+    def require_real_gem(name, version = nil, require: nil)
+      line = +"gem \"#{name}\""
       line << ", \"#{version}\"" if version
+      line << ", require: #{require.inspect}" unless require.nil?
       line << "\n"
       gemfile(line, append: true)
     end

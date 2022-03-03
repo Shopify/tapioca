@@ -478,6 +478,50 @@ module Tapioca
           @project.remove("sorbet/tapioca/require.rb")
         end
 
+        it "loads gems that are marked `require: false`" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+            write("lib/foo/secret.rb", "class Foo::Secret; end")
+          end
+
+          bar = mock_gem("bar", "1.0.0") do
+            write("lib/bar.rb", <<~RUBY)
+              module Foo
+                MY_CONSTANT = 42
+              end
+            RUBY
+          end
+
+          @project.require_mock_gem(foo, require: false)
+          @project.require_mock_gem(bar, require: false)
+          @project.bundle_install
+
+          @project.write("sorbet/tapioca/require.rb", <<~RB)
+            require "foo/secret"
+          RB
+
+          result = @project.tapioca("gem --exclude bar")
+
+          refute_includes(result.out, <<~OUT)
+            Compiled bar
+          OUT
+
+          assert_includes(result.out, <<~OUT)
+            Compiled foo
+          OUT
+
+          refute_project_file_exist("sorbet/rbi/gems/bar@1.0.0.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
+            #{FOO_RBI.rstrip}
+            class Foo::Secret; end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("sorbet/tapioca/require.rb")
+        end
+
         it "explains what went wrong when it can't load the postrequire properly" do
           foo = mock_gem("foo", "0.0.1") do
             write("lib/foo.rb", FOO_RB)
