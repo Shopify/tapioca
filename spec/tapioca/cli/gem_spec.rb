@@ -1340,7 +1340,7 @@ module Tapioca
           result = @project.tapioca("gem --all")
 
           assert_includes(result.out, <<~OUT)
-            Typechecking RBI files...  Done
+            Checking generated RBI files...  Done
 
               Changed strictness of sorbet/rbi/gems/bar@0.3.0.rbi to `typed: false` (conflicting with DSL files)
 
@@ -1350,30 +1350,6 @@ module Tapioca
           assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
           assert_file_strictness("false", "sorbet/rbi/gems/bar@0.3.0.rbi")
           assert_file_strictness("false", "sorbet/rbi/gems/baz@1.0.0.rbi")
-          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
-
-          assert_empty_stderr(result)
-          assert_success_status(result)
-        end
-
-        it "must turn the strictness of files with error to false only in asked gems" do
-          @project.tapioca("gem --all --no-auto-strictness")
-
-          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
-          assert_file_strictness("true", "sorbet/rbi/gems/bar@0.3.0.rbi")
-          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
-
-          result = @project.tapioca("gem foo bar")
-
-          assert_includes(result.out, <<~OUT)
-            Typechecking RBI files...  Done
-
-              Changed strictness of sorbet/rbi/gems/bar@0.3.0.rbi to `typed: false` (conflicting with DSL files)
-          OUT
-
-          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
-          assert_file_strictness("false", "sorbet/rbi/gems/bar@0.3.0.rbi")
-          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
           assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
 
           assert_empty_stderr(result)
@@ -1392,7 +1368,7 @@ module Tapioca
           result = @project.tapioca("gem --dsl-dir sorbet/rbi/shims")
 
           assert_includes(result.out, <<~OUT)
-            Typechecking RBI files...  Done
+            Checking generated RBI files...  Done
 
               Changed strictness of sorbet/rbi/gems/foo@0.0.1.rbi to `typed: false` (conflicting with DSL files)
           OUT
@@ -1407,6 +1383,70 @@ module Tapioca
           assert_success_status(result)
 
           @project.remove("sorbet/rbi/shims/foo.rbi")
+        end
+      end
+
+      describe "sanity" do
+        before(:all) do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          bar = mock_gem("bar", "1.0.0") do
+            write("lib/bar.rb", BAR_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install
+          @project.tapioca("init")
+        end
+
+        after do
+          project.remove("sorbet/rbi/gems")
+          project.remove("sorbet/rbi/dsl")
+        end
+
+        it "must display an error message when a generated gem RBI file contains a parse error" do
+          @project.write("sorbet/rbi/gems/bar@1.0.0.rbi", <<~RBI)
+            # typed: true
+
+            module Bar
+              # This method is missing a `)`
+              sig { params(block: T.proc.params(x: T.any(String, Integer).void).void }
+              def bar(&block); end
+            end
+          RBI
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.err, <<~ERR)
+            ##### INTERNAL ERROR #####
+
+            There are parse errors in the generated RBI files.
+
+            This seems related to a bug in Tapioca.
+            Please open an issue at https://github.com/Shopify/tapioca/issues/new with the following information:
+
+            Tapioca v#{Tapioca::VERSION}
+
+            Command:
+              bin/tapioca gem foo
+
+            Gems:
+          ERR
+
+          assert_includes(result.err, "foo (0.0.1)")
+
+          assert_includes(result.err, <<~ERR)
+            Errors:
+              sorbet/rbi/gems/bar@1.0.0.rbi:5: unexpected token tRCURLY (2001)
+              sorbet/rbi/gems/bar@1.0.0.rbi:6: unexpected token "end" (2001)
+
+            ##########################
+          ERR
+
+          refute_success_status(result)
         end
       end
     end
