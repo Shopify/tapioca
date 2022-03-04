@@ -66,9 +66,22 @@ module Tapioca
     end
 
     class ExecResult < T::Struct
+      extend T::Sig
+
       const :out, String
       const :err, String
       const :status, T::Boolean
+
+      sig { returns(String) }
+      def to_s
+        <<~STR
+          ########## STDOUT ##########
+          #{out.empty? ? "<empty>" : out}
+          ########## STDERR ##########
+          #{err.empty? ? "<empty>" : err}
+          ########## STATUS: #{status} ##########
+        STR
+      end
     end
 
     # Run `bundle install` in this project context (unbundled env)
