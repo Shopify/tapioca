@@ -171,11 +171,8 @@ module Tapioca
             write("lib/bar.rb", BAR_RB)
           end
 
-          @project.gemfile(<<~GEMFILE, append: true)
-            #{foo.gemfile_line}
-            #{bar.gemfile_line}
-          GEMFILE
-
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
           @project.bundle_install
 
           result = @project.tapioca("gem foo")
@@ -1308,12 +1305,9 @@ module Tapioca
             RB
           end
 
-          @project.gemfile(<<~GEMFILE, append: true)
-            #{foo.gemfile_line}
-            #{bar.gemfile_line}
-            #{baz.gemfile_line}
-          GEMFILE
-
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(baz)
           @project.bundle_install
 
           @project.write("sorbet/rbi/dsl/foo.rbi", <<~RBI)
