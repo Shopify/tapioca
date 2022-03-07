@@ -1279,6 +1279,65 @@ module Tapioca
           @project.remove("sorbet/rbi/dsl")
         end
       end
+
+      describe "custom compilers" do
+        it "must be able to load custom compilers without a full require" do
+          @project.bundle_install
+
+          @project.write("lib/post.rb", <<~RB)
+            class Post
+            end
+          RB
+
+          @project.write("lib/compilers/post_compiler.rb", <<~RB)
+            require "post"
+            require "tapioca/dsl"
+
+            class PostCompiler < Tapioca::Dsl::Compiler
+              extend T::Sig
+
+              ConstantType = type_member(fixed: T.class_of(::Post))
+
+              sig { override.void }
+              def decorate
+                root.create_path(constant) do |klass|
+                  klass.create_module("GeneratedBar")
+                  klass.create_include("GeneratedBar")
+                end
+              end
+
+              sig { override.returns(T::Enumerable[Module]) }
+              def self.gather_constants
+                [::Post]
+              end
+            end
+          RB
+
+          @project.write("bin/generate", <<~RB)
+            require_relative "../config/environment"
+
+            file = RBI::File.new(strictness: "strong")
+            pipeline = Tapioca::Dsl::Pipeline.new(requested_constants: [])
+            PostCompiler.new(pipeline, file.root, Post).decorate
+            puts Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
+          RB
+
+          result = @project.bundle_exec("ruby bin/generate")
+
+          assert_equal(<<~OUT, result.out)
+            # typed: strong
+
+            class Post
+              include GeneratedBar
+
+              module GeneratedBar; end
+            end
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+      end
     end
   end
 end
