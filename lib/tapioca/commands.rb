@@ -9,5 +9,6 @@ module Tapioca
     autoload :Gem, "tapioca/commands/gem"
     autoload :Require, "tapioca/commands/require"
     autoload :Todo, "tapioca/commands/todo"
+    autoload :Foo, "tapioca/commands/foo"
   end
 end

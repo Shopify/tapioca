@@ -64,6 +64,10 @@ module Tapioca
       sig { override.void }
       def execute
         load_dsl_extensions
+
+        # TODO WIP
+        require_relative "../../../load.rb"
+
         load_application(eager_load: @requested_constants.empty?)
         abort_if_pending_migrations!
         load_dsl_compilers
