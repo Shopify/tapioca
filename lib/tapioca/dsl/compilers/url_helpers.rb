@@ -109,6 +109,8 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def self.gather_constants
+          return [] unless Rails.application
+
           Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
           Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
