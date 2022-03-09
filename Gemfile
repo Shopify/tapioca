@@ -42,6 +42,7 @@ group(:development, :test) do
   gem("bcrypt", require: false)
   gem("xpath", require: false)
   gem("rubocop-lsp", require: false)
+  gem("measured-rails", require: false)
 
   # net-smtp was removed from default gems in Ruby 3.1, but is used by the `mail` gem.
   # So we need to add it as a dependency until `mail` is fixed:

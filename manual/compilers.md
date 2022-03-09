@@ -23,6 +23,7 @@ In the following section you will find all available DSL compilers:
 * [Config](compiler_config.md)
 * [FrozenRecord](compiler_frozenrecord.md)
 * [IdentityCache](compiler_identitycache.md)
+* [MeasuredRails](compiler_measuredrails.md)
 * [MixedInClassAttributes](compiler_mixedinclassattributes.md)
 * [Protobuf](compiler_protobuf.md)
 * [RailsGenerators](compiler_railsgenerators.md)

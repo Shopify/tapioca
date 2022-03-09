@@ -162,6 +162,13 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    measured (2.8.2)
+      activesupport (>= 5.2)
+    measured-rails (2.8.2)
+      activemodel (>= 5.2)
+      activerecord (>= 5.2)
+      measured (= 2.8.2)
+      railties (>= 5.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
@@ -319,6 +326,7 @@ DEPENDENCIES
   frozen_record
   google-protobuf
   identity_cache
+  measured-rails
   minitest
   minitest-hooks
   minitest-reporters
