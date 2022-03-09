@@ -28,6 +28,7 @@ module Tapioca
         assert_equal(<<~CONFIG, @project.read("sorbet/config"))
           --dir
           .
+          --ignore=vendor/
         CONFIG
 
         assert_project_file_equal("sorbet/tapioca/require.rb", <<~RB)
