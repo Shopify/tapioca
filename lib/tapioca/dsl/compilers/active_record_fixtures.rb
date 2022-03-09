@@ -60,6 +60,8 @@ module Tapioca
 
         sig { override.returns(T::Enumerable[Module]) }
         def self.gather_constants
+          return [] unless Rails.application
+
           [ActiveSupport::TestCase]
         end
 
