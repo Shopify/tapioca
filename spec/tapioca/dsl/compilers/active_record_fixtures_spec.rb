@@ -8,8 +8,34 @@ module Tapioca
     module Compilers
       class ActiveRecordFixturesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordFixtures" do
-          describe "initialize" do
+          describe "without a Rails app" do
+            it "gathers nothing if not in a Rails application" do
+              add_ruby_file("post_test.rb", <<~RUBY)
+                class PostTest < ActiveSupport::TestCase
+                end
+
+                class User
+                end
+              RUBY
+
+              assert_empty(gathered_constants)
+            end
+          end
+
+          describe "with a Rails app" do
+            before do
+              require "active_record"
+              require "rails"
+
+              define_fake_rails_app
+            end
+
             it "gathers only the ActiveSupport::TestCase base class" do
+              require "active_record"
+              require "rails"
+
+              define_fake_rails_app
+
               add_ruby_file("post_test.rb", <<~RUBY)
                 class PostTest < ActiveSupport::TestCase
                 end
@@ -19,15 +45,6 @@ module Tapioca
               RUBY
 
               assert_equal(["ActiveSupport::TestCase"], gathered_constants)
-            end
-          end
-
-          describe "decorate" do
-            before do
-              require "active_record"
-              require "rails"
-
-              define_fake_rails_app
             end
 
             it "does nothing if there are no fixtures" do
