@@ -76,7 +76,6 @@ module Tapioca
             next if line.include?("<")
 
             line.strip
-              .gsub("T.untyped::", "")
               .gsub(/T\.class_of\(([:\w]+)\)/, '\1') # Turn T.class_of(Foo)::Bar into Foo::Bar
           end
           .compact
