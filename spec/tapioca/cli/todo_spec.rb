@@ -35,6 +35,24 @@ module Tapioca
             def foo
               Undef2.new
             end
+
+            class << self
+              def foo2
+                Undef5.new
+              end
+            end
+
+            class Bar
+              def bar
+                Undef6.new
+              end
+
+              class << self
+                def bar2
+                  Undef7.new
+                end
+              end
+            end
           end
 
           ::Undef1::Undef3.foo
@@ -60,7 +78,10 @@ module Tapioca
           module ::Undef1; end
           module ::Undef1::Undef3; end
           module ::Undef2::Undef4; end
+          module Foo::Bar::Undef6; end
+          module Foo::Bar::Undef7; end
           module Foo::Undef2; end
+          module Foo::Undef5; end
         RB
 
         assert_empty_stderr(result)

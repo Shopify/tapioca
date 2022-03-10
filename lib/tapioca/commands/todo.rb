@@ -74,10 +74,12 @@ module Tapioca
           .each_line
           .map do |line|
             next if line.include?("<")
-            next if line.include?("class_of")
-            line.strip.gsub("T.untyped::", "")
+
+            line.strip
+              .gsub(/T\.class_of\(([:\w]+)\)/, '\1') # Turn T.class_of(Foo)::Bar into Foo::Bar
           end
           .compact
+          .sort
       end
     end
   end
