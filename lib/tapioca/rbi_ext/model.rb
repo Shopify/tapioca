@@ -98,6 +98,7 @@ module RBI
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
       return true if SPECIAL_METHOD_NAMES.include?(name)
+
       !!name.match(/^[a-zA-Z_][[:word:]]*[?!=]?$/)
     end
 
@@ -110,6 +111,7 @@ module RBI
     def create_node(node)
       cached = nodes_cache[node.to_s]
       return cached if cached
+
       nodes_cache[node.to_s] = node
       self << node
       node

@@ -72,6 +72,7 @@ module Tapioca
     def validate_config!(config_file, config)
       # To ensure that this is not re-entered, we mark during validation
       return if @validating_config
+
       @validating_config = T.let(true, T.nilable(T::Boolean))
 
       commands = T.cast(self, Thor).class.commands

@@ -46,6 +46,7 @@ module Tapioca
         sig { returns(CompilerContext) }
         def context
           raise "Please call `use_dsl_compiler` before" unless @context
+
           @context
         end
 

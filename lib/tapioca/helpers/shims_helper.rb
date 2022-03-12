@@ -32,6 +32,7 @@ module Tapioca
       index.keys.each do |key|
         nodes = index[key]
         next unless shims_have_duplicates?(nodes, shim_rbi_dir)
+
         duplicates[key] = nodes
       end
       say(" Done", :green)

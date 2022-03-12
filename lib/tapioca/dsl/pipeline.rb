@@ -122,6 +122,7 @@ module Tapioca
 
         compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
+
           compiler = compiler_class.new(self, file.root, constant)
           compiler.decorate
         end

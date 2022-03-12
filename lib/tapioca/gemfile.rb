@@ -272,6 +272,7 @@ module Tapioca
         # one of those folders to see if the path really belongs in the given gem
         # or not.
         return false unless Bundler::Source::Git === @spec.source
+
         parent = Pathname.new(path)
 
         until parent.root?

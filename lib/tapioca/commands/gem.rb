@@ -361,6 +361,7 @@ module Tapioca
       sig { params(gem: Gemfile::GemSpec, file: RBI::File).void }
       def merge_with_exported_rbi(gem, file)
         return file unless gem.export_rbi_files?
+
         tree = gem.exported_rbi_tree
 
         unless tree.conflicts.empty?
