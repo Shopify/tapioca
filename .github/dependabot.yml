@@ -3,10 +3,7 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: weekly
-      day: friday
-      time: "10:00"
-      timezone: America/New_York
+      interval: "weekly"
     reviewers:
       - "Shopify/sorbet"
     labels:
@@ -15,10 +12,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: weekly
-      day: friday
-      time: "10:00"
-      timezone: America/New_York
+      interval: "weekly"
     reviewers:
       - "Shopify/sorbet"
     labels:
