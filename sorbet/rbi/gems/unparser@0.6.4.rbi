@@ -1539,6 +1539,13 @@ class Unparser::Emitter::Defined < ::Unparser::Emitter
   def subject; end
 end
 
+# Emitter for in pattern nodes
+class Unparser::Emitter::FindPattern < ::Unparser::Emitter
+  private
+
+  def dispatch; end
+end
+
 # Emitter for flip flops
 class Unparser::Emitter::FlipFlop < ::Unparser::Emitter
   def symbol_name; end
@@ -1837,8 +1844,22 @@ class Unparser::Emitter::MatchPattern < ::Unparser::Emitter
   def target; end
 end
 
+# Modern ast format emits `match_pattern`
+# node on single line pre 3.0, but 3.0+ uses `match_pattern_p`
+Unparser::Emitter::MatchPattern::SYMBOL = T.let(T.unsafe(nil), String)
+
+class Unparser::Emitter::MatchPatternP < ::Unparser::Emitter
+  private
+
+  def dispatch; end
+  def pattern; end
+  def remaining_children; end
+  def target; end
+end
+
 # Emiter for match rest nodes
 class Unparser::Emitter::MatchRest < ::Unparser::Emitter
+  def dispatch; end
   def emit_array_pattern; end
   def emit_hash_pattern; end
 
