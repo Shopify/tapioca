@@ -87,6 +87,7 @@ module Tapioca
       def symbol_in_payload?(symbol_name)
         symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
         return false unless symbol_name
+
         @payload_symbols.include?(symbol_name)
       end
 
@@ -102,9 +103,11 @@ module Tapioca
       def name_of(constant)
         name = name_of_proxy_target(constant, super(class_of(constant)))
         return name if name
+
         name = super(constant)
         return if name.nil?
         return unless are_equal?(constant, constantize(name, inherit: true))
+
         name = "Struct" if name =~ /^(::)?Struct::[^:]+$/
         name
       end
@@ -350,6 +353,7 @@ module Tapioca
       sig { params(constant: Module, class_name: T.nilable(String)).returns(T.nilable(String)) }
       def name_of_proxy_target(constant, class_name)
         return unless class_name == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
+
         # We are dealing with a ActiveSupport::Deprecation::DeprecatedConstantProxy
         # so try to get the name of the target class
         begin

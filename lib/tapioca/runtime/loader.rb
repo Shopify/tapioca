@@ -41,6 +41,7 @@ module Tapioca
       sig { params(file: T.nilable(String)).void }
       def require_helper(file)
         return unless file
+
         file = File.absolute_path(file)
         return unless File.exist?(file)
 

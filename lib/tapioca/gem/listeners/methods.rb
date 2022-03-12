@@ -41,6 +41,7 @@ module Tapioca
             .each do |visibility, method_list|
               method_list.sort!.map do |name|
                 next if name == :initialize
+
                 vis = case visibility
                 when :protected
                   RBI::Protected.new
@@ -163,6 +164,7 @@ module Tapioca
         sig { params(name: String).returns(T::Boolean) }
         def valid_method_name?(name)
           return true if SPECIAL_METHOD_NAMES.include?(name)
+
           !!name.match(/^[[:word:]]+[?!=]?$/)
         end
 

@@ -40,6 +40,7 @@ module Tapioca
         error.more.each do |line|
           # Also collect the conflicting definition file paths
           next unless line.include?("Previous definition")
+
           files << line.split(":").first&.strip
         end
       end
