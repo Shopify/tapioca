@@ -34,7 +34,7 @@ end
 # information that is needed to build a source map file.
 #
 # To add this comment we must have an asset we can link to.
-# To do this we ensure that the original aset is loaded, then
+# To do this we ensure that the original asset is loaded, then
 # we use a use a special mime type. For example `application/js-sourcemap+json`
 # for a JS source map.
 #
@@ -53,7 +53,7 @@ end
 class Sprockets::ArgumentError < ::Sprockets::Error; end
 
 class Sprockets::Asset
-  # Private: Intialize Asset wrapper from attributes Hash.
+  # Private: Initialize Asset wrapper from attributes Hash.
   #
   # Asset wrappers should not be initialized directly, only
   # Environment#find_asset should vend them.
@@ -171,7 +171,7 @@ class Sprockets::Asset
   #
   # The API status of the keys is dependent on the pipeline processors
   # itself. So some values maybe considered public and others internal.
-  # See the pipeline proccessor documentation itself.
+  # See the pipeline processor documentation itself.
   #
   # Returns Hash.
   def metadata; end
@@ -193,7 +193,7 @@ class Sprockets::Asset
 
   # Public: Internal URI to lookup asset by.
   #
-  # NOT a publically accessible URL.
+  # NOT a publicly accessible URL.
   #
   # Returns URI.
   def uri; end
@@ -315,7 +315,7 @@ module Sprockets::Bower
   # load_path    - String environment path
   # logical_path - String path relative to base
   #
-  # Returns candiate filenames.
+  # Returns candidate filenames.
   def resolve_alternates(load_path, logical_path); end
 end
 
@@ -330,7 +330,7 @@ Sprockets::Bower::POSSIBLE_BOWER_JSONS = T.let(T.unsafe(nil), Array)
 # Uses pipeline metadata:
 #
 #   :required - Ordered Set of asset URIs to prepend
-#   :stubbed  - Set of asset URIs to substract from the required set.
+#   :stubbed  - Set of asset URIs to subtract from the required set.
 #
 # Also see DirectiveProcessor.
 class Sprockets::Bundle
@@ -399,7 +399,7 @@ class Sprockets::Cache
   # Internal: Wrap a backend cache store.
   #
   # Always assign a backend cache store instance to Environment#cache= and
-  # use Environment#cache to retreive a wrapped interface.
+  # use Environment#cache to retrieve a wrapped interface.
   #
   # cache - A compatible backend cache store instance.
   #
@@ -686,7 +686,7 @@ class Sprockets::Cache::Wrapper < ::Struct; end
 
 # `CachedEnvironment` is a special cached version of `Environment`.
 #
-# The expection is that all of its file system methods are cached
+# The exception is that all of its file system methods are cached
 # for the instances lifetime. This makes `CachedEnvironment` much faster. This
 # behavior is ideal in production environments where the file system
 # is immutable.
@@ -763,7 +763,7 @@ Sprockets::ClosureCompressor::VERSION = T.let(T.unsafe(nil), String)
 # Processor engine class for the CoffeeScript compiler.
 # Depends on the `coffee-script` and `coffee-script-source` gems.
 #
-# For more infomation see:
+# For more information see:
 #
 #   https://github.com/rails/ruby-coffee-script
 module Sprockets::CoffeeScriptProcessor
@@ -880,9 +880,9 @@ module Sprockets::Configuration
 
   # Deprecated: Assign a `Digest` implementation class. This maybe any Ruby
   # `Digest::` implementation such as `Digest::SHA256` or
-  # `Digest::MD5`.
+  # `Digest::SHA512`.
   #
-  #     environment.digest_class = Digest::MD5
+  #     environment.digest_class = Digest::SHA512
   def digest_class=(klass); end
 
   def initialize_configuration(parent); end
@@ -946,7 +946,7 @@ class Sprockets::Context
   #
   # NOTE: This helper is currently not implemented and should be
   # customized by the application. Though, in the future, some
-  # basics implemention may be provided with different methods that
+  # basic implementation may be provided with different methods that
   # are required to be overridden.
   #
   # @raise [NotImplementedError]
@@ -1115,14 +1115,14 @@ module Sprockets::Dependencies
   include ::Sprockets::DigestUtils
   include ::Sprockets::PathDigestUtils
 
-  # Public: Add environmental dependency inheirted by all assets.
+  # Public: Add environmental dependency inherited by all assets.
   #
   # uri - String dependency URI
   #
   # Returns nothing.
   def add_dependency(uri); end
 
-  # Public: Add environmental dependency inheirted by all assets.
+  # Public: Add environmental dependency inherited by all assets.
   #
   # uri - String dependency URI
   #
@@ -1162,6 +1162,15 @@ end
 # Environment.
 module Sprockets::DigestUtils
   extend ::Sprockets::DigestUtils
+
+  # Internal: Checks an asset name for a valid digest
+  #
+  # name - The name of the asset
+  #
+  # Returns true if the name contains a digest like string and .digested before the extension
+  #
+  # @return [Boolean]
+  def already_digested?(name); end
 
   # Internal: Detect digest class hash algorithm for digest bytes.
   #
@@ -1477,6 +1486,11 @@ class Sprockets::ERBProcessor
 
   def call(input); end
 
+  private
+
+  # @return [Boolean]
+  def keyword_constructor?; end
+
   class << self
     def call(input); end
 
@@ -1489,7 +1503,7 @@ end
 
 # Processor engine class for the Eco compiler. Depends on the `eco` gem.
 #
-# For more infomation see:
+# For more information see:
 #
 #   https://github.com/sstephenson/ruby-eco
 #   https://github.com/sstephenson/eco
@@ -1511,7 +1525,7 @@ Sprockets::EcoProcessor::VERSION = T.let(T.unsafe(nil), String)
 
 # Processor engine class for the EJS compiler. Depends on the `ejs` gem.
 #
-# For more infomation see:
+# For more information see:
 #
 #   https://github.com/sstephenson/ruby-ejs
 module Sprockets::EjsProcessor
@@ -1672,7 +1686,7 @@ end
 class Sprockets::Error < ::StandardError; end
 module Sprockets::Exporters; end
 
-# Convienence class for all exporters to inherit from
+# Convenience class for all exporters to inherit from
 #
 # An exporter is responsible for exporting a Sprockets::Asset
 # to a file system. For example the Exporters::File class
@@ -1711,7 +1725,7 @@ class Sprockets::Exporters::Base
   # Returns the value of attribute environment.
   def environment; end
 
-  # Public: Callback that is executed after intialization
+  # Public: Callback that is executed after initialization
   #
   # Any setup that needs to be done can be performed in the +setup+
   # method. It will be called immediately after initialization.
@@ -1982,7 +1996,7 @@ module Sprockets::Loader
   # Internal: Retrieves an asset based on its digest
   #
   # unloaded - An UnloadedAsset
-  # limit    - A Fixnum which sets the maximum number of versions of "histories"
+  # limit    - An Integer which sets the maximum number of versions of "histories"
   #            stored in the cache
   #
   # This method attempts to retrieve the last `limit` number of histories of an asset
@@ -2058,7 +2072,7 @@ end
 # The JSON is part of the public API and should be considered stable. This
 # should make it easy to read from other programming languages and processes
 # that don't have sprockets loaded. See `#assets` and `#files` for more
-# infomation about the structure.
+# information about the structure.
 class Sprockets::Manifest
   include ::Sprockets::ManifestUtils
 
@@ -2133,7 +2147,7 @@ class Sprockets::Manifest
   # Public: Find all assets matching pattern set in environment.
   #
   # Returns Enumerator of Assets.
-  def find(*args); end
+  def find(*args, &block); end
 
   # Public: Find the source of assets by paths.
   #
@@ -2149,7 +2163,7 @@ class Sprockets::Manifest
   #   manifest.remove("application-2e8e9a7c6b0aafa0c9bdeec90ea30213.js")
   def remove(filename); end
 
-  # Persist manfiest back to FS
+  # Persist manifest back to FS
   def save; end
 
   private
@@ -2280,7 +2294,7 @@ module Sprockets::Npm
   # load_path    - String environment path
   # logical_path - String path relative to base
   #
-  # Returns candiate filenames.
+  # Returns candidate filenames.
   def resolve_alternates(load_path, logical_path); end
 end
 
@@ -2661,7 +2675,7 @@ module Sprockets::Processing
   #
   # mime_type - String MIME Type. Use '*/*' applies to all types.
   # key       - Symbol metadata key
-  # initial   - Initial memo to pass to the reduce funciton (default: nil)
+  # initial   - Initial memo to pass to the reduce function (default: nil)
   # block     - Proc accepting the memo accumulator and current value
   #
   # Returns nothing.
@@ -2752,7 +2766,7 @@ end
 #
 # A Processor is a general function that may modify or transform an asset as
 # part of the pipeline. CoffeeScript to JavaScript conversion, Minification
-# or Concatenation are all implemented as seperate Processor steps.
+# or Concatenation are all implemented as separate Processor steps.
 #
 # Processors maybe any object that responds to call. So procs or a class that
 # defines a self.call method.
@@ -3042,7 +3056,7 @@ end
 
 # Processor engine class for the SASS/SCSS compiler. Depends on the `sassc` gem.
 #
-# For more infomation see:
+# For more information see:
 #
 #   https://github.com/sass/sassc-ruby
 #   https://github.com/sass/sassc-rails
@@ -3297,7 +3311,7 @@ Sprockets::Server::ALLOWED_REQUEST_METHODS = T.let(T.unsafe(nil), Set)
 # When a file is passed in it will have a `application/js-sourcemap+json`
 # or `application/css-sourcemap+json` mime type. The filename will be
 # match the original asset. The original asset is loaded. As it
-# gets processed by Sprockets it will aquire all information
+# gets processed by Sprockets it will acquire all information
 # needed to build a source map file in the `asset.to_hash[:metadata][:map]`
 # key.
 #
@@ -3327,7 +3341,7 @@ module Sprockets::SourceMapUtils
   # Returns mapping Hash object.
   def bsearch_mappings(mappings, offset, from = T.unsafe(nil), to = T.unsafe(nil)); end
 
-  # Public: Combine two seperate source map transformations into a single
+  # Public: Combine two separate source map transformations into a single
   # mapping.
   #
   # Source transformations may happen in discrete steps producing separate
@@ -3510,7 +3524,7 @@ module Sprockets::SourceMapUtils
   #
   # ary - Two dimensional Array of Integers.
   #
-  # Returns a VLQ encoded String seperated by , and ;.
+  # Returns a VLQ encoded String separated by , and ;.
   def vlq_encode_mappings(ary); end
 end
 
@@ -3657,6 +3671,7 @@ class Sprockets::Transformers::Transformer < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4048,7 +4063,7 @@ module Sprockets::Utils
 
   # Internal: Duplicate and store key/value on new frozen hash.
   #
-  # Seperated for recursive calls, always use hash_reassoc(hash, *keys).
+  # Separated for recursive calls, always use hash_reassoc(hash, *keys).
   #
   # hash - Hash
   # key  - Object key
