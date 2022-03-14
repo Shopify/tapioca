@@ -24,15 +24,31 @@ class RuboCop::Cop::Layout::ExtraSpacing < ::RuboCop::Cop::Base
   def align_equal_sign(corrector, token, align_to); end
   def align_equal_signs(range, corrector); end
   def aligned_locations(locs); end
+
+  # @return [Boolean]
   def aligned_tok?(token); end
+
   def all_relevant_assignment_lines(line_number); end
+
+  # @return [Boolean]
   def allow_for_trailing_comments?; end
+
   def check_assignment(token); end
   def check_other(token1, token2, ast); end
   def check_tokens(ast, token1, token2); end
+
+  # @yield [range_between(start_pos, end_pos)]
   def extra_space_range(token1, token2); end
+
+  # @return [Boolean]
   def force_equal_sign_alignment?; end
+
+  # @return [Boolean]
   def ignored_range?(ast, start_pos); end
+
+  # Returns an array of ranges that should not be reported. It's the
+  # extra spaces between the keys and values in a multiline hash,
+  # since those are handled by the Layout/HashAlignment cop.
   def ignored_ranges(ast); end
 
   class << self
@@ -201,6 +217,33 @@ end
 
 RuboCop::Cop::RSpec::Be::MSG = T.let(T.unsafe(nil), String)
 
+# Check for expectations where `be(...)` can replace `eq(...)`.
+#
+# The `be` matcher compares by identity while the `eq` matcher compares
+# using `==`. Booleans and nil can be compared by identity and therefore
+# the `be` matcher is preferable as it is a more strict test.
+#
+# @example
+#
+#   # bad
+#   expect(foo).to eq(true)
+#   expect(foo).to eq(false)
+#   expect(foo).to eq(nil)
+#
+#   # good
+#   expect(foo).to be(true)
+#   expect(foo).to be(false)
+#   expect(foo).to be(nil)
+class RuboCop::Cop::RSpec::BeEq < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def eq_type_with_identity?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::RSpec::BeEq::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::BeEq::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Check for expectations where `be(...)` can replace `eql(...)`.
 #
 # The `be` matcher compares by identity while the `eql` matcher
@@ -241,6 +284,28 @@ end
 
 RuboCop::Cop::RSpec::BeEql::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::RSpec::BeEql::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Check that `be_nil` is used instead of `be(nil)`.
+#
+# RSpec has a built-in `be_nil` matcher specifically for expecting `nil`.
+# For consistent specs, we recommend using that instead of `be(nil)`.
+#
+# @example
+#
+#   # bad
+#   expect(foo).to be(nil)
+#
+#   # good
+#   expect(foo).to be_nil
+class RuboCop::Cop::RSpec::BeNil < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def nil_value_expectation?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::RSpec::BeNil::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::BeNil::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Check that before/after(:all) isn't being used.
 #
