@@ -188,6 +188,12 @@ module I18n::Backend::Base
   # subjects will be returned directly.
   def resolve(locale, object, subject, options = T.unsafe(nil)); end
 
+  # Resolves a translation.
+  # If the given subject is a Symbol, it will be translated with the
+  # given options. If it is a Proc then it will be evaluated. All other
+  # subjects will be returned directly.
+  def resolve_entry(locale, object, subject, options = T.unsafe(nil)); end
+
   # @return [Boolean]
   def subtrees?; end
 
@@ -305,7 +311,7 @@ module I18n::Backend::Fallbacks
   def exists?(locale, key, options = T.unsafe(nil)); end
 
   def extract_non_symbol_default!(options); end
-  def resolve(locale, object, subject, options = T.unsafe(nil)); end
+  def resolve_entry(locale, object, subject, options = T.unsafe(nil)); end
 
   # Overwrites the Base backend translate method so that it will try each
   # locale given by I18n.fallbacks for the given locale. E.g. for the
@@ -561,6 +567,117 @@ class I18n::Backend::KeyValue::SubtreeProxy
 
   # @return [Boolean]
   def nil?; end
+end
+
+class I18n::Backend::LazyLoadable < ::I18n::Backend::Simple
+  # @return [LazyLoadable] a new instance of LazyLoadable
+  def initialize(lazy_load: T.unsafe(nil)); end
+
+  # Parse the load path and extract all locales.
+  def available_locales; end
+
+  # Eager loading is not supported in the lazy context.
+  def eager_load!; end
+
+  # Returns whether the current locale is initialized.
+  #
+  # @return [Boolean]
+  def initialized?; end
+
+  def lookup(locale, key, scope = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Clean up translations and uninitialize all locales.
+  def reload!; end
+
+  protected
+
+  # Load translations from files that belong to the current locale.
+  #
+  # @raise [InvalidFilenames]
+  def init_translations; end
+
+  def initialized_locales; end
+
+  private
+
+  # Checks if a filename is named in correspondence to the translations it loaded.
+  # The locale extracted from the path must be the single locale loaded in the translations.
+  #
+  # @raise [FilenameIncorrect]
+  def assert_file_named_correctly!(file, translations); end
+
+  # Select all files from I18n load path that belong to current locale.
+  # These files must start with the locale identifier (ie. "en", "pt-BR"),
+  # followed by an "_" demarcation to separate proceeding text.
+  def filenames_for_current_locale; end
+
+  # @return [Boolean]
+  def lazy_load?; end
+
+  # Loads each file supplied and asserts that the file only loads
+  # translations as expected by the name. The method returns a list of
+  # errors corresponding to offending files.
+  def load_translations_and_collect_file_errors(files); end
+end
+
+class I18n::Backend::LazyLoadable::FilenameIncorrect < ::StandardError
+  # @return [FilenameIncorrect] a new instance of FilenameIncorrect
+  def initialize(file, expected_locale, unexpected_locales); end
+end
+
+# Backend that lazy loads translations based on the current locale. This
+# implementation avoids loading all translations up front. Instead, it only
+# loads the translations that belong to the current locale. This offers a
+# performance incentive in local development and test environments for
+# applications with many translations for many different locales. It's
+# particularly useful when the application only refers to a single locales'
+# translations at a time (ex. A Rails workload).  The implementation
+# identifies which translation files from the load path belong to the
+# current locale by pattern matching against their path name.
+#
+# Specifically, a translation file is considered to belong to a locale if:
+# a) the filename is in the I18n load path
+# b) the filename ends in a supported extension (ie. .yml, .json, .po, .rb)
+# c) the filename starts with the locale identifier
+# d) the locale identifier and optional proceeding text is separated by an underscore, ie. "_".
+#
+# Examples:
+# Valid files that will be selected by this backend:
+#
+# "files/locales/en_translation.yml" (Selected for locale "en")
+# "files/locales/fr.po"  (Selected for locale "fr")
+#
+# Invalid files that won't be selected by this backend:
+#
+# "files/locales/translation-file"
+# "files/locales/en-translation.unsupported"
+# "files/locales/french/translation.yml"
+# "files/locales/fr/translation.yml"
+#
+# The implementation uses this assumption to defer the loading of
+# translation files until the current locale actually requires them.
+#
+# The backend has two working modes: lazy_load and eager_load.
+#
+# Note: This backend should only be enabled in test environments!
+# When the mode is set to false, the backend behaves exactly like the
+# Simple backend, with an additional check that the paths being loaded
+# abide by the format. If paths can't be matched to the format, an error is raised.
+#
+# You can configure lazy loaded backends through the initializer or backends
+# accessor:
+#
+#   # In test environments
+#
+#   I18n.backend = I18n::Backend::LazyLoadable.new(lazy_load: true)
+#
+#   # In other environments, such as production and CI
+#
+#   I18n.backend = I18n::Backend::LazyLoadable.new(lazy_load: false) # default
+class I18n::Backend::LocaleExtractor
+  class << self
+    def locale_from_path(path); end
+  end
 end
 
 module I18n::Backend::Memoize
@@ -1282,6 +1399,13 @@ end
 I18n::Gettext::PLURAL_SEPARATOR = T.let(T.unsafe(nil), String)
 I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
 
+class I18n::InvalidFilenames < ::I18n::ArgumentError
+  # @return [InvalidFilenames] a new instance of InvalidFilenames
+  def initialize(file_errors); end
+end
+
+I18n::InvalidFilenames::NUMBER_OF_ERRORS_SHOWN = T.let(T.unsafe(nil), Integer)
+
 class I18n::InvalidLocale < ::I18n::ArgumentError
   # @return [InvalidLocale] a new instance of InvalidLocale
   def initialize(locale); end
@@ -1486,6 +1610,20 @@ class I18n::UnknownFileType < ::I18n::ArgumentError
 
   # Returns the value of attribute type.
   def type; end
+end
+
+class I18n::UnsupportedMethod < ::I18n::ArgumentError
+  # @return [UnsupportedMethod] a new instance of UnsupportedMethod
+  def initialize(method, backend_klass, msg); end
+
+  # Returns the value of attribute backend_klass.
+  def backend_klass; end
+
+  # Returns the value of attribute method.
+  def method; end
+
+  # Returns the value of attribute msg.
+  def msg; end
 end
 
 module I18n::Utils

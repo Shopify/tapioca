@@ -33,8 +33,12 @@ module ActiveStorage
   def routes_prefix=(val); end
   def service_urls_expire_in; end
   def service_urls_expire_in=(val); end
+  def supported_image_processing_methods; end
+  def supported_image_processing_methods=(val); end
   def track_variants; end
   def track_variants=(val); end
+  def unsupported_image_processing_arguments; end
+  def unsupported_image_processing_arguments=(val); end
   def variable_content_types; end
   def variable_content_types=(val); end
   def variant_processor; end
@@ -80,9 +84,13 @@ module ActiveStorage
     def routes_prefix=(val); end
     def service_urls_expire_in; end
     def service_urls_expire_in=(val); end
+    def supported_image_processing_methods; end
+    def supported_image_processing_methods=(val); end
     def table_name_prefix; end
     def track_variants; end
     def track_variants=(val); end
+    def unsupported_image_processing_arguments; end
+    def unsupported_image_processing_arguments=(val); end
     def use_relative_model_naming?; end
     def variable_content_types; end
     def variable_content_types=(val); end
@@ -994,7 +1002,6 @@ class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 module ActiveStorage::VERSION; end
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

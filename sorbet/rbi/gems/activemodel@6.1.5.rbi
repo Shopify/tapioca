@@ -2930,7 +2930,7 @@ end
 module ActiveModel::Type
   class << self
     def default_value; end
-    def lookup(*args, **kwargs); end
+    def lookup(*args); end
 
     # Add a new type to the registry, allowing it to be gotten through ActiveModel::Type#lookup
     def register(type_name, klass = T.unsafe(nil), **options, &block); end
@@ -3174,7 +3174,7 @@ class ActiveModel::Type::Registration
   # @return [Registration] a new instance of Registration
   def initialize(name, block, **_arg2); end
 
-  def call(_registry, *args, **kwargs); end
+  def call(_registry, *args); end
 
   # @return [Boolean]
   def matches?(type_name, *args, **kwargs); end
@@ -3192,7 +3192,7 @@ class ActiveModel::Type::Registry
   # @return [Registry] a new instance of Registry
   def initialize; end
 
-  def lookup(symbol, *args, **kwargs); end
+  def lookup(symbol, *args); end
   def register(type_name, klass = T.unsafe(nil), **options, &block); end
 
   private
@@ -3364,7 +3364,6 @@ end
 module ActiveModel::VERSION; end
 ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveModel::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

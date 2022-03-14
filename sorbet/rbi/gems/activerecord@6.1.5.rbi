@@ -2547,7 +2547,7 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
 
   def remove_records(existing_records, records, method); end
   def replace_common_records_in_memory(new_target, original_target); end
-  def replace_on_target(record, index, skip_callbacks); end
+  def replace_on_target(record, skip_callbacks, replace:, inversing: T.unsafe(nil)); end
   def replace_records(new_target, original_target); end
 end
 
@@ -11073,7 +11073,7 @@ module ActiveRecord::ConnectionHandling
   #     Dog.first # finds first Dog record stored on the shard one replica
   #   end
   #
-  # The database kwarg is deprecated and will be removed in 6.2.0 without replacement.
+  # The database kwarg is deprecated and will be removed in Rails 7.0.0 without replacement.
   def connected_to(database: T.unsafe(nil), role: T.unsafe(nil), shard: T.unsafe(nil), prevent_writes: T.unsafe(nil), &blk); end
 
   # Returns true if role is the current connected role.
@@ -14114,6 +14114,7 @@ class ActiveRecord::InternalMetadata < ::ActiveRecord::Base
     def enabled?; end
 
     def primary_key; end
+    def record_timestamps; end
     def table_name; end
   end
 end
@@ -15414,6 +15415,14 @@ end
 
 class ActiveRecord::Migration::Compatibility::V6_0::ReferenceDefinition < ::ActiveRecord::ConnectionAdapters::ReferenceDefinition
   def index_options(table_name); end
+end
+
+module ActiveRecord::Migration::Compatibility::V6_0::SQLite3; end
+
+module ActiveRecord::Migration::Compatibility::V6_0::SQLite3::TableDefinition
+  def belongs_to(*args, **options); end
+  def column(name, type, index: T.unsafe(nil), **options); end
+  def references(*args, **options); end
 end
 
 module ActiveRecord::Migration::Compatibility::V6_0::TableDefinition
@@ -22306,7 +22315,6 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

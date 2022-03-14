@@ -1951,6 +1951,5 @@ end
 module ActiveJob::VERSION; end
 ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::TINY = T.let(T.unsafe(nil), Integer)
