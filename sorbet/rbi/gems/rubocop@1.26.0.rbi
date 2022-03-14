@@ -342,7 +342,7 @@ class RuboCop::CLI::Environment
   def run(name); end
 end
 
-class RuboCop::CLI::Finished < ::RuntimeError; end
+class RuboCop::CLI::Finished < ::StandardError; end
 RuboCop::CLI::STATUS_ERROR = T.let(T.unsafe(nil), Integer)
 RuboCop::CLI::STATUS_INTERRUPTED = T.let(T.unsafe(nil), Integer)
 RuboCop::CLI::STATUS_OFFENSES = T.let(T.unsafe(nil), Integer)
@@ -1529,6 +1529,7 @@ class RuboCop::Cop::Badge
   def with_department(department); end
 
   class << self
+    def camel_case(name_part); end
     def for(class_name); end
     def parse(identifier); end
   end
@@ -3307,9 +3308,10 @@ RuboCop::Cop::Gemspec::OrderedDependencies::MSG = T.let(T.unsafe(nil), String)
 
 # Requires a gemspec to have `rubygems_mfa_required` metadata set.
 #
-# This setting tells RubyGems that MFA is required for accounts to
-# be able perform privileged operations, such as (see
-# RubyGems' documentation for the full list of privileged operations):
+# This setting tells RubyGems that MFA (Multi-Factor Authentication) is
+# required for accounts to be able perform privileged operations, such as
+# (see RubyGems' documentation for the full list of privileged
+# operations):
 #
 # * `gem push`
 # * `gem yank`
@@ -3624,13 +3626,6 @@ end
 
 RuboCop::Cop::Generator::RequireFileInjector::REQUIRE_PATH = T.let(T.unsafe(nil), Regexp)
 
-# NOTE: RDoc 5.1.0 or lower has the following issue.
-# https://github.com/rubocop/rubocop/issues/7043
-#
-# The following `String#gsub` can be replaced with
-# squiggly heredoc when RuboCop supports Ruby 2.5 or higher
-# (RDoc 6.0 or higher).
-#
 # @api private
 RuboCop::Cop::Generator::SOURCE_TEMPLATE = T.let(T.unsafe(nil), String)
 
@@ -4453,7 +4448,7 @@ end
 
 RuboCop::Cop::Layout::BlockEndNewline::MSG = T.let(T.unsafe(nil), String)
 
-# This cop checks how the `when` and `in`s of a `case` expression
+# This cop checks how the `when` and ``in``s of a `case` expression
 # are indented in relation to its `case` or `end` keyword.
 #
 # It will register a separate offense for each misaligned `when` and `in`.
@@ -8844,13 +8839,12 @@ RuboCop::Cop::Layout::MultilineMethodDefinitionBraceLayout::ALWAYS_SAME_LINE_MES
 RuboCop::Cop::Layout::MultilineMethodDefinitionBraceLayout::NEW_LINE_MESSAGE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Layout::MultilineMethodDefinitionBraceLayout::SAME_LINE_MESSAGE = T.let(T.unsafe(nil), String)
 
-# This cop checks the indentation of the right hand side operand in
-# binary operations that span more than one line.
+# This cop checks the indentation of the right hand side operand in binary operations that
+# span more than one line.
 #
-# The `aligned` style checks that operators are aligned if they are part
-# of an `if` or `while` condition, a `return` statement, etc. In other
-# contexts, the second operand should be indented regardless of enforced
-# style.
+# The `aligned` style checks that operators are aligned if they are part of an `if` or `while`
+# condition, an explicit `return` statement, etc. In other contexts, the second operand should
+# be indented regardless of enforced style.
 #
 # @example EnforcedStyle: aligned (default)
 #   # bad
@@ -12927,24 +12921,11 @@ RuboCop::Cop::Lint::IneffectiveAccessModifier::ALTERNATIVE_PRIVATE = T.let(T.uns
 RuboCop::Cop::Lint::IneffectiveAccessModifier::ALTERNATIVE_PROTECTED = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Lint::IneffectiveAccessModifier::MSG = T.let(T.unsafe(nil), String)
 
-# This cop looks for error classes inheriting from `Exception`
-# and its standard library subclasses, excluding subclasses of
-# `StandardError`. It is configurable to suggest using either
-# `RuntimeError` (default) or `StandardError` instead.
+# This cop looks for error classes inheriting from `Exception`.
+# It is configurable to suggest using either `StandardError` (default) or
+# `RuntimeError` instead.
 #
-# @example EnforcedStyle: runtime_error (default)
-#   # bad
-#
-#   class C < Exception; end
-#
-#   C = Class.new(Exception)
-#
-#   # good
-#
-#   class C < RuntimeError; end
-#
-#   C = Class.new(RuntimeError)
-# @example EnforcedStyle: standard_error
+# @example EnforcedStyle: standard_error (default)
 #   # bad
 #
 #   class C < Exception; end
@@ -12956,6 +12937,18 @@ RuboCop::Cop::Lint::IneffectiveAccessModifier::MSG = T.let(T.unsafe(nil), String
 #   class C < StandardError; end
 #
 #   C = Class.new(StandardError)
+# @example EnforcedStyle: runtime_error
+#   # bad
+#
+#   class C < Exception; end
+#
+#   C = Class.new(Exception)
+#
+#   # good
+#
+#   class C < RuntimeError; end
+#
+#   C = Class.new(RuntimeError)
 class RuboCop::Cop::Lint::InheritException < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
@@ -12967,13 +12960,12 @@ class RuboCop::Cop::Lint::InheritException < ::RuboCop::Cop::Base
   private
 
   # @return [Boolean]
-  def illegal_class_name?(class_node); end
+  def exception_class?(class_node); end
 
   def message(node); end
   def preferred_base_class; end
 end
 
-RuboCop::Cop::Lint::InheritException::ILLEGAL_CLASSES = T.let(T.unsafe(nil), Array)
 RuboCop::Cop::Lint::InheritException::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Lint::InheritException::PREFERRED_BASE_CLASS = T.let(T.unsafe(nil), Hash)
 RuboCop::Cop::Lint::InheritException::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
@@ -14218,6 +14210,10 @@ RuboCop::Cop::Lint::RedundantCopEnableDirective::MSG = T.let(T.unsafe(nil), Stri
 
 # Sort globbed results by default in Ruby 3.0.
 # This cop checks for redundant `sort` method to `Dir.glob` and `Dir[]`.
+#
+# This cop is unsafe, in case of having a file and a directory with
+# identical names, since directory will be loaded before the file, which
+# will break `exe/files.rb` that rely on `exe.rb` file.
 #
 # @example
 #
@@ -16636,6 +16632,7 @@ class RuboCop::Cop::Lint::UselessTimes < ::RuboCop::Cop::Base
 
   private
 
+  def autocorrect(corrector, count, node, proc_name); end
   def autocorrect_block(corrector, node); end
   def autocorrect_block_pass(corrector, node, proc_name); end
   def fix_indentation(source, range); end
@@ -19703,13 +19700,17 @@ RuboCop::Cop::Security::Open::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 # potential security issues leading to remote code execution when
 # loading from an untrusted source.
 #
+# NOTE: Ruby 3.1+ (Psych 4) uses `Psych.load` as `Psych.safe_load` by default.
+#
 # @example
 #   # bad
-#   YAML.load("--- foo")
+#   YAML.load("--- !ruby/object:Foo {}") # Psych 3 is unsafe by default
 #
 #   # good
-#   YAML.safe_load("--- foo")
-#   YAML.dump("foo")
+#   YAML.safe_load("--- !ruby/object:Foo {}", [Foo])                    # Ruby 2.5  (Psych 3)
+#   YAML.safe_load("--- !ruby/object:Foo {}", permitted_classes: [Foo]) # Ruby 3.0- (Psych 3)
+#   YAML.load("--- !ruby/object:Foo {}", permitted_classes: [Foo])      # Ruby 3.1+ (Psych 4)
+#   YAML.dump(foo)
 class RuboCop::Cop::Security::YAMLLoad < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
@@ -22066,26 +22067,32 @@ RuboCop::Cop::Style::DateTime::COERCION_MSG = T.let(T.unsafe(nil), String)
 #
 #   # bad
 #   def foo()
-#   # does a thing
+#   do_something
 #   end
 #
 #   # good
 #   def foo
-#   # does a thing
+#   do_something
 #   end
 #
-#   # also good
-#   def foo() does_a_thing end
+#   # bad
+#   def foo() = do_something
+#
+#   # good
+#   def foo = do_something
+#
+#   # good (without parentheses it's a syntax error)
+#   def foo() do_something end
 # @example
 #
 #   # bad
 #   def Baz.foo()
-#   # does a thing
+#   do_something
 #   end
 #
 #   # good
 #   def Baz.foo
-#   # does a thing
+#   do_something
 #   end
 class RuboCop::Cop::Style::DefWithParentheses < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
@@ -25197,7 +25204,6 @@ class RuboCop::Cop::Style::LambdaCall < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  def autocorrect(corrector, node); end
   def on_send(node); end
 
   private
@@ -25208,12 +25214,13 @@ class RuboCop::Cop::Style::LambdaCall < ::RuboCop::Cop::Base
   # @return [Boolean]
   def implicit_style?; end
 
-  def message(_node); end
-
   # @return [Boolean]
   def offense?(node); end
+
+  def prefer(node); end
 end
 
+RuboCop::Cop::Style::LambdaCall::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Style::LambdaCall::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # This cop checks for string literal concatenation at
@@ -26910,6 +26917,33 @@ class RuboCop::Cop::Style::NegatedWhile < ::RuboCop::Cop::Base
   def on_until(node); end
   def on_while(node); end
 end
+
+# This cop checks for nested `File.dirname`.
+# It replaces nested `File.dirname` with the level argument introduced in Ruby 3.1.
+#
+# @example
+#
+#   # bad
+#   File.dirname(File.dirname(path))
+#
+#   # good
+#   File.dirname(path, 2)
+class RuboCop::Cop::Style::NestedFileDirname < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
+
+  def file_dirname?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+
+  private
+
+  def offense_range(node); end
+  def path_with_dir_level(node, level); end
+end
+
+RuboCop::Cop::Style::NestedFileDirname::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::NestedFileDirname::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # This cop checks for nested use of if, unless, while and until in their
 # modifier form.
@@ -30800,6 +30834,9 @@ class RuboCop::Cop::Style::StringConcatenation < ::RuboCop::Cop::Base
   def handle_quotes(parts); end
 
   # @return [Boolean]
+  def heredoc?(node); end
+
+  # @return [Boolean]
   def line_end_concatenation?(node); end
 
   # @return [Boolean]
@@ -31561,7 +31598,7 @@ end
 # last item of all non-empty, multiline array literals.
 # * `comma`: Requires a comma after last item in an array,
 # but only when each item is on its own line.
-# * `no_comma`: Does not requires a comma after the
+# * `no_comma`: Does not require a comma after the
 # last item in an array
 #
 # @example EnforcedStyleForMultiline: consistent_comma
@@ -31703,7 +31740,7 @@ RuboCop::Cop::Style::TrailingCommaInBlockArgs::MSG = T.let(T.unsafe(nil), String
 # last item of all non-empty, multiline hash literals.
 # * `comma`: Requires a comma after the last item in a hash,
 # but only when each item is on its own line.
-# * `no_comma`: Does not requires a comma after the
+# * `no_comma`: Does not require a comma after the
 # last item in a hash
 #
 # @example EnforcedStyleForMultiline: consistent_comma
@@ -35418,7 +35455,7 @@ end
 
 # An exception indicating that the inspection loop got stuck correcting
 # offenses back and forth.
-class RuboCop::Runner::InfiniteCorrectionLoop < ::RuntimeError
+class RuboCop::Runner::InfiniteCorrectionLoop < ::StandardError
   # @return [InfiniteCorrectionLoop] a new instance of InfiniteCorrectionLoop
   def initialize(path, offenses_by_iteration, loop_start: T.unsafe(nil)); end
 
