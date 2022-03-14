@@ -5,6 +5,7 @@ module Tapioca
   class Cli < Thor
     include CliHelper
     include ConfigHelper
+    include SorbetHelper
     include ShimsHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
@@ -242,6 +243,7 @@ module Tapioca
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
     option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
+    option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
     def check_shims
       index = RBI::Index.new
 
@@ -249,6 +251,30 @@ module Tapioca
       if !Dir.exist?(shim_rbi_dir) || Dir.empty?(shim_rbi_dir)
         say("No shim RBIs to check", :green)
         exit(0)
+      end
+
+      payload_path = T.let(nil, T.nilable(String))
+
+      if options[:payload]
+        if sorbet_supports?(:print_payload_sources)
+          Dir.mktmpdir do |dir|
+            payload_path = dir
+            result = sorbet("--no-config --print=payload-sources:#{payload_path}")
+
+            unless result.status
+              say_error("Sorbet failed to dump payload")
+              say_error(result.err)
+              exit(1)
+            end
+
+            index_payload(index, payload_path)
+          end
+        else
+          say_error("The version of Sorbet used in your Gemfile.lock does not support `--print=payload-sources`")
+          say_error("Current: v#{SORBET_GEM_SPEC.version}")
+          say_error("Required: #{FEATURE_REQUIREMENTS[:print_payload_sources]}")
+          exit(1)
+        end
       end
 
       index_rbis(index, "shim", shim_rbi_dir)
@@ -260,7 +286,11 @@ module Tapioca
         duplicates.each do |key, nodes|
           say_error("\nDuplicated RBI for #{key}:", :red)
           nodes.each do |node|
-            say_error(" * #{node.loc}", :red)
+            node_loc = node.loc
+            next unless node_loc
+
+            loc_string = location_to_payload_url(node_loc, path_prefix: payload_path)
+            say_error(" * #{loc_string}", :red)
           end
         end
         say_error("\nPlease remove the duplicated definitions from the #{shim_rbi_dir} directory.", :red)

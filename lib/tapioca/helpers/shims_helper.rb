@@ -8,20 +8,25 @@ module Tapioca
 
     requires_ancestor { Thor::Shell }
 
+    SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
+
+    sig { params(index: RBI::Index, dir: String).void }
+    def index_payload(index, dir)
+      return unless Dir.exist?(dir)
+
+      say("Loading Sorbet payload... ")
+      files = Dir.glob("#{dir}/**/*.rbi").sort
+      parse_and_index_files(index, files)
+      say(" Done", :green)
+    end
+
     sig { params(index: RBI::Index, kind: String, dir: String).void }
     def index_rbis(index, kind, dir)
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
 
       say("Loading #{kind} RBIs from #{dir}... ")
       files = Dir.glob("#{dir}/**/*.rbi").sort
-
-      trees = files.map do |file|
-        RBI::Parser.parse_file(file)
-      rescue RBI::ParseError => e
-        say_error("\nWarning: #{e} (#{e.location})", :yellow)
-      end.compact
-
-      index.visit_all(trees)
+      parse_and_index_files(index, files)
       say(" Done", :green)
     end
 
@@ -39,7 +44,29 @@ module Tapioca
       duplicates
     end
 
+    sig { params(loc: RBI::Loc, path_prefix: T.nilable(String)).returns(String) }
+    def location_to_payload_url(loc, path_prefix:)
+      return loc.to_s unless path_prefix
+
+      url = loc.file || ""
+      return loc.to_s unless url.start_with?(path_prefix)
+
+      url = url.sub(path_prefix, SORBET_PAYLOAD_URL)
+      url = "#{url}#L#{loc.begin_line}"
+      url
+    end
+
     private
+
+    sig { params(index: RBI::Index, files: T::Array[String]).void }
+    def parse_and_index_files(index, files)
+      trees = files.map do |file|
+        RBI::Parser.parse_file(file)
+      rescue RBI::ParseError => e
+        say_error("\nWarning: #{e} (#{e.location})", :yellow)
+      end.compact
+      index.visit_all(trees)
+    end
 
     sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String).returns(T::Boolean) }
     def shims_have_duplicates?(nodes, shim_rbi_dir)
