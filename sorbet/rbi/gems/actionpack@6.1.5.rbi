@@ -528,7 +528,7 @@ module AbstractController::Collector
 
   private
 
-  def method_missing(symbol, &block); end
+  def method_missing(symbol, *args, &block); end
 
   class << self
     def generate_method_for_mime(mime); end
@@ -7034,7 +7034,10 @@ end
 #
 # When a request comes to an unauthorized host, the +response_app+
 # application will be executed and rendered. If no +response_app+ is given, a
-# default one will run, which responds with <tt>403 Forbidden</tt>.
+# default one will run.
+# The default response app logs blocked host info with level 'error' and
+# responds with <tt>403 Forbidden</tt>. The body of the response contains debug info
+# if +config.consider_all_requests_local+ is set to true, otherwise the body is empty.
 class ActionDispatch::HostAuthorization
   # @return [HostAuthorization] a new instance of HostAuthorization
   def initialize(app, hosts, deprecated_response_app = T.unsafe(nil), exclude: T.unsafe(nil), response_app: T.unsafe(nil)); end
@@ -7053,7 +7056,19 @@ class ActionDispatch::HostAuthorization
 end
 
 ActionDispatch::HostAuthorization::ALLOWED_HOSTS_IN_DEVELOPMENT = T.let(T.unsafe(nil), Array)
-ActionDispatch::HostAuthorization::DEFAULT_RESPONSE_APP = T.let(T.unsafe(nil), Proc)
+
+class ActionDispatch::HostAuthorization::DefaultResponseApp
+  def call(env); end
+
+  private
+
+  def available_logger(request); end
+  def log_error(request); end
+  def response(format, body); end
+  def response_body(request); end
+end
+
+ActionDispatch::HostAuthorization::DefaultResponseApp::RESPONSE_STATUS = T.let(T.unsafe(nil), Integer)
 ActionDispatch::HostAuthorization::IPV4_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 ActionDispatch::HostAuthorization::IPV6_HOSTNAME = T.let(T.unsafe(nil), Regexp)
 ActionDispatch::HostAuthorization::IPV6_HOSTNAME_WITH_PORT = T.let(T.unsafe(nil), Regexp)
@@ -13021,6 +13036,7 @@ class ActionDispatch::ShowExceptions
 
   private
 
+  def fallback_to_html_format_if_invalid_mime_type(request); end
   def pass_response(status); end
   def render_exception(request, exception); end
 end
@@ -13123,7 +13139,6 @@ end
 module ActionPack::VERSION; end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

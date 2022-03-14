@@ -1739,6 +1739,5 @@ end
 module ActionMailer::VERSION; end
 ActionMailer::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionMailer::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionMailer::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionMailer::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionMailer::VERSION::TINY = T.let(T.unsafe(nil), Integer)
