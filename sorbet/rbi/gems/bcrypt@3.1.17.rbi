@@ -51,7 +51,7 @@ class BCrypt::Engine
     def generate_salt(cost = T.unsafe(nil)); end
 
     # Given a secret and a valid salt (see BCrypt::Engine.generate_salt) calculates
-    # a bcrypt() password hash.
+    # a bcrypt() password hash. Secrets longer than 72 bytes are truncated.
     def hash_secret(secret, salt, _ = T.unsafe(nil)); end
 
     # Returns true if +salt+ is a valid bcrypt() salt, false if not.
@@ -79,6 +79,15 @@ BCrypt::Engine::MAX_COST = T.let(T.unsafe(nil), Integer)
 
 # Maximum possible size of bcrypt() salts.
 BCrypt::Engine::MAX_SALT_LENGTH = T.let(T.unsafe(nil), Integer)
+
+# Maximum possible size of bcrypt() secrets.
+# Older versions of the bcrypt library would truncate passwords longer
+# than 72 bytes, but newer ones do not. We truncate like the old library for
+# forward compatibility. This way users upgrading from Ubuntu 18.04 to 20.04
+# will not have their user passwords invalidated, for example.
+# A max secret length greater than 255 leads to bcrypt returning nil.
+# https://github.com/bcrypt-ruby/bcrypt-ruby/issues/225#issuecomment-875908425
+BCrypt::Engine::MAX_SECRET_BYTESIZE = T.let(T.unsafe(nil), Integer)
 
 # The minimum cost supported by the algorithm.
 BCrypt::Engine::MIN_COST = T.let(T.unsafe(nil), Integer)
@@ -125,6 +134,17 @@ class BCrypt::Password < ::String
   def initialize(raw_hash); end
 
   # Compares a potential secret against the hash. Returns true if the secret is the original secret, false otherwise.
+  #
+  # Comparison edge case/gotcha:
+  #
+  #    secret = "my secret"
+  #    @password = BCrypt::Password.create(secret)
+  #
+  #    @password == secret              # => True
+  #    @password == @password           # => False
+  #    @password == @password.to_s      # => False
+  #    @password.to_s == @password      # => True
+  #    @password.to_s == @password.to_s # => True
   def ==(secret); end
 
   # The hash portion of the stored password hash.
@@ -134,6 +154,17 @@ class BCrypt::Password < ::String
   def cost; end
 
   # Compares a potential secret against the hash. Returns true if the secret is the original secret, false otherwise.
+  #
+  # Comparison edge case/gotcha:
+  #
+  #    secret = "my secret"
+  #    @password = BCrypt::Password.create(secret)
+  #
+  #    @password == secret              # => True
+  #    @password == @password           # => False
+  #    @password == @password.to_s      # => False
+  #    @password.to_s == @password      # => True
+  #    @password.to_s == @password.to_s # => True
   def is_password?(secret); end
 
   # The salt of the store password hash (including version and cost).
