@@ -25,7 +25,7 @@ jobs:
       - name: Update RBI
         run: |
           bundle exec exe/tapioca gem
-          git add --all
+          git add sorbet/rbi
           git commit -m "Update RBI"
           git push origin ${GITHUB_HEAD_REF#refs/heads/}
       - name: Enable auto-merge for Dependabot PRs
