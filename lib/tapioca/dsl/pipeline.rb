@@ -53,7 +53,7 @@ module Tapioca
       end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
-          .select { |c| Runtime::Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
+          .select { |c| Module === c } # Filter value constants out
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
         if constants_to_process.empty?
@@ -112,8 +112,35 @@ module Tapioca
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
       def gather_constants(requested_constants)
         constants = compilers.map(&:processable_constants).reduce(Set.new, :union)
+        constants = filter_anonymous_and_reloaded_constants(constants)
+
         constants &= requested_constants unless requested_constants.empty?
         constants
+      end
+
+      sig { params(constants: T::Set[Module]).returns(T::Set[Module]) }
+      def filter_anonymous_and_reloaded_constants(constants)
+        # Group constants by their names
+        constants_by_name = constants
+          .group_by { |c| T.must(Runtime::Reflection.name_of(c)) }
+          .select { |name, _| !name.nil? }
+
+        # Find the constants that have been reloaded
+        reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
+
+        unless reloaded_constants.empty?
+          reloaded_constant_names = reloaded_constants.map { |name| "`#{name}`" }.join(", ")
+
+          $stderr.puts("WARNING: Multiple constants with the same name: #{reloaded_constant_names}")
+          $stderr.puts("Make sure some object is not holding onto these constants during an app reload.")
+        end
+
+        # Look up all the constants back from their names. The resulting constant set will be the
+        # set of constants that are actually in memory with those names.
+        constants_by_name
+          .keys
+          .map { |name| T.cast(Runtime::Reflection.constantize(name), Module) }
+          .to_set
       end
 
       sig { params(constant: Module).returns(T.nilable(RBI::File)) }
