@@ -534,7 +534,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "does not crash withg anonymous constants" do
+        it "does not crash with anonymous constants" do
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"
 

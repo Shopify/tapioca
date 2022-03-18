@@ -53,7 +53,7 @@ module Tapioca
       end
       def run(&blk)
         constants_to_process = gather_constants(requested_constants)
-          .select { |c| Runtime::Reflection.name_of(c) && Module === c } # Filter anonymous or value constants
+          .select { |c| Module === c } # Filter value constants out
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
         if constants_to_process.empty?
@@ -112,16 +112,18 @@ module Tapioca
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
       def gather_constants(requested_constants)
         constants = compilers.map(&:processable_constants).reduce(Set.new, :union)
-        constants = filter_reloaded_constants(constants)
+        constants = filter_anonymous_and_reloaded_constants(constants)
 
         constants &= requested_constants unless requested_constants.empty?
         constants
       end
 
       sig { params(constants: T::Set[Module]).returns(T::Set[Module]) }
-      def filter_reloaded_constants(constants)
+      def filter_anonymous_and_reloaded_constants(constants)
         # Group constants by their names
-        constants_by_name = constants.group_by { |c| T.must(Runtime::Reflection.name_of(c)) }
+        constants_by_name = constants
+          .group_by { |c| T.must(Runtime::Reflection.name_of(c)) }
+          .select { |name, _| !name.nil? }
 
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
