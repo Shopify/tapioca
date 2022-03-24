@@ -25,16 +25,9 @@ module Tapioca
       to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),
     }.freeze, T::Hash[Symbol, ::Gem::Requirement])
 
-    class CmdResult < T::Struct
-      const :out, String
-      const :err, String
-      const :status, T::Boolean
-    end
-
-    sig { params(sorbet_args: String).returns(CmdResult) }
+    sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
     def sorbet(*sorbet_args)
-      out, err, status = Open3.capture3([sorbet_path, *sorbet_args].join(" "))
-      CmdResult.new(out: out, err: err, status: status.success? || false)
+      Spoom::Sorbet.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path, capture_err: true)
     end
 
     sig { returns(String) }

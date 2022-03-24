@@ -6,14 +6,7 @@
 
 module Spoom
   class << self
-    sig do
-      params(
-        cmd: ::String,
-        arg: ::String,
-        path: ::String,
-        capture_err: T::Boolean
-      ).returns([::String, T::Boolean, ::Integer])
-    end
+    sig { params(cmd: ::String, arg: ::String, path: ::String, capture_err: T::Boolean).returns(::Spoom::ExecResult) }
     def exec(cmd, *arg, path: T.unsafe(nil), capture_err: T.unsafe(nil)); end
   end
 end
@@ -747,6 +740,17 @@ end
 
 class Spoom::Error < ::StandardError; end
 
+class Spoom::ExecResult < ::T::Struct
+  const :err, ::String
+  const :exit_code, ::Integer
+  const :out, ::String
+  const :status, T::Boolean
+
+  class << self
+    def inherited(s); end
+  end
+end
+
 # Build a file hierarchy from a set of file paths.
 class Spoom::FileTree
   sig { params(paths: T::Enumerable[::String], strip_prefix: T.nilable(::String)).void }
@@ -853,7 +857,7 @@ end
 module Spoom::Git
   class << self
     # Git commands
-    sig { params(arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def checkout(*arg, path: T.unsafe(nil)); end
 
     # Get the commit Time for a `sha`
@@ -867,7 +871,7 @@ module Spoom::Git
     sig { params(path: ::String).returns(T.nilable(::String)) }
     def current_branch(path: T.unsafe(nil)); end
 
-    sig { params(arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def diff(*arg, path: T.unsafe(nil)); end
 
     # Translate a git epoch timestamp into a Time
@@ -875,20 +879,20 @@ module Spoom::Git
     def epoch_to_time(timestamp); end
 
     # Execute a `command`
-    sig { params(command: ::String, arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(command: ::String, arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def exec(command, *arg, path: T.unsafe(nil)); end
 
     # Get the last commit sha
     sig { params(path: ::String).returns(T.nilable(::String)) }
     def last_commit(path: T.unsafe(nil)); end
 
-    sig { params(arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def log(*arg, path: T.unsafe(nil)); end
 
-    sig { params(arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def rev_parse(*arg, path: T.unsafe(nil)); end
 
-    sig { params(arg: ::String, path: ::String).returns([::String, ::String, T::Boolean]) }
+    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def show(*arg, path: T.unsafe(nil)); end
 
     # Get the hash of the commit introducing the `sorbet/config` file
@@ -908,30 +912,60 @@ end
 module Spoom::LSP; end
 
 class Spoom::LSP::Client
-  # @return [Client] a new instance of Client
+  sig { params(sorbet_bin: ::String, sorbet_args: ::String, path: ::String).void }
   def initialize(sorbet_bin, *sorbet_args, path: T.unsafe(nil)); end
 
+  sig { void }
   def close; end
+
+  sig { params(uri: ::String, line: ::Integer, column: ::Integer).returns(T::Array[::Spoom::LSP::Location]) }
   def definitions(uri, line, column); end
+
+  sig { params(uri: ::String).returns(T::Array[::Spoom::LSP::DocumentSymbol]) }
   def document_symbols(uri); end
+
+  sig { params(uri: ::String, line: ::Integer, column: ::Integer).returns(T.nilable(::Spoom::LSP::Hover)) }
   def hover(uri, line, column); end
+
+  sig { returns(::Integer) }
   def next_id; end
 
   # LSP requests
   #
   # @raise [Error::AlreadyOpen]
+  sig { params(workspace_path: ::String).void }
   def open(workspace_path); end
 
+  sig { returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def read; end
 
   # @raise [Error::BadHeaders]
+  sig { returns(T.nilable(::String)) }
   def read_raw; end
 
+  sig do
+    params(
+      uri: ::String,
+      line: ::Integer,
+      column: ::Integer,
+      include_decl: T::Boolean
+    ).returns(T::Array[::Spoom::LSP::Location])
+  end
   def references(uri, line, column, include_decl = T.unsafe(nil)); end
+
+  sig { params(message: ::Spoom::LSP::Message).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
   def send(message); end
+
+  sig { params(json_string: ::String).void }
   def send_raw(json_string); end
+
+  sig { params(uri: ::String, line: ::Integer, column: ::Integer).returns(T::Array[::Spoom::LSP::SignatureHelp]) }
   def signatures(uri, line, column); end
+
+  sig { params(query: ::String).returns(T::Array[::Spoom::LSP::DocumentSymbol]) }
   def symbols(query); end
+
+  sig { params(uri: ::String, line: ::Integer, column: ::Integer).returns(T::Array[::Spoom::LSP::Location]) }
   def type_definitions(uri, line, column); end
 end
 
@@ -946,10 +980,13 @@ class Spoom::LSP::Diagnostic < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Diagnostic) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -967,11 +1004,16 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def kind_string; end
+
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::DocumentSymbol) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -982,16 +1024,17 @@ class Spoom::LSP::Error::AlreadyOpen < ::Spoom::LSP::Error; end
 class Spoom::LSP::Error::BadHeaders < ::Spoom::LSP::Error; end
 
 class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
-  # @return [Diagnostics] a new instance of Diagnostics
+  sig { params(uri: ::String, diagnostics: T::Array[::Spoom::LSP::Diagnostic]).void }
   def initialize(uri, diagnostics); end
 
-  # Returns the value of attribute diagnostics.
+  sig { returns(T::Array[::Spoom::LSP::Diagnostic]) }
   def diagnostics; end
 
-  # Returns the value of attribute uri.
+  sig { returns(::String) }
   def uri; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Error::Diagnostics) }
     def from_json(json); end
   end
 end
@@ -1005,10 +1048,13 @@ class Spoom::LSP::Hover < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -1022,10 +1068,13 @@ class Spoom::LSP::Location < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Location) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -1034,14 +1083,16 @@ end
 #
 # The language server protocol always uses `"2.0"` as the `jsonrpc` version.
 class Spoom::LSP::Message
-  # @return [Message] a new instance of Message
+  sig { void }
   def initialize; end
 
+  sig { returns(T::Hash[T.untyped, T.untyped]) }
   def as_json; end
 
-  # Returns the value of attribute jsonrpc.
+  sig { returns(::String) }
   def jsonrpc; end
 
+  sig { params(args: T.untyped).returns(::String) }
   def to_json(*args); end
 end
 
@@ -1049,13 +1100,13 @@ end
 #
 # A processed notification message must not send a response back. They work like events.
 class Spoom::LSP::Notification < ::Spoom::LSP::Message
-  # @return [Notification] a new instance of Notification
+  sig { params(method: ::String, params: T::Hash[T.untyped, T.untyped]).void }
   def initialize(method, params); end
 
-  # Returns the value of attribute method.
+  sig { returns(::String) }
   def method; end
 
-  # Returns the value of attribute params.
+  sig { returns(T::Hash[T.untyped, T.untyped]) }
   def params; end
 end
 
@@ -1068,10 +1119,13 @@ class Spoom::LSP::Position < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -1094,10 +1148,13 @@ class Spoom::LSP::Range < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -1106,33 +1163,34 @@ end
 #
 # Every processed request must send a response back to the sender of the request.
 class Spoom::LSP::Request < ::Spoom::LSP::Message
-  # @return [Request] a new instance of Request
+  sig { params(id: ::Integer, method: ::String, params: T::Hash[T.untyped, T.untyped]).void }
   def initialize(id, method, params); end
 
-  # Returns the value of attribute id.
+  sig { returns(::Integer) }
   def id; end
 
-  # Returns the value of attribute method.
+  sig { returns(::String) }
   def method; end
 
-  # Returns the value of attribute params.
+  sig { returns(T::Hash[T.untyped, T.untyped]) }
   def params; end
 end
 
 class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
-  # @return [ResponseError] a new instance of ResponseError
+  sig { params(code: ::Integer, message: ::String, data: T::Hash[T.untyped, T.untyped]).void }
   def initialize(code, message, data); end
 
-  # Returns the value of attribute code.
+  sig { returns(::Integer) }
   def code; end
 
-  # Returns the value of attribute data.
+  sig { returns(T::Hash[T.untyped, T.untyped]) }
   def data; end
 
-  # Returns the value of attribute message.
+  sig { returns(::String) }
   def message; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::ResponseError) }
     def from_json(json); end
   end
 end
@@ -1147,10 +1205,13 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
   def accept_printer(printer); end
 
+  sig { returns(::String) }
   def to_s; end
 
   class << self
+    sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::SignatureHelp) }
     def from_json(json); end
+
     def inherited(s); end
   end
 end
@@ -1169,12 +1230,10 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   sig { params(uri: ::String).returns(::String) }
   def clean_uri(uri); end
 
-  # Returns the value of attribute prefix.
+  sig { returns(T.nilable(::String)) }
   def prefix; end
 
-  # Sets the attribute prefix
-  #
-  # @param value the value to set the attribute prefix to.
+  # @return [String, nil]
   def prefix=(_arg0); end
 
   sig { params(objects: T::Array[::Spoom::LSP::PrintableSymbol]).void }
@@ -1186,12 +1245,10 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   sig { params(objects: T::Array[::Spoom::LSP::PrintableSymbol]).void }
   def print_objects(objects); end
 
-  # Returns the value of attribute seen.
+  sig { returns(T::Set[::Integer]) }
   def seen; end
 
-  # Sets the attribute seen
-  #
-  # @param value the value to set the attribute seen to.
+  # @return [Set<Integer>]
   def seen=(_arg0); end
 end
 
@@ -1255,7 +1312,7 @@ module Spoom::Sorbet
         path: ::String,
         capture_err: T::Boolean,
         sorbet_bin: T.nilable(::String)
-      ).returns([::String, T::Boolean, ::Integer])
+      ).returns(::Spoom::ExecResult)
     end
     def srb(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
@@ -1279,7 +1336,7 @@ module Spoom::Sorbet
         path: ::String,
         capture_err: T::Boolean,
         sorbet_bin: T.nilable(::String)
-      ).returns([::String, T::Boolean, ::Integer])
+      ).returns(::Spoom::ExecResult)
     end
     def srb_tc(*arg, path: T.unsafe(nil), capture_err: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
