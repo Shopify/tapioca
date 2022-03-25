@@ -93,8 +93,8 @@ module Tapioca
                     # ...
                   end
 
-                  sig { params(user_id: Integer).void }
-                  def authenticate(user_id)
+                  sig { params(user_id: Integer, block: T.proc.void).void }
+                  def authenticate(user_id, &block)
                     # ...
                   end
                 end
@@ -117,8 +117,8 @@ module Tapioca
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
-                    sig { params(user_id: ::Integer).void }
-                    def authenticate(user_id); end
+                    sig { params(user_id: ::Integer, block: T.proc.void).void }
+                    def authenticate(user_id, &block); end
 
                     sig { returns(T.untyped) }
                     def helper; end

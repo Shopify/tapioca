@@ -1,11 +1,14 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/helpers/signatures_helper"
+
 module Tapioca
   module Dsl
     module Helpers
       module ParamHelper
         extend T::Sig
+        include SignaturesHelper
 
         sig { params(name: String, type: String).returns(RBI::TypedParam) }
         def create_param(name, type:)
@@ -44,7 +47,7 @@ module Tapioca
 
         sig { params(param: RBI::Param, type: String).returns(RBI::TypedParam) }
         def create_typed_param(param, type)
-          RBI::TypedParam.new(param: param, type: type)
+          RBI::TypedParam.new(param: param, type: sanitize_signature_types(type))
         end
       end
     end
