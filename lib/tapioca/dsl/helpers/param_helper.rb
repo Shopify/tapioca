@@ -40,12 +40,12 @@ module Tapioca
 
         sig { params(name: String, type: String).returns(RBI::TypedParam) }
         def create_block_param(name, type:)
-          create_typed_param(RBI::BlockParam.new(name), sanitize_signature_types(type))
+          create_typed_param(RBI::BlockParam.new(name), type)
         end
 
         sig { params(param: RBI::Param, type: String).returns(RBI::TypedParam) }
         def create_typed_param(param, type)
-          RBI::TypedParam.new(param: param, type: type)
+          RBI::TypedParam.new(param: param, type: sanitize_signature_types(type))
         end
       end
     end
