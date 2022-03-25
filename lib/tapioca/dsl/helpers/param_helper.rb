@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/helpers/signatures_helper"
+
 module Tapioca
   module Dsl
     module Helpers
