@@ -6,6 +6,7 @@ module Tapioca
     module Helpers
       module ParamHelper
         extend T::Sig
+        include SignaturesHelper
 
         sig { params(name: String, type: String).returns(RBI::TypedParam) }
         def create_param(name, type:)
@@ -39,7 +40,7 @@ module Tapioca
 
         sig { params(name: String, type: String).returns(RBI::TypedParam) }
         def create_block_param(name, type:)
-          create_typed_param(RBI::BlockParam.new(name), type)
+          create_typed_param(RBI::BlockParam.new(name), sanitize_signature_types(type))
         end
 
         sig { params(param: RBI::Param, type: String).returns(RBI::TypedParam) }
