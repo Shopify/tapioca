@@ -54,7 +54,7 @@ module Tapioca
       sig { returns(T::Set[Module]) }
       def self.processable_constants
         @processable_constants ||= T.let(
-          Set.new(gather_constants).tap(&:compare_by_identity),
+          T::Set[Module].new(gather_constants).compare_by_identity,
           T.nilable(T::Set[Module])
         )
         T.must(@processable_constants)
