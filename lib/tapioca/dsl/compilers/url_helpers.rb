@@ -162,7 +162,8 @@ module Tapioca
             superclass_ancestors = ancestors_of(superclass) if superclass
           end
 
-          (ancestors_of(mod) - superclass_ancestors).any? { |ancestor| helper == ancestor }
+          ancestors = Set.new.compare_by_identity.merge(ancestors_of(mod)).subtract(superclass_ancestors)
+          ancestors.any? { |ancestor| helper == ancestor }
         end
       end
     end
