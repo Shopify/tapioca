@@ -72,6 +72,8 @@ module Tapioca
 
         ConstantType = type_member(fixed: Module)
 
+        FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
+
         sig { override.void }
         def decorate
           root.create_path(constant) do |klass|
@@ -88,7 +90,15 @@ module Tapioca
                 create_kw_opt_param(field.name, type: field.init_type, default: field.default)
               end
 
-              klass.create_method("initialize", parameters: parameters, return_type: "void")
+              if fields.all? { |field| FIELD_RE.match?(field.name) }
+                klass.create_method("initialize", parameters: parameters, return_type: "void")
+              else
+                # One of the fields has an incorrect name for a named parameter so creating the default initialize for
+                # it would create a RBI with a syntax error.
+                # The workaround is to create an initialize that takes a **kwargs instead.
+                kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
+                klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
+              end
             end
           end
         end
