@@ -94,8 +94,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -207,8 +207,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -290,8 +290,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -357,8 +357,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -409,8 +409,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -444,8 +444,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -517,8 +517,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -632,8 +632,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -714,8 +714,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -806,8 +806,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -913,8 +913,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -974,8 +974,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -1094,8 +1094,8 @@ module Tapioca
 
             Done
 
-            Typechecking RBI files...  Done
-            No error found
+            Checking generated RBI files...  Done
+              No errors found
 
             All operations performed in working directory.
             Please review changes and commit them.
@@ -1329,7 +1329,7 @@ module Tapioca
           result = @project.tapioca("dsl Post")
 
           assert_includes(result.out, <<~OUT)
-            Typechecking RBI files...  Done
+            Checking generated RBI files...  Done
 
               Changed strictness of sorbet/rbi/gems/bar@1.0.0.rbi to `typed: false` (conflicting with DSL files)
           OUT
@@ -1402,6 +1402,67 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
+        end
+      end
+
+      describe "sanity" do
+        before(:all) do
+          @project.require_real_gem("smart_properties", "1.15.0")
+          @project.bundle_install
+          @project.tapioca("init")
+
+          @project.write("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+        end
+
+        after do
+          project.remove("sorbet/rbi/gems")
+          project.remove("sorbet/rbi/dsl")
+        end
+
+        it "must display an error message when a generated gem RBI file contains a parse error" do
+          @project.write("sorbet/rbi/dsl/bar.rbi", <<~RBI)
+            # typed: true
+
+            module Bar
+              # This method is missing a `)`
+              sig { params(block: T.proc.params(x: T.any(String, Integer).void).void }
+              def bar(&block); end
+            end
+          RBI
+
+          result = @project.tapioca("dsl Post")
+
+          assert_includes(result.err, <<~ERR)
+            ##### INTERNAL ERROR #####
+
+            There are parse errors in the generated RBI files.
+
+            This seems related to a bug in Tapioca.
+            Please open an issue at https://github.com/Shopify/tapioca/issues/new with the following information:
+
+            Tapioca v#{Tapioca::VERSION}
+
+            Command:
+              bin/tapioca dsl Post
+
+            Compilers:
+              Tapioca::Dsl::Compilers::SmartProperties
+
+            Errors:
+              sorbet/rbi/dsl/bar.rbi:5: unexpected token tRCURLY (2001)
+              sorbet/rbi/dsl/bar.rbi:6: unexpected token "end" (2001)
+
+            ##########################
+          ERR
+
+          refute_success_status(result)
         end
       end
     end

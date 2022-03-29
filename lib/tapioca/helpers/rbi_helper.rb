@@ -9,17 +9,24 @@ module Tapioca
     requires_ancestor { Thor::Shell }
     requires_ancestor { SorbetHelper }
 
-    sig { params(gem_names: T::Array[String], gem_dir: String, dsl_dir: String).void }
-    def update_gem_rbis_strictnesses(gem_names, gem_dir: DEFAULT_GEM_DIR, dsl_dir: DEFAULT_DSL_DIR)
-      return unless File.directory?(dsl_dir)
-
+    sig do
+      params(
+        command: String,
+        gem_dir: String,
+        dsl_dir: String,
+        auto_strictness: T::Boolean,
+        gems: T::Array[Gemfile::GemSpec],
+        compilers: T::Enumerable[Class]
+      ).void
+    end
+    def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])
       error_url_base = Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE
 
-      say("Typechecking RBI files... ")
+      say("Checking generated RBI files... ")
       res = sorbet(
         "--no-config",
         "--error-url-base=#{error_url_base}",
-        "--isolate-error-code 4010",
+        "--stop-after namer",
         dsl_dir,
         gem_dir
       )
@@ -28,10 +35,62 @@ module Tapioca
       errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err)
 
       if errors.empty?
-        say("No error found", [:green, :bold])
+        say("  No errors found\n\n", [:green, :bold])
         return
       end
 
+      parse_errors = errors.select { |error| error.code < 4000 }
+
+      if parse_errors.any?
+        say_error(<<~ERR, :red)
+
+          ##### INTERNAL ERROR #####
+
+          There are parse errors in the generated RBI files.
+
+          This seems related to a bug in Tapioca.
+          Please open an issue at https://github.com/Shopify/tapioca/issues/new with the following information:
+
+          Tapioca v#{Tapioca::VERSION}
+
+          Command:
+            #{command}
+
+        ERR
+
+        say_error(<<~ERR, :red) if gems.any?
+          Gems:
+          #{gems.map { |gem| "  #{gem.name} (#{gem.version})" }.join("\n")}
+
+        ERR
+
+        say_error(<<~ERR, :red) if compilers.any?
+          Compilers:
+          #{compilers.map { |compiler| "  #{compiler.name}" }.join("\n")}
+
+        ERR
+
+        say_error(<<~ERR, :red)
+          Errors:
+          #{parse_errors.map { |error| "  #{error}" }.join("\n")}
+
+          ##########################
+
+        ERR
+      end
+
+      if auto_strictness
+        redef_errors = errors.select { |error| error.code == 4010 }
+        update_gem_rbis_strictnesses(redef_errors, gem_dir)
+      end
+
+      Kernel.exit(1) if parse_errors.any?
+    end
+
+    private
+
+    sig { params(errors: T::Array[Spoom::Sorbet::Errors::Error], gem_dir: String).void }
+    def update_gem_rbis_strictnesses(errors, gem_dir)
       files = []
 
       errors.each do |error|
@@ -48,10 +107,8 @@ module Tapioca
       files
         .uniq
         .sort
-        .select do |file|
-          name = gem_name_from_rbi_path(file)
-          file.start_with?(gem_dir) && (gem_names.empty? || gem_names.include?(name))
-        end.each do |file|
+        .select { |file| file.start_with?(gem_dir) }
+        .each do |file|
           Spoom::Sorbet::Sigils.change_sigil_in_file(file, "false")
           say("\n  Changed strictness of #{file} to `typed: false` (conflicting with DSL files)", [:yellow, :bold])
         end

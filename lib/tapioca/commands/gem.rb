@@ -79,8 +79,13 @@ module Tapioca
         end
 
         if anything_done
-          gem_names = gem_queue.map(&:name)
-          update_gem_rbis_strictnesses(gem_names, gem_dir: @outpath.to_s, dsl_dir: @dsl_dir) if @auto_strictness
+          validate_rbi_files(
+            command: default_command(:gem, @gem_names.join(" ")),
+            gem_dir: @outpath.to_s,
+            dsl_dir: @dsl_dir,
+            auto_strictness: @auto_strictness,
+            gems: bundle.dependencies
+          )
 
           say("All operations performed in working directory.", [:green, :bold])
           say("Please review changes and commit them.", [:green, :bold])
@@ -104,7 +109,13 @@ module Tapioca
         ].any?
 
         if anything_done
-          update_gem_rbis_strictnesses([], gem_dir: @outpath.to_s, dsl_dir: @dsl_dir) if @auto_strictness
+          validate_rbi_files(
+            command: default_command(:gem),
+            gem_dir: @outpath.to_s,
+            dsl_dir: @dsl_dir,
+            auto_strictness: @auto_strictness,
+            gems: bundle.dependencies
+          )
 
           say("All operations performed in working directory.", [:green, :bold])
           say("Please review changes and commit them.", [:green, :bold])
