@@ -373,6 +373,44 @@ module Tapioca
                 def string_value=(value); end
               RBI
             end
+
+            it "generates methods in RBI files with sanitized field names" do
+              add_ruby_file("protobuf.rb", <<~RUBY)
+                Google::Protobuf::DescriptorPool.generated_pool.build do
+                  add_file("cart.proto", :syntax => :proto3) do
+                    add_message "MyCart" do
+                      optional :ShopID, :int32, 1
+                      optional :ShopName, :string, 2
+                    end
+                  end
+                end
+
+                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Cart
+                  sig { params(fields: T.untyped).void }
+                  def initialize(**fields); end
+
+                  sig { returns(Integer) }
+                  def ShopID; end
+
+                  sig { params(value: Integer).returns(Integer) }
+                  def ShopID=(value); end
+
+                  sig { returns(String) }
+                  def ShopName; end
+
+                  sig { params(value: String).returns(String) }
+                  def ShopName=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Cart))
+            end
           end
         end
       end
