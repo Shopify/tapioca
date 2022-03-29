@@ -167,6 +167,35 @@ module Tapioca
                 "GeneratedUrlHelpersModule",
               ], gathered_constants)
             end
+
+            it "gathers constants even when `hash` is overriden" do
+              add_ruby_file("bad_module.rb", <<~RUBY)
+                class Application < Rails::Application
+                end
+
+                module BadModule
+                  extend self
+
+                  def hash(a, b)
+                  end
+                end
+
+                class Bar
+                  extend BadModule
+                end
+
+                class Foo < Bar
+                  extend BadModule
+                end
+              RUBY
+
+              assert_equal([
+                "ActionDispatch::IntegrationTest",
+                "ActionView::Helpers",
+                "GeneratedPathHelpersModule",
+                "GeneratedUrlHelpersModule",
+              ], gathered_constants)
+            end
           end
 
           describe "decorate" do
