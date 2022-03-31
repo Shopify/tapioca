@@ -249,6 +249,50 @@ module Tapioca
           refute_success_status(result)
         end
 
+        it "detects duplicates from Sorbet's payload" do
+          @project.write("sorbet/rbi/shims/core/string.rbi", <<~RBI)
+            class String
+              sig { returns(String) }
+              def capitalize(); end
+
+              def some_method_that_is_not_defined_in_the_payload; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/stdlib/base64.rbi", <<~RBI)
+            module Base64
+              sig { params(str: String).returns(String) }
+              def self.decode64(str); end
+
+              def self.some_method_that_is_not_defined_in_the_payload; end
+            end
+          RBI
+
+          result = @project.tapioca("check-shims")
+
+          assert_includes(result.out, <<~OUT)
+            Loading Sorbet payload...  Done
+            Loading shim RBIs from sorbet/rbi/shims...  Done
+            Looking for duplicates...  Done
+          OUT
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::String#capitalize:
+             * https://github.com/sorbet/sorbet/tree/master/rbi/core/string.rbi#L406
+             * sorbet/rbi/shims/core/string.rbi:3:2-3:23
+
+            Duplicated RBI for ::Base64::decode64:
+             * https://github.com/sorbet/sorbet/tree/master/rbi/stdlib/base64.rbi#L37
+             * sorbet/rbi/shims/stdlib/base64.rbi:3:2-3:29
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+          ERR
+
+          refute_success_status(result)
+        end
+
         it "checks shims with custom rbi dirs" do
           @project.write("rbi/gem/foo@1.0.0.rbi", <<~RBI)
             class Foo
