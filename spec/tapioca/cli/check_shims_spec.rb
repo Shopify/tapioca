@@ -28,7 +28,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_equal(<<~OUT, result.out)
             No shim RBIs to check
@@ -50,7 +50,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_equal(<<~OUT, result.out)
             Loading shim RBIs from sorbet/rbi/shims...  Done
@@ -88,7 +88,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::Bar#bar:
@@ -123,7 +123,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
           assert_success_status(result)
         end
 
@@ -142,7 +142,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
           assert_success_status(result)
         end
 
@@ -173,7 +173,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::Foo#foo:
@@ -204,7 +204,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::Foo#foo:
@@ -233,7 +233,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::Foo#foo:
@@ -314,7 +314,7 @@ module Tapioca
           RBI
 
           result = @project.tapioca(
-            "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim"
+            "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim --no-payload"
           )
 
           assert_includes(result.err, <<~ERR)
@@ -355,7 +355,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("check-shims")
+          result = @project.tapioca("check-shims --no-payload")
 
           assert_includes(result.err, <<~ERR)
             Warning: Unsupported block node type `foo` (sorbet/rbi/shims/foo.rbi:2:2-2:13)
