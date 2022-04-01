@@ -327,14 +327,10 @@ module Tapioca
           relations_enabled = compiler_enabled?("ActiveRecordRelations")
           polymorphic_association = !constant.table_exists? || polymorphic_association?(reflection)
 
-          if relations_enabled
-            if polymorphic_association
-              "ActiveRecord::Associations::CollectionProxy"
-            else
-              "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
-            end
-          elsif polymorphic_association
+          if polymorphic_association
             "ActiveRecord::Associations::CollectionProxy[T.untyped]"
+          elsif relations_enabled
+            "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
           else
             "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
           end
