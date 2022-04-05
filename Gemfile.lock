@@ -13,7 +13,7 @@ PATH
       pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.14)
       sorbet-static-and-runtime (>= 0.5.9204)
-      spoom (~> 1.1.0, >= 1.1.4)
+      spoom (~> 1.1.0, >= 1.1.11)
       thor (>= 1.2.0)
       yard-sorbet
 
@@ -274,7 +274,7 @@ GEM
     sorbet-static-and-runtime (0.5.9851)
       sorbet (= 0.5.9851)
       sorbet-runtime (= 0.5.9851)
-    spoom (1.1.9)
+    spoom (1.1.11)
       sorbet (>= 0.5.9204)
       sorbet-runtime (>= 0.5.9204)
       thor (>= 0.19.2)
