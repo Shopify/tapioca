@@ -2281,12 +2281,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Foo
           def foo(*_arg0, **_arg1, &_arg2); end
         end
-        <% elsif ruby_version(">= 2.7.0") %>
+        <% else %>
         class Foo
           def foo(*_arg0, &_arg1); end
         end
-        <% else %>
-        class Foo; end
         <% end %>
       RBI
 
