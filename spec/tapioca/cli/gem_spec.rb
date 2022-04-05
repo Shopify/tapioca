@@ -193,8 +193,7 @@ module Tapioca
           gem_name = "ostruct"
           gem_top_level_constant = "class OpenStruct"
 
-          # `default_stubs` is a private method on Ruby 2.6
-          gem_spec = ::Gem::Specification.send(:default_stubs, "*.gemspec").find do |spec|
+          gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?
           end
           assert(gem_spec, "Cannot find default '#{gem_name}' gem")
