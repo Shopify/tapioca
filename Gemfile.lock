@@ -14,7 +14,7 @@ PATH
       rbi (~> 0.0.0, >= 0.0.14)
       sorbet-runtime (>= 0.5.9204)
       sorbet-static (>= 0.5.9204)
-      spoom (~> 1.1.0, >= 1.1.4)
+      spoom (~> 1.1.0, >= 1.1.11)
       thor (>= 1.2.0)
       yard-sorbet
 
