@@ -10,11 +10,11 @@ module Google; end
 
 module Google::Protobuf
   class << self
-    def decode(klass, proto); end
+    def decode(klass, proto, options = T.unsafe(nil)); end
     def decode_json(klass, json, options = T.unsafe(nil)); end
     def deep_copy(_arg0); end
     def discard_unknown(_arg0); end
-    def encode(msg); end
+    def encode(msg, options = T.unsafe(nil)); end
     def encode_json(msg, options = T.unsafe(nil)); end
   end
 end
@@ -68,10 +68,10 @@ class Google::Protobuf::DescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -100,10 +100,10 @@ class Google::Protobuf::DescriptorProto::ExtensionRange
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -132,10 +132,10 @@ class Google::Protobuf::DescriptorProto::ReservedRange
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -177,10 +177,10 @@ class Google::Protobuf::EnumDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -209,10 +209,10 @@ class Google::Protobuf::EnumDescriptorProto::EnumReservedRange
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -241,10 +241,10 @@ class Google::Protobuf::EnumOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -273,10 +273,10 @@ class Google::Protobuf::EnumValueDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -305,10 +305,10 @@ class Google::Protobuf::EnumValueOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -339,10 +339,10 @@ class Google::Protobuf::ExtensionRangeOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -388,10 +388,10 @@ class Google::Protobuf::FieldDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -459,10 +459,10 @@ class Google::Protobuf::FieldOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -522,10 +522,10 @@ class Google::Protobuf::FileDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -554,10 +554,10 @@ class Google::Protobuf::FileDescriptorSet
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -586,10 +586,10 @@ class Google::Protobuf::FileOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -630,10 +630,10 @@ class Google::Protobuf::GeneratedCodeInfo
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -662,10 +662,10 @@ class Google::Protobuf::GeneratedCodeInfo::Annotation
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -838,7 +838,7 @@ module Google::Protobuf::MessageExts
   mixes_in_class_methods ::Google::Protobuf::MessageExts::ClassMethods
 
   def to_json(options = T.unsafe(nil)); end
-  def to_proto; end
+  def to_proto(options = T.unsafe(nil)); end
 
   class << self
     # this is only called in jruby; mri loades the ClassMethods differently
@@ -872,10 +872,10 @@ class Google::Protobuf::MessageOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -904,10 +904,10 @@ class Google::Protobuf::MethodDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -936,10 +936,10 @@ class Google::Protobuf::MethodOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -989,10 +989,10 @@ class Google::Protobuf::OneofDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1021,10 +1021,10 @@ class Google::Protobuf::OneofOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1173,10 +1173,10 @@ class Google::Protobuf::ServiceDescriptorProto
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1205,10 +1205,10 @@ class Google::Protobuf::ServiceOptions
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1237,10 +1237,10 @@ class Google::Protobuf::SourceCodeInfo
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1269,10 +1269,10 @@ class Google::Protobuf::SourceCodeInfo::Location
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1303,10 +1303,10 @@ class Google::Protobuf::UninterpretedOption
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
@@ -1335,10 +1335,10 @@ class Google::Protobuf::UninterpretedOption::NamePart
   def respond_to_missing?(*_arg0); end
 
   class << self
-    def decode(_arg0); end
+    def decode(*_arg0); end
     def decode_json(*_arg0); end
     def descriptor; end
-    def encode(_arg0); end
+    def encode(*_arg0); end
     def encode_json(*_arg0); end
   end
 end
