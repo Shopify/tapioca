@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("pry", ">= 0.12.2")
   spec.add_dependency("rbi", "~> 0.0.0", ">= 0.0.14")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.9204")
-  spec.add_dependency("spoom", "~> 1.1.0", ">= 1.1.4")
+  spec.add_dependency("spoom", "~> 1.1.0", ">= 1.1.11")
   spec.add_dependency("thor", ">= 1.2.0")
   spec.add_dependency("yard-sorbet")
 
