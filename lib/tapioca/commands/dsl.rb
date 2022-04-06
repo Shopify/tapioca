@@ -61,12 +61,26 @@ module Tapioca
         @loader = T.let(nil, T.nilable(Runtime::Loader))
       end
 
-      sig { override.void }
-      def execute
+      sig { void }
+      def load_dsl_defaults
         load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
+
+        # TODO: move this into load_application
         abort_if_pending_migrations!
+
         load_dsl_compilers
+      end
+
+      sig { override.void }
+      def execute
+        puts custom_load_file_path
+        if File.exist?(custom_load_file_path)
+          require custom_load_file_path
+          instance_exec(&Tapioca.dsl_loader_block)
+        else
+          load_dsl_defaults
+        end
 
         if @should_verify
           say("Checking for out-of-date RBIs...")
@@ -379,6 +393,11 @@ module Tapioca
       sig { void }
       def load_dsl_extensions
         Dir["#{__dir__}/../dsl/extensions/*.rb"].sort.each { |f| require(f) }
+      end
+
+      sig { returns(String) }
+      def custom_load_file_path
+        File.expand_path("#{@tapioca_path}/load.rb")
       end
     end
   end

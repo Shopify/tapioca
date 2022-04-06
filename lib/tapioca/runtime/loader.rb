@@ -120,4 +120,21 @@ module Tapioca
       end
     end
   end
+
+  @dsl_loader_block = T.let(nil, T.nilable(T.proc.void))
+
+  sig { params(block: T.proc.bind(Tapioca::Commands::Dsl).void).void }
+  def self.load_for_dsl(&block)
+    @dsl_loader_block = block
+  end
+
+  sig { returns(T.proc.params(arg: T.untyped).void) }
+  def self.dsl_loader_block
+    block = @dsl_loader_block
+
+    # TODO: some message
+    raise unless block
+
+    T.unsafe(block)
+  end
 end
