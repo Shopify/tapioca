@@ -137,7 +137,7 @@ module Tapioca
       constant_name = super
 
       # This is a hack to work around modules under anonymous modules not having
-      # names in 2.6 and 2.7: https://bugs.ruby-lang.org/issues/14895
+      # names in 2.7: https://bugs.ruby-lang.org/issues/14895
       #
       # This happens when a type variable is declared under `class << self`, for
       # example.

@@ -35,58 +35,58 @@ module Tapioca
 
       sig { params(object: BasicObject).returns(Class).checked(:never) }
       def class_of(object)
-        CLASS_METHOD.bind(object).call
+        CLASS_METHOD.bind_call(object)
       end
 
       sig { params(constant: Module).returns(T::Array[Symbol]) }
       def constants_of(constant)
-        CONSTANTS_METHOD.bind(constant).call(false)
+        CONSTANTS_METHOD.bind_call(constant, false)
       end
 
       sig { params(constant: Module).returns(T.nilable(String)) }
       def name_of(constant)
-        name = NAME_METHOD.bind(constant).call
+        name = NAME_METHOD.bind_call(constant)
         name&.start_with?("#<") ? nil : name
       end
 
       sig { params(constant: Module).returns(Class) }
       def singleton_class_of(constant)
-        SINGLETON_CLASS_METHOD.bind(constant).call
+        SINGLETON_CLASS_METHOD.bind_call(constant)
       end
 
       sig { params(constant: Module).returns(T::Array[Module]) }
       def ancestors_of(constant)
-        ANCESTORS_METHOD.bind(constant).call
+        ANCESTORS_METHOD.bind_call(constant)
       end
 
       sig { params(constant: Class).returns(T.nilable(Class)) }
       def superclass_of(constant)
-        SUPERCLASS_METHOD.bind(constant).call
+        SUPERCLASS_METHOD.bind_call(constant)
       end
 
       sig { params(object: BasicObject).returns(Integer).checked(:never) }
       def object_id_of(object)
-        OBJECT_ID_METHOD.bind(object).call
+        OBJECT_ID_METHOD.bind_call(object)
       end
 
       sig { params(object: BasicObject, other: BasicObject).returns(T::Boolean).checked(:never) }
       def are_equal?(object, other)
-        EQUAL_METHOD.bind(object).call(other)
+        EQUAL_METHOD.bind_call(object, other)
       end
 
       sig { params(constant: Module).returns(T::Array[Symbol]) }
       def public_instance_methods_of(constant)
-        PUBLIC_INSTANCE_METHODS_METHOD.bind(constant).call
+        PUBLIC_INSTANCE_METHODS_METHOD.bind_call(constant)
       end
 
       sig { params(constant: Module).returns(T::Array[Symbol]) }
       def protected_instance_methods_of(constant)
-        PROTECTED_INSTANCE_METHODS_METHOD.bind(constant).call
+        PROTECTED_INSTANCE_METHODS_METHOD.bind_call(constant)
       end
 
       sig { params(constant: Module).returns(T::Array[Symbol]) }
       def private_instance_methods_of(constant)
-        PRIVATE_INSTANCE_METHODS_METHOD.bind(constant).call
+        PRIVATE_INSTANCE_METHODS_METHOD.bind_call(constant)
       end
 
       sig { params(constant: Module).returns(T::Array[Module]) }
@@ -124,7 +124,7 @@ module Tapioca
 
       sig { params(constant: Module, method: Symbol).returns(Method) }
       def method_of(constant, method)
-        METHOD_METHOD.bind(constant).call(method)
+        METHOD_METHOD.bind_call(constant, method)
       end
 
       # Returns an array with all classes that are < than the supplied class.
