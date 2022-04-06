@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.add_dependency("bundler", ">= 1.17.3")
+  spec.add_dependency("parallel", ">= 1.21.0")
   spec.add_dependency("pry", ">= 0.12.2")
   spec.add_dependency("rbi", "~> 0.0.0", ">= 0.0.14")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.9204")

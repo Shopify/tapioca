@@ -20,10 +20,6 @@ module Tapioca
         number_of_workers || [Etc.nprocessors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min,
         Integer
       )
-
-      # The number of items that will be processed per worker, so that we can split the queue into groups and assign
-      # them to each one of the workers
-      @items_per_worker = T.let((queue.length.to_f / @number_of_workers).ceil, Integer)
     end
 
     sig do

@@ -10,6 +10,7 @@ PATH
   specs:
     tapioca (0.7.0)
       bundler (>= 1.17.3)
+      parallel (>= 1.21.0)
       pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.14)
       sorbet-static-and-runtime (>= 0.5.9204)
