@@ -61,11 +61,19 @@ module Tapioca
         @loader = T.let(nil, T.nilable(Runtime::Loader))
       end
 
+      def run_default_load_actions(loader)
+        load_dsl_extensions
+
+        load_application(loader, eager_load: @requested_constants.empty?)
+        abort_if_pending_migrations!
+      end
+
       sig { override.void }
       def execute
-        load_dsl_extensions
-        load_application(eager_load: @requested_constants.empty?)
-        abort_if_pending_migrations!
+        require(File.expand_path("#{@tapioca_path}/load.rb"))
+
+        Tapioca::LoadContext.instance.run_load_commands_for(self)
+
         load_dsl_compilers
 
         if @should_verify
@@ -125,29 +133,6 @@ module Tapioca
       end
 
       private
-
-      sig { params(eager_load: T::Boolean).void }
-      def load_application(eager_load:)
-        say("Loading Rails application... ")
-
-        loader.load_rails_application(
-          environment_load: true,
-          eager_load: eager_load
-        )
-
-        say("Done", :green)
-      end
-
-      sig { void }
-      def abort_if_pending_migrations!
-        return unless File.exist?("config/application.rb")
-        return unless defined?(::Rake)
-
-        Rails.application.load_tasks
-        if Rake::Task.task_defined?("db:abort_if_pending_migrations")
-          Rake::Task["db:abort_if_pending_migrations"].invoke
-        end
-      end
 
       sig { void }
       def load_dsl_compilers
@@ -349,11 +334,6 @@ module Tapioca
         end.sort
       end
 
-      sig { returns(Runtime::Loader) }
-      def loader
-        @loader ||= Runtime::Loader.new
-      end
-
       sig { params(class_name: String).returns(String) }
       def underscore(class_name)
         return class_name unless /[A-Z-]|::/.match?(class_name)
@@ -377,8 +357,31 @@ module Tapioca
       end
 
       sig { void }
+      def abort_if_pending_migrations!
+        return unless File.exist?("config/application.rb")
+        return unless defined?(::Rake)
+
+        Rails.application.load_tasks
+        if Rake::Task.task_defined?("db:abort_if_pending_migrations")
+          Rake::Task["db:abort_if_pending_migrations"].invoke
+        end
+      end
+
+      sig { void }
       def load_dsl_extensions
         Dir["#{__dir__}/../dsl/extensions/*.rb"].sort.each { |f| require(f) }
+      end
+
+      sig { params(loader: Runtime::Loader, eager_load: T::Boolean).void }
+      def load_application(loader, eager_load:)
+        say("Loading Rails application... ")
+
+        loader.load_rails_application(
+          environment_load: true,
+          eager_load: eager_load
+        )
+
+        say("Done", :green)
       end
     end
   end

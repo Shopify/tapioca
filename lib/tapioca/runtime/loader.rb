@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "thor"
 module Tapioca
   module Runtime
     class Loader
@@ -34,6 +35,11 @@ module Tapioca
         end
 
         eager_load_rails_app if eager_load
+      end
+
+      sig { void }
+      def load_autoloads
+        Tapioca::Runtime::Trackers::Autoload.eager_load_all!
       end
 
       private
