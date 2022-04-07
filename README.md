@@ -257,6 +257,7 @@ check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
+  payload: true
 ```
 <!-- END_CONFIG_TEMPLATE -->
 

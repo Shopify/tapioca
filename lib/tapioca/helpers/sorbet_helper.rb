@@ -21,8 +21,8 @@ module Tapioca
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
     FEATURE_REQUIREMENTS = T.let({
-      # First tag that includes https://github.com/sorbet/sorbet/pull/4706
-      to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),
+      to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),    # https://github.com/sorbet/sorbet/pull/4706
+      print_payload_sources: ::Gem::Requirement.new(">= 0.5.9818"), # https://github.com/sorbet/sorbet/pull/5504
     }.freeze, T::Hash[Symbol, ::Gem::Requirement])
 
     sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
