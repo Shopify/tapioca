@@ -35,11 +35,14 @@ module Parallel
     # options is either a Integer or a Hash with :count
     def extract_count_from_options(options); end
 
+    def instrument_finish(item, index, result, options); end
+    def instrument_start(item, index, options); end
     def process_incoming_jobs(read, write, job_factory, options, &block); end
     def replace_worker(job_factory, workers, index, options, blk); end
     def with_instrumentation(item, index, options); end
     def work_direct(job_factory, options, &block); end
     def work_in_processes(job_factory, options, &blk); end
+    def work_in_ractors(job_factory, options); end
     def work_in_threads(job_factory, options, &block); end
     def worker(job_factory, options, &block); end
   end
