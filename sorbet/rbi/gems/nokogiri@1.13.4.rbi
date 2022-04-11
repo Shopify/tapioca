@@ -603,8 +603,9 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   # into a head element.
   def meta_encoding=(encoding); end
 
-  # Serialize Node using +options+.  Save options can also be set using a
-  # block. See SaveOptions.
+  # Serialize Node using +options+. Save options can also be set using a block.
+  #
+  # See also Nokogiri::XML::Node::SaveOptions and Node@Serialization+and+Generating+Output.
   #
   # These two statements are equivalent:
   #
@@ -3200,8 +3201,9 @@ class Nokogiri::XML::Node
   # Also see related method +swap+.
   def replace(node_or_tags); end
 
-  # Serialize Node using +options+.  Save options can also be set using a
-  # block. See SaveOptions.
+  # Serialize Node using +options+. Save options can also be set using a block.
+  #
+  # See also Nokogiri::XML::Node::SaveOptions and Node@Serialization+and+Generating+Output.
   #
   # These two statements are equivalent:
   #
@@ -3422,7 +3424,8 @@ Nokogiri::XML::Node::NOTATION_NODE = T.let(T.unsafe(nil), Integer)
 # PI node type
 Nokogiri::XML::Node::PI_NODE = T.let(T.unsafe(nil), Integer)
 
-# Save options for serializing nodes
+# Save options for serializing nodes.
+# See the method group entitled Node@Serialization+and+Generating+Output for usage.
 class Nokogiri::XML::Node::SaveOptions
   # Create a new SaveOptions object with +options+
   #
