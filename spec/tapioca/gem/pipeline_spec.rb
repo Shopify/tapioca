@@ -1210,6 +1210,64 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles method that is also prepended" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar
+            super
+          end
+        end
+
+        class Baz
+          prepend Foo
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          def bar; end
+        end
+
+        module Foo
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a method that is prepended without calling super" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def bar; end
+        end
+
+        class Baz
+          prepend Foo
+
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Baz
+          include ::Foo
+
+          def bar; end
+        end
+
+        module Foo
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "ignores methods on other objects" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar

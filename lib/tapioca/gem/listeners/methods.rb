@@ -66,7 +66,7 @@ module Tapioca
         end
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
-          return unless method.owner == constant
+          return unless method_owned_by_constant?(method, constant)
           return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
           signature = signature_of(method)
@@ -140,6 +140,29 @@ module Tapioca
 
           @pipeline.push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
+        end
+
+        # Check whether the method is defined by the constant.
+        #
+        # In most cases, it works to check that the constant is the method owner. However,
+        # in the case that a method is also defined in a module prepended to the constant, it
+        # will be owned by the prepended module, not the constant.
+        #
+        # This method implements a better way of checking whether a constant defines a method.
+        # It walks up the ancestor tree via the `super_method` method; if any of the super
+        # methods are owned by the constant, it means that the constant declares the method.
+        sig { params(method: UnboundMethod, constant: Module).returns(T::Boolean) }
+        def method_owned_by_constant?(method, constant)
+          # Widen the type of `method` to be nilable
+          method = T.let(method, T.nilable(UnboundMethod))
+
+          while method
+            return true if method.owner == constant
+
+            method = method.super_method
+          end
+
+          false
         end
 
         sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
