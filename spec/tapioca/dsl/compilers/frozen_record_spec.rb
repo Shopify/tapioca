@@ -97,6 +97,111 @@ module Tapioca
               assert_equal(expected, rbi_for(:Student))
             end
 
+            it "can handle annotated fields" do
+              add_ruby_file("student.rb", <<~RUBY)
+                # typed: strong
+
+                class Student < FrozenRecord::Base
+                  extend(T::Sig)
+
+                  self.base_path = __dir__
+
+                  sig { returns(String) }
+                  def first_name
+                    super
+                  end
+
+                  sig { returns(String) }
+                  def last_name
+                    super
+                  end
+
+                  sig { returns(String) }
+                  def location
+                    super
+                  end
+
+                  sig { returns(Integer) }
+                  def age
+                    return super + 5
+                  end
+
+                  sig { params(grain: Symbol).returns(String) }
+                  def area(grain:)
+                    parts = location.split(',').map(&:strip)
+                    case grain
+                    when :city
+                      parts[0]
+                    when :province
+                      parts[1]
+                    when :country
+                      parts[2]
+                    else
+                      location
+                    end
+                  end
+                end
+              RUBY
+
+              add_content_file("students.yml", <<~YAML)
+                - id: 1
+                  first_name: John
+                  last_name: Smith
+                  age: 19
+                  location: Ottawa, Ontario, Canada
+                - id: 2
+                  first_name: Dan
+                  last_name:  Lord
+                  age: 20
+                  location: Toronto, Ontario, Canada
+              YAML
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Student
+                  include FrozenRecordAttributeMethods
+
+                  module FrozenRecordAttributeMethods
+                    sig { returns(::Integer) }
+                    def age; end
+
+                    sig { returns(T::Boolean) }
+                    def age?; end
+
+                    sig { params(grain: ::Symbol).returns(::String) }
+                    def area(grain:); end
+
+                    sig { returns(::String) }
+                    def first_name; end
+
+                    sig { returns(T::Boolean) }
+                    def first_name?; end
+
+                    sig { returns(T.untyped) }
+                    def id; end
+
+                    sig { returns(T::Boolean) }
+                    def id?; end
+
+                    sig { returns(::String) }
+                    def last_name; end
+
+                    sig { returns(T::Boolean) }
+                    def last_name?; end
+
+                    sig { returns(::String) }
+                    def location; end
+
+                    sig { returns(T::Boolean) }
+                    def location?; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Student))
+            end
+
             it "can handle frozen record scopes" do
               add_ruby_file("student.rb", <<~RUBY)
                 class Student < FrozenRecord::Base
