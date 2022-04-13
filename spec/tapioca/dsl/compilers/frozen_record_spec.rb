@@ -73,19 +73,19 @@ module Tapioca
                   include FrozenRecordAttributeMethods
 
                   module FrozenRecordAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(String) }
                     def first_name; end
 
                     sig { returns(T::Boolean) }
                     def first_name?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(Integer) }
                     def id; end
 
                     sig { returns(T::Boolean) }
                     def id?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(String) }
                     def last_name; end
 
                     sig { returns(T::Boolean) }
@@ -106,25 +106,7 @@ module Tapioca
 
                   self.base_path = __dir__
 
-                  sig { returns(String) }
-                  def first_name
-                    super
-                  end
-
-                  sig { returns(String) }
-                  def last_name
-                    super
-                  end
-
-                  sig { returns(String) }
-                  def location
-                    super
-                  end
-
-                  sig { returns(Integer) }
-                  def age
-                    return super + 5
-                  end
+                  self.default_attributes = { shirt_size: :large }
 
                   sig { params(grain: Symbol).returns(String) }
                   def area(grain:)
@@ -149,11 +131,27 @@ module Tapioca
                   last_name: Smith
                   age: 19
                   location: Ottawa, Ontario, Canada
+                  is_cool_person: no
+                  birth_date: 1867-07-01
+                  updated_at: 2014-02-24T19:08:06-05:00
+                  favourite_foods:
+                    - Pizza
+                  skills:
+                    backend: Ruby
+                    frontend: HTML
                 - id: 2
                   first_name: Dan
                   last_name:  Lord
                   age: 20
                   location: Toronto, Ontario, Canada
+                  is_cool_person: yes
+                  birth_date: 1967-07-01
+                  updated_at: 2015-02-24T19:08:06-05:00
+                  favourite_foods:
+                    - Tacos
+                  skills:
+                    backend: Ruby
+                    frontend: CSS
               YAML
 
               expected = <<~RBI
@@ -163,38 +161,71 @@ module Tapioca
                   include FrozenRecordAttributeMethods
 
                   module FrozenRecordAttributeMethods
-                    sig { returns(::Integer) }
+                    sig { returns(Integer) }
                     def age; end
 
                     sig { returns(T::Boolean) }
                     def age?; end
 
-                    sig { params(grain: ::Symbol).returns(::String) }
-                    def area(grain:); end
+                    sig { returns(Date) }
+                    def birth_date; end
 
-                    sig { returns(::String) }
+                    sig { returns(T::Boolean) }
+                    def birth_date?; end
+
+                    sig { returns(Array) }
+                    def favourite_foods; end
+
+                    sig { returns(T::Boolean) }
+                    def favourite_foods?; end
+
+                    sig { returns(String) }
                     def first_name; end
 
                     sig { returns(T::Boolean) }
                     def first_name?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(Integer) }
                     def id; end
 
                     sig { returns(T::Boolean) }
                     def id?; end
 
-                    sig { returns(::String) }
+                    sig { returns(T::Boolean) }
+                    def is_cool_person; end
+
+                    sig { returns(T::Boolean) }
+                    def is_cool_person?; end
+
+                    sig { returns(String) }
                     def last_name; end
 
                     sig { returns(T::Boolean) }
                     def last_name?; end
 
-                    sig { returns(::String) }
+                    sig { returns(String) }
                     def location; end
 
                     sig { returns(T::Boolean) }
                     def location?; end
+
+                    sig { returns(Symbol) }
+                    def shirt_size; end
+
+                    sig { returns(T::Boolean) }
+                    def shirt_size?; end
+
+                    sig { returns(Hash) }
+                    def skills; end
+
+                    sig { returns(T::Boolean) }
+                    def skills?; end
+
+                    sig { returns(Time) }
+                    def updated_at; end
+
+                    sig { returns(T::Boolean) }
+                    def updated_at?; end
                   end
                 end
               RBI
@@ -226,13 +257,13 @@ module Tapioca
                   extend GeneratedRelationMethods
 
                   module FrozenRecordAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(String) }
                     def course; end
 
                     sig { returns(T::Boolean) }
                     def course?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(Integer) }
                     def id; end
 
                     sig { returns(T::Boolean) }

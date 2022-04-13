@@ -72,21 +72,17 @@ module Tapioca
           attributes = constant.attributes
           return if attributes.empty?
 
+          instance = constant.first
+
           root.create_path(constant) do |record|
             module_name = "FrozenRecordAttributeMethods"
 
             record.create_module(module_name) do |mod|
-              extra_methods = constant.instance_methods(false) - attributes.to_a.map(&:to_sym)
               attributes.each do |attribute|
-                return_type = compile_method_return_type_to_rbi(constant.instance_method(attribute))
+                return_type = instance.attributes[attribute].class.name
+                return_type = "T::Boolean" if ["FalseClass", "TrueClass"].include?(return_type)
                 mod.create_method("#{attribute}?", return_type: "T::Boolean")
                 mod.create_method(attribute.to_s, return_type: return_type)
-              end
-              extra_methods.each do |method|
-                method_def = constant.instance_method(method)
-                parameters = compile_method_parameters_to_rbi(method_def)
-                return_type = compile_method_return_type_to_rbi(method_def)
-                mod.create_method(method.to_s, return_type: return_type, parameters: parameters)
               end
             end
 
