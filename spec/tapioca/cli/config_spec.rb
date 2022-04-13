@@ -93,6 +93,33 @@ module Tapioca
         refute_success_status(result)
       end
 
+      it "validates invalid configuration option values inside arrays and hashes" do
+        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+          dsl:
+            only: [1, false]
+            exclude: [1, false]
+          gem:
+            exclude: [1, false]
+            typed_overrides:
+              msgpack: false
+        YAML
+
+        result = @project.tapioca("gem")
+
+        assert_equal(<<~ERR, result.err)
+
+          Configuration file sorbet/tapioca/config.yml has the following errors:
+
+          - invalid value for option only for key dsl - expected Array[String] but found [1, false]
+          - invalid value for option exclude for key dsl - expected Array[String] but found [1, false]
+          - invalid value for option exclude for key gem - expected Array[String] but found [1, false]
+          - invalid value for option typed_overrides for key gem - expected Hash[String, String] but found {\"msgpack\"=>false}
+        ERR
+
+        assert_empty_stdout(result)
+        refute_success_status(result)
+      end
+
       it "validates unknown configuration keys, options, and invalid values" do
         @project.write("sorbet/tapioca/config.yml", <<~YAML)
           gem:

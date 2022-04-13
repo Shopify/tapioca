@@ -126,6 +126,18 @@ module Tapioca
         error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
           "`#{command_option.type.capitalize}` but found #{config_option_value_type.capitalize}"
         next build_error(error_msg) unless config_option_value_type == command_option.type
+
+        case config_option_value_type
+        when :array
+          error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
+            "`Array[String]` but found `#{config_option_value}`"
+          next build_error(error_msg) unless config_option_value.all? { |v| v.is_a?(String) }
+        when :hash
+          error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
+            "`Hash[String, String]` but found `#{config_option_value}`"
+          all_strings = (config_option_value.keys + config_option_value.values).all? { |v| v.is_a?(String) }
+          next build_error(error_msg) unless all_strings
+        end
       end.compact
     end
 
