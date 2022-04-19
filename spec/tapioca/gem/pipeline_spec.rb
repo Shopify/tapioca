@@ -76,9 +76,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           extend(::T::Helpers)
           extend(T::Generic)
 
-          Elem = type_template(:in, fixed: Integer)
-          K = type_member(upper: Numeric)
-          V = type_member(lower: String)
+          Elem = type_template(:in) {{fixed: Integer}}
+          K = type_member {{upper: Numeric}}
+          V = type_member {{lower: String}}
 
           interface!
 
@@ -106,9 +106,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           interface!
 
-          Elem = type_template(:in, fixed: Integer)
-          K = type_member(upper: Numeric)
-          V = type_member(lower: String)
+          Elem = type_template(:in) {{fixed: Integer}}
+          K = type_member {{upper: Numeric}}
+          V = type_member {{lower: String}}
         end
 
         Bar::Arr = T.let(T.unsafe(nil), Array)
