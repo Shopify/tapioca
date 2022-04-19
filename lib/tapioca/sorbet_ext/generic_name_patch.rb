@@ -151,16 +151,18 @@ module Tapioca
 
     sig { returns(String) }
     def serialize
-      parts = []
-      parts << ":#{@variance}" unless @variance == :invariant
-      parts << "fixed: #{@fixed}" if @fixed
-      parts << "lower: #{@lower}" unless @lower == T.untyped
-      parts << "upper: #{@upper}" unless @upper == BasicObject
+      positional_arg = @variance unless @variance == :invariant
+      blk_arg = []
+      blk_arg << "fixed: #{@fixed}" if @fixed
+      blk_arg << "lower: #{@lower}" if @lower
+      blk_arg << "upper: #{@upper}" if @upper
 
-      parameters = parts.join(", ")
+      parameters = ""
+      parameters += "(:#{positional_arg})" if positional_arg
+      parameters += " {{#{blk_arg.join(", ")}}}" unless blk_arg.empty?
 
       serialized = @type.serialize.dup
-      serialized << "(#{parameters})" unless parameters.empty?
+      serialized << parameters unless parameters.empty?
       serialized
     end
 
