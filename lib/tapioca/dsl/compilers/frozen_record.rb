@@ -72,15 +72,21 @@ module Tapioca
           attributes = constant.attributes
           return if attributes.empty?
 
-          instance = constant.first
-
           root.create_path(constant) do |record|
             module_name = "FrozenRecordAttributeMethods"
 
             record.create_module(module_name) do |mod|
               attributes.each do |attribute|
-                return_type = instance.attributes[attribute].class.name
-                return_type = "T::Boolean" if ["FalseClass", "TrueClass"].include?(return_type)
+                return_type = "T.untyped"
+                if constant.respond_to?(:attribute_types)
+                  attribute_type = T.let(
+                    T.unsafe(constant).attribute_types[attribute],
+                    ActiveModel::Type::Value
+                  )
+                  has_default = T.let(constant.default_attributes.key?(attribute), T::Boolean)
+                  return_type = type_for(attribute_type, has_default)
+                end
+
                 mod.create_method("#{attribute}?", return_type: "T::Boolean")
                 mod.create_method(attribute.to_s, return_type: return_type)
               end
@@ -98,6 +104,41 @@ module Tapioca
         end
 
         private
+
+        sig { params(attribute_type_value: ::ActiveModel::Type::Value, has_default: T::Boolean).returns(::String) }
+        def type_for(attribute_type_value, has_default)
+          type = case attribute_type_value
+          when ActiveModel::Type::Boolean
+            "T::Boolean"
+          when ActiveModel::Type::Date
+            "::Date"
+          when ActiveModel::Type::DateTime, ActiveModel::Type::Time
+            "::DateTime"
+          when ActiveModel::Type::Decimal
+            "::BigDecimal"
+          when ActiveModel::Type::Float
+            "::Float"
+          when ActiveModel::Type::Integer
+            "::Integer"
+          when ActiveModel::Type::String
+            "::String"
+          else
+            other_type = attribute_type_value.type
+            case other_type
+            when :array
+              "::Array"
+            when :hash
+              "::Hash"
+            when :symbol
+              "::Symbol"
+            else
+              # we don't want untyped to be wrapped by T.nilable, so just return early
+              return "T.untyped"
+            end
+          end
+
+          has_default ? type : as_nilable_type(type)
+        end
 
         sig { params(record: RBI::Scope).void }
         def decorate_scopes(record)
