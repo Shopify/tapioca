@@ -42,6 +42,11 @@ module Tapioca
     def mock_project(&block)
       project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}/project")
       project.gemfile(project.tapioca_gemfile)
+      # Pin Sorbet static and runtime version to the current one in this project
+      project.require_real_gem(
+        "sorbet-static-and-runtime",
+        ::Gem::Specification.find_by_name("sorbet-static-and-runtime").version.to_s
+      )
       project.instance_exec(project, &block) if block
       project
     end
