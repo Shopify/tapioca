@@ -247,7 +247,7 @@ GEM
     rubocop-lsp (0.1.6)
       language_server-protocol (>= 3.16)
       rubocop (>= 1.0)
-    rubocop-rspec (2.9.0)
+    rubocop-rspec (2.10.0)
       rubocop (~> 1.19)
     rubocop-shopify (2.5.0)
       rubocop (~> 1.25)
