@@ -20,10 +20,19 @@ module T
         Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
       end
 
-      def type_member(variance = :invariant, &blk)
+      def type_member(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        hash = blk ? blk.call : {}
+        hash = if blk
+          blk.call
+        else
+          {
+            fixed: fixed,
+            lower: lower,
+            upper: upper,
+          }
+        end
+
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Member,
@@ -34,10 +43,19 @@ module T
         end
       end
 
-      def type_template(variance = :invariant, &blk)
+      def type_template(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        hash = blk ? blk.call : {}
+        hash = if blk
+          blk.call
+        else
+          {
+            fixed: fixed,
+            lower: lower,
+            upper: upper,
+          }
+        end
+
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Template,
