@@ -17,7 +17,7 @@ module Tapioca
       include Runtime::Reflection
       extend Runtime::Reflection
 
-      ConstantType = type_member {{upper: Module}}
+      ConstantType = type_member { { upper: Module } }
 
       abstract!
 

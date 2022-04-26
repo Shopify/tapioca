@@ -49,7 +49,7 @@ module Tapioca
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
-        ConstantType = type_member(fixed: Module)
+        ConstantType = type_member { { fixed: Module } }
 
         sig { override.void }
         def decorate

@@ -70,7 +70,7 @@ module Tapioca
 
         extend T::Sig
 
-        ConstantType = type_member(fixed: Module)
+        ConstantType = type_member { { fixed: Module } }
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 

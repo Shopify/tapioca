@@ -49,7 +49,7 @@ module Tapioca
             T::Array[String]
           )
 
-        ConstantType = type_member(fixed: T.all(::AASM::ClassMethods, Class))
+        ConstantType = type_member { { fixed: T.all(::AASM::ClassMethods, Class) } }
 
         sig { override.void }
         def decorate

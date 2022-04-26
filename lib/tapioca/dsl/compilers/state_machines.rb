@@ -118,7 +118,7 @@ module Tapioca
       class StateMachines < Compiler
         extend T::Sig
 
-        ConstantType = type_member(fixed: T.all(Module, ::StateMachines::ClassMethods))
+        ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
         sig { override.void }
         def decorate

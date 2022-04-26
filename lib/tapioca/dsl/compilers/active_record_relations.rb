@@ -150,7 +150,7 @@ module Tapioca
         include Helpers::ActiveRecordConstantsHelper
         include SorbetHelper
 
-        ConstantType = type_member(fixed: T.class_of(::ActiveRecord::Base))
+        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         sig { override.void }
         def decorate

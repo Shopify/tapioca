@@ -51,7 +51,7 @@ module Tapioca
       class MixedInClassAttributes < Compiler
         extend T::Sig
 
-        ConstantType = type_member(fixed: Module)
+        ConstantType = type_member { { fixed: Module } }
 
         sig { override.void }
         def decorate

@@ -69,7 +69,7 @@ module Tapioca
           T.proc.params(type: T.any(Module, String)).returns(String)
         )
 
-        ConstantType = type_member(fixed: T.class_of(::ActiveRecord::Base))
+        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         sig { override.void }
         def decorate
