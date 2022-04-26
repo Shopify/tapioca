@@ -38,10 +38,20 @@ module Tapioca
     #
     # assert(@project.file?("lib/foo.rb"))
     # ~~~
-    sig { params(block: T.nilable(T.proc.params(gem: MockProject).bind(MockProject).void)).returns(MockProject) }
-    def mock_project(&block)
+    sig do
+      params(
+        sorbet_dependency: T::Boolean,
+        block: T.nilable(T.proc.params(gem: MockProject).bind(MockProject).void)
+      ).returns(MockProject)
+    end
+    def mock_project(sorbet_dependency: true, &block)
       project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}/project")
       project.gemfile(project.tapioca_gemfile)
+      # Pin Sorbet static and runtime version to the current one in this project
+      project.require_real_gem(
+        "sorbet-static-and-runtime",
+        ::Gem::Specification.find_by_name("sorbet-static-and-runtime").version.to_s
+      ) if sorbet_dependency
       project.instance_exec(project, &block) if block
       project
     end
