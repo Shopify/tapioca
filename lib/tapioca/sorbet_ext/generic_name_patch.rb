@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/sorbet_ext/name_patch"
+require "tapioca/helpers/sorbet_helper"
 
 module T
   module Generic
@@ -127,6 +128,7 @@ module Tapioca
   # do that automatically for us and we get the `name` method for free from `Module`.
   class TypeVariableModule < Module
     extend T::Sig
+    include SorbetHelper
 
     class Type < T::Enum
       enums do
@@ -169,15 +171,30 @@ module Tapioca
 
     sig { returns(String) }
     def serialize
-      positional_arg = @variance unless @variance == :invariant
-      blk_arg = []
-      blk_arg << "fixed: #{@fixed}" if @fixed
-      blk_arg << "lower: #{@lower}" if @lower
-      blk_arg << "upper: #{@upper}" if @upper
+      variance = @variance unless @variance == :invariant
 
-      parameters = ""
-      parameters += "(:#{positional_arg})" if positional_arg
-      parameters += " {{#{blk_arg.join(", ")}}}" unless blk_arg.empty?
+      bounds = []
+      bounds << "fixed: #{@fixed}" if @fixed
+      bounds << "lower: #{@lower}" if @lower
+      bounds << "upper: #{@upper}" if @upper
+
+      # rubocop:disable Style/IdenticalConditionalBranches
+      parameters = if sorbet_supports?(:type_variable_block_syntax)
+        parts = []
+        parts << "(:#{variance})" if variance
+        parts << " { { #{bounds.join(", ")} } }" unless bounds.empty?
+        parts.join
+      else
+        parts = []
+        parts << ":#{variance}" if variance
+        parts.concat(bounds)
+        if parts.empty?
+          ""
+        else
+          "(#{parts.join(", ")})"
+        end
+      end
+      # rubocop:enable Style/IdenticalConditionalBranches
 
       serialized = @type.serialize.dup
       serialized << parameters unless parameters.empty?
