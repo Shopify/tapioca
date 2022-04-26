@@ -377,7 +377,8 @@ module Tapioca
 
       describe "when Sorbet version is too old" do
         before(:all) do
-          @project.require_real_gem("sorbet", "=0.5.9760")
+          @project = mock_project(sorbet_dependency: false)
+          @project.require_real_gem("sorbet-static-and-runtime", "=0.5.9760")
           @project.bundle_install
         end
 
