@@ -23,6 +23,8 @@ class Array
   def place(*values); end
 end
 
+Array::NOT_SET = T.let(T.unsafe(nil), Object)
+
 class File < ::IO
   class << self
     # Cleans a path by removing extraneous '..', '.' and '/' characters
@@ -324,7 +326,6 @@ class Insertion
 end
 
 class Module
-  include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
 
   # Returns the class name of a full module namespace path

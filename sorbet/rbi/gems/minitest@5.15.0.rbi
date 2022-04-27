@@ -1321,7 +1321,6 @@ Minitest::Unit::VERSION = T.let(T.unsafe(nil), String)
 Minitest::VERSION = T.let(T.unsafe(nil), String)
 
 class Module
-  include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
 
   def infect_an_assertion(meth, new_name, dont_flip = T.unsafe(nil)); end
@@ -1333,8 +1332,7 @@ Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
+  include ::ActiveSupport::Dependencies::RequireDependency
   include ::Kernel
   include ::ActiveSupport::ForkTracker::CoreExt
   include ::ActiveSupport::ForkTracker::CoreExtPrivate
@@ -1342,5 +1340,4 @@ class Object < ::BasicObject
   include ::Minitest::Expectations
   include ::PP::ObjectMixin
   include ::ActiveSupport::Tryable
-  include ::ActiveSupport::Dependencies::Loadable
 end

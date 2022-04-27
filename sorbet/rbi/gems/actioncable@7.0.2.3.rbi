@@ -331,6 +331,8 @@ class ActionCable::Channel::ConnectionStub
   # @return [ConnectionStub] a new instance of ConnectionStub
   def initialize(identifiers = T.unsafe(nil)); end
 
+  def connection_identifier; end
+
   # Returns the value of attribute identifiers.
   def identifiers; end
 
@@ -344,6 +346,10 @@ class ActionCable::Channel::ConnectionStub
   def transmissions; end
 
   def transmit(cable_message); end
+
+  private
+
+  def connection_gid(ids); end
 end
 
 module ActionCable::Channel::Naming
@@ -501,11 +507,9 @@ module ActionCable::Channel::Streams
   # Defaults to <tt>coder: nil</tt> which does no decoding, passes raw messages.
   def stream_from(broadcasting, callback = T.unsafe(nil), coder: T.unsafe(nil), &block); end
 
-  # Calls stream_for if record is present, otherwise calls reject.
-  # This method is intended to be called when you're looking
-  # for a record based on a parameter, if its found it will start
-  # streaming. If the record is nil then it will reject the connection.
-  def stream_or_reject_for(record); end
+  # Calls stream_for with the given <tt>model</tt> if it's present to start streaming,
+  # otherwise rejects the subscription.
+  def stream_or_reject_for(model); end
 
   private
 
@@ -1117,7 +1121,7 @@ class ActionCable::Connection::TaggedLoggerProxy
   def error(message); end
   def fatal(message); end
   def info(message); end
-  def tag(logger); end
+  def tag(logger, &block); end
 
   # Returns the value of attribute tags.
   def tags; end
@@ -1339,14 +1343,15 @@ module ActionCable::Helpers::ActionCableHelper
   #
   #   <head>
   #     <%= action_cable_meta_tag %>
-  #     <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
+  #     <%= javascript_include_tag 'application', 'data-turbo-track' => 'reload' %>
   #   </head>
   #
   # This is then used by Action Cable to determine the URL of your WebSocket server.
   # Your JavaScript can then connect to the server without needing to specify the
   # URL directly:
   #
-  #   window.Cable = require("@rails/actioncable")
+  #   import Cable from "@rails/actioncable"
+  #   window.Cable = Cable
   #   window.App = {}
   #   App.cable = Cable.createConsumer()
   #
@@ -1603,6 +1608,14 @@ class ActionCable::Server::Configuration
   # @param value the value to set the attribute mount_path to.
   def mount_path=(_arg0); end
 
+  # Returns the value of attribute precompile_assets.
+  def precompile_assets; end
+
+  # Sets the attribute precompile_assets
+  #
+  # @param value the value to set the attribute precompile_assets to.
+  def precompile_assets=(_arg0); end
+
   # Returns constant of subscription adapter specified in config/cable.yml.
   # If the adapter cannot be found, this will default to the Redis adapter.
   # Also makes sure proper dependencies are required.
@@ -1672,7 +1685,7 @@ class ActionCable::Server::Worker
   # @return [Boolean]
   def stopping?; end
 
-  def work(connection); end
+  def work(connection, &block); end
 
   private
 
@@ -1692,7 +1705,7 @@ end
 module ActionCable::Server::Worker::ActiveRecordConnectionManagement
   extend ::ActiveSupport::Concern
 
-  def with_database_connections; end
+  def with_database_connections(&block); end
 end
 
 module ActionCable::SubscriptionAdapter
@@ -1879,5 +1892,6 @@ end
 module ActionCable::VERSION; end
 ActionCable::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionCable::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActionCable::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionCable::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionCable::VERSION::TINY = T.let(T.unsafe(nil), Integer)

@@ -8,13 +8,70 @@ module ActiveRecord
   extend ::ActiveSupport::Autoload
 
   class << self
+    def action_on_strict_loading_violation; end
+    def action_on_strict_loading_violation=(_arg0); end
+    def application_record_class; end
+    def application_record_class=(_arg0); end
+    def async_query_executor; end
+    def async_query_executor=(_arg0); end
+    def default_timezone; end
+
+    # Determines whether to use Time.utc (using :utc) or Time.local (using :local) when pulling
+    # dates and times from the database. This is set to :utc by default.
+    def default_timezone=(default_timezone); end
+
+    def dump_schema_after_migration; end
+    def dump_schema_after_migration=(_arg0); end
+    def dump_schemas; end
+    def dump_schemas=(_arg0); end
     def eager_load!; end
+    def error_on_ignored_order; end
+    def error_on_ignored_order=(_arg0); end
 
     # Returns the version of the currently loaded Active Record as a <tt>Gem::Version</tt>
     def gem_version; end
 
+    def global_executor_concurrency; end
+
+    # Set the +global_executor_concurrency+. This configuration value can only be used
+    # with the global thread pool async query executor.
+    def global_executor_concurrency=(global_executor_concurrency); end
+
+    def global_thread_pool_async_query_executor; end
+    def index_nested_attribute_errors; end
+    def index_nested_attribute_errors=(_arg0); end
+    def lazily_load_schema_cache; end
+    def lazily_load_schema_cache=(_arg0); end
+    def legacy_connection_handling; end
+    def legacy_connection_handling=(_arg0); end
+    def maintain_test_schema; end
+    def maintain_test_schema=(_arg0); end
+    def query_transformers; end
+    def query_transformers=(_arg0); end
+    def queues; end
+    def queues=(_arg0); end
+    def reading_role; end
+    def reading_role=(_arg0); end
+    def schema_cache_ignored_tables; end
+    def schema_cache_ignored_tables=(_arg0); end
+    def schema_format; end
+    def schema_format=(_arg0); end
+    def suppress_multiple_database_warning; end
+    def suppress_multiple_database_warning=(_arg0); end
+    def timestamped_migrations; end
+    def timestamped_migrations=(_arg0); end
+    def verbose_query_logs; end
+    def verbose_query_logs=(_arg0); end
+    def verify_foreign_keys_for_fixtures; end
+    def verify_foreign_keys_for_fixtures=(_arg0); end
+
     # Returns the version of the currently loaded ActiveRecord as a <tt>Gem::Version</tt>
     def version; end
+
+    def warn_on_records_fetched_greater_than; end
+    def warn_on_records_fetched_greater_than=(_arg0); end
+    def writing_role; end
+    def writing_role=(_arg0); end
   end
 end
 
@@ -264,15 +321,10 @@ class ActiveRecord::AssociationNotFoundError < ::ActiveRecord::ConfigurationErro
   # Returns the value of attribute association_name.
   def association_name; end
 
+  def corrections; end
+
   # Returns the value of attribute record.
   def record; end
-end
-
-class ActiveRecord::AssociationNotFoundError::Correction
-  # @return [Correction] a new instance of Correction
-  def initialize(error); end
-
-  def corrections; end
 end
 
 class ActiveRecord::AssociationRelation < ::ActiveRecord::Relation
@@ -280,12 +332,10 @@ class ActiveRecord::AssociationRelation < ::ActiveRecord::Relation
   def initialize(klass, association, **_arg2); end
 
   def ==(other); end
-  def build(attributes = T.unsafe(nil), &block); end
   def insert(attributes, **kwargs); end
   def insert!(attributes, **kwargs); end
   def insert_all(attributes, **kwargs); end
   def insert_all!(attributes, **kwargs); end
-  def new(attributes = T.unsafe(nil), &block); end
   def proxy_association; end
   def upsert(attributes, **kwargs); end
   def upsert_all(attributes, **kwargs); end
@@ -325,8 +375,6 @@ module ActiveRecord::Associations
   # @return [Boolean]
   def association_cached?(name); end
 
-  def reload(*_arg0); end
-
   private
 
   # Returns the specified association instance if it exists, +nil+ otherwise.
@@ -334,9 +382,6 @@ module ActiveRecord::Associations
 
   # Set the specified association instance.
   def association_instance_set(name, association); end
-
-  # Clears out the association cache.
-  def clear_association_cache; end
 
   def init_internals; end
   def initialize_dup(*_arg0); end
@@ -404,6 +449,7 @@ class ActiveRecord::Associations::Association
 
   def create(attributes = T.unsafe(nil), &block); end
   def create!(attributes = T.unsafe(nil), &block); end
+  def disable_joins; end
   def extensions; end
   def initialize_attributes(record, except_from_scope_attributes = T.unsafe(nil)); end
   def inversed_from(record); end
@@ -487,6 +533,11 @@ class ActiveRecord::Associations::Association
 
   def build_record(attributes); end
   def enqueue_destroy_association(options); end
+
+  # Reader and writer methods call this so that consistent errors are presented
+  # when the association target class does not exist.
+  def ensure_klass_exists!; end
+
   def find_target; end
 
   # @return [Boolean]
@@ -530,7 +581,7 @@ class ActiveRecord::Associations::Association
 
   # Raises ActiveRecord::AssociationTypeMismatch unless +record+ is of
   # the kind of the class of the associated objects. Meant to be used as
-  # a sanity check when you are about to assign an associated record.
+  # a safety check when you are about to assign an associated record.
   def raise_on_type_mismatch!(record); end
 
   def scope_for_create; end
@@ -547,12 +598,12 @@ class ActiveRecord::Associations::Association
   # This is only relevant to certain associations, which is why it returns +nil+ by default.
   def stale_state; end
 
-  # @return [Boolean]
-  def strict_loading?; end
-
   # Can be overridden (i.e. in ThroughAssociation) to merge in other scopes (i.e. the
   # through association's scope)
   def target_scope; end
+
+  # @return [Boolean]
+  def violates_strict_loading?; end
 end
 
 class ActiveRecord::Associations::AssociationScope
@@ -605,7 +656,13 @@ class ActiveRecord::Associations::BelongsToAssociation < ::ActiveRecord::Associa
   def reset; end
 
   # @return [Boolean]
+  def saved_change_to_target?; end
+
+  # @return [Boolean]
   def target_changed?; end
+
+  # @return [Boolean]
+  def target_previously_changed?; end
 
   # @return [Boolean]
   def updated?; end
@@ -638,7 +695,13 @@ class ActiveRecord::Associations::BelongsToPolymorphicAssociation < ::ActiveReco
   def klass; end
 
   # @return [Boolean]
+  def saved_change_to_target?; end
+
+  # @return [Boolean]
   def target_changed?; end
+
+  # @return [Boolean]
+  def target_previously_changed?; end
 
   private
 
@@ -681,6 +744,7 @@ class ActiveRecord::Associations::Builder::Association
     def define_accessors(model, reflection); end
 
     def define_callbacks(model, reflection); end
+    def define_change_tracking_methods(model, reflection); end
     def define_extensions(model, name); end
     def define_readers(mixin, name); end
     def define_validations(model, reflection); end
@@ -710,6 +774,7 @@ class ActiveRecord::Associations::Builder::BelongsTo < ::ActiveRecord::Associati
     def add_destroy_callbacks(model, reflection); end
     def add_touch_callbacks(model, reflection); end
     def define_callbacks(model, reflection); end
+    def define_change_tracking_methods(model, reflection); end
     def define_validations(model, reflection); end
     def macro; end
     def valid_dependent_options; end
@@ -843,6 +908,8 @@ end
 #   create_other(attributes={})       |     X      |              |    X
 #   create_other!(attributes={})      |     X      |              |    X
 #   reload_other                      |     X      |      X       |    X
+#   other_changed?                    |     X      |      X       |
+#   other_previously_changed?         |     X      |      X       |
 #
 # === Collection associations (one-to-many / many-to-many)
 #                                     |       |          | has_many
@@ -1059,19 +1126,27 @@ end
 # you can also define callbacks that get triggered when you add an object to or remove an
 # object from an association collection.
 #
-#   class Project
-#     has_and_belongs_to_many :developers, after_add: :evaluate_velocity
+#   class Firm < ActiveRecord::Base
+#     has_many :clients,
+#              dependent: :destroy,
+#              after_add: :congratulate_client,
+#              after_remove: :log_after_remove
 #
-#     def evaluate_velocity(developer)
-#       ...
+#     def congratulate_client(record)
+#       # ...
 #     end
-#   end
+#
+#     def log_after_remove(record)
+#       # ...
+#     end
 #
 # It's possible to stack callbacks by passing them as an array. Example:
 #
-#   class Project
-#     has_and_belongs_to_many :developers,
-#                             after_add: [:evaluate_velocity, Proc.new { |p, d| p.shipping_date = Time.now}]
+#   class Firm < ActiveRecord::Base
+#     has_many :clients,
+#              dependent: :destroy,
+#              after_add: [:congratulate_client, -> (firm, record) { firm.log << "after_adding#{record.id}" }],
+#              after_remove: :log_after_remove
 #   end
 #
 # Possible callbacks are: +before_add+, +after_add+, +before_remove+ and +after_remove+.
@@ -1081,6 +1156,18 @@ end
 #
 # Similarly, if any of the +before_remove+ callbacks throw an exception, the object
 # will not be removed from the collection.
+#
+# Note: To trigger remove callbacks, you must use +destroy+ / +destroy_all+ methods. For example:
+#
+#   * <tt>firm.clients.destroy(client)</tt>
+#   * <tt>firm.clients.destroy(*clients)</tt>
+#   * <tt>firm.clients.destroy_all</tt>
+#
+# +delete+ / +delete_all+ methods like the following do *not* trigger remove callbacks:
+#
+#   * <tt>firm.clients.delete(client)</tt>
+#   * <tt>firm.clients.delete(*clients)</tt>
+#   * <tt>firm.clients.delete_all</tt>
 #
 # == Association extensions
 #
@@ -1225,9 +1312,10 @@ end
 # inverse detection only works on #has_many, #has_one, and
 # #belongs_to associations.
 #
-# <tt>:foreign_key</tt> and <tt>:through</tt> options on the associations,
-# or a custom scope, will also prevent the association's inverse
-# from being found automatically.
+# <tt>:foreign_key</tt> and <tt>:through</tt> options on the associations
+# will also prevent the association's inverse from being found automatically,
+# as will a custom scopes in some cases. See further details in the
+# {Active Record Associations guide}[https://guides.rubyonrails.org/association_basics.html#bi-directional-associations].
 #
 # The automatic guessing of the inverse association uses a heuristic based
 # on the name of the class, so it may not work for all associations,
@@ -1699,6 +1787,10 @@ module ActiveRecord::Associations::ClassMethods
   #   if the record is invalid.
   # [reload_association]
   #   Returns the associated object, forcing a database read.
+  # [association_changed?]
+  #   Returns true if a new associate object has been assigned and the next save will update the foreign key.
+  # [association_previously_changed?]
+  #   Returns true if the previous save updated the association to reference a new associate object.
   #
   # === Example
   #
@@ -1709,6 +1801,8 @@ module ActiveRecord::Associations::ClassMethods
   # * <tt>Post#create_author</tt> (similar to <tt>post.author = Author.new; post.author.save; post.author</tt>)
   # * <tt>Post#create_author!</tt> (similar to <tt>post.author = Author.new; post.author.save!; post.author</tt>)
   # * <tt>Post#reload_author</tt>
+  # * <tt>Post#author_changed?</tt>
+  # * <tt>Post#author_previously_changed?</tt>
   # The declaration can also include an +options+ hash to specialize the behavior of the association.
   #
   # === Scopes
@@ -1839,7 +1933,7 @@ module ActiveRecord::Associations::ClassMethods
   # The join table should not have a primary key or a model associated with it. You must manually generate the
   # join table with a migration such as this:
   #
-  #   class CreateDevelopersProjectsJoinTable < ActiveRecord::Migration[6.0]
+  #   class CreateDevelopersProjectsJoinTable < ActiveRecord::Migration[7.0]
   #     def change
   #       create_join_table :developers, :projects
   #     end
@@ -2175,6 +2269,11 @@ module ActiveRecord::Associations::ClassMethods
   #   join model. This allows associated records to be built which will automatically create
   #   the appropriate join model records when they are saved. (See the 'Association Join Models'
   #   section above.)
+  # [:disable_joins]
+  #   Specifies whether joins should be skipped for an association. If set to true, two or more queries
+  #   will be generated. Note that in some cases, if order or limit is applied, it will be done in-memory
+  #   due to database limitations. This option is only applicable on `has_many :through` associations as
+  #   `has_many` alone do not perform a join.
   # [:source]
   #   Specifies the source association name used by #has_many <tt>:through</tt> queries.
   #   Only use it if the name cannot be inferred from the association.
@@ -2204,7 +2303,8 @@ module ActiveRecord::Associations::ClassMethods
   #   Useful for defining methods on associations, especially when they should be shared between multiple
   #   association objects.
   # [:strict_loading]
-  #   Enforces strict loading every time the associated record is loaded through this association.
+  #   When set to +true+, enforces strict loading every time the associated record is loaded through this
+  #   association.
   # [:ensuring_owner_was]
   #   Specifies an instance method to be called on the owner. The method must return true in order for the
   #   associated records to be deleted in a background job.
@@ -2218,6 +2318,7 @@ module ActiveRecord::Associations::ClassMethods
   #   has_many :tags, as: :taggable
   #   has_many :reports, -> { readonly }
   #   has_many :subscribers, through: :subscriptions, source: :user
+  #   has_many :subscribers, through: :subscriptions, disable_joins: true
   #   has_many :comments, strict_loading: true
   def has_many(name, scope = T.unsafe(nil), **options, &extension); end
 
@@ -2320,8 +2421,21 @@ module ActiveRecord::Associations::ClassMethods
   #   source reflection. You can only use a <tt>:through</tt> query through a #has_one
   #   or #belongs_to association on the join model.
   #
+  #   If the association on the join model is a #belongs_to, the collection can be modified
+  #   and the records on the <tt>:through</tt> model will be automatically created and removed
+  #   as appropriate. Otherwise, the collection is read-only, so you should manipulate the
+  #   <tt>:through</tt> association directly.
+  #
   #   If you are going to modify the association (rather than just read from it), then it is
-  #   a good idea to set the <tt>:inverse_of</tt> option.
+  #   a good idea to set the <tt>:inverse_of</tt> option on the source association on the
+  #   join model. This allows associated records to be built which will automatically create
+  #   the appropriate join model records when they are saved. (See the 'Association Join Models'
+  #   section above.)
+  # [:disable_joins]
+  #   Specifies whether joins should be skipped for an association. If set to true, two or more queries
+  #   will be generated. Note that in some cases, if order or limit is applied, it will be done in-memory
+  #   due to database limitations. This option is only applicable on `has_one :through` associations as
+  #   `has_one` alone does not perform a join.
   # [:source]
   #   Specifies the source association name used by #has_one <tt>:through</tt> queries.
   #   Only use it if the name cannot be inferred from the association.
@@ -2363,6 +2477,7 @@ module ActiveRecord::Associations::ClassMethods
   #   has_one :attachment, as: :attachable
   #   has_one :boss, -> { readonly }
   #   has_one :club, through: :membership
+  #   has_one :club, through: :membership, disable_joins: true
   #   has_one :primary_address, -> { where(primary: true) }, through: :addressables, source: :addressable
   #   has_one :credit_card, required: true
   #   has_one :credit_card, strict_loading: true
@@ -2491,17 +2606,6 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
 
   def target=(record); end
 
-  # Starts a transaction in the association class's database connection.
-  #
-  #   class Author < ActiveRecord::Base
-  #     has_many :books
-  #   end
-  #
-  #   Author.first.books.transaction do
-  #     # same effect as calling Book.transaction
-  #   end
-  def transaction(*args); end
-
   # Implements the writer method, e.g. foo.items= for Foo.has_many :items
   def writer(records); end
 
@@ -2549,6 +2653,7 @@ class ActiveRecord::Associations::CollectionAssociation < ::ActiveRecord::Associ
   def replace_common_records_in_memory(new_target, original_target); end
   def replace_on_target(record, skip_callbacks, replace:, inversing: T.unsafe(nil)); end
   def replace_records(new_target, original_target); end
+  def transaction(&block); end
 end
 
 # Collection proxies in Active Record are middlemen between an
@@ -3077,7 +3182,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # to <tt>collection.size.zero?</tt>. If the collection has not been loaded,
   # it is equivalent to <tt>!collection.exists?</tt>. If the collection has
   # not already been loaded and you are going to fetch the records anyway it
-  # is better to check <tt>collection.length.zero?</tt>.
+  # is better to check <tt>collection.load.empty?</tt>.
   #
   #   class Person < ActiveRecord::Base
   #     has_many :pets
@@ -3095,6 +3200,8 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def empty?; end
 
   def except(*_arg0, &_arg1); end
+  def excluding(*_arg0, &_arg1); end
+  def excluding!(*_arg0, &_arg1); end
   def extending(*_arg0, &_arg1); end
   def extending!(*_arg0, &_arg1); end
   def extending_values(*_arg0, &_arg1); end
@@ -3142,6 +3249,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def having!(*_arg0, &_arg1); end
   def having_clause(*_arg0, &_arg1); end
   def having_clause=(arg); end
+  def in_order_of(*_arg0, &_arg1); end
 
   # Returns +true+ if the given +record+ is present in the collection.
   #
@@ -3166,6 +3274,8 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def insert_all(*_arg0, &_arg1); end
   def insert_all!(*_arg0, &_arg1); end
   def inspect; end
+  def invert_where(*_arg0, &_arg1); end
+  def invert_where!(*_arg0, &_arg1); end
   def joins(*_arg0, &_arg1); end
   def joins!(*_arg0, &_arg1); end
   def joins_values(*_arg0, &_arg1); end
@@ -3213,7 +3323,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # Returns +true+ if the association has been loaded, otherwise +false+.
   #
   #   person.pets.loaded? # => false
-  #   person.pets
+  #   person.pets.records
   #   person.pets.loaded? # => true
   #
   # @return [Boolean]
@@ -3222,7 +3332,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   # Returns +true+ if the association has been loaded, otherwise +false+.
   #
   #   person.pets.loaded? # => false
-  #   person.pets
+  #   person.pets.records
   #   person.pets.loaded? # => true
   #
   # @return [Boolean]
@@ -3477,6 +3587,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def strict_loading!(*_arg0, &_arg1); end
   def strict_loading_value(*_arg0, &_arg1); end
   def strict_loading_value=(arg); end
+  def structurally_compatible?(*_arg0, &_arg1); end
 
   # Gives a record (or N records if a parameter is supplied) from the collection
   # using the same rules as <tt>ActiveRecord::Base.take</tt>.
@@ -3518,6 +3629,7 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
   def where!(*_arg0, &_arg1); end
   def where_clause(*_arg0, &_arg1); end
   def where_clause=(arg); end
+  def without(*_arg0, &_arg1); end
 
   private
 
@@ -3531,6 +3643,15 @@ class ActiveRecord::Associations::CollectionProxy < ::ActiveRecord::Relation
 
   # @return [Boolean]
   def null_scope?; end
+end
+
+class ActiveRecord::Associations::DisableJoinsAssociationScope < ::ActiveRecord::Associations::AssociationScope
+  def scope(association); end
+
+  private
+
+  def add_constraints(reflection, key, join_ids, owner, ordered); end
+  def last_scope_chain(reverse_chain, owner); end
 end
 
 module ActiveRecord::Associations::ForeignAssociation
@@ -3662,7 +3783,7 @@ class ActiveRecord::Associations::HasOneAssociation < ::ActiveRecord::Associatio
   # updated within replace.
   def set_new_record(record); end
 
-  def transaction_if(value); end
+  def transaction_if(value, &block); end
 end
 
 # = Active Record Has One Through Association
@@ -3676,6 +3797,8 @@ class ActiveRecord::Associations::HasOneThroughAssociation < ::ActiveRecord::Ass
 end
 
 class ActiveRecord::Associations::JoinDependency
+  extend ::ActiveSupport::Autoload
+
   # @return [JoinDependency] a new instance of JoinDependency
   def initialize(base, table, associations, join_type); end
 
@@ -3923,9 +4046,6 @@ end
 class ActiveRecord::Associations::Preloader
   extend ::ActiveSupport::Autoload
 
-  # @return [Preloader] a new instance of Preloader
-  def initialize(associate_by_default: T.unsafe(nil)); end
-
   # Eager loads the named associations for the given Active Record record(s).
   #
   # In this description, 'association name' shall refer to the name passed
@@ -3953,89 +4073,88 @@ class ActiveRecord::Associations::Preloader
   #   example, specifying <tt>{ author: :avatar }</tt> will preload a
   #   book's author, as well as that author's avatar.
   #
-  # +:associations+ has the same format as the +:include+ option for
-  # <tt>ActiveRecord::Base.find</tt>. So +associations+ could look like this:
+  # +:associations+ has the same format as the +:include+ method in
+  # <tt>ActiveRecord::QueryMethods</tt>. So +associations+ could look like this:
   #
   #   :books
   #   [ :books, :author ]
   #   { author: :avatar }
   #   [ :books, { author: :avatar } ]
-  def preload(records, associations, preload_scope = T.unsafe(nil)); end
-
-  private
-
-  def grouped_records(association, records, polymorphic_parent); end
-
-  # Returns a class containing the logic needed to load preload the data
-  # and attach it to a relation. The class returned implements a `run` method
-  # that accepts a preloader.
-  def preloader_for(reflection, owners); end
-
-  def preloaders_for_hash(association, records, scope, polymorphic_parent); end
-
-  # Loads all the given data into +records+ for a singular +association+.
   #
-  # Functions by instantiating a preloader class such as Preloader::Association and
-  # call the +run+ method for each passed in class in the +records+ argument.
+  # +available_records+ is an array of ActiveRecord::Base. The Preloader
+  # will try to use the objects in this array to preload the requested
+  # associations before querying the database. This can save database
+  # queries by reusing in-memory objects. The optimization is only applied
+  # to single associations (i.e. :belongs_to, :has_one) with no scopes.
   #
-  # Not all records have the same class, so group then preload group on the reflection
-  # itself so that if various subclass share the same association then we do not split
-  # them unnecessarily
-  #
-  # Additionally, polymorphic belongs_to associations can have multiple associated
-  # classes, depending on the polymorphic_type field. So we group by the classes as
-  # well.
-  def preloaders_for_one(association, records, scope, polymorphic_parent); end
+  # @return [Preloader] a new instance of Preloader
+  def initialize(records:, associations:, scope: T.unsafe(nil), available_records: T.unsafe(nil), associate_by_default: T.unsafe(nil)); end
 
-  def preloaders_for_reflection(reflection, records, scope); end
+  # Returns the value of attribute associate_by_default.
+  def associate_by_default; end
 
-  # Loads all the given data into +records+ for the +association+.
-  def preloaders_on(association, records, scope, polymorphic_parent = T.unsafe(nil)); end
-end
+  # Returns the value of attribute associations.
+  def associations; end
 
-class ActiveRecord::Associations::Preloader::AlreadyLoaded
-  # @return [AlreadyLoaded] a new instance of AlreadyLoaded
-  def initialize(klass, owners, reflection, preload_scope, associate_by_default = T.unsafe(nil)); end
+  def branches; end
+  def call; end
 
-  def preloaded_records; end
-  def records_by_owner; end
-  def run; end
+  # @return [Boolean]
+  def empty?; end
 
-  private
+  def loaders; end
 
-  # Returns the value of attribute owners.
-  def owners; end
+  # Returns the value of attribute records.
+  def records; end
 
-  # Returns the value of attribute reflection.
-  def reflection; end
+  # Returns the value of attribute scope.
+  def scope; end
 end
 
 class ActiveRecord::Associations::Preloader::Association
   # @return [Association] a new instance of Association
-  def initialize(klass, owners, reflection, preload_scope, associate_by_default = T.unsafe(nil)); end
+  def initialize(klass, owners, reflection, preload_scope, reflection_scope, associate_by_default); end
 
-  def preloaded_records; end
-  def records_by_owner; end
-  def run; end
-
-  private
-
-  def associate_records_to_owner(owner, records); end
+  def associate_records_from_unscoped(unscoped_records); end
 
   # The name of the key on the associated records
   def association_key_name; end
 
-  def association_key_type; end
-  def build_scope; end
-  def convert_key(key); end
-
-  # @return [Boolean]
-  def key_conversion_required?; end
+  def future_classes; end
 
   # Returns the value of attribute klass.
   def klass; end
 
-  def load_records; end
+  def load_records(raw_records = T.unsafe(nil)); end
+
+  # @return [Boolean]
+  def loaded?(owner); end
+
+  def loader_query; end
+  def owners_by_key; end
+  def preloaded_records; end
+  def records_by_owner; end
+  def run; end
+
+  # @return [Boolean]
+  def run?; end
+
+  def runnable_loaders; end
+  def scope; end
+  def set_inverse(record); end
+  def table_name; end
+  def target_for(owner); end
+
+  private
+
+  def associate_records_to_owner(owner, records); end
+  def association_key_type; end
+  def build_scope; end
+  def cascade_strict_loading(scope); end
+  def convert_key(key); end
+
+  # @return [Boolean]
+  def key_conversion_required?; end
 
   # Returns the value of attribute model.
   def model; end
@@ -4044,44 +4163,158 @@ class ActiveRecord::Associations::Preloader::Association
   def owner_key_name; end
 
   def owner_key_type; end
-  def owner_keys; end
 
   # Returns the value of attribute owners.
   def owners; end
 
-  def owners_by_key; end
-
   # Returns the value of attribute preload_scope.
   def preload_scope; end
-
-  def records_for(ids); end
 
   # Returns the value of attribute reflection.
   def reflection; end
 
   def reflection_scope; end
+end
+
+class ActiveRecord::Associations::Preloader::Association::LoaderQuery
+  # @return [LoaderQuery] a new instance of LoaderQuery
+  def initialize(scope, association_key_name); end
+
+  # Returns the value of attribute association_key_name.
+  def association_key_name; end
+
+  # @return [Boolean]
+  def eql?(other); end
+
+  def hash; end
+  def load_records_for_keys(keys, &block); end
+  def load_records_in_batch(loaders); end
+  def records_for(loaders); end
+
+  # Returns the value of attribute scope.
   def scope; end
 end
 
-class ActiveRecord::Associations::Preloader::ThroughAssociation < ::ActiveRecord::Associations::Preloader::Association
-  # @return [ThroughAssociation] a new instance of ThroughAssociation
-  def initialize(*_arg0); end
+class ActiveRecord::Associations::Preloader::Association::LoaderRecords
+  # @return [LoaderRecords] a new instance of LoaderRecords
+  def initialize(loaders, loader_query); end
 
-  def preloaded_records; end
-  def records_by_owner; end
+  def records; end
 
   private
+
+  def already_loaded_records; end
+
+  # Returns the value of attribute already_loaded_records_by_key.
+  def already_loaded_records_by_key; end
+
+  # Returns the value of attribute keys_to_load.
+  def keys_to_load; end
+
+  def load_records; end
+
+  # Returns the value of attribute loader_query.
+  def loader_query; end
+
+  # Returns the value of attribute loaders.
+  def loaders; end
+
+  def populate_keys_to_load_and_already_loaded_records; end
+end
+
+class ActiveRecord::Associations::Preloader::Batch
+  # @return [Batch] a new instance of Batch
+  def initialize(preloaders, available_records:); end
+
+  def call; end
+
+  private
+
+  def group_and_load_similar(loaders); end
+
+  # Returns the value of attribute loaders.
+  def loaders; end
+end
+
+class ActiveRecord::Associations::Preloader::Branch
+  # @return [Branch] a new instance of Branch
+  def initialize(association:, children:, parent:, associate_by_default:, scope:); end
+
+  # Returns the value of attribute associate_by_default.
+  def associate_by_default; end
+
+  # Returns the value of attribute association.
+  def association; end
+
+  # Returns the value of attribute children.
+  def children; end
+
+  # @return [Boolean]
+  def done?; end
+
+  def future_classes; end
+  def grouped_records; end
+  def immediate_future_classes; end
+  def likely_reflections; end
+  def loaders; end
+
+  # Returns the value of attribute parent.
+  def parent; end
+
+  # @return [Boolean]
+  def polymorphic?; end
+
+  def preloaded_records; end
+
+  # Sets the attribute preloaded_records
+  #
+  # @param value the value to set the attribute preloaded_records to.
+  def preloaded_records=(_arg0); end
+
+  def preloaders_for_reflection(reflection, reflection_records); end
+
+  # @return [Boolean]
+  def root?; end
+
+  def runnable_loaders; end
+
+  # Returns the value of attribute scope.
+  def scope; end
+
+  def source_records; end
+  def target_classes; end
+
+  private
+
+  def build_children(children); end
+
+  # Returns a class containing the logic needed to load preload the data
+  # and attach it to a relation. The class returned implements a `run` method
+  # that accepts a preloader.
+  def preloader_for(reflection); end
+end
+
+class ActiveRecord::Associations::Preloader::ThroughAssociation < ::ActiveRecord::Associations::Preloader::Association
+  def future_classes; end
+  def preloaded_records; end
+  def records_by_owner; end
+  def runnable_loaders; end
+
+  private
+
+  # @return [Boolean]
+  def data_available?; end
 
   def middle_records; end
   def preload_index; end
   def source_preloaders; end
+  def source_records_by_owner; end
   def source_reflection; end
   def through_preloaders; end
+  def through_records_by_owner; end
   def through_reflection; end
   def through_scope; end
 end
-
-ActiveRecord::Associations::Preloader::ThroughAssociation::PRELOADER = T.let(T.unsafe(nil), ActiveRecord::Associations::Preloader)
 
 class ActiveRecord::Associations::SingularAssociation < ::ActiveRecord::Associations::Association
   def build(attributes = T.unsafe(nil), &block); end
@@ -4138,8 +4371,8 @@ module ActiveRecord::Associations::ThroughAssociation
   # @return [Boolean]
   def foreign_key_present?; end
 
-  # Note: this does not capture all cases, for example it would be crazy to try to
-  # properly support stale-checking for nested associations.
+  # Note: this does not capture all cases, for example it would be impractical
+  # to try to properly support stale-checking for nested associations.
   def stale_state; end
 
   # We merge in these scopes for two reasons:
@@ -4151,6 +4384,46 @@ module ActiveRecord::Associations::ThroughAssociation
   def through_association; end
   def through_reflection; end
 end
+
+class ActiveRecord::AsynchronousQueriesTracker
+  # @return [AsynchronousQueriesTracker] a new instance of AsynchronousQueriesTracker
+  def initialize; end
+
+  # Returns the value of attribute current_session.
+  def current_session; end
+
+  def finalize_session; end
+  def start_session; end
+
+  class << self
+    def complete(asynchronous_queries_tracker); end
+    def install_executor_hooks(executor = T.unsafe(nil)); end
+    def run; end
+  end
+end
+
+module ActiveRecord::AsynchronousQueriesTracker::NullSession
+  class << self
+    # @return [Boolean]
+    def active?; end
+
+    def finalize; end
+  end
+end
+
+class ActiveRecord::AsynchronousQueriesTracker::Session
+  # @return [Session] a new instance of Session
+  def initialize; end
+
+  # @return [Boolean]
+  def active?; end
+
+  def finalize; end
+end
+
+# AsynchronousQueryInsideTransactionError will be raised when attempting
+# to perform an asynchronous query from inside a transaction
+class ActiveRecord::AsynchronousQueryInsideTransactionError < ::ActiveRecord::ActiveRecordError; end
 
 module ActiveRecord::AttributeAssignment
   include ::ActiveModel::ForbiddenAttributesProtection
@@ -4214,6 +4487,7 @@ module ActiveRecord::AttributeMethods
   mixes_in_class_methods ::ActiveRecord::AttributeMethods::Write::ClassMethods
   mixes_in_class_methods ::ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
   mixes_in_class_methods ::ActiveRecord::AttributeMethods::TimeZoneConversion::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::AttributeMethods::Dirty::ClassMethods
   mixes_in_class_methods ::ActiveRecord::AttributeMethods::Serialization::ClassMethods
 
   # Returns the value of the attribute identified by <tt>attr_name</tt> after it has been typecast (for example,
@@ -4283,9 +4557,8 @@ module ActiveRecord::AttributeMethods
 
   # Returns an <tt>#inspect</tt>-like string for the value of the
   # attribute +attr_name+. String attributes are truncated up to 50
-  # characters, Date and Time attributes are returned in the
-  # <tt>:db</tt> format. Other attributes return the value of
-  # <tt>#inspect</tt> without modification.
+  # characters. Other attributes return the value of <tt>#inspect</tt>
+  # without modification.
   #
   #   person = Person.create!(name: 'David Heinemeier Hansson ' * 3)
   #
@@ -4293,7 +4566,7 @@ module ActiveRecord::AttributeMethods
   #   # => "\"David Heinemeier Hansson David Heinemeier Hansson ...\""
   #
   #   person.attribute_for_inspect(:created_at)
-  #   # => "\"2012-10-22 00:15:07\""
+  #   # => "\"2012-10-22 00:15:07.000000000 +0000\""
   #
   #   person.attribute_for_inspect(:tag_ids)
   #   # => "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
@@ -4378,11 +4651,11 @@ module ActiveRecord::AttributeMethods
   # @return [Boolean]
   def attribute_method?(attr_name); end
 
-  # Filters out the primary keys, from the attribute names, when the primary
+  # Filters out the virtual columns and also primary keys, from the attribute names, when the primary
   # key is to be generated (e.g. the id attribute has no value).
   def attributes_for_create(attribute_names); end
 
-  # Filters the primary keys and readonly attributes from the attribute names.
+  # Filters the primary keys, readonly attributes and virtual columns from the attribute names.
   def attributes_for_update(attribute_names); end
 
   def attributes_with_values(attribute_names); end
@@ -4402,12 +4675,18 @@ module ActiveRecord::AttributeMethods
     def attribute_method_matchers; end
     def attribute_method_matchers=(value); end
     def attribute_method_matchers?; end
-    def partial_writes; end
-    def partial_writes=(value); end
-    def partial_writes?; end
+    def partial_inserts; end
+    def partial_inserts=(value); end
+    def partial_inserts?; end
+    def partial_updates; end
+    def partial_updates=(value); end
+    def partial_updates?; end
     def skip_time_zone_conversion_for_attributes; end
     def skip_time_zone_conversion_for_attributes=(value); end
     def skip_time_zone_conversion_for_attributes?; end
+    def time_zone_aware_attributes; end
+    def time_zone_aware_attributes=(value); end
+    def time_zone_aware_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types=(value); end
     def time_zone_aware_types?; end
@@ -4418,10 +4697,14 @@ module ActiveRecord::AttributeMethods
     def attribute_aliases?; end
     def attribute_method_matchers; end
     def attribute_method_matchers?; end
-    def partial_writes; end
-    def partial_writes?; end
+    def partial_inserts; end
+    def partial_inserts?; end
+    def partial_updates; end
+    def partial_updates?; end
     def skip_time_zone_conversion_for_attributes; end
     def skip_time_zone_conversion_for_attributes?; end
+    def time_zone_aware_attributes; end
+    def time_zone_aware_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types?; end
   end
@@ -4464,6 +4747,9 @@ module ActiveRecord::AttributeMethods::BeforeTypeCast
   #   task.attributes_before_type_cast
   #   # => {"id"=>nil, "title"=>nil, "is_done"=>true, "completed_on"=>"2012-10-21", "created_at"=>nil, "updated_at"=>nil}
   def attributes_before_type_cast; end
+
+  # Returns a hash of attributes for assignment to the database.
+  def attributes_for_database; end
 
   # Returns the value of the attribute identified by +attr_name+ before
   # typecasting and deserialization.
@@ -4582,6 +4868,7 @@ module ActiveRecord::AttributeMethods::Dirty
 
   mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveModel::AttributeMethods::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::AttributeMethods::Dirty::ClassMethods
 
   # Returns the original value of an attribute before the last save.
   #
@@ -4696,8 +4983,8 @@ module ActiveRecord::AttributeMethods::Dirty
   def _create_record(attribute_names = T.unsafe(nil)); end
   def _touch_row(attribute_names, time); end
   def _update_record(attribute_names = T.unsafe(nil)); end
-  def attribute_names_for_partial_writes; end
-  def write_attribute_without_type_cast(attr_name, value); end
+  def attribute_names_for_partial_inserts; end
+  def attribute_names_for_partial_updates; end
 
   module GeneratedClassMethods
     def attribute_aliases; end
@@ -4706,9 +4993,12 @@ module ActiveRecord::AttributeMethods::Dirty
     def attribute_method_matchers; end
     def attribute_method_matchers=(value); end
     def attribute_method_matchers?; end
-    def partial_writes; end
-    def partial_writes=(value); end
-    def partial_writes?; end
+    def partial_inserts; end
+    def partial_inserts=(value); end
+    def partial_inserts?; end
+    def partial_updates; end
+    def partial_updates=(value); end
+    def partial_updates?; end
   end
 
   module GeneratedInstanceMethods
@@ -4716,9 +5006,19 @@ module ActiveRecord::AttributeMethods::Dirty
     def attribute_aliases?; end
     def attribute_method_matchers; end
     def attribute_method_matchers?; end
-    def partial_writes; end
-    def partial_writes?; end
+    def partial_inserts; end
+    def partial_inserts?; end
+    def partial_updates; end
+    def partial_updates?; end
   end
+end
+
+module ActiveRecord::AttributeMethods::Dirty::ClassMethods
+  def partial_writes; end
+  def partial_writes=(value); end
+
+  # @return [Boolean]
+  def partial_writes?; end
 end
 
 class ActiveRecord::AttributeMethods::GeneratedAttributeMethods < ::Module
@@ -4858,15 +5158,45 @@ module ActiveRecord::AttributeMethods::Serialization
 end
 
 module ActiveRecord::AttributeMethods::Serialization::ClassMethods
-  # If you have an attribute that needs to be saved to the database as an
-  # object, and retrieved as the same object, then specify the name of that
-  # attribute using this method and it will be handled automatically. The
-  # serialization is done through YAML. If +class_name+ is specified, the
-  # serialized object must be of that class on assignment and retrieval.
-  # Otherwise SerializationTypeMismatch will be raised.
+  # If you have an attribute that needs to be saved to the database as a
+  # serialized object, and retrieved by deserializing into the same object,
+  # then specify the name of that attribute using this method and serialization
+  # will be handled automatically.
   #
-  # Empty objects as <tt>{}</tt>, in the case of +Hash+, or <tt>[]</tt>, in the case of
-  # +Array+, will always be persisted as null.
+  # The serialization format may be YAML, JSON, or any custom format using a
+  # custom coder class.
+  #
+  # === Serialization formats
+  #
+  #   serialize attr_name [, class_name_or_coder]
+  #
+  #                        |                           |  database storage   |
+  #   class_name_or_coder  | attribute read/write type | serialized | NULL   |
+  #   ---------------------+---------------------------+------------+--------+
+  #     <not given>        | any value that supports   |    YAML    |        |
+  #                        |   .to_yaml                |            |        |
+  #                        |                           |            |        |
+  #   Array                | Array **                  |    YAML    |  []    |
+  #                        |                           |            |        |
+  #   Hash                 | Hash **                   |    YAML    |  {}    |
+  #                        |                           |            |        |
+  #   JSON                 | any value that supports   |    JSON    |        |
+  #                        |   .to_json                |            |        |
+  #                        |                           |            |        |
+  #   <custom coder class> | any value supported by    |   custom   | custom |
+  #                        | the custom coder class    |            |        |
+  #
+  # ** If +class_name_or_coder+ is +Array+ or +Hash+, values retrieved will
+  # always be of that type, and any value assigned must be of that type or
+  # +SerializationTypeMismatch+ will be raised.
+  #
+  # ==== Custom coders
+  # A custom coder class or module may be given. This must have +self.load+
+  # and +self.dump+ class/module methods. <tt>self.dump(object)</tt> will be called
+  # to serialize an object and should return the serialized value to be
+  # stored in the database (+nil+ to store as +NULL+). <tt>self.load(string)</tt>
+  # will be called to reverse the process and load (unserialize) from the
+  # database.
   #
   # Keep in mind that database adapters handle certain serialization tasks
   # for you. For instance: +json+ and +jsonb+ types in PostgreSQL will be
@@ -4880,8 +5210,9 @@ module ActiveRecord::AttributeMethods::Serialization::ClassMethods
   # ==== Parameters
   #
   # * +attr_name+ - The field name that should be serialized.
-  # * +class_name_or_coder+ - Optional, a coder object, which responds to +.load+ and +.dump+
-  #   or a class name that the object type should be equal to.
+  # * +class_name_or_coder+ - Optional, may be be +Array+ or +Hash+ or
+  #   +JSON+ or a custom coder class or module which responds to +.load+
+  #   and +.dump+. See table above.
   #
   # ==== Options
   #
@@ -4891,7 +5222,7 @@ module ActiveRecord::AttributeMethods::Serialization::ClassMethods
   #
   # ==== Example
   #
-  #   # Serialize a preferences attribute.
+  #   # Serialize a preferences attribute using YAML coder.
   #   class User < ActiveRecord::Base
   #     serialize :preferences
   #   end
@@ -4904,6 +5235,28 @@ module ActiveRecord::AttributeMethods::Serialization::ClassMethods
   #   # Serialize preferences as Hash using YAML coder.
   #   class User < ActiveRecord::Base
   #     serialize :preferences, Hash
+  #   end
+  #
+  #   # Serialize preferences using a custom coder.
+  #   class Rot13JSON
+  #     def self.rot13(string)
+  #       string.tr("a-zA-Z", "n-za-mN-ZA-M")
+  #     end
+  #
+  #     # returns serialized string that will be stored in the database
+  #     def self.dump(object)
+  #       ActiveSupport::JSON.encode(object).rot13
+  #     end
+  #
+  #     # reverses the above, turning the serialized string from the database
+  #     # back into its original value
+  #     def self.load(string)
+  #       ActiveSupport::JSON.decode(string.rot13)
+  #     end
+  #   end
+  #
+  #   class User < ActiveRecord::Base
+  #     serialize :preferences, Rot13JSON
   #   end
   def serialize(attr_name, class_name_or_coder = T.unsafe(nil), **options); end
 
@@ -4929,6 +5282,9 @@ module ActiveRecord::AttributeMethods::TimeZoneConversion
     def skip_time_zone_conversion_for_attributes; end
     def skip_time_zone_conversion_for_attributes=(value); end
     def skip_time_zone_conversion_for_attributes?; end
+    def time_zone_aware_attributes; end
+    def time_zone_aware_attributes=(value); end
+    def time_zone_aware_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types=(value); end
     def time_zone_aware_types?; end
@@ -4937,6 +5293,8 @@ module ActiveRecord::AttributeMethods::TimeZoneConversion
   module GeneratedInstanceMethods
     def skip_time_zone_conversion_for_attributes; end
     def skip_time_zone_conversion_for_attributes?; end
+    def time_zone_aware_attributes; end
+    def time_zone_aware_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types?; end
   end
@@ -4985,8 +5343,6 @@ module ActiveRecord::AttributeMethods::Write
   # This method exists to avoid the expensive primary_key check internally, without
   # breaking compatibility with the write_attribute API
   def attribute=(attr_name, value); end
-
-  def write_attribute_without_type_cast(attr_name, value); end
 end
 
 module ActiveRecord::AttributeMethods::Write::ClassMethods
@@ -5013,8 +5369,6 @@ module ActiveRecord::Attributes
 end
 
 module ActiveRecord::Attributes::ClassMethods
-  # :call-seq: attribute(name, cast_type = nil, **options)
-  #
   # Defines an attribute with a type on this model. It will override the
   # type of existing attributes if needed. This allows control over how
   # values are converted to and from SQL when assigned to a model. It also
@@ -5208,7 +5562,7 @@ module ActiveRecord::Attributes::ClassMethods
   # tracking is performed. The methods +changed?+ and +changed_in_place?+
   # will be called from ActiveModel::Dirty. See the documentation for those
   # methods in ActiveModel::Type::Value for more details.
-  def attribute(name, cast_type = T.unsafe(nil), **options, &block); end
+  def attribute(name, cast_type = T.unsafe(nil), default: T.unsafe(nil), **options); end
 
   # This is the low level API which sits beneath +attribute+. It only
   # accepts type objects, and will do its work immediately instead of
@@ -5234,8 +5588,6 @@ module ActiveRecord::Attributes::ClassMethods
 
   private
 
-  def _lookup_cast_type(name, type, options); end
-  def decorate_attribute_type(attr_name, **default); end
   def define_default_attribute(name, value, type, from_user:); end
 end
 
@@ -5416,6 +5768,11 @@ module ActiveRecord::AutosaveAssociation
 
   def _ensure_no_duplicate_errors; end
 
+  # If the record is new or it has changed, returns true.
+  #
+  # @return [Boolean]
+  def _record_changed?(reflection, record, key); end
+
   # Is used as an around_save callback to check while saving a collection
   # association whether or not the parent was a new record before saving.
   def around_save_collection_association; end
@@ -5446,11 +5803,6 @@ module ActiveRecord::AutosaveAssociation
   def nested_records_changed_for_autosave?; end
 
   def normalize_reflection_attribute(indexed_attribute, reflection, index, attribute); end
-
-  # If the record is new or it has changed, returns true.
-  #
-  # @return [Boolean]
-  def record_changed?(reflection, record, key); end
 
   # Saves the associated record if it's new or <tt>:autosave</tt> is enabled.
   #
@@ -5638,6 +5990,23 @@ end
 #   anonymous = User.new(name: "")
 #   anonymous.name? # => false
 #
+# Query methods will also respect any overwrites of default accessors:
+#
+#   class User
+#     # Has admin boolean column
+#     def admin
+#       false
+#     end
+#   end
+#
+#   user.update(admin: true)
+#
+#   user.read_attribute(:admin)  # => true, gets the column value
+#   user[:admin] # => true, also gets the column value
+#
+#   user.admin   # => false, due to the getter overwrite
+#   user.admin?  # => false, due to the getter overwrite
+#
 # == Accessing attributes before they have been typecasted
 #
 # Sometimes you want to be able to read the raw attribute data without having the column-determined
@@ -5817,6 +6186,7 @@ class ActiveRecord::Base
   include ::ActiveRecord::SecureToken
   include ::ActiveRecord::SignedId
   include ::ActiveRecord::Suppressor
+  include ::ActiveRecord::Encryption::EncryptableRecord
   include ::MoneyColumn::ActiveRecordHooks
   extend ::ActiveModel::Naming
   extend ::ActiveSupport::Benchmarkable
@@ -5857,6 +6227,7 @@ class ActiveRecord::Base
   extend ::ActiveRecord::AttributeMethods::Write::ClassMethods
   extend ::ActiveRecord::AttributeMethods::PrimaryKey::ClassMethods
   extend ::ActiveRecord::AttributeMethods::TimeZoneConversion::ClassMethods
+  extend ::ActiveRecord::AttributeMethods::Dirty::ClassMethods
   extend ::ActiveRecord::AttributeMethods::Serialization::ClassMethods
   extend ::ActiveRecord::Callbacks::ClassMethods
   extend ::ActiveModel::Validations::Callbacks::ClassMethods
@@ -5872,6 +6243,7 @@ class ActiveRecord::Base
   extend ::ActiveRecord::SecureToken::ClassMethods
   extend ::ActiveRecord::SignedId::ClassMethods
   extend ::ActiveRecord::Suppressor::ClassMethods
+  extend ::ActiveRecord::Encryption::EncryptableRecord::ClassMethods
   extend ::ActiveRecord::TypedStore::Extension
   extend ::MoneyColumn::ActiveRecordHooks::ClassMethods
 
@@ -5911,6 +6283,8 @@ class ActiveRecord::Base
   def attribute_aliases?; end
   def attribute_method_matchers; end
   def attribute_method_matchers?; end
+  def automatic_scope_inversing; end
+  def automatic_scope_inversing?; end
   def cache_timestamp_format; end
   def cache_timestamp_format?; end
   def cache_versioning; end
@@ -5926,52 +6300,50 @@ class ActiveRecord::Base
   def default_scopes; end
   def default_shard; end
   def default_shard?; end
-  def default_timezone; end
   def defined_enums; end
   def defined_enums?; end
   def destroy_association_async_job; end
-  def dump_schema_after_migration; end
-  def dump_schemas; end
-  def error_on_ignored_order; end
+  def encrypted_attributes; end
+  def encrypted_attributes=(_arg0); end
+  def encrypted_attributes?; end
   def include_root_in_json; end
   def include_root_in_json?; end
-  def index_nested_attribute_errors; end
-  def legacy_connection_handling; end
   def lock_optimistically; end
   def lock_optimistically?; end
   def logger; end
+  def logger?; end
   def model_name(*_arg0, &_arg1); end
   def nested_attributes_options; end
   def nested_attributes_options?; end
-  def partial_writes; end
-  def partial_writes?; end
+  def partial_inserts; end
+  def partial_inserts?; end
+  def partial_updates; end
+  def partial_updates?; end
   def pluralize_table_names; end
   def pluralize_table_names?; end
   def primary_key_prefix_type; end
+  def primary_key_prefix_type?; end
   def record_timestamps; end
   def record_timestamps=(_arg0); end
   def record_timestamps?; end
-  def schema_format; end
   def signed_id_verifier_secret; end
+  def signed_id_verifier_secret?; end
   def skip_time_zone_conversion_for_attributes; end
   def skip_time_zone_conversion_for_attributes?; end
   def store_full_class_name; end
   def store_full_class_name?; end
   def store_full_sti_class; end
   def store_full_sti_class?; end
-  def suppress_multiple_database_warning; end
   def table_name_prefix; end
   def table_name_prefix?; end
   def table_name_suffix; end
   def table_name_suffix?; end
   def time_zone_aware_attributes; end
+  def time_zone_aware_attributes?; end
   def time_zone_aware_types; end
   def time_zone_aware_types?; end
-  def timestamped_migrations; end
   def type_for_attribute(*_arg0, &_arg1); end
   def validation_context; end
-  def verbose_query_logs; end
-  def warn_on_records_fetched_greater_than; end
 
   private
 
@@ -6014,8 +6386,6 @@ class ActiveRecord::Base
     def _validators; end
     def _validators=(value); end
     def _validators?; end
-    def action_on_strict_loading_violation; end
-    def action_on_strict_loading_violation=(val); end
     def after_create(*args, **options, &block); end
     def after_destroy(*args, **options, &block); end
     def after_find(*args, **options, &block); end
@@ -6026,12 +6396,13 @@ class ActiveRecord::Base
     def aggregate_reflections; end
     def aggregate_reflections=(value); end
     def aggregate_reflections?; end
-    def allow_unsafe_raw_sql; end
-    def allow_unsafe_raw_sql=(value); end
+    def application_record_class?; end
     def around_create(*args, **options, &block); end
     def around_destroy(*args, **options, &block); end
     def around_save(*args, **options, &block); end
     def around_update(*args, **options, &block); end
+    def asynchronous_queries_session; end
+    def asynchronous_queries_tracker; end
     def attribute_aliases; end
     def attribute_aliases=(value); end
     def attribute_aliases?; end
@@ -6041,6 +6412,9 @@ class ActiveRecord::Base
     def attributes_to_define_after_schema_loads; end
     def attributes_to_define_after_schema_loads=(value); end
     def attributes_to_define_after_schema_loads?; end
+    def automatic_scope_inversing; end
+    def automatic_scope_inversing=(value); end
+    def automatic_scope_inversing?; end
     def before_create(*args, **options, &block); end
     def before_destroy(*args, **options, &block); end
     def before_save(*args, **options, &block); end
@@ -6063,7 +6437,7 @@ class ActiveRecord::Base
     def connection_class; end
     def connection_class=(b); end
     def connection_class?; end
-    def connection_classes; end
+    def connection_class_for_self; end
     def connection_handler; end
     def connection_handler=(handler); end
     def connection_handlers; end
@@ -6084,21 +6458,20 @@ class ActiveRecord::Base
     def default_shard; end
     def default_shard=(value); end
     def default_shard?; end
-    def default_timezone; end
-    def default_timezone=(val); end
     def defined_enums; end
     def defined_enums=(value); end
     def defined_enums?; end
     def destroy_association_async_job; end
     def destroy_association_async_job=(value); end
-    def dump_schema_after_migration; end
-    def dump_schema_after_migration=(val); end
-    def dump_schemas; end
-    def dump_schemas=(val); end
-    def error_on_ignored_order; end
-    def error_on_ignored_order=(val); end
+    def encrypted_attributes; end
+    def encrypted_attributes=(value); end
+    def encrypted_attributes?; end
+    def enumerate_columns_in_select_statements; end
+    def enumerate_columns_in_select_statements=(value); end
+    def enumerate_columns_in_select_statements?; end
     def has_many_inversing; end
-    def has_many_inversing=(val); end
+    def has_many_inversing=(value); end
+    def has_many_inversing?; end
     def immutable_strings_by_default; end
     def immutable_strings_by_default=(value); end
     def immutable_strings_by_default?; end
@@ -6108,47 +6481,47 @@ class ActiveRecord::Base
     def include_root_in_json; end
     def include_root_in_json=(value); end
     def include_root_in_json?; end
-    def index_nested_attribute_errors; end
-    def index_nested_attribute_errors=(val); end
+    def inheritance_column; end
+    def inheritance_column=(value); end
+    def inheritance_column?; end
     def internal_metadata_table_name; end
     def internal_metadata_table_name=(value); end
     def internal_metadata_table_name?; end
-    def legacy_connection_handling; end
-    def legacy_connection_handling=(val); end
     def local_stored_attributes; end
     def local_stored_attributes=(_arg0); end
     def lock_optimistically; end
     def lock_optimistically=(value); end
     def lock_optimistically?; end
     def logger; end
-    def logger=(val); end
-    def maintain_test_schema; end
-    def maintain_test_schema=(val); end
+    def logger=(value); end
+    def logger?; end
     def nested_attributes_options; end
     def nested_attributes_options=(value); end
     def nested_attributes_options?; end
-    def partial_writes; end
-    def partial_writes=(value); end
-    def partial_writes?; end
+    def partial_inserts; end
+    def partial_inserts=(value); end
+    def partial_inserts?; end
+    def partial_updates; end
+    def partial_updates=(value); end
+    def partial_updates?; end
     def pluralize_table_names; end
     def pluralize_table_names=(value); end
     def pluralize_table_names?; end
     def primary_key_prefix_type; end
-    def primary_key_prefix_type=(val); end
-    def queues; end
-    def queues=(val); end
-    def reading_role; end
-    def reading_role=(val); end
+    def primary_key_prefix_type=(value); end
+    def primary_key_prefix_type?; end
     def record_timestamps; end
     def record_timestamps=(value); end
     def record_timestamps?; end
-    def schema_format; end
-    def schema_format=(val); end
     def schema_migrations_table_name; end
     def schema_migrations_table_name=(value); end
     def schema_migrations_table_name?; end
+    def shard_selector; end
+    def shard_selector=(value); end
+    def shard_selector?; end
     def signed_id_verifier_secret; end
-    def signed_id_verifier_secret=(val); end
+    def signed_id_verifier_secret=(value); end
+    def signed_id_verifier_secret?; end
     def skip_time_zone_conversion_for_attributes; end
     def skip_time_zone_conversion_for_attributes=(value); end
     def skip_time_zone_conversion_for_attributes?; end
@@ -6162,8 +6535,6 @@ class ActiveRecord::Base
     def strict_loading_by_default=(value); end
     def strict_loading_by_default?; end
     def strict_loading_violation!(owner:, reflection:); end
-    def suppress_multiple_database_warning; end
-    def suppress_multiple_database_warning=(val); end
     def table_name_prefix; end
     def table_name_prefix=(value); end
     def table_name_prefix?; end
@@ -6171,18 +6542,15 @@ class ActiveRecord::Base
     def table_name_suffix=(value); end
     def table_name_suffix?; end
     def time_zone_aware_attributes; end
-    def time_zone_aware_attributes=(val); end
+    def time_zone_aware_attributes=(value); end
+    def time_zone_aware_attributes?; end
     def time_zone_aware_types; end
     def time_zone_aware_types=(value); end
     def time_zone_aware_types?; end
-    def timestamped_migrations; end
-    def timestamped_migrations=(val); end
-    def verbose_query_logs; end
-    def verbose_query_logs=(val); end
-    def warn_on_records_fetched_greater_than; end
-    def warn_on_records_fetched_greater_than=(val); end
-    def writing_role; end
-    def writing_role=(val); end
+
+    private
+
+    def _inheritance_column=(value); end
   end
 end
 
@@ -6249,7 +6617,7 @@ module ActiveRecord::Batches
   #
   # NOTE: By its nature, batch processing is subject to race conditions if
   # other processes are modifying the database.
-  def find_each(start: T.unsafe(nil), finish: T.unsafe(nil), batch_size: T.unsafe(nil), error_on_ignore: T.unsafe(nil), order: T.unsafe(nil)); end
+  def find_each(start: T.unsafe(nil), finish: T.unsafe(nil), batch_size: T.unsafe(nil), error_on_ignore: T.unsafe(nil), order: T.unsafe(nil), &block); end
 
   # Yields each batch of records that was found by the find options as
   # an array.
@@ -6379,6 +6747,9 @@ class ActiveRecord::Batches::BatchEnumerator
   # @return [BatchEnumerator] a new instance of BatchEnumerator
   def initialize(relation:, of: T.unsafe(nil), start: T.unsafe(nil), finish: T.unsafe(nil)); end
 
+  # The size of the batches yielded by the BatchEnumerator.
+  def batch_size; end
+
   # Deletes records in batches. Returns the total number of rows affected.
   #
   #   Person.in_batches.delete_all
@@ -6398,7 +6769,7 @@ class ActiveRecord::Batches::BatchEnumerator
   #   Person.in_batches.each do |relation|
   #     relation.update_all(awesome: true)
   #   end
-  def each; end
+  def each(&block); end
 
   # Looping through a collection of records from the database (using the
   # +all+ method, for example) is very inefficient since it will try to
@@ -6421,7 +6792,16 @@ class ActiveRecord::Batches::BatchEnumerator
   #   Person.in_batches.each_record.with_index do |person, index|
   #     person.award_trophy(index + 1)
   #   end
-  def each_record; end
+  def each_record(&block); end
+
+  # The primary key value at which the BatchEnumerator ends, inclusive of the value.
+  def finish; end
+
+  # The relation from which the BatchEnumerator yields batches.
+  def relation; end
+
+  # The primary key value from which the BatchEnumerator starts, inclusive of the value.
+  def start; end
 
   # Updates records in batches. Returns the total number of rows affected.
   #
@@ -6500,7 +6880,7 @@ module ActiveRecord::Calculations
   #
   #   Article.group(:status, :category).count
   #   # =>  {["draft", "business"]=>10, ["draft", "technology"]=>4,
-  #          ["published", "business"]=>0, ["published", "technology"]=>2}
+  #   #      ["published", "business"]=>0, ["published", "technology"]=>2}
   #
   # If #count is used with {Relation#select}[rdoc-ref:QueryMethods#select], it will count the selected columns:
   #
@@ -6548,7 +6928,7 @@ module ActiveRecord::Calculations
   def pick(*column_names); end
 
   # Use #pluck as a shortcut to select one or more attributes without
-  # loading a bunch of records just to grab the attributes you want.
+  # loading an entire record object per row.
   #
   #   Person.pluck(:name)
   #
@@ -6588,7 +6968,7 @@ module ActiveRecord::Calculations
   # #calculate for examples with options.
   #
   #   Person.sum(:age) # => 4562
-  def sum(column_name = T.unsafe(nil)); end
+  def sum(identity_or_column = T.unsafe(nil), &block); end
 
   private
 
@@ -6621,7 +7001,7 @@ module ActiveRecord::Calculations
   def operation_over_aggregate_column(column, operation, distinct); end
   def perform_calculation(operation, column_name); end
   def select_for_count; end
-  def type_cast_calculated_value(value, operation); end
+  def type_cast_calculated_value(value, operation, type); end
   def type_cast_pluck_values(result, columns); end
   def type_for(field, &block); end
 end
@@ -7054,6 +7434,14 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # @return [Boolean]
   def advisory_locks_enabled?; end
 
+  # Override to check all foreign key constraints in a database.
+  #
+  # @return [Boolean]
+  def all_foreign_keys_valid?; end
+
+  # @return [Boolean]
+  def async_enabled?; end
+
   # Called by ActiveRecord::InsertAll,
   # Passed an instance of ActiveRecord::InsertAll::Builder,
   # This method implements standard bulk inserts for all databases, but
@@ -7063,6 +7451,7 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
 
   def case_insensitive_comparison(attribute, value); end
   def case_sensitive_comparison(attribute, value); end
+  def check_if_write_query(sql); end
   def check_version; end
 
   # Clear any caching the database adapter may be doing.
@@ -7071,8 +7460,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # Check the connection back in to the connection pool
   def close; end
 
-  def connection_klass; end
+  def connection_class; end
   def create(*_arg0); end
+
+  # This is meant to be implemented by the adapters that support custom enum types
+  def create_enum(*_arg0); end
+
   def database_version; end
 
   # @return [Boolean]
@@ -7109,6 +7502,8 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
 
   # A list of extensions, to be filled in by adapters that support them.
   def extensions; end
+
+  def field_ordered_value(column, values); end
 
   # This is meant to be implemented by the adapters that support advisory
   # locks
@@ -7212,14 +7607,28 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # overridden by concrete adapters.
   def reset!; end
 
+  # The role (ie :writing) for the current connection. In a
+  # non-multi role application, `:writing` is returned.
+  def role; end
+
   def rollback_db_transaction(*_arg0); end
   def rollback_to_savepoint(*_arg0); end
   def schema_cache; end
   def schema_cache=(cache); end
   def schema_migration; end
 
+  # Returns the version identifier of the schema currently available in
+  # the database. This is generally equal to the number of the highest-
+  # numbered migration that has been executed, or 0 if no schema
+  # information is present / the database is empty.
+  def schema_version; end
+
   # Seconds since this connection was returned to the pool
   def seconds_idle; end
+
+  # The shard (ie :default) for the current connection. In
+  # a non-sharded application, `:default` is returned.
+  def shard; end
 
   # this method must only be called while holding connection pool's mutex (and a desire for segfaults)
   def steal!; end
@@ -7250,6 +7659,9 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # @return [Boolean]
   def supports_common_table_expressions?; end
 
+  # @return [Boolean]
+  def supports_concurrent_connections?; end
+
   # Does this adapter support datetime with precision?
   #
   # @return [Boolean]
@@ -7260,6 +7672,11 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   #
   # @return [Boolean]
   def supports_ddl_transactions?; end
+
+  # Does this adapter support creating deferrable constraints?
+  #
+  # @return [Boolean]
+  def supports_deferrable_constraints?; end
 
   # Does this adapter support explain?
   #
@@ -7382,6 +7799,8 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # Returns the value of attribute visitor.
   def visitor; end
 
+  def with_instrumenter(instrumenter, &block); end
+
   private
 
   def arel_visitor; end
@@ -7400,14 +7819,8 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   def collector; end
   def column_for(table_name, column_name); end
   def column_for_attribute(attribute); end
-  def extract_limit(sql_type); end
-  def extract_precision(sql_type); end
-  def extract_scale(sql_type); end
-  def initialize_type_map(m = T.unsafe(nil)); end
-  def log(sql, name = T.unsafe(nil), binds = T.unsafe(nil), type_casted_binds = T.unsafe(nil), statement_name = T.unsafe(nil)); end
-  def register_class_with_limit(mapping, key, klass); end
-  def register_class_with_precision(mapping, key, klass); end
-  def reload_type_map; end
+  def log(sql, name = T.unsafe(nil), binds = T.unsafe(nil), type_casted_binds = T.unsafe(nil), statement_name = T.unsafe(nil), async: T.unsafe(nil), &block); end
+  def transform_query(sql); end
   def translate_exception(exception, message:, sql:, binds:); end
   def translate_exception_class(e, sql, binds); end
   def type_map; end
@@ -7435,13 +7848,25 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
     def quoted_table_names; end
     def type_cast_config_to_boolean(config); end
     def type_cast_config_to_integer(config); end
+
+    private
+
+    def extract_limit(sql_type); end
+    def extract_precision(sql_type); end
+    def extract_scale(sql_type); end
+    def initialize_type_map(m); end
+    def register_class_with_limit(mapping, key, klass); end
+    def register_class_with_precision(mapping, key, klass); end
   end
 end
 
 ActiveRecord::ConnectionAdapters::AbstractAdapter::ADAPTER_NAME = T.let(T.unsafe(nil), String)
 ActiveRecord::ConnectionAdapters::AbstractAdapter::COMMENT_REGEX = T.let(T.unsafe(nil), Regexp)
 ActiveRecord::ConnectionAdapters::AbstractAdapter::DEFAULT_READ_QUERY = T.let(T.unsafe(nil), Array)
+ActiveRecord::ConnectionAdapters::AbstractAdapter::EXCEPTION_IMMEDIATE = T.let(T.unsafe(nil), Hash)
+ActiveRecord::ConnectionAdapters::AbstractAdapter::EXCEPTION_NEVER = T.let(T.unsafe(nil), Hash)
 ActiveRecord::ConnectionAdapters::AbstractAdapter::SIMPLE_INT = T.let(T.unsafe(nil), Regexp)
+ActiveRecord::ConnectionAdapters::AbstractAdapter::TYPE_MAP = T.let(T.unsafe(nil), ActiveRecord::Type::TypeMap)
 
 class ActiveRecord::ConnectionAdapters::AbstractAdapter::Version
   include ::Comparable
@@ -7459,6 +7884,7 @@ end
 
 module ActiveRecord::ConnectionAdapters::AbstractPool
   def get_schema_cache(connection); end
+  def lazily_set_schema_cache; end
   def set_schema_cache(cache); end
 end
 
@@ -7659,6 +8085,9 @@ class ActiveRecord::ConnectionAdapters::Column
 
   def type(*_arg0, &_arg1); end
 
+  # @return [Boolean]
+  def virtual?; end
+
   private
 
   def deduplicated; end
@@ -7848,13 +8277,6 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
 
   def prevent_writes; end
   def prevent_writes=(prevent_writes); end
-
-  # Remove the connection for this class. This will close the active
-  # connection and the defined connection (if they exist). The result
-  # can be used as an argument for #establish_connection, for easily
-  # re-establishing the connection.
-  def remove_connection(*args, &block); end
-
   def remove_connection_pool(owner, role: T.unsafe(nil), shard: T.unsafe(nil)); end
 
   # Locate the connection of the nearest super class. This can be an
@@ -7871,25 +8293,19 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   # Prevent writing to the database regardless of role.
   #
   # In some cases you may want to prevent writes to the database
-  # even if you are on a database that can write. `while_preventing_writes`
+  # even if you are on a database that can write. +while_preventing_writes+
   # will prevent writes to the database for the duration of the block.
   #
   # This method does not provide the same protection as a readonly
   # user and is meant to be a safeguard against accidental writes.
   #
-  # See `READ_QUERY` for the queries that are blocked by this
+  # See +READ_QUERY+ for the queries that are blocked by this
   # method.
   def while_preventing_writes(enabled = T.unsafe(nil)); end
 
   private
 
   # Returns the pool manager for an owner.
-  #
-  # Using `"primary"` to look up the pool manager for `ActiveRecord::Base` is
-  # deprecated in favor of looking it up by `"ActiveRecord::Base"`.
-  #
-  # During the deprecation period, if `"primary"` is passed, the pool manager
-  # for `ActiveRecord::Base` will still be returned.
   def get_pool_manager(owner); end
 
   # Returns the value of attribute owner_to_pool_manager.
@@ -7906,10 +8322,23 @@ class ActiveRecord::ConnectionAdapters::ConnectionHandler
   #   # => { host: "localhost", database: "foo", adapter: "sqlite3" }
   #
   # @raise [AdapterNotSpecified]
-  def resolve_pool_config(config, owner_name); end
+  def resolve_pool_config(config, owner_name, role, shard); end
 end
 
 ActiveRecord::ConnectionAdapters::ConnectionHandler::FINALIZER = T.let(T.unsafe(nil), Proc)
+
+class ActiveRecord::ConnectionAdapters::ConnectionHandler::StringConnectionOwner
+  # @return [StringConnectionOwner] a new instance of StringConnectionOwner
+  def initialize(name); end
+
+  def current_preventing_writes; end
+
+  # Returns the value of attribute name.
+  def name; end
+
+  # @return [Boolean]
+  def primary_class?; end
+end
 
 # Connection pool base class for managing Active Record database
 # connections.
@@ -7995,6 +8424,9 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # @return [Boolean]
   def active_connection?; end
 
+  # Returns the value of attribute async_executor.
+  def async_executor; end
+
   # Returns the value of attribute automatic_reconnect.
   def automatic_reconnect; end
 
@@ -8065,8 +8497,11 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # held in a cache keyed by a thread.
   def connection; end
 
-  # Returns the value of attribute connection_klass.
-  def connection_klass; end
+  # Returns the value of attribute connection_class.
+  def connection_class; end
+
+  # Returns the value of attribute connection_class.
+  def connection_klass(*args, &block); end
 
   # Returns an array containing the connections currently in the pool.
   # Access to the array does not require synchronization on the pool because
@@ -8146,8 +8581,15 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
   # remain open and active but will no longer be managed by this pool.
   def remove(conn); end
 
+  # Returns the value of attribute role.
+  def role; end
+
+  def schedule_query(future_result); end
   def schema_cache(*_arg0, &_arg1); end
   def schema_cache=(arg); end
+
+  # Returns the value of attribute shard.
+  def shard; end
 
   # Returns the value of attribute size.
   def size; end
@@ -8181,6 +8623,7 @@ class ActiveRecord::ConnectionAdapters::ConnectionPool
 
   def adopt_connection(conn); end
   def attempt_to_checkout_all_existing_connections(raise_on_acquisition_timeout = T.unsafe(nil)); end
+  def build_async_executor; end
 
   # --
   # this is unfortunately not concurrent
@@ -8403,17 +8846,6 @@ class ActiveRecord::ConnectionAdapters::CreateIndexDefinition < ::Struct
 end
 
 module ActiveRecord::ConnectionAdapters::DatabaseLimits
-  # Returns the maximum allowed length for an index name. This
-  # limit is enforced by \Rails and is less than or equal to
-  # #index_name_length. The gap between
-  # #index_name_length is to allow internal \Rails
-  # operations to use prefixes in temporary operations.
-  def allowed_index_name_length(*args, &block); end
-
-  # Returns the maximum number of elements in an IN (x,y,z) clause.
-  # +nil+ means no limit.
-  def in_clause_length(*args, &block); end
-
   # Returns the maximum length of an index name.
   def index_name_length; end
 
@@ -8513,6 +8945,13 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   # @raise [NotImplementedError]
   def explain(arel, binds = T.unsafe(nil)); end
 
+  # Returns an Arel SQL literal for the CURRENT_TIMESTAMP for usage with
+  # arbitrary precision date/time columns.
+  #
+  # Adapters supporting datetime with precision should override this to
+  # provide as much precision as is available.
+  def high_precision_current_timestamp; end
+
   # Executes an INSERT query and returns the new record's ID
   #
   # +id_value+ will be returned unless the value is +nil+, in
@@ -8559,7 +8998,7 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   def sanitize_limit(limit); end
 
   # Returns an ActiveRecord::Result instance.
-  def select_all(arel, name = T.unsafe(nil), binds = T.unsafe(nil), preparable: T.unsafe(nil)); end
+  def select_all(arel, name = T.unsafe(nil), binds = T.unsafe(nil), preparable: T.unsafe(nil), async: T.unsafe(nil)); end
 
   # Returns a record hash with the column names as keys and column values
   # as values.
@@ -8686,7 +9125,7 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   #
   # The mysql2 and postgresql adapters support setting the transaction
   # isolation level.
-  def transaction(requires_new: T.unsafe(nil), isolation: T.unsafe(nil), joinable: T.unsafe(nil)); end
+  def transaction(requires_new: T.unsafe(nil), isolation: T.unsafe(nil), joinable: T.unsafe(nil), &block); end
 
   def transaction_isolation_levels; end
   def transaction_manager; end
@@ -8728,9 +9167,8 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
   def last_inserted_id(result); end
 
   # Returns an ActiveRecord::Result instance.
-  def select(sql, name = T.unsafe(nil), binds = T.unsafe(nil)); end
+  def select(sql, name = T.unsafe(nil), binds = T.unsafe(nil), prepare: T.unsafe(nil), async: T.unsafe(nil)); end
 
-  def select_prepared(sql, name = T.unsafe(nil), binds = T.unsafe(nil)); end
   def single_value_from_rows(rows); end
   def sql_for_insert(sql, pk, binds); end
   def to_sql_and_binds(arel_or_sql_string, binds = T.unsafe(nil), preparable = T.unsafe(nil)); end
@@ -8738,6 +9176,9 @@ module ActiveRecord::ConnectionAdapters::DatabaseStatements
 end
 
 ActiveRecord::ConnectionAdapters::DatabaseStatements::DEFAULT_INSERT_VALUE = T.let(T.unsafe(nil), Arel::Nodes::SqlLiteral)
+
+# This is a safe default, even if not high precision on all databases
+ActiveRecord::ConnectionAdapters::DatabaseStatements::HIGH_PRECISION_CURRENT_TIMESTAMP = T.let(T.unsafe(nil), Arel::Nodes::SqlLiteral)
 
 module ActiveRecord::ConnectionAdapters::Deduplicable
   extend ::ActiveSupport::Concern
@@ -8762,6 +9203,8 @@ class ActiveRecord::ConnectionAdapters::ForeignKeyDefinition < ::Struct
 
   # @return [Boolean]
   def custom_primary_key?; end
+
+  def deferrable; end
 
   # @return [Boolean]
   def defined_for?(to_table: T.unsafe(nil), validate: T.unsafe(nil), **options); end
@@ -8870,7 +9313,10 @@ end
 class ActiveRecord::ConnectionAdapters::NullPool
   include ::ActiveRecord::ConnectionAdapters::AbstractPool
 
-  def connection_klass; end
+  def async_executor; end
+  def checkin(_); end
+  def connection_class; end
+  def remove(_); end
 
   # Returns the value of attribute schema_cache.
   def schema_cache; end
@@ -8903,10 +9349,10 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   include ::Mutex_m
 
   # @return [PoolConfig] a new instance of PoolConfig
-  def initialize(connection_klass, db_config); end
+  def initialize(connection_class, db_config, role, shard); end
 
-  # Returns the value of attribute connection_klass.
-  def connection_klass; end
+  # Returns the value of attribute connection_class.
+  def connection_class; end
 
   def connection_specification_name; end
 
@@ -8919,6 +9365,9 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   def locked?; end
   def pool; end
 
+  # Returns the value of attribute role.
+  def role; end
+
   # Returns the value of attribute schema_cache.
   def schema_cache; end
 
@@ -8926,6 +9375,9 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   #
   # @param value the value to set the attribute schema_cache to.
   def schema_cache=(_arg0); end
+
+  # Returns the value of attribute shard.
+  def shard; end
 
   def synchronize(&block); end
   def try_lock; end
@@ -8994,7 +9446,7 @@ module ActiveRecord::ConnectionAdapters::QueryCache
   # Returns the value of attribute query_cache_enabled.
   def query_cache_enabled; end
 
-  def select_all(arel, name = T.unsafe(nil), binds = T.unsafe(nil), preparable: T.unsafe(nil)); end
+  def select_all(arel, name = T.unsafe(nil), binds = T.unsafe(nil), preparable: T.unsafe(nil), async: T.unsafe(nil)); end
 
   # Disable the query cache within the block.
   def uncached; end
@@ -9007,12 +9459,7 @@ module ActiveRecord::ConnectionAdapters::QueryCache
 
   def cache_sql(sql, name, binds); end
   def configure_query_cache!; end
-
-  # If arel is locked this is a SELECT ... FOR UPDATE or somesuch. Such
-  # queries should not be cached.
-  #
-  # @return [Boolean]
-  def locked?(arel); end
+  def lookup_sql_cache(sql, name, binds); end
 
   class << self
     def dirties_query_cache(base, *method_names); end
@@ -9046,6 +9493,11 @@ module ActiveRecord::ConnectionAdapters::Quoting
   # Quotes the column value to help prevent
   # {SQL injection attacks}[https://en.wikipedia.org/wiki/SQL_injection].
   def quote(value); end
+
+  # Quote a value to be used as a bound parameter of unknown type. For example,
+  # MySQL might perform dangerous castings when comparing a string to a number,
+  # so this method will cast numbers to string.
+  def quote_bound_value(value); end
 
   # Quotes the column name. Defaults to no quoting.
   def quote_column_name(column_name); end
@@ -9083,15 +9535,13 @@ module ActiveRecord::ConnectionAdapters::Quoting
   # Cast a +value+ to a type that the database understands. For example,
   # SQLite does not understand dates, so this method will convert a Date
   # to a String.
-  def type_cast(value, column = T.unsafe(nil)); end
+  def type_cast(value); end
 
   def unquoted_false; end
   def unquoted_true; end
 
   private
 
-  def _quote(value); end
-  def _type_cast(value); end
   def lookup_cast_type(sql_type); end
   def type_casted_binds(binds); end
 end
@@ -9238,10 +9688,15 @@ class ActiveRecord::ConnectionAdapters::SchemaCache
 
   def deep_deduplicate(value); end
   def derive_columns_hash_and_deduplicate_values; end
+
+  # @return [Boolean]
+  def ignored_table?(table_name); end
+
   def initialize_dup(other); end
   def open(filename); end
   def prepare_data_sources; end
   def reset_version!; end
+  def tables_to_cache; end
 
   class << self
     def load_from(filename); end
@@ -9263,11 +9718,7 @@ class ActiveRecord::ConnectionAdapters::SchemaCreation
   def action_sql(action, dependency); end
   def add_column_options!(sql, options); end
   def add_table_options!(create_sql, o); end
-  def check_constraint_in_create(table_name, expression, options); end
-  def check_constraint_options(*_arg0, &_arg1); end
   def column_options(o); end
-  def foreign_key_in_create(from_table, to_table, options); end
-  def foreign_key_options(*_arg0, &_arg1); end
   def options_include_default?(*_arg0, &_arg1); end
   def quote_column_name(*_arg0, &_arg1); end
   def quote_default_expression(*_arg0, &_arg1); end
@@ -9328,6 +9779,8 @@ class ActiveRecord::ConnectionAdapters::SchemaDumper < ::ActiveRecord::SchemaDum
     def create(connection, options); end
   end
 end
+
+ActiveRecord::ConnectionAdapters::SchemaDumper::DEFAULT_DATETIME_PRECISION = T.let(T.unsafe(nil), Integer)
 
 module ActiveRecord::ConnectionAdapters::SchemaStatements
   include ::ActiveRecord::Migration::JoinTable
@@ -9399,24 +9852,31 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
 
   # Add a new +type+ column named +column_name+ to +table_name+.
   #
+  # See {ActiveRecord::ConnectionAdapters::TableDefinition.column}[rdoc-ref:ActiveRecord::ConnectionAdapters::TableDefinition#column].
+  #
   # The +type+ parameter is normally one of the migrations native types,
   # which is one of the following:
   # <tt>:primary_key</tt>, <tt>:string</tt>, <tt>:text</tt>,
   # <tt>:integer</tt>, <tt>:bigint</tt>, <tt>:float</tt>, <tt>:decimal</tt>, <tt>:numeric</tt>,
   # <tt>:datetime</tt>, <tt>:time</tt>, <tt>:date</tt>,
-  # <tt>:binary</tt>, <tt>:boolean</tt>.
+  # <tt>:binary</tt>, <tt>:blob</tt>, <tt>:boolean</tt>.
   #
   # You may use a type not in this list as long as it is supported by your
   # database (for example, "polygon" in MySQL), but this will not be database
   # agnostic and should usually be avoided.
   #
   # Available options are (none of these exists by default):
-  # * <tt>:limit</tt> -
-  #   Requests a maximum column length. This is the number of characters for a <tt>:string</tt> column
-  #   and number of bytes for <tt>:text</tt>, <tt>:binary</tt>, and <tt>:integer</tt> columns.
-  #   This option is ignored by some backends.
+  # * <tt>:comment</tt> -
+  #   Specifies the comment for the column. This option is ignored by some backends.
+  # * <tt>:collation</tt> -
+  #   Specifies the collation for a <tt>:string</tt> or <tt>:text</tt> column.
+  #   If not specified, the column will have the same collation as the table.
   # * <tt>:default</tt> -
   #   The column's default value. Use +nil+ for +NULL+.
+  # * <tt>:limit</tt> -
+  #   Requests a maximum column length. This is the number of characters for a <tt>:string</tt> column
+  #   and number of bytes for <tt>:text</tt>, <tt>:binary</tt>, <tt>:blob</tt>, and <tt>:integer</tt> columns.
+  #   This option is ignored by some backends.
   # * <tt>:null</tt> -
   #   Allows or disallows +NULL+ values in the column.
   # * <tt>:precision</tt> -
@@ -9503,6 +9963,10 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   ALTER TABLE "articles" ADD CONSTRAINT fk_rails_e74ce85cbc FOREIGN KEY ("author_id") REFERENCES "authors" ("id")
   #
+  # ====== Creating a foreign key, ignoring method call if the foreign key exists
+  #
+  #  add_foreign_key(:articles, :authors, if_not_exists: true)
+  #
   # ====== Creating a foreign key on a specific column
   #
   #   add_foreign_key :articles, :users, column: :author_id, primary_key: "lng_id"
@@ -9530,8 +9994,14 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   Action that happens <tt>ON DELETE</tt>. Valid values are +:nullify+, +:cascade+ and +:restrict+
   # [<tt>:on_update</tt>]
   #   Action that happens <tt>ON UPDATE</tt>. Valid values are +:nullify+, +:cascade+ and +:restrict+
+  # [<tt>:if_not_exists</tt>]
+  #   Specifies if the foreign key already exists to not try to re-add it. This will avoid
+  #   duplicate column errors.
   # [<tt>:validate</tt>]
   #   (PostgreSQL only) Specify whether or not the constraint should be validated. Defaults to +true+.
+  # [<tt>:deferrable</tt>]
+  #   (PostgreSQL only) Specify whether or not the foreign key should be deferrable. Valid values are booleans or
+  #   +:deferred+ or +:immediate+ to specify the default behavior. Defaults to +false+.
   def add_foreign_key(from_table, to_table, **options); end
 
   # Adds a new index to the table. +column_name+ can be a single Symbol, or
@@ -9590,7 +10060,7 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #
   #   CREATE INDEX by_name_surname ON accounts(name(10), surname(15))
   #
-  # Note: SQLite doesn't support index length.
+  # Note: only supported by MySQL
   #
   # ====== Creating an index with a sort order (desc or asc, asc is the default)
   #
@@ -9877,6 +10347,9 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   #   column_exists?(:suppliers, :name)
   #
   #   # Check a column exists of a particular type
+  #   #
+  #   # This works for standard non-casted types (eg. string) but is unreliable
+  #   # for types that may get cast to something else (eg. char, bigint).
   #   column_exists?(:suppliers, :name, :string)
   #
   #   # Check a column exists with a specific definition
@@ -10092,9 +10565,11 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # @return [Boolean]
   def data_source_exists?(name); end
 
-  # Returns the relation names useable to back Active Record models.
+  # Returns the relation names usable to back Active Record models.
   # For most adapters this means all #tables and #views.
   def data_sources; end
+
+  def distinct_relation_for_primary_key(relation); end
 
   # Drops the join table specified by the given arguments.
   # See #create_join_table for details.
@@ -10221,7 +10696,8 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # The +type+ and +options+ parameters will be ignored if present. It can be helpful
   # to provide these in a migration's +change+ method so it can be reverted.
   # In that case, +type+ and +options+ will be used by #add_column.
-  # Indexes on the column are automatically removed.
+  # Depending on the database you're using, indexes using this column may be
+  # automatically removed or modified to remove this column from the index.
   #
   # If the options provided include an +if_exists+ key, it will be used to check if the
   # column does not exist. This will silently ignore the migration rather than raising
@@ -10259,6 +10735,11 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # Removes the foreign key named +special_fk_name+ on the +accounts+ table.
   #
   #   remove_foreign_key :accounts, name: :special_fk_name
+  #
+  # Checks if the foreign key exists before trying to remove it. Will silently ignore indexes that
+  # don't exist.
+  #
+  #   remove_foreign_key :accounts, :branches, if_exists: true
   #
   # The +options+ hash accepts the same keys as SchemaStatements#add_foreign_key
   # with an addition of
@@ -10402,6 +10883,11 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   # @raise [NotImplementedError]
   def data_source_sql(name = T.unsafe(nil), type: T.unsafe(nil)); end
 
+  # Try to identify whether the given column name is an expression
+  #
+  # @return [Boolean]
+  def expression_column_name?(column_name); end
+
   def extract_foreign_key_action(specifier); end
   def extract_new_comment_value(default_or_changes); end
   def extract_new_default_value(default_or_changes); end
@@ -10494,6 +10980,7 @@ end
 #     t.time
 #     t.date
 #     t.binary
+#     t.blob
 #     t.boolean
 #     t.foreign_key
 #     t.json
@@ -10523,6 +11010,7 @@ class ActiveRecord::ConnectionAdapters::Table
 
   def bigint(*names, **options); end
   def binary(*names, **options); end
+  def blob(*names, **options); end
   def boolean(*names, **options); end
 
   # Changes the column's definition according to the new options.
@@ -10555,7 +11043,7 @@ class ActiveRecord::ConnectionAdapters::Table
   #  t.check_constraint("price > 0", name: "price_check")
   #
   # See {connection.add_check_constraint}[rdoc-ref:SchemaStatements#add_check_constraint]
-  def check_constraint(*args); end
+  def check_constraint(*args, **options); end
 
   # Adds a new column to the named table.
   #
@@ -10653,7 +11141,7 @@ class ActiveRecord::ConnectionAdapters::Table
   #  t.remove_check_constraint(name: "price_check")
   #
   # See {connection.remove_check_constraint}[rdoc-ref:SchemaStatements#remove_check_constraint]
-  def remove_check_constraint(*args); end
+  def remove_check_constraint(*args, **options); end
 
   # Removes the given foreign key from the table.
   #
@@ -10723,7 +11211,7 @@ end
 # Inside migration files, the +t+ object in {create_table}[rdoc-ref:SchemaStatements#create_table]
 # is actually of this type:
 #
-#   class SomeMigration < ActiveRecord::Migration[6.0]
+#   class SomeMigration < ActiveRecord::Migration[7.0]
 #     def up
 #       create_table :foo do |t|
 #         puts t.class  # => "ActiveRecord::ConnectionAdapters::TableDefinition"
@@ -10758,6 +11246,7 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
 
   def bigint(*names, **options); end
   def binary(*names, **options); end
+  def blob(*names, **options); end
   def boolean(*names, **options); end
   def check_constraint(expression, **options); end
 
@@ -10843,7 +11332,7 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   def datetime(*names, **options); end
   def decimal(*names, **options); end
   def float(*names, **options); end
-  def foreign_key(table_name, **options); end
+  def foreign_key(to_table, **options); end
 
   # Returns the value of attribute foreign_keys.
   def foreign_keys; end
@@ -10866,7 +11355,9 @@ class ActiveRecord::ConnectionAdapters::TableDefinition
   # Returns the value of attribute name.
   def name; end
 
+  def new_check_constraint_definition(expression, options); end
   def new_column_definition(name, type, **options); end
+  def new_foreign_key_definition(to_table, options); end
   def numeric(*names, **options); end
 
   # Returns the value of attribute options.
@@ -11072,9 +11563,7 @@ module ActiveRecord::ConnectionHandling
   #   ActiveRecord::Base.connected_to(role: :reading, shard: :shard_one_replica) do
   #     Dog.first # finds first Dog record stored on the shard one replica
   #   end
-  #
-  # The database kwarg is deprecated and will be removed in Rails 7.0.0 without replacement.
-  def connected_to(database: T.unsafe(nil), role: T.unsafe(nil), shard: T.unsafe(nil), prevent_writes: T.unsafe(nil), &blk); end
+  def connected_to(role: T.unsafe(nil), shard: T.unsafe(nil), prevent_writes: T.unsafe(nil), &blk); end
 
   # Returns true if role is the current connected role.
   #
@@ -11114,14 +11603,6 @@ module ActiveRecord::ConnectionHandling
   # also be used to "borrow" the connection to do database work unrelated
   # to any of the specific Active Records.
   def connection; end
-
-  # Returns the configuration of the associated connection as a hash:
-  #
-  #  ActiveRecord::Base.connection_config
-  #  # => {pool: 5, timeout: 5000, database: "db/development.sqlite3", adapter: "sqlite3"}
-  #
-  # Please use only for reading.
-  def connection_config(*args, &block); end
 
   # Returns the db_config object from the associated connection:
   #
@@ -11221,8 +11702,21 @@ module ActiveRecord::ConnectionHandling
   # @return [Boolean]
   def primary_class?; end
 
+  # Prohibit swapping shards while inside of the passed block.
+  #
+  # In some cases you may want to be able to swap shards but not allow a
+  # nested call to connected_to or connected_to_many to swap again. This
+  # is useful in cases you're using sharding to provide per-request
+  # database isolation.
+  def prohibit_shard_swapping(enabled = T.unsafe(nil)); end
+
   def remove_connection(name = T.unsafe(nil)); end
   def retrieve_connection; end
+
+  # Determine whether or not shard swapping is currently prohibited
+  #
+  # @return [Boolean]
+  def shard_swapping_prohibited?; end
 
   # Prevent writing to the database regardless of role.
   #
@@ -11239,6 +11733,7 @@ module ActiveRecord::ConnectionHandling
 
   private
 
+  def append_to_connected_to_stack(entry); end
   def clear_on_handler(handler); end
   def resolve_config_for_connection(config_or_env); end
   def swap_connection_handler(handler, &blk); end
@@ -11386,15 +11881,37 @@ module ActiveRecord::Core
   # if the record tries to lazily load an association.
   #
   #   user = User.first
-  #   user.strict_loading!
-  #   user.comments.to_a
+  #   user.strict_loading! # => true
+  #   user.comments
   #   => ActiveRecord::StrictLoadingViolationError
-  def strict_loading!; end
+  #
+  # === Parameters:
+  #
+  # * value - Boolean specifying whether to enable or disable strict loading.
+  # * mode - Symbol specifying strict loading mode. Defaults to :all. Using
+  #          :n_plus_one_only mode will only raise an error if an association
+  #          that will lead to an n plus one query is lazily loaded.
+  #
+  # === Example:
+  #
+  #   user = User.first
+  #   user.strict_loading!(false) # => false
+  #   user.comments
+  #   => #<ActiveRecord::Associations::CollectionProxy>
+  def strict_loading!(value = T.unsafe(nil), mode: T.unsafe(nil)); end
 
   # Returns +true+ if the record is in strict_loading mode.
   #
   # @return [Boolean]
   def strict_loading?; end
+
+  # Returns the value of attribute strict_loading_mode.
+  def strict_loading_mode; end
+
+  # Returns +true+ if the record uses strict_loading with +:n_plus_one_only+ mode enabled.
+  #
+  # @return [Boolean]
+  def strict_loading_n_plus_one_only?; end
 
   # Returns an array of the values returned by the given methods.
   def values_at(*methods); end
@@ -11434,6 +11951,18 @@ module ActiveRecord::Core
     def default_shard?; end
     def destroy_association_async_job; end
     def destroy_association_async_job=(value); end
+    def enumerate_columns_in_select_statements; end
+    def enumerate_columns_in_select_statements=(value); end
+    def enumerate_columns_in_select_statements?; end
+    def has_many_inversing; end
+    def has_many_inversing=(value); end
+    def has_many_inversing?; end
+    def logger; end
+    def logger=(value); end
+    def logger?; end
+    def shard_selector; end
+    def shard_selector=(value); end
+    def shard_selector?; end
     def strict_loading_by_default; end
     def strict_loading_by_default=(value); end
     def strict_loading_by_default?; end
@@ -11447,6 +11976,8 @@ module ActiveRecord::Core
     def default_shard; end
     def default_shard?; end
     def destroy_association_async_job; end
+    def logger; end
+    def logger?; end
   end
 end
 
@@ -11454,19 +11985,23 @@ module ActiveRecord::Core::ClassMethods
   # Overwrite the default class equality method to provide support for decorated models.
   def ===(object); end
 
-  # @return [Boolean]
-  def _internal?; end
-
-  def arel_attribute(*args, &block); end
+  def action_on_strict_loading_violation; end
+  def action_on_strict_loading_violation=(value); end
+  def application_record_class; end
+  def application_record_class=(value); end
 
   # Returns an instance of <tt>Arel::Table</tt> loaded with the current table name.
-  #
-  #   class Post < ActiveRecord::Base
-  #     scope :published_and_commented, -> { published.and(arel_table[:comments_count].gt(0)) }
-  #   end
   def arel_table; end
 
   def cached_find_by_statement(key, &block); end
+  def default_timezone; end
+  def default_timezone=(value); end
+  def dump_schema_after_migration; end
+  def dump_schema_after_migration=(value); end
+  def dump_schemas; end
+  def dump_schemas=(value); end
+  def error_on_ignored_order; end
+  def error_on_ignored_order=(value); end
 
   # Returns columns which shouldn't be exposed while calling +#inspect+.
   def filter_attributes; end
@@ -11478,6 +12013,8 @@ module ActiveRecord::Core::ClassMethods
   def find_by(*args); end
   def find_by!(*args); end
   def generated_association_methods; end
+  def index_nested_attribute_errors; end
+  def index_nested_attribute_errors=(value); end
   def inherited(child_class); end
   def initialize_find_by_cache; end
   def initialize_generated_modules; end
@@ -11486,8 +12023,28 @@ module ActiveRecord::Core::ClassMethods
   def inspect; end
 
   def inspection_filter; end
+  def legacy_connection_handling; end
+  def legacy_connection_handling=(value); end
+  def maintain_test_schema; end
+  def maintain_test_schema=(value); end
   def predicate_builder; end
+  def queues; end
+  def queues=(value); end
+  def reading_role; end
+  def reading_role=(value); end
+  def schema_format; end
+  def schema_format=(value); end
+  def suppress_multiple_database_warning; end
+  def suppress_multiple_database_warning=(value); end
+  def timestamped_migrations; end
+  def timestamped_migrations=(value); end
   def type_caster; end
+  def verbose_query_logs; end
+  def verbose_query_logs=(value); end
+  def warn_on_records_fetched_greater_than; end
+  def warn_on_records_fetched_greater_than=(value); end
+  def writing_role; end
+  def writing_role=(value); end
 
   private
 
@@ -11641,14 +12198,6 @@ class ActiveRecord::DatabaseConfigurations
   # @return [DatabaseConfigurations] a new instance of DatabaseConfigurations
   def initialize(configurations = T.unsafe(nil)); end
 
-  # Returns the config hash that corresponds with the environment
-  #
-  # If the application has multiple databases +default_hash+ will
-  # return the first config hash for the environment.
-  #
-  #   { database: "my_db", adapter: "mysql2" }
-  def [](*args, &block); end
-
   def any?(*_arg0, &_arg1); end
 
   # Checks if the application's configurations are empty.
@@ -11659,7 +12208,7 @@ class ActiveRecord::DatabaseConfigurations
   def blank?; end
 
   # Collects the configs for the environment and optionally the specification
-  # name passed in. To include replica configurations pass <tt>include_replicas: true</tt>.
+  # name passed in. To include replica configurations pass <tt>include_hidden: true</tt>.
   #
   # If a name is provided a single DatabaseConfig object will be
   # returned, otherwise an array of DatabaseConfig objects will be
@@ -11672,22 +12221,18 @@ class ActiveRecord::DatabaseConfigurations
   # * <tt>name:</tt> The db config name (i.e. primary, animals, etc.). Defaults
   #   to +nil+. If no +env_name+ is specified the config for the default env and the
   #   passed +name+ will be returned.
-  # * <tt>include_replicas:</tt> Determines whether to include replicas in
+  # * <tt>include_replicas:</tt> Deprecated. Determines whether to include replicas in
   #   the returned list. Most of the time we're only iterating over the write
   #   connection (i.e. migrations don't need to run for the write and read connection).
   #   Defaults to +false+.
-  def configs_for(env_name: T.unsafe(nil), spec_name: T.unsafe(nil), name: T.unsafe(nil), include_replicas: T.unsafe(nil)); end
+  # * <tt>include_hidden:</tt> Determines whether to include replicas and configurations
+  #   hidden by +database_tasks: false+ in the returned list. Most of the time we're only
+  #   iterating over the primary connections (i.e. migrations don't need to run for the
+  #   write and read connection). Defaults to +false+.
+  def configs_for(env_name: T.unsafe(nil), name: T.unsafe(nil), include_replicas: T.unsafe(nil), include_hidden: T.unsafe(nil)); end
 
   # Returns the value of attribute configurations.
   def configurations; end
-
-  # Returns the config hash that corresponds with the environment
-  #
-  # If the application has multiple databases +default_hash+ will
-  # return the first config hash for the environment.
-  #
-  #   { database: "my_db", adapter: "mysql2" }
-  def default_hash(*args, &block); end
 
   # Checks if the application's configurations are empty.
   #
@@ -11732,9 +12277,6 @@ class ActiveRecord::DatabaseConfigurations
   #   DatabaseConfigurations.new({}).resolve("postgresql://localhost/foo")
   #   # => DatabaseConfigurations::UrlConfig.new(config: {"adapter" => "postgresql", "host" => "localhost", "database" => "foo"})
   def resolve(config); end
-
-  # Returns the DatabaseConfigurations object as a Hash.
-  def to_h(*args, &block); end
 
   private
 
@@ -11818,9 +12360,6 @@ class ActiveRecord::DatabaseConfigurations::DatabaseConfig
   def checkout_timeout; end
 
   # @raise [NotImplementedError]
-  def config; end
-
-  # @raise [NotImplementedError]
   def database; end
 
   def env_name; end
@@ -11835,7 +12374,16 @@ class ActiveRecord::DatabaseConfigurations::DatabaseConfig
   def idle_timeout; end
 
   # @raise [NotImplementedError]
+  def max_queue; end
+
+  # @raise [NotImplementedError]
+  def max_threads; end
+
+  # @raise [NotImplementedError]
   def migrations_paths; end
+
+  # @raise [NotImplementedError]
+  def min_threads; end
 
   def name; end
 
@@ -11859,8 +12407,6 @@ class ActiveRecord::DatabaseConfigurations::DatabaseConfig
 
   # @raise [NotImplementedError]
   def schema_cache_path; end
-
-  def spec_name(*args, &block); end
 end
 
 # A HashConfig object is created for each database configuration entry that
@@ -11892,21 +12438,32 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   def _database=(database); end
   def adapter; end
   def checkout_timeout; end
-  def config; end
 
   # Returns the value of attribute configuration_hash.
   def configuration_hash; end
 
   def database; end
+
+  # @return [Boolean]
+  def database_tasks?; end
+
+  def default_schema_cache_path; end
   def host; end
   def idle_timeout; end
+  def lazy_schema_cache_path; end
+  def max_queue; end
+  def max_threads; end
 
   # The migrations paths for a database configuration. If the
   # +migrations_paths+ key is present in the config, +migrations_paths+
   # will return its value.
   def migrations_paths; end
 
+  def min_threads; end
   def pool; end
+
+  # @return [Boolean]
+  def primary?; end
 
   # +reaping_frequency+ is configurable mostly for historical reasons, but it could
   # also be useful if someone wants a very low +idle_timeout+.
@@ -11923,6 +12480,22 @@ class ActiveRecord::DatabaseConfigurations::HashConfig < ::ActiveRecord::Databas
   # If omitted, the filename will be read from ENV or a
   # default will be derived.
   def schema_cache_path; end
+
+  # Determines whether to dump the schema/structure files and the
+  # filename that should be used.
+  #
+  # If +configuration_hash[:schema_dump]+ is set to +false+ or +nil+
+  # the schema will not be dumped.
+  #
+  # If the config option is set that will be used. Otherwise Rails
+  # will generate the filename from the database config name.
+  def schema_dump(format = T.unsafe(nil)); end
+
+  def socket; end
+
+  private
+
+  def schema_file_type(format); end
 end
 
 class ActiveRecord::DatabaseConfigurations::InvalidConfigurationError < ::StandardError; end
@@ -11944,7 +12517,7 @@ class ActiveRecord::DatabaseConfigurations::InvalidConfigurationError < ::Standa
 #
 # ==== Options
 #
-# * <tt>:env_name</tt> - The Rails environment, ie "development".
+# * <tt>:env_name</tt> - The Rails environment, i.e. "development".
 # * <tt>:name</tt> - The db config name. In a standard two-tier
 #   database configuration this will default to "primary". In a multiple
 #   database three-tier database configuration this corresponds to the name
@@ -11965,6 +12538,18 @@ class ActiveRecord::DatabaseConfigurations::UrlConfig < ::ActiveRecord::Database
   # Return a Hash that can be merged into the main config that represents
   # the passed in url
   def build_url_hash; end
+end
+
+# Raised when connection to the database could not been established because it was not
+# able to connect to the host or when the authorization failed.
+class ActiveRecord::DatabaseConnectionError < ::ActiveRecord::ConnectionNotEstablished
+  # @return [DatabaseConnectionError] a new instance of DatabaseConnectionError
+  def initialize(message = T.unsafe(nil)); end
+
+  class << self
+    def hostname_error(hostname); end
+    def username_error(username); end
+  end
 end
 
 # Deadlocked will be raised when a transaction is rolled
@@ -12019,10 +12604,9 @@ class ActiveRecord::Deadlocked < ::ActiveRecord::TransactionRollbackError; end
 #     end
 #   end
 #
-#   # Schema: messages[ id, subject ]
+#   # Schema: messages[ id, subject, body ]
 #   class Message < ApplicationRecord
 #     include Entryable
-#     has_rich_text :content
 #   end
 #
 #   # Schema: comments[ id, content ]
@@ -12034,7 +12618,7 @@ class ActiveRecord::Deadlocked < ::ActiveRecord::TransactionRollbackError; end
 # resides in the +Entry+ "superclass". But the +Entry+ absolutely can stand alone in terms of querying capacity
 # in particular. You can now easily do things like:
 #
-#   Account.entries.order(created_at: :desc).limit(50)
+#   Account.find(1).entries.order(created_at: :desc).limit(50)
 #
 # Which is exactly what you want when displaying both comments and messages together. The entry itself can
 # be rendered as its delegated type easily, like so:
@@ -12044,7 +12628,9 @@ class ActiveRecord::Deadlocked < ::ActiveRecord::TransactionRollbackError; end
 #
 #   # entries/entryables/_message.html.erb
 #   <div class="message">
-#     Posted on <%= entry.created_at %> by <%= entry.creator.name %>: <%= entry.message.content %>
+#     <div class="subject"><%= entry.message.subject %></div>
+#     <p><%= entry.message.body %></p>
+#     <i>Posted on <%= entry.created_at %> by <%= entry.creator.name %></i>
 #   </div>
 #
 #   # entries/entryables/_comment.html.erb
@@ -12104,6 +12690,21 @@ class ActiveRecord::Deadlocked < ::ActiveRecord::TransactionRollbackError; end
 #   end
 #
 # Now you can list a bunch of entries, call +Entry#title+, and polymorphism will provide you with the answer.
+#
+# == Nested Attributes
+#
+# Enabling nested attributes on a delegated_type association allows you to
+# create the entry and message in one go:
+#
+#   class Entry < ApplicationRecord
+#     delegated_type :entryable, types: %w[ Message Comment ]
+#     accepts_nested_attributes_for :entryable
+#   end
+#
+#   params = { entry: { entryable_type: 'Message', entryable_attributes: { subject: 'Smiling' } } }
+#   entry = Entry.create(params[:entry])
+#   entry.entryable.id # => 2
+#   entry.entryable.subject # => 'Smiling'
 module ActiveRecord::DelegatedType
   # Defines this as a class that'll delegate its type for the passed +role+ to the class references in +types+.
   # That'll create a polymorphic +belongs_to+ relationship to that +role+, and it'll add all the delegated
@@ -12124,8 +12725,6 @@ module ActiveRecord::DelegatedType
   #   Entry#comment         # => returns the comment record, when entryable_type == "Comment", otherwise nil
   #   Entry#comment_id      # => returns entryable_id, when entryable_type == "Comment", otherwise nil
   #
-  # The +options+ are passed directly to the +belongs_to+ call, so this is where you declare +dependent+ etc.
-  #
   # You can also declare namespaced types:
   #
   #   class Entry < ApplicationRecord
@@ -12135,11 +12734,33 @@ module ActiveRecord::DelegatedType
   #   Entry.access_notice_messages
   #   entry.access_notice_message
   #   entry.access_notice_message?
+  #
+  # === Options
+  #
+  # The +options+ are passed directly to the +belongs_to+ call, so this is where you declare +dependent+ etc.
+  # The following options can be included to specialize the behavior of the delegated type convenience methods.
+  #
+  # [:foreign_key]
+  #   Specify the foreign key used for the convenience methods. By default this is guessed to be the passed
+  #   +role+ with an "_id" suffix. So a class that defines a
+  #   <tt>delegated_type :entryable, types: %w[ Message Comment ]</tt> association will use "entryable_id" as
+  #   the default <tt>:foreign_key</tt>.
+  # [:primary_key]
+  #   Specify the method that returns the primary key of associated object used for the convenience methods.
+  #   By default this is +id+.
+  #
+  # Option examples:
+  #   class Entry < ApplicationRecord
+  #     delegated_type :entryable, types: %w[ Message Comment ], primary_key: :uuid, foreign_key: :entryable_uuid
+  #   end
+  #
+  #   Entry#message_uuid      # => returns entryable_uuid, when entryable_type == "Message", otherwise nil
+  #   Entry#comment_uuid      # => returns entryable_uuid, when entryable_type == "Comment", otherwise nil
   def delegated_type(role, types:, **options); end
 
   private
 
-  def define_delegated_type_methods(role, types:); end
+  def define_delegated_type_methods(role, types:, options:); end
 end
 
 module ActiveRecord::Delegation
@@ -12170,6 +12791,7 @@ module ActiveRecord::Delegation
   def slice(*_arg0, &_arg1); end
   def split(*_arg0, &_arg1); end
   def to_formatted_s(*_arg0, &_arg1); end
+  def to_fs(*_arg0, &_arg1); end
   def to_sentence(*_arg0, &_arg1); end
   def to_xml(*_arg0, &_arg1); end
   def |(*_arg0, &_arg1); end
@@ -12251,6 +12873,22 @@ class ActiveRecord::DestroyAssociationAsyncJob < ::ActiveJob::Base
     def queue_name; end
     def rescue_handlers; end
   end
+end
+
+class ActiveRecord::DisableJoinsAssociationRelation < ::ActiveRecord::Relation
+  # @return [DisableJoinsAssociationRelation] a new instance of DisableJoinsAssociationRelation
+  def initialize(klass, key, ids); end
+
+  def first(limit = T.unsafe(nil)); end
+
+  # Returns the value of attribute ids.
+  def ids; end
+
+  # Returns the value of attribute key.
+  def key; end
+
+  def limit(value); end
+  def load; end
 end
 
 class ActiveRecord::DuplicateMigrationNameError < ::ActiveRecord::MigrationError
@@ -12345,11 +12983,915 @@ class ActiveRecord::EagerLoadPolymorphicError < ::ActiveRecord::ActiveRecordErro
   def initialize(reflection = T.unsafe(nil)); end
 end
 
+module ActiveRecord::Encryption
+  include ::ActiveRecord::Encryption::Configurable
+  include ::ActiveRecord::Encryption::Contexts
+  extend ::ActiveSupport::Autoload
+  extend ::ActiveRecord::Encryption::Configurable::ClassMethods
+  extend ::ActiveRecord::Encryption::Contexts::ClassMethods
+
+  def config; end
+  def custom_contexts; end
+  def custom_contexts=(obj); end
+  def default_context; end
+  def encrypted_attribute_declaration_listeners; end
+  def encrypted_attribute_declaration_listeners=(val); end
+
+  class << self
+    def config; end
+    def custom_contexts; end
+    def custom_contexts=(obj); end
+    def default_context; end
+    def eager_load!; end
+    def encrypted_attribute_declaration_listeners; end
+    def encrypted_attribute_declaration_listeners=(val); end
+  end
+end
+
+# The algorithm used for encrypting and decrypting +Message+ objects.
+#
+# It uses AES-256-GCM. It will generate a random IV for non deterministic encryption (default)
+# or derive an initialization vector from the encrypted content for deterministic encryption.
+#
+# See +Cipher::Aes256Gcm+.
+class ActiveRecord::Encryption::Cipher
+  extend ::ActiveSupport::Autoload
+
+  # Decrypt the provided +Message+.
+  #
+  # When +key+ is an Array, it will try all the keys raising a
+  # +ActiveRecord::Encryption::Errors::Decryption+ if none works.
+  def decrypt(encrypted_message, key:); end
+
+  # Encrypts the provided text and return an encrypted +Message+.
+  def encrypt(clean_text, key:, deterministic: T.unsafe(nil)); end
+
+  def iv_length; end
+  def key_length; end
+
+  private
+
+  def cipher_for(secret, deterministic: T.unsafe(nil)); end
+  def try_to_decrypt_with_each(encrypted_text, keys:); end
+end
+
+# A 256-GCM cipher.
+#
+# By default it will use random initialization vectors. For deterministic encryption, it will use a SHA-256 hash of
+# the text to encrypt and the secret.
+#
+# See +Encryptor+
+class ActiveRecord::Encryption::Cipher::Aes256Gcm
+  # When iv not provided, it will generate a random iv on each encryption operation (default and
+  # recommended operation)
+  #
+  # @return [Aes256Gcm] a new instance of Aes256Gcm
+  def initialize(secret, deterministic: T.unsafe(nil)); end
+
+  def decrypt(encrypted_message); end
+  def encrypt(clear_text); end
+
+  private
+
+  def generate_deterministic_iv(clear_text); end
+  def generate_iv(cipher, clear_text); end
+
+  class << self
+    def iv_length; end
+    def key_length; end
+  end
+end
+
+ActiveRecord::Encryption::Cipher::Aes256Gcm::CIPHER_TYPE = T.let(T.unsafe(nil), String)
+ActiveRecord::Encryption::Cipher::DEFAULT_ENCODING = T.let(T.unsafe(nil), Encoding)
+
+# Container of configuration options
+class ActiveRecord::Encryption::Config
+  # @return [Config] a new instance of Config
+  def initialize; end
+
+  # Returns the value of attribute add_to_filter_parameters.
+  def add_to_filter_parameters; end
+
+  # Sets the attribute add_to_filter_parameters
+  #
+  # @param value the value to set the attribute add_to_filter_parameters to.
+  def add_to_filter_parameters=(_arg0); end
+
+  # Returns the value of attribute deterministic_key.
+  def deterministic_key; end
+
+  # Sets the attribute deterministic_key
+  #
+  # @param value the value to set the attribute deterministic_key to.
+  def deterministic_key=(_arg0); end
+
+  # Returns the value of attribute encrypt_fixtures.
+  def encrypt_fixtures; end
+
+  # Sets the attribute encrypt_fixtures
+  #
+  # @param value the value to set the attribute encrypt_fixtures to.
+  def encrypt_fixtures=(_arg0); end
+
+  # Returns the value of attribute excluded_from_filter_parameters.
+  def excluded_from_filter_parameters; end
+
+  # Sets the attribute excluded_from_filter_parameters
+  #
+  # @param value the value to set the attribute excluded_from_filter_parameters to.
+  def excluded_from_filter_parameters=(_arg0); end
+
+  # Returns the value of attribute extend_queries.
+  def extend_queries; end
+
+  # Sets the attribute extend_queries
+  #
+  # @param value the value to set the attribute extend_queries to.
+  def extend_queries=(_arg0); end
+
+  # Returns the value of attribute forced_encoding_for_deterministic_encryption.
+  def forced_encoding_for_deterministic_encryption; end
+
+  # Sets the attribute forced_encoding_for_deterministic_encryption
+  #
+  # @param value the value to set the attribute forced_encoding_for_deterministic_encryption to.
+  def forced_encoding_for_deterministic_encryption=(_arg0); end
+
+  # Returns the value of attribute key_derivation_salt.
+  def key_derivation_salt; end
+
+  # Sets the attribute key_derivation_salt
+  #
+  # @param value the value to set the attribute key_derivation_salt to.
+  def key_derivation_salt=(_arg0); end
+
+  # Configure previous encryption schemes.
+  #
+  #   config.active_record.encryption.previous = [ { key_provider: MyOldKeyProvider.new } ]
+  def previous=(previous_schemes_properties); end
+
+  # Returns the value of attribute previous_schemes.
+  def previous_schemes; end
+
+  # Sets the attribute previous_schemes
+  #
+  # @param value the value to set the attribute previous_schemes to.
+  def previous_schemes=(_arg0); end
+
+  # Returns the value of attribute primary_key.
+  def primary_key; end
+
+  # Sets the attribute primary_key
+  #
+  # @param value the value to set the attribute primary_key to.
+  def primary_key=(_arg0); end
+
+  # Returns the value of attribute store_key_references.
+  def store_key_references; end
+
+  # Sets the attribute store_key_references
+  #
+  # @param value the value to set the attribute store_key_references to.
+  def store_key_references=(_arg0); end
+
+  # Returns the value of attribute support_unencrypted_data.
+  def support_unencrypted_data; end
+
+  # Sets the attribute support_unencrypted_data
+  #
+  # @param value the value to set the attribute support_unencrypted_data to.
+  def support_unencrypted_data=(_arg0); end
+
+  # Returns the value of attribute validate_column_size.
+  def validate_column_size; end
+
+  # Sets the attribute validate_column_size
+  #
+  # @param value the value to set the attribute validate_column_size to.
+  def validate_column_size=(_arg0); end
+
+  private
+
+  def add_previous_scheme(**properties); end
+  def set_defaults; end
+end
+
+# Configuration API for +ActiveRecord::Encryption+
+module ActiveRecord::Encryption::Configurable
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::ActiveRecord::Encryption::Configurable::ClassMethods
+end
+
+module ActiveRecord::Encryption::Configurable::ClassMethods
+  def cipher(*_arg0, &_arg1); end
+  def configure(primary_key:, deterministic_key:, key_derivation_salt:, **properties); end
+  def encrypted_attribute_was_declared(klass, name); end
+  def encryptor(*_arg0, &_arg1); end
+  def frozen_encryption(*_arg0, &_arg1); end
+  def install_auto_filtered_parameters_hook(application); end
+  def key_generator(*_arg0, &_arg1); end
+  def key_provider(*_arg0, &_arg1); end
+  def message_serializer(*_arg0, &_arg1); end
+  def on_encrypted_attribute_declared(&block); end
+end
+
+# An encryption context configures the different entities used to perform encryption:
+#
+# * A key provider
+# * A key generator
+# * An encryptor, the facade to encrypt data
+# * A cipher, the encryption algorithm
+# * A message serializer
+class ActiveRecord::Encryption::Context
+  # @return [Context] a new instance of Context
+  def initialize; end
+
+  def cipher; end
+  def cipher=(_arg0); end
+  def encryptor; end
+  def encryptor=(_arg0); end
+  def frozen_encryption; end
+  def frozen_encryption=(_arg0); end
+  def frozen_encryption?; end
+  def key_generator; end
+  def key_generator=(_arg0); end
+  def key_provider; end
+  def key_provider=(_arg0); end
+  def message_serializer; end
+  def message_serializer=(_arg0); end
+
+  private
+
+  def set_defaults; end
+end
+
+ActiveRecord::Encryption::Context::PROPERTIES = T.let(T.unsafe(nil), Array)
+
+# +ActiveRecord::Encryption+ uses encryption contexts to configure the different entities used to
+# encrypt/decrypt at a given moment in time.
+#
+# By default, the library uses a default encryption context. This is the +Context+ that gets configured
+# initially via +config.active_record.encryption+ options. Library users can define nested encryption contexts
+# when running blocks of code.
+#
+# See +Context+.
+module ActiveRecord::Encryption::Contexts
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::ActiveRecord::Encryption::Contexts::ClassMethods
+end
+
+module ActiveRecord::Encryption::Contexts::ClassMethods
+  def context; end
+  def current_custom_context; end
+  def protecting_encrypted_data(&block); end
+  def with_encryption_context(properties); end
+  def without_encryption(&block); end
+end
+
+# A +KeyProvider+ that derives keys from passwords.
+class ActiveRecord::Encryption::DerivedSecretKeyProvider < ::ActiveRecord::Encryption::KeyProvider
+  # @return [DerivedSecretKeyProvider] a new instance of DerivedSecretKeyProvider
+  def initialize(passwords); end
+end
+
+# A +KeyProvider+ that derives keys from passwords.
+class ActiveRecord::Encryption::DeterministicKeyProvider < ::ActiveRecord::Encryption::DerivedSecretKeyProvider
+  # @raise [ActiveRecord::Encryption::Errors::Configuration]
+  # @return [DeterministicKeyProvider] a new instance of DeterministicKeyProvider
+  def initialize(password); end
+end
+
+# This is the concern mixed in Active Record models to make them encryptable. It adds the +encrypts+
+# attribute declaration, as well as the API to encrypt and decrypt records.
+module ActiveRecord::Encryption::EncryptableRecord
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::ActiveRecord::Encryption::EncryptableRecord::ClassMethods
+
+  # Returns the ciphertext for +attribute_name+.
+  def ciphertext_for(attribute_name); end
+
+  # Decrypts all the encryptable attributes and saves the changes.
+  def decrypt; end
+
+  # Encrypts all the encryptable attributes and saves the changes.
+  def encrypt; end
+
+  # Returns whether a given attribute is encrypted or not.
+  #
+  # @return [Boolean]
+  def encrypted_attribute?(attribute_name); end
+
+  private
+
+  def build_decrypt_attribute_assignments; end
+  def build_encrypt_attribute_assignments; end
+  def cant_modify_encrypted_attributes_when_frozen; end
+  def decrypt_attributes; end
+  def encrypt_attributes; end
+
+  # @return [Boolean]
+  def has_encrypted_attributes?; end
+
+  # @raise [ActiveRecord::Encryption::Errors::Configuration]
+  def validate_encryption_allowed; end
+
+  module GeneratedClassMethods
+    def encrypted_attributes; end
+    def encrypted_attributes=(value); end
+    def encrypted_attributes?; end
+  end
+
+  module GeneratedInstanceMethods
+    def encrypted_attributes; end
+    def encrypted_attributes=(value); end
+    def encrypted_attributes?; end
+  end
+end
+
+module ActiveRecord::Encryption::EncryptableRecord::ClassMethods
+  def deterministic_encrypted_attributes; end
+  def encrypts(*names, key_provider: T.unsafe(nil), key: T.unsafe(nil), deterministic: T.unsafe(nil), downcase: T.unsafe(nil), ignore_case: T.unsafe(nil), previous: T.unsafe(nil), **context_properties); end
+  def source_attribute_from_preserved_attribute(attribute_name); end
+
+  private
+
+  def add_length_validation_for_encrypted_columns; end
+  def encrypt_attribute(name, attribute_scheme); end
+  def global_previous_schemes_for(scheme); end
+  def load_schema!; end
+  def override_accessors_to_preserve_original(name, original_attribute_name); end
+  def preserve_original_encrypted(name); end
+  def scheme_for(key_provider: T.unsafe(nil), key: T.unsafe(nil), deterministic: T.unsafe(nil), downcase: T.unsafe(nil), ignore_case: T.unsafe(nil), previous: T.unsafe(nil), **context_properties); end
+  def validate_column_size(attribute_name); end
+end
+
+ActiveRecord::Encryption::EncryptableRecord::ORIGINAL_ATTRIBUTE_PREFIX = T.let(T.unsafe(nil), String)
+
+# An +ActiveModel::Type+ that encrypts/decrypts strings of text.
+#
+# This is the central piece that connects the encryption system with +encrypts+ declarations in the
+# model classes. Whenever you declare an attribute as encrypted, it configures an +EncryptedAttributeType+
+# for that attribute.
+class ActiveRecord::Encryption::EncryptedAttributeType < ::ActiveRecord::Type::Text
+  include ::ActiveModel::Type::Helpers::Mutable
+
+  # === Options
+  #
+  # * <tt>:scheme</tt> - A +Scheme+ with the encryption properties for this attribute.
+  # * <tt>:cast_type</tt> - A type that will be used to serialize (before encrypting) and deserialize
+  #   (after decrypting). +ActiveModel::Type::String+ by default.
+  #
+  # @return [EncryptedAttributeType] a new instance of EncryptedAttributeType
+  def initialize(scheme:, cast_type: T.unsafe(nil), previous_type: T.unsafe(nil)); end
+
+  def accessor(*_arg0, &_arg1); end
+
+  # Returns the value of attribute cast_type.
+  def cast_type; end
+
+  # @return [Boolean]
+  def changed_in_place?(raw_old_value, new_value); end
+
+  def deserialize(value); end
+  def deterministic?(*_arg0, &_arg1); end
+  def downcase?(*_arg0, &_arg1); end
+  def fixed?(*_arg0, &_arg1); end
+  def key_provider(*_arg0, &_arg1); end
+  def previous_schemes(*_arg0, &_arg1); end
+  def previous_types; end
+
+  # Returns the value of attribute scheme.
+  def scheme; end
+
+  def serialize(value); end
+  def with_context(*_arg0, &_arg1); end
+
+  private
+
+  def build_previous_types_for(schemes); end
+  def clean_text_scheme; end
+  def decrypt(value); end
+  def decryption_options; end
+  def encrypt(value); end
+  def encryption_options; end
+  def encryptor; end
+  def handle_deserialize_error(error, value); end
+  def previous_schemes_including_clean_text; end
+
+  # @return [Boolean]
+  def previous_type?; end
+
+  def previous_types_without_clean_text; end
+  def serialize_with_current(value); end
+  def serialize_with_oldest(value); end
+
+  # @return [Boolean]
+  def serialize_with_oldest?; end
+
+  # @return [Boolean]
+  def support_unencrypted_data?; end
+
+  def try_to_deserialize_with_previous_encrypted_types(value); end
+end
+
+module ActiveRecord::Encryption::EncryptedFixtures
+  def initialize(fixture, model_class); end
+
+  private
+
+  def encrypt_fixture_data(fixture, model_class); end
+  def process_preserved_original_columns(fixture, model_class); end
+end
+
+# An encryptor that can encrypt data but can't decrypt it.
+class ActiveRecord::Encryption::EncryptingOnlyEncryptor < ::ActiveRecord::Encryption::Encryptor
+  def decrypt(encrypted_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+end
+
+# An encryptor exposes the encryption API that +ActiveRecord::Encryption::EncryptedAttributeType+
+# uses for encrypting and decrypting attribute values.
+#
+# It interacts with a +KeyProvider+ for getting the keys, and delegate to
+# +ActiveRecord::Encryption::Cipher+ the actual encryption algorithm.
+class ActiveRecord::Encryption::Encryptor
+  # Decrypts a +clean_text+ and returns the result as clean text
+  #
+  # === Options
+  #
+  # [:key_provider]
+  #   Key provider to use for the encryption operation. It will default to
+  #   +ActiveRecord::Encryption.key_provider+ when not provided
+  #
+  # [:cipher_options]
+  #   +Cipher+-specific options that will be passed to the Cipher configured in
+  #   +ActiveRecord::Encryption.cipher+
+  def decrypt(encrypted_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+
+  # Encrypts +clean_text+ and returns the encrypted result
+  #
+  # Internally, it will:
+  #
+  # 1. Create a new +ActiveRecord::Encryption::Message+
+  # 2. Compress and encrypt +clean_text+ as the message payload
+  # 3. Serialize it with +ActiveRecord::Encryption.message_serializer+ (+ActiveRecord::Encryption::SafeMarshal+
+  #    by default)
+  # 4. Encode the result with Base 64
+  #
+  # === Options
+  #
+  # [:key_provider]
+  #   Key provider to use for the encryption operation. It will default to
+  #   +ActiveRecord::Encryption.key_provider+ when not provided
+  #
+  # [:cipher_options]
+  #   +Cipher+-specific options that will be passed to the Cipher configured in
+  #   +ActiveRecord::Encryption.cipher+
+  def encrypt(clear_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+
+  # Returns whether the text is encrypted or not
+  #
+  # @return [Boolean]
+  def encrypted?(text); end
+
+  private
+
+  def build_encrypted_message(clear_text, key_provider:, cipher_options:); end
+  def cipher; end
+  def compress(data); end
+
+  # Under certain threshold, ZIP compression is actually worse that not compressing
+  def compress_if_worth_it(string); end
+
+  def default_key_provider; end
+  def deserialize_message(message); end
+  def force_encoding_if_needed(value); end
+  def forced_encoding_for_deterministic_encryption; end
+  def serialize_message(message); end
+  def serializer; end
+  def uncompress(data); end
+  def uncompress_if_needed(data, compressed); end
+  def validate_payload_type(clear_text); end
+end
+
+ActiveRecord::Encryption::Encryptor::DECRYPT_ERRORS = T.let(T.unsafe(nil), Array)
+ActiveRecord::Encryption::Encryptor::ENCODING_ERRORS = T.let(T.unsafe(nil), Array)
+ActiveRecord::Encryption::Encryptor::THRESHOLD_TO_JUSTIFY_COMPRESSION = T.let(T.unsafe(nil), Integer)
+
+# Implements a simple envelope encryption approach where:
+#
+# * It generates a random data-encryption key for each encryption operation
+# * It stores the generated key along with the encrypted payload. It encrypts this key
+#   with the master key provided in the credential +active_record.encryption.master key+
+#
+# This provider can work with multiple master keys. It will use the last one for encrypting.
+#
+# When `config.store_key_references` is true, it will also store a reference to
+# the specific master key that was used to encrypt the data-encryption key. When not set,
+# it will try all the configured master keys looking for the right one, in order to
+# return the right decryption key.
+class ActiveRecord::Encryption::EnvelopeEncryptionKeyProvider
+  def active_primary_key; end
+  def decryption_keys(encrypted_message); end
+  def encryption_key; end
+
+  private
+
+  def decrypt_data_key(encrypted_message); end
+  def encrypt_data_key(random_secret); end
+  def generate_random_secret; end
+  def primary_key_provider; end
+end
+
+module ActiveRecord::Encryption::Errors; end
+class ActiveRecord::Encryption::Errors::Base < ::StandardError; end
+class ActiveRecord::Encryption::Errors::Configuration < ::ActiveRecord::Encryption::Errors::Base; end
+class ActiveRecord::Encryption::Errors::Decryption < ::ActiveRecord::Encryption::Errors::Base; end
+class ActiveRecord::Encryption::Errors::Encoding < ::ActiveRecord::Encryption::Errors::Base; end
+class ActiveRecord::Encryption::Errors::EncryptedContentIntegrity < ::ActiveRecord::Encryption::Errors::Base; end
+class ActiveRecord::Encryption::Errors::Encryption < ::ActiveRecord::Encryption::Errors::Base; end
+class ActiveRecord::Encryption::Errors::ForbiddenClass < ::ActiveRecord::Encryption::Errors::Base; end
+
+# Automatically expand encrypted arguments to support querying both encrypted and unencrypted data
+#
+# Active Record Encryption supports querying the db using deterministic attributes. For example:
+#
+#   Contact.find_by(email_address: "jorge@hey.com")
+#
+# The value "jorge@hey.com" will get encrypted automatically to perform the query. But there is
+# a problem while the data is being encrypted. This won't work. During that time, you need these
+# queries to be:
+#
+#   Contact.find_by(email_address: [ "jorge@hey.com", "<encrypted jorge@hey.com>" ])
+#
+# This patches ActiveRecord to support this automatically. It addresses both:
+#
+# * ActiveRecord::Base: Used in +Contact.find_by_email_address(...)+
+# * ActiveRecord::Relation: Used in +Contact.internal.find_by_email_address(...)+
+#
+# +ActiveRecord::Base+ relies on +ActiveRecord::Relation+ (+ActiveRecord::QueryMethods+) but it does
+# some prepared statements caching. That's why we need to intercept +ActiveRecord::Base+ as soon
+# as it's invoked (so that the proper prepared statement is cached).
+#
+# When modifying this file run performance tests in +test/performance/extended_deterministic_queries_performance_test.rb+ to
+#   make sure performance overhead is acceptable.
+#
+# We will extend this to support previous "encryption context" versions in future iterations
+module ActiveRecord::Encryption::ExtendedDeterministicQueries
+  class << self
+    def install_support; end
+  end
+end
+
+class ActiveRecord::Encryption::ExtendedDeterministicQueries::AdditionalValue
+  # @return [AdditionalValue] a new instance of AdditionalValue
+  def initialize(value, type); end
+
+  # Returns the value of attribute type.
+  def type; end
+
+  # Returns the value of attribute value.
+  def value; end
+
+  private
+
+  def process(value); end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::CoreQueries
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::ActiveRecord::Encryption::ExtendedDeterministicQueries::CoreQueries::ClassMethods
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::CoreQueries::ClassMethods
+  include ::ActiveRecord::Encryption::ExtendedDeterministicQueries::EncryptedQueryArgumentProcessor
+
+  def find_by(*args); end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::EncryptedQueryArgumentProcessor
+  extend ::ActiveSupport::Concern
+
+  private
+
+  def additional_values_for(value, type); end
+  def process_encrypted_query_argument(value, check_for_additional_values, type); end
+  def process_encrypted_query_arguments(args, check_for_additional_values); end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::ExtendedEncryptableType
+  def serialize(data); end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::InWithAdditionalValues
+  def encryption_aware_type_caster; end
+  def proc_for_binds; end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicQueries::RelationQueries
+  include ::ActiveRecord::Encryption::ExtendedDeterministicQueries::EncryptedQueryArgumentProcessor
+
+  # @return [Boolean]
+  def exists?(*args); end
+
+  def find_or_create_by(attributes, &block); end
+  def find_or_create_by!(attributes, &block); end
+  def where(*args); end
+
+  private
+
+  def process_encrypted_query_arguments_if_needed(args); end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicUniquenessValidator
+  class << self
+    def install_support; end
+  end
+end
+
+module ActiveRecord::Encryption::ExtendedDeterministicUniquenessValidator::EncryptedUniquenessValidator
+  def validate_each(record, attribute, value); end
+end
+
+# A key is a container for a given +secret+
+#
+# Optionally, it can include +public_tags+. These tags are meant to be stored
+# in clean (public) and can be used, for example, to include information that
+# references the key for a future retrieval operation.
+class ActiveRecord::Encryption::Key
+  # @return [Key] a new instance of Key
+  def initialize(secret); end
+
+  def id; end
+
+  # Returns the value of attribute public_tags.
+  def public_tags; end
+
+  # Returns the value of attribute secret.
+  def secret; end
+
+  class << self
+    def derive_from(password); end
+  end
+end
+
+# Utility for generating and deriving random keys.
+class ActiveRecord::Encryption::KeyGenerator
+  # Derives a key from the given password. The key will have a size in bytes of +:length+ (configured +Cipher+'s length
+  # by default)
+  #
+  # The generated key will be salted with the value of +ActiveRecord::Encryption.key_derivation_salt+
+  def derive_key_from(password, length: T.unsafe(nil)); end
+
+  # Returns a random key in hexadecimal format. The key will have a size in bytes of +:length+ (configured +Cipher+'s
+  # length by default)
+  #
+  # Hexadecimal format is handy for representing keys as printable text. To maximize the space of characters used, it is
+  # good practice including not printable characters. Hexadecimal format ensures that generated keys are representable with
+  # plain text
+  #
+  # To convert back to the original string with the desired length:
+  #
+  #   [ value ].pack("H*")
+  def generate_random_hex_key(length: T.unsafe(nil)); end
+
+  # Returns a random key. The key will have a size in bytes of +:length+ (configured +Cipher+'s length by default)
+  def generate_random_key(length: T.unsafe(nil)); end
+
+  private
+
+  def key_length; end
+end
+
+# A +KeyProvider+ serves keys:
+#
+# * An encryption key
+# * A list of potential decryption keys. Serving multiple decryption keys supports rotation-schemes
+#   where new keys are added but old keys need to continue working
+class ActiveRecord::Encryption::KeyProvider
+  # @return [KeyProvider] a new instance of KeyProvider
+  def initialize(keys); end
+
+  # Returns the list of decryption keys
+  #
+  # When the message holds a reference to its encryption key, it will return an array
+  # with that key. If not, it will return the list of keys.
+  def decryption_keys(encrypted_message); end
+
+  # Returns the first key in the list as the active key to perform encryptions
+  #
+  # When +ActiveRecord::Encryption.config.store_key_references+ is true, the key will include
+  # a public tag referencing the key itself. That key will be stored in the public
+  # headers of the encrypted message
+  def encryption_key; end
+
+  private
+
+  def keys_grouped_by_id; end
+end
+
+# A message defines the structure of the data we store in encrypted attributes. It contains:
+#
+# * An encrypted payload
+# * A list of unencrypted headers
+#
+# See +Encryptor#encrypt+
+class ActiveRecord::Encryption::Message
+  # @return [Message] a new instance of Message
+  def initialize(payload: T.unsafe(nil), headers: T.unsafe(nil)); end
+
+  def ==(other_message); end
+
+  # Returns the value of attribute headers.
+  def headers; end
+
+  # Sets the attribute headers
+  #
+  # @param value the value to set the attribute headers to.
+  def headers=(_arg0); end
+
+  # Returns the value of attribute payload.
+  def payload; end
+
+  # Sets the attribute payload
+  #
+  # @param value the value to set the attribute payload to.
+  def payload=(_arg0); end
+
+  private
+
+  def validate_payload_type(payload); end
+end
+
+# A message serializer that serializes +Messages+ with JSON.
+#
+# The generated structure is pretty simple:
+#
+#   {
+#     p: <payload>,
+#     h: {
+#       header1: value1,
+#       header2: value2,
+#       ...
+#     }
+#   }
+#
+# Both the payload and the header values are encoded with Base64
+# to prevent JSON parsing errors and encoding issues when
+# storing the resulting serialized data.
+class ActiveRecord::Encryption::MessageSerializer
+  # @raise [ActiveRecord::Encryption::Errors::ForbiddenClass]
+  def dump(message); end
+
+  def load(serialized_content); end
+
+  private
+
+  def decode_if_needed(value); end
+  def encode_if_needed(value); end
+  def headers_to_json(headers); end
+  def message_to_json(message); end
+  def parse_message(data, level); end
+  def parse_properties(headers, level); end
+  def validate_message_data_format(data, level); end
+end
+
+# An encryptor that won't decrypt or encrypt. It will just return the passed
+# values
+class ActiveRecord::Encryption::NullEncryptor
+  def decrypt(encrypted_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+  def encrypt(clean_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+
+  # @return [Boolean]
+  def encrypted?(text); end
+end
+
+# This is a wrapper for a hash of encryption properties. It is used by
+# +Key+ (public tags) and +Message+ (headers).
+#
+# Since properties are serialized in messages, it is important for storage
+# efficiency to keep their keys as short as possible. It defines accessors
+# for common properties that will keep these keys very short while exposing
+# a readable name.
+#
+#   message.headers.encrypted_data_key # instead of message.headers[:k]
+#
+# See +Properties#DEFAULT_PROPERTIES+, +Key+, +Message+
+class ActiveRecord::Encryption::Properties
+  # @return [Properties] a new instance of Properties
+  def initialize(initial_properties = T.unsafe(nil)); end
+
+  def ==(arg); end
+
+  # Set a value for a given key
+  #
+  # It will raise an +EncryptedContentIntegrity+ if the value exists
+  #
+  # @raise [Errors::EncryptedContentIntegrity]
+  def []=(key, value); end
+
+  def add(other_properties); end
+  def auth_tag; end
+  def auth_tag=(value); end
+  def compressed; end
+  def compressed=(value); end
+  def encoding; end
+  def encoding=(value); end
+  def encrypted_data_key; end
+  def encrypted_data_key=(value); end
+  def encrypted_data_key_id; end
+  def encrypted_data_key_id=(value); end
+  def iv; end
+  def iv=(value); end
+  def method_missing(method, *args, &block); end
+  def to_h; end
+  def validate_value_type(value); end
+
+  private
+
+  # Returns the value of attribute data.
+  def data; end
+
+  def respond_to_missing?(name, include_private = T.unsafe(nil)); end
+end
+
+ActiveRecord::Encryption::Properties::ALLOWED_VALUE_CLASSES = T.let(T.unsafe(nil), Array)
+
+# For each entry it generates an accessor exposing the full name
+ActiveRecord::Encryption::Properties::DEFAULT_PROPERTIES = T.let(T.unsafe(nil), Hash)
+
+# A +NullEncryptor+ that will raise an error when trying to encrypt data
+#
+# This is useful when you want to reveal ciphertexts for debugging purposes
+# and you want to make sure you won't overwrite any encryptable attribute with
+# the wrong content.
+class ActiveRecord::Encryption::ReadOnlyNullEncryptor
+  def decrypt(encrypted_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+
+  # @raise [Errors::Encryption]
+  def encrypt(clean_text, key_provider: T.unsafe(nil), cipher_options: T.unsafe(nil)); end
+
+  # @return [Boolean]
+  def encrypted?(text); end
+end
+
+# A container of attribute encryption options.
+#
+# It validates and serves attribute encryption options.
+#
+# See +EncryptedAttributeType+, +Context+
+class ActiveRecord::Encryption::Scheme
+  # @return [Scheme] a new instance of Scheme
+  def initialize(key_provider: T.unsafe(nil), key: T.unsafe(nil), deterministic: T.unsafe(nil), downcase: T.unsafe(nil), ignore_case: T.unsafe(nil), previous_schemes: T.unsafe(nil), **context_properties); end
+
+  # @return [Boolean]
+  def deterministic?; end
+
+  # @return [Boolean]
+  def downcase?; end
+
+  # @return [Boolean]
+  def fixed?; end
+
+  # @return [Boolean]
+  def ignore_case?; end
+
+  def key_provider; end
+  def merge(other_scheme); end
+
+  # Returns the value of attribute previous_schemes.
+  def previous_schemes; end
+
+  # Sets the attribute previous_schemes
+  #
+  # @param value the value to set the attribute previous_schemes to.
+  def previous_schemes=(_arg0); end
+
+  def to_h; end
+  def with_context(&block); end
+
+  private
+
+  def build_key_provider; end
+
+  # @raise [Errors::Configuration]
+  def validate_config!; end
+
+  def validate_credential(key, error_message = T.unsafe(nil)); end
+  def validate_keys!; end
+end
+
 # Declare an enum attribute where the values map to integers in the database,
 # but can be queried by name. Example:
 #
 #   class Conversation < ActiveRecord::Base
-#     enum status: [ :active, :archived ]
+#     enum :status, [ :active, :archived ]
 #   end
 #
 #   # conversation.update! status: 0
@@ -12383,26 +13925,33 @@ end
 #   Conversation.where(status: [:active, :archived])
 #   Conversation.where.not(status: :active)
 #
-# Defining scopes can be disabled by setting +:_scopes+ to +false+.
+# Defining scopes can be disabled by setting +:scopes+ to +false+.
 #
 #   class Conversation < ActiveRecord::Base
-#     enum status: [ :active, :archived ], _scopes: false
+#     enum :status, [ :active, :archived ], scopes: false
 #   end
 #
-# You can set the default enum value by setting +:_default+, like:
+# You can set the default enum value by setting +:default+, like:
 #
 #   class Conversation < ActiveRecord::Base
-#     enum status: [ :active, :archived ], _default: "active"
+#     enum :status, [ :active, :archived ], default: :active
 #   end
 #
 #   conversation = Conversation.new
 #   conversation.status # => "active"
 #
-# Finally, it's also possible to explicitly map the relation between attribute and
+# It's possible to explicitly map the relation between attribute and
 # database integer with a hash:
 #
 #   class Conversation < ActiveRecord::Base
-#     enum status: { active: 0, archived: 1 }
+#     enum :status, active: 0, archived: 1
+#   end
+#
+# Finally it's also possible to use a string column to persist the enumerated value.
+# Note that this will likely lead to slower database queries:
+#
+#   class Conversation < ActiveRecord::Base
+#     enum :status, active: "active", archived: "archived"
 #   end
 #
 # Note that when an array is used, the implicit mapping from the values to database
@@ -12427,14 +13976,14 @@ end
 #
 #   Conversation.where("status <> ?", Conversation.statuses[:archived])
 #
-# You can use the +:_prefix+ or +:_suffix+ options when you need to define
+# You can use the +:prefix+ or +:suffix+ options when you need to define
 # multiple enums with same values. If the passed value is +true+, the methods
 # are prefixed/suffixed with the name of the enum. It is also possible to
 # supply a custom value:
 #
 #   class Conversation < ActiveRecord::Base
-#     enum status: [:active, :archived], _suffix: true
-#     enum comments_status: [:active, :inactive], _prefix: :comments
+#     enum :status, [ :active, :archived ], suffix: true
+#     enum :comments_status, [ :active, :inactive ], prefix: :comments
 #   end
 #
 # With the above example, the bang and predicate methods along with the
@@ -12446,11 +13995,12 @@ end
 #   conversation.comments_inactive!
 #   conversation.comments_active? # => false
 module ActiveRecord::Enum
-  def enum(definitions); end
+  def enum(name = T.unsafe(nil), values = T.unsafe(nil), **options); end
   def inherited(base); end
 
   private
 
+  def _enum(name, values, prefix: T.unsafe(nil), suffix: T.unsafe(nil), scopes: T.unsafe(nil), **options); end
   def _enum_methods_module; end
   def assert_valid_enum_definition_values(values); end
   def detect_enum_conflict!(enum_name, method_name, klass_method = T.unsafe(nil)); end
@@ -12472,7 +14022,7 @@ class ActiveRecord::Enum::EnumMethods < ::Module
 
   private
 
-  def define_enum_methods(name, value_method_name, value, enum_scopes); end
+  def define_enum_methods(name, value_method_name, value, scopes); end
 
   # Returns the value of attribute klass.
   def klass; end
@@ -12485,6 +14035,10 @@ class ActiveRecord::Enum::EnumType < ::ActiveModel::Type::Value
   def assert_valid_value(value); end
   def cast(value); end
   def deserialize(value); end
+
+  # @return [Boolean]
+  def serializable?(value, &block); end
+
   def serialize(value); end
 
   # Returns the value of attribute subtype.
@@ -12536,12 +14090,7 @@ end
 #   ActiveRecord::ExplainRegistry.queries
 #
 # returns the collected queries local to the current thread.
-#
-# See the documentation of ActiveSupport::PerThreadRegistry
-# for further details.
 class ActiveRecord::ExplainRegistry
-  extend ::ActiveSupport::PerThreadRegistry
-
   # @return [ExplainRegistry] a new instance of ExplainRegistry
   def initialize; end
 
@@ -12559,12 +14108,19 @@ class ActiveRecord::ExplainRegistry
   # Returns the value of attribute queries.
   def queries; end
 
-  # Sets the attribute queries
-  #
-  # @param value the value to set the attribute queries to.
-  def queries=(_arg0); end
-
   def reset; end
+
+  class << self
+    def collect(*_arg0, &_arg1); end
+    def collect=(arg); end
+    def collect?(*_arg0, &_arg1); end
+    def queries(*_arg0, &_arg1); end
+    def reset(*_arg0, &_arg1); end
+
+    private
+
+    def instance; end
+  end
 end
 
 class ActiveRecord::ExplainSubscriber
@@ -12704,6 +14260,13 @@ module ActiveRecord::FinderMethods
   # an ActiveRecord::RecordNotFound error.
   def find_by!(arg, *args); end
 
+  # Finds the sole matching record. Raises ActiveRecord::RecordNotFound if no
+  # record is found. Raises ActiveRecord::SoleRecordExceeded if more than one
+  # record is found.
+  #
+  #   Product.find_sole_by(["price = %?", price])
+  def find_sole_by(arg, *args); end
+
   # Find the first record (or first N records if a parameter is supplied).
   # If no order is defined it will order by primary key.
   #
@@ -12815,6 +14378,13 @@ module ActiveRecord::FinderMethods
   # is found.
   def second_to_last!; end
 
+  # Finds the sole matching record. Raises ActiveRecord::RecordNotFound if no
+  # record is found. Raises ActiveRecord::SoleRecordExceeded if more than one
+  # record is found.
+  #
+  #   Product.where(["price = %?", price]).sole
+  def sole; end
+
   # Gives a record (or N records if a parameter is supplied) without any implied
   # order. The order will depend on the database implementation.
   # If an order is supplied it will be respected.
@@ -12855,7 +14425,6 @@ module ActiveRecord::FinderMethods
   private
 
   def apply_join_dependency(eager_loading: T.unsafe(nil)); end
-  def check_reorder_deprecation; end
   def construct_relation_for_exists(conditions); end
   def find_last(limit); end
   def find_nth(index); end
@@ -12870,7 +14439,6 @@ module ActiveRecord::FinderMethods
   # @raise [UnknownPrimaryKey]
   def find_with_ids(*ids); end
 
-  def limited_ids_for(relation); end
   def ordered_relation; end
 
   # @return [Boolean]
@@ -12887,7 +14455,7 @@ class ActiveRecord::Fixture
 
   def [](key); end
   def class_name; end
-  def each; end
+  def each(&block); end
 
   # @raise [FixtureClassNotFound]
   def find; end
@@ -12926,7 +14494,7 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 #     name: Google
 #     url: http://www.google.com
 #
-# This fixture file includes two fixtures. Each YAML fixture (ie. record) is given a name and
+# This fixture file includes two fixtures. Each YAML fixture (i.e. record) is given a name and
 # is followed by an indented list of key/value pairs in the "key: value" format. Records are
 # separated by a blank line for your viewing pleasure.
 #
@@ -13043,7 +14611,7 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 # - define a helper method in <tt>test_helper.rb</tt>
 #     module FixtureFileHelpers
 #       def file_sha(path)
-#         Digest::SHA2.hexdigest(File.read(Rails.root.join('test/fixtures', path)))
+#         OpenSSL::Digest::SHA256.hexdigest(File.read(Rails.root.join('test/fixtures', path)))
 #       end
 #     end
 #     ActiveRecord::FixtureSet.context_class.include FixtureFileHelpers
@@ -13202,7 +14770,7 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 #
 # Just provide the polymorphic target type and Active Record will take care of the rest.
 #
-# === has_and_belongs_to_many
+# === has_and_belongs_to_many or has_many :through
 #
 # Time to give our monkey some fruit.
 #
@@ -13298,7 +14866,7 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 # defaults:
 #
 #   DEFAULTS: &DEFAULTS
-#     created_on: <%= 3.weeks.ago.to_s(:db) %>
+#     created_on: <%= 3.weeks.ago.to_fs(:db) %>
 #
 #   first:
 #     name: Smurf
@@ -13317,7 +14885,7 @@ class ActiveRecord::FixtureClassNotFound < ::ActiveRecord::ActiveRecordError; en
 #   _fixture:
 #     ignore:
 #       - base
-#     # or use "ignore: base" when there is only one fixture needs to be ignored.
+#     # or use "ignore: base" when there is only one fixture that needs to be ignored.
 #
 #   base: &base
 #     admin: false
@@ -13417,7 +14985,6 @@ class ActiveRecord::FixtureSet
     def instantiate_all_loaded_fixtures(object, load_instances = T.unsafe(nil)); end
     def instantiate_fixtures(object, fixture_set, load_instances = T.unsafe(nil)); end
     def reset_cache; end
-    def signed_global_id(fixture_set_name, label, column_type: T.unsafe(nil), **options); end
 
     private
 
@@ -13457,6 +15024,8 @@ class ActiveRecord::FixtureSet::File
 
   # Validate our unmarshalled data.
   def validate(data); end
+
+  def validate_config_row(data); end
 
   class << self
     # Open a fixture file named +file+.  When called with a block, the block
@@ -13517,6 +15086,12 @@ class ActiveRecord::FixtureSet::TableRow::HasManyThroughProxy < ::ActiveRecord::
   def join_table; end
   def lhs_key; end
   def rhs_key; end
+  def timestamp_column_names; end
+end
+
+class ActiveRecord::FixtureSet::TableRow::PrimaryKeyError < ::StandardError
+  # @return [PrimaryKeyError] a new instance of PrimaryKeyError
+  def initialize(label, association, value); end
 end
 
 class ActiveRecord::FixtureSet::TableRow::ReflectionProxy
@@ -13530,7 +15105,7 @@ end
 
 class ActiveRecord::FixtureSet::TableRows
   # @return [TableRows] a new instance of TableRows
-  def initialize(table_name, model_class:, fixtures:, config:); end
+  def initialize(table_name, model_class:, fixtures:); end
 
   # Returns the value of attribute model_class.
   def model_class; end
@@ -13544,7 +15119,52 @@ class ActiveRecord::FixtureSet::TableRows
 
   private
 
-  def build_table_rows_from(table_name, fixtures, config); end
+  def build_table_rows_from(table_name, fixtures); end
+end
+
+class ActiveRecord::FutureResult
+  # @return [FutureResult] a new instance of FutureResult
+  def initialize(pool, *args, **kwargs); end
+
+  def cancel; end
+  def empty?(*_arg0, &_arg1); end
+  def execute!(connection); end
+  def execute_or_skip; end
+
+  # Returns the value of attribute lock_wait.
+  def lock_wait; end
+
+  # @return [Boolean]
+  def pending?; end
+
+  def result; end
+  def schedule!(session); end
+  def to_a(*_arg0, &_arg1); end
+
+  private
+
+  # @return [Boolean]
+  def canceled?; end
+
+  def exec_query(connection, *args, **kwargs); end
+  def execute_or_wait; end
+  def execute_query(connection, async: T.unsafe(nil)); end
+end
+
+class ActiveRecord::FutureResult::Canceled < ::ActiveRecord::ActiveRecordError; end
+
+class ActiveRecord::FutureResult::EventBuffer
+  # @return [EventBuffer] a new instance of EventBuffer
+  def initialize(future_result, instrumenter); end
+
+  def flush; end
+  def instrument(name, payload = T.unsafe(nil), &block); end
+end
+
+class ActiveRecord::FutureResult::SelectAll < ::ActiveRecord::FutureResult
+  private
+
+  def exec_query(*_arg0, **_arg1); end
 end
 
 class ActiveRecord::HasManyThroughAssociationNotFoundError < ::ActiveRecord::ActiveRecordError
@@ -13553,18 +15173,13 @@ class ActiveRecord::HasManyThroughAssociationNotFoundError < ::ActiveRecord::Act
   # @return [HasManyThroughAssociationNotFoundError] a new instance of HasManyThroughAssociationNotFoundError
   def initialize(owner_class = T.unsafe(nil), reflection = T.unsafe(nil)); end
 
+  def corrections; end
+
   # Returns the value of attribute owner_class.
   def owner_class; end
 
   # Returns the value of attribute reflection.
   def reflection; end
-end
-
-class ActiveRecord::HasManyThroughAssociationNotFoundError::Correction
-  # @return [Correction] a new instance of Correction
-  def initialize(error); end
-
-  def corrections; end
 end
 
 class ActiveRecord::HasManyThroughAssociationPointlessSourceTypeError < ::ActiveRecord::ActiveRecordError
@@ -13661,7 +15276,6 @@ module ActiveRecord::Inheritance
   include GeneratedInstanceMethods
 
   mixes_in_class_methods GeneratedClassMethods
-  mixes_in_class_methods ::ActiveRecord::Inheritance::ClassMethods
 
   private
 
@@ -13806,6 +15420,8 @@ module ActiveRecord::Inheritance::ClassMethods
   # @return [Boolean]
   def descends_from_active_record?; end
 
+  def dup; end
+
   # @return [Boolean]
   def finder_needs_type_condition?; end
 
@@ -13824,6 +15440,14 @@ module ActiveRecord::Inheritance::ClassMethods
   # Returns the value to be stored in the polymorphic type column for Polymorphic Associations.
   def polymorphic_name; end
 
+  # Sets the application record class for Active Record
+  #
+  # This is useful if your application uses a different class than
+  # ApplicationRecord for your primary abstract class. This class
+  # will share a database connection with Active Record. It is the class
+  # that connects to your primary database.
+  def primary_abstract_class; end
+
   # Returns the class for the provided +type_name+.
   #
   # It is used to find the class correspondent to the value stored in the inheritance column.
@@ -13838,6 +15462,8 @@ module ActiveRecord::Inheritance::ClassMethods
   # MyApp::Business::Account would appear as MyApp::Business::AccountSubclass.
   def compute_type(type_name); end
 
+  def set_base_class; end
+
   private
 
   # Called by +instantiate+ to decide which class to use for a new
@@ -13846,6 +15472,7 @@ module ActiveRecord::Inheritance::ClassMethods
   def discriminate_class_for_record(record); end
 
   def find_sti_class(type_name); end
+  def initialize_clone(other); end
 
   # Detect the subclass from the inheritance column of attrs. If the inheritance column value
   # is not self or a valid subclass, raises ActiveRecord::SubclassNotFound
@@ -13860,7 +15487,7 @@ end
 class ActiveRecord::InsertAll
   # @raise [ArgumentError]
   # @return [InsertAll] a new instance of InsertAll
-  def initialize(model, inserts, on_duplicate:, returning: T.unsafe(nil), unique_by: T.unsafe(nil)); end
+  def initialize(model, inserts, on_duplicate:, update_only: T.unsafe(nil), returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Returns the value of attribute connection.
   def connection; end
@@ -13873,6 +15500,9 @@ class ActiveRecord::InsertAll
   # Returns the value of attribute keys.
   def keys; end
 
+  # TODO: Consider remaining this method, as it only conditionally extends keys, not always
+  def keys_including_timestamps; end
+
   def map_key_with_value; end
 
   # Returns the value of attribute model.
@@ -13882,6 +15512,9 @@ class ActiveRecord::InsertAll
   def on_duplicate; end
 
   def primary_keys; end
+
+  # @return [Boolean]
+  def record_timestamps?; end
 
   # Returns the value of attribute returning.
   def returning; end
@@ -13897,7 +15530,21 @@ class ActiveRecord::InsertAll
   # @return [Boolean]
   def update_duplicates?; end
 
+  # Returns the value of attribute update_only.
+  def update_only; end
+
+  # Returns the value of attribute update_sql.
+  def update_sql; end
+
   private
+
+  def configure_on_duplicate_update_logic; end
+
+  # @return [Boolean]
+  def custom_update_sql_provided?; end
+
+  # @raise [ArgumentError]
+  def disallow_raw_sql!(value); end
 
   def ensure_valid_options_for_connection!; end
   def find_unique_index_for(unique_by); end
@@ -13906,6 +15553,7 @@ class ActiveRecord::InsertAll
   # Returns the value of attribute scope_attributes.
   def scope_attributes; end
 
+  def timestamps_for_create; end
   def to_sql; end
   def unique_by_columns; end
   def unique_indexes; end
@@ -13919,10 +15567,14 @@ class ActiveRecord::InsertAll::Builder
   def conflict_target; end
   def into; end
   def keys(*_arg0, &_arg1); end
+  def keys_including_timestamps(*_arg0, &_arg1); end
 
   # Returns the value of attribute model.
   def model; end
 
+  def raw_update_sql; end
+  def raw_update_sql?; end
+  def record_timestamps?(*_arg0, &_arg1); end
   def returning; end
   def skip_duplicates?(*_arg0, &_arg1); end
   def touch_model_timestamps_unless(&block); end
@@ -14098,10 +15750,6 @@ class ActiveRecord::InternalMetadata < ::ActiveRecord::Base
   class << self
     def [](key); end
     def []=(key, value); end
-
-    # @return [Boolean]
-    def _internal?; end
-
     def _validators; end
 
     # Creates an internal metadata table with columns +key+ and +value+
@@ -14135,22 +15783,25 @@ class ActiveRecord::InverseOfAssociationNotFoundError < ::ActiveRecord::ActiveRe
   # Returns the value of attribute associated_class.
   def associated_class; end
 
+  def corrections; end
+
   # Returns the value of attribute reflection.
   def reflection; end
 end
 
-class ActiveRecord::InverseOfAssociationNotFoundError::Correction
-  # @return [Correction] a new instance of Correction
-  def initialize(error); end
+class ActiveRecord::InverseOfAssociationRecursiveError < ::ActiveRecord::ActiveRecordError
+  # @return [InverseOfAssociationRecursiveError] a new instance of InverseOfAssociationRecursiveError
+  def initialize(reflection = T.unsafe(nil)); end
 
-  def corrections; end
+  # Returns the value of attribute reflection.
+  def reflection; end
 end
 
 # Exception that can be raised to stop migrations from being rolled back.
 # For example the following migration is not reversible.
 # Rolling back this migration will raise an ActiveRecord::IrreversibleMigration error.
 #
-#   class IrreversibleMigrationExample < ActiveRecord::Migration[6.0]
+#   class IrreversibleMigrationExample < ActiveRecord::Migration[7.0]
 #     def change
 #       create_table :distributors do |t|
 #         t.string :zipcode
@@ -14168,7 +15819,7 @@ end
 #
 # 1. Define <tt>#up</tt> and <tt>#down</tt> methods instead of <tt>#change</tt>:
 #
-#  class ReversibleMigrationExample < ActiveRecord::Migration[6.0]
+#  class ReversibleMigrationExample < ActiveRecord::Migration[7.0]
 #    def up
 #      create_table :distributors do |t|
 #        t.string :zipcode
@@ -14193,7 +15844,7 @@ end
 #
 # 2. Use the #reversible method in <tt>#change</tt> method:
 #
-#   class ReversibleMigrationExample < ActiveRecord::Migration[6.0]
+#   class ReversibleMigrationExample < ActiveRecord::Migration[7.0]
 #     def change
 #       create_table :distributors do |t|
 #         t.string :zipcode
@@ -14225,19 +15876,7 @@ class ActiveRecord::IrreversibleOrderError < ::ActiveRecord::ActiveRecordError; 
 
 module ActiveRecord::LegacyYamlAdapter
   class << self
-    def convert(klass, coder); end
-  end
-end
-
-module ActiveRecord::LegacyYamlAdapter::Rails41
-  class << self
-    def convert(klass, coder); end
-  end
-end
-
-module ActiveRecord::LegacyYamlAdapter::Rails420
-  class << self
-    def convert(klass, coder); end
+    def convert(coder); end
   end
 end
 
@@ -14432,8 +16071,12 @@ module ActiveRecord::Locking::Pessimistic
 
   # Wraps the passed block in a transaction, locking the object
   # before yielding. You can pass the SQL locking clause
-  # as argument (see <tt>lock!</tt>).
-  def with_lock(lock = T.unsafe(nil)); end
+  # as an optional argument (see <tt>#lock!</tt>).
+  #
+  # You can also pass options like <tt>requires_new:</tt>, <tt>isolation:</tt>,
+  # and <tt>joinable:</tt> to the wrapping transaction (see
+  # <tt>ActiveRecord::ConnectionAdapters::DatabaseStatements#transaction</tt>).
+  def with_lock(*args); end
 end
 
 class ActiveRecord::LogSubscriber < ::ActiveSupport::LogSubscriber
@@ -14448,6 +16091,7 @@ class ActiveRecord::LogSubscriber < ::ActiveSupport::LogSubscriber
   def colorize_payload_name(name, payload_name); end
   def debug(progname = T.unsafe(nil), &block); end
   def extract_query_source_location(locations); end
+  def filter(name, value); end
   def log_query_source; end
   def logger; end
   def render_bind(attr, value); end
@@ -14488,9 +16132,14 @@ end
 # To use the DatabaseSelector in your application with default settings add
 # the following options to your environment config:
 #
-#   config.active_record.database_selector = { delay: 2.seconds }
-#   config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
-#   config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+#   # This require is only necessary when using `rails new app --minimal`
+#   require "active_support/core_ext/integer/time"
+#
+#   class Application < Rails::Application
+#     config.active_record.database_selector = { delay: 2.seconds }
+#     config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
+#     config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+#   end
 #
 # New applications will include these lines commented out in the production.rb.
 #
@@ -14565,7 +16214,7 @@ class ActiveRecord::Middleware::DatabaseSelector::Resolver
   # @return [Boolean]
   def time_since_last_write_ok?; end
 
-  def write_to_primary(&blk); end
+  def write_to_primary; end
 
   class << self
     def call(context, options = T.unsafe(nil)); end
@@ -14603,6 +16252,48 @@ class ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   end
 end
 
+# The ShardSelector Middleware provides a framework for automatically
+# swapping shards. Rails provides a basic framework to determine which
+# shard to switch to and allows for applications to write custom strategies
+# for swapping if needed.
+#
+# The ShardSelector takes a set of options (currently only `lock` is supported)
+# that can be used by the middleware to alter behavior. `lock` is
+# true by default and will prohibit the request from switching shards once
+# inside the block. If `lock` is false, then shard swapping will be allowed.
+# For tenant based sharding, `lock` should always be true to prevent application
+# code from mistakenly switching between tenants.
+#
+# Options can be set in the config:
+#
+#   config.active_record.shard_selector = { lock: true }
+#
+# Applications must also provide the code for the resolver as it depends on application
+# specific models. An example resolver would look like this:
+#
+#   config.active_record.shard_resolver = ->(request) {
+#     subdomain = request.subdomain
+#     tenant = Tenant.find_by_subdomain!(subdomain)
+#     tenant.shard
+#   }
+class ActiveRecord::Middleware::ShardSelector
+  # @return [ShardSelector] a new instance of ShardSelector
+  def initialize(app, resolver, options = T.unsafe(nil)); end
+
+  def call(env); end
+
+  # Returns the value of attribute options.
+  def options; end
+
+  # Returns the value of attribute resolver.
+  def resolver; end
+
+  private
+
+  def selected_shard(request); end
+  def set_shard(shard, &block); end
+end
+
 # = Active Record Migrations
 #
 # Migrations can manage the evolution of a schema used by several physical
@@ -14615,7 +16306,7 @@ end
 #
 # Example of a simple migration:
 #
-#   class AddSsl < ActiveRecord::Migration[6.0]
+#   class AddSsl < ActiveRecord::Migration[7.0]
 #     def up
 #       add_column :accounts, :ssl_enabled, :boolean, default: true
 #     end
@@ -14635,7 +16326,7 @@ end
 #
 # Example of a more complex migration that also needs to initialize data:
 #
-#   class AddSystemSettings < ActiveRecord::Migration[6.0]
+#   class AddSystemSettings < ActiveRecord::Migration[7.0]
 #     def up
 #       create_table :system_settings do |t|
 #         t.string  :name
@@ -14763,7 +16454,7 @@ end
 #   bin/rails generate migration add_fieldname_to_tablename fieldname:string
 #
 # This will generate the file <tt>timestamp_add_fieldname_to_tablename.rb</tt>, which will look like this:
-#   class AddFieldnameToTablename < ActiveRecord::Migration[6.0]
+#   class AddFieldnameToTablename < ActiveRecord::Migration[7.0]
 #     def change
 #       add_column :tablenames, :fieldname, :string
 #     end
@@ -14789,7 +16480,7 @@ end
 #
 # Not all migrations change the schema. Some just fix the data:
 #
-#   class RemoveEmptyTags < ActiveRecord::Migration[6.0]
+#   class RemoveEmptyTags < ActiveRecord::Migration[7.0]
 #     def up
 #       Tag.all.each { |tag| tag.destroy if tag.pages.empty? }
 #     end
@@ -14802,7 +16493,7 @@ end
 #
 # Others remove columns when they migrate up instead of down:
 #
-#   class RemoveUnnecessaryItemAttributes < ActiveRecord::Migration[6.0]
+#   class RemoveUnnecessaryItemAttributes < ActiveRecord::Migration[7.0]
 #     def up
 #       remove_column :items, :incomplete_items_count
 #       remove_column :items, :completed_items_count
@@ -14816,7 +16507,7 @@ end
 #
 # And sometimes you need to do something in SQL not abstracted directly by migrations:
 #
-#   class MakeJoinUnique < ActiveRecord::Migration[6.0]
+#   class MakeJoinUnique < ActiveRecord::Migration[7.0]
 #     def up
 #       execute "ALTER TABLE `pages_linked_pages` ADD UNIQUE `page_id_linked_page_id` (`page_id`,`linked_page_id`)"
 #     end
@@ -14833,7 +16524,7 @@ end
 # <tt>Base#reset_column_information</tt> in order to ensure that the model has the
 # latest column data from after the new column was added. Example:
 #
-#   class AddPeopleSalary < ActiveRecord::Migration[6.0]
+#   class AddPeopleSalary < ActiveRecord::Migration[7.0]
 #     def up
 #       add_column :people, :salary, :integer
 #       Person.reset_column_information
@@ -14891,7 +16582,7 @@ end
 # To define a reversible migration, define the +change+ method in your
 # migration like this:
 #
-#   class TenderloveMigration < ActiveRecord::Migration[6.0]
+#   class TenderloveMigration < ActiveRecord::Migration[7.0]
 #     def change
 #       create_table(:horses) do |t|
 #         t.column :content, :text
@@ -14921,7 +16612,7 @@ end
 # can't execute inside a transaction though, and for these situations
 # you can turn the automatic transactions off.
 #
-#   class ChangeEnum < ActiveRecord::Migration[6.0]
+#   class ChangeEnum < ActiveRecord::Migration[7.0]
 #     disable_ddl_transaction!
 #
 #     def up
@@ -14971,7 +16662,7 @@ class ActiveRecord::Migration
   # when the three columns 'first_name', 'last_name' and 'full_name' exist,
   # even when migrating down:
   #
-  #    class SplitNameMigration < ActiveRecord::Migration[6.0]
+  #    class SplitNameMigration < ActiveRecord::Migration[7.0]
   #      def change
   #        add_column :users, :first_name, :string
   #        add_column :users, :last_name, :string
@@ -14997,7 +16688,7 @@ class ActiveRecord::Migration
   # and create the table 'apples' on the way up, and the reverse
   # on the way down.
   #
-  #   class FixTLMigration < ActiveRecord::Migration[6.0]
+  #   class FixTLMigration < ActiveRecord::Migration[7.0]
   #     def change
   #       revert do
   #         create_table(:horses) do |t|
@@ -15016,7 +16707,7 @@ class ActiveRecord::Migration
   #
   #   require_relative "20121212123456_tenderlove_migration"
   #
-  #   class FixupTLMigration < ActiveRecord::Migration[6.0]
+  #   class FixupTLMigration < ActiveRecord::Migration[7.0]
   #     def change
   #       revert TenderloveMigration
   #
@@ -15027,7 +16718,7 @@ class ActiveRecord::Migration
   #   end
   #
   # This command can be nested.
-  def revert(*migration_classes); end
+  def revert(*migration_classes, &block); end
 
   # @return [Boolean]
   def reverting?; end
@@ -15061,7 +16752,7 @@ class ActiveRecord::Migration
   # In the following example, the new column +published+ will be given
   # the value +true+ for all existing records.
   #
-  #    class AddPublishedToPosts < ActiveRecord::Migration[6.0]
+  #    class AddPublishedToPosts < ActiveRecord::Migration[7.0]
   #      def change
   #        add_column :posts, :published, :boolean, default: false
   #        up_only do
@@ -15069,7 +16760,7 @@ class ActiveRecord::Migration
   #        end
   #      end
   #    end
-  def up_only; end
+  def up_only(&block); end
 
   def verbose; end
   def verbose=(val); end
@@ -15295,7 +16986,7 @@ class ActiveRecord::Migration::CommandRecorder
   def invert_rename_column(args); end
   def invert_rename_index(args); end
   def invert_rename_table(args); end
-  def invert_transaction(args); end
+  def invert_transaction(args, &block); end
 
   # Forwards any missing method call to the \target.
   def method_missing(method, *args, &block); end
@@ -15398,10 +17089,11 @@ module ActiveRecord::Migration::Compatibility::V5_2::CommandRecorder
 end
 
 module ActiveRecord::Migration::Compatibility::V5_2::TableDefinition
+  def column(name, type, index: T.unsafe(nil), **options); end
   def timestamps(**options); end
 end
 
-class ActiveRecord::Migration::Compatibility::V6_0 < ::ActiveRecord::Migration::Current
+class ActiveRecord::Migration::Compatibility::V6_0 < ::ActiveRecord::Migration::Compatibility::V6_1
   def add_belongs_to(table_name, ref_name, **options); end
   def add_reference(table_name, ref_name, **options); end
   def change_table(table_name, **options); end
@@ -15427,10 +17119,48 @@ end
 
 module ActiveRecord::Migration::Compatibility::V6_0::TableDefinition
   def belongs_to(*args, **options); end
+  def column(name, type, index: T.unsafe(nil), **options); end
   def references(*args, **options); end
 end
 
-ActiveRecord::Migration::Compatibility::V6_1 = ActiveRecord::Migration::Current
+class ActiveRecord::Migration::Compatibility::V6_1 < ::ActiveRecord::Migration::Current
+  def add_column(table_name, column_name, type, **options); end
+  def create_table(table_name, **options); end
+
+  private
+
+  def compatible_table_definition(t); end
+end
+
+class ActiveRecord::Migration::Compatibility::V6_1::PostgreSQLCompat
+  class << self
+    def compatible_timestamp_type(type, connection); end
+  end
+end
+
+module ActiveRecord::Migration::Compatibility::V6_1::TableDefinition
+  def column(name, type, index: T.unsafe(nil), **options); end
+  def new_column_definition(name, type, **options); end
+end
+
+# This file exists to ensure that old migrations run the same way they did before a Rails upgrade.
+# e.g. if you write a migration on Rails 6.1, then upgrade to Rails 7, the migration should do the same thing to your
+# database as it did when you were running Rails 6.1
+#
+# "Current" is an alias for `ActiveRecord::Migration`, it represents the current Rails version.
+# New migration functionality that will never be backward compatible should be added directly to `ActiveRecord::Migration`.
+#
+# There are classes for each prior Rails version. Each class descends from the *next* Rails version, so:
+# 6.1 < 7.0
+# 5.2 < 6.0 < 6.1 < 7.0
+#
+# If you are introducing new migration functionality that should only apply from Rails 7 onward, then you should
+# find the class that immediately precedes it (6.1), and override the relevant migration methods to undo your changes.
+#
+# For example, Rails 6 added a default value for the `precision` option on datetime columns. So in this file, the `V5_2`
+# class sets the value of `precision` to `nil` if it's not explicitly provided. This way, the default value will not apply
+# for migrations written for 5.2, but will for migrations written for 6.0.
+ActiveRecord::Migration::Compatibility::V7_0 = ActiveRecord::Migration::Current
 
 # This must be defined before the inherited hook, below
 class ActiveRecord::Migration::Current < ::ActiveRecord::Migration; end
@@ -15468,23 +17198,41 @@ class ActiveRecord::Migration::ReversibleBlockHelper < ::Struct
   end
 end
 
+# MigrationContext sets the context in which a migration is run.
+#
+# A migration context requires the path to the migrations is set
+# in the +migrations_paths+ parameter. Optionally a +schema_migration+
+# class can be provided. For most applications, +SchemaMigration+ is
+# sufficient. Multiple database applications need a +SchemaMigration+
+# per primary database.
 class ActiveRecord::MigrationContext
   # @return [MigrationContext] a new instance of MigrationContext
-  def initialize(migrations_paths, schema_migration); end
-
-  # @return [Boolean]
-  def any_migrations?; end
+  def initialize(migrations_paths, schema_migration = T.unsafe(nil)); end
 
   def current_environment; end
   def current_version; end
-  def down(target_version = T.unsafe(nil)); end
+  def down(target_version = T.unsafe(nil), &block); end
   def forward(steps = T.unsafe(nil)); end
   def get_all_versions; end
 
   # @raise [NoEnvironmentInSchemaError]
   def last_stored_environment; end
 
+  # Runs the migrations in the +migrations_path+.
+  #
+  # If +target_version+ is +nil+, +migrate+ will run +up+.
+  #
+  # If the +current_version+ and +target_version+ are both
+  # 0 then an empty array will be returned and no migrations
+  # will be run.
+  #
+  # If the +current_version+ in the schema is greater than
+  # the +target_version+, then +down+ will be run.
+  #
+  # If none of the conditions are met, +up+ will be run with
+  # the +target_version+.
   def migrate(target_version = T.unsafe(nil), &block); end
+
   def migrations; end
 
   # Returns the value of attribute migrations_paths.
@@ -15496,6 +17244,7 @@ class ActiveRecord::MigrationContext
   def needs_migration?; end
 
   def open; end
+  def pending_migration_versions; end
 
   # @return [Boolean]
   def protected_environment?; end
@@ -15506,7 +17255,7 @@ class ActiveRecord::MigrationContext
   # Returns the value of attribute schema_migration.
   def schema_migration; end
 
-  def up(target_version = T.unsafe(nil)); end
+  def up(target_version = T.unsafe(nil), &block); end
 
   private
 
@@ -15609,7 +17358,7 @@ class ActiveRecord::Migrator
   private
 
   # Wrap the migration in a transaction only if supported by the adapter.
-  def ddl_transaction(migration); end
+  def ddl_transaction(migration, &block); end
 
   # @return [Boolean]
   def down?; end
@@ -15655,7 +17404,7 @@ class ActiveRecord::Migrator
   def validate(migrations); end
 
   def with_advisory_lock; end
-  def with_advisory_lock_connection; end
+  def with_advisory_lock_connection(&block); end
 
   class << self
     # For cases where a table doesn't exist like loading from schema cache
@@ -15684,6 +17433,7 @@ module ActiveRecord::ModelSchema
   include GeneratedInstanceMethods
 
   mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::ActiveRecord::ModelSchema::ClassMethods
 
   class << self
     # Derives the join table name for +first_table+ and +second_table+. The
@@ -15703,12 +17453,18 @@ module ActiveRecord::ModelSchema
     def implicit_order_column; end
     def implicit_order_column=(value); end
     def implicit_order_column?; end
+    def inheritance_column; end
+    def inheritance_column=(value); end
+    def inheritance_column?; end
     def internal_metadata_table_name; end
     def internal_metadata_table_name=(value); end
     def internal_metadata_table_name?; end
     def pluralize_table_names; end
     def pluralize_table_names=(value); end
     def pluralize_table_names?; end
+    def primary_key_prefix_type; end
+    def primary_key_prefix_type=(value); end
+    def primary_key_prefix_type?; end
     def schema_migrations_table_name; end
     def schema_migrations_table_name=(value); end
     def schema_migrations_table_name?; end
@@ -15723,6 +17479,8 @@ module ActiveRecord::ModelSchema
   module GeneratedInstanceMethods
     def pluralize_table_names; end
     def pluralize_table_names?; end
+    def primary_key_prefix_type; end
+    def primary_key_prefix_type?; end
     def table_name_prefix; end
     def table_name_prefix?; end
     def table_name_suffix; end
@@ -15804,20 +17562,6 @@ module ActiveRecord::ModelSchema::ClassMethods
   #   user.category # => raises NoMethodError
   def ignored_columns=(columns); end
 
-  # Defines the name of the table column which will store the class name on single-table
-  # inheritance situations.
-  #
-  # The default inheritance column name is +type+, which means it's a
-  # reserved word inside Active Record. To be able to use single-table
-  # inheritance with another column name, or to use the column +type+ in
-  # your own model for something else, you can set +inheritance_column+:
-  #
-  #     self.inheritance_column = 'zoink'
-  def inheritance_column; end
-
-  # Sets the value of inheritance_column
-  def inheritance_column=(value); end
-
   # Returns the next value that will be used as the primary key on
   # an insert statement.
   def next_sequence_value; end
@@ -15838,14 +17582,16 @@ module ActiveRecord::ModelSchema::ClassMethods
   # Returns a quoted version of the table name, used to construct SQL statements.
   def quoted_table_name; end
 
+  def real_inheritance_column=(value); end
+
   # Resets all the cached information about columns, which will cause them
   # to be reloaded on the next request.
   #
   # The most common usage pattern for this method is probably in a migration,
   # when just after creating a table you want to populate it with some default
-  # values, eg:
+  # values, e.g.:
   #
-  #  class CreateJobLevels < ActiveRecord::Migration[6.0]
+  #  class CreateJobLevels < ActiveRecord::Migration[7.0]
   #    def up
   #      create_table :job_levels do |t|
   #        t.integer :id
@@ -15935,6 +17681,21 @@ module ActiveRecord::ModelSchema::ClassMethods
   # the table name guess for an Invoice class becomes "myapp_invoices".
   # Invoice::Lineitem becomes "myapp_invoice_lineitems".
   #
+  # Active Model Naming's +model_name+ is the base name used to guess the
+  # table name. In case a custom Active Model Name is defined, it will be
+  # used for the table name as well:
+  #
+  #   class PostRecord < ActiveRecord::Base
+  #     class << self
+  #       def model_name
+  #         ActiveModel::Name.new(self, nil, "Post")
+  #       end
+  #     end
+  #   end
+  #
+  #   PostRecord.table_name
+  #   # => "posts"
+  #
   # You can also set your own table name explicitly:
   #
   #   class Mouse < ActiveRecord::Base
@@ -15984,9 +17745,7 @@ module ActiveRecord::ModelSchema::ClassMethods
   def schema_loaded?; end
 
   # Guesses the table name, but does not decorate it with prefix and suffix information.
-  def undecorated_table_name(class_name = T.unsafe(nil)); end
-
-  def warn_if_deprecated_type(column); end
+  def undecorated_table_name(model_name); end
 end
 
 # Raised when there are multiple errors while doing a mass assignment through the
@@ -16280,7 +18039,7 @@ end
 #   member.posts.second.title # => '[UPDATED] other post'
 #
 # However, the above applies if the parent model is being updated as well.
-# For example, If you wanted to create a +member+ named _joe_ and wanted to
+# For example, if you wanted to create a +member+ named _joe_ and wanted to
 # update the +posts+ at the same time, that would give an
 # ActiveRecord::RecordNotFound error.
 #
@@ -16345,18 +18104,19 @@ end
 #
 # === Validating the presence of a parent model
 #
-# If you want to validate that a child record is associated with a parent
-# record, you can use the +validates_presence_of+ method and the +:inverse_of+
-# key as this example illustrates:
+# The +belongs_to+ association validates the presence of the parent model
+# by default. You can disable this behavior by specifying <code>optional: true</code>.
+# This can be used, for example, when conditionally validating the presence
+# of the parent model:
 #
-#   class Member < ActiveRecord::Base
-#     has_many :posts, inverse_of: :member
-#     accepts_nested_attributes_for :posts
+#   class Veterinarian < ActiveRecord::Base
+#     has_many :patients, inverse_of: :veterinarian
+#     accepts_nested_attributes_for :patients
 #   end
 #
-#   class Post < ActiveRecord::Base
-#     belongs_to :member, inverse_of: :posts
-#     validates_presence_of :member
+#   class Patient < ActiveRecord::Base
+#     belongs_to :veterinarian, inverse_of: :patients, optional: true
+#     validates :veterinarian, presence: true, unless: -> { awaiting_intake }
 #   end
 #
 # Note that if you do not specify the +:inverse_of+ option, then
@@ -16453,7 +18213,24 @@ class ActiveRecord::NestedAttributes::TooManyRecords < ::ActiveRecord::ActiveRec
 ActiveRecord::NestedAttributes::UNASSIGNABLE_KEYS = T.let(T.unsafe(nil), Array)
 
 # Raised when a given database does not exist.
-class ActiveRecord::NoDatabaseError < ::ActiveRecord::StatementInvalid; end
+class ActiveRecord::NoDatabaseError < ::ActiveRecord::StatementInvalid
+  include ::ActiveSupport::ActionableError
+  extend ::ActiveSupport::ActionableError::ClassMethods
+
+  # @return [NoDatabaseError] a new instance of NoDatabaseError
+  def initialize(message = T.unsafe(nil)); end
+
+  def _actions; end
+  def _actions=(_arg0); end
+  def _actions?; end
+
+  class << self
+    def _actions; end
+    def _actions=(value); end
+    def _actions?; end
+    def db_error(db_name); end
+  end
+end
 
 class ActiveRecord::NoEnvironmentInSchemaError < ::ActiveRecord::MigrationError
   # @return [NoEnvironmentInSchemaError] a new instance of NoEnvironmentInSchemaError
@@ -16536,12 +18313,11 @@ module ActiveRecord::NullRelation
 
   def or(other); end
   def pluck(*column_names); end
-  def to_sql; end
   def update_all(_updates); end
 
   private
 
-  def exec_queries; end
+  def exec_main_query(async: T.unsafe(nil)); end
 end
 
 class ActiveRecord::PendingMigrationError < ::ActiveRecord::MigrationError
@@ -16573,24 +18349,24 @@ module ActiveRecord::Persistence
   mixes_in_class_methods ::ActiveRecord::Persistence::ClassMethods
 
   # Returns an instance of the specified +klass+ with the attributes of the
-  # current record. This is mostly useful in relation to single-table
-  # inheritance structures where you want a subclass to appear as the
+  # current record. This is mostly useful in relation to single table
+  # inheritance (STI) structures where you want a subclass to appear as the
   # superclass. This can be used along with record identification in
   # Action Pack to allow, say, <tt>Client < Company</tt> to do something
   # like render <tt>partial: @client.becomes(Company)</tt> to render that
   # instance using the companies/company partial instead of clients/client.
   #
   # Note: The new instance will share a link to the same attributes as the original class.
-  # Therefore the sti column value will still be the same.
+  # Therefore the STI column value will still be the same.
   # Any change to the attributes on either instance will affect both instances.
-  # If you want to change the sti column as well, use #becomes! instead.
+  # If you want to change the STI column as well, use #becomes! instead.
   def becomes(klass); end
 
-  # Wrapper around #becomes that also changes the instance's sti column value.
+  # Wrapper around #becomes that also changes the instance's STI column value.
   # This is especially useful if you want to persist the changed class in your
   # database.
   #
-  # Note: The old instance's sti column value will be changed too, as both objects
+  # Note: The old instance's STI column value will be changed too, as both objects
   # share the same set of attributes.
   def becomes!(klass); end
 
@@ -16675,6 +18451,11 @@ module ActiveRecord::Persistence
   #
   # @return [Boolean]
   def previously_new_record?; end
+
+  # Returns true if this object was previously persisted but now it has been deleted.
+  #
+  # @return [Boolean]
+  def previously_persisted?; end
 
   # Reloads the record from the database.
   #
@@ -16889,6 +18670,8 @@ module ActiveRecord::Persistence
   def _create_record(attribute_names = T.unsafe(nil)); end
 
   def _delete_row; end
+  def _find_record(options); end
+  def _primary_key_constraints_hash; end
 
   # @raise [ReadOnlyRecord]
   def _raise_readonly_record_error; end
@@ -16909,6 +18692,9 @@ module ActiveRecord::Persistence
 
   def _update_row(attribute_names, attempted_action = T.unsafe(nil)); end
 
+  # @return [Boolean]
+  def apply_scoping?(options); end
+
   # The name of the method used to touch a +belongs_to+ association when the
   # +:touch+ option is used.
   def belongs_to_touch_method; end
@@ -16919,6 +18705,7 @@ module ActiveRecord::Persistence
   def destroy_associations; end
 
   def destroy_row; end
+  def strict_loaded_associations; end
 
   # @raise [ActiveRecordError]
   def verify_readonly_attribute(name); end
@@ -17009,7 +18796,7 @@ module ActiveRecord::Persistence::ClassMethods
   # go through Active Record's type casting and serialization.
   #
   # See <tt>ActiveRecord::Persistence#insert_all</tt> for documentation.
-  def insert(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil)); end
+  def insert(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Inserts a single record into the database in a single SQL INSERT
   # statement. It does not instantiate any models nor does it trigger
@@ -17017,7 +18804,7 @@ module ActiveRecord::Persistence::ClassMethods
   # go through Active Record's type casting and serialization.
   #
   # See <tt>ActiveRecord::Persistence#insert_all!</tt> for more.
-  def insert!(attributes, returning: T.unsafe(nil)); end
+  def insert!(attributes, returning: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Inserts multiple records into the database in a single SQL INSERT
   # statement. It does not instantiate any models nor does it trigger
@@ -17043,6 +18830,9 @@ module ActiveRecord::Persistence::ClassMethods
   #   or <tt>returning: false</tt> to omit the underlying <tt>RETURNING</tt> SQL
   #   clause entirely.
   #
+  #   You can also pass an SQL string if you need more control on the return values
+  #   (for example, <tt>returning: "id, name as new_name"</tt>).
+  #
   # [:unique_by]
   #   (PostgreSQL and SQLite only) By default rows are considered to be unique
   #   by every unique index on the table. Any duplicate rows are skipped.
@@ -17059,6 +18849,17 @@ module ActiveRecord::Persistence::ClassMethods
   #     unique_by: %i[ author_id name ]
   #     unique_by: :index_books_on_isbn
   #
+  # [:record_timestamps]
+  #   By default, automatic setting of timestamp columns is controlled by
+  #   the model's <tt>record_timestamps</tt> config, matching typical
+  #   behavior.
+  #
+  #   To override this and force automatic setting of timestamp columns one
+  #   way or the other, pass <tt>:record_timestamps</tt>:
+  #
+  #     record_timestamps: true  # Always set timestamps automatically
+  #     record_timestamps: false # Never set timestamps automatically
+  #
   # Because it relies on the index information from the database
   # <tt>:unique_by</tt> is recommended to be paired with
   # Active Record's schema_cache.
@@ -17072,7 +18873,15 @@ module ActiveRecord::Persistence::ClassMethods
   #     { id: 1, title: "Rework", author: "David" },
   #     { id: 1, title: "Eloquent Ruby", author: "Russ" }
   #   ])
-  def insert_all(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil)); end
+  #
+  #   # insert_all works on chained scopes, and you can use create_with
+  #   # to set default attributes for all inserted records.
+  #
+  #   author.books.create_with(created_at: Time.now).insert_all([
+  #     { id: 1, title: "Rework" },
+  #     { id: 2, title: "Eloquent Ruby" }
+  #   ])
+  def insert_all(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Inserts multiple records into the database in a single SQL INSERT
   # statement. It does not instantiate any models nor does it trigger
@@ -17100,6 +18909,20 @@ module ActiveRecord::Persistence::ClassMethods
   #   or <tt>returning: false</tt> to omit the underlying <tt>RETURNING</tt> SQL
   #   clause entirely.
   #
+  #   You can also pass an SQL string if you need more control on the return values
+  #   (for example, <tt>returning: "id, name as new_name"</tt>).
+  #
+  # [:record_timestamps]
+  #   By default, automatic setting of timestamp columns is controlled by
+  #   the model's <tt>record_timestamps</tt> config, matching typical
+  #   behavior.
+  #
+  #   To override this and force automatic setting of timestamp columns one
+  #   way or the other, pass <tt>:record_timestamps</tt>:
+  #
+  #     record_timestamps: true  # Always set timestamps automatically
+  #     record_timestamps: false # Never set timestamps automatically
+  #
   # ==== Examples
   #
   #   # Insert multiple records
@@ -17114,7 +18937,7 @@ module ActiveRecord::Persistence::ClassMethods
   #     { id: 1, title: "Rework", author: "David" },
   #     { id: 1, title: "Eloquent Ruby", author: "Russ" }
   #   ])
-  def insert_all!(attributes, returning: T.unsafe(nil)); end
+  def insert_all!(attributes, returning: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Given an attributes hash, +instantiate+ returns a new instance of
   # the appropriate class. Accepts only keys as strings.
@@ -17134,6 +18957,7 @@ module ActiveRecord::Persistence::ClassMethods
   # ==== Parameters
   #
   # * +id+ - This should be the id or an array of ids to be updated.
+  #   Optional argument, defaults to all records in the relation.
   # * +attributes+ - This should be a hash of attributes or an array of hashes.
   #
   # ==== Examples
@@ -17156,13 +18980,17 @@ module ActiveRecord::Persistence::ClassMethods
   # for updating all records in a single query.
   def update(id = T.unsafe(nil), attributes); end
 
+  # Updates the object (or multiple objects) just like #update but calls #update! instead
+  # of +update+, so an exception is raised if the record is invalid and saving will fail.
+  def update!(id = T.unsafe(nil), attributes); end
+
   # Updates or inserts (upserts) a single record into the database in a
   # single SQL INSERT statement. It does not instantiate any models nor does
   # it trigger Active Record callbacks or validations. Though passed values
   # go through Active Record's type casting and serialization.
   #
   # See <tt>ActiveRecord::Persistence#upsert_all</tt> for documentation.
-  def upsert(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil)); end
+  def upsert(attributes, on_duplicate: T.unsafe(nil), returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   # Updates or inserts (upserts) multiple records into the database in a
   # single SQL INSERT statement. It does not instantiate any models nor does
@@ -17175,6 +19003,10 @@ module ActiveRecord::Persistence::ClassMethods
   # Returns an <tt>ActiveRecord::Result</tt> with its contents based on
   # <tt>:returning</tt> (see below).
   #
+  # By default, +upsert_all+ will update all the columns that can be updated when
+  # there is a conflict. These are all the columns except primary keys, read-only
+  # columns, and columns covered by the optional +unique_by+.
+  #
   # ==== Options
   #
   # [:returning]
@@ -17183,6 +19015,9 @@ module ActiveRecord::Persistence::ClassMethods
   #   Pass <tt>returning: %w[ id name ]</tt> for both id and name
   #   or <tt>returning: false</tt> to omit the underlying <tt>RETURNING</tt> SQL
   #   clause entirely.
+  #
+  #   You can also pass an SQL string if you need more control on the return values
+  #   (for example, <tt>returning: "id, name as new_name"</tt>).
   #
   # [:unique_by]
   #   (PostgreSQL and SQLite only) By default rows are considered to be unique
@@ -17204,6 +19039,54 @@ module ActiveRecord::Persistence::ClassMethods
   # <tt>:unique_by</tt> is recommended to be paired with
   # Active Record's schema_cache.
   #
+  # [:on_duplicate]
+  #   Configure the SQL update sentence that will be used in case of conflict.
+  #
+  #   NOTE: If you use this option you must provide all the columns you want to update
+  #   by yourself.
+  #
+  #   Example:
+  #
+  #     Commodity.upsert_all(
+  #       [
+  #         { id: 2, name: "Copper", price: 4.84 },
+  #         { id: 4, name: "Gold", price: 1380.87 },
+  #         { id: 6, name: "Aluminium", price: 0.35 }
+  #       ],
+  #       on_duplicate: Arel.sql("price = GREATEST(commodities.price, EXCLUDED.price)")
+  #     )
+  #
+  #   See the related +:update_only+ option. Both options can't be used at the same time.
+  #
+  # [:update_only]
+  #   Provide a list of column names that will be updated in case of conflict. If not provided,
+  #   +upsert_all+ will update all the columns that can be updated. These are all the columns
+  #   except primary keys, read-only columns, and columns covered by the optional +unique_by+
+  #
+  #   Example:
+  #
+  #     Commodity.upsert_all(
+  #       [
+  #         { id: 2, name: "Copper", price: 4.84 },
+  #         { id: 4, name: "Gold", price: 1380.87 },
+  #         { id: 6, name: "Aluminium", price: 0.35 }
+  #       ],
+  #       update_only: [:price] # Only prices will be updated
+  #     )
+  #
+  #   See the related +:on_duplicate+ option. Both options can't be used at the same time.
+  #
+  # [:record_timestamps]
+  #   By default, automatic setting of timestamp columns is controlled by
+  #   the model's <tt>record_timestamps</tt> config, matching typical
+  #   behavior.
+  #
+  #   To override this and force automatic setting of timestamp columns one
+  #   way or the other, pass <tt>:record_timestamps</tt>:
+  #
+  #     record_timestamps: true  # Always set timestamps automatically
+  #     record_timestamps: false # Never set timestamps automatically
+  #
   # ==== Examples
   #
   #   # Inserts multiple records, performing an upsert when records have duplicate ISBNs.
@@ -17215,11 +19098,14 @@ module ActiveRecord::Persistence::ClassMethods
   #   ], unique_by: :isbn)
   #
   #   Book.find_by(isbn: "1").title # => "Eloquent Ruby"
-  def upsert_all(attributes, returning: T.unsafe(nil), unique_by: T.unsafe(nil)); end
+  def upsert_all(attributes, on_duplicate: T.unsafe(nil), update_only: T.unsafe(nil), returning: T.unsafe(nil), unique_by: T.unsafe(nil), record_timestamps: T.unsafe(nil)); end
 
   private
 
-  def _substitute_values(values); end
+  # Called by +_update_record+ and +_delete_record+
+  # to build `where` clause from default scopes.
+  # Skips empty scopes.
+  def build_default_constraint; end
 
   # Called by +instantiate+ to decide which class to use for a new
   # record instance.
@@ -17311,10 +19197,6 @@ class ActiveRecord::PredicateBuilder::AssociationQueryValue
   # Returns the value of attribute value.
   def value; end
 end
-
-# No-op BaseHandler to work Mashal.load(File.read("legacy_relation.dump")).
-# TODO: Remove the constant alias once Rails 6.1 has released.
-ActiveRecord::PredicateBuilder::BaseHandler = ActiveRecord::PredicateBuilder::BasicObjectHandler
 
 class ActiveRecord::PredicateBuilder::BasicObjectHandler
   # @return [BasicObjectHandler] a new instance of BasicObjectHandler
@@ -17443,9 +19325,100 @@ end
 # QueryCanceled will be raised when canceling statement due to user request.
 class ActiveRecord::QueryCanceled < ::ActiveRecord::QueryAborted; end
 
+# = Active Record Query Logs
+#
+# Automatically tag SQL queries with runtime information.
+#
+# Default tags available for use:
+#
+# * +application+
+# * +pid+
+# * +socket+
+# * +db_host+
+# * +database+
+#
+# _Action Controller and Active Job tags are also defined when used in Rails:_
+#
+# * +controller+
+# * +action+
+# * +job+
+#
+# The tags used in a query can be configured directly:
+#
+#     ActiveRecord::QueryLogs.tags = [ :application, :controller, :action, :job ]
+#
+# or via Rails configuration:
+#
+#     config.active_record.query_log_tags = [ :application, :controller, :action, :job ]
+#
+# To add new comment tags, add a hash to the tags array containing the keys and values you
+# want to add to the comment. Dynamic content can be created by setting a proc or lambda value in a hash,
+# and can reference any value stored in the +context+ object.
+#
+# Example:
+#
+#    tags = [
+#      :application,
+#      {
+#        custom_tag: ->(context) { context[:controller]&.controller_name },
+#        custom_value: -> { Custom.value },
+#      }
+#    ]
+#    ActiveRecord::QueryLogs.tags = tags
+#
+# The QueryLogs +context+ can be manipulated via the +ActiveSupport::ExecutionContext.set+ method.
+#
+# Temporary updates limited to the execution of a block:
+#
+#    ActiveSupport::ExecutionContext.set(foo: Bar.new) do
+#      posts = Post.all
+#    end
+#
+# Direct updates to a context value:
+#
+#    ActiveSupport::ExecutionContext[:foo] = Bar.new
+#
+# Tag comments can be prepended to the query:
+#
+#    ActiveRecord::QueryLogs.prepend_comment = true
+#
+# For applications where the content will not change during the lifetime of
+# the request or job execution, the tags can be cached for reuse in every query:
+#
+#    ActiveRecord::QueryLogs.cache_query_log_tags = true
+#
+# This option can be set during application configuration or in a Rails initializer:
+#
+#    config.active_record.cache_query_log_tags = true
+module ActiveRecord::QueryLogs
+  class << self
+    def cache_query_log_tags; end
+    def cache_query_log_tags=(val); end
+    def cached_comment; end
+    def cached_comment=(obj); end
+    def call(sql); end
+    def clear_cache; end
+    def prepend_comment; end
+    def prepend_comment=(val); end
+    def taggings; end
+    def taggings=(val); end
+    def tags; end
+    def tags=(val); end
+
+    private
+
+    # Returns an SQL comment +String+ containing the query log tags.
+    # Sets and returns a cached comment if <tt>cache_query_log_tags</tt> is +true+.
+    def comment; end
+
+    def escape_sql_comment(content); end
+    def tag_content; end
+    def uncached_comment; end
+  end
+end
+
 module ActiveRecord::QueryMethods
   include ::ActiveModel::ForbiddenAttributesProtection
-  extend ::ActiveSupport::Concern
 
   def _select!(*fields); end
 
@@ -17533,6 +19506,33 @@ module ActiveRecord::QueryMethods
   def eager_load_values; end
   def eager_load_values=(value); end
 
+  # Excludes the specified record (or collection of records) from the resulting
+  # relation. For example:
+  #
+  #   Post.excluding(post)
+  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" != 1
+  #
+  #   Post.excluding(post_one, post_two)
+  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" NOT IN (1, 2)
+  #
+  # This can also be called on associations. As with the above example, either
+  # a single record of collection thereof may be specified:
+  #
+  #   post = Post.find(1)
+  #   comment = Comment.find(2)
+  #   post.comments.excluding(comment)
+  #   # SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 1 AND "comments"."id" != 2
+  #
+  # This is short-hand for <tt>.where.not(id: post.id)</tt> and <tt>.where.not(id: [post_one.id, post_two.id])</tt>.
+  #
+  # An <tt>ArgumentError</tt> will be raised if either no records are
+  # specified, or if any of the records in the collection (if a collection
+  # is passed in) are not instances of the same model that the relation is
+  # scoping.
+  def excluding(*records); end
+
+  def excluding!(records); end
+
   # Used to extend a scope with additional methods, either through
   # a module or through a block provided.
   #
@@ -17587,7 +19587,7 @@ module ActiveRecord::QueryMethods
   #   account.memberships.preload(:user).collect(&:user)
   def extract_associated(association); end
 
-  # Specifies table from which the records will be fetched. For example:
+  # Specifies the table from which the records will be fetched. For example:
   #
   #   Topic.select('title').from('posts')
   #   # SELECT title FROM posts
@@ -17597,8 +19597,26 @@ module ActiveRecord::QueryMethods
   #   Topic.select('title').from(Topic.approved)
   #   # SELECT title FROM (SELECT * FROM topics WHERE approved = 't') subquery
   #
+  # Passing a second argument (string or symbol), creates the alias for the SQL from clause. Otherwise the alias "subquery" is used:
+  #
   #   Topic.select('a.title').from(Topic.approved, :a)
   #   # SELECT a.title FROM (SELECT * FROM topics WHERE approved = 't') a
+  #
+  # It does not add multiple arguments to the SQL from clause. The last +from+ chained is the one used:
+  #
+  #   Topic.select('title').from(Topic.approved).from(Topic.inactive)
+  #   # SELECT title FROM (SELECT topics.* FROM topics WHERE topics.active = 'f') subquery
+  #
+  # For multiple arguments for the SQL from clause, you can pass a string with the exact elements in the SQL from list:
+  #
+  #   color = "red"
+  #   Color
+  #     .from("colors c, JSONB_ARRAY_ELEMENTS(colored_things) AS colorvalues(colorvalue)")
+  #     .where("colorvalue->>'color' = ?", color)
+  #     .select("c.*").to_a
+  #   # SELECT c.*
+  #   # FROM colors c, JSONB_ARRAY_ELEMENTS(colored_things) AS colorvalues(colorvalue)
+  #   # WHERE (colorvalue->>'color' = 'red')
   def from(value, subquery_name = T.unsafe(nil)); end
 
   def from!(value, subquery_name = T.unsafe(nil)); end
@@ -17640,6 +19658,15 @@ module ActiveRecord::QueryMethods
   def having!(opts, *rest); end
   def having_clause; end
   def having_clause=(value); end
+
+  # Allows to specify an order by a specific set of values. Depending on your
+  # adapter this will either use a CASE statement or a built-in function.
+  #
+  #   User.in_order_of(:id, [1, 5, 3])
+  #   # SELECT "users".* FROM "users"
+  #   #   ORDER BY FIELD("users"."id", 1, 5, 3)
+  #   #   WHERE "users"."id" IN (1, 5, 3)
+  def in_order_of(column, values); end
 
   # Specify relationships to be included in the result set. For
   # example:
@@ -17686,7 +19713,39 @@ module ActiveRecord::QueryMethods
   def includes_values; end
   def includes_values=(value); end
 
-  # Performs a joins on +args+. The given symbol(s) should match the name of
+  # Allows you to invert an entire where clause instead of manually applying conditions.
+  #
+  #   class User
+  #     scope :active, -> { where(accepted: true, locked: false) }
+  #   end
+  #
+  #   User.where(accepted: true)
+  #   # WHERE `accepted` = 1
+  #
+  #   User.where(accepted: true).invert_where
+  #   # WHERE `accepted` != 1
+  #
+  #   User.active
+  #   # WHERE `accepted` = 1 AND `locked` = 0
+  #
+  #   User.active.invert_where
+  #   # WHERE NOT (`accepted` = 1 AND `locked` = 0)
+  #
+  # Be careful because this inverts all conditions before +invert_where+ call.
+  #
+  #   class User
+  #     scope :active, -> { where(accepted: true, locked: false) }
+  #     scope :inactive, -> { active.invert_where } # Do not attempt it
+  #   end
+  #
+  #   # It also inverts `where(role: 'admin')` unexpectedly.
+  #   User.where(role: 'admin').inactive
+  #   # WHERE NOT (`role` = 'admin' AND `accepted` = 1 AND `locked` = 0)
+  def invert_where; end
+
+  def invert_where!; end
+
+  # Performs JOINs on +args+. The given symbol(s) should match the name of
   # the association(s).
   #
   #   User.joins(:posts)
@@ -17720,13 +19779,13 @@ module ActiveRecord::QueryMethods
   def joins_values; end
   def joins_values=(value); end
 
-  # Performs a left outer joins on +args+:
+  # Performs LEFT OUTER JOINs on +args+:
   #
   #   User.left_outer_joins(:posts)
   #   => SELECT "users".* FROM "users" LEFT OUTER JOIN "posts" ON "posts"."user_id" = "users"."id"
   def left_joins(*args); end
 
-  # Performs a left outer joins on +args+:
+  # Performs LEFT OUTER JOINs on +args+:
   #
   #   User.left_outer_joins(:posts)
   #   => SELECT "users".* FROM "users" LEFT OUTER JOIN "posts" ON "posts"."user_id" = "users"."id"
@@ -17829,16 +19888,36 @@ module ActiveRecord::QueryMethods
 
   def or!(other); end
 
-  # Allows to specify an order attribute:
+  # Applies an <code>ORDER BY</code> clause to a query.
+  #
+  # #order accepts arguments in one of several formats.
+  #
+  # === symbols
+  #
+  # The symbol represents the name of the column you want to order the results by.
   #
   #   User.order(:name)
   #   # SELECT "users".* FROM "users" ORDER BY "users"."name" ASC
   #
+  # By default, the order is ascending. If you want descending order, you can
+  # map the column name symbol to +:desc+.
+  #
   #   User.order(email: :desc)
   #   # SELECT "users".* FROM "users" ORDER BY "users"."email" DESC
   #
+  # Multiple columns can be passed this way, and they will be applied in the order specified.
+  #
   #   User.order(:name, email: :desc)
   #   # SELECT "users".* FROM "users" ORDER BY "users"."name" ASC, "users"."email" DESC
+  #
+  # === strings
+  #
+  # Strings are passed directly to the database, allowing you to specify
+  # simple SQL expressions.
+  #
+  # This could be a source of SQL injection, so only strings composed of plain
+  # column names and simple <code>function(column_name)</code> expressions
+  # with optional +ASC+/+DESC+ modifiers are allowed.
   #
   #   User.order('name')
   #   # SELECT "users".* FROM "users" ORDER BY name
@@ -17848,6 +19927,19 @@ module ActiveRecord::QueryMethods
   #
   #   User.order('name DESC, email')
   #   # SELECT "users".* FROM "users" ORDER BY name DESC, email
+  #
+  # === Arel
+  #
+  # If you need to pass in complicated expressions that you have verified
+  # are safe for the database, you can use Arel.
+  #
+  #   User.order(Arel.sql('end_date - start_date'))
+  #   # SELECT "users".* FROM "users" ORDER BY end_date - start_date
+  #
+  # Custom query syntax, like JSON columns for Postgres, is supported in this way.
+  #
+  #   User.order(Arel.sql("payload->>'kind'"))
+  #   # SELECT "users".* FROM "users" ORDER BY payload->>'kind'
   def order(*args); end
 
   # Same as #order but operates on relation in-place instead of copying.
@@ -18011,6 +20103,20 @@ module ActiveRecord::QueryMethods
   def strict_loading_value; end
   def strict_loading_value=(value); end
 
+  # Checks whether the given relation is structurally compatible with this relation, to determine
+  # if it's possible to use the #and and #or methods without raising an error. Structurally
+  # compatible is defined as: they must be scoping the same model, and they must differ only by
+  # #where (if no #group has been defined) or #having (if a #group is present).
+  #
+  #    Post.where("id = 1").structurally_compatible?(Post.where("author_id = 3"))
+  #    # => true
+  #
+  #    Post.joins(:comments).structurally_compatible?(Post.where("id = 1"))
+  #    # => false
+  #
+  # @return [Boolean]
+  def structurally_compatible?(other); end
+
   # Deduplicate multiple values.
   def uniq!(name); end
 
@@ -18118,13 +20224,13 @@ module ActiveRecord::QueryMethods
   #
   # Fields can be symbols or strings. Values can be single values, arrays, or ranges.
   #
-  #    User.where({ name: "Joe", email: "joe@example.com" })
+  #    User.where(name: "Joe", email: "joe@example.com")
   #    # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com'
   #
-  #    User.where({ name: ["Alice", "Bob"]})
+  #    User.where(name: ["Alice", "Bob"])
   #    # SELECT * FROM users WHERE name IN ('Alice', 'Bob')
   #
-  #    User.where({ created_at: (Time.now.midnight - 1.day)..Time.now.midnight })
+  #    User.where(created_at: (Time.now.midnight - 1.day)..Time.now.midnight)
   #    # SELECT * FROM users WHERE (created_at BETWEEN '2012-06-09 07:00:00.000000' AND '2012-06-10 07:00:00.000000')
   #
   # In the case of a belongs_to relationship, an association key can be used
@@ -18154,8 +20260,8 @@ module ActiveRecord::QueryMethods
   #
   # For hash conditions, you can either use the table name in the key, or use a sub-hash.
   #
-  #    User.joins(:posts).where({ "posts.published" => true })
-  #    User.joins(:posts).where({ posts: { published: true } })
+  #    User.joins(:posts).where("posts.published" => true)
+  #    User.joins(:posts).where(posts: { published: true })
   #
   # === no argument
   #
@@ -18176,6 +20282,31 @@ module ActiveRecord::QueryMethods
   def where!(opts, *rest); end
   def where_clause; end
   def where_clause=(value); end
+
+  # Excludes the specified record (or collection of records) from the resulting
+  # relation. For example:
+  #
+  #   Post.excluding(post)
+  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" != 1
+  #
+  #   Post.excluding(post_one, post_two)
+  #   # SELECT "posts".* FROM "posts" WHERE "posts"."id" NOT IN (1, 2)
+  #
+  # This can also be called on associations. As with the above example, either
+  # a single record of collection thereof may be specified:
+  #
+  #   post = Post.find(1)
+  #   comment = Comment.find(2)
+  #   post.comments.excluding(comment)
+  #   # SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 1 AND "comments"."id" != 2
+  #
+  # This is short-hand for <tt>.where.not(id: post.id)</tt> and <tt>.where.not(id: [post_one.id, post_two.id])</tt>.
+  #
+  # An <tt>ArgumentError</tt> will be raised if either no records are
+  # specified, or if any of the records in the collection (if a collection
+  # is passed in) are not instances of the same model that the relation is
+  # scoping.
+  def without(*records); end
 
   protected
 
@@ -18209,11 +20340,11 @@ module ActiveRecord::QueryMethods
   #    Post.references()   # raises an error
   #    Post.references([]) # does not raise an error
   #
-  # This particular method should be called with a method_name and the args
+  # This particular method should be called with a method_name (__callee__) and the args
   # passed into that method as an input. For example:
   #
   # def references(*args)
-  #   check_if_method_has_arguments!("references", args)
+  #   check_if_method_has_arguments!(__callee__, args)
   #   ...
   # end
   def check_if_method_has_arguments!(method_name, args, message = T.unsafe(nil)); end
@@ -18223,7 +20354,7 @@ module ActiveRecord::QueryMethods
   # @return [Boolean]
   def does_not_support_reverse?(order); end
 
-  def each_join_dependencies(join_dependencies = T.unsafe(nil)); end
+  def each_join_dependencies(join_dependencies = T.unsafe(nil), &block); end
   def lookup_table_klass_from_join_dependencies(table_name); end
   def order_column(field); end
   def preprocess_order_args(order_args); end
@@ -18251,6 +20382,26 @@ class ActiveRecord::QueryMethods::WhereChain
   # @return [WhereChain] a new instance of WhereChain
   def initialize(scope); end
 
+  # Returns a new relation with joins and where clause to identify
+  # associated relations.
+  #
+  # For example, posts that are associated to a related author:
+  #
+  #    Post.where.associated(:author)
+  #    # SELECT "posts".* FROM "posts"
+  #    # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  #    # WHERE "authors"."id" IS NOT NULL
+  #
+  # Additionally, multiple relations can be combined. This will return posts
+  # associated to both an author and any comments:
+  #
+  #    Post.where.associated(:author, :comments)
+  #    # SELECT "posts".* FROM "posts"
+  #    # INNER JOIN "authors" ON "authors"."id" = "posts"."author_id"
+  #    # INNER JOIN "comments" ON "comments"."post_id" = "posts"."id"
+  #    # WHERE "authors"."id" IS NOT NULL AND "comments"."id" IS NOT NULL
+  def associated(*associations); end
+
   # Returns a new relation with left outer joins and where clause to identify
   # missing relations.
   #
@@ -18269,7 +20420,7 @@ class ActiveRecord::QueryMethods::WhereChain
   #    # LEFT OUTER JOIN "authors" ON "authors"."id" = "posts"."author_id"
   #    # LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id"
   #    # WHERE "authors"."id" IS NULL AND "comments"."id" IS NULL
-  def missing(*args); end
+  def missing(*associations); end
 
   # Returns a new relation expressing WHERE + NOT condition according to
   # the conditions in the arguments.
@@ -18295,9 +20446,15 @@ class ActiveRecord::QueryMethods::WhereChain
   #    User.where.not(name: "Jon", role: "admin")
   #    # SELECT * FROM users WHERE NOT (name == 'Jon' AND role == 'admin')
   def not(opts, *rest); end
+
+  private
+
+  def scope_association_reflection(association); end
 end
 
 module ActiveRecord::Querying
+  def _load_from_sql(result_set, &block); end
+  def _query_by_sql(sql, binds = T.unsafe(nil), preparable: T.unsafe(nil), async: T.unsafe(nil)); end
   def and(*_arg0, &_arg1); end
   def annotate(*_arg0, &_arg1); end
   def any?(*_arg0, &_arg1); end
@@ -18329,6 +20486,7 @@ module ActiveRecord::Querying
   def distinct(*_arg0, &_arg1); end
   def eager_load(*_arg0, &_arg1); end
   def except(*_arg0, &_arg1); end
+  def excluding(*_arg0, &_arg1); end
   def exists?(*_arg0, &_arg1); end
   def extending(*_arg0, &_arg1); end
   def extract_associated(*_arg0, &_arg1); end
@@ -18360,6 +20518,9 @@ module ActiveRecord::Querying
   #
   #   Post.find_by_sql ["SELECT title FROM posts WHERE author = ? AND created > ?", author_id, start_date]
   #   Post.find_by_sql ["SELECT body FROM comments WHERE author = :user_id OR approved_by = :user_id", { :user_id => user_id }]
+  #
+  # Note that building your own SQL query string from user input may expose your application to
+  # injection attacks (https://guides.rubyonrails.org/security.html#sql-injection).
   def find_by_sql(sql, binds = T.unsafe(nil), preparable: T.unsafe(nil), &block); end
 
   def find_each(*_arg0, &_arg1); end
@@ -18367,6 +20528,7 @@ module ActiveRecord::Querying
   def find_or_create_by(*_arg0, &_arg1); end
   def find_or_create_by!(*_arg0, &_arg1); end
   def find_or_initialize_by(*_arg0, &_arg1); end
+  def find_sole_by(*_arg0, &_arg1); end
   def first(*_arg0, &_arg1); end
   def first!(*_arg0, &_arg1); end
   def first_or_create(*_arg0, &_arg1); end
@@ -18381,7 +20543,9 @@ module ActiveRecord::Querying
   def having(*_arg0, &_arg1); end
   def ids(*_arg0, &_arg1); end
   def in_batches(*_arg0, &_arg1); end
+  def in_order_of(*_arg0, &_arg1); end
   def includes(*_arg0, &_arg1); end
+  def invert_where(*_arg0, &_arg1); end
   def joins(*_arg0, &_arg1); end
   def last(*_arg0, &_arg1); end
   def last!(*_arg0, &_arg1); end
@@ -18414,6 +20578,7 @@ module ActiveRecord::Querying
   def second_to_last(*_arg0, &_arg1); end
   def second_to_last!(*_arg0, &_arg1); end
   def select(*_arg0, &_arg1); end
+  def sole(*_arg0, &_arg1); end
   def strict_loading(*_arg0, &_arg1); end
   def sum(*_arg0, &_arg1); end
   def take(*_arg0, &_arg1); end
@@ -18426,12 +20591,15 @@ module ActiveRecord::Querying
   def unscope(*_arg0, &_arg1); end
   def update_all(*_arg0, &_arg1); end
   def where(*_arg0, &_arg1); end
+  def without(*_arg0, &_arg1); end
 end
 
 ActiveRecord::Querying::QUERYING_METHODS = T.let(T.unsafe(nil), Array)
 
 # = Active Record Railtie
 class ActiveRecord::Railtie < ::Rails::Railtie; end
+
+ActiveRecord::Railtie::SQLITE3_PRODUCTION_WARN = T.let(T.unsafe(nil), String)
 
 # Raised when values that executed are out of range.
 class ActiveRecord::RangeError < ::ActiveRecord::StatementInvalid; end
@@ -18461,6 +20629,17 @@ end
 module ActiveRecord::ReadonlyAttributes::ClassMethods
   # Attributes listed as readonly will be used to create a new record but update operations will
   # ignore these fields.
+  #
+  # You can assign a new value to a readonly attribute, but it will be ignored when the record is updated.
+  #
+  # ==== Examples
+  #
+  #   class Post < ActiveRecord::Base
+  #     attr_readonly :title
+  #   end
+  #
+  #   post = Post.create!(title: "Introducing Ruby on Rails!")
+  #   post.update(title: "a different title") # change to title will be ignored
   def attr_readonly(*attributes); end
 
   # @return [Boolean]
@@ -18490,7 +20669,7 @@ class ActiveRecord::RecordInvalid < ::ActiveRecord::ActiveRecordError
 end
 
 # Raised by {ActiveRecord::Base#destroy!}[rdoc-ref:Persistence#destroy!]
-# when a call to {#destroy}[rdoc-ref:Persistence#destroy!]
+# when a call to {#destroy}[rdoc-ref:Persistence#destroy]
 # would return false.
 #
 #   begin
@@ -18560,6 +20739,9 @@ module ActiveRecord::Reflection
     def aggregate_reflections; end
     def aggregate_reflections=(value); end
     def aggregate_reflections?; end
+    def automatic_scope_inversing; end
+    def automatic_scope_inversing=(value); end
+    def automatic_scope_inversing?; end
   end
 
   module GeneratedInstanceMethods
@@ -18567,6 +20749,8 @@ module ActiveRecord::Reflection
     def _reflections?; end
     def aggregate_reflections; end
     def aggregate_reflections?; end
+    def automatic_scope_inversing; end
+    def automatic_scope_inversing?; end
   end
 end
 
@@ -18616,7 +20800,7 @@ class ActiveRecord::Reflection::AbstractReflection
 
   def inverse_of; end
 
-  # This shit is nasty. We need to avoid the following situation:
+  # We need to avoid the following situation:
   #
   #   * An associated record is deleted via record.destroy
   #   * Hence the callbacks run, and they find a belongs_to on the record with a
@@ -18631,7 +20815,7 @@ class ActiveRecord::Reflection::AbstractReflection
   # @return [Boolean]
   def inverse_updates_counter_in_memory?; end
 
-  # This shit is nasty. We need to avoid the following situation:
+  # We need to avoid the following situation:
   #
   #   * An associated record is deleted via record.destroy
   #   * Hence the callbacks run, and they find a belongs_to on the record with a
@@ -18644,7 +20828,7 @@ class ActiveRecord::Reflection::AbstractReflection
   def inverse_which_updates_counter_cache; end
 
   def join_scope(table, foreign_table, foreign_klass); end
-  def join_scopes(table, predicate_builder, klass = T.unsafe(nil)); end
+  def join_scopes(table, predicate_builder, klass = T.unsafe(nil), record = T.unsafe(nil)); end
   def klass_join_scope(table, predicate_builder); end
 
   # Returns a list of scopes that should be applied for this Reflection
@@ -18666,6 +20850,7 @@ class ActiveRecord::Reflection::AbstractReflection
 
   private
 
+  def ensure_option_not_given_as_class!(option_name); end
   def predicate_builder(table); end
   def primary_key(klass); end
 end
@@ -18700,7 +20885,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   def belongs_to?; end
 
   def check_eager_loadable!; end
-  def check_preloadable!; end
   def check_validity!; end
 
   # This is for clearing cache on the reflection. Useful for tests that need to compare
@@ -18719,10 +20903,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   def collection?; end
 
   def compute_class(name); end
-
-  # @return [Boolean]
-  def constructable?; end
-
   def extensions; end
   def foreign_key; end
 
@@ -18789,8 +20969,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # returns either +nil+ or the inverse association name that it finds.
   def automatic_inverse_of; end
 
-  def calculate_constructable(macro, options); end
-
   # Checks to see if the reflection doesn't have any options that prevent
   # us from being able to guess the inverse automatically. First, the
   # <tt>inverse_of</tt> option cannot be set to false. Second, we must
@@ -18798,11 +20976,8 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # Third, we must not have options such as <tt>:foreign_key</tt>
   # which prevent us from correctly guessing the inverse association.
   #
-  # Anything with a scope can additionally ruin our attempt at finding an
-  # inverse, so we exclude reflections with scopes.
-  #
   # @return [Boolean]
-  def can_find_inverse_of_automatically?(reflection); end
+  def can_find_inverse_of_automatically?(reflection, inverse_reflection = T.unsafe(nil)); end
 
   def derive_class_name; end
   def derive_foreign_key; end
@@ -18813,6 +20988,16 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # +nil+.
   def inverse_name; end
 
+  # Scopes on the potential inverse reflection prevent automatic
+  # <tt>inverse_of</tt>, since the scope could exclude the owner record
+  # we would inverse from. Scopes on the reflection itself allow for
+  # automatic <tt>inverse_of</tt> as long as
+  # <tt>config.active_record.automatic_scope_inversing<tt> is set to
+  # +true+ (the default for new applications).
+  #
+  # @return [Boolean]
+  def scope_allows_automatic_inverse_of?(reflection, inverse_reflection); end
+
   # Checks if the inverse reflection that is returned from the
   # +automatic_inverse_of+ method is a valid reflection. We must
   # make sure that the reflection's active_record name matches up
@@ -18821,9 +21006,6 @@ class ActiveRecord::Reflection::AssociationReflection < ::ActiveRecord::Reflecti
   # @return [Boolean]
   def valid_inverse_reflection?(reflection); end
 end
-
-ActiveRecord::Reflection::AssociationReflection::INVALID_AUTOMATIC_INVERSE_OPTIONS = T.let(T.unsafe(nil), Array)
-ActiveRecord::Reflection::AssociationReflection::VALID_AUTOMATIC_INVERSE_MACROS = T.let(T.unsafe(nil), Array)
 
 class ActiveRecord::Reflection::BelongsToReflection < ::ActiveRecord::Reflection::AssociationReflection
   def association_class; end
@@ -18841,10 +21023,8 @@ class ActiveRecord::Reflection::BelongsToReflection < ::ActiveRecord::Reflection
 
   private
 
-  def calculate_constructable(macro, options); end
-
   # @return [Boolean]
-  def can_find_inverse_of_automatically?(_); end
+  def can_find_inverse_of_automatically?(*_arg0); end
 end
 
 # \Reflection enables the ability to examine the associations and aggregations of
@@ -18916,10 +21096,6 @@ class ActiveRecord::Reflection::HasOneReflection < ::ActiveRecord::Reflection::A
   def has_one?; end
 
   def macro; end
-
-  private
-
-  def calculate_constructable(macro, options); end
 end
 
 # Base class for AggregateReflection and AssociationReflection. Objects of
@@ -18986,7 +21162,7 @@ class ActiveRecord::Reflection::PolymorphicReflection < ::ActiveRecord::Reflecti
   def constraints; end
   def join_foreign_key(*_arg0, &_arg1); end
   def join_primary_key(*_arg0, &_arg1); end
-  def join_scopes(table, predicate_builder, klass = T.unsafe(nil)); end
+  def join_scopes(table, predicate_builder, klass = T.unsafe(nil), record = T.unsafe(nil)); end
   def klass(*_arg0, &_arg1); end
   def name(*_arg0, &_arg1); end
   def plural_name(*_arg0, &_arg1); end
@@ -19036,7 +21212,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   def autosave=(arg); end
   def belongs_to?(*_arg0, &_arg1); end
   def check_eager_loadable!(*_arg0, &_arg1); end
-  def check_preloadable!(*_arg0, &_arg1); end
   def check_validity!; end
 
   # This is for clearing cache on the reflection. Useful for tests that need to compare
@@ -19064,7 +21239,6 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   def collection?(*_arg0, &_arg1); end
   def compute_class(*_arg0, &_arg1); end
   def constraints; end
-  def constructable?(*_arg0, &_arg1); end
   def extensions(*_arg0, &_arg1); end
   def foreign_key(*_arg0, &_arg1); end
   def foreign_type(*_arg0, &_arg1); end
@@ -19077,7 +21251,7 @@ class ActiveRecord::Reflection::ThroughReflection < ::ActiveRecord::Reflection::
   def join_foreign_key(*_arg0, &_arg1); end
   def join_id_for(*_arg0, &_arg1); end
   def join_primary_key(klass = T.unsafe(nil)); end
-  def join_scopes(table, predicate_builder, klass = T.unsafe(nil)); end
+  def join_scopes(table, predicate_builder, klass = T.unsafe(nil), record = T.unsafe(nil)); end
   def join_table(*_arg0, &_arg1); end
   def klass; end
   def macro(*_arg0, &_arg1); end
@@ -19195,8 +21369,6 @@ class ActiveRecord::Relation
   # @return [Boolean]
   def any?; end
 
-  def arel_attribute(*args, &block); end
-
   # @yield [attr, bind]
   def bind_attribute(name, value); end
 
@@ -19282,7 +21454,7 @@ class ActiveRecord::Relation
   # {ActiveRecord::Base.create!}[rdoc-ref:Persistence::ClassMethods#create!].
   def create!(attributes = T.unsafe(nil), &block); end
 
-  # Attempts to create a record with the given attributes in a table that has a unique constraint
+  # Attempts to create a record with the given attributes in a table that has a unique database constraint
   # on one or several of its columns. If a row already exists with one or several of these
   # unique constraints, the exception such an insertion would normally raise is caught,
   # and the existing record with those attributes is found using #find_by!.
@@ -19293,7 +21465,7 @@ class ActiveRecord::Relation
   #
   # There are several drawbacks to #create_or_find_by, though:
   #
-  # * The underlying table must have the relevant columns defined with unique constraints.
+  # * The underlying table must have the relevant columns defined with unique database constraints.
   # * A unique constraint violation may be triggered by only one, or at least less than all,
   #   of the given attributes. This means that the subsequent #find_by! may fail to find a
   #   matching record, which will then raise an <tt>ActiveRecord::RecordNotFound</tt> exception,
@@ -19427,7 +21599,7 @@ class ActiveRecord::Relation
   # above can be alternatively written this way:
   #
   #   # Find the first user named "Scarlett" or create a new one with a
-  #   # different last name.
+  #   # particular last name.
   #   User.find_or_create_by(first_name: 'Scarlett') do |user|
   #     user.last_name = 'Johansson'
   #   end
@@ -19480,6 +21652,26 @@ class ActiveRecord::Relation
   #   Post.where(published: true).load # => #<ActiveRecord::Relation>
   def load(&block); end
 
+  # Schedule the query to be performed from a background thread pool.
+  #
+  #   Post.where(published: true).load_async # => #<ActiveRecord::Relation>
+  #
+  # When the +Relation+ is iterated, if the background query wasn't executed yet,
+  # it will be performed by the foreground thread.
+  #
+  # Note that {config.active_record.async_query_executor}[https://guides.rubyonrails.org/configuring.html#config-active-record-async-query-executor] must be configured
+  # for queries to actually be executed concurrently. Otherwise it defaults to
+  # executing them in the foreground.
+  #
+  # +load_async+ will also fallback to executing in the foreground in the test environment when transactional
+  # fixtures are enabled.
+  #
+  # If the query was actually executed in the background, the Active Record logs will show
+  # it by prefixing the log line with <tt>ASYNC</tt>:
+  #
+  #   ASYNC Post Load (0.0ms) (db time 2ms)  SELECT "posts".* FROM "posts" LIMIT 100
+  def load_async; end
+
   # Returns the value of attribute loaded.
   def loaded; end
 
@@ -19531,6 +21723,13 @@ class ActiveRecord::Relation
   def reload; end
 
   def reset; end
+
+  # Returns <tt>true</tt> if the relation was scheduled on the background
+  # thread pool.
+  #
+  # @return [Boolean]
+  def scheduled?; end
+
   def scope_for_create; end
 
   # Scope all queries to the current scope.
@@ -19540,9 +21739,14 @@ class ActiveRecord::Relation
   #   end
   #   # => SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 1 ORDER BY "comments"."id" ASC LIMIT 1
   #
+  # If <tt>all_queries: true</tt> is passed, scoping will apply to all queries
+  # for the relation including +update+ and +delete+ on instances.
+  # Once +all_queries+ is set to true it cannot be set to false in a
+  # nested block.
+  #
   # Please check unscoped if you want to remove all previous scopes (including
   # the default_scope) during the execution of a block.
-  def scoping; end
+  def scoping(all_queries: T.unsafe(nil), &block); end
 
   # Returns size of the records.
   def size; end
@@ -19596,6 +21800,7 @@ class ActiveRecord::Relation
   def touch_all(*names, time: T.unsafe(nil)); end
 
   def update(id = T.unsafe(nil), attributes); end
+  def update!(id = T.unsafe(nil), attributes); end
 
   # Updates all records in the current relation with details given. This method constructs a single SQL UPDATE
   # statement and sends it straight to the database. It does not instantiate the involved models and it does not
@@ -19640,6 +21845,7 @@ class ActiveRecord::Relation
   def update_counters(counters); end
 
   def values; end
+  def values_for_queries; end
 
   # Returns a hash of where conditions.
   #
@@ -19660,23 +21866,29 @@ class ActiveRecord::Relation
   def _create!(attributes, &block); end
   def _increment_attribute(attribute, value = T.unsafe(nil)); end
   def _new(attributes, &block); end
-  def _scoping(scope); end
+  def _scoping(scope, registry, all_queries = T.unsafe(nil)); end
   def _substitute_values(values); end
 
   # @return [Boolean]
-  def already_in_scope?; end
+  def already_in_scope?(registry); end
 
-  def build_preloader; end
   def compute_cache_key(timestamp_column = T.unsafe(nil)); end
   def compute_cache_version(timestamp_column); end
   def current_scope_restoring_block(&block); end
+  def exec_main_query(async: T.unsafe(nil)); end
   def exec_queries(&block); end
+
+  # @return [Boolean]
+  def global_scope?(registry); end
+
   def initialize_copy(other); end
+  def instantiate_records(rows, &block); end
+  def limited_count; end
 
   # @return [Boolean]
   def references_eager_loaded_tables?; end
 
-  def skip_query_cache_if_necessary; end
+  def skip_query_cache_if_necessary(&block); end
   def tables_in_string(string); end
 end
 
@@ -19731,7 +21943,6 @@ class ActiveRecord::Relation::Merger
   def initialize(relation, other, rewhere = T.unsafe(nil)); end
 
   def merge; end
-  def normal_values; end
 
   # Returns the value of attribute other.
   def other; end
@@ -19749,6 +21960,7 @@ class ActiveRecord::Relation::Merger
   def merge_multi_values; end
   def merge_outer_joins; end
   def merge_preloads; end
+  def merge_select_values; end
   def merge_single_values; end
 
   # @return [Boolean]
@@ -19805,8 +22017,10 @@ class ActiveRecord::Relation::WhereClause
   def contradiction?; end
 
   def empty?(*_arg0, &_arg1); end
+  def eql?(other); end
   def except(*columns); end
   def extract_attributes; end
+  def hash; end
   def invert; end
   def merge(other, rewhere = T.unsafe(nil)); end
   def or(other); end
@@ -19844,10 +22058,6 @@ end
 
 ActiveRecord::Relation::WhereClause::ARRAY_WITH_EMPTY_STRING = T.let(T.unsafe(nil), Array)
 
-# No-op WhereClauseFactory to work Mashal.load(File.read("legacy_relation.dump")).
-# TODO: Remove the class once Rails 6.1 has released.
-class ActiveRecord::Relation::WhereClauseFactory; end
-
 # This class encapsulates a result returned from calling
 # {#exec_query}[rdoc-ref:ConnectionAdapters::DatabaseStatements#exec_query]
 # on any database connection adapter. For example:
@@ -19884,8 +22094,8 @@ class ActiveRecord::Result
   def initialize(columns, rows, column_types = T.unsafe(nil)); end
 
   def [](idx); end
+  def cancel; end
   def cast_values(type_overrides = T.unsafe(nil)); end
-  def collect!(*args, &block); end
 
   # Returns the value of attribute column_types.
   def column_types; end
@@ -19897,7 +22107,7 @@ class ActiveRecord::Result
   # row as parameter.
   #
   # Returns an +Enumerator+ if no block is given.
-  def each; end
+  def each(&block); end
 
   # Returns true if there are no records, otherwise false.
   #
@@ -19915,7 +22125,7 @@ class ActiveRecord::Result
   # Returns the number of elements in the rows array.
   def length; end
 
-  def map!(*args, &block); end
+  def result; end
 
   # Returns the value of attribute rows.
   def rows; end
@@ -19931,7 +22141,13 @@ class ActiveRecord::Result
   def column_type(name, type_overrides = T.unsafe(nil)); end
   def hash_rows; end
   def initialize_copy(other); end
+
+  class << self
+    def empty; end
+  end
 end
+
+ActiveRecord::Result::EMPTY = T.let(T.unsafe(nil), ActiveRecord::Result)
 
 # {ActiveRecord::Base.transaction}[rdoc-ref:Transactions::ClassMethods#transaction]
 # uses this exception to distinguish a deliberate rollback from other exceptional situations.
@@ -19952,7 +22168,7 @@ end
 #           # The system must fail on Friday so that our support department
 #           # won't be out of job. We silently rollback this transaction
 #           # without telling the user.
-#           raise ActiveRecord::Rollback, "Call tech support!"
+#           raise ActiveRecord::Rollback
 #         end
 #       end
 #       # ActiveRecord::Rollback is the only exception that won't be passed on
@@ -19965,27 +22181,14 @@ class ActiveRecord::Rollback < ::ActiveRecord::ActiveRecordError; end
 
 # This is a thread locals registry for Active Record. For example:
 #
-#   ActiveRecord::RuntimeRegistry.connection_handler
+#   ActiveRecord::RuntimeRegistry.sql_runtime
 #
-# returns the connection handler local to the current thread.
-#
-# See the documentation of ActiveSupport::PerThreadRegistry
-# for further details.
-class ActiveRecord::RuntimeRegistry
-  extend ::ActiveSupport::PerThreadRegistry
+# returns the connection handler local to the current unit of execution (either thread of fiber).
+module ActiveRecord::RuntimeRegistry
+  extend ::ActiveRecord::RuntimeRegistry
 
-  # Returns the value of attribute sql_runtime.
   def sql_runtime; end
-
-  # Sets the attribute sql_runtime
-  #
-  # @param value the value to set the attribute sql_runtime to.
-  def sql_runtime=(_arg0); end
-
-  class << self
-    def sql_runtime; end
-    def sql_runtime=(x); end
-  end
+  def sql_runtime=(runtime); end
 end
 
 module ActiveRecord::Sanitization
@@ -20061,7 +22264,7 @@ module ActiveRecord::Sanitization::ClassMethods
   # Accepts an array, or string of SQL conditions and sanitizes
   # them into a valid SQL fragment for an ORDER clause.
   #
-  #   sanitize_sql_for_order(["field(id, ?)", [1,3,2]])
+  #   sanitize_sql_for_order([Arel.sql("field(id, ?)"), [1,3,2]])
   #   # => "field(id, 1,3,2)"
   #
   #   sanitize_sql_for_order("id ASC")
@@ -20108,7 +22311,7 @@ end
 #
 # Usage:
 #
-#   ActiveRecord::Schema.define do
+#   ActiveRecord::Schema[7.0].define do
 #     create_table :authors do |t|
 #       t.string :name, null: false
 #     end
@@ -20128,23 +22331,36 @@ end
 # ActiveRecord::Schema is only supported by database adapters that also
 # support migrations, the two features being very similar.
 class ActiveRecord::Schema < ::ActiveRecord::Migration::Current
-  def define(info, &block); end
+  include ::ActiveRecord::Schema::Definition
+  extend ::ActiveRecord::Schema::Definition::ClassMethods
 
   class << self
-    # Eval the given block. All methods available to the current connection
-    # adapter are available within the block, so you can easily use the
-    # database definition DSL to build up your schema (
-    # {create_table}[rdoc-ref:ConnectionAdapters::SchemaStatements#create_table],
-    # {add_index}[rdoc-ref:ConnectionAdapters::SchemaStatements#add_index], etc.).
-    #
-    # The +info+ hash is optional, and if given is used to define metadata
-    # about the current schema (currently, only the schema's version):
-    #
-    #   ActiveRecord::Schema.define(version: 2038_01_19_000001) do
-    #     ...
-    #   end
-    def define(info = T.unsafe(nil), &block); end
+    def [](version); end
   end
+end
+
+module ActiveRecord::Schema::Definition
+  extend ::ActiveSupport::Concern
+
+  mixes_in_class_methods ::ActiveRecord::Schema::Definition::ClassMethods
+
+  def define(info, &block); end
+end
+
+module ActiveRecord::Schema::Definition::ClassMethods
+  # Eval the given block. All methods available to the current connection
+  # adapter are available within the block, so you can easily use the
+  # database definition DSL to build up your schema (
+  # {create_table}[rdoc-ref:ConnectionAdapters::SchemaStatements#create_table],
+  # {add_index}[rdoc-ref:ConnectionAdapters::SchemaStatements#add_index], etc.).
+  #
+  # The +info+ hash is optional, and if given is used to define metadata
+  # about the current schema (currently, only the schema's version):
+  #
+  #   ActiveRecord::Schema[7.0].define(version: 2038_01_19_000001) do
+  #     ...
+  #   end
+  def define(info = T.unsafe(nil), &block); end
 end
 
 # = Active Record Schema Dumper
@@ -20172,8 +22388,8 @@ class ActiveRecord::SchemaDumper
 
   # :singleton-method:
   # A list of tables which should not be dumped to the schema.
-  # Acceptable values are strings as well as regexp if ActiveRecord::Base.schema_format == :ruby.
-  # Only strings are accepted if ActiveRecord::Base.schema_format == :sql.
+  # Acceptable values are strings as well as regexp if ActiveRecord.schema_format == :ruby.
+  # Only strings are accepted if ActiveRecord.schema_format == :sql.
   def ignore_tables; end
 
   def ignore_tables=(val); end
@@ -20219,6 +22435,9 @@ class ActiveRecord::SchemaDumper
   def tables(stream); end
   def trailer(stream); end
 
+  # (enum) types are only supported by PostgreSQL
+  def types(stream); end
+
   class << self
     def chk_ignore_pattern; end
     def chk_ignore_pattern=(val); end
@@ -20245,9 +22464,6 @@ class ActiveRecord::SchemaMigration < ::ActiveRecord::Base
   def version; end
 
   class << self
-    # @return [Boolean]
-    def _internal?; end
-
     def _validators; end
     def all_versions; end
     def create_table; end
@@ -20256,6 +22472,10 @@ class ActiveRecord::SchemaMigration < ::ActiveRecord::Base
     def normalize_migration_number(number); end
     def normalized_versions; end
     def primary_key; end
+
+    # @return [Boolean]
+    def table_exists?; end
+
     def table_name; end
   end
 end
@@ -20295,6 +22515,8 @@ end
 module ActiveRecord::Scoping::ClassMethods
   def current_scope(skip_inherited_scope = T.unsafe(nil)); end
   def current_scope=(scope); end
+  def global_current_scope(skip_inherited_scope = T.unsafe(nil)); end
+  def global_current_scope=(scope); end
 
   # Collects attributes from scopes that should be applied when creating
   # an AR instance for the particular class this is called on.
@@ -20304,6 +22526,8 @@ module ActiveRecord::Scoping::ClassMethods
   #
   # @return [Boolean]
   def scope_attributes?; end
+
+  def scope_registry; end
 end
 
 module ActiveRecord::Scoping::Default
@@ -20329,6 +22553,13 @@ end
 module ActiveRecord::Scoping::Default::ClassMethods
   def before_remove_const; end
 
+  # Checks if the model has any default scopes. If all_queries
+  # is set to true, the method will check if there are any
+  # default_scopes for the model  where +all_queries+ is true.
+  #
+  # @return [Boolean]
+  def default_scopes?(all_queries: T.unsafe(nil)); end
+
   # Are there attributes associated with this scope?
   #
   # @return [Boolean]
@@ -20352,11 +22583,11 @@ module ActiveRecord::Scoping::Default::ClassMethods
   #   Post.unscoped {
   #     Post.limit(10) # Fires "SELECT * FROM posts LIMIT 10"
   #   }
-  def unscoped; end
+  def unscoped(&block); end
 
   private
 
-  def build_default_scope(relation = T.unsafe(nil)); end
+  def build_default_scope(relation = T.unsafe(nil), all_queries: T.unsafe(nil)); end
 
   # Use this macro in your model to set a default scope for all operations on
   # the model.
@@ -20368,10 +22599,25 @@ module ActiveRecord::Scoping::Default::ClassMethods
   #   Article.all # => SELECT * FROM articles WHERE published = true
   #
   # The #default_scope is also applied while creating/building a record.
-  # It is not applied while updating a record.
+  # It is not applied while updating or deleting a record.
   #
   #   Article.new.published    # => true
   #   Article.create.published # => true
+  #
+  # To apply a #default_scope when updating or deleting a record, add
+  # <tt>all_queries: true</tt>:
+  #
+  #   class Article < ActiveRecord::Base
+  #     default_scope { where(blog_id: 1) }, all_queries: true
+  #   end
+  #
+  # Applying a default scope to all queries will ensure that records
+  # are always queried by the additional conditions. Note that only
+  # where clauses apply, as it does not make sense to add order to
+  # queries that return a single object by primary key.
+  #
+  #   Article.find(1).destroy
+  #   => DELETE ... FROM `articles` where ID = 1 AND blog_id = 1;
   #
   # (You can also pass any object which responds to +call+ to the
   # +default_scope+ macro, and it will be called when building the
@@ -20399,17 +22645,37 @@ module ActiveRecord::Scoping::Default::ClassMethods
   #       # Should return a scope, you can call 'super' here etc.
   #     end
   #   end
-  def default_scope(scope = T.unsafe(nil), &block); end
+  def default_scope(scope = T.unsafe(nil), all_queries: T.unsafe(nil), &block); end
 
   # The ignore_default_scope flag is used to prevent an infinite recursion
   # situation where a default scope references a scope which has a default
   # scope which references a scope...
   def evaluate_default_scope; end
 
+  # If all_queries is nil, only execute on select and insert queries.
+  #
+  # If all_queries is true, check if the default_scope object has
+  # all_queries set, then execute on all queries; select, insert, update
+  # and delete.
+  #
+  # @return [Boolean]
+  def execute_scope?(all_queries, default_scope_obj); end
+
   def ignore_default_scope=(ignore); end
 
   # @return [Boolean]
   def ignore_default_scope?; end
+end
+
+class ActiveRecord::Scoping::DefaultScope
+  # @return [DefaultScope] a new instance of DefaultScope
+  def initialize(scope, all_queries = T.unsafe(nil)); end
+
+  # Returns the value of attribute all_queries.
+  def all_queries; end
+
+  # Returns the value of attribute scope.
+  def scope; end
 end
 
 module ActiveRecord::Scoping::Named
@@ -20436,7 +22702,7 @@ module ActiveRecord::Scoping::Named::ClassMethods
   def default_extensions; end
 
   # Returns a scope for the model with default scopes.
-  def default_scoped(scope = T.unsafe(nil)); end
+  def default_scoped(scope = T.unsafe(nil), all_queries: T.unsafe(nil)); end
 
   # Adds a class method for retrieving and querying objects.
   # The method is intended to return an ActiveRecord::Relation
@@ -20542,14 +22808,11 @@ module ActiveRecord::Scoping::Named::ClassMethods
   private
 
   def singleton_method_added(name); end
-
-  # @return [Boolean]
-  def valid_scope_name?(name); end
 end
 
 # This class stores the +:current_scope+ and +:ignore_default_scope+ values
-# for different classes. The registry is stored as a thread local, which is
-# accessed through +ScopeRegistry.current+.
+# for different classes. The registry is stored as either a thread or fiber
+# local depending on the application configuration.
 #
 # This class allows you to store and get the scope values on different
 # classes and different types of scopes. For example, if you are attempting
@@ -20557,23 +22820,25 @@ end
 # following code:
 #
 #   registry = ActiveRecord::Scoping::ScopeRegistry
-#   registry.set_value_for(:current_scope, Board, some_new_scope)
+#   registry.set_current_scope(Board, some_new_scope)
 #
 # Now when you run:
 #
-#   registry.value_for(:current_scope, Board)
+#   registry.current_scope(Board)
 #
-# You will obtain whatever was defined in +some_new_scope+. The #value_for
-# and #set_value_for methods are delegated to the current ScopeRegistry
-# object, so the above example code can also be called as:
-#
-#   ActiveRecord::Scoping::ScopeRegistry.set_value_for(:current_scope,
-#       Board, some_new_scope)
+# You will obtain whatever was defined in +some_new_scope+.
 class ActiveRecord::Scoping::ScopeRegistry
-  extend ::ActiveSupport::PerThreadRegistry
-
   # @return [ScopeRegistry] a new instance of ScopeRegistry
   def initialize; end
+
+  def current_scope(model, skip_inherited_scope = T.unsafe(nil)); end
+  def global_current_scope(model, skip_inherited_scope = T.unsafe(nil)); end
+  def ignore_default_scope(model, skip_inherited_scope = T.unsafe(nil)); end
+  def set_current_scope(model, value); end
+  def set_global_current_scope(model, value); end
+  def set_ignore_default_scope(model, value); end
+
+  private
 
   # Sets the +value+ for a given +scope_type+ and +model+.
   def set_value_for(scope_type, model, value); end
@@ -20581,12 +22846,16 @@ class ActiveRecord::Scoping::ScopeRegistry
   # Obtains the value for a given +scope_type+ and +model+.
   def value_for(scope_type, model, skip_inherited_scope = T.unsafe(nil)); end
 
-  private
-
-  def raise_invalid_scope_type!(scope_type); end
+  class << self
+    def current_scope(*_arg0, &_arg1); end
+    def global_current_scope(*_arg0, &_arg1); end
+    def ignore_default_scope(*_arg0, &_arg1); end
+    def instance; end
+    def set_current_scope(*_arg0, &_arg1); end
+    def set_global_current_scope(*_arg0, &_arg1); end
+    def set_ignore_default_scope(*_arg0, &_arg1); end
+  end
 end
-
-ActiveRecord::Scoping::ScopeRegistry::VALID_SCOPE_TYPES = T.let(T.unsafe(nil), Array)
 
 module ActiveRecord::SecureToken
   extend ::ActiveSupport::Concern
@@ -20656,7 +22925,9 @@ class ActiveRecord::SerializationTypeMismatch < ::ActiveRecord::ActiveRecordErro
 # = Active Record Signed Id
 module ActiveRecord::SignedId
   extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
 
+  mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActiveRecord::SignedId::ClassMethods
 
   # Returns a signed id that's generated using a preconfigured +ActiveSupport::MessageVerifier+ instance.
@@ -20674,6 +22945,17 @@ module ActiveRecord::SignedId
   # And you then change your +find_signed+ calls to require this new purpose. Any old signed ids that were not
   # created with the purpose will no longer find the record.
   def signed_id(expires_in: T.unsafe(nil), purpose: T.unsafe(nil)); end
+
+  module GeneratedClassMethods
+    def signed_id_verifier_secret; end
+    def signed_id_verifier_secret=(value); end
+    def signed_id_verifier_secret?; end
+  end
+
+  module GeneratedInstanceMethods
+    def signed_id_verifier_secret; end
+    def signed_id_verifier_secret?; end
+  end
 end
 
 module ActiveRecord::SignedId::ClassMethods
@@ -20731,6 +23013,15 @@ module ActiveRecord::SignedId::ClassMethods
   # verifiers for different classes. This is also helpful if you need to rotate keys, as you can prepare
   # your custom verifier for that in advance. See +ActiveSupport::MessageVerifier+ for details.
   def signed_id_verifier=(verifier); end
+end
+
+# Raised when Active Record finds multiple records but only expected one.
+class ActiveRecord::SoleRecordExceeded < ::ActiveRecord::ActiveRecordError
+  # @return [SoleRecordExceeded] a new instance of SoleRecordExceeded
+  def initialize(record = T.unsafe(nil)); end
+
+  # Returns the value of attribute record.
+  def record; end
 end
 
 module ActiveRecord::SpawnMethods
@@ -21091,20 +23382,14 @@ module ActiveRecord::Suppressor
 
   def save(**_arg0); end
   def save!(**_arg0); end
+
+  class << self
+    def registry; end
+  end
 end
 
 module ActiveRecord::Suppressor::ClassMethods
   def suppress(&block); end
-end
-
-class ActiveRecord::SuppressorRegistry
-  extend ::ActiveSupport::PerThreadRegistry
-
-  # @return [SuppressorRegistry] a new instance of SuppressorRegistry
-  def initialize; end
-
-  # Returns the value of attribute suppressed.
-  def suppressed; end
 end
 
 class ActiveRecord::TableMetadata
@@ -21202,12 +23487,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   def create(configuration, *arguments); end
   def create_all; end
   def create_current(environment = T.unsafe(nil), name = T.unsafe(nil)); end
-  def current_config(*args, &block); end
-
-  # Sets the attribute current_config
-  #
-  # @param value the value to set the attribute current_config to.
-  def current_config=(*args, &block); end
 
   # Returns the value of attribute database_configuration.
   def database_configuration; end
@@ -21217,6 +23496,7 @@ module ActiveRecord::Tasks::DatabaseTasks
   # @param value the value to set the attribute database_configuration to.
   def database_configuration=(_arg0); end
 
+  def db_configs_with_versions(db_configs); end
   def db_dir; end
 
   # Sets the attribute db_dir
@@ -21227,7 +23507,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   def drop(configuration, *arguments); end
   def drop_all; end
   def drop_current(environment = T.unsafe(nil)); end
-  def dump_filename(db_config_name, format = T.unsafe(nil)); end
   def dump_schema(db_config, format = T.unsafe(nil)); end
 
   # Dumps the schema cache in YAML format for the connection into the file
@@ -21254,7 +23533,7 @@ module ActiveRecord::Tasks::DatabaseTasks
   def load_schema(db_config, format = T.unsafe(nil), file = T.unsafe(nil)); end
   def load_schema_current(format = T.unsafe(nil), file = T.unsafe(nil), environment = T.unsafe(nil)); end
   def load_seed; end
-  def migrate; end
+  def migrate(version = T.unsafe(nil)); end
   def migrate_status; end
   def migrations_paths; end
 
@@ -21264,6 +23543,7 @@ module ActiveRecord::Tasks::DatabaseTasks
   def migrations_paths=(_arg0); end
 
   def name; end
+  def prepare_all; end
   def purge(configuration); end
   def purge_all; end
   def purge_current(environment = T.unsafe(nil)); end
@@ -21277,11 +23557,11 @@ module ActiveRecord::Tasks::DatabaseTasks
   # @param value the value to set the attribute root to.
   def root=(_arg0); end
 
-  def schema_file(format = T.unsafe(nil)); end
-  def schema_file_type(format = T.unsafe(nil)); end
+  def schema_dump_path(db_config, format = T.unsafe(nil)); end
+  def schema_file_type(*args, &block); end
 
   # @return [Boolean]
-  def schema_up_to_date?(configuration, format = T.unsafe(nil), file = T.unsafe(nil), environment = T.unsafe(nil), name = T.unsafe(nil)); end
+  def schema_up_to_date?(configuration, format = T.unsafe(nil), file = T.unsafe(nil)); end
 
   def seed_loader; end
 
@@ -21291,7 +23571,6 @@ module ActiveRecord::Tasks::DatabaseTasks
   def seed_loader=(_arg0); end
 
   def setup_initial_database_yaml; end
-  def spec(*args, &block); end
   def structure_dump(configuration, *arguments); end
   def structure_load(configuration, *arguments); end
   def target_version; end
@@ -21300,6 +23579,7 @@ module ActiveRecord::Tasks::DatabaseTasks
   private
 
   def class_for_adapter(adapter); end
+  def configs_for(**options); end
 
   # Create a new instance for the specified db configuration object
   # For classes that have been converted to use db_config objects, pass a
@@ -21314,6 +23594,8 @@ module ActiveRecord::Tasks::DatabaseTasks
 
   def resolve_configuration(configuration); end
   def schema_sha1(file); end
+  def structure_dump_flags_for(adapter); end
+  def structure_load_flags_for(adapter); end
   def truncate_tables(db_config); end
 
   # @return [Boolean]
@@ -21391,10 +23673,10 @@ class ActiveRecord::Tasks::PostgreSQLDatabaseTasks
 
   def encoding; end
   def establish_master_connection; end
+  def psql_env; end
   def remove_sql_header_comments(filename); end
   def run_cmd(cmd, args, action); end
   def run_cmd_error(cmd, args, action); end
-  def set_psql_env; end
 
   class << self
     # @return [Boolean]
@@ -21742,9 +24024,6 @@ module ActiveRecord::Transactions
   # Clear the new record state and id of a record.
   def clear_transaction_record_state; end
 
-  # Force to clear the transaction record state.
-  def force_clear_transaction_record_state; end
-
   # @return [Boolean]
   def has_transactional_callbacks?; end
 
@@ -22032,13 +24311,21 @@ module ActiveRecord::Type
   end
 end
 
-class ActiveRecord::Type::AdapterSpecificRegistry < ::ActiveModel::Type::Registry
+class ActiveRecord::Type::AdapterSpecificRegistry
+  # @return [AdapterSpecificRegistry] a new instance of AdapterSpecificRegistry
+  def initialize; end
+
   def add_modifier(options, klass, **args); end
+  def lookup(symbol, *args, **kwargs); end
+  def register(type_name, klass = T.unsafe(nil), **options, &block); end
 
   private
 
   def find_registration(symbol, *args, **kwargs); end
-  def registration_klass; end
+  def initialize_copy(other); end
+
+  # Returns the value of attribute registrations.
+  def registrations; end
 end
 
 ActiveRecord::Type::BigInteger = ActiveModel::Type::BigInteger
@@ -22085,13 +24372,22 @@ end
 
 ActiveRecord::Type::Float = ActiveModel::Type::Float
 
-class ActiveRecord::Type::HashLookupTypeMap < ::ActiveRecord::Type::TypeMap
+class ActiveRecord::Type::HashLookupTypeMap
+  # @return [HashLookupTypeMap] a new instance of HashLookupTypeMap
+  def initialize(parent = T.unsafe(nil)); end
+
   def alias_type(type, alias_type); end
+  def clear; end
+  def fetch(lookup_key, *args, &block); end
 
   # @return [Boolean]
   def key?(key); end
 
   def keys; end
+  def lookup(lookup_key, *args); end
+
+  # @raise [::ArgumentError]
+  def register_type(key, value = T.unsafe(nil), &block); end
 
   private
 
@@ -22218,19 +24514,18 @@ class ActiveRecord::Type::Time::Value; end
 
 class ActiveRecord::Type::TypeMap
   # @return [TypeMap] a new instance of TypeMap
-  def initialize; end
+  def initialize(parent = T.unsafe(nil)); end
 
   def alias_type(key, target_key); end
-  def clear; end
-  def fetch(lookup_key, *args, &block); end
-  def lookup(lookup_key, *args); end
+  def fetch(lookup_key, &block); end
+  def lookup(lookup_key); end
 
   # @raise [::ArgumentError]
   def register_type(key, value = T.unsafe(nil), &block); end
 
-  private
+  protected
 
-  def perform_fetch(lookup_key, *args); end
+  def perform_fetch(lookup_key, &block); end
 end
 
 class ActiveRecord::Type::UnsignedInteger < ::ActiveModel::Type::Integer
@@ -22287,12 +24582,12 @@ ActiveRecord::UnknownAttributeError = ActiveModel::UnknownAttributeError
 #
 # For example, the following code would raise this exception:
 #
-#   Post.order("length(title)").first
+#   Post.order("REPLACE(title, 'misc', 'zzzz') asc").pluck(:id)
 #
 # The desired result can be accomplished by wrapping the known-safe string
 # in Arel.sql:
 #
-#   Post.order(Arel.sql("length(title)")).first
+#   Post.order(Arel.sql("REPLACE(title, 'misc', 'zzzz') asc")).pluck(:id)
 #
 # Again, such a workaround should *not* be used when passing user-provided
 # values, such as request parameters or model attributes to query methods.
@@ -22315,6 +24610,7 @@ end
 module ActiveRecord::VERSION; end
 ActiveRecord::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveRecord::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveRecord::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveRecord::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -22591,7 +24887,7 @@ module ActiveRecord::Validations::ClassMethods
   #   <tt>WHERE</tt> SQL fragment to limit the uniqueness constraint lookup
   #   (e.g. <tt>conditions: -> { where(status: 'active') }</tt>).
   # * <tt>:case_sensitive</tt> - Looks for an exact match. Ignored by
-  #   non-text columns (+true+ by default).
+  #   non-text columns. The default behavior respects the default database collation.
   # * <tt>:allow_nil</tt> - If set to +true+, skips this validation if the
   #   attribute is +nil+ (default is +false+).
   # * <tt>:allow_blank</tt> - If set to +true+, skips this validation if the
@@ -22725,7 +25021,7 @@ module Arel
 
     # Wrap a known-safe SQL string for passing to query methods, e.g.
     #
-    #   Post.order(Arel.sql("length(title)")).last
+    #   Post.order(Arel.sql("REPLACE(title, 'misc', 'zzzz') asc")).pluck(:id)
     #
     # Great caution should be taken to avoid SQL injection vulnerabilities.
     # This method should not be used with unsafe values such as request
@@ -22761,13 +25057,6 @@ class Arel::Attributes::Attribute < ::Struct
   def type_caster; end
 end
 
-class Arel::Attributes::Boolean < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::Decimal < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::Float < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::Integer < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::String < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::Time < ::Arel::Attributes::Attribute; end
-class Arel::Attributes::Undefined < ::Arel::Attributes::Attribute; end
 module Arel::Collectors; end
 
 class Arel::Collectors::Bind
@@ -22860,9 +25149,9 @@ end
 
 # FIXME hopefully we can remove this
 module Arel::Crud
-  def compile_delete; end
+  def compile_delete(key = T.unsafe(nil), having_clause = T.unsafe(nil), group_values_columns = T.unsafe(nil)); end
   def compile_insert(values); end
-  def compile_update(values, pk); end
+  def compile_update(values, key = T.unsafe(nil), having_clause = T.unsafe(nil), group_values_columns = T.unsafe(nil)); end
   def create_insert; end
 end
 
@@ -22870,9 +25159,11 @@ class Arel::DeleteManager < ::Arel::TreeManager
   include ::Arel::TreeManager::StatementMethods
 
   # @return [DeleteManager] a new instance of DeleteManager
-  def initialize; end
+  def initialize(table = T.unsafe(nil)); end
 
   def from(relation); end
+  def group(columns); end
+  def having(expr); end
 end
 
 class Arel::EmptyJoinError < ::Arel::ArelError; end
@@ -22902,9 +25193,13 @@ module Arel::FactoryMethods
   def lower(column); end
 end
 
+module Arel::FilterPredications
+  def filter(expr); end
+end
+
 class Arel::InsertManager < ::Arel::TreeManager
   # @return [InsertManager] a new instance of InsertManager
-  def initialize; end
+  def initialize(table = T.unsafe(nil)); end
 
   def columns; end
   def create_values(values); end
@@ -23198,7 +25493,23 @@ class Arel::Nodes::DeleteStatement < ::Arel::Nodes::Node
   # @return [Boolean]
   def eql?(other); end
 
+  # Returns the value of attribute groups.
+  def groups; end
+
+  # Sets the attribute groups
+  #
+  # @param value the value to set the attribute groups to.
+  def groups=(_arg0); end
+
   def hash; end
+
+  # Returns the value of attribute havings.
+  def havings; end
+
+  # Sets the attribute havings
+  #
+  # @param value the value to set the attribute havings to.
+  def havings=(_arg0); end
 
   # Returns the value of attribute key.
   def key; end
@@ -23207,14 +25518,6 @@ class Arel::Nodes::DeleteStatement < ::Arel::Nodes::Node
   #
   # @param value the value to set the attribute key to.
   def key=(_arg0); end
-
-  # Returns the value of attribute left.
-  def left; end
-
-  # Sets the attribute left
-  #
-  # @param value the value to set the attribute left to.
-  def left=(_arg0); end
 
   # Returns the value of attribute limit.
   def limit; end
@@ -23240,28 +25543,20 @@ class Arel::Nodes::DeleteStatement < ::Arel::Nodes::Node
   # @param value the value to set the attribute orders to.
   def orders=(_arg0); end
 
-  # Returns the value of attribute left.
+  # Returns the value of attribute relation.
   def relation; end
 
-  # Sets the attribute left
+  # Sets the attribute relation
   #
-  # @param value the value to set the attribute left to.
+  # @param value the value to set the attribute relation to.
   def relation=(_arg0); end
 
-  # Returns the value of attribute right.
-  def right; end
-
-  # Sets the attribute right
-  #
-  # @param value the value to set the attribute right to.
-  def right=(_arg0); end
-
-  # Returns the value of attribute right.
+  # Returns the value of attribute wheres.
   def wheres; end
 
-  # Sets the attribute right
+  # Sets the attribute wheres
   #
-  # @param value the value to set the attribute right to.
+  # @param value the value to set the attribute wheres to.
   def wheres=(_arg0); end
 
   private
@@ -23347,6 +25642,10 @@ module Arel::Nodes::FetchAttribute
   def fetch_attribute; end
 end
 
+class Arel::Nodes::Filter < ::Arel::Nodes::Binary
+  include ::Arel::WindowPredications
+end
+
 class Arel::Nodes::Following < ::Arel::Nodes::Unary
   # @return [Following] a new instance of Following
   def initialize(expr = T.unsafe(nil)); end
@@ -23356,6 +25655,7 @@ class Arel::Nodes::FullOuterJoin < ::Arel::Nodes::Join; end
 
 class Arel::Nodes::Function < ::Arel::Nodes::NodeExpression
   include ::Arel::WindowPredications
+  include ::Arel::FilterPredications
 
   # @return [Function] a new instance of Function
   def initialize(expr, aliaz = T.unsafe(nil)); end
@@ -23475,7 +25775,7 @@ class Arel::Nodes::InnerJoin < ::Arel::Nodes::Join; end
 
 class Arel::Nodes::InsertStatement < ::Arel::Nodes::Node
   # @return [InsertStatement] a new instance of InsertStatement
-  def initialize; end
+  def initialize(relation = T.unsafe(nil)); end
 
   # @return [Boolean]
   def ==(other); end
@@ -23769,7 +26069,7 @@ end
 
 class Arel::Nodes::SelectCore < ::Arel::Nodes::Node
   # @return [SelectCore] a new instance of SelectCore
-  def initialize; end
+  def initialize(relation = T.unsafe(nil)); end
 
   # @return [Boolean]
   def ==(other); end
@@ -23863,7 +26163,7 @@ end
 
 class Arel::Nodes::SelectStatement < ::Arel::Nodes::NodeExpression
   # @return [SelectStatement] a new instance of SelectStatement
-  def initialize(cores = T.unsafe(nil)); end
+  def initialize(relation = T.unsafe(nil)); end
 
   # @return [Boolean]
   def ==(other); end
@@ -24012,7 +26312,7 @@ end
 
 class Arel::Nodes::UpdateStatement < ::Arel::Nodes::Node
   # @return [UpdateStatement] a new instance of UpdateStatement
-  def initialize; end
+  def initialize(relation = T.unsafe(nil)); end
 
   # @return [Boolean]
   def ==(other); end
@@ -24020,7 +26320,23 @@ class Arel::Nodes::UpdateStatement < ::Arel::Nodes::Node
   # @return [Boolean]
   def eql?(other); end
 
+  # Returns the value of attribute groups.
+  def groups; end
+
+  # Sets the attribute groups
+  #
+  # @param value the value to set the attribute groups to.
+  def groups=(_arg0); end
+
   def hash; end
+
+  # Returns the value of attribute havings.
+  def havings; end
+
+  # Sets the attribute havings
+  #
+  # @param value the value to set the attribute havings to.
+  def havings=(_arg0); end
 
   # Returns the value of attribute key.
   def key; end
@@ -24253,6 +26569,7 @@ class Arel::SelectManager < ::Arel::TreeManager
   def take(limit); end
   def taken; end
   def union(operation, other = T.unsafe(nil)); end
+  def where(expr); end
   def where_sql(engine = T.unsafe(nil)); end
   def window(name); end
   def with(*subqueries); end
@@ -24266,7 +26583,6 @@ end
 Arel::SelectManager::STRING_OR_SYMBOL_CLASS = T.let(T.unsafe(nil), Array)
 
 class Arel::Table
-  include ::Arel::Crud
   include ::Arel::FactoryMethods
   include ::Arel::AliasPredication
 
@@ -24341,15 +26657,11 @@ end
 class Arel::TreeManager
   include ::Arel::FactoryMethods
 
-  # @return [TreeManager] a new instance of TreeManager
-  def initialize; end
-
   # Returns the value of attribute ast.
   def ast; end
 
   def to_dot; end
   def to_sql(engine = T.unsafe(nil)); end
-  def where(expr); end
 
   private
 
@@ -24370,8 +26682,10 @@ class Arel::UpdateManager < ::Arel::TreeManager
   include ::Arel::TreeManager::StatementMethods
 
   # @return [UpdateManager] a new instance of UpdateManager
-  def initialize; end
+  def initialize(table = T.unsafe(nil)); end
 
+  def group(columns); end
+  def having(expr); end
   def set(values); end
 
   # UPDATE +table+
@@ -24389,89 +26703,46 @@ class Arel::Visitors::Dot < ::Arel::Visitors::Visitor
 
   private
 
-  def binary(o); end
   def edge(name); end
-  def extract(o); end
-  def function(o); end
-  def named_window(o); end
-  def nary(o); end
   def quote(string); end
   def to_dot; end
-  def unary(o); end
   def visit(o); end
   def visit_ActiveModel_Attribute(o); end
-  def visit_Arel_Attribute(o); end
   def visit_Arel_Attributes_Attribute(o); end
-  def visit_Arel_Attributes_Boolean(o); end
-  def visit_Arel_Attributes_Float(o); end
-  def visit_Arel_Attributes_Integer(o); end
-  def visit_Arel_Attributes_String(o); end
-  def visit_Arel_Attributes_Time(o); end
   def visit_Arel_Nodes_And(o); end
-  def visit_Arel_Nodes_As(o); end
-  def visit_Arel_Nodes_Assignment(o); end
-  def visit_Arel_Nodes_Avg(o); end
-  def visit_Arel_Nodes_Between(o); end
+  def visit_Arel_Nodes_Binary(o); end
   def visit_Arel_Nodes_BindParam(o); end
+  def visit_Arel_Nodes_Case(o); end
   def visit_Arel_Nodes_Casted(o); end
   def visit_Arel_Nodes_Comment(o); end
-  def visit_Arel_Nodes_Concat(o); end
   def visit_Arel_Nodes_Count(o); end
-  def visit_Arel_Nodes_Cube(o); end
+
+  # intentionally left blank
+  def visit_Arel_Nodes_CurrentRow(o); end
+
   def visit_Arel_Nodes_DeleteStatement(o); end
-  def visit_Arel_Nodes_DoesNotMatch(o); end
-  def visit_Arel_Nodes_Equality(o); end
-  def visit_Arel_Nodes_Exists(o); end
+  def visit_Arel_Nodes_Distinct(o); end
   def visit_Arel_Nodes_Extract(o); end
-  def visit_Arel_Nodes_Following(o); end
-  def visit_Arel_Nodes_FullOuterJoin(o); end
-  def visit_Arel_Nodes_GreaterThan(o); end
-  def visit_Arel_Nodes_GreaterThanOrEqual(o); end
-  def visit_Arel_Nodes_Group(o); end
-  def visit_Arel_Nodes_Grouping(o); end
-  def visit_Arel_Nodes_GroupingElement(o); end
-  def visit_Arel_Nodes_GroupingSet(o); end
-  def visit_Arel_Nodes_Having(o); end
+  def visit_Arel_Nodes_Function(o); end
   def visit_Arel_Nodes_HomogeneousIn(o); end
-  def visit_Arel_Nodes_In(o); end
-  def visit_Arel_Nodes_InnerJoin(o); end
+  def visit_Arel_Nodes_InfixOperation(o); end
   def visit_Arel_Nodes_InsertStatement(o); end
-  def visit_Arel_Nodes_IsDistinctFrom(o); end
-  def visit_Arel_Nodes_IsNotDistinctFrom(o); end
-  def visit_Arel_Nodes_JoinSource(o); end
-  def visit_Arel_Nodes_LessThan(o); end
-  def visit_Arel_Nodes_LessThanOrEqual(o); end
-  def visit_Arel_Nodes_Limit(o); end
-  def visit_Arel_Nodes_Matches(o); end
-  def visit_Arel_Nodes_Max(o); end
-  def visit_Arel_Nodes_Min(o); end
   def visit_Arel_Nodes_NamedFunction(o); end
   def visit_Arel_Nodes_NamedWindow(o); end
-  def visit_Arel_Nodes_Not(o); end
-  def visit_Arel_Nodes_NotEqual(o); end
-  def visit_Arel_Nodes_NotIn(o); end
-  def visit_Arel_Nodes_Offset(o); end
-  def visit_Arel_Nodes_On(o); end
-  def visit_Arel_Nodes_OptimizerHints(o); end
-  def visit_Arel_Nodes_Or(o); end
+  def visit_Arel_Nodes_NotRegexp(o); end
   def visit_Arel_Nodes_Ordering(o); end
-  def visit_Arel_Nodes_OuterJoin(o); end
-  def visit_Arel_Nodes_Over(o); end
-  def visit_Arel_Nodes_Preceding(o); end
-  def visit_Arel_Nodes_Range(o); end
-  def visit_Arel_Nodes_RightOuterJoin(o); end
-  def visit_Arel_Nodes_RollUp(o); end
-  def visit_Arel_Nodes_Rows(o); end
+  def visit_Arel_Nodes_Regexp(o); end
   def visit_Arel_Nodes_SelectCore(o); end
   def visit_Arel_Nodes_SelectStatement(o); end
   def visit_Arel_Nodes_SqlLiteral(o); end
   def visit_Arel_Nodes_StringJoin(o); end
-  def visit_Arel_Nodes_Sum(o); end
   def visit_Arel_Nodes_TableAlias(o); end
-  def visit_Arel_Nodes_UnqualifiedColumn(o); end
+  def visit_Arel_Nodes_Unary(o); end
+  def visit_Arel_Nodes_UnaryOperation(o); end
   def visit_Arel_Nodes_UpdateStatement(o); end
   def visit_Arel_Nodes_ValuesList(o); end
   def visit_Arel_Nodes_Window(o); end
+  def visit_Arel_Nodes_With(o); end
   def visit_Arel_Table(o); end
   def visit_Array(o); end
   def visit_BigDecimal(o); end
@@ -24487,8 +26758,10 @@ class Arel::Visitors::Dot < ::Arel::Visitors::Visitor
   def visit_Symbol(o); end
   def visit_Time(o); end
   def visit_TrueClass(o); end
+  def visit__children(o); end
+  def visit__no_edges(o); end
+  def visit__regexp(o); end
   def visit_edge(o, method); end
-  def window(o); end
   def with_node(node); end
 end
 
@@ -24526,7 +26799,7 @@ end
 class Arel::Visitors::MySQL < ::Arel::Visitors::ToSql
   private
 
-  # MySQL is too stupid to create a temporary table for use subquery, so we have
+  # MySQL doesn't automatically create a temporary table for use subquery, so we have
   # to give it some prompting in the form of a subsubquery.
   def build_subselect(key, o); end
 
@@ -24545,6 +26818,10 @@ class Arel::Visitors::MySQL < ::Arel::Visitors::ToSql
   def visit_Arel_Nodes_IsDistinctFrom(o, collector); end
   def visit_Arel_Nodes_IsNotDistinctFrom(o, collector); end
   def visit_Arel_Nodes_NotRegexp(o, collector); end
+
+  # no-op
+  def visit_Arel_Nodes_NullsFirst(o, collector); end
+
   def visit_Arel_Nodes_Regexp(o, collector); end
   def visit_Arel_Nodes_SelectCore(o, collector); end
 
@@ -24579,8 +26856,6 @@ class Arel::Visitors::PostgreSQL < ::Arel::Visitors::ToSql
   def visit_Arel_Nodes_Lateral(o, collector); end
   def visit_Arel_Nodes_Matches(o, collector); end
   def visit_Arel_Nodes_NotRegexp(o, collector); end
-  def visit_Arel_Nodes_NullsFirst(o, collector); end
-  def visit_Arel_Nodes_NullsLast(o, collector); end
   def visit_Arel_Nodes_Regexp(o, collector); end
   def visit_Arel_Nodes_RollUp(o, collector); end
 end
@@ -24620,6 +26895,9 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   def collect_optimizer_hints(o, collector); end
 
   # @return [Boolean]
+  def has_group_by_and_having?(o); end
+
+  # @return [Boolean]
   def has_join_sources?(o); end
 
   # @return [Boolean]
@@ -24651,6 +26929,8 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
 
   # @raise [UnsupportedVisitError]
   def unsupported(o, collector); end
+
+  def visit_ActiveModel_Attribute(o, collector); end
 
   # @raise [UnsupportedVisitError]
   def visit_ActiveSupport_Multibyte_Chars(o, collector); end
@@ -24686,6 +26966,7 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   def visit_Arel_Nodes_Exists(o, collector); end
   def visit_Arel_Nodes_Extract(o, collector); end
   def visit_Arel_Nodes_False(o, collector); end
+  def visit_Arel_Nodes_Filter(o, collector); end
   def visit_Arel_Nodes_Following(o, collector); end
   def visit_Arel_Nodes_FullOuterJoin(o, collector); end
   def visit_Arel_Nodes_GreaterThan(o, collector); end
@@ -24717,6 +26998,10 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   # @raise [NotImplementedError]
   def visit_Arel_Nodes_NotRegexp(o, collector); end
 
+  # NullsFirst is available on all but MySQL, where it is redefined.
+  def visit_Arel_Nodes_NullsFirst(o, collector); end
+
+  def visit_Arel_Nodes_NullsLast(o, collector); end
   def visit_Arel_Nodes_Offset(o, collector); end
   def visit_Arel_Nodes_On(o, collector); end
   def visit_Arel_Nodes_OptimizerHints(o, collector); end
@@ -24733,7 +27018,11 @@ class Arel::Visitors::ToSql < ::Arel::Visitors::Visitor
   def visit_Arel_Nodes_RightOuterJoin(o, collector); end
   def visit_Arel_Nodes_Rows(o, collector); end
   def visit_Arel_Nodes_SelectCore(o, collector); end
+
+  # The Oracle enhanced adapter uses this private method,
+  # see https://github.com/rsim/oracle-enhanced/issues/2186
   def visit_Arel_Nodes_SelectOptions(o, collector); end
+
   def visit_Arel_Nodes_SelectStatement(o, collector); end
   def visit_Arel_Nodes_SqlLiteral(o, collector); end
   def visit_Arel_Nodes_StringJoin(o, collector); end

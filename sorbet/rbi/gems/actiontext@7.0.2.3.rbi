@@ -31,6 +31,7 @@ module ActionText::Attachable
   # @return [Boolean]
   def previewable_attachable?; end
 
+  def to_attachable_partial_path; end
   def to_rich_text_attributes(attributes = T.unsafe(nil)); end
   def to_trix_content_attachment_partial_path; end
 
@@ -61,6 +62,7 @@ class ActionText::Attachables::ContentAttachment
   include ::ActiveModel::Conversion
   include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveModel::AttributeAssignment
+  include ::ActiveModel::API
   include ::ActiveModel::Model
   extend ::ActiveModel::Validations::ClassMethods
   extend ::ActiveModel::Naming
@@ -175,6 +177,8 @@ class ActionText::Attachment
   # Returns the value of attribute node.
   def node; end
 
+  def tag_name; end
+  def tag_name=(val); end
   def to_html; end
   def to_param(*_arg0, &_arg1); end
   def to_plain_text; end
@@ -194,6 +198,8 @@ class ActionText::Attachment
     def from_attachables(attachables); end
     def from_attributes(attributes, attachable = T.unsafe(nil)); end
     def from_node(node, attachable = T.unsafe(nil)); end
+    def tag_name; end
+    def tag_name=(val); end
 
     private
 
@@ -203,8 +209,6 @@ class ActionText::Attachment
 end
 
 ActionText::Attachment::ATTRIBUTES = T.let(T.unsafe(nil), Array)
-ActionText::Attachment::SELECTOR = T.let(T.unsafe(nil), String)
-ActionText::Attachment::TAG_NAME = T.let(T.unsafe(nil), String)
 
 class ActionText::AttachmentGallery
   include ::ActiveModel::Validations
@@ -213,6 +217,7 @@ class ActionText::AttachmentGallery
   include ::ActiveModel::Conversion
   include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveModel::AttributeAssignment
+  include ::ActiveModel::API
   include ::ActiveModel::Model
   extend ::ActiveModel::Validations::ClassMethods
   extend ::ActiveModel::Naming
@@ -255,15 +260,15 @@ class ActionText::AttachmentGallery
     def _validators; end
     def _validators=(value); end
     def _validators?; end
+    def attachment_selector; end
     def find_attachment_gallery_nodes(content); end
     def fragment_by_canonicalizing_attachment_galleries(content); end
     def fragment_by_replacing_attachment_gallery_nodes(content); end
     def from_node(node); end
+    def selector; end
   end
 end
 
-ActionText::AttachmentGallery::ATTACHMENT_SELECTOR = T.let(T.unsafe(nil), String)
-ActionText::AttachmentGallery::SELECTOR = T.let(T.unsafe(nil), String)
 ActionText::AttachmentGallery::TAG_NAME = T.let(T.unsafe(nil), String)
 
 module ActionText::Attachments
@@ -312,7 +317,9 @@ module ActionText::Attribute
 end
 
 module ActionText::Attribute::ClassMethods
-  def has_rich_text(name); end
+  def has_rich_text(name, encrypted: T.unsafe(nil)); end
+  def rich_text_association_names; end
+  def with_all_rich_text; end
 end
 
 class ActionText::Content
@@ -345,6 +352,7 @@ class ActionText::Content
   def render_attachment_galleries(&block); end
   def render_attachments(**options, &block); end
   def to_html; end
+  def to_partial_path; end
   def to_plain_text; end
   def to_rendered_html_with_layout; end
   def to_s; end
@@ -371,6 +379,7 @@ module ActionText::ContentHelper
   def allowed_attributes=(val); end
   def allowed_tags; end
   def allowed_tags=(val); end
+  def render_action_text_attachment(attachment, locals: T.unsafe(nil)); end
   def render_action_text_attachments(content); end
   def render_action_text_content(content); end
   def sanitize_action_text_content(content); end
@@ -391,10 +400,94 @@ module ActionText::ContentHelper
   end
 end
 
+class ActionText::EncryptedRichText < ::ActionText::RichText
+  include ::ActionText::EncryptedRichText::GeneratedAttributeMethods
+  include ::ActionText::EncryptedRichText::GeneratedAssociationMethods
+
+  class << self
+    def __callbacks; end
+    def _validators; end
+    def attributes_to_define_after_schema_loads; end
+    def defined_enums; end
+    def encrypted_attributes; end
+  end
+end
+
+module ActionText::EncryptedRichText::GeneratedAssociationMethods; end
+module ActionText::EncryptedRichText::GeneratedAttributeMethods; end
+
+module ActionText::Encryption
+  def decrypt; end
+  def encrypt; end
+
+  private
+
+  def decrypt_rich_texts; end
+  def encrypt_rich_texts; end
+  def encryptable_rich_texts; end
+
+  # @return [Boolean]
+  def has_encrypted_rich_texts?; end
+end
+
 class ActionText::Engine < ::Rails::Engine; end
 
+# Fixtures are a way of organizing data that you want to test against; in
+# short, sample data.
+#
+# To learn more about fixtures, read the
+# {ActiveRecord::FixtureSet}[rdoc-ref:ActiveRecord::FixtureSet] documentation.
+#
+# === YAML
+#
+# Like other Active Record-backed models, ActionText::RichText records inherit
+# from ActiveRecord::Base instances and can therefore be populated by
+# fixtures.
+#
+# Consider an <tt>Article</tt> class:
+#
+#   class Article < ApplicationRecord
+#     has_rich_text :content
+#   end
+#
+# To declare fixture data for the related <tt>content</tt>, first declare fixture
+# data for <tt>Article</tt> instances in <tt>test/fixtures/articles.yml</tt>:
+#
+#   first:
+#     title: An Article
+#
+# Then declare the <tt>ActionText::RichText</tt> fixture data in
+# <tt>test/fixtures/action_text/rich_texts.yml</tt>, making sure to declare
+# each entry's <tt>record:</tt> key as a polymorphic relationship:
+#
+#   first:
+#     record: first (Article)
+#     name: content
+#     body: <div>Hello, world.</div>
+#
+# When processed, Active Record will insert database records for each fixture
+# entry and will ensure the Action Text relationship is intact.
 class ActionText::FixtureSet
   class << self
+    # Fixtures support Action Text attachments as part of their <tt>body</tt>
+    # HTML.
+    #
+    # === Examples
+    #
+    # For example, consider a second <tt>Article</tt> fixture declared in
+    # <tt>test/fixtures/articles.yml</tt>:
+    #
+    #   second:
+    #     title: Another Article
+    #
+    # You can attach a mention of <tt>articles(:first)</tt> to <tt>second</tt>'s
+    # <tt>content</tt> by embedding a call to <tt>ActionText::FixtureSet.attachment</tt>
+    # in the <tt>body:</tt> value in <tt>test/fixtures/action_text/rich_texts.yml</tt>:
+    #
+    #   second:
+    #     record: second (Article)
+    #     name: content
+    #     body: <div>Hello, <%= ActionText::FixtureSet.attachment("articles", :first) %></div>
     def attachment(fixture_set_name, label, column_type: T.unsafe(nil)); end
   end
 end
@@ -441,7 +534,10 @@ module ActionText::PlainTextConversion
 
   private
 
+  def break_if_nested_list(node, text); end
   def bullet_for_li_node(node, index); end
+  def indentation_for_li_node(node); end
+  def list_node_depth_for_node(node); end
   def list_node_name_for_li_node(node); end
   def plain_text_for_block(node, index = T.unsafe(nil)); end
   def plain_text_for_blockquote_node(node, index); end
@@ -450,12 +546,13 @@ module ActionText::PlainTextConversion
   def plain_text_for_figcaption_node(node, index); end
   def plain_text_for_h1_node(node, index = T.unsafe(nil)); end
   def plain_text_for_li_node(node, index); end
+  def plain_text_for_list(node, index); end
   def plain_text_for_node(node, index = T.unsafe(nil)); end
   def plain_text_for_node_children(node); end
-  def plain_text_for_ol_node(node, index = T.unsafe(nil)); end
+  def plain_text_for_ol_node(node, index); end
   def plain_text_for_p_node(node, index = T.unsafe(nil)); end
   def plain_text_for_text_node(node, index); end
-  def plain_text_for_ul_node(node, index = T.unsafe(nil)); end
+  def plain_text_for_ul_node(node, index); end
   def plain_text_method_for_node(node); end
   def remove_trailing_newlines(text); end
 end
@@ -504,6 +601,8 @@ end
 module ActionText::RichText::GeneratedAssociationMethods
   def record; end
   def record=(value); end
+  def record_changed?; end
+  def record_previously_changed?; end
   def reload_record; end
 end
 

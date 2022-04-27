@@ -1633,9 +1633,12 @@ class ActiveResource::Collection
   def fourth(*_arg0, &_arg1); end
   def from(*_arg0, &_arg1); end
   def hash(*_arg0, &_arg1); end
+  def in_groups(*_arg0, &_arg1); end
+  def in_groups_of(*_arg0, &_arg1); end
   def include?(*_arg0, &_arg1); end
   def including(*_arg0, &_arg1); end
   def index(*_arg0, &_arg1); end
+  def inquiry(*_arg0, &_arg1); end
   def insert(*_arg0, &_arg1); end
   def inspect(*_arg0, &_arg1); end
   def intersection(*_arg0, &_arg1); end
@@ -1700,6 +1703,7 @@ class ActiveResource::Collection
   def sort(*_arg0, &_arg1); end
   def sort!(*_arg0, &_arg1); end
   def sort_by!(*_arg0, &_arg1); end
+  def split(*_arg0, &_arg1); end
   def sum(*_arg0, &_arg1); end
   def take(*_arg0, &_arg1); end
   def take_while(*_arg0, &_arg1); end
@@ -1710,6 +1714,7 @@ class ActiveResource::Collection
   def to_ary(*_arg0, &_arg1); end
   def to_default_s(*_arg0, &_arg1); end
   def to_formatted_s(*_arg0, &_arg1); end
+  def to_fs(*_arg0, &_arg1); end
   def to_h(*_arg0, &_arg1); end
   def to_param(*_arg0, &_arg1); end
   def to_query(*_arg0, &_arg1); end

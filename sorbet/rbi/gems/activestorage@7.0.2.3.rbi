@@ -33,12 +33,16 @@ module ActiveStorage
   def routes_prefix=(val); end
   def service_urls_expire_in; end
   def service_urls_expire_in=(val); end
+  def silence_invalid_content_types_warning; end
+  def silence_invalid_content_types_warning=(val); end
   def supported_image_processing_methods; end
   def supported_image_processing_methods=(val); end
   def track_variants; end
   def track_variants=(val); end
   def unsupported_image_processing_arguments; end
   def unsupported_image_processing_arguments=(val); end
+  def urls_expire_in; end
+  def urls_expire_in=(val); end
   def variable_content_types; end
   def variable_content_types=(val); end
   def variant_processor; end
@@ -84,6 +88,8 @@ module ActiveStorage
     def routes_prefix=(val); end
     def service_urls_expire_in; end
     def service_urls_expire_in=(val); end
+    def silence_invalid_content_types_warning; end
+    def silence_invalid_content_types_warning=(val); end
     def supported_image_processing_methods; end
     def supported_image_processing_methods=(val); end
     def table_name_prefix; end
@@ -91,6 +97,8 @@ module ActiveStorage
     def track_variants=(val); end
     def unsupported_image_processing_arguments; end
     def unsupported_image_processing_arguments=(val); end
+    def urls_expire_in; end
+    def urls_expire_in=(val); end
     def use_relative_model_naming?; end
     def variable_content_types; end
     def variable_content_types=(val); end
@@ -119,7 +127,7 @@ class ActiveStorage::AnalyzeJob < ::ActiveStorage::BaseJob
 end
 
 # This is an abstract base class for analyzers, which extract metadata from blobs. See
-# ActiveStorage::Analyzer::ImageAnalyzer for an example of a concrete subclass.
+# ActiveStorage::Analyzer::VideoAnalyzer for an example of a concrete subclass.
 class ActiveStorage::Analyzer
   # @return [Analyzer] a new instance of Analyzer
   def initialize(blob); end
@@ -137,6 +145,7 @@ class ActiveStorage::Analyzer
   # Downloads the blob to a tempfile on disk. Yields the tempfile.
   def download_blob_to_tempfile(&block); end
 
+  def instrument(analyzer, &block); end
   def logger; end
   def tmpdir; end
 
@@ -155,9 +164,33 @@ class ActiveStorage::Analyzer
   end
 end
 
+class ActiveStorage::Analyzer::AudioAnalyzer < ::ActiveStorage::Analyzer
+  def metadata; end
+
+  private
+
+  def audio_stream; end
+  def bit_rate; end
+  def duration; end
+  def ffprobe_path; end
+  def probe; end
+  def probe_from(file); end
+  def streams; end
+
+  class << self
+    def accept?(blob); end
+  end
+end
+
 class ActiveStorage::Analyzer::ImageAnalyzer < ::ActiveStorage::Analyzer
   def metadata; end
 
+  class << self
+    def accept?(blob); end
+  end
+end
+
+class ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
 
   def read_image; end
@@ -167,6 +200,20 @@ class ActiveStorage::Analyzer::ImageAnalyzer < ::ActiveStorage::Analyzer
     def accept?(blob); end
   end
 end
+
+class ActiveStorage::Analyzer::ImageAnalyzer::Vips < ::ActiveStorage::Analyzer::ImageAnalyzer
+  private
+
+  def read_image; end
+  def rotated_image?(image); end
+  def valid_image?(image); end
+
+  class << self
+    def accept?(blob); end
+  end
+end
+
+ActiveStorage::Analyzer::ImageAnalyzer::Vips::ROTATIONS = T.let(T.unsafe(nil), Regexp)
 
 class ActiveStorage::Analyzer::NullAnalyzer < ::ActiveStorage::Analyzer
   def metadata; end
@@ -183,6 +230,8 @@ class ActiveStorage::Analyzer::VideoAnalyzer < ::ActiveStorage::Analyzer
   private
 
   def angle; end
+  def audio?; end
+  def audio_stream; end
   def computed_height; end
   def container; end
   def display_aspect_ratio; end
@@ -197,6 +246,7 @@ class ActiveStorage::Analyzer::VideoAnalyzer < ::ActiveStorage::Analyzer
   def rotated?; end
   def streams; end
   def tags; end
+  def video?; end
   def video_stream; end
   def width; end
 
@@ -241,6 +291,7 @@ class ActiveStorage::Attached::Changes::CreateMany
 
   def assign_associated_attachments; end
   def build_subchange_from(attachable); end
+  def persisted_or_new_attachments; end
   def reset_associated_blobs; end
   def subchanges; end
 end
@@ -291,16 +342,70 @@ class ActiveStorage::Attached::Changes::DeleteOne
   def save; end
 end
 
+class ActiveStorage::Attached::Changes::DetachMany
+  def initialize(name, record, attachments); end
+
+  def attachments; end
+  def detach; end
+  def name; end
+  def record; end
+end
+
+class ActiveStorage::Attached::Changes::DetachOne
+  def initialize(name, record, attachment); end
+
+  def attachment; end
+  def detach; end
+  def name; end
+  def record; end
+
+  private
+
+  def reset; end
+end
+
+class ActiveStorage::Attached::Changes::PurgeMany
+  def initialize(name, record, attachments); end
+
+  def attachments; end
+  def name; end
+  def purge; end
+  def purge_later; end
+  def record; end
+
+  private
+
+  def reset; end
+end
+
+class ActiveStorage::Attached::Changes::PurgeOne
+  def initialize(name, record, attachment); end
+
+  def attachment; end
+  def name; end
+  def purge; end
+  def purge_later; end
+  def record; end
+
+  private
+
+  def reset; end
+end
+
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def attach(*attachables); end
   def attached?; end
   def attachments; end
   def blobs; end
-  def detach; end
+  def detach(*_arg0, &_arg1); end
   def method_missing(method, *args, &block); end
+  def purge(*_arg0, &_arg1); end
+  def purge_later(*_arg0, &_arg1); end
 
   private
 
+  def detach_many; end
+  def purge_many; end
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -332,15 +437,16 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   def attached?; end
   def attachment; end
   def blank?; end
-  def detach; end
+  def detach(*_arg0, &_arg1); end
   def method_missing(method, *args, &block); end
-  def purge; end
-  def purge_later; end
+  def purge(*_arg0, &_arg1); end
+  def purge_later(*_arg0, &_arg1); end
 
   private
 
+  def detach_one; end
+  def purge_one; end
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
-  def write_attachment(attachment); end
 end
 
 class ActiveStorage::Attachment < ::ActiveStorage::Record
@@ -354,6 +460,7 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def purge_later; end
   def signed_id(*_arg0, &_arg1); end
   def validate_associated_records_for_blob(*args); end
+  def variant(transformations); end
 
   private
 
@@ -362,23 +469,29 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def mirror_blob_later; end
   def purge_dependent_blob_later; end
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
+  def variants; end
 
   class << self
     def __callbacks; end
     def _reflections; end
     def _validators; end
     def defined_enums; end
+    def with_all_variant_records(*args); end
   end
 end
 
 module ActiveStorage::Attachment::GeneratedAssociationMethods
   def blob; end
   def blob=(value); end
+  def blob_changed?; end
+  def blob_previously_changed?; end
   def build_blob(*args, &block); end
   def create_blob(*args, &block); end
   def create_blob!(*args, &block); end
   def record; end
   def record=(value); end
+  def record_changed?; end
+  def record_previously_changed?; end
   def reload_blob; end
   def reload_record; end
 end
@@ -386,12 +499,13 @@ end
 module ActiveStorage::Attachment::GeneratedAttributeMethods; end
 
 class ActiveStorage::BaseController < ::ActionController::Base
+  include ::ActionController::Live
+  include ::ActiveStorage::Streaming
   include ::ActiveStorage::SetCurrent
 
   private
 
   def _layout(lookup_context, formats); end
-  def stream(blob); end
 
   class << self
     def __callbacks; end
@@ -457,9 +571,12 @@ module ActiveStorage::Blob::Representable
 end
 
 class ActiveStorage::Current < ::ActiveSupport::CurrentAttributes
+  def host; end
+  def host=(host); end
+
   class << self
-    def host; end
-    def host=(attribute); end
+    def url_options; end
+    def url_options=(value); end
   end
 end
 
@@ -502,7 +619,7 @@ class ActiveStorage::Downloader
   # @return [Downloader] a new instance of Downloader
   def initialize(service); end
 
-  def open(key, checksum:, name: T.unsafe(nil), tmpdir: T.unsafe(nil)); end
+  def open(key, checksum: T.unsafe(nil), verify: T.unsafe(nil), name: T.unsafe(nil), tmpdir: T.unsafe(nil)); end
 
   # Returns the value of attribute service.
   def service; end
@@ -546,6 +663,75 @@ class ActiveStorage::Filename
 
   class << self
     def wrap(filename); end
+  end
+end
+
+# Fixtures are a way of organizing data that you want to test against; in
+# short, sample data.
+#
+# To learn more about fixtures, read the
+# {ActiveRecord::FixtureSet}[rdoc-ref:ActiveRecord::FixtureSet] documentation.
+#
+# === YAML
+#
+# Like other Active Record-backed models,
+# {ActiveStorage::Attachment}[rdoc-ref:ActiveStorage::Attachment] and
+# {ActiveStorage::Blob}[rdoc-ref:ActiveStorage::Blob] records inherit from
+# {ActiveRecord::Base}[rdoc-ref:ActiveRecord::Base] instances and therefore
+# can be populated by fixtures.
+#
+# Consider a hypothetical <tt>Article</tt> model class, its related
+# fixture data, as well as fixture data for related ActiveStorage::Attachment
+# and ActiveStorage::Blob records:
+#
+#   # app/models/article.rb
+#   class Article < ApplicationRecord
+#     has_one_attached :thumbnail
+#   end
+#
+#   # fixtures/active_storage/blobs.yml
+#   first_thumbnail_blob: <%= ActiveStorage::FixtureSet.blob filename: "first.png" %>
+#
+#   # fixtures/active_storage/attachments.yml
+#   first_thumbnail_attachment:
+#     name: thumbnail
+#     record: first (Article)
+#     blob: first_thumbnail_blob
+#
+# When processed, Active Record will insert database records for each fixture
+# entry and will ensure the Active Storage relationship is intact.
+class ActiveStorage::FixtureSet
+  include ::ActiveSupport::Testing::FileFixtures
+  include ::ActiveRecord::SecureToken
+  extend ::ActiveRecord::SecureToken::ClassMethods
+
+  def file_fixture_path; end
+  def file_fixture_path?; end
+  def prepare(instance, **attributes); end
+
+  class << self
+    # Generate a YAML-encoded representation of an ActiveStorage::Blob
+    # instance's attributes, resolve the file relative to the directory mentioned
+    # by <tt>ActiveSupport::Testing::FileFixtures.file_fixture</tt>, and upload
+    # the file to the Service
+    #
+    # === Examples
+    #
+    #   # tests/fixtures/action_text/blobs.yml
+    #   second_thumbnail_blob: <%= ActiveStorage::FixtureSet.blob(
+    #     filename: "second.svg",
+    #   ) %>
+    #
+    #   third_thumbnail_blob: <%= ActiveStorage::FixtureSet.blob(
+    #     filename: "third.svg",
+    #     content_type: "image/svg+xml",
+    #     service_name: "public"
+    #   ) %>
+    def blob(filename:, **attributes); end
+
+    def file_fixture_path; end
+    def file_fixture_path=(value); end
+    def file_fixture_path?; end
   end
 end
 
@@ -593,7 +779,6 @@ class ActiveStorage::Preview
   def image; end
   def key; end
   def processed; end
-  def service_url(*args, &block); end
   def url(**options); end
   def variation; end
 
@@ -761,15 +946,20 @@ module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
   def reflect_on_attachment(attachment); end
 end
 
+class ActiveStorage::Reflection::HasAttachedReflection < ::ActiveRecord::Reflection::MacroReflection
+  def variant(name, transformations); end
+  def variants; end
+end
+
 # Holds all the metadata about a has_many_attached attachment as it was
 # specified in the Active Record class.
-class ActiveStorage::Reflection::HasManyAttachedReflection < ::ActiveRecord::Reflection::MacroReflection
+class ActiveStorage::Reflection::HasManyAttachedReflection < ::ActiveStorage::Reflection::HasAttachedReflection
   def macro; end
 end
 
 # Holds all the metadata about a has_one_attached attachment as it was
 # specified in the Active Record class.
-class ActiveStorage::Reflection::HasOneAttachedReflection < ::ActiveRecord::Reflection::MacroReflection
+class ActiveStorage::Reflection::HasOneAttachedReflection < ::ActiveStorage::Reflection::HasAttachedReflection
   def macro; end
 end
 
@@ -810,11 +1000,16 @@ end
 # can configure the service to use like this:
 #
 #   ActiveStorage::Blob.service = ActiveStorage::Service.configure(
-#     :Disk,
-#     root: Pathname("/foo/bar/storage")
+#     :local,
+#     { local: {service: "Disk",  root: Pathname("/tmp/foo/storage") } }
 #   )
 class ActiveStorage::Service
   extend ::ActiveSupport::Autoload
+
+  # Concatenate multiple files into a single "composed" file.
+  #
+  # @raise [NotImplementedError]
+  def compose(source_keys, destination_key, filename: T.unsafe(nil), content_type: T.unsafe(nil), disposition: T.unsafe(nil), custom_metadata: T.unsafe(nil)); end
 
   # Delete the file at the +key+.
   #
@@ -843,7 +1038,7 @@ class ActiveStorage::Service
   def exist?(key); end
 
   # Returns a Hash of headers for +url_for_direct_upload+ requests.
-  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:); end
+  def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:, custom_metadata: T.unsafe(nil)); end
 
   # Returns the value of attribute name.
   def name; end
@@ -881,11 +1076,15 @@ class ActiveStorage::Service
   # that will be uploaded. All these attributes will be validated by the service upon upload.
   #
   # @raise [NotImplementedError]
-  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:); end
+  def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:, custom_metadata: T.unsafe(nil)); end
 
   private
 
   def content_disposition_with(filename:, type: T.unsafe(nil)); end
+
+  # @raise [NotImplementedError]
+  def custom_metadata_headers(metadata); end
+
   def instrument(operation, payload = T.unsafe(nil), &block); end
 
   # @raise [NotImplementedError]
@@ -945,6 +1144,7 @@ module ActiveStorage::SetBlob
 
   private
 
+  def blob_scope; end
   def set_blob; end
 end
 
@@ -952,13 +1152,20 @@ module ActiveStorage::SetCurrent
   extend ::ActiveSupport::Concern
 end
 
-module ActiveStorage::SetHeaders
-  extend ::ActiveSupport::Concern
+module ActiveStorage::Streaming
+  include ::ActionController::Rendering
+  include ::ActionController::DataStreaming
+  include ::ActionController::Live
+  extend ::ActionController::Rendering::ClassMethods
+  extend ::ActionController::Live::ClassMethods
 
   private
 
-  def set_content_headers_from(blob); end
+  def send_blob_byte_range_data(blob, range_header, disposition: T.unsafe(nil)); end
+  def send_blob_stream(blob, disposition: T.unsafe(nil)); end
 end
+
+ActiveStorage::Streaming::DEFAULT_BLOB_STREAMING_DISPOSITION = T.let(T.unsafe(nil), String)
 
 module ActiveStorage::Transformers
   extend ::ActiveSupport::Autoload
@@ -1002,6 +1209,7 @@ class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 module ActiveStorage::VERSION; end
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -1018,7 +1226,6 @@ class ActiveStorage::Variant
   def key; end
   def processed; end
   def service(*_arg0, &_arg1); end
-  def service_url(*args, &block); end
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
   def variation; end
 
@@ -1045,6 +1252,8 @@ end
 module ActiveStorage::VariantRecord::GeneratedAssociationMethods
   def blob; end
   def blob=(value); end
+  def blob_changed?; end
+  def blob_previously_changed?; end
   def build_blob(*args, &block); end
   def create_blob(*args, &block); end
   def create_blob!(*args, &block); end
@@ -1063,7 +1272,7 @@ class ActiveStorage::VariantWithRecord
   def process; end
   def processed; end
   def processed?; end
-  def service_url(*args, &block); end
+  def service(*_arg0, &_arg1); end
   def url(*_arg0, &_arg1); end
   def variation; end
 

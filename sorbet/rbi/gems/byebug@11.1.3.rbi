@@ -2255,8 +2255,6 @@ Byebug::WidthSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 # Extends the extension class to be able to pass information about the
 # debugging environment from the c-extension to the user.
 class Exception
-  include ::ActiveSupport::Dependencies::Blamable
-
   # Returns the value of attribute __bb_context.
   def __bb_context; end
 end
