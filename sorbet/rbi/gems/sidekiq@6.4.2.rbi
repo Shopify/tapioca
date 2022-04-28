@@ -53,10 +53,20 @@ module Sidekiq
     # end
     def death_handlers; end
 
+    def default_job_options; end
+    def default_job_options=(hash); end
     def default_server_middleware; end
+
+    # deprecated
     def default_worker_options; end
+
+    # deprecated
     def default_worker_options=(hash); end
+
     def dump_json(object); end
+
+    # @return [Boolean]
+    def ent?; end
 
     # Register a proc to handle any error which occurs within the Sidekiq process.
     #
@@ -131,7 +141,7 @@ class Sidekiq::Client
   #   client.middleware do |chain|
   #     chain.use MyClientMiddleware
   #   end
-  #   client.push('class' => 'SomeWorker', 'args' => [1,2,3])
+  #   client.push('class' => 'SomeJob', 'args' => [1,2,3])
   #
   # All client instances default to the globally-defined
   # Sidekiq.client_middleware but you can change as necessary.
@@ -140,16 +150,16 @@ class Sidekiq::Client
   # The main method used to push a job to Redis.  Accepts a number of options:
   #
   #   queue - the named queue to use, default 'default'
-  #   class - the worker class to call, required
+  #   class - the job class to call, required
   #   args - an array of simple arguments to the perform method, must be JSON-serializable
   #   at - timestamp to schedule the job (optional), must be Numeric (e.g. Time.now.to_f)
   #   retry - whether to retry this job if it fails, default true or an integer number of retries
   #   backtrace - whether to save any error backtrace, default false
   #
   # If class is set to the class name, the jobs' options will be based on Sidekiq's default
-  # worker options. Otherwise, they will be based on the job class's options.
+  # job options. Otherwise, they will be based on the job class's options.
   #
-  # Any options valid for a worker class's sidekiq_options are also available here.
+  # Any options valid for a job class's sidekiq_options are also available here.
   #
   # All options must be strings, not symbols.  NB: because we are serializing to JSON, all
   # symbols in 'args' will be converted to strings.  Note that +backtrace: true+ can take quite a bit of
@@ -158,7 +168,7 @@ class Sidekiq::Client
   # Returns a unique Job ID.  If middleware stops the job, nil will be returned instead.
   #
   # Example:
-  #   push('queue' => 'my_queue', 'class' => MyWorker, 'args' => ['foo', 1, :bat => 'bar'])
+  #   push('queue' => 'my_queue', 'class' => MyJob, 'args' => ['foo', 1, :bat => 'bar'])
   def push(item); end
 
   # Push a large number of jobs to Redis. This method cuts out the redis
@@ -188,29 +198,28 @@ class Sidekiq::Client
   private
 
   def atomic_push(conn, payloads); end
-  def process_single(worker_class, item); end
   def raw_push(payloads); end
 
   class << self
     # Resque compatibility helpers.  Note all helpers
-    # should go through Worker#client_push.
+    # should go through Sidekiq::Job#client_push.
     #
     # Example usage:
-    #   Sidekiq::Client.enqueue(MyWorker, 'foo', 1, :bat => 'bar')
+    #   Sidekiq::Client.enqueue(MyJob, 'foo', 1, :bat => 'bar')
     #
     # Messages are enqueued to the 'default' queue.
     def enqueue(klass, *args); end
 
     # Example usage:
-    #   Sidekiq::Client.enqueue_in(3.minutes, MyWorker, 'foo', 1, :bat => 'bar')
+    #   Sidekiq::Client.enqueue_in(3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     def enqueue_in(interval, klass, *args); end
 
     # Example usage:
-    #   Sidekiq::Client.enqueue_to(:queue_name, MyWorker, 'foo', 1, :bat => 'bar')
+    #   Sidekiq::Client.enqueue_to(:queue_name, MyJob, 'foo', 1, :bat => 'bar')
     def enqueue_to(queue, klass, *args); end
 
     # Example usage:
-    #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyWorker, 'foo', 1, :bat => 'bar')
+    #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     def enqueue_to_in(queue, interval, klass, *args); end
 
     def push(item); end
@@ -221,8 +230,8 @@ class Sidekiq::Client
     #
     #   pool = ConnectionPool.new { Redis.new }
     #   Sidekiq::Client.via(pool) do
-    #     SomeWorker.perform_async(1,2,3)
-    #     SomeOtherWorker.perform_async(1,2,3)
+    #     SomeJob.perform_async(1,2,3)
+    #     SomeOtherJob.perform_async(1,2,3)
     #   end
     #
     # Generally this is only needed for very large Sidekiq installs processing
@@ -241,7 +250,6 @@ module Sidekiq::Context
 end
 
 Sidekiq::DEFAULTS = T.let(T.unsafe(nil), Hash)
-Sidekiq::DEFAULT_WORKER_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 module Sidekiq::Extensions
   class << self
@@ -254,15 +262,6 @@ module Sidekiq::Extensions::PsychAutoload
 end
 
 Sidekiq::FAKE_INFO = T.let(T.unsafe(nil), Hash)
-
-# Sidekiq::Job is a new alias for Sidekiq::Worker as of Sidekiq 6.3.0.
-# Use `include Sidekiq::Job` rather than `include Sidekiq::Worker`.
-#
-# The term "worker" is too generic and overly confusing, used in several
-# different contexts meaning different things. Many people call a Sidekiq
-# process a "worker". Some people call the thread that executes jobs a
-# "worker". This change brings Sidekiq closer to ActiveJob where your job
-# classes extend ApplicationJob.
 Sidekiq::Job = Sidekiq::Worker
 
 module Sidekiq::JobUtil
@@ -276,6 +275,8 @@ module Sidekiq::JobUtil
   #
   # @raise [ArgumentError]
   def validate(item); end
+
+  def verify_json(item); end
 
   private
 
@@ -317,18 +318,10 @@ module Sidekiq::LoggingUtils
   # FIXME: Remove when the minimum Ruby version supports overriding Logger#level.
   def add(severity, message = T.unsafe(nil), progname = T.unsafe(nil), &block); end
 
-  # @return [Boolean]
   def debug?; end
-
-  # @return [Boolean]
   def error?; end
-
-  # @return [Boolean]
   def fatal?; end
-
-  # @return [Boolean]
   def info?; end
-
   def level; end
   def local_level; end
   def local_level=(level); end
@@ -336,7 +329,6 @@ module Sidekiq::LoggingUtils
   # Change the thread-local level for the duration of the given block.
   def log_at(level); end
 
-  # @return [Boolean]
   def warn?; end
 end
 
@@ -385,10 +377,10 @@ Sidekiq::LoggingUtils::LEVELS = T.let(T.unsafe(nil), Hash)
 # This is an example of a minimal server middleware:
 #
 # class MyServerHook
-#   def call(worker_instance, msg, queue)
-#     puts "Before work"
+#   def call(job_instance, msg, queue)
+#     puts "Before job"
 #     yield
-#     puts "After work"
+#     puts "After job"
 #   end
 # end
 #
@@ -397,7 +389,7 @@ Sidekiq::LoggingUtils::LEVELS = T.let(T.unsafe(nil), Hash)
 # to Redis:
 #
 # class MyClientHook
-#   def call(worker_class, msg, queue, redis_pool)
+#   def call(job_class, msg, queue, redis_pool)
 #     puts "Before push"
 #     result = yield
 #     puts "After push"
@@ -470,7 +462,7 @@ class Sidekiq::RedisConnection
     def determine_redis_provider; end
     def log_info(options); end
 
-    # Sidekiq needs a lot of concurrent Redis connections.
+    # Sidekiq needs many concurrent Redis connections.
     #
     # We need a connection for each Processor.
     # We need a connection for Pro's real-time change listener
@@ -484,12 +476,12 @@ class Sidekiq::RedisConnection
   end
 end
 
-# We are shutting down Sidekiq but what about workers that
+# We are shutting down Sidekiq but what about threads that
 # are working on some long job?  This error is
-# raised in workers that have not finished within the hard
+# raised in jobs that have not finished within the hard
 # timeout limit.  This is needed to rollback db transactions,
 # otherwise Ruby's Thread#kill will commit.  See #377.
-# DO NOT RESCUE THIS ERROR IN YOUR WORKERS
+# DO NOT RESCUE THIS ERROR IN YOUR JOBS
 class Sidekiq::Shutdown < ::Interrupt; end
 
 Sidekiq::VERSION = T.let(T.unsafe(nil), String)
@@ -553,60 +545,10 @@ module Sidekiq::Worker
   end
 end
 
-# The Sidekiq testing infrastructure overrides perform_async
-# so that it does not actually touch the network.  Instead it
-# stores the asynchronous jobs in a per-class array so that
-# their presence/absence can be asserted by your tests.
-#
-# This is similar to ActionMailer's :test delivery_method and its
-# ActionMailer::Base.deliveries array.
-#
-# Example:
-#
-#   require 'sidekiq/testing'
-#
-#   assert_equal 0, HardWorker.jobs.size
-#   HardWorker.perform_async(:something)
-#   assert_equal 1, HardWorker.jobs.size
-#   assert_equal :something, HardWorker.jobs[0]['args'][0]
-#
-#   assert_equal 0, Sidekiq::Extensions::DelayedMailer.jobs.size
-#   MyMailer.delay.send_welcome_email('foo@example.com')
-#   assert_equal 1, Sidekiq::Extensions::DelayedMailer.jobs.size
-#
-# You can also clear and drain all workers' jobs:
-#
-#   assert_equal 0, Sidekiq::Extensions::DelayedMailer.jobs.size
-#   assert_equal 0, Sidekiq::Extensions::DelayedModel.jobs.size
-#
-#   MyMailer.delay.send_welcome_email('foo@example.com')
-#   MyModel.delay.do_something_hard
-#
-#   assert_equal 1, Sidekiq::Extensions::DelayedMailer.jobs.size
-#   assert_equal 1, Sidekiq::Extensions::DelayedModel.jobs.size
-#
-#   Sidekiq::Worker.clear_all # or .drain_all
-#
-#   assert_equal 0, Sidekiq::Extensions::DelayedMailer.jobs.size
-#   assert_equal 0, Sidekiq::Extensions::DelayedModel.jobs.size
-#
-# This can be useful to make sure jobs don't linger between tests:
-#
-#   RSpec.configure do |config|
-#     config.before(:each) do
-#       Sidekiq::Worker.clear_all
-#     end
-#   end
-#
-# or for acceptance testing, i.e. with cucumber:
-#
-#   AfterStep do
-#     Sidekiq::Worker.drain_all
-#   end
-#
-#   When I sign up as "foo@example.com"
-#   Then I should receive a welcome email to "foo@example.com"
 module Sidekiq::Worker::ClassMethods
+  def build_client; end
+
+  # @raise [ArgumentError]
   def client_push(item); end
 
   # @raise [ArgumentError]
@@ -650,6 +592,9 @@ module Sidekiq::Worker::ClassMethods
 
   # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
   def perform_inline(*args); end
+
+  # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
+  def perform_sync(*args); end
 
   def queue_as(q); end
   def set(options); end
