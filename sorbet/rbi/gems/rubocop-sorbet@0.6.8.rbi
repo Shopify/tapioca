@@ -6,6 +6,10 @@
 
 module RuboCop; end
 module RuboCop::Cop; end
+
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
+RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
+
 module RuboCop::Cop::Sorbet; end
 
 # This cop disallows using `.override(allow_incompatible: true)`.
@@ -46,7 +50,8 @@ class RuboCop::Cop::Sorbet::BindingConstantWithoutTypeAlias < ::RuboCop::Cop::Co
   def autocorrect(node); end
   def binding_unaliased_type?(param0 = T.unsafe(nil)); end
   def dynamic_type_creation_with_block?(param0 = T.unsafe(nil)); end
-  def generic_parameter_decl?(param0 = T.unsafe(nil)); end
+  def generic_parameter_decl_block_call?(param0 = T.unsafe(nil)); end
+  def generic_parameter_decl_call?(param0 = T.unsafe(nil)); end
   def method_needing_aliasing_on_t?(param0); end
 
   # @return [Boolean]
@@ -454,6 +459,14 @@ class RuboCop::Cop::Sorbet::KeywordArgumentOrdering < ::RuboCop::Cop::Sorbet::Si
   private
 
   def check_order_for_kwoptargs(parameters); end
+end
+
+module RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
+  def on_assignment(value); end
+
+  class << self
+    def prepended(base); end
+  end
 end
 
 # This cop ensures one ancestor per requires_ancestor line

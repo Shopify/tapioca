@@ -3240,6 +3240,7 @@ RuboCop::AST::NodePattern::Sets::SET____ = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_2 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_3 = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_____2 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::VAR = T.let(T.unsafe(nil), String)
 
 # Common functionality for primitive numeric nodes: `int`, `float`, ...
