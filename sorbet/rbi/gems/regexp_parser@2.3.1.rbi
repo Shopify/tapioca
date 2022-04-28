@@ -1483,40 +1483,36 @@ end
 module Regexp::Syntax
   private
 
-  def comparable_version(name); end
+  def comparable(name); end
   def const_missing(const_name); end
   def fallback_version_class(version); end
-  def inherit_from_version(parent_version, new_version); end
 
-  # Loads and instantiates an instance of the syntax specification class for
-  # the given syntax version name. The special names 'any' and '*' return an
-  # instance of Syntax::Any.
+  # Returns the syntax specification class for the given syntax
+  # version name. The special names 'any' and '*' return Syntax::Any.
+  def for(name); end
+
   def new(name); end
-
   def specified_versions; end
   def supported?(name); end
   def version_class(version); end
-  def version_const_name(version_string); end
   def warn_if_future_version(const_name); end
 
   class << self
-    def comparable_version(name); end
+    def comparable(name); end
     def const_missing(const_name); end
     def fallback_version_class(version); end
-    def inherit_from_version(parent_version, new_version); end
 
-    # Loads and instantiates an instance of the syntax specification class for
-    # the given syntax version name. The special names 'any' and '*' return an
-    # instance of Syntax::Any.
+    # Returns the syntax specification class for the given syntax
+    # version name. The special names 'any' and '*' return Syntax::Any.
+    def for(name); end
+
     def new(name); end
-
     def specified_versions; end
 
     # @return [Boolean]
     def supported?(name); end
 
     def version_class(version); end
-    def version_const_name(version_string); end
     def warn_if_future_version(const_name); end
   end
 end
@@ -1525,45 +1521,63 @@ end
 # is useful during development, testing, and should be useful for some types
 # of transformations as well.
 class Regexp::Syntax::Any < ::Regexp::Syntax::Base
-  # @return [Any] a new instance of Any
-  def initialize; end
-
-  def implements!(_type, _token); end
-
-  # @return [Boolean]
-  def implements?(_type, _token); end
+  class << self
+    # @return [Boolean]
+    def implements?(_type, _token); end
+  end
 end
 
 # A lookup map of supported types and tokens in a given syntax
 class Regexp::Syntax::Base
   include ::Regexp::Syntax::Token
 
+  # TODO: drop this backwards compatibility code in v3.0.0, do `private :new`
+  #
   # @return [Base] a new instance of Base
   def initialize; end
 
-  # @raise [NotImplementedError]
-  def check!(type, token); end
+  def method_missing(name, *args); end
+
+  private
 
   # @return [Boolean]
-  def check?(type, token); end
-
-  def excludes(type, tokens); end
-  def features; end
-  def implementations(type); end
-  def implements(type, tokens); end
-
-  # @raise [NotImplementedError]
-  def implements!(type, token); end
-
-  # @return [Boolean]
-  def implements?(type, token); end
-
-  def normalize(type, token); end
-  def normalize_backref(type, token); end
-  def normalize_group(type, token); end
+  def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   class << self
-    def inspect; end
+    def added_features; end
+
+    # @raise [NotImplementedError]
+    def check!(type, token); end
+
+    # @return [Boolean]
+    def check?(type, token); end
+
+    def excludes(type, tokens); end
+
+    # Returns the value of attribute features.
+    def features; end
+
+    # Sets the attribute features
+    #
+    # @param value the value to set the attribute features to.
+    def features=(_arg0); end
+
+    def implementations(type); end
+    def implements(type, tokens); end
+
+    # @raise [NotImplementedError]
+    def implements!(type, token); end
+
+    # @return [Boolean]
+    def implements?(type, token); end
+
+    # automatically inherit features through the syntax class hierarchy
+    def inherited(subclass); end
+
+    def normalize(type, token); end
+    def normalize_backref(type, token); end
+    def normalize_group(type, token); end
+    def removed_features; end
   end
 end
 
@@ -1676,6 +1690,7 @@ Regexp::Syntax::Token::Quantifier::IntervalReluctant = T.let(T.unsafe(nil), Arra
 Regexp::Syntax::Token::Quantifier::Possessive = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Quantifier::Reluctant = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Quantifier::Type = T.let(T.unsafe(nil), Symbol)
+Regexp::Syntax::Token::Quantifier::V1_8_6 = T.let(T.unsafe(nil), Array)
 
 # Type is the same as Backreference so keeping it here, for now.
 module Regexp::Syntax::Token::SubexpressionCall; end
@@ -1696,6 +1711,7 @@ Regexp::Syntax::Token::UnicodeProperty::Age_V2_6_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Age_V2_6_2 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Age_V2_6_3 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Age_V3_1_0 = T.let(T.unsafe(nil), Array)
+Regexp::Syntax::Token::UnicodeProperty::Age_V3_2_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::All = T.let(T.unsafe(nil), Array)
 module Regexp::Syntax::Token::UnicodeProperty::Category; end
 Regexp::Syntax::Token::UnicodeProperty::Category::All = T.let(T.unsafe(nil), Array)
@@ -1728,6 +1744,7 @@ Regexp::Syntax::Token::UnicodeProperty::Script_V2_5_0 = T.let(T.unsafe(nil), Arr
 Regexp::Syntax::Token::UnicodeProperty::Script_V2_6_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Script_V2_6_2 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Script_V3_1_0 = T.let(T.unsafe(nil), Array)
+Regexp::Syntax::Token::UnicodeProperty::Script_V3_2_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::Type = T.let(T.unsafe(nil), Symbol)
 Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V1_9_0 = T.let(T.unsafe(nil), Array)
@@ -1739,6 +1756,7 @@ Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V2_5_0 = T.let(T.unsafe(nil
 Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V2_6_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V2_6_2 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V3_1_0 = T.let(T.unsafe(nil), Array)
+Regexp::Syntax::Token::UnicodeProperty::UnicodeBlock_V3_2_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V1_9_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V1_9_3 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V2_0_0 = T.let(T.unsafe(nil), Array)
@@ -1750,89 +1768,27 @@ Regexp::Syntax::Token::UnicodeProperty::V2_6_0 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V2_6_2 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V2_6_3 = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::UnicodeProperty::V3_1_0 = T.let(T.unsafe(nil), Array)
+Regexp::Syntax::Token::UnicodeProperty::V3_2_0 = T.let(T.unsafe(nil), Array)
 
 class Regexp::Syntax::UnknownSyntaxNameError < ::Regexp::Syntax::SyntaxError
   # @return [UnknownSyntaxNameError] a new instance of UnknownSyntaxNameError
   def initialize(name); end
 end
 
-class Regexp::Syntax::V1_8_6 < ::Regexp::Syntax::Base
-  # @return [V1_8_6] a new instance of V1_8_6
-  def initialize; end
-end
-
-class Regexp::Syntax::V1_9 < ::Regexp::Syntax::V1_9_3; end
-
-class Regexp::Syntax::V1_9_1 < ::Regexp::Syntax::V1_8_6
-  # @return [V1_9_1] a new instance of V1_9_1
-  def initialize; end
-end
-
-class Regexp::Syntax::V1_9_3 < ::Regexp::Syntax::V1_9_1
-  # @return [V1_9_3] a new instance of V1_9_3
-  def initialize; end
-end
-
-# use the last 1.9 release as the base
-class Regexp::Syntax::V2_0_0 < ::Regexp::Syntax::V1_9
-  # @return [V2_0_0] a new instance of V2_0_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_1 < ::Regexp::Syntax::V2_0_0; end
-class Regexp::Syntax::V2_2 < ::Regexp::Syntax::V2_2_0; end
-
-class Regexp::Syntax::V2_2_0 < ::Regexp::Syntax::V2_1
-  # @return [V2_2_0] a new instance of V2_2_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_3 < ::Regexp::Syntax::V2_3_0; end
-
-class Regexp::Syntax::V2_3_0 < ::Regexp::Syntax::V2_2
-  # @return [V2_3_0] a new instance of V2_3_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_4 < ::Regexp::Syntax::V2_4_1; end
-
-class Regexp::Syntax::V2_4_0 < ::Regexp::Syntax::V2_3
-  # @return [V2_4_0] a new instance of V2_4_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_4_1 < ::Regexp::Syntax::V2_4_0
-  # @return [V2_4_1] a new instance of V2_4_1
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_5 < ::Regexp::Syntax::V2_5_0; end
-
-class Regexp::Syntax::V2_5_0 < ::Regexp::Syntax::V2_4
-  # @return [V2_5_0] a new instance of V2_5_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_6_0 < ::Regexp::Syntax::V2_5
-  # @return [V2_6_0] a new instance of V2_6_0
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_6_2 < ::Regexp::Syntax::V2_6_0
-  # @return [V2_6_2] a new instance of V2_6_2
-  def initialize; end
-end
-
-class Regexp::Syntax::V2_6_3 < ::Regexp::Syntax::V2_6_2
-  # @return [V2_6_3] a new instance of V2_6_3
-  def initialize; end
-end
-
-class Regexp::Syntax::V3_1_0 < ::Regexp::Syntax::V2_6_3
-  # @return [V3_1_0] a new instance of V3_1_0
-  def initialize; end
-end
-
+class Regexp::Syntax::V1_8_6 < ::Regexp::Syntax::Base; end
+class Regexp::Syntax::V1_9_1 < ::Regexp::Syntax::V1_8_6; end
+class Regexp::Syntax::V1_9_3 < ::Regexp::Syntax::V1_9_1; end
+class Regexp::Syntax::V2_0_0 < ::Regexp::Syntax::V1_9_3; end
+class Regexp::Syntax::V2_2_0 < ::Regexp::Syntax::V2_0_0; end
+class Regexp::Syntax::V2_3_0 < ::Regexp::Syntax::V2_2_0; end
+class Regexp::Syntax::V2_4_0 < ::Regexp::Syntax::V2_3_0; end
+class Regexp::Syntax::V2_4_1 < ::Regexp::Syntax::V2_4_0; end
+class Regexp::Syntax::V2_5_0 < ::Regexp::Syntax::V2_4_1; end
+class Regexp::Syntax::V2_6_0 < ::Regexp::Syntax::V2_5_0; end
+class Regexp::Syntax::V2_6_2 < ::Regexp::Syntax::V2_6_0; end
+class Regexp::Syntax::V2_6_3 < ::Regexp::Syntax::V2_6_2; end
+class Regexp::Syntax::V3_1_0 < ::Regexp::Syntax::V2_6_3; end
+class Regexp::Syntax::V3_2_0 < ::Regexp::Syntax::V3_1_0; end
 Regexp::Syntax::VERSION_CONST_REGEXP = T.let(T.unsafe(nil), Regexp)
 Regexp::Syntax::VERSION_FORMAT = T.let(T.unsafe(nil), String)
 Regexp::Syntax::VERSION_REGEXP = T.let(T.unsafe(nil), Regexp)

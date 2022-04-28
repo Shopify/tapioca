@@ -447,141 +447,140 @@ end
 module RuboCop::AST::CollectionNode
   extend ::Forwardable
 
-  def &(*args, **_arg1, &block); end
-  def *(*args, **_arg1, &block); end
-  def +(*args, **_arg1, &block); end
-  def -(*args, **_arg1, &block); end
-  def <<(*args, **_arg1, &block); end
-  def [](*args, **_arg1, &block); end
-  def []=(*args, **_arg1, &block); end
-  def all?(*args, **_arg1, &block); end
-  def any?(*args, **_arg1, &block); end
-  def append(*args, **_arg1, &block); end
-  def assoc(*args, **_arg1, &block); end
-  def at(*args, **_arg1, &block); end
-  def bsearch(*args, **_arg1, &block); end
-  def bsearch_index(*args, **_arg1, &block); end
-  def chain(*args, **_arg1, &block); end
-  def chunk(*args, **_arg1, &block); end
-  def chunk_while(*args, **_arg1, &block); end
-  def clear(*args, **_arg1, &block); end
-  def collect(*args, **_arg1, &block); end
-  def collect!(*args, **_arg1, &block); end
-  def collect_concat(*args, **_arg1, &block); end
-  def combination(*args, **_arg1, &block); end
-  def compact(*args, **_arg1, &block); end
-  def compact!(*args, **_arg1, &block); end
-  def concat(*args, **_arg1, &block); end
-  def count(*args, **_arg1, &block); end
-  def cycle(*args, **_arg1, &block); end
-  def deconstruct(*args, **_arg1, &block); end
-  def delete(*args, **_arg1, &block); end
-  def delete_at(*args, **_arg1, &block); end
-  def delete_if(*args, **_arg1, &block); end
-  def detect(*args, **_arg1, &block); end
-  def difference(*args, **_arg1, &block); end
-  def dig(*args, **_arg1, &block); end
-  def drop(*args, **_arg1, &block); end
-  def drop_while(*args, **_arg1, &block); end
-  def each(*args, **_arg1, &block); end
-  def each_cons(*args, **_arg1, &block); end
-  def each_entry(*args, **_arg1, &block); end
-  def each_index(*args, **_arg1, &block); end
-  def each_slice(*args, **_arg1, &block); end
-  def each_with_index(*args, **_arg1, &block); end
-  def each_with_object(*args, **_arg1, &block); end
-  def empty?(*args, **_arg1, &block); end
-  def entries(*args, **_arg1, &block); end
-  def fetch(*args, **_arg1, &block); end
-  def fill(*args, **_arg1, &block); end
-  def filter(*args, **_arg1, &block); end
-  def filter!(*args, **_arg1, &block); end
-  def filter_map(*args, **_arg1, &block); end
-  def find(*args, **_arg1, &block); end
-  def find_all(*args, **_arg1, &block); end
-  def find_index(*args, **_arg1, &block); end
-  def first(*args, **_arg1, &block); end
-  def flat_map(*args, **_arg1, &block); end
-  def flatten(*args, **_arg1, &block); end
-  def flatten!(*args, **_arg1, &block); end
-  def grep(*args, **_arg1, &block); end
-  def grep_v(*args, **_arg1, &block); end
-  def group_by(*args, **_arg1, &block); end
-  def include?(*args, **_arg1, &block); end
-  def index(*args, **_arg1, &block); end
-  def inject(*args, **_arg1, &block); end
-  def insert(*args, **_arg1, &block); end
-  def intersect?(*args, **_arg1, &block); end
-  def intersection(*args, **_arg1, &block); end
-  def join(*args, **_arg1, &block); end
-  def keep_if(*args, **_arg1, &block); end
-  def last(*args, **_arg1, &block); end
-  def lazy(*args, **_arg1, &block); end
-  def length(*args, **_arg1, &block); end
-  def map(*args, **_arg1, &block); end
-  def map!(*args, **_arg1, &block); end
-  def max(*args, **_arg1, &block); end
-  def max_by(*args, **_arg1, &block); end
-  def member?(*args, **_arg1, &block); end
-  def min(*args, **_arg1, &block); end
-  def min_by(*args, **_arg1, &block); end
-  def minmax(*args, **_arg1, &block); end
-  def minmax_by(*args, **_arg1, &block); end
-  def none?(*args, **_arg1, &block); end
-  def one?(*args, **_arg1, &block); end
-  def pack(*args, **_arg1, &block); end
-  def partition(*args, **_arg1, &block); end
-  def permutation(*args, **_arg1, &block); end
-  def place(*args, **_arg1, &block); end
-  def pop(*args, **_arg1, &block); end
-  def prepend(*args, **_arg1, &block); end
-  def product(*args, **_arg1, &block); end
-  def push(*args, **_arg1, &block); end
-  def rassoc(*args, **_arg1, &block); end
-  def reduce(*args, **_arg1, &block); end
-  def reject(*args, **_arg1, &block); end
-  def reject!(*args, **_arg1, &block); end
-  def repeated_combination(*args, **_arg1, &block); end
-  def repeated_permutation(*args, **_arg1, &block); end
-  def replace(*args, **_arg1, &block); end
-  def reverse(*args, **_arg1, &block); end
-  def reverse!(*args, **_arg1, &block); end
-  def reverse_each(*args, **_arg1, &block); end
-  def rindex(*args, **_arg1, &block); end
-  def rotate(*args, **_arg1, &block); end
-  def rotate!(*args, **_arg1, &block); end
-  def sample(*args, **_arg1, &block); end
-  def select(*args, **_arg1, &block); end
-  def select!(*args, **_arg1, &block); end
-  def shelljoin(*args, **_arg1, &block); end
-  def shift(*args, **_arg1, &block); end
-  def shuffle(*args, **_arg1, &block); end
-  def shuffle!(*args, **_arg1, &block); end
-  def size(*args, **_arg1, &block); end
-  def slice(*args, **_arg1, &block); end
-  def slice!(*args, **_arg1, &block); end
-  def slice_after(*args, **_arg1, &block); end
-  def slice_before(*args, **_arg1, &block); end
-  def slice_when(*args, **_arg1, &block); end
-  def sort(*args, **_arg1, &block); end
-  def sort!(*args, **_arg1, &block); end
-  def sort_by(*args, **_arg1, &block); end
-  def sort_by!(*args, **_arg1, &block); end
-  def sum(*args, **_arg1, &block); end
-  def take(*args, **_arg1, &block); end
-  def take_while(*args, **_arg1, &block); end
-  def tally(*args, **_arg1, &block); end
-  def to_ary(*args, **_arg1, &block); end
-  def to_h(*args, **_arg1, &block); end
-  def to_set(*args, **_arg1, &block); end
-  def transpose(*args, **_arg1, &block); end
-  def union(*args, **_arg1, &block); end
-  def uniq(*args, **_arg1, &block); end
-  def uniq!(*args, **_arg1, &block); end
-  def unshift(*args, **_arg1, &block); end
-  def values_at(*args, **_arg1, &block); end
-  def zip(*args, **_arg1, &block); end
-  def |(*args, **_arg1, &block); end
+  def &(*args, &block); end
+  def *(*args, &block); end
+  def +(*args, &block); end
+  def -(*args, &block); end
+  def <<(*args, &block); end
+  def [](*args, &block); end
+  def []=(*args, &block); end
+  def all?(*args, &block); end
+  def any?(*args, &block); end
+  def append(*args, &block); end
+  def assoc(*args, &block); end
+  def at(*args, &block); end
+  def bsearch(*args, &block); end
+  def bsearch_index(*args, &block); end
+  def chain(*args, &block); end
+  def chunk(*args, &block); end
+  def chunk_while(*args, &block); end
+  def clear(*args, &block); end
+  def collect(*args, &block); end
+  def collect!(*args, &block); end
+  def collect_concat(*args, &block); end
+  def combination(*args, &block); end
+  def compact(*args, &block); end
+  def compact!(*args, &block); end
+  def concat(*args, &block); end
+  def count(*args, &block); end
+  def cycle(*args, &block); end
+  def deconstruct(*args, &block); end
+  def delete(*args, &block); end
+  def delete_at(*args, &block); end
+  def delete_if(*args, &block); end
+  def detect(*args, &block); end
+  def difference(*args, &block); end
+  def dig(*args, &block); end
+  def drop(*args, &block); end
+  def drop_while(*args, &block); end
+  def each(*args, &block); end
+  def each_cons(*args, &block); end
+  def each_entry(*args, &block); end
+  def each_index(*args, &block); end
+  def each_slice(*args, &block); end
+  def each_with_index(*args, &block); end
+  def each_with_object(*args, &block); end
+  def empty?(*args, &block); end
+  def entries(*args, &block); end
+  def fetch(*args, &block); end
+  def fill(*args, &block); end
+  def filter(*args, &block); end
+  def filter!(*args, &block); end
+  def filter_map(*args, &block); end
+  def find(*args, &block); end
+  def find_all(*args, &block); end
+  def find_index(*args, &block); end
+  def first(*args, &block); end
+  def flat_map(*args, &block); end
+  def flatten(*args, &block); end
+  def flatten!(*args, &block); end
+  def grep(*args, &block); end
+  def grep_v(*args, &block); end
+  def group_by(*args, &block); end
+  def include?(*args, &block); end
+  def index(*args, &block); end
+  def inject(*args, &block); end
+  def insert(*args, &block); end
+  def intersection(*args, &block); end
+  def join(*args, &block); end
+  def keep_if(*args, &block); end
+  def last(*args, &block); end
+  def lazy(*args, &block); end
+  def length(*args, &block); end
+  def map(*args, &block); end
+  def map!(*args, &block); end
+  def max(*args, &block); end
+  def max_by(*args, &block); end
+  def member?(*args, &block); end
+  def min(*args, &block); end
+  def min_by(*args, &block); end
+  def minmax(*args, &block); end
+  def minmax_by(*args, &block); end
+  def none?(*args, &block); end
+  def one?(*args, &block); end
+  def pack(*args, &block); end
+  def partition(*args, &block); end
+  def permutation(*args, &block); end
+  def place(*args, &block); end
+  def pop(*args, &block); end
+  def prepend(*args, &block); end
+  def product(*args, &block); end
+  def push(*args, &block); end
+  def rassoc(*args, &block); end
+  def reduce(*args, &block); end
+  def reject(*args, &block); end
+  def reject!(*args, &block); end
+  def repeated_combination(*args, &block); end
+  def repeated_permutation(*args, &block); end
+  def replace(*args, &block); end
+  def reverse(*args, &block); end
+  def reverse!(*args, &block); end
+  def reverse_each(*args, &block); end
+  def rindex(*args, &block); end
+  def rotate(*args, &block); end
+  def rotate!(*args, &block); end
+  def sample(*args, &block); end
+  def select(*args, &block); end
+  def select!(*args, &block); end
+  def shelljoin(*args, &block); end
+  def shift(*args, &block); end
+  def shuffle(*args, &block); end
+  def shuffle!(*args, &block); end
+  def size(*args, &block); end
+  def slice(*args, &block); end
+  def slice!(*args, &block); end
+  def slice_after(*args, &block); end
+  def slice_before(*args, &block); end
+  def slice_when(*args, &block); end
+  def sort(*args, &block); end
+  def sort!(*args, &block); end
+  def sort_by(*args, &block); end
+  def sort_by!(*args, &block); end
+  def sum(*args, &block); end
+  def take(*args, &block); end
+  def take_while(*args, &block); end
+  def tally(*args, &block); end
+  def to_ary(*args, &block); end
+  def to_h(*args, &block); end
+  def to_set(*args, &block); end
+  def transpose(*args, &block); end
+  def union(*args, &block); end
+  def uniq(*args, &block); end
+  def uniq!(*args, &block); end
+  def unshift(*args, &block); end
+  def values_at(*args, &block); end
+  def zip(*args, &block); end
+  def |(*args, &block); end
 end
 
 RuboCop::AST::CollectionNode::ARRAY_METHODS = T.let(T.unsafe(nil), Array)
@@ -2218,7 +2217,7 @@ class RuboCop::AST::NodePattern
   # Returns the value of attribute ast.
   def ast; end
 
-  def captures(*args, **_arg1, &block); end
+  def captures(*args, &block); end
   def encode_with(coder); end
   def eql?(other); end
   def freeze; end
@@ -2230,12 +2229,12 @@ class RuboCop::AST::NodePattern
   # Returns the value of attribute match_code.
   def match_code; end
 
-  def named_parameters(*args, **_arg1, &block); end
+  def named_parameters(*args, &block); end
 
   # Returns the value of attribute pattern.
   def pattern; end
 
-  def positional_parameters(*args, **_arg1, &block); end
+  def positional_parameters(*args, &block); end
   def to_s; end
 
   class << self
@@ -2306,7 +2305,7 @@ class RuboCop::AST::NodePattern::Compiler
   # @return [Compiler] a new instance of Compiler
   def initialize; end
 
-  def bind(*args, **_arg1, &block); end
+  def bind(*args, &block); end
 
   # Returns the value of attribute binding.
   def binding; end
@@ -2389,14 +2388,14 @@ class RuboCop::AST::NodePattern::Compiler::Debug < ::RuboCop::AST::NodePattern::
   # @return [Debug] a new instance of Debug
   def initialize; end
 
-  def comments(*args, **_arg1, &block); end
+  def comments(*args, &block); end
   def named_parameters; end
 
   # Returns the value of attribute node_ids.
   def node_ids; end
 
   def parser; end
-  def tokens(*args, **_arg1, &block); end
+  def tokens(*args, &block); end
 end
 
 # @api private
@@ -2509,7 +2508,6 @@ class RuboCop::AST::NodePattern::Compiler::Debug::Colorizer::Result < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2944,14 +2942,14 @@ RuboCop::AST::NodePattern::Node::AnyOrder::ARITIES = T.let(T.unsafe(nil), Hash)
 
 # Node class for `$something`
 class RuboCop::AST::NodePattern::Node::Capture < ::RuboCop::AST::NodePattern::Node
-  def arity(*args, **_arg1, &block); end
+  def arity(*args, &block); end
 
   # @return [Boolean]
   def capture?; end
 
   def in_sequence_head; end
   def nb_captures; end
-  def rest?(*args, **_arg1, &block); end
+  def rest?(*args, &block); end
 end
 
 module RuboCop::AST::NodePattern::Node::ForbidInSeqHead
@@ -3075,14 +3073,14 @@ class RuboCop::AST::NodePattern::Parser < ::Racc::Parser
   def _reduce_8(val, _values); end
   def _reduce_9(val, _values); end
   def _reduce_none(val, _values); end
-  def emit_atom(*args, **_arg1, &block); end
-  def emit_call(*args, **_arg1, &block); end
-  def emit_capture(*args, **_arg1, &block); end
-  def emit_list(*args, **_arg1, &block); end
-  def emit_unary_op(*args, **_arg1, &block); end
-  def emit_union(*args, **_arg1, &block); end
+  def emit_atom(*args, &block); end
+  def emit_call(*args, &block); end
+  def emit_capture(*args, &block); end
+  def emit_list(*args, &block); end
+  def emit_unary_op(*args, &block); end
+  def emit_union(*args, &block); end
   def inspect; end
-  def next_token(*args, **_arg1, &block); end
+  def next_token(*args, &block); end
 
   # (Similar API to `parser` gem)
   # Parses a source and returns the AST.
@@ -3267,6 +3265,7 @@ RuboCop::AST::NodePattern::Sets::SET____ = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_2 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET____ETC_3 = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_____2 = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::VAR = T.let(T.unsafe(nil), String)
 
 # Common functionality for primitive numeric nodes: `int`, `float`, ...
