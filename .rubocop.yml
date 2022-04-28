@@ -14,7 +14,7 @@ AllCops:
   Exclude:
   - "vendor/**/*"
   Include:
-  - "sorbet/rbi/**/*.rbi"
+  - "sorbet/rbi/shims/**/*.rbi"
 
 Naming/InclusiveLanguage:
   Exclude:
