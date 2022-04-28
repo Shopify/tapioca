@@ -61,11 +61,16 @@ module Tapioca
         @loader = T.let(nil, T.nilable(Runtime::Loader))
       end
 
-      sig { override.void }
-      def execute
+      sig { void }
+      def load_dsl_defaults
         load_dsl_extensions
         load_application(eager_load: @requested_constants.empty?)
         load_dsl_compilers
+      end
+
+      sig { override.void }
+      def execute
+        load_dsl_defaults
 
         if @should_verify
           say("Checking for out-of-date RBIs...")
