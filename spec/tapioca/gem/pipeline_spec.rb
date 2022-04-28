@@ -2596,6 +2596,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             B = type_template(:out)
             C = type_template
 
+            # The constants below are using the old type variable syntax specifically,
+            # so that we can be certain that we handle the old syntax properly.
             D = type_member(fixed: Integer)
             E = type_member(fixed: Integer, upper: T::Array[Numeric])
             F = type_member(
@@ -2614,12 +2616,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
               B = type_template(:out)
               C = type_template
 
-              D = type_member(fixed: Integer)
-              E = type_member(fixed: Integer, upper: Numeric)
-              F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
-              G = type_member(:in, fixed: Integer)
-              H = type_member(:in, fixed: Integer, upper: Numeric)
-              I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
+              D = type_member { { fixed: Integer } }
+              E = type_member { { fixed: Integer, upper: Numeric } }
+              F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+              G = type_member(:in) { { fixed: Integer } }
+              H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+              I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
             end
           end
 
@@ -2901,9 +2903,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Service
           extend T::Generic
 
-          InputType = type_member(upper: Result[Integer, String])
-          ReturnType = type_member(fixed: Result[Integer, String])
-          TempType = type_member(lower: Result[Integer, String])
+          InputType = type_member { { upper: Result[Integer, String] } }
+          ReturnType = type_member { { fixed: Result[Integer, String] } }
+          TempType = type_member { { lower: Result[Integer, String] } }
         end
       RUBY
 
@@ -3024,7 +3026,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           include ::Root
           extend T::Sig
           extend T::Generic
-          Elem = type_member(fixed: Integer)
+          Elem = type_member { { fixed: Integer } }
 
           sig { override.returns(T::Array[Node[Integer]]) }
           def children
