@@ -6478,10 +6478,6 @@ class RuboCop::Cop::Layout::ExtraSpacing < ::RuboCop::Cop::Base
   # extra spaces between the keys and values in a multiline hash,
   # since those are handled by the Layout/HashAlignment cop.
   def ignored_ranges(ast); end
-
-  class << self
-    def autocorrect_incompatible_with; end
-  end
 end
 
 RuboCop::Cop::Layout::ExtraSpacing::MSG_UNALIGNED_ASGN = T.let(T.unsafe(nil), String)
