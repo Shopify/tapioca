@@ -118,7 +118,7 @@ module Tapioca
       #     sig { returns(T::Array[::Post]) }
       #     def to_ary; end
       #
-      #     Elem = type_member(fixed: ::Post)
+      #     Elem = type_member { { fixed: ::Post } }
       #   end
       #
       #   class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -141,7 +141,7 @@ module Tapioca
       #     sig { returns(T::Array[::Post]) }
       #     def to_ary; end
       #
-      #     Elem = type_member(fixed: ::Post)
+      #     Elem = type_member { { fixed: ::Post } }
       #   end
       # end
       # ~~~
@@ -253,7 +253,7 @@ module Tapioca
           model.create_class(RelationClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(RelationMethodsModuleName)
-            klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
           end
@@ -269,7 +269,7 @@ module Tapioca
           model.create_class(AssociationRelationClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(AssociationRelationMethodsModuleName)
-            klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
           end
@@ -281,7 +281,7 @@ module Tapioca
         def create_relation_where_chain_class(model)
           model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
             create_where_chain_methods(klass, RelationClassName)
-            klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
           end
         end
 
@@ -292,7 +292,7 @@ module Tapioca
             superclass_name: AssociationRelationClassName
           ) do |klass|
             create_where_chain_methods(klass, AssociationRelationClassName)
-            klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
           end
         end
 
@@ -329,7 +329,7 @@ module Tapioca
           model.create_class(AssociationsCollectionProxyClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(AssociationRelationMethodsModuleName)
-            klass.create_constant("Elem", value: "type_member(fixed: #{constant_name})")
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
             create_collection_proxy_methods(klass)

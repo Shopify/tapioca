@@ -47,7 +47,7 @@ module Tapioca
                 class SettingsConfigOptions < ::Config::Options
                   extend T::Generic
 
-                  Elem = type_member(fixed: T.untyped)
+                  Elem = type_member { { fixed: T.untyped } }
 
                   sig { returns(T.untyped) }
                   def github_key; end
@@ -85,7 +85,7 @@ module Tapioca
                 class FooConfigOptions < ::Config::Options
                   extend T::Generic
 
-                  Elem = type_member(fixed: T.untyped)
+                  Elem = type_member { { fixed: T.untyped } }
 
                   sig { returns(T.untyped) }
                   def github_key; end
@@ -126,7 +126,7 @@ module Tapioca
                 class SettingsConfigOptions < ::Config::Options
                   extend T::Generic
 
-                  Elem = type_member(fixed: T.untyped)
+                  Elem = type_member { { fixed: T.untyped } }
 
                   sig { returns(T.untyped) }
                   def github; end

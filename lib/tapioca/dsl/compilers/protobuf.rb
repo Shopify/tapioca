@@ -117,7 +117,7 @@ module Tapioca
           klass.create_extend("T::Generic")
 
           names.each do |name|
-            klass.create_type_member(name)
+            klass.create_type_variable(name, type: "type_member")
           end
         end
 
