@@ -128,7 +128,6 @@ module Tapioca
   # do that automatically for us and we get the `name` method for free from `Module`.
   class TypeVariableModule < Module
     extend T::Sig
-    include SorbetHelper
 
     class Type < T::Enum
       enums do
@@ -171,34 +170,17 @@ module Tapioca
 
     sig { returns(String) }
     def serialize
-      variance = @variance unless @variance == :invariant
+      fixed = @fixed.to_s if @fixed
+      upper = @upper.to_s if @upper
+      lower = @lower.to_s if @lower
 
-      bounds = []
-      bounds << "fixed: #{@fixed}" if @fixed
-      bounds << "lower: #{@lower}" if @lower
-      bounds << "upper: #{@upper}" if @upper
-
-      # rubocop:disable Style/IdenticalConditionalBranches
-      parameters = if sorbet_supports?(:type_variable_block_syntax)
-        parts = []
-        parts << "(:#{variance})" if variance
-        parts << " { { #{bounds.join(", ")} } }" unless bounds.empty?
-        parts.join
-      else
-        parts = []
-        parts << ":#{variance}" if variance
-        parts.concat(bounds)
-        if parts.empty?
-          ""
-        else
-          "(#{parts.join(", ")})"
-        end
-      end
-      # rubocop:enable Style/IdenticalConditionalBranches
-
-      serialized = @type.serialize.dup
-      serialized << parameters unless parameters.empty?
-      serialized
+      TypeVariableHelper.serialize_type_variable(
+        @type.serialize,
+        @variance,
+        fixed,
+        upper,
+        lower
+      )
     end
 
     sig { returns(Tapioca::TypeVariable) }
