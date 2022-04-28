@@ -121,4 +121,26 @@ module Tapioca
       end
     end
   end
+
+  @dsl_loader_block = T.let(nil, T.nilable(T.proc.void))
+
+  sig { params(block: T.proc.bind(Tapioca::Commands::Dsl).void).void }
+  def self.load_for_dsl(&block)
+    @dsl_loader_block = block
+  end
+
+  sig { returns(T.proc.params(arg: T.untyped).void) }
+  def self.dsl_loader_block
+    block = @dsl_loader_block
+
+    raise <<~ERR unless block
+      To provide a custom application loader, `Tapioca.load_for_dsl` must be called with a block
+
+        Tapioca.load_for_dsl do
+          # Add custom load instructions here
+        end
+    ERR
+
+    T.unsafe(block)
+  end
 end

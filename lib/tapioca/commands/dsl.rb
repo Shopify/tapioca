@@ -70,7 +70,14 @@ module Tapioca
 
       sig { override.void }
       def execute
-        load_dsl_defaults
+        custom_load_file_path = File.expand_path("#{@tapioca_path}/load.rb")
+
+        if File.exist?(custom_load_file_path)
+          require custom_load_file_path
+          instance_exec(&Tapioca.dsl_loader_block)
+        else
+          load_dsl_defaults
+        end
 
         if @should_verify
           say("Checking for out-of-date RBIs...")
