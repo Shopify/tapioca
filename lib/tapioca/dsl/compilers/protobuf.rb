@@ -70,7 +70,7 @@ module Tapioca
 
         extend T::Sig
 
-        ConstantType = type_member(fixed: Module)
+        ConstantType = type_member { { fixed: Module } }
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 
@@ -117,7 +117,7 @@ module Tapioca
           klass.create_extend("T::Generic")
 
           names.each do |name|
-            klass.create_type_member(name)
+            klass.create_type_variable(name, type: "type_member")
           end
         end
 

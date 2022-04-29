@@ -49,7 +49,7 @@ module Tapioca
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
-        ConstantType = type_member(fixed: Module)
+        ConstantType = type_member { { fixed: Module } }
 
         sig { override.void }
         def decorate
@@ -77,7 +77,7 @@ module Tapioca
             # enumerates the entries, we don't make any assumptions about their
             # types.
             mod.create_extend("T::Generic")
-            mod.create_type_member("Elem", value: "type_member(fixed: T.untyped)")
+            mod.create_type_variable("Elem", type: "type_member", fixed: "T.untyped")
 
             method_names.each do |method_name|
               # Create getter method

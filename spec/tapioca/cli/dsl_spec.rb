@@ -663,7 +663,7 @@ module Tapioca
             class CompilerThatIncludesBarModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
 
-              ConstantType = type_member(fixed: T.class_of(::Post))
+              ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
               sig { override.void }
               def decorate
@@ -686,7 +686,7 @@ module Tapioca
             class CompilerThatIncludesFooModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
 
-              ConstantType = type_member(fixed: T.class_of(::Post))
+              ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
               sig { override.void }
               def decorate
@@ -778,7 +778,7 @@ module Tapioca
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
 
-                ConstantType = type_member(fixed: Job)
+                ConstantType = type_member { { fixed: Job } }
 
                 sig { override.void }
                 def decorate
@@ -885,7 +885,7 @@ module Tapioca
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
 
-                ConstantType = type_member(fixed: Job)
+                ConstantType = type_member { { fixed: Job } }
 
                 sig { override.void }
                 def decorate
@@ -1398,7 +1398,7 @@ module Tapioca
             class PostCompiler < Tapioca::Dsl::Compiler
               extend T::Sig
 
-              ConstantType = type_member(fixed: T.class_of(::Post))
+              ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
               sig { override.void }
               def decorate

@@ -450,25 +450,27 @@ module Tapioca
                     include CommonRelationMethods
                     include GeneratedAssociationRelationMethods
 
+                    Elem = type_member { { fixed: ::Post } }
+
                     sig { returns(T::Array[::Post]) }
                     def to_ary; end
-
-                    Elem = type_member(fixed: ::Post)
                   end
 
                   class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
+                    Elem = type_member { { fixed: ::Post } }
+
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def missing(*args); end
 
                     sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateAssociationRelation) }
                     def not(opts, *rest); end
-
-                    Elem = type_member(fixed: ::Post)
                   end
 
                   class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
                     include CommonRelationMethods
                     include GeneratedAssociationRelationMethods
+
+                    Elem = type_member { { fixed: ::Post } }
 
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def <<(*records); end
@@ -508,28 +510,26 @@ module Tapioca
 
                     sig { returns(T::Array[::Post]) }
                     def to_ary; end
-
-                    Elem = type_member(fixed: ::Post)
                   end
 
                   class PrivateRelation < ::ActiveRecord::Relation
                     include CommonRelationMethods
                     include GeneratedRelationMethods
 
+                    Elem = type_member { { fixed: ::Post } }
+
                     sig { returns(T::Array[::Post]) }
                     def to_ary; end
-
-                    Elem = type_member(fixed: ::Post)
                   end
 
                   class PrivateRelationWhereChain < PrivateRelation
+                    Elem = type_member { { fixed: ::Post } }
+
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def missing(*args); end
 
                     sig { params(opts: T.untyped, rest: T.untyped).returns(PrivateRelation) }
                     def not(opts, *rest); end
-
-                    Elem = type_member(fixed: ::Post)
                   end
                 end
               RUBY

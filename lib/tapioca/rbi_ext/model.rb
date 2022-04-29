@@ -61,8 +61,18 @@ module RBI
       create_node(RBI::MixesInClassMethods.new(name))
     end
 
-    sig { params(name: String, value: String).void }
-    def create_type_member(name, value: "type_member")
+    sig do
+      params(
+        name: String,
+        type: String,
+        variance: Symbol,
+        fixed: T.nilable(String),
+        upper: T.nilable(String),
+        lower: T.nilable(String)
+      ).void
+    end
+    def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
+      value = Tapioca::TypeVariableHelper.serialize_type_variable(type, variance, fixed, upper, lower)
       create_node(RBI::TypeMember.new(name, value))
     end
 

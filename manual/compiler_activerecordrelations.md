@@ -106,7 +106,7 @@ class Post
     sig { returns(T::Array[::Post]) }
     def to_ary; end
 
-    Elem = type_member(fixed: ::Post)
+    Elem = type_member { { fixed: ::Post } }
   end
 
   class PrivateCollectionProxy < ::ActiveRecord::Associations::CollectionProxy
@@ -129,7 +129,7 @@ class Post
     sig { returns(T::Array[::Post]) }
     def to_ary; end
 
-    Elem = type_member(fixed: ::Post)
+    Elem = type_member { { fixed: ::Post } }
   end
 end
 ~~~

@@ -39,7 +39,7 @@ module Tapioca
       class ActiveModelAttributes < Compiler
         extend T::Sig
 
-        ConstantType = type_member(fixed: T.all(Class, ::ActiveModel::Attributes::ClassMethods))
+        ConstantType = type_member { { fixed: T.all(Class, ::ActiveModel::Attributes::ClassMethods) } }
 
         sig { override.void }
         def decorate

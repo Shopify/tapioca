@@ -119,7 +119,7 @@ module Tapioca
           end
         end
 
-        ConstantType = type_member(fixed: T.class_of(ActiveRecord::Base))
+        ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
 
         sig { override.void }
         def decorate
