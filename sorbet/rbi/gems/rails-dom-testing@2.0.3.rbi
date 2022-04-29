@@ -40,6 +40,7 @@ HTMLSelector::NO_STRIP = T.let(T.unsafe(nil), Array)
 
 module Rails
   extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Benchmarkable
 
   class << self
     def app_class; end
@@ -53,6 +54,7 @@ module Rails
     def configuration; end
     def env; end
     def env=(environment); end
+    def error; end
     def gem_version; end
     def groups(*groups); end
     def initialize!(*_arg0, &_arg1); end

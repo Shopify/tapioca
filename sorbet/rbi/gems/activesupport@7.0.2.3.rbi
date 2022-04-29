@@ -15,9 +15,15 @@ module ActiveSupport
   def parse_json_times=(val); end
   def test_order; end
   def test_order=(val); end
+  def test_parallelization_threshold; end
+  def test_parallelization_threshold=(val); end
 
   class << self
+    def cache_format_version; end
+    def cache_format_version=(value); end
     def eager_load!; end
+    def error_reporter; end
+    def error_reporter=(_arg0); end
     def escape_html_entities_in_json(*_arg0, &_arg1); end
     def escape_html_entities_in_json=(arg); end
 
@@ -30,6 +36,8 @@ module ActiveSupport
     def parse_json_times=(val); end
     def test_order; end
     def test_order=(val); end
+    def test_parallelization_threshold; end
+    def test_parallelization_threshold=(val); end
     def time_precision(*_arg0, &_arg1); end
     def time_precision=(arg); end
     def to_time_preserves_timezone; end
@@ -44,7 +52,7 @@ module ActiveSupport
   end
 end
 
-# Actionable errors let's you define actions to resolve an error.
+# Actionable errors lets you define actions to resolve an error.
 #
 # To make an error actionable, include the <tt>ActiveSupport::ActionableError</tt>
 # module and invoke the +action+ class macro to define the action. An action
@@ -261,7 +269,7 @@ module ActiveSupport::Benchmarkable
   #  <% benchmark 'Process data files', level: :info, silence: true do %>
   #    <%= expensive_and_chatty_files_operation %>
   #  <% end %>
-  def benchmark(message = T.unsafe(nil), options = T.unsafe(nil)); end
+  def benchmark(message = T.unsafe(nil), options = T.unsafe(nil), &block); end
 end
 
 module ActiveSupport::BigDecimalWithDefaultFormat
@@ -284,6 +292,14 @@ module ActiveSupport::Cache
     #
     # The +key+ argument can also respond to +cache_key+ or +to_param+.
     def expand_cache_key(key, namespace = T.unsafe(nil)); end
+
+    # Returns the value of attribute format_version.
+    def format_version; end
+
+    # Sets the attribute format_version
+    #
+    # @param value the value to set the attribute format_version to.
+    def format_version=(_arg0); end
 
     # Creates a new Store object according to the given options.
     #
@@ -322,11 +338,49 @@ module ActiveSupport::Cache
   end
 end
 
+module ActiveSupport::Cache::Coders
+  class << self
+    def [](version); end
+  end
+end
+
+module ActiveSupport::Cache::Coders::Loader
+  extend ::ActiveSupport::Cache::Coders::Loader
+
+  def load(payload); end
+end
+
+# The one set by Marshal.
+ActiveSupport::Cache::Coders::MARK_61 = T.let(T.unsafe(nil), String)
+
+ActiveSupport::Cache::Coders::MARK_70_COMPRESSED = T.let(T.unsafe(nil), String)
+ActiveSupport::Cache::Coders::MARK_70_UNCOMPRESSED = T.let(T.unsafe(nil), String)
+
+module ActiveSupport::Cache::Coders::Rails61Coder
+  include ::ActiveSupport::Cache::Coders::Loader
+  extend ::ActiveSupport::Cache::Coders::Loader
+  extend ::ActiveSupport::Cache::Coders::Rails61Coder
+
+  def dump(entry); end
+  def dump_compressed(entry, threshold); end
+end
+
+module ActiveSupport::Cache::Coders::Rails70Coder
+  include ::ActiveSupport::Cache::Coders::Loader
+  extend ::ActiveSupport::Cache::Coders::Loader
+  extend ::ActiveSupport::Cache::Coders::Rails70Coder
+
+  def dump(entry); end
+  def dump_compressed(entry, threshold); end
+end
+
 module ActiveSupport::Cache::ConnectionPoolLike
   # @yield [_self]
   # @yieldparam _self [ActiveSupport::Cache::ConnectionPoolLike] the object that the method was called on
   def with; end
 end
+
+ActiveSupport::Cache::DEFAULT_COMPRESS_LIMIT = T.let(T.unsafe(nil), Integer)
 
 # This class is used to represent cache entries. Cache entries have a value, an optional
 # expiration time, and an optional version. The expiration time is used to support the :race_condition_ttl option
@@ -337,14 +391,19 @@ end
 # using short instance variable names that are lazily defined.
 class ActiveSupport::Cache::Entry
   # Creates a new cache entry for the specified value. Options supported are
-  # +:compress+, +:compress_threshold+, +:version+ and +:expires_in+.
+  # +:compressed+, +:version+, +:expires_at+ and +:expires_in+.
   #
   # @return [Entry] a new instance of Entry
-  def initialize(value, compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), version: T.unsafe(nil), expires_in: T.unsafe(nil), **_arg5); end
+  def initialize(value, compressed: T.unsafe(nil), version: T.unsafe(nil), expires_in: T.unsafe(nil), expires_at: T.unsafe(nil), **_arg5); end
 
   # Returns the size of the cached value. This could be less than
   # <tt>value.bytesize</tt> if the data is compressed.
   def bytesize; end
+
+  def compressed(compress_threshold); end
+
+  # @return [Boolean]
+  def compressed?; end
 
   # Duplicates the value in a class. This is used by cache implementations that don't natively
   # serialize entries to protect against accidental cache modifications.
@@ -360,40 +419,61 @@ class ActiveSupport::Cache::Entry
   def expires_at=(value); end
 
   # @return [Boolean]
+  def local?; end
+
+  # @return [Boolean]
   def mismatched?(version); end
 
+  def pack; end
   def value; end
+
+  # Returns the value of attribute version.
   def version; end
 
   private
 
-  def compress!(compress_threshold); end
-
-  # @return [Boolean]
-  def compressed?; end
-
   def uncompress(value); end
-end
 
-ActiveSupport::Cache::Entry::DEFAULT_COMPRESS_LIMIT = T.let(T.unsafe(nil), Integer)
+  class << self
+    def unpack(members); end
+  end
+end
 
 # A cache store implementation which stores everything on the filesystem.
 #
 # FileStore implements the Strategy::LocalCache strategy which implements
 # an in-memory cache inside of a block.
 class ActiveSupport::Cache::FileStore < ::ActiveSupport::Cache::Store
-  include ::ActiveSupport::Cache::Strategy::LocalCache
-
   # @return [FileStore] a new instance of FileStore
   def initialize(cache_path, **options); end
 
   # Returns the value of attribute cache_path.
   def cache_path; end
 
+  # Preemptively iterates through all stored keys and removes the ones which have expired.
+  def cleanup(options = T.unsafe(nil)); end
+
+  # Deletes all items from the cache. In this case it deletes all the entries in the specified
+  # file store directory except for .keep or .gitkeep. Be careful which directory is specified in your
+  # config file when using +FileStore+ because everything in that directory will be deleted.
+  def clear(options = T.unsafe(nil)); end
+
+  # Decrements an already existing integer value that is stored in the cache.
+  # If the key is not found nothing is done.
+  def decrement(name, amount = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  def delete_matched(matcher, options = T.unsafe(nil)); end
+
+  # Increments an already existing integer value that is stored in the cache.
+  # If the key is not found nothing is done.
+  def increment(name, amount = T.unsafe(nil), options = T.unsafe(nil)); end
+
   private
 
   # Delete empty directories in the cache.
   def delete_empty_directories(dir); end
+
+  def delete_entry(key, **options); end
 
   # Make sure a file path's directories exist.
   def ensure_cache_path(path); end
@@ -411,7 +491,11 @@ class ActiveSupport::Cache::FileStore < ::ActiveSupport::Cache::Store
   # Translate a key into a file path.
   def normalize_key(key, options); end
 
+  def read_entry(key, **options); end
+  def read_serialized_entry(key, **_arg1); end
   def search_dir(dir, &callback); end
+  def write_entry(key, entry, **options); end
+  def write_serialized_entry(key, payload, **options); end
 
   class << self
     # Advertise cache versioning support.
@@ -487,6 +571,7 @@ class ActiveSupport::Cache::MemoryStore < ::ActiveSupport::Cache::Store
   private
 
   def cached_size(key, payload); end
+  def default_coder; end
   def delete_entry(key, **options); end
   def modify_value(name, amount, options); end
   def read_entry(key, **options); end
@@ -500,22 +585,22 @@ class ActiveSupport::Cache::MemoryStore < ::ActiveSupport::Cache::Store
   end
 end
 
-ActiveSupport::Cache::MemoryStore::DEFAULT_CODER = ActiveSupport::Cache::MemoryStore::DupCoder
-
 module ActiveSupport::Cache::MemoryStore::DupCoder
-  class << self
-    def dump(entry); end
-    def load(entry); end
-  end
+  extend ::ActiveSupport::Cache::MemoryStore::DupCoder
+
+  def dump(entry); end
+  def dump_compressed(entry, threshold); end
+  def load(entry); end
 end
 
 ActiveSupport::Cache::MemoryStore::PER_ENTRY_OVERHEAD = T.let(T.unsafe(nil), Integer)
 
 module ActiveSupport::Cache::NullCoder
-  class << self
-    def dump(entry); end
-    def load(payload); end
-  end
+  extend ::ActiveSupport::Cache::NullCoder
+
+  def dump(entry); end
+  def dump_compressed(entry, threshold); end
+  def load(payload); end
 end
 
 # A cache store implementation which doesn't actually store anything. Useful in
@@ -528,6 +613,20 @@ end
 class ActiveSupport::Cache::NullStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
 
+  def cleanup(**options); end
+  def clear(**options); end
+  def decrement(name, amount = T.unsafe(nil), **options); end
+  def delete_matched(matcher, options = T.unsafe(nil)); end
+  def increment(name, amount = T.unsafe(nil), **options); end
+
+  private
+
+  def delete_entry(key, **_arg1); end
+  def read_entry(key, **s); end
+  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
+  def write_entry(key, entry, **_arg2); end
+  def write_serialized_entry(key, payload, **_arg2); end
+
   class << self
     # Advertise cache versioning support.
     #
@@ -535,6 +634,9 @@ class ActiveSupport::Cache::NullStore < ::ActiveSupport::Cache::Store
     def supports_cache_versioning?; end
   end
 end
+
+# Mapping of canonical option names to aliases that a store will recognize.
+ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 
 # Redis cache store.
 #
@@ -554,7 +656,6 @@ end
 # * +delete_matched+ support for Redis KEYS globs.
 class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
-  include ::ActiveSupport::Cache::RedisCacheStore::LocalCacheWithRaw
 
   # Creates a new Redis cache store.
   #
@@ -587,6 +688,55 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # @return [RedisCacheStore] a new instance of RedisCacheStore
   def initialize(namespace: T.unsafe(nil), compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), coder: T.unsafe(nil), expires_in: T.unsafe(nil), race_condition_ttl: T.unsafe(nil), error_handler: T.unsafe(nil), **redis_options); end
 
+  # Cache Store API implementation.
+  #
+  # Removes expired entries. Handled natively by Redis least-recently-/
+  # least-frequently-used expiry, so manual cleanup is not supported.
+  def cleanup(**options); end
+
+  # Clear the entire cache on all Redis servers. Safe to use on
+  # shared servers if the cache is namespaced.
+  #
+  # Failsafe: Raises errors.
+  def clear(**options); end
+
+  # Cache Store API implementation.
+  #
+  # Decrement a cached value. This method uses the Redis decr atomic
+  # operator and can only be used on values written with the :raw option.
+  # Calling it on a value not stored with :raw will initialize that value
+  # to zero.
+  #
+  # Failsafe: Raises errors.
+  def decrement(name, amount = T.unsafe(nil), **options); end
+
+  # Cache Store API implementation.
+  #
+  # Supports Redis KEYS glob patterns:
+  #
+  #   h?llo matches hello, hallo and hxllo
+  #   h*llo matches hllo and heeeello
+  #   h[ae]llo matches hello and hallo, but not hillo
+  #   h[^e]llo matches hallo, hbllo, ... but not hello
+  #   h[a-b]llo matches hallo and hbllo
+  #
+  # Use \ to escape special characters if you want to match them verbatim.
+  #
+  # See https://redis.io/commands/KEYS for more.
+  #
+  # Failsafe: Raises errors.
+  def delete_matched(matcher, options = T.unsafe(nil)); end
+
+  # Cache Store API implementation.
+  #
+  # Increment a cached value. This method uses the Redis incr atomic
+  # operator and can only be used on values written with the :raw option.
+  # Calling it on a value not stored with :raw will initialize that value
+  # to zero.
+  #
+  # Failsafe: Raises errors.
+  def increment(name, amount = T.unsafe(nil), **options); end
+
   def inspect; end
 
   # Returns the value of attribute max_key_bytesize.
@@ -609,24 +759,46 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # Returns the value of attribute redis_options.
   def redis_options; end
 
+  # Get info from redis servers.
+  def stats; end
+
   private
+
+  # Delete an entry from the cache.
+  def delete_entry(key, **_arg1); end
 
   # Deletes multiple entries in the cache. Returns the number of entries deleted.
   def delete_multi_entries(entries, **_options); end
 
-  def deserialize_entry(payload, raw:); end
+  def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
   def failsafe(method, returning: T.unsafe(nil)); end
-  def handle_exception(exception:, method:, returning:); end
 
   # Truncate keys that exceed 1kB.
   def normalize_key(key, options); end
 
+  # Store provider interface:
+  # Read an entry from the cache.
+  def read_entry(key, **options); end
+
+  def read_multi_entries(keys, **options); end
   def read_multi_mget(*names); end
-  def serialize_entries(entries, raw: T.unsafe(nil)); end
-  def serialize_entry(entry, raw: T.unsafe(nil)); end
+  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
+  def serialize_entries(entries, **options); end
+  def serialize_entry(entry, raw: T.unsafe(nil), **options); end
   def set_redis_capabilities; end
   def truncate_key(key); end
+
+  # Write an entry to the cache.
+  #
+  # Requires Redis 2.6.12+ for extended SET options.
+  def write_entry(key, entry, raw: T.unsafe(nil), **options); end
+
   def write_key_expiry(client, key, options); end
+
+  # Nonstandard store provider API to write multiple values at once.
+  def write_multi_entries(entries, expires_in: T.unsafe(nil), **options); end
+
+  def write_serialized_entry(key, payload, **_arg2); end
 
   class << self
     # Factory method to create a new Redis instance.
@@ -656,15 +828,7 @@ end
 ActiveSupport::Cache::RedisCacheStore::DEFAULT_ERROR_HANDLER = T.let(T.unsafe(nil), Proc)
 ActiveSupport::Cache::RedisCacheStore::DEFAULT_REDIS_OPTIONS = T.let(T.unsafe(nil), Hash)
 
-# Support raw values in the local cache strategy.
-module ActiveSupport::Cache::RedisCacheStore::LocalCacheWithRaw
-  private
-
-  def write_entry(key, entry, **options); end
-  def write_multi_entries(entries, **options); end
-end
-
-# Keys are truncated with their own SHA2 digest if they exceed 1kB
+# Keys are truncated with the ActiveSupport digest if they exceed 1kB
 ActiveSupport::Cache::RedisCacheStore::MAX_KEY_BYTESIZE = T.let(T.unsafe(nil), Integer)
 
 # The maximum number of entries to receive per SCAN call.
@@ -819,10 +983,20 @@ class ActiveSupport::Cache::Store
   # All caches support auto-expiring content after a specified number of
   # seconds. This value can be specified as an option to the constructor
   # (in which case all entries will be affected), or it can be supplied to
-  # the +fetch+ or +write+ method to effect just one entry.
+  # the +fetch+ or +write+ method to affect just one entry.
+  # <tt>:expire_in</tt> and <tt>:expired_in</tt> are aliases for
+  # <tt>:expires_in</tt>.
   #
   #   cache = ActiveSupport::Cache::MemoryStore.new(expires_in: 5.minutes)
   #   cache.write(key, value, expires_in: 1.minute) # Set a lower value for one entry
+  #
+  # Setting <tt>:expires_at</tt> will set an absolute expiration time on the cache.
+  # All caches support auto-expiring content after a specified number of
+  # seconds. This value can only be supplied to the +fetch+ or +write+ method to
+  # affect just one entry.
+  #
+  #   cache = ActiveSupport::Cache::MemoryStore.new
+  #   cache.write(key, value, expires_at: Time.now.at_end_of_hour)
   #
   # Setting <tt>:version</tt> verifies the cache stored under <tt>name</tt>
   # is of the same version. nil is returned on mismatches despite contents.
@@ -936,6 +1110,8 @@ class ActiveSupport::Cache::Store
   # Silences the logger within a block.
   def mute; end
 
+  def new_entry(value, options = T.unsafe(nil)); end
+
   # Returns the value of attribute options.
   def options; end
 
@@ -976,6 +1152,8 @@ class ActiveSupport::Cache::Store
   def write_multi(hash, options = T.unsafe(nil)); end
 
   private
+
+  def default_coder; end
 
   # Deletes an entry from the cache implementation. Subclasses must
   # implement this method.
@@ -1023,6 +1201,9 @@ class ActiveSupport::Cache::Store
   # cache stores to do additional normalization.
   def normalize_key(key, options = T.unsafe(nil)); end
 
+  # Normalize aliased options to their canonical form
+  def normalize_options(options); end
+
   def normalize_version(key, options = T.unsafe(nil)); end
 
   # Reads an entry from the cache implementation. Subclasses must implement
@@ -1036,7 +1217,7 @@ class ActiveSupport::Cache::Store
   def read_multi_entries(names, **options); end
 
   def save_block_result_to_cache(name, options); end
-  def serialize_entry(entry); end
+  def serialize_entry(entry, **options); end
 
   # Writes an entry to the cache implementation. Subclasses must implement
   # this method.
@@ -1059,7 +1240,6 @@ class ActiveSupport::Cache::Store
   end
 end
 
-ActiveSupport::Cache::Store::DEFAULT_CODER = Marshal
 module ActiveSupport::Cache::Strategy; end
 
 # Caches that implement LocalCache will be backed by an in-memory cache for the
@@ -1077,53 +1257,41 @@ module ActiveSupport::Cache::Strategy::LocalCache
   def middleware; end
 
   # Use a local cache for the duration of block.
-  def with_local_cache; end
+  def with_local_cache(&block); end
 
   private
 
-  def bypass_local_cache; end
-  def delete_entry(key, **options); end
+  def bypass_local_cache(&block); end
+  def delete_entry(key, **_arg1); end
   def local_cache; end
   def local_cache_key; end
-  def read_entry(key, **options); end
   def read_multi_entries(keys, **options); end
+  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
   def use_temporary_local_cache(temporary_cache); end
   def write_cache_value(name, value, **options); end
-  def write_entry(key, entry, **options); end
+  def write_serialized_entry(key, payload, **_arg2); end
 end
 
 # Class for storing and registering the local caches.
-class ActiveSupport::Cache::Strategy::LocalCache::LocalCacheRegistry
-  extend ::ActiveSupport::PerThreadRegistry
-
-  # @return [LocalCacheRegistry] a new instance of LocalCacheRegistry
-  def initialize; end
+module ActiveSupport::Cache::Strategy::LocalCache::LocalCacheRegistry
+  extend ::ActiveSupport::Cache::Strategy::LocalCache::LocalCacheRegistry
 
   def cache_for(local_cache_key); end
   def set_cache_for(local_cache_key, value); end
-
-  class << self
-    def cache_for(l); end
-    def set_cache_for(l, v); end
-  end
 end
 
 # Simple memory backed cache. This cache is not thread safe and is intended only
 # for serving as a temporary memory cache for a single thread.
-class ActiveSupport::Cache::Strategy::LocalCache::LocalStore < ::ActiveSupport::Cache::Store
+class ActiveSupport::Cache::Strategy::LocalCache::LocalStore
   # @return [LocalStore] a new instance of LocalStore
   def initialize; end
 
   def clear(options = T.unsafe(nil)); end
-  def delete_entry(key, **options); end
-  def fetch_entry(key, options = T.unsafe(nil)); end
-  def read_entry(key, **options); end
-  def read_multi_entries(keys, **options); end
-
-  # Don't allow synchronizing since it isn't thread safe.
-  def synchronize; end
-
-  def write_entry(key, entry, **options); end
+  def delete_entry(key); end
+  def fetch_entry(key); end
+  def read_entry(key); end
+  def read_multi_entries(keys); end
+  def write_entry(key, entry); end
 end
 
 # --
@@ -1260,9 +1428,52 @@ ActiveSupport::Callbacks::CALLBACK_FILTER_TYPES = T.let(T.unsafe(nil), Array)
 
 # A future invocation of user-supplied code (either as a callback,
 # or a condition filter).
-class ActiveSupport::Callbacks::CallTemplate
-  # @return [CallTemplate] a new instance of CallTemplate
-  def initialize(target, method, arguments, block); end
+module ActiveSupport::Callbacks::CallTemplate
+  class << self
+    # Filters support:
+    #
+    #   Symbols:: A method to call.
+    #   Procs::   A proc to call with the object.
+    #   Objects:: An object with a <tt>before_foo</tt> method on it to call.
+    #
+    # All of these objects are converted into a CallTemplate and handled
+    # the same after this point.
+    def build(filter, callback); end
+  end
+end
+
+class ActiveSupport::Callbacks::CallTemplate::InstanceExec0
+  # @return [InstanceExec0] a new instance of InstanceExec0
+  def initialize(block); end
+
+  def expand(target, value, block); end
+  def inverted_lambda; end
+  def make_lambda; end
+end
+
+class ActiveSupport::Callbacks::CallTemplate::InstanceExec1
+  # @return [InstanceExec1] a new instance of InstanceExec1
+  def initialize(block); end
+
+  def expand(target, value, block); end
+  def inverted_lambda; end
+  def make_lambda; end
+end
+
+class ActiveSupport::Callbacks::CallTemplate::InstanceExec2
+  # @return [InstanceExec2] a new instance of InstanceExec2
+  def initialize(block); end
+
+  # @raise [ArgumentError]
+  def expand(target, value, block); end
+
+  def inverted_lambda; end
+  def make_lambda; end
+end
+
+class ActiveSupport::Callbacks::CallTemplate::MethodCall
+  # @return [MethodCall] a new instance of MethodCall
+  def initialize(method); end
 
   # Return the parts needed to make this call, with the given
   # input values.
@@ -1279,25 +1490,26 @@ class ActiveSupport::Callbacks::CallTemplate
   # call stack pollution.
   def expand(target, value, block); end
 
-  # Return a lambda that will make this call when given the input
-  # values, but then return the boolean inverse of that result.
   def inverted_lambda; end
-
-  # Return a lambda that will make this call when given the input
-  # values.
   def make_lambda; end
+end
 
-  class << self
-    # Filters support:
-    #
-    #   Symbols:: A method to call.
-    #   Procs::   A proc to call with the object.
-    #   Objects:: An object with a <tt>before_foo</tt> method on it to call.
-    #
-    # All of these objects are converted into a CallTemplate and handled
-    # the same after this point.
-    def build(filter, callback); end
-  end
+class ActiveSupport::Callbacks::CallTemplate::ObjectCall
+  # @return [ObjectCall] a new instance of ObjectCall
+  def initialize(target, method); end
+
+  def expand(target, value, block); end
+  def inverted_lambda; end
+  def make_lambda; end
+end
+
+class ActiveSupport::Callbacks::CallTemplate::ProcCall
+  # @return [ProcCall] a new instance of ProcCall
+  def initialize(target); end
+
+  def expand(target, value, block); end
+  def inverted_lambda; end
+  def make_lambda; end
 end
 
 class ActiveSupport::Callbacks::Callback
@@ -1315,6 +1527,7 @@ class ActiveSupport::Callbacks::Callback
   # @return [Boolean]
   def duplicates?(other); end
 
+  # Returns the value of attribute filter.
   def filter; end
 
   # Returns the value of attribute kind.
@@ -1338,12 +1551,9 @@ class ActiveSupport::Callbacks::Callback
   # @param value the value to set the attribute name to.
   def name=(_arg0); end
 
-  def raw_filter; end
-
   private
 
   def check_conditionals(conditionals); end
-  def compute_identifier(filter); end
   def conditions_lambdas; end
 
   class << self
@@ -1559,9 +1769,31 @@ module ActiveSupport::Callbacks::ClassMethods
   # <tt>:unless</tt> options may be passed in order to control when the
   # callback is skipped.
   #
-  #   class Writer < Person
-  #      skip_callback :validate, :before, :check_membership, if: -> { age > 18 }
+  #   class Writer < PersonRecord
+  #     attr_accessor :age
+  #     skip_callback :save, :before, :saving_message, if: -> { age > 18 }
   #   end
+  #
+  # When if option returns true, callback is skipped.
+  #
+  #   writer = Writer.new
+  #   writer.age = 20
+  #   writer.save
+  #
+  # Output:
+  #   - save
+  #   saved
+  #
+  # When if option returns false, callback is NOT skipped.
+  #
+  #   young_writer = Writer.new
+  #   young_writer.age = 17
+  #   young_writer.save
+  #
+  # Output:
+  #   saving...
+  #   - save
+  #   saved
   #
   # An <tt>ArgumentError</tt> will be raised if the callback has not
   # already been set (unless the <tt>:raise</tt> option is set to <tt>false</tt>).
@@ -1570,8 +1802,6 @@ module ActiveSupport::Callbacks::ClassMethods
   protected
 
   def get_callbacks(name); end
-
-  # Ruby 2.6 and newer
   def set_callbacks(name, callbacks); end
 end
 
@@ -1652,6 +1882,28 @@ class ActiveSupport::Callbacks::Filters::Environment < ::Struct
   end
 end
 
+class ActiveSupport::CodeGenerator
+  # @return [CodeGenerator] a new instance of CodeGenerator
+  def initialize(owner, path, line); end
+
+  def define_cached_method(name, namespace:, as: T.unsafe(nil), &block); end
+  def execute; end
+
+  class << self
+    def batch(owner, path, line); end
+  end
+end
+
+class ActiveSupport::CodeGenerator::MethodSet
+  # @return [MethodSet] a new instance of MethodSet
+  def initialize(namespace); end
+
+  def apply(owner, path, line); end
+  def define_cached_method(name, as: T.unsafe(nil)); end
+end
+
+ActiveSupport::CodeGenerator::MethodSet::METHOD_CACHES = T.let(T.unsafe(nil), Hash)
+
 module ActiveSupport::CompareWithRange
   # Extends the default Range#=== to support range comparisons.
   #  (1..5) === (1..5)  # => true
@@ -1665,21 +1917,6 @@ module ActiveSupport::CompareWithRange
   #
   # The given range must be fully bounded, with both start and end.
   def ===(value); end
-
-  # Extends the default Range#cover? to support range comparisons.
-  #  (1..5).cover?(1..5)  # => true
-  #  (1..5).cover?(2..3)  # => true
-  #  (1..5).cover?(1...6) # => true
-  #  (1..5).cover?(2..6)  # => false
-  #
-  # The native Range#cover? behavior is untouched.
-  #  ('a'..'f').cover?('c') # => true
-  #  (5..9).cover?(11) # => false
-  #
-  # The given range must be fully bounded, with both start and end.
-  #
-  # @return [Boolean]
-  def cover?(value); end
 
   # Extends the default Range#include? to support range comparisons.
   #  (1..5).include?(1..5)  # => true
@@ -1863,7 +2100,7 @@ class ActiveSupport::Concurrency::LoadInterlockAwareMonitor < ::Monitor
   # Enters an exclusive section, but allows dependency loading while blocked
   def mon_enter; end
 
-  def synchronize; end
+  def synchronize(&block); end
 end
 
 ActiveSupport::Concurrency::LoadInterlockAwareMonitor::EXCEPTION_IMMEDIATE = T.let(T.unsafe(nil), Hash)
@@ -1936,7 +2173,7 @@ class ActiveSupport::Concurrency::ShareLock
   # @return [Boolean]
   def eligible_waiters?(compatible); end
 
-  def wait_for(method); end
+  def wait_for(method, &block); end
 end
 
 # Configurable provides a <tt>config</tt> method to store and retrieve
@@ -2028,17 +2265,19 @@ module ActiveSupport::Configurable::ClassMethods
   #   User.new.allowed_access = true # => NoMethodError
   #   User.new.allowed_access        # => NoMethodError
   #
-  # Also you can pass a block to set up the attribute with a default value.
+  # Also you can pass <tt>default</tt> or a block to set up the attribute with a default value.
   #
   #   class User
   #     include ActiveSupport::Configurable
+  #     config_accessor :allowed_access, default: false
   #     config_accessor :hair_colors do
   #       [:brown, :black, :blonde, :red]
   #     end
   #   end
   #
+  #   User.allowed_access # => false
   #   User.hair_colors # => [:brown, :black, :blonde, :red]
-  def config_accessor(*names, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil)); end
+  def config_accessor(*names, instance_reader: T.unsafe(nil), instance_writer: T.unsafe(nil), instance_accessor: T.unsafe(nil), default: T.unsafe(nil)); end
 end
 
 class ActiveSupport::Configurable::Configuration < ::ActiveSupport::InheritableOptions
@@ -2230,238 +2469,57 @@ class ActiveSupport::CurrentAttributes
     def current_instances_key; end
     def generated_attribute_methods; end
     def method_missing(name, *args, &block); end
+
+    # @return [Boolean]
+    def respond_to_missing?(name, _); end
   end
 end
 
 module ActiveSupport::Dependencies
-  extend ::ActiveSupport::Dependencies
-
-  def _eager_load_paths; end
-  def _eager_load_paths=(val); end
-
-  # Attempt to autoload the provided module name by searching for a directory
-  # matching the expected path suffix. If found, the module is created and
-  # assigned to +into+'s constants with the name +const_name+. Provided that
-  # the directory was loaded from a reloadable base path, it is added to the
-  # set of constants that are to be unloaded.
-  def autoload_module!(into, const_name, qualified_name, path_suffix); end
-
-  def autoload_once_paths; end
-  def autoload_once_paths=(val); end
-  def autoload_paths; end
-  def autoload_paths=(val); end
-
-  # Does the provided path_suffix correspond to an autoloadable module?
-  # Instead of returning a boolean, the autoload base for this module is
-  # returned.
-  #
-  # @return [Boolean]
-  def autoloadable_module?(path_suffix); end
-
-  # Determine if the given constant has been automatically loaded.
-  #
-  # @return [Boolean]
-  def autoloaded?(desc); end
-
-  def autoloaded_constants; end
-  def autoloaded_constants=(val); end
-  def clear; end
-  def constant_watch_stack; end
-  def constant_watch_stack=(val); end
-
-  # Get the reference for class named +name+.
-  # Raises an exception if referenced class does not exist.
-  def constantize(name); end
-
-  def depend_on(file_name, message = T.unsafe(nil)); end
-  def explicitly_unloadable_constants; end
-  def explicitly_unloadable_constants=(val); end
-  def history; end
-  def history=(val); end
-  def hook!; end
-  def interlock; end
-  def interlock=(val); end
-
-  # @return [Boolean]
-  def load?; end
-
-  # Load the file at the provided path. +const_paths+ is a set of qualified
-  # constant names. When loading the file, Dependencies will watch for the
-  # addition of these constants. Each that is defined will be marked as
-  # autoloaded, and will be removed when Dependencies.clear is next called.
-  #
-  # If the second parameter is left off, then Dependencies will construct a
-  # set of names that the file at +path+ may define. See
-  # +loadable_constants_for_path+ for more details.
-  def load_file(path, const_paths = T.unsafe(nil)); end
-
-  # Load the constant named +const_name+ which is missing from +from_mod+. If
-  # it is not possible to load the constant into from_mod, try its parent
-  # module using +const_missing+.
-  def load_missing_constant(from_mod, const_name); end
-
-  # @return [Boolean]
-  def load_once_path?(path); end
-
-  # Given +path+, a filesystem path to a ruby file, return an array of
-  # constant paths which would cause Dependencies to attempt to load this
-  # file.
-  def loadable_constants_for_path(path, bases = T.unsafe(nil)); end
-
-  def loaded; end
-  def loaded=(val); end
-  def loading; end
-  def loading=(val); end
-  def log(message); end
-  def logger; end
-  def logger=(val); end
-
-  # Mark the provided constant name for unloading. This constant will be
-  # unloaded on each request, not just the next one.
-  def mark_for_unload(const_desc); end
-
-  def mechanism; end
-  def mechanism=(val); end
-
-  # Run the provided block and detect the new constants that were loaded during
-  # its execution. Constants may only be regarded as 'new' once -- so if the
-  # block calls +new_constants_in+ again, then the constants defined within the
-  # inner call will not be reported in this one.
-  #
-  # If the provided block does not run to completion, and instead raises an
-  # exception, any new constants are regarded as being only partially defined
-  # and will be removed immediately.
-  def new_constants_in(*descs); end
-
-  # Is the provided constant path defined?
-  #
-  # @return [Boolean]
-  def qualified_const_defined?(path); end
-
-  # Returns the constant path for the provided parent and constant name.
-  def qualified_name_for(mod, name); end
-
-  # Store a reference to a class +klass+.
-  def reference(klass); end
-
-  def remove_constant(const); end
-
-  # Remove the constants that have been autoloaded, and those that have been
-  # marked for unloading. Before each constant is removed a callback is sent
-  # to its class/module if it implements +before_remove_const+.
-  #
-  # The callback implementation should be restricted to cleaning up caches, etc.
-  # as the environment will be in an inconsistent state, e.g. other constants
-  # may have already been unloaded and not accessible.
-  def remove_unloadable_constants!; end
-
-  def require_or_load(file_name, const_path = T.unsafe(nil)); end
-
-  # Get the reference for class named +name+ if one exists.
-  # Otherwise returns +nil+.
-  def safe_constantize(name); end
-
-  # Search for a file in autoload_paths matching the provided suffix.
-  def search_for_file(path_suffix); end
-
-  # Convert the provided const desc to a qualified constant name (as a string).
-  # A module, class, symbol, or string may be provided.
-  def to_constant_name(desc); end
-
-  def unhook!; end
-  def verbose; end
-  def verbose=(val); end
-  def warnings_on_first_load; end
-  def warnings_on_first_load=(val); end
-
-  # Will the provided constant descriptor be unloaded?
-  #
-  # @return [Boolean]
-  def will_unload?(const_desc); end
-
-  private
-
-  # Returns the original name of a class or module even if `name` has been
-  # overridden.
-  def real_mod_name(mod); end
-
-  def uninitialized_constant(qualified_name, const_name, receiver:); end
-
   class << self
+    def _autoloaded_tracked_classes; end
+    def _autoloaded_tracked_classes=(_arg0); end
     def _eager_load_paths; end
-    def _eager_load_paths=(val); end
+    def _eager_load_paths=(_arg0); end
     def autoload_once_paths; end
-    def autoload_once_paths=(val); end
+    def autoload_once_paths=(_arg0); end
     def autoload_paths; end
-    def autoload_paths=(val); end
-    def autoloaded_constants; end
-    def autoloaded_constants=(val); end
-    def constant_watch_stack; end
-    def constant_watch_stack=(val); end
-    def explicitly_unloadable_constants; end
-    def explicitly_unloadable_constants=(val); end
-    def history; end
-    def history=(val); end
+    def autoload_paths=(_arg0); end
+    def autoloader; end
+    def autoloader=(_arg0); end
+
+    # Private method that reloads constants autoloaded by the main autoloader.
+    #
+    # Rails.application.reloader.reload! is the public interface for application
+    # reload. That involves more things, like deleting unloaded classes from the
+    # internal state of the descendants tracker, or reloading routes.
+    def clear; end
+
+    # Private method that helps configuring the autoloaders.
+    #
+    # @return [Boolean]
+    def eager_load?(path); end
+
     def interlock; end
-    def interlock=(val); end
+    def interlock=(_arg0); end
 
     # Execute the supplied block while holding an exclusive lock,
     # preventing any other thread from being inside a #run_interlock
     # block at the same time.
-    def load_interlock; end
-
-    def loaded; end
-    def loaded=(val); end
-    def loading; end
-    def loading=(val); end
-    def logger; end
-    def logger=(val); end
-    def mechanism; end
-    def mechanism=(val); end
+    def load_interlock(&block); end
 
     # Execute the supplied block without interference from any
     # concurrent loads.
-    def run_interlock; end
+    def run_interlock(&block); end
+
+    # Private method used by require_dependency.
+    def search_for_file(relpath); end
 
     # Execute the supplied block while holding an exclusive lock,
     # preventing any other thread from being inside a #run_interlock
     # block at the same time.
-    def unload_interlock; end
-
-    def verbose; end
-    def verbose=(val); end
-    def warnings_on_first_load; end
-    def warnings_on_first_load=(val); end
+    def unload_interlock(&block); end
   end
-end
-
-# Exception file-blaming.
-module ActiveSupport::Dependencies::Blamable
-  def blame_file!(file); end
-  def blamed_files; end
-  def copy_blame!(exc); end
-  def describe_blame; end
-end
-
-class ActiveSupport::Dependencies::ClassCache
-  # @return [ClassCache] a new instance of ClassCache
-  def initialize; end
-
-  def [](key); end
-  def clear!; end
-
-  # @return [Boolean]
-  def empty?; end
-
-  def get(key); end
-
-  # @return [Boolean]
-  def key?(key); end
-
-  def safe_get(key); end
-
-  # @raise [ArgumentError]
-  def store(klass); end
 end
 
 class ActiveSupport::Dependencies::Interlock
@@ -2470,170 +2528,36 @@ class ActiveSupport::Dependencies::Interlock
 
   def done_running; end
   def done_unloading; end
-  def loading; end
-  def permit_concurrent_loads; end
+  def loading(&block); end
+  def permit_concurrent_loads(&block); end
   def raw_state(&block); end
-  def running; end
+  def running(&block); end
   def start_running; end
   def start_unloading; end
-  def unloading; end
+  def unloading(&block); end
 end
 
-# Object includes this module.
-module ActiveSupport::Dependencies::Loadable
-  def load_dependency(file); end
-
-  # <b>Warning:</b> This method is obsolete in +:zeitwerk+ mode. In
-  # +:zeitwerk+ mode semantics match Ruby's and you do not need to be
-  # defensive with load order. Just refer to classes and modules normally.
-  # If the constant name is dynamic, camelize if needed, and constantize.
+module ActiveSupport::Dependencies::RequireDependency
+  # <b>Warning:</b> This method is obsolete. The semantics of the autoloader
+  # match Ruby's and you do not need to be defensive with load order anymore.
+  # Just refer to classes and modules normally.
   #
-  # In +:classic+ mode, interprets a file using +mechanism+ and marks its
-  # defined constants as autoloaded. +file_name+ can be either a string or
-  # respond to <tt>to_path</tt>.
-  #
-  # In +:classic+ mode, use this method in code that absolutely needs a
-  # certain constant to be defined at that point. A typical use case is to
-  # make constant name resolution deterministic for constants with the same
-  # relative name in different namespaces whose evaluation would depend on
-  # load order otherwise.
-  #
-  # Engines that do not control the mode in which their parent application
-  # runs should call +require_dependency+ where needed in case the runtime
-  # mode is +:classic+.
-  def require_dependency(file_name, message = T.unsafe(nil)); end
-
-  def require_or_load(file_name); end
-
-  # Mark the given constant as unloadable. Unloadable constants are removed
-  # each time dependencies are cleared.
-  #
-  # Note that marking a constant for unloading need only be done once. Setup
-  # or init scripts may list each unloadable constant that may need unloading;
-  # each constant will be removed for every subsequent clear, as opposed to
-  # for the first clear.
-  #
-  # The provided constant descriptor may be a (non-anonymous) module or class,
-  # or a qualified constant name as a string or symbol.
-  #
-  # Returns +true+ if the constant was not previously marked for unloading,
-  # +false+ otherwise.
-  def unloadable(const_desc); end
-
-  private
-
-  def load(file, wrap = T.unsafe(nil)); end
-  def require(file); end
-
-  class << self
-    def exclude_from(base); end
-    def include_into(base); end
-  end
-end
-
-# Module includes this module.
-module ActiveSupport::Dependencies::ModuleConstMissing
-  def const_missing(const_name); end
-
-  # We assume that the name of the module reflects the nesting
-  # (unless it can be proven that is not the case) and the path to the file
-  # that defines the constant. Anonymous modules cannot follow these
-  # conventions and therefore we assume that the user wants to refer to a
-  # top-level constant.
-  def guess_for_anonymous(const_name); end
-
-  def unloadable(const_desc = T.unsafe(nil)); end
-
-  class << self
-    def append_features(base); end
-    def exclude_from(base); end
-    def include_into(base); end
-  end
-end
-
-ActiveSupport::Dependencies::Reference = T.let(T.unsafe(nil), ActiveSupport::Dependencies::ClassCache)
-ActiveSupport::Dependencies::UNBOUND_METHOD_MODULE_NAME = T.let(T.unsafe(nil), UnboundMethod)
-
-# The WatchStack keeps a stack of the modules being watched as files are
-# loaded. If a file in the process of being loaded (parent.rb) triggers the
-# load of another file (child.rb) the stack will ensure that child.rb
-# handles the new constants.
-#
-# If child.rb is being autoloaded, its constants will be added to
-# autoloaded_constants. If it was being required, they will be discarded.
-#
-# This is handled by walking back up the watch stack and adding the constants
-# found by child.rb to the list of original constants in parent.rb.
-class ActiveSupport::Dependencies::WatchStack
-  include ::Enumerable
-
-  # @return [WatchStack] a new instance of WatchStack
-  def initialize; end
-
-  def each(&block); end
-
-  # Returns a list of new constants found since the last call to
-  # <tt>watch_namespaces</tt>.
-  def new_constants; end
-
-  # Add a set of modules to the watch stack, remembering the initial
-  # constants.
-  def watch_namespaces(namespaces); end
-
-  # if parent.rb is autoloaded, the stack will look like [[Object]]. If
-  # parent.rb then requires namespace/child.rb, the stack will look like
-  # [[Object], [Namespace]].
-  def watching; end
-
-  # @return [Boolean]
-  def watching?; end
-
-  private
-
-  def pop_modules(modules); end
-end
-
-module ActiveSupport::Dependencies::ZeitwerkIntegration
-  class << self
-    def take_over(enable_reloading:); end
-
-    private
-
-    # @return [Boolean]
-    def autoload_once?(autoload_path); end
-
-    def decorate_dependencies; end
-
-    # @return [Boolean]
-    def eager_load?(autoload_path); end
-
-    def freeze_paths; end
-    def setup_autoloaders(enable_reloading); end
-  end
-end
-
-module ActiveSupport::Dependencies::ZeitwerkIntegration::Decorations
-  # @return [Boolean]
-  def autoloaded?(object); end
-
-  def autoloaded_constants; end
-  def clear; end
-  def constantize(cpath); end
-  def safe_constantize(cpath); end
-  def unhook!; end
-  def verbose=(verbose); end
-end
-
-module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
-  class << self
-    def camelize(basename, _abspath); end
-    def inflect(overrides); end
-  end
-end
-
-module ActiveSupport::Dependencies::ZeitwerkIntegration::RequireDependency
+  # Engines that do not control the mode in which their parent application runs
+  # should call +require_dependency+ where needed in case the runtime mode is
+  # +:classic+.
   def require_dependency(filename); end
 end
+
+module ActiveSupport::DeprecatedNumericWithFormat
+  def to_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
+end
+
+module ActiveSupport::DeprecatedRangeWithFormat
+  def to_default_s(*args, &block); end
+  def to_s(format = T.unsafe(nil)); end
+end
+
+ActiveSupport::DeprecatedRangeWithFormat::NOT_SET = T.let(T.unsafe(nil), Object)
 
 # \Deprecation specifies the API used by Rails to deprecate methods, instance
 # variables, objects and constants.
@@ -2671,6 +2595,7 @@ class ActiveSupport::Deprecation
     def deprecate_methods(*_arg0, &_arg1); end
     def deprecation_horizon(*_arg0, &_arg1); end
     def deprecation_horizon=(arg); end
+    def deprecation_warning(deprecated_method_name, message = T.unsafe(nil), caller_backtrace = T.unsafe(nil)); end
     def disallowed_behavior(*_arg0, &_arg1); end
     def disallowed_behavior=(arg); end
     def disallowed_warnings(*_arg0, &_arg1); end
@@ -2680,6 +2605,7 @@ class ActiveSupport::Deprecation
     def silence(*_arg0, &_arg1); end
     def silenced(*_arg0, &_arg1); end
     def silenced=(arg); end
+    def warn(message = T.unsafe(nil), callstack = T.unsafe(nil)); end
   end
 end
 
@@ -2691,7 +2617,7 @@ end
 # [+stderr+]  Log all deprecation warnings to <tt>$stderr</tt>.
 # [+log+]     Log all deprecation warnings to +Rails.logger+.
 # [+notify+]  Use +ActiveSupport::Notifications+ to notify +deprecation.rails+.
-# [+silence+] Do nothing.
+# [+silence+] Do nothing. On Rails, set <tt>config.active_support.report_deprecations = false</tt> to disable all behaviors.
 #
 # Setting behaviors only affects deprecations that happen after boot time.
 # For more information you can read the documentation of the +behavior=+ method.
@@ -2720,6 +2646,9 @@ module ActiveSupport::Deprecation::Behavior
   #   ActiveSupport::Deprecation.behavior = ->(message, callstack, deprecation_horizon, gem_name) {
   #     # custom stuff
   #   }
+  #
+  # If you are using Rails, you can set <tt>config.active_support.report_deprecations = false</tt> to disable
+  # all deprecation behaviors. This is similar to the +silence+ option but more performant.
   def behavior=(behavior); end
 
   # Whether to print a backtrace along with the warning.
@@ -3092,9 +3021,13 @@ module ActiveSupport::DescendantsTracker
   def subclasses; end
 
   class << self
-    def clear; end
+    def clear(classes); end
     def descendants(klass); end
     def direct_descendants(klass); end
+    def disable_clear!; end
+
+    # @return [Boolean]
+    def native?; end
 
     # This is the only method that is not thread safe, but is only ever called
     # during the eager loading phase.
@@ -3143,7 +3076,7 @@ end
 #   1.month.ago       # equivalent to Time.now.advance(months: -1)
 class ActiveSupport::Duration
   # @return [Duration] a new instance of Duration
-  def initialize(value, parts); end
+  def initialize(value, parts, variable = T.unsafe(nil)); end
 
   # Returns the modulo of this Duration by another Duration or Numeric.
   # Numeric values are treated as seconds.
@@ -3174,6 +3107,8 @@ class ActiveSupport::Duration
   # Returns +true+ if +other+ is also a Duration instance with the
   # same +value+, or if <tt>other == value</tt>.
   def ==(other); end
+
+  def _parts; end
 
   # Calculates a new Time or Date that is as far in the future
   # as this Duration represents.
@@ -3272,13 +3207,8 @@ class ActiveSupport::Duration
   # @return [Boolean]
   def kind_of?(klass); end
 
-  # Returns the value of attribute parts.
+  # Returns a copy of the parts hash that defines the duration
   def parts; end
-
-  # Sets the attribute parts
-  #
-  # @param value the value to set the attribute parts to.
-  def parts=(_arg0); end
 
   # Calculates a new Time or Date that is as far in the future
   # as this Duration represents.
@@ -3319,10 +3249,8 @@ class ActiveSupport::Duration
   # Returns the value of attribute value.
   def value; end
 
-  # Sets the attribute value
-  #
-  # @param value the value to set the attribute value to.
-  def value=(_arg0); end
+  # @return [Boolean]
+  def variable?; end
 
   private
 
@@ -3442,6 +3370,8 @@ class ActiveSupport::Duration::ISO8601Serializer
 
   private
 
+  def format_seconds(seconds); end
+
   # Return pair of duration's parts and whole duration sign.
   # Parts are summarized (as they can become repetitive due to addition, etc).
   # Zero parts are removed as not significant.
@@ -3486,6 +3416,9 @@ class ActiveSupport::Duration::Scalar < ::Numeric
   # Returns the value of attribute value.
   def value; end
 
+  # @return [Boolean]
+  def variable?; end
+
   private
 
   def calculate(op, other); end
@@ -3493,6 +3426,8 @@ class ActiveSupport::Duration::Scalar < ::Numeric
   # @raise [TypeError]
   def raise_type_error(other); end
 end
+
+ActiveSupport::Duration::VARIABLE_PARTS = T.let(T.unsafe(nil), Array)
 
 module ActiveSupport::EachTimeWithZone
   def each(&block); end
@@ -3520,6 +3455,7 @@ class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
 
   private
 
+  def deep_transform(hash); end
   def deserialize(config); end
   def options; end
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
@@ -3598,6 +3534,104 @@ end
 
 ActiveSupport::EnvironmentInquirer::DEFAULT_ENVIRONMENTS = T.let(T.unsafe(nil), Array)
 
+# +ActiveSupport::ErrorReporter+ is a common interface for error reporting services.
+#
+# To rescue and report any unhandled error, you can use the +handle+ method:
+#
+#   Rails.error.handle do
+#     do_something!
+#   end
+#
+# If an error is raised, it will be reported and swallowed.
+#
+# Alternatively if you want to report the error but not swallow it, you can use +record+
+#
+#   Rails.error.record do
+#     do_something!
+#   end
+#
+# Both methods can be restricted to only handle a specific exception class
+#
+#   maybe_tags = Rails.error.handle(Redis::BaseError) { redis.get("tags") }
+#
+# You can also pass some extra context information that may be used by the error subscribers:
+#
+#   Rails.error.handle(context: { section: "admin" }) do
+#     # ...
+#   end
+#
+# Additionally a +severity+ can be passed along to communicate how important the error report is.
+# +severity+ can be one of +:error+, +:warning+ or +:info+. Handled errors default to the +:warning+
+# severity, and unhandled ones to +error+.
+#
+# Both +handle+ and +record+ pass through the return value from the block. In the case of +handle+
+# rescuing an error, a fallback can be provided. The fallback must be a callable whose result will
+# be returned when the block raises and is handled:
+#
+#   user = Rails.error.handle(fallback: -> { User.anonymous }) do
+#     User.find_by(params)
+#   end
+class ActiveSupport::ErrorReporter
+  # @return [ErrorReporter] a new instance of ErrorReporter
+  def initialize(*subscribers, logger: T.unsafe(nil)); end
+
+  # Report any unhandled exception, and swallow it.
+  #
+  #   Rails.error.handle do
+  #     1 + '1'
+  #   end
+  def handle(error_class = T.unsafe(nil), severity: T.unsafe(nil), context: T.unsafe(nil), fallback: T.unsafe(nil)); end
+
+  # Returns the value of attribute logger.
+  def logger; end
+
+  # Sets the attribute logger
+  #
+  # @param value the value to set the attribute logger to.
+  def logger=(_arg0); end
+
+  def record(error_class = T.unsafe(nil), severity: T.unsafe(nil), context: T.unsafe(nil)); end
+
+  # When the block based +handle+ and +record+ methods are not suitable, you can directly use +report+
+  #
+  #   Rails.error.report(error, handled: true)
+  def report(error, handled:, severity: T.unsafe(nil), context: T.unsafe(nil)); end
+
+  # Update the execution context that is accessible to error subscribers
+  #
+  #   Rails.error.set_context(section: "checkout", user_id: @user.id)
+  #
+  # See +ActiveSupport::ExecutionContext.set+
+  def set_context(*_arg0, &_arg1); end
+
+  # Register a new error subscriber. The subscriber must respond to
+  #
+  #   report(Exception, handled: Boolean, context: Hash)
+  #
+  # The +report+ method +should+ never raise an error.
+  def subscribe(subscriber); end
+end
+
+ActiveSupport::ErrorReporter::SEVERITIES = T.let(T.unsafe(nil), Array)
+
+module ActiveSupport::ExecutionContext
+  class << self
+    def []=(key, value); end
+    def after_change(&block); end
+    def clear; end
+
+    # Updates the execution context. If a block is given, it resets the provided keys to their
+    # previous value once the block exits.
+    def set(**options); end
+
+    def to_h; end
+
+    private
+
+    def store; end
+  end
+end
+
 class ActiveSupport::ExecutionWrapper
   include ::ActiveSupport::Callbacks
   extend ::ActiveSupport::Callbacks::ClassMethods
@@ -3609,6 +3643,7 @@ class ActiveSupport::ExecutionWrapper
   def _run_callbacks; end
   def _run_complete_callbacks(&block); end
   def _run_run_callbacks(&block); end
+  def complete; end
 
   # Complete this in-flight execution. This method *must* be called
   # exactly once on the result of any call to +run!+.
@@ -3616,6 +3651,7 @@ class ActiveSupport::ExecutionWrapper
   # Where possible, prefer +wrap+.
   def complete!; end
 
+  def run; end
   def run!; end
 
   private
@@ -3631,18 +3667,12 @@ class ActiveSupport::ExecutionWrapper
     def _run_callbacks; end
     def _run_callbacks=(value); end
 
-    # Returns the value of attribute active.
-    def active; end
-
-    # Sets the attribute active
-    #
-    # @param value the value to set the attribute active to.
-    def active=(_arg0); end
-
     # @return [Boolean]
     def active?; end
 
-    def inherited(other); end
+    def active_key; end
+    def error_reporter; end
+    def perform; end
 
     # Register an object to be invoked during both the +run+ and
     # +complete+ steps.
@@ -3802,13 +3832,13 @@ module ActiveSupport::ForkTracker
 end
 
 module ActiveSupport::ForkTracker::CoreExt
-  def fork(*_arg0); end
+  def fork(*_arg0, &_arg1); end
 end
 
-module ActiveSupport::ForkTracker::CoreExtPrivate
-  private
+module ActiveSupport::ForkTracker::CoreExtPrivate; end
 
-  def fork(*_arg0); end
+module ActiveSupport::ForkTracker::ModernCoreExt
+  def _fork; end
 end
 
 # A convenient wrapper for the zlib standard library that allows
@@ -4181,13 +4211,21 @@ class ActiveSupport::HashWithIndifferentAccess < ::Hash
   end
 end
 
-module ActiveSupport::IncludeTimeWithZone
-  # Extends the default Range#include? to support ActiveSupport::TimeWithZone.
-  #
-  #   (1.hour.ago..1.hour.from_now).include?(Time.current) # => true
-  #
+module ActiveSupport::HtmlSafeTranslation
+  extend ::ActiveSupport::HtmlSafeTranslation
+
+  def translate(key, **options); end
+
+  private
+
+  def html_escape_translation_options(options); end
+  def html_safe_translation(translation); end
+
   # @return [Boolean]
-  def include?(value); end
+  def html_safe_translation_key?(key); end
+
+  # @return [Boolean]
+  def i18n_option?(name); end
 end
 
 # The Inflector transforms words from singular to plural, class names to table
@@ -4294,7 +4332,7 @@ module ActiveSupport::Inflector
   #
   # * Applies human inflection rules to the argument.
   # * Deletes leading underscores, if any.
-  # * Removes a "_id" suffix if present.
+  # * Removes an "_id" suffix if present.
   # * Replaces underscores with spaces, if any.
   # * Downcases all words except acronyms.
   # * Capitalizes the first word.
@@ -4308,7 +4346,7 @@ module ActiveSupport::Inflector
   #   humanize('author_id')                        # => "Author"
   #   humanize('author_id', capitalize: false)     # => "author"
   #   humanize('_id')                              # => "Id"
-  #   humanize('author_id', keep_id_suffix: true)  # => "Author Id"
+  #   humanize('author_id', keep_id_suffix: true)  # => "Author id"
   #
   # If "SSL" was defined to be an acronym:
   #
@@ -4561,13 +4599,13 @@ ActiveSupport::Inflector::ALLOWED_ENCODINGS_FOR_TRANSLITERATE = T.let(T.unsafe(n
 #     inflect.plural /^(ox)$/i, '\1\2en'
 #     inflect.singular /^(ox)en/i, '\1'
 #
-#     inflect.irregular 'octopus', 'octopi'
+#     inflect.irregular 'cactus', 'cacti'
 #
 #     inflect.uncountable 'equipment'
 #   end
 #
 # New rules are added at the top. So in the example above, the irregular
-# rule for octopus will now be the first of the pluralization and
+# rule for cactus will now be the first of the pluralization and
 # singularization rules that is runs. This guarantees that your rules run
 # before any of the rules that may already have been loaded.
 class ActiveSupport::Inflector::Inflections
@@ -4634,7 +4672,7 @@ class ActiveSupport::Inflector::Inflections
   # Clears the loaded inflections within a given scope (default is
   # <tt>:all</tt>). Give the scope as a symbol of the inflection type, the
   # options are: <tt>:plurals</tt>, <tt>:singulars</tt>, <tt>:uncountables</tt>,
-  # <tt>:humans</tt>.
+  # <tt>:humans</tt>, <tt>:acronyms</tt>.
   #
   #   clear :all
   #   clear :plurals
@@ -4658,7 +4696,7 @@ class ActiveSupport::Inflector::Inflections
   # regular expressions. You simply pass the irregular in singular and
   # plural form.
   #
-  #   irregular 'octopus', 'octopi'
+  #   irregular 'cactus', 'cacti'
   #   irregular 'person', 'people'
   def irregular(singular, plural); end
 
@@ -4699,6 +4737,7 @@ class ActiveSupport::Inflector::Inflections
 
   class << self
     def instance(locale = T.unsafe(nil)); end
+    def instance_or_fallback(locale); end
   end
 end
 
@@ -4731,6 +4770,31 @@ class ActiveSupport::InheritableOptions < ::ActiveSupport::OrderedOptions
   def initialize(parent = T.unsafe(nil)); end
 
   def inheritable_copy; end
+end
+
+module ActiveSupport::IsolatedExecutionState
+  class << self
+    def [](key); end
+    def []=(key, value); end
+    def clear; end
+    def delete(key); end
+
+    # Returns the value of attribute isolation_level.
+    def isolation_level; end
+
+    def isolation_level=(level); end
+
+    # @return [Boolean]
+    def key?(key); end
+
+    def unique_id; end
+
+    private
+
+    def current; end
+    def current_fiber; end
+    def current_thread; end
+  end
 end
 
 module ActiveSupport::JSON
@@ -4865,6 +4929,11 @@ class ActiveSupport::KeyGenerator
   # to be compatible with the default settings of ActiveSupport::MessageVerifier.
   # i.e. OpenSSL::Digest::SHA1#block_length
   def generate_key(salt, key_size = T.unsafe(nil)); end
+
+  class << self
+    def hash_digest_class; end
+    def hash_digest_class=(klass); end
+  end
 end
 
 # lazy_load_hooks allows Rails to lazily load a lot of components and thus
@@ -4976,6 +5045,7 @@ class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   def finish(name, id, payload); end
   def info(progname = T.unsafe(nil), &block); end
   def logger; end
+  def publish_event(event); end
   def start(name, id, payload); end
   def unknown(progname = T.unsafe(nil), &block); end
   def warn(progname = T.unsafe(nil), &block); end
@@ -4987,6 +5057,8 @@ class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # on the Highline implementation and will automatically append CLEAR to the
   # end of the returned String.
   def color(text, color, bold = T.unsafe(nil)); end
+
+  def log_exception(name, e); end
 
   class << self
     def colorize_logging; end
@@ -5039,9 +5111,6 @@ class ActiveSupport::Logger < ::Logger
     # Broadcasts logs to multiple loggers.
     def broadcast(logger); end
 
-    def local_levels; end
-    def local_levels=(val); end
-
     # Returns true if the logger destination matches one of the sources
     #
     #   logger = Logger.new(STDOUT)
@@ -5084,17 +5153,12 @@ module ActiveSupport::LoggerThreadSafeLevel
   def level; end
   def local_level; end
   def local_level=(level); end
-  def local_log_id; end
 
   # Change the thread-local level for the duration of the given block.
   def log_at(level); end
 
   def unknown?; end
   def warn?; end
-end
-
-module ActiveSupport::MarshalWithAutoloading
-  def load(source, proc = T.unsafe(nil)); end
 end
 
 # MessageEncryptor is a simple way to encrypt values which get stored
@@ -5112,6 +5176,11 @@ end
 #   crypt = ActiveSupport::MessageEncryptor.new(key)                            # => #<ActiveSupport::MessageEncryptor ...>
 #   encrypted_data = crypt.encrypt_and_sign('my secret data')                   # => "NlFBTTMwOUV5UlA1QlNEN2xkY2d6eThYWWh..."
 #   crypt.decrypt_and_verify(encrypted_data)                                    # => "my secret data"
+# The +decrypt_and_verify+ method will raise an
+# <tt>ActiveSupport::MessageEncryptor::InvalidMessage</tt> exception if the data
+# provided cannot be decrypted or verified.
+#
+#   crypt.decrypt_and_verify('not encrypted data') # => ActiveSupport::MessageEncryptor::InvalidMessage
 #
 # === Confining messages to a specific purpose
 #
@@ -5171,6 +5240,31 @@ end
 class ActiveSupport::MessageEncryptor
   include ::ActiveSupport::Messages::Rotator
   include ::ActiveSupport::Messages::Rotator::Encryptor
+
+  # Initialize a new MessageEncryptor. +secret+ must be at least as long as
+  # the cipher key size. For the default 'aes-256-gcm' cipher, this is 256
+  # bits. If you are using a user-entered secret, you can generate a suitable
+  # key by using <tt>ActiveSupport::KeyGenerator</tt> or a similar key
+  # derivation function.
+  #
+  # First additional parameter is used as the signature key for +MessageVerifier+.
+  # This allows you to specify keys to encrypt and sign data.
+  #
+  #    ActiveSupport::MessageEncryptor.new('secret', 'signature_secret')
+  #
+  # Options:
+  # * <tt>:cipher</tt>     - Cipher to use. Can be any cipher returned by
+  #   <tt>OpenSSL::Cipher.ciphers</tt>. Default is 'aes-256-gcm'.
+  # * <tt>:digest</tt> - String of digest to use for signing. Default is
+  #   +SHA1+. Ignored when using an AEAD cipher like 'aes-256-gcm'.
+  # * <tt>:serializer</tt> - Object serializer to use. Default is +Marshal+.
+  #
+  # @return [MessageEncryptor] a new instance of MessageEncryptor
+  def initialize(*secrets, on_rotation: T.unsafe(nil), **options); end
+
+  # Decrypt and verify a message. We need to verify the message in order to
+  # avoid padding attacks. Reference: https://www.limited-entropy.com/padding-oracle-attacks/.
+  def decrypt_and_verify(*args, on_rotation: T.unsafe(nil), **options); end
 
   # Encrypt and sign a message. We need to sign the message in order to avoid
   # padding attacks. Reference: https://www.limited-entropy.com/padding-oracle-attacks/.
@@ -5280,8 +5374,8 @@ ActiveSupport::MessageEncryptor::OpenSSLCipherError = OpenSSL::Cipher::CipherErr
 # return the original value. But messages can be set to expire at a given
 # time with +:expires_in+ or +:expires_at+.
 #
-#   @verifier.generate(parcel, expires_in: 1.month)
-#   @verifier.generate(doowad, expires_at: Time.now.end_of_year)
+#   @verifier.generate("parcel", expires_in: 1.month)
+#   @verifier.generate("doowad", expires_at: Time.now.end_of_year)
 #
 # Then the messages can be verified and returned up to the expire time.
 # Thereafter, the +verified+ method returns +nil+ while +verify+ raises
@@ -5290,8 +5384,8 @@ ActiveSupport::MessageEncryptor::OpenSSLCipherError = OpenSSL::Cipher::CipherErr
 # === Rotating keys
 #
 # MessageVerifier also supports rotating out old configurations by falling
-# back to a stack of verifiers. Call +rotate+ to build and add a verifier to
-# so either +verified+ or +verify+ will also try verifying with the fallback.
+# back to a stack of verifiers. Call +rotate+ to build and add a verifier so
+# either +verified+ or +verify+ will also try verifying with the fallback.
 #
 # By default any rotated verifiers use the values of the primary
 # verifier unless specified otherwise.
@@ -5313,6 +5407,10 @@ ActiveSupport::MessageEncryptor::OpenSSLCipherError = OpenSSL::Cipher::CipherErr
 class ActiveSupport::MessageVerifier
   include ::ActiveSupport::Messages::Rotator
   include ::ActiveSupport::Messages::Rotator::Verifier
+
+  # @raise [ArgumentError]
+  # @return [MessageVerifier] a new instance of MessageVerifier
+  def initialize(*secrets, on_rotation: T.unsafe(nil), **options); end
 
   # Generates a signed message for the provided value.
   #
@@ -5339,6 +5437,29 @@ class ActiveSupport::MessageVerifier
   # Decodes the signed message using the +MessageVerifier+'s secret.
   #
   #   verifier = ActiveSupport::MessageVerifier.new 's3Krit'
+  #
+  #   signed_message = verifier.generate 'a private message'
+  #   verifier.verified(signed_message) # => 'a private message'
+  #
+  # Returns +nil+ if the message was not signed with the same secret.
+  #
+  #   other_verifier = ActiveSupport::MessageVerifier.new 'd1ff3r3nt-s3Krit'
+  #   other_verifier.verified(signed_message) # => nil
+  #
+  # Returns +nil+ if the message is not Base64-encoded.
+  #
+  #   invalid_message = "f--46a0120593880c733a53b6dad75b42ddc1c8996d"
+  #   verifier.verified(invalid_message) # => nil
+  #
+  # Raises any error raised while decoding the signed message.
+  #
+  #   incompatible_message = "test--dad7b06c94abba8d46a15fafaef56c327665d5ff"
+  #   verifier.verified(incompatible_message) # => TypeError: incompatible marshal file format
+  def verified(*args, on_rotation: T.unsafe(nil), **options); end
+
+  # Decodes the signed message using the +MessageVerifier+'s secret.
+  #
+  #   verifier = ActiveSupport::MessageVerifier.new 's3Krit'
   #   signed_message = verifier.generate 'a private message'
   #
   #   verifier.verify(signed_message) # => 'a private message'
@@ -5353,11 +5474,20 @@ class ActiveSupport::MessageVerifier
   private
 
   def decode(data); end
+  def digest_length_in_hex; end
+
+  # @return [Boolean]
+  def digest_matches_data?(digest, data); end
+
   def encode(data); end
   def generate_digest(data); end
+  def get_data_and_digest_from(signed_message); end
+  def separator_index_for(signed_message); end
 end
 
 class ActiveSupport::MessageVerifier::InvalidSignature < ::StandardError; end
+ActiveSupport::MessageVerifier::SEPARATOR = T.let(T.unsafe(nil), String)
+ActiveSupport::MessageVerifier::SEPARATOR_LENGTH = T.let(T.unsafe(nil), Integer)
 module ActiveSupport::Messages; end
 
 class ActiveSupport::Messages::Metadata
@@ -5498,20 +5628,20 @@ class ActiveSupport::Multibyte::Chars
 
   # Performs composition on all the characters.
   #
-  #   'é'.length                       # => 3
-  #   'é'.mb_chars.compose.to_s.length # => 2
+  #   'é'.length                       # => 1
+  #   'é'.mb_chars.compose.to_s.length # => 1
   def compose; end
 
   # Performs canonical decomposition on all the characters.
   #
-  #   'é'.length                         # => 2
-  #   'é'.mb_chars.decompose.to_s.length # => 3
+  #   'é'.length                         # => 1
+  #   'é'.mb_chars.decompose.to_s.length # => 2
   def decompose; end
 
   # Returns the number of grapheme clusters in the string.
   #
   #   'क्षि'.mb_chars.length   # => 4
-  #   'क्षि'.mb_chars.grapheme_length # => 3
+  #   'क्षि'.mb_chars.grapheme_length # => 2
   def grapheme_length; end
 
   # Limits the byte size of the string to a number of bytes without breaking
@@ -5601,9 +5731,6 @@ module ActiveSupport::Multibyte::Unicode
 
   # Decompose composed characters to the decomposed form.
   def decompose(type, codepoints); end
-
-  def default_normalization_form; end
-  def default_normalization_form=(_); end
 
   # Replaces all ISO-8859-1 or CP1252 characters by their UTF-8 equivalent
   # resulting in a valid UTF-8 string.
@@ -5819,6 +5946,7 @@ module ActiveSupport::Notifications
     def notifier=(_arg0); end
 
     def publish(name, *args); end
+    def publish_event(event); end
 
     # Subscribe to a given event name with the passed +block+.
     #
@@ -5845,10 +5973,19 @@ module ActiveSupport::Notifications
     #   ActiveSupport::Notifications.subscribe(/render/) do |event|
     #     @event = event
     #   end
+    #
+    # Raises an error if invalid event name type is passed:
+    #
+    #  ActiveSupport::Notifications.subscribe(:render) {|*args| ...}
+    #  #=> ArgumentError (pattern must be specified as a String, Regexp or empty)
     def subscribe(pattern = T.unsafe(nil), callback = T.unsafe(nil), &block); end
 
     def subscribed(callback, pattern = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
     def unsubscribe(subscriber_or_name); end
+
+    private
+
+    def registry; end
   end
 end
 
@@ -5907,6 +6044,8 @@ class ActiveSupport::Notifications::Event
   # @param value the value to set the attribute payload to.
   def payload=(_arg0); end
 
+  def record; end
+
   # Record information at the time this event starts
   def start!; end
 
@@ -5919,7 +6058,10 @@ class ActiveSupport::Notifications::Event
   private
 
   def now; end
+
+  # Likely on JRuby, TruffleRuby
   def now_allocations; end
+
   def now_cpu; end
 end
 
@@ -5934,6 +6076,7 @@ class ActiveSupport::Notifications::Fanout
   def initialize; end
 
   def finish(name, id, payload, listeners = T.unsafe(nil)); end
+  def iterate_guarding_exceptions(listeners); end
   def listeners_for(name); end
 
   # @return [Boolean]
@@ -5942,6 +6085,7 @@ class ActiveSupport::Notifications::Fanout
   def lock; end
   def locked?; end
   def publish(name, *args); end
+  def publish_event(event); end
   def start(name, id, payload); end
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
   def synchronize(&block); end
@@ -5956,27 +6100,12 @@ end
 module ActiveSupport::Notifications::Fanout::Subscribers
   class << self
     def new(pattern, listener, monotonic); end
-    def wrap_all(pattern, subscriber); end
   end
-end
-
-class ActiveSupport::Notifications::Fanout::Subscribers::AllMessages
-  # @return [AllMessages] a new instance of AllMessages
-  def initialize(delegate); end
-
-  def finish(name, id, payload); end
-  def matches?(_arg0); end
-  def publish(name, *args); end
-  def start(name, id, payload); end
-
-  # @return [Boolean]
-  def subscribed_to?(name); end
-
-  def unsubscribe!(*_arg0); end
 end
 
 class ActiveSupport::Notifications::Fanout::Subscribers::EventObject < ::ActiveSupport::Notifications::Fanout::Subscribers::Evented
   def finish(name, id, payload); end
+  def publish_event(event); end
   def start(name, id, payload); end
 
   private
@@ -5990,13 +6119,11 @@ class ActiveSupport::Notifications::Fanout::Subscribers::Evented
 
   def finish(name, id, payload); end
 
-  # @return [Boolean]
-  def matches?(name); end
-
   # Returns the value of attribute pattern.
   def pattern; end
 
   def publish(name, *args); end
+  def publish_event(event); end
   def start(name, id, payload); end
 
   # @return [Boolean]
@@ -6024,6 +6151,11 @@ class ActiveSupport::Notifications::Fanout::Subscribers::Matcher
   end
 end
 
+class ActiveSupport::Notifications::Fanout::Subscribers::Matcher::AllMessages
+  def ===(name); end
+  def unsubscribe!(*_arg0); end
+end
+
 class ActiveSupport::Notifications::Fanout::Subscribers::MonotonicTimed < ::ActiveSupport::Notifications::Fanout::Subscribers::Evented
   def finish(name, id, payload); end
   def publish(name, *args); end
@@ -6036,21 +6168,12 @@ class ActiveSupport::Notifications::Fanout::Subscribers::Timed < ::ActiveSupport
   def start(name, id, payload); end
 end
 
-# This class is a registry which holds all of the +Instrumenter+ objects
-# in a particular thread local. To access the +Instrumenter+ object for a
-# particular +notifier+, you can call the following method:
-#
-#   InstrumentationRegistry.instrumenter_for(notifier)
-#
-# The instrumenters for multiple notifiers are held in a single instance of
-# this class.
-class ActiveSupport::Notifications::InstrumentationRegistry
-  extend ::ActiveSupport::PerThreadRegistry
+class ActiveSupport::Notifications::InstrumentationSubscriberError < ::RuntimeError
+  # @return [InstrumentationSubscriberError] a new instance of InstrumentationSubscriberError
+  def initialize(exceptions); end
 
-  # @return [InstrumentationRegistry] a new instance of InstrumentationRegistry
-  def initialize; end
-
-  def instrumenter_for(notifier); end
+  # Returns the value of attribute exceptions.
+  def exceptions; end
 end
 
 # Instrumenters are stored in a thread local.
@@ -6071,6 +6194,8 @@ class ActiveSupport::Notifications::Instrumenter
   # notifier. Notice that events get sent even if an error occurs in the
   # passed-in block.
   def instrument(name, payload = T.unsafe(nil)); end
+
+  def new_event(name, payload = T.unsafe(nil)); end
 
   # Send a start notification with +name+ and +payload+.
   def start(name, payload); end
@@ -6128,8 +6253,6 @@ module ActiveSupport::NumberHelper
   #   number_to_currency(1234567890.506, precision: 3) # => "$1,234,567,890.506"
   #   number_to_currency(1234567890.506, locale: :fr)  # => "1 234 567 890,51 €"
   #   number_to_currency('123a456')                    # => "$123a456"
-  #
-  #   number_to_currency("123a456", raise: true)       # => InvalidNumberError
   #
   #   number_to_currency(-0.456789, precision: 0)
   #   # => "$0"
@@ -6616,7 +6739,218 @@ class ActiveSupport::NumberHelper::RoundingHelper
 
   def absolute_precision(number); end
   def convert_to_decimal(number); end
-  def significant; end
+end
+
+module ActiveSupport::NumericWithFormat
+  # Provides options for converting numbers into formatted strings.
+  # Options are provided for phone numbers, currency, percentage,
+  # precision, positional notation, file size and pretty printing.
+  #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
+  # ==== Options
+  #
+  # For details on which formats use which options, see ActiveSupport::NumberHelper
+  #
+  # ==== Examples
+  #
+  #  Phone Numbers:
+  #  5551234.to_fs(:phone)                                     # => "555-1234"
+  #  1235551234.to_fs(:phone)                                  # => "123-555-1234"
+  #  1235551234.to_fs(:phone, area_code: true)                 # => "(123) 555-1234"
+  #  1235551234.to_fs(:phone, delimiter: ' ')                  # => "123 555 1234"
+  #  1235551234.to_fs(:phone, area_code: true, extension: 555) # => "(123) 555-1234 x 555"
+  #  1235551234.to_fs(:phone, country_code: 1)                 # => "+1-123-555-1234"
+  #  1235551234.to_fs(:phone, country_code: 1, extension: 1343, delimiter: '.')
+  #  # => "+1.123.555.1234 x 1343"
+  #
+  #  Currency:
+  #  1234567890.50.to_fs(:currency)                     # => "$1,234,567,890.50"
+  #  1234567890.506.to_fs(:currency)                    # => "$1,234,567,890.51"
+  #  1234567890.506.to_fs(:currency, precision: 3)      # => "$1,234,567,890.506"
+  #  1234567890.506.to_fs(:currency, round_mode: :down) # => "$1,234,567,890.50"
+  #  1234567890.506.to_fs(:currency, locale: :fr)       # => "1 234 567 890,51 €"
+  #  -1234567890.50.to_fs(:currency, negative_format: '(%u%n)')
+  #  # => "($1,234,567,890.50)"
+  #  1234567890.50.to_fs(:currency, unit: '&pound;', separator: ',', delimiter: '')
+  #  # => "&pound;1234567890,50"
+  #  1234567890.50.to_fs(:currency, unit: '&pound;', separator: ',', delimiter: '', format: '%n %u')
+  #  # => "1234567890,50 &pound;"
+  #
+  #  Percentage:
+  #  100.to_fs(:percentage)                                  # => "100.000%"
+  #  100.to_fs(:percentage, precision: 0)                    # => "100%"
+  #  1000.to_fs(:percentage, delimiter: '.', separator: ',') # => "1.000,000%"
+  #  302.24398923423.to_fs(:percentage, precision: 5)        # => "302.24399%"
+  #  302.24398923423.to_fs(:percentage, round_mode: :down)   # => "302.243%"
+  #  1000.to_fs(:percentage, locale: :fr)                    # => "1 000,000%"
+  #  100.to_fs(:percentage, format: '%n  %')                 # => "100.000  %"
+  #
+  #  Delimited:
+  #  12345678.to_fs(:delimited)                     # => "12,345,678"
+  #  12345678.05.to_fs(:delimited)                  # => "12,345,678.05"
+  #  12345678.to_fs(:delimited, delimiter: '.')     # => "12.345.678"
+  #  12345678.to_fs(:delimited, delimiter: ',')     # => "12,345,678"
+  #  12345678.05.to_fs(:delimited, separator: ' ')  # => "12,345,678 05"
+  #  12345678.05.to_fs(:delimited, locale: :fr)     # => "12 345 678,05"
+  #  98765432.98.to_fs(:delimited, delimiter: ' ', separator: ',')
+  #  # => "98 765 432,98"
+  #
+  #  Rounded:
+  #  111.2345.to_fs(:rounded)                                      # => "111.235"
+  #  111.2345.to_fs(:rounded, precision: 2)                        # => "111.23"
+  #  111.2345.to_fs(:rounded, precision: 2, round_mode: :up)       # => "111.24"
+  #  13.to_fs(:rounded, precision: 5)                              # => "13.00000"
+  #  389.32314.to_fs(:rounded, precision: 0)                       # => "389"
+  #  111.2345.to_fs(:rounded, significant: true)                   # => "111"
+  #  111.2345.to_fs(:rounded, precision: 1, significant: true)     # => "100"
+  #  13.to_fs(:rounded, precision: 5, significant: true)           # => "13.000"
+  #  111.234.to_fs(:rounded, locale: :fr)                          # => "111,234"
+  #  13.to_fs(:rounded, precision: 5, significant: true, strip_insignificant_zeros: true)
+  #  # => "13"
+  #  389.32314.to_fs(:rounded, precision: 4, significant: true)    # => "389.3"
+  #  1111.2345.to_fs(:rounded, precision: 2, separator: ',', delimiter: '.')
+  #  # => "1.111,23"
+  #
+  #  Human-friendly size in Bytes:
+  #  123.to_fs(:human_size)                                    # => "123 Bytes"
+  #  1234.to_fs(:human_size)                                   # => "1.21 KB"
+  #  12345.to_fs(:human_size)                                  # => "12.1 KB"
+  #  1234567.to_fs(:human_size)                                # => "1.18 MB"
+  #  1234567890.to_fs(:human_size)                             # => "1.15 GB"
+  #  1234567890123.to_fs(:human_size)                          # => "1.12 TB"
+  #  1234567890123456.to_fs(:human_size)                       # => "1.1 PB"
+  #  1234567890123456789.to_fs(:human_size)                    # => "1.07 EB"
+  #  1234567.to_fs(:human_size, precision: 2)                  # => "1.2 MB"
+  #  1234567.to_fs(:human_size, precision: 2, round_mode: :up) # => "1.3 MB"
+  #  483989.to_fs(:human_size, precision: 2)                   # => "470 KB"
+  #  1234567.to_fs(:human_size, precision: 2, separator: ',')  # => "1,2 MB"
+  #  1234567890123.to_fs(:human_size, precision: 5)            # => "1.1228 TB"
+  #  524288000.to_fs(:human_size, precision: 5)                # => "500 MB"
+  #
+  #  Human-friendly format:
+  #  123.to_fs(:human)                                       # => "123"
+  #  1234.to_fs(:human)                                      # => "1.23 Thousand"
+  #  12345.to_fs(:human)                                     # => "12.3 Thousand"
+  #  1234567.to_fs(:human)                                   # => "1.23 Million"
+  #  1234567890.to_fs(:human)                                # => "1.23 Billion"
+  #  1234567890123.to_fs(:human)                             # => "1.23 Trillion"
+  #  1234567890123456.to_fs(:human)                          # => "1.23 Quadrillion"
+  #  1234567890123456789.to_fs(:human)                       # => "1230 Quadrillion"
+  #  489939.to_fs(:human, precision: 2)                      # => "490 Thousand"
+  #  489939.to_fs(:human, precision: 2, round_mode: :down)   # => "480 Thousand"
+  #  489939.to_fs(:human, precision: 4)                      # => "489.9 Thousand"
+  #  1234567.to_fs(:human, precision: 4,
+  #                   significant: false)                             # => "1.2346 Million"
+  #  1234567.to_fs(:human, precision: 1,
+  #                   separator: ',',
+  #                   significant: false)                             # => "1,2 Million"
+  def to_formatted_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Provides options for converting numbers into formatted strings.
+  # Options are provided for phone numbers, currency, percentage,
+  # precision, positional notation, file size and pretty printing.
+  #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
+  # ==== Options
+  #
+  # For details on which formats use which options, see ActiveSupport::NumberHelper
+  #
+  # ==== Examples
+  #
+  #  Phone Numbers:
+  #  5551234.to_fs(:phone)                                     # => "555-1234"
+  #  1235551234.to_fs(:phone)                                  # => "123-555-1234"
+  #  1235551234.to_fs(:phone, area_code: true)                 # => "(123) 555-1234"
+  #  1235551234.to_fs(:phone, delimiter: ' ')                  # => "123 555 1234"
+  #  1235551234.to_fs(:phone, area_code: true, extension: 555) # => "(123) 555-1234 x 555"
+  #  1235551234.to_fs(:phone, country_code: 1)                 # => "+1-123-555-1234"
+  #  1235551234.to_fs(:phone, country_code: 1, extension: 1343, delimiter: '.')
+  #  # => "+1.123.555.1234 x 1343"
+  #
+  #  Currency:
+  #  1234567890.50.to_fs(:currency)                     # => "$1,234,567,890.50"
+  #  1234567890.506.to_fs(:currency)                    # => "$1,234,567,890.51"
+  #  1234567890.506.to_fs(:currency, precision: 3)      # => "$1,234,567,890.506"
+  #  1234567890.506.to_fs(:currency, round_mode: :down) # => "$1,234,567,890.50"
+  #  1234567890.506.to_fs(:currency, locale: :fr)       # => "1 234 567 890,51 €"
+  #  -1234567890.50.to_fs(:currency, negative_format: '(%u%n)')
+  #  # => "($1,234,567,890.50)"
+  #  1234567890.50.to_fs(:currency, unit: '&pound;', separator: ',', delimiter: '')
+  #  # => "&pound;1234567890,50"
+  #  1234567890.50.to_fs(:currency, unit: '&pound;', separator: ',', delimiter: '', format: '%n %u')
+  #  # => "1234567890,50 &pound;"
+  #
+  #  Percentage:
+  #  100.to_fs(:percentage)                                  # => "100.000%"
+  #  100.to_fs(:percentage, precision: 0)                    # => "100%"
+  #  1000.to_fs(:percentage, delimiter: '.', separator: ',') # => "1.000,000%"
+  #  302.24398923423.to_fs(:percentage, precision: 5)        # => "302.24399%"
+  #  302.24398923423.to_fs(:percentage, round_mode: :down)   # => "302.243%"
+  #  1000.to_fs(:percentage, locale: :fr)                    # => "1 000,000%"
+  #  100.to_fs(:percentage, format: '%n  %')                 # => "100.000  %"
+  #
+  #  Delimited:
+  #  12345678.to_fs(:delimited)                     # => "12,345,678"
+  #  12345678.05.to_fs(:delimited)                  # => "12,345,678.05"
+  #  12345678.to_fs(:delimited, delimiter: '.')     # => "12.345.678"
+  #  12345678.to_fs(:delimited, delimiter: ',')     # => "12,345,678"
+  #  12345678.05.to_fs(:delimited, separator: ' ')  # => "12,345,678 05"
+  #  12345678.05.to_fs(:delimited, locale: :fr)     # => "12 345 678,05"
+  #  98765432.98.to_fs(:delimited, delimiter: ' ', separator: ',')
+  #  # => "98 765 432,98"
+  #
+  #  Rounded:
+  #  111.2345.to_fs(:rounded)                                      # => "111.235"
+  #  111.2345.to_fs(:rounded, precision: 2)                        # => "111.23"
+  #  111.2345.to_fs(:rounded, precision: 2, round_mode: :up)       # => "111.24"
+  #  13.to_fs(:rounded, precision: 5)                              # => "13.00000"
+  #  389.32314.to_fs(:rounded, precision: 0)                       # => "389"
+  #  111.2345.to_fs(:rounded, significant: true)                   # => "111"
+  #  111.2345.to_fs(:rounded, precision: 1, significant: true)     # => "100"
+  #  13.to_fs(:rounded, precision: 5, significant: true)           # => "13.000"
+  #  111.234.to_fs(:rounded, locale: :fr)                          # => "111,234"
+  #  13.to_fs(:rounded, precision: 5, significant: true, strip_insignificant_zeros: true)
+  #  # => "13"
+  #  389.32314.to_fs(:rounded, precision: 4, significant: true)    # => "389.3"
+  #  1111.2345.to_fs(:rounded, precision: 2, separator: ',', delimiter: '.')
+  #  # => "1.111,23"
+  #
+  #  Human-friendly size in Bytes:
+  #  123.to_fs(:human_size)                                    # => "123 Bytes"
+  #  1234.to_fs(:human_size)                                   # => "1.21 KB"
+  #  12345.to_fs(:human_size)                                  # => "12.1 KB"
+  #  1234567.to_fs(:human_size)                                # => "1.18 MB"
+  #  1234567890.to_fs(:human_size)                             # => "1.15 GB"
+  #  1234567890123.to_fs(:human_size)                          # => "1.12 TB"
+  #  1234567890123456.to_fs(:human_size)                       # => "1.1 PB"
+  #  1234567890123456789.to_fs(:human_size)                    # => "1.07 EB"
+  #  1234567.to_fs(:human_size, precision: 2)                  # => "1.2 MB"
+  #  1234567.to_fs(:human_size, precision: 2, round_mode: :up) # => "1.3 MB"
+  #  483989.to_fs(:human_size, precision: 2)                   # => "470 KB"
+  #  1234567.to_fs(:human_size, precision: 2, separator: ',')  # => "1,2 MB"
+  #  1234567890123.to_fs(:human_size, precision: 5)            # => "1.1228 TB"
+  #  524288000.to_fs(:human_size, precision: 5)                # => "500 MB"
+  #
+  #  Human-friendly format:
+  #  123.to_fs(:human)                                       # => "123"
+  #  1234.to_fs(:human)                                      # => "1.23 Thousand"
+  #  12345.to_fs(:human)                                     # => "12.3 Thousand"
+  #  1234567.to_fs(:human)                                   # => "1.23 Million"
+  #  1234567890.to_fs(:human)                                # => "1.23 Billion"
+  #  1234567890123.to_fs(:human)                             # => "1.23 Trillion"
+  #  1234567890123456.to_fs(:human)                          # => "1.23 Quadrillion"
+  #  1234567890123456789.to_fs(:human)                       # => "1230 Quadrillion"
+  #  489939.to_fs(:human, precision: 2)                      # => "490 Thousand"
+  #  489939.to_fs(:human, precision: 2, round_mode: :down)   # => "480 Thousand"
+  #  489939.to_fs(:human, precision: 4)                      # => "489.9 Thousand"
+  #  1234567.to_fs(:human, precision: 4,
+  #                   significant: false)                             # => "1.2346 Million"
+  #  1234567.to_fs(:human, precision: 1,
+  #                   separator: ',',
+  #                   significant: false)                             # => "1,2 Million"
+  def to_fs(format = T.unsafe(nil), options = T.unsafe(nil)); end
 end
 
 class ActiveSupport::OptionMerger
@@ -6625,8 +6959,10 @@ class ActiveSupport::OptionMerger
 
   private
 
-  def invoke_method(method, arguments, options, &block); end
   def method_missing(method, *arguments, &block); end
+
+  # @return [Boolean]
+  def respond_to_missing?(*arguments); end
 end
 
 # DEPRECATED: <tt>ActiveSupport::OrderedHash</tt> implements a hash that preserves
@@ -6714,6 +7050,11 @@ end
 #
 #   ActiveSupport::ParameterFilter.new([:foo, "bar"])
 #   => replaces the value to all keys matching /foo|bar/i with "[FILTERED]"
+#
+#   ActiveSupport::ParameterFilter.new([/\Apin\z/i, /\Apin_/i])
+#   => replaces the value for the exact (case-insensitive) key 'pin' and all
+#   (case-insensitive) keys beginning with 'pin_', with "[FILTERED]".
+#   Does not match keys with 'pin' as a substring, such as 'shipping_id'.
 #
 #   ActiveSupport::ParameterFilter.new(["credit_card.code"])
 #   => replaces { credit_card: {code: "xxxx"} } with "[FILTERED]", does not
@@ -6830,48 +7171,37 @@ class ActiveSupport::Railtie < ::Rails::Railtie; end
 module ActiveSupport::RangeWithFormat
   # Convert range to a formatted string. See RANGE_FORMATS for predefined formats.
   #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
   #   range = (1..100)           # => 1..100
   #
   #   range.to_s                 # => "1..100"
-  #   range.to_s(:db)            # => "BETWEEN '1' AND '100'"
+  #   range.to_fs(:db)            # => "BETWEEN '1' AND '100'"
   #
   # == Adding your own range formats to to_s
   # You can add your own formats to the Range::RANGE_FORMATS hash.
   # Use the format name as the hash key and a Proc instance.
   #
   #   # config/initializers/range_formats.rb
-  #   Range::RANGE_FORMATS[:short] = ->(start, stop) { "Between #{start.to_s(:db)} and #{stop.to_s(:db)}" }
-  def to_default_s(format = T.unsafe(nil)); end
-
-  # Convert range to a formatted string. See RANGE_FORMATS for predefined formats.
-  #
-  #   range = (1..100)           # => 1..100
-  #
-  #   range.to_s                 # => "1..100"
-  #   range.to_s(:db)            # => "BETWEEN '1' AND '100'"
-  #
-  # == Adding your own range formats to to_s
-  # You can add your own formats to the Range::RANGE_FORMATS hash.
-  # Use the format name as the hash key and a Proc instance.
-  #
-  #   # config/initializers/range_formats.rb
-  #   Range::RANGE_FORMATS[:short] = ->(start, stop) { "Between #{start.to_s(:db)} and #{stop.to_s(:db)}" }
+  #   Range::RANGE_FORMATS[:short] = ->(start, stop) { "Between #{start.to_fs(:db)} and #{stop.to_fs(:db)}" }
   def to_formatted_s(format = T.unsafe(nil)); end
 
   # Convert range to a formatted string. See RANGE_FORMATS for predefined formats.
   #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
   #   range = (1..100)           # => 1..100
   #
   #   range.to_s                 # => "1..100"
-  #   range.to_s(:db)            # => "BETWEEN '1' AND '100'"
+  #   range.to_fs(:db)            # => "BETWEEN '1' AND '100'"
   #
   # == Adding your own range formats to to_s
   # You can add your own formats to the Range::RANGE_FORMATS hash.
   # Use the format name as the hash key and a Proc instance.
   #
   #   # config/initializers/range_formats.rb
-  #   Range::RANGE_FORMATS[:short] = ->(start, stop) { "Between #{start.to_s(:db)} and #{stop.to_s(:db)}" }
-  def to_s(format = T.unsafe(nil)); end
+  #   Range::RANGE_FORMATS[:short] = ->(start, stop) { "Between #{start.to_fs(:db)} and #{stop.to_fs(:db)}" }
+  def to_fs(format = T.unsafe(nil)); end
 end
 
 ActiveSupport::RangeWithFormat::RANGE_FORMATS = T.let(T.unsafe(nil), Hash)
@@ -7047,6 +7377,8 @@ module ActiveSupport::Rescuable::ClassMethods
   def find_rescue_handler(exception); end
 end
 
+module ActiveSupport::RubyFeatures; end
+
 class ActiveSupport::SafeBuffer < ::String
   # @return [SafeBuffer] a new instance of SafeBuffer
   def initialize(str = T.unsafe(nil)); end
@@ -7122,7 +7454,8 @@ class ActiveSupport::SafeBuffer < ::String
 
   private
 
-  def html_escape_interpolated_argument(arg); end
+  def explicit_html_escape_interpolated_argument(arg); end
+  def implicit_html_escape_interpolated_argument(arg); end
   def initialize_copy(other); end
   def original_concat(*_arg0); end
   def set_block_back_references(block, match_data); end
@@ -7150,7 +7483,7 @@ ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS_WITH_BACKREF = T.let(T.unsafe(n
 #
 #   class MyController < ApplicationController
 #     def authenticate_request
-#       rotator = ActiveSupport::SecureComparerotator.new('new_password')
+#       rotator = ActiveSupport::SecureCompareRotator.new('new_password')
 #       rotator.rotate('old_password')
 #
 #       authenticate_or_request_with_http_basic do |username, password|
@@ -7163,6 +7496,9 @@ ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS_WITH_BACKREF = T.let(T.unsafe(n
 class ActiveSupport::SecureCompareRotator
   include ::ActiveSupport::Messages::Rotator
   include ::ActiveSupport::SecurityUtils
+
+  # @return [SecureCompareRotator] a new instance of SecureCompareRotator
+  def initialize(*secrets, on_rotation: T.unsafe(nil), **options); end
 
   def secure_compare!(other_value, on_rotation: T.unsafe(nil)); end
 
@@ -7255,6 +7591,7 @@ class ActiveSupport::Subscriber
 
   def finish(name, id, payload); end
   def patterns; end
+  def publish_event(event); end
   def start(name, id, payload); end
 
   private
@@ -7297,19 +7634,6 @@ class ActiveSupport::Subscriber
     # Returns the value of attribute subscriber.
     def subscriber; end
   end
-end
-
-# This is a registry for all the event stacks kept for subscribers.
-#
-# See the documentation of <tt>ActiveSupport::PerThreadRegistry</tt>
-# for further details.
-class ActiveSupport::SubscriberQueueRegistry
-  extend ::ActiveSupport::PerThreadRegistry
-
-  # @return [SubscriberQueueRegistry] a new instance of SubscriberQueueRegistry
-  def initialize; end
-
-  def get_queue(queue_key); end
 end
 
 # Wraps any standard Logger object to provide tagging capabilities.
@@ -7451,7 +7775,11 @@ class ActiveSupport::TestCase < ::Minitest::Test
     #
     # The threaded parallelization uses minitest's parallel executor directly.
     # The processes parallelization uses a Ruby DRb server.
-    def parallelize(workers: T.unsafe(nil), with: T.unsafe(nil)); end
+    #
+    # Because parallelization presents an overhead, it is only enabled when the
+    # number of tests to run is above the +threshold+ param. The default value is
+    # 50, and it's configurable via +config.active_support.test_parallelization_threshold+.
+    def parallelize(workers: T.unsafe(nil), with: T.unsafe(nil), threshold: T.unsafe(nil)); end
 
     # Set up hook for parallel testing. This can be used if you have multiple
     # databases or any behavior that needs to be run after the process is forked
@@ -7600,12 +7928,19 @@ module ActiveSupport::Testing::Assertions
   #     post :create, params: { status: { ok: true } }
   #   end
   #
+  # Provide the optional keyword argument :from to specify the expected
+  # initial value.
+  #
+  #   assert_no_changes -> { Status.all_good? }, from: true do
+  #     post :create, params: { status: { ok: true } }
+  #   end
+  #
   # An error message can be specified.
   #
   #   assert_no_changes -> { Status.all_good? }, 'Expected the status to be good' do
   #     post :create, params: { status: { ok: false } }
   #   end
-  def assert_no_changes(expression, message = T.unsafe(nil), &block); end
+  def assert_no_changes(expression, message = T.unsafe(nil), from: T.unsafe(nil), &block); end
 
   # Assertion that the numeric result of evaluating an expression is not
   # changed before and after invoking the passed in block.
@@ -7654,6 +7989,10 @@ module ActiveSupport::Testing::Assertions
   #     perform_service(param: 'no_exception')
   #   end
   def assert_nothing_raised; end
+
+  private
+
+  def _assert_nothing_raised_or_warn(assertion, &block); end
 end
 
 ActiveSupport::Testing::Assertions::UNTRACKED = T.let(T.unsafe(nil), Object)
@@ -7703,8 +8042,61 @@ module ActiveSupport::Testing::Declarative
 end
 
 module ActiveSupport::Testing::Deprecation
+  # Asserts that a matching deprecation warning was emitted by the given deprecator during the execution of the yielded block.
+  #
+  #   assert_deprecated(/foo/, CustomDeprecator) do
+  #     CustomDeprecator.warn "foo should no longer be used"
+  #   end
+  #
+  # The +match+ object may be a +Regexp+, or +String+ appearing in the message.
+  #
+  #   assert_deprecated('foo', CustomDeprecator) do
+  #     CustomDeprecator.warn "foo should no longer be used"
+  #   end
+  #
+  # If the +match+ is omitted (or explicitly +nil+), any deprecation warning will match.
+  #
+  #   assert_deprecated(nil, CustomDeprecator) do
+  #     CustomDeprecator.warn "foo should no longer be used"
+  #   end
+  #
+  # If no +deprecator+ is given, defaults to ActiveSupport::Deprecation.
+  #
+  #   assert_deprecated do
+  #     ActiveSupport::Deprecation.warn "foo should no longer be used"
+  #   end
   def assert_deprecated(match = T.unsafe(nil), deprecator = T.unsafe(nil), &block); end
+
+  # Asserts that no deprecation warnings are emitted by the given deprecator during the execution of the yielded block.
+  #
+  #   assert_not_deprecated(CustomDeprecator) do
+  #     CustomDeprecator.warn "message" # fails assertion
+  #   end
+  #
+  # If no +deprecator+ is given, defaults to ActiveSupport::Deprecation.
+  #
+  #   assert_not_deprecated do
+  #     ActiveSupport::Deprecation.warn "message" # fails assertion
+  #   end
+  #
+  #   assert_not_deprecated do
+  #     CustomDeprecator.warn "message" # passes assertion
+  #   end
   def assert_not_deprecated(deprecator = T.unsafe(nil), &block); end
+
+  # Returns an array of all the deprecation warnings emitted by the given
+  # +deprecator+ during the execution of the yielded block.
+  #
+  #   collect_deprecations(CustomDeprecator) do
+  #     CustomDeprecator.warn "message"
+  #   end # => ["message"]
+  #
+  # If no +deprecator+ is given, defaults to ActiveSupport::Deprecation.
+  #
+  #   collect_deprecations do
+  #     CustomDeprecator.warn "custom message"
+  #     ActiveSupport::Deprecation.warn "message"
+  #   end # => ["message"]
   def collect_deprecations(deprecator = T.unsafe(nil)); end
 end
 
@@ -7758,7 +8150,7 @@ module ActiveSupport::Testing::Isolation::Forking
 end
 
 module ActiveSupport::Testing::Isolation::Subprocess
-  # Crazy H4X to get this working in windows / jruby with
+  # Complicated H4X to get this working in windows / jruby with
   # no forking.
   def run_in_isolation(&blk); end
 end
@@ -7773,6 +8165,7 @@ class ActiveSupport::Testing::Parallelization
   def after_fork_hooks; end
   def run_cleanup_hooks; end
   def shutdown; end
+  def size; end
   def start; end
 
   class << self
@@ -7794,6 +8187,7 @@ class ActiveSupport::Testing::Parallelization::Server
   # @return [Boolean]
   def active_workers?; end
 
+  def interrupt; end
   def pop; end
 
   # @raise [DRb::DRbConnError]
@@ -7819,6 +8213,42 @@ class ActiveSupport::Testing::Parallelization::Worker
 
   def add_setup_exception(result); end
   def set_process_title(status); end
+end
+
+class ActiveSupport::Testing::ParallelizeExecutor
+  # @return [ParallelizeExecutor] a new instance of ParallelizeExecutor
+  def initialize(size:, with:, threshold: T.unsafe(nil)); end
+
+  def <<(work); end
+
+  # Returns the value of attribute parallelize_with.
+  def parallelize_with; end
+
+  def shutdown; end
+
+  # Returns the value of attribute size.
+  def size; end
+
+  def start; end
+
+  # Returns the value of attribute threshold.
+  def threshold; end
+
+  private
+
+  def build_parallel_executor; end
+  def execution_info; end
+  def parallel_executor; end
+  def parallelize; end
+
+  # @return [Boolean]
+  def parallelized?; end
+
+  # @return [Boolean]
+  def should_parallelize?; end
+
+  def show_execution_info; end
+  def tests_count; end
 end
 
 # Adds support for +setup+ and +teardown+ callbacks.
@@ -7929,7 +8359,7 @@ module ActiveSupport::Testing::Stream
   private
 
   def capture(stream); end
-  def quietly; end
+  def quietly(&block); end
   def silence_stream(stream); end
 end
 
@@ -8071,6 +8501,14 @@ module ActiveSupport::Testing::TimeHelpers
 
   private
 
+  # Returns the value of attribute in_block.
+  def in_block; end
+
+  # Sets the attribute in_block
+  #
+  # @param value the value to set the attribute in_block to.
+  def in_block=(_arg0); end
+
   def simple_stubs; end
 end
 
@@ -8099,7 +8537,7 @@ end
 #   t.dst?                                # => true
 #   t.utc_offset                          # => -14400
 #   t.zone                                # => "EDT"
-#   t.to_s(:rfc822)                       # => "Sun, 18 May 2008 13:27:25 -0400"
+#   t.to_fs(:rfc822)                      # => "Sun, 18 May 2008 13:27:25 -0400"
 #   t + 1.day                             # => Mon, 19 May 2008 13:27:25.031505668 EDT -04:00
 #   t.beginning_of_year                   # => Tue, 01 Jan 2008 00:00:00.000000000 EST -05:00
 #   t > Time.utc(1999)                    # => true
@@ -8489,18 +8927,31 @@ class ActiveSupport::TimeWithZone
   #   Time.current.in_time_zone('Hawaii').to_datetime   # => Mon, 17 Aug 2015 16:32:20 -1000
   def to_datetime; end
 
-  # Returns the object's date and time as a floating point number of seconds
+  # Returns the object's date and time as a floating-point number of seconds
   # since the Epoch (January 1, 1970 00:00 UTC).
   #
   #   Time.zone.now.to_f # => 1417709320.285418
   def to_f; end
 
   # Returns a string of the object's date and time.
+  #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
   # Accepts an optional <tt>format</tt>:
   # * <tt>:default</tt> - default value, mimics Ruby Time#to_s format.
-  # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_formatted_s(:db).
+  # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_fs(:db).
   # * Any key in <tt>Time::DATE_FORMATS</tt> can be used. See active_support/core_ext/time/conversions.rb.
   def to_formatted_s(format = T.unsafe(nil)); end
+
+  # Returns a string of the object's date and time.
+  #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
+  # Accepts an optional <tt>format</tt>:
+  # * <tt>:default</tt> - default value, mimics Ruby Time#to_s format.
+  # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_fs(:db).
+  # * Any key in <tt>Time::DATE_FORMATS</tt> can be used. See active_support/core_ext/time/conversions.rb.
+  def to_fs(format = T.unsafe(nil)); end
 
   # Returns the object's date and time as an integer number of seconds
   # since the Epoch (January 1, 1970 00:00 UTC).
@@ -8515,10 +8966,6 @@ class ActiveSupport::TimeWithZone
   def to_r; end
 
   # Returns a string of the object's date and time.
-  # Accepts an optional <tt>format</tt>:
-  # * <tt>:default</tt> - default value, mimics Ruby Time#to_s format.
-  # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_formatted_s(:db).
-  # * Any key in <tt>Time::DATE_FORMATS</tt> can be used. See active_support/core_ext/time/conversions.rb.
   def to_s(format = T.unsafe(nil)); end
 
   # Returns an instance of +Time+, either with the same UTC offset
@@ -8608,6 +9055,7 @@ class ActiveSupport::TimeWithZone
   end
 end
 
+ActiveSupport::TimeWithZone::NOT_SET = T.let(T.unsafe(nil), Object)
 ActiveSupport::TimeWithZone::PRECISIONS = T.let(T.unsafe(nil), Hash)
 ActiveSupport::TimeWithZone::SECONDS_PER_DAY = T.let(T.unsafe(nil), Integer)
 
@@ -8690,8 +9138,6 @@ class ActiveSupport::TimeZone
   #
   # If the string is invalid then an +ArgumentError+ will be raised unlike +parse+
   # which usually returns +nil+ when given an invalid date string.
-  #
-  # @raise [ArgumentError]
   def iso8601(str); end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -8878,13 +9324,14 @@ module ActiveSupport::ToJsonWithActiveSupportEncoder
 end
 
 module ActiveSupport::Tryable
-  def try(method_name = T.unsafe(nil), *args, &b); end
-  def try!(method_name = T.unsafe(nil), *args, &b); end
+  def try(*args, &block); end
+  def try!(*args, &block); end
 end
 
 module ActiveSupport::VERSION; end
 ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -9064,9 +9511,9 @@ class Array
   # Removes all blank elements from the +Array+ in place and returns self.
   # Uses Object#blank? for determining if an item is blank.
   #
-  #    a = [1, "", nil, 2, " ", [], {}, false, true]
-  #    a.compact_blank!
-  #    # =>  [1, 2, true]
+  #   a = [1, "", nil, 2, " ", [], {}, false, true]
+  #   a.compact_blank!
+  #   # =>  [1, 2, true]
   def compact_blank!; end
 
   # Returns a deep copy of array.
@@ -9132,11 +9579,62 @@ class Array
   #   %w( a b c ).from(-10)  # => []
   def from(position); end
 
+  # Splits or iterates over the array in +number+ of groups, padding any
+  # remaining slots with +fill_with+ unless it is +false+.
+  #
+  #   %w(1 2 3 4 5 6 7 8 9 10).in_groups(3) {|group| p group}
+  #   ["1", "2", "3", "4"]
+  #   ["5", "6", "7", nil]
+  #   ["8", "9", "10", nil]
+  #
+  #   %w(1 2 3 4 5 6 7 8 9 10).in_groups(3, '&nbsp;') {|group| p group}
+  #   ["1", "2", "3", "4"]
+  #   ["5", "6", "7", "&nbsp;"]
+  #   ["8", "9", "10", "&nbsp;"]
+  #
+  #   %w(1 2 3 4 5 6 7).in_groups(3, false) {|group| p group}
+  #   ["1", "2", "3"]
+  #   ["4", "5"]
+  #   ["6", "7"]
+  def in_groups(number, fill_with = T.unsafe(nil), &block); end
+
+  # Splits or iterates over the array in groups of size +number+,
+  # padding any remaining slots with +fill_with+ unless it is +false+.
+  #
+  #   %w(1 2 3 4 5 6 7 8 9 10).in_groups_of(3) {|group| p group}
+  #   ["1", "2", "3"]
+  #   ["4", "5", "6"]
+  #   ["7", "8", "9"]
+  #   ["10", nil, nil]
+  #
+  #   %w(1 2 3 4 5).in_groups_of(2, '&nbsp;') {|group| p group}
+  #   ["1", "2"]
+  #   ["3", "4"]
+  #   ["5", "&nbsp;"]
+  #
+  #   %w(1 2 3 4 5).in_groups_of(2, false) {|group| p group}
+  #   ["1", "2"]
+  #   ["3", "4"]
+  #   ["5"]
+  def in_groups_of(number, fill_with = T.unsafe(nil), &block); end
+
   # Returns a new array that includes the passed elements.
   #
   #   [ 1, 2, 3 ].including(4, 5) # => [ 1, 2, 3, 4, 5 ]
   #   [ [ 0, 1 ] ].including([ [ 1, 0 ] ]) # => [ [ 0, 1 ], [ 1, 0 ] ]
   def including(*elements); end
+
+  # Wraps the array in an +ArrayInquirer+ object, which gives a friendlier way
+  # to check its string-like contents.
+  #
+  #   pets = [:cat, :dog].inquiry
+  #
+  #   pets.cat?     # => true
+  #   pets.ferret?  # => false
+  #
+  #   pets.any?(:cat, :ferret)  # => true
+  #   pets.any?(:ferret, :alligator)  # => false
+  def inquiry; end
 
   # Equal to <tt>self[1]</tt>.
   #
@@ -9148,7 +9646,13 @@ class Array
   #   %w( a b c d e ).second_to_last # => "d"
   def second_to_last; end
 
-  # Array#sum was added in Ruby 2.4 but it only works with Numeric elements.
+  # Divides the array into one or more subarrays based on a delimiting +value+
+  # or the result of an optional block.
+  #
+  #   [1, 2, 3, 4, 5].split(3)              # => [[1, 2], [4, 5]]
+  #   (1..10).to_a.split { |i| i % 3 == 0 } # => [[1, 2], [4, 5], [7, 8], [10]]
+  def split(value = T.unsafe(nil), &block); end
+
   def sum(init = T.unsafe(nil), &block); end
 
   # Equal to <tt>self[2]</tt>.
@@ -9174,10 +9678,22 @@ class Array
   # Extends <tt>Array#to_s</tt> to convert a collection of elements into a
   # comma separated id list if <tt>:db</tt> argument is given as the format.
   #
-  #   Blog.all.to_formatted_s(:db)  # => "1,2,3"
-  #   Blog.none.to_formatted_s(:db) # => "null"
-  #   [1,2].to_formatted_s          # => "[1, 2]"
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
+  #   Blog.all.to_fs(:db)  # => "1,2,3"
+  #   Blog.none.to_fs(:db) # => "null"
+  #   [1,2].to_fs          # => "[1, 2]"
   def to_formatted_s(format = T.unsafe(nil)); end
+
+  # Extends <tt>Array#to_s</tt> to convert a collection of elements into a
+  # comma separated id list if <tt>:db</tt> argument is given as the format.
+  #
+  # This method is aliased to <tt>to_formatted_s</tt>.
+  #
+  #   Blog.all.to_fs(:db)  # => "1,2,3"
+  #   Blog.none.to_fs(:db) # => "null"
+  #   [1,2].to_fs          # => "[1, 2]"
+  def to_fs(format = T.unsafe(nil)); end
 
   # Calls <tt>to_param</tt> on all its elements and joins the result with
   # slashes. This is used by <tt>url_for</tt> in Action Pack.
@@ -9189,12 +9705,6 @@ class Array
   #   ['Rails', 'coding'].to_query('hobbies') # => "hobbies%5B%5D=Rails&hobbies%5B%5D=coding"
   def to_query(key); end
 
-  # Extends <tt>Array#to_s</tt> to convert a collection of elements into a
-  # comma separated id list if <tt>:db</tt> argument is given as the format.
-  #
-  #   Blog.all.to_formatted_s(:db)  # => "1,2,3"
-  #   Blog.none.to_formatted_s(:db) # => "null"
-  #   [1,2].to_formatted_s          # => "[1, 2]"
   def to_s(format = T.unsafe(nil)); end
 
   # Converts the array to a comma-separated sentence where the last element is
@@ -9206,12 +9716,12 @@ class Array
   #
   # ==== Options
   #
-  # * <tt>:words_connector</tt> - The sign or word used to join the elements
-  #   in arrays with two or more elements (default: ", ").
-  # * <tt>:two_words_connector</tt> - The sign or word used to join the elements
-  #   in arrays with two elements (default: " and ").
+  # * <tt>:words_connector</tt> - The sign or word used to join all but the last
+  #   element in arrays with three or more elements (default: ", ").
   # * <tt>:last_word_connector</tt> - The sign or word used to join the last element
   #   in arrays with three or more elements (default: ", and ").
+  # * <tt>:two_words_connector</tt> - The sign or word used to join the elements
+  #   in arrays with two elements (default: " and ").
   # * <tt>:locale</tt> - If +i18n+ is available, you can set a locale and use
   #   the connector options defined on the 'support.array' namespace in the
   #   corresponding dictionary file.
@@ -9326,7 +9836,13 @@ class Array
   #   </messages>
   def to_xml(options = T.unsafe(nil)); end
 
-  # Alias for #excluding.
+  # Returns a copy of the Array excluding the specified elements.
+  #
+  #   ["David", "Rafael", "Aaron", "Todd"].excluding("Aaron", "Todd") # => ["David", "Rafael"]
+  #   [ [ 0, 1 ], [ 1, 0 ] ].excluding([ [ 1, 0 ] ]) # => [ [ 0, 1 ] ]
+  #
+  # Note: This is an optimization of <tt>Enumerable#excluding</tt> that uses <tt>Array#-</tt>
+  # instead of <tt>Array#reject</tt> for performance reasons.
   def without(*elements); end
 
   class << self
@@ -9369,8 +9885,12 @@ class Array
   end
 end
 
+Array::NOT_SET = T.let(T.unsafe(nil), Object)
+
 class BigDecimal < ::Numeric
   include ::ActiveSupport::BigDecimalWithDefaultFormat
+  include ::ActiveSupport::NumericWithFormat
+  include ::ActiveSupport::DeprecatedNumericWithFormat
 
   # A BigDecimal would be naturally represented as a JSON number. Most libraries,
   # however, parse non-integer JSON numbers directly as floats. Clients using
@@ -9382,6 +9902,8 @@ class BigDecimal < ::Numeric
   # BigDecimal, it still has the chance to post-process the string and get the
   # real value.
   def as_json(options = T.unsafe(nil)); end
+
+  def to_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
 end
 
 BigDecimal::EXCEPTION_NaN = T.let(T.unsafe(nil), Integer)
@@ -9595,21 +10117,21 @@ class Date
 
   # Convert to a formatted string. See DATE_FORMATS for predefined formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   #   date = Date.new(2007, 11, 10)       # => Sat, 10 Nov 2007
   #
+  #   date.to_fs(:db)                     # => "2007-11-10"
   #   date.to_formatted_s(:db)            # => "2007-11-10"
-  #   date.to_s(:db)                      # => "2007-11-10"
   #
-  #   date.to_formatted_s(:short)         # => "10 Nov"
-  #   date.to_formatted_s(:number)        # => "20071110"
-  #   date.to_formatted_s(:long)          # => "November 10, 2007"
-  #   date.to_formatted_s(:long_ordinal)  # => "November 10th, 2007"
-  #   date.to_formatted_s(:rfc822)        # => "10 Nov 2007"
-  #   date.to_formatted_s(:iso8601)       # => "2007-11-10"
+  #   date.to_fs(:short)         # => "10 Nov"
+  #   date.to_fs(:number)        # => "20071110"
+  #   date.to_fs(:long)          # => "November 10, 2007"
+  #   date.to_fs(:long_ordinal)  # => "November 10th, 2007"
+  #   date.to_fs(:rfc822)        # => "10 Nov 2007"
+  #   date.to_fs(:iso8601)       # => "2007-11-10"
   #
-  # == Adding your own date formats to to_formatted_s
+  # == Adding your own date formats to to_fs
   # You can add your own formats to the Date::DATE_FORMATS hash.
   # Use the format name as the hash key and either a strftime string
   # or Proc instance that takes a date argument as the value.
@@ -9621,21 +10143,21 @@ class Date
 
   # Convert to a formatted string. See DATE_FORMATS for predefined formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   #   date = Date.new(2007, 11, 10)       # => Sat, 10 Nov 2007
   #
+  #   date.to_fs(:db)                     # => "2007-11-10"
   #   date.to_formatted_s(:db)            # => "2007-11-10"
-  #   date.to_s(:db)                      # => "2007-11-10"
   #
-  #   date.to_formatted_s(:short)         # => "10 Nov"
-  #   date.to_formatted_s(:number)        # => "20071110"
-  #   date.to_formatted_s(:long)          # => "November 10, 2007"
-  #   date.to_formatted_s(:long_ordinal)  # => "November 10th, 2007"
-  #   date.to_formatted_s(:rfc822)        # => "10 Nov 2007"
-  #   date.to_formatted_s(:iso8601)       # => "2007-11-10"
+  #   date.to_fs(:short)         # => "10 Nov"
+  #   date.to_fs(:number)        # => "20071110"
+  #   date.to_fs(:long)          # => "November 10, 2007"
+  #   date.to_fs(:long_ordinal)  # => "November 10th, 2007"
+  #   date.to_fs(:rfc822)        # => "10 Nov 2007"
+  #   date.to_fs(:iso8601)       # => "2007-11-10"
   #
-  # == Adding your own date formats to to_formatted_s
+  # == Adding your own date formats to to_fs
   # You can add your own formats to the Date::DATE_FORMATS hash.
   # Use the format name as the hash key and either a strftime string
   # or Proc instance that takes a date argument as the value.
@@ -9643,6 +10165,8 @@ class Date
   #   # config/initializers/date_formats.rb
   #   Date::DATE_FORMATS[:month_and_year] = '%B %Y'
   #   Date::DATE_FORMATS[:short_ordinal] = ->(date) { date.strftime("%B #{date.day.ordinalize}") }
+  def to_fs(format = T.unsafe(nil)); end
+
   def to_s(format = T.unsafe(nil)); end
 
   # Converts a Date instance to a Time, where the time is set to the beginning of the day.
@@ -9705,6 +10229,7 @@ class Date
 end
 
 Date::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
+Date::NOT_SET = T.let(T.unsafe(nil), Object)
 module DateAndTime; end
 
 module DateAndTime::Calculations
@@ -10250,21 +10775,21 @@ class DateTime < ::Date
 
   # Convert to a formatted string. See Time::DATE_FORMATS for predefined formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   # === Examples
   #   datetime = DateTime.civil(2007, 12, 4, 0, 0, 0, 0)   # => Tue, 04 Dec 2007 00:00:00 +0000
   #
-  #   datetime.to_formatted_s(:db)            # => "2007-12-04 00:00:00"
-  #   datetime.to_s(:db)                      # => "2007-12-04 00:00:00"
-  #   datetime.to_s(:number)                  # => "20071204000000"
-  #   datetime.to_formatted_s(:short)         # => "04 Dec 00:00"
-  #   datetime.to_formatted_s(:long)          # => "December 04, 2007 00:00"
-  #   datetime.to_formatted_s(:long_ordinal)  # => "December 4th, 2007 00:00"
-  #   datetime.to_formatted_s(:rfc822)        # => "Tue, 04 Dec 2007 00:00:00 +0000"
-  #   datetime.to_formatted_s(:iso8601)       # => "2007-12-04T00:00:00+00:00"
+  #   datetime.to_fs(:db)            # => "2007-12-04 00:00:00"
+  #   datetime.to_formatted_s(:db)   # => "2007-12-04 00:00:00"
+  #   datetime.to_fs(:number)        # => "20071204000000"
+  #   datetime.to_fs(:short)         # => "04 Dec 00:00"
+  #   datetime.to_fs(:long)          # => "December 04, 2007 00:00"
+  #   datetime.to_fs(:long_ordinal)  # => "December 4th, 2007 00:00"
+  #   datetime.to_fs(:rfc822)        # => "Tue, 04 Dec 2007 00:00:00 +0000"
+  #   datetime.to_fs(:iso8601)       # => "2007-12-04T00:00:00+00:00"
   #
-  # == Adding your own datetime formats to to_formatted_s
+  # == Adding your own datetime formats to to_fs
   # DateTime formats are shared with Time. You can add your own to the
   # Time::DATE_FORMATS hash. Use the format name as the hash key and
   # either a strftime string or Proc instance that takes a time or
@@ -10275,26 +10800,23 @@ class DateTime < ::Date
   #   Time::DATE_FORMATS[:short_ordinal] = lambda { |time| time.strftime("%B #{time.day.ordinalize}") }
   def to_formatted_s(format = T.unsafe(nil)); end
 
-  # Converts +self+ to an integer number of seconds since the Unix epoch.
-  def to_i; end
-
   # Convert to a formatted string. See Time::DATE_FORMATS for predefined formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   # === Examples
   #   datetime = DateTime.civil(2007, 12, 4, 0, 0, 0, 0)   # => Tue, 04 Dec 2007 00:00:00 +0000
   #
-  #   datetime.to_formatted_s(:db)            # => "2007-12-04 00:00:00"
-  #   datetime.to_s(:db)                      # => "2007-12-04 00:00:00"
-  #   datetime.to_s(:number)                  # => "20071204000000"
-  #   datetime.to_formatted_s(:short)         # => "04 Dec 00:00"
-  #   datetime.to_formatted_s(:long)          # => "December 04, 2007 00:00"
-  #   datetime.to_formatted_s(:long_ordinal)  # => "December 4th, 2007 00:00"
-  #   datetime.to_formatted_s(:rfc822)        # => "Tue, 04 Dec 2007 00:00:00 +0000"
-  #   datetime.to_formatted_s(:iso8601)       # => "2007-12-04T00:00:00+00:00"
+  #   datetime.to_fs(:db)            # => "2007-12-04 00:00:00"
+  #   datetime.to_formatted_s(:db)   # => "2007-12-04 00:00:00"
+  #   datetime.to_fs(:number)        # => "20071204000000"
+  #   datetime.to_fs(:short)         # => "04 Dec 00:00"
+  #   datetime.to_fs(:long)          # => "December 04, 2007 00:00"
+  #   datetime.to_fs(:long_ordinal)  # => "December 4th, 2007 00:00"
+  #   datetime.to_fs(:rfc822)        # => "Tue, 04 Dec 2007 00:00:00 +0000"
+  #   datetime.to_fs(:iso8601)       # => "2007-12-04T00:00:00+00:00"
   #
-  # == Adding your own datetime formats to to_formatted_s
+  # == Adding your own datetime formats to to_fs
   # DateTime formats are shared with Time. You can add your own to the
   # Time::DATE_FORMATS hash. Use the format name as the hash key and
   # either a strftime string or Proc instance that takes a time or
@@ -10303,6 +10825,11 @@ class DateTime < ::Date
   #   # config/initializers/time_formats.rb
   #   Time::DATE_FORMATS[:month_and_year] = '%B %Y'
   #   Time::DATE_FORMATS[:short_ordinal] = lambda { |time| time.strftime("%B #{time.day.ordinalize}") }
+  def to_fs(format = T.unsafe(nil)); end
+
+  # Converts +self+ to an integer number of seconds since the Unix epoch.
+  def to_i; end
+
   def to_s(format = T.unsafe(nil)); end
 
   # Either return an instance of +Time+ with the same UTC offset
@@ -10350,24 +10877,33 @@ class DateTime < ::Date
   end
 end
 
+DateTime::NOT_SET = T.let(T.unsafe(nil), Object)
+
 module Digest::UUID
   class << self
+    def use_rfc4122_namespaced_uuids; end
+    def use_rfc4122_namespaced_uuids=(val); end
+
     # Generates a v5 non-random UUID (Universally Unique IDentifier).
     #
-    # Using Digest::MD5 generates version 3 UUIDs; Digest::SHA1 generates version 5 UUIDs.
+    # Using OpenSSL::Digest::MD5 generates version 3 UUIDs; OpenSSL::Digest::SHA1 generates version 5 UUIDs.
     # uuid_from_hash always generates the same UUID for a given name and namespace combination.
     #
     # See RFC 4122 for details of UUID at: https://www.ietf.org/rfc/rfc4122.txt
-    def uuid_from_hash(hash_class, uuid_namespace, name); end
+    def uuid_from_hash(hash_class, namespace, name); end
 
-    # Convenience method for uuid_from_hash using Digest::MD5.
+    # Convenience method for uuid_from_hash using OpenSSL::Digest::MD5.
     def uuid_v3(uuid_namespace, name); end
 
     # Convenience method for SecureRandom.uuid.
     def uuid_v4; end
 
-    # Convenience method for uuid_from_hash using Digest::SHA1.
+    # Convenience method for uuid_from_hash using OpenSSL::Digest::SHA1.
     def uuid_v5(uuid_namespace, name); end
+
+    private
+
+    def pack_uuid_namespace(namespace); end
   end
 end
 
@@ -10561,16 +11097,16 @@ module Enumerable
   # Returns a new +Array+ without the blank items.
   # Uses Object#blank? for determining if an item is blank.
   #
-  #    [1, "", nil, 2, " ", [], {}, false, true].compact_blank
-  #    # =>  [1, 2, true]
+  #   [1, "", nil, 2, " ", [], {}, false, true].compact_blank
+  #   # =>  [1, 2, true]
   #
-  #    Set.new([nil, "", 1, 2])
-  #    # => [2, 1] (or [1, 2])
+  #   Set.new([nil, "", 1, 2])
+  #   # => [2, 1] (or [1, 2])
   #
   # When called on a +Hash+, returns a new +Hash+ without the blank values.
   #
-  #    { a: "", b: 1, c: nil, d: [], e: false, f: true }.compact_blank
-  #    #=> { b: 1, f: true }
+  #   { a: "", b: 1, c: nil, d: [], e: false, f: true }.compact_blank
+  #   # => { b: 1, f: true }
   def compact_blank; end
 
   # The negative of the <tt>Enumerable#include?</tt>. Returns +true+ if the
@@ -10590,6 +11126,16 @@ module Enumerable
   #   {foo: 1, bar: 2, baz: 3}.excluding :bar
   #   # => {foo: 1, baz: 3}
   def excluding(*elements); end
+
+  # Returns a new +Array+ where the order has been set to that provided in the +series+, based on the +key+ of the
+  # objects in the original enumerable.
+  #
+  #   [ Person.find(5), Person.find(3), Person.find(1) ].in_order_of(:id, [ 1, 5, 3 ])
+  #   # => [ Person.find(1), Person.find(5), Person.find(3) ]
+  #
+  # If the +series+ include keys that have no corresponding element in the Enumerable, these are ignored.
+  # If the Enumerable has additional elements that aren't named in the +series+, these are not included in the result.
+  def in_order_of(key, series); end
 
   # Returns a new array that includes the passed elements.
   #
@@ -10633,6 +11179,18 @@ module Enumerable
   # @return [Boolean]
   def many?; end
 
+  # Calculates the maximum from the extracted elements.
+  #
+  #   payments = [Payment.new(5), Payment.new(15), Payment.new(10)]
+  #   payments.maximum(:price) # => 15
+  def maximum(key); end
+
+  # Calculates the minimum from the extracted elements.
+  #
+  #   payments = [Payment.new(5), Payment.new(15), Payment.new(10)]
+  #   payments.minimum(:price) # => 5
+  def minimum(key); end
+
   # Extract the given key from the first element in the enumerable.
   #
   #   [{ name: "David" }, { name: "Rafael" }, { name: "Aaron" }].pick(:name)
@@ -10651,6 +11209,14 @@ module Enumerable
   #   # => [[1, "David"], [2, "Rafael"]]
   def pluck(*keys); end
 
+  # Returns the sole item in the enumerable. If there are no items, or more
+  # than one item, raises +Enumerable::SoleItemExpectedError+.
+  #
+  #   ["x"].sole          # => "x"
+  #   Set.new.sole        # => Enumerable::SoleItemExpectedError: no item found
+  #   { a: 1, b: 2 }.sole # => Enumerable::SoleItemExpectedError: multiple items found
+  def sole; end
+
   # Calculates a sum from the elements.
   #
   #  payments.sum { |p| p.price * p.tax_rate }
@@ -10662,24 +11228,35 @@ module Enumerable
   #
   # It can also calculate the sum without the use of a block.
   #
-  #  [5, 15, 10].sum # => 30
-  #  ['foo', 'bar'].sum # => "foobar"
-  #  [[1, 2], [3, 1, 5]].sum # => [1, 2, 3, 1, 5]
+  #   [5, 15, 10].sum # => 30
+  #   ['foo', 'bar'].sum('') # => "foobar"
+  #   [[1, 2], [3, 1, 5]].sum([]) # => [1, 2, 3, 1, 5]
   #
   # The default sum of an empty list is zero. You can override this default:
   #
-  #  [].sum(Payment.new(0)) { |i| i.amount } # => Payment.new(0)
+  #   [].sum(Payment.new(0)) { |i| i.amount } # => Payment.new(0)
   def sum(identity = T.unsafe(nil), &block); end
 
-  # Alias for #excluding.
+  # Returns a copy of the enumerable excluding the specified elements.
+  #
+  #   ["David", "Rafael", "Aaron", "Todd"].excluding "Aaron", "Todd"
+  #   # => ["David", "Rafael"]
+  #
+  #   ["David", "Rafael", "Aaron", "Todd"].excluding %w[ Aaron Todd ]
+  #   # => ["David", "Rafael"]
+  #
+  #   {foo: 1, bar: 2, baz: 3}.excluding :bar
+  #   # => {foo: 1, baz: 3}
   def without(*elements); end
 end
 
 Enumerable::INDEX_WITH_DEFAULT = T.let(T.unsafe(nil), Object)
 
-class Exception
-  include ::ActiveSupport::Dependencies::Blamable
+# Error generated by +sole+ when called on an enumerable that doesn't have
+# exactly one item.
+class Enumerable::SoleItemExpectedError < ::StandardError; end
 
+class Exception
   def as_json(options = T.unsafe(nil)); end
 end
 
@@ -10700,11 +11277,15 @@ class FalseClass
 end
 
 class Float < ::Numeric
+  include ::ActiveSupport::NumericWithFormat
+  include ::ActiveSupport::DeprecatedNumericWithFormat
   include ::JSON::Ext::Generator::GeneratorMethods::Float
 
   # Encoding Infinity or NaN to JSON should return "null". The default returns
   # "Infinity" or "NaN" which are not valid JSON.
   def as_json(options = T.unsafe(nil)); end
+
+  def to_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
 end
 
 class Hash
@@ -10720,9 +11301,9 @@ class Hash
   # Removes all blank values from the +Hash+ in place and returns self.
   # Uses Object#blank? for determining if a value is blank.
   #
-  #    h = { a: "", b: 1, c: nil, d: [], e: false, f: true }
-  #    h.compact_blank!
-  #    # => { b: 1, f: true }
+  #   h = { a: "", b: 1, c: nil, d: [], e: false, f: true }
+  #   h.compact_blank!
+  #   # => { b: 1, f: true }
   def compact_blank!; end
 
   # Returns a deep copy of hash.
@@ -11180,6 +11761,8 @@ class IPAddr
 end
 
 class Integer < ::Numeric
+  include ::ActiveSupport::NumericWithFormat
+  include ::ActiveSupport::DeprecatedNumericWithFormat
   include ::JSON::Ext::Generator::GeneratorMethods::Integer
 
   # Returns a Duration instance matching the number of months provided.
@@ -11191,6 +11774,8 @@ class Integer < ::Numeric
   #
   #   2.months # => 2 months
   def months; end
+
+  def to_s(format = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns a Duration instance matching the number of years provided.
   #
@@ -11208,7 +11793,7 @@ module Kernel
 
   # Sets $VERBOSE to +true+ for the duration of the block and back to its
   # original value afterwards.
-  def enable_warnings; end
+  def enable_warnings(&block); end
 
   # Sets $VERBOSE to +nil+ for the duration of the block and back to its original
   # value afterwards.
@@ -11218,7 +11803,7 @@ module Kernel
   #   end
   #
   #   noisy_call # warning voiced
-  def silence_warnings; end
+  def silence_warnings(&block); end
 
   # Blocks and ignores any exception passed as argument if raised within the block.
   #
@@ -11237,7 +11822,9 @@ module Kernel
   class << self
     # Sets $VERBOSE to +true+ for the duration of the block and back to its
     # original value afterwards.
-    def enable_warnings; end
+    def enable_warnings(&block); end
+
+    def fork(*_arg0, &_arg1); end
 
     # Sets $VERBOSE to +nil+ for the duration of the block and back to its original
     # value afterwards.
@@ -11247,7 +11834,7 @@ module Kernel
     #   end
     #
     #   noisy_call # warning voiced
-    def silence_warnings; end
+    def silence_warnings(&block); end
 
     # Blocks and ignores any exception passed as argument if raised within the block.
     #
@@ -11288,14 +11875,18 @@ class Method
   def duplicable?; end
 end
 
+# == Attribute Accessors per Thread
+#
 # Extends the module object with class/module and instance accessors for
 # class/module attributes, just like the native attr* accessors for instance
 # attributes, but does so on a per-thread basis.
 #
 # So the values are scoped within the Thread.current space under the class name
 # of the module.
+#
+# Note that it can also be scoped per-fiber if Rails.application.config.active_support.isolation_level
+# is set to `:fiber`
 class Module
-  include ::ActiveSupport::Dependencies::ModuleConstMissing
   include ::Module::Concerning
 
   # Allows you to make aliases for attributes, which includes
@@ -11343,6 +11934,8 @@ class Module
   #
   # @return [Boolean]
   def anonymous?; end
+
+  def as_json(options = T.unsafe(nil)); end
 
   # Declares an attribute reader and writer backed by an internally-named instance
   # variable.
@@ -11968,16 +12561,18 @@ class Module
   #   Account.user     # => "DHH"
   #   Account.new.user # => "DHH"
   #
+  # Unlike `mattr_accessor`, values are *not* shared with subclasses or parent classes.
   # If a subclass changes the value, the parent class' value is not changed.
-  # Similarly, if the parent class changes the value, the value of subclasses
-  # is not changed.
+  # If the parent class changes the value, the value of subclasses is not changed.
   #
   #   class Customer < Account
   #   end
   #
-  #   Customer.user = "Rafael"
-  #   Customer.user # => "Rafael"
-  #   Account.user  # => "DHH"
+  #   Account.user   # => "DHH"
+  #   Customer.user  # => nil
+  #   Customer.user  = "Rafael"
+  #   Customer.user  # => "Rafael"
+  #   Account.user   # => "DHH"
   #
   # To omit the instance writer method, pass <tt>instance_writer: false</tt>.
   # To omit the instance reader method, pass <tt>instance_reader: false</tt>.
@@ -12006,9 +12601,9 @@ class Module
   #     thread_mattr_reader :user
   #   end
   #
-  #   Current.user # => nil
-  #   Thread.current[:attr_Current_user] = "DHH"
+  #   Current.user = "DHH"
   #   Current.user # => "DHH"
+  #   Thread.new { Current.user }.values # => nil
   #
   # The attribute name must be a valid method name in Ruby.
   #
@@ -12057,16 +12652,18 @@ class Module
   #   Account.user     # => "DHH"
   #   Account.new.user # => "DHH"
   #
+  # Unlike `mattr_accessor`, values are *not* shared with subclasses or parent classes.
   # If a subclass changes the value, the parent class' value is not changed.
-  # Similarly, if the parent class changes the value, the value of subclasses
-  # is not changed.
+  # If the parent class changes the value, the value of subclasses is not changed.
   #
   #   class Customer < Account
   #   end
   #
-  #   Customer.user = "Rafael"
-  #   Customer.user # => "Rafael"
-  #   Account.user  # => "DHH"
+  #   Account.user   # => "DHH"
+  #   Customer.user  # => nil
+  #   Customer.user  = "Rafael"
+  #   Customer.user  # => "Rafael"
+  #   Account.user   # => "DHH"
   #
   # To omit the instance writer method, pass <tt>instance_writer: false</tt>.
   # To omit the instance reader method, pass <tt>instance_reader: false</tt>.
@@ -12095,9 +12692,9 @@ class Module
   #     thread_mattr_reader :user
   #   end
   #
-  #   Current.user # => nil
-  #   Thread.current[:attr_Current_user] = "DHH"
+  #   Current.user = "DHH"
   #   Current.user # => "DHH"
+  #   Thread.new { Current.user }.values # => nil
   #
   # The attribute name must be a valid method name in Ruby.
   #
@@ -12344,12 +12941,12 @@ class NilClass
   #
   # With +try+
   #   @person.try(:children).try(:first).try(:name)
-  def try(_method_name = T.unsafe(nil), *_arg1); end
+  def try(*_arg0); end
 
   # Calling +try!+ on +nil+ always returns +nil+.
   #
   #   nil.try!(:name) # => nil
-  def try!(_method_name = T.unsafe(nil), *_arg1); end
+  def try!(*_arg0); end
 end
 
 class Numeric
@@ -12533,8 +13130,7 @@ Numeric::TERABYTE = T.let(T.unsafe(nil), Integer)
 # ++
 class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
+  include ::ActiveSupport::Dependencies::RequireDependency
   include ::Kernel
   include ::ActiveSupport::ForkTracker::CoreExt
   include ::ActiveSupport::ForkTracker::CoreExtPrivate
@@ -12542,13 +13138,35 @@ class Object < ::BasicObject
   include ::Minitest::Expectations
   include ::PP::ObjectMixin
   include ::ActiveSupport::Tryable
-  include ::ActiveSupport::Dependencies::Loadable
 
-  # A duck-type assistant method. For example, Active Support extends Date
-  # to define an <tt>acts_like_date?</tt> method, and extends Time to define
-  # <tt>acts_like_time?</tt>. As a result, we can do <tt>x.acts_like?(:time)</tt> and
-  # <tt>x.acts_like?(:date)</tt> to do duck-type-safe comparisons, since classes that
-  # we want to act like Time simply need to define an <tt>acts_like_time?</tt> method.
+  # Provides a way to check whether some class acts like some other class based on the existence of
+  # an appropriately-named marker method.
+  #
+  # A class that provides the same interface as <tt>SomeClass</tt> may define a marker method named
+  # <tt>acts_like_some_class?</tt> to signal its compatibility to callers of
+  # <tt>acts_like?(:some_class)</tt>.
+  #
+  # For example, Active Support extends <tt>Date</tt> to define an <tt>acts_like_date?</tt> method,
+  # and extends <tt>Time</tt> to define <tt>acts_like_time?</tt>. As a result, developers can call
+  # <tt>x.acts_like?(:time)</tt> and <tt>x.acts_like?(:date)</tt> to test duck-type compatibility,
+  # and classes that are able to act like <tt>Time</tt> can also define an <tt>acts_like_time?</tt>
+  # method to interoperate.
+  #
+  # Note that the marker method is only expected to exist. It isn't called, so its body or return
+  # value are irrelevant.
+  #
+  # ==== Example: A class that provides the same interface as <tt>String</tt>
+  #
+  # This class may define:
+  #
+  #   class Stringish
+  #     def acts_like_string?
+  #     end
+  #   end
+  #
+  # Then client code can query for duck-type-safeness this way:
+  #
+  #   Stringish.new.acts_like?(:string) # => true
   #
   # @return [Boolean]
   def acts_like?(duck); end
@@ -12737,11 +13355,31 @@ class Object < ::BasicObject
   #       validates :phone_number_type, inclusion: { in: Phone.phone_number_types.keys }
   #     end
   #   end
+  #
+  # When the block argument is omitted, the decorated Object instance is returned:
+  #
+  #   module MyStyledHelpers
+  #     def styled
+  #       with_options style: "color: red;"
+  #     end
+  #   end
+  #
+  #   # styled.link_to "I'm red", "/"
+  #   # #=> <a href="/" style="color: red;">I'm red</a>
+  #
+  #   # styled.button_tag "I'm red too!"
+  #   # #=> <button style="color: red;">I'm red too!</button>
   def with_options(options, &block); end
 end
 
 class Pathname
   def as_json(options = T.unsafe(nil)); end
+end
+
+module Process
+  class << self
+    def fork(*_arg0, &_arg1); end
+  end
 end
 
 class Process::Status
@@ -12750,12 +13388,15 @@ end
 
 class Range
   include ::ActiveSupport::RangeWithFormat
+  include ::ActiveSupport::DeprecatedRangeWithFormat
   include ::ActiveSupport::CompareWithRange
-  include ::ActiveSupport::IncludeTimeWithZone
   include ::ActiveSupport::EachTimeWithZone
   include ::Enumerable
 
+  def ===(value); end
   def as_json(options = T.unsafe(nil)); end
+  def each(&block); end
+  def include?(value); end
 
   # Compare two ranges and see if they overlap each other
   #  (1..5).overlaps?(4..6) # => true
@@ -12764,9 +13405,13 @@ class Range
   # @return [Boolean]
   def overlaps?(other); end
 
+  def step(n = T.unsafe(nil), &block); end
+
   # Optimize range sum to use arithmetic progression if a block is not given and
   # we have a range of numeric values.
   def sum(identity = T.unsafe(nil)); end
+
+  def to_s(format = T.unsafe(nil)); end
 end
 
 class Regexp
@@ -12817,6 +13462,19 @@ class Regexp::Token < ::Struct
     def new(*_arg0); end
   end
 end
+
+module Singleton
+  mixes_in_class_methods ::Singleton::SingletonClassMethods
+
+  # Singleton instances are not duplicable:
+  #
+  # Class.new.include(Singleton).instance.dup # TypeError (can't dup instance of singleton
+  #
+  # @return [Boolean]
+  def duplicable?; end
+end
+
+Singleton::VERSION = T.let(T.unsafe(nil), String)
 
 # String inflections define new methods on the String class to transform names for different purposes.
 # For instance, you can figure out the name of a table from the name of a class.
@@ -13019,7 +13677,7 @@ class String
   #   'author_id'.humanize                          # => "Author"
   #   'author_id'.humanize(capitalize: false)       # => "author"
   #   '_id'.humanize                                # => "Id"
-  #   'author_id'.humanize(keep_id_suffix: true)    # => "Author Id"
+  #   'author_id'.humanize(keep_id_suffix: true)    # => "Author id"
   #
   # See ActiveSupport::Inflector.humanize.
   def humanize(capitalize: T.unsafe(nil), keep_id_suffix: T.unsafe(nil)); end
@@ -13650,22 +14308,22 @@ class Time
 
   # Converts to a formatted string. See DATE_FORMATS for built-in formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   #   time = Time.now                    # => 2007-01-18 06:10:17 -06:00
   #
+  #   time.to_fs(:time)                  # => "06:10"
   #   time.to_formatted_s(:time)         # => "06:10"
-  #   time.to_s(:time)                   # => "06:10"
   #
-  #   time.to_formatted_s(:db)           # => "2007-01-18 06:10:17"
-  #   time.to_formatted_s(:number)       # => "20070118061017"
-  #   time.to_formatted_s(:short)        # => "18 Jan 06:10"
-  #   time.to_formatted_s(:long)         # => "January 18, 2007 06:10"
-  #   time.to_formatted_s(:long_ordinal) # => "January 18th, 2007 06:10"
-  #   time.to_formatted_s(:rfc822)       # => "Thu, 18 Jan 2007 06:10:17 -0600"
-  #   time.to_formatted_s(:iso8601)      # => "2007-01-18T06:10:17-06:00"
+  #   time.to_fs(:db)           # => "2007-01-18 06:10:17"
+  #   time.to_fs(:number)       # => "20070118061017"
+  #   time.to_fs(:short)        # => "18 Jan 06:10"
+  #   time.to_fs(:long)         # => "January 18, 2007 06:10"
+  #   time.to_fs(:long_ordinal) # => "January 18th, 2007 06:10"
+  #   time.to_fs(:rfc822)       # => "Thu, 18 Jan 2007 06:10:17 -0600"
+  #   time.to_fs(:iso8601)      # => "2007-01-18T06:10:17-06:00"
   #
-  # == Adding your own time formats to +to_formatted_s+
+  # == Adding your own time formats to +to_fs+
   # You can add your own formats to the Time::DATE_FORMATS hash.
   # Use the format name as the hash key and either a strftime string
   # or Proc instance that takes a time argument as the value.
@@ -13677,22 +14335,22 @@ class Time
 
   # Converts to a formatted string. See DATE_FORMATS for built-in formats.
   #
-  # This method is aliased to <tt>to_s</tt>.
+  # This method is aliased to <tt>to_formatted_s</tt>.
   #
   #   time = Time.now                    # => 2007-01-18 06:10:17 -06:00
   #
+  #   time.to_fs(:time)                  # => "06:10"
   #   time.to_formatted_s(:time)         # => "06:10"
-  #   time.to_s(:time)                   # => "06:10"
   #
-  #   time.to_formatted_s(:db)           # => "2007-01-18 06:10:17"
-  #   time.to_formatted_s(:number)       # => "20070118061017"
-  #   time.to_formatted_s(:short)        # => "18 Jan 06:10"
-  #   time.to_formatted_s(:long)         # => "January 18, 2007 06:10"
-  #   time.to_formatted_s(:long_ordinal) # => "January 18th, 2007 06:10"
-  #   time.to_formatted_s(:rfc822)       # => "Thu, 18 Jan 2007 06:10:17 -0600"
-  #   time.to_formatted_s(:iso8601)      # => "2007-01-18T06:10:17-06:00"
+  #   time.to_fs(:db)           # => "2007-01-18 06:10:17"
+  #   time.to_fs(:number)       # => "20070118061017"
+  #   time.to_fs(:short)        # => "18 Jan 06:10"
+  #   time.to_fs(:long)         # => "January 18, 2007 06:10"
+  #   time.to_fs(:long_ordinal) # => "January 18th, 2007 06:10"
+  #   time.to_fs(:rfc822)       # => "Thu, 18 Jan 2007 06:10:17 -0600"
+  #   time.to_fs(:iso8601)      # => "2007-01-18T06:10:17-06:00"
   #
-  # == Adding your own time formats to +to_formatted_s+
+  # == Adding your own time formats to +to_fs+
   # You can add your own formats to the Time::DATE_FORMATS hash.
   # Use the format name as the hash key and either a strftime string
   # or Proc instance that takes a time argument as the value.
@@ -13700,6 +14358,8 @@ class Time
   #   # config/initializers/time_formats.rb
   #   Time::DATE_FORMATS[:month_and_year] = '%B %Y'
   #   Time::DATE_FORMATS[:short_ordinal]  = ->(time) { time.strftime("%B #{time.day.ordinalize}") }
+  def to_fs(format = T.unsafe(nil)); end
+
   def to_s(format = T.unsafe(nil)); end
 
   # Either return +self+ or the time in the local system timezone depending
@@ -13712,11 +14372,11 @@ class Time
 
     # Layers additional behavior on Time.at so that ActiveSupport::TimeWithZone and DateTime
     # instances can be used when called with a single argument
-    def at(*args); end
+    def at(*args, **kwargs); end
 
     # Layers additional behavior on Time.at so that ActiveSupport::TimeWithZone and DateTime
     # instances can be used when called with a single argument
-    def at_with_coercion(*args); end
+    def at_with_coercion(*args, **kwargs); end
 
     # Returns <tt>Time.zone.now</tt> when <tt>Time.zone</tt> or <tt>config.time_zone</tt> are set, otherwise just returns <tt>Time.now</tt>.
     def current; end
@@ -13820,6 +14480,7 @@ end
 
 Time::COMMON_YEAR_DAYS_IN_MONTH = T.let(T.unsafe(nil), Array)
 Time::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
+Time::NOT_SET = T.let(T.unsafe(nil), Object)
 
 class TrueClass
   include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
@@ -13837,23 +14498,12 @@ class TrueClass
   def to_param; end
 end
 
-module URI
-  include ::URI::RFC2396_REGEXP
-
-  class << self
-    def parser; end
-  end
-end
-
 class URI::Generic
   include ::URI::RFC2396_REGEXP
   include ::URI
 
   def as_json(options = T.unsafe(nil)); end
 end
-
-URI::Parser = URI::RFC2396_Parser
-URI::REGEXP = URI::RFC2396_REGEXP
 
 class UnboundMethod
   include ::MethodSource::SourceLocation::UnboundMethodExtensions

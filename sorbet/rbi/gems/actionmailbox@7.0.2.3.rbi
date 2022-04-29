@@ -17,6 +17,8 @@ module ActionMailbox
   def logger=(val); end
   def queues; end
   def queues=(val); end
+  def storage_service; end
+  def storage_service=(val); end
 
   class << self
     def incinerate; end
@@ -32,6 +34,8 @@ module ActionMailbox
     def railtie_helpers_paths; end
     def railtie_namespace; end
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
+    def storage_service; end
+    def storage_service=(val); end
     def table_name_prefix; end
     def use_relative_model_naming?; end
   end
@@ -240,6 +244,7 @@ module ActionMailbox::InboundEmail::MessageId::ClassMethods
 
   private
 
+  def create_and_upload_raw_email!(source); end
   def extract_message_id(source); end
   def generate_missing_message_id(message_checksum); end
 end
@@ -694,6 +699,7 @@ Mail::RubyVer = Mail::Ruby19
 
 module Rails
   extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Benchmarkable
 
   class << self
     def app_class; end
@@ -707,6 +713,7 @@ module Rails
     def configuration; end
     def env; end
     def env=(environment); end
+    def error; end
     def gem_version; end
     def groups(*groups); end
     def initialize!(*_arg0, &_arg1); end

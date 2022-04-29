@@ -8,9 +8,56 @@ module ActiveRecord
   extend ::ActiveSupport::Autoload
 
   class << self
+    def action_on_strict_loading_violation; end
+    def action_on_strict_loading_violation=(_arg0); end
+    def application_record_class; end
+    def application_record_class=(_arg0); end
+    def async_query_executor; end
+    def async_query_executor=(_arg0); end
+    def default_timezone; end
+    def default_timezone=(default_timezone); end
+    def dump_schema_after_migration; end
+    def dump_schema_after_migration=(_arg0); end
+    def dump_schemas; end
+    def dump_schemas=(_arg0); end
     def eager_load!; end
+    def error_on_ignored_order; end
+    def error_on_ignored_order=(_arg0); end
     def gem_version; end
+    def global_executor_concurrency; end
+    def global_executor_concurrency=(global_executor_concurrency); end
+    def global_thread_pool_async_query_executor; end
+    def index_nested_attribute_errors; end
+    def index_nested_attribute_errors=(_arg0); end
+    def lazily_load_schema_cache; end
+    def lazily_load_schema_cache=(_arg0); end
+    def legacy_connection_handling; end
+    def legacy_connection_handling=(_arg0); end
+    def maintain_test_schema; end
+    def maintain_test_schema=(_arg0); end
+    def query_transformers; end
+    def query_transformers=(_arg0); end
+    def queues; end
+    def queues=(_arg0); end
+    def reading_role; end
+    def reading_role=(_arg0); end
+    def schema_cache_ignored_tables; end
+    def schema_cache_ignored_tables=(_arg0); end
+    def schema_format; end
+    def schema_format=(_arg0); end
+    def suppress_multiple_database_warning; end
+    def suppress_multiple_database_warning=(_arg0); end
+    def timestamped_migrations; end
+    def timestamped_migrations=(_arg0); end
+    def verbose_query_logs; end
+    def verbose_query_logs=(_arg0); end
+    def verify_foreign_keys_for_fixtures; end
+    def verify_foreign_keys_for_fixtures=(_arg0); end
     def version; end
+    def warn_on_records_fetched_greater_than; end
+    def warn_on_records_fetched_greater_than=(_arg0); end
+    def writing_role; end
+    def writing_role=(_arg0); end
   end
 end
 

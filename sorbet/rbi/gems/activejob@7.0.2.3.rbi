@@ -116,8 +116,8 @@ class ActiveJob::Base
   include ::ActiveSupport::Callbacks
   include ::ActiveJob::Callbacks
   include ::ActiveJob::Exceptions
-  include ::ActiveJob::Logging
   include ::ActiveJob::Instrumentation
+  include ::ActiveJob::Logging
   include ::ActiveJob::Timezones
   include ::ActiveJob::Translation
   include ::ActiveJob::TestHelper::TestQueueAdapter
@@ -186,10 +186,10 @@ class ActiveJob::Base
     def rescue_handlers?; end
     def retry_jitter; end
     def retry_jitter=(value); end
-    def return_false_on_aborted_enqueue(*args, &block); end
-    def return_false_on_aborted_enqueue=(*args, &block); end
-    def skip_after_callbacks_if_terminated; end
-    def skip_after_callbacks_if_terminated=(val); end
+    def return_false_on_aborted_enqueue; end
+    def return_false_on_aborted_enqueue=(value); end
+    def skip_after_callbacks_if_terminated(*args, &block); end
+    def skip_after_callbacks_if_terminated=(*args, &block); end
   end
 end
 
@@ -216,10 +216,6 @@ module ActiveJob::Callbacks
   mixes_in_class_methods ::ActiveSupport::Callbacks::ClassMethods
   mixes_in_class_methods ::ActiveSupport::DescendantsTracker
   mixes_in_class_methods ::ActiveJob::Callbacks::ClassMethods
-
-  private
-
-  def halted_callback_hook(_filter, name); end
 
   class << self
     def __callbacks; end
@@ -356,16 +352,14 @@ module ActiveJob::Callbacks::ClassMethods
   #     end
   #   end
   def before_perform(*filters, &blk); end
-
-  def inherited(klass); end
 end
 
 class ActiveJob::ConfiguredJob
   # @return [ConfiguredJob] a new instance of ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
-  def perform_later(*args); end
-  def perform_now(*args); end
+  def perform_later(*_arg0, &_arg1); end
+  def perform_now(*_arg0, &_arg1); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -412,6 +406,12 @@ module ActiveJob::Core
   #      end
   #    end
   def deserialize(job_data); end
+
+  # Track any exceptions raised by the backend so callers can inspect the errors.
+  def enqueue_error; end
+
+  # Track any exceptions raised by the backend so callers can inspect the errors.
+  def enqueue_error=(_arg0); end
 
   # Track when a job was enqueued
   def enqueued_at; end
@@ -476,6 +476,15 @@ module ActiveJob::Core
   # @param value the value to set the attribute serialized_arguments to.
   def serialized_arguments=(_arg0); end
 
+  # Configures the job with the given options.
+  def set(options = T.unsafe(nil)); end
+
+  # Track whether the adapter received the job successfully.
+  def successfully_enqueued=(_arg0); end
+
+  # @return [Boolean]
+  def successfully_enqueued?; end
+
   # Timezone to be used during the job.
   def timezone; end
 
@@ -528,7 +537,10 @@ class ActiveJob::DeserializationError < ::StandardError
   def initialize; end
 end
 
-# Provides behavior for enqueuing jobs.
+# Can be raised by adapters if they wish to communicate to the caller a reason
+# why the adapter was unexpectedly unable to enqueue a job.
+class ActiveJob::EnqueueError < ::StandardError; end
+
 module ActiveJob::Enqueuing
   extend ::ActiveSupport::Concern
 
@@ -557,13 +569,17 @@ module ActiveJob::Enqueuing::ClassMethods
   # Push a job onto the queue. By default the arguments must be either String,
   # Integer, Float, NilClass, TrueClass, FalseClass, BigDecimal, Symbol, Date,
   # Time, DateTime, ActiveSupport::TimeWithZone, ActiveSupport::Duration,
-  # Hash, ActiveSupport::HashWithIndifferentAccess, Array or
+  # Hash, ActiveSupport::HashWithIndifferentAccess, Array, Range or
   # GlobalID::Identification instances, although this can be extended by adding
   # custom serializers.
   #
   # Returns an instance of the job class queued with arguments available in
-  # Job#arguments.
-  def perform_later(*args); end
+  # Job#arguments or false if the enqueue did not succeed.
+  #
+  # After the attempted enqueue, the job will be yielded to an optional block.
+  #
+  # @yield [job]
+  def perform_later(*_arg0, &_arg1); end
 
   private
 
@@ -649,7 +665,8 @@ module ActiveJob::Exceptions::ClassMethods
   #   as a computing proc that takes the number of executions so far as an argument, or as a symbol reference of
   #   <tt>:exponentially_longer</tt>, which applies the wait algorithm of <tt>((executions**4) + (Kernel.rand * (executions**4) * jitter)) + 2</tt>
   #   (first wait ~3s, then ~18s, then ~83s, etc)
-  # * <tt>:attempts</tt> - Re-enqueues the job the specified number of times (default: 5 attempts)
+  # * <tt>:attempts</tt> - Re-enqueues the job the specified number of times (default: 5 attempts) or a symbol reference of <tt>:unlimited</tt>
+  #   to retry the job until it succeeds
   # * <tt>:queue</tt> - Re-enqueues the job on a different queue
   # * <tt>:priority</tt> - Re-enqueues the job with a different priority
   # * <tt>:jitter</tt> - A random delay of wait time used when calculating backoff. The default is 15% (0.15) which represents the upper bound of possible wait time (expressed as a percentage)
@@ -659,6 +676,7 @@ module ActiveJob::Exceptions::ClassMethods
   #  class RemoteServiceJob < ActiveJob::Base
   #    retry_on CustomAppException # defaults to ~3s wait, 5 attempts
   #    retry_on AnotherCustomAppException, wait: ->(executions) { executions * 2 }
+  #    retry_on CustomInfrastructureException, wait: 5.minutes, attempts: :unlimited
   #
   #    retry_on ActiveRecord::Deadlocked, wait: 5.seconds, attempts: 3
   #    retry_on Net::OpenTimeout, Timeout::Error, wait: :exponentially_longer, attempts: 10 # retries at most 10 times for Net::OpenTimeout and Timeout::Error combined
@@ -706,6 +724,10 @@ module ActiveJob::Execution
   #   puts MyJob.new(*args).perform_now # => "Hello World!"
   def perform_now; end
 
+  private
+
+  def _perform_job; end
+
   module GeneratedClassMethods
     def rescue_handlers; end
     def rescue_handlers=(value); end
@@ -726,14 +748,17 @@ module ActiveJob::Execution::ClassMethods
   # Performs the job immediately.
   #
   #   MyJob.perform_now("mike")
-  def perform_now(*args); end
+  def perform_now(*_arg0, &_arg1); end
 end
 
 module ActiveJob::Instrumentation
   extend ::ActiveSupport::Concern
 
+  def perform_now; end
+
   private
 
+  def _perform_job; end
   def halted_callback_hook(*_arg0); end
   def instrument(operation, payload = T.unsafe(nil), &block); end
 end
@@ -762,12 +787,14 @@ module ActiveJob::Logging
 
   mixes_in_class_methods GeneratedClassMethods
 
+  def perform_now; end
+
   private
 
   # @return [Boolean]
   def logger_tagged_by_active_job?; end
 
-  def tag_logger(*tags); end
+  def tag_logger(*tags, &block); end
 
   module GeneratedClassMethods
     def log_arguments; end
@@ -1300,8 +1327,8 @@ class ActiveJob::Railtie < ::Rails::Railtie; end
 # currently support String, Integer, Float, NilClass, TrueClass, FalseClass,
 # BigDecimal, Symbol, Date, Time, DateTime, ActiveSupport::TimeWithZone,
 # ActiveSupport::Duration, Hash, ActiveSupport::HashWithIndifferentAccess,
-# Array or GlobalID::Identification instances, although this can be extended
-# by adding custom serializers.
+# Array, Range or GlobalID::Identification instances, although this can be
+# extended by adding custom serializers.
 # Raised if you set the key for a Hash something else than a string or
 # a symbol. Also raised when trying to serialize an object which can't be
 # identified with a GlobalID - such as an unpersisted Active Record model.
@@ -1369,6 +1396,8 @@ end
 
 class ActiveJob::Serializers::ModuleSerializer < ::ActiveJob::Serializers::ObjectSerializer
   def deserialize(hash); end
+
+  # @raise [SerializationError]
   def serialize(constant); end
 
   private
@@ -1425,6 +1454,17 @@ class ActiveJob::Serializers::ObjectSerializer
     def serialize?(*_arg0, &_arg1); end
   end
 end
+
+class ActiveJob::Serializers::RangeSerializer < ::ActiveJob::Serializers::ObjectSerializer
+  def deserialize(hash); end
+  def serialize(range); end
+
+  private
+
+  def klass; end
+end
+
+ActiveJob::Serializers::RangeSerializer::KEYS = T.let(T.unsafe(nil), Array)
 
 class ActiveJob::Serializers::SymbolSerializer < ::ActiveJob::Serializers::ObjectSerializer
   def deserialize(argument); end
@@ -1509,7 +1549,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts the number of times a job is enqueued to a specific queue by passing +:queue+ option.
@@ -1567,7 +1607,7 @@ module ActiveJob::TestHelper
   #       MyJob.set(wait_until: Date.tomorrow.noon).perform_later
   #     end
   #   end
-  def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
+  def assert_enqueued_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil), &block); end
 
   # Asserts that no jobs have been enqueued.
   #
@@ -1601,7 +1641,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts that no jobs are enqueued to a specific queue by passing +:queue+ option
@@ -1654,7 +1694,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
   #
   # If the +:queue+ option is specified,
@@ -1815,7 +1855,7 @@ module ActiveJob::TestHelper
   #       MyJob.set(wait_until: Date.tomorrow.noon).perform_later
   #     end
   #   end
-  def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), &block); end
+  def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil), &block); end
 
   def before_setup; end
   def enqueued_jobs(*_arg0, &_arg1); end
@@ -1862,7 +1902,7 @@ module ActiveJob::TestHelper
   #     assert_performed_jobs 1
   #   end
   #
-  # +:only+ and +:except+ options accepts Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
   #
   # If the +:queue+ option is specified,
@@ -1909,7 +1949,7 @@ module ActiveJob::TestHelper
   def enqueued_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
   def filter_as_proc(filter); end
   def flush_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil)); end
-  def instantiate_job(payload); end
+  def instantiate_job(payload, skip_deserialize_arguments: T.unsafe(nil)); end
   def jobs_with(jobs, only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil)); end
   def performed_jobs_with(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), &block); end
   def prepare_args_for_assertion(args); end
@@ -1951,5 +1991,6 @@ end
 module ActiveJob::VERSION; end
 ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::TINY = T.let(T.unsafe(nil), Integer)

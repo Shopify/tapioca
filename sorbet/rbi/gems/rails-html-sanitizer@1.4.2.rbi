@@ -24,16 +24,17 @@ module ActionView::Helpers
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
   include ::ActionView::Helpers::AssetUrlHelper
-  include ::ActionView::Helpers::AtomFeedHelper
-  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::CaptureHelper
+  include ::ActionView::Helpers::OutputSafetyHelper
+  include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::AssetTagHelper
+  include ::ActionView::Helpers::AtomFeedHelper
+  include ::ActionView::Helpers::CacheHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
   include ::ActionView::Helpers::CsrfHelper
   include ::ActionView::Helpers::DateHelper
-  include ::ActionView::Helpers::OutputSafetyHelper
-  include ::ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::FormOptionsHelper
@@ -42,8 +43,6 @@ module ActionView::Helpers
   include ::ActionView::Helpers::RenderingHelper
   extend ::ActiveSupport::Autoload
   extend ::ActiveSupport::Concern
-  include ::ActionView::Helpers::TagHelper
-  include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::TextHelper
@@ -254,6 +253,7 @@ ActionView::TemplateError = ActionView::Template::Error
 
 module Rails
   extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Benchmarkable
 
   class << self
     def app_class; end
@@ -267,6 +267,7 @@ module Rails
     def configuration; end
     def env; end
     def env=(environment); end
+    def error; end
     def gem_version; end
     def groups(*groups); end
     def initialize!(*_arg0, &_arg1); end

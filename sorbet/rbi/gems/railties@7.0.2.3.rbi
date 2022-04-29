@@ -18,6 +18,7 @@ end
 
 module Rails
   extend ::ActiveSupport::Autoload
+  extend ::ActiveSupport::Benchmarkable
 
   class << self
     # Returns the value of attribute app_class.
@@ -60,6 +61,8 @@ module Rails
     #
     #   Rails.env = "staging" # => "staging"
     def env=(environment); end
+
+    def error; end
 
     # Returns the version of the currently loaded Rails as a <tt>Gem::Version</tt>
     def gem_version; end
@@ -150,34 +153,9 @@ end
 #   9)  Build the middleware stack and run to_prepare callbacks
 #   10) Run config.before_eager_load and eager_load! if eager_load is true
 #   11) Run config.after_initialize callbacks
-#
-# == Multiple Applications
-#
-# If you decide to define multiple applications, then the first application
-# that is initialized will be set to +Rails.application+, unless you override
-# it with a different application.
-#
-# To create a new application, you can instantiate a new instance of a class
-# that has already been created:
-#
-#   class Application < Rails::Application
-#   end
-#
-#   first_application  = Application.new
-#   second_application = Application.new(config: first_application.config)
-#
-# In the above example, the configuration from the first application was used
-# to initialize the second application. You can also use the +initialize_copy+
-# on one of the applications to create a copy of the application which shares
-# the configuration.
-#
-# If you decide to define Rake tasks, runners, or initializers in an
-# application other than +Rails.application+, then you must run them manually.
 class Rails::Application < ::Rails::Engine
   # @return [Application] a new instance of Application
   def initialize(initial_variable_values = T.unsafe(nil), &block); end
-
-  def asset_precompiled?(logical_path); end
 
   # Returns the value of attribute assets.
   def assets; end
@@ -187,8 +165,9 @@ class Rails::Application < ::Rails::Engine
   # @param value the value to set the attribute assets to.
   def assets=(_arg0); end
 
-  def assets_manifest; end
-  def assets_manifest=(_arg0); end
+  # Returns the value of attribute autoloaders.
+  def autoloaders; end
+
   def build_middleware_stack; end
   def config; end
 
@@ -350,8 +329,6 @@ class Rails::Application < ::Rails::Engine
   # +railties_order+.
   def migration_railties; end
 
-  def precompiled_assets(clear_cache = T.unsafe(nil)); end
-
   # If you try to define a set of Rake tasks on the instance, these will get
   # passed up to the Rake tasks defined on the application's class.
   def rake_tasks(&block); end
@@ -508,11 +485,6 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   #
   # @param value the value to set the attribute autoflush_log to.
   def autoflush_log=(_arg0); end
-
-  # Returns the value of attribute autoloader.
-  def autoloader; end
-
-  def autoloader=(autoloader); end
 
   # Returns the value of attribute beginning_of_week.
   def beginning_of_week; end
@@ -706,7 +678,10 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # tags and load the database.yml for the rake tasks.
   def load_database_yaml; end
 
-  # Loads default configurations. See {the result of the method for each version}[https://guides.rubyonrails.org/configuring.html#results-of-config-load-defaults].
+  # Loads default configuration values for a target version. This includes
+  # defaults for versions prior to the target version. See the
+  # {configuration guide}[https://guides.rubyonrails.org/configuring.html]
+  # for the default values associated with a particular version.
   def load_defaults(target_version); end
 
   # Returns the value of attribute loaded_config_version.
@@ -811,6 +786,14 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # @param value the value to set the attribute secret_key_base to.
   def secret_key_base=(_arg0); end
 
+  # Returns the value of attribute server_timing.
+  def server_timing; end
+
+  # Sets the attribute server_timing
+  #
+  # @param value the value to set the attribute server_timing to.
+  def server_timing=(_arg0); end
+
   # Returns the value of attribute session_options.
   def session_options; end
 
@@ -913,8 +896,15 @@ end
 Rails::Application::INITIAL_VARIABLES = T.let(T.unsafe(nil), Array)
 
 class Rails::Application::RoutesReloader
+  include ::ActiveSupport::Callbacks
+  extend ::ActiveSupport::Callbacks::ClassMethods
+  extend ::ActiveSupport::DescendantsTracker
+
   # @return [RoutesReloader] a new instance of RoutesReloader
   def initialize; end
+
+  def __callbacks; end
+  def __callbacks?; end
 
   # Returns the value of attribute eager_load.
   def eager_load; end
@@ -938,6 +928,7 @@ class Rails::Application::RoutesReloader
   # Returns the value of attribute route_sets.
   def route_sets; end
 
+  def run_after_load_paths=(_arg0); end
   def updated?(*_arg0, &_arg1); end
 
   private
@@ -946,7 +937,14 @@ class Rails::Application::RoutesReloader
   def finalize!; end
   def load_paths; end
   def revert; end
+  def run_after_load_paths; end
   def updater; end
+
+  class << self
+    def __callbacks; end
+    def __callbacks=(value); end
+    def __callbacks?; end
+  end
 end
 
 class Rails::ApplicationController < ::ActionController::Base
@@ -968,18 +966,32 @@ class Rails::ApplicationController < ::ActionController::Base
   end
 end
 
-module Rails::Autoloaders
-  extend ::Enumerable
+class Rails::Autoloaders
+  include ::Enumerable
 
+  # @return [Autoloaders] a new instance of Autoloaders
+  def initialize; end
+
+  # @yield [main]
+  def each; end
+
+  def log!; end
+  def logger=(logger); end
+
+  # Returns the value of attribute main.
+  def main; end
+
+  # Returns the value of attribute once.
+  def once; end
+
+  # @return [Boolean]
+  def zeitwerk_enabled?; end
+end
+
+module Rails::Autoloaders::Inflector
   class << self
-    def each; end
-    def log!; end
-    def logger=(logger); end
-    def main; end
-    def once; end
-
-    # @return [Boolean]
-    def zeitwerk_enabled?; end
+    def camelize(basename, _abspath); end
+    def inflect(overrides); end
   end
 end
 
@@ -996,14 +1008,11 @@ module Rails::Command
     # Command names must end with "_command.rb". This is required because Rails
     # looks in load paths and loads the command just before it's going to be used.
     #
-    #   find_by_namespace :webrat, :rails, :integration
+    #   find_by_namespace :webrat, :integration
     #
     # Will search for the following commands:
     #
-    #   "rails:webrat", "webrat:integration", "webrat"
-    #
-    # Notice that "rails:commands:webrat" could be loaded as well, what
-    # Rails looks for is the first and last parts of the namespace.
+    #   "webrat", "webrat:integration", "rails:webrat", "rails:webrat:integration"
     def find_by_namespace(namespace, command_name = T.unsafe(nil)); end
 
     def hidden_commands; end
@@ -1022,6 +1031,9 @@ module Rails::Command
     def commands; end
     def file_lookup_paths; end
     def lookup_paths; end
+
+    # @return [Boolean]
+    def rails_new_with_no_path?(args); end
   end
 end
 
@@ -1107,6 +1119,21 @@ class Rails::Command::Base < ::Thor
   end
 end
 
+class Rails::Command::Base::CorrectableError < ::Rails::Command::Base::Error
+  include ::DidYouMean::Correctable
+
+  # @return [CorrectableError] a new instance of CorrectableError
+  def initialize(message, key, options); end
+
+  def corrections; end
+
+  # Returns the value of attribute key.
+  def key; end
+
+  # Returns the value of attribute options.
+  def options; end
+end
+
 class Rails::Command::Base::Error < ::Thor::Error; end
 
 module Rails::Command::Behavior
@@ -1128,17 +1155,6 @@ module Rails::Command::Behavior::ClassMethods
 end
 
 Rails::Command::HELP_MAPPINGS = T.let(T.unsafe(nil), Array)
-
-module Rails::Command::Spellchecker
-  class << self
-    def suggest(word, from:); end
-
-    private
-
-    def levenshtein_distance(str1, str2); end
-  end
-end
-
 module Rails::Configuration; end
 
 class Rails::Configuration::Generators
@@ -1249,17 +1265,17 @@ class Rails::Configuration::MiddlewareStackProxy
   def initialize(operations = T.unsafe(nil), delete_operations = T.unsafe(nil)); end
 
   def +(other); end
-  def delete(*args, &block); end
-  def insert(*args, &block); end
-  def insert_after(*args, &block); end
-  def insert_before(*args, &block); end
+  def delete(*_arg0, &_arg1); end
+  def insert(*_arg0, &_arg1); end
+  def insert_after(*_arg0, &_arg1); end
+  def insert_before(*_arg0, &_arg1); end
   def merge_into(other); end
-  def move(*args, &block); end
-  def move_after(*args, &block); end
-  def move_before(*args, &block); end
-  def swap(*args, &block); end
-  def unshift(*args, &block); end
-  def use(*args, &block); end
+  def move(*_arg0, &_arg1); end
+  def move_after(*_arg0, &_arg1); end
+  def move_before(*_arg0, &_arg1); end
+  def swap(*_arg0, &_arg1); end
+  def unshift(*_arg0, &_arg1); end
+  def use(*_arg0, &_arg1); end
 
   protected
 
@@ -1294,7 +1310,7 @@ end
 # Then ensure that this file is loaded at the top of your <tt>config/application.rb</tt>
 # (or in your +Gemfile+) and it will automatically load models, controllers and helpers
 # inside +app+, load routes at <tt>config/routes.rb</tt>, load locales at
-# <tt>config/locales/*</tt>, and load tasks at <tt>lib/tasks/*</tt>.
+# <tt>config/locales/**/*</tt>, and load tasks at <tt>lib/tasks/**/*</tt>.
 #
 # == Configuration
 #
@@ -1879,8 +1895,7 @@ module Rails::Generators
     # Returns an array of generator namespaces that are hidden.
     # Generator namespaces may be hidden for a variety of reasons.
     # Some are aliased such as "rails:migration" and can be
-    # invoked with the shorter "migration", others are private to other generators
-    # such as "css:scaffold".
+    # invoked with the shorter "migration".
     def hidden_namespaces; end
 
     def hide_namespace(*namespaces); end
@@ -1961,6 +1976,7 @@ module Rails::Generators::Actions
   #   gem "technoweenie-restful-authentication", lib: "restful-authentication", source: "http://gems.github.com/"
   #   gem "rails", "3.0", git: "https://github.com/rails/rails"
   #   gem "RedCloth", ">= 4.1.0", "< 4.2.0"
+  #   gem "rspec", comment: "Put this comment above the gem declaration"
   def gem(*args); end
 
   # Wraps gem entries inside a group.
@@ -2086,12 +2102,18 @@ module Rails::Generators::Actions
   # similarly to say_status, this method respects the quiet? option given.
   def log(*args); end
 
+  def match_file(path, pattern); end
+
   # Returns optimized string with indentation
   def optimize_indentation(value, amount = T.unsafe(nil)); end
 
-  # Surround string with single quotes if there is no quotes.
-  # Otherwise fall back to double quotes
+  # Always returns value in double quotes.
   def quote(value); end
+
+  # Returns optimized string with indentation
+  def rebase_indentation(value, amount = T.unsafe(nil)); end
+
+  def route_namespace_pattern(namespace); end
 
   # Manage +Gemfile+ indentation for a DSL action block
   def with_indentation(&block); end
@@ -2196,9 +2218,12 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
 
   private
 
-  def add_gem_entry_filter; end
+  # CSS processors other than Tailwind require a node-based JavaScript environment. So overwrite the normal JS default
+  # if one such processor has been specified.
+  def adjusted_javascript_option; end
+
   def apply_rails_template; end
-  def assets_gemfile_entry; end
+  def asset_pipeline_gemfile_entry; end
   def build(meth, *args); end
   def builder; end
   def bundle_command(command, env = T.unsafe(nil)); end
@@ -2209,13 +2234,11 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def cable_gemfile_entry; end
   def comment_if(value); end
   def create_root; end
+  def css_gemfile_entry; end
   def database_gemfile_entry; end
 
   # @return [Boolean]
   def depend_on_bootsnap?; end
-
-  # @return [Boolean]
-  def depend_on_listen?; end
 
   # @return [Boolean]
   def depends_on_system_test?; end
@@ -2223,8 +2246,8 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def empty_directory_with_keep_file(destination, config = T.unsafe(nil)); end
   def exec_bundle_command(bundle_command, command, env); end
   def gemfile_entries; end
-  def gemfile_entry(name, *args); end
   def generate_bundler_binstub; end
+  def hotwire_gemfile_entry; end
 
   # @return [Boolean]
   def include_all_railties?; end
@@ -2236,14 +2259,17 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   # @return [Boolean]
   def keeps?; end
 
-  # @return [Boolean]
-  def os_supports_listen_out_of_the_box?; end
-
   def psych_gemfile_entry; end
   def rails_gemfile_entry; end
+
+  # @return [Boolean]
+  def rails_prerelease?; end
+
   def rails_version_specifier(gem_version = T.unsafe(nil)); end
   def run_bundle; end
-  def run_webpack; end
+  def run_css; end
+  def run_hotwire; end
+  def run_javascript; end
   def set_default_accessors!; end
 
   # @return [Boolean]
@@ -2259,17 +2285,17 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def skip_dev_gems?; end
 
   # @return [Boolean]
-  def spring_install?; end
+  def skip_sprockets?; end
 
   # @return [Boolean]
   def sqlite3?; end
 
-  def web_server_gemfile_entry; end
+  def target_rails_prerelease(self_command = T.unsafe(nil)); end
 
   # @return [Boolean]
-  def webpack_install?; end
+  def using_node?; end
 
-  def webpacker_gemfile_entry; end
+  def web_server_gemfile_entry; end
 
   class << self
     def add_shared_options_for(name); end
@@ -2281,12 +2307,10 @@ class Rails::Generators::AppBase::GemfileEntry < ::Struct
   # @return [GemfileEntry] a new instance of GemfileEntry
   def initialize(name, version, comment, options = T.unsafe(nil), commented_out = T.unsafe(nil)); end
 
-  # Returns the value of attribute version
-  #
-  # @return [Object] the current value of version
-  def version; end
+  def to_s; end
 
   class << self
+    def floats(name, comment = T.unsafe(nil)); end
     def github(name, github, branch = T.unsafe(nil), comment = T.unsafe(nil)); end
     def path(name, path, comment = T.unsafe(nil)); end
     def version(name, version, comment = T.unsafe(nil)); end
@@ -2633,6 +2657,12 @@ class Rails::Generators::GeneratedAttribute
     # @return [Boolean]
     def reference?(type); end
 
+    # @return [Boolean]
+    def valid_index_type?(index_type); end
+
+    # @return [Boolean]
+    def valid_type?(type); end
+
     private
 
     # parse possible attribute options like :limit for string/text/binary/integer, :precision/:scale for decimals or :polymorphic for references/belongs_to
@@ -2641,6 +2671,7 @@ class Rails::Generators::GeneratedAttribute
   end
 end
 
+Rails::Generators::GeneratedAttribute::DEFAULT_TYPES = T.let(T.unsafe(nil), Array)
 Rails::Generators::GeneratedAttribute::INDEX_OPTIONS = T.let(T.unsafe(nil), Array)
 Rails::Generators::GeneratedAttribute::UNIQ_INDEX_OPTIONS = T.let(T.unsafe(nil), Array)
 
@@ -2737,24 +2768,24 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def attributes_names; end
   def class_name; end
   def class_path; end
-  def edit_helper; end
+  def edit_helper(*_arg0, &_arg1); end
   def file_path; end
   def fixture_file_name; end
   def human_name; end
   def i18n_scope; end
-  def index_helper; end
+  def index_helper(type: T.unsafe(nil)); end
   def inside_template; end
 
   # @return [Boolean]
   def inside_template?; end
 
-  def model_resource_name(prefix: T.unsafe(nil)); end
+  def model_resource_name(base_name = T.unsafe(nil), prefix: T.unsafe(nil)); end
 
   # @return [Boolean]
   def mountable_engine?; end
 
   def namespaced_class_path; end
-  def new_helper; end
+  def new_helper(type: T.unsafe(nil)); end
 
   # Convert attributes array into GeneratedAttribute objects.
   def parse_attributes!; end
@@ -2770,7 +2801,7 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def redirect_resource_name; end
   def regular_class_path; end
   def route_url; end
-  def show_helper; end
+  def show_helper(arg = T.unsafe(nil), type: T.unsafe(nil)); end
 
   # FIXME: We are avoiding to use alias because a bug on thor that make
   # this method public and add it to the task list.
@@ -3017,7 +3048,7 @@ module Rails::Generators::Testing::Behaviour
   # Create a Rails::Generators::GeneratedAttribute by supplying the
   # attribute type and, optionally, the attribute name:
   #
-  #   create_generated_attribute(:string, 'name')
+  #   create_generated_attribute(:string, "name")
   def create_generated_attribute(attribute_type, name = T.unsafe(nil), index = T.unsafe(nil)); end
 
   # Instantiate the generator.
@@ -3210,7 +3241,7 @@ class Rails::MailersController < ::Rails::ApplicationController
   def find_preview; end
   def locale_query(locale); end
   def part_query(mime_type); end
-  def set_locale; end
+  def set_locale(&block); end
 
   # @return [Boolean]
   def show_previews?; end
@@ -3541,6 +3572,8 @@ class Rails::Railtie
   def each_registered_block(type, &block); end
 
   class << self
+    def <=>(other); end
+
     # @return [Boolean]
     def abstract_railtie?; end
 
@@ -3554,6 +3587,9 @@ class Rails::Railtie
     def console(&blk); end
     def generators(&blk); end
 
+    # @private
+    def inherited(subclass); end
+
     # Since Rails::Railtie cannot be instantiated, any methods that call
     # +instance+ are intended to be called only on subclasses of a Railtie.
     def instance; end
@@ -3563,6 +3599,13 @@ class Rails::Railtie
     def runner(&blk); end
     def server(&blk); end
     def subclasses; end
+
+    protected
+
+    def increment_load_index; end
+
+    # Returns the value of attribute load_index.
+    def load_index; end
 
     private
 
@@ -3813,6 +3856,7 @@ class Rails::TestUnit::Runner
     def default_test_exclude_glob; end
     def default_test_glob; end
     def extract_filters(argv); end
+    def list_tests(argv); end
 
     # @return [Boolean]
     def path_argument?(arg); end
@@ -3826,19 +3870,6 @@ class Rails::TestUnitRailtie < ::Rails::Railtie; end
 module Rails::VERSION; end
 Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
+Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)
 Rails::VERSION::TINY = T.let(T.unsafe(nil), Integer)
-
-class Rails::WelcomeController < ::Rails::ApplicationController
-  def index; end
-
-  private
-
-  def _layout(lookup_context, formats); end
-
-  class << self
-    def _layout; end
-    def _layout_conditions; end
-    def middleware_stack; end
-  end
-end

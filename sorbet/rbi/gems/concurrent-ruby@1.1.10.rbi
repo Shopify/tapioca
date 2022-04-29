@@ -76,11 +76,7 @@ module Concurrent
   # @raise [Transaction::LeaveError]
   def leave_transaction; end
 
-  # Returns the current time a tracked by the application monotonic clock.
-  #
-  # @return [Float] The current monotonic time since some unspecified
-  #   starting point
-  def monotonic_time; end
+  def monotonic_time(unit = T.unsafe(nil)); end
 
   class << self
     # Abort a currently running transaction - see `Concurrent::atomically`.
@@ -197,12 +193,7 @@ module Concurrent
     # @raise [Transaction::LeaveError]
     def leave_transaction; end
 
-    # Returns the current time a tracked by the application monotonic clock.
-    #
-    # @return [Float] The current monotonic time since some unspecified
-    #   starting point
-    def monotonic_time; end
-
+    def monotonic_time(unit = T.unsafe(nil)); end
     def new_fast_executor(opts = T.unsafe(nil)); end
     def new_io_executor(opts = T.unsafe(nil)); end
     def physical_processor_count; end
@@ -349,11 +340,12 @@ class Concurrent::AbstractExecutorService < ::Concurrent::Synchronization::Locka
 
   private
 
-  # Handler which executes the `fallback_policy` once the queue size
-  # reaches `max_queue`.
+  # Returns an action which executes the `fallback_policy` once the queue
+  # size reaches `max_queue`. The reason for the indirection of an action
+  # is so that the work can be deferred outside of synchronization.
   #
   # @param args [Array] the arguments to the task which is being handled.
-  def handle_fallback(*args); end
+  def fallback_action(*args); end
 
   # @return [Boolean]
   def ns_auto_terminate?; end
@@ -2974,7 +2966,7 @@ class Concurrent::Error < ::StandardError; end
 #   t1 = Thread.new do
 #   puts "t1 is waiting"
 #   event.wait(1)
-#   puts "event ocurred"
+#   puts "event occurred"
 #   end
 #
 #   t2 = Thread.new do
@@ -2985,8 +2977,8 @@ class Concurrent::Error < ::StandardError; end
 #   [t1, t2].each(&:join)
 #
 #   # prints:
-#   # t2 calling set
 #   # t1 is waiting
+#   # t2 calling set
 #   # event occurred
 # @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms682655.aspx
 class Concurrent::Event < ::Concurrent::Synchronization::LockableObject
@@ -3267,11 +3259,6 @@ Concurrent::GLOBAL_FAST_EXECUTOR = T.let(T.unsafe(nil), Concurrent::Delay)
 Concurrent::GLOBAL_IMMEDIATE_EXECUTOR = T.let(T.unsafe(nil), Concurrent::ImmediateExecutor)
 Concurrent::GLOBAL_IO_EXECUTOR = T.let(T.unsafe(nil), Concurrent::Delay)
 Concurrent::GLOBAL_LOGGER = T.let(T.unsafe(nil), Concurrent::AtomicReference)
-
-# Clock that cannot be set and represents monotonic time since
-# some unspecified starting point.
-Concurrent::GLOBAL_MONOTONIC_CLOCK = T.let(T.unsafe(nil), T.untyped)
-
 Concurrent::GLOBAL_TIMER_SET = T.let(T.unsafe(nil), Concurrent::Delay)
 
 # A thread-safe subclass of Hash. This version locks against the object
@@ -6947,12 +6934,23 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   # @return [Integer] The minimum number of threads that may be retained in the pool.
   def min_length; end
 
+  # Prune the thread pool of unneeded threads
+  #
+  # What is being pruned is controlled by the min_threads and idletime
+  # parameters passed at pool creation time
+  #
+  # This is a no-op on some pool implementation (e.g. the Java one).  The Ruby
+  # pool will auto-prune each time a new job is posted. You will need to call
+  # this method explicitely in case your application post jobs in bursts (a
+  # lot of jobs and then nothing for long periods)
+  def prune_pool; end
+
   # The number of tasks in the queue awaiting execution.
   #
   # @return [Integer] The number of tasks in the queue awaiting execution.
   def queue_length; end
 
-  def ready_worker(worker); end
+  def ready_worker(worker, last_message); end
 
   # Number of tasks that may be enqueued before reaching `max_queue` and rejecting
   # new tasks. A value of -1 indicates that the queue may grow without bound.
@@ -6974,7 +6972,6 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   def synchronous; end
 
   def worker_died(worker); end
-  def worker_not_old_enough(worker); end
   def worker_task_completed; end
 
   private
@@ -7008,7 +7005,7 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   def ns_prune_pool; end
 
   # handle ready worker, giving it new job or assigning back to @ready
-  def ns_ready_worker(worker, success = T.unsafe(nil)); end
+  def ns_ready_worker(worker, last_message, success = T.unsafe(nil)); end
 
   # removes a worker which is not in not tracked in @ready
   def ns_remove_busy_worker(worker); end
@@ -7016,9 +7013,6 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   def ns_reset_if_forked; end
   def ns_shutdown_execution; end
   def ns_worker_died(worker); end
-
-  # returns back worker to @ready which was not idle for enough time
-  def ns_worker_not_old_enough(worker); end
 end
 
 # Default maximum number of threads that will be created in the pool.
@@ -7110,29 +7104,42 @@ end
 # @example Basic usage
 #
 #   require 'concurrent'
-#   require 'thread'   # for Queue
-#   require 'open-uri' # for open(uri)
+#   require 'csv'
+#   require 'open-uri'
 #
 #   class Ticker
-#   def get_year_end_closing(symbol, year)
-#   uri = "http://ichart.finance.yahoo.com/table.csv?s=#{symbol}&a=11&b=01&c=#{year}&d=11&e=31&f=#{year}&g=m"
-#   data = open(uri) {|f| f.collect{|line| line.strip } }
-#   data[1].split(',')[4].to_f
+#   def get_year_end_closing(symbol, year, api_key)
+#   uri = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=#{symbol}&apikey=#{api_key}&datatype=csv"
+#   data = []
+#   csv = URI.parse(uri).read
+#   if csv.include?('call frequency')
+#   return :rate_limit_exceeded
+#   end
+#   CSV.parse(csv, headers: true) do |row|
+#   data << row['close'].to_f if row['timestamp'].include?(year.to_s)
+#   end
+#   year_end = data.first
+#   year_end
+#   rescue => e
+#   p e
 #   end
 #   end
+#
+#   api_key = ENV['ALPHAVANTAGE_KEY']
+#   abort(error_message) unless api_key
 #
 #   # Future
-#   price = Concurrent::Future.execute{ Ticker.new.get_year_end_closing('TWTR', 2013) }
+#   price = Concurrent::Future.execute{ Ticker.new.get_year_end_closing('TWTR', 2013, api_key) }
 #   price.state #=> :pending
-#   sleep(1)    # do other stuff
-#   price.value #=> 63.65
-#   price.state #=> :fulfilled
+#   price.pending? #=> true
+#   price.value(0) #=> nil (does not block)
 #
-#   # ScheduledTask
-#   task = Concurrent::ScheduledTask.execute(2){ Ticker.new.get_year_end_closing('INTC', 2013) }
-#   task.state #=> :pending
-#   sleep(3)   # do other stuff
-#   task.value #=> 25.96
+#   sleep(1)    # do other stuff
+#
+#   price.value #=> 63.65 (after blocking if necessary)
+#   price.state #=> :fulfilled
+#   price.fulfilled? #=> true
+#   price.value #=> 63.65
 # @example Successful task execution
 #
 #   task = Concurrent::ScheduledTask.new(2){ 'What does the fox say?' }
@@ -7289,6 +7296,8 @@ end
 # releasing a blocking acquirer.
 # However, no actual permit objects are used; the Semaphore just keeps a
 # count of the number available and acts accordingly.
+# Alternatively, permits may be acquired within a block, and automatically
+# released after the block finishes executing.
 #
 # @example
 #   semaphore = Concurrent::Semaphore.new(2)
@@ -7321,6 +7330,19 @@ end
 #   # Thread 2 acquired semaphore
 #   # Thread 4 releasing semaphore
 #   # Thread 1 acquired semaphore
+# @example
+#   semaphore = Concurrent::Semaphore.new(1)
+#
+#   puts semaphore.available_permits
+#   semaphore.acquire do
+#   puts semaphore.available_permits
+#   end
+#   puts semaphore.available_permits
+#
+#   # prints:
+#   # 1
+#   # 0
+#   # 1
 class Concurrent::Semaphore < ::Concurrent::MutexSemaphore; end
 
 Concurrent::SemaphoreImplementation = Concurrent::MutexSemaphore
@@ -8263,11 +8285,9 @@ class Concurrent::TVar < ::Concurrent::Synchronization::Object
   # @return [TVar] a new instance of TVar
   def initialize(value); end
 
-  def unsafe_increment_version; end
   def unsafe_lock; end
   def unsafe_value; end
   def unsafe_value=(value); end
-  def unsafe_version; end
 
   # Get the value of a `TVar`.
   def value; end
@@ -8533,9 +8553,7 @@ end
 # Should the task experience an unrecoverable crash only the task thread will
 # crash. This makes the `TimerTask` very fault tolerant. Additionally, the
 # `TimerTask` thread can respond to the success or failure of the task,
-# performing logging or ancillary operations. `TimerTask` can also be
-# configured with a timeout value allowing it to kill a task that runs too
-# long.
+# performing logging or ancillary operations.
 #
 # One other advantage of `TimerTask` is that it forces the business logic to
 # be completely decoupled from the concurrency logic. The business logic can
@@ -8556,28 +8574,24 @@ end
 # {http://ruby-doc.org/stdlib-2.0/libdoc/observer/rdoc/Observable.html
 # Observable} module. On execution the `TimerTask` will notify the observers
 # with three arguments: time of execution, the result of the block (or nil on
-# failure), and any raised exceptions (or nil on success). If the timeout
-# interval is exceeded the observer will receive a `Concurrent::TimeoutError`
-# object as the third argument.
+# failure), and any raised exceptions (or nil on success).
 #
 # @example Basic usage
 #   task = Concurrent::TimerTask.new{ puts 'Boom!' }
 #   task.execute
 #
 #   task.execution_interval #=> 60 (default)
-#   task.timeout_interval   #=> 30 (default)
 #
 #   # wait 60 seconds...
 #   #=> 'Boom!'
 #
 #   task.shutdown #=> true
-# @example Configuring `:execution_interval` and `:timeout_interval`
-#   task = Concurrent::TimerTask.new(execution_interval: 5, timeout_interval: 5) do
+# @example Configuring `:execution_interval`
+#   task = Concurrent::TimerTask.new(execution_interval: 5) do
 #   puts 'Boom!'
 #   end
 #
 #   task.execution_interval #=> 5
-#   task.timeout_interval   #=> 5
 # @example Immediate execution with `:run_now`
 #   task = Concurrent::TimerTask.new(run_now: true){ puts 'Boom!' }
 #   task.execute
@@ -8616,15 +8630,13 @@ end
 #   def update(time, result, ex)
 #   if result
 #   print "(#{time}) Execution successfully returned #{result}\n"
-#   elsif ex.is_a?(Concurrent::TimeoutError)
-#   print "(#{time}) Execution timed out\n"
 #   else
 #   print "(#{time}) Execution failed with error #{ex}\n"
 #   end
 #   end
 #   end
 #
-#   task = Concurrent::TimerTask.new(execution_interval: 1, timeout_interval: 1){ 42 }
+#   task = Concurrent::TimerTask.new(execution_interval: 1){ 42 }
 #   task.add_observer(TaskObserver.new)
 #   task.execute
 #   sleep 4
@@ -8634,7 +8646,7 @@ end
 #   #=> (2013-10-13 19:09:00 -0400) Execution successfully returned 42
 #   task.shutdown
 #
-#   task = Concurrent::TimerTask.new(execution_interval: 1, timeout_interval: 1){ sleep }
+#   task = Concurrent::TimerTask.new(execution_interval: 1){ sleep }
 #   task.add_observer(TaskObserver.new)
 #   task.execute
 #
@@ -8659,7 +8671,6 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
 
   # Create a new TimerTask with the given task and configuration.
   #
-  # @option opts
   # @option opts
   # @option opts
   # @param opts [Hash] the options defining task execution.
@@ -8714,7 +8725,6 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
   def ns_kill_execution; end
   def ns_shutdown_execution; end
   def schedule_next_task(interval = T.unsafe(nil)); end
-  def timeout_task(completion); end
 
   class << self
     # Create and execute a new `TimerTask`.
@@ -8722,7 +8732,6 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
     # @example
     #   task = Concurrent::TimerTask.execute(execution_interval: 10){ print "Hello World\n" }
     #   task.running? #=> true
-    # @option opts
     # @option opts
     # @option opts
     # @param opts [Hash] the options defining task execution.
@@ -8750,12 +8759,9 @@ class Concurrent::Transaction
 
   def abort; end
   def commit; end
+  def open(tvar); end
   def read(tvar); end
   def unlock; end
-
-  # @return [Boolean]
-  def valid?; end
-
   def write(tvar, value); end
 
   class << self
@@ -8768,28 +8774,28 @@ Concurrent::Transaction::ABORTED = T.let(T.unsafe(nil), Object)
 class Concurrent::Transaction::AbortError < ::StandardError; end
 class Concurrent::Transaction::LeaveError < ::StandardError; end
 
-class Concurrent::Transaction::ReadLogEntry < ::Struct
-  # Returns the value of attribute tvar
+class Concurrent::Transaction::OpenEntry < ::Struct
+  # Returns the value of attribute modified
   #
-  # @return [Object] the current value of tvar
-  def tvar; end
+  # @return [Object] the current value of modified
+  def modified; end
 
-  # Sets the attribute tvar
+  # Sets the attribute modified
   #
-  # @param value [Object] the value to set the attribute tvar to.
+  # @param value [Object] the value to set the attribute modified to.
   # @return [Object] the newly set value
-  def tvar=(_); end
+  def modified=(_); end
 
-  # Returns the value of attribute version
+  # Returns the value of attribute value
   #
-  # @return [Object] the current value of version
-  def version; end
+  # @return [Object] the current value of value
+  def value; end
 
-  # Sets the attribute version
+  # Sets the attribute value
   #
-  # @param value [Object] the value to set the attribute version to.
+  # @param value [Object] the value to set the attribute value to.
   # @return [Object] the newly set value
-  def version=(_); end
+  def value=(_); end
 
   class << self
     def [](*_arg0); end

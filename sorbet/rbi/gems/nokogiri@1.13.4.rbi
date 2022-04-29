@@ -2791,6 +2791,10 @@ class Nokogiri::XML::Node
   def external_subset; end
   def first_element_child; end
 
+  # Create a DocumentFragment containing +tags+ that is relative to _this_
+  # context node.
+  def fragment(tags); end
+
   # Returns true if this is a DocumentFragment
   #
   # @return [Boolean]
@@ -2833,6 +2837,9 @@ class Nokogiri::XML::Node
   #
   # @return [Boolean]
   def html?; end
+
+  # Get the inner_html for this node's Node#children
+  def inner_html(options = T.unsafe(nil)); end
 
   # Set the inner html for this Node to +node_or_tags+
   # +node_or_tags+ can be a Nokogiri::XML::Node, a Nokogiri::XML::DocumentFragment, or a string containing markup.
@@ -3321,6 +3328,25 @@ class Nokogiri::XML::Node
   # See Node#write_to for a list of +options+
   def write_html_to(io, options = T.unsafe(nil)); end
 
+  # Write Node to +io+ with +options+. +options+ modify the output of
+  # this method.  Valid options are:
+  #
+  # * +:encoding+ for changing the encoding
+  # * +:indent_text+ the indentation text, defaults to one space
+  # * +:indent+ the number of +:indent_text+ to use, defaults to 2
+  # * +:save_with+ a combination of SaveOptions constants.
+  #
+  # To save with UTF-8 indented twice:
+  #
+  #   node.write_to(io, :encoding => 'UTF-8', :indent => 2)
+  #
+  # To save indented with two dashes:
+  #
+  #   node.write_to(io, :indent_text => '-', :indent => 2)
+  #
+  # @yield [config]
+  def write_to(io, *options); end
+
   # Write Node as XHTML to +io+ with +options+
   #
   # See Node#write_to for a list of +options+
@@ -3346,6 +3372,7 @@ class Nokogiri::XML::Node
   private
 
   def add_child_node(_arg0); end
+  def add_child_node_and_reparent_attrs(node); end
   def add_next_sibling_node(_arg0); end
   def add_previous_sibling_node(_arg0); end
   def add_sibling(next_or_previous, node_or_tags); end
