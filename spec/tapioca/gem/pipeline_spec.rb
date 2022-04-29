@@ -50,6 +50,19 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       tree.string
     end
 
+    before do
+      # We need to undefine and unload `ActiveSupport` so that the test object
+      # space is as clean as possible.
+      #
+      # This is inside a `before` block instead of a `before(:all)` block because
+      # it looks like `before(:all)` blocks run in the parent process, but we don't
+      # want to mess with the object space of the parent process.
+      if defined?(::ActiveSupport)
+        Object.send(:remove_const, :ActiveSupport)
+        $LOADED_FEATURES.delete_if { |path| path.include?("active_support") }
+      end
+    end
+
     it "compiles DelegateClass" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
@@ -466,6 +479,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           def to_foo(base = T.unsafe(nil)); end
         end
+
+        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
+        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
       assert_equal(output, compile)
@@ -1997,6 +2013,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
     it "adds mixes_in_class_methods(ClassMethods) to modules that extend from ActiveSupport::Concern" do
       add_ruby_file("validations.rb", <<~RUBY)
+        require "active_support"
         require "active_support/concern"
 
         module Validations
@@ -2017,6 +2034,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       add_ruby_file("super_validations.rb", <<~RUBY)
+        require "active_support"
         require "active_support/concern"
 
         module SuperValidations
@@ -2151,7 +2169,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "properly treats Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances" do
+    it "properly treats post-Rails 6.1 ActiveSupport::Deprecation::DeprecatedConstantProxy instances" do
       add_ruby_file("active_support/deprecation/deprecation_proxy.rb", <<~RUBY)
         module ActiveSupport
           class Deprecation
