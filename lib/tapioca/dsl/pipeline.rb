@@ -152,6 +152,9 @@ module Tapioca
 
           compiler = compiler_class.new(self, file.root, constant)
           compiler.decorate
+        rescue
+          $stderr.puts("Error: `#{compiler_class.name}` failed to generate RBI for `#{constant}`")
+          raise # This is an unexpected error, so re-raise it
         end
 
         return if file.root.empty?

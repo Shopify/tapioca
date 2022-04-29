@@ -1148,6 +1148,42 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/dsl/job.rbi")
           assert_project_file_exist("sorbet/rbi/dsl/image.rbi")
         end
+
+        it "shows a helpful error message when unexpected errors occur" do
+          @project.write("lib/post.rb", <<~RB)
+            class Post
+            end
+          RB
+
+          @project.write("lib/compilers/post_compiler_that_raises.rb", <<~RB)
+            require "post"
+
+            class PostCompilerThatRaises < Tapioca::Dsl::Compiler
+              def decorate
+                raise "Some unexpected error happened"
+              end
+
+              def self.gather_constants
+                [::Post]
+              end
+            end
+          RB
+
+          result = @project.tapioca("dsl")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+          OUT
+
+          assert_includes(result.err, "Error: `PostCompilerThatRaises` failed to generate RBI for `Post`")
+          assert_includes(result.err, "Some unexpected error happened")
+
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          refute_success_status(result)
+        end
       end
 
       describe "verify" do
