@@ -248,7 +248,7 @@ module Tapioca
                   RUBY
 
                   add_ruby_file("user.rb", <<~RUBY)
-                    class User
+                    class User < ActiveRecord::Base
                     end
                   RUBY
 
@@ -308,7 +308,7 @@ module Tapioca
                   RUBY
 
                   add_ruby_file("comment.rb", <<~RUBY)
-                    class Comment
+                    class Comment < ActiveRecord::Base
                     end
                   RUBY
 
@@ -936,7 +936,7 @@ module Tapioca
                   RUBY
 
                   add_ruby_file("user.rb", <<~RUBY)
-                    class User
+                    class User < ActiveRecord::Base
                     end
                   RUBY
 
@@ -996,7 +996,7 @@ module Tapioca
                   RUBY
 
                   add_ruby_file("comment.rb", <<~RUBY)
-                    class Comment
+                    class Comment < ActiveRecord::Base
                     end
                   RUBY
 
@@ -1447,6 +1447,7 @@ module Tapioca
                 class Dummy < Rails::Application
                   config.eager_load = true
                   config.active_storage.service = :local
+                  config.active_record.legacy_connection_handling = false
                   config.active_storage.service_configurations = {
                     local: {
                       service: "Disk",
