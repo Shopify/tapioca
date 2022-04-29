@@ -2091,8 +2091,17 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).void }
   def create_path(constant, &block); end
 
-  sig { params(name: ::String, value: ::String).void }
-  def create_type_member(name, value: T.unsafe(nil)); end
+  sig do
+    params(
+      name: ::String,
+      type: ::String,
+      variance: ::Symbol,
+      fixed: T.nilable(::String),
+      upper: T.nilable(::String),
+      lower: T.nilable(::String)
+    ).void
+  end
+  def create_type_variable(name, type:, variance: T.unsafe(nil), fixed: T.unsafe(nil), upper: T.unsafe(nil), lower: T.unsafe(nil)); end
 
   sig { params(annotation: ::String).void }
   def deannotate!(annotation); end

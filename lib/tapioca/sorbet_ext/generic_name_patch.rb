@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/sorbet_ext/name_patch"
+require "tapioca/helpers/sorbet_helper"
 
 module T
   module Generic
@@ -20,31 +21,47 @@ module T
         Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
       end
 
-      def type_member(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
+      def type_member(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
+        hash = if blk
+          blk.call
+        else
+          {
+            fixed: fixed,
+            lower: lower,
+            upper: upper,
+          }
+        end
+
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Member,
           variance,
-          fixed,
-          lower,
-          upper
+          **hash,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
 
-      def type_template(variance = :invariant, fixed: nil, lower: T.untyped, upper: BasicObject)
+      def type_template(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
+        hash = if blk
+          blk.call
+        else
+          {
+            fixed: fixed,
+            lower: lower,
+            upper: upper,
+          }
+        end
+
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Template,
           variance,
-          fixed,
-          lower,
-          upper
+          **hash,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
@@ -122,7 +139,7 @@ module Tapioca
     sig do
       params(context: Module, type: Type, variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void
     end
-    def initialize(context, type, variance, fixed, lower, upper) # rubocop:disable Metrics/ParameterLists
+    def initialize(context, type, variance, fixed: nil, lower: nil, upper: nil)
       @context = context
       @type = type
       @variance = variance
@@ -153,17 +170,17 @@ module Tapioca
 
     sig { returns(String) }
     def serialize
-      parts = []
-      parts << ":#{@variance}" unless @variance == :invariant
-      parts << "fixed: #{@fixed}" if @fixed
-      parts << "lower: #{@lower}" unless @lower == T.untyped
-      parts << "upper: #{@upper}" unless @upper == BasicObject
+      fixed = @fixed.to_s if @fixed
+      upper = @upper.to_s if @upper
+      lower = @lower.to_s if @lower
 
-      parameters = parts.join(", ")
-
-      serialized = @type.serialize.dup
-      serialized << "(#{parameters})" unless parameters.empty?
-      serialized
+      TypeVariableHelper.serialize_type_variable(
+        @type.serialize,
+        @variance,
+        fixed,
+        upper,
+        lower
+      )
     end
 
     sig { returns(Tapioca::TypeVariable) }

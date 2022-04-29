@@ -38,7 +38,7 @@ module Tapioca
       class ActiveRecordFixtures < Compiler
         extend T::Sig
 
-        ConstantType = type_member(fixed: T.class_of(ActiveSupport::TestCase))
+        ConstantType = type_member { { fixed: T.class_of(ActiveSupport::TestCase) } }
 
         sig { override.void }
         def decorate

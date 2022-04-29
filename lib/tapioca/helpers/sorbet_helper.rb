@@ -21,8 +21,8 @@ module Tapioca
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
     FEATURE_REQUIREMENTS = T.let({
-      # First tag that includes https://github.com/sorbet/sorbet/pull/4706
-      to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),
+      to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),         # https://github.com/sorbet/sorbet/pull/4706
+      type_variable_block_syntax: ::Gem::Requirement.new(">= 0.5.9892"), # https://github.com/sorbet/sorbet/pull/5639
     }.freeze, T::Hash[Symbol, ::Gem::Requirement])
 
     class CmdResult < T::Struct
