@@ -942,7 +942,7 @@ class ActionMailer::Base < ::AbstractController::Base
 
     private
 
-    def method_missing(method_name, *args); end
+    def method_missing(method_name, *args, **_arg2); end
     def observer_class_for(value); end
 
     # @return [Boolean]
@@ -955,8 +955,8 @@ end
 module ActionMailer::Base::HelperMethods
   include ::ActionMailer::MailHelper
 
-  def combined_fragment_cache_key(*args, &block); end
-  def view_cache_dependencies(*args, &block); end
+  def combined_fragment_cache_key(*args, **_arg1, &block); end
+  def view_cache_dependencies(*args, **_arg1, &block); end
 end
 
 class ActionMailer::Base::LateAttachmentsProxy < ::SimpleDelegator
@@ -1062,7 +1062,7 @@ module ActionMailer::DeliveryMethods::ClassMethods
   #     arguments: '-i'
   def add_delivery_method(symbol, klass, default_options = T.unsafe(nil)); end
 
-  def deliveries(*_arg0, &_arg1); end
+  def deliveries(*_arg0, **_arg1, &_arg2); end
   def deliveries=(arg); end
   def wrap_delivery_behavior(mail, method = T.unsafe(nil), options = T.unsafe(nil)); end
 end
@@ -1185,7 +1185,7 @@ end
 #   Notifier.welcome(User.first).message       # a Mail::Message object
 class ActionMailer::MessageDelivery
   # @return [MessageDelivery] a new instance of MessageDelivery
-  def initialize(mailer_class, action, *args); end
+  def initialize(mailer_class, action, *args, **_arg3); end
 
   # Method calls are delegated to the Mail::Message that's ready to deliver.
   def __getobj__; end
@@ -1380,7 +1380,7 @@ class ActionMailer::Parameterized::Mailer
 
   private
 
-  def method_missing(method_name, *args); end
+  def method_missing(method_name, *args, **_arg2); end
 
   # @return [Boolean]
   def respond_to_missing?(method, include_all = T.unsafe(nil)); end
@@ -1388,7 +1388,7 @@ end
 
 class ActionMailer::Parameterized::MessageDelivery < ::ActionMailer::MessageDelivery
   # @return [MessageDelivery] a new instance of MessageDelivery
-  def initialize(mailer_class, action, params, *args); end
+  def initialize(mailer_class, action, params, *args, **_arg4); end
 
   private
 

@@ -142,7 +142,7 @@ class ActiveJob::Base
   def _run_perform_callbacks(&block); end
   def logger; end
   def logger=(val); end
-  def queue_adapter(*_arg0, &_arg1); end
+  def queue_adapter(*_arg0, **_arg1, &_arg2); end
   def queue_name_prefix; end
   def queue_name_prefix=(_arg0); end
   def queue_name_prefix?; end
@@ -188,8 +188,8 @@ class ActiveJob::Base
     def retry_jitter=(value); end
     def return_false_on_aborted_enqueue; end
     def return_false_on_aborted_enqueue=(value); end
-    def skip_after_callbacks_if_terminated(*args, &block); end
-    def skip_after_callbacks_if_terminated=(*args, &block); end
+    def skip_after_callbacks_if_terminated(*args, **_arg1, &block); end
+    def skip_after_callbacks_if_terminated=(*args, **_arg1, &block); end
   end
 end
 
@@ -358,8 +358,8 @@ class ActiveJob::ConfiguredJob
   # @return [ConfiguredJob] a new instance of ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
-  def perform_later(*_arg0, &_arg1); end
-  def perform_now(*_arg0, &_arg1); end
+  def perform_later(*_arg0, **_arg1, &_arg2); end
+  def perform_now(*_arg0, **_arg1, &_arg2); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -371,7 +371,7 @@ module ActiveJob::Core
 
   # Creates a new job instance. Takes the arguments that will be
   # passed to the perform method.
-  def initialize(*arguments); end
+  def initialize(*arguments, **_arg1); end
 
   # Job arguments
   def arguments; end
@@ -566,24 +566,11 @@ end
 
 # Includes the +perform_later+ method for job initialization.
 module ActiveJob::Enqueuing::ClassMethods
-  # Push a job onto the queue. By default the arguments must be either String,
-  # Integer, Float, NilClass, TrueClass, FalseClass, BigDecimal, Symbol, Date,
-  # Time, DateTime, ActiveSupport::TimeWithZone, ActiveSupport::Duration,
-  # Hash, ActiveSupport::HashWithIndifferentAccess, Array, Range or
-  # GlobalID::Identification instances, although this can be extended by adding
-  # custom serializers.
-  #
-  # Returns an instance of the job class queued with arguments available in
-  # Job#arguments or false if the enqueue did not succeed.
-  #
-  # After the attempted enqueue, the job will be yielded to an optional block.
-  #
-  # @yield [job]
-  def perform_later(*_arg0, &_arg1); end
+  def perform_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
-  def job_or_instantiate(*args); end
+  def job_or_instantiate(*args, **_arg1); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -744,11 +731,7 @@ end
 # Includes methods for executing and performing jobs instantly.
 module ActiveJob::Execution::ClassMethods
   def execute(job_data); end
-
-  # Performs the job immediately.
-  #
-  #   MyJob.perform_now("mike")
-  def perform_now(*_arg0, &_arg1); end
+  def perform_now(*_arg0, **_arg1, &_arg2); end
 end
 
 module ActiveJob::Instrumentation
@@ -1449,9 +1432,9 @@ class ActiveJob::Serializers::ObjectSerializer
   def klass; end
 
   class << self
-    def deserialize(*_arg0, &_arg1); end
-    def serialize(*_arg0, &_arg1); end
-    def serialize?(*_arg0, &_arg1); end
+    def deserialize(*_arg0, **_arg1, &_arg2); end
+    def serialize(*_arg0, **_arg1, &_arg2); end
+    def serialize?(*_arg0, **_arg1, &_arg2); end
   end
 end
 
@@ -1858,7 +1841,7 @@ module ActiveJob::TestHelper
   def assert_performed_with(job: T.unsafe(nil), args: T.unsafe(nil), at: T.unsafe(nil), queue: T.unsafe(nil), priority: T.unsafe(nil), &block); end
 
   def before_setup; end
-  def enqueued_jobs(*_arg0, &_arg1); end
+  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
   def enqueued_jobs=(arg); end
 
   # Performs all enqueued jobs. If a block is given, performs all of the jobs
@@ -1920,7 +1903,7 @@ module ActiveJob::TestHelper
   # immediately or before the given time
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
-  def performed_jobs(*_arg0, &_arg1); end
+  def performed_jobs(*_arg0, **_arg1, &_arg2); end
   def performed_jobs=(arg); end
 
   # Accesses the queue_adapter set by ActiveJob::Base.

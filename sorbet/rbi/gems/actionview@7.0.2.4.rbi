@@ -37,13 +37,13 @@ class ActionView::AbstractRenderer
   # @return [AbstractRenderer] a new instance of AbstractRenderer
   def initialize(lookup_context); end
 
-  def any_templates?(*_arg0, &_arg1); end
-  def formats(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
+  def formats(*_arg0, **_arg1, &_arg2); end
 
   # @raise [NotImplementedError]
   def render; end
 
-  def template_exists?(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -315,10 +315,10 @@ class ActionView::Base
   def default_formats=(val); end
   def field_error_proc; end
   def field_error_proc=(val); end
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
   def formats=(arg); end
   def in_rendering_context(options); end
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
   def locale=(arg); end
   def logger; end
   def logger=(_arg0); end
@@ -332,7 +332,7 @@ class ActionView::Base
   def prefix_partial_path_with_controller_namespace?; end
   def streaming_completion_on_exception; end
   def streaming_completion_on_exception=(val); end
-  def view_paths(*_arg0, &_arg1); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
   def view_paths=(arg); end
 
   # Returns the value of attribute view_renderer.
@@ -2249,26 +2249,26 @@ end
 # This module keeps all methods and behavior in ActionView
 # that simply delegates to the controller.
 module ActionView::Helpers::ControllerHelper
-  def action_name(*_arg0, &_arg1); end
+  def action_name(*_arg0, **_arg1, &_arg2); end
   def assign_controller(controller); end
   def controller; end
   def controller=(_arg0); end
-  def controller_name(*_arg0, &_arg1); end
-  def controller_path(*_arg0, &_arg1); end
-  def cookies(*_arg0, &_arg1); end
-  def flash(*_arg0, &_arg1); end
-  def headers(*_arg0, &_arg1); end
+  def controller_name(*_arg0, **_arg1, &_arg2); end
+  def controller_path(*_arg0, **_arg1, &_arg2); end
+  def cookies(*_arg0, **_arg1, &_arg2); end
+  def flash(*_arg0, **_arg1, &_arg2); end
+  def headers(*_arg0, **_arg1, &_arg2); end
   def logger; end
-  def params(*_arg0, &_arg1); end
+  def params(*_arg0, **_arg1, &_arg2); end
   def request; end
   def request=(_arg0); end
-  def request_forgery_protection_token(*_arg0, &_arg1); end
+  def request_forgery_protection_token(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def respond_to?(method_name, include_private = T.unsafe(nil)); end
 
-  def response(*_arg0, &_arg1); end
-  def session(*_arg0, &_arg1); end
+  def response(*_arg0, **_arg1, &_arg2); end
+  def session(*_arg0, **_arg1, &_arg2); end
 end
 
 ActionView::Helpers::ControllerHelper::CONTROLLER_DELEGATES = T.let(T.unsafe(nil), Array)
@@ -7712,7 +7712,7 @@ module ActionView::Helpers::TagHelper
   # HTML attributes by passing an attributes hash to +options+.
   # Instead of passing the content as an argument, you can also use a block
   # in which case, you pass your +options+ as the second parameter.
-  # Set escape to false to disable attribute value escaping.
+  # Set escape to false to disable escaping.
   # Note: this is legacy syntax, see +tag+ method description for details.
   #
   # ==== Options
@@ -7805,13 +7805,13 @@ module ActionView::Helpers::TagHelper
   #   tag.div data: { city_state: %w( Chicago IL ) }
   #   # => <div data-city-state="[&quot;Chicago&quot;,&quot;IL&quot;]"></div>
   #
-  # The generated attributes are escaped by default. This can be disabled using
-  # +escape_attributes+.
+  # The generated tag names and attributes are escaped by default. This can be disabled using
+  # +escape+.
   #
   #   tag.img src: 'open & shut.png'
   #   # => <img src="open &amp; shut.png">
   #
-  #   tag.img src: 'open & shut.png', escape_attributes: false
+  #   tag.img src: 'open & shut.png', escape: false
   #   # => <img src="open & shut.png">
   #
   # The tag builder respects
@@ -7935,10 +7935,11 @@ class ActionView::Helpers::TagHelper::TagBuilder
   def p(*arguments, **options, &block); end
   def tag_option(key, value, escape); end
   def tag_options(options, escape = T.unsafe(nil)); end
-  def tag_string(name, content = T.unsafe(nil), escape_attributes: T.unsafe(nil), **options, &block); end
+  def tag_string(name, content = T.unsafe(nil), **options, &block); end
 
   private
 
+  def handle_deprecated_escape_options(options); end
   def method_missing(called, *args, **options, &block); end
   def prefix_tag_option(prefix, key, value, escape); end
 
@@ -9541,7 +9542,7 @@ module ActionView::Layouts
 
   def initialize(*_arg0); end
 
-  def _layout_conditions(*_arg0, &_arg1); end
+  def _layout_conditions(*_arg0, **_arg1, &_arg2); end
   def _normalize_options(options); end
   def action_has_layout=(_arg0); end
 
@@ -9879,6 +9880,7 @@ class ActionView::MissingTemplate::Results::Result < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -10224,25 +10226,25 @@ class ActionView::PathSet
 
   def +(array); end
   def <<(*args); end
-  def [](*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
   def compact; end
   def concat(*args); end
-  def each(*_arg0, &_arg1); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def exists?(path, prefixes, partial, details, details_key, locals); end
 
   def find(path, prefixes, partial, details, details_key, locals); end
   def find_all(path, prefixes, partial, details, details_key, locals); end
-  def include?(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
   def insert(*args); end
 
   # Returns the value of attribute paths.
   def paths; end
 
-  def pop(*_arg0, &_arg1); end
+  def pop(*_arg0, **_arg1, &_arg2); end
   def push(*args); end
-  def size(*_arg0, &_arg1); end
+  def size(*_arg0, **_arg1, &_arg2); end
   def to_ary; end
   def unshift(*args); end
 
@@ -10764,7 +10766,7 @@ class ActionView::Resolver
   def all_template_paths; end
   def caching; end
   def caching=(val); end
-  def caching?(*_arg0, &_arg1); end
+  def caching?(*_arg0, **_arg1, &_arg2); end
   def clear_cache; end
 
   # Normalizes the arguments and passes it on to find_templates.
@@ -10821,6 +10823,7 @@ class ActionView::Resolver::PathParser::ParsedPath < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -11581,7 +11584,7 @@ module ActionView::TestCase::Behavior
   # @param value the value to set the attribute controller to.
   def controller=(_arg0); end
 
-  def lookup_context(*_arg0, &_arg1); end
+  def lookup_context(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute output_buffer.
   def output_buffer; end
@@ -11750,10 +11753,10 @@ class ActionView::UnboundTemplate
   # Returns the value of attribute details.
   def details; end
 
-  def format(*_arg0, &_arg1); end
-  def handler(*_arg0, &_arg1); end
-  def locale(*_arg0, &_arg1); end
-  def variant(*_arg0, &_arg1); end
+  def format(*_arg0, **_arg1, &_arg2); end
+  def handler(*_arg0, **_arg1, &_arg2); end
+  def locale(*_arg0, **_arg1, &_arg2); end
+  def variant(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute virtual_path.
   def virtual_path; end
@@ -11779,7 +11782,7 @@ module ActionView::ViewPaths
   # The prefixes used in render "foo" shortcuts.
   def _prefixes; end
 
-  def any_templates?(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
 
   # Append a path to the list of view paths for the current <tt>LookupContext</tt>.
   #
@@ -11790,9 +11793,9 @@ module ActionView::ViewPaths
   def append_view_path(path); end
 
   def details_for_lookup; end
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
   def formats=(arg); end
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
   def locale=(arg); end
 
   # <tt>LookupContext</tt> is the object responsible for holding all
@@ -11808,8 +11811,8 @@ module ActionView::ViewPaths
   #   (see ActionView::PathSet for more information)
   def prepend_view_path(path); end
 
-  def template_exists?(*_arg0, &_arg1); end
-  def view_paths(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
 
   class << self
     def all_view_paths; end
