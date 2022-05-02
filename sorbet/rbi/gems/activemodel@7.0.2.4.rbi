@@ -408,7 +408,7 @@ module ActiveModel::AttributeMethods
   # It's also possible to instantiate related objects, so a <tt>Client</tt>
   # class belonging to the +clients+ table with a +master_id+ foreign key
   # can instantiate master through <tt>Client#master</tt>.
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # @return [Boolean]
   def respond_to?(method, include_private_methods = T.unsafe(nil)); end
@@ -759,6 +759,7 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher::Attri
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -815,9 +816,9 @@ class ActiveModel::AttributeSet
   def []=(name, value); end
   def accessed; end
   def deep_dup; end
-  def each_value(*_arg0, &_arg1); end
-  def except(*_arg0, &_arg1); end
-  def fetch(*_arg0, &_arg1); end
+  def each_value(*_arg0, **_arg1, &_arg2); end
+  def except(*_arg0, **_arg1, &_arg2); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
   def fetch_value(name, &block); end
   def freeze; end
 
@@ -1709,7 +1710,7 @@ class ActiveModel::Errors
   #   person.errors.attribute_names # => [:name]
   def attribute_names; end
 
-  def clear(*args, &block); end
+  def clear(*args, **_arg1, &block); end
 
   # Copies the errors from <tt>other</tt>.
   # For copying errors but keep <tt>@base</tt> as is.
@@ -1731,8 +1732,8 @@ class ActiveModel::Errors
   # Returns a Hash of attributes with an array of their error details.
   def details; end
 
-  def each(*args, &block); end
-  def empty?(*args, &block); end
+  def each(*args, **_arg1, &block); end
+  def empty?(*args, **_arg1, &block); end
 
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
@@ -1887,7 +1888,7 @@ class ActiveModel::Errors
   # @return [Boolean]
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  def size(*args, &block); end
+  def size(*args, **_arg1, &block); end
 
   # Returns all the full error messages in an array.
   #
@@ -1908,7 +1909,7 @@ class ActiveModel::Errors
   #   person.errors.to_hash(true) # => {:name=>["name cannot be nil"]}
   def to_hash(full_messages = T.unsafe(nil)); end
 
-  def uniq!(*args, &block); end
+  def uniq!(*args, **_arg1, &block); end
 
   # Search for errors matching +attribute+, +type+ or +options+.
   #
@@ -1985,16 +1986,16 @@ class ActiveModel::LazyAttributeHash
   def []=(key, value); end
   def deep_dup; end
   def each_key(&block); end
-  def each_value(*_arg0, &_arg1); end
-  def except(*_arg0, &_arg1); end
-  def fetch(*_arg0, &_arg1); end
+  def each_value(*_arg0, **_arg1, &_arg2); end
+  def except(*_arg0, **_arg1, &_arg2); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def key?(key); end
 
   def marshal_dump; end
   def marshal_load(values); end
-  def transform_values(*_arg0, &_arg1); end
+  def transform_values(*_arg0, **_arg1, &_arg2); end
 
   protected
 
@@ -2242,12 +2243,12 @@ class ActiveModel::Name
   # @return [Name] a new instance of Name
   def initialize(klass, namespace = T.unsafe(nil), name = T.unsafe(nil), locale = T.unsafe(nil)); end
 
-  def !~(*_arg0, &_arg1); end
-  def <=>(*_arg0, &_arg1); end
+  def !~(*_arg0, **_arg1, &_arg2); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
   def ==(arg); end
   def ===(arg); end
-  def =~(*_arg0, &_arg1); end
-  def as_json(*_arg0, &_arg1); end
+  def =~(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute collection.
   def cache_key; end
@@ -2268,7 +2269,7 @@ class ActiveModel::Name
   # @param value the value to set the attribute element to.
   def element=(_arg0); end
 
-  def eql?(*_arg0, &_arg1); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
 
   # Transform the model name into a more human format, using I18n. By default,
   # it will underscore then humanize the class name.
@@ -2290,7 +2291,7 @@ class ActiveModel::Name
   # @param value the value to set the attribute i18n_key to.
   def i18n_key=(_arg0); end
 
-  def match?(*_arg0, &_arg1); end
+  def match?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute name.
   def name; end
@@ -2340,8 +2341,8 @@ class ActiveModel::Name
   # @param value the value to set the attribute singular_route_key to.
   def singular_route_key=(_arg0); end
 
-  def to_s(*_arg0, &_arg1); end
-  def to_str(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_str(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   def uncountable?; end
@@ -2456,7 +2457,7 @@ class ActiveModel::NestedError < ::ActiveModel::Error
   # Returns the value of attribute inner_error.
   def inner_error; end
 
-  def message(*args, &block); end
+  def message(*args, **_arg1, &block); end
 end
 
 class ActiveModel::NullMutationTracker
@@ -2909,7 +2910,7 @@ end
 module ActiveModel::Type
   class << self
     def default_value; end
-    def lookup(*_arg0, &_arg1); end
+    def lookup(*_arg0, **_arg1, &_arg2); end
 
     # Add a new type to the registry, allowing it to be referenced as a
     # symbol by {attribute}[rdoc-ref:Attributes::ClassMethods#attribute].
@@ -3155,7 +3156,7 @@ class ActiveModel::Type::Registry
   # @return [Registry] a new instance of Registry
   def initialize; end
 
-  def lookup(symbol, *args); end
+  def lookup(symbol, *args, **_arg2); end
   def register(type_name, klass = T.unsafe(nil), &block); end
 
   private
