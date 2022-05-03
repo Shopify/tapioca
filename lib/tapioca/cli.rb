@@ -90,7 +90,7 @@ module Tapioca
     option :quiet,
       aliases: ["-q"],
       type: :boolean,
-      desc: "Supresses file creation output",
+      desc: "Suppresses file creation output",
       default: false
     option :workers,
       aliases: ["-w"],
