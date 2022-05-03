@@ -180,7 +180,7 @@ Options:
           [--only=compiler [compiler ...]]     # Only run supplied DSL compiler(s)
           [--exclude=compiler [compiler ...]]  # Exclude supplied DSL compiler(s)
           [--verify], [--no-verify]            # Verifies RBIs are up-to-date
-  -q, [--quiet], [--no-quiet]                  # Supresses file creation output
+  -q, [--quiet], [--no-quiet]                  # Suppresses file creation output
   -w, [--workers=N]                            # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
                                                # Default: 1
           [--rbi-max-line-length=N]            # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
