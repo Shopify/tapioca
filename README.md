@@ -348,7 +348,156 @@ This option can be used on CI to make sure the RBI files are always up-to-date a
 
 #### Writing custom DSL compilers
 
-**TODO**
+It is possible to create your own compilers for DSLs not supported by Tapioca out of the box.
+
+Let's take for example this `Encryptable` module that uses the [`included` hook](https://ruby-doc.org/core-3.1.1/Module.html#method-i-included) to dynamically add a few methods to the classes that include it:
+
+```rb
+module Encryptable
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+
+  module ClassMethods
+    def attr_encrypted(attr_name)
+      encrypted_attributes << attr_name
+
+      attr_accessor(attr_name)
+
+      encrypted_attr_name = :"#{attr_name}_encrypted"
+
+      define_method(encrypted_attr_name) do
+        value = send(attr_name)
+        encrypt(value)
+      end
+
+      define_method("#{encrypted_attr_name}=") do |value|
+        send("#{attr_name}=", decrypt(value))
+      end
+    end
+
+    def encrypted_attributes
+      @encrypted_attributes ||= []
+    end
+  end
+
+  private
+
+  def encrypt(value)
+    value.unpack("H*").first
+  end
+
+  def decrypt(value)
+    [value].pack("H*")
+  end
+end
+```
+
+When `Encryptable` is included in a class like this one, it makes it possible to call `attr_encrypted` to define an attribute, its accessors and its encrypted accessors:
+
+```rb
+class CreditCard
+  include Encryptable
+
+  attr_encrypted :number
+end
+```
+
+These accessors can then be used on the `CreditCard` instance without having to define them in the class:
+
+```rb
+# typed: true
+# file: example.rb
+
+card = CreditCard.new
+card.number = "1234 5678 9012 3456"
+
+p card.number             # => "1234 5678 9012 3456"
+p card.number_encrypted   # => "31323334203536373820393031322033343536"
+
+card.number_encrypted = "31323334203536373820393031322033343536"
+p card.number             # => "1234 5678 9012 3456"
+```
+
+Sadly, since these methods have been created dynamically at runtime, when our `attr_encryptable` method was run, there are no static traces of the `number`, `number=`, `number_encrypted` and `number_encrypted=` methods. Since Sorbet does not run the Ruby code but analyses it statically, it can't see these methods and running type-checking will show a bunch of errors:
+
+```shell
+$ bundle exec srb tc
+
+lib/example.rb:5: Method number= does not exist on CreditCard https://srb.help/7003
+lib/example.rb:7: Method number does not exist on CreditCard https://srb.help/7003
+lib/example.rb:8: Method number_encrypted does not exist on CreditCard https://srb.help/7003
+lib/example.rb:10: Method number_encrypted= does not exist on CreditCard https://srb.help/7003
+lib/example.rb:11: Method number does not exist on CreditCard https://srb.help/7003
+
+Errors: 5
+```
+
+To solve this you will have to create your own DSL compiler able that understands the `Encryptable` DSL and can generate the RBI definitions representing the actual shape of `CreditCard` at runtime.
+
+To do so, create the new DSL compiler inside the `sorbet/tapioca/compilers` directory of your application with the following contents:
+
+```rb
+module Tapioca
+  module Compilers
+    class Encryptable < Tapioca::Dsl::Compiler
+      extend T::Sig
+
+      ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
+
+      sig { override.returns(T::Enumerable[Module]) }
+      def self.gather_constants
+        # Collect all the classes that include Encryptable
+        all_classes.select { |c| c < ::Encryptable }
+      end
+
+      sig { override.void }
+      def decorate
+        # Create a RBI definition for each class that includes Encryptable
+        root.create_path(constant) do |klass|
+          # For each encrypted attribute we find in the class
+          constant.encrypted_attributes.each do |attr_name|
+            # Create the RBI definitions for all the missing methods
+            klass.create_method(attr_name, return_type: "String")
+            klass.create_method("#{attr_name}=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+            klass.create_method("#{attr_name}_encrypted", return_type: "String")
+            klass.create_method("#{attr_name}_encrypted=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+          end
+        end
+      end
+    end
+  end
+end
+```
+
+There are two main parts to the DSL compiler API: `gather_constants` and `decorate`:
+
+* The `gather_constants` class method collects all classes (or modules) that should be processed by this specific DSL compiler.
+* The `decorate` method defines how to generate the necessary RBI definitions for the gathered constants.
+
+You can now run the new RBI compiler through the normal DSL generation process (your custom compiler will be loaded automatically by Tapioca):
+
+```shell
+$ bin/tapioca dsl
+
+Loading Rails application... Done
+Loading DSL compiler classes... Done
+Compiling DSL RBI files...
+
+      create  sorbet/rbi/dsl/credit_card.rbi
+
+Done
+```
+
+And then run Sorbet without error:
+
+```shell
+$ bundle exec srb tc
+
+No errors! Great job.
+```
+
+For more concrete and advanced examples, take a look at [Tapioca's default DSL compilers](https://github.com/Shopify/tapioca/tree/main/lib/tapioca/dsl/compilers).
 
 ### RBI files for missing constants and methods
 
