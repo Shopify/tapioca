@@ -172,7 +172,7 @@ module Tapioca
     option :doc,
       type: :boolean,
       desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
-      default: false
+      default: true
     option :exported_gem_rbis,
       type: :boolean,
       desc: "Include RBIs found in the `rbi/` directory of the gem",
