@@ -82,6 +82,8 @@ This will create the `sorbet/config` and `sorbet/tapioca/require.rb` files for y
 
 <!-- START_HELP_COMMAND_INIT -->
 ```shell
+$ tapioca help init
+
 Usage:
   tapioca init
 
@@ -102,6 +104,8 @@ This will generate RBIs for the specified gems and place them in the RBI directo
 
 <!-- START_HELP_COMMAND_GEM -->
 ```shell
+$ tapioca help gem
+
 Usage:
   tapioca gem [gem...]
 
@@ -145,6 +149,8 @@ This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved consta
 
 <!-- START_HELP_COMMAND_TODO -->
 ```shell
+$ tapioca help todo
+
 Usage:
   tapioca todo
 
@@ -169,6 +175,8 @@ This will generate DSL RBIs for specified constants (or for all handled constant
 
 <!-- START_HELP_COMMAND_DSL -->
 ```shell
+$ tapioca help dsl
+
 Usage:
   tapioca dsl [constant...]
 

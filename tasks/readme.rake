@@ -106,6 +106,8 @@ task :readme do
 
       contents = replace_section(contents, section, <<~MARKDOWN)
         ```shell
+        $ #{$PROGRAM_NAME} help #{command_name}
+
         #{shell.contents.chomp}
         ```
       MARKDOWN
