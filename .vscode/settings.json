@@ -10,7 +10,7 @@
   "byesig.fold": false,
   "byesig.showIcon": false,
   "[ruby]": {
-    "editor.defaultFormatter": "Shopify.rubocop-lsp",
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
     "editor.formatOnSave": true
   }
 }
