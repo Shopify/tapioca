@@ -12,6 +12,7 @@ gem("rubocop-shopify", require: false)
 gem("rubocop-sorbet", ">= 0.4.1")
 gem("rubocop-rspec", require: false)
 gem("sorbet")
+gem("ruby-lsp", require: false)
 
 group(:deployment, :development) do
   gem("rake")
@@ -41,7 +42,6 @@ group(:development, :test) do
   gem("aasm", require: false)
   gem("bcrypt", require: false)
   gem("xpath", require: false)
-  gem("rubocop-lsp", require: false)
 
   # net-smtp was removed from default gems in Ruby 3.1, but is used by the `mail` gem.
   # So we need to add it as a dependency until `mail` is fixed:
