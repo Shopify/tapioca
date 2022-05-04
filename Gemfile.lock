@@ -265,6 +265,10 @@ GEM
       rubocop (~> 1.25)
     rubocop-sorbet (0.6.8)
       rubocop (>= 0.90.0)
+    ruby-lsp (0.0.2)
+      language_server-protocol
+      rubocop (>= 1.0)
+      syntax_tree (>= 2.3)
     ruby-progressbar (1.11.0)
     shopify-money (0.16.0)
     sidekiq (6.4.2)
@@ -297,6 +301,7 @@ GEM
     sqlite3 (1.4.2)
     state_machines (0.5.0)
     strscan (3.0.1)
+    syntax_tree (2.3.1)
     thor (1.2.1)
     timeout (0.2.0)
     tzinfo (2.0.4)
@@ -343,6 +348,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
+  ruby-lsp
   shopify-money
   sidekiq
   smart_properties
