@@ -52,6 +52,8 @@ module Tapioca
       def rails_engines
         return [] unless Object.const_defined?("Rails::Engine")
 
+        safe_require("active_support/core_ext/class/subclasses")
+
         # We can use `Class#descendants` here, since we know Rails is loaded
         Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
       end
