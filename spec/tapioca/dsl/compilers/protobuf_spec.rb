@@ -411,6 +411,30 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Cart))
             end
+
+            it "generates methods in RBI files with oneof fields" do
+              add_ruby_file("protobuf.rb", <<~RUBY)
+                Google::Protobuf::DescriptorPool.generated_pool.build do
+                  add_file("cart.proto", :syntax => :proto3) do
+                    add_message "MyCart" do
+                      oneof :contact_info do
+                        optional :phone_number, :int32, 1
+                        optional :email, :string, 2
+                      end
+                    end
+                  end
+                end
+
+                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+              RUBY
+
+              rbi_output = rbi_for(:Cart)
+
+              assert_includes(rbi_output, indented(<<~RBI, 2))
+                sig { returns(T.nilable(Symbol)) }
+                def contact_info; end
+              RBI
+            end
           end
         end
       end
