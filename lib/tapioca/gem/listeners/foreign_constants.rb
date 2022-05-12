@@ -25,8 +25,8 @@ module Tapioca
           # constants have mixed in the current module that we are handling. We add all the
           # constants that we discover to the pipeline to be processed.
           Runtime::Trackers::Mixin.constants_with_mixin(mixin).each do |constant, locations|
-            location = locations.first
-            next if location.nil? || !@pipeline.gem.contains_path?(location)
+            next if defined_by_application?(constant)
+            next unless mixed_in_by_gem?(locations)
 
             name = @pipeline.name_of(constant)
 
@@ -43,6 +43,32 @@ module Tapioca
 
             @pipeline.push_foreign_constant(name, constant) if name
           end
+        end
+
+        sig do
+          params(
+            locations: T::Array[String]
+          ).returns(T::Boolean)
+        end
+        def mixed_in_by_gem?(locations)
+          locations.compact.any? { |location| @pipeline.gem.contains_path?(location) }
+        end
+
+        sig do
+          params(
+            constant: Module
+          ).returns(T::Boolean)
+        end
+        def defined_by_application?(constant)
+          application_dir = (Bundler.default_gemfile / "..").to_s
+          Tapioca::Runtime::Trackers::ConstantDefinition.files_for(constant).any? do |location|
+            location.start_with?(application_dir) && !in_bundle_path?(location)
+          end
+        end
+
+        sig { params(path: String).returns(T::Boolean) }
+        def in_bundle_path?(path)
+          path.start_with?(Bundler.bundle_path.to_s, Bundler.app_cache.to_s)
         end
 
         sig { params(constant: Module).returns(T.nilable(String)) }
