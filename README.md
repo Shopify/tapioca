@@ -673,6 +673,8 @@ check_shims:
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
   payload: true
+annotations:
+  repo_uri: https://raw.githubusercontent.com/Shopify/rbi-central/main
 ```
 <!-- END_CONFIG_TEMPLATE -->
 
