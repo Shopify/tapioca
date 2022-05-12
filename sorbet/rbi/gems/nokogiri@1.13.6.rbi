@@ -934,7 +934,7 @@ class Nokogiri::HTML4::SAX::Parser < ::Nokogiri::XML::SAX::Parser
 
   # Parse html stored in +data+ using +encoding+
   #
-  # @raise [ArgumentError]
+  # @raise [TypeError]
   # @yield [ctx]
   def parse_memory(data, encoding = T.unsafe(nil)); end
 end
