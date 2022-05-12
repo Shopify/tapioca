@@ -83,6 +83,7 @@ module Tapioca
               create_type_members(klass, "Key", "Value")
             else
               descriptor = T.let(T.unsafe(constant).descriptor, Google::Protobuf::Descriptor)
+              descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
               fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
               fields.sort_by!(&:name)
 
@@ -215,6 +216,19 @@ module Tapioca
           )
 
           field
+        end
+
+        sig do
+          params(
+            klass: RBI::Scope,
+            desc: Google::Protobuf::OneofDescriptor
+          ).void
+        end
+        def create_oneof_method(klass, desc)
+          klass.create_method(
+            desc.name,
+            return_type: "T.nilable(Symbol)"
+          )
         end
       end
     end
