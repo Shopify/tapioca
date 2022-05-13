@@ -16,6 +16,8 @@ module Tapioca
         parser = SymbolTableParser.new
         parser.parse_object(obj)
         parser.symbols
+      rescue JSON::ParserError
+        Set.new
       end
 
       sig { returns(T::Set[String]) }
