@@ -113,7 +113,10 @@ module Tapioca
     sig { params(command: String).returns(ExecResult) }
     def tapioca(command)
       exec_command = ["tapioca", command]
-      exec_command << "--workers=1" if command.start_with?(/gem/) && !command.match?("--workers")
+      if command.start_with?(/gem/)
+        exec_command << "--workers=1" unless command.match?("--workers")
+        exec_command << "--no-doc" unless command.match?("--doc")
+      end
       bundle_exec(exec_command.join(" "))
     end
   end
