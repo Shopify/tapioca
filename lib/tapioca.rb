@@ -35,12 +35,17 @@ module Tapioca
   DEFAULT_GEM_DIR = T.let("#{DEFAULT_RBI_DIR}/gems", String)
   DEFAULT_SHIM_DIR = T.let("#{DEFAULT_RBI_DIR}/shims", String)
   DEFAULT_TODO_FILE = T.let("#{DEFAULT_RBI_DIR}/todo.rbi", String)
+  DEFAULT_ANNOTATIONS_DIR = T.let("#{DEFAULT_RBI_DIR}/annotations", String)
 
   DEFAULT_OVERRIDES = T.let({
     # ActiveSupport overrides some core methods with different signatures
     # so we generate a typed: false RBI for it to suppress errors
     "activesupport" => "false",
   }.freeze, T::Hash[String, String])
+
+  CENTRAL_REPO_ROOT_URI = "https://raw.githubusercontent.com/Shopify/rbi-central/main"
+  CENTRAL_REPO_INDEX_PATH = "index.json"
+  CENTRAL_REPO_ANNOTATIONS_DIR = "rbi/annotations"
 end
 
 require "tapioca/version"

@@ -301,6 +301,13 @@ module Tapioca
       exit(0)
     end
 
+    desc "annotations", "Pull gem annotations from a central RBI repository"
+    option :repo_uri, type: :string, desc: "Repository URI to pull annotations from", default: CENTRAL_REPO_ROOT_URI
+    def annotations
+      command = Commands::Annotations.new(central_repo_root_uri: options[:repo_uri])
+      command.execute
+    end
+
     map ["--version", "-v"] => :__print_version
 
     desc "--version, -v", "show version"
