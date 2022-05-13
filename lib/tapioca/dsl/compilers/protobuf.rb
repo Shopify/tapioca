@@ -88,7 +88,7 @@ module Tapioca
               fields.sort_by!(&:name)
 
               parameters = fields.map do |field|
-                create_kw_opt_param(field.name, type: field.init_type, default: field.default)
+                create_kw_opt_param(field.name, type: "T.nilable(#{field.init_type})", default: field.default)
               end
 
               if fields.all? { |field| FIELD_RE.match?(field.name) }
@@ -206,13 +206,13 @@ module Tapioca
 
           klass.create_method(
             field.name,
-            return_type: field.type
+            return_type: "T.nilable(#{field.type})"
           )
 
           klass.create_method(
             "#{field.name}=",
-            parameters: [create_param("value", type: field.type)],
-            return_type: field.type
+            parameters: [create_param("value", type: "T.nilable(#{field.type})")],
+            return_type: "T.nilable(#{field.type})"
           )
 
           field

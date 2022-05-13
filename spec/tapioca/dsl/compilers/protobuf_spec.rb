@@ -57,19 +57,19 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(customer_id: Integer, shop_id: Integer).void }
+                  sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
                   def initialize(customer_id: nil, shop_id: nil); end
 
-                  sig { returns(Integer) }
+                  sig { returns(T.nilable(Integer)) }
                   def customer_id; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                   def customer_id=(value); end
 
-                  sig { returns(Integer) }
+                  sig { returns(T.nilable(Integer)) }
                   def shop_id; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                   def shop_id=(value); end
                 end
               RBI
@@ -94,13 +94,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(events: String).void }
+                  sig { params(events: T.nilable(String)).void }
                   def initialize(events: nil); end
 
-                  sig { returns(String) }
+                  sig { returns(T.nilable(String)) }
                   def events; end
 
-                  sig { params(value: String).returns(String) }
+                  sig { params(value: T.nilable(String)).returns(T.nilable(String)) }
                   def events=(value); end
                 end
               RBI
@@ -128,13 +128,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
+                  sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
                   def initialize(cart_item_index: nil); end
 
-                  sig { returns(Google::Protobuf::UInt64Value) }
+                  sig { returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index; end
 
-                  sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
+                  sig { params(value: T.nilable(Google::Protobuf::UInt64Value)).returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index=(value); end
                 end
               RBI
@@ -168,13 +168,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(value_type: Cart::VALUE_TYPE).void }
+                  sig { params(value_type: T.nilable(Cart::VALUE_TYPE)).void }
                   def initialize(value_type: nil); end
 
-                  sig { returns(Cart::VALUE_TYPE) }
+                  sig { returns(T.nilable(Cart::VALUE_TYPE)) }
                   def value_type; end
 
-                  sig { params(value: Cart::VALUE_TYPE).returns(Cart::VALUE_TYPE) }
+                  sig { params(value: T.nilable(Cart::VALUE_TYPE)).returns(T.nilable(Cart::VALUE_TYPE)) }
                   def value_type=(value); end
                 end
               RBI
@@ -208,13 +208,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(value_type: Cart::MYVALUETYPE).void }
+                  sig { params(value_type: T.nilable(Cart::MYVALUETYPE)).void }
                   def initialize(value_type: nil); end
 
-                  sig { returns(Cart::MYVALUETYPE) }
+                  sig { returns(T.nilable(Cart::MYVALUETYPE)) }
                   def value_type; end
 
-                  sig { params(value: Cart::MYVALUETYPE).returns(Cart::MYVALUETYPE) }
+                  sig { params(value: T.nilable(Cart::MYVALUETYPE)).returns(T.nilable(Cart::MYVALUETYPE)) }
                   def value_type=(value); end
                 end
               RBI
@@ -242,19 +242,19 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(customer_ids: T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer]), indices: T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value])).void }
+                  sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
                   def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
 
-                  sig { returns(Google::Protobuf::RepeatedField[Integer]) }
+                  sig { returns(T.nilable(Google::Protobuf::RepeatedField[Integer])) }
                   def customer_ids; end
 
-                  sig { params(value: Google::Protobuf::RepeatedField[Integer]).returns(Google::Protobuf::RepeatedField[Integer]) }
+                  sig { params(value: T.nilable(Google::Protobuf::RepeatedField[Integer])).returns(T.nilable(Google::Protobuf::RepeatedField[Integer])) }
                   def customer_ids=(value); end
 
-                  sig { returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+                  sig { returns(T.nilable(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value])) }
                   def indices; end
 
-                  sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+                  sig { params(value: T.nilable(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value])).returns(T.nilable(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value])) }
                   def indices=(value); end
                 end
               RBI
@@ -282,19 +282,19 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(customers: T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer]), stores: T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value])).void }
+                  sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
                   def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
 
-                  sig { returns(Google::Protobuf::Map[String, Integer]) }
+                  sig { returns(T.nilable(Google::Protobuf::Map[String, Integer])) }
                   def customers; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Integer]).returns(Google::Protobuf::Map[String, Integer]) }
+                  sig { params(value: T.nilable(Google::Protobuf::Map[String, Integer])).returns(T.nilable(Google::Protobuf::Map[String, Integer])) }
                   def customers=(value); end
 
-                  sig { returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+                  sig { returns(T.nilable(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value])) }
                   def stores; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]).returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+                  sig { params(value: T.nilable(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value])).returns(T.nilable(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value])) }
                   def stores=(value); end
                 end
               RBI
@@ -329,47 +329,47 @@ module Tapioca
               rbi_output = rbi_for(:Cart)
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: T::Boolean).returns(T::Boolean) }
+                sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
                 def bool_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).returns(String) }
+                sig { params(value: T.nilable(String)).returns(T.nilable(String)) }
                 def byte_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).returns(Integer) }
+                sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                 def customer_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).returns(Integer) }
+                sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                 def id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).returns(Integer) }
+                sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                 def item_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Float).returns(Float) }
+                sig { params(value: T.nilable(Float)).returns(T.nilable(Float)) }
                 def money_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Float).returns(Float) }
+                sig { params(value: T.nilable(Float)).returns(T.nilable(Float)) }
                 def number_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).returns(Integer) }
+                sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                 def shop_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).returns(String) }
+                sig { params(value: T.nilable(String)).returns(T.nilable(String)) }
                 def string_value=(value); end
               RBI
             end
@@ -395,16 +395,16 @@ module Tapioca
                   sig { params(fields: T.untyped).void }
                   def initialize(**fields); end
 
-                  sig { returns(Integer) }
+                  sig { returns(T.nilable(Integer)) }
                   def ShopID; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: T.nilable(Integer)).returns(T.nilable(Integer)) }
                   def ShopID=(value); end
 
-                  sig { returns(String) }
+                  sig { returns(T.nilable(String)) }
                   def ShopName; end
 
-                  sig { params(value: String).returns(String) }
+                  sig { params(value: T.nilable(String)).returns(T.nilable(String)) }
                   def ShopName=(value); end
                 end
               RBI
