@@ -204,6 +204,7 @@ module Tapioca
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
 
+          require 'pry'; binding.pry
           klass.create_method(
             field.name,
             return_type: "T.nilable(#{field.type})"
