@@ -204,7 +204,7 @@ module Tapioca
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
 
-          if field.default.include("Protobuf")
+          if field.default.include?("Protobuf")
             require 'pry'; binding.pry
           end
           # `field.default` is a string
