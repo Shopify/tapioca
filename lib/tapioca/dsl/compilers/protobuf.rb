@@ -65,7 +65,8 @@ module Tapioca
           prop :name, String
           prop :type, String  # Used for accessor param & return sig
           prop :init_type, String  # Type for `initialize` kw arg sig
-          prop :init_default, String  # Default value for `initialize`. Rename to init_default?
+          prop :init_default, String  # Default value for `initialize`
+          prop :return_type, String  # Return type when reading the field, may differ from init_type
         end
 
         extend T::Sig
@@ -146,6 +147,17 @@ module Tapioca
           end
         end
 
+        def return_type_of(descriptor)
+          type = type_of(descriptor)
+          if descriptor.type == :message
+            # XXX what about enum?
+            # XXX what about repeats & maps?
+            "T.nilable(#{type})"
+          else
+            type
+          end
+        end
+
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
@@ -167,6 +179,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
+                return_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
                 init_default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
             else
@@ -180,18 +193,20 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
+                return_type: "T.any(#{type}, T::Array[#{elem_type}])", # XXX nilable?
                 init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
             end
           else
             type = type_of(descriptor)
+            return_type = return_type_of(descriptor)
 
-            require 'pry'; binding.pry
             Field.new(
               name: descriptor.name,
               type: type,
               init_type: type,
               init_default: "nil",
+              return_type: return_type,
             )
           end
         end
@@ -224,16 +239,16 @@ module Tapioca
           #[2] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_default
           #=> "nil"
           #[3] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_type
-          #=> "String"          
+          #=> "String"
           klass.create_method(
             field.name,
-            return_type: "T.nilable(#{field.type})"
+            return_type: field.return_type,
           )
 
           klass.create_method(
             "#{field.name}=",
             parameters: [create_param("value", type: "T.nilable(#{field.type})")],
-            return_type: "T.nilable(#{field.type})"
+            return_type: field.return_type,
           )
 
           field
