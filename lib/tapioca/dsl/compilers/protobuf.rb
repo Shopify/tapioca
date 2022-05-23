@@ -63,11 +63,10 @@ module Tapioca
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
-          prop :type, String  # Used for accessor param & return sig
           prop :init_type, String  # Type for `initialize` kw arg sig
           prop :init_default, String  # Default value for `initialize`
-          prop :return_type, String  # Return type when reading the field, may differ from init_type
-          prop :assignable_type, String  # Type for arg to foo=, may differ
+          prop :return_type, String  # Return type from field may differ from init_type
+          prop :assignable_type, String  # Assignable type for field may differ from init_type
         end
 
         extend T::Sig
@@ -187,14 +186,12 @@ module Tapioca
 
               Field.new(
                 name: descriptor.name,
-                type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
                 init_default: "Google::Protobuf::Map.new(#{default_args.join(", ")})",
-                return_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
-                assignable_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
+                return_type: type,
+                assignable_type: type,
               )
             else
-              require 'pry'; binding.pry
               elem_type = type_of(descriptor)
               type = "Google::Protobuf::RepeatedField[#{elem_type}]"
 
@@ -203,7 +200,6 @@ module Tapioca
 
               Field.new(
                 name: descriptor.name,
-                type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
                 init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
                 return_type: type,
@@ -217,7 +213,6 @@ module Tapioca
 
             Field.new(
               name: descriptor.name,
-              type: type,
               init_type: type,
               init_default: "nil",
               return_type: return_type,
