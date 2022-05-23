@@ -204,7 +204,9 @@ module Tapioca
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
 
-          require 'pry'; binding.pry
+          if field.default.include("Protobuf")
+            require 'pry'; binding.pry
+          end
           # `field.default` is a string
           # If nilable, it's "nil"
           # eg
