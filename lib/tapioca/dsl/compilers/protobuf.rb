@@ -150,8 +150,11 @@ module Tapioca
 
         def return_type_of(descriptor)
           type = type_of(descriptor)
-          if descriptor.type == :message
-            # XXX what about enum?
+          case descriptor.type
+          when :enum
+            require 'pry'; binding.pry
+            "T.any(Symbol, Integer)"
+          when :message
             # XXX what about repeats & maps?
             "T.nilable(#{type})"
           else
@@ -160,7 +163,7 @@ module Tapioca
         end
 
         def assignable_type_of(descriptor)
-          # XXX same logic always?
+          # TODO Is this always true?
           return_type_of(descriptor)
         end
 
