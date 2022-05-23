@@ -63,9 +63,9 @@ module Tapioca
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
-          prop :type, String
-          prop :init_type, String
-          prop :default, String
+          prop :type, String  # Used for accessor param & return sig
+          prop :init_type, String  # Type for `initialize` kw arg sig
+          prop :init_default, String  # Default value for `initialize`. Rename to init_default?
         end
 
         extend T::Sig
@@ -88,7 +88,7 @@ module Tapioca
               fields.sort_by!(&:name)
 
               parameters = fields.map do |field|
-                create_kw_opt_param(field.name, type: "T.nilable(#{field.init_type})", default: field.default)
+                create_kw_opt_param(field.name, type: "T.nilable(#{field.init_type})", default: field.init_default)
               end
 
               if fields.all? { |field| FIELD_RE.match?(field.name) }
@@ -167,7 +167,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
-                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
+                init_default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
             else
               elem_type = type_of(descriptor)
@@ -180,7 +180,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
-                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
+                init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
             end
           else
@@ -191,7 +191,7 @@ module Tapioca
               name: descriptor.name,
               type: type,
               init_type: type,
-              default: descriptor.default.class
+              init_default: "nil",
             )
           end
         end
@@ -206,12 +206,12 @@ module Tapioca
           require 'pry'; binding.pry
           field = field_of(desc)
 
-          # `field.default` is a string
+          # `field.init_default` is a string
           # If nilable, it's "nil"
           # eg
           # [5] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.type
           # => "Google::Protobuf::RepeatedField[Google::Api::HttpRule]"
-          # [6] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.default
+          # [6] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_default
           # => "Google::Protobuf::RepeatedField.new(:message, Google::Api::HttpRule)"
           # [7] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.name
           # => "rules"
@@ -221,7 +221,7 @@ module Tapioca
           # Hmm this seems wrong for a string field though
           # [1] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.type
           #=> "String"
-          #[2] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.default
+          #[2] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_default
           #=> "nil"
           #[3] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_type
           #=> "String"          
