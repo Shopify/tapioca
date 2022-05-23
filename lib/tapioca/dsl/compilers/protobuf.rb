@@ -186,11 +186,12 @@ module Tapioca
           else
             type = type_of(descriptor)
 
+            require 'pry'; binding.pry
             Field.new(
               name: descriptor.name,
               type: type,
               init_type: type,
-              default: "nil"
+              default: descriptor.default.class
             )
           end
         end
@@ -202,11 +203,9 @@ module Tapioca
           ).returns(Field)
         end
         def create_descriptor_method(klass, desc)
+          require 'pry'; binding.pry
           field = field_of(desc)
 
-          if field.default.include?("Protobuf")
-            require 'pry'; binding.pry
-          end
           # `field.default` is a string
           # If nilable, it's "nil"
           # eg
