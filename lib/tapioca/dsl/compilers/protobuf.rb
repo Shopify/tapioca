@@ -194,6 +194,7 @@ module Tapioca
                 assignable_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
               )
             else
+              require 'pry'; binding.pry
               elem_type = type_of(descriptor)
               type = "Google::Protobuf::RepeatedField[#{elem_type}]"
 
