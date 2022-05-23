@@ -67,6 +67,7 @@ module Tapioca
           prop :init_type, String  # Type for `initialize` kw arg sig
           prop :init_default, String  # Default value for `initialize`
           prop :return_type, String  # Return type when reading the field, may differ from init_type
+          prop :assignable_type, String  # Type for arg to foo=, may differ
         end
 
         extend T::Sig
@@ -158,6 +159,11 @@ module Tapioca
           end
         end
 
+        def assignable_type_of(descriptor)
+          # XXX same logic always?
+          return_type_of(descriptor)
+        end
+
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
@@ -179,8 +185,9 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
+                init_default: "Google::Protobuf::Map.new(#{default_args.join(", ")})",
                 return_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
-                init_default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
+                assignable_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])", # XXX nilable??
               )
             else
               elem_type = type_of(descriptor)
@@ -193,13 +200,15 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
+                init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
                 return_type: "T.any(#{type}, T::Array[#{elem_type}])", # XXX nilable?
-                init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
+                assignable_type: "T.any(#{type}, T::Array[#{elem_type}])", # XXX nilable?
               )
             end
           else
             type = type_of(descriptor)
             return_type = return_type_of(descriptor)
+            assignable_type = assignable_type_of(descriptor)
 
             Field.new(
               name: descriptor.name,
@@ -207,6 +216,7 @@ module Tapioca
               init_type: type,
               init_default: "nil",
               return_type: return_type,
+              assignable_type: assignable_type,
             )
           end
         end
@@ -218,7 +228,6 @@ module Tapioca
           ).returns(Field)
         end
         def create_descriptor_method(klass, desc)
-          require 'pry'; binding.pry
           field = field_of(desc)
 
           # `field.init_default` is a string
@@ -247,7 +256,7 @@ module Tapioca
 
           klass.create_method(
             "#{field.name}=",
-            parameters: [create_param("value", type: "T.nilable(#{field.type})")],
+            parameters: [create_param("value", type: field.assignable_type)],
             return_type: field.return_type,
           )
 
