@@ -151,9 +151,10 @@ module Tapioca
         def return_type_of(descriptor)
           type = type_of(descriptor)
           case descriptor.type
-          when :enum
-            require 'pry'; binding.pry
-            "T.any(Symbol, Integer)"
+          # when :enum
+          # NOT SURE ABOUT THIS
+          #   require 'pry'; binding.pry
+          #   "T.any(Symbol, Integer)"
           when :message
             # XXX what about repeats & maps?
             "T.nilable(#{type})"
@@ -204,8 +205,8 @@ module Tapioca
                 type: type,
                 init_type: "T.any(#{type}, T::Array[#{elem_type}])",
                 init_default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
-                return_type: "T.any(#{type}, T::Array[#{elem_type}])", # XXX nilable?
-                assignable_type: "T.any(#{type}, T::Array[#{elem_type}])", # XXX nilable?
+                return_type: type,
+                assignable_type: type,
               )
             end
           else
