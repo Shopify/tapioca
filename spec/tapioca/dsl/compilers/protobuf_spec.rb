@@ -72,12 +72,6 @@ module Tapioca
                   sig { params(value: Integer).returns(Integer) }
                   def customer_id=(value); end
 
-                  sig { returns(T::Boolean) }
-                  def has_customer_id?; end
-
-                  sig { returns(T::Boolean) }
-                  def has_shop_id?; end
-
                   sig { returns(Integer) }
                   def shop_id; end
 
@@ -117,9 +111,6 @@ module Tapioca
 
                   sig { params(value: String).returns(String) }
                   def events=(value); end
-
-                  sig { returns(T::Boolean) }
-                  def has_events?; end
                 end
               RBI
 
@@ -157,9 +148,6 @@ module Tapioca
 
                   sig { void }
                   def clear_cart_item_index; end
-
-                  sig { returns(T::Boolean) }
-                  def has_cart_item_index?; end
                 end
               RBI
 
@@ -197,9 +185,6 @@ module Tapioca
 
                   sig { void }
                   def clear_value_type; end
-
-                  sig { returns(T::Boolean) }
-                  def has_value_type?; end
 
                   sig { returns(T.any(Integer, Symbol)) }
                   def value_type; end
@@ -243,9 +228,6 @@ module Tapioca
 
                   sig { void }
                   def clear_value_type; end
-
-                  sig { returns(T::Boolean) }
-                  def has_value_type?; end
 
                   sig { returns(T.any(Integer, Symbol)) }
                   def value_type; end
@@ -460,12 +442,6 @@ module Tapioca
 
                   sig { void }
                   def clear_ShopName; end
-
-                  sig { returns(T::Boolean) }
-                  def has_ShopID?; end
-
-                  sig { returns(T::Boolean) }
-                  def has_ShopName?; end
                 end
               RBI
 

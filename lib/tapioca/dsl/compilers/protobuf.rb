@@ -253,13 +253,6 @@ module Tapioca
             return_type: field.return_type,
           )
 
-          unless desc.label == :repeated
-            klass.create_method(
-              "has_#{field.name}?",
-              return_type: "T::Boolean",
-            )
-          end
-
           klass.create_method(
             "clear_#{field.name}",
             return_type: "void",
