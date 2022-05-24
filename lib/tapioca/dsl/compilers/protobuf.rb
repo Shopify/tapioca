@@ -63,7 +63,7 @@ module Tapioca
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
-          prop :init_type, String  # Type for `initialize` kw arg sig
+          prop :init_type, String  # Type for `initialize` kw arg sig, without T.nilable
           prop :init_default, String  # Default value for `initialize`
           prop :return_type, String  # Return type from field may differ from init_type
           prop :assignable_type, String  # Assignable type for field may differ from init_type
@@ -147,24 +147,36 @@ module Tapioca
           end
         end
 
-        def return_type_of(descriptor)
+        def init_type_of(descriptor)
           type = type_of(descriptor)
           case descriptor.type
-          # when :enum
-          # NOT SURE ABOUT THIS
-          #   require 'pry'; binding.pry
-          #   "T.any(Symbol, Integer)"
           when :message
-            # XXX what about repeats & maps?
+            type
+          else
+            assignable_type_of(descriptor)
+          end
+        end
+
+        def assignable_type_of(descriptor)
+          type = type_of(descriptor)
+          case descriptor.type
+          when :enum
+            descriptor.subtype.enummodule.name
+          when :message
             "T.nilable(#{type})"
           else
             type
           end
         end
 
-        def assignable_type_of(descriptor)
-          # TODO Is this always true?
-          return_type_of(descriptor)
+        def return_type_of(descriptor)
+          type = type_of(descriptor)
+          case descriptor.type
+          when :message
+            "T.nilable(#{type})"
+          else
+            type
+          end
         end
 
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
@@ -207,16 +219,12 @@ module Tapioca
               )
             end
           else
-            type = type_of(descriptor)
-            return_type = return_type_of(descriptor)
-            assignable_type = assignable_type_of(descriptor)
-
             Field.new(
               name: descriptor.name,
-              init_type: type,
+              init_type: init_type_of(descriptor),
               init_default: "nil",
-              return_type: return_type,
-              assignable_type: assignable_type,
+              return_type: return_type_of(descriptor),
+              assignable_type: assignable_type_of(descriptor),
             )
           end
         end
