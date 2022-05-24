@@ -237,26 +237,6 @@ module Tapioca
         end
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
-
-          # `field.init_default` is a string
-          # If nilable, it's "nil"
-          # eg
-          # [5] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.type
-          # => "Google::Protobuf::RepeatedField[Google::Api::HttpRule]"
-          # [6] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_default
-          # => "Google::Protobuf::RepeatedField.new(:message, Google::Api::HttpRule)"
-          # [7] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.name
-          # => "rules"
-          # [10] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> klass.name
-          # => "Google::Api::Http"
-          #
-          # Hmm this seems wrong for a string field though
-          # [1] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.type
-          #=> "String"
-          #[2] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_default
-          #=> "nil"
-          #[3] pry(#<Tapioca::Dsl::Compilers::Protobuf>)> field.init_type
-          #=> "String"
           klass.create_method(
             field.name,
             return_type: field.return_type,
