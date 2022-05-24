@@ -60,11 +60,23 @@ module Tapioca
                   sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
                   def initialize(customer_id: nil, shop_id: nil); end
 
+                  sig { void }
+                  def clear_customer_id; end
+
+                  sig { void }
+                  def clear_shop_id; end
+
                   sig { returns(Integer) }
                   def customer_id; end
 
                   sig { params(value: Integer).returns(Integer) }
                   def customer_id=(value); end
+
+                  sig { returns(T::Boolean) }
+                  def has_customer_id?; end
+
+                  sig { returns(T::Boolean) }
+                  def has_shop_id?; end
 
                   sig { returns(Integer) }
                   def shop_id; end
@@ -97,11 +109,17 @@ module Tapioca
                   sig { params(events: T.nilable(String)).void }
                   def initialize(events: nil); end
 
+                  sig { void }
+                  def clear_events; end
+
                   sig { returns(String) }
                   def events; end
 
                   sig { params(value: String).returns(String) }
                   def events=(value); end
+
+                  sig { returns(T::Boolean) }
+                  def has_events?; end
                 end
               RBI
 
@@ -136,6 +154,12 @@ module Tapioca
 
                   sig { params(value: T.nilable(Google::Protobuf::UInt64Value)).returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index=(value); end
+
+                  sig { void }
+                  def clear_cart_item_index; end
+
+                  sig { returns(T::Boolean) }
+                  def has_cart_item_index?; end
                 end
               RBI
 
@@ -170,6 +194,12 @@ module Tapioca
                 class Cart
                   sig { params(value_type: T.nilable(Cart::VALUE_TYPE)).void }
                   def initialize(value_type: nil); end
+
+                  sig { void }
+                  def clear_value_type; end
+
+                  sig { returns(T::Boolean) }
+                  def has_value_type?; end
 
                   sig { returns(Cart::VALUE_TYPE) }
                   def value_type; end
@@ -211,6 +241,12 @@ module Tapioca
                   sig { params(value_type: T.nilable(Cart::MYVALUETYPE)).void }
                   def initialize(value_type: nil); end
 
+                  sig { void }
+                  def clear_value_type; end
+
+                  sig { returns(T::Boolean) }
+                  def has_value_type?; end
+
                   sig { returns(Cart::MYVALUETYPE) }
                   def value_type; end
 
@@ -244,6 +280,12 @@ module Tapioca
                 class Cart
                   sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
                   def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
+
+                  sig { void }
+                  def clear_customer_ids; end
+
+                  sig { void }
+                  def clear_indices; end
 
                   sig { returns(Google::Protobuf::RepeatedField[Integer]) }
                   def customer_ids; end
@@ -284,6 +326,12 @@ module Tapioca
                 class Cart
                   sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
                   def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
+
+                  sig { void }
+                  def clear_customers; end
+
+                  sig { void }
+                  def clear_stores; end
 
                   sig { returns(Google::Protobuf::Map[String, Integer]) }
                   def customers; end
@@ -406,6 +454,18 @@ module Tapioca
 
                   sig { params(value: String).returns(String) }
                   def ShopName=(value); end
+
+                  sig { void }
+                  def clear_ShopID; end
+
+                  sig { void }
+                  def clear_ShopName; end
+
+                  sig { returns(T::Boolean) }
+                  def has_ShopID?; end
+
+                  sig { returns(T::Boolean) }
+                  def has_ShopName?; end
                 end
               RBI
 
