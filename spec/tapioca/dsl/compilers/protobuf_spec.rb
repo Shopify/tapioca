@@ -201,10 +201,10 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def has_value_type?; end
 
-                  sig { returns(Cart::VALUE_TYPE) }
+                  sig { returns(T.any(Integer, Symbol)) }
                   def value_type; end
 
-                  sig { params(value: Cart::VALUE_TYPE).returns(Cart::VALUE_TYPE) }
+                  sig { params(value: Cart::VALUE_TYPE).returns(T.any(Integer, Symbol)) }
                   def value_type=(value); end
                 end
               RBI
@@ -247,10 +247,10 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def has_value_type?; end
 
-                  sig { returns(Cart::MYVALUETYPE) }
+                  sig { returns(T.any(Integer, Symbol)) }
                   def value_type; end
 
-                  sig { params(value: Cart::MYVALUETYPE).returns(Cart::MYVALUETYPE) }
+                  sig { params(value: Cart::MYVALUETYPE).returns(T.any(Integer, Symbol)) }
                   def value_type=(value); end
                 end
               RBI

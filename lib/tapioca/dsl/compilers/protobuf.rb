@@ -174,6 +174,11 @@ module Tapioca
           case descriptor.type
           when :message
             "T.nilable(#{type})"
+          when :enum
+            # Per the docs: "When reading the value back, it will be a symbol if
+            # the enum value is known, or a number if it is unknown."
+            # https://developers.google.com/protocol-buffers/docs/reference/ruby-generated#enum
+            "T.any(Integer, Symbol)"
           else
             type
           end
