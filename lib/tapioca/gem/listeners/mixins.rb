@@ -71,9 +71,8 @@ module Tapioca
 
         sig { params(constant: Module).returns(T::Array[Module]) }
         def interesting_ancestors_of(constant)
-          inherited_ancestors_ids = Set.new(
-            inherited_ancestors_of(constant).map { |mod| object_id_of(mod) }
-          )
+          inherited_ancestors = Set.new.compare_by_identity.merge(inherited_ancestors_of(constant))
+
           # TODO: There is actually a bug here where this will drop modules that
           # may be included twice. For example:
           #
@@ -91,9 +90,9 @@ module Tapioca
           #
           # Instead, we should only drop the tail matches of the ancestors and
           # inherited ancestors, past the location of the constant itself.
-          constant.ancestors.reject do |mod|
-            inherited_ancestors_ids.include?(object_id_of(mod))
-          end
+          ancestors = Set.new.compare_by_identity.merge(ancestors_of(constant))
+
+          (ancestors - inherited_ancestors).to_a
         end
       end
     end
