@@ -64,7 +64,7 @@ module Rails
 
     def error; end
 
-    # Returns the version of the currently loaded Rails as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Rails as a <tt>Gem::Version</tt>.
     def gem_version; end
 
     # Returns all Rails groups for loading based on:
@@ -103,7 +103,7 @@ module Rails
     #     # => #<Pathname:/Users/someuser/some/path/project>
     def root; end
 
-    # Returns the version of the currently loaded Rails as a string.
+    # Returns the currently loaded version of Rails as a string.
     def version; end
   end
 end
@@ -117,12 +117,12 @@ end
 # Rails::Application::Bootstrap) and finishing initializers, after all the others
 # are executed (check Rails::Application::Finisher).
 #
-# == Configuration
+# == \Configuration
 #
 # Besides providing the same configuration as Rails::Engine and Rails::Railtie,
 # the application object has several specific configurations, for example
-# "cache_classes", "consider_all_requests_local", "filter_parameters",
-# "logger" and so forth.
+# +cache_classes+, +consider_all_requests_local+, +filter_parameters+,
+# +logger+, and so forth.
 #
 # Check Rails::Application::Configuration to see them all.
 #
@@ -138,21 +138,21 @@ end
 # == Booting process
 #
 # The application is also responsible for setting up and executing the booting
-# process. From the moment you require "config/application.rb" in your app,
+# process. From the moment you require <tt>config/application.rb</tt> in your app,
 # the booting process goes like this:
 #
-#   1)  require "config/boot.rb" to set up load paths
-#   2)  require railties and engines
-#   3)  Define Rails.application as "class MyApp::Application < Rails::Application"
-#   4)  Run config.before_configuration callbacks
-#   5)  Load config/environments/ENV.rb
-#   6)  Run config.before_initialize callbacks
-#   7)  Run Railtie#initializer defined by railties, engines and application.
-#       One by one, each engine sets up its load paths, routes and runs its config/initializers/* files.
-#   8)  Custom Railtie#initializers added by railties, engines and applications are executed
-#   9)  Build the middleware stack and run to_prepare callbacks
-#   10) Run config.before_eager_load and eager_load! if eager_load is true
-#   11) Run config.after_initialize callbacks
+# 1.  <tt>require "config/boot.rb"</tt> to set up load paths.
+# 2.  +require+ railties and engines.
+# 3.  Define +Rails.application+ as <tt>class MyApp::Application < Rails::Application</tt>.
+# 4.  Run +config.before_configuration+ callbacks.
+# 5.  Load <tt>config/environments/ENV.rb</tt>.
+# 6.  Run +config.before_initialize+ callbacks.
+# 7.  Run <tt>Railtie#initializer</tt> defined by railties, engines, and application.
+#     One by one, each engine sets up its load paths and routes, and runs its <tt>config/initializers/*</tt> files.
+# 8.  Custom <tt>Railtie#initializers</tt> added by railties, engines, and applications are executed.
+# 9.  Build the middleware stack and run +to_prepare+ callbacks.
+# 10. Run +config.before_eager_load+ and +eager_load!+ if +eager_load+ is +true+.
+# 11. Run +config.after_initialize+ callbacks.
 class Rails::Application < ::Rails::Engine
   # @return [Application] a new instance of Application
   def initialize(initial_variable_values = T.unsafe(nil), &block); end
@@ -318,7 +318,7 @@ class Rails::Application < ::Rails::Engine
   #     Rails.application.message_verifier('sensitive_data').verify(message)
   #     # => 'my sensible data'
   #
-  # See the +ActiveSupport::MessageVerifier+ documentation for more information.
+  # See the ActiveSupport::MessageVerifier documentation for more information.
   def message_verifier(verifier_name); end
 
   # Return an array of railties respecting the order they're loaded
@@ -362,13 +362,14 @@ class Rails::Application < ::Rails::Engine
   def sandbox?; end
 
   # The secret_key_base is used as the input secret to the application's key generator, which in turn
-  # is used to create all MessageVerifiers/MessageEncryptors, including the ones that sign and encrypt cookies.
+  # is used to create all ActiveSupport::MessageVerifier and ActiveSupport::MessageEncryptor instances,
+  # including the ones that sign and encrypt cookies.
   #
   # In development and test, this is randomly generated and stored in a
   # temporary file in <tt>tmp/development_secret.txt</tt>.
   #
-  # In all other environments, we look for it first in ENV["SECRET_KEY_BASE"],
-  # then credentials.secret_key_base, and finally secrets.secret_key_base. For most applications,
+  # In all other environments, we look for it first in <tt>ENV["SECRET_KEY_BASE"]</tt>,
+  # then +credentials.secret_key_base+, and finally +secrets.secret_key_base+. For most applications,
   # the correct place to store it is in the encrypted credentials file.
   def secret_key_base; end
 
@@ -529,6 +530,7 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # @param value the value to set the attribute console to.
   def console=(_arg0); end
 
+  # Configures the ActionDispatch::ContentSecurityPolicy.
   def content_security_policy(&block); end
 
   # Returns the value of attribute content_security_policy_nonce_directives.
@@ -720,6 +722,8 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   def logger=(_arg0); end
 
   def paths; end
+
+  # Configures the ActionDispatch::PermissionsPolicy.
   def permissions_policy(&block); end
 
   # Returns the value of attribute public_file_server.
@@ -802,6 +806,20 @@ class Rails::Application::Configuration < ::Rails::Engine::Configuration
   # @param value the value to set the attribute session_options to.
   def session_options=(_arg0); end
 
+  # Specifies what class to use to store the session. Possible values
+  # are +:cookie_store+, +:mem_cache_store+, a custom store, or
+  # +:disabled+. +:disabled+ tells Rails not to deal with sessions.
+  #
+  # Additional options will be set as +session_options+:
+  #
+  #   config.session_store :cookie_store, key: "_your_app_session"
+  #   config.session_options # => {key: "_your_app_session"}
+  #
+  # If a custom store is specified as a symbol, it will be resolved to
+  # the +ActionDispatch::Session+ namespace:
+  #
+  #   # use ActionDispatch::Session::MyCustomStore as the session store
+  #   config.session_store :my_custom_store
   def session_store(new_session_store = T.unsafe(nil), **options); end
 
   # @return [Boolean]
@@ -1017,7 +1035,7 @@ module Rails::Command
 
     def hidden_commands; end
 
-    # Receives a namespace, arguments and the behavior to invoke the command.
+    # Receives a namespace, arguments, and the behavior to invoke the command.
     def invoke(full_namespace, args = T.unsafe(nil), **config); end
 
     def print_commands; end
@@ -1288,10 +1306,10 @@ end
 
 # <tt>Rails::Engine</tt> allows you to wrap a specific Rails application or subset of
 # functionality and share it with other applications or within a larger packaged application.
-# Every <tt>Rails::Application</tt> is just an engine, which allows for simple
+# Every Rails::Application is just an engine, which allows for simple
 # feature and application sharing.
 #
-# Any <tt>Rails::Engine</tt> is also a <tt>Rails::Railtie</tt>, so the same
+# Any <tt>Rails::Engine</tt> is also a Rails::Railtie, so the same
 # methods (like <tt>rake_tasks</tt> and +generators+) and configuration
 # options that are available in railties can also be used in engines.
 #
@@ -1308,7 +1326,7 @@ end
 #   end
 #
 # Then ensure that this file is loaded at the top of your <tt>config/application.rb</tt>
-# (or in your +Gemfile+) and it will automatically load models, controllers and helpers
+# (or in your +Gemfile+), and it will automatically load models, controllers, and helpers
 # inside +app+, load routes at <tt>config/routes.rb</tt>, load locales at
 # <tt>config/locales/**/*</tt>, and load tasks at <tt>lib/tasks/**/*</tt>.
 #
@@ -1469,13 +1487,13 @@ end
 #
 # == Isolated Engine
 #
-# Normally when you create controllers, helpers and models inside an engine, they are treated
+# Normally when you create controllers, helpers, and models inside an engine, they are treated
 # as if they were created inside the application itself. This means that all helpers and
 # named routes from the application will be available to your engine's controllers as well.
 #
 # However, sometimes you want to isolate your engine from the application, especially if your engine
 # has its own router. To do that, you simply need to call +isolate_namespace+. This method requires
-# you to pass a module where all your controllers, helpers and models should be nested to:
+# you to pass a module where all your controllers, helpers, and models should be nested to:
 #
 #   module MyEngine
 #     class Engine < Rails::Engine
@@ -1513,9 +1531,9 @@ end
 # +articles_path+, like you would do with your main application.
 #
 # To make this behavior consistent with other parts of the framework,
-# isolated engines also have an effect on <tt>ActiveModel::Naming</tt>. In a
+# isolated engines also have an effect on ActiveModel::Naming. In a
 # normal Rails app, when you use a namespaced model such as
-# <tt>Namespace::Article</tt>, <tt>ActiveModel::Naming</tt> will generate
+# <tt>Namespace::Article</tt>, ActiveModel::Naming will generate
 # names with the prefix "namespace". In an isolated engine, the prefix will
 # be omitted in URL helpers and form fields, for convenience.
 #
@@ -1664,15 +1682,15 @@ class Rails::Engine < ::Rails::Railtie
   def isolated?(*_arg0, **_arg1, &_arg2); end
 
   # Load console and invoke the registered hooks.
-  # Check <tt>Rails::Railtie.console</tt> for more info.
+  # Check Rails::Railtie.console for more info.
   def load_console(app = T.unsafe(nil)); end
 
   # Load Rails generators and invoke the registered hooks.
-  # Check <tt>Rails::Railtie.generators</tt> for more info.
+  # Check Rails::Railtie.generators for more info.
   def load_generators(app = T.unsafe(nil)); end
 
   # Load Rails runner and invoke the registered hooks.
-  # Check <tt>Rails::Railtie.runner</tt> for more info.
+  # Check Rails::Railtie.runner for more info.
   def load_runner(app = T.unsafe(nil)); end
 
   # Load data from db/seeds.rb file. It can be used in to load engines'
@@ -1682,11 +1700,11 @@ class Rails::Engine < ::Rails::Railtie
   def load_seed; end
 
   # Invoke the server registered hooks.
-  # Check <tt>Rails::Railtie.server</tt> for more info.
+  # Check Rails::Railtie.server for more info.
   def load_server(app = T.unsafe(nil)); end
 
-  # Load Rake, railties tasks and invoke the registered hooks.
-  # Check <tt>Rails::Railtie.rake_tasks</tt> for more info.
+  # Load Rake and railties tasks, and invoke the registered hooks.
+  # Check Rails::Railtie.rake_tasks for more info.
   def load_tasks(app = T.unsafe(nil)); end
 
   def middleware(*_arg0, **_arg1, &_arg2); end
@@ -1901,8 +1919,8 @@ module Rails::Generators
     def hide_namespace(*namespaces); end
     def hide_namespaces(*namespaces); end
 
-    # Receives a namespace, arguments and the behavior to invoke the generator.
-    # It's used as the default entry point for generate, destroy and update
+    # Receives a namespace, arguments, and the behavior to invoke the generator.
+    # It's used as the default entry point for generate, destroy, and update
     # commands.
     def invoke(namespace, args = T.unsafe(nil), config = T.unsafe(nil)); end
 
@@ -2285,6 +2303,9 @@ class Rails::Generators::AppBase < ::Rails::Generators::Base
   def skip_dev_gems?; end
 
   # @return [Boolean]
+  def skip_propshaft?; end
+
+  # @return [Boolean]
   def skip_sprockets?; end
 
   # @return [Boolean]
@@ -2447,7 +2468,7 @@ class Rails::Generators::Base < ::Thor::Group
     #
     # The first and last part used to find the generator to be invoked are
     # guessed based on class invokes hook_for, as noticed in the example above.
-    # This can be customized with two options: :in and :as.
+    # This can be customized with two options: +:in+ and +:as+.
     #
     # Let's suppose you are creating a generator that needs to invoke the
     # controller generator from test unit. Your first attempt is:
@@ -2461,7 +2482,7 @@ class Rails::Generators::Base < ::Thor::Group
     #   "test_unit:awesome", "test_unit"
     #
     # Which is not the desired lookup. You can change it by providing the
-    # :as option:
+    # +:as+ option:
     #
     #   class AwesomeGenerator < Rails::Generators::Base
     #     hook_for :test_framework, as: :controller
@@ -2472,7 +2493,7 @@ class Rails::Generators::Base < ::Thor::Group
     #   "test_unit:controller", "test_unit"
     #
     # Similarly, if you want it to also look up in the rails namespace, you
-    # just need to provide the :in value:
+    # just need to provide the +:in+ value:
     #
     #   class AwesomeGenerator < Rails::Generators::Base
     #     hook_for :test_framework, in: :rails, as: :controller
@@ -2818,7 +2839,7 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
 
   class << self
     # Add a class collisions name to be checked on class initialization. You
-    # can supply a hash with a :prefix or :suffix to be tested.
+    # can supply a hash with a +:prefix+ or +:suffix+ to be tested.
     #
     # ==== Examples
     #
@@ -3328,7 +3349,7 @@ end
 #   root.add "app/controllers", eager_load: true
 #
 # The above command creates a new root object and adds "app/controllers" as a path.
-# This means we can get a <tt>Rails::Paths::Path</tt> object back like below:
+# This means we can get a Rails::Paths::Path object back like below:
 #
 #   path = root["app/controllers"]
 #   path.eager_load?               # => true
@@ -3408,7 +3429,6 @@ class Rails::Rack::Logger < ::ActiveSupport::LogSubscriber
 
   def call_app(request, env); end
   def compute_tags(request); end
-  def finish(request); end
   def logger; end
 
   # Started GET "/session/new" for 127.0.0.1 at 2012-09-26 14:51:42 -0700
@@ -3432,7 +3452,7 @@ end
 # * creating initializers
 # * configuring a Rails framework for the application, like setting a generator
 # * adding <tt>config.*</tt> keys to the environment
-# * setting up a subscriber with <tt>ActiveSupport::Notifications</tt>
+# * setting up a subscriber with ActiveSupport::Notifications
 # * adding Rake tasks
 #
 # == Creating a Railtie
@@ -3537,7 +3557,7 @@ end
 # == Application and Engine
 #
 # An engine is nothing more than a railtie with some initializers already set. And since
-# <tt>Rails::Application</tt> is an engine, the same configuration described here can be
+# Rails::Application is an engine, the same configuration described here can be
 # used in both.
 #
 # Be sure to look at the documentation of those specific classes for more information.
@@ -3774,7 +3794,7 @@ class Rails::SourceAnnotationExtractor
     #
     # If +options+ has a <tt>:tag</tt> flag, it will be passed to each annotation's +to_s+.
     #
-    # See <tt>#find_in</tt> for a list of file extensions that will be taken into account.
+    # See SourceAnnotationExtractor#find_in for a list of file extensions that will be taken into account.
     #
     # This class method is the single entry point for the <tt>rails notes</tt> command.
     def enumerate(tag = T.unsafe(nil), options = T.unsafe(nil)); end
@@ -3870,6 +3890,20 @@ class Rails::TestUnitRailtie < ::Rails::Railtie; end
 module Rails::VERSION; end
 Rails::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 Rails::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-Rails::VERSION::PRE = T.let(T.unsafe(nil), String)
 Rails::VERSION::STRING = T.let(T.unsafe(nil), String)
 Rails::VERSION::TINY = T.let(T.unsafe(nil), Integer)
+
+class Rails::WelcomeController < ::Rails::ApplicationController
+  def index; end
+
+  private
+
+  def _layout(lookup_context, formats); end
+
+  class << self
+    def __callbacks; end
+    def _layout; end
+    def _layout_conditions; end
+    def middleware_stack; end
+  end
+end

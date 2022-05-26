@@ -66,7 +66,7 @@ module ActiveStorage
     def draw_routes; end
     def draw_routes=(val); end
 
-    # Returns the version of the currently loaded Active Storage as a <tt>Gem::Version</tt>.
+    # Returns the currently loaded version of Active Storage as a <tt>Gem::Version</tt>.
     def gem_version; end
 
     def logger; end
@@ -107,7 +107,7 @@ module ActiveStorage
     def verifier; end
     def verifier=(val); end
 
-    # Returns the version of the currently loaded ActiveStorage as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Active Storage as a <tt>Gem::Version</tt>.
     def version; end
 
     def video_preview_arguments; end
@@ -499,8 +499,6 @@ end
 module ActiveStorage::Attachment::GeneratedAttributeMethods; end
 
 class ActiveStorage::BaseController < ::ActionController::Base
-  include ::ActionController::Live
-  include ::ActiveStorage::Streaming
   include ::ActiveStorage::SetCurrent
 
   private
@@ -1209,7 +1207,6 @@ class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 module ActiveStorage::VERSION; end
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

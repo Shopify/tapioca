@@ -13,13 +13,13 @@ module ActionCable
   def server; end
 
   class << self
-    # Returns the version of the currently loaded Action Cable as a <tt>Gem::Version</tt>.
+    # Returns the currently loaded version of Action Cable as a <tt>Gem::Version</tt>.
     def gem_version; end
 
     # Singleton instance of the server
     def server; end
 
-    # Returns the version of the currently loaded Action Cable as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Action Cable as a <tt>Gem::Version</tt>.
     def version; end
   end
 end
@@ -169,7 +169,7 @@ class ActionCable::Channel::Base
   def subscribe_to_channel; end
 
   # Called by the cable connection when it's cut, so the channel has a chance to cleanup with callbacks.
-  # This method is not intended to be called directly by the user. Instead, overwrite the #unsubscribed callback.
+  # This method is not intended to be called directly by the user. Instead, override the #unsubscribed callback.
   def unsubscribe_from_channel; end
 
   private
@@ -1110,7 +1110,7 @@ class ActionCable::Connection::Subscriptions
 end
 
 # Allows the use of per-connection tags against the server logger. This wouldn't work using the traditional
-# <tt>ActiveSupport::TaggedLogging</tt> enhanced Rails.logger, as that logger will reset the tags between requests.
+# ActiveSupport::TaggedLogging enhanced Rails.logger, as that logger will reset the tags between requests.
 # The connection is long-lived, so it needs its own set of tags for its independent duration.
 class ActionCable::Connection::TaggedLoggerProxy
   # @return [TaggedLoggerProxy] a new instance of TaggedLoggerProxy
@@ -1164,7 +1164,7 @@ end
 #   end
 #
 # +connect+ accepts additional information about the HTTP request with the
-# +params+, +headers+, +session+ and Rack +env+ options.
+# +params+, +headers+, +session+, and Rack +env+ options.
 #
 #   def test_connect_with_headers_and_query_string
 #     connect params: { user_id: 1 }, headers: { "X-API-TOKEN" => "secret-my" }
@@ -1792,7 +1792,7 @@ end
 # == Test adapter for Action Cable
 #
 # The test adapter should be used only in testing. Along with
-# <tt>ActionCable::TestHelper</tt> it makes a great tool to test your Rails application.
+# ActionCable::TestHelper it makes a great tool to test your Rails application.
 #
 # To use the test adapter set +adapter+ value to +test+ in your +config/cable.yml+ file.
 #
@@ -1892,6 +1892,5 @@ end
 module ActionCable::VERSION; end
 ActionCable::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionCable::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionCable::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionCable::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionCable::VERSION::TINY = T.let(T.unsafe(nil), Integer)

@@ -39,7 +39,7 @@ class AbstractController::Base
   extend ::ActiveSupport::Configurable::ClassMethods
   extend ::ActiveSupport::DescendantsTracker
 
-  # Delegates to the class' ::action_methods
+  # Delegates to the class's ::action_methods.
   def action_methods; end
 
   # Returns the name of the action this controller is processing.
@@ -61,7 +61,7 @@ class AbstractController::Base
   # @return [Boolean]
   def available_action?(action_name); end
 
-  # Delegates to the class' ::controller_path
+  # Delegates to the class's ::controller_path.
   def controller_path; end
 
   # Returns the formats that can be processed by the controller.
@@ -72,7 +72,7 @@ class AbstractController::Base
 
   # Tests if a response body is set. Used to determine if the
   # +process_action+ callback needs to be terminated in
-  # +AbstractController::Callbacks+.
+  # AbstractController::Callbacks.
   #
   # @return [Boolean]
   def performed?; end
@@ -85,7 +85,7 @@ class AbstractController::Base
   #
   # ==== Returns
   # * <tt>self</tt>
-  def process(action, *args); end
+  def process(action, *args, **_arg2); end
 
   # Returns the body of the HTTP response sent by the controller.
   def response_body; end
@@ -161,13 +161,7 @@ class AbstractController::Base
   # * <tt>nil</tt>    - No method name could be found.
   def method_for_action(action_name); end
 
-  # Call the action. Override this in a subclass to modify the
-  # behavior around processing an action. This, and not #process,
-  # is the intended way to override action dispatching.
-  #
-  # Notice that the first argument is the method to be dispatched
-  # which is *not* necessarily the same as the action name.
-  def process_action(method_name, *args); end
+  def process_action(*_arg0, **_arg1, &_arg2); end
 
   class << self
     # Returns the value of attribute abstract.
@@ -415,9 +409,7 @@ module AbstractController::Callbacks
 
   private
 
-  # Override <tt>AbstractController::Base#process_action</tt> to run the
-  # <tt>process_action</tt> callbacks around the normal behavior.
-  def process_action(*_arg0); end
+  def process_action(*_arg0, **_arg1, &_arg2); end
 
   module GeneratedClassMethods
     def __callbacks; end
@@ -837,7 +829,7 @@ module ActionController
   end
 end
 
-# API Controller is a lightweight version of <tt>ActionController::Base</tt>,
+# API Controller is a lightweight version of ActionController::Base,
 # created for applications that don't require all functionalities that a complete
 # \Rails controller provides, allowing you to create controllers with just the
 # features that you need for API only applications.
@@ -864,7 +856,7 @@ end
 #   end
 #
 # Request, response, and parameters objects all work the exact same way as
-# <tt>ActionController::Base</tt>.
+# ActionController::Base.
 #
 # == Renders
 #
@@ -883,7 +875,7 @@ end
 #
 # Redirects are used to move from one action to another. You can use the
 # <tt>redirect_to</tt> method in your controllers in the same way as in
-# <tt>ActionController::Base</tt>. For example:
+# ActionController::Base. For example:
 #
 #   def create
 #     redirect_to root_url and return if not_authorized?
@@ -893,7 +885,7 @@ end
 # == Adding New Behavior
 #
 # In some scenarios you may want to add back some functionality provided by
-# <tt>ActionController::Base</tt> that is not present by default in
+# ActionController::Base that is not present by default in
 # <tt>ActionController::API</tt>, for instance <tt>MimeResponds</tt>. This
 # module gives you the <tt>respond_to</tt> method. Adding it is quite simple,
 # you just need to include the module in a specific controller or in
@@ -915,7 +907,7 @@ end
 #     end
 #   end
 #
-# Make sure to check the modules included in <tt>ActionController::Base</tt>
+# Make sure to check the modules included in ActionController::Base
 # if you want to use any other functionality that is not provided
 # by <tt>ActionController::API</tt> out of the box.
 #
@@ -1126,10 +1118,11 @@ end
 #
 # or you can remove the entire session with +reset_session+.
 #
-# Sessions are stored by default in a browser cookie that's cryptographically signed, but unencrypted.
-# This prevents the user from tampering with the session but also allows them to see its contents.
-#
-# Do not put secret information in cookie-based sessions!
+# By default, sessions are stored in an encrypted browser cookie (see
+# ActionDispatch::Session::CookieStore). Thus the user will not be able to
+# read or edit the session data. However, the user can keep a copy of the
+# cookie even after it has expired, so you should avoid storing sensitive
+# information in cookie-based sessions.
 #
 # == Responses
 #
@@ -1574,7 +1567,7 @@ module ActionController::ConditionalGet
   #   expires_in 3.hours, public: true, stale_while_revalidate: 60.seconds, stale_if_error: 5.minutes
   #
   # HTTP Cache-Control Extensions other values: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
-  # Any additional key-value pairs are concatenated onto the `Cache-Control` header in the response:
+  # Any additional key-value pairs are concatenated onto the Cache-Control header in the response:
   #
   #   expires_in 3.hours, public: true, "s-maxage": 3.hours, "no-transform": true
   #
@@ -1873,7 +1866,43 @@ module ActionController::ContentSecurityPolicy
 end
 
 module ActionController::ContentSecurityPolicy::ClassMethods
+  # Overrides parts of the globally configured Content-Security-Policy
+  # header:
+  #
+  #   class PostsController < ApplicationController
+  #     content_security_policy do |policy|
+  #       policy.base_uri "https://www.example.com"
+  #     end
+  #   end
+  #
+  # Options can be passed similar to +before_action+. For example, pass
+  # <tt>only: :index</tt> to override the header on the index action only:
+  #
+  #   class PostsController < ApplicationController
+  #     content_security_policy(only: :index) do |policy|
+  #       policy.default_src :self, :https
+  #     end
+  #   end
+  #
+  # Pass +false+ to remove the Content-Security-Policy header:
+  #
+  #   class PostsController < ApplicationController
+  #     content_security_policy false, only: :index
+  #   end
   def content_security_policy(enabled = T.unsafe(nil), **options, &block); end
+
+  # Overrides the globally configured Content-Security-Policy-Report-Only
+  # header:
+  #
+  #   class PostsController < ApplicationController
+  #     content_security_policy_report_only only: :index
+  #   end
+  #
+  # Pass +false+ to remove the Content-Security-Policy-Report-Only header:
+  #
+  #   class PostsController < ApplicationController
+  #     content_security_policy_report_only false, only: :index
+  #   end
   def content_security_policy_report_only(report_only = T.unsafe(nil), **options); end
 end
 
@@ -2127,7 +2156,7 @@ end
 
 # Override the default form builder for all views rendered by this
 # controller and any of its descendants. Accepts a subclass of
-# +ActionView::Helpers::FormBuilder+.
+# ActionView::Helpers::FormBuilder.
 #
 # For example, given a form builder:
 #
@@ -2172,7 +2201,7 @@ module ActionController::FormBuilder::ClassMethods
   # in the views rendered by this controller and its subclasses.
   #
   # ==== Parameters
-  # * <tt>builder</tt> - Default form builder, an instance of +ActionView::Helpers::FormBuilder+
+  # * <tt>builder</tt> - Default form builder, an instance of ActionView::Helpers::FormBuilder
   def default_form_builder(builder); end
 end
 
@@ -2324,7 +2353,7 @@ module ActionController::Helpers::ClassMethods
   # instead when using +capture+.
   def helpers; end
 
-  # Overwrite modules_for_helpers to accept :all as argument, which loads
+  # Override modules_for_helpers to accept +:all+ as argument, which loads
   # all helpers in helpers_path.
   #
   # ==== Parameters
@@ -2340,10 +2369,10 @@ module ActionController::Helpers::ClassMethods
   def all_application_helpers; end
 end
 
-# HTTP Basic, Digest and Token authentication.
+# HTTP Basic, Digest, and Token authentication.
 module ActionController::HttpAuthentication; end
 
-# HTTP \Basic authentication.
+# = HTTP \Basic authentication
 #
 # === Simple \Basic example
 #
@@ -2427,10 +2456,15 @@ module ActionController::HttpAuthentication::Basic::ControllerMethods
 end
 
 module ActionController::HttpAuthentication::Basic::ControllerMethods::ClassMethods
+  # Enables HTTP \Basic authentication.
+  #
+  # See ActionController::HttpAuthentication::Basic for example usage.
+  #
+  # @raise [ArgumentError]
   def http_basic_authenticate_with(name:, password:, realm: T.unsafe(nil), **options); end
 end
 
-# HTTP \Digest authentication.
+# = HTTP \Digest authentication
 #
 # === Simple \Digest example
 #
@@ -2475,7 +2509,7 @@ end
 module ActionController::HttpAuthentication::Digest
   extend ::ActionController::HttpAuthentication::Digest
 
-  # Returns false on a valid response, true otherwise
+  # Returns false on a valid response, true otherwise.
   def authenticate(request, realm, &password_procedure); end
 
   def authentication_header(controller, realm); end
@@ -2517,7 +2551,7 @@ module ActionController::HttpAuthentication::Digest
   #
   # An implementation might choose not to accept a previously used nonce or a previously used digest, in order to
   # protect against a replay attack. Or, an implementation might choose to use one-time nonces or digests for
-  # POST, PUT, or PATCH requests and a time-stamp for GET requests. For more details on the issues involved see Section 4
+  # POST, PUT, or PATCH requests, and a time-stamp for GET requests. For more details on the issues involved see Section 4
   # of this document.
   #
   # The nonce is opaque to the client. Composed of Time, and hash of Time with secret
@@ -2544,18 +2578,24 @@ module ActionController::HttpAuthentication::Digest
 end
 
 module ActionController::HttpAuthentication::Digest::ControllerMethods
+  # Authenticate using an HTTP \Digest, or otherwise render an HTTP header
+  # requesting the client to send a \Digest.
+  #
+  # See ActionController::HttpAuthentication::Digest for example usage.
   def authenticate_or_request_with_http_digest(realm = T.unsafe(nil), message = T.unsafe(nil), &password_procedure); end
 
-  # Authenticate with HTTP Digest, returns true or false
+  # Authenticate using an HTTP \Digest. Returns true if authentication is
+  # successful, false otherwise.
   def authenticate_with_http_digest(realm = T.unsafe(nil), &password_procedure); end
 
-  # Render output including the HTTP Digest authentication header
+  # Render an HTTP header requesting the client to send a \Digest for
+  # authentication.
   def request_http_digest_authentication(realm = T.unsafe(nil), message = T.unsafe(nil)); end
 end
 
-# HTTP Token authentication.
+# = HTTP \Token authentication
 #
-# Simple Token example:
+# === Simple \Token example
 #
 #   class PostsController < ApplicationController
 #     TOKEN = "secret"
@@ -2633,35 +2673,39 @@ module ActionController::HttpAuthentication::Token
   # If token Authorization header is present, call the login
   # procedure with the present token and options.
   #
-  # [controller]
-  #   ActionController::Base instance for the current request.
-  #
-  # [login_procedure]
-  #   Proc to call if a token is present. The Proc should take two arguments:
-  #
-  #     authenticate(controller) { |token, options| ... }
-  #
   # Returns the return value of <tt>login_procedure</tt> if a
   # token is found. Returns <tt>nil</tt> if no token is found.
+  #
+  # ==== Parameters
+  #
+  # * +controller+ - ActionController::Base instance for the current request.
+  # * +login_procedure+ - Proc to call if a token is present. The Proc
+  #   should take two arguments:
+  #
+  #     authenticate(controller) { |token, options| ... }
   def authenticate(controller, &login_procedure); end
 
   # Sets a WWW-Authenticate header to let the client know a token is desired.
   #
-  # controller - ActionController::Base instance for the outgoing response.
-  # realm      - String realm to use in the header.
-  #
   # Returns nothing.
+  #
+  # ==== Parameters
+  #
+  # * +controller+ - ActionController::Base instance for the outgoing response.
+  # * +realm+ - String realm to use in the header.
   def authentication_request(controller, realm, message = T.unsafe(nil)); end
 
   # Encodes the given token and options into an Authorization header value.
   #
-  # token   - String token.
-  # options - optional Hash of the options.
-  #
   # Returns String.
+  #
+  # ==== Parameters
+  #
+  # * +token+ - String token.
+  # * +options+ - Optional Hash of the options.
   def encode_credentials(token, options = T.unsafe(nil)); end
 
-  # Takes raw_params and turns it into an array of parameters
+  # Takes +raw_params+ and turns it into an array of parameters.
   def params_array_from(raw_params); end
 
   # This method takes an authorization body and splits up the key-value
@@ -2675,14 +2719,18 @@ module ActionController::HttpAuthentication::Token
   # Parses the token and options out of the token Authorization header.
   # The value for the Authorization header is expected to have the prefix
   # <tt>"Token"</tt> or <tt>"Bearer"</tt>. If the header looks like this:
-  #   Authorization: Token token="abc", nonce="def"
-  # Then the returned token is <tt>"abc"</tt>, and the options are
-  # <tt>{nonce: "def"}</tt>
   #
-  # request - ActionDispatch::Request instance with the current headers.
+  #   Authorization: Token token="abc", nonce="def"
+  #
+  # Then the returned token is <tt>"abc"</tt>, and the options are
+  # <tt>{nonce: "def"}</tt>.
   #
   # Returns an +Array+ of <tt>[String, Hash]</tt> if a token is present.
   # Returns +nil+ if no token is found.
+  #
+  # ==== Parameters
+  #
+  # * +request+ - ActionDispatch::Request instance with the current headers.
   def token_and_options(request); end
 
   def token_params_from(auth); end
@@ -2691,8 +2739,18 @@ end
 ActionController::HttpAuthentication::Token::AUTHN_PAIR_DELIMITERS = T.let(T.unsafe(nil), Regexp)
 
 module ActionController::HttpAuthentication::Token::ControllerMethods
+  # Authenticate using an HTTP Bearer token, or otherwise render an HTTP
+  # header requesting the client to send a Bearer token.
+  #
+  # See ActionController::HttpAuthentication::Token for example usage.
   def authenticate_or_request_with_http_token(realm = T.unsafe(nil), message = T.unsafe(nil), &login_procedure); end
+
+  # Authenticate using an HTTP Bearer token. Returns true if
+  # authentication is successful, false otherwise.
   def authenticate_with_http_token(&login_procedure); end
+
+  # Render an HTTP header requesting the client to send a Bearer token for
+  # authentication.
   def request_http_token_authentication(realm = T.unsafe(nil), message = T.unsafe(nil)); end
 end
 
@@ -3027,7 +3085,7 @@ end
 
 # <tt>ActionController::Metal</tt> is the simplest possible controller, providing a
 # valid Rack interface without the additional niceties provided by
-# <tt>ActionController::Base</tt>.
+# ActionController::Base.
 #
 # A sample metal controller might look like this:
 #
@@ -3078,7 +3136,7 @@ end
 #
 # == Other Helpers
 #
-# You can refer to the modules included in <tt>ActionController::Base</tt> to see
+# You can refer to the modules included in ActionController::Base to see
 # other features you can bring into your metal controller.
 #
 # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
@@ -3091,7 +3149,7 @@ class ActionController::Metal < ::AbstractController::Base
   def content_type(*_arg0, **_arg1, &_arg2); end
   def content_type=(arg); end
 
-  # Delegates to the class' <tt>controller_name</tt>.
+  # Delegates to the class's ::controller_name.
   def controller_name; end
 
   def dispatch(name, request, response); end
@@ -3691,7 +3749,7 @@ class ActionController::Parameters
 
   # Deletes a key-value pair from +Parameters+ and returns the value. If
   # +key+ is not found, returns +nil+ (or, with optional code block, yields
-  # +key+ and returns the result). Cf. +#extract!+, which returns the
+  # +key+ and returns the result). Cf. #extract!, which returns the
   # corresponding +ActionController::Parameters+ object.
   def delete(key, &block); end
 
@@ -3724,6 +3782,7 @@ class ActionController::Parameters
   def each_value(&block); end
 
   def empty?(*_arg0, **_arg1, &_arg2); end
+  def encode_with(coder); end
 
   # Returns true if another +Parameters+ object contains the same content and
   # permitted flag.
@@ -4502,33 +4561,6 @@ class ActionController::ParamsWrapper::Options < ::Struct
   end
 end
 
-# HTTP Permissions Policy is a web standard for defining a mechanism to
-# allow and deny the use of browser permissions in its own context, and
-# in content within any <iframe> elements in the document.
-#
-# Full details of HTTP Permissions Policy specification and guidelines can
-# be found at MDN:
-#
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy
-#
-# Examples of usage:
-#
-#   # Global policy
-#   Rails.application.config.permissions_policy do |f|
-#     f.camera      :none
-#     f.gyroscope   :none
-#     f.microphone  :none
-#     f.usb         :none
-#     f.fullscreen  :self
-#     f.payment     :self, "https://secure.example.com"
-#   end
-#
-#   # Controller level policy
-#   class PagesController < ApplicationController
-#     permissions_policy do |p|
-#       p.geolocation "https://example.com"
-#     end
-#   end
 module ActionController::PermissionsPolicy
   extend ::ActiveSupport::Concern
 
@@ -4536,6 +4568,23 @@ module ActionController::PermissionsPolicy
 end
 
 module ActionController::PermissionsPolicy::ClassMethods
+  # Overrides parts of the globally configured Feature-Policy
+  # header:
+  #
+  #   class PagesController < ApplicationController
+  #     permissions_policy do |policy|
+  #       policy.geolocation "https://example.com"
+  #     end
+  #   end
+  #
+  # Options can be passed similar to +before_action+. For example, pass
+  # <tt>only: :index</tt> to override the header on the index action only:
+  #
+  #   class PagesController < ApplicationController
+  #     permissions_policy(only: :index) do |policy|
+  #       policy.camera :self
+  #     end
+  #   end
   def permissions_policy(**options, &block); end
 end
 
@@ -4649,7 +4698,7 @@ module ActionController::Redirecting
   #
   # Raises UnsafeRedirectError in the case of an unsafe redirect.
   #
-  # To allow any external redirects pass `allow_other_host: true`, though using a user-provided param in that case is unsafe.
+  # To allow any external redirects pass <tt>allow_other_host: true</tt>, though using a user-provided param in that case is unsafe.
   #
   #   redirect_to "https://rubyonrails.org", allow_other_host: true
   #
@@ -4759,7 +4808,7 @@ class ActionController::Renderer
   # Render templates with any options from ActionController::Base#render_to_string.
   #
   # The primary options are:
-  # * <tt>:partial</tt> - See <tt>ActionView::PartialRenderer</tt> for details.
+  # * <tt>:partial</tt> - See ActionView::PartialRenderer for details.
   # * <tt>:file</tt> - Renders an explicit template file. Add <tt>:locals</tt> to pass in, if so desired.
   #   It shouldn’t be used directly with unsanitized user input due to lack of validation.
   # * <tt>:inline</tt> - Renders an ERB template string.
@@ -4781,7 +4830,7 @@ class ActionController::Renderer
   # Render templates with any options from ActionController::Base#render_to_string.
   #
   # The primary options are:
-  # * <tt>:partial</tt> - See <tt>ActionView::PartialRenderer</tt> for details.
+  # * <tt>:partial</tt> - See ActionView::PartialRenderer for details.
   # * <tt>:file</tt> - Renders an explicit template file. Add <tt>:locals</tt> to pass in, if so desired.
   #   It shouldn’t be used directly with unsanitized user input due to lack of validation.
   # * <tt>:inline</tt> - Renders an ERB template string.
@@ -4830,7 +4879,7 @@ module ActionController::Renderers
   def _render_with_renderer_json(json, options); end
   def _render_with_renderer_xml(xml, options); end
 
-  # Called by +render+ in <tt>AbstractController::Rendering</tt>
+  # Called by +render+ in AbstractController::Rendering
   # which sets the return value as the +response_body+.
   #
   # If no renderer is found, +super+ returns control to
@@ -4842,7 +4891,7 @@ module ActionController::Renderers
 
     # Adds a new renderer to call within controller actions.
     # A renderer is invoked by passing its name as an option to
-    # <tt>AbstractController::Rendering#render</tt>. To create a renderer
+    # AbstractController::Rendering#render. To create a renderer
     # pass it a name and a block. The block takes two arguments, the first
     # is the value paired with its key and the second is the remaining
     # hash of options passed to +render+.
@@ -4892,8 +4941,7 @@ module ActionController::Renderers
   end
 end
 
-# Used in <tt>ActionController::Base</tt>
-# and <tt>ActionController::API</tt> to include all
+# Used in ActionController::Base and ActionController::API to include all
 # renderers by default.
 module ActionController::Renderers::All
   extend ::ActiveSupport::Concern
@@ -4920,18 +4968,18 @@ module ActionController::Renderers::ClassMethods
   # Adds, by name, a renderer or renderers to the +_renderers+ available
   # to call within controller actions.
   #
-  # It is useful when rendering from an <tt>ActionController::Metal</tt> controller or
+  # It is useful when rendering from an ActionController::Metal controller or
   # otherwise to add an available renderer proc to a specific controller.
   #
-  # Both <tt>ActionController::Base</tt> and <tt>ActionController::API</tt>
-  # include <tt>ActionController::Renderers::All</tt>, making all renderers
+  # Both ActionController::Base and ActionController::API
+  # include ActionController::Renderers::All, making all renderers
   # available in the controller. See <tt>Renderers::RENDERERS</tt> and <tt>Renderers.add</tt>.
   #
-  # Since <tt>ActionController::Metal</tt> controllers cannot render, the controller
-  # must include <tt>AbstractController::Rendering</tt>, <tt>ActionController::Rendering</tt>,
-  # and <tt>ActionController::Renderers</tt>, and have at least one renderer.
+  # Since ActionController::Metal controllers cannot render, the controller
+  # must include AbstractController::Rendering, ActionController::Rendering,
+  # and ActionController::Renderers, and have at least one renderer.
   #
-  # Rather than including <tt>ActionController::Renderers::All</tt> and including all renderers,
+  # Rather than including ActionController::Renderers::All and including all renderers,
   # you may specify which renderers to include by passing the renderer name or names to
   # +use_renderers+. For example, a controller that includes only the <tt>:json</tt> renderer
   # (+_render_with_renderer_json+) might look like:
@@ -4955,18 +5003,18 @@ module ActionController::Renderers::ClassMethods
   # Adds, by name, a renderer or renderers to the +_renderers+ available
   # to call within controller actions.
   #
-  # It is useful when rendering from an <tt>ActionController::Metal</tt> controller or
+  # It is useful when rendering from an ActionController::Metal controller or
   # otherwise to add an available renderer proc to a specific controller.
   #
-  # Both <tt>ActionController::Base</tt> and <tt>ActionController::API</tt>
-  # include <tt>ActionController::Renderers::All</tt>, making all renderers
+  # Both ActionController::Base and ActionController::API
+  # include ActionController::Renderers::All, making all renderers
   # available in the controller. See <tt>Renderers::RENDERERS</tt> and <tt>Renderers.add</tt>.
   #
-  # Since <tt>ActionController::Metal</tt> controllers cannot render, the controller
-  # must include <tt>AbstractController::Rendering</tt>, <tt>ActionController::Rendering</tt>,
-  # and <tt>ActionController::Renderers</tt>, and have at least one renderer.
+  # Since ActionController::Metal controllers cannot render, the controller
+  # must include AbstractController::Rendering, ActionController::Rendering,
+  # and ActionController::Renderers, and have at least one renderer.
   #
-  # Rather than including <tt>ActionController::Renderers::All</tt> and including all renderers,
+  # Rather than including ActionController::Renderers::All and including all renderers,
   # you may specify which renderers to include by passing the renderer name or names to
   # +use_renderers+. For example, a controller that includes only the <tt>:json</tt> renderer
   # (+_render_with_renderer_json+) might look like:
@@ -5004,7 +5052,7 @@ module ActionController::Rendering
 
   def render_to_body(options = T.unsafe(nil)); end
 
-  # Overwrite render_to_string because body can now be set to a Rack body.
+  # Override render_to_string because body can now be set to a Rack body.
   def render_to_string(*_arg0); end
 
   private
@@ -5064,7 +5112,7 @@ ActionController::Rendering::RENDER_FORMATS_IN_PRIORITY = T.let(T.unsafe(nil), A
 # response may be extracted. To prevent this, only XmlHttpRequest (known as XHR or
 # Ajax) requests are allowed to make requests for JavaScript responses.
 #
-# Subclasses of <tt>ActionController::Base</tt> are protected by default with the
+# Subclasses of ActionController::Base are protected by default with the
 # <tt>:exception</tt> strategy, which raises an
 # <tt>ActionController::InvalidAuthenticityToken</tt> error on unverified requests.
 #
@@ -5242,8 +5290,8 @@ module ActionController::RequestForgeryProtection::ClassMethods
   #
   # Valid Options:
   #
-  # * <tt>:only/:except</tt> - Only apply forgery protection to a subset of actions. For example <tt>only: [ :create, :create_all ]</tt>.
-  # * <tt>:if/:unless</tt> - Turn off the forgery protection entirely depending on the passed Proc or method reference.
+  # * <tt>:only</tt> / <tt>:except</tt> - Only apply forgery protection to a subset of actions. For example <tt>only: [ :create, :create_all ]</tt>.
+  # * <tt>:if</tt> / <tt>:unless</tt> - Turn off the forgery protection entirely depending on the passed Proc or method reference.
   # * <tt>:prepend</tt> - By default, the verification of the authentication token will be added at the position of the
   #   protect_from_forgery call in your application. This means any callbacks added before are run first. This is useful
   #   when you want your forgery protection to depend on other callbacks, like authentication methods (Oauth vs Cookie auth).
@@ -5428,7 +5476,7 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # Ruby implementation).
 #
 # Streaming can be added to a given template easily, all you need to do is
-# to pass the :stream option.
+# to pass the +:stream+ option.
 #
 #   class PostsController
 #     def index
@@ -5463,8 +5511,8 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 #     render stream: true
 #   end
 #
-# Notice that :stream only works with templates. Rendering :json
-# or :xml with :stream won't work.
+# Notice that +:stream+ only works with templates. Rendering +:json+
+# or +:xml+ with +:stream+ won't work.
 #
 # == Communication between layout and template
 #
@@ -5476,7 +5524,7 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # variables set in the template to be used in the layout, they won't
 # work once you move to streaming. The proper way to communicate
 # between layout and template, regardless of whether you use streaming
-# or not, is by using +content_for+, +provide+ and +yield+.
+# or not, is by using +content_for+, +provide+, and +yield+.
 #
 # Take a simple example where the layout expects the template to tell
 # which title to use:
@@ -5536,7 +5584,7 @@ ActionController::SessionOverflowError::DEFAULT_MESSAGE = T.let(T.unsafe(nil), S
 # That said, when streaming, you need to properly check your templates
 # and choose when to use +provide+ and +content_for+.
 #
-# == Headers, cookies, session and flash
+# == Headers, cookies, session, and flash
 #
 # When streaming, the HTTP headers are sent to the client right before
 # it renders the first line. This means that, modifying headers, cookies,
@@ -5706,7 +5754,7 @@ end
 # == Basic example
 #
 # Functional tests are written as follows:
-# 1. First, one uses the +get+, +post+, +patch+, +put+, +delete+ or +head+ method to simulate
+# 1. First, one uses the +get+, +post+, +patch+, +put+, +delete+, or +head+ method to simulate
 #    an HTTP request.
 # 2. Then, one asserts whether the current state is as expected. "State" can be anything:
 #    the controller's HTTP response, the database contents, etc.
@@ -5861,7 +5909,7 @@ module ActionController::TestCase::Behavior
   #
   # You can also simulate POST, PATCH, PUT, DELETE, and HEAD requests with
   # +post+, +patch+, +put+, +delete+, and +head+.
-  # Example sending parameters, session and setting a flash message:
+  # Example sending parameters, session, and setting a flash message:
   #
   #   get :show,
   #     params: { id: 7 },
@@ -5909,7 +5957,7 @@ module ActionController::TestCase::Behavior
   #     session: { user_id: 1 },
   #     flash: { notice: 'This is flash message' }
   #
-  # To simulate +GET+, +POST+, +PATCH+, +PUT+, +DELETE+ and +HEAD+ requests
+  # To simulate +GET+, +POST+, +PATCH+, +PUT+, +DELETE+, and +HEAD+ requests
   # prefer using #get, #post, #patch, #put, #delete and #head methods
   # respectively which will make tests more expressive.
   #
@@ -6067,11 +6115,11 @@ end
 # Includes +url_for+ into the host class. The class has to provide a +RouteSet+ by implementing
 # the <tt>_routes</tt> method. Otherwise, an exception will be raised.
 #
-# In addition to <tt>AbstractController::UrlFor</tt>, this module accesses the HTTP layer to define
+# In addition to AbstractController::UrlFor, this module accesses the HTTP layer to define
 # URL options like the +host+. In order to do so, this module requires the host class
 # to implement +env+ which needs to be Rack-compatible and +request+
-# which is either an instance of +ActionDispatch::Request+ or an object
-# that responds to the +host+, +optional_port+, +protocol+ and
+# which is either an instance of ActionDispatch::Request or an object
+# that responds to the +host+, +optional_port+, +protocol+, and
 # +symbolized_path_parameter+ methods.
 #
 #   class RootUrl
@@ -6274,8 +6322,8 @@ module ActionDispatch::Assertions::RoutingAssertions
   # match +path+. Basically, it asserts that \Rails recognizes the route given by +expected_options+.
   #
   # Pass a hash in the second argument (+path+) to specify the request method. This is useful for routes
-  # requiring a specific HTTP method. The hash should contain a :path with the incoming request path
-  # and a :method containing the required HTTP verb.
+  # requiring a specific HTTP method. The hash should contain a +:path+ with the incoming request path
+  # and a +:method+ containing the required HTTP verb.
   #
   #   # Asserts that POSTing to /items will call the create action on ItemsController
   #   assert_recognizes({controller: 'items', action: 'create'}, {path: 'items', method: :post})
@@ -6326,7 +6374,7 @@ module ActionDispatch::Assertions::RoutingAssertions
   def assert_routing(path, options, defaults = T.unsafe(nil), extras = T.unsafe(nil), message = T.unsafe(nil)); end
 
   # ROUTES TODO: These assertions should really work in an integration context
-  def method_missing(selector, *args, &block); end
+  def method_missing(selector, *args, **_arg2, &block); end
 
   def setup; end
 
@@ -6378,6 +6426,23 @@ class ActionDispatch::Callbacks
   end
 end
 
+# Configures the HTTP
+# {Content-Security-Policy}[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy]
+# response header to help protect against XSS and injection attacks.
+#
+# Example global policy:
+#
+#   Rails.application.config.content_security_policy do |policy|
+#     policy.default_src :self, :https
+#     policy.font_src    :self, :https, :data
+#     policy.img_src     :self, :https, :data
+#     policy.object_src  :none
+#     policy.script_src  :self, :https
+#     policy.style_src   :self, :https
+#
+#     # Specify URI for violation reports
+#     policy.report_uri "/csp-violation-report-endpoint"
+#   end
 class ActionDispatch::ContentSecurityPolicy
   # @return [ContentSecurityPolicy] a new instance of ContentSecurityPolicy
   # @yield [_self]
@@ -6385,7 +6450,17 @@ class ActionDispatch::ContentSecurityPolicy
   def initialize; end
 
   def base_uri(*sources); end
+
+  # Specify whether to prevent the user agent from loading any assets over
+  # HTTP when the page uses HTTPS:
+  #
+  #   policy.block_all_mixed_content
+  #
+  # Pass +false+ to allow it again:
+  #
+  #   policy.block_all_mixed_content false
   def block_all_mixed_content(enabled = T.unsafe(nil)); end
+
   def build(context = T.unsafe(nil), nonce = T.unsafe(nil), nonce_directives = T.unsafe(nil)); end
   def child_src(*sources); end
   def connect_src(*sources); end
@@ -6402,12 +6477,50 @@ class ActionDispatch::ContentSecurityPolicy
   def manifest_src(*sources); end
   def media_src(*sources); end
   def object_src(*sources); end
+
+  # Restricts the set of plugins that can be embedded:
+  #
+  #   policy.plugin_types "application/x-shockwave-flash"
+  #
+  # Leave empty to allow all plugins:
+  #
+  #   policy.plugin_types
   def plugin_types(*types); end
+
   def prefetch_src(*sources); end
+
+  # Enable the {report-uri}[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri]
+  # directive. Violation reports will be sent to the specified URI:
+  #
+  #   policy.report_uri "/csp-violation-report-endpoint"
   def report_uri(uri); end
+
+  # Specify asset types for which {Subresource Integrity}[https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity]
+  # is required:
+  #
+  #   policy.require_sri_for :script, :style
+  #
+  # Leave empty to not require Subresource Integrity:
+  #
+  #   policy.require_sri_for
   def require_sri_for(*types); end
+
   def require_trusted_types_for(*sources); end
+
+  # Specify whether a {sandbox}[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/sandbox]
+  # should be enabled for the requested resource:
+  #
+  #   policy.sandbox
+  #
+  # Values can be passed as arguments:
+  #
+  #   policy.sandbox "allow-scripts", "allow-modals"
+  #
+  # Pass +false+ to disable the sandbox:
+  #
+  #   policy.sandbox false
   def sandbox(*values); end
+
   def script_src(*sources); end
   def script_src_attr(*sources); end
   def script_src_elem(*sources); end
@@ -6415,7 +6528,16 @@ class ActionDispatch::ContentSecurityPolicy
   def style_src_attr(*sources); end
   def style_src_elem(*sources); end
   def trusted_types(*sources); end
+
+  # Specify whether user agents should treat any assets over HTTP as HTTPS:
+  #
+  #   policy.upgrade_insecure_requests
+  #
+  # Pass +false+ to disable it:
+  #
+  #   policy.upgrade_insecure_requests false
   def upgrade_insecure_requests(enabled = T.unsafe(nil)); end
+
   def worker_src(*sources); end
 
   private
@@ -6523,7 +6645,7 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #
 #   cookies.delete :user_name
 #
-# Please note that if you specify a :domain when setting a cookie, you must also specify the domain when deleting the cookie:
+# Please note that if you specify a +:domain+ when setting a cookie, you must also specify the domain when deleting the cookie:
 #
 #  cookies[:name] = {
 #    value: 'a yummy cookie',
@@ -6560,6 +6682,10 @@ ActionDispatch::ContentSecurityPolicy::Request::POLICY_REPORT_ONLY = T.let(T.uns
 #   Default is +false+.
 # * <tt>:httponly</tt> - Whether this cookie is accessible via scripting or
 #   only HTTP. Defaults to +false+.
+# * <tt>:same_site</tt> - The value of the +SameSite+ cookie attribute, which
+#   determines how this cookie should be restricted in cross-site contexts.
+#   Possible values are +nil+, +:none+, +:lax+, and +:strict+. Defaults to
+#   +:lax+.
 class ActionDispatch::Cookies
   # @return [Cookies] a new instance of Cookies
   def initialize(app); end
@@ -6595,7 +6721,7 @@ ActionDispatch::Cookies::COOKIES_ROTATIONS = T.let(T.unsafe(nil), String)
 ActionDispatch::Cookies::COOKIES_SAME_SITE_PROTECTION = T.let(T.unsafe(nil), String)
 ActionDispatch::Cookies::COOKIES_SERIALIZER = T.let(T.unsafe(nil), String)
 
-# Include in a cookie jar to allow chaining, e.g. cookies.permanent.signed.
+# Include in a cookie jar to allow chaining, e.g. +cookies.permanent.signed+.
 module ActionDispatch::Cookies::ChainedCookieJars
   # Returns a jar that'll automatically encrypt cookie values before sending them to the client and will decrypt them for read.
   # If the cookie was tampered with by the user (or a 3rd party), +nil+ will be returned.
@@ -7067,10 +7193,11 @@ ActionDispatch::FileHandler::PRECOMPRESSED = T.let(T.unsafe(nil), Hash)
 #     end
 #   end
 #
-#   show.html.erb
-#     <% if flash[:notice] %>
-#       <div class="notice"><%= flash[:notice] %></div>
-#     <% end %>
+# Then in +show.html.erb+:
+#
+#   <% if flash[:notice] %>
+#     <div class="notice"><%= flash[:notice] %></div>
+#   <% end %>
 #
 # Since the +notice+ and +alert+ keys are a common idiom, convenience accessors are available:
 #
@@ -7214,9 +7341,9 @@ ActionDispatch::Flash::KEY = T.let(T.unsafe(nil), String)
 module ActionDispatch::Flash::RequestMethods
   def commit_flash; end
 
-  # Access the contents of the flash. Use <tt>flash["notice"]</tt> to
-  # read a notice you put there or <tt>flash["notice"] = "hello"</tt>
-  # to put a new one.
+  # Access the contents of the flash. Returns a ActionDispatch::Flash::FlashHash.
+  #
+  # See ActionDispatch::Flash for example usage.
   def flash; end
 
   def flash=(flash); end
@@ -7602,8 +7729,8 @@ module ActionDispatch::Http::MimeNegotiation
   # Sets the \formats by string extensions. This differs from #format= by allowing you
   # to set multiple, ordered formats, which is useful when you want to have a fallback.
   #
-  # In this example, the :iphone format will be used if it's available, otherwise it'll fallback
-  # to the :html format.
+  # In this example, the +:iphone+ format will be used if it's available, otherwise it'll fallback
+  # to the +:html+ format.
   #
   #   class ApplicationController < ActionController::Base
   #     before_action :adjust_format_for_iphone_with_html_fallback
@@ -9503,6 +9630,21 @@ end
 
 class ActionDispatch::MissingController < ::NameError; end
 
+# Configures the HTTP
+# {Feature-Policy}[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy]
+# response header to specify which browser features the current document and
+# its iframes can use.
+#
+# Example global policy:
+#
+#   Rails.application.config.permissions_policy do |policy|
+#     policy.camera      :none
+#     policy.gyroscope   :none
+#     policy.microphone  :none
+#     policy.usb         :none
+#     policy.fullscreen  :self
+#     policy.payment     :self, "https://secure.example.com"
+#   end
 class ActionDispatch::PermissionsPolicy
   # @return [PermissionsPolicy] a new instance of PermissionsPolicy
   # @yield [_self]
@@ -9884,8 +10026,8 @@ class ActionDispatch::Request
   def remote_user; end
 
   # Returns the unique request id, which is based on either the X-Request-Id header that can
-  # be generated by a firewall, load balancer, or web server or by the RequestId middleware
-  # (which sets the action_dispatch.request_id environment variable).
+  # be generated by a firewall, load balancer, or web server, or by the RequestId middleware
+  # (which sets the +action_dispatch.request_id+ environment variable).
   #
   # This unique ID is useful for tracing a request from end-to-end as part of logging or debugging.
   # This relies on the Rack variable set by the ActionDispatch::RequestId middleware.
@@ -9942,8 +10084,8 @@ class ActionDispatch::Request
   def show_exceptions?; end
 
   # Returns the unique request id, which is based on either the X-Request-Id header that can
-  # be generated by a firewall, load balancer, or web server or by the RequestId middleware
-  # (which sets the action_dispatch.request_id environment variable).
+  # be generated by a firewall, load balancer, or web server, or by the RequestId middleware
+  # (which sets the +action_dispatch.request_id+ environment variable).
   #
   # This unique ID is useful for tracing a request from end-to-end as part of logging or debugging.
   # This relies on the Rack variable set by the ActionDispatch::RequestId middleware.
@@ -10245,7 +10387,7 @@ class ActionDispatch::RequestEncoder::IdentityEncoder
 end
 
 # Makes a unique request id available to the +action_dispatch.request_id+ env variable (which is then accessible
-# through <tt>ActionDispatch::Request#request_id</tt> or the alias <tt>ActionDispatch::Request#uuid</tt>) and sends
+# through ActionDispatch::Request#request_id or the alias ActionDispatch::Request#uuid) and sends
 # the same id to the client via the X-Request-Id header.
 #
 # The unique request id is either based on the X-Request-Id header in the request, which would typically be generated
@@ -10608,7 +10750,7 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # Resource routing allows you to quickly declare all of the common routes
 # for a given resourceful controller. Instead of declaring separate routes
-# for your +index+, +show+, +new+, +edit+, +create+, +update+ and +destroy+
+# for your +index+, +show+, +new+, +edit+, +create+, +update+, and +destroy+
 # actions, a resourceful route declares them in a single line of code:
 #
 #  resources :photos
@@ -10645,9 +10787,8 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #     resources :posts, :comments
 #   end
 #
-# For more, see <tt>Routing::Mapper::Resources#resources</tt>,
-# <tt>Routing::Mapper::Scoping#namespace</tt>, and
-# <tt>Routing::Mapper::Scoping#scope</tt>.
+# For more, see Routing::Mapper::Resources#resources,
+# Routing::Mapper::Scoping#namespace, and Routing::Mapper::Scoping#scope.
 #
 # == Non-resourceful routes
 #
@@ -10939,10 +11080,10 @@ module ActionDispatch::Routing::Mapper::Base
   #
   # If you want to expose your action to both GET and POST, use:
   #
-  #   # sets :controller, :action and :id in params
+  #   # sets :controller, :action, and :id in params
   #   match ':controller/:action/:id', via: [:get, :post]
   #
-  # Note that +:controller+, +:action+ and +:id+ are interpreted as URL
+  # Note that +:controller+, +:action+, and +:id+ are interpreted as URL
   # query parameters and thus available through +params+ in an action.
   #
   # If you want to expose your action to GET, use +get+ in the router:
@@ -11479,7 +11620,7 @@ ActionDispatch::Routing::Mapper::Mapping::OPTIONAL_FORMAT_REGEX = T.let(T.unsafe
 
 # Resource routing allows you to quickly declare all of the common routes
 # for a given resourceful controller. Instead of declaring separate routes
-# for your +index+, +show+, +new+, +edit+, +create+, +update+ and +destroy+
+# for your +index+, +show+, +new+, +edit+, +create+, +update+, and +destroy+
 # actions, a resourceful route declares them in a single line of code:
 #
 #  resources :photos
@@ -12070,7 +12211,7 @@ module ActionDispatch::Routing::Mapper::Scoping
   #
   # === Options
   #
-  # The +:path+, +:as+, +:module+, +:shallow_path+ and +:shallow_prefix+
+  # The +:path+, +:as+, +:module+, +:shallow_path+, and +:shallow_prefix+
   # options all default to the name of the namespace.
   #
   # For options, see <tt>Base#match</tt>. For +:shallow_path+ option, see
@@ -12349,6 +12490,11 @@ module ActionDispatch::Routing::Redirection
   #
   # This will redirect the user, while ignoring certain parts of the request, including query string, etc.
   # <tt>/stories</tt>, <tt>/stories?foo=bar</tt>, etc all redirect to <tt>/posts</tt>.
+  #
+  # The redirect will use a <tt>301 Moved Permanently</tt> status code by
+  # default. This can be overridden with the +:status+ option:
+  #
+  #   get "/stories" => redirect("/posts", status: 307)
   #
   # You can also use interpolation in the supplied redirect argument:
   #
@@ -12966,7 +13112,7 @@ ActionDispatch::Routing::SEPARATORS = T.let(T.unsafe(nil), Array)
 #   resources :users
 #
 # This generates, among other things, the method <tt>users_path</tt>. By default,
-# this method is accessible from your controllers, views and mailers. If you need
+# this method is accessible from your controllers, views, and mailers. If you need
 # to access this auto-generated method from other places (such as a model), then
 # you can do that by including Rails.application.routes.url_helpers in your class:
 #
@@ -13009,7 +13155,7 @@ module ActionDispatch::Routing::UrlFor
   #   threadable_url(threadable)   # => "http://example.com/buckets/1"
   def route_for(name, *args); end
 
-  # Generate a URL based on the options provided, default_url_options and the
+  # Generate a URL based on the options provided, default_url_options, and the
   # routes defined in routes.rb. The following options are supported:
   #
   # * <tt>:only_path</tt> - If true, the relative URL is returned. Defaults to +false+.
@@ -13048,7 +13194,7 @@ module ActionDispatch::Routing::UrlFor
   #    # => '/myapp/tasks/testing'
   #
   # Missing routes keys may be filled in from the current request's parameters
-  # (e.g. +:controller+, +:action+, +:id+ and any other parameters that are
+  # (e.g. +:controller+, +:action+, +:id+, and any other parameters that are
   # placed in the path). Given that the current action has been reached
   # through <tt>GET /users/1</tt>:
   #
@@ -13273,8 +13419,8 @@ end
 #   Rails.application.config.session_store :cookie_store, expire_after: 14.days
 #
 # would set the session cookie to expire automatically 14 days after creation.
-# Other useful options include <tt>:key</tt>, <tt>:secure</tt> and
-# <tt>:httponly</tt>.
+# Other useful options include <tt>:key</tt>, <tt>:secure</tt>,
+# <tt>:httponly</tt>, and <tt>:same_site</tt>.
 class ActionDispatch::Session::CookieStore < ::ActionDispatch::Session::AbstractSecureStore
   # @return [CookieStore] a new instance of CookieStore
   def initialize(app, options = T.unsafe(nil)); end
@@ -13429,10 +13575,10 @@ end
 
 module ActionPack
   class << self
-    # Returns the version of the currently loaded Action Pack as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Action Pack as a <tt>Gem::Version</tt>.
     def gem_version; end
 
-    # Returns the version of the currently loaded ActionPack as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Action Pack as a <tt>Gem::Version</tt>.
     def version; end
   end
 end
@@ -13440,7 +13586,6 @@ end
 module ActionPack::VERSION; end
 ActionPack::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionPack::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionPack::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionPack::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 

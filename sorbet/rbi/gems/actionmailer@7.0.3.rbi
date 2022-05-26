@@ -10,10 +10,10 @@ module ActionMailer
   class << self
     def eager_load!; end
 
-    # Returns the version of the currently loaded Action Mailer as a <tt>Gem::Version</tt>.
+    # Returns the currently loaded version of Action Mailer as a <tt>Gem::Version</tt>.
     def gem_version; end
 
-    # Returns the version of the currently loaded Action Mailer as a
+    # Returns the currently loaded version of Action Mailer as a
     # <tt>Gem::Version</tt>.
     def version; end
   end
@@ -114,7 +114,7 @@ end
 #   You got a new note!
 #   <%= truncate(@note.body, length: 25) %>
 #
-# If you need to access the subject, from or the recipients in the view, you can do that through message object:
+# If you need to access the subject, from, or the recipients in the view, you can do that through message object:
 #
 #   You got a new note from <%= message.from %>!
 #   <%= truncate(@note.body, length: 25) %>
@@ -157,9 +157,9 @@ end
 #   mail = NotifierMailer.welcome(User.first)      # => an ActionMailer::MessageDelivery object
 #   mail.deliver_now                               # generates and sends the email now
 #
-# The <tt>ActionMailer::MessageDelivery</tt> class is a wrapper around a delegate that will call
+# The ActionMailer::MessageDelivery class is a wrapper around a delegate that will call
 # your method to generate the mail. If you want direct access to the delegator, or <tt>Mail::Message</tt>,
-# you can call the <tt>message</tt> method on the <tt>ActionMailer::MessageDelivery</tt> object.
+# you can call the <tt>message</tt> method on the ActionMailer::MessageDelivery object.
 #
 #   NotifierMailer.welcome(User.first).message     # => a Mail::Message object
 #
@@ -342,13 +342,36 @@ end
 #   end
 #
 # Callbacks in Action Mailer are implemented using
-# <tt>AbstractController::Callbacks</tt>, so you can define and configure
+# AbstractController::Callbacks, so you can define and configure
 # callbacks in the same manner that you would use callbacks in classes that
-# inherit from <tt>ActionController::Base</tt>.
+# inherit from ActionController::Base.
 #
 # Note that unless you have a specific reason to do so, you should prefer
 # using <tt>before_action</tt> rather than <tt>after_action</tt> in your
 # Action Mailer classes so that headers are parsed properly.
+#
+# = Rescuing Errors
+#
+# +rescue+ blocks inside of a mailer method cannot rescue errors that occur
+# outside of rendering -- for example, record deserialization errors in a
+# background job, or errors from a third-party mail delivery service.
+#
+# To rescue errors that occur during any part of the mailing process, use
+# {rescue_from}[rdoc-ref:ActiveSupport::Rescuable::ClassMethods#rescue_from]:
+#
+#   class NotifierMailer < ApplicationMailer
+#     rescue_from ActiveJob::DeserializationError do
+#       # ...
+#     end
+#
+#     rescue_from "SomeThirdPartyService::ApiError" do
+#       # ...
+#     end
+#
+#     def notify(recipient)
+#       mail(to: recipient, subject: "Notification")
+#     end
+#   end
 #
 # = Previewing emails
 #
@@ -710,7 +733,7 @@ class ActionMailer::Base < ::AbstractController::Base
   def perform_deliveries=(val); end
   def preview_interceptors; end
   def preview_path; end
-  def process(method_name, *args); end
+  def process(method_name, *args, **_arg2); end
   def raise_delivery_errors; end
   def raise_delivery_errors=(val); end
   def relative_url_root; end
@@ -884,7 +907,7 @@ class ActionMailer::Base < ::AbstractController::Base
     def raise_delivery_errors=(val); end
 
     # Register an Interceptor which will be called before mail is sent.
-    # Either a class, string or symbol can be passed in as the Interceptor.
+    # Either a class, string, or symbol can be passed in as the Interceptor.
     # If a string or symbol is passed in it will be camelized and constantized.
     def register_interceptor(interceptor); end
 
@@ -892,7 +915,7 @@ class ActionMailer::Base < ::AbstractController::Base
     def register_interceptors(*interceptors); end
 
     # Register an Observer which will be notified when mail is delivered.
-    # Either a class, string or symbol can be passed in as the Observer.
+    # Either a class, string, or symbol can be passed in as the Observer.
     # If a string or symbol is passed in it will be camelized and constantized.
     def register_observer(observer); end
 
@@ -925,7 +948,7 @@ class ActionMailer::Base < ::AbstractController::Base
     def test_settings?; end
 
     # Unregister a previously registered Interceptor.
-    # Either a class, string or symbol can be passed in as the Interceptor.
+    # Either a class, string, or symbol can be passed in as the Interceptor.
     # If a string or symbol is passed in it will be camelized and constantized.
     def unregister_interceptor(interceptor); end
 
@@ -933,7 +956,7 @@ class ActionMailer::Base < ::AbstractController::Base
     def unregister_interceptors(*interceptors); end
 
     # Unregister a previously registered Observer.
-    # Either a class, string or symbol can be passed in as the Observer.
+    # Either a class, string, or symbol can be passed in as the Observer.
     # If a string or symbol is passed in it will be camelized and constantized.
     def unregister_observer(observer); end
 
@@ -1209,7 +1232,7 @@ class ActionMailer::MessageDelivery
   # * <tt>:priority</tt> - Enqueues the email with the specified priority
   #
   # By default, the email will be enqueued using <tt>ActionMailer::MailDeliveryJob</tt>. Each
-  # <tt>ActionMailer::Base</tt> class can specify the job to use by setting the class variable
+  # ActionMailer::Base class can specify the job to use by setting the class variable
   # +delivery_job+.
   #
   #   class AccountRegistrationMailer < ApplicationMailer
@@ -1235,7 +1258,7 @@ class ActionMailer::MessageDelivery
   # * <tt>:priority</tt> - Enqueues the email with the specified priority
   #
   # By default, the email will be enqueued using <tt>ActionMailer::MailDeliveryJob</tt>. Each
-  # <tt>ActionMailer::Base</tt> class can specify the job to use by setting the class variable
+  # ActionMailer::Base class can specify the job to use by setting the class variable
   # +delivery_job+.
   #
   #   class AccountRegistrationMailer < ApplicationMailer
@@ -1487,7 +1510,7 @@ module ActionMailer::Rescuable
 
   private
 
-  def process(*_arg0); end
+  def process(*_arg0, **_arg1, &_arg2); end
 
   module GeneratedClassMethods
     def rescue_handlers; end
@@ -1719,6 +1742,5 @@ end
 module ActionMailer::VERSION; end
 ActionMailer::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionMailer::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionMailer::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionMailer::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionMailer::VERSION::TINY = T.let(T.unsafe(nil), Integer)
