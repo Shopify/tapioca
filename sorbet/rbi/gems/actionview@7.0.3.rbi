@@ -10,10 +10,10 @@ module ActionView
   class << self
     def eager_load!; end
 
-    # Returns the version of the currently loaded Action View as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Action View as a <tt>Gem::Version</tt>.
     def gem_version; end
 
-    # Returns the version of the currently loaded ActionView as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Action View as a <tt>Gem::Version</tt>.
     def version; end
   end
 end
@@ -1339,7 +1339,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an asset in the public directory. This
   # will use +asset_path+ internally, so most of their behaviors
-  # will be the same. If :host options is set, it overwrites global
+  # will be the same. If +:host+ options is set, it overwrites global
   # +config.action_controller.asset_host+ setting.
   #
   # All other options provided are forwarded to +asset_path+ call.
@@ -1361,7 +1361,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an audio asset in the public audios directory.
   # This will use +audio_path+ internally, so most of their behaviors will be the same.
-  # Since +audio_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +audio_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
@@ -1395,7 +1395,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a font asset.
   # This will use +font_path+ internally, so most of their behaviors will be the same.
-  # Since +font_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +font_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
@@ -1418,7 +1418,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an image asset.
   # This will use +image_path+ internally, so most of their behaviors will be the same.
-  # Since +image_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +image_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
@@ -1438,7 +1438,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a JavaScript asset in the public javascripts directory.
   # This will use +javascript_path+ internally, so most of their behaviors will be the same.
-  # Since +javascript_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +javascript_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
@@ -1608,7 +1608,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a stylesheet asset in the public stylesheets directory.
   # This will use +stylesheet_path+ internally, so most of their behaviors will be the same.
-  # Since +stylesheet_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +stylesheet_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
@@ -1616,7 +1616,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an asset in the public directory. This
   # will use +asset_path+ internally, so most of their behaviors
-  # will be the same. If :host options is set, it overwrites global
+  # will be the same. If +:host+ options is set, it overwrites global
   # +config.action_controller.asset_host+ setting.
   #
   # All other options provided are forwarded to +asset_path+ call.
@@ -1628,7 +1628,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an audio asset in the public audios directory.
   # This will use +audio_path+ internally, so most of their behaviors will be the same.
-  # Since +audio_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +audio_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
@@ -1637,7 +1637,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a font asset.
   # This will use +font_path+ internally, so most of their behaviors will be the same.
-  # Since +font_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +font_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
@@ -1646,7 +1646,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to an image asset.
   # This will use +image_path+ internally, so most of their behaviors will be the same.
-  # Since +image_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +image_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
@@ -1655,7 +1655,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a JavaScript asset in the public javascripts directory.
   # This will use +javascript_path+ internally, so most of their behaviors will be the same.
-  # Since +javascript_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +javascript_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
@@ -1664,7 +1664,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a stylesheet asset in the public stylesheets directory.
   # This will use +stylesheet_path+ internally, so most of their behaviors will be the same.
-  # Since +stylesheet_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +stylesheet_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
@@ -1673,7 +1673,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a video asset in the public videos directory.
   # This will use +video_path+ internally, so most of their behaviors will be the same.
-  # Since +video_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +video_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
@@ -1693,7 +1693,7 @@ module ActionView::Helpers::AssetUrlHelper
 
   # Computes the full URL to a video asset in the public videos directory.
   # This will use +video_path+ internally, so most of their behaviors will be the same.
-  # Since +video_url+ is based on +asset_url+ method you can set :host options. If :host
+  # Since +video_url+ is based on +asset_url+ method you can set +:host+ options. If +:host+
   # options is set, it overwrites global +config.action_controller.asset_host+ setting.
   #
   #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
@@ -2476,7 +2476,7 @@ module ActionView::Helpers::DateHelper
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   def datetime_select(object_name, method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # Reports the approximate distance in time between two Time, Date or DateTime objects or integers as seconds.
+  # Reports the approximate distance in time between two Time, Date, or DateTime objects or integers as seconds.
   # Pass <tt>include_seconds: true</tt> if you want more detailed approximations when distance < 1 min, 29 secs.
   # Distances are reported based on the following table:
   #
@@ -2865,12 +2865,12 @@ module ActionView::Helpers::DateHelper
   # Note that you cannot pass a <tt>Numeric</tt> value to <tt>time_ago_in_words</tt>.
   def time_ago_in_words(from_time, options = T.unsafe(nil)); end
 
-  # Returns a set of select tags (one for hour, minute and optionally second) pre-selected for accessing a
+  # Returns a set of select tags (one for hour, minute, and optionally second) pre-selected for accessing a
   # specified time-based attribute (identified by +method+) on an object assigned to the template (identified by
   # +object+). You can include the seconds with <tt>:include_seconds</tt>. You can get hours in the AM/PM format
   # with <tt>:ampm</tt> option.
   #
-  # This method will also generate 3 input hidden tags, for the actual year, month and day unless the option
+  # This method will also generate 3 input hidden tags, for the actual year, month, and day unless the option
   # <tt>:ignore_date</tt> is set to +true+. If you set the <tt>:ignore_date</tt> to +true+, you must have a
   # +date_select+ on the same method within the form otherwise an exception will be raised.
   #
@@ -3083,6 +3083,7 @@ class ActionView::Helpers::DateTimeSelector
   #  => "<option value="">Select month</option>"
   def prompt_option_tag(type, options); end
 
+  def prompt_text(prompt, type); end
   def sec; end
 
   # Returns the separator for a given datetime component.
@@ -3421,7 +3422,7 @@ class ActionView::Helpers::FormBuilder
   #   <% end %>
   def field_name(method, *methods, multiple: T.unsafe(nil), index: T.unsafe(nil)); end
 
-  # See the docs for the <tt>ActionView::FormHelper.fields</tt> helper method.
+  # See the docs for the ActionView::Helpers::FormHelper#fields helper method.
   def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
 
   # Creates a scope around a specific model object like form_for, but
@@ -3756,7 +3757,7 @@ class ActionView::Helpers::FormBuilder
 
   # Returns a label tag tailored for labelling an input field for a specified attribute (identified by +method+) on an object
   # assigned to the template (identified by +object+). The text of label will default to the attribute name unless a translation
-  # is found in the current I18n locale (through helpers.label.<modelname>.<attribute>) or you specify it explicitly.
+  # is found in the current I18n locale (through <tt>helpers.label.<modelname>.<attribute></tt>) or you specify it explicitly.
   # Additional options on the label tag can be passed as a hash with +options+. These options will be tagged
   # onto the HTML as an HTML element attribute as in the example shown, except for the <tt>:value</tt> option, which is designed to
   # target labels for radio_button tags (where the value is used in the ID of the input tag).
@@ -4536,9 +4537,10 @@ module ActionView::Helpers::FormHelper
   #   <% end %>
   #
   # Note that fields_for will automatically generate a hidden field
-  # to store the ID of the record. There are circumstances where this
-  # hidden field is not needed and you can pass <tt>include_id: false</tt>
-  # to prevent fields_for from rendering it automatically.
+  # to store the ID of the record if it responds to <tt>persisted?</tt>.
+  # There are circumstances where this hidden field is not needed and you
+  # can pass <tt>include_id: false</tt> to prevent fields_for from
+  # rendering it automatically.
   def fields_for(record_name, record_object = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a file upload input tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -5184,7 +5186,7 @@ module ActionView::Helpers::FormHelper
 
   # Returns a label tag tailored for labelling an input field for a specified attribute (identified by +method+) on an object
   # assigned to the template (identified by +object+). The text of label will default to the attribute name unless a translation
-  # is found in the current I18n locale (through helpers.label.<modelname>.<attribute>) or you specify it explicitly.
+  # is found in the current I18n locale (through <tt>helpers.label.<modelname>.<attribute></tt>) or you specify it explicitly.
   # Additional options on the label tag can be passed as a hash with +options+. These options will be tagged
   # onto the HTML as an HTML element attribute as in the example shown, except for the <tt>:value</tt> option, which is designed to
   # target labels for radio_button tags (where the value is used in the ID of the input tag).
@@ -6128,9 +6130,9 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # Options:
   # * <tt>:index_as_value</tt> - Defaults to false, set to true to use the indexes from
-  # `I18n.translate("date.day_names")` as the values. By default, Sunday is always 0.
+  #   <tt>I18n.translate("date.day_names")</tt> as the values. By default, Sunday is always 0.
   # * <tt>:day_format</tt> - The I18n key of the array to use for the weekday options.
-  # Defaults to :day_names, set to :abbr_day_names for abbreviations.
+  #   Defaults to +:day_names+, set to +:abbr_day_names+ for abbreviations.
   # * <tt>:beginning_of_week</tt> - Defaults to Date.beginning_of_week.
   #
   # NOTE: Only the option tags are returned, you have to wrap this call in
@@ -6991,7 +6993,7 @@ ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP = T.let(T.unsafe(nil), Hash
 
 # Provides methods for converting numbers into formatted strings.
 # Methods are provided for phone numbers, currency, percentage,
-# precision, positional notation, file size and pretty printing.
+# precision, positional notation, file size, and pretty printing.
 #
 # Most methods expect a +number+ argument, and will return it
 # unchanged if can't be converted into a valid number.
@@ -7375,7 +7377,7 @@ module ActionView::Helpers::NumberHelper
 end
 
 # Raised when argument +number+ param given to the helpers is invalid and
-# the option :raise is set to  +true+.
+# the option +:raise+ is set to  +true+.
 class ActionView::Helpers::NumberHelper::InvalidNumberError < ::StandardError
   # @return [InvalidNumberError] a new instance of InvalidNumberError
   def initialize(number); end
@@ -7425,7 +7427,7 @@ end
 # In order to use this module, all you need is to implement
 # view_renderer that returns an ActionView::Renderer object.
 module ActionView::Helpers::RenderingHelper
-  # Overwrites _layout_for in the context object so it supports the case a block is
+  # Overrides _layout_for in the context object so it supports the case a block is
   # passed to a partial. Returns the contents that are yielded to a layout, given a
   # name or a block.
   #
@@ -7476,8 +7478,8 @@ module ActionView::Helpers::RenderingHelper
 
   # Returns the result of a render that's dictated by the options hash. The primary options are:
   #
-  # * <tt>:partial</tt> - See <tt>ActionView::PartialRenderer</tt>.
-  # * <tt>:file</tt> - Renders an explicit template file (this used to be the old default), add :locals to pass in those.
+  # * <tt>:partial</tt> - See ActionView::PartialRenderer.
+  # * <tt>:file</tt> - Renders an explicit template file (this used to be the old default), add +:locals+ to pass in those.
   # * <tt>:inline</tt> - Renders an inline template similar to how it's done in the controller.
   # * <tt>:plain</tt> - Renders the text passed in out. Setting the content
   #   type as <tt>text/plain</tt>.
@@ -7485,8 +7487,7 @@ module ActionView::Helpers::RenderingHelper
   #   performs HTML escape on the string first. Setting the content type as
   #   <tt>text/html</tt>.
   # * <tt>:body</tt> - Renders the text passed in, and inherits the content
-  #   type of <tt>text/plain</tt> from <tt>ActionDispatch::Response</tt>
-  #   object.
+  #   type of <tt>text/plain</tt> from ActionDispatch::Response object.
   #
   # If no <tt>options</tt> hash is passed or if <tt>:update</tt> is specified, then:
   #
@@ -7797,7 +7798,7 @@ module ActionView::Helpers::TagHelper
   #
   # Thus <tt>data-user-id</tt> can be accessed as <tt>dataset.userId</tt>.
   #
-  # Data attribute values are encoded to JSON, with the exception of strings, symbols and
+  # Data attribute values are encoded to JSON, with the exception of strings, symbols, and
   # BigDecimals.
   # This may come in handy when using jQuery's HTML5-aware <tt>.data()</tt>
   # from 1.4.3.
@@ -7829,7 +7830,7 @@ module ActionView::Helpers::TagHelper
   # Transforms a Hash into HTML attributes, ready to be interpolated into
   # ERB. Includes or omits boolean attributes based on their truthiness.
   # Transforms keys nested within
-  # <tt>aria:</tt> or <tt>data:</tt> objects into `aria-` and `data-`
+  # <tt>aria:</tt> or <tt>data:</tt> objects into <tt>aria-</tt> and <tt>data-</tt>
   # prefixed attributes:
   #
   #   <input <%= tag.attributes(type: :text, aria: { label: "Search" }) %>>
@@ -7948,7 +7949,7 @@ class ActionView::Helpers::TagHelper::TagBuilder
 end
 
 ActionView::Helpers::TagHelper::TagBuilder::HTML_VOID_ELEMENTS = T.let(T.unsafe(nil), Set)
-ActionView::Helpers::TagHelper::TagBuilder::SVG_VOID_ELEMENTS = T.let(T.unsafe(nil), Set)
+ActionView::Helpers::TagHelper::TagBuilder::SVG_SELF_CLOSING_ELEMENTS = T.let(T.unsafe(nil), Set)
 
 module ActionView::Helpers::Tags
   extend ::ActiveSupport::Autoload
@@ -8530,7 +8531,7 @@ module ActionView::Helpers::TextHelper
   def safe_concat(string); end
 
   # Returns +text+ transformed into HTML using simple formatting rules.
-  # Two or more consecutive newlines(<tt>\n\n</tt> or <tt>\r\n\r\n</tt>) are
+  # Two or more consecutive newlines (<tt>\n\n</tt> or <tt>\r\n\r\n</tt>) are
   # considered a paragraph and wrapped in <tt><p></tt> tags. One newline
   # (<tt>\n</tt> or <tt>\r\n</tt>) is considered a linebreak and a
   # <tt><br /></tt> tag is appended. This method does not remove the
@@ -8841,8 +8842,6 @@ module ActionView::Helpers::UrlHelper
   #   <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>. By default it will be <tt>:post</tt>.
   # * <tt>:disabled</tt> - If set to true, it will generate a disabled button.
   # * <tt>:data</tt> - This option can be used to add custom data attributes.
-  # * <tt>:remote</tt> -  If set to true, will allow the Unobtrusive JavaScript drivers to control the
-  #   submit behavior. By default this behavior is an ajax submit.
   # * <tt>:form</tt> - This hash will be form attributes
   # * <tt>:form_class</tt> - This controls the class of the form within which the submit button will
   #   be placed
@@ -8884,25 +8883,37 @@ module ActionView::Helpers::UrlHelper
   #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"  autocomplete="off"/>
   #   #    </form>"
   #
+  #   <%= button_to "Create", { action: "create" }, form: { "data-type" => "json" } %>
+  #   # => "<form method="post" action="/images/create" class="button_to" data-type="json">
+  #   #      <button type="submit">Create</button>
+  #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"  autocomplete="off"/>
+  #   #    </form>"
+  #
+  # ==== Deprecated: Rails UJS Attributes
+  #
+  # Prior to Rails 7, Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following Rails 7,
+  # this library is no longer on by default. This library integrated with the following options:
+  #
+  # * <tt>:remote</tt> -  If set to true, will allow <tt>@rails/ujs</tt> to control the
+  #   submit behavior. By default this behavior is an Ajax submit.
+  #
+  # <tt>@rails/ujs</tt> also integrated with the following +:data+ options:
+  #
+  # * <tt>confirm: "question?"</tt> - This will allow <tt>@rails/ujs</tt>
+  #   to prompt with the question specified (in this case, the
+  #   resulting text would be <tt>question?</tt>). If the user accepts, the
+  #   button is processed normally, otherwise no action is taken.
+  # * <tt>:disable_with</tt> - Value of this parameter will be
+  #   used as the value for a disabled version of the submit
+  #   button when the form is submitted.
+  #
+  # ===== Rails UJS Examples
+  #
   #   <%= button_to "Create", { action: "create" }, remote: true, form: { "data-type" => "json" } %>
   #   # => "<form method="post" action="/images/create" class="button_to" data-remote="true" data-type="json">
   #   #      <button type="submit">Create</button>
   #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"  autocomplete="off"/>
   #   #    </form>"
-  #
-  # ==== Deprecated: Rails UJS attributes
-  #
-  # Prior to Rails 7, Rails shipped with a JavaScript library called @rails/ujs on by default. Following Rails 7,
-  # this library is no longer on by default. This library integrated with the following options:
-  #
-  # * <tt>confirm: 'question?'</tt> - This will allow the unobtrusive JavaScript
-  #   driver to prompt with the question specified (in this case, the
-  #   resulting text would be <tt>question?</tt>). If the user accepts, the
-  #   button is processed normally, otherwise no action is taken.
-  # * <tt>:disable_with</tt> - Value of this parameter will be
-  #   used as the value for a disabled version of the submit
-  #   button when the form is submitted. This feature is provided
-  #   by the unobtrusive JavaScript driver.
   def button_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   def button_to_generates_button_tag; end
@@ -8940,21 +8951,6 @@ module ActionView::Helpers::UrlHelper
   #
   # ==== Options
   # * <tt>:data</tt> - This option can be used to add custom data attributes.
-  # * <tt>method: symbol of HTTP verb</tt> - This modifier will dynamically
-  #   create an HTML form and immediately submit the form for processing using
-  #   the HTTP verb specified. Useful for having links perform a POST operation
-  #   in dangerous actions like deleting a record (which search bots can follow
-  #   while spidering your site). Supported verbs are <tt>:post</tt>, <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>.
-  #   Note that if the user has JavaScript disabled, the request will fall back
-  #   to using GET. If <tt>href: '#'</tt> is used and the user has JavaScript
-  #   disabled clicking the link will have no effect. If you are relying on the
-  #   POST behavior, you should check for it in your controller's action by using
-  #   the request object's methods for <tt>post?</tt>, <tt>delete?</tt>, <tt>patch?</tt>, or <tt>put?</tt>.
-  # * <tt>remote: true</tt> - This will allow the unobtrusive JavaScript
-  #   driver to make an Ajax request to the URL in question instead of following
-  #   the link. The drivers each provide mechanisms for listening for the
-  #   completion of the Ajax request and performing JavaScript operations once
-  #   they're complete
   #
   # ==== Examples
   #
@@ -9031,28 +9027,43 @@ module ActionView::Helpers::UrlHelper
   #   link_to "Nonsense search", searches_path(foo: "bar", baz: "quux")
   #   # => <a href="/searches?foo=bar&baz=quux">Nonsense search</a>
   #
-  # The only option specific to +link_to+ (<tt>:method</tt>) is used as follows:
-  #
-  #   link_to("Destroy", "http://www.example.com", method: :delete)
-  #   # => <a href='http://www.example.com' rel="nofollow" data-method="delete">Destroy</a>
-  #
-  # Also you can set any link attributes such as <tt>target</tt>, <tt>rel</tt>, <tt>type</tt>:
+  # You can set any link attributes such as <tt>target</tt>, <tt>rel</tt>, <tt>type</tt>:
   #
   #   link_to "External link", "http://www.rubyonrails.org/", target: "_blank", rel: "nofollow"
   #   # => <a href="http://www.rubyonrails.org/" target="_blank" rel="nofollow">External link</a>
   #
-  # ==== Deprecated: Rails UJS attributes
+  # ==== Deprecated: Rails UJS Attributes
   #
-  # Prior to Rails 7, Rails shipped with a JavaScript library called @rails/ujs on by default. Following Rails 7,
+  # Prior to Rails 7, Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following Rails 7,
   # this library is no longer on by default. This library integrated with the following options:
   #
-  # * <tt>confirm: 'question?'</tt> - This will allow the unobtrusive JavaScript
-  #   driver to prompt with the question specified (in this case, the
+  # * <tt>method: symbol of HTTP verb</tt> - This modifier will dynamically
+  #   create an HTML form and immediately submit the form for processing using
+  #   the HTTP verb specified. Useful for having links perform a POST operation
+  #   in dangerous actions like deleting a record (which search bots can follow
+  #   while spidering your site). Supported verbs are <tt>:post</tt>, <tt>:delete</tt>, <tt>:patch</tt>, and <tt>:put</tt>.
+  #   Note that if the user has JavaScript disabled, the request will fall back
+  #   to using GET. If <tt>href: '#'</tt> is used and the user has JavaScript
+  #   disabled clicking the link will have no effect. If you are relying on the
+  #   POST behavior, you should check for it in your controller's action by using
+  #   the request object's methods for <tt>post?</tt>, <tt>delete?</tt>, <tt>patch?</tt>, or <tt>put?</tt>.
+  # * <tt>remote: true</tt> - This will allow <tt>@rails/ujs</tt>
+  #   to make an Ajax request to the URL in question instead of following
+  #   the link.
+  #
+  # <tt>@rails/ujs</tt> also integrated with the following +:data+ options:
+  #
+  # * <tt>confirm: "question?"</tt> - This will allow <tt>@rails/ujs</tt>
+  #   to prompt with the question specified (in this case, the
   #   resulting text would be <tt>question?</tt>). If the user accepts, the
   #   link is processed normally, otherwise no action is taken.
   # * <tt>:disable_with</tt> - Value of this parameter will be used as the
-  #   name for a disabled version of the link. This feature is provided by
-  #   the unobtrusive JavaScript driver.
+  #   name for a disabled version of the link.
+  #
+  # ===== Rails UJS Examples
+  #
+  #   link_to "Remove Profile", profile_path(@profile), method: :delete
+  #   # => <a href="/profiles/1" rel="nofollow" data-method="delete">Remove Profile</a>
   #
   #   link_to "Visit Other Site", "http://www.rubyonrails.org/", data: { confirm: "Are you sure?" }
   #   # => <a href="http://www.rubyonrails.org/" data-confirm="Are you sure?">Visit Other Site</a>
@@ -9512,7 +9523,7 @@ end
 # be rendered directly, without wrapping a layout around the rendered view.
 #
 # Both the <tt>:only</tt> and <tt>:except</tt> condition can accept an arbitrary number of method references, so
-# #<tt>except: [ :rss, :text_only ]</tt> is valid, as is <tt>except: :rss</tt>.
+# <tt>except: [ :rss, :text_only ]</tt> is valid, as is <tt>except: :rss</tt>.
 #
 # == Using a different layout in the action render call
 #
@@ -9618,14 +9629,17 @@ module ActionView::Layouts::ClassMethods
   # true::   raise an ArgumentError
   # nil::    Force default layout behavior with inheritance
   #
-  # Return value of +Proc+ and +Symbol+ arguments should be +String+, +false+, +true+ or +nil+
+  # Return value of +Proc+ and +Symbol+ arguments should be +String+, +false+, +true+, or +nil+
   # with the same meaning as described above.
+  #
   # ==== Parameters
+  #
   # * <tt>layout</tt> - The layout to use.
   #
   # ==== Options (conditions)
-  # * :only   - A list of actions to apply this layout to.
-  # * :except - Apply this layout to all actions but this one.
+  #
+  # * +:only+   - A list of actions to apply this layout to.
+  # * +:except+ - Apply this layout to all actions but this one.
   def layout(layout, conditions = T.unsafe(nil)); end
 
   private
@@ -9999,7 +10013,7 @@ end
 # This would first render <tt>advertiser/_account.html.erb</tt> with <tt>@buyer</tt> passed in as the local variable +account+, then
 # render <tt>advertiser/_ad.html.erb</tt> and pass the local variable +ad+ to the template for display.
 #
-# == The :as and :object options
+# == The +:as+ and +:object+ options
 #
 # By default ActionView::PartialRenderer doesn't have any local variables.
 # The <tt>:object</tt> option can be used to pass an object to the partial. For instance:
@@ -10345,7 +10359,7 @@ module ActionView::RecordIdentifier
   # on the default implementation (which just joins all key attributes with '_') or on your own
   # overwritten version of the method. By default, this implementation passes the key string through a
   # method that replaces all characters that are invalid inside DOM ids, with valid ones. You need to
-  # make sure yourself that your dom ids are valid, in case you overwrite this method.
+  # make sure yourself that your dom ids are valid, in case you override this method.
   def record_key_for_dom_id(record); end
 end
 
@@ -10713,9 +10727,7 @@ module ActionView::Rendering
 
   def initialize; end
 
-  # Overwrite process to set up I18n proxy.
-  def process(*_arg0); end
-
+  def process(*_arg0, **_arg1, &_arg2); end
   def render_to_body(options = T.unsafe(nil)); end
 
   # Returns the value of attribute rendered_format.
@@ -11605,6 +11617,15 @@ module ActionView::TestCase::Behavior
   def rendered=(_arg0); end
 
   def rendered_views; end
+
+  # Returns the value of attribute request.
+  def request; end
+
+  # Sets the attribute request
+  #
+  # @param value the value to set the attribute request to.
+  def request=(_arg0); end
+
   def setup_with_controller; end
 
   private
@@ -11770,7 +11791,6 @@ end
 module ActionView::VERSION; end
 ActionView::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionView::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActionView::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActionView::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActionView::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -11784,7 +11804,7 @@ module ActionView::ViewPaths
 
   def any_templates?(*_arg0, **_arg1, &_arg2); end
 
-  # Append a path to the list of view paths for the current <tt>LookupContext</tt>.
+  # Append a path to the list of view paths for the current LookupContext.
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into
@@ -11798,12 +11818,12 @@ module ActionView::ViewPaths
   def locale(*_arg0, **_arg1, &_arg2); end
   def locale=(arg); end
 
-  # <tt>LookupContext</tt> is the object responsible for holding all
+  # LookupContext is the object responsible for holding all
   # information required for looking up templates, i.e. view paths and
-  # details. Check <tt>ActionView::LookupContext</tt> for more information.
+  # details. Check ActionView::LookupContext for more information.
   def lookup_context; end
 
-  # Prepend a path to the list of view paths for the current <tt>LookupContext</tt>.
+  # Prepend a path to the list of view paths for the current LookupContext.
   #
   # ==== Parameters
   # * <tt>path</tt> - If a String is provided, it gets converted into

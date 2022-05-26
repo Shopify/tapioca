@@ -8,10 +8,10 @@ module ActiveJob
   extend ::ActiveSupport::Autoload
 
   class << self
-    # Returns the version of the currently loaded Active Job as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Active Job as a <tt>Gem::Version</tt>.
     def gem_version; end
 
-    # Returns the version of the currently loaded Active Job as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Active Job as a <tt>Gem::Version</tt>.
     def version; end
   end
 end
@@ -1093,10 +1093,10 @@ end
 # == Test adapter for Active Job
 #
 # The test adapter should be used only in testing. Along with
-# <tt>ActiveJob::TestCase</tt> and <tt>ActiveJob::TestHelper</tt>
+# ActiveJob::TestCase and ActiveJob::TestHelper
 # it makes a great tool to test your Rails application.
 #
-# To use the test adapter set queue_adapter config to +:test+.
+# To use the test adapter set +queue_adapter+ config to +:test+.
 #
 #   Rails.application.config.active_job.queue_adapter = :test
 class ActiveJob::QueueAdapters::TestAdapter
@@ -1310,7 +1310,7 @@ class ActiveJob::Railtie < ::Rails::Railtie; end
 # currently support String, Integer, Float, NilClass, TrueClass, FalseClass,
 # BigDecimal, Symbol, Date, Time, DateTime, ActiveSupport::TimeWithZone,
 # ActiveSupport::Duration, Hash, ActiveSupport::HashWithIndifferentAccess,
-# Array, Range or GlobalID::Identification instances, although this can be
+# Array, Range, or GlobalID::Identification instances, although this can be
 # extended by adding custom serializers.
 # Raised if you set the key for a Hash something else than a string or
 # a symbol. Also raised when trying to serialize an object which can't be
@@ -1532,7 +1532,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class, or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts the number of times a job is enqueued to a specific queue by passing +:queue+ option.
@@ -1624,7 +1624,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class, or Proc. When passed a Proc,
   # a hash containing the job's class and it's argument are passed as argument.
   #
   # Asserts that no jobs are enqueued to a specific queue by passing +:queue+ option
@@ -1677,7 +1677,7 @@ module ActiveJob::TestHelper
   #     end
   #   end
   #
-  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class, or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
   #
   # If the +:queue+ option is specified,
@@ -1885,7 +1885,7 @@ module ActiveJob::TestHelper
   #     assert_performed_jobs 1
   #   end
   #
-  # +:only+ and +:except+ options accept Class, Array of Class or Proc. When passed a Proc,
+  # +:only+ and +:except+ options accept Class, Array of Class, or Proc. When passed a Proc,
   # an instance of the job will be passed as argument.
   #
   # If the +:queue+ option is specified,
@@ -1916,12 +1916,12 @@ module ActiveJob::TestHelper
   # Specifies the queue adapter to use with all Active Job test helpers.
   #
   # Returns an instance of the queue adapter and defaults to
-  # <tt>ActiveJob::QueueAdapters::TestAdapter</tt>.
+  # ActiveJob::QueueAdapters::TestAdapter.
   #
   # Note: The adapter provided by this method must provide some additional
-  # methods from those expected of a standard <tt>ActiveJob::QueueAdapter</tt>
+  # methods from those expected of a standard ActiveJob::QueueAdapter
   # in order to be used with the active job test helpers. Refer to
-  # <tt>ActiveJob::QueueAdapters::TestAdapter</tt>.
+  # ActiveJob::QueueAdapters::TestAdapter.
   def queue_adapter_for_test; end
 
   private
@@ -1974,6 +1974,5 @@ end
 module ActiveJob::VERSION; end
 ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveJob::VERSION::TINY = T.let(T.unsafe(nil), Integer)

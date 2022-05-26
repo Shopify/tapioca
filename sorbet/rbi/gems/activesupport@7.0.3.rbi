@@ -27,7 +27,7 @@ module ActiveSupport
     def escape_html_entities_in_json(*_arg0, **_arg1, &_arg2); end
     def escape_html_entities_in_json=(arg); end
 
-    # Returns the version of the currently loaded Active Support as a <tt>Gem::Version</tt>.
+    # Returns the currently loaded version of Active Support as a <tt>Gem::Version</tt>.
     def gem_version; end
 
     def json_encoder(*_arg0, **_arg1, &_arg2); end
@@ -47,7 +47,7 @@ module ActiveSupport
     def utc_to_local_returns_utc_offset_times; end
     def utc_to_local_returns_utc_offset_times=(value); end
 
-    # Returns the version of the currently loaded ActiveSupport as a <tt>Gem::Version</tt>
+    # Returns the currently loaded version of Active Support as a <tt>Gem::Version</tt>.
     def version; end
   end
 end
@@ -184,10 +184,10 @@ end
 #
 # To reconfigure an existing BacktraceCleaner (like the default one in Rails)
 # and show as much data as possible, you can always call
-# <tt>BacktraceCleaner#remove_silencers!</tt>, which will restore the
+# BacktraceCleaner#remove_silencers!, which will restore the
 # backtrace to a pristine state. If you need to reconfigure an existing
 # BacktraceCleaner so that it does not filter or modify the paths of any lines
-# of the backtrace, you can call <tt>BacktraceCleaner#remove_filters!</tt>
+# of the backtrace, you can call BacktraceCleaner#remove_filters!
 # These two methods will give you a completely untouched backtrace.
 #
 # Inspired by the Quiet Backtrace gem by thoughtbot.
@@ -522,7 +522,7 @@ ActiveSupport::Cache::FileStore::GITKEEP_FILES = T.let(T.unsafe(nil), Array)
 # to share cache data with each other and this may not be the most
 # appropriate cache in that scenario.
 #
-# This cache has a bounded size specified by the :size options to the
+# This cache has a bounded size specified by the +:size+ options to the
 # initializer (default is 32Mb). When the cache exceeds the allotted size,
 # a cleanup will occur which tries to prune the cache down to three quarters
 # of the maximum size by removing the least recently used entries.
@@ -683,7 +683,7 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   #
   # Race condition TTL is not set by default. This can be used to avoid
   # "thundering herd" cache writes when hot cache entries are expired.
-  # See <tt>ActiveSupport::Cache::Store#fetch</tt> for more.
+  # See ActiveSupport::Cache::Store#fetch for more.
   #
   # @return [RedisCacheStore] a new instance of RedisCacheStore
   def initialize(namespace: T.unsafe(nil), compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), coder: T.unsafe(nil), expires_in: T.unsafe(nil), race_condition_ttl: T.unsafe(nil), error_handler: T.unsafe(nil), **redis_options); end
@@ -703,8 +703,8 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # Cache Store API implementation.
   #
   # Decrement a cached value. This method uses the Redis decr atomic
-  # operator and can only be used on values written with the :raw option.
-  # Calling it on a value not stored with :raw will initialize that value
+  # operator and can only be used on values written with the +:raw+ option.
+  # Calling it on a value not stored with +:raw+ will initialize that value
   # to zero.
   #
   # Failsafe: Raises errors.
@@ -730,8 +730,8 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # Cache Store API implementation.
   #
   # Increment a cached value. This method uses the Redis incr atomic
-  # operator and can only be used on values written with the :raw option.
-  # Calling it on a value not stored with :raw will initialize that value
+  # operator and can only be used on values written with the +:raw+ option.
+  # Calling it on a value not stored with +:raw+ will initialize that value
   # to zero.
   #
   # Failsafe: Raises errors.
@@ -843,13 +843,16 @@ ActiveSupport::Cache::RedisCacheStore::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), In
 # Some implementations may not support all methods beyond the basic cache
 # methods of +fetch+, +write+, +read+, +exist?+, and +delete+.
 #
-# ActiveSupport::Cache::Store can store any serializable Ruby object.
+# ActiveSupport::Cache::Store can store any Ruby object that is supported by
+# its +coder+'s +dump+ and +load+ methods.
 #
 #   cache = ActiveSupport::Cache::MemoryStore.new
 #
 #   cache.read('city')   # => nil
 #   cache.write('city', "Duckburgh")
 #   cache.read('city')   # => "Duckburgh"
+#
+#   cache.write('not serializable', Proc.new {}) # => TypeError
 #
 # Keys are always translated into Strings and are case sensitive. When an
 # object is specified as a key and has a +cache_key+ method defined, this
@@ -1312,8 +1315,8 @@ end
 ActiveSupport::Cache::UNIVERSAL_OPTIONS = T.let(T.unsafe(nil), Array)
 
 # CachingKeyGenerator is a wrapper around KeyGenerator which allows users to avoid
-# re-executing the key generation process when it's called using the same salt and
-# key_size.
+# re-executing the key generation process when it's called using the same +salt+ and
+# +key_size+.
 class ActiveSupport::CachingKeyGenerator
   # @return [CachingKeyGenerator] a new instance of CachingKeyGenerator
   def initialize(key_generator); end
@@ -1329,19 +1332,19 @@ end
 # needing to override or redefine methods of the base class.
 #
 # Mixing in this module allows you to define the events in the object's
-# life cycle that will support callbacks (via +ClassMethods.define_callbacks+),
+# life cycle that will support callbacks (via ClassMethods#define_callbacks),
 # set the instance methods, procs, or callback objects to be called (via
-# +ClassMethods.set_callback+), and run the installed callbacks at the
+# ClassMethods#set_callback), and run the installed callbacks at the
 # appropriate times (via +run_callbacks+).
 #
 # By default callbacks are halted by throwing +:abort+.
-# See +ClassMethods.define_callbacks+ for details.
+# See ClassMethods#define_callbacks for details.
 #
 # Three kinds of callbacks are supported: before callbacks, run before a
 # certain event; after callbacks, run after the event; and around callbacks,
 # blocks that surround the event, triggering it when they yield. Callback code
 # can be contained in instance methods, procs or lambdas, or callback objects
-# that respond to certain predetermined methods. See +ClassMethods.set_callback+
+# that respond to certain predetermined methods. See ClassMethods#set_callback
 # for details.
 #
 #   class Record
@@ -2178,13 +2181,13 @@ class ActiveSupport::Concurrency::ShareLock
 end
 
 # Configurable provides a <tt>config</tt> method to store and retrieve
-# configuration options as an <tt>OrderedOptions</tt>.
+# configuration options as an OrderedOptions.
 module ActiveSupport::Configurable
   extend ::ActiveSupport::Concern
 
   mixes_in_class_methods ::ActiveSupport::Configurable::ClassMethods
 
-  # Reads and writes attributes from a configuration <tt>OrderedOptions</tt>.
+  # Reads and writes attributes from a configuration OrderedOptions.
   #
   #   require "active_support/configurable"
   #
@@ -2561,7 +2564,7 @@ end
 ActiveSupport::DeprecatedRangeWithFormat::NOT_SET = T.let(T.unsafe(nil), Object)
 
 # \Deprecation specifies the API used by Rails to deprecate methods, instance
-# variables, objects and constants.
+# variables, objects, and constants.
 class ActiveSupport::Deprecation
   include ::Singleton
   include ::ActiveSupport::Deprecation::InstanceDelegator
@@ -2797,7 +2800,7 @@ class ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy < ::ActiveSupp
 end
 
 # DeprecatedObjectProxy transforms an object into a deprecated one. It
-# takes an object, a deprecation message and optionally a deprecator. The
+# takes an object, a deprecation message, and optionally a deprecator. The
 # deprecator defaults to +ActiveSupport::Deprecator+ if none is specified.
 #
 #   deprecated_object = ActiveSupport::Deprecation::DeprecatedObjectProxy.new(Object.new, "This object is now deprecated")
@@ -3009,7 +3012,7 @@ end
 
 ActiveSupport::Deprecation::Reporting::RAILS_GEM_ROOT = T.let(T.unsafe(nil), String)
 
-# Raised when <tt>ActiveSupport::Deprecation::Behavior#behavior</tt> is set with <tt>:raise</tt>.
+# Raised when ActiveSupport::Deprecation::Behavior#behavior is set with <tt>:raise</tt>.
 # You would set <tt>:raise</tt>, as a behavior to raise errors and proactively report exceptions from deprecations.
 class ActiveSupport::DeprecationException < ::StandardError; end
 
@@ -3497,6 +3500,18 @@ class ActiveSupport::EncryptedFile::MissingKeyError < ::RuntimeError
   def initialize(key_path:, env_key:); end
 end
 
+module ActiveSupport::EnumerableCoreExt; end
+
+module ActiveSupport::EnumerableCoreExt::Constants
+  private
+
+  def const_missing(name); end
+end
+
+# HACK: For performance reasons, Enumerable shouldn't have any constants of its own.
+# So we move SoleItemExpectedError into ActiveSupport::EnumerableCoreExt.
+ActiveSupport::EnumerableCoreExt::SoleItemExpectedError = Enumerable::SoleItemExpectedError
+
 class ActiveSupport::EnvironmentInquirer < ::ActiveSupport::StringInquirer
   # @return [EnvironmentInquirer] a new instance of EnvironmentInquirer
   def initialize(env); end
@@ -3535,8 +3550,8 @@ ActiveSupport::EnvironmentInquirer::DEFAULT_ENVIRONMENTS = T.let(T.unsafe(nil), 
 #   end
 #
 # Additionally a +severity+ can be passed along to communicate how important the error report is.
-# +severity+ can be one of +:error+, +:warning+ or +:info+. Handled errors default to the +:warning+
-# severity, and unhandled ones to +error+.
+# +severity+ can be one of +:error+, +:warning+, or +:info+. Handled errors default to the +:warning+
+# severity, and unhandled ones to +:error+.
 #
 # Both +handle+ and +record+ pass through the return value from the block. In the case of +handle+
 # rescuing an error, a fallback can be provided. The fallback must be a callable whose result will
@@ -4516,7 +4531,7 @@ module ActiveSupport::Inflector
   #   transliterate('Jürgen', locale: :de)
   #   # => "Juergen"
   #
-  # Transliteration is restricted to UTF-8, US-ASCII and GB18030 strings
+  # Transliteration is restricted to UTF-8, US-ASCII, and GB18030 strings.
   # Other encodings will raise an ArgumentError.
   #
   # @raise [ArgumentError]
@@ -4730,7 +4745,7 @@ class ActiveSupport::Inflector::Inflections::Uncountables < ::Array
   def to_regex(string); end
 end
 
-# +InheritableOptions+ provides a constructor to build an +OrderedOptions+
+# +InheritableOptions+ provides a constructor to build an OrderedOptions
 # hash inherited from another hash.
 #
 # Use this if you already have some hash and you want to create a new one based on it.
@@ -4760,6 +4775,7 @@ module ActiveSupport::IsolatedExecutionState
     # @return [Boolean]
     def key?(key); end
 
+    def share_with(other); end
     def unique_id; end
 
     private
@@ -4898,9 +4914,9 @@ class ActiveSupport::KeyGenerator
   # @return [KeyGenerator] a new instance of KeyGenerator
   def initialize(secret, options = T.unsafe(nil)); end
 
-  # Returns a derived key suitable for use.  The default key_size is chosen
+  # Returns a derived key suitable for use.  The default +key_size+ is chosen
   # to be compatible with the default settings of ActiveSupport::MessageVerifier.
-  # i.e. OpenSSL::Digest::SHA1#block_length
+  # i.e. <tt>OpenSSL::Digest::SHA1#block_length</tt>
   def generate_key(salt, key_size = T.unsafe(nil)); end
 
   class << self
@@ -4909,14 +4925,14 @@ class ActiveSupport::KeyGenerator
   end
 end
 
-# lazy_load_hooks allows Rails to lazily load a lot of components and thus
+# LazyLoadHooks allows Rails to lazily load a lot of components and thus
 # making the app boot faster. Because of this feature now there is no need to
 # require <tt>ActiveRecord::Base</tt> at boot time purely to apply
 # configuration. Instead a hook is registered that applies configuration once
 # <tt>ActiveRecord::Base</tt> is loaded. Here <tt>ActiveRecord::Base</tt> is
 # used as example but this feature can be applied elsewhere too.
 #
-# Here is an example where +on_load+ method is called to register a hook.
+# Here is an example where on_load method is called to register a hook.
 #
 #   initializer 'active_record.initialize_timezone' do
 #     ActiveSupport.on_load(:active_record) do
@@ -4926,10 +4942,14 @@ end
 #   end
 #
 # When the entirety of +ActiveRecord::Base+ has been
-# evaluated then +run_load_hooks+ is invoked. The very last line of
+# evaluated then run_load_hooks is invoked. The very last line of
 # +ActiveRecord::Base+ is:
 #
 #   ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
+#
+# run_load_hooks will then execute all the hooks that were registered
+# with the on_load method. In the case of the above example, it will
+# execute the block of code that is in the +initializer+.
 module ActiveSupport::LazyLoadHooks
   # Declares a block that will be executed when a Rails component is fully
   # loaded.
@@ -4940,6 +4960,13 @@ module ActiveSupport::LazyLoadHooks
   # * <tt>:run_once</tt> - Given +block+ will run only once.
   def on_load(name, options = T.unsafe(nil), &block); end
 
+  # Executes all blocks registered to +name+ via on_load, using +base+ as the
+  # evaluation context.
+  #
+  #  ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
+  #
+  # In the case of the above example, it will execute all hooks registered
+  # for +:active_record+ within the class +ActiveRecord::Base+.
   def run_load_hooks(name, base = T.unsafe(nil)); end
 
   private
@@ -4953,7 +4980,7 @@ module ActiveSupport::LazyLoadHooks
 end
 
 # <tt>ActiveSupport::LogSubscriber</tt> is an object set to consume
-# <tt>ActiveSupport::Notifications</tt> with the sole purpose of logging them.
+# ActiveSupport::Notifications with the sole purpose of logging them.
 # The log subscriber dispatches notifications to a registered object based
 # on its given namespace.
 #
@@ -4983,7 +5010,7 @@ end
 # it will properly dispatch the event
 # (<tt>ActiveSupport::Notifications::Event</tt>) to the sql method.
 #
-# Being an <tt>ActiveSupport::Notifications</tt> consumer,
+# Being an ActiveSupport::Notifications consumer,
 # <tt>ActiveSupport::LogSubscriber</tt> exposes a simple interface to check if
 # instrumented code raises an exception. It is common to log a different
 # message in case of an error, and this can be achieved by extending
@@ -5140,7 +5167,7 @@ end
 # The cipher text and initialization vector are base64 encoded and returned
 # to you.
 #
-# This can be used in situations similar to the <tt>MessageVerifier</tt>, but
+# This can be used in situations similar to the MessageVerifier, but
 # where you don't want users to be able to determine the value of the payload.
 #
 #   len   = ActiveSupport::MessageEncryptor.key_len
@@ -5149,6 +5176,7 @@ end
 #   crypt = ActiveSupport::MessageEncryptor.new(key)                            # => #<ActiveSupport::MessageEncryptor ...>
 #   encrypted_data = crypt.encrypt_and_sign('my secret data')                   # => "NlFBTTMwOUV5UlA1QlNEN2xkY2d6eThYWWh..."
 #   crypt.decrypt_and_verify(encrypted_data)                                    # => "my secret data"
+#
 # The +decrypt_and_verify+ method will raise an
 # <tt>ActiveSupport::MessageEncryptor::InvalidMessage</tt> exception if the data
 # provided cannot be decrypted or verified.
@@ -5217,10 +5245,10 @@ class ActiveSupport::MessageEncryptor
   # Initialize a new MessageEncryptor. +secret+ must be at least as long as
   # the cipher key size. For the default 'aes-256-gcm' cipher, this is 256
   # bits. If you are using a user-entered secret, you can generate a suitable
-  # key by using <tt>ActiveSupport::KeyGenerator</tt> or a similar key
+  # key by using ActiveSupport::KeyGenerator or a similar key
   # derivation function.
   #
-  # First additional parameter is used as the signature key for +MessageVerifier+.
+  # First additional parameter is used as the signature key for MessageVerifier.
   # This allows you to specify keys to encrypt and sign data.
   #
   #    ActiveSupport::MessageEncryptor.new('secret', 'signature_secret')
@@ -5720,7 +5748,7 @@ end
 # The Unicode version that is supported by the implementation
 ActiveSupport::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String)
 
-# = Notifications
+# = \Notifications
 #
 # <tt>ActiveSupport::Notifications</tt> provides an instrumentation API for
 # Ruby.
@@ -5800,7 +5828,7 @@ ActiveSupport::Multibyte::Unicode::UNICODE_VERSION = T.let(T.unsafe(nil), String
 #   event.payload[:exception]         # => ["ArgumentError", "Invalid value"]
 #   event.payload[:exception_object]  # => #<ArgumentError: Invalid value>
 #
-# As the earlier example depicts, the class <tt>ActiveSupport::Notifications::Event</tt>
+# As the earlier example depicts, the class ActiveSupport::Notifications::Event
 # is able to take the arguments as they come and provide an object-oriented
 # interface to that data.
 #
@@ -6717,7 +6745,7 @@ end
 module ActiveSupport::NumericWithFormat
   # Provides options for converting numbers into formatted strings.
   # Options are provided for phone numbers, currency, percentage,
-  # precision, positional notation, file size and pretty printing.
+  # precision, positional notation, file size, and pretty printing.
   #
   # This method is aliased to <tt>to_formatted_s</tt>.
   #
@@ -6822,7 +6850,7 @@ module ActiveSupport::NumericWithFormat
 
   # Provides options for converting numbers into formatted strings.
   # Options are provided for phone numbers, currency, percentage,
-  # precision, positional notation, file size and pretty printing.
+  # precision, positional notation, file size, and pretty printing.
   #
   # This method is aliased to <tt>to_formatted_s</tt>.
   #
@@ -7273,7 +7301,7 @@ module ActiveSupport::Rescuable
   def handler_for_rescue(exception); end
 
   # Delegates to the class method, but uses the instance as the subject for
-  # rescue_from handlers (method calls, instance_exec blocks).
+  # rescue_from handlers (method calls, +instance_exec+ blocks).
   def rescue_with_handler(exception); end
 
   module GeneratedClassMethods
@@ -7331,7 +7359,7 @@ module ActiveSupport::Rescuable::ClassMethods
   # Matches an exception to a handler based on the exception class.
   #
   # If no handler matches the exception, check for a handler matching the
-  # (optional) exception.cause. If no handler matches the exception or its
+  # (optional) +exception.cause+. If no handler matches the exception or its
   # cause, this returns +nil+, so you can deal with unhandled exceptions.
   # Be sure to re-raise unhandled exceptions if this is what you expect.
   #
@@ -7437,7 +7465,7 @@ class ActiveSupport::SafeBuffer < ::String
   def set_block_back_references(block, match_data); end
 end
 
-# Raised when <tt>ActiveSupport::SafeBuffer#safe_concat</tt> is called on unsafe buffers.
+# Raised when ActiveSupport::SafeBuffer#safe_concat is called on unsafe buffers.
 class ActiveSupport::SafeBuffer::SafeConcatError < ::StandardError
   # @return [SafeConcatError] a new instance of SafeConcatError
   def initialize; end
@@ -7446,7 +7474,7 @@ end
 ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS = T.let(T.unsafe(nil), Array)
 ActiveSupport::SafeBuffer::UNSAFE_STRING_METHODS_WITH_BACKREF = T.let(T.unsafe(nil), Array)
 
-# The ActiveSupport::SecureCompareRotator is a wrapper around +ActiveSupport::SecurityUtils.secure_compare+
+# The ActiveSupport::SecureCompareRotator is a wrapper around ActiveSupport::SecurityUtils.secure_compare
 # and allows you to rotate a previously defined value to a new one.
 #
 # It can be used as follow:
@@ -7632,6 +7660,7 @@ end
 # it easy to stamp log lines with subdomains, request ids, and anything else
 # to aid debugging of multi-user production applications.
 module ActiveSupport::TaggedLogging
+  def broadcast_to(other_logger); end
   def clear_tags!(*_arg0, **_arg1, &_arg2); end
   def flush; end
   def pop_tags(*_arg0, **_arg1, &_arg2); end
@@ -7833,7 +7862,7 @@ module ActiveSupport::Testing::Assertions
   #     @object = 42
   #   end
   #
-  # The keyword arguments :from and :to can be given to specify the
+  # The keyword arguments +:from+ and +:to+ can be given to specify the
   # expected initial value and the expected value after the block was
   # executed.
   #
@@ -8494,7 +8523,7 @@ end
 # system's <tt>ENV['TZ']</tt> zone.
 #
 # You shouldn't ever need to create a TimeWithZone instance directly via +new+.
-# Instead use methods +local+, +parse+, +at+ and +now+ on TimeZone instances,
+# Instead use methods +local+, +parse+, +at+, and +now+ on TimeZone instances,
 # and +in_time_zone+ on Time and DateTime instances.
 #
 #   Time.zone = 'Eastern Time (US & Canada)'        # => 'Eastern Time (US & Canada)'
@@ -8652,8 +8681,8 @@ class ActiveSupport::TimeWithZone
   # Returns a new +ActiveSupport::TimeWithZone+ where one or more of the elements have
   # been changed according to the +options+ parameter. The time options (<tt>:hour</tt>,
   # <tt>:min</tt>, <tt>:sec</tt>, <tt>:usec</tt>, <tt>:nsec</tt>) reset cascadingly,
-  # so if only the hour is passed, then minute, sec, usec and nsec is set to 0. If the
-  # hour and minute is passed, then sec, usec and nsec is set to 0. The +options+
+  # so if only the hour is passed, then minute, sec, usec, and nsec is set to 0. If the
+  # hour and minute is passed, then sec, usec, and nsec is set to 0. The +options+
   # parameter takes a hash with any of these keys: <tt>:year</tt>, <tt>:month</tt>,
   # <tt>:day</tt>, <tt>:hour</tt>, <tt>:min</tt>, <tt>:sec</tt>, <tt>:usec</tt>,
   # <tt>:nsec</tt>, <tt>:offset</tt>, <tt>:zone</tt>. Pass either <tt>:usec</tt>
@@ -8826,7 +8855,7 @@ class ActiveSupport::TimeWithZone
   # @return [Boolean]
   def past?; end
 
-  # Returns the underlying TZInfo::TimezonePeriod.
+  # Returns the underlying <tt>TZInfo::TimezonePeriod</tt>.
   def period; end
 
   # Returns true if the current object's time falls within
@@ -9036,16 +9065,16 @@ ActiveSupport::TimeWithZone::NOT_SET = T.let(T.unsafe(nil), Object)
 ActiveSupport::TimeWithZone::PRECISIONS = T.let(T.unsafe(nil), Hash)
 ActiveSupport::TimeWithZone::SECONDS_PER_DAY = T.let(T.unsafe(nil), Integer)
 
-# The TimeZone class serves as a wrapper around TZInfo::Timezone instances.
+# The TimeZone class serves as a wrapper around <tt>TZInfo::Timezone</tt> instances.
 # It allows us to do the following:
 #
 # * Limit the set of zones provided by TZInfo to a meaningful subset of 134
 #   zones.
 # * Retrieve and display zones with a friendlier name
 #   (e.g., "Eastern Time (US & Canada)" instead of "America/New_York").
-# * Lazily load TZInfo::Timezone instances only when they're needed.
+# * Lazily load <tt>TZInfo::Timezone</tt> instances only when they're needed.
 # * Create ActiveSupport::TimeWithZone instances via TimeZone's +local+,
-#   +parse+, +at+ and +now+ methods.
+#   +parse+, +at+, and +now+ methods.
 #
 # If you set <tt>config.time_zone</tt> in the Rails Application, you can
 # access this TimeZone object via <tt>Time.zone</tt>:
@@ -9164,11 +9193,11 @@ class ActiveSupport::TimeZone
   # If the string is invalid then an +ArgumentError+ could be raised.
   def parse(str, now = T.unsafe(nil)); end
 
-  # Available so that TimeZone instances respond like TZInfo::Timezone
+  # Available so that TimeZone instances respond like <tt>TZInfo::Timezone</tt>
   # instances.
   def period_for_local(time, dst = T.unsafe(nil)); end
 
-  # Available so that TimeZone instances respond like TZInfo::Timezone
+  # Available so that TimeZone instances respond like <tt>TZInfo::Timezone</tt>
   # instances.
   def period_for_utc(time); end
 
@@ -9308,7 +9337,6 @@ end
 module ActiveSupport::VERSION; end
 ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
 ActiveSupport::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
@@ -9601,8 +9629,8 @@ class Array
   #   [ [ 0, 1 ] ].including([ [ 1, 0 ] ]) # => [ [ 0, 1 ], [ 1, 0 ] ]
   def including(*elements); end
 
-  # Wraps the array in an +ArrayInquirer+ object, which gives a friendlier way
-  # to check its string-like contents.
+  # Wraps the array in an ActiveSupport::ArrayInquirer object, which gives a
+  # friendlier way to check its string-like contents.
   #
   #   pets = [:cat, :dog].inquiry
   #
@@ -10138,7 +10166,7 @@ class Date
   def to_s(format = T.unsafe(nil)); end
 
   # Converts a Date instance to a Time, where the time is set to the beginning of the day.
-  # The timezone can be either :local or :utc (default :local).
+  # The timezone can be either +:local+ or +:utc+ (default +:local+).
   #
   #   date = Date.new(2007, 11, 10)  # => Sat, 10 Nov 2007
   #
@@ -10147,8 +10175,8 @@ class Date
   #
   #   date.to_time(:utc)             # => 2007-11-10 00:00:00 UTC
   #
-  # NOTE: The :local timezone is Ruby's *process* timezone, i.e. ENV['TZ'].
-  #       If the *application's* timezone is needed, then use +in_time_zone+ instead.
+  # NOTE: The +:local+ timezone is Ruby's *process* timezone, i.e. <tt>ENV['TZ']</tt>.
+  # If the <b>application's</b> timezone is needed, then use +in_time_zone+ instead.
   #
   # @raise [ArgumentError]
   def to_time(form = T.unsafe(nil)); end
@@ -10161,15 +10189,15 @@ class Date
   def xmlschema; end
 
   class << self
-    # Returns the week start (e.g. :monday) for the current request, if this has been set (via Date.beginning_of_week=).
+    # Returns the week start (e.g. +:monday+) for the current request, if this has been set (via Date.beginning_of_week=).
     # If <tt>Date.beginning_of_week</tt> has not been set for the current request, returns the week start specified in <tt>config.beginning_of_week</tt>.
-    # If no config.beginning_of_week was specified, returns :monday.
+    # If no +config.beginning_of_week+ was specified, returns +:monday+.
     def beginning_of_week; end
 
-    # Sets <tt>Date.beginning_of_week</tt> to a week start (e.g. :monday) for current request/thread.
+    # Sets <tt>Date.beginning_of_week</tt> to a week start (e.g. +:monday+) for current request/thread.
     #
     # This method accepts any of the following day symbols:
-    # :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday
+    # +:monday+, +:tuesday+, +:wednesday+, +:thursday+, +:friday+, +:saturday+, +:sunday+
     def beginning_of_week=(week_start); end
 
     # Returns the value of attribute beginning_of_week_default.
@@ -10183,7 +10211,7 @@ class Date
     # Returns Time.zone.today when <tt>Time.zone</tt> or <tt>config.time_zone</tt> are set, otherwise just returns Date.today.
     def current; end
 
-    # Returns week start day symbol (e.g. :monday), or raises an +ArgumentError+ for invalid day symbol.
+    # Returns week start day symbol (e.g. +:monday+), or raises an +ArgumentError+ for invalid day symbol.
     #
     # @raise [ArgumentError]
     def find_beginning_of_week!(week_start); end
@@ -10372,10 +10400,10 @@ module DateAndTime::Calculations
   # @return [Boolean]
   def future?; end
 
-  # Short-hand for months_ago(1).
+  # Short-hand for <tt>months_ago(1)</tt>.
   def last_month; end
 
-  # Short-hand for months_ago(3).
+  # Short-hand for <tt>months_ago(3)</tt>.
   def last_quarter; end
 
   # Returns a new date/time representing the given day in the previous week.
@@ -10387,7 +10415,7 @@ module DateAndTime::Calculations
   # Returns a new date/time representing the previous weekday.
   def last_weekday; end
 
-  # Short-hand for years_ago(1).
+  # Short-hand for <tt>years_ago(1)</tt>.
   def last_year; end
 
   # Returns Monday of this week assuming that week starts on Monday.
@@ -10412,7 +10440,7 @@ module DateAndTime::Calculations
   #   today.next_occurring(:thursday)  # => Thu, 21 Dec 2017
   def next_occurring(day_of_week); end
 
-  # Short-hand for months_since(3)
+  # Short-hand for <tt>months_since(3)</tt>.
   def next_quarter; end
 
   # Returns a new date/time representing the given day in the next week.
@@ -10463,7 +10491,7 @@ module DateAndTime::Calculations
   #   today.prev_occurring(:thursday)  # => Thu, 07 Dec 2017
   def prev_occurring(day_of_week); end
 
-  # Short-hand for months_ago(3).
+  # Short-hand for <tt>months_ago(3)</tt>.
   def prev_quarter; end
 
   # Returns a new date/time representing the given day in the previous week.
@@ -10950,7 +10978,7 @@ module ERB::Util
   # WARNING: this helper only works with valid JSON. Using this on non-JSON values
   # will open up serious XSS vulnerabilities. For example, if you replace the
   # +current_user.to_json+ in the example above with user input instead, the browser
-  # will happily eval() that string as JavaScript.
+  # will happily <tt>eval()</tt> that string as JavaScript.
   #
   # The escaping performed in this method is identical to those performed in the
   # Active Support JSON encoder when +ActiveSupport.escape_html_entities_in_json+ is
@@ -11043,7 +11071,7 @@ module ERB::Util
     # WARNING: this helper only works with valid JSON. Using this on non-JSON values
     # will open up serious XSS vulnerabilities. For example, if you replace the
     # +current_user.to_json+ in the example above with user input instead, the browser
-    # will happily eval() that string as JavaScript.
+    # will happily <tt>eval()</tt> that string as JavaScript.
     #
     # The escaping performed in this method is identical to those performed in the
     # Active Support JSON encoder when +ActiveSupport.escape_html_entities_in_json+ is
@@ -11083,6 +11111,8 @@ ERB::Util::TAG_NAME_START_REGEXP = T.let(T.unsafe(nil), Regexp)
 ERB::Util::TAG_NAME_START_REGEXP_SET = T.let(T.unsafe(nil), String)
 
 module Enumerable
+  extend ::ActiveSupport::EnumerableCoreExt::Constants
+
   def as_json(options = T.unsafe(nil)); end
 
   # Returns a new +Array+ without the blank items.
@@ -11240,8 +11270,6 @@ module Enumerable
   #   # => {foo: 1, baz: 3}
   def without(*elements); end
 end
-
-Enumerable::INDEX_WITH_DEFAULT = T.let(T.unsafe(nil), Object)
 
 # Error generated by +sole+ when called on an enumerable that doesn't have
 # exactly one item.
@@ -11408,14 +11436,14 @@ class Hash
   # @return [Boolean]
   def extractable_options?; end
 
-  # Returns an <tt>ActiveSupport::HashWithIndifferentAccess</tt> out of its receiver:
+  # Returns an ActiveSupport::HashWithIndifferentAccess out of its receiver:
   #
   #   { a: 1 }.with_indifferent_access['a'] # => 1
   # Called when object is nested under an object that receives
   # #with_indifferent_access. This method will be called on the current object
   # by the enclosing object and is aliased to #with_indifferent_access by
-  # default. Subclasses of Hash may overwrite this method to return +self+ if
-  # converting to an <tt>ActiveSupport::HashWithIndifferentAccess</tt> would not be
+  # default. Subclasses of Hash may override this method to return +self+ if
+  # converting to an ActiveSupport::HashWithIndifferentAccess would not be
   # desirable.
   #
   #   b = { b: 1 }
@@ -11600,7 +11628,7 @@ class Hash
   # Destructive +reverse_merge+.
   def with_defaults!(other_hash); end
 
-  # Returns an <tt>ActiveSupport::HashWithIndifferentAccess</tt> out of its receiver:
+  # Returns an ActiveSupport::HashWithIndifferentAccess out of its receiver:
   #
   #   { a: 1 }.with_indifferent_access['a'] # => 1
   def with_indifferent_access; end
@@ -11932,8 +11960,8 @@ end
 # So the values are scoped within the Thread.current space under the class name
 # of the module.
 #
-# Note that it can also be scoped per-fiber if Rails.application.config.active_support.isolation_level
-# is set to `:fiber`
+# Note that it can also be scoped per-fiber if +Rails.application.config.active_support.isolation_level+
+# is set to +:fiber+.
 class Module
   include ::Module::Concerning
 
@@ -12609,7 +12637,7 @@ class Module
   #   Account.user     # => "DHH"
   #   Account.new.user # => "DHH"
   #
-  # Unlike `mattr_accessor`, values are *not* shared with subclasses or parent classes.
+  # Unlike +mattr_accessor+, values are *not* shared with subclasses or parent classes.
   # If a subclass changes the value, the parent class' value is not changed.
   # If the parent class changes the value, the value of subclasses is not changed.
   #
@@ -12651,7 +12679,7 @@ class Module
   #
   #   Current.user = "DHH"
   #   Current.user # => "DHH"
-  #   Thread.new { Current.user }.values # => nil
+  #   Thread.new { Current.user }.value # => nil
   #
   # The attribute name must be a valid method name in Ruby.
   #
@@ -12700,7 +12728,7 @@ class Module
   #   Account.user     # => "DHH"
   #   Account.new.user # => "DHH"
   #
-  # Unlike `mattr_accessor`, values are *not* shared with subclasses or parent classes.
+  # Unlike +mattr_accessor+, values are *not* shared with subclasses or parent classes.
   # If a subclass changes the value, the parent class' value is not changed.
   # If the parent class changes the value, the value of subclasses is not changed.
   #
@@ -12742,7 +12770,7 @@ class Module
   #
   #   Current.user = "DHH"
   #   Current.user # => "DHH"
-  #   Thread.new { Current.user }.values # => nil
+  #   Thread.new { Current.user }.value # => nil
   #
   # The attribute name must be a valid method name in Ruby.
   #
@@ -13771,7 +13799,7 @@ class String
   # Returns the indented string, or +nil+ if there was nothing to indent.
   def indent!(amount, indent_string = T.unsafe(nil), indent_empty_lines = T.unsafe(nil)); end
 
-  # Wraps the current string in the <tt>ActiveSupport::StringInquirer</tt> class,
+  # Wraps the current string in the ActiveSupport::StringInquirer class,
   # which gives you a prettier way to test for equality.
   #
   #   env = 'production'.inquiry
@@ -14051,10 +14079,10 @@ class String
   def to_datetime; end
 
   # Converts a string to a Time value.
-  # The +form+ can be either :utc or :local (default :local).
+  # The +form+ can be either +:utc+ or +:local+ (default +:local+).
   #
   # The time is parsed using Time.parse method.
-  # If +form+ is :local, then the time is in the system timezone.
+  # If +form+ is +:local+, then the time is in the system timezone.
   # If the date part is missing then the current date is used and if
   # the time part is missing then it is assumed to be 00:00:00.
   #
@@ -14250,8 +14278,8 @@ class Time
   # Returns a new Time where one or more of the elements have been changed according
   # to the +options+ parameter. The time options (<tt>:hour</tt>, <tt>:min</tt>,
   # <tt>:sec</tt>, <tt>:usec</tt>, <tt>:nsec</tt>) reset cascadingly, so if only
-  # the hour is passed, then minute, sec, usec and nsec is set to 0. If the hour
-  # and minute is passed, then sec, usec and nsec is set to 0. The +options+ parameter
+  # the hour is passed, then minute, sec, usec, and nsec is set to 0. If the hour
+  # and minute is passed, then sec, usec, and nsec is set to 0. The +options+ parameter
   # takes a hash with any of these keys: <tt>:year</tt>, <tt>:month</tt>, <tt>:day</tt>,
   # <tt>:hour</tt>, <tt>:min</tt>, <tt>:sec</tt>, <tt>:usec</tt>, <tt>:nsec</tt>,
   # <tt>:offset</tt>. Pass either <tt>:usec</tt> or <tt>:nsec</tt>, not both.
@@ -14483,7 +14511,7 @@ class Time
     #     end
     #   end
     #
-    # NOTE: This won't affect any <tt>ActiveSupport::TimeWithZone</tt>
+    # NOTE: This won't affect any ActiveSupport::TimeWithZone
     # objects that have already been created, e.g. any model timestamp
     # attributes that have been read before the block will remain in
     # the application's default timezone.
@@ -14499,8 +14527,8 @@ class Time
     #
     # * A Rails TimeZone object.
     # * An identifier for a Rails TimeZone object (e.g., "Eastern Time (US & Canada)", <tt>-5.hours</tt>).
-    # * A TZInfo::Timezone object.
-    # * An identifier for a TZInfo::Timezone object (e.g., "America/New_York").
+    # * A <tt>TZInfo::Timezone</tt> object.
+    # * An identifier for a <tt>TZInfo::Timezone</tt> object (e.g., "America/New_York").
     #
     # Here's an example of how you might set <tt>Time.zone</tt> on a per request basis and reset it when the request is done.
     # <tt>current_user.time_zone</tt> just needs to return a string identifying the user's preferred time zone:

@@ -456,7 +456,7 @@ class ActionText::Engine < ::Rails::Engine; end
 #   first:
 #     title: An Article
 #
-# Then declare the <tt>ActionText::RichText</tt> fixture data in
+# Then declare the ActionText::RichText fixture data in
 # <tt>test/fixtures/action_text/rich_texts.yml</tt>, making sure to declare
 # each entry's <tt>record:</tt> key as a polymorphic relationship:
 #
