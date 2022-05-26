@@ -440,6 +440,7 @@ class RuboCop::CommentConfig::CopAnalysis < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -458,8 +459,8 @@ class RuboCop::Config
   # @return [Config] a new instance of Config
   def initialize(hash = T.unsafe(nil), loaded_path = T.unsafe(nil)); end
 
-  def [](*args, &block); end
-  def []=(*args, &block); end
+  def [](*args, **_arg1, &block); end
+  def []=(*args, **_arg1, &block); end
   def add_excludes_from_higher_level(highest_config); end
 
   # @return [Boolean]
@@ -474,20 +475,20 @@ class RuboCop::Config
 
   def bundler_lock_file_path; end
   def check; end
-  def delete(*args, &block); end
+  def delete(*args, **_arg1, &block); end
   def deprecation_check; end
-  def dig(*args, &block); end
+  def dig(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def disabled_new_cops?; end
 
-  def each(*args, &block); end
-  def each_key(*args, &block); end
+  def each(*args, **_arg1, &block); end
+  def each_key(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def enabled_new_cops?; end
 
-  def fetch(*args, &block); end
+  def fetch(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def file_to_exclude?(file); end
@@ -519,16 +520,16 @@ class RuboCop::Config
   # @return [Boolean]
   def internal?; end
 
-  def key?(*args, &block); end
-  def keys(*args, &block); end
+  def key?(*args, **_arg1, &block); end
+  def keys(*args, **_arg1, &block); end
   def loaded_features; end
 
   # Returns the value of attribute loaded_path.
   def loaded_path; end
 
   def make_excludes_absolute; end
-  def map(*args, &block); end
-  def merge(*args, &block); end
+  def map(*args, **_arg1, &block); end
+  def merge(*args, **_arg1, &block); end
   def path_relative_to_config(path); end
   def patterns_to_exclude; end
   def patterns_to_include; end
@@ -540,16 +541,16 @@ class RuboCop::Config
   # @return [Boolean]
   def possibly_include_hidden?; end
 
-  def replace(*args, &block); end
+  def replace(*args, **_arg1, &block); end
   def signature; end
   def smart_loaded_path; end
   def target_rails_version; end
-  def target_ruby_version(*args, &block); end
-  def to_h(*args, &block); end
-  def to_hash(*args, &block); end
+  def target_ruby_version(*args, **_arg1, &block); end
+  def to_h(*args, **_arg1, &block); end
+  def to_hash(*args, **_arg1, &block); end
   def to_s; end
-  def transform_values(*args, &block); end
-  def validate(*args, &block); end
+  def transform_values(*args, **_arg1, &block); end
+  def validate(*args, **_arg1, &block); end
   def validate_after_resolution; end
 
   private
@@ -593,6 +594,7 @@ class RuboCop::Config::CopConfig < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1204,8 +1206,8 @@ class RuboCop::ConfigValidator
   # @return [ConfigValidator] a new instance of ConfigValidator
   def initialize(config); end
 
-  def for_all_cops(*args, &block); end
-  def smart_loaded_path(*args, &block); end
+  def for_all_cops(*args, **_arg1, &block); end
+  def smart_loaded_path(*args, **_arg1, &block); end
   def target_ruby_version; end
   def validate; end
 
@@ -1846,6 +1848,7 @@ class RuboCop::Cop::Base::InvestigationReport < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2634,6 +2637,7 @@ class RuboCop::Cop::Commissioner::InvestigationReport < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2824,6 +2828,7 @@ class RuboCop::Cop::Cop::Correction < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -3223,6 +3228,100 @@ end
 
 RuboCop::Cop::Gemspec::DateAssignment::MSG = T.let(T.unsafe(nil), String)
 
+# Enforce that gem dependency version specifications or a commit reference (branch,
+# ref, or tag) are either required or forbidden.
+#
+# @example EnforcedStyle: required (default)
+#
+#   # bad
+#   Gem::Specification.new do |spec|
+#   spec.add_dependency 'parser'
+#   end
+#
+#   # bad
+#   Gem::Specification.new do |spec|
+#   spec.add_development_dependency 'parser'
+#   end
+#
+#   # good
+#   Gem::Specification.new do |spec|
+#   spec.add_dependency 'parser', '>= 2.3.3.1', '< 3.0'
+#   end
+#
+#   # good
+#   Gem::Specification.new do |spec|
+#   spec.add_development_dependency 'parser', '>= 2.3.3.1', '< 3.0'
+#   end
+# @example EnforcedStyle: forbidden
+#
+#   # bad
+#   Gem::Specification.new do |spec|
+#   spec.add_dependency 'parser', '>= 2.3.3.1', '< 3.0'
+#   end
+#
+#   # bad
+#   Gem::Specification.new do |spec|
+#   spec.add_development_dependency 'parser', '>= 2.3.3.1', '< 3.0'
+#   end
+#
+#   # good
+#   Gem::Specification.new do |spec|
+#   spec.add_dependency 'parser'
+#   end
+#
+#   # good
+#   Gem::Specification.new do |spec|
+#   spec.add_development_dependency 'parser'
+#   end
+class RuboCop::Cop::Gemspec::DependencyVersion < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::ConfigurableEnforcedStyle
+  include ::RuboCop::Cop::GemspecHelp
+
+  def add_dependency_method_declarations(param0); end
+  def includes_commit_reference?(param0 = T.unsafe(nil)); end
+  def includes_version_specification?(param0 = T.unsafe(nil)); end
+  def on_new_investigation; end
+
+  private
+
+  # @return [Boolean]
+  def add_dependency_method?(method_name); end
+
+  def add_dependency_method_nodes; end
+
+  # @return [Boolean]
+  def allowed_gem?(node); end
+
+  def allowed_gems; end
+
+  # @return [Boolean]
+  def forbidden_offense?(node); end
+
+  # @return [Boolean]
+  def forbidden_style?; end
+
+  # @return [Boolean]
+  def match_block_variable_name?(receiver_name); end
+
+  def message(range); end
+
+  # @return [Boolean]
+  def offense?(node); end
+
+  # @return [Boolean]
+  def required_offense?(node); end
+
+  # @return [Boolean]
+  def required_style?; end
+
+  # @return [Boolean]
+  def version_specification?(expression); end
+end
+
+RuboCop::Cop::Gemspec::DependencyVersion::FORBIDDEN_MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Gemspec::DependencyVersion::REQUIRED_MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Gemspec::DependencyVersion::VERSION_SPECIFICATION_REGEX = T.let(T.unsafe(nil), Regexp)
+
 # An attribute assignment method calls should be listed only once
 # in a gemspec.
 #
@@ -3262,9 +3361,6 @@ class RuboCop::Cop::Gemspec::DuplicatedAssignment < ::RuboCop::Cop::Base
   def on_new_investigation; end
 
   private
-
-  # @return [Boolean]
-  def assignment_method?(method_name); end
 
   def duplicated_assignment_method_nodes; end
 
@@ -3494,7 +3590,7 @@ RuboCop::Cop::Gemspec::RequiredRubyVersion::RESTRICT_ON_SEND = T.let(T.unsafe(ni
 #
 #   # bad
 #   Gem::Specification.new do |spec|
-#   if RUBY_VERSION >= '2.5'
+#   if RUBY_VERSION >= '3.0'
 #   spec.add_runtime_dependency 'gem_a'
 #   else
 #   spec.add_runtime_dependency 'gem_b'
@@ -3871,6 +3967,7 @@ class RuboCop::Cop::HashTransformMethod::Autocorrection < ::Struct
     def from_map_to_h(node, match); end
     def from_to_h(node, match); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -3920,6 +4017,7 @@ class RuboCop::Cop::HashTransformMethod::Captures < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -10822,7 +10920,7 @@ RuboCop::Cop::Lint::AmbiguousOperatorPrecedence::RESTRICT_ON_SEND = T.let(T.unsa
 
 # This cop checks for ambiguous ranges.
 #
-# Ranges have quite low precedence, which leads to unexpected behaviour when
+# Ranges have quite low precedence, which leads to unexpected behavior when
 # using a range with other operators. This cop avoids that by making ranges
 # explicit by requiring parenthesis around complex range boundaries (anything
 # that is not a literal: numerics, strings, symbols, etc.).
@@ -12503,8 +12601,8 @@ RuboCop::Cop::Lint::EnsureReturn::MSG = T.let(T.unsafe(nil), String)
 #   end
 class RuboCop::Cop::Lint::ErbNewArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
-  extend ::RuboCop::Cop::TargetRubyVersion
   extend ::RuboCop::Cop::AutoCorrector
+  extend ::RuboCop::Cop::TargetRubyVersion
 
   def erb_new_with_non_keyword_arguments(param0 = T.unsafe(nil)); end
   def on_send(node); end
@@ -14791,14 +14889,7 @@ class RuboCop::Cop::Lint::ReturnInVoidContext < ::RuboCop::Cop::Base
 
   private
 
-  def method_name(context_node); end
   def non_void_context(return_node); end
-
-  # @return [Boolean]
-  def setter_method?(method_name); end
-
-  # @return [Boolean]
-  def void_context_method?(method_name); end
 end
 
 RuboCop::Cop::Lint::ReturnInVoidContext::MSG = T.let(T.unsafe(nil), String)
@@ -16472,37 +16563,6 @@ class RuboCop::Cop::Lint::UselessAssignment < ::RuboCop::Cop::Base
 end
 
 RuboCop::Cop::Lint::UselessAssignment::MSG = T.let(T.unsafe(nil), String)
-
-# This cop checks for useless `else` in `begin..end` without `rescue`.
-#
-# NOTE: This syntax is no longer valid on Ruby 2.6 or higher and
-# this cop is going to be removed at some point the future.
-#
-# @example
-#
-#   # bad
-#
-#   begin
-#   do_something
-#   else
-#   do_something_else # This will never be run.
-#   end
-# @example
-#
-#   # good
-#
-#   begin
-#   do_something
-#   rescue
-#   handle_errors
-#   else
-#   do_something_else
-#   end
-class RuboCop::Cop::Lint::UselessElseWithoutRescue < ::RuboCop::Cop::Base
-  def on_new_investigation; end
-end
-
-RuboCop::Cop::Lint::UselessElseWithoutRescue::MSG = T.let(T.unsafe(nil), String)
 
 # This cop checks for useless method definitions, specifically: empty constructors
 # and methods just delegating to `super`.
@@ -18425,6 +18485,7 @@ class RuboCop::Cop::Naming::InclusiveLanguage::WordLocation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -18826,11 +18887,15 @@ RuboCop::Cop::Naming::RescuedExceptionsVariableName::MSG = T.let(T.unsafe(nil), 
 #
 #   # good
 #   fooBar = 1
+# @example AllowedPatterns: ['_v\d+\z']
+#   # good
+#   :release_v1
 class RuboCop::Cop::Naming::VariableName < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::AllowedIdentifiers
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::ConfigurableFormatting
   include ::RuboCop::Cop::ConfigurableNaming
+  include ::RuboCop::Cop::AllowedPattern
 
   def on_arg(node); end
   def on_blockarg(node); end
@@ -18843,6 +18908,9 @@ class RuboCop::Cop::Naming::VariableName < ::RuboCop::Cop::Base
   def on_lvasgn(node); end
   def on_optarg(node); end
   def on_restarg(node); end
+
+  # @return [Boolean]
+  def valid_name?(node, name, given_style = T.unsafe(nil)); end
 
   private
 
@@ -18859,9 +18927,9 @@ RuboCop::Cop::Naming::VariableName::MSG = T.let(T.unsafe(nil), String)
 # can be used to specify whether method names and symbols should be checked.
 # Both are enabled by default.
 #
-# @example AllowedIdentifiers: [capture3]
+# @example AllowedPatterns: ['_v\d+\z']
 #   # good
-#   expect(Open3).to receive(:capture3)
+#   :some_sym_v1
 # @example EnforcedStyle: normalcase (default)
 #   # bad
 #   :some_sym_1
@@ -18920,6 +18988,9 @@ RuboCop::Cop::Naming::VariableName::MSG = T.let(T.unsafe(nil), String)
 # @example CheckSymbols: false
 #   # good
 #   :some_sym_1
+# @example AllowedIdentifiers: [capture3]
+#   # good
+#   expect(Open3).to receive(:capture3)
 # @example EnforcedStyle: snake_case
 #   # bad
 #   :some_sym1
@@ -18941,14 +19012,19 @@ class RuboCop::Cop::Naming::VariableNumber < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::ConfigurableFormatting
   include ::RuboCop::Cop::ConfigurableNumbering
+  include ::RuboCop::Cop::AllowedPattern
 
   def on_arg(node); end
   def on_cvasgn(node); end
   def on_def(node); end
   def on_defs(node); end
+  def on_gvasgn(node); end
   def on_ivasgn(node); end
   def on_lvasgn(node); end
   def on_sym(node); end
+
+  # @return [Boolean]
+  def valid_name?(node, name, given_style = T.unsafe(nil)); end
 
   private
 
@@ -19184,6 +19260,7 @@ class RuboCop::Cop::Offense::PseudoSourceRange < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -21383,7 +21460,7 @@ class RuboCop::Cop::Style::CollectionCompact < ::RuboCop::Cop::Base
 
   private
 
-  def good_method_name(method_name); end
+  def good_method_name(node); end
   def offense_range(node); end
   def range(begin_pos_node, end_pos_node); end
 end
@@ -22665,9 +22742,25 @@ RuboCop::Cop::Style::DoubleCopDisableDirective::MSG = T.let(T.unsafe(nil), Strin
 #   def foo?
 #   !!return_value
 #   end
+#
+#   define_method :foo? do
+#   !!return_value
+#   end
+#
+#   define_singleton_method :foo? do
+#   !!return_value
+#   end
 # @example EnforcedStyle: forbidden
 #   # bad
 #   def foo?
+#   !!return_value
+#   end
+#
+#   define_method :foo? do
+#   !!return_value
+#   end
+#
+#   define_singleton_method :foo? do
 #   !!return_value
 #   end
 class RuboCop::Cop::Style::DoubleNegation < ::RuboCop::Cop::Base
@@ -22681,6 +22774,9 @@ class RuboCop::Cop::Style::DoubleNegation < ::RuboCop::Cop::Base
 
   # @return [Boolean]
   def allowed_in_returns?(node); end
+
+  # @return [Boolean]
+  def define_mehod?(node); end
 
   # @return [Boolean]
   def double_negative_condition_return_value?(node, last_child, conditional_node); end
@@ -23225,6 +23321,30 @@ RuboCop::Cop::Style::EndlessMethod::CORRECTION_STYLES = T.let(T.unsafe(nil), Arr
 RuboCop::Cop::Style::EndlessMethod::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::Style::EndlessMethod::MSG_MULTI_LINE = T.let(T.unsafe(nil), String)
 
+# This cop checks for consistent usage of `ENV['HOME']`. If `nil` is used as
+# the second argument of `ENV.fetch`, it is treated as a bad case like `ENV[]`.
+#
+# @example
+#
+#   # bad
+#   ENV['HOME']
+#   ENV.fetch('HOME', nil)
+#
+#   # good
+#   Dir.home
+#
+#   # good
+#   ENV.fetch('HOME', default)
+class RuboCop::Cop::Style::EnvHome < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def env_home?(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::Style::EnvHome::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::EnvHome::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # This cop ensures that eval methods (`eval`, `instance_eval`, `class_eval`
 # and `module_eval`) are given filename and line number values (`__FILE__`
 # and `__LINE__`). This data is used to ensure that any errors raised
@@ -23555,16 +23675,31 @@ RuboCop::Cop::Style::ExponentialNotation::MESSAGES = T.let(T.unsafe(nil), Hash)
 # On the other hand, `ENV.fetch` raises KeyError or returns the explicitly
 # specified default value.
 #
+# When an `ENV[]` is the LHS of `||`, the autocorrect makes the RHS
+# the default value of `ENV.fetch`.
+#
 # @example
 #   # bad
 #   ENV['X']
-#   ENV['X'] || z
+#   ENV['X'] || 'string literal'
+#   ENV['X'] || some_method
 #   x = ENV['X']
+#
+#   ENV['X'] || y.map do |a|
+#   puts a * 2
+#   end
 #
 #   # good
 #   ENV.fetch('X')
-#   ENV.fetch('X', nil) || z
+#   ENV.fetch('X', 'string literal')
+#   ENV.fetch('X') { some_method }
 #   x = ENV.fetch('X')
+#
+#   ENV.fetch('X') do
+#   y.map do |a|
+#   puts a * 2
+#   end
+#   end
 #
 #   # also good
 #   !ENV['X']
@@ -23572,8 +23707,11 @@ RuboCop::Cop::Style::ExponentialNotation::MESSAGES = T.let(T.unsafe(nil), Hash)
 class RuboCop::Cop::Style::FetchEnvVar < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
+  def block_control?(param0 = T.unsafe(nil)); end
   def env_with_bracket?(param0 = T.unsafe(nil)); end
+  def env_with_bracket_in_descendants?(param0 = T.unsafe(nil)); end
   def on_send(node); end
+  def operand_of_or?(param0 = T.unsafe(nil)); end
 
   private
 
@@ -23588,7 +23726,7 @@ class RuboCop::Cop::Style::FetchEnvVar < ::RuboCop::Cop::Base
   def allowable_use?(node); end
 
   # @return [Boolean]
-  def allowed_var?(expression); end
+  def allowed_var?(node); end
 
   # The following are allowed cases:
   #
@@ -23598,16 +23736,82 @@ class RuboCop::Cop::Style::FetchEnvVar < ::RuboCop::Cop::Base
   # @return [Boolean]
   def assigned?(node); end
 
+  def configured_indentation; end
+  def conterpart_rhs_of(node); end
+
+  # Adds an offense and sets `nil` to the default value of `ENV.fetch`.
+  # `ENV['X']` --> `ENV.fetch('X', nil)`
+  def default_nil(node, expression); end
+
+  def default_rhs(node, expression); end
+
+  # Adds an offense and makes the RHS the default value of `ENV.fetch`.
+  # `z || ENV['X'] || y` --> `z || ENV.fetch('X') { y }`
+  def default_rhs_in_outer_or(node, expression); end
+
+  # Adds an offense and makes the RHS the default value of `ENV.fetch`.
+  # `ENV['X'] || y` --> `ENV.fetch('X') { y }`
+  def default_rhs_in_same_or(node, expression); end
+
+  # @return [Boolean]
+  def default_to_rhs?(node); end
+
+  def first_line_of(source); end
+
+  # @return [Boolean]
+  def left_end_of_or_chains?(node); end
+
+  # Looks ahead to the `ENV[]` that must be corrected first, avoiding a cross correction.
+  # ```
+  # ENV['X'] || y.map do |a|
+  #   a.map do |b|
+  #     ENV['Z'] + b
+  #     ^^^^^^^^ This must be corrected first.
+  #   end
+  # end
+  # ```
+  def lookahead_target_node(base_node); end
+
   # Check if the node is a receiver and receives a message with dot syntax.
   #
   # @return [Boolean]
   def message_chained_with_dot?(node); end
 
+  def message_template_for(rhs); end
+  def new_code_default_nil(expression); end
+  def new_code_default_rhs(node, expression); end
+  def new_code_default_rhs_multiline(node, expression); end
+  def new_code_default_rhs_single_line(node, expression); end
+
+  # @return [Boolean]
+  def no_env_with_bracket_in_descendants?(node); end
+
+  # @return [Boolean]
+  def offensive?(node); end
+
+  # @return [Boolean]
+  def rhs_can_be_default_value?(node); end
+
+  # @return [Boolean]
+  def rhs_is_block_control?(node); end
+
+  # @return [Boolean]
+  def right_end_of_or_chains?(node); end
+
+  # Returns the node and expression of the rightmost `ENV[]` in `||` chains.
+  # e.g.,
+  # `ENV['X'] || y || z || ENV['A'] || b`
+  #                        ^^^^^^^^ Matches this one
+  def rightmost_offense_in_or_chains(base_node); end
+
   # @return [Boolean]
   def used_as_flag?(node); end
 end
 
-RuboCop::Cop::Style::FetchEnvVar::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::FetchEnvVar::MSG_DEFAULT_NIL = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::FetchEnvVar::MSG_DEFAULT_RHS_MULTILINE_BLOCK = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::FetchEnvVar::MSG_DEFAULT_RHS_SECOND_ARG_OF_FETCH = T.let(T.unsafe(nil), String)
+RuboCop::Cop::Style::FetchEnvVar::MSG_DEFAULT_RHS_SINGLE_LINE_BLOCK = T.let(T.unsafe(nil), String)
 
 # Favor `File.(bin)read` convenience methods.
 #
@@ -26687,6 +26891,9 @@ class RuboCop::Cop::Style::MultilineTernaryOperator < ::RuboCop::Cop::Base
   def offense?(node); end
 
   def replacement(node); end
+
+  # @return [Boolean]
+  def use_assignment_method?(node); end
 end
 
 RuboCop::Cop::Style::MultilineTernaryOperator::MSG_IF = T.let(T.unsafe(nil), String)
@@ -28935,8 +29142,20 @@ class RuboCop::Cop::Style::RedundantCondition < ::RuboCop::Cop::Base
 
   private
 
+  # @return [Boolean]
+  def asgn_type?(node); end
+
+  # @return [Boolean]
+  def branches_have_assignment?(node); end
+
+  # @return [Boolean]
+  def branches_have_method?(node); end
+
   def correct_ternary(corrector, node); end
   def else_source(else_branch); end
+  def else_source_if_has_assignment(else_branch); end
+  def else_source_if_has_method(else_branch); end
+  def if_source(if_branch); end
   def make_ternary_form(node); end
   def message(node); end
 
@@ -28946,7 +29165,19 @@ class RuboCop::Cop::Style::RedundantCondition < ::RuboCop::Cop::Base
   def range_of_offense(node); end
 
   # @return [Boolean]
+  def redudant_condition?(node); end
+
+  # @return [Boolean]
+  def require_braces?(node); end
+
+  # @return [Boolean]
   def require_parentheses?(node); end
+
+  # @return [Boolean]
+  def synonymous_condition_and_branch?(node); end
+
+  # @return [Boolean]
+  def use_hash_key_access?(node); end
 
   # @return [Boolean]
   def use_hash_key_assignment?(else_branch); end
@@ -32511,14 +32742,14 @@ class RuboCop::Cop::Style::TrivialAccessors < ::RuboCop::Cop::Base
   def allowed_reader?(node); end
 
   # @return [Boolean]
-  def allowed_writer?(method_name); end
+  def allowed_writer?(node); end
 
   def autocorrect(corrector, node); end
   def autocorrect_class(corrector, node); end
   def autocorrect_instance(corrector, node); end
 
   # @return [Boolean]
-  def dsl_writer?(method_name); end
+  def dsl_writer?(node); end
 
   # @return [Boolean]
   def exact_name_match?; end
@@ -33656,6 +33887,7 @@ class RuboCop::Cop::VariableForce::AssignmentReference < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -33761,6 +33993,7 @@ class RuboCop::Cop::VariableForce::Branch::Base < ::Struct
     def inherited(subclass); end
 
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
     def type; end
@@ -34153,6 +34386,7 @@ class RuboCop::Cop::VariableForce::VariableReference < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -34809,6 +35043,7 @@ class RuboCop::Formatter::HTMLFormatter::Color < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -34874,6 +35109,7 @@ class RuboCop::Formatter::HTMLFormatter::FileOffenses < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -34916,6 +35152,7 @@ class RuboCop::Formatter::HTMLFormatter::Summary < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -34967,6 +35204,35 @@ class RuboCop::Formatter::JUnitFormatter < ::RuboCop::Formatter::BaseFormatter
 
   def add_failure_to(testcase, offenses, cop_name); end
   def reset_count; end
+end
+
+# This formatter displays the report data in markdown
+class RuboCop::Formatter::MarkdownFormatter < ::RuboCop::Formatter::BaseFormatter
+  include ::RuboCop::Formatter::TextUtil
+  include ::RuboCop::PathUtil
+
+  # @return [MarkdownFormatter] a new instance of MarkdownFormatter
+  def initialize(output, options = T.unsafe(nil)); end
+
+  def file_finished(file, offenses); end
+
+  # Returns the value of attribute files.
+  def files; end
+
+  def finished(inspected_files); end
+  def started(target_files); end
+
+  # Returns the value of attribute summary.
+  def summary; end
+
+  private
+
+  def possible_ellipses(location); end
+  def render_markdown; end
+  def write_code(offense); end
+  def write_context(offense); end
+  def write_file_messages; end
+  def write_heading(file); end
 end
 
 # This formatter displays the list of offended cops with a count of how
@@ -35275,7 +35541,7 @@ end
 #
 #   comment.encoding # => 'ascii-8bit'
 # @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Specify-Coding.html
-# @see https://git.io/vMCXh Emacs handling in Ruby's parse.y
+# @see https://github.com/ruby/ruby/blob/3f306dc/parse.y#L6873-L6892 Emacs handling in parse.y
 class RuboCop::MagicComment::EmacsComment < ::RuboCop::MagicComment::EditorComment
   private
 
@@ -35317,13 +35583,15 @@ class RuboCop::MagicComment::SimpleComment < ::RuboCop::MagicComment
   #
   # Case-insensitive and dashes/underscores are acceptable.
   #
-  # @see https://git.io/vM7Mg
+  # @see https://github.com/ruby/ruby/blob/78b95b4/parse.y#L7134-L7138
   def extract_frozen_string_literal; end
 
   def extract_shareable_constant_value; end
 end
 
-# @see https://git.io/vMC1C IRB's pattern for matching magic comment tokens
+# IRB's pattern for matching magic comment tokens.
+#
+# @see https://github.com/ruby/ruby/blob/b4a55c1/lib/irb/magic-file.rb#L5
 RuboCop::MagicComment::TOKEN = T.let(T.unsafe(nil), Regexp)
 
 # Wrapper for Vim style magic comments.
