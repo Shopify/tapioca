@@ -21,47 +21,33 @@ module T
         Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
       end
 
-      def type_member(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
+      def type_member(variance = :invariant, fixed: nil, lower: nil, upper: nil, &bounds_proc)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
-        hash = if blk
-          blk.call
-        else
-          {
-            fixed: fixed,
-            lower: lower,
-            upper: upper,
-          }
-        end
-
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Member,
           variance,
-          **hash,
+          fixed,
+          lower,
+          upper,
+          bounds_proc
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
 
-      def type_template(variance = :invariant, fixed: nil, lower: nil, upper: nil, &blk)
+      def type_template(variance = :invariant, fixed: nil, lower: nil, upper: nil, &bounds_proc)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
-        hash = if blk
-          blk.call
-        else
-          {
-            fixed: fixed,
-            lower: lower,
-            upper: upper,
-          }
-        end
-
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Template,
           variance,
-          **hash,
+          fixed,
+          lower,
+          upper,
+          bounds_proc
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
@@ -136,18 +122,31 @@ module Tapioca
       end
     end
 
+    # rubocop:disable Metrics/ParameterLists
     sig do
-      params(context: Module, type: Type, variance: Symbol, fixed: T.untyped, lower: T.untyped, upper: T.untyped).void
+      params(
+        context: Module,
+        type: Type,
+        variance: Symbol,
+        fixed: T.untyped,
+        lower: T.untyped,
+        upper: T.untyped,
+        bounds_proc: T.nilable(T.proc.returns(T::Hash[Symbol, T.untyped]))
+      ).void
     end
-    def initialize(context, type, variance, fixed: nil, lower: nil, upper: nil)
+    def initialize(context, type, variance, fixed, lower, upper, bounds_proc)
       @context = context
       @type = type
       @variance = variance
-      @fixed = fixed
-      @lower = lower
-      @upper = upper
+      @bounds_proc = if bounds_proc
+        bounds_proc
+      else
+        build_bounds_proc(fixed, lower, upper)
+      end
+
       super()
     end
+    # rubocop:enable Metrics/ParameterLists
 
     sig { returns(T.nilable(String)) }
     def name
@@ -170,9 +169,10 @@ module Tapioca
 
     sig { returns(String) }
     def serialize
-      fixed = @fixed.to_s if @fixed
-      upper = @upper.to_s if @upper
-      lower = @lower.to_s if @lower
+      bounds = @bounds_proc.call
+      fixed = bounds[:fixed].to_s if bounds.key?(:fixed)
+      lower = bounds[:lower].to_s if bounds.key?(:lower)
+      upper = bounds[:upper].to_s if bounds.key?(:upper)
 
       TypeVariableHelper.serialize_type_variable(
         @type.serialize,
@@ -189,6 +189,19 @@ module Tapioca
     end
 
     private
+
+    sig do
+      params(fixed: T.untyped, lower: T.untyped, upper: T.untyped)
+        .returns(T.proc.returns(T::Hash[Symbol, T.untyped]))
+    end
+    def build_bounds_proc(fixed, lower, upper)
+      bounds = {}
+      bounds[:fixed] = fixed unless fixed.nil?
+      bounds[:lower] = lower unless lower.nil?
+      bounds[:upper] = upper unless upper.nil?
+
+      -> { bounds }
+    end
 
     sig do
       type_parameters(:Result)

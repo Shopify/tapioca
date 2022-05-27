@@ -2588,6 +2588,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
             NullGenericType = SimpleGenericType[Integer].new(0)
           end
+
+          module ForwardDeclaration
+            extend T::Sig
+            extend T::Generic
+
+            Elem = type_member { { fixed: LateDeclaredModule }}
+
+            module LateDeclaredModule
+            end
+          end
         end
       RUBY
 
@@ -2694,6 +2704,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
           end
         end
+
+        module Generics::ForwardDeclaration
+          extend T::Generic
+
+          Elem = type_member { { fixed: Generics::ForwardDeclaration::LateDeclaredModule } }
+        end
+
+        module Generics::ForwardDeclaration::LateDeclaredModule; end
 
         class Generics::SimpleGenericType
           extend T::Generic
