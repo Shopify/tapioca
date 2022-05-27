@@ -6,7 +6,10 @@
 
 module RuboCop; end
 module RuboCop::Cop; end
+
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
+
 module RuboCop::Cop::RSpec; end
 
 # Checks that left braces for adjacent single line lets are aligned.
@@ -401,7 +404,7 @@ class RuboCop::Cop::RSpec::Capybara::FeatureMethods < ::RuboCop::Cop::RSpec::Bas
   def enabled_methods; end
 end
 
-# https://git.io/v7Kwr
+# https://github.com/teamcapybara/capybara/blob/e283c1aeaa72441f5403963577e16333bf111a81/lib/capybara/rspec/features.rb#L31-L36
 RuboCop::Cop::RSpec::Capybara::FeatureMethods::MAP = T.let(T.unsafe(nil), Hash)
 
 RuboCop::Cop::RSpec::Capybara::FeatureMethods::MSG = T.let(T.unsafe(nil), String)
@@ -443,6 +446,48 @@ RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::CAPYBARA_MATCHER_METHODS = T.l
 RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::MSG_FALSE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::MSG_TRUE = T.let(T.unsafe(nil), String)
 RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Prefer negated matchers over `to change.by(0)`.
+#
+# @example
+#   # bad
+#   expect { run }.to change(Foo, :bar).by(0)
+#   expect { run }.to change { Foo.bar }.by(0)
+#   expect { run }
+#   .to change(Foo, :bar).by(0)
+#   .and change(Foo, :baz).by(0)
+#   expect { run }
+#   .to change { Foo.bar }.by(0)
+#   .and change { Foo.baz }.by(0)
+#
+#   # good
+#   expect { run }.not_to change(Foo, :bar)
+#   expect { run }.not_to change { Foo.bar }
+#   expect { run }
+#   .to not_change(Foo, :bar)
+#   .and not_change(Foo, :baz)
+#   expect { run }
+#   .to not_change { Foo.bar }
+#   .and not_change { Foo.baz }
+class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def expect_change_with_arguments(param0 = T.unsafe(nil)); end
+  def expect_change_with_block(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+
+  private
+
+  def autocorrect(corrector, node); end
+  def check_offence(node); end
+
+  # @return [Boolean]
+  def compound_expectations?(node); end
+end
+
+RuboCop::Cop::RSpec::ChangeByZero::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::ChangeByZero::MSG_COMPOUND = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::ChangeByZero::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Help methods for working with nodes containing comments.
 module RuboCop::Cop::RSpec::CommentsHelp
@@ -694,11 +739,11 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
 
   # @example
   #   # nil represents base constant
-  #   collapse_namespace([], :C)                 # => [:C]
-  #   collapse_namespace([:A, :B], [:C)          # => [:A, :B, :C]
-  #   collapse_namespace([:A, :B], [:B, :C)      # => [:A, :B, :C]
-  #   collapse_namespace([:A, :B], [nil, :C)     # => [nil, :C]
-  #   collapse_namespace([:A, :B], [nil, :B, :C) # => [nil, :B, :C]
+  #   collapse_namespace([], [:C])                # => [:C]
+  #   collapse_namespace([:A, :B], [:C])          # => [:A, :B, :C]
+  #   collapse_namespace([:A, :B], [:B, :C])      # => [:A, :B, :C]
+  #   collapse_namespace([:A, :B], [nil, :C])     # => [nil, :C]
+  #   collapse_namespace([:A, :B], [nil, :B, :C]) # => [nil, :B, :C]
   # @param namespace [Array<Symbol>]
   # @param const [Array<Symbol>]
   # @return [Array<Symbol>]
@@ -734,9 +779,6 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   def scope_change?(node); end
 
   # @return [Boolean]
-  def skip_blocks?; end
-
-  # @return [Boolean]
   def skippable_block?(node); end
 end
 
@@ -765,7 +807,7 @@ end
 
 RuboCop::Cop::RSpec::DescribedClassModuleWrapping::MSG = T.let(T.unsafe(nil), String)
 
-# This cop enforces custom RSpec dialects.
+# Enforces custom RSpec dialects.
 #
 # A dialect can be based on the following RSpec methods:
 #
@@ -4355,7 +4397,7 @@ end
 RuboCop::Cop::RSpec::VerifiedDoubles::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::RSpec::VerifiedDoubles::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks void `expect()`.
+# Checks void `expect()`.
 #
 # @example
 #   # bad
@@ -4380,7 +4422,7 @@ end
 RuboCop::Cop::RSpec::VoidExpect::MSG = T.let(T.unsafe(nil), String)
 RuboCop::Cop::RSpec::VoidExpect::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# This cop checks for calling a block within a stub.
+# Checks for calling a block within a stub.
 #
 # @example
 #   # bad
