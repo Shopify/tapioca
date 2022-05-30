@@ -71,9 +71,18 @@ module Tapioca
         @events << Gem::ConstNodeAdded.new(symbol, constant, node)
       end
 
-      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
+      sig do
+        params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never)
+      end
       def push_scope(symbol, constant, node)
         @events << Gem::ScopeNodeAdded.new(symbol, constant, node)
+      end
+
+      sig do
+        params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never)
+      end
+      def push_foreign_scope(symbol, constant, node)
+        @events << Gem::ForeignScopeNodeAdded.new(symbol, constant, node)
       end
 
       sig do
@@ -256,7 +265,12 @@ module Tapioca
             RBI::Module.new(name)
           end
 
-        push_scope(name, constant, scope)
+        if foreign_constant
+          push_foreign_scope(name, constant, scope)
+        else
+          push_scope(name, constant, scope)
+        end
+
         @root << scope
       end
 

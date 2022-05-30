@@ -102,6 +102,8 @@ module Tapioca
       end
     end
 
+    class ForeignScopeNodeAdded < ScopeNodeAdded; end
+
     class MethodNodeAdded < NodeAdded
       extend T::Sig
 

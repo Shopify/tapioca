@@ -542,9 +542,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           include ::Foo::Bar
           extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
         end
-
-        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
-        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
       assert_equal(output, compile)
@@ -597,9 +594,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           include ::Foo::Bar
           extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
         end
-
-        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
-        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
       assert_equal(output, compile)
