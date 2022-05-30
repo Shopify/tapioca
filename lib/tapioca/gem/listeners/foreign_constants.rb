@@ -29,6 +29,18 @@ module Tapioca
             next if location.nil? || !@pipeline.gem.contains_path?(location)
 
             name = @pipeline.name_of(constant)
+
+            # Calling Tapioca::Gem::Pipeline#name_of on a singleton class returns `nil`.
+            # To handle this case, use string parsing to get the name of the singleton class's
+            # base constant. Then, generate RBIs as if the base constant is extending the mixin,
+            # which is functionally equivalent to including or prepending to the singleton class.
+            if !name && constant.singleton_class?
+              name = constant_name_from_singleton_class(constant)
+              next unless name
+
+              constant = T.cast(constantize(name), Module)
+            end
+
             @pipeline.push_foreign_constant(name, constant) if name
           end
         end

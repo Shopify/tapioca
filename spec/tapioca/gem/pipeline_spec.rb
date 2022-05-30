@@ -605,6 +605,29 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles dynamic mixin to singleton class" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          module Bar; end
+        end
+      RUBY
+
+      add_ruby_file("ext.rb", <<~RUBY)
+        Class.singleton_class.prepend(Foo::Bar)
+      RUBY
+
+      output = template(<<~RBI)
+        class Class < ::Module
+          extend ::Foo::Bar
+        end
+
+        class Foo; end
+        module Foo::Bar; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles without annotations" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
