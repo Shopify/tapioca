@@ -85,6 +85,8 @@ Usage:
   tapioca init
 
 Options:
+      [--postrequire=POSTREQUIRE]    
+                                     # Default: sorbet/tapioca/require.rb
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes

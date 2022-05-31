@@ -76,6 +76,14 @@ module Tapioca
         assert_empty_stderr(result)
         assert_success_status(result)
       end
+
+      it "creates the Tapioca post-require file in a custom location" do
+        result = @project.tapioca("init --postrequire sorbet/tapioca/custom_require.rb")
+        assert_includes(result.out, "create  sorbet/tapioca/custom_require.rb")
+        assert_project_file_exist("sorbet/tapioca/custom_require.rb")
+        assert_empty_stderr(result)
+        assert_success_status(result)
+      end
     end
   end
 end
