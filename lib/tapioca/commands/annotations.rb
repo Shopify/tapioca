@@ -10,14 +10,14 @@ module Tapioca
 
       sig do
         params(
-          central_repo_root_uri: String,
+          central_repo_root_uris: T::Array[String],
           central_repo_index_path: String
         ).void
       end
-      def initialize(central_repo_root_uri:, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
+      def initialize(central_repo_root_uris:, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
         super()
-        @central_repo_root_uri = central_repo_root_uri
-        @index = T.let(fetch_index, RepoIndex)
+        @central_repo_root_uris = central_repo_root_uris
+        @indexes = T.let(fetch_indexes, T::Hash[String, RepoIndex])
       end
 
       sig { override.void }
@@ -60,10 +60,20 @@ module Tapioca
         say("\nDone\n\n", :green)
       end
 
-      sig { returns(RepoIndex) }
-      def fetch_index
-        say("Retrieving index from central repository... ", [:blue, :bold])
-        content = fetch_file(CENTRAL_REPO_INDEX_PATH)
+      sig { returns(T::Hash[String, RepoIndex]) }
+      def fetch_indexes
+        multiple_repos = @central_repo_root_uris.size > 1
+        repo_number = 1
+        @central_repo_root_uris.each_with_object({}) do |uri, hash|
+          hash[uri] = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
+          repo_number += 1
+        end
+      end
+
+      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(RepoIndex) }
+      def fetch_index(repo_uri, repo_number:)
+        say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
+        content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
         exit(1) unless content
 
         index = RepoIndex.from_json(content)
@@ -74,7 +84,11 @@ module Tapioca
       sig { params(gem_names: T::Array[String]).returns(T::Array[String]) }
       def fetch_annotations(gem_names)
         say("Fetching gem annotations from central repository... ", [:blue, :bold])
-        fetchable_gems = gem_names.select { |gem_name| @index.has_gem?(gem_name) }
+        fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[String, T::Array[String]])
+
+        gem_names.each_with_object(fetchable_gems) do |gem_name, hash|
+          @indexes.each { |uri, index| hash[gem_name] << uri if index.has_gem?(gem_name) }
+        end
 
         if fetchable_gems.empty?
           say(" Nothing to do")
@@ -82,54 +96,57 @@ module Tapioca
         end
 
         say("\n")
-        fetched_gems = fetchable_gems.select { |name| fetch_annotation(name) }
+        fetched_gems = fetchable_gems.select { |gem_name, repo_uris| fetch_annotation(repo_uris, gem_name) }
         say("\nDone", :green)
-        fetched_gems
+        fetched_gems.keys.sort
       end
 
-      sig { params(gem_name: String).void }
-      def fetch_annotation(gem_name)
-        content = fetch_file("#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
-        return unless content
+      sig { params(repo_uris: T::Array[String], gem_name: String).void }
+      def fetch_annotation(repo_uris, gem_name)
+        # TODO: handle merges and conflicts
+        repo_uris.each do |repo_uri|
+          content = fetch_file(repo_uri, "#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
+          return unless content
 
-        content = add_header(gem_name, content)
+          content = add_header(gem_name, content)
 
-        dir = DEFAULT_ANNOTATIONS_DIR
-        FileUtils.mkdir_p(dir)
-        say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
-        create_file("#{dir}/#{gem_name}.rbi", content)
-      end
-
-      sig { params(path: String).returns(T.nilable(String)) }
-      def fetch_file(path)
-        if @central_repo_root_uri.start_with?(%r{https?://})
-          fetch_http_file(path)
-        else
-          fetch_local_file(path)
+          dir = DEFAULT_ANNOTATIONS_DIR
+          FileUtils.mkdir_p(dir)
+          say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
+          create_file("#{dir}/#{gem_name}.rbi", content)
         end
       end
 
-      sig { params(path: String).returns(T.nilable(String)) }
-      def fetch_local_file(path)
-        File.read("#{@central_repo_root_uri}/#{path}")
+      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      def fetch_file(repo_uri, path)
+        if repo_uri.start_with?(%r{https?://})
+          fetch_http_file(repo_uri, path)
+        else
+          fetch_local_file(repo_uri, path)
+        end
+      end
+
+      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      def fetch_local_file(repo_uri, path)
+        File.read("#{repo_uri}/#{path}")
       rescue => e
         say_error("\nCan't fetch file `#{path}` (#{e.message})", :bold, :red)
         nil
       end
 
-      sig { params(path: String).returns(T.nilable(String)) }
-      def fetch_http_file(path)
-        uri = URI("#{@central_repo_root_uri}/#{path}")
+      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      def fetch_http_file(repo_uri, path)
+        uri = URI("#{repo_uri}/#{path}")
         response = Net::HTTP.get_response(uri)
         case response
         when Net::HTTPSuccess
           response.body
         else
-          say_error("\nCan't fetch file `#{path}` from #{@central_repo_root_uri} (#{response.class})", :bold, :red)
+          say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{response.class})", :bold, :red)
           nil
         end
       rescue SocketError, Errno::ECONNREFUSED => e
-        say_error("\nCan't fetch file `#{path}` from #{@central_repo_root_uri} (#{e.message})", :bold, :red)
+        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{e.message})", :bold, :red)
         nil
       end
 

@@ -99,6 +99,54 @@ module Tapioca
 
         repo.destroy
       end
+
+      it "gets annotations from multiple repos" do
+        repo1 = create_repo({
+          rbi: <<~RBI,
+            # typed: true
+
+            class AnnotationForRBI; end
+          RBI
+        }, repo_name: "repo1")
+
+        repo2 = create_repo({
+          spoom: <<~RBI,
+            # typed: strict
+
+            class AnnotationForSpoom; end
+          RBI
+        }, repo_name: "repo2")
+
+        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+
+        assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
+        assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
+
+        assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
+          # typed: true
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForRBI; end
+        RBI
+
+        assert_project_annotation_equal("sorbet/rbi/annotations/spoom.rbi", <<~RBI)
+          # typed: strict
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForSpoom; end
+        RBI
+
+        assert_success_status(result)
+
+        repo1.destroy
+        repo2.destroy
+      end
     end
 
     private
