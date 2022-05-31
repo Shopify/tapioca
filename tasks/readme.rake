@@ -95,7 +95,7 @@ task :readme do
     end
   end
 
-  def print_command_help(contents)
+  def print_commands_help(contents)
     shell = FakeShell.new
 
     Tapioca::Cli.commands.each_key do |command_name|
@@ -120,7 +120,7 @@ task :readme do
 
   contents = File.read(path)
   contents = print_config_template(contents)
-  contents = print_command_help(contents)
+  contents = print_commands_help(contents)
   File.write(path, contents)
 
   assert_synchronized(path) if ENV["CI"] == "true"
