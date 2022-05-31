@@ -103,9 +103,9 @@ module Tapioca
 
     private
 
-    sig { params(annotations: T::Hash[String, String]).returns(MockDir) }
-    def create_repo(annotations)
-      repo = MockDir.new("#{@project.path}/repo")
+    sig { params(annotations: T::Hash[String, String], repo_name: String).returns(MockDir) }
+    def create_repo(annotations, repo_name: "repo")
+      repo = MockDir.new("#{@project.path}/#{repo_name}")
       index = {}
 
       annotations.each do |gem_name, rbi_content|
