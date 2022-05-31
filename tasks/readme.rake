@@ -81,6 +81,8 @@ task :readme do
   end
 
   class FakeShell < Thor::Shell::Basic
+    DEFAULT_TERMINAL_WIDTH = 120
+
     def stdout
       @stdout ||= StringIO.new
     end
@@ -92,6 +94,10 @@ task :readme do
     def clear
       @stdout = StringIO.new
       self
+    end
+
+    def terminal_width
+      DEFAULT_TERMINAL_WIDTH
     end
   end
 
