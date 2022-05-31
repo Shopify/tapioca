@@ -17,7 +17,7 @@ module Tapioca
       it "does nothing if the repo is empty" do
         repo = create_repo({})
 
-        result = @project.tapioca("annotations --repo-uri #{repo.path}")
+        result = @project.tapioca("annotations --sources #{repo.path}")
 
         assert_equal(<<~OUT, result.out)
           Retrieving index from central repository... Done
@@ -38,7 +38,7 @@ module Tapioca
         @project.write("sorbet/rbi/annotations/bar.rbi", "# typed: true")
         @project.write("sorbet/rbi/annotations/foo.rbi", "# typed: true")
 
-        result = @project.tapioca("annotations --repo-uri #{repo.path}")
+        result = @project.tapioca("annotations --sources #{repo.path}")
 
         assert_includes(result.out, "remove  sorbet/rbi/annotations/bar.rbi")
         assert_includes(result.out, "remove  sorbet/rbi/annotations/foo.rbi")
@@ -68,7 +68,7 @@ module Tapioca
           RBI
         })
 
-        result = @project.tapioca("annotations --repo-uri #{repo.path}")
+        result = @project.tapioca("annotations --sources #{repo.path}")
 
         assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
         assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
@@ -109,7 +109,7 @@ module Tapioca
           RBI
         })
 
-        result = @project.tapioca("annotations --repo-uri #{repo.path}")
+        result = @project.tapioca("annotations --sources #{repo.path}")
 
         assert_includes(result.err, <<~ERR)
           Can't import RBI file for `spoom` as it contains errors:
@@ -139,7 +139,7 @@ module Tapioca
           RBI
         }, repo_name: "repo2")
 
-        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+        result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
         assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
         assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
@@ -193,7 +193,7 @@ module Tapioca
           RBI
         }, repo_name: "repo2")
 
-        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+        result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
         assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
 
@@ -242,7 +242,7 @@ module Tapioca
           RBI
         }, repo_name: "repo2")
 
-        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+        result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
         assert_includes(result.err, <<~ERR)
           Can't import RBI file for `spoom` as it contains conflicts:

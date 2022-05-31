@@ -302,10 +302,11 @@ module Tapioca
       exit(0)
     end
 
-    desc "annotations", "Pull gem annotations from a central RBI repository"
-    option :repo_uri, type: :array, desc: "Repository URI to pull annotations from", default: [CENTRAL_REPO_ROOT_URI]
+    desc "annotations", "Pull gem RBI annotations from remote sources"
+    option :sources, type: :array, default: [CENTRAL_REPO_ROOT_URI],
+      desc: "URIs of the sources to pull gem RBI annotations from"
     def annotations
-      command = Commands::Annotations.new(central_repo_root_uris: options[:repo_uri])
+      command = Commands::Annotations.new(central_repo_root_uris: options[:sources])
       command.execute
     end
 

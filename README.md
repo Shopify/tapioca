@@ -48,7 +48,7 @@ $ tapioca help
 
 Commands:
   tapioca --version, -v      # show version
-  tapioca annotations        # Pull gem annotations from a central RBI repository
+  tapioca annotations        # Pull gem RBI annotations from remote sources
   tapioca check-shims        # check duplicated definitions in shim RBIs
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
@@ -694,7 +694,7 @@ check_shims:
   shim_rbi_dir: sorbet/rbi/shims
   payload: true
 annotations:
-  repo_uri:
+  sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
 ```
 <!-- END_CONFIG_TEMPLATE -->
