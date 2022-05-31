@@ -42,11 +42,14 @@ end
 
 Run `bundle install` and make sure Tapioca is properly installed:
 
-```sh
-$ bundle exec tapioca help
+<!-- START_HELP -->
+```shell
+$ tapioca help
+
 Commands:
   tapioca --version, -v      # show version
-  tapioca clean-shims        # clean duplicated definitions in shim RBIs
+  tapioca annotations        # Pull gem annotations from a central RBI repository
+  tapioca check-shims        # check duplicated definitions in shim RBIs
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
@@ -58,7 +61,9 @@ Options:
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+
 ```
+<!-- END_HELP -->
 
 ## Getting started
 
