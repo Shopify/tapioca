@@ -223,7 +223,7 @@ Once the file is generated, you should review it, remove all unnecessary require
 
 #### Excluding a gem from RBI generation
 
-It may be useful to exclude some gems from the generation process. For example for gems that are in Bundle's debug group or gems of which the contents are dependent on the architecture they are loaded on. A typical example is `fakefs`, which, if loaded into memory, changes `File` operations to be no-ops and breaks Tapioca RBI file generation altogether.
+It may be useful to exclude some gems from the generation process. For example for gems that are in Bundle's debug group or gems of which the contents are dependent on the architecture they are loaded on. 
 
 To do so you can pass the list of gems you want to exclude in the command line with the `--exclude` option:
 
@@ -239,6 +239,11 @@ gem:
     - gemA
     - gemB
 ```
+
+There are a few development/test environment gems that can cause RBI generation issues, so Tapioca skips them by default:
+
+- `debug`
+- `fakefs`
 
 #### Changing the strictness level of the RBI for a gem
 

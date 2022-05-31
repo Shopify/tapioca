@@ -140,8 +140,13 @@ module Tapioca
       extend(T::Sig)
       include GemHelper
 
-      IGNORED_GEMS = T.let(["sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime"].freeze,
-        T::Array[String])
+      IGNORED_GEMS = T.let(
+        [
+          "sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime",
+          "debug", "fakefs",
+        ].freeze,
+        T::Array[String]
+      )
 
       sig { returns(String) }
       attr_reader :full_gem_path, :version
