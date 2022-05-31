@@ -74,21 +74,21 @@ module Tapioca
         assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
         refute_includes(result.out, "create  sorbet/rbi/annotations/foo.rbi")
 
-        assert_project_annotation_equal(repo, "sorbet/rbi/annotations/rbi.rbi", <<~RBI)
+        assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
           # typed: true
 
           # DO NOT EDIT MANUALLY
-          # This file was pulled from $REPO_PATH.
+          # This file was pulled from a central RBI files repository.
           # Please run `bin/tapioca annotations` to update it.
 
           class AnnotationForRBI; end
         RBI
 
-        assert_project_annotation_equal(repo, "sorbet/rbi/annotations/spoom.rbi", <<~RBI)
+        assert_project_annotation_equal("sorbet/rbi/annotations/spoom.rbi", <<~RBI)
           # typed: strict
 
           # DO NOT EDIT MANUALLY
-          # This file was pulled from $REPO_PATH.
+          # This file was pulled from a central RBI files repository.
           # Please run `bin/tapioca annotations` to update it.
 
           class AnnotationForSpoom; end
@@ -117,10 +117,9 @@ module Tapioca
       repo
     end
 
-    sig { params(repo: MockDir, path: String, content: String).void }
-    def assert_project_annotation_equal(repo, path, content)
-      rbi_annotation = @project.read(path)
-      assert_equal(content.strip, rbi_annotation.gsub(repo.path, "$REPO_PATH").strip)
+    sig { params(path: String, content: String).void }
+    def assert_project_annotation_equal(path, content)
+      assert_equal(content.strip, @project.read(path).strip)
     end
   end
 end

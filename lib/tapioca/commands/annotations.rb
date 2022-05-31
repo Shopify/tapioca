@@ -137,7 +137,7 @@ module Tapioca
       def add_header(name, content)
         header = <<~COMMENT
           # DO NOT EDIT MANUALLY
-          # This file was pulled from #{@central_repo_root_uri}.
+          # This file was pulled from a central RBI files repository.
           # Please run `#{default_command(:annotations)}` to update it.
         COMMENT
 
