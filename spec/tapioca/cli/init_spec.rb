@@ -68,6 +68,14 @@ module Tapioca
         assert_empty_stderr(result)
         assert_success_status(result)
       end
+
+      it "creates the Tapioca config file in a custom location" do
+        result = @project.tapioca("init --config sorbet/tapioca/custom_config.yml")
+        assert_includes(result.out, "create  sorbet/tapioca/custom_config.yml")
+        assert_project_file_exist("sorbet/tapioca/custom_config.yml")
+        assert_empty_stderr(result)
+        assert_success_status(result)
+      end
     end
   end
 end

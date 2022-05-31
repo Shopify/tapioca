@@ -26,7 +26,7 @@ module Tapioca
     def init
       command = Commands::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
-        tapioca_config: TAPIOCA_CONFIG_FILE,
+        tapioca_config: options[:config],
         default_postrequire: DEFAULT_POSTREQUIRE_FILE
       )
       command.execute
