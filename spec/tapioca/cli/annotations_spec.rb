@@ -100,6 +100,28 @@ module Tapioca
         repo.destroy
       end
 
+      it "handles parse errors within annotations" do
+        repo = create_repo({
+          spoom: <<~RBI,
+            # typed: true
+
+            class AnnotationForSpoom
+          RBI
+        })
+
+        result = @project.tapioca("annotations --repo-uri #{repo.path}")
+
+        assert_includes(result.err, <<~ERR)
+          Can't import RBI file for `spoom` as it contains errors:
+              Error: unexpected token $end (-:4:0-4:0)
+        ERR
+
+        refute_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
+        refute_project_file_exist("sorbet/rbi/annotations/spoom.rbi")
+
+        repo.destroy
+      end
+
       it "gets annotations from multiple repos" do
         repo1 = create_repo({
           rbi: <<~RBI,
@@ -143,6 +165,93 @@ module Tapioca
         RBI
 
         assert_success_status(result)
+
+        repo1.destroy
+        repo2.destroy
+      end
+
+      it "merges annotations from multiple repos" do
+        repo1 = create_repo({
+          rbi: <<~RBI,
+            # typed: true
+
+            class AnnotationForRBI
+              def foo; end
+              def bar; end
+            end
+          RBI
+        }, repo_name: "repo1")
+
+        repo2 = create_repo({
+          rbi: <<~RBI,
+            # typed: true
+
+            class AnnotationForRBI
+              def foo; end
+              def baz; end
+            end
+          RBI
+        }, repo_name: "repo2")
+
+        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+
+        assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
+
+        assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
+          # typed: true
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForRBI
+            def foo; end
+            def bar; end
+            def baz; end
+          end
+        RBI
+
+        assert_success_status(result)
+
+        repo1.destroy
+        repo2.destroy
+      end
+
+      it "handles conflicts with annotations from multiple repos" do
+        repo1 = create_repo({
+          spoom: <<~RBI,
+            # typed: true
+
+            class AnnotationForSpoom
+              def foo(x, y); end
+              def bar; end
+              def baz; end
+            end
+          RBI
+        }, repo_name: "repo1")
+
+        repo2 = create_repo({
+          spoom: <<~RBI,
+            # typed: true
+
+            class AnnotationForSpoom
+              def foo(x); end
+              def bar(x); end
+              def baz; end
+            end
+          RBI
+        }, repo_name: "repo2")
+
+        result = @project.tapioca("annotations --repo-uri #{repo1.path} #{repo2.path}")
+
+        assert_includes(result.err, <<~ERR)
+          Can't import RBI file for `spoom` as it contains conflicts:
+              Conflicting definitions for `::AnnotationForSpoom#foo(x, y)`
+              Conflicting definitions for `::AnnotationForSpoom#bar()`
+        ERR
+
+        refute_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
+        refute_project_file_exist("sorbet/rbi/annotations/spoom.rbi")
 
         repo1.destroy
         repo2.destroy

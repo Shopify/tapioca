@@ -103,18 +103,19 @@ module Tapioca
 
       sig { params(repo_uris: T::Array[String], gem_name: String).void }
       def fetch_annotation(repo_uris, gem_name)
-        # TODO: handle merges and conflicts
-        repo_uris.each do |repo_uri|
-          content = fetch_file(repo_uri, "#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
-          return unless content
-
-          content = add_header(gem_name, content)
-
-          dir = DEFAULT_ANNOTATIONS_DIR
-          FileUtils.mkdir_p(dir)
-          say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
-          create_file("#{dir}/#{gem_name}.rbi", content)
+        contents = repo_uris.map do |repo_uri|
+          fetch_file(repo_uri, "#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
         end
+
+        content = merge_files(gem_name, contents.compact)
+        return unless content
+
+        content = add_header(gem_name, content)
+
+        dir = DEFAULT_ANNOTATIONS_DIR
+        FileUtils.mkdir_p(dir)
+        say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
+        create_file("#{dir}/#{gem_name}.rbi", content)
       end
 
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
@@ -165,6 +166,33 @@ module Tapioca
           say_error("Couldn't insert file header for content: #{content} due to unexpected file format")
           content
         end
+      end
+
+      sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
+      def merge_files(gem_name, contents)
+        return nil if contents.empty?
+
+        rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
+
+        contents.each do |content|
+          rbi = RBI::Parser.parse_string(content)
+          rewriter.merge(rbi)
+        end
+
+        tree = rewriter.tree
+        return tree.string if tree.conflicts.empty?
+
+        say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains conflicts:", :yellow)
+
+        tree.conflicts.each do |conflict|
+          say_error("    #{conflict}", :yellow)
+        end
+
+        nil
+      rescue RBI::ParseError => e
+        say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains errors:", :yellow)
+        say_error("    Error: #{e.message} (#{e.location})")
+        nil
       end
     end
   end
