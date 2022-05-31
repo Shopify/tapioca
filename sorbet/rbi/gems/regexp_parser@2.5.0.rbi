@@ -45,6 +45,8 @@ class Regexp::Expression::Assertion::Lookahead < ::Regexp::Expression::Assertion
 class Regexp::Expression::Assertion::Lookbehind < ::Regexp::Expression::Assertion::Base; end
 class Regexp::Expression::Assertion::NegativeLookahead < ::Regexp::Expression::Assertion::Base; end
 class Regexp::Expression::Assertion::NegativeLookbehind < ::Regexp::Expression::Assertion::Base; end
+
+# TODO: unify name with token :backref, one way or the other, in v3.0.0
 module Regexp::Expression::Backreference; end
 
 class Regexp::Expression::Backreference::Base < ::Regexp::Expression::Base
@@ -122,6 +124,7 @@ end
 class Regexp::Expression::Base
   include ::Regexp::Expression::Shared
   include ::RuboCop::Ext::RegexpParser::Expression::Base
+  extend ::Regexp::Expression::Shared::ClassMethods
 
   # @return [Base] a new instance of Base
   def initialize(token, options = T.unsafe(nil)); end
@@ -607,6 +610,8 @@ end
 
 module Regexp::Expression::Keep; end
 
+# TOOD: in regexp_parser v3.0.0 this should possibly be a Subexpression
+#       that contains all expressions to its left.
 class Regexp::Expression::Keep::Mark < ::Regexp::Expression::Base
   def match_length; end
 end
@@ -631,6 +636,7 @@ end
 # Or actually allow chaining as a more concise but tricky solution than PR#69.
 class Regexp::Expression::Quantifier
   include ::Regexp::Expression::Shared
+  extend ::Regexp::Expression::Shared::ClassMethods
 
   # @return [Quantifier] a new instance of Quantifier
   def initialize(*args); end
@@ -683,7 +689,6 @@ Regexp::Expression::Quantifier::MODES = T.let(T.unsafe(nil), Array)
 class Regexp::Expression::Root < ::Regexp::Expression::Subexpression
   class << self
     def build(options = T.unsafe(nil)); end
-    def build_token; end
   end
 end
 
@@ -699,8 +704,7 @@ class Regexp::Expression::Sequence < ::Regexp::Expression::Subexpression
   def ts; end
 
   class << self
-    def add_to(subexpression, params = T.unsafe(nil), active_opts = T.unsafe(nil)); end
-    def at_levels(level, set_level, conditional_level); end
+    def add_to(exp, params = T.unsafe(nil), active_opts = T.unsafe(nil)); end
   end
 end
 
@@ -717,6 +721,8 @@ class Regexp::Expression::SequenceOperation < ::Regexp::Expression::Subexpressio
 end
 
 module Regexp::Expression::Shared
+  mixes_in_class_methods ::Regexp::Expression::Shared::ClassMethods
+
   # Deep-compare two expressions for equality.
   def ==(other); end
 
@@ -805,6 +811,7 @@ module Regexp::Expression::Shared
 
   def to_s(format = T.unsafe(nil)); end
   def to_str(format = T.unsafe(nil)); end
+  def token_class; end
 
   # Test if this expression has the given test_type, which can be either
   # a symbol or an array of symbols to check against the expression's type.
@@ -827,6 +834,17 @@ module Regexp::Expression::Shared
     # @private
     def included(mod); end
   end
+end
+
+# filled in ./methods/*.rb
+module Regexp::Expression::Shared::ClassMethods
+  # Convenience method to init a valid Expression without a Regexp::Token
+  #
+  # @raise [ArgumentError]
+  def construct(params = T.unsafe(nil)); end
+
+  def construct_defaults; end
+  def token_class; end
 end
 
 class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
@@ -912,7 +930,9 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   def intersperse(expressions, separator); end
 end
 
+# TODO: unify name with token :property, on way or the other, in v3.0.0
 module Regexp::Expression::UnicodeProperty; end
+
 class Regexp::Expression::UnicodeProperty::Age < ::Regexp::Expression::UnicodeProperty::Base; end
 class Regexp::Expression::UnicodeProperty::Alnum < ::Regexp::Expression::UnicodeProperty::Base; end
 class Regexp::Expression::UnicodeProperty::Alpha < ::Regexp::Expression::UnicodeProperty::Base; end
@@ -1627,7 +1647,7 @@ Regexp::Syntax::Token::Conditional::Delimiters = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Conditional::Separator = T.let(T.unsafe(nil), Array)
 Regexp::Syntax::Token::Conditional::Type = T.let(T.unsafe(nil), Symbol)
 
-# TODO: unify naming with RE::EscapeSequence, on way or the other, in v3.0.0
+# TODO: unify naming with RE::EscapeSequence, one way or the other, in v3.0.0
 module Regexp::Syntax::Token::Escape; end
 
 Regexp::Syntax::Token::Escape::ASCII = T.let(T.unsafe(nil), Array)
