@@ -199,6 +199,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.0)
       ast (~> 2.4.1)
+    prettier_print (0.1.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -243,7 +244,7 @@ GEM
       sorbet-runtime (>= 0.5.9204)
       unparser
     redis (4.6.0)
-    regexp_parser (2.4.0)
+    regexp_parser (2.5.0)
     rexml (3.2.5)
     rubocop (1.30.0)
       parallel (~> 1.10)
@@ -262,7 +263,7 @@ GEM
       rubocop (~> 1.29)
     rubocop-sorbet (0.6.8)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.0.2)
+    ruby-lsp (0.0.3)
       language_server-protocol
       rubocop (>= 1.0)
       syntax_tree (>= 2.3)
@@ -298,7 +299,8 @@ GEM
     sqlite3 (1.4.2)
     state_machines (0.5.0)
     strscan (3.0.2)
-    syntax_tree (2.3.1)
+    syntax_tree (2.7.1)
+      prettier_print
     thor (1.2.1)
     timeout (0.2.0)
     tzinfo (2.0.4)

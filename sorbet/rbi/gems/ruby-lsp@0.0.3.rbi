@@ -5,3 +5,4 @@
 # Please instead update this file by running `bin/tapioca gem ruby-lsp`.
 
 module RubyLsp; end
+RubyLsp::VERSION = T.let(T.unsafe(nil), String)
