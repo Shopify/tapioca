@@ -594,9 +594,9 @@ Please remove the duplicated definitions from the sorbet/rbi/shims directory.
 
 This command can be used on CI to make sure the RBI shims are always up-to-date and non-redundant with generated files.
 
-<!-- START_HELP_COMMAND_CHECK-SHIMS -->
+<!-- START_HELP_COMMAND_CHECK_SHIMS -->
 ```shell
-$ bin/tapioca help check-shims
+$ tapioca help check_shims
 
 Usage:
   tapioca check-shims
@@ -608,13 +608,15 @@ Options:
                                      # Default: sorbet/rbi/dsl
       [--shim-rbi-dir=SHIM_RBI_DIR]  # Path to shim RBIs
                                      # Default: sorbet/rbi/shims
+      [--payload], [--no-payload]    # Check shims against Sorbet's payload
+                                     # Default: true
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
 check duplicated definitions in shim RBIs
 ```
-<!-- END_HELP_COMMAND_CHECK-SHIMS -->
+<!-- END_HELP_COMMAND_CHECK_SHIMS -->
 
 ### Configuration
 
