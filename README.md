@@ -167,7 +167,7 @@ generate RBIs from gems
 
 #### Manually requiring parts of a gem
 
-It may happen that the RBI file generated for a gem listed inside your `Gemfile.lock` is missing some definitions taht you would expect it to be exporting.
+It may happen that the RBI file generated for a gem listed inside your `Gemfile.lock` is missing some definitions that you would expect it to be exporting.
 
 For gems that have a normal default `require` and that load all of their constants through that, everything should work seamlessly. However, for gems that are marked as `require: false` in the `Gemfile`, or for gems that export constants optionally via different requires, where a single require does not load the whole gem code into memory, Tapioca will not be able to load some of the types into memory and, thus, won't be able to generate complete RBIs for them. For this reason, we need to keep a small external file named `sorbet/tapioca/require.rb` that is executed after all the gems in the `Gemfile` have been required and before generation of gem RBIs have started. This file is responsible for adding the requires for additional files from gems, which are not covered by the default require.
 
