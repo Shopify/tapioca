@@ -69,7 +69,7 @@ Options:
 
 Execute this command to get started:
 
-```sh
+```shell
 $ bundle exec tapioca init
       create  sorbet/config
       create  sorbet/tapioca/config.yml
@@ -106,7 +106,7 @@ Sorbet does not read the code in your gem dependencies, so it does not know the 
 
 In order to generate the RBI files for the gems used in your application, run the following command:
 
-```sh
+```shell
 $ bin/tapioca gems [gems...]
 
 Removing RBI files of gems that have been removed:
@@ -221,7 +221,7 @@ If you ever run into a case, where you add a gem or update the version of a gem 
 
 To help you get started, you can use the command `tapioca require` to auto-populate the contents of the `sorbet/tapioca/require.rb` file with all the requires found in your application:
 
-```sh
+```shell
 $ bin/tapioca require
 
 Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
@@ -238,7 +238,7 @@ It may be useful to exclude some gems from the generation process. For example f
 
 To do so you can pass the list of gems you want to exclude in the command line with the `--exclude` option:
 
-```sh
+```shell
 $ bin/tapioca gems --exclude gemA gemB
 ```
 
@@ -257,7 +257,7 @@ By default, all RBI files for gems are generated with the [strictness level](htt
 
 Tapioca comes with an automatic detection (option `--auto-strictness`, enabled by default) of such cases and will switch the strictness level to `typed: false` in RBI files containing conflicts with the core and standard library definitions. It is nonetheless possible to manually switch the strictness level for a gem using the `--typed-overrides` option:
 
-```sh
+```shell
 $ bin/tapioca gems --typed-overrides gemA:false gemB:false
 ```
 
@@ -274,7 +274,7 @@ gem:
 
 To ensure all RBI files for gems are up-to-date with the latest changes in your `Gemfile.lock`, Tapioca provides a `--verify` option:
 
-```sh
+```shell
 $ bin/tapioca gems --verify
 
 Checking for out-of-date RBIs...
@@ -291,7 +291,7 @@ To solve this, Tapioca can load your application and introspect it to find the c
 
 To generate the RBI files for the DSLs used in your application, run the following command:
 
-```sh
+```shell
 $ bin/tapioca dsl
 
 Loading Rails application... Done
@@ -338,7 +338,7 @@ generate RBIs for dynamic methods
 
 To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, Tapioca provide a `--verify` option:
 
-```sh
+```shell
 $ bin/tapioca dsl --verify
 
 Loading Rails application... Done
@@ -528,7 +528,7 @@ To get you started quickly, Tapioca can create a RBI file containing a stub of a
 
 To generate the RBI file for the missing constants used in your application run the following command:
 
-```sh
+```shell
 $ bin/tapioca todo
 
 Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Done
@@ -577,7 +577,7 @@ end
 
 As you migrate to newer versions of Sorbet or Tapioca, some shims may become useless as Sorbet's internal definitions for Ruby's core and standard library is enhanced or Tapioca is able to generate definitions for new DSLs. To avoid keeping outdated or useless definitions inside your application shims, Tapioca provides the `check-shims` command:
 
-```sh
+```shell
 $ bin/tapioca check-shims
 
 Loading Sorbet payload...  Done
