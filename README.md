@@ -163,6 +163,12 @@ generate RBIs from gems
 ```
 <!-- END_HELP_COMMAND_GEM -->
 
+By default, running `tapioca gem` will only generate the RBI files for gems that have been added to or removed from the project's `Gemfile` this means that Tapioca will not regenerate the RBI files for untouched gems. However, when changing Tapioca configuration or bumping its version, it may be useful to force the regeneration of the RBI files previsouly generated. This can be done with the `--all` option:
+
+```shell
+bin/tapioca gems --all
+```
+
 > Are you coming from `srb rbi`? [See how `tapioca gem` compares to `srb rbi`](https://github.com/Shopify/tapioca/wiki/How-does-tapioca-compare-to-%22srb-rbi-gems%22-%3F).
 
 #### Manually requiring parts of a gem
