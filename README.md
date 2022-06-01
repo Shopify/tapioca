@@ -48,7 +48,7 @@ $ tapioca help
 
 Commands:
   tapioca --version, -v      # show version
-  tapioca annotations        # Pull gem annotations from a central RBI repository
+  tapioca annotations        # Pull gem RBI annotations from remote sources
   tapioca check-shims        # check duplicated definitions in shim RBIs
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
@@ -290,6 +290,30 @@ Nothing to do, all RBIs are up-to-date.
 ```
 
 This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
+
+### Pulling RBI annotations from remote sources
+
+Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems.
+
+To pull the annotations relevant to your project from the central repository, run the `annotations` command:
+
+```shell
+bin/tapioca annotations
+```
+
+By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--sources` options. For example if your repository is stored on Github:
+
+```shell
+bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
+```
+
+Tapioca also supports pulling annotations from multiple sources:
+
+```shell
+bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
+```
+
+> Note: support for private repositories is not yet implemented.
 
 ### Generating RBI files for Rails and other DSLs
 
@@ -694,7 +718,8 @@ check_shims:
   shim_rbi_dir: sorbet/rbi/shims
   payload: true
 annotations:
-  repo_uri: https://raw.githubusercontent.com/Shopify/rbi-central/main
+  sources:
+  - https://raw.githubusercontent.com/Shopify/rbi-central/main
 ```
 <!-- END_CONFIG_TEMPLATE -->
 
