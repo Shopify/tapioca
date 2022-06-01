@@ -81,6 +81,8 @@ task :readme do
   end
 
   class FakeShell < Thor::Shell::Basic
+    DEFAULT_TERMINAL_WIDTH = 120
+
     def stdout
       @stdout ||= StringIO.new
     end
@@ -93,9 +95,32 @@ task :readme do
       @stdout = StringIO.new
       self
     end
+
+    def terminal_width
+      DEFAULT_TERMINAL_WIDTH
+    end
   end
 
-  def print_command_help(contents)
+  def print_help(contents)
+    shell = FakeShell.new
+
+    $PROGRAM_NAME = "tapioca"
+    section = "HELP"
+
+    Tapioca::Cli.help(shell.clear)
+
+    contents = replace_section(contents, section, <<~MARKDOWN)
+      ```shell
+      $ #{$PROGRAM_NAME} help
+
+      #{shell.contents.chomp}
+      ```
+    MARKDOWN
+
+    contents
+  end
+
+  def print_commands_help(contents)
     shell = FakeShell.new
 
     Tapioca::Cli.commands.each_key do |command_name|
@@ -120,7 +145,8 @@ task :readme do
 
   contents = File.read(path)
   contents = print_config_template(contents)
-  contents = print_command_help(contents)
+  contents = print_help(contents)
+  contents = print_commands_help(contents)
   File.write(path, contents)
 
   assert_synchronized(path) if ENV["CI"] == "true"
