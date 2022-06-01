@@ -23,11 +23,12 @@ module Tapioca
       default: false
 
     desc "init", "initializes folder structure"
+    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def init
       command = Commands::Init.new(
         sorbet_config: SORBET_CONFIG_FILE,
-        tapioca_config: TAPIOCA_CONFIG_FILE,
-        default_postrequire: DEFAULT_POSTREQUIRE_FILE
+        tapioca_config: options[:config],
+        default_postrequire: options[:postrequire]
       )
       command.execute
     end

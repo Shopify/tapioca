@@ -148,6 +148,26 @@ module Tapioca
         assert_empty_stdout(result)
         refute_success_status(result)
       end
+
+      it "loads the configuration file from a custom location" do
+        @project.write("tapioca_custom_config.yml", <<~YAML)
+          foo: true
+        YAML
+
+        result = @project.tapioca("gem --config tapioca_custom_config.yml")
+
+        assert_equal(<<~ERR, result.err)
+
+          Configuration file tapioca_custom_config.yml has the following errors:
+
+          - unknown key foo
+        ERR
+
+        assert_empty_stdout(result)
+        refute_success_status(result)
+
+        @project.remove("tapioca_custom_config.yml")
+      end
     end
   end
 end
