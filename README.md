@@ -298,22 +298,55 @@ Since Tapioca does not perform any type inference, the RBI files generated for t
 To pull the annotations relevant to your project from the central repository, run the `annotations` command:
 
 ```shell
-bin/tapioca annotations
+$ bin/tapioca annotations
+
+Retrieving index from central repository... Done
+Listing gems from Gemfile.lock... Done
+Removing annotations for gems that have been removed...  Nothing to do
+Fetching gem annotations from central repository...
+
+  Fetched activesupport
+   created  sorbet/rbi/annotations/activesupport.rbi
+
+Done
 ```
+
+<!-- START_HELP_COMMAND_ANNOTATIONS -->
+```shell
+$ tapioca help annotations
+
+Usage:
+  tapioca annotations
+
+Options:
+      [--sources=one two three]      # URIs of the sources to pull gem RBI annotations from
+                                     # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
+      [--auth=AUTH]                  # HTTP authorization header for private sources
+  -c, [--config=<config file path>]  # Path to the Tapioca configuration file
+                                     # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+
+Pull gem RBI annotations from remote sources
+```
+<!-- END_HELP_COMMAND_ANNOTATIONS -->
 
 By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--sources` options. For example if your repository is stored on Github:
 
 ```shell
-bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
+$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
 ```
 
 Tapioca also supports pulling annotations from multiple sources:
 
 ```shell
-bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
+$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
 ```
 
-> Note: support for private repositories is not yet implemented.
+Private repositories can be used as sources by passing the option `--auth` with an authentification string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
+
+```shell
+$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$PRIVATE_REPO/$BRANCH --auth "token $TOKEN"
+```
 
 ### Generating RBI files for Rails and other DSLs
 
@@ -720,6 +753,7 @@ check_shims:
 annotations:
   sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
+  auth: ''
 ```
 <!-- END_CONFIG_TEMPLATE -->
 
