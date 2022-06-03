@@ -236,7 +236,7 @@ Once the file is generated, you should review it, remove all unnecessary require
 
 #### Excluding a gem from RBI generation
 
-It may be useful to exclude some gems from the generation process. For example for gems that are in Bundle's debug group or gems of which the contents are dependent on the architecture they are loaded on. 
+It may be useful to exclude some gems from the generation process. For example for gems that are in Bundle's debug group or gems of which the contents are dependent on the architecture they are loaded on.
 
 To do so you can pass the list of gems you want to exclude in the command line with the `--exclude` option:
 
