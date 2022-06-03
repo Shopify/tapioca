@@ -1,6 +1,12 @@
 # typed: true
 # frozen_string_literal: true
 
+# Temporary fix for CI
+# A patch as been upstreamed, we're waiting for it to be merged.
+# See https://github.com/rubyconfig/config/pull/319
+# TODO: remove this one the patch is released.
+require "rails"
+
 require "yard"
 require "tapioca"
 require "tapioca/runtime/reflection"
