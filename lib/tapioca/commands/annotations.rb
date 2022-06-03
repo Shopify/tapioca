@@ -138,7 +138,12 @@ module Tapioca
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
       def fetch_http_file(repo_uri, path)
         uri = URI("#{repo_uri}/#{path}")
-        response = Net::HTTP.get_response(uri)
+
+        request = Net::HTTP::Get.new(uri)
+        response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+          http.request(request)
+        end
+
         case response
         when Net::HTTPSuccess
           response.body
