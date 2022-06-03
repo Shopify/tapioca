@@ -184,7 +184,11 @@ module Tapioca
               )
             end
           else
-            type = type_of(descriptor)
+            type = if descriptor.label == :optional && descriptor.type == :message
+              "T.nilable(#{type_of(descriptor)})"
+            else
+              type_of(descriptor)
+            end
 
             Field.new(
               name: descriptor.name,
