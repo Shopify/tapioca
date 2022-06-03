@@ -64,17 +64,29 @@ module Tapioca
       def fetch_indexes
         multiple_repos = @central_repo_root_uris.size > 1
         repo_number = 1
-        @central_repo_root_uris.each_with_object({}) do |uri, hash|
-          hash[uri] = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
+        indexes = T.let({}, T::Hash[String, RepoIndex])
+
+        @central_repo_root_uris.each do |uri|
+          index = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
+          next unless index
+
+          indexes[uri] = index
           repo_number += 1
         end
+
+        if indexes.empty?
+          say_error("\nCan't fetch annotations without sources (no index fetched)", :bold, :red)
+          exit(1)
+        end
+
+        indexes
       end
 
-      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(RepoIndex) }
+      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(T.nilable(RepoIndex)) }
       def fetch_index(repo_uri, repo_number:)
         say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
-        exit(1) unless content
+        return nil unless content
 
         index = RepoIndex.from_json(content)
         say("Done", :green)
