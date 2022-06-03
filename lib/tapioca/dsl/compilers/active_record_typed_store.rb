@@ -95,11 +95,20 @@ module Tapioca
         sig { override.void }
         def decorate
           stores = constant.typed_stores
-          return if stores.values.flat_map(&:accessors).empty?
+          accessors = stores.values.flat_map(&:accessors)
+          return if accessors.empty?
+
+          # Support versions > v1.5.0
+          if accessors.first.is_a?(Hash)
+            return if accessors.filter_map { |accessor| accessor.keys.first }.empty?
+          end
 
           root.create_path(constant) do |model|
             stores.values.each do |store_data|
               store_data.accessors.each do |accessor|
+                # Support versions > v1.5.0
+                accessor = accessor.first if accessor.is_a?(Array)
+
                 field = store_data.fields[accessor]
                 type = type_for(field.type_sym)
                 type = as_nilable_type(type) if field.null
