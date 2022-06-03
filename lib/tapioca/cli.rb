@@ -305,8 +305,9 @@ module Tapioca
     desc "annotations", "Pull gem RBI annotations from remote sources"
     option :sources, type: :array, default: [CENTRAL_REPO_ROOT_URI],
       desc: "URIs of the sources to pull gem RBI annotations from"
+    option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
     def annotations
-      command = Commands::Annotations.new(central_repo_root_uris: options[:sources])
+      command = Commands::Annotations.new(central_repo_root_uris: options[:sources], auth: options[:auth])
       command.execute
     end
 

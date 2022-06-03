@@ -11,12 +11,14 @@ module Tapioca
       sig do
         params(
           central_repo_root_uris: T::Array[String],
+          auth: T.nilable(String),
           central_repo_index_path: String
         ).void
       end
-      def initialize(central_repo_root_uris:, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
+      def initialize(central_repo_root_uris:, auth: nil, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
         super()
         @central_repo_root_uris = central_repo_root_uris
+        @auth = auth
         @indexes = T.let(fetch_indexes, T::Hash[String, RepoIndex])
       end
 
@@ -152,6 +154,8 @@ module Tapioca
         uri = URI("#{repo_uri}/#{path}")
 
         request = Net::HTTP::Get.new(uri)
+        request["Authorization"] = @auth if @auth
+
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
           http.request(request)
         end
