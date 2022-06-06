@@ -11,6 +11,7 @@ require "set"
 require "shellwords"
 require "spoom"
 require "tempfile"
+require "yaml"
 
 require "tapioca"
 require "tapioca/runtime/reflection"

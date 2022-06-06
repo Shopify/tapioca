@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "yaml"
-
 module Tapioca
   module ConfigHelper
     extend T::Sig
