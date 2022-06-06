@@ -188,7 +188,7 @@ module Tapioca
         def valid_method_name?(name)
           return true if SPECIAL_METHOD_NAMES.include?(name)
 
-          !!name.match(/^[[:word:]]+[?!=]?$/)
+          !!name.match(/^[[:alpha:]][[:word:]]*[?!=]?$/)
         end
 
         sig { params(name: String).returns(T::Boolean) }

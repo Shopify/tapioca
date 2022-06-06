@@ -3713,5 +3713,36 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it "ignores methods with illegal names" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          # Valid names
+          define_method("f") {}
+          define_method("f7") {}
+          define_method("foo") {}
+          define_method("fè") {}
+          define_method("è") {}
+
+          # Invalid names#{" "}
+          define_method("") {}
+          define_method(":") {}
+          define_method("@") {}
+          define_method("7") {}
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def f; end
+          def f7; end
+          def foo; end
+          def fè; end
+          def è; end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: false))
+    end
   end
 end
