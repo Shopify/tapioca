@@ -1,7 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "logger"
 require "yard-sorbet"
 
 module Tapioca
