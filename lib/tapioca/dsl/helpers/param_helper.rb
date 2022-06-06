@@ -6,7 +6,7 @@ module Tapioca
     module Helpers
       module ParamHelper
         extend T::Sig
-        include SignaturesHelper
+        include RBIHelper
 
         sig { params(name: String, type: String).returns(RBI::TypedParam) }
         def create_param(name, type:)

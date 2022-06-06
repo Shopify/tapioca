@@ -6,7 +6,7 @@ module Tapioca
     class Pipeline
       extend T::Sig
       include Runtime::Reflection
-      include SignaturesHelper
+      include RBIHelper
 
       IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
 

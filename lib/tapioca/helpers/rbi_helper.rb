@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module SignaturesHelper
+  module RBIHelper
     extend T::Sig
 
     sig { params(sig_string: String).returns(String) }
