@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "pathname"
+
 require "tapioca"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"

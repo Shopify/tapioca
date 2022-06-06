@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "pathname"
-
 module Tapioca
   module Gem
     class Pipeline
