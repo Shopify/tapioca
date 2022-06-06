@@ -3,6 +3,7 @@
 
 require "etc"
 require "json"
+require "parallel"
 require "pathname"
 require "tempfile"
 
