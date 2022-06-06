@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "bundler"
 require "erb"
 require "etc"
 require "fileutils"

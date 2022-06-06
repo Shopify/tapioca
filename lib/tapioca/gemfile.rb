@@ -1,7 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "bundler"
 require "logger"
 require "yard-sorbet"
 
