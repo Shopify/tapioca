@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "net/http"
-
 module Tapioca
   module Commands
     class Annotations < Command
