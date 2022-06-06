@@ -5,6 +5,7 @@ require "etc"
 require "json"
 require "parallel"
 require "pathname"
+require "set"
 require "spoom"
 require "tempfile"
 
