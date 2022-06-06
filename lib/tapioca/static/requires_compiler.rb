@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "spoom"
-
 module Tapioca
   module Static
     class RequiresCompiler
