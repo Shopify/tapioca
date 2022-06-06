@@ -3,6 +3,7 @@
 
 require "erb"
 require "etc"
+require "fileutils"
 require "json"
 require "parallel"
 require "pathname"
