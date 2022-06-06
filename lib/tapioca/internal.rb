@@ -3,6 +3,7 @@
 
 require "json"
 require "pathname"
+require "tempfile"
 
 require "tapioca"
 require "tapioca/runtime/reflection"
