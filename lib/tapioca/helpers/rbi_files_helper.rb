@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module RBIHelper
+  module RBIFilesHelper
     extend T::Sig
     extend T::Helpers
 
