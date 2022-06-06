@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "etc"
 require "json"
 require "pathname"
 require "tempfile"
