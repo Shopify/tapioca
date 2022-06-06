@@ -8,6 +8,7 @@ require "json"
 require "parallel"
 require "pathname"
 require "set"
+require "shellwords"
 require "spoom"
 require "tempfile"
 

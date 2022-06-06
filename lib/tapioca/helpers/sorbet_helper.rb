@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "shellwords"
-
 module Tapioca
   module SorbetHelper
     extend T::Sig
