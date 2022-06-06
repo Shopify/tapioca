@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "erb"
 require "etc"
 require "json"
 require "parallel"
