@@ -16,6 +16,7 @@ require "spoom"
 require "tempfile"
 require "thor"
 require "yaml"
+require "yard-sorbet"
 
 require "tapioca"
 require "tapioca/runtime/reflection"
