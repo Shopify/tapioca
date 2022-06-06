@@ -1,10 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "tapioca/rbi_ext/model"
-require "tapioca/dsl/helpers/param_helper"
-require "tapioca/dsl/pipeline"
-
 module Tapioca
   module Dsl
     module Compilers
