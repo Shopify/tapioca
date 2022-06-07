@@ -275,9 +275,10 @@ GEM
       rubocop (~> 1.30)
     rubocop-sorbet (0.6.8)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.0.3)
+    ruby-lsp (0.0.4)
       language_server-protocol
       rubocop (>= 1.0)
+      sorbet-runtime
       syntax_tree (>= 2.3)
     ruby-progressbar (1.11.0)
     shopify-money (0.16.0)
@@ -370,4 +371,4 @@ DEPENDENCIES
   xpath
 
 BUNDLED WITH
-   2.3.3
+   2.3.4
