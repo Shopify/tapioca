@@ -17,6 +17,8 @@ module Tapioca
 
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
+    SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
+
     FEATURE_REQUIREMENTS = T.let({
       to_ary_nil_support: ::Gem::Requirement.new(">= 0.5.9220"),         # https://github.com/sorbet/sorbet/pull/4706
       print_payload_sources: ::Gem::Requirement.new(">= 0.5.9818"),      # https://github.com/sorbet/sorbet/pull/5504

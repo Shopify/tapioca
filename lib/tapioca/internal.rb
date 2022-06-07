@@ -35,7 +35,6 @@ require "tapioca/runtime/generic_type_registry"
 require "tapioca/helpers/cli_helper"
 require "tapioca/helpers/config_helper"
 require "tapioca/helpers/rbi_files_helper"
-require "tapioca/helpers/shims_helper"
 require "tapioca/helpers/env_helper"
 
 require "tapioca/repo_index"

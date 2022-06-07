@@ -6,8 +6,8 @@ module Tapioca
     include CliHelper
     include ConfigHelper
     include SorbetHelper
-    include ShimsHelper
     include EnvHelper
+    include RBIFilesHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
