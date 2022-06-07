@@ -20,7 +20,7 @@ end
 
 group(:development, :test) do
   gem("smart_properties", require: false)
-  gem("frozen_record", require: false)
+  gem("frozen_record", github: "byroot/frozen_record", branch: "master", require: false)
   gem("sprockets", require: false)
   gem("rails", require: false)
   gem("state_machines", require: false)
@@ -38,7 +38,7 @@ group(:development, :test) do
   gem("shopify-money", require: false)
   gem("sidekiq", require: false)
   gem("nokogiri", require: false)
-  gem("config", require: false)
+  gem("config", github: "rubyconfig/config", branch: "master", require: false)
   gem("aasm", require: false)
   gem("bcrypt", require: false)
   gem("xpath", require: false)
