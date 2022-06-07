@@ -6,6 +6,7 @@ module Tapioca
     extend T::Sig
     include SorbetHelper
     extend SorbetHelper
+    extend self
 
     sig { params(name: String, type: String).returns(RBI::TypedParam) }
     def create_param(name, type:)
@@ -88,6 +89,11 @@ module Tapioca
       serialized << "(#{parameters.join(", ")})" unless parameters.empty?
       serialized << " { { #{block.join(", ")} } }" unless block.empty?
       serialized
+    end
+
+    sig { params(name: String).returns(T::Boolean) }
+    def valid_method_name?(name)
+      !name.to_sym.inspect.start_with?(':"', ":@", ":$")
     end
   end
 end
