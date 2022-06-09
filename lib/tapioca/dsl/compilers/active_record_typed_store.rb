@@ -95,17 +95,18 @@ module Tapioca
         sig { override.void }
         def decorate
           stores = constant.typed_stores
-          return if stores.values.flat_map(&:accessors).empty?
+          return if stores.values.all? { |store| store.accessors.empty? }
 
           root.create_path(constant) do |model|
             stores.values.each do |store_data|
-              store_data.accessors.each do |accessor|
-                field = store_data.fields[accessor]
+              store_data.accessors.each do |accessor, name|
+                field = store_data.fields.fetch(accessor)
                 type = type_for(field.type_sym)
                 type = as_nilable_type(type) if field.null
+                name ||= field.name # support < 1.5.0
 
                 store_accessors_module = model.create_module("StoreAccessors")
-                generate_methods(store_accessors_module, field.name.to_s, type)
+                generate_methods(store_accessors_module, name.to_s, type)
                 model.create_include("StoreAccessors")
               end
             end
