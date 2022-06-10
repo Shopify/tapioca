@@ -278,6 +278,7 @@ module Tapioca
           RB
 
           @project.require_mock_gem(gem)
+          @project.bundle_install
 
           result = @project.tapioca("dsl")
 
