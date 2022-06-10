@@ -41,6 +41,13 @@ module Tapioca
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
           @project.bundle_install
+          @gemfile = @project.read("Gemfile")
+          @gemfile_lock = @project.read("Gemfile.lock")
+        end
+
+        before do
+          @project.write("Gemfile", @gemfile)
+          @project.write("Gemfile.lock", @gemfile_lock)
         end
 
         after do
