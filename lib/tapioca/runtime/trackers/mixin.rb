@@ -23,21 +23,19 @@ module Tapioca
             constant: Module,
             mixin: Module,
             mixin_type: Type,
-            locations: T.nilable(T::Array[Thread::Backtrace::Location])
           ).void
         end
-        def self.register(constant, mixin, mixin_type, locations)
-          locations ||= []
-          locations.map!(&:absolute_path).uniq!
+        def self.register(constant, mixin, mixin_type)
+          location = Reflection.required_from_location
 
           locs = mixin_locations_for(constant)
-          locs.fetch(mixin_type).store(mixin, T.cast(locations, T::Array[String]))
+          locs.fetch(mixin_type).store(mixin, location)
 
           constants = constants_with_mixin(mixin)
-          constants[constant] = T.cast(locations, T::Array[String])
+          constants[constant] = location
         end
 
-        sig { params(constant: Module).returns(T::Hash[Type, T::Hash[Module, T::Array[String]]]) }
+        sig { params(constant: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
         def self.mixin_locations_for(constant)
           @constants_to_mixin_locations[constant] ||= {
             Type::Prepend => {}.compare_by_identity,
@@ -46,7 +44,7 @@ module Tapioca
           }
         end
 
-        sig { params(mixin: Module).returns(T::Hash[Module, T::Array[String]]) }
+        sig { params(mixin: Module).returns(T::Hash[Module, String]) }
         def self.constants_with_mixin(mixin)
           @mixins_to_constants[mixin] ||= {}.compare_by_identity
         end
@@ -62,7 +60,6 @@ class Module
         constant,
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Prepend,
-        caller_locations
       )
       super
     end
@@ -72,7 +69,6 @@ class Module
         constant,
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Include,
-        caller_locations
       )
       super
     end
@@ -82,7 +78,6 @@ class Module
         obj,
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Extend,
-        caller_locations
       ) if Module === obj
       super
     end
