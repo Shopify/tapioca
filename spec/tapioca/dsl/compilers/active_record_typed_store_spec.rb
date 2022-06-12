@@ -426,6 +426,32 @@ module Tapioca
 
               assert_includes(rbi_for(:Post), expected)
             end
+
+            it "generates methods with prefix and suffix" do
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                  typed_store :metadata, prefix: true, suffix: true do |s|
+                    s.string(:rate)
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Post
+                  include StoreAccessors
+
+                  module StoreAccessors
+                    sig { returns(T.nilable(String)) }
+                    def metadata_rate_metadata; end
+
+                    sig { params(metadata_rate_metadata: T.nilable(String)).returns(T.nilable(String)) }
+                    def metadata_rate_metadata=(metadata_rate_metadata); end
+              RBI
+
+              assert_includes(rbi_for(:Post), expected)
+            end
           end
         end
       end
