@@ -7,7 +7,8 @@ module Tapioca
       module Mixin
         extend T::Sig
 
-        @mixin_map = {}.compare_by_identity
+        @constants_to_mixin_locations = {}.compare_by_identity
+        @mixins_to_constants = {}.compare_by_identity
 
         class Type < T::Enum
           enums do
@@ -20,25 +21,34 @@ module Tapioca
         sig do
           params(
             constant: Module,
-            mod: Module,
+            mixin: Module,
             mixin_type: Type,
             locations: T.nilable(T::Array[Thread::Backtrace::Location])
           ).void
         end
-        def self.register(constant, mod, mixin_type, locations)
+        def self.register(constant, mixin, mixin_type, locations)
           locations ||= []
           locations.map!(&:absolute_path).uniq!
+
           locs = mixin_locations_for(constant)
-          locs.fetch(mixin_type).store(mod, T.cast(locations, T::Array[String]))
+          locs.fetch(mixin_type).store(mixin, T.cast(locations, T::Array[String]))
+
+          constants = constants_with_mixin(mixin)
+          constants[constant] = T.cast(locations, T::Array[String])
         end
 
         sig { params(constant: Module).returns(T::Hash[Type, T::Hash[Module, T::Array[String]]]) }
         def self.mixin_locations_for(constant)
-          @mixin_map[constant] ||= {
+          @constants_to_mixin_locations[constant] ||= {
             Type::Prepend => {}.compare_by_identity,
             Type::Include => {}.compare_by_identity,
             Type::Extend => {}.compare_by_identity,
           }
+        end
+
+        sig { params(mixin: Module).returns(T::Hash[Module, T::Array[String]]) }
+        def self.constants_with_mixin(mixin)
+          @mixins_to_constants[mixin] ||= {}.compare_by_identity
         end
       end
     end

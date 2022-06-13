@@ -42,6 +42,20 @@ module Tapioca
       end
     end
 
+    class ForeignConstantFound < ConstantFound
+      extend T::Sig
+
+      sig { override.returns(Module) }
+      def constant
+        T.cast(@constant, Module)
+      end
+
+      sig { params(symbol: String, constant: Module).void }
+      def initialize(symbol, constant)
+        super
+      end
+    end
+
     class NodeAdded < Event
       extend T::Helpers
       extend T::Sig
@@ -87,6 +101,8 @@ module Tapioca
         @node = node
       end
     end
+
+    class ForeignScopeNodeAdded < ScopeNodeAdded; end
 
     class MethodNodeAdded < NodeAdded
       extend T::Sig

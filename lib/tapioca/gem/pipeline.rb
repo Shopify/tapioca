@@ -41,6 +41,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
         @node_listeners << Gem::Listeners::Subconstants.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
+        @node_listeners << Gem::Listeners::ForeignConstants.new(self)
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
       end
 
@@ -60,14 +61,28 @@ module Tapioca
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 
+      sig { params(symbol: String, constant: Module).void.checked(:never) }
+      def push_foreign_constant(symbol, constant)
+        @events << Gem::ForeignConstantFound.new(symbol, constant)
+      end
+
       sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
       def push_const(symbol, constant, node)
         @events << Gem::ConstNodeAdded.new(symbol, constant, node)
       end
 
-      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
+      sig do
+        params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never)
+      end
       def push_scope(symbol, constant, node)
         @events << Gem::ScopeNodeAdded.new(symbol, constant, node)
+      end
+
+      sig do
+        params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never)
+      end
+      def push_foreign_scope(symbol, constant, node)
+        @events << Gem::ForeignScopeNodeAdded.new(symbol, constant, node)
       end
 
       sig do
@@ -152,11 +167,15 @@ module Tapioca
         return if alias_namespaced?(name)
         return if seen?(name)
 
-        constant = event.constant
-        return if T::Enum === constant # T::Enum instances are defined via `compile_enums`
+        return if T::Enum === event.constant # T::Enum instances are defined via `compile_enums`
 
         mark_seen(name)
-        compile_constant(name, constant)
+
+        if event.is_a?(Gem::ForeignConstantFound)
+          compile_foreign_constant(name, event.constant)
+        else
+          compile_constant(name, event.constant)
+        end
       end
 
       sig { params(event: Gem::NodeAdded).void }
@@ -165,6 +184,11 @@ module Tapioca
       end
 
       # Compile
+
+      sig { params(symbol: String, constant: Module).void }
+      def compile_foreign_constant(symbol, constant)
+        compile_module(symbol, constant, foreign_constant: true)
+      end
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def compile_constant(symbol, constant)
@@ -228,9 +252,9 @@ module Tapioca
         @root << node
       end
 
-      sig { params(name: String, constant: Module).void }
-      def compile_module(name, constant)
-        return unless defined_in_gem?(constant, strict: false)
+      sig { params(name: String, constant: Module, foreign_constant: T::Boolean).void }
+      def compile_module(name, constant, foreign_constant: false)
+        return unless defined_in_gem?(constant, strict: false) || foreign_constant
         return if Tapioca::TypeVariableModule === constant
 
         scope =
@@ -241,7 +265,12 @@ module Tapioca
             RBI::Module.new(name)
           end
 
-        push_scope(name, constant, scope)
+        if foreign_constant
+          push_foreign_scope(name, constant, scope)
+        else
+          push_scope(name, constant, scope)
+        end
+
         @root << scope
       end
 

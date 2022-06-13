@@ -202,6 +202,11 @@ module Tapioca
         rescue
           nil
         end
+
+        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        def ignore?(event)
+          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
       end
     end
   end

@@ -26,6 +26,11 @@ module Tapioca
             @pipeline.push_symbol(name) if name
           end
         end
+
+        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        def ignore?(event)
+          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
       end
     end
   end

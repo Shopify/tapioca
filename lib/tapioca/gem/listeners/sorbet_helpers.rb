@@ -23,6 +23,11 @@ module Tapioca
           node << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)
           node << RBI::Helper.new("sealed") if T::Private::Sealed.sealed_module?(constant)
         end
+
+        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        def ignore?(event)
+          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
       end
     end
   end

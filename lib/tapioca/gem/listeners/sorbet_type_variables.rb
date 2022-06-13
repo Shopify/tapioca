@@ -45,6 +45,11 @@ module Tapioca
 
           tree << RBI::Extend.new("T::Generic")
         end
+
+        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        def ignore?(event)
+          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
       end
     end
   end

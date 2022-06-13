@@ -17,6 +17,8 @@ module Tapioca
 
         sig { params(event: NodeAdded).void }
         def dispatch(event)
+          return if ignore?(event)
+
           case event
           when ConstNodeAdded
             on_const(event)
@@ -41,6 +43,15 @@ module Tapioca
 
         sig { params(event: MethodNodeAdded).void }
         def on_method(event)
+        end
+
+        sig { params(event: NodeAdded).returns(T::Boolean) }
+        def ignore?(event)
+          # Some listeners do not have to take any action on certain events. For example,
+          # almost every listener should skip ForeignScopeNodeAdded events in order not to generate
+          # unnecessary RBIs for foreign constants. This method should be overridden by listener
+          # subclasses to skip any events that aren't relevant to them.
+          false
         end
       end
     end
