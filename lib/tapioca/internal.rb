@@ -37,6 +37,7 @@ require "tapioca/helpers/config_helper"
 require "tapioca/helpers/signatures_helper"
 require "tapioca/helpers/rbi_helper"
 require "tapioca/helpers/shims_helper"
+require "tapioca/helpers/env_helper"
 
 require "tapioca/repo_index"
 require "tapioca/gemfile"

@@ -7,6 +7,7 @@ module Tapioca
     include ConfigHelper
     include SorbetHelper
     include ShimsHelper
+    include EnvHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
@@ -102,7 +103,14 @@ module Tapioca
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: 120
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: "development"
     def dsl(*constants)
+      set_environment
+
       command = Commands::Dsl.new(
         requested_constants: constants,
         outpath: Pathname.new(options[:outdir]),
@@ -196,8 +204,15 @@ module Tapioca
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: 120
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: "development"
     def gem(*gems)
       Tapioca.silence_warnings do
+        set_environment
+
         all = options[:all]
         verify = options[:verify]
 
