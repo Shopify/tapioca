@@ -19,11 +19,12 @@ module Tapioca
         super()
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth
-        @indexes = T.let(fetch_indexes, T::Hash[String, RepoIndex])
+        @indexes = T.let({}, T::Hash[String, RepoIndex])
       end
 
       sig { override.void }
       def execute
+        @indexes = fetch_indexes
         project_gems = list_gemfile_gems
         remove_expired_annotations(project_gems)
         fetch_annotations(project_gems)
