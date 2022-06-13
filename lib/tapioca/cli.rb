@@ -102,7 +102,14 @@ module Tapioca
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: 120
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: "development"
     def dsl(*constants)
+      set_environment
+
       command = Commands::Dsl.new(
         requested_constants: constants,
         outpath: Pathname.new(options[:outdir]),
@@ -196,8 +203,15 @@ module Tapioca
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
       default: 120
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: "development"
     def gem(*gems)
       Tapioca.silence_warnings do
+        set_environment
+
         all = options[:all]
         verify = options[:verify]
 
@@ -320,6 +334,10 @@ module Tapioca
     no_commands do
       def self.exit_on_failure?
         true
+      end
+
+      def set_environment
+        ENV["RAILS_ENV"] = ENV["RACK_ENV"] = options[:environment]
       end
     end
   end

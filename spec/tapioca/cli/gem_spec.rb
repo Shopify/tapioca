@@ -1717,6 +1717,44 @@ module Tapioca
           assert_success_status(result)
         end
       end
+
+      describe "environment" do
+        before(:all) do
+          @project.tapioca("init")
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              $stderr.puts "RAILS ENVIRONMENT: \#{ENV["RAILS_ENV"]}"
+              $stderr.puts "RACK ENVIRONMENT: \#{ENV["RACK_ENV"]}"
+            RB
+          end
+
+          @project.require_mock_gem(foo, require: false)
+          @project.bundle_install
+        end
+
+        it "must default to `development` as environment" do
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+
+          assert_equal(<<~OUT, result.err)
+            RAILS ENVIRONMENT: development
+            RACK ENVIRONMENT: development
+          OUT
+        end
+
+        it "must accept another value for environment" do
+          result = @project.tapioca("gem foo --environment staging")
+
+          assert_success_status(result)
+
+          assert_equal(<<~OUT, result.err)
+            RAILS ENVIRONMENT: staging
+            RACK ENVIRONMENT: staging
+          OUT
+        end
+      end
     end
   end
 end

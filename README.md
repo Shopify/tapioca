@@ -162,6 +162,8 @@ Options:
                                                               # Default: sorbet/rbi/dsl
           [--rbi-max-line-length=N]                           # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                               # Default: 120
+  -e, [--environment=ENVIRONMENT]                             # The Rack/Rails environment to use when generating RBIs
+                                                              # Default: development
   -c, [--config=<config file path>]                           # Path to the Tapioca configuration file
                                                               # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
@@ -357,6 +359,8 @@ Options:
                                                # Default: 1
           [--rbi-max-line-length=N]            # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                # Default: 120
+  -e, [--environment=ENVIRONMENT]              # The Rack/Rails environment to use when generating RBIs
+                                               # Default: development
   -c, [--config=<config file path>]            # Path to the Tapioca configuration file
                                                # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
@@ -696,6 +700,7 @@ dsl:
   quiet: false
   workers: 1
   rbi_max_line_length: 120
+  environment: development
 gem:
   outdir: sorbet/rbi/gems
   file_header: true
@@ -712,6 +717,7 @@ gem:
   auto_strictness: true
   dsl_dir: sorbet/rbi/dsl
   rbi_max_line_length: 120
+  environment: development
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
