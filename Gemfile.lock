@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/byroot/frozen_record.git
-  revision: 4130a0600874aae2b8c83108053255d67f0cad08
+  revision: 274658bf0d0846b16549ac153d0181572b97e7de
   branch: master
   specs:
-    frozen_record (0.23.0)
+    frozen_record (0.25.4)
       activemodel
       dedup
 
