@@ -753,7 +753,6 @@ check_shims:
 annotations:
   sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
-  auth: ''
 ```
 <!-- END_CONFIG_TEMPLATE -->
 
