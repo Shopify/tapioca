@@ -1,8 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-require "set"
-
 module Tapioca
   module Runtime
     module Trackers

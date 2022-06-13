@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "thor"
-
 module Tapioca
   module CliHelper
     extend T::Sig

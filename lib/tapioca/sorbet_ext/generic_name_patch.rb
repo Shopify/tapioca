@@ -1,9 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-require "tapioca/sorbet_ext/name_patch"
-require "tapioca/helpers/sorbet_helper"
-
 module T
   module Generic
     # This module intercepts calls to generic type instantiations and type variable definitions.

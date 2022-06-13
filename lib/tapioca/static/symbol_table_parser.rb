@@ -1,9 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "json"
-require "tempfile"
-
 module Tapioca
   module Static
     class SymbolTableParser
