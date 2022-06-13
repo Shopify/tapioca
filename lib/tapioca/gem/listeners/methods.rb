@@ -180,11 +180,6 @@ module Tapioca
             .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_parameter_name?(name)
-          name.match?(/^[[[:alnum:]]_]+$/)
-        end
-
         sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
         def initialize_method_for(constant)
           constant.instance_method(:initialize)

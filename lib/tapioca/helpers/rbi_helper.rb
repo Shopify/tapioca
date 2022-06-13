@@ -95,5 +95,10 @@ module Tapioca
     def valid_method_name?(name)
       !name.to_sym.inspect.start_with?(':"', ":@", ":$")
     end
+
+    sig { params(name: String).returns(T::Boolean) }
+    def valid_parameter_name?(name)
+      /^([[:lower:]]|_|[^[[:ascii:]]])([[:alnum:]]|_|[^[[:ascii:]]])*$/.match?(name)
+    end
   end
 end

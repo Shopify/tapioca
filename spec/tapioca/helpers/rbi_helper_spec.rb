@@ -22,5 +22,21 @@ class Tapioca::RBIHelperSpec < Minitest::Spec
         refute(valid_method_name?(name))
       end
     end
+
+    it "accepts valid parameter names" do
+      ["f", "foo", "_foo", "foo_", "fOO", "f00", "éxéctôr", "❨╯°□°❩╯︵┻━┻"].each do |name|
+        assert(valid_parameter_name?(name))
+      end
+    end
+
+    it "rejects invalid parameter names" do
+      [
+        "", "42", "42foo", "foo!", "foo=", "foo?", "Foo", "!foo", "-@foo", "foo-", "foo-bar", "foo.bar",
+        "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
+        "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",
+      ].each do |name|
+        refute(valid_parameter_name?(name))
+      end
+    end
   end
 end

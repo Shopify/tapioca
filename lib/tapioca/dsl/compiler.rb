@@ -168,11 +168,6 @@ module Tapioca
           "T.nilable(#{type})"
         end
       end
-
-      sig { params(name: String).returns(T::Boolean) }
-      def valid_parameter_name?(name)
-        name.match?(/^[[[:alnum:]]_]+$/)
-      end
     end
   end
 end
