@@ -111,7 +111,6 @@ module Tapioca
   # do that automatically for us and we get the `name` method for free from `Module`.
   class TypeVariableModule < Module
     extend T::Sig
-    include RBIHelper
 
     class Type < T::Enum
       enums do
@@ -172,7 +171,7 @@ module Tapioca
       lower = bounds[:lower].to_s if bounds.key?(:lower)
       upper = bounds[:upper].to_s if bounds.key?(:upper)
 
-      serialize_type_variable(
+      RBIHelper.serialize_type_variable(
         @type.serialize,
         @variance,
         fixed,

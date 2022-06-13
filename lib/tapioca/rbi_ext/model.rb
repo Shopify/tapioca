@@ -4,7 +4,6 @@
 module RBI
   class Tree
     extend T::Sig
-    include Tapioca::RBIHelper
 
     sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).void }
     def create_path(constant, &block)
@@ -73,7 +72,7 @@ module RBI
       ).void
     end
     def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
-      value = serialize_type_variable(type, variance, fixed, upper, lower)
+      value = Tapioca::RBIHelper.serialize_type_variable(type, variance, fixed, upper, lower)
       create_node(RBI::TypeMember.new(name, value))
     end
 

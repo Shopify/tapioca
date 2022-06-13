@@ -5,6 +5,7 @@ module Tapioca
   module RBIHelper
     extend T::Sig
     include SorbetHelper
+    extend SorbetHelper
 
     sig { params(name: String, type: String).returns(RBI::TypedParam) }
     def create_param(name, type:)
@@ -64,7 +65,7 @@ module Tapioca
         lower: T.nilable(String)
       ).returns(String)
     end
-    def serialize_type_variable(type, variance, fixed, upper, lower)
+    def self.serialize_type_variable(type, variance, fixed, upper, lower)
       variance = nil if variance == :invariant
 
       bounds = []
