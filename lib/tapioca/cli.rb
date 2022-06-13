@@ -7,6 +7,7 @@ module Tapioca
     include ConfigHelper
     include SorbetHelper
     include ShimsHelper
+    include EnvHelper
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
@@ -334,10 +335,6 @@ module Tapioca
     no_commands do
       def self.exit_on_failure?
         true
-      end
-
-      def set_environment
-        ENV["RAILS_ENV"] = ENV["RACK_ENV"] = options[:environment]
       end
     end
   end
