@@ -27,6 +27,10 @@ task :readme do
     command.hidden? || command.name.start_with?("__") || command.name == "init"
   end
 
+  def skip_option?(option)
+    option.name == "auth"
+  end
+
   def option_value(option)
     fallback_value = case option.type
     when :boolean
@@ -49,9 +53,11 @@ task :readme do
   end
 
   def command_options(command)
-    command.options.to_h do |name, opt|
+    command.options.map do |name, opt|
+      next if skip_option?(opt)
+
       [name.to_s, option_value(opt)]
-    end
+    end.compact.to_h
   end
 
   def config

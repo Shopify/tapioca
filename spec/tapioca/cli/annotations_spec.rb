@@ -100,6 +100,29 @@ module Tapioca
         repo.destroy
       end
 
+      it "gets index from the central repo using the default source" do
+        result = @project.tapioca("annotations")
+
+        assert_includes(result.out, "Retrieving index from central repository... Done")
+        assert_success_status(result)
+      end
+
+      it "recovers from a bad source" do
+        result = @project.tapioca("annotations --sources #{Tapioca::CENTRAL_REPO_ROOT_URI} https://bad-source")
+
+        assert_includes(result.out, "Retrieving index from central repository #1... Done")
+        assert_includes(result.err, "Can't fetch file `index.json` from https://bad-source")
+        assert_success_status(result)
+      end
+
+      it "errors without a valid source" do
+        result = @project.tapioca("annotations --sources https://bad-source")
+
+        assert_includes(result.err, "Can't fetch file `index.json` from https://bad-source")
+        assert_includes(result.err, "Can't fetch annotations without sources (no index fetched)")
+        refute_success_status(result)
+      end
+
       it "handles parse errors within annotations" do
         repo = create_repo({
           spoom: <<~RBI,

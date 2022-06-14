@@ -9,17 +9,20 @@ module Tapioca
       sig do
         params(
           central_repo_root_uris: T::Array[String],
+          auth: T.nilable(String),
           central_repo_index_path: String
         ).void
       end
-      def initialize(central_repo_root_uris:, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
+      def initialize(central_repo_root_uris:, auth: nil, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
         super()
         @central_repo_root_uris = central_repo_root_uris
-        @indexes = T.let(fetch_indexes, T::Hash[String, RepoIndex])
+        @auth = auth
+        @indexes = T.let({}, T::Hash[String, RepoIndex])
       end
 
       sig { override.void }
       def execute
+        @indexes = fetch_indexes
         project_gems = list_gemfile_gems
         remove_expired_annotations(project_gems)
         fetch_annotations(project_gems)
@@ -62,17 +65,29 @@ module Tapioca
       def fetch_indexes
         multiple_repos = @central_repo_root_uris.size > 1
         repo_number = 1
-        @central_repo_root_uris.each_with_object({}) do |uri, hash|
-          hash[uri] = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
+        indexes = T.let({}, T::Hash[String, RepoIndex])
+
+        @central_repo_root_uris.each do |uri|
+          index = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
+          next unless index
+
+          indexes[uri] = index
           repo_number += 1
         end
+
+        if indexes.empty?
+          say_error("\nCan't fetch annotations without sources (no index fetched)", :bold, :red)
+          exit(1)
+        end
+
+        indexes
       end
 
-      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(RepoIndex) }
+      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(T.nilable(RepoIndex)) }
       def fetch_index(repo_uri, repo_number:)
         say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
-        exit(1) unless content
+        return nil unless content
 
         index = RepoIndex.from_json(content)
         say("Done", :green)
@@ -136,7 +151,14 @@ module Tapioca
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
       def fetch_http_file(repo_uri, path)
         uri = URI("#{repo_uri}/#{path}")
-        response = Net::HTTP.get_response(uri)
+
+        request = Net::HTTP::Get.new(uri)
+        request["Authorization"] = @auth if @auth
+
+        response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
+          http.request(request)
+        end
+
         case response
         when Net::HTTPSuccess
           response.body
