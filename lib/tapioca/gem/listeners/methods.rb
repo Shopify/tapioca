@@ -9,11 +9,6 @@ module Tapioca
 
         include Runtime::Reflection
 
-        SPECIAL_METHOD_NAMES = T.let([
-          "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
-          "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",
-        ], T::Array[String])
-
         private
 
         sig { override.params(event: ScopeNodeAdded).void }
@@ -184,23 +179,21 @@ module Tapioca
             .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_method_name?(name)
-          return true if SPECIAL_METHOD_NAMES.include?(name)
-
-          !!name.match(/^[[:word:]]+[?!=]?$/)
-        end
-
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_parameter_name?(name)
-          name.match?(/^[[[:alnum:]]_]+$/)
-        end
-
         sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
         def initialize_method_for(constant)
           constant.instance_method(:initialize)
         rescue
           nil
+        end
+
+        sig { params(name: String).returns(T::Boolean) }
+        def valid_method_name?(name)
+          !name.to_sym.inspect.start_with?(':"', ":@", ":$")
+        end
+
+        sig { params(name: String).returns(T::Boolean) }
+        def valid_parameter_name?(name)
+          /^([[:lower:]]|_|[^[[:ascii:]]])([[:alnum:]]|_|[^[[:ascii:]]])*$/.match?(name)
         end
       end
     end

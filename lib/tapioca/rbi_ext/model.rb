@@ -99,17 +99,9 @@ module RBI
 
     private
 
-    SPECIAL_METHOD_NAMES = T.let(
-      ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<", "<=", "=>", ">", ">=",
-       "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",].freeze,
-      T::Array[String]
-    )
-
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
-      return true if SPECIAL_METHOD_NAMES.include?(name)
-
-      !!name.match(/^[a-zA-Z_][[:word:]]*[?!=]?$/)
+      !name.to_sym.inspect.start_with?(':"', ":@", ":$")
     end
 
     sig { returns(T::Hash[String, RBI::Node]) }

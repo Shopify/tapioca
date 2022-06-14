@@ -178,7 +178,7 @@ module Tapioca
 
       sig { params(name: String).returns(T::Boolean) }
       def valid_parameter_name?(name)
-        name.match?(/^[[[:alnum:]]_]+$/)
+        /^([[:lower:]]|_|[^[[:ascii:]]])([[:alnum:]]|_|[^[[:ascii:]]])*$/.match?(name)
       end
     end
   end
