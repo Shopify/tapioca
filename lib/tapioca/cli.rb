@@ -324,6 +324,11 @@ module Tapioca
     option :netrc_file, type: :string, desc: "Path to .netrc file"
     option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
     def annotations
+      if !options[:netrc] && options[:netrc_file]
+        say_error("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
+        exit(1)
+      end
+
       command = Commands::Annotations.new(
         central_repo_root_uris: options[:sources],
         auth: options[:auth],
