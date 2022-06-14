@@ -5,6 +5,7 @@ module Tapioca
   module Commands
     autoload :Command, "tapioca/commands/command"
     autoload :Annotations, "tapioca/commands/annotations"
+    autoload :CheckShims, "tapioca/commands/check_shims"
     autoload :Dsl, "tapioca/commands/dsl"
     autoload :Init, "tapioca/commands/init"
     autoload :Gem, "tapioca/commands/gem"

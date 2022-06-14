@@ -652,6 +652,7 @@ Loading Sorbet payload...  Done
 Loading shim RBIs from sorbet/rbi/shims...  Done
 Loading gem RBIs from sorbet/rbi/gems...  Done
 Loading gem RBIs from sorbet/rbi/dsl...  Done
+Loading annotation RBIs from sorbet/rbi/annotations...  Done
 Looking for duplicates...  Done
 
 Duplicated RBI for ::MyModel#title:
@@ -675,17 +676,19 @@ Usage:
   tapioca check-shims
 
 Options:
-      [--gem-rbi-dir=GEM_RBI_DIR]    # Path to gem RBIs
-                                     # Default: sorbet/rbi/gems
-      [--dsl-rbi-dir=DSL_RBI_DIR]    # Path to DSL RBIs
-                                     # Default: sorbet/rbi/dsl
-      [--shim-rbi-dir=SHIM_RBI_DIR]  # Path to shim RBIs
-                                     # Default: sorbet/rbi/shims
-      [--payload], [--no-payload]    # Check shims against Sorbet's payload
-                                     # Default: true
-  -c, [--config=<config file path>]  # Path to the Tapioca configuration file
-                                     # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+      [--gem-rbi-dir=GEM_RBI_DIR]                  # Path to gem RBIs
+                                                   # Default: sorbet/rbi/gems
+      [--dsl-rbi-dir=DSL_RBI_DIR]                  # Path to DSL RBIs
+                                                   # Default: sorbet/rbi/dsl
+      [--shim-rbi-dir=SHIM_RBI_DIR]                # Path to shim RBIs
+                                                   # Default: sorbet/rbi/shims
+      [--annotations-rbi-dir=ANNOTATIONS_RBI_DIR]  # Path to annotations RBIs
+                                                   # Default: sorbet/rbi/annotations
+      [--payload], [--no-payload]                  # Check shims against Sorbet's payload
+                                                   # Default: true
+  -c, [--config=<config file path>]                # Path to the Tapioca configuration file
+                                                   # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
 
 check duplicated definitions in shim RBIs
 ```
@@ -755,6 +758,7 @@ check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
+  annotations_rbi_dir: sorbet/rbi/annotations
   payload: true
 annotations:
   sources:
