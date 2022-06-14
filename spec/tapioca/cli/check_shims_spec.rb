@@ -103,7 +103,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -182,7 +182,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_includes(result.err, "Duplicated RBI for ::Foo#bar")
@@ -213,7 +213,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -243,7 +243,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -287,7 +287,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -311,10 +311,21 @@ module Tapioca
               def foo; end
               def bar; end
             end
+
+            module Baz
+              def baz; end
+            end
+          RBI
+
+          @project.write("rbi/todo.rbi", <<~RBI)
+            module Baz
+              def baz; end
+            end
           RBI
 
           result = @project.tapioca(
-            "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim --no-payload"
+            "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim " \
+              "--todo-rbi-file=rbi/todo.rbi --no-payload"
           )
 
           assert_includes(result.err, <<~ERR)
@@ -330,7 +341,13 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the rbi/shim directory.
+            Duplicated RBI for ::Baz#baz:
+             * rbi/todo.rbi:2:2-2:14
+             * rbi/shim/foo.rbi:7:2-7:14
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from the rbi/shim and rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -368,7 +385,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
@@ -414,7 +431,95 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+          ERR
+
+          refute_success_status(result)
+        end
+
+        it "detects duplicated definitions between the TODO file and generated RBIs" do
+          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+          RBI
+
+          @project.write("sorbet/rbi/dsl/bar.rbi", <<~RBI)
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Bar#bar:
+             * sorbet/rbi/todo.rbi:6:2-6:14
+             * sorbet/rbi/dsl/bar.rbi:2:2-2:14
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo#foo:
+             * sorbet/rbi/todo.rbi:2:2-2:18
+             * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+          ERR
+
+          refute_success_status(result)
+        end
+
+        it "detects duplicated definitions between the TODO file and shims" do
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Bar#bar:
+             * sorbet/rbi/todo.rbi:6:2-6:14
+             * sorbet/rbi/shims/bar.rbi:2:2-2:14
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo#foo:
+             * sorbet/rbi/todo.rbi:2:2-2:18
+             * sorbet/rbi/shims/foo.rbi:2:2-2:18
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
           refute_success_status(result)
