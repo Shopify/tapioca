@@ -41,12 +41,18 @@ module Tapioca
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
+
+              class Baz; end
             end
           RBI
 
           @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :bar
+
+              class Baz
+                def baz; end
+              end
             end
           RBI
 
@@ -76,6 +82,10 @@ module Tapioca
             end
           RBI
 
+          @project.write("sorbet/rbi/dsl/baz.rbi", <<~RBI)
+            module Baz; end
+          RBI
+
           @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
@@ -85,6 +95,12 @@ module Tapioca
           @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
             module Bar
               def bar; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+            module Baz
+              def baz; end
             end
           RBI
 
@@ -223,14 +239,23 @@ module Tapioca
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
+
+              class Baz; end
             end
+
+            class Bar; end
           RBI
 
           @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo, :bar
               def foo; end
+
+              class Baz; end
             end
+
+            class Bar; end
+            class Bar; end
           RBI
 
           result = @project.tapioca("check-shims --no-payload")
@@ -243,6 +268,19 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo::Baz:
+             * sorbet/rbi/shims/foo.rbi:5:2-5:16
+             * sorbet/rbi/gems/foo@1.0.0.rbi:4:2-4:16
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Bar:
+             * sorbet/rbi/shims/foo.rbi:8:0-8:14
+             * sorbet/rbi/shims/foo.rbi:9:0-9:14
+             * sorbet/rbi/gems/foo@1.0.0.rbi:7:0-7:14
+          ERR
+
+          assert_includes(result.err, <<~ERR)
             Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
@@ -250,6 +288,10 @@ module Tapioca
         end
 
         it "detects duplicates from Sorbet's payload" do
+          @project.write("sorbet/rbi/shims/core/object.rbi", <<~RBI)
+            class Object; end
+          RBI
+
           @project.write("sorbet/rbi/shims/core/string.rbi", <<~RBI)
             class String
               sig { returns(String) }
@@ -275,6 +317,12 @@ module Tapioca
             Loading shim RBIs from sorbet/rbi/shims...  Done
             Looking for duplicates...  Done
           OUT
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Object:
+             * https://github.com/sorbet/sorbet/tree/master/rbi/core/object.rbi#L27
+             * sorbet/rbi/shims/core/object.rbi:1:0-1:17
+          ERR
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::String#capitalize:
@@ -404,6 +452,10 @@ module Tapioca
             end
           RBI
 
+          @project.write("sorbet/rbi/annotations/baz.rbi", <<~RBI)
+            module Baz; end
+          RBI
+
           @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
@@ -414,6 +466,10 @@ module Tapioca
             module Bar
               def bar; end
             end
+          RBI
+
+          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+            module Baz; end
           RBI
 
           result = @project.tapioca("check-shims --no-payload")
@@ -431,6 +487,12 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Baz:
+             * sorbet/rbi/shims/baz.rbi:1:0-1:15
+             * sorbet/rbi/annotations/baz.rbi:1:0-1:15
+          ERR
+
+          assert_includes(result.err, <<~ERR)
             Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
           ERR
 
@@ -441,6 +503,8 @@ module Tapioca
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
+
+              class Baz; end
             end
           RBI
 
@@ -453,6 +517,8 @@ module Tapioca
           @project.write("sorbet/rbi/todo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
+
+              class Baz; end
             end
 
             module Bar
@@ -464,7 +530,7 @@ module Tapioca
 
           assert_includes(result.err, <<~ERR)
             Duplicated RBI for ::Bar#bar:
-             * sorbet/rbi/todo.rbi:6:2-6:14
+             * sorbet/rbi/todo.rbi:8:2-8:14
              * sorbet/rbi/dsl/bar.rbi:2:2-2:14
           ERR
 
@@ -472,6 +538,12 @@ module Tapioca
             Duplicated RBI for ::Foo#foo:
              * sorbet/rbi/todo.rbi:2:2-2:18
              * sorbet/rbi/gems/foo@1.0.0.rbi:2:2-2:18
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo::Baz:
+             * sorbet/rbi/todo.rbi:4:2-4:16
+             * sorbet/rbi/gems/foo@1.0.0.rbi:4:2-4:16
           ERR
 
           assert_includes(result.err, <<~ERR)
@@ -494,6 +566,10 @@ module Tapioca
             end
           RBI
 
+          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+            module Baz; end
+          RBI
+
           @project.write("sorbet/rbi/todo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
@@ -502,6 +578,8 @@ module Tapioca
             module Bar
               def bar; end
             end
+
+            module Baz; end
           RBI
 
           result = @project.tapioca("check-shims --no-payload")
@@ -516,6 +594,12 @@ module Tapioca
             Duplicated RBI for ::Foo#foo:
              * sorbet/rbi/todo.rbi:2:2-2:18
              * sorbet/rbi/shims/foo.rbi:2:2-2:18
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Baz:
+             * sorbet/rbi/todo.rbi:9:0-9:15
+             * sorbet/rbi/shims/baz.rbi:1:0-1:15
           ERR
 
           assert_includes(result.err, <<~ERR)

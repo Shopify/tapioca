@@ -172,6 +172,9 @@ module Tapioca
       shims_or_todos = extract_shims_and_todos(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
       return false if shims_or_todos.empty?
 
+      shims_or_todos_empty_scopes = extract_empty_scopes(shims_or_todos)
+      return true unless shims_or_todos_empty_scopes.empty?
+
       props = extract_methods_and_attrs(shims_or_todos)
       return false if props.empty?
 
@@ -195,6 +198,11 @@ module Tapioca
       nodes.select do |node|
         node.loc&.file&.start_with?(shim_rbi_dir) || node.loc&.file == todo_rbi_file
       end
+    end
+
+    sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[RBI::Scope]) }
+    def extract_empty_scopes(nodes)
+      T.cast(nodes.select { |node| node.is_a?(RBI::Scope) && node.empty? }, T::Array[RBI::Scope])
     end
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
