@@ -323,6 +323,9 @@ Usage:
 Options:
       [--sources=one two three]      # URIs of the sources to pull gem RBI annotations from
                                      # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
+      [--netrc], [--no-netrc]        # Use .netrc to authenticate to private sources
+                                     # Default: true
+      [--netrc-file=NETRC_FILE]      # Path to .netrc file
       [--auth=AUTH]                  # HTTP authorization header for private sources
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
@@ -344,11 +347,41 @@ Tapioca also supports pulling annotations from multiple sources:
 $ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
 ```
 
-Private repositories can be used as sources by passing the option `--auth` with an authentification string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
+#### Basic authentication
+
+Private repositories can be used as sources by passing the option `--auth` with an authentication string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```shell
 $ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$PRIVATE_REPO/$BRANCH --auth "token $TOKEN"
 ```
+
+#### Using a .netrc file
+
+Tapioca supports reading credentials from a [netrc](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html) file (defaulting to `~/.netrc`).
+
+Given these lines in your netrc:
+
+```netrc
+machine raw.githubusercontent.com
+  login $USERNAME
+  password $TOKEN
+```
+
+where `$USERNAME` is your Github username and `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), then, if you run Tapioca with the `--netrc` option (enabled by default), your annotation requests should be authenticated properly.
+
+The `--netrc-file` option can be specified to read from a file other than `~/.netrc`:
+
+```shell
+$ bin/tapioca annotations --netrc-file /path/to/my/netrc/file
+```
+
+Similar to `--netrc-file`, you can also specify an alternative netrc file by using the `TAPIOCA_NETRC_FILE` environment variable:
+
+```shell
+$ TAPIOCA_NETRC_FILE=/path/to/my/netrc/file bin/tapioca annotations
+```
+
+Tapioca will first try to find the netrc file as specified by the `--netrc-file` option. If that option is not supplied, it will try the `TAPIOCA_NETRC_FILE` environment variable value. If that value is not supplied either, it will fallback to `~/.netrc`.
 
 ### Generating RBI files for Rails and other DSLs
 
@@ -763,6 +796,8 @@ check_shims:
 annotations:
   sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
+  netrc: true
+  netrc_file: ''
 ```
 <!-- END_CONFIG_TEMPLATE -->
 

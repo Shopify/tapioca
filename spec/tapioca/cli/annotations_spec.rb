@@ -279,6 +279,16 @@ module Tapioca
         repo1.destroy
         repo2.destroy
       end
+
+      it "errors if passing both --no-netrc and --netrc-file" do
+        result = @project.tapioca("annotations --no-netrc --netrc-file some_file")
+
+        assert_includes(result.err, <<~ERR)
+          Options `--no-netrc` and `--netrc-file` can't be used together
+        ERR
+
+        refute_success_status(result)
+      end
     end
 
     private

@@ -28,5 +28,13 @@ module Tapioca
       rbi_formatter.max_line_length = options[:rbi_max_line_length]
       rbi_formatter
     end
+
+    sig { params(options: T::Hash[Symbol, T.untyped]).returns(T.nilable(String)) }
+    def netrc_file(options)
+      return nil if options[:auth]
+      return nil unless options[:netrc]
+
+      options[:netrc_file] || ENV["TAPIOCA_NETRC_FILE"] || File.join(ENV["HOME"].to_s, ".netrc")
+    end
   end
 end

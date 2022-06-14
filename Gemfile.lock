@@ -28,6 +28,7 @@ PATH
   specs:
     tapioca (0.9.0.pre)
       bundler (>= 1.17.3)
+      netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.14)
@@ -209,6 +210,7 @@ GEM
       digest
       net-protocol
       timeout
+    netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)

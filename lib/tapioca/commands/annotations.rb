@@ -10,13 +10,22 @@ module Tapioca
         params(
           central_repo_root_uris: T::Array[String],
           auth: T.nilable(String),
+          netrc_file: T.nilable(String),
           central_repo_index_path: String
         ).void
       end
-      def initialize(central_repo_root_uris:, auth: nil, central_repo_index_path: CENTRAL_REPO_INDEX_PATH)
+      def initialize(
+        central_repo_root_uris:,
+        auth: nil,
+        netrc_file: nil,
+        central_repo_index_path: CENTRAL_REPO_INDEX_PATH
+      )
         super()
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth
+        @netrc_file = netrc_file
+        @netrc_info = T.let(nil, T.nilable(Netrc))
+        @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
         @indexes = T.let({}, T::Hash[String, RepoIndex])
       end
 
@@ -150,10 +159,11 @@ module Tapioca
 
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
       def fetch_http_file(repo_uri, path)
+        auth = @tokens[repo_uri]
         uri = URI("#{repo_uri}/#{path}")
 
         request = Net::HTTP::Get.new(uri)
-        request["Authorization"] = @auth if @auth
+        request["Authorization"] = auth if auth
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
           http.request(request)
@@ -213,6 +223,34 @@ module Tapioca
         say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains errors:", :yellow)
         say_error("    Error: #{e.message} (#{e.location})")
         nil
+      end
+
+      sig { returns(T::Hash[String, T.nilable(String)]) }
+      def repo_tokens
+        @netrc_info = Netrc.read(@netrc_file) if @netrc_file
+        @central_repo_root_uris.map do |uri|
+          if @auth
+            [uri, @auth]
+          else
+            [uri, token_for(uri)]
+          end
+        end.compact.to_h
+      end
+
+      sig { params(repo_uri: String).returns(T.nilable(String)) }
+      def token_for(repo_uri)
+        return nil unless @netrc_info
+
+        host = URI(repo_uri).host
+        return nil unless host
+
+        creds = @netrc_info[host]
+        return nil unless creds
+
+        token = creds.to_a.last
+        return nil unless token
+
+        "token #{token}"
       end
     end
   end
