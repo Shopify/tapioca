@@ -257,12 +257,14 @@ module Tapioca
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
     option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
+    option :annotations_rbi_dir, type: :string, desc: "Path to annotations RBIs", default: DEFAULT_ANNOTATIONS_DIR
     option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
     def check_shims
       command = Commands::CheckShims.new(
         gem_rbi_dir: options[:gem_rbi_dir],
         dsl_rbi_dir: options[:dsl_rbi_dir],
         shim_rbi_dir: options[:shim_rbi_dir],
+        annotations_rbi_dir: options[:annotations_rbi_dir],
         payload: options[:payload]
       )
       command.execute

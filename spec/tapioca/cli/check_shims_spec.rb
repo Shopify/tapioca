@@ -373,6 +373,52 @@ module Tapioca
 
           refute_success_status(result)
         end
+
+        it "detects duplicated definitions between shim and annotations" do
+          @project.write("sorbet/rbi/annotations/foo.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+          RBI
+
+          @project.write("sorbet/rbi/annotations/bar.rbi", <<~RBI)
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            class Foo
+              attr_reader :foo
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+            module Bar
+              def bar; end
+            end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Bar#bar:
+             * sorbet/rbi/shims/bar.rbi:2:2-2:14
+             * sorbet/rbi/annotations/bar.rbi:2:2-2:14
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo#foo:
+             * sorbet/rbi/shims/foo.rbi:2:2-2:18
+             * sorbet/rbi/annotations/foo.rbi:2:2-2:18
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from the sorbet/rbi/shims directory.
+          ERR
+
+          refute_success_status(result)
+        end
       end
 
       describe "when Sorbet version is too old" do

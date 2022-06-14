@@ -12,14 +12,16 @@ module Tapioca
         params(
           gem_rbi_dir: String,
           dsl_rbi_dir: String,
+          annotations_rbi_dir: String,
           shim_rbi_dir: String,
           payload: T::Boolean
         ).void
       end
-      def initialize(gem_rbi_dir:, dsl_rbi_dir:, shim_rbi_dir:, payload:)
+      def initialize(gem_rbi_dir:, dsl_rbi_dir:, annotations_rbi_dir:, shim_rbi_dir:, payload:)
         super()
         @gem_rbi_dir = gem_rbi_dir
         @dsl_rbi_dir = dsl_rbi_dir
+        @annotations_rbi_dir = annotations_rbi_dir
         @shim_rbi_dir = shim_rbi_dir
         @payload = payload
       end
@@ -60,6 +62,7 @@ module Tapioca
         index_rbis(index, "shim", @shim_rbi_dir)
         index_rbis(index, "gem", @gem_rbi_dir)
         index_rbis(index, "dsl", @dsl_rbi_dir)
+        index_rbis(index, "annotation", @annotations_rbi_dir)
 
         duplicates = duplicated_nodes_from_index(index, @shim_rbi_dir)
         unless duplicates.empty?
