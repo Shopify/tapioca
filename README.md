@@ -257,8 +257,8 @@ gem:
 
 There are a few development/test environment gems that can cause RBI generation issues, so Tapioca skips them by default:
 
-- `debug`
-- `fakefs`
+* `debug`
+* `fakefs`
 
 #### Changing the strictness level of the RBI for a gem
 
