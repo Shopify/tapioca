@@ -86,7 +86,7 @@ module RBI
       ).void
     end
     def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new)
-      return unless valid_method_name?(name)
+      return unless Tapioca::RBIHelper.valid_method_name?(name)
 
       sig = RBI::Sig.new(return_type: return_type)
       method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method, visibility: visibility)
@@ -98,19 +98,6 @@ module RBI
     end
 
     private
-
-    SPECIAL_METHOD_NAMES = T.let(
-      ["!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^", "<", "<=", "=>", ">", ">=",
-       "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",].freeze,
-      T::Array[String]
-    )
-
-    sig { params(name: String).returns(T::Boolean) }
-    def valid_method_name?(name)
-      return true if SPECIAL_METHOD_NAMES.include?(name)
-
-      !!name.match(/^[a-zA-Z_][[:word:]]*[?!=]?$/)
-    end
 
     sig { returns(T::Hash[String, RBI::Node]) }
     def nodes_cache

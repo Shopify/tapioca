@@ -7,12 +7,8 @@ module Tapioca
       class Methods < Base
         extend T::Sig
 
+        include RBIHelper
         include Runtime::Reflection
-
-        SPECIAL_METHOD_NAMES = T.let([
-          "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
-          "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",
-        ], T::Array[String])
 
         private
 
@@ -182,18 +178,6 @@ module Tapioca
             .props
             .keys
             .include?(method_name.gsub(/=$/, "").to_sym)
-        end
-
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_method_name?(name)
-          return true if SPECIAL_METHOD_NAMES.include?(name)
-
-          !!name.match(/^[[:word:]]+[?!=]?$/)
-        end
-
-        sig { params(name: String).returns(T::Boolean) }
-        def valid_parameter_name?(name)
-          name.match?(/^[[[:alnum:]]_]+$/)
         end
 
         sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
