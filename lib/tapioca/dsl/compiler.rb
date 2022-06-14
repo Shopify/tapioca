@@ -8,6 +8,7 @@ module Tapioca
       extend T::Helpers
       extend T::Generic
 
+      include RBIHelper
       include Runtime::Reflection
       extend Runtime::Reflection
 
@@ -112,8 +113,6 @@ module Tapioca
           class_method: class_method
         )
       end
-
-      include Helpers::ParamHelper
 
       sig { params(method_def: T.any(Method, UnboundMethod)).returns(T::Array[RBI::TypedParam]) }
       def compile_method_parameters_to_rbi(method_def)

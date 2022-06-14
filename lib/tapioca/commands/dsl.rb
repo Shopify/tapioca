@@ -5,7 +5,7 @@ module Tapioca
   module Commands
     class Dsl < Command
       include SorbetHelper
-      include RBIHelper
+      include RBIFilesHelper
 
       sig do
         params(

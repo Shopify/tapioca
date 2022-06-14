@@ -171,7 +171,7 @@ module Tapioca
       lower = bounds[:lower].to_s if bounds.key?(:lower)
       upper = bounds[:upper].to_s if bounds.key?(:upper)
 
-      TypeVariableHelper.serialize_type_variable(
+      RBIHelper.serialize_type_variable(
         @type.serialize,
         @variance,
         fixed,

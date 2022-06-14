@@ -72,7 +72,7 @@ module RBI
       ).void
     end
     def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
-      value = Tapioca::TypeVariableHelper.serialize_type_variable(type, variance, fixed, upper, lower)
+      value = Tapioca::RBIHelper.serialize_type_variable(type, variance, fixed, upper, lower)
       create_node(RBI::TypeMember.new(name, value))
     end
 
