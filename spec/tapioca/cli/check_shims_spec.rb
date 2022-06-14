@@ -4,8 +4,8 @@
 require "spec_helper"
 
 module Tapioca
-  class CleanShimsTest < SpecWithProject
-    describe "cli::clean-shims" do
+  class CheckShimsTest < SpecWithProject
+    describe "cli::check-shims" do
       after do
         @project.remove("sorbet/rbi")
       end
