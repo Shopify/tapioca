@@ -54,7 +54,7 @@ SQLite3::Constants::ErrorCode::BUSY = T.let(T.unsafe(nil), Integer)
 # Unable to open the database file
 SQLite3::Constants::ErrorCode::CANTOPEN = T.let(T.unsafe(nil), Integer)
 
-# Abort due to contraint violation
+# Abort due to constraint violation
 SQLite3::Constants::ErrorCode::CONSTRAINT = T.let(T.unsafe(nil), Integer)
 
 # The database disk image is malformed
@@ -385,7 +385,7 @@ class SQLite3::Database
   # rows.
   #
   # See also #execute_batch2 for additional ways of
-  # executing statments.
+  # executing statements.
   def execute_batch(sql, bind_vars = T.unsafe(nil), *args); end
 
   # Executes all SQL statements in the given string. By contrast, the other
@@ -400,7 +400,7 @@ class SQLite3::Database
   # a block can be passed to parse the values accordingly.
   #
   # See also #execute_batch for additional ways of
-  # executing statments.
+  # executing statements.
   def execute_batch2(sql, &block); end
 
   def extended_result_codes=(_arg0); end
@@ -434,7 +434,7 @@ class SQLite3::Database
   def prepare(sql); end
 
   # This is a convenience method for creating a statement, binding
-  # paramters to it, and calling execute:
+  # parameters to it, and calling execute:
   #
   #   result = db.query( "select * from foo where a=?", [5])
   #   # is the same as
@@ -507,6 +507,7 @@ class SQLite3::Database
 
   def db_filename(_arg0); end
   def define_aggregator2(_arg0, _arg1); end
+  def disable_quirk_mode; end
   def exec_batch(_arg0, _arg1); end
   def make_type_translator(should_translate); end
   def open16(_arg0); end
@@ -660,7 +661,7 @@ module SQLite3::Pragmas
   # Requests the given pragma (and parameters), and if the block is given,
   # each row of the result set will be yielded to it. Otherwise, the results
   # are returned as an array.
-  def get_query_pragma(name, *parms, &block); end
+  def get_query_pragma(name, *params, &block); end
 
   def ignore_check_constraints=(mode); end
 
@@ -1054,7 +1055,7 @@ class SQLite3::Translator
   def add_translator(type, &block); end
 
   # Translate the given string value to a value of the given type. In the
-  # absense of an installed translator block for the given type, the value
+  # absence of an installed translator block for the given type, the value
   # itself is always returned. Further, +nil+ values are never translated,
   # and are always passed straight through regardless of the type parameter.
   def translate(type, value); end
@@ -1102,10 +1103,6 @@ SQLite3::VersionProxy::TINY = T.let(T.unsafe(nil), Integer)
 # :beta-tag:
 SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 
-# Allows Writing of '100'.to_money for +String+ types
-# Excess characters will be discarded
-#   '100'.to_money => #<Money @cents=10000>
-#   '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
   include ::JSON::Ext::Generator::GeneratorMethods::String
