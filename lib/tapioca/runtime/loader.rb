@@ -53,9 +53,13 @@ module Tapioca
         return [] unless Object.const_defined?("Rails::Engine")
 
         safe_require("active_support/core_ext/class/subclasses")
+        root = File.expand_path(".")
 
         # We can use `Class#descendants` here, since we know Rails is loaded
-        Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
+        Object.const_get("Rails::Engine")
+          .descendants
+          .reject(&:abstract_railtie?)
+          .reject { |engine| File.fnmatch?("#{root}/**", engine.config.root) }
       end
 
       sig { params(path: String).void }
