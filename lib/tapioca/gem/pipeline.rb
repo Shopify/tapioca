@@ -193,7 +193,10 @@ module Tapioca
 
       sig { params(symbol: String, constant: Module).void }
       def compile_foreign_constant(symbol, constant)
-        compile_module(symbol, constant, foreign_constant: true)
+        return if Tapioca::TypeVariableModule === constant
+
+        scope = compile_scope(symbol, constant)
+        push_foreign_scope(symbol, constant, scope)
       end
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
@@ -258,18 +261,13 @@ module Tapioca
         @root << node
       end
 
-      sig { params(name: String, constant: Module, foreign_constant: T::Boolean).void }
-      def compile_module(name, constant, foreign_constant: false)
-        return unless defined_in_gem?(constant, strict: false) || foreign_constant
+      sig { params(name: String, constant: Module).void }
+      def compile_module(name, constant)
+        return unless defined_in_gem?(constant, strict: false)
         return if Tapioca::TypeVariableModule === constant
 
         scope = compile_scope(name, constant)
-
-        if foreign_constant
-          push_foreign_scope(name, constant, scope)
-        else
-          push_scope(name, constant, scope)
-        end
+        push_scope(name, constant, scope)
       end
 
       sig { params(name: String, constant: Module).returns(RBI::Scope) }
