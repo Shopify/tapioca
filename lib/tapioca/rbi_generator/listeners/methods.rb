@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Gem
+  class RBIGenerator
     module Listeners
       class Methods < Base
         extend T::Sig
@@ -63,7 +63,8 @@ module Tapioca
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method_owned_by_constant?(method, constant)
-          return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
+
+          return if @pipeline.skip_method?(symbol_name, constant, method)
 
           signature = signature_of(method)
           method = T.let(signature.method, UnboundMethod) if signature
@@ -189,7 +190,7 @@ module Tapioca
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(ForeignScopeNodeAdded)
         end
       end
     end

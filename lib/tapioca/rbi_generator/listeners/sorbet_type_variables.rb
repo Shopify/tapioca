@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Gem
+  class RBIGenerator
     module Listeners
       class SorbetTypeVariables < Base
         extend T::Sig
@@ -48,7 +48,7 @@ module Tapioca
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(ForeignScopeNodeAdded)
         end
       end
     end

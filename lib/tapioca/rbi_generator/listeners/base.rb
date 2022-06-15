@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Gem
+  class RBIGenerator
     module Listeners
       class Base
         extend T::Sig
@@ -10,7 +10,7 @@ module Tapioca
 
         abstract!
 
-        sig { params(pipeline: Pipeline).void }
+        sig { params(pipeline: RBIGenerator).void }
         def initialize(pipeline)
           @pipeline = pipeline
         end

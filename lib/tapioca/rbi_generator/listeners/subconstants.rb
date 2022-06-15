@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Gem
+  class RBIGenerator
     module Listeners
       class Subconstants < Base
         extend T::Sig
@@ -14,11 +14,12 @@ module Tapioca
         sig { override.params(event: ScopeNodeAdded).void }
         def on_scope(event)
           symbol = event.symbol
-          return if @pipeline.symbol_in_payload?(symbol) && event.node.empty?
+          constant = event.constant
+
+          return if @pipeline.skip_subconstant?(symbol, constant) && event.node.empty?
 
           prefix = symbol == "Object" ? "" : symbol
 
-          constant = event.constant
           constants_of(constant).sort.uniq.map do |constant_name|
             name = "#{prefix}::#{constant_name}"
             subconstant = constantize(name)
@@ -34,7 +35,7 @@ module Tapioca
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(ForeignScopeNodeAdded)
         end
       end
     end

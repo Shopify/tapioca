@@ -4,14 +4,14 @@
 module Tapioca
   module Gem
     module Listeners
-      class ForeignConstants < Base
+      class ForeignConstants < RBIGenerator::Listeners::Base
         extend T::Sig
 
         include Runtime::Reflection
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        sig { override.params(event: RBIGenerator::ScopeNodeAdded).void }
         def on_scope(event)
           mixin = event.constant
           return if Class === mixin # Classes can't be mixed into other constants
@@ -25,8 +25,7 @@ module Tapioca
           # constants have mixed in the current module that we are handling. We add all the
           # constants that we discover to the pipeline to be processed.
           Runtime::Trackers::Mixin.constants_with_mixin(mixin).each do |constant, locations|
-            next if defined_by_application?(constant)
-            next unless mixed_in_by_gem?(locations)
+            next if @pipeline.skip_mixin?(constant, locations)
 
             name = @pipeline.name_of(constant)
 
@@ -45,40 +44,14 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            locations: T::Array[String]
-          ).returns(T::Boolean)
-        end
-        def mixed_in_by_gem?(locations)
-          locations.compact.any? { |location| @pipeline.gem.contains_path?(location) }
-        end
-
-        sig do
-          params(
-            constant: Module
-          ).returns(T::Boolean)
-        end
-        def defined_by_application?(constant)
-          application_dir = (Bundler.default_gemfile / "..").to_s
-          Tapioca::Runtime::Trackers::ConstantDefinition.files_for(constant).any? do |location|
-            location.start_with?(application_dir) && !in_bundle_path?(location)
-          end
-        end
-
-        sig { params(path: String).returns(T::Boolean) }
-        def in_bundle_path?(path)
-          path.start_with?(Bundler.bundle_path.to_s, Bundler.app_cache.to_s)
-        end
-
         sig { params(constant: Module).returns(T.nilable(String)) }
         def constant_name_from_singleton_class(constant)
           constant.to_s.match("#<Class:(.+)>")&.captures&.first
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        sig { override.params(event: RBIGenerator::NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(RBIGenerator::ForeignScopeNodeAdded)
         end
       end
     end

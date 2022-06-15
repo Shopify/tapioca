@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Tapioca
-  module Gem
+  class RBIGenerator
     class Event
       extend T::Sig
       extend T::Helpers

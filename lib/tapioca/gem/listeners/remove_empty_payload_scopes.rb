@@ -4,21 +4,21 @@
 module Tapioca
   module Gem
     module Listeners
-      class RemoveEmptyPayloadScopes < Base
+      class RemoveEmptyPayloadScopes < RBIGenerator::Listeners::Base
         extend T::Sig
 
         include Runtime::Reflection
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        sig { override.params(event: RBIGenerator::ScopeNodeAdded).void }
         def on_scope(event)
-          event.node.detach if @pipeline.symbol_in_payload?(event.symbol) && event.node.empty?
+          event.node.detach if @pipeline.skip_object?(event.symbol, event.constant) && event.node.empty?
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        sig { override.params(event: RBIGenerator::NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(RBIGenerator::ForeignScopeNodeAdded)
         end
       end
     end

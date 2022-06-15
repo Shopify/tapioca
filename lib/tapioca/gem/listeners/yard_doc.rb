@@ -4,7 +4,7 @@
 module Tapioca
   module Gem
     module Listeners
-      class YardDoc < Base
+      class YardDoc < RBIGenerator::Listeners::Base
         extend T::Sig
 
         IGNORED_COMMENTS = T.let([
@@ -28,17 +28,17 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ConstNodeAdded).void }
+        sig { override.params(event: RBIGenerator::ConstNodeAdded).void }
         def on_const(event)
           event.node.comments = documentation_comments(event.symbol)
         end
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        sig { override.params(event: RBIGenerator::ScopeNodeAdded).void }
         def on_scope(event)
           event.node.comments = documentation_comments(event.symbol)
         end
 
-        sig { override.params(event: MethodNodeAdded).void }
+        sig { override.params(event: RBIGenerator::MethodNodeAdded).void }
         def on_method(event)
           separator = event.constant.singleton_class? ? "." : "#"
           event.node.comments = documentation_comments(
@@ -91,9 +91,9 @@ module Tapioca
           comments
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        sig { override.params(event: RBIGenerator::NodeAdded).returns(T::Boolean) }
         def ignore?(event)
-          event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+          event.is_a?(RBIGenerator::ForeignScopeNodeAdded)
         end
       end
     end

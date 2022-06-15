@@ -46,6 +46,7 @@ require "tapioca/static/symbol_table_parser"
 require "tapioca/static/symbol_loader"
 require "tapioca/static/requires_compiler"
 
+require "tapioca/rbi_generator"
 require "tapioca/gem"
 require "tapioca/dsl"
 require "tapioca/commands"
