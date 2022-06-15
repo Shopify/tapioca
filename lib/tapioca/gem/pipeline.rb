@@ -179,7 +179,7 @@ module Tapioca
       sig { params(event: Gem::SymbolFound).void }
       def on_symbol(event)
         symbol = event.symbol.delete_prefix("::")
-        return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
+        return if skip_symbol?(symbol)
 
         constant = constantize(symbol)
         push_constant(symbol, constant) if Runtime::Reflection.constant_defined?(constant)
@@ -188,13 +188,7 @@ module Tapioca
       sig { params(event: Gem::ConstantFound).void.checked(:never) }
       def on_constant(event)
         name = event.symbol
-
-        return if name.strip.empty?
-        return if name.start_with?("#<")
-        return if name.downcase == name
-        return if alias_namespaced?(name)
-
-        return if T::Enum === event.constant # T::Enum instances are defined via `compile_enums`
+        return if skip_constant?(name, event.constant)
 
         if event.is_a?(Gem::ForeignConstantFound)
           compile_foreign_constant(name, event.constant)
@@ -212,7 +206,10 @@ module Tapioca
 
       sig { params(symbol: String, constant: Module).void }
       def compile_foreign_constant(symbol, constant)
-        return if Tapioca::TypeVariableModule === constant
+        return if skip_foreign_constant?(symbol, constant)
+        return if seen?(symbol)
+
+        seen!(symbol)
 
         scope = compile_scope(symbol, constant)
         push_foreign_scope(symbol, constant, scope)
@@ -238,8 +235,7 @@ module Tapioca
 
         seen!(name)
 
-        return if symbol_in_payload?(name)
-        return unless constant_in_gem?(name)
+        return if skip_alias?(name, constant)
 
         target = name_of(constant)
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
@@ -260,8 +256,7 @@ module Tapioca
 
         seen!(name)
 
-        return if symbol_in_payload?(name)
-        return unless constant_in_gem?(name)
+        return if skip_object?(name, value)
 
         klass = class_of(value)
 
@@ -292,8 +287,7 @@ module Tapioca
 
       sig { params(name: String, constant: Module).void }
       def compile_module(name, constant)
-        return unless defined_in_gem?(constant, strict: false)
-        return if Tapioca::TypeVariableModule === constant
+        return if skip_module?(name, constant)
         return if seen?(name)
 
         seen!(name)
@@ -366,6 +360,52 @@ module Tapioca
       end
 
       # Constants and properties filtering
+
+      sig { params(name: String).returns(T::Boolean) }
+      def skip_symbol?(name)
+        symbol_in_payload?(name) && !@bootstrap_symbols.include?(name)
+      end
+
+      sig { params(name: String, constant: BasicObject).returns(T::Boolean).checked(:never) }
+      def skip_constant?(name, constant)
+        return true if name.strip.empty?
+        return true if name.start_with?("#<")
+        return true if name.downcase == name
+        return true if alias_namespaced?(name)
+
+        return true if T::Enum === constant # T::Enum instances are defined via `compile_enums`
+
+        false
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_alias?(name, constant)
+        return true if symbol_in_payload?(name)
+        return true unless constant_in_gem?(name)
+
+        false
+      end
+
+      sig { params(name: String, constant: BasicObject).returns(T::Boolean).checked(:never) }
+      def skip_object?(name, constant)
+        return true if symbol_in_payload?(name)
+        return true unless constant_in_gem?(name)
+
+        false
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_foreign_constant?(name, constant)
+        Tapioca::TypeVariableModule === constant
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_module?(name, constant)
+        return true unless defined_in_gem?(constant, strict: false)
+        return true if Tapioca::TypeVariableModule === constant
+
+        false
+      end
 
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
