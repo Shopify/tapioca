@@ -10,6 +10,7 @@ module Tapioca
     autoload :Dsl, "tapioca/commands/dsl"
     autoload :Configure, "tapioca/commands/configure"
     autoload :Gem, "tapioca/commands/gem"
+    autoload :Payload, "tapioca/commands/payload"
     autoload :Require, "tapioca/commands/require"
     autoload :Todo, "tapioca/commands/todo"
   end
