@@ -1,13 +1,4 @@
 GIT
-  remote: https://github.com/byroot/frozen_record.git
-  revision: 4130a0600874aae2b8c83108053255d67f0cad08
-  branch: master
-  specs:
-    frozen_record (0.23.0)
-      activemodel
-      dedup
-
-GIT
   remote: https://github.com/csfrancis/cityhash.git
   revision: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
   ref: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
@@ -169,6 +160,9 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (~> 1.8, >= 1.8.0)
     erubi (1.10.0)
+    frozen_record (0.25.4)
+      activemodel
+      dedup
     globalid (1.0.0)
       activesupport (>= 5.0)
     google-protobuf (3.21.1)
@@ -357,7 +351,7 @@ DEPENDENCIES
   bcrypt
   cityhash!
   config!
-  frozen_record!
+  frozen_record
   google-protobuf
   identity_cache
   minitest

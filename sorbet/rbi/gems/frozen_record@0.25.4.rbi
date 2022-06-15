@@ -15,6 +15,16 @@ module FrozenRecord
     def deprecated_yaml_erb_backend=(_arg0); end
 
     def eager_load!; end
+
+    # Returns the value of attribute enforce_max_records_scan.
+    def enforce_max_records_scan; end
+
+    # Sets the attribute enforce_max_records_scan
+    #
+    # @param value the value to set the attribute enforce_max_records_scan to.
+    def enforce_max_records_scan=(_arg0); end
+
+    def ignore_max_records_scan; end
   end
 end
 
@@ -149,6 +159,9 @@ class FrozenRecord::Base
     def last!(*_arg0, &_arg1); end
     def limit(*_arg0, &_arg1); end
     def load_records(force: T.unsafe(nil)); end
+    def max_records_scan; end
+    def max_records_scan=(value); end
+    def max_records_scan?; end
     def maximum(*_arg0, &_arg1); end
     def memsize(object = T.unsafe(nil), seen = T.unsafe(nil)); end
     def minimum(*_arg0, &_arg1); end
@@ -166,6 +179,7 @@ class FrozenRecord::Base
     def scope(name, body); end
     def sum(*_arg0, &_arg1); end
     def where(*_arg0, &_arg1); end
+    def with_max_records_scan(value); end
 
     private
 
@@ -303,7 +317,6 @@ class FrozenRecord::Scope
   def clear_cache!; end
   def comparable_attributes; end
   def compare(record_a, record_b); end
-  def delegate_to_class(*args, &block); end
   def limit!(amount); end
   def matching_records; end
   def method_missing(method_name, *args, &block); end
@@ -323,6 +336,8 @@ class FrozenRecord::Scope
   # @return [Boolean]
   def respond_to_missing?(method_name, *_arg1); end
 end
+
+FrozenRecord::Scope::ARRAY_INTERSECTION = T.let(T.unsafe(nil), TrueClass)
 
 class FrozenRecord::Scope::CoverMatcher < ::FrozenRecord::Scope::Matcher
   # @return [Boolean]
@@ -370,6 +385,8 @@ class FrozenRecord::Scope::WhereChain
 
   def not(criterias); end
 end
+
+class FrozenRecord::SlowQuery < ::StandardError; end
 
 class FrozenRecord::UniqueIndex < ::FrozenRecord::Index
   def build(records); end
