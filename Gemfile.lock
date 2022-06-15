@@ -277,11 +277,11 @@ GEM
       rubocop (~> 1.30)
     rubocop-sorbet (0.6.8)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.0.4)
+    ruby-lsp (0.1.0)
       language_server-protocol
       rubocop (>= 1.0)
       sorbet-runtime
-      syntax_tree (>= 2.3)
+      syntax_tree (>= 2.4)
     ruby-progressbar (1.11.0)
     shopify-money (0.16.0)
     sidekiq (6.5.0)
