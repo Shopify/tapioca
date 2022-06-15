@@ -263,21 +263,27 @@ module Tapioca
         return unless defined_in_gem?(constant, strict: false) || foreign_constant
         return if Tapioca::TypeVariableModule === constant
 
-        scope =
-          if constant.is_a?(Class)
-            superclass = compile_superclass(constant)
-            RBI::Class.new(name, superclass_name: superclass)
-          else
-            RBI::Module.new(name)
-          end
+        scope = compile_scope(name, constant)
 
         if foreign_constant
           push_foreign_scope(name, constant, scope)
         else
           push_scope(name, constant, scope)
         end
+      end
+
+      sig { params(name: String, constant: Module).returns(RBI::Scope) }
+      def compile_scope(name, constant)
+        scope = if constant.is_a?(Class)
+          superclass = compile_superclass(constant)
+          RBI::Class.new(name, superclass_name: superclass)
+        else
+          RBI::Module.new(name)
+        end
 
         @root << scope
+
+        scope
       end
 
       sig { params(constant: Class).returns(T.nilable(String)) }
