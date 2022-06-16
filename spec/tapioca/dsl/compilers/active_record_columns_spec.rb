@@ -224,6 +224,7 @@ module Tapioca
                         t.boolean :boolean_column
                         t.datetime :datetime_column
                         t.decimal :money_column
+                        t.text :serialized_column
                       end
                     end
                   end
@@ -235,6 +236,7 @@ module Tapioca
 
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
+                    serialize :serialized_column, JSON
                   end
                 RUBY
 
@@ -285,6 +287,12 @@ module Tapioca
                 expected = indented(<<~RBI, 4)
                   sig { params(value: T.nilable(::Money)).returns(T.nilable(::Money)) }
                   def money_column=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.untyped).returns(T.untyped) }
+                  def serialized_column=(value); end
                 RBI
                 assert_includes(output, expected)
               end

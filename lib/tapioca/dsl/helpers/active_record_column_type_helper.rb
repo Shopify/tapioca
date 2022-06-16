@@ -75,7 +75,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: Object).returns(String) }
+        sig { params(column_type: BasicObject).returns(String) }
         def handle_unknown_type(column_type)
           return "T.untyped" unless ActiveModel::Type::Value === column_type
           return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(column_type)
