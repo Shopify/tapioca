@@ -79,7 +79,7 @@ module Tapioca
               say_error(" * #{loc_string}", :red)
             end
           end
-          say_error("\nPlease remove the duplicated definitions from the #{@shim_rbi_dir} and #{@todo_rbi_file}.", :red)
+          say_error("\nPlease remove the duplicated definitions from #{@shim_rbi_dir} and #{@todo_rbi_file}", :red)
           exit(1)
         end
 

@@ -119,7 +119,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -198,7 +198,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_includes(result.err, "Duplicated RBI for ::Foo#bar")
@@ -229,13 +229,13 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
         end
 
-        it "detects duplicates from the same shim file" do
+        it "detects duplicates from same shim file" do
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
@@ -281,7 +281,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -335,7 +335,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -395,7 +395,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the rbi/shim and rbi/todo.rbi.
+            Please remove the duplicated definitions from rbi/shim and rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -433,7 +433,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -493,7 +493,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -547,7 +547,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
@@ -603,7 +603,7 @@ module Tapioca
           ERR
 
           assert_includes(result.err, <<~ERR)
-            Please remove the duplicated definitions from the sorbet/rbi/shims and sorbet/rbi/todo.rbi.
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
           ERR
 
           refute_success_status(result)
