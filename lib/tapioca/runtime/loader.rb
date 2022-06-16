@@ -53,13 +53,12 @@ module Tapioca
         return [] unless Object.const_defined?("Rails::Engine")
 
         safe_require("active_support/core_ext/class/subclasses")
-        root = File.expand_path(".")
 
         # We can use `Class#descendants` here, since we know Rails is loaded
         Object.const_get("Rails::Engine")
           .descendants
           .reject(&:abstract_railtie?)
-          .reject { |engine| File.fnmatch?("#{root}/**", engine.config.root) }
+          .reject { |engine| gem_in_app_dir?(Rails.root.to_path, engine.config.root.to_path) }
       end
 
       sig { params(path: String).void }
@@ -124,6 +123,16 @@ module Tapioca
             nil
           end
         end
+      end
+
+      sig { params(gemfile_dir: String, full_gem_path: String).returns(T::Boolean) }
+      def gem_in_app_dir?(gemfile_dir, full_gem_path)
+        !gem_in_bundle_path?(full_gem_path) && full_gem_path.start_with?(gemfile_dir)
+      end
+
+      sig { params(full_gem_path: String).returns(T::Boolean) }
+      def gem_in_bundle_path?(full_gem_path)
+        full_gem_path.start_with?(Bundler.bundle_path.to_s, Bundler.app_cache.to_s)
       end
     end
   end
