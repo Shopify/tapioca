@@ -19,6 +19,15 @@ module Tapioca
       say(" Done", :green)
     end
 
+    sig { params(index: RBI::Index, kind: String, file: String).void }
+    def index_rbi(index, kind, file)
+      return unless File.exist?(file)
+
+      say("Loading #{kind} RBIs from #{file}... ")
+      parse_and_index_file(index, file)
+      say(" Done", :green)
+    end
+
     sig { params(index: RBI::Index, kind: String, dir: String).void }
     def index_rbis(index, kind, dir)
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
@@ -29,13 +38,19 @@ module Tapioca
       say(" Done", :green)
     end
 
-    sig { params(index: RBI::Index, shim_rbi_dir: String).returns(T::Hash[String, T::Array[RBI::Node]]) }
-    def duplicated_nodes_from_index(index, shim_rbi_dir)
+    sig do
+      params(
+        index: RBI::Index,
+        shim_rbi_dir: String,
+        todo_rbi_file: String
+      ).returns(T::Hash[String, T::Array[RBI::Node]])
+    end
+    def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
       duplicates = {}
       say("Looking for duplicates... ")
       index.keys.each do |key|
         nodes = index[key]
-        next unless shims_have_duplicates?(nodes, shim_rbi_dir)
+        next unless shims_or_todos_have_duplicates?(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
 
         duplicates[key] = nodes
       end
@@ -137,31 +152,39 @@ module Tapioca
 
     sig { params(index: RBI::Index, files: T::Array[String]).void }
     def parse_and_index_files(index, files)
-      trees = files.map do |file|
-        RBI::Parser.parse_file(file)
-      rescue RBI::ParseError => e
-        say_error("\nWarning: #{e} (#{e.location})", :yellow)
-      end.compact
-      index.visit_all(trees)
+      files.each do |file|
+        parse_and_index_file(index, file)
+      end
     end
 
-    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String).returns(T::Boolean) }
-    def shims_have_duplicates?(nodes, shim_rbi_dir)
+    sig { params(index: RBI::Index, file: String).void }
+    def parse_and_index_file(index, file)
+      tree = RBI::Parser.parse_file(file)
+      index.visit(tree)
+    rescue RBI::ParseError => e
+      say_error("\nWarning: #{e} (#{e.location})", :yellow)
+    end
+
+    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String, todo_rbi_file: String).returns(T::Boolean) }
+    def shims_or_todos_have_duplicates?(nodes, shim_rbi_dir:, todo_rbi_file:)
       return false if nodes.size == 1
 
-      shims = extract_shims(nodes, shim_rbi_dir)
-      return false if shims.empty?
+      shims_or_todos = extract_shims_and_todos(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
+      return false if shims_or_todos.empty?
 
-      props = extract_methods_and_attrs(shims)
+      shims_or_todos_empty_scopes = extract_empty_scopes(shims_or_todos)
+      return true unless shims_or_todos_empty_scopes.empty?
+
+      props = extract_methods_and_attrs(shims_or_todos)
       return false if props.empty?
 
-      shims_with_sigs = extract_nodes_with_sigs(props)
-      shims_with_sigs.each do |shim|
-        shim_sigs = shim.sigs
+      shims_or_todos_with_sigs = extract_nodes_with_sigs(props)
+      shims_or_todos_with_sigs.each do |shim_or_todo|
+        shims_or_todos_sigs = shim_or_todo.sigs
 
         extract_methods_and_attrs(nodes).each do |node|
-          next if node == shim
-          return true if shim_sigs.all? { |sig| node.sigs.include?(sig) }
+          next if node == shim_or_todo
+          return true if shims_or_todos_sigs.all? { |sig| node.sigs.include?(sig) }
         end
 
         return false
@@ -170,11 +193,16 @@ module Tapioca
       true
     end
 
-    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String).returns(T::Array[RBI::Node]) }
-    def extract_shims(nodes, shim_rbi_dir)
+    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String, todo_rbi_file: String).returns(T::Array[RBI::Node]) }
+    def extract_shims_and_todos(nodes, shim_rbi_dir:, todo_rbi_file:)
       nodes.select do |node|
-        node.loc&.file&.start_with?(shim_rbi_dir)
+        node.loc&.file&.start_with?(shim_rbi_dir) || node.loc&.file == todo_rbi_file
       end
+    end
+
+    sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[RBI::Scope]) }
+    def extract_empty_scopes(nodes)
+      T.cast(nodes.select { |node| node.is_a?(RBI::Scope) && node.empty? }, T::Array[RBI::Scope])
     end
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }

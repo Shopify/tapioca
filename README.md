@@ -717,6 +717,8 @@ Options:
                                                    # Default: sorbet/rbi/shims
       [--annotations-rbi-dir=ANNOTATIONS_RBI_DIR]  # Path to annotations RBIs
                                                    # Default: sorbet/rbi/annotations
+      [--todo-rbi-file=TODO_RBI_FILE]              # Path to the generated todo RBI file
+                                                   # Default: sorbet/rbi/todo.rbi
       [--payload], [--no-payload]                  # Check shims against Sorbet's payload
                                                    # Default: true
   -c, [--config=<config file path>]                # Path to the Tapioca configuration file
@@ -792,6 +794,7 @@ check_shims:
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
   annotations_rbi_dir: sorbet/rbi/annotations
+  todo_rbi_file: sorbet/rbi/todo.rbi
   payload: true
 annotations:
   sources:
