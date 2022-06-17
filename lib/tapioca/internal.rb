@@ -24,6 +24,7 @@ require "tapioca"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"
 require "tapioca/runtime/dynamic_mixin_compiler"
+require "tapioca/helpers/gem_helper"
 require "tapioca/runtime/loader"
 
 require "tapioca/helpers/sorbet_helper"
