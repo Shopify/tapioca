@@ -38,6 +38,8 @@ module Tapioca
               "::DateTime"
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
+            when ActiveRecord::Enum::EnumType
+              "::String"
             else
               handle_unknown_type(column_type)
             end

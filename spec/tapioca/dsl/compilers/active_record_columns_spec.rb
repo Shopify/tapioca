@@ -225,6 +225,8 @@ module Tapioca
                         t.datetime :datetime_column
                         t.decimal :money_column
                         t.text :serialized_column
+                        # Ideally this would test t.enum but that is not supported by sqlite
+                        t.string :enum_column
                       end
                     end
                   end
@@ -237,6 +239,7 @@ module Tapioca
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
                     serialize :serialized_column, JSON
+                    enum :enum_column, [ :active, :archived ]
                   end
                 RUBY
 
@@ -293,6 +296,12 @@ module Tapioca
                 expected = indented(<<~RBI, 4)
                   sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def enum_column=(value); end
                 RBI
                 assert_includes(output, expected)
               end
