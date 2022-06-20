@@ -286,13 +286,6 @@ module Tapioca
         false
       end
 
-      sig { params(path: T.any(String, Pathname)).returns(String) }
-      def to_realpath(path)
-        path_string = path.to_s
-        path_string = File.realpath(path_string) if File.exist?(path_string)
-        path_string
-      end
-
       sig { returns(T::Boolean) }
       def gem_ignored?
         IGNORED_GEMS.include?(name)
