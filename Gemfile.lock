@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rubyconfig/config.git
-  revision: 740fe1fd235649e41d5813d5a618caa3969be13b
+  revision: 87709f9344837e908e1bf19363a95b279763eb1b
   branch: master
   specs:
     config (4.0.0)
