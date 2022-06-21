@@ -173,11 +173,11 @@ module Tapioca
         when Net::HTTPSuccess
           response.body
         else
-          say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{response.class})", :bold, :red)
+          say_http_error(path, repo_uri, message: response.class)
           nil
         end
       rescue SocketError, Errno::ECONNREFUSED => e
-        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{e.message})", :bold, :red)
+        say_http_error(path, repo_uri, message: e.message)
         nil
       end
 
@@ -251,6 +251,19 @@ module Tapioca
         return nil unless token
 
         "token #{token}"
+      end
+
+      sig { params(path: String, repo_uri: String, message: String).void }
+      def say_http_error(path, repo_uri, message:)
+        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
+        say_error(<<~ERROR)
+          Tapioca can't access the annotations at #{repo_uri}.
+
+          Are you trying to access a private repository?
+          If so, please specify your Github credentials in your ~/.netrc file or by specifying the --auth option.
+
+          See https://github.com/Shopify/tapioca#using-a-netrc-file for more details.
+        ERROR
       end
     end
   end
