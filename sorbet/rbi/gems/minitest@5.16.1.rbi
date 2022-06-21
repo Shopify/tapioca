@@ -38,7 +38,7 @@ module Kernel
   #
   # For some suggestions on how to improve your specs, try:
   #
-  # http://betterspecs.org
+  # https://betterspecs.org
   #
   # but do note that several items there are debatable or specific to
   # rspec.
@@ -65,6 +65,7 @@ module Minitest
 
     def backtrace_filter; end
     def backtrace_filter=(_arg0); end
+    def cattr_accessor(name); end
     def clock_time; end
     def extensions; end
     def extensions=(_arg0); end
@@ -97,6 +98,8 @@ module Minitest
     def run(args = T.unsafe(nil)); end
 
     def run_one_method(klass, method_name); end
+    def seed; end
+    def seed=(_arg0); end
   end
 end
 
@@ -475,8 +478,6 @@ class Minitest::CompositeReporter < ::Minitest::AbstractReporter
   def start; end
 end
 
-Minitest::ENCS = T.let(T.unsafe(nil), TrueClass)
-
 class Minitest::Expectation < ::Struct
   def ctx; end
   def ctx=(_); end
@@ -518,6 +519,7 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1174,6 +1176,8 @@ class Minitest::Test < ::Minitest::Runnable
   def capture_exceptions; end
 
   def class_name; end
+  def neuter_exception(e); end
+  def new_exception(klass, msg, bt); end
 
   # Runs a single test with setup/teardown hooks.
   def run; end
@@ -1334,8 +1338,6 @@ class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::Dependencies::RequireDependency
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::JSON::Ext::Generator::GeneratorMethods::Object
   include ::Minitest::Expectations
   include ::PP::ObjectMixin
