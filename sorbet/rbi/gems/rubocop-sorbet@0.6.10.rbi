@@ -6,10 +6,7 @@
 
 module RuboCop; end
 module RuboCop::Cop; end
-
-# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
-
 module RuboCop::Cop::Sorbet; end
 
 # This cop disallows using `.override(allow_incompatible: true)`.
@@ -394,6 +391,22 @@ class RuboCop::Cop::Sorbet::ForbidTUnsafe < ::RuboCop::Cop::Cop
   def t_unsafe?(param0 = T.unsafe(nil)); end
 end
 
+# This cop disallows using `T.untyped` anywhere.
+#
+# @example
+#
+#   # bad
+#   sig { params(my_argument: T.untyped).void }
+#   def foo(my_argument); end
+#
+#   # good
+#   sig { params(my_argument: String).void }
+#   def foo(my_argument); end
+class RuboCop::Cop::Sorbet::ForbidTUntyped < ::RuboCop::Cop::Cop
+  def on_send(node); end
+  def t_untyped?(param0 = T.unsafe(nil)); end
+end
+
 # This cop disallows use of `T.untyped` or `T.nilable(T.untyped)`
 # as a prop type for `T::Struct`.
 #
@@ -635,6 +648,15 @@ end
 
 RuboCop::Cop::Sorbet::ValidSigil::SIGIL_REGEX = T.let(T.unsafe(nil), Regexp)
 RuboCop::Cop::Sorbet::ValidSigil::STRICTNESS_LEVELS = T.let(T.unsafe(nil), Array)
+
+class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
+  include ::RuboCop::Cop::Style::MutableConstant::ShareableConstantValue
+  include ::RuboCop::Cop::FrozenStringLiteral
+  include ::RuboCop::Cop::ConfigurableEnforcedStyle
+  extend ::RuboCop::Cop::AutoCorrector
+end
+
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 module RuboCop::Sorbet; end
