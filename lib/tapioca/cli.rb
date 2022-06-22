@@ -278,6 +278,12 @@ module Tapioca
     option :netrc, type: :boolean, default: true, desc: "Use .netrc to authenticate to private sources"
     option :netrc_file, type: :string, desc: "Path to .netrc file"
     option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Override for typed sigils for pulled annotations",
+      default: {}
     def annotations
       if !options[:netrc] && options[:netrc_file]
         say_error("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
@@ -287,7 +293,8 @@ module Tapioca
       command = Commands::Annotations.new(
         central_repo_root_uris: options[:sources],
         auth: options[:auth],
-        netrc_file: netrc_file(options)
+        netrc_file: netrc_file(options),
+        typed_overrides: options[:typed_overrides]
       )
       command.execute
     end

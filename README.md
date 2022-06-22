@@ -321,15 +321,16 @@ Usage:
   tapioca annotations
 
 Options:
-      [--sources=one two three]      # URIs of the sources to pull gem RBI annotations from
-                                     # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
-      [--netrc], [--no-netrc]        # Use .netrc to authenticate to private sources
-                                     # Default: true
-      [--netrc-file=NETRC_FILE]      # Path to .netrc file
-      [--auth=AUTH]                  # HTTP authorization header for private sources
-  -c, [--config=<config file path>]  # Path to the Tapioca configuration file
-                                     # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+          [--sources=one two three]                           # URIs of the sources to pull gem RBI annotations from
+                                                              # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
+          [--netrc], [--no-netrc]                             # Use .netrc to authenticate to private sources
+                                                              # Default: true
+          [--netrc-file=NETRC_FILE]                           # Path to .netrc file
+          [--auth=AUTH]                                       # HTTP authorization header for private sources
+  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Override for typed sigils for pulled annotations
+  -c, [--config=<config file path>]                           # Path to the Tapioca configuration file
+                                                              # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]                             # Verbose output for debugging purposes
 
 Pull gem RBI annotations from remote sources
 ```
@@ -382,6 +383,24 @@ $ TAPIOCA_NETRC_FILE=/path/to/my/netrc/file bin/tapioca annotations
 ```
 
 Tapioca will first try to find the netrc file as specified by the `--netrc-file` option. If that option is not supplied, it will try the `TAPIOCA_NETRC_FILE` environment variable value. If that value is not supplied either, it will fallback to `~/.netrc`.
+
+#### Changing the typed strictness of annotations files
+
+Sometimes the annotations files pulled by Tapioca will create type errors in your project because of incompatibilities.
+It is possible to ignore such files by switching their strictness level `--typed-overrides` option:
+
+```shell
+$ bin/tapioca annotations --typed-overrides gemA:ignore gemB:false
+```
+
+Or through the configuration file:
+
+```yaml
+annotations:
+  typed_overrides:
+    gemA: "ignore"
+    gemB: "false"
+```
 
 ### Generating RBI files for Rails and other DSLs
 
@@ -801,6 +820,7 @@ annotations:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
   netrc: true
   netrc_file: ''
+  typed_overrides: {}
 ```
 <!-- END_CONFIG_TEMPLATE -->
 

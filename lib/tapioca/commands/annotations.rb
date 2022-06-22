@@ -11,14 +11,16 @@ module Tapioca
           central_repo_root_uris: T::Array[String],
           auth: T.nilable(String),
           netrc_file: T.nilable(String),
-          central_repo_index_path: String
+          central_repo_index_path: String,
+          typed_overrides: T::Hash[String, String]
         ).void
       end
       def initialize(
         central_repo_root_uris:,
         auth: nil,
         netrc_file: nil,
-        central_repo_index_path: CENTRAL_REPO_INDEX_PATH
+        central_repo_index_path: CENTRAL_REPO_INDEX_PATH,
+        typed_overrides: {}
       )
         super()
         @central_repo_root_uris = central_repo_root_uris
@@ -27,6 +29,7 @@ module Tapioca
         @netrc_info = T.let(nil, T.nilable(Netrc))
         @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
         @indexes = T.let({}, T::Hash[String, RepoIndex])
+        @typed_overrides = typed_overrides
       end
 
       sig { override.void }
@@ -132,6 +135,7 @@ module Tapioca
         content = merge_files(gem_name, contents.compact)
         return unless content
 
+        content = apply_typed_override(gem_name, content)
         content = add_header(gem_name, content)
 
         dir = DEFAULT_ANNOTATIONS_DIR
@@ -196,6 +200,18 @@ module Tapioca
           say_error("Couldn't insert file header for content: #{content} due to unexpected file format")
           content
         end
+      end
+
+      sig { params(name: String, content: String).returns(String) }
+      def apply_typed_override(name, content)
+        strictness = @typed_overrides[name]
+        return content unless strictness
+
+        unless Spoom::Sorbet::Sigils.strictness_in_content(content)
+          return "# typed: #{strictness}\n\n#{content}"
+        end
+
+        Spoom::Sorbet::Sigils.update_sigil(content, strictness)
       end
 
       sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
