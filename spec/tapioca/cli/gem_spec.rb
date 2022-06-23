@@ -1185,6 +1185,80 @@ module Tapioca
             module Bar; end
           RBI
         end
+
+        it "must not load engines in the application" do
+          @project.write("config/application.rb", <<~RB)
+            require "rails"
+
+            module ModuleTest
+              class Application < Rails::Application
+                attr_reader :config
+
+                def initialize
+                  super
+                  root = Pathname.new("#{@project.path}")
+                  @config = Rails::Application::Configuration.new(root)
+                end
+              end
+
+              def self.application
+                Application.new
+              end
+            end
+
+            lib_dir = File.expand_path("../lib/", __dir__)
+
+            # Add lib directory to load path
+            $LOAD_PATH << lib_dir
+
+            # Require files from lib directory
+            Dir.glob("**/*.rb", base: lib_dir).sort.each do |file|
+              require(file)
+            end
+          RB
+
+          @project.write("config/environment.rb", <<~RB)
+            require_relative "application.rb"
+          RB
+
+          @project.write("foo/app/models/foo.rb", <<~RB)
+            raise NotImplementedError, "This file should not be loaded"
+          RB
+
+          @project.write("foo/lib/foo.rb", <<~RB)
+            module Foo
+              class Engine < ::Rails::Engine
+                isolate_namespace Foo
+              end
+            end
+          RB
+
+          @project.write("foo/foo.gemspec", <<~GEMSPEC)
+            Gem::Specification.new do |spec|
+              spec.name        = "foo"
+              spec.version     = "0.0.1"
+              spec.authors     = ["Maple Ong"]
+              spec.email       = ["maple.ong@shopify.com"]
+              spec.summary     = "Summary of Foo."
+              spec.description = "Description of Foo."
+              spec.files = Dir.chdir(File.expand_path(__dir__)) do
+                Dir["{app,lib}/**/*"]
+              end
+              spec.add_dependency "rails", ">= 7.0.3"
+            end
+          GEMSPEC
+
+          @project.require_real_gem("rails")
+          @project.gemfile(<<~GEMFILE, append: true)
+            gem 'foo', path: 'foo'
+          GEMFILE
+
+          @project.bundle_install
+          res = @project.tapioca("gem activesupport")
+
+          refute_includes(res.err, "This file should not be loaded")
+          assert_success_status(res)
+        end
       end
 
       describe "sync" do

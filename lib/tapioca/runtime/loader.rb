@@ -5,6 +5,7 @@ module Tapioca
   module Runtime
     class Loader
       extend(T::Sig)
+      include Tapioca::GemHelper
 
       sig do
         params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void
@@ -55,7 +56,10 @@ module Tapioca
         safe_require("active_support/core_ext/class/subclasses")
 
         # We can use `Class#descendants` here, since we know Rails is loaded
-        Object.const_get("Rails::Engine").descendants.reject(&:abstract_railtie?)
+        Object.const_get("Rails::Engine")
+          .descendants
+          .reject(&:abstract_railtie?)
+          .reject { |engine| gem_in_app_dir?(Rails.root.to_path, engine.config.root.to_path) }
       end
 
       sig { params(path: String).void }
