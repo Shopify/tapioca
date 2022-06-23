@@ -222,7 +222,7 @@ module Tapioca
           typed_overrides: options[:typed_overrides],
           outpath: Pathname.new(options[:outdir]),
           file_header: options[:file_header],
-          doc: options[:doc],
+          include_doc: options[:doc],
           include_exported_rbis: options[:exported_gem_rbis],
           number_of_workers: options[:workers],
           auto_strictness: options[:auto_strictness],
