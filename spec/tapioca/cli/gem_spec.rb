@@ -1096,10 +1096,9 @@ module Tapioca
           assert_includes(response.out, "Compiled actionpack")
           assert_includes(response.out, "Compiled typed_parameters")
 
-          # TODO: Uncomment when addressing part 2 of tapioca#890
-          # actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
+          actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
           # actionpack RBI should have nothing in it about `TypedParameters`
-          # refute_includes(actionpack_rbi, "TypedParameters")
+          refute_includes(actionpack_rbi, "TypedParameters")
 
           assert_project_file_equal("sorbet/rbi/gems/typed_parameters@0.3.0.rbi", <<~RBI)
             # typed: true

@@ -26,19 +26,20 @@ module Tapioca
           end
 
           node = event.node
-          add_mixins(node, prepends.reverse, Runtime::Trackers::Mixin::Type::Prepend)
-          add_mixins(node, includes.reverse, Runtime::Trackers::Mixin::Type::Include)
-          add_mixins(node, extends.reverse, Runtime::Trackers::Mixin::Type::Extend)
+          add_mixins(node, constant, prepends.reverse, Runtime::Trackers::Mixin::Type::Prepend)
+          add_mixins(node, constant, includes.reverse, Runtime::Trackers::Mixin::Type::Include)
+          add_mixins(node, constant, extends.reverse, Runtime::Trackers::Mixin::Type::Extend)
         end
 
         sig do
           params(
             tree: RBI::Tree,
+            constant: Module,
             mods: T::Array[Module],
             mixin_type: Runtime::Trackers::Mixin::Type
           ).void
         end
-        def add_mixins(tree, mods, mixin_type)
+        def add_mixins(tree, constant, mods, mixin_type)
           mods
             .select do |mod|
               name = @pipeline.name_of(mod)
@@ -46,6 +47,8 @@ module Tapioca
               name && !filtered_mixin?(name)
             end
             .map do |mod|
+              next unless mixed_in_by_gem?(constant, mod, mixin_type)
+
               name = @pipeline.name_of(mod)
               @pipeline.push_symbol(name) if name
 
@@ -60,6 +63,23 @@ module Tapioca
                 tree << RBI::Extend.new(T.must(qname))
               end
             end
+        end
+
+        sig do
+          params(
+            constant: Module,
+            mixin: Module,
+            mixin_type: Runtime::Trackers::Mixin::Type
+          ).returns(T::Boolean)
+        end
+        def mixed_in_by_gem?(constant, mixin, mixin_type)
+          mixin_location =
+            T.cast(
+              Runtime::Trackers::Mixin.constants_with_mixin(mixin).dig(mixin_type, constant),
+              T.nilable(String)
+            )
+
+          !!mixin_location && @pipeline.gem.contains_path?(mixin_location)
         end
 
         sig { params(mixin_name: String).returns(T::Boolean) }

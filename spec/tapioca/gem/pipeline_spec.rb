@@ -313,16 +313,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       object_output = template(<<~RBI)
         class Object < ::BasicObject
-          include ::Kernel
-
           def hello; end
         end
       RBI
 
       compiled = compile
-        .gsub(/^\s+include ::Minitest::Expectations\s/, "")
-        .gsub(/^\s+include ::JSON::Ext::Generator::GeneratorMethods::Object\s/, "")
-        .gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
       assert_includes(compiled, basic_object_output)
       assert_includes(compiled, object_output)
@@ -446,8 +441,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Array
 
           def foo_int; end
         end
@@ -460,8 +453,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Hash
           extend ::Foo::Bar
 
           def to_bar; end
@@ -472,10 +463,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class String
-          include ::Comparable
-          include ::JSON::Ext::Generator::GeneratorMethods::String
           include ::Foo::Bar
-          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
           def to_foo(base = T.unsafe(nil)); end
         end
@@ -519,8 +507,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Array
         end
 
         class Foo
@@ -531,16 +517,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Hash
           extend ::Foo::Bar
         end
 
         class String
-          include ::Comparable
-          include ::JSON::Ext::Generator::GeneratorMethods::String
           include ::Foo::Bar
-          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
         end
       RBI
 
@@ -571,8 +552,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Array
         end
 
         class Foo
@@ -583,16 +562,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
-          include ::Enumerable
-          include ::JSON::Ext::Generator::GeneratorMethods::Hash
           extend ::Foo::Bar
         end
 
         class String
-          include ::Comparable
-          include ::JSON::Ext::Generator::GeneratorMethods::String
           include ::Foo::Bar
-          extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
         end
       RBI
 
@@ -2431,9 +2405,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           extend ::T::Props
-          extend ::T::Props::Plugin
-          extend ::T::Props::Optional
-          extend ::T::Props::WeakConstructor
           extend ::T::Props::Constructor
 
           class << self
@@ -2851,10 +2822,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class Buzz
-          include ::T::Props
-          include ::T::Props::Plugin
-          include ::T::Props::Optional
-          include ::T::Props::WeakConstructor
           include ::T::Props::Constructor
           extend ::T::Props::ClassMethods
           extend ::T::Props::Plugin::ClassMethods
