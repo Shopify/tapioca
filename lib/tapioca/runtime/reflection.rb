@@ -20,6 +20,8 @@ module Tapioca
       PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
       METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
 
+      REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+
       sig do
         params(
           symbol: String,
@@ -151,6 +153,20 @@ module Tapioca
         end
 
         T.unsafe(result)
+      end
+
+      # Examines the call stack to identify the closest location where a "require" is performed
+      # by searching for the label "<top (required)>". If none is found, it returns the location
+      # labeled "<main>", which is the original call site.
+      sig { returns(String) }
+      def required_from_location
+        locations = Kernel.caller_locations
+        return "" unless locations
+
+        required_location = locations.find { |loc| REQUIRED_FROM_LABELS.include?(loc.label) }
+        return "" unless required_location
+
+        required_location.absolute_path || ""
       end
     end
   end
