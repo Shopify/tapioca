@@ -11,14 +11,16 @@ module Tapioca
           central_repo_root_uris: T::Array[String],
           auth: T.nilable(String),
           netrc_file: T.nilable(String),
-          central_repo_index_path: String
+          central_repo_index_path: String,
+          typed_overrides: T::Hash[String, String]
         ).void
       end
       def initialize(
         central_repo_root_uris:,
         auth: nil,
         netrc_file: nil,
-        central_repo_index_path: CENTRAL_REPO_INDEX_PATH
+        central_repo_index_path: CENTRAL_REPO_INDEX_PATH,
+        typed_overrides: {}
       )
         super()
         @central_repo_root_uris = central_repo_root_uris
@@ -27,6 +29,7 @@ module Tapioca
         @netrc_info = T.let(nil, T.nilable(Netrc))
         @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
         @indexes = T.let({}, T::Hash[String, RepoIndex])
+        @typed_overrides = typed_overrides
       end
 
       sig { override.void }
@@ -132,6 +135,7 @@ module Tapioca
         content = merge_files(gem_name, contents.compact)
         return unless content
 
+        content = apply_typed_override(gem_name, content)
         content = add_header(gem_name, content)
 
         dir = DEFAULT_ANNOTATIONS_DIR
@@ -173,11 +177,11 @@ module Tapioca
         when Net::HTTPSuccess
           response.body
         else
-          say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{response.class})", :bold, :red)
+          say_http_error(path, repo_uri, message: response.class)
           nil
         end
       rescue SocketError, Errno::ECONNREFUSED => e
-        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{e.message})", :bold, :red)
+        say_http_error(path, repo_uri, message: e.message)
         nil
       end
 
@@ -196,6 +200,18 @@ module Tapioca
           say_error("Couldn't insert file header for content: #{content} due to unexpected file format")
           content
         end
+      end
+
+      sig { params(name: String, content: String).returns(String) }
+      def apply_typed_override(name, content)
+        strictness = @typed_overrides[name]
+        return content unless strictness
+
+        unless Spoom::Sorbet::Sigils.strictness_in_content(content)
+          return "# typed: #{strictness}\n\n#{content}"
+        end
+
+        Spoom::Sorbet::Sigils.update_sigil(content, strictness)
       end
 
       sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
@@ -251,6 +267,19 @@ module Tapioca
         return nil unless token
 
         "token #{token}"
+      end
+
+      sig { params(path: String, repo_uri: String, message: String).void }
+      def say_http_error(path, repo_uri, message:)
+        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
+        say_error(<<~ERROR)
+          Tapioca can't access the annotations at #{repo_uri}.
+
+          Are you trying to access a private repository?
+          If so, please specify your Github credentials in your ~/.netrc file or by specifying the --auth option.
+
+          See https://github.com/Shopify/tapioca#using-a-netrc-file for more details.
+        ERROR
       end
     end
   end

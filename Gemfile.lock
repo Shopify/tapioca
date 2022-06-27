@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rubyconfig/config.git
-  revision: 740fe1fd235649e41d5813d5a618caa3969be13b
+  revision: 87709f9344837e908e1bf19363a95b279763eb1b
   branch: master
   specs:
     config (4.0.0)
@@ -160,7 +160,7 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (~> 1.8, >= 1.8.0)
     erubi (1.10.0)
-    frozen_record (0.25.4)
+    frozen_record (0.25.5)
       activemodel
       dedup
     globalid (1.0.0)
@@ -182,7 +182,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.1)
     minitest-hooks (1.5.0)
       minitest (> 5.3)
     minitest-reporters (1.5.0)
@@ -275,7 +275,7 @@ GEM
       rubocop (~> 1.19)
     rubocop-shopify (2.7.0)
       rubocop (~> 1.30)
-    rubocop-sorbet (0.6.8)
+    rubocop-sorbet (0.6.10)
       rubocop (>= 0.90.0)
     ruby-lsp (0.1.0)
       language_server-protocol
@@ -284,26 +284,26 @@ GEM
       syntax_tree (>= 2.4)
     ruby-progressbar (1.11.0)
     shopify-money (0.16.0)
-    sidekiq (6.5.0)
+    sidekiq (6.5.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
     smart_properties (1.17.0)
-    sorbet (0.5.10092)
-      sorbet-static (= 0.5.10092)
-    sorbet-runtime (0.5.10092)
-    sorbet-static (0.5.10092-universal-darwin-14)
-    sorbet-static (0.5.10092-universal-darwin-15)
-    sorbet-static (0.5.10092-universal-darwin-16)
-    sorbet-static (0.5.10092-universal-darwin-17)
-    sorbet-static (0.5.10092-universal-darwin-18)
-    sorbet-static (0.5.10092-universal-darwin-19)
-    sorbet-static (0.5.10092-universal-darwin-20)
-    sorbet-static (0.5.10092-universal-darwin-21)
-    sorbet-static (0.5.10092-x86_64-linux)
-    sorbet-static-and-runtime (0.5.10092)
-      sorbet (= 0.5.10092)
-      sorbet-runtime (= 0.5.10092)
+    sorbet (0.5.10101)
+      sorbet-static (= 0.5.10101)
+    sorbet-runtime (0.5.10101)
+    sorbet-static (0.5.10101-universal-darwin-14)
+    sorbet-static (0.5.10101-universal-darwin-15)
+    sorbet-static (0.5.10101-universal-darwin-16)
+    sorbet-static (0.5.10101-universal-darwin-17)
+    sorbet-static (0.5.10101-universal-darwin-18)
+    sorbet-static (0.5.10101-universal-darwin-19)
+    sorbet-static (0.5.10101-universal-darwin-20)
+    sorbet-static (0.5.10101-universal-darwin-21)
+    sorbet-static (0.5.10101-x86_64-linux)
+    sorbet-static-and-runtime (0.5.10101)
+      sorbet (= 0.5.10101)
+      sorbet-runtime (= 0.5.10101)
     spoom (1.1.11)
       sorbet (>= 0.5.9204)
       sorbet-runtime (>= 0.5.9204)
@@ -369,7 +369,6 @@ DEPENDENCIES
   shopify-money
   sidekiq
   smart_properties
-  sorbet
   sprockets
   sqlite3
   state_machines

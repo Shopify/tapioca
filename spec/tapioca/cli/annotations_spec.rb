@@ -112,6 +112,14 @@ module Tapioca
 
         assert_includes(result.out, "Retrieving index from central repository #1... Done")
         assert_includes(result.err, "Can't fetch file `index.json` from https://bad-source")
+        assert_includes(result.err, <<~ERROR)
+          Tapioca can't access the annotations at https://bad-source.
+
+          Are you trying to access a private repository?
+          If so, please specify your Github credentials in your ~/.netrc file or by specifying the --auth option.
+
+          See https://github.com/Shopify/tapioca#using-a-netrc-file for more details.
+        ERROR
         assert_success_status(result)
       end
 
@@ -288,6 +296,45 @@ module Tapioca
         ERR
 
         refute_success_status(result)
+      end
+
+      it "overrides strictnesses in annotations files" do
+        repo = create_repo({
+          rbi: <<~RBI,
+            # typed: strict
+
+            class AnnotationForRBI; end
+          RBI
+          spoom: <<~RBI,
+            class AnnotationForSpoom; end
+          RBI
+        })
+
+        result = @project.tapioca("annotations --sources #{repo.path} --typed-overrides rbi:ignore spoom:true")
+
+        assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
+          # typed: ignore
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForRBI; end
+        RBI
+
+        assert_project_annotation_equal("sorbet/rbi/annotations/spoom.rbi", <<~RBI)
+          # typed: true
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForSpoom; end
+        RBI
+
+        assert_success_status(result)
+
+        repo.destroy
       end
     end
 

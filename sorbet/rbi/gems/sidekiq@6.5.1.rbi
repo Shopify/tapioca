@@ -11,14 +11,7 @@ class ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper
   extend ::Sidekiq::Worker::ClassMethods
 end
 
-# SdNotify is a pure-Ruby implementation of sd_notify(3). It can be used to
-# notify systemd about state changes. Methods of this package are no-op on
-# non-systemd systems (eg. Darwin).
-#
-# The API maps closely to the original implementation of sd_notify(3),
-# therefore be sure to check the official man pages prior to using SdNotify.
-#
-# @see https://www.freedesktop.org/software/systemd/man/sd_notify.html
+# Use `Sidekiq.transactional_push!` in your sidekiq.rb initializer
 module Sidekiq
   class << self
     def [](key); end
@@ -149,6 +142,7 @@ module Sidekiq
 
     def strict_args!(mode = T.unsafe(nil)); end
     def transactional_push!; end
+    def ❨╯°□°❩╯︵┻━┻; end
   end
 end
 
@@ -535,6 +529,8 @@ end
 Sidekiq::RedisConnection::RedisAdapter::BaseError = Redis::BaseError
 Sidekiq::RedisConnection::RedisAdapter::CommandError = Redis::CommandError
 
+# Server-side middleware must import this Module in order
+# to get access to server resources during `call`.
 module Sidekiq::ServerMiddleware
   # Returns the value of attribute config.
   def config; end

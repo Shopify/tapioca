@@ -111,8 +111,8 @@ module Tapioca
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_initialize_by(attributes, &block); end
 
-                    sig { returns(T.nilable(::Post)) }
-                    def find_sole_by; end
+                    sig { params(arg: T.untyped, args: T.untyped).returns(::Post) }
+                    def find_sole_by(arg, *args); end
 
                     sig { params(limit: T.untyped).returns(T.untyped) }
                     def first(limit = nil); end
@@ -183,7 +183,7 @@ module Tapioca
                     sig { returns(::Post) }
                     def second_to_last!; end
 
-                    sig { returns(T.nilable(::Post)) }
+                    sig { returns(::Post) }
                     def sole; end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
