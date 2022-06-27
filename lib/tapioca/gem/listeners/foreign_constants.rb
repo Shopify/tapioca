@@ -24,23 +24,25 @@ module Tapioca
           # The way we identify these "foreign constants" is by asking the mixin tracker which
           # constants have mixed in the current module that we are handling. We add all the
           # constants that we discover to the pipeline to be processed.
-          Runtime::Trackers::Mixin.constants_with_mixin(mixin).each do |constant, location|
-            next unless mixed_in_by_gem?(location)
+          Runtime::Trackers::Mixin.constants_with_mixin(mixin).each_value do |location_info|
+            location_info.each do |constant, location|
+              next unless mixed_in_by_gem?(location)
 
-            name = @pipeline.name_of(constant)
+              name = @pipeline.name_of(constant)
 
-            # Calling Tapioca::Gem::Pipeline#name_of on a singleton class returns `nil`.
-            # To handle this case, use string parsing to get the name of the singleton class's
-            # base constant. Then, generate RBIs as if the base constant is extending the mixin,
-            # which is functionally equivalent to including or prepending to the singleton class.
-            if !name && constant.singleton_class?
-              name = constant_name_from_singleton_class(constant)
-              next unless name
+              # Calling Tapioca::Gem::Pipeline#name_of on a singleton class returns `nil`.
+              # To handle this case, use string parsing to get the name of the singleton class's
+              # base constant. Then, generate RBIs as if the base constant is extending the mixin,
+              # which is functionally equivalent to including or prepending to the singleton class.
+              if !name && constant.singleton_class?
+                name = constant_name_from_singleton_class(constant)
+                next unless name
 
-              constant = T.cast(constantize(name), Module)
+                constant = T.cast(constantize(name), Module)
+              end
+
+              @pipeline.push_foreign_constant(name, constant) if name
             end
-
-            @pipeline.push_foreign_constant(name, constant) if name
           end
         end
 
