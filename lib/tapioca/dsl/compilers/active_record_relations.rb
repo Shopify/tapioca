@@ -543,6 +543,23 @@ module Tapioca
                 ],
                 return_type: constant_name
               )
+            when :find_sole_by
+              create_common_method(
+                "find_sole_by",
+                common_relation_methods_module,
+                parameters: [
+                  create_param("arg", type: "T.untyped"),
+                  create_rest_param("args", type: "T.untyped"),
+                ],
+                return_type: constant_name
+              )
+            when :sole
+              create_common_method(
+                "sole",
+                common_relation_methods_module,
+                parameters: [],
+                return_type: constant_name
+              )
             when :first, :last, :take
               create_common_method(
                 method_name,
