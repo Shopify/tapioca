@@ -55,11 +55,6 @@ module Tapioca
           @pipeline.gem.contains_path?(location)
         end
 
-        sig { params(constant: Module).returns(T.nilable(String)) }
-        def constant_name_from_singleton_class(constant)
-          constant.to_s.match("#<Class:(.+)>")&.captures&.first
-        end
-
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)

@@ -168,6 +168,17 @@ module Tapioca
 
         required_location.absolute_path || ""
       end
+
+      sig { params(constant: Module).returns(T.nilable(String)) }
+      def constant_name_from_singleton_class(constant)
+        constant.to_s.match("#<Class:(.+)>")&.captures&.first
+      end
+
+      sig { params(constant: Module).returns(T.nilable(BasicObject)) }
+      def constant_from_singleton_class(constant)
+        constant_name = constant_name_from_singleton_class(constant)
+        constantize(constant_name) if constant_name
+      end
     end
   end
 end
