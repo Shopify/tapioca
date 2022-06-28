@@ -55,11 +55,12 @@ module Tapioca
 
         safe_require("active_support/core_ext/class/subclasses")
 
+        project_path = Bundler.default_gemfile.parent.expand_path
         # We can use `Class#descendants` here, since we know Rails is loaded
         Object.const_get("Rails::Engine")
           .descendants
           .reject(&:abstract_railtie?)
-          .reject { |engine| gem_in_app_dir?(Rails.root.to_path, engine.config.root.to_path) }
+          .reject { |engine| gem_in_app_dir?(project_path, engine.config.root.to_path) }
       end
 
       sig { params(path: String).void }
