@@ -1340,6 +1340,19 @@ class Sprockets::DirectiveProcessor
   #     //= depend_on "foo.png"
   def process_depend_on_directive(path); end
 
+  # Allows you to state a dependency on a relative directory
+  # without including it.
+  #
+  # This is used for caching purposes. Any changes made to
+  # the dependency directory will invalidate the cache of the
+  # source file.
+  #
+  # This is useful if you are using ERB and File.read to pull
+  # in contents from multiple files in a directory.
+  #
+  #     //= depend_on_directory ./data
+  def process_depend_on_directory_directive(path = T.unsafe(nil), accept = T.unsafe(nil)); end
+
   # Gathers comment directives in the source and processes them.
   # Any directive method matching `process_*_directive` will
   # automatically be available. This makes it easy to extend the
@@ -3671,6 +3684,7 @@ class Sprockets::Transformers::Transformer < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
