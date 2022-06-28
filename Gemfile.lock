@@ -165,7 +165,7 @@ GEM
       dedup
     globalid (1.0.0)
       activesupport (>= 5.0)
-    google-protobuf (3.21.1)
+    google-protobuf (3.21.2)
     hashdiff (1.0.1)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
