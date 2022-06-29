@@ -9,6 +9,7 @@ module Tapioca
 
         @constants_to_mixin_locations = {}.compare_by_identity
         @mixins_to_constants = {}.compare_by_identity
+        @enabled = true
 
         class Type < T::Enum
           enums do
@@ -19,6 +20,19 @@ module Tapioca
         end
 
         sig do
+          type_parameters(:Result)
+            .params(block: T.proc.returns(T.type_parameter(:Result)))
+            .returns(T.type_parameter(:Result))
+        end
+        def self.with_disabled_registration(&block)
+          @enabled = false
+
+          block.call
+        ensure
+          @enabled = true
+        end
+
+        sig do
           params(
             constant: Module,
             mixin: Module,
@@ -26,6 +40,8 @@ module Tapioca
           ).void
         end
         def self.register(constant, mixin, mixin_type)
+          return unless @enabled
+
           location = Reflection.required_from_location
 
           constants = constants_with_mixin(mixin)
