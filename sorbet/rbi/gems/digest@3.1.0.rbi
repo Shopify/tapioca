@@ -11,8 +11,6 @@ module Digest
 end
 
 class Digest::Class
-  include ::Digest::Instance
-
   class << self
     # Returns the base64 encoded hash value of a given _string_.  The
     # return value is properly padded with '=' and contains no line

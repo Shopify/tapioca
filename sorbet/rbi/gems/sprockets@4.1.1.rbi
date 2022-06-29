@@ -6,20 +6,7 @@
 
 # Define some basic Sprockets error classes
 module Sprockets
-  extend ::Sprockets::Utils
-  extend ::Sprockets::URIUtils
-  extend ::Sprockets::PathUtils
-  extend ::Sprockets::DigestUtils
-  extend ::Sprockets::PathDigestUtils
-  extend ::Sprockets::Dependencies
-  extend ::Sprockets::Compressing
-  extend ::Sprockets::Exporting
   extend ::Sprockets::ProcessorUtils
-  extend ::Sprockets::Processing
-  extend ::Sprockets::HTTPUtils
-  extend ::Sprockets::Transformers
-  extend ::Sprockets::Mime
-  extend ::Sprockets::Paths
   extend ::Sprockets::Configuration
 end
 
@@ -229,22 +216,11 @@ Sprockets::BabelProcessor::VERSION = T.let(T.unsafe(nil), String)
 # `Base` class for `Environment` and `CachedEnvironment`.
 class Sprockets::Base
   include ::Sprockets::SourceMapUtils
-  include ::Sprockets::Utils
   include ::Sprockets::PathUtils
   include ::Sprockets::DigestUtils
   include ::Sprockets::PathDigestUtils
-  include ::Sprockets::URIUtils
   include ::Sprockets::PathDependencyUtils
-  include ::Sprockets::Dependencies
-  include ::Sprockets::Compressing
-  include ::Sprockets::Exporting
-  include ::Sprockets::ProcessorUtils
   include ::Sprockets::Resolve
-  include ::Sprockets::Processing
-  include ::Sprockets::HTTPUtils
-  include ::Sprockets::Transformers
-  include ::Sprockets::Mime
-  include ::Sprockets::Paths
   include ::Sprockets::Configuration
   include ::Sprockets::Server
   include ::Sprockets::Loader
@@ -845,16 +821,10 @@ end
 
 module Sprockets::Configuration
   include ::Sprockets::Utils
-  include ::Sprockets::URIUtils
-  include ::Sprockets::PathUtils
-  include ::Sprockets::DigestUtils
-  include ::Sprockets::PathDigestUtils
   include ::Sprockets::Dependencies
   include ::Sprockets::Compressing
   include ::Sprockets::Exporting
-  include ::Sprockets::ProcessorUtils
   include ::Sprockets::Processing
-  include ::Sprockets::HTTPUtils
   include ::Sprockets::Transformers
   include ::Sprockets::Mime
   include ::Sprockets::Paths
@@ -1111,7 +1081,6 @@ class Sprockets::ConversionError < ::Sprockets::NotFound; end
 # `Environment` and `CachedEnvironment` classes.
 module Sprockets::Dependencies
   include ::Sprockets::URIUtils
-  include ::Sprockets::PathUtils
   include ::Sprockets::DigestUtils
   include ::Sprockets::PathDigestUtils
 
@@ -1973,12 +1942,9 @@ end
 # object.
 module Sprockets::Loader
   include ::Sprockets::URIUtils
-  include ::Sprockets::Utils
   include ::Sprockets::ProcessorUtils
   include ::Sprockets::PathUtils
   include ::Sprockets::DigestUtils
-  include ::Sprockets::PathDependencyUtils
-  include ::Sprockets::HTTPUtils
   include ::Sprockets::Transformers
   include ::Sprockets::Resolve
   include ::Sprockets::Processing
@@ -2871,7 +2837,6 @@ Sprockets::ProcessorUtils::VALID_METADATA_VALUE_TYPES = T.let(T.unsafe(nil), Set
 Sprockets::ProcessorUtils::VALID_METADATA_VALUE_TYPES_HASH = T.let(T.unsafe(nil), Hash)
 
 module Sprockets::Resolve
-  include ::Sprockets::PathUtils
   include ::Sprockets::URIUtils
   include ::Sprockets::PathDependencyUtils
   include ::Sprockets::HTTPUtils
@@ -3684,7 +3649,6 @@ class Sprockets::Transformers::Transformer < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

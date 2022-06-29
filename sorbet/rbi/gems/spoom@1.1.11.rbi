@@ -14,9 +14,6 @@ end
 module Spoom::Cli; end
 
 class Spoom::Cli::Bump < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   sig { params(directory: ::String).void }
   def bump(directory = T.unsafe(nil)); end
 
@@ -27,17 +24,11 @@ class Spoom::Cli::Bump < ::Thor
 end
 
 class Spoom::Cli::Config < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
   def show; end
 end
 
 class Spoom::Cli::Coverage < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   def bundle_install(path, sha); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
   def message_no_data(file); end
@@ -51,10 +42,6 @@ end
 Spoom::Cli::Coverage::DATA_DIR = T.let(T.unsafe(nil), String)
 
 module Spoom::Cli::Helper
-  include ::Spoom::Colorize
-
-  requires_ancestor { Thor }
-
   sig { params(string: ::String).returns(::String) }
   def blue(string); end
 
@@ -119,9 +106,6 @@ module Spoom::Cli::Helper
 end
 
 class Spoom::Cli::LSP < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   # TODO: options, filter, limit, kind etc.. filter rbi
   def defs(file, line, col); end
 
@@ -159,9 +143,6 @@ class Spoom::Cli::LSP < ::Thor
 end
 
 class Spoom::Cli::Main < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   def __print_version; end
   def bump(*args); end
   def config(*args); end
@@ -179,9 +160,6 @@ class Spoom::Cli::Main < ::Thor
 end
 
 class Spoom::Cli::Run < ::Thor
-  include ::Spoom::Colorize
-  include ::Spoom::Cli::Helper
-
   def colorize_message(message); end
   def format_error(error, format); end
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
@@ -970,8 +948,6 @@ class Spoom::LSP::Client
 end
 
 class Spoom::LSP::Diagnostic < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :code, ::Integer
   const :informations, ::Object
   const :message, ::String
@@ -992,8 +968,6 @@ class Spoom::LSP::Diagnostic < ::T::Struct
 end
 
 class Spoom::LSP::DocumentSymbol < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :children, T::Array[::Spoom::LSP::DocumentSymbol]
   const :detail, T.nilable(::String)
   const :kind, ::Integer
@@ -1040,8 +1014,6 @@ class Spoom::LSP::Error::Diagnostics < ::Spoom::LSP::Error
 end
 
 class Spoom::LSP::Hover < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :contents, ::String
   const :range, T.nilable(T::Range[T.untyped])
 
@@ -1060,8 +1032,6 @@ class Spoom::LSP::Hover < ::T::Struct
 end
 
 class Spoom::LSP::Location < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :range, ::Spoom::LSP::Range
   const :uri, ::String
 
@@ -1111,8 +1081,6 @@ class Spoom::LSP::Notification < ::Spoom::LSP::Message
 end
 
 class Spoom::LSP::Position < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :char, ::Integer
   const :line, ::Integer
 
@@ -1140,8 +1108,6 @@ module Spoom::LSP::PrintableSymbol
 end
 
 class Spoom::LSP::Range < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :end, ::Spoom::LSP::Position
   const :start, ::Spoom::LSP::Position
 
@@ -1196,8 +1162,6 @@ class Spoom::LSP::ResponseError < ::Spoom::LSP::Error
 end
 
 class Spoom::LSP::SignatureHelp < ::T::Struct
-  include ::Spoom::LSP::PrintableSymbol
-
   const :doc, ::Object
   const :label, T.nilable(::String)
   const :params, T::Array[T.untyped]
@@ -1254,8 +1218,6 @@ end
 
 # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
 class Spoom::Printer
-  include ::Spoom::Colorize
-
   abstract!
 
   sig { params(out: T.any(::IO, ::StringIO), colors: T::Boolean, indent_level: ::Integer).void }
@@ -1442,8 +1404,6 @@ end
 Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE = T.let(T.unsafe(nil), String)
 
 class Spoom::Sorbet::Errors::Error
-  include ::Comparable
-
   sig do
     params(
       file: T.nilable(::String),

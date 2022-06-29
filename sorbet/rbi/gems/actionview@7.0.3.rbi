@@ -257,32 +257,12 @@ class ActionView::ActionViewError < ::StandardError; end
 class ActionView::Base
   include ::ActionView::Context
   include ::ERB::Util
-  include ::ActiveSupport::Benchmarkable
-  include ::ActionView::Helpers::ActiveModelHelper
-  include ::ActionView::Helpers::AssetUrlHelper
-  include ::ActionView::Helpers::CaptureHelper
-  include ::ActionView::Helpers::OutputSafetyHelper
-  include ::ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper
-  include ::ActionView::Helpers::AssetTagHelper
-  include ::ActionView::Helpers::AtomFeedHelper
-  include ::ActionView::Helpers::CacheHelper
-  include ::ActionView::Helpers::ControllerHelper
-  include ::ActionView::Helpers::CspHelper
-  include ::ActionView::Helpers::CsrfHelper
-  include ::ActionView::Helpers::DateHelper
-  include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::FormTagHelper
-  include ::ActionView::ModelNaming
-  include ::ActionView::RecordIdentifier
   include ::ActionView::Helpers::FormHelper
   include ::ActionView::Helpers::TranslationHelper
-  include ::ActionView::Helpers::FormOptionsHelper
-  include ::ActionView::Helpers::JavaScriptHelper
-  include ::ActionView::Helpers::NumberHelper
-  include ::ActionView::Helpers::RenderingHelper
   include ::ActionView::Helpers
   extend ::ActionView::Helpers::UrlHelper::ClassMethods
   extend ::ActionView::Helpers::SanitizeHelper::ClassMethods
@@ -737,7 +717,6 @@ module ActionView::Helpers
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
   include ::ActionView::Helpers::AssetUrlHelper
-  include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
@@ -749,7 +728,6 @@ module ActionView::Helpers
   include ::ActionView::Helpers::CsrfHelper
   include ::ActionView::Helpers::DateHelper
   include ::ActionView::Helpers::DebugHelper
-  include ::ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::FormOptionsHelper
   include ::ActionView::Helpers::JavaScriptHelper
   include ::ActionView::Helpers::NumberHelper
@@ -802,8 +780,6 @@ end
 #   # => <link href="/assets/application.css?body=1" rel="stylesheet" />
 module ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AssetUrlHelper
-  include ::ActionView::Helpers::CaptureHelper
-  include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
 
   def apply_stylesheet_media_default; end

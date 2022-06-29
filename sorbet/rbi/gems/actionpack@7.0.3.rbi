@@ -915,7 +915,6 @@ end
 class ActionController::API < ::ActionController::Metal
   include ::ActionView::ViewPaths
   include ::AbstractController::Rendering
-  include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionDispatch::Routing::UrlFor
   include ::AbstractController::UrlFor
   include ::ActionController::UrlFor
@@ -926,7 +925,6 @@ class ActionController::API < ::ActionController::Metal
   include ::ActionController::Rendering
   include ::ActionController::Renderers
   include ::ActionController::Renderers::All
-  include ::ActionController::Head
   include ::ActionController::ConditionalGet
   include ::ActionController::BasicImplicitRender
   include ::ActionController::StrongParameters
@@ -1203,7 +1201,6 @@ class ActionController::Base < ::ActionController::Metal
   include ::AbstractController::AssetPaths
   include ::AbstractController::Helpers
   include ::ActionController::Helpers
-  include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionDispatch::Routing::UrlFor
   include ::AbstractController::UrlFor
   include ::ActionController::UrlFor
@@ -1215,16 +1212,13 @@ class ActionController::Base < ::ActionController::Metal
   include ::ActionController::Rendering
   include ::ActionController::Renderers
   include ::ActionController::Renderers::All
-  include ::ActionController::Head
   include ::ActionController::ConditionalGet
   include ::ActionController::EtagWithTemplateDigest
   include ::ActionController::EtagWithFlash
   include ::ActionController::Caching
   include ::AbstractController::Caching::Fragments
-  include ::AbstractController::Caching::ConfigMethods
   include ::AbstractController::Caching
   include ::ActionController::MimeResponds
-  include ::ActionController::BasicImplicitRender
   include ::ActionController::ImplicitRender
   include ::ActionController::StrongParameters
   include ::ActionController::ParameterEncoding
@@ -5847,14 +5841,7 @@ end
 #  assert_redirected_to page_url(title: 'foo')
 class ActionController::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::ConstantLookup
-  include ::ActionDispatch::Assertions::ResponseAssertions
-  include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::Rails::Dom::Testing::Assertions::DomAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
   include ::Rails::Dom::Testing::Assertions
-  include ::ActionDispatch::TestProcess::FixtureFile
-  include ::ActionDispatch::TestProcess
   include ::ActionController::TestCase::Behavior
   include ::ActionController::TemplateAssertions
   include ::ActionDispatch::Assertions
@@ -5876,7 +5863,6 @@ class ActionController::TestCase < ::ActiveSupport::TestCase
 end
 
 module ActionController::TestCase::Behavior
-  include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionDispatch::TestProcess
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -6239,9 +6225,6 @@ ActionDispatch::AssertionResponse::GENERIC_RESPONSE_CODES = T.let(T.unsafe(nil),
 module ActionDispatch::Assertions
   include ::ActionDispatch::Assertions::ResponseAssertions
   include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::Rails::Dom::Testing::Assertions::DomAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
   include ::Rails::Dom::Testing::Assertions
 
   def html_document; end
@@ -8114,12 +8097,6 @@ module ActionDispatch::Integration::RequestHelpers
 end
 
 module ActionDispatch::Integration::Runner
-  include ::ActionDispatch::Assertions::ResponseAssertions
-  include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::Rails::Dom::Testing::Assertions::DomAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
-  include ::Rails::Dom::Testing::Assertions
   include ::ActionDispatch::Assertions
 
   def initialize(*args, &blk); end

@@ -6,7 +6,6 @@
 
 # ANSI namespace module contains all the ANSI related classes.
 module ANSI
-  extend ::ANSI::Constants
   extend ::ANSI::Code
 end
 
@@ -31,7 +30,6 @@ ANSI::CHART = T.let(T.unsafe(nil), Hash)
 # See {ANSI::CHART} for list of all supported codes.
 module ANSI::Code
   include ::ANSI::Constants
-  extend ::ANSI::Constants
   extend ::ANSI::Code
 
   # Return ANSI code given a list of symbolic names.

@@ -5,12 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem thor`.
 
 class Thor
-  include ::Thor::Base
-  include ::Thor::Invocation
-  include ::Thor::Shell
-  extend ::Thor::Base::ClassMethods
-  extend ::Thor::Invocation::ClassMethods
-
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   class << self
@@ -2247,9 +2241,6 @@ Thor::Options::SHORT_SQ_RE = T.let(T.unsafe(nil), Regexp)
 #     end
 #   end
 module Thor::RakeCompat
-  include ::FileUtils::StreamUtils_
-  include ::FileUtils
-  include ::Rake::FileUtilsExt
   include ::Rake::DSL
 
   class << self
@@ -2707,8 +2698,6 @@ Thor::Task = Thor::Command
 
 # Raised when a command was not found.
 class Thor::UndefinedCommandError < ::Thor::Error
-  include ::DidYouMean::Correctable
-
   # @return [UndefinedCommandError] a new instance of UndefinedCommandError
   def initialize(command, all_commands, namespace); end
 
@@ -2734,8 +2723,6 @@ end
 Thor::UndefinedTaskError = Thor::UndefinedCommandError
 
 class Thor::UnknownArgumentError < ::Thor::Error
-  include ::DidYouMean::Correctable
-
   # @return [UnknownArgumentError] a new instance of UnknownArgumentError
   def initialize(switches, unknown); end
 

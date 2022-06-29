@@ -7,7 +7,6 @@
 # Reopen main module to define the library version
 module Byebug
   include ::Byebug::Helpers::ReflectionHelper
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug
 
   # Debugger's display expressions
@@ -697,7 +696,6 @@ end
 # Disabling custom display expressions or breakpoints.
 class Byebug::DisableCommand < ::Byebug::Command
   include ::Byebug::Subcommands
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug::Subcommands::ClassMethods
 
   class << self
@@ -709,7 +707,6 @@ end
 
 # Disables all or specific breakpoints
 class Byebug::DisableCommand::BreakpointsCommand < ::Byebug::Command
-  include ::Byebug::Helpers::ParseHelper
   include ::Byebug::Helpers::ToggleHelper
 
   def execute; end
@@ -723,7 +720,6 @@ end
 
 # Enables all or specific displays
 class Byebug::DisableCommand::DisplayCommand < ::Byebug::Command
-  include ::Byebug::Helpers::ParseHelper
   include ::Byebug::Helpers::ToggleHelper
 
   def execute; end
@@ -788,7 +784,6 @@ end
 # Enabling custom display expressions or breakpoints.
 class Byebug::EnableCommand < ::Byebug::Command
   include ::Byebug::Subcommands
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug::Subcommands::ClassMethods
 
   class << self
@@ -800,7 +795,6 @@ end
 
 # Enables all or specific breakpoints
 class Byebug::EnableCommand::BreakpointsCommand < ::Byebug::Command
-  include ::Byebug::Helpers::ParseHelper
   include ::Byebug::Helpers::ToggleHelper
 
   def execute; end
@@ -814,7 +808,6 @@ end
 
 # Enables all or specific displays
 class Byebug::EnableCommand::DisplayCommand < ::Byebug::Command
-  include ::Byebug::Helpers::ParseHelper
   include ::Byebug::Helpers::ToggleHelper
 
   def execute; end
@@ -1267,7 +1260,6 @@ Byebug::HistsizeSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 # Shows info about different aspects of the debugger.
 class Byebug::InfoCommand < ::Byebug::Command
   include ::Byebug::Subcommands
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug::Subcommands::ClassMethods
 
   class << self
@@ -1997,7 +1989,6 @@ end
 # Manipulation of Ruby threads
 class Byebug::ThreadCommand < ::Byebug::Command
   include ::Byebug::Subcommands
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug::Subcommands::ClassMethods
 
   class << self
@@ -2130,7 +2121,6 @@ end
 # Shows variables and its values
 class Byebug::VarCommand < ::Byebug::Command
   include ::Byebug::Subcommands
-  extend ::Byebug::Helpers::ReflectionHelper
   extend ::Byebug::Subcommands::ClassMethods
 
   class << self
@@ -2142,7 +2132,6 @@ end
 
 # Shows global, instance and local variables
 class Byebug::VarCommand::AllCommand < ::Byebug::Command
-  include ::Byebug::Helpers::EvalHelper
   include ::Byebug::Helpers::VarHelper
 
   def execute; end
@@ -2156,7 +2145,6 @@ end
 
 # Information about arguments of the current method/block
 class Byebug::VarCommand::ArgsCommand < ::Byebug::Command
-  include ::Byebug::Helpers::EvalHelper
   include ::Byebug::Helpers::VarHelper
 
   def execute; end
@@ -2187,7 +2175,6 @@ end
 
 # Shows global variables
 class Byebug::VarCommand::GlobalCommand < ::Byebug::Command
-  include ::Byebug::Helpers::EvalHelper
   include ::Byebug::Helpers::VarHelper
 
   def execute; end
@@ -2201,7 +2188,6 @@ end
 
 # Shows instance variables
 class Byebug::VarCommand::InstanceCommand < ::Byebug::Command
-  include ::Byebug::Helpers::EvalHelper
   include ::Byebug::Helpers::VarHelper
 
   def execute; end
@@ -2215,7 +2201,6 @@ end
 
 # Shows local variables in current scope
 class Byebug::VarCommand::LocalCommand < ::Byebug::Command
-  include ::Byebug::Helpers::EvalHelper
   include ::Byebug::Helpers::VarHelper
 
   def execute; end

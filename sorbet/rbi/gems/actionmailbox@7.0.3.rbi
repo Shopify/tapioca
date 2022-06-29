@@ -441,9 +441,6 @@ module Mail
 end
 
 class Mail::Address
-  include ::Mail::Constants
-  include ::Mail::Utilities
-
   def initialize(value = T.unsafe(nil)); end
 
   def ==(other_address); end
@@ -481,9 +478,6 @@ class Mail::Address
 end
 
 class Mail::Message
-  include ::Mail::Constants
-  include ::Mail::Utilities
-
   def initialize(*args, &block); end
 
   def <=>(other); end
@@ -697,9 +691,6 @@ Mail::RANDOM_TAG = T.let(T.unsafe(nil), String)
 Mail::RubyVer = Mail::Ruby19
 
 module Rails
-  extend ::ActiveSupport::Autoload
-  extend ::ActiveSupport::Benchmarkable
-
   class << self
     def app_class; end
     def app_class=(_arg0); end

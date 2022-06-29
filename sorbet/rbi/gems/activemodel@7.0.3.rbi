@@ -74,7 +74,6 @@ end
 # refer to the specific modules included in <tt>ActiveModel::API</tt>
 # (see below).
 module ActiveModel::API
-  include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveModel::AttributeAssignment
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods

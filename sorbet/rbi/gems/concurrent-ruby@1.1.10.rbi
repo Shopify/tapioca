@@ -8,7 +8,6 @@
 module Concurrent
   extend ::Concurrent::Utility::EngineDetector
   extend ::Concurrent::Utility::NativeExtensionLoader
-  extend ::Logger::Severity
   extend ::Concurrent::Concern::Logging
   extend ::Concurrent::Concern::Deprecation
 
@@ -297,8 +296,6 @@ end
 Concurrent::AbstractExchanger::CANCEL = T.let(T.unsafe(nil), Object)
 
 class Concurrent::AbstractExecutorService < ::Concurrent::Synchronization::LockableObject
-  include ::Logger::Severity
-  include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
   include ::Concurrent::Concern::Deprecation
 
@@ -2417,10 +2414,7 @@ end
 module Concurrent::Concern; end
 
 module Concurrent::Concern::Deprecation
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
-  extend ::Logger::Severity
-  extend ::Concurrent::Concern::Logging
   extend ::Concurrent::Concern::Deprecation
 
   def deprecated(message, strip = T.unsafe(nil)); end
@@ -2872,7 +2866,6 @@ end
 #   execute on the given executor, allowing the call to timeout.
 # @see Concurrent::Concern::Dereferenceable
 class Concurrent::Delay < ::Concurrent::Synchronization::LockableObject
-  include ::Concurrent::Concern::Dereferenceable
   include ::Concurrent::Concern::Obligation
 
   # Create a new `Delay` in the `:pending` state.
@@ -3079,7 +3072,6 @@ class Concurrent::Exchanger < ::Concurrent::RubyExchanger; end
 Concurrent::ExchangerImplementation = Concurrent::RubyExchanger
 
 module Concurrent::ExecutorService
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # Submit a task to the executor for asynchronous processing.
@@ -3309,7 +3301,6 @@ Concurrent::HashImplementation = Hash
 # 2. For recent application:
 #    [DataDrivenFuture in Habanero Java from Rice](http://www.cs.rice.edu/~vs3/hjlib/doc/edu/rice/hj/api/HjDataDrivenFuture.html).
 class Concurrent::IVar < ::Concurrent::Synchronization::LockableObject
-  include ::Concurrent::Concern::Dereferenceable
   include ::Concurrent::Concern::Obligation
   include ::Concurrent::Concern::Observable
 
@@ -5041,7 +5032,6 @@ class Concurrent::PromiseExecutionError < ::StandardError; end
 
 # {include:file:docs-source/promises-main.md}
 module Concurrent::Promises
-  extend ::Concurrent::Promises::FactoryMethods::Configuration
   extend ::Concurrent::Promises::FactoryMethods
 end
 
@@ -7029,7 +7019,6 @@ Concurrent::RubyThreadPoolExecutor::DEFAULT_MIN_POOL_SIZE = T.let(T.unsafe(nil),
 Concurrent::RubyThreadPoolExecutor::DEFAULT_THREAD_IDLETIMEOUT = T.let(T.unsafe(nil), Integer)
 
 class Concurrent::RubyThreadPoolExecutor::Worker
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # @return [Worker] a new instance of Worker
@@ -7365,8 +7354,6 @@ Concurrent::SemaphoreImplementation = Concurrent::MutexSemaphore
 #   foo.is_a? Concurrent::SerialExecutor  #=> true
 #   foo.serialized?                       #=> true
 module Concurrent::SerialExecutorService
-  include ::Logger::Severity
-  include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
 
   # Does this executor guarantee serialization of its operations?
@@ -7380,7 +7367,6 @@ end
 
 # Ensures passed jobs in a serialized order never running at the same time.
 class Concurrent::SerializedExecution < ::Concurrent::Synchronization::LockableObject
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # @return [SerializedExecution] a new instance of SerializedExecution
@@ -7462,9 +7448,6 @@ end
 # @see [SimpleDelegator](http://www.ruby-doc.org/stdlib-2.1.2/libdoc/delegate/rdoc/SimpleDelegator.html)
 # @see Concurrent::SerializedExecution
 class Concurrent::SerializedExecutionDelegator < ::SimpleDelegator
-  include ::Logger::Severity
-  include ::Concurrent::Concern::Logging
-  include ::Concurrent::ExecutorService
   include ::Concurrent::SerialExecutorService
 
   # @return [SerializedExecutionDelegator] a new instance of SerializedExecutionDelegator

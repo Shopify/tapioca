@@ -60,8 +60,6 @@ class ActionText::Attachables::ContentAttachment
   include ::ActiveSupport::Callbacks
   include ::ActiveModel::Validations::HelperMethods
   include ::ActiveModel::Conversion
-  include ::ActiveModel::ForbiddenAttributesProtection
-  include ::ActiveModel::AttributeAssignment
   include ::ActiveModel::API
   include ::ActiveModel::Model
   extend ::ActiveModel::Validations::ClassMethods
