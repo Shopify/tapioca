@@ -28,25 +28,17 @@ module Tapioca
         def self.register(constant, mixin, mixin_type)
           location = Reflection.required_from_location
 
-          locs = mixin_locations_for(constant)
-          locs.fetch(mixin_type).store(mixin, location)
-
           constants = constants_with_mixin(mixin)
-          constants[constant] = location
+          constants.fetch(mixin_type).store(constant, location)
         end
 
-        sig { params(constant: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
-        def self.mixin_locations_for(constant)
-          @constants_to_mixin_locations[constant] ||= {
+        sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
+        def self.constants_with_mixin(mixin)
+          @mixins_to_constants[mixin] ||= {
             Type::Prepend => {}.compare_by_identity,
             Type::Include => {}.compare_by_identity,
             Type::Extend => {}.compare_by_identity,
           }
-        end
-
-        sig { params(mixin: Module).returns(T::Hash[Module, String]) }
-        def self.constants_with_mixin(mixin)
-          @mixins_to_constants[mixin] ||= {}.compare_by_identity
         end
       end
     end
@@ -61,6 +53,9 @@ class Module
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Prepend,
       )
+
+      register_extend_on_attached_class(constant) if constant.singleton_class?
+
       super
     end
 
@@ -70,6 +65,9 @@ class Module
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Include,
       )
+
+      register_extend_on_attached_class(constant) if constant.singleton_class?
+
       super
     end
 
@@ -80,6 +78,22 @@ class Module
         Tapioca::Runtime::Trackers::Mixin::Type::Extend,
       ) if Module === obj
       super
+    end
+
+    private
+
+    # Including or prepending on a singleton class is functionally equivalent to extending the
+    # attached class. Registering the mixin as an extend on the attached class ensures that
+    # this mixin can be found whether searching for an include/prepend on the singleton class
+    # or an extend on the attached class.
+    def register_extend_on_attached_class(constant)
+      attached_class = Tapioca::Runtime::Reflection.constant_from_singleton_class(constant)
+
+      Tapioca::Runtime::Trackers::Mixin.register(
+        T.cast(attached_class, Module),
+        self,
+        Tapioca::Runtime::Trackers::Mixin::Type::Extend,
+      ) if attached_class
     end
   end)
 end
