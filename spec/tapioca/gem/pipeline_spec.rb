@@ -3815,5 +3815,49 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it "compile FOO" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Bar
+          extend T::Sig
+          extend T::Helpers
+
+          interface!
+
+          sig { abstract.void }
+          def bar; end
+        end
+
+        class Foo < T::Struct
+          extend T::Sig
+          include Bar
+
+          sig { override.void }
+          def bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Bar
+          interface!
+
+          sig { abstract.void }
+          def bar; end
+        end
+
+        class Foo < ::T::Struct
+          include ::Bar
+
+          sig { override.void }
+          def bar; end
+
+          class << self
+            def inherited(s); end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end

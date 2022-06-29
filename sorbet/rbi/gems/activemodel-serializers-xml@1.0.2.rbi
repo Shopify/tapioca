@@ -5,6 +5,8 @@
 # Please instead update this file by running `bin/tapioca gem activemodel-serializers-xml`.
 
 module ActiveModel
+  extend ::ActiveSupport::Autoload
+
   class << self
     def eager_load!; end
     def gem_version; end
@@ -12,7 +14,9 @@ module ActiveModel
   end
 end
 
-module ActiveModel::Serializers; end
+module ActiveModel::Serializers
+  extend ::ActiveSupport::Autoload
+end
 
 module ActiveModel::Serializers::Xml
   include ::ActiveModel::Serialization

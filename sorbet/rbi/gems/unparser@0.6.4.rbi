@@ -105,6 +105,7 @@ Unparser::AST::CLOSE_NODES = T.let(T.unsafe(nil), Array)
 # AST enumerator
 class Unparser::AST::Enumerator
   include ::Enumerable
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   extend ::Unparser::Adamantium::ModuleMethods
@@ -164,6 +165,7 @@ Unparser::AST::INHERIT_NODES = T.let(T.unsafe(nil), Array)
 
 # Calculated local variable scope for a given node
 class Unparser::AST::LocalVariableScope
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   include ::Enumerable
@@ -251,6 +253,8 @@ Unparser::AST::TAUTOLOGY = T.let(T.unsafe(nil), Proc)
 
 # Controlled AST walker walking the AST in deeth first search with pre order
 class Unparser::AST::Walker
+  include ::Unparser::Equalizer::Methods
+
   # Call walker with node
   #
   # @api private
@@ -784,6 +788,8 @@ end
 
 # Path target
 class Unparser::CLI::Target::Path < ::Unparser::CLI::Target
+  include ::Unparser::Equalizer::Methods
+
   # Literal for this target
   #
   # @return [Validation]
@@ -797,6 +803,8 @@ end
 
 # String target
 class Unparser::CLI::Target::String
+  include ::Unparser::Equalizer::Methods
+
   # Literal for this target
   #
   # @return [Validation]
@@ -810,6 +818,7 @@ end
 
 # Class to colorize strings
 class Unparser::Color
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   extend ::Unparser::Adamantium::ModuleMethods
@@ -1026,6 +1035,7 @@ end
 
 # Class to create diffs from source code
 class Unparser::Diff
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   extend ::Unparser::Adamantium::ModuleMethods
@@ -1079,6 +1089,7 @@ Unparser::EMPTY_STRING = T.let(T.unsafe(nil), String)
 # RequireBLock
 class Unparser::Either
   include ::Unparser::RequireBlock
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   extend ::Unparser::Adamantium::ModuleMethods
@@ -2298,7 +2309,10 @@ module Unparser::NodeDetails
 end
 
 class Unparser::NodeDetails::Send
+  include ::Unparser::NodeHelpers
+  include ::Unparser::Constants
   include ::Unparser::NodeDetails
+  include ::Unparser::Equalizer::Methods
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
   extend ::Unparser::Adamantium::ModuleMethods
@@ -2493,6 +2507,8 @@ end
 class Unparser::Writer::Binary
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
+  include ::Unparser::NodeHelpers
+  include ::Unparser::Generation
   include ::Unparser::Writer
   include ::Unparser::Anima::InstanceMethods
   include ::Unparser::Equalizer::Methods
@@ -2535,6 +2551,8 @@ Unparser::Writer::Binary::OPERATOR_TOKENS = T.let(T.unsafe(nil), Hash)
 class Unparser::Writer::DynamicString
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
+  include ::Unparser::NodeHelpers
+  include ::Unparser::Generation
   include ::Unparser::Writer
   include ::Unparser::Anima::InstanceMethods
   include ::Unparser::Equalizer::Methods
@@ -2607,6 +2625,8 @@ Unparser::Writer::DynamicString::PATTERNS_3 = T.let(T.unsafe(nil), Array)
 
 # Writer for rescue bodies
 class Unparser::Writer::Resbody
+  include ::Unparser::NodeHelpers
+  include ::Unparser::Generation
   include ::Unparser::Writer
   include ::Unparser::Anima::InstanceMethods
   include ::Unparser::Equalizer::Methods
@@ -2636,6 +2656,8 @@ end
 class Unparser::Writer::Rescue
   include ::Unparser::Adamantium
   include ::Unparser::Adamantium::InstanceMethods
+  include ::Unparser::NodeHelpers
+  include ::Unparser::Generation
   include ::Unparser::Writer
   include ::Unparser::Anima::InstanceMethods
   include ::Unparser::Equalizer::Methods
@@ -2667,6 +2689,7 @@ end
 
 # Writer for send
 class Unparser::Writer::Send
+  include ::Unparser::NodeHelpers
   include ::Unparser::Generation
   include ::Unparser::Constants
   include ::Unparser::Adamantium

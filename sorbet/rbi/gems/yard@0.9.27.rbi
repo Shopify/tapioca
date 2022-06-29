@@ -5,6 +5,9 @@
 # Please instead update this file by running `bin/tapioca gem yard`.
 
 class Array
+  include ::Enumerable
+  include ::JSON::Ext::Generator::GeneratorMethods::Array
+
   # Places values before or after another object (by value) in
   # an array. This is used in tandem with the before and after
   # methods of the {Insertion} class.
@@ -88,6 +91,8 @@ Gem::RubyGemsVersion = T.let(T.unsafe(nil), String)
 #        constant Gem::Cache is an alias for this class to allow old
 #        YAMLized source index objects to load properly.
 class Gem::SourceIndex
+  include ::Enumerable
+
   # Constructs a source index instance from the provided specifications, which
   # is a Hash of gem full names and Gem::Specifications.
   # --
@@ -321,6 +326,8 @@ class Insertion
 end
 
 class Module
+  include ::Module::Concerning
+
   # Returns the class name of a full module namespace path
   #
   # @example
@@ -336,6 +343,9 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
 # @private
 class Rack::Request
+  include ::Rack::Request::Env
+  include ::Rack::Request::Helpers
+
   # @return [Request] a new instance of Request
   def initialize(env); end
 
@@ -374,6 +384,10 @@ Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 #   '100'.to_money => #<Money @cents=10000>
 #   '100.37'.to_money => #<Money @cents=10037>
 class String
+  include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
+
   # Splits text into tokens the way a shell would, handling quoted
   # text as a single token. Use '\"' and "\'" to escape quotes and
   # '\\' to escape a backslash.
@@ -3911,6 +3925,9 @@ module YARD::Handlers; end
 # @see #register
 # @see #parse_block
 class YARD::Handlers::Base
+  include ::YARD::CodeObjects
+  include ::YARD::Parser
+
   # @return [Base] a new instance of Base
   def initialize(source_parser, stmt); end
 
@@ -4215,6 +4232,7 @@ YARD::Handlers::C::AttributeHandler::MATCH = T.let(T.unsafe(nil), Regexp)
 # @since 0.8.0
 class YARD::Handlers::C::Base < ::YARD::Handlers::Base
   include ::YARD::Parser::C
+  include ::YARD::Handlers::Common::MethodHandler
   include ::YARD::Handlers::C::HandlerMethods
 
   # @since 0.8.0
@@ -4630,6 +4648,9 @@ end
 # @see Handlers::Base
 # @see Legacy::Base
 class YARD::Handlers::Ruby::Base < ::YARD::Handlers::Base
+  include ::YARD::Parser::Ruby
+  extend ::YARD::Parser::Ruby
+
   def call_params; end
   def caller_method; end
   def parse_block(inner_node, opts = T.unsafe(nil)); end
@@ -4700,6 +4721,9 @@ end
 
 # Handles class declarations
 class YARD::Handlers::Ruby::ClassHandler < ::YARD::Handlers::Ruby::Base
+  include ::YARD::Handlers::Ruby::StructHandlerMethods
+  include ::YARDSorbet::Handlers::StructClassHandler
+
   private
 
   def create_struct_superclass(superclass, superclass_def); end
@@ -5112,6 +5136,8 @@ end
 #   the +@!attribute+ directive. This module should not be relied on.
 # @since 0.5.6
 module YARD::Handlers::Ruby::StructHandlerMethods
+  include ::YARD::CodeObjects
+
   # Creates the auto-generated docstring for the getter method of a struct's
   # member. This is used so the generated documentation will look just like that
   # of an attribute defined using attr_accessor.
@@ -9437,6 +9463,7 @@ end
 #
 # @since 0.6.0
 class YARD::Server::Commands::RootRequestCommand < ::YARD::Server::Commands::Base
+  include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
   # @since 0.6.0
@@ -9489,6 +9516,7 @@ end
 #
 # @since 0.6.0
 class YARD::Server::Commands::StaticFileCommand < ::YARD::Server::Commands::LibraryCommand
+  include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
   # @since 0.6.0
@@ -11811,6 +11839,7 @@ end
 # The helper module for HTML templates.
 module YARD::Templates::Helpers::HtmlHelper
   include ::YARD::Templates::Helpers::MarkupHelper
+  include ::YARD::Templates::Helpers::ModuleHelper
   include ::YARD::Templates::Helpers::HtmlSyntaxHighlightHelper
 
   # @param object [CodeObjects::Base] the object to get an anchor for

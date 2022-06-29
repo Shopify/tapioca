@@ -489,6 +489,7 @@ class ActionMailer::Base < ::AbstractController::Base
   include ::ActiveSupport::Callbacks
   include ::AbstractController::Callbacks
   include ::AbstractController::Caching::Fragments
+  include ::AbstractController::Caching::ConfigMethods
   include ::AbstractController::Caching
   include ::ActionView::Rendering
   include ::ActionView::Layouts
@@ -1530,6 +1531,11 @@ end
 
 class ActionMailer::TestCase < ::ActiveSupport::TestCase
   include ::ActiveSupport::Testing::ConstantLookup
+  include ::ActiveJob::TestHelper
+  include ::ActionMailer::TestHelper
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions::DomAssertions
   include ::ActionMailer::TestCase::Behavior
   extend ::ActiveSupport::Testing::ConstantLookup::ClassMethods
   extend ::ActionMailer::TestCase::Behavior::ClassMethods
@@ -1547,7 +1553,10 @@ class ActionMailer::TestCase < ::ActiveSupport::TestCase
 end
 
 module ActionMailer::TestCase::Behavior
+  include ::ActiveSupport::Testing::Assertions
+  include ::ActiveJob::TestHelper
   include ::ActionMailer::TestHelper
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
   include ::Rails::Dom::Testing::Assertions::SelectorAssertions
   include ::Rails::Dom::Testing::Assertions::DomAssertions
   extend ::ActiveSupport::Concern
@@ -1601,6 +1610,7 @@ end
 # Provides helper methods for testing Action Mailer, including #assert_emails
 # and #assert_no_emails.
 module ActionMailer::TestHelper
+  include ::ActiveSupport::Testing::Assertions
   include ::ActiveJob::TestHelper
 
   # Asserts that the number of emails sent matches the given number.

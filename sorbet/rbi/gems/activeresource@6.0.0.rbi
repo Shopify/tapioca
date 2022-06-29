@@ -489,6 +489,7 @@ class ActiveResource::Base
   include ::ActiveResource::Callbacks
   include ::ActiveModel::Validations::Callbacks
   include ::ActiveModel::Conversion
+  include ::ActiveModel::Serialization
   include ::ActiveModel::Serializers::JSON
   include ::ActiveModel::Serializers::Xml
   include ::ActiveResource::Reflection
