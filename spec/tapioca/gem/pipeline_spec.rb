@@ -323,6 +323,38 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_includes(compiled, object_output)
     end
 
+    it "compiles dynamic includes into Object" do
+      add_ruby_file("ext.rb", <<~RUBY)
+        module Foo
+          # This class will trigger an include into
+          # Object every time it is included. This will end
+          # up triggering a mixin from `DynamicMixinCompiler`
+          # which will mess up mixin attribution if we have
+          # not disabled mixin tracking from dynamic mixin
+          # compiler.
+          module API
+            def self.included(_mod)
+              Object.send(:include, Foo::ObjectMethods)
+            end
+          end
+
+          module ObjectMethods; end
+        end
+
+        module Bar
+          include Foo::API
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Object < ::BasicObject
+          include ::Foo::ObjectMethods
+        end
+      RBI
+
+      assert_includes(compile, output)
+    end
+
     it "compiles mixins in the correct order" do
       add_ruby_file("bar.rb", <<~RUBY)
         module ModuleA

@@ -35,22 +35,24 @@ module Tapioca
             # before the actual include
             before = singleton_class.ancestors
             # Call the actual `include` method with the supplied module
-            super(mod).tap do
-              # Take a snapshot of the list of singleton class ancestors
-              # after the actual include
-              after = singleton_class.ancestors
-              # The difference is the modules that are added to the list
-              # of ancestors of the singleton class. Those are all the
-              # modules that were `extend`ed due to the `include` call.
-              #
-              # We record those modules on our lookup table keyed by
-              # the included module with the values being all the modules
-              # that that module pulls into the singleton class.
-              #
-              # We need to reverse the order, since the extend order should
-              # be the inverse of the ancestor order. That is, earlier
-              # extended modules would be later in the ancestor chain.
-              mixins_from_modules[mod] = (after - before).reverse!
+            ::Tapioca::Runtime::Trackers::Mixin.with_disabled_registration do
+              super(mod).tap do
+                # Take a snapshot of the list of singleton class ancestors
+                # after the actual include
+                after = singleton_class.ancestors
+                # The difference is the modules that are added to the list
+                # of ancestors of the singleton class. Those are all the
+                # modules that were `extend`ed due to the `include` call.
+                #
+                # We record those modules on our lookup table keyed by
+                # the included module with the values being all the modules
+                # that that module pulls into the singleton class.
+                #
+                # We need to reverse the order, since the extend order should
+                # be the inverse of the ancestor order. That is, earlier
+                # extended modules would be later in the ancestor chain.
+                mixins_from_modules[mod] = (after - before).reverse!
+              end
             end
           rescue Exception # rubocop:disable Lint/RescueException
             # this is a best effort, bail if we can't perform this
