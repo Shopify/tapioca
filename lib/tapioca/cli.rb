@@ -245,8 +245,6 @@ module Tapioca
           rbi_formatter: rbi_formatter(options)
         )
 
-        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
-
         unless gems.empty?
           raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
           raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
@@ -262,7 +260,7 @@ module Tapioca
         if gems.empty? && !all
           command.sync(should_verify: verify)
         else
-          command.execute
+          command.execute(should_verify: verify)
         end
       end
     end

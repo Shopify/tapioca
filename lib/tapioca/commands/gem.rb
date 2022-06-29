@@ -64,11 +64,19 @@ module Tapioca
         @include_exported_rbis = include_exported_rbis
       end
 
-      sig { override.void }
-      def execute
+      sig { override.params(should_verify: T::Boolean).void }
+      def execute(should_verify: false)
         require_gem_file
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
+
+        if should_verify
+          say("Checking for out-of-date RBIs...")
+          say("")
+          verify_rbi_contents(gem_queue)
+          return
+        end
+
         anything_done = [
           perform_removals,
           gem_queue.any?,
@@ -76,7 +84,7 @@ module Tapioca
 
         Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
-            compile_gem_rbi(gem)
+            compile_and_write_gem_rbi(gem)
             puts
           end
         end
@@ -131,6 +139,26 @@ module Tapioca
 
       private
 
+      sig { params(gem_queue: T::Array[Tapioca::Gemfile::GemSpec]).void }
+      def verify_rbi_contents(gem_queue)
+        result = Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
+          rbi_string = compile_gem_rbi(gem, silent: true)
+          file = T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s).first
+          path = gem_rbi_filename(gem.name, gem.version)
+
+          if file.nil?
+            [path, :added]
+          elsif file.basename.to_s != gem.rbi_file_name || File.read(file) != rbi_string
+            [path, :changed]
+          end
+        end
+
+        result.concat(removed_rbis.map { |gem_name| [existing_rbi(gem_name), :removed] })
+        result.compact!
+
+        report_diff_and_exit_if_out_of_date(T.unsafe(result).to_h, :gem, "--all")
+      end
+
       sig { returns(Runtime::Loader) }
       def loader
         @loader ||= Runtime::Loader.new
@@ -175,8 +203,8 @@ module Tapioca
         end
       end
 
-      sig { params(gem: Gemfile::GemSpec).void }
-      def compile_gem_rbi(gem)
+      sig { params(gem: Gemfile::GemSpec, silent: T::Boolean).returns(String) }
+      def compile_gem_rbi(gem, silent: false)
         gem_name = set_color(gem.name, :yellow, :bold)
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
@@ -191,13 +219,17 @@ module Tapioca
 
         if rbi.empty?
           @rbi_formatter.write_empty_body_comment!(rbi)
-          say("Compiled #{gem_name} (empty output)", :yellow)
+          say("Compiled #{gem_name} (empty output)", :yellow) unless silent
         else
-          say("Compiled #{gem_name}", :green)
+          say("Compiled #{gem_name}", :green) unless silent
         end
 
-        rbi_string = @rbi_formatter.print_file(rbi)
-        create_file(@outpath / gem.rbi_file_name, rbi_string)
+        @rbi_formatter.print_file(rbi)
+      end
+
+      sig { params(gem: Gemfile::GemSpec).void }
+      def compile_and_write_gem_rbi(gem)
+        create_file(@outpath / gem.rbi_file_name, compile_gem_rbi(gem))
 
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove_file(file) unless file.basename.to_s == gem.rbi_file_name
@@ -272,7 +304,7 @@ module Tapioca
               end
 
               gem = T.must(bundle.gem(gem_name))
-              compile_gem_rbi(gem)
+              compile_and_write_gem_rbi(gem)
               puts
             end
           end
@@ -323,13 +355,13 @@ module Tapioca
         existing_rbis.key?(gem_name)
       end
 
-      sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
-      def report_diff_and_exit_if_out_of_date(diff, command)
+      sig { params(diff: T::Hash[String, Symbol], command: Symbol, args: String).void }
+      def report_diff_and_exit_if_out_of_date(diff, command, *args)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
           say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{default_command(command)}`", [:green, :bold])
+          say("  `#{T.unsafe(self).default_command(command, *args)}`", [:green, :bold])
           say("Once it is complete, be sure to commit and push any changes", :green)
 
           say("")

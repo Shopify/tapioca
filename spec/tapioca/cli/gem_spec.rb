@@ -173,17 +173,6 @@ module Tapioca
           assert_empty_stdout(result)
           refute_success_status(result)
         end
-
-        it "must show an error if both --all and --verify are supplied" do
-          result = @project.tapioca("gem --all --verify")
-
-          assert_equal(<<~ERR, result.err)
-            Options '--all' and '--verify' are mutually exclusive
-          ERR
-
-          assert_empty_stdout(result)
-          refute_success_status(result)
-        end
       end
 
       describe "generate" do
@@ -1620,6 +1609,99 @@ module Tapioca
 
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca gem`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) added:
+              - sorbet/rbi/gems/foo@0.0.1.rbi
+              File(s) changed:
+              - sorbet/rbi/gems/bar@0.3.0.rbi
+              File(s) removed:
+              - sorbet/rbi/gems/outdated@5.0.0.rbi
+          OUT
+
+          # Does not actually modify anything
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.2.0.rbi")
+
+          assert_empty_stderr(result)
+          refute_success_status(result)
+        end
+      end
+
+      describe "verify all" do
+        before(:all) do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.bundle_install
+        end
+
+        after(:all) { @project.remove("../gems") }
+
+        it "does nothing and returns exit_status 0 when nothing changes" do
+          @project.tapioca("gem")
+          @project.remove("sorbet/rbi/gems/tapioca@0.9.0.rbi")
+
+          result = @project.tapioca("gem --all --verify --exclude tapioca")
+
+          assert_equal(<<~OUT, result.out)
+            Requiring all gems to prepare for compiling...  Done
+
+            Checking for out-of-date RBIs...
+
+            Nothing to do, all RBIs are up-to-date.
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "advises of removed file(s) and returns exit_status 1" do
+          @project.tapioca("gem")
+
+          result = @project.tapioca("gem --all --verify --exclude foo bar tapioca")
+
+          assert_equal(<<~OUT, result.out)
+            Requiring all gems to prepare for compiling...  Done
+
+            Checking for out-of-date RBIs...
+
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca gem --all`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) removed:
+              - sorbet/rbi/gems/bar@0.3.0.rbi
+              - sorbet/rbi/gems/foo@0.0.1.rbi
+              - sorbet/rbi/gems/tapioca@0.9.0.rbi
+          OUT
+
+          # Does not actually modify anything
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+
+          assert_empty_stderr(result)
+          refute_success_status(result)
+        end
+
+        it "advises of added/removed/changed file(s) and returns exit_status 1" do
+          @project.tapioca("gem")
+
+          @project.remove("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/outdated@5.0.0.rbi")
+          @project.move("sorbet/rbi/gems/bar@0.3.0.rbi", "sorbet/rbi/gems/bar@0.2.0.rbi")
+
+          result = @project.tapioca("gem --all --verify")
+
+          assert_equal(<<~OUT, result.out)
+            Requiring all gems to prepare for compiling...  Done
+
+            Checking for out-of-date RBIs...
+
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca gem --all`
             Once it is complete, be sure to commit and push any changes
 
             Reason:

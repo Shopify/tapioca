@@ -24,12 +24,12 @@ module Tapioca
       sig { abstract.void }
       def execute; end
 
-      private
-
       sig { params(command: Symbol, args: String).returns(String) }
       def default_command(command, *args)
         [Tapioca::BINARY_FILE, command.to_s, *args].join(" ")
       end
+
+      private
 
       sig { returns(Thor::Actions) }
       attr_reader :file_writer
