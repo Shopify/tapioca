@@ -293,7 +293,19 @@ Checking for out-of-date RBIs...
 Nothing to do, all RBIs are up-to-date.
 ```
 
-This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
+To ensure that the content of RBIs is up to date, for example in case Tapioca generation has changed, it provides the `--verify --all` option:
+
+```shell
+$ bin/tapioca gems --verify --all
+
+Requiring all gems to prepare for compiling...
+
+Checking for out-of-date RBIs...
+
+Nothing to do, all RBIs are up-to-date.
+```
+
+These options can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
 
 ### Pulling RBI annotations from remote sources
 
