@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+bundle exec tapioca gems --all -o tmp/generated-rbis
+
+if [ $? -ne 0 ]; then
+  rm -rf tmp/generated-rbis
+  echo -e "\nError: Tapioca failed generating it's own RBIs" >&2
+  exit 1
+fi
+
+diff "sorbet/rbi/gems" "tmp/generated-rbis"
+
+if [ $? -ne 0 ]; then
+  rm -rf tmp/generated-rbis
+  echo -e "\nError: Tapioca RBIs are out-of-date" >&2
+  exit 1
+fi
+
+rm -rf tmp/generated-rbis

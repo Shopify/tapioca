@@ -31,4 +31,4 @@ jobs:
       - name: Run tests
         run: bin/test
       - name: Verify gem RBIs are up-to-date
-        run: bundle exec exe/tapioca gem --verify
+        run: bin/check-rbis
