@@ -31,6 +31,6 @@ jobs:
       - name: Run tests
         run: bin/test
       - name: Verify gem RBIs are up-to-date
-        run: bundle exec exe/tapioca gem --verify
+        run: bundle exec exe/tapioca gem --verify --all
       - name: Verify duplicates in shims
         run: bundle exec exe/tapioca check-shims
