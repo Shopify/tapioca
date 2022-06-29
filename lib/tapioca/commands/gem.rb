@@ -142,13 +142,13 @@ module Tapioca
       sig { params(gem_queue: T::Array[Tapioca::Gemfile::GemSpec]).void }
       def verify_rbi_contents(gem_queue)
         result = Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
-          rbi_string = compile_gem_rbi(gem, silent: true)
+          rbi_string = compile_gem_rbi(gem, silent: true).sub(/^# typed: .*/, "")
           file = T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s).first
           path = gem_rbi_filename(gem.name, gem.version)
 
           if file.nil?
             [path, :added]
-          elsif file.basename.to_s != gem.rbi_file_name || File.read(file) != rbi_string
+          elsif file.basename.to_s != gem.rbi_file_name || File.read(file).sub(/^# typed: .*/, "") != rbi_string
             [path, :changed]
           end
         end
