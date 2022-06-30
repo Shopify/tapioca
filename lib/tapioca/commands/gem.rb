@@ -17,6 +17,7 @@ module Tapioca
           outpath: Pathname,
           file_header: T::Boolean,
           include_doc: T::Boolean,
+          include_loc: T::Boolean,
           include_exported_rbis: T::Boolean,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
@@ -33,6 +34,7 @@ module Tapioca
         outpath:,
         file_header:,
         include_doc:,
+        include_loc:,
         include_exported_rbis:,
         number_of_workers: nil,
         auto_strictness: true,
@@ -58,6 +60,7 @@ module Tapioca
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @include_doc = T.let(include_doc, T::Boolean)
+        @include_loc = T.let(include_loc, T::Boolean)
         @include_exported_rbis = include_exported_rbis
       end
 
@@ -182,7 +185,7 @@ module Tapioca
           default_command(:gem, gem.name),
           reason: "types exported from the `#{gem.name}` gem",) if @file_header
 
-        rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc).compile
+        rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc, include_loc: @include_loc).compile
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
 

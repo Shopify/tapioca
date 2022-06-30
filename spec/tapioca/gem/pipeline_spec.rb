@@ -27,8 +27,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   end
 
   describe Tapioca::Gem::Pipeline do
-    sig { params(include_doc: T::Boolean).returns(String) }
-    def compile(include_doc: false)
+    sig { params(include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
+    def compile(include_doc: false, include_loc: false)
       stub = GemStub.new(
         name: "the-dep",
         version: "1.1.2",
@@ -40,13 +40,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       spec = Bundler::StubSpecification.from_stub(stub)
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
-      tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc).compile
+      tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
 
       # NOTE: This is not returning a `RBI::File`.
       # The following test suite is based on the string output of the `RBI::Tree` rather
       # than the, now used, `RBI::File`. The file output includes the sigils, comments, etc.
       # We should eventually update these tests to be based on the `RBI::File`.
       Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+
       tree.string
     end
 
@@ -3865,6 +3866,129 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RBI
 
       assert_equal(output, compile)
+    end
+
+    it "compile RBIs with location from gem source" do
+      add_ruby_file("foo.rb", <<~RB)
+        class Foo
+          extend T::Helpers
+
+          requires_ancestor { ::Helper }
+
+          module Helper
+            def helper_method; end
+          end
+        end
+
+        module Bar
+          extend T::Sig
+
+          # Some documentation
+          sig { void }
+          def bar; end
+
+          # Some documentation
+          def self.bar; end
+
+          BAR = Foo
+
+          # We shouldn't add the documentation when it points to things like `(eval)`
+          eval("def foo1; end")
+          define_method(:foo2) {}
+        end
+
+        class Baz
+          extend T::Helpers
+          abstract!
+        end
+
+        class Quux < T::Struct
+        end
+
+        class String
+          def foo; end
+        end
+
+        class BasicFoo < BasicObject
+          extend ::T::Sig
+
+          sig { void }
+          def foo; end
+        end
+      RB
+
+      output = template(<<~RBI)
+        # source://the-dep-1.1.2/lib/foo.rb:11
+        module Bar
+          # Some documentation
+          #
+          # source://the-dep-1.1.2/lib/foo.rb:16
+          sig { void }
+          def bar; end
+
+          def foo1; end
+
+          # source://the-dep-1.1.2/lib/foo.rb:25
+          def foo2; end
+
+          class << self
+            # Some documentation
+            #
+            # source://the-dep-1.1.2/lib/foo.rb:19
+            def bar; end
+          end
+        end
+
+        # source://the-dep-1.1.2/lib/foo.rb:21
+        Bar::BAR = Foo
+
+        # source://the-dep-1.1.2/lib/foo.rb:40
+        class BasicFoo < ::BasicObject
+          # source://the-dep-1.1.2/lib/foo.rb:44
+          sig { void }
+          def foo; end
+        end
+
+        # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+        #
+        # source://the-dep-1.1.2/lib/foo.rb:28
+        class Baz
+          abstract!
+
+          # source://sorbet-runtime-0.5.10125/lib/types/private/abstract/declare.rb:37
+          def initialize(*args, **_arg1, &blk); end
+        end
+
+        # source://the-dep-1.1.2/lib/foo.rb:1
+        class Foo; end
+
+        # source://the-dep-1.1.2/lib/foo.rb:6
+        module Foo::Helper
+          # source://the-dep-1.1.2/lib/foo.rb:7
+          def helper_method; end
+        end
+
+        # source://the-dep-1.1.2/lib/foo.rb:33
+        class Quux < ::T::Struct
+          class << self
+            # source://sorbet-runtime-0.5.10125/lib/types/struct.rb:13
+            def inherited(s); end
+          end
+        end
+
+        class String
+          # source://the-dep-1.1.2/lib/foo.rb:37
+          def foo; end
+        end
+
+        # source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:104
+        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
+
+        # source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:105
+        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
+      RBI
+
+      assert_equal(output, compile(include_doc: true, include_loc: true))
     end
   end
 end

@@ -13,8 +13,8 @@ module Tapioca
       sig { returns(Gemfile::GemSpec) }
       attr_reader :gem
 
-      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
-      def initialize(gem, include_doc: false)
+      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean, include_loc: T::Boolean).void }
+      def initialize(gem, include_doc: false, include_loc: false)
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
@@ -40,6 +40,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::Subconstants.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
+        @node_listeners << Gem::Listeners::GemLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
       end
 

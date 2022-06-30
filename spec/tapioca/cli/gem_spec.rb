@@ -978,6 +978,7 @@ module Tapioca
           @project.bundle_install
 
           result = @project.tapioca("gem foo")
+          puts result
 
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
             # typed: true

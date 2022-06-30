@@ -116,6 +116,7 @@ module Tapioca
       if command.start_with?(/gem/)
         exec_command << "--workers=1" unless command.match?("--workers")
         exec_command << "--no-doc" unless command.match?("--doc")
+        exec_command << "--no-loc" unless command.match?("--loc")
       end
       bundle_exec(exec_command.join(" "))
     end
