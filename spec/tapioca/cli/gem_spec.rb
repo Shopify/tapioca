@@ -195,6 +195,7 @@ module Tapioca
           project.gemfile(project.tapioca_gemfile)
           project.remove("sorbet/rbi")
           project.remove("../gems")
+          project.remove("sorbet/tapioca/require.rb")
         end
 
         it "must generate a single gem RBI" do
@@ -505,8 +506,6 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
-
-          @project.remove("sorbet/tapioca/require.rb")
         end
 
         it "loads gems that are marked `require: false`" do
@@ -752,8 +751,6 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
-
-          @project.remove("sorbet/tapioca/require.rb")
         end
 
         it "generate an empty RBI file" do
