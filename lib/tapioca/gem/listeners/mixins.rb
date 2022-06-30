@@ -79,7 +79,9 @@ module Tapioca
               T.nilable(String)
             )
 
-          !!mixin_location && @pipeline.gem.contains_path?(mixin_location)
+          return true if mixin_location.nil?
+
+          @pipeline.gem.contains_path?(mixin_location)
         end
 
         sig { params(mixin_name: String).returns(T::Boolean) }

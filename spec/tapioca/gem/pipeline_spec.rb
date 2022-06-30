@@ -313,6 +313,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       object_output = template(<<~RBI)
         class Object < ::BasicObject
+          include ::Kernel
+
           def hello; end
         end
       RBI
@@ -348,6 +350,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Object < ::BasicObject
+          include ::Kernel
           include ::Foo::ObjectMethods
         end
       RBI
@@ -473,6 +476,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
+          include ::Enumerable
 
           def foo_int; end
         end
@@ -485,6 +489,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
+          include ::Enumerable
           extend ::Foo::Bar
 
           def to_bar; end
@@ -495,6 +500,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class String
+          include ::Comparable
           include ::Foo::Bar
 
           def to_foo(base = T.unsafe(nil)); end
@@ -539,6 +545,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
+          include ::Enumerable
         end
 
         class Foo
@@ -549,10 +556,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
+          include ::Enumerable
           extend ::Foo::Bar
         end
 
         class String
+          include ::Comparable
           include ::Foo::Bar
         end
       RBI
@@ -584,6 +593,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Array
           include ::Foo::Bar
+          include ::Enumerable
         end
 
         class Foo
@@ -594,10 +604,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Foo::Bar; end
 
         class Hash
+          include ::Enumerable
           extend ::Foo::Bar
         end
 
         class String
+          include ::Comparable
           include ::Foo::Bar
         end
       RBI
@@ -2437,6 +2449,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           extend ::T::Props
+          extend ::T::Props::Plugin
+          extend ::T::Props::Optional
+          extend ::T::Props::WeakConstructor
           extend ::T::Props::Constructor
 
           class << self
@@ -2854,6 +2869,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class Buzz
+          include ::T::Props
+          include ::T::Props::Plugin
+          include ::T::Props::Optional
+          include ::T::Props::WeakConstructor
           include ::T::Props::Constructor
           extend ::T::Props::ClassMethods
           extend ::T::Props::Plugin::ClassMethods
