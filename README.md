@@ -54,6 +54,7 @@ Commands:
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
+  tapioca init               # get project ready for type checking
   tapioca require            # generate the list of files to be required by tapioca
   tapioca todo               # generate the list of unresolved constants
 
@@ -70,35 +71,34 @@ Options:
 Execute this command to get started:
 
 ```shell
-$ bundle exec tapioca configure
-      create  sorbet/config
-      create  sorbet/tapioca/config.yml
-      create  sorbet/tapioca/require.rb
-      create  bin/tapioca
+$ bundle exec tapioca init
 ```
 
 This will:
 
-* create the [configuration file for Sorbet](https://sorbet.org/docs/cli#config-file), the [configuration file for Tapioca](#Configuration) and the [require.rb file](#manually-requiring-parts-of-a-gem)
-* install the [binstub](https://bundler.io/man/bundle-binstubs.1.html#DESCRIPTION) for Tapioca in your app's `bin/` folder, so that you can use `bin/tapioca` to run commands in your app
+1. create the [configuration file for Sorbet](https://sorbet.org/docs/cli#config-file), the [configuration file for Tapioca](#Configuration) and the [require.rb file](#manually-requiring-parts-of-a-gem)
+2. install the [binstub](https://bundler.io/man/bundle-binstubs.1.html#DESCRIPTION) for Tapioca in your app's `bin/` folder, so that you can use `bin/tapioca` to run commands in your app
+3. pull the community RBI annotations from the [central repository](https://github.com/Shopify/rbi-central) matching your app's gems
+4. generate the RBIs for your app's gems
+5. generate the RBI file for missing constants
 
-<!-- START_HELP_COMMAND_CONFIGURE -->
+See the following sections for more details about each step.
+
+<!-- START_HELP_COMMAND_INIT -->
 ```shell
-$ tapioca help configure
+$ tapioca help init
 
 Usage:
-  tapioca configure
+  tapioca init
 
 Options:
-      [--postrequire=POSTREQUIRE]    
-                                     # Default: sorbet/tapioca/require.rb
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
-initialize folder structure and type checking configuration
+get project ready for type checking
 ```
-<!-- END_HELP_COMMAND_CONFIGURE -->
+<!-- END_HELP_COMMAND_INIT -->
 
 ## Usage
 

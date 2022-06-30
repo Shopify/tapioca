@@ -21,6 +21,14 @@ module Tapioca
       desc: "Verbose output for debugging purposes",
       default: false
 
+    desc "init", "get project ready for type checking"
+    def init
+      invoke(:configure)
+      invoke(:annotations)
+      invoke(:gem)
+      invoke(:todo)
+    end
+
     desc "configure", "initialize folder structure and type checking configuration"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def configure
