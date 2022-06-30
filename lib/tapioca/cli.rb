@@ -105,7 +105,7 @@ module Tapioca
       aliases: ["-e"],
       type: :string,
       desc: "The Rack/Rails environment to use when generating RBIs",
-      default: "development"
+      default: DEFAULT_ENVIRONMENT
     def dsl(*constants)
       set_environment
 
@@ -206,7 +206,7 @@ module Tapioca
       aliases: ["-e"],
       type: :string,
       desc: "The Rack/Rails environment to use when generating RBIs",
-      default: "development"
+      default: DEFAULT_ENVIRONMENT
     def gem(*gems)
       Tapioca.silence_warnings do
         set_environment
