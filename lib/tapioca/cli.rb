@@ -100,7 +100,7 @@ module Tapioca
     option :rbi_max_line_length,
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
-      default: 120
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
     option :environment,
       aliases: ["-e"],
       type: :string,
@@ -201,7 +201,7 @@ module Tapioca
     option :rbi_max_line_length,
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
-      default: 120
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
     option :environment,
       aliases: ["-e"],
       type: :string,

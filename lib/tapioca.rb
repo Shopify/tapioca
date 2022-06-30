@@ -43,6 +43,7 @@ module Tapioca
     "activesupport" => "false",
   }.freeze, T::Hash[String, String])
 
+  DEFAULT_RBI_MAX_LINE_LENGTH = 120
   DEFAULT_ENVIRONMENT = "development"
 
   CENTRAL_REPO_ROOT_URI = "https://raw.githubusercontent.com/Shopify/rbi-central/main"
