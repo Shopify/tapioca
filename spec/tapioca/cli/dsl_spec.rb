@@ -1534,7 +1534,7 @@ module Tapioca
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.bundle_install
-          @project.tapioca("init")
+          @project.tapioca("configure")
 
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"
@@ -1593,7 +1593,7 @@ module Tapioca
 
       describe "environment" do
         before(:all) do
-          @project.tapioca("init")
+          @project.tapioca("configure")
 
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"

@@ -21,10 +21,10 @@ module Tapioca
       desc: "Verbose output for debugging purposes",
       default: false
 
-    desc "init", "initializes folder structure"
+    desc "configure", "initialize folder structure and type checking configuration"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
-    def init
-      command = Commands::Init.new(
+    def configure
+      command = Commands::Configure.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: options[:config],
         default_postrequire: options[:postrequire]

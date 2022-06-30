@@ -24,7 +24,7 @@ task :readme do
   end
 
   def skip_command?(command)
-    command.hidden? || command.name.start_with?("__") || command.name == "init"
+    command.hidden? || command.name.start_with?("__") || command.name == "configure"
   end
 
   def skip_option?(option)

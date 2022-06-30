@@ -5,8 +5,8 @@ require "spec_helper"
 require "yaml"
 
 module Tapioca
-  class InitSpec < SpecWithProject
-    describe "cli::init" do
+  class ConfigureSpec < SpecWithProject
+    describe "cli::configure" do
       before(:all) do
         project.bundle_install
       end
@@ -18,7 +18,7 @@ module Tapioca
       end
 
       it "must create proper files" do
-        result = @project.tapioca("init")
+        result = @project.tapioca("configure")
 
         assert_includes(result.out, "create  sorbet/config")
         assert_includes(result.out, "create  sorbet/tapioca/config.yml")
@@ -55,7 +55,7 @@ module Tapioca
         @project.write("sorbet/tapioca/require.rb")
         @project.write("sorbet/tapioca/config.yml")
 
-        result = @project.tapioca("init")
+        result = @project.tapioca("configure")
 
         assert_includes(result.out, "skip  sorbet/config")
         assert_includes(result.out, "skip  sorbet/tapioca/config.yml")
@@ -70,7 +70,7 @@ module Tapioca
       end
 
       it "creates the Tapioca config file in a custom location" do
-        result = @project.tapioca("init --config sorbet/tapioca/custom_config.yml")
+        result = @project.tapioca("configure --config sorbet/tapioca/custom_config.yml")
         assert_includes(result.out, "create  sorbet/tapioca/custom_config.yml")
         assert_project_file_exist("sorbet/tapioca/custom_config.yml")
         assert_empty_stderr(result)
@@ -78,7 +78,7 @@ module Tapioca
       end
 
       it "creates the Tapioca post-require file in a custom location" do
-        result = @project.tapioca("init --postrequire sorbet/tapioca/custom_require.rb")
+        result = @project.tapioca("configure --postrequire sorbet/tapioca/custom_require.rb")
         assert_includes(result.out, "create  sorbet/tapioca/custom_require.rb")
         assert_project_file_exist("sorbet/tapioca/custom_require.rb")
         assert_empty_stderr(result)

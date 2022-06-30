@@ -50,10 +50,10 @@ Commands:
   tapioca --version, -v      # show version
   tapioca annotations        # Pull gem RBI annotations from remote sources
   tapioca check-shims        # check duplicated definitions in shim RBIs
+  tapioca configure          # initialize folder structure and type checking configuration
   tapioca dsl [constant...]  # generate RBIs for dynamic methods
   tapioca gem [gem...]       # generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
-  tapioca init               # initializes folder structure
   tapioca require            # generate the list of files to be required by tapioca
   tapioca todo               # generate the list of unresolved constants
 
@@ -70,7 +70,7 @@ Options:
 Execute this command to get started:
 
 ```shell
-$ bundle exec tapioca init
+$ bundle exec tapioca configure
       create  sorbet/config
       create  sorbet/tapioca/config.yml
       create  sorbet/tapioca/require.rb
@@ -82,12 +82,12 @@ This will:
 * create the [configuration file for Sorbet](https://sorbet.org/docs/cli#config-file), the [configuration file for Tapioca](#Configuration) and the [require.rb file](#manually-requiring-parts-of-a-gem)
 * install the [binstub](https://bundler.io/man/bundle-binstubs.1.html#DESCRIPTION) for Tapioca in your app's `bin/` folder, so that you can use `bin/tapioca` to run commands in your app
 
-<!-- START_HELP_COMMAND_INIT -->
+<!-- START_HELP_COMMAND_CONFIGURE -->
 ```shell
-$ tapioca help init
+$ tapioca help configure
 
 Usage:
-  tapioca init
+  tapioca configure
 
 Options:
       [--postrequire=POSTREQUIRE]    
@@ -96,9 +96,9 @@ Options:
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
-initializes folder structure
+initialize folder structure and type checking configuration
 ```
-<!-- END_HELP_COMMAND_INIT -->
+<!-- END_HELP_COMMAND_CONFIGURE -->
 
 ## Usage
 
