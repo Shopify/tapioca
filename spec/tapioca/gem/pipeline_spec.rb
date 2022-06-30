@@ -3956,7 +3956,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           abstract!
 
           # source://sorbet-runtime-0.5.10125/lib/types/private/abstract/declare.rb:37
+        <% if ruby_version(">= 3.1") %>
           def initialize(*args, **_arg1, &blk); end
+        <% else %>
+          def initialize(*args, &blk); end
+        <% end %>
         end
 
         # source://the-dep-1.1.2/lib/foo.rb:1
