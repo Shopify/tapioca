@@ -5,9 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem rubocop`.
 
 class Regexp::Expression::Base
-  include ::Regexp::Expression::Shared
   include ::RuboCop::Ext::RegexpParser::Expression::Base
-  extend ::Regexp::Expression::Shared::ClassMethods
 end
 
 class Regexp::Expression::CharacterSet < ::Regexp::Expression::Subexpression
@@ -27501,7 +27499,6 @@ RuboCop::Cop::Style::MultipleComparison::MSG = T.let(T.unsafe(nil), String)
 #   # shareable_constant_value: literal
 #   CONST = [1, 2, 3]
 class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
   include ::RuboCop::Cop::Style::MutableConstant::ShareableConstantValue
   include ::RuboCop::Cop::FrozenStringLiteral
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
@@ -37099,8 +37096,6 @@ end
 # Extensions to the core String class
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)

@@ -702,7 +702,7 @@ class ActiveResource::Base
   # The logger for diagnosing and tracing Active Resource calls.
   def logger; end
 
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
@@ -1567,45 +1567,45 @@ class ActiveResource::Collection
   # @return [Collection] a new instance of Collection
   def initialize(elements = T.unsafe(nil)); end
 
-  def &(*_arg0, &_arg1); end
-  def *(*_arg0, &_arg1); end
-  def +(*_arg0, &_arg1); end
-  def -(*_arg0, &_arg1); end
-  def <<(*_arg0, &_arg1); end
-  def <=>(*_arg0, &_arg1); end
+  def &(*_arg0, **_arg1, &_arg2); end
+  def *(*_arg0, **_arg1, &_arg2); end
+  def +(*_arg0, **_arg1, &_arg2); end
+  def -(*_arg0, **_arg1, &_arg2); end
+  def <<(*_arg0, **_arg1, &_arg2); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
   def ==(arg); end
-  def [](*_arg0, &_arg1); end
-  def []=(*_arg0, &_arg1); end
-  def all?(*_arg0, &_arg1); end
-  def any?(*_arg0, &_arg1); end
-  def append(*_arg0, &_arg1); end
-  def as_json(*_arg0, &_arg1); end
-  def assoc(*_arg0, &_arg1); end
-  def at(*_arg0, &_arg1); end
-  def blank?(*_arg0, &_arg1); end
-  def bsearch(*_arg0, &_arg1); end
-  def bsearch_index(*_arg0, &_arg1); end
-  def clear(*_arg0, &_arg1); end
-  def collect(*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
+  def []=(*_arg0, **_arg1, &_arg2); end
+  def all?(*_arg0, **_arg1, &_arg2); end
+  def any?(*_arg0, **_arg1, &_arg2); end
+  def append(*_arg0, **_arg1, &_arg2); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
+  def assoc(*_arg0, **_arg1, &_arg2); end
+  def at(*_arg0, **_arg1, &_arg2); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
+  def bsearch(*_arg0, **_arg1, &_arg2); end
+  def bsearch_index(*_arg0, **_arg1, &_arg2); end
+  def clear(*_arg0, **_arg1, &_arg2); end
+  def collect(*_arg0, **_arg1, &_arg2); end
   def collect!; end
-  def combination(*_arg0, &_arg1); end
-  def compact(*_arg0, &_arg1); end
-  def compact!(*_arg0, &_arg1); end
-  def compact_blank!(*_arg0, &_arg1); end
-  def concat(*_arg0, &_arg1); end
-  def count(*_arg0, &_arg1); end
-  def cycle(*_arg0, &_arg1); end
-  def deconstruct(*_arg0, &_arg1); end
-  def deep_dup(*_arg0, &_arg1); end
-  def delete(*_arg0, &_arg1); end
-  def delete_at(*_arg0, &_arg1); end
-  def delete_if(*_arg0, &_arg1); end
-  def difference(*_arg0, &_arg1); end
-  def dig(*_arg0, &_arg1); end
-  def drop(*_arg0, &_arg1); end
-  def drop_while(*_arg0, &_arg1); end
-  def each(*_arg0, &_arg1); end
-  def each_index(*_arg0, &_arg1); end
+  def combination(*_arg0, **_arg1, &_arg2); end
+  def compact(*_arg0, **_arg1, &_arg2); end
+  def compact!(*_arg0, **_arg1, &_arg2); end
+  def compact_blank!(*_arg0, **_arg1, &_arg2); end
+  def concat(*_arg0, **_arg1, &_arg2); end
+  def count(*_arg0, **_arg1, &_arg2); end
+  def cycle(*_arg0, **_arg1, &_arg2); end
+  def deconstruct(*_arg0, **_arg1, &_arg2); end
+  def deep_dup(*_arg0, **_arg1, &_arg2); end
+  def delete(*_arg0, **_arg1, &_arg2); end
+  def delete_at(*_arg0, **_arg1, &_arg2); end
+  def delete_if(*_arg0, **_arg1, &_arg2); end
+  def difference(*_arg0, **_arg1, &_arg2); end
+  def dig(*_arg0, **_arg1, &_arg2); end
+  def drop(*_arg0, **_arg1, &_arg2); end
+  def drop_while(*_arg0, **_arg1, &_arg2); end
+  def each(*_arg0, **_arg1, &_arg2); end
+  def each_index(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def elements; end
@@ -1613,46 +1613,47 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def elements=(_arg0); end
 
-  def empty?(*_arg0, &_arg1); end
-  def eql?(*_arg0, &_arg1); end
-  def excluding(*_arg0, &_arg1); end
-  def extract!(*_arg0, &_arg1); end
-  def extract_options!(*_arg0, &_arg1); end
-  def fetch(*_arg0, &_arg1); end
-  def fifth(*_arg0, &_arg1); end
-  def fill(*_arg0, &_arg1); end
-  def filter(*_arg0, &_arg1); end
-  def filter!(*_arg0, &_arg1); end
-  def find_index(*_arg0, &_arg1); end
-  def first(*_arg0, &_arg1); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
+  def excluding(*_arg0, **_arg1, &_arg2); end
+  def extract!(*_arg0, **_arg1, &_arg2); end
+  def extract_options!(*_arg0, **_arg1, &_arg2); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
+  def fifth(*_arg0, **_arg1, &_arg2); end
+  def fill(*_arg0, **_arg1, &_arg2); end
+  def filter(*_arg0, **_arg1, &_arg2); end
+  def filter!(*_arg0, **_arg1, &_arg2); end
+  def find_index(*_arg0, **_arg1, &_arg2); end
+  def first(*_arg0, **_arg1, &_arg2); end
   def first_or_create(attributes = T.unsafe(nil)); end
   def first_or_initialize(attributes = T.unsafe(nil)); end
-  def flatten(*_arg0, &_arg1); end
-  def flatten!(*_arg0, &_arg1); end
-  def forty_two(*_arg0, &_arg1); end
-  def fourth(*_arg0, &_arg1); end
-  def from(*_arg0, &_arg1); end
-  def hash(*_arg0, &_arg1); end
-  def in_groups(*_arg0, &_arg1); end
-  def in_groups_of(*_arg0, &_arg1); end
-  def include?(*_arg0, &_arg1); end
-  def including(*_arg0, &_arg1); end
-  def index(*_arg0, &_arg1); end
-  def inquiry(*_arg0, &_arg1); end
-  def insert(*_arg0, &_arg1); end
-  def inspect(*_arg0, &_arg1); end
-  def intersection(*_arg0, &_arg1); end
-  def join(*_arg0, &_arg1); end
-  def keep_if(*_arg0, &_arg1); end
-  def last(*_arg0, &_arg1); end
-  def length(*_arg0, &_arg1); end
-  def map(*_arg0, &_arg1); end
+  def flatten(*_arg0, **_arg1, &_arg2); end
+  def flatten!(*_arg0, **_arg1, &_arg2); end
+  def forty_two(*_arg0, **_arg1, &_arg2); end
+  def fourth(*_arg0, **_arg1, &_arg2); end
+  def from(*_arg0, **_arg1, &_arg2); end
+  def hash(*_arg0, **_arg1, &_arg2); end
+  def in_groups(*_arg0, **_arg1, &_arg2); end
+  def in_groups_of(*_arg0, **_arg1, &_arg2); end
+  def include?(*_arg0, **_arg1, &_arg2); end
+  def including(*_arg0, **_arg1, &_arg2); end
+  def index(*_arg0, **_arg1, &_arg2); end
+  def inquiry(*_arg0, **_arg1, &_arg2); end
+  def insert(*_arg0, **_arg1, &_arg2); end
+  def inspect(*_arg0, **_arg1, &_arg2); end
+  def intersect?(*_arg0, **_arg1, &_arg2); end
+  def intersection(*_arg0, **_arg1, &_arg2); end
+  def join(*_arg0, **_arg1, &_arg2); end
+  def keep_if(*_arg0, **_arg1, &_arg2); end
+  def last(*_arg0, **_arg1, &_arg2); end
+  def length(*_arg0, **_arg1, &_arg2); end
+  def map(*_arg0, **_arg1, &_arg2); end
   def map!; end
-  def max(*_arg0, &_arg1); end
-  def min(*_arg0, &_arg1); end
-  def minmax(*_arg0, &_arg1); end
-  def none?(*_arg0, &_arg1); end
-  def one?(*_arg0, &_arg1); end
+  def max(*_arg0, **_arg1, &_arg2); end
+  def min(*_arg0, **_arg1, &_arg2); end
+  def minmax(*_arg0, **_arg1, &_arg2); end
+  def none?(*_arg0, **_arg1, &_arg2); end
+  def one?(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def original_params; end
@@ -1660,21 +1661,21 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def original_params=(_arg0); end
 
-  def pack(*_arg0, &_arg1); end
-  def permutation(*_arg0, &_arg1); end
-  def place(*_arg0, &_arg1); end
-  def pop(*_arg0, &_arg1); end
-  def prepend(*_arg0, &_arg1); end
-  def pretty_print(*_arg0, &_arg1); end
-  def pretty_print_cycle(*_arg0, &_arg1); end
-  def product(*_arg0, &_arg1); end
-  def push(*_arg0, &_arg1); end
-  def rassoc(*_arg0, &_arg1); end
-  def reject(*_arg0, &_arg1); end
-  def reject!(*_arg0, &_arg1); end
-  def repeated_combination(*_arg0, &_arg1); end
-  def repeated_permutation(*_arg0, &_arg1); end
-  def replace(*_arg0, &_arg1); end
+  def pack(*_arg0, **_arg1, &_arg2); end
+  def permutation(*_arg0, **_arg1, &_arg2); end
+  def place(*_arg0, **_arg1, &_arg2); end
+  def pop(*_arg0, **_arg1, &_arg2); end
+  def prepend(*_arg0, **_arg1, &_arg2); end
+  def pretty_print(*_arg0, **_arg1, &_arg2); end
+  def pretty_print_cycle(*_arg0, **_arg1, &_arg2); end
+  def product(*_arg0, **_arg1, &_arg2); end
+  def push(*_arg0, **_arg1, &_arg2); end
+  def rassoc(*_arg0, **_arg1, &_arg2); end
+  def reject(*_arg0, **_arg1, &_arg2); end
+  def reject!(*_arg0, **_arg1, &_arg2); end
+  def repeated_combination(*_arg0, **_arg1, &_arg2); end
+  def repeated_permutation(*_arg0, **_arg1, &_arg2); end
+  def replace(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   def resource_class; end
@@ -1682,59 +1683,59 @@ class ActiveResource::Collection
   # The array of actual elements returned by index actions
   def resource_class=(_arg0); end
 
-  def reverse(*_arg0, &_arg1); end
-  def reverse!(*_arg0, &_arg1); end
-  def reverse_each(*_arg0, &_arg1); end
-  def rindex(*_arg0, &_arg1); end
-  def rotate(*_arg0, &_arg1); end
-  def rotate!(*_arg0, &_arg1); end
-  def sample(*_arg0, &_arg1); end
-  def second(*_arg0, &_arg1); end
-  def second_to_last(*_arg0, &_arg1); end
-  def select(*_arg0, &_arg1); end
-  def select!(*_arg0, &_arg1); end
-  def shelljoin(*_arg0, &_arg1); end
-  def shift(*_arg0, &_arg1); end
-  def shuffle(*_arg0, &_arg1); end
-  def shuffle!(*_arg0, &_arg1); end
-  def size(*_arg0, &_arg1); end
-  def slice(*_arg0, &_arg1); end
-  def slice!(*_arg0, &_arg1); end
-  def sort(*_arg0, &_arg1); end
-  def sort!(*_arg0, &_arg1); end
-  def sort_by!(*_arg0, &_arg1); end
-  def split(*_arg0, &_arg1); end
-  def sum(*_arg0, &_arg1); end
-  def take(*_arg0, &_arg1); end
-  def take_while(*_arg0, &_arg1); end
-  def third(*_arg0, &_arg1); end
-  def third_to_last(*_arg0, &_arg1); end
-  def to(*_arg0, &_arg1); end
+  def reverse(*_arg0, **_arg1, &_arg2); end
+  def reverse!(*_arg0, **_arg1, &_arg2); end
+  def reverse_each(*_arg0, **_arg1, &_arg2); end
+  def rindex(*_arg0, **_arg1, &_arg2); end
+  def rotate(*_arg0, **_arg1, &_arg2); end
+  def rotate!(*_arg0, **_arg1, &_arg2); end
+  def sample(*_arg0, **_arg1, &_arg2); end
+  def second(*_arg0, **_arg1, &_arg2); end
+  def second_to_last(*_arg0, **_arg1, &_arg2); end
+  def select(*_arg0, **_arg1, &_arg2); end
+  def select!(*_arg0, **_arg1, &_arg2); end
+  def shelljoin(*_arg0, **_arg1, &_arg2); end
+  def shift(*_arg0, **_arg1, &_arg2); end
+  def shuffle(*_arg0, **_arg1, &_arg2); end
+  def shuffle!(*_arg0, **_arg1, &_arg2); end
+  def size(*_arg0, **_arg1, &_arg2); end
+  def slice(*_arg0, **_arg1, &_arg2); end
+  def slice!(*_arg0, **_arg1, &_arg2); end
+  def sort(*_arg0, **_arg1, &_arg2); end
+  def sort!(*_arg0, **_arg1, &_arg2); end
+  def sort_by!(*_arg0, **_arg1, &_arg2); end
+  def split(*_arg0, **_arg1, &_arg2); end
+  def sum(*_arg0, **_arg1, &_arg2); end
+  def take(*_arg0, **_arg1, &_arg2); end
+  def take_while(*_arg0, **_arg1, &_arg2); end
+  def third(*_arg0, **_arg1, &_arg2); end
+  def third_to_last(*_arg0, **_arg1, &_arg2); end
+  def to(*_arg0, **_arg1, &_arg2); end
   def to_a; end
-  def to_ary(*_arg0, &_arg1); end
-  def to_default_s(*_arg0, &_arg1); end
-  def to_formatted_s(*_arg0, &_arg1); end
-  def to_fs(*_arg0, &_arg1); end
-  def to_h(*_arg0, &_arg1); end
-  def to_param(*_arg0, &_arg1); end
-  def to_query(*_arg0, &_arg1); end
-  def to_s(*_arg0, &_arg1); end
-  def to_sentence(*_arg0, &_arg1); end
-  def to_xml(*_arg0, &_arg1); end
-  def to_yaml(*_arg0, &_arg1); end
-  def transpose(*_arg0, &_arg1); end
-  def union(*_arg0, &_arg1); end
-  def uniq(*_arg0, &_arg1); end
-  def uniq!(*_arg0, &_arg1); end
-  def unshift(*_arg0, &_arg1); end
-  def values_at(*_arg0, &_arg1); end
+  def to_ary(*_arg0, **_arg1, &_arg2); end
+  def to_default_s(*_arg0, **_arg1, &_arg2); end
+  def to_formatted_s(*_arg0, **_arg1, &_arg2); end
+  def to_fs(*_arg0, **_arg1, &_arg2); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
+  def to_query(*_arg0, **_arg1, &_arg2); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
+  def to_sentence(*_arg0, **_arg1, &_arg2); end
+  def to_xml(*_arg0, **_arg1, &_arg2); end
+  def to_yaml(*_arg0, **_arg1, &_arg2); end
+  def transpose(*_arg0, **_arg1, &_arg2); end
+  def union(*_arg0, **_arg1, &_arg2); end
+  def uniq(*_arg0, **_arg1, &_arg2); end
+  def uniq!(*_arg0, **_arg1, &_arg2); end
+  def unshift(*_arg0, **_arg1, &_arg2); end
+  def values_at(*_arg0, **_arg1, &_arg2); end
 
   # @raise [ArgumentError]
   def where(clauses = T.unsafe(nil)); end
 
-  def without(*_arg0, &_arg1); end
-  def zip(*_arg0, &_arg1); end
-  def |(*_arg0, &_arg1); end
+  def without(*_arg0, **_arg1, &_arg2); end
+  def zip(*_arg0, **_arg1, &_arg2); end
+  def |(*_arg0, **_arg1, &_arg2); end
 end
 
 ActiveResource::Collection::SELF_DEFINE_METHODS = T.let(T.unsafe(nil), Array)

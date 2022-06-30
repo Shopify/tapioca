@@ -1025,6 +1025,7 @@ class Concurrent::Agent::Job < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1427,7 +1428,7 @@ class Concurrent::Async::AwaitDelegator
 end
 
 module Concurrent::Async::ClassMethods
-  def new(*args, &block); end
+  def new(*args, **_arg1, &block); end
 end
 
 # Atoms provide a way to manage shared, synchronous, independent state.
@@ -2837,6 +2838,7 @@ class Concurrent::CyclicBarrier::Generation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7451,6 +7453,7 @@ class Concurrent::SerializedExecution::Job < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -8800,6 +8803,7 @@ class Concurrent::Transaction::OpenEntry < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

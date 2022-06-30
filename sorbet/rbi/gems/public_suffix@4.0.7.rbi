@@ -687,6 +687,7 @@ class PublicSuffix::Rule::Entry < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

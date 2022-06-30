@@ -3083,6 +3083,60 @@ class REXML::Instruction < ::REXML::Child
   def write(writer, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 end
 
+module REXML::Light; end
+
+# Represents a tagged XML element.  Elements are characterized by
+# having children, attributes, and names, and can themselves be
+# children.
+class REXML::Light::Node
+  # Create a new element.
+  #
+  # @return [Node] a new instance of Node
+  def initialize(node = T.unsafe(nil)); end
+
+  # Append a child to this element, optionally under a provided namespace.
+  # The namespace argument is ignored if the element argument is an Element
+  # object.  Otherwise, the element argument is a string, the namespace (if
+  # provided) is the namespace the element is created in.
+  def <<(element); end
+
+  def =~(path); end
+  def [](reference, ns = T.unsafe(nil)); end
+
+  # Doesn't handle namespaces yet
+  def []=(reference, ns, value = T.unsafe(nil)); end
+
+  def children; end
+  def each; end
+
+  # @return [Boolean]
+  def has_name?(name, namespace = T.unsafe(nil)); end
+
+  def local_name; end
+  def local_name=(name_str); end
+  def name; end
+  def name=(name_str, ns = T.unsafe(nil)); end
+  def namespace(prefix = T.unsafe(nil)); end
+  def namespace=(namespace); end
+  def node_type; end
+  def parent; end
+  def parent=(node); end
+  def prefix(namespace = T.unsafe(nil)); end
+  def root; end
+  def size; end
+  def text=(foo); end
+  def to_s; end
+
+  private
+
+  def namespace_of(node, prefix = T.unsafe(nil)); end
+  def namesplit; end
+  def prefix_of(node, namespace = T.unsafe(nil)); end
+end
+
+REXML::Light::Node::NAMESPLIT = T.let(T.unsafe(nil), Regexp)
+REXML::Light::Node::PARENTS = T.let(T.unsafe(nil), Array)
+
 class REXML::NotationDecl < ::REXML::Child
   # @return [NotationDecl] a new instance of NotationDecl
   def initialize(name, middle, pub, sys); end

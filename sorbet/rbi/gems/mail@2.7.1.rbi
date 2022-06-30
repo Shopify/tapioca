@@ -4222,6 +4222,7 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4319,6 +4320,7 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4467,6 +4469,7 @@ class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Stru
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4604,6 +4607,7 @@ class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4741,6 +4745,7 @@ class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruc
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4900,6 +4905,7 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5049,6 +5055,7 @@ class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5197,6 +5204,7 @@ class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5335,6 +5343,7 @@ class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5483,6 +5492,7 @@ class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5621,6 +5631,7 @@ class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5781,6 +5792,7 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6810,8 +6822,6 @@ Mail::VERSION::STRING = T.let(T.unsafe(nil), String)
 
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 end
 
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)

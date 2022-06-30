@@ -1,6 +1,12 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "set"
+
+require "tapioca"
+require "tapioca/runtime/reflection"
+require "tapioca/runtime/trackers"
+
 require "bundler"
 require "erb"
 require "etc"
@@ -11,7 +17,6 @@ require "net/http"
 require "netrc"
 require "parallel"
 require "pathname"
-require "set"
 require "shellwords"
 require "spoom"
 require "tempfile"
@@ -19,10 +24,6 @@ require "thor"
 require "yaml"
 require "yard-sorbet"
 
-require "tapioca"
-
-require "tapioca/runtime/reflection"
-require "tapioca/runtime/trackers"
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/helpers/gem_helper"
 require "tapioca/runtime/loader"

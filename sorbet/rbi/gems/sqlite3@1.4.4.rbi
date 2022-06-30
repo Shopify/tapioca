@@ -1103,10 +1103,12 @@ SQLite3::VersionProxy::TINY = T.let(T.unsafe(nil), Integer)
 # :beta-tag:
 SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 
+# Allows Writing of '100'.to_money for +String+ types
+# Excess characters will be discarded
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   def to_blob; end
 end
