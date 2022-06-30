@@ -9509,7 +9509,6 @@ ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
 
 class Array
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
 
   def as_json(options = T.unsafe(nil)); end
 
@@ -9915,8 +9914,6 @@ BigDecimal::EXCEPTION_NaN = T.let(T.unsafe(nil), Integer)
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
 class Class < ::Module
-  include ::StateMachines::MacroMethods
-
   # Declare a class-level attribute whose value is inheritable by subclasses.
   # Subclasses can change their own value and it will not impact parent class.
   #
@@ -10876,6 +10873,10 @@ end
 
 DateTime::NOT_SET = T.let(T.unsafe(nil), Object)
 
+class Delegator < ::BasicObject
+  include ::ActiveSupport::Tryable
+end
+
 module Digest::UUID
   class << self
     def use_rfc4122_namespaced_uuids; end
@@ -11280,8 +11281,6 @@ class Exception
 end
 
 class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
-
   def as_json(options = T.unsafe(nil)); end
 
   # +false+ is blank:
@@ -11298,7 +11297,6 @@ end
 class Float < ::Numeric
   include ::ActiveSupport::NumericWithFormat
   include ::ActiveSupport::DeprecatedNumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Float
 
   # Encoding Infinity or NaN to JSON should return "null". The default returns
   # "Infinity" or "NaN" which are not valid JSON.
@@ -11309,8 +11307,6 @@ end
 
 class Hash
   include ::Enumerable
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
-  include ::DeepMerge::DeepMergeHash
 
   def as_json(options = T.unsafe(nil)); end
 
@@ -11692,8 +11688,6 @@ HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 
 # :enddoc:
 module I18n
-  extend ::I18n::Base
-
   class << self
     def cache_key_digest; end
     def cache_key_digest=(key_digest); end
@@ -11831,8 +11825,6 @@ IO::READABLE = T.let(T.unsafe(nil), Integer)
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 class IPAddr
-  include ::Comparable
-
   def as_json(options = T.unsafe(nil)); end
 end
 
@@ -11841,7 +11833,6 @@ IPAddr::VERSION = T.let(T.unsafe(nil), String)
 class Integer < ::Numeric
   include ::ActiveSupport::NumericWithFormat
   include ::ActiveSupport::DeprecatedNumericWithFormat
-  include ::JSON::Ext::Generator::GeneratorMethods::Integer
 
   # Returns a Duration instance matching the number of months provided.
   #
@@ -11939,9 +11930,6 @@ class LoadError < ::ScriptError
 end
 
 class Method
-  include ::MethodSource::SourceLocation::MethodExtensions
-  include ::MethodSource::MethodExtensions
-
   # Methods are not duplicable:
   #
   #  method(:puts).duplicable? # => false
@@ -12994,8 +12982,6 @@ end
 NameError::UNBOUND_METHOD_MODULE_NAME = T.let(T.unsafe(nil), UnboundMethod)
 
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
-
   def as_json(options = T.unsafe(nil)); end
 
   # +nil+ is blank:
@@ -13209,9 +13195,6 @@ class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::Dependencies::RequireDependency
   include ::Kernel
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
-  include ::Minitest::Expectations
-  include ::PP::ObjectMixin
   include ::ActiveSupport::Tryable
 
   # Provides a way to check whether some class acts like some other class based on the existence of
@@ -13491,6 +13474,30 @@ class Range
   def to_s(format = T.unsafe(nil)); end
 end
 
+class Redis
+  include ::Redis::Commands::Bitmaps
+  include ::Redis::Commands::Cluster
+  include ::Redis::Commands::Connection
+  include ::Redis::Commands::Geo
+  include ::Redis::Commands::Hashes
+  include ::Redis::Commands::HyperLogLog
+  include ::Redis::Commands::Keys
+  include ::Redis::Commands::Lists
+  include ::Redis::Commands::Pubsub
+  include ::Redis::Commands::Scripting
+  include ::Redis::Commands::Server
+  include ::Redis::Commands::Sets
+  include ::Redis::Commands::SortedSets
+  include ::Redis::Commands::Streams
+  include ::Redis::Commands::Strings
+  include ::Redis::Commands::Transactions
+  include ::ActiveSupport::Cache::ConnectionPoolLike
+end
+
+class Redis::Distributed
+  include ::ActiveSupport::Cache::ConnectionPoolLike
+end
+
 class Regexp
   def as_json(options = T.unsafe(nil)); end
 
@@ -13560,8 +13567,6 @@ Singleton::VERSION = T.let(T.unsafe(nil), String)
 #   'ScaleScore'.tableize # => "scale_scores"
 class String
   include ::Comparable
-  include ::JSON::Ext::Generator::GeneratorMethods::String
-  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
 
   # Enables more predictable duck-typing on String-like classes. See <tt>Object#acts_like?</tt>.
   #
@@ -14561,8 +14566,6 @@ Time::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
 Time::NOT_SET = T.let(T.unsafe(nil), Object)
 
 class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
-
   def as_json(options = T.unsafe(nil)); end
 
   # +true+ is not blank:
@@ -14584,9 +14587,6 @@ class URI::Generic
 end
 
 class UnboundMethod
-  include ::MethodSource::SourceLocation::UnboundMethodExtensions
-  include ::MethodSource::MethodExtensions
-
   # Unbound methods are not duplicable:
   #
   #  method(:puts).unbind.duplicable? # => false

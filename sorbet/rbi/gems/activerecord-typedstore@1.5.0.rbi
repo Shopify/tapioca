@@ -5,8 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem activerecord-typedstore`.
 
 module ActiveRecord
-  extend ::ActiveSupport::Autoload
-
   class << self
     def action_on_strict_loading_violation; end
     def action_on_strict_loading_violation=(_arg0); end

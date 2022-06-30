@@ -10323,7 +10323,6 @@ class ActionView::Railtie < ::Rails::Engine; end
 #   end
 module ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
-  extend ::ActionView::ModelNaming
   extend ::ActionView::RecordIdentifier
   extend ::ActionView::ModelNaming
 

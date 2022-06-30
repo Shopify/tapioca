@@ -849,6 +849,10 @@ end
 
 Net::SMTP::VERSION = T.let(T.unsafe(nil), String)
 
+class Net::SMTPAuthenticationError < ::Net::ProtoAuthError
+  include ::Net::SMTPError
+end
+
 # Module mixed in to all SMTP error classes
 module Net::SMTPError
   def initialize(response, message: T.unsafe(nil)); end
@@ -860,5 +864,25 @@ module Net::SMTPError
   def response; end
 end
 
+class Net::SMTPFatalError < ::Net::ProtoFatalError
+  include ::Net::SMTPError
+end
+
+class Net::SMTPServerBusy < ::Net::ProtoServerError
+  include ::Net::SMTPError
+end
+
 # class SMTP
 Net::SMTPSession = Net::SMTP
+
+class Net::SMTPSyntaxError < ::Net::ProtoSyntaxError
+  include ::Net::SMTPError
+end
+
+class Net::SMTPUnknownError < ::Net::ProtoUnknownError
+  include ::Net::SMTPError
+end
+
+class Net::SMTPUnsupportedCommand < ::Net::ProtocolError
+  include ::Net::SMTPError
+end

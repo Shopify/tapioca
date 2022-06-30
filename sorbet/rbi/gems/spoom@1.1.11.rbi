@@ -576,7 +576,7 @@ end
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { override.params(y: ::String, color: ::String, curve: ::String).returns(::String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end

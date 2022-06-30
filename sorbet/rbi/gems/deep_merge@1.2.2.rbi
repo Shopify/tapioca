@@ -102,3 +102,8 @@ module DeepMerge::DeepMergeHash
 end
 
 class DeepMerge::InvalidParameter < ::StandardError; end
+
+class Hash
+  include ::Enumerable
+  include ::DeepMerge::DeepMergeHash
+end

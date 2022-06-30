@@ -22,7 +22,6 @@ class Redis
   include ::Redis::Commands::Strings
   include ::Redis::Commands::Transactions
   include ::Redis::Commands
-  include ::ActiveSupport::Cache::ConnectionPoolLike
 
   # Create a new client instance
   #
@@ -1855,7 +1854,7 @@ module Redis::Commands::SortedSets
   # @param destination [String] destination key
   # @param keys [Array<String>] source keys
   # @return [Integer] number of elements in the resulting sorted set
-  def zdiffstore(*args); end
+  def zdiffstore(*args, **_arg1); end
 
   # Increment the score of a member in a sorted set.
   #
@@ -1883,7 +1882,7 @@ module Redis::Commands::SortedSets
   #   - `:with_scores => true`: include scores in output
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
-  def zinter(*args); end
+  def zinter(*args, **_arg1); end
 
   # Intersect multiple sorted sets and store the resulting sorted set in a new
   # key.
@@ -1897,7 +1896,7 @@ module Redis::Commands::SortedSets
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max)
   # @return [Integer] number of elements in the resulting sorted set
-  def zinterstore(*args); end
+  def zinterstore(*args, **_arg1); end
 
   # Count the members, with the same score in a sorted set, within the given lexicographical range.
   #
@@ -2189,7 +2188,7 @@ module Redis::Commands::SortedSets
   #   - `:with_scores => true`: include scores in output
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
-  def zunion(*args); end
+  def zunion(*args, **_arg1); end
 
   # Add multiple sorted sets and store the resulting sorted set in a new key.
   #
@@ -2202,7 +2201,7 @@ module Redis::Commands::SortedSets
   #   sorted sets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max, ...)
   # @return [Integer] number of elements in the resulting sorted set
-  def zunionstore(*args); end
+  def zunionstore(*args, **_arg1); end
 
   private
 
@@ -2846,8 +2845,6 @@ class Redis::DeprecatedPipeline
 end
 
 class Redis::Distributed
-  include ::ActiveSupport::Cache::ConnectionPoolLike
-
   # @return [Distributed] a new instance of Distributed
   def initialize(node_configs, options = T.unsafe(nil)); end
 
@@ -3297,7 +3294,7 @@ class Redis::Distributed
 
   # Add one or more members to a sorted set, or update the score for members
   # that already exist.
-  def zadd(key, *args); end
+  def zadd(key, *args, **_arg2); end
 
   # Get the number of members in a sorted set.
   def zcard(key); end

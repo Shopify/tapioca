@@ -10,7 +10,7 @@ module RBI; end
 class RBI::ASTVisitor
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   # @abstract
   sig { abstract.params(node: T.nilable(::AST::Node)).void }
@@ -1576,7 +1576,7 @@ class RBI::Scope < ::RBI::Tree
 
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   sig { override.params(v: ::RBI::Printer).void }
   def accept_printer(v); end
@@ -2321,7 +2321,7 @@ end
 class RBI::Visitor
   abstract!
 
-  def initialize(*args, &blk); end
+  def initialize(*args, **_arg1, &blk); end
 
   # @abstract
   sig { abstract.params(node: T.nilable(::RBI::Node)).void }

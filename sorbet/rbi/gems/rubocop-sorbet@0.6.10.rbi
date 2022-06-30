@@ -651,10 +651,6 @@ RuboCop::Cop::Sorbet::ValidSigil::STRICTNESS_LEVELS = T.let(T.unsafe(nil), Array
 
 class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
-  include ::RuboCop::Cop::Style::MutableConstant::ShareableConstantValue
-  include ::RuboCop::Cop::FrozenStringLiteral
-  include ::RuboCop::Cop::ConfigurableEnforcedStyle
-  extend ::RuboCop::Cop::AutoCorrector
 end
 
 RuboCop::NodePattern = RuboCop::AST::NodePattern
