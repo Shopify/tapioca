@@ -87,13 +87,14 @@ module Tapioca
         params(
           symbol: String,
           constant: Module,
+          method: UnboundMethod,
           node: RBI::Method,
           signature: T.untyped,
           parameters: T::Array[[Symbol, String]]
         ).void.checked(:never)
       end
-      def push_method(symbol, constant, node, signature, parameters)
-        @events << Gem::MethodNodeAdded.new(symbol, constant, node, signature, parameters)
+      def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+        @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }

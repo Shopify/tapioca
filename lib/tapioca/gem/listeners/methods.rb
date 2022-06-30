@@ -134,7 +134,7 @@ module Tapioca
             end
           end
 
-          @pipeline.push_method(symbol_name, constant, rbi_method, signature, sanitized_parameters)
+          @pipeline.push_method(symbol_name, constant, method, rbi_method, signature, sanitized_parameters)
           tree << rbi_method
         end
 
