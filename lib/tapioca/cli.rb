@@ -107,7 +107,7 @@ module Tapioca
       desc: "The Rack/Rails environment to use when generating RBIs",
       default: DEFAULT_ENVIRONMENT
     def dsl(*constants)
-      set_environment
+      set_environment(options)
 
       command = Commands::Dsl.new(
         requested_constants: constants,
@@ -209,7 +209,7 @@ module Tapioca
       default: DEFAULT_ENVIRONMENT
     def gem(*gems)
       Tapioca.silence_warnings do
-        set_environment
+        set_environment(options)
 
         all = options[:all]
         verify = options[:verify]
