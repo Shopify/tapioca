@@ -19,12 +19,21 @@ module Tapioca
           T.must(@payload_symbols)
         end
 
-        sig { returns(T::Set[String]) }
-        def engine_symbols
-          unless @engine_symbols
-            @engine_symbols = T.let(load_engine_symbols, T.nilable(T::Set[String]))
+        sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
+        def engine_symbols(gem)
+          gem_engine = engines.find do |engine|
+            gem.contains_path?(engine.config.root.to_s)
           end
-          T.must(@engine_symbols)
+
+          return Set.new unless gem_engine
+
+          paths = gem_engine.config.eager_load_paths.flat_map do |load_path|
+            Pathname.glob("#{load_path}/**/*.rb")
+          end
+
+          symbols_from_paths(paths)
+        rescue
+          Set.new
         end
 
         sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
@@ -34,31 +43,21 @@ module Tapioca
 
         private
 
+        sig { returns(T::Array[T.class_of(Rails::Engine)]) }
+        def engines
+          @engines = T.let(@engines, T.nilable(T::Array[T.class_of(Rails::Engine)]))
+
+          @engines ||= if Object.const_defined?("Rails::Engine")
+            descendants_of(Object.const_get("Rails::Engine"))
+              .reject(&:abstract_railtie?)
+          else
+            []
+          end
+        end
+
         sig { params(input: String, table_type: String).returns(String) }
         def symbol_table_json_from(input, table_type: "symbol-table-json")
           sorbet("--no-config", "--quiet", "--print=#{table_type}", input).out
-        end
-
-        sig { returns(T::Set[String]) }
-        def load_engine_symbols
-          return Set.new unless Object.const_defined?("Rails::Engine")
-
-          engine = descendants_of(Object.const_get("Rails::Engine"))
-            .reject(&:abstract_railtie?)
-            .find do |klass|
-              name = name_of(klass)
-              !name.nil? && payload_symbols.include?(name)
-            end
-
-          return Set.new unless engine
-
-          paths = engine.config.eager_load_paths.flat_map do |load_path|
-            Pathname.glob("#{load_path}/**/*.rb")
-          end
-
-          symbols_from_paths(paths)
-        rescue
-          Set.new
         end
 
         sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
