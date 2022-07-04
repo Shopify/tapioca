@@ -34,6 +34,8 @@ module Timeout
   # a module method, so you can call it directly as Timeout.timeout().
   #
   # @raise [e]
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:83
   def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
 
   class << self
@@ -64,25 +66,35 @@ module Timeout
     # a module method, so you can call it directly as Timeout.timeout().
     #
     # @raise [e]
+    #
+    # source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:83
     def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
   end
 end
 
+# source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:54
 Timeout::CALLER_OFFSET = T.let(T.unsafe(nil), Integer)
 
 # Raised by Timeout.timeout when the block times out.
 class Timeout::Error < ::RuntimeError
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:39
   def exception(*_arg0); end
 
   # Returns the value of attribute thread.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:30
   def thread; end
 
   class << self
+    # source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:32
     def catch(*args); end
   end
 end
 
 # :stopdoc:
+#
+# source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:53
 Timeout::THIS_FILE = T.let(T.unsafe(nil), Regexp)
 
+# source:///RUBY_ROOT/lib/ruby/3.1.0/timeout.rb:26
 Timeout::VERSION = T.let(T.unsafe(nil), String)

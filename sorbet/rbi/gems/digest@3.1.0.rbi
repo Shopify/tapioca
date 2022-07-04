@@ -6,6 +6,7 @@
 
 module Digest
   class << self
+    # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:22
     def const_missing(name); end
   end
 end
@@ -17,6 +18,8 @@ class Digest::Class
     # Returns the base64 encoded hash value of a given _string_.  The
     # return value is properly padded with '=' and contains no line
     # feeds.
+    #
+    # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:55
     def base64digest(str, *args); end
 
     # Creates a digest object and reads a given file, _name_.
@@ -25,6 +28,8 @@ class Digest::Class
     #
     #   p Digest::SHA256.file("X11R6.8.2-src.tar.bz2").hexdigest
     #   # => "f02e3c85572dc9ad7cb77c2a638e3be24cc1b5bea9fdbb0b0299c9668475c534"
+    #
+    # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:48
     def file(name, *args); end
   end
 end
@@ -39,14 +44,20 @@ module Digest::Instance
   #
   # In either case, the return value is properly padded with '=' and
   # contains no line feeds.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:82
   def base64digest(str = T.unsafe(nil)); end
 
   # Returns the resulting hash value and resets the digest to the
   # initial state.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:88
   def base64digest!; end
 
   # Updates the digest with the contents of a given file _name_ and
   # returns self.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest.rb:63
   def file(name); end
 end
 
@@ -94,6 +105,8 @@ class Digest::SHA2 < ::Digest::Class
   # Valid bit lengths are 256, 384 and 512.
   #
   # @return [SHA2] a new instance of SHA2
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:61
   def initialize(bitlen = T.unsafe(nil)); end
 
   # call-seq:
@@ -101,6 +114,8 @@ class Digest::SHA2 < ::Digest::Class
   #   digest_obj << string -> digest_obj
   #
   # Update the digest using a given _string_ and return self.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:89
   def <<(str); end
 
   # call-seq:
@@ -114,6 +129,8 @@ class Digest::SHA2 < ::Digest::Class
   #   # => 1024
   #   Digest::SHA512.new.block_length * 8
   #   # => 1024
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:112
   def block_length; end
 
   # call-seq:
@@ -130,14 +147,19 @@ class Digest::SHA2 < ::Digest::Class
   #
   # For example, digests produced by Digest::SHA256 will always be 32 bytes
   # (256 bits) in size.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:130
   def digest_length; end
 
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:138
   def inspect; end
 
   # call-seq:
   #   digest_obj.reset -> digest_obj
   #
   # Reset the digest to the initial state and return self.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:79
   def reset; end
 
   # call-seq:
@@ -145,12 +167,18 @@ class Digest::SHA2 < ::Digest::Class
   #   digest_obj << string -> digest_obj
   #
   # Update the digest using a given _string_ and return self.
+  #
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:89
   def update(str); end
 
   private
 
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:95
   def finish; end
+
+  # source:///RUBY_ROOT/lib/ruby/3.1.0/digest/sha2.rb:134
   def initialize_copy(other); end
 end
 
+# source:///RUBY_ROOT/lib/ruby/3.1.0/digest/version.rb:4
 Digest::VERSION = T.let(T.unsafe(nil), String)
