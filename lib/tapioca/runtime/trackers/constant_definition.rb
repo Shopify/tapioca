@@ -45,8 +45,8 @@ module Tapioca
         # or where metaprogramming was used via +eval+, etc.
         def self.files_for(klass)
           name = String === klass ? klass : name_of(klass)
-          files = @class_files[name]
-          files&.map(&:path)&.to_set || Set.new
+          files = @class_files.fetch(name, [])
+          files.map(&:path).to_set
         end
       end
     end
