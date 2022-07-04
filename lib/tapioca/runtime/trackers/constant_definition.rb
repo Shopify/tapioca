@@ -10,6 +10,12 @@ module Tapioca
       # available in the ruby runtime without extra accounting.
       module ConstantDefinition
         extend Reflection
+        extend T::Sig
+
+        class ConstantLocation < T::Struct
+          const :lineno, Integer
+          const :path, String
+        end
 
         @class_files = {}
 
@@ -18,13 +24,19 @@ module Tapioca
           unless tp.self.singleton_class?
             key = name_of(tp.self)
             file = tp.path
+            lineno = tp.lineno
+
             if file == "(eval)"
-              file = T.must(caller_locations)
+              caller_location = T.must(caller_locations)
                 .drop_while { |loc| loc.path == "(eval)" }
-                .first&.path
+                .first
+
+              file = caller_location&.path
+              lineno = caller_location&.lineno
             end
+
             @class_files[key] ||= Set.new
-            @class_files[key] << file
+            @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
           end
         end
 
@@ -34,7 +46,7 @@ module Tapioca
         def self.files_for(klass)
           name = String === klass ? klass : name_of(klass)
           files = @class_files[name]
-          files || Set.new
+          files&.map(&:path)&.to_set || Set.new
         end
       end
     end
