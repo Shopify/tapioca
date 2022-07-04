@@ -40,7 +40,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::Subconstants.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
-        @node_listeners << Gem::Listeners::GemLocation.new(self) if include_loc
+        @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
       end
 

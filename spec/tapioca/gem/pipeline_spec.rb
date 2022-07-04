@@ -3955,7 +3955,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Baz
           abstract!
 
-          # source://sorbet-runtime-0.5.10125/lib/types/private/abstract/declare.rb:37
+          # source://sorbet-runtime-#{Gem::Specification.find_by_name("sorbet-runtime").version}/lib/types/private/abstract/declare.rb:37
         <% if ruby_version(">= 3.1") %>
           def initialize(*args, **_arg1, &blk); end
         <% else %>
@@ -3975,20 +3975,23 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # source://the-dep-1.1.2/lib/foo.rb:33
         class Quux < ::T::Struct
           class << self
-            # source://sorbet-runtime-0.5.10125/lib/types/struct.rb:13
+            # source://sorbet-runtime-#{Gem::Specification.find_by_name("sorbet-runtime").version}/lib/types/struct.rb:13
             def inherited(s); end
           end
         end
 
+        # source://the-dep-1.1.2/lib/foo.rb:36
         class String
+          include ::Comparable
+
           # source://the-dep-1.1.2/lib/foo.rb:37
           def foo; end
         end
 
-        # source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:104
+        # source://activesupport-#{Gem::Specification.find_by_name("activesupport").version}/lib/active_support/core_ext/object/blank.rb:104
         String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-        # source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:105
+        # source://activesupport-#{Gem::Specification.find_by_name("activesupport").version}/lib/active_support/core_ext/object/blank.rb:105
         String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
