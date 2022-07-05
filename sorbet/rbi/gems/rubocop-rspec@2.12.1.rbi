@@ -11,7 +11,10 @@ class RuboCop::AST::Node < ::Parser::AST::Node
 end
 
 module RuboCop::Cop; end
+
+# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
+
 module RuboCop::Cop::RSpec; end
 
 # Checks that left braces for adjacent single line lets are aligned.
@@ -411,6 +414,43 @@ RuboCop::Cop::RSpec::Capybara::FeatureMethods::MAP = T.let(T.unsafe(nil), Hash)
 
 RuboCop::Cop::RSpec::Capybara::FeatureMethods::MSG = T.let(T.unsafe(nil), String)
 
+# Checks for there is a more specific matcher offered by Capybara.
+#
+# @example
+#
+#   # bad
+#   expect(page).to have_selector('button')
+#   expect(page).to have_no_selector('button.cls')
+#   expect(page).to have_css('button')
+#   expect(page).to have_no_css('a.cls', exact_text: 'foo')
+#   expect(page).to have_css('table.cls')
+#   expect(page).to have_css('select')
+#
+#   # good
+#   expect(page).to have_button
+#   expect(page).to have_no_button(class: 'cls')
+#   expect(page).to have_button
+#   expect(page).to have_no_link('foo', class: 'cls')
+#   expect(page).to have_table(class: 'cls')
+#   expect(page).to have_select
+class RuboCop::Cop::RSpec::Capybara::SpecificMatcher < ::RuboCop::Cop::RSpec::Base
+  def first_argument(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+
+  private
+
+  # @return [Boolean]
+  def acceptable_pattern?(arg); end
+
+  def good_matcher(node, matcher); end
+  def message(node, matcher); end
+  def specific_matcher(arg); end
+end
+
+RuboCop::Cop::RSpec::Capybara::SpecificMatcher::MSG = T.let(T.unsafe(nil), String)
+RuboCop::Cop::RSpec::Capybara::SpecificMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+RuboCop::Cop::RSpec::Capybara::SpecificMatcher::SPECIFIC_MATCHER = T.let(T.unsafe(nil), Hash)
+
 # Checks for boolean visibility in Capybara finders.
 #
 # Capybara lets you find elements that match a certain visibility using
@@ -455,6 +495,8 @@ RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::RESTRICT_ON_SEND = T.let(T.uns
 #   # bad
 #   expect { run }.to change(Foo, :bar).by(0)
 #   expect { run }.to change { Foo.bar }.by(0)
+#
+#   # bad - compound expectations
 #   expect { run }
 #   .to change(Foo, :bar).by(0)
 #   .and change(Foo, :baz).by(0)
@@ -465,6 +507,9 @@ RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::RESTRICT_ON_SEND = T.let(T.uns
 #   # good
 #   expect { run }.not_to change(Foo, :bar)
 #   expect { run }.not_to change { Foo.bar }
+#
+#   # good - compound expectations
+#   define_negated_matcher :not_change, :change
 #   expect { run }
 #   .to not_change(Foo, :bar)
 #   .and not_change(Foo, :baz)
@@ -481,7 +526,7 @@ class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
   private
 
   def autocorrect(corrector, node); end
-  def check_offence(node); end
+  def check_offense(node); end
 
   # @return [Boolean]
   def compound_expectations?(node); end
@@ -693,7 +738,7 @@ RuboCop::Cop::RSpec::DescribeSymbol::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 # possible to use an overriding configuration file local to that
 # directory.
 #
-# @example `EnforcedStyle: described_class`
+# @example `EnforcedStyle: described_class` (default)
 #   # bad
 #   describe MyClass do
 #   subject { MyClass.do_something }
@@ -1172,7 +1217,9 @@ end
 RuboCop::Cop::RSpec::EmptyLineAfterSubject::MSG = T.let(T.unsafe(nil), String)
 
 # Helps determine the offending location if there is not an empty line
-# following the node. Allows comments to follow directly after.
+# following the node. Allows comments to follow directly after
+# in the following cases.
+# - followed by empty line(s)
 module RuboCop::Cop::RSpec::EmptyLineSeparation
   include ::RuboCop::Cop::RSpec::FinalEndLocation
   include ::RuboCop::Cop::RangeHelp
@@ -1180,7 +1227,7 @@ module RuboCop::Cop::RSpec::EmptyLineSeparation
   # @return [Boolean]
   def last_child?(node); end
 
-  # @yield [offending_loc(line)]
+  # @yield [offending_loc(enable_directive_line || final_end_line)]
   def missing_separating_line(node); end
 
   def missing_separating_line_offense(node); end
@@ -1190,7 +1237,7 @@ end
 # Checks for long examples.
 #
 # A long example is usually more difficult to understand. Consider
-# extracting out some behaviour, e.g. with a `let` block, or a helper
+# extracting out some behavior, e.g. with a `let` block, or a helper
 # method.
 #
 # You can set literals you want to fold with `CountAsOne`.
@@ -1253,7 +1300,7 @@ RuboCop::Cop::RSpec::ExampleLength::LABEL = T.let(T.unsafe(nil), String)
 #
 # This cop can be configured using the `EnforcedStyle` option
 #
-# @example `EnforcedStyle: always_allow`
+# @example `EnforcedStyle: always_allow` (default)
 #   # bad
 #   it('') { is_expected.to be_good }
 #   it '' do
@@ -1397,6 +1444,8 @@ RuboCop::Cop::RSpec::ExcessiveDocstringSpacing::MSG = T.let(T.unsafe(nil), Strin
 
 # Checks for `expect(...)` calls containing literal values.
 #
+# Autocorrection is performed when the expected is not a literal.
+#
 # @example
 #   # bad
 #   expect(5).to eq(price)
@@ -1442,13 +1491,7 @@ RuboCop::Cop::RSpec::ExpectActual::SUPPORTED_MATCHERS = T.let(T.unsafe(nil), Arr
 #
 # This cop can be configured using the `EnforcedStyle` option.
 #
-# @example `EnforcedStyle: block`
-#   # bad
-#   expect { run }.to change(Foo, :bar)
-#
-#   # good
-#   expect { run }.to change { Foo.bar }
-# @example `EnforcedStyle: method_call`
+# @example `EnforcedStyle: method_call` (default)
 #   # bad
 #   expect { run }.to change { Foo.bar }
 #   expect { run }.to change { foo.baz }
@@ -1459,6 +1502,12 @@ RuboCop::Cop::RSpec::ExpectActual::SUPPORTED_MATCHERS = T.let(T.unsafe(nil), Arr
 #   # also good when there are arguments or chained method calls
 #   expect { run }.to change { Foo.bar(:count) }
 #   expect { run }.to change { user.reload.name }
+# @example `EnforcedStyle: block`
+#   # bad
+#   expect { run }.to change(Foo, :bar)
+#
+#   # good
+#   expect { run }.to change { Foo.bar }
 class RuboCop::Cop::RSpec::ExpectChange < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
@@ -1618,15 +1667,21 @@ RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically::MSG = T.let(T.unsaf
 #
 # This cop can be configured using the `EnforcedStyle` option
 #
-# @example `EnforcedStyle: create_list`
+# @example `EnforcedStyle: create_list` (default)
 #   # bad
 #   3.times { create :user }
 #
 #   # good
 #   create_list :user, 3
 #
-#   # good
-#   3.times { |n| create :user, created_at: n.months.ago }
+#   # bad
+#   3.times { create :user, age: 18 }
+#
+#   # good - index is used to alter the created models attributes
+#   3.times { |n| create :user, age: n }
+#
+#   # good - contains a method call, may return different values
+#   3.times { create :user, age: rand }
 # @example `EnforcedStyle: n_times`
 #   # bad
 #   create_list :user, 3
@@ -1638,9 +1693,11 @@ class RuboCop::Cop::RSpec::FactoryBot::CreateList < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::RSpec::FactoryBot::Language
   extend ::RuboCop::Cop::AutoCorrector
 
+  def arguments_include_method_call?(param0 = T.unsafe(nil)); end
   def factory_call(param0 = T.unsafe(nil)); end
   def factory_list_call(param0 = T.unsafe(nil)); end
-  def n_times_block_without_arg?(param0 = T.unsafe(nil)); end
+  def n_times_block?(param0 = T.unsafe(nil)); end
+  def n_times_block_with_arg_and_used?(param0 = T.unsafe(nil)); end
   def on_block(node); end
   def on_send(node); end
 
@@ -1674,7 +1731,7 @@ class RuboCop::Cop::RSpec::FactoryBot::CreateList::CreateListCorrector
   def call_with_block_replacement(node); end
   def format_block(node); end
   def format_multiline_block(node); end
-  def format_singeline_block(node); end
+  def format_singleline_block(node); end
 
   # Returns the value of attribute node.
   def node; end
@@ -1898,7 +1955,7 @@ RuboCop::Cop::RSpec::Focus::MSG = T.let(T.unsafe(nil), String)
 # styles: "implicit", "each", and "example." All styles have
 # the same behavior.
 #
-# @example when configuration is `EnforcedStyle: implicit`
+# @example `EnforcedStyle: implicit` (default)
 #   # bad
 #   before(:each) do
 #   # ...
@@ -1913,7 +1970,7 @@ RuboCop::Cop::RSpec::Focus::MSG = T.let(T.unsafe(nil), String)
 #   before do
 #   # ...
 #   end
-# @example when configuration is `EnforcedStyle: each`
+# @example `EnforcedStyle: each`
 #   # bad
 #   before(:example) do
 #   # ...
@@ -1928,7 +1985,7 @@ RuboCop::Cop::RSpec::Focus::MSG = T.let(T.unsafe(nil), String)
 #   before(:each) do
 #   # ...
 #   end
-# @example when configuration is `EnforcedStyle: example`
+# @example `EnforcedStyle: example`
 #   # bad
 #   before(:each) do
 #   # ...
@@ -2058,7 +2115,7 @@ RuboCop::Cop::RSpec::ImplicitBlockExpectation::RESTRICT_ON_SEND = T.let(T.unsafe
 # This cop can be configured using the `EnforcedStyle` option
 # and supports the `--auto-gen-config` flag.
 #
-# @example `EnforcedStyle: is_expected`
+# @example `EnforcedStyle: is_expected` (default)
 #
 #   # bad
 #   it { should be_truthy }
@@ -2283,13 +2340,13 @@ RuboCop::Cop::RSpec::InstanceVariable::MSG = T.let(T.unsafe(nil), String)
 
 # Checks that only one `it_behaves_like` style is used.
 #
-# @example when configuration is `EnforcedStyle: it_behaves_like`
+# @example `EnforcedStyle: it_behaves_like` (default)
 #   # bad
 #   it_should_behave_like 'a foo'
 #
 #   # good
 #   it_behaves_like 'a foo'
-# @example when configuration is `EnforcedStyle: it_should_behave_like`
+# @example `EnforcedStyle: it_should_behave_like`
 #   # bad
 #   it_behaves_like 'a foo'
 #
@@ -2391,7 +2448,7 @@ RuboCop::Cop::RSpec::LeadingSubject::MSG = T.let(T.unsafe(nil), String)
 #
 # If several examples may define a `DummyClass`, instead of being a
 # blank slate class as it will be in the first example, subsequent
-# examples will be reopening it and modifying its behaviour in
+# examples will be reopening it and modifying its behavior in
 # unpredictable ways.
 # Even worse when a class that exists in the codebase is reopened.
 #
@@ -2588,7 +2645,7 @@ RuboCop::Cop::RSpec::MessageChain::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array
 # This cop can be configured in your configuration using the
 # `EnforcedStyle` option and supports `--auto-gen-config`.
 #
-# @example `EnforcedStyle: allow`
+# @example `EnforcedStyle: allow` (default)
 #
 #   # bad
 #   expect(foo).to receive(:bar)
@@ -2624,20 +2681,26 @@ RuboCop::Cop::RSpec::MessageExpectation::SUPPORTED_STYLES = T.let(T.unsafe(nil),
 # This cop can be configured in your configuration using the
 # `EnforcedStyle` option and supports `--auto-gen-config`.
 #
-# @example `EnforcedStyle: have_received`
+# @example `EnforcedStyle: have_received` (default)
 #
 #   # bad
 #   expect(foo).to receive(:bar)
+#   do_something
 #
 #   # good
+#   allow(foo).to receive(:bar) # or use instance_spy
+#   do_something
 #   expect(foo).to have_received(:bar)
 # @example `EnforcedStyle: receive`
 #
 #   # bad
+#   allow(foo).to receive(:bar)
+#   do_something
 #   expect(foo).to have_received(:bar)
 #
 #   # good
 #   expect(foo).to receive(:bar)
+#   do_something
 class RuboCop::Cop::RSpec::MessageSpies < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
 
@@ -2730,6 +2793,24 @@ RuboCop::Cop::RSpec::MultipleDescribes::MSG = T.let(T.unsafe(nil), String)
 #   end
 #
 #   it 'sets the users age' do
+#   expect(user.age).to eq(22)
+#   end
+#   end
+# @example `aggregate_failures: true` (default)
+#
+#   # good - the cop ignores when RSpec aggregates failures
+#   describe UserCreator do
+#   it 'builds a user', :aggregate_failures do
+#   expect(user.name).to eq("John")
+#   expect(user.age).to eq(22)
+#   end
+#   end
+# @example `aggregate_failures: false`
+#
+#   # Detected as an offense
+#   describe UserCreator do
+#   it 'builds a user', aggregate_failures: false do
+#   expect(user.name).to eq("John")
 #   expect(user.age).to eq(22)
 #   end
 #   end
@@ -3073,7 +3154,8 @@ RuboCop::Cop::RSpec::NestedGroups::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for consistent method usage for negating expectations.
 #
-# @example
+# @example `EnforcedStyle: not_to` (default)
+#
 #   # bad
 #   it '...' do
 #   expect(false).to_not be_true
@@ -3082,6 +3164,17 @@ RuboCop::Cop::RSpec::NestedGroups::MSG = T.let(T.unsafe(nil), String)
 #   # good
 #   it '...' do
 #   expect(false).not_to be_true
+#   end
+# @example `EnforcedStyle: to_not`
+#
+#   # bad
+#   it '...' do
+#   expect(false).not_to be_true
+#   end
+#
+#   # good
+#   it '...' do
+#   expect(false).to_not be_true
 #   end
 class RuboCop::Cop::RSpec::NotToNot < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
@@ -3257,6 +3350,23 @@ class RuboCop::Cop::RSpec::Rails::AvoidSetupHook < ::RuboCop::Cop::RSpec::Base
 end
 
 RuboCop::Cop::RSpec::Rails::AvoidSetupHook::MSG = T.let(T.unsafe(nil), String)
+
+# Checks that tests use `have_http_status` instead of equality matchers.
+#
+# @example
+#   # bad
+#   expect(response.status).to be(200)
+#
+#   # good
+#   expect(response).to have_http_status(200)
+class RuboCop::Cop::RSpec::Rails::HaveHttpStatus < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  def match_status(param0 = T.unsafe(nil)); end
+  def on_send(node); end
+end
+
+RuboCop::Cop::RSpec::Rails::HaveHttpStatus::MSG = T.let(T.unsafe(nil), String)
 
 # Enforces use of symbolic or numeric value to describe HTTP status.
 #
@@ -3657,6 +3767,16 @@ RuboCop::Cop::RSpec::RepeatedIncludeExample::MSG = T.let(T.unsafe(nil), String)
 #
 # This cop can be configured using the `EnforcedStyle` option
 #
+# @example `EnforcedStyle: and_return` (default)
+#   # bad
+#   allow(Foo).to receive(:bar) { "baz" }
+#   expect(Foo).to receive(:bar) { "baz" }
+#
+#   # good
+#   allow(Foo).to receive(:bar).and_return("baz")
+#   expect(Foo).to receive(:bar).and_return("baz")
+#   # also good as the returned value is dynamic
+#   allow(Foo).to receive(:bar) { bar.baz }
 # @example `EnforcedStyle: block`
 #   # bad
 #   allow(Foo).to receive(:bar).and_return("baz")
@@ -3667,16 +3787,6 @@ RuboCop::Cop::RSpec::RepeatedIncludeExample::MSG = T.let(T.unsafe(nil), String)
 #   expect(Foo).to receive(:bar) { "baz" }
 #   # also good as the returned value is dynamic
 #   allow(Foo).to receive(:bar).and_return(bar.baz)
-# @example `EnforcedStyle: and_return`
-#   # bad
-#   allow(Foo).to receive(:bar) { "baz" }
-#   expect(Foo).to receive(:bar) { "baz" }
-#
-#   # good
-#   allow(Foo).to receive(:bar).and_return("baz")
-#   expect(Foo).to receive(:bar).and_return("baz")
-#   # also good as the returned value is dynamic
-#   allow(Foo).to receive(:bar) { bar.baz }
 class RuboCop::Cop::RSpec::ReturnFromStub < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
@@ -4753,7 +4863,7 @@ end
 
 # RuboCop RSpec specific extensions of RuboCop::AST::Node
 module RuboCop::RSpec::Node
-  # In various cops we want to regard const as literal althought it's not
+  # In various cops we want to regard const as literal although it's not
   # strictly literal.
   #
   # @return [Boolean]
