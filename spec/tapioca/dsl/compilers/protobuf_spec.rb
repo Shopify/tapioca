@@ -128,13 +128,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(cart_item_index: Google::Protobuf::UInt64Value).void }
+                  sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
                   def initialize(cart_item_index: nil); end
 
-                  sig { returns(Google::Protobuf::UInt64Value) }
+                  sig { returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index; end
 
-                  sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
+                  sig { params(value: T.nilable(Google::Protobuf::UInt64Value)).returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index=(value); end
                 end
               RBI
