@@ -106,8 +106,8 @@ module Tapioca
           klass.create_method(attribute, return_type: return_type)
           klass.create_method("#{attribute}?", return_type: "T::Boolean")
           klass.create_method("#{attribute}=", parameters: [
-                                                 create_param("value", type: return_type),
-                                               ], return_type: return_type)
+            create_param("value", type: return_type),
+          ], return_type: return_type)
         end
       end
     end
