@@ -279,7 +279,7 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
+                  sig { params(value: T.nilable(::Time)).returns(T.nilable(::Time)) }
                   def datetime_column=(value); end
                 RBI
                 assert_includes(output, expected)
