@@ -519,7 +519,6 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1177,7 +1176,7 @@ class Minitest::Test < ::Minitest::Runnable
 
   def class_name; end
   def neuter_exception(e); end
-  def new_exception(klass, msg, bt); end
+  def new_exception(klass, msg, bt, kill = T.unsafe(nil)); end
 
   # Runs a single test with setup/teardown hooks.
   def run; end
@@ -1334,5 +1333,7 @@ Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 class Object < ::BasicObject
   include ::Kernel
+  include ::ActiveSupport::ForkTracker::CoreExt
+  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Minitest::Expectations
 end
