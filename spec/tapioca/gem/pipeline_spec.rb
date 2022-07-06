@@ -3869,17 +3869,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     end
 
     it "compile RBIs with location from gem source" do
-      add_ruby_file("foo.rb", <<~RB)
-        class Foo
-          extend T::Helpers
-
-          requires_ancestor { ::Helper }
-
-          module Helper
-            def helper_method; end
-          end
-        end
-
+      add_ruby_file("bar.rb", <<~RB)
         module Bar
           extend T::Sig
 
@@ -3890,11 +3880,23 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           # Some documentation
           def self.bar; end
 
-          BAR = Foo
+          BAR = 123
 
           # We shouldn't add the documentation when it points to things like `(eval)`
           eval("def foo1; end")
           define_method(:foo2) {}
+        end
+      RB
+
+      add_ruby_file("foo.rb", <<~RB)
+        class Foo
+          extend T::Helpers
+
+          requires_ancestor { ::Helper }
+
+          module Helper
+            def helper_method; end
+          end
         end
 
         class Baz
@@ -3917,45 +3919,48 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RB
 
+      active_support_version = Gem::Specification.find_by_name("activesupport").version
+      sorbet_runtime_version = Gem::Specification.find_by_name("sorbet-runtime").version
+
       output = template(<<~RBI)
-        # source://the-dep-1.1.2/lib/foo.rb:11
+        # source://the-dep-1.1.2/lib/bar.rb:1
         module Bar
           # Some documentation
           #
-          # source://the-dep-1.1.2/lib/foo.rb:16
+          # source://the-dep-1.1.2/lib/bar.rb:6
           sig { void }
           def bar; end
 
           def foo1; end
 
-          # source://the-dep-1.1.2/lib/foo.rb:25
+          # source://the-dep-1.1.2/lib/bar.rb:15
           def foo2; end
 
           class << self
             # Some documentation
             #
-            # source://the-dep-1.1.2/lib/foo.rb:19
+            # source://the-dep-1.1.2/lib/bar.rb:9
             def bar; end
           end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:21
-        Bar::BAR = Foo
+        # source://the-dep-1.1.2/lib/bar.rb:11
+        Bar::BAR = T.let(T.unsafe(nil), Integer)
 
-        # source://the-dep-1.1.2/lib/foo.rb:40
+        # source://the-dep-1.1.2/lib/foo.rb:23
         class BasicFoo < ::BasicObject
-          # source://the-dep-1.1.2/lib/foo.rb:44
+          # source://the-dep-1.1.2/lib/foo.rb:27
           sig { void }
           def foo; end
         end
 
         # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
         #
-        # source://the-dep-1.1.2/lib/foo.rb:28
+        # source://the-dep-1.1.2/lib/foo.rb:11
         class Baz
           abstract!
 
-          # source://sorbet-runtime-#{Gem::Specification.find_by_name("sorbet-runtime").version}/lib/types/private/abstract/declare.rb:37
+          # source://sorbet-runtime-#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb:37
         <% if ruby_version(">= 3.1") %>
           def initialize(*args, **_arg1, &blk); end
         <% else %>
@@ -3972,26 +3977,26 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def helper_method; end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:33
+        # source://the-dep-1.1.2/lib/foo.rb:16
         class Quux < ::T::Struct
           class << self
-            # source://sorbet-runtime-#{Gem::Specification.find_by_name("sorbet-runtime").version}/lib/types/struct.rb:13
+            # source://sorbet-runtime-#{sorbet_runtime_version}/lib/types/struct.rb:13
             def inherited(s); end
           end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:36
+        # source://the-dep-1.1.2/lib/foo.rb:19
         class String
           include ::Comparable
 
-          # source://the-dep-1.1.2/lib/foo.rb:37
+          # source://the-dep-1.1.2/lib/foo.rb:20
           def foo; end
         end
 
-        # source://activesupport-#{Gem::Specification.find_by_name("activesupport").version}/lib/active_support/core_ext/object/blank.rb:104
+        # source://activesupport-#{active_support_version}/lib/active_support/core_ext/object/blank.rb:104
         String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-        # source://activesupport-#{Gem::Specification.find_by_name("activesupport").version}/lib/active_support/core_ext/object/blank.rb:105
+        # source://activesupport-#{active_support_version}/lib/active_support/core_ext/object/blank.rb:105
         String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
