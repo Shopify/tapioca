@@ -35,7 +35,7 @@ module Tapioca
             when ActiveRecord::Type::Boolean
               "T::Boolean"
             when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
-              "::DateTime"
+              "::Time"
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
             else

@@ -118,10 +118,10 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(::DateTime)) }
+                  sig { returns(T.nilable(::Time)) }
                   def created_at; end
 
-                  sig { params(value: T.nilable(::DateTime)).returns(T.nilable(::DateTime)) }
+                  sig { params(value: T.nilable(::Time)).returns(T.nilable(::Time)) }
                   def created_at=(value); end
 
                   sig { returns(T.nilable(::Integer)) }

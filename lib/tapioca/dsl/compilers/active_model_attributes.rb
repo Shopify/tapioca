@@ -103,7 +103,7 @@ module Tapioca
           when ActiveModel::Type::Date
             "::Date"
           when ActiveModel::Type::DateTime, ActiveModel::Type::Time
-            "::DateTime"
+            "::Time"
           when ActiveModel::Type::Decimal
             "::BigDecimal"
           when ActiveModel::Type::Float
