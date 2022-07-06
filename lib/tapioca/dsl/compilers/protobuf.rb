@@ -146,6 +146,11 @@ module Tapioca
           end
         end
 
+        sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        def nilable_descriptor?(descriptor)
+          descriptor.label == :optional && descriptor.type == :message
+        end
+
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
@@ -184,11 +189,8 @@ module Tapioca
               )
             end
           else
-            type = if descriptor.label == :optional && descriptor.type == :message
-              "T.nilable(#{type_of(descriptor)})"
-            else
-              type_of(descriptor)
-            end
+            type = type_of(descriptor)
+            type = as_nilable_type(type) if nilable_descriptor?(descriptor)
 
             Field.new(
               name: descriptor.name,
