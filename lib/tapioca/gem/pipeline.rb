@@ -171,11 +171,8 @@ module Tapioca
         return if name.start_with?("#<")
         return if name.downcase == name
         return if alias_namespaced?(name)
-        return if seen?(name)
 
         return if T::Enum === event.constant # T::Enum instances are defined via `compile_enums`
-
-        mark_seen(name)
 
         if event.is_a?(Gem::ForeignConstantFound)
           compile_foreign_constant(name, event.constant)
@@ -212,6 +209,10 @@ module Tapioca
 
       sig { params(name: String, constant: Module).void }
       def compile_alias(name, constant)
+        return if seen?(name)
+
+        mark_seen(name)
+
         return if symbol_in_payload?(name)
 
         target = name_of(constant)
@@ -229,6 +230,10 @@ module Tapioca
 
       sig { params(name: String, value: BasicObject).void.checked(:never) }
       def compile_object(name, value)
+        return if seen?(name)
+
+        mark_seen(name)
+
         return if symbol_in_payload?(name)
 
         klass = class_of(value)
@@ -262,6 +267,9 @@ module Tapioca
       def compile_module(name, constant, foreign_constant: false)
         return unless defined_in_gem?(constant, strict: false) || foreign_constant
         return if Tapioca::TypeVariableModule === constant
+        return if seen?(name)
+
+        mark_seen(name)
 
         scope =
           if constant.is_a?(Class)
