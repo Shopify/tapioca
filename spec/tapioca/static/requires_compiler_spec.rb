@@ -200,7 +200,7 @@ module Tapioca
             require "b" # やあ
           RB
 
-          @project.write("lib/win-31j.rb", (<<~RB).encode("Windows-31J"))
+          @project.write("lib/win-31j.rb", <<~RB.encode("Windows-31J"))
             # encoding:Windows-31J
 
             require "b"

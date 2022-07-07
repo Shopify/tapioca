@@ -261,7 +261,7 @@ GEM
     redis (4.6.0)
     regexp_parser (2.5.0)
     rexml (3.2.5)
-    rubocop (1.31.1)
+    rubocop (1.31.2)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
@@ -279,9 +279,8 @@ GEM
       rubocop (~> 1.31)
     rubocop-sorbet (0.6.10)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.1.0)
+    ruby-lsp (0.2.0)
       language_server-protocol
-      rubocop (>= 1.0)
       sorbet-runtime
       syntax_tree (>= 2.4)
     ruby-progressbar (1.11.0)
@@ -316,7 +315,7 @@ GEM
     sqlite3 (1.4.4)
     state_machines (0.5.0)
     strscan (3.0.2)
-    syntax_tree (2.7.1)
+    syntax_tree (3.0.0)
       prettier_print
     thor (1.2.1)
     timeout (0.2.0)
