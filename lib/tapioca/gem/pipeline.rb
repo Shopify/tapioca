@@ -13,8 +13,8 @@ module Tapioca
       sig { returns(Gemfile::GemSpec) }
       attr_reader :gem
 
-      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean).void }
-      def initialize(gem, include_doc: false)
+      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean, include_loc: T::Boolean).void }
+      def initialize(gem, include_doc: false, include_loc: false)
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
@@ -40,6 +40,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::Subconstants.new(self)
         @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
+        @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
       end
 
@@ -87,13 +88,14 @@ module Tapioca
         params(
           symbol: String,
           constant: Module,
+          method: UnboundMethod,
           node: RBI::Method,
           signature: T.untyped,
           parameters: T::Array[[Symbol, String]]
         ).void.checked(:never)
       end
-      def push_method(symbol, constant, node, signature, parameters)
-        @events << Gem::MethodNodeAdded.new(symbol, constant, node, signature, parameters)
+      def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
+        @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
       sig { params(symbol_name: String).returns(T::Boolean) }

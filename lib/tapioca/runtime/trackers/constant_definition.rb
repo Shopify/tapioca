@@ -48,6 +48,11 @@ module Tapioca
           files = @class_files.fetch(name, [])
           files.map(&:path).to_set
         end
+
+        def self.locations_for(klass)
+          name = String === klass ? klass : name_of(klass)
+          @class_files[name] || Set.new
+        end
       end
     end
   end

@@ -152,6 +152,8 @@ Options:
           [--verify], [--no-verify]                           # Verify RBIs are up-to-date
           [--doc], [--no-doc]                                 # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
                                                               # Default: true
+          [--loc], [--no-loc]                                 # Include comments with source location when generating RBIs
+                                                              # Default: true
           [--exported-gem-rbis], [--no-exported-gem-rbis]     # Include RBIs found in the `rbi/` directory of the gem
                                                               # Default: true
   -w, [--workers=N]                                           # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
@@ -802,6 +804,7 @@ gem:
     activesupport: 'false'
   verify: false
   doc: true
+  loc: true
   exported_gem_rbis: true
   workers: 1
   auto_strictness: true

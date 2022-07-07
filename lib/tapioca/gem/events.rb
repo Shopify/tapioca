@@ -105,6 +105,9 @@ module Tapioca
     class MethodNodeAdded < NodeAdded
       extend T::Sig
 
+      sig { returns(UnboundMethod) }
+      attr_reader :method
+
       sig { returns(RBI::Method) }
       attr_reader :node
 
@@ -118,14 +121,16 @@ module Tapioca
         params(
           symbol: String,
           constant: Module,
+          method: UnboundMethod,
           node: RBI::Method,
           signature: T.untyped,
           parameters: T::Array[[Symbol, String]]
         ).void.checked(:never)
       end
-      def initialize(symbol, constant, node, signature, parameters)
+      def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node
+        @method = method
         @signature = signature
         @parameters = parameters
       end
