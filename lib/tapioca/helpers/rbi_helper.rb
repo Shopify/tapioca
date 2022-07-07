@@ -93,7 +93,10 @@ module Tapioca
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
-      !name.to_sym.inspect.start_with?(':"', ":@", ":$")
+      name == "==" || !(
+        name.to_sym.inspect.start_with?(':"', ":@", ":$") ||
+        name.delete_suffix("=").to_sym.inspect.start_with?(':"', ":@", ":$")
+      )
     end
 
     sig { params(name: String).returns(T::Boolean) }
