@@ -211,6 +211,35 @@ module Tapioca
                 assert_includes(output, expected)
               end
 
+              it "skips columns with names that can't be Ruby method names" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.string :"4_to_5"
+                        t.string :"foo-bar"
+                        t.string :"@foo"
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                  end
+                RUBY
+
+                output = rbi_for(:Post)
+
+                # "4_to_5" should never be the start of a method name,
+                # but method names like "saved_change_to_4_to_5" are fine.
+                refute_includes(output, "def 4_to_5")
+                # no method name should include "foo-bar"
+                refute_includes(output, "foo-bar")
+                # no method name should include "@foo"
+                refute_includes(output, "@foo")
+              end
+
               it "generates a proper type for every ActiveRecord column type" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
