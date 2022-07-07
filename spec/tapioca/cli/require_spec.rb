@@ -8,7 +8,7 @@ module Tapioca
     describe "cli::require" do
       before(:all) do
         project.bundle_install
-        project.tapioca("init")
+        project.tapioca("configure")
       end
 
       after do

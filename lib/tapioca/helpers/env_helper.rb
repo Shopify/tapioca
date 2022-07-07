@@ -8,8 +8,8 @@ module Tapioca
 
     requires_ancestor { Thor }
 
-    sig { void }
-    def set_environment
+    sig { params(options: T::Hash[Symbol, T.untyped]).void }
+    def set_environment(options) # rubocop:disable Naming/AccessorMethodName
       ENV["RAILS_ENV"] = ENV["RACK_ENV"] = options[:environment]
     end
   end
