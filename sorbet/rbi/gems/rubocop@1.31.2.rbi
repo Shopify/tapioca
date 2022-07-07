@@ -463,6 +463,7 @@ class RuboCop::CommentConfig::CopAnalysis < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -481,8 +482,8 @@ class RuboCop::Config
   # @return [Config] a new instance of Config
   def initialize(hash = T.unsafe(nil), loaded_path = T.unsafe(nil)); end
 
-  def [](*args, &block); end
-  def []=(*args, &block); end
+  def [](*args, **_arg1, &block); end
+  def []=(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def active_support_extensions_enabled?; end
@@ -501,20 +502,20 @@ class RuboCop::Config
 
   def bundler_lock_file_path; end
   def check; end
-  def delete(*args, &block); end
+  def delete(*args, **_arg1, &block); end
   def deprecation_check; end
-  def dig(*args, &block); end
+  def dig(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def disabled_new_cops?; end
 
-  def each(*args, &block); end
-  def each_key(*args, &block); end
+  def each(*args, **_arg1, &block); end
+  def each_key(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def enabled_new_cops?; end
 
-  def fetch(*args, &block); end
+  def fetch(*args, **_arg1, &block); end
 
   # @return [Boolean]
   def file_to_exclude?(file); end
@@ -546,16 +547,16 @@ class RuboCop::Config
   # @return [Boolean]
   def internal?; end
 
-  def key?(*args, &block); end
-  def keys(*args, &block); end
+  def key?(*args, **_arg1, &block); end
+  def keys(*args, **_arg1, &block); end
   def loaded_features; end
 
   # Returns the value of attribute loaded_path.
   def loaded_path; end
 
   def make_excludes_absolute; end
-  def map(*args, &block); end
-  def merge(*args, &block); end
+  def map(*args, **_arg1, &block); end
+  def merge(*args, **_arg1, &block); end
   def path_relative_to_config(path); end
   def patterns_to_exclude; end
   def patterns_to_include; end
@@ -567,16 +568,16 @@ class RuboCop::Config
   # @return [Boolean]
   def possibly_include_hidden?; end
 
-  def replace(*args, &block); end
+  def replace(*args, **_arg1, &block); end
   def signature; end
   def smart_loaded_path; end
   def target_rails_version; end
-  def target_ruby_version(*args, &block); end
-  def to_h(*args, &block); end
-  def to_hash(*args, &block); end
+  def target_ruby_version(*args, **_arg1, &block); end
+  def to_h(*args, **_arg1, &block); end
+  def to_hash(*args, **_arg1, &block); end
   def to_s; end
-  def transform_values(*args, &block); end
-  def validate(*args, &block); end
+  def transform_values(*args, **_arg1, &block); end
+  def validate(*args, **_arg1, &block); end
   def validate_after_resolution; end
 
   private
@@ -620,6 +621,7 @@ class RuboCop::Config::CopConfig < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1239,8 +1241,8 @@ class RuboCop::ConfigValidator
   # @return [ConfigValidator] a new instance of ConfigValidator
   def initialize(config); end
 
-  def for_all_cops(*args, &block); end
-  def smart_loaded_path(*args, &block); end
+  def for_all_cops(*args, **_arg1, &block); end
+  def smart_loaded_path(*args, **_arg1, &block); end
   def target_ruby_version; end
   def validate; end
 
@@ -1885,6 +1887,7 @@ class RuboCop::Cop::Base::InvestigationReport < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2021,6 +2024,7 @@ RuboCop::Cop::Bundler::DuplicatedGem::MSG = T.let(T.unsafe(nil), String)
 #   # Version 2.1 introduces breaking change baz
 #   gem 'bar', '< 2.1'
 class RuboCop::Cop::Bundler::GemComment < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::VisibilityHelp
   include ::RuboCop::Cop::DefNode
   include ::RuboCop::Cop::GemDeclaration
 
@@ -2673,6 +2677,7 @@ class RuboCop::Cop::Commissioner::InvestigationReport < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2863,6 +2868,7 @@ class RuboCop::Cop::Cop::Correction < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -2924,6 +2930,7 @@ RuboCop::Cop::Corrector::NOOP_CONSUMER = T.let(T.unsafe(nil), Proc)
 
 # Common functionality for checking def nodes.
 module RuboCop::Cop::DefNode
+  include ::RuboCop::Cop::VisibilityHelp
   extend ::RuboCop::AST::NodePattern::Macros
 
   def non_public_modifier?(param0 = T.unsafe(nil)); end
@@ -2935,11 +2942,7 @@ module RuboCop::Cop::DefNode
 
   # @return [Boolean]
   def preceding_non_public_modifier?(node); end
-
-  def stripped_source_upto(index); end
 end
-
-RuboCop::Cop::DefNode::NON_PUBLIC_MODIFIERS = T.let(T.unsafe(nil), Array)
 
 # Helpers for builtin documentation
 module RuboCop::Cop::Documentation
@@ -4017,6 +4020,7 @@ class RuboCop::Cop::HashTransformMethod::Autocorrection < ::Struct
     def from_map_to_h(node, match); end
     def from_to_h(node, match); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -4066,6 +4070,7 @@ class RuboCop::Cop::HashTransformMethod::Captures < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6921,7 +6926,7 @@ class RuboCop::Cop::Layout::FirstArrayElementIndentation < ::RuboCop::Cop::Base
 
   def brace_alignment_style; end
   def check(array_node, left_parenthesis); end
-  def check_right_bracket(right_bracket, left_bracket, left_parenthesis); end
+  def check_right_bracket(right_bracket, first_elem, left_bracket, left_parenthesis); end
   def message(base_description); end
   def message_for_right_bracket(indent_base_type); end
 end
@@ -7080,7 +7085,7 @@ class RuboCop::Cop::Layout::FirstHashElementIndentation < ::RuboCop::Cop::Base
   def brace_alignment_style; end
   def check(hash_node, left_parenthesis); end
   def check_based_on_longest_key(hash_node, left_brace, left_parenthesis); end
-  def check_right_brace(right_brace, left_brace, left_parenthesis); end
+  def check_right_brace(right_brace, first_pair, left_brace, left_parenthesis); end
 
   # @return [Boolean]
   def enforce_first_argument_with_fixed_indentation?; end
@@ -13949,13 +13954,16 @@ class RuboCop::Cop::Lint::NonAtomicFileOperation < ::RuboCop::Cop::Base
 
   private
 
+  # @return [Boolean]
+  def allowable_use_with_if?(if_node); end
+
   def autocorrect(corrector, node, range); end
 
   # @return [Boolean]
   def force_option?(node); end
 
   def message(node); end
-  def offense(node, exist_node); end
+  def register_offense(node, exist_node); end
   def replacement_method(node); end
 end
 
@@ -17984,14 +17992,12 @@ module RuboCop::Cop::MultilineElementIndentation
   def detected_styles(actual_column, offset, left_parenthesis, left_brace); end
   def detected_styles_for_column(column, left_parenthesis, left_brace); end
   def each_argument_node(node, type); end
-  def hash_pair_where_value_beginning_with(left_brace); end
+  def hash_pair_where_value_beginning_with(left_brace, first); end
   def incorrect_style_detected(styles, first, base_column_type); end
-  def indent_base(left_brace, left_parenthesis); end
+  def indent_base(left_brace, first, left_parenthesis); end
 
   # @return [Boolean]
   def key_and_value_begin_on_same_line?(pair); end
-
-  def node_beginning_with(left_brace); end
 
   # @return [Boolean]
   def right_sibling_begins_on_subsequent_line?(pair); end
@@ -18811,6 +18817,7 @@ class RuboCop::Cop::Naming::InclusiveLanguage::WordLocation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -19585,6 +19592,7 @@ class RuboCop::Cop::Offense::PseudoSourceRange < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -23007,6 +23015,7 @@ RuboCop::Cop::Style::Documentation::MSG = T.let(T.unsafe(nil), String)
 #   end
 class RuboCop::Cop::Style::DocumentationMethod < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::DocumentationComment
+  include ::RuboCop::Cop::VisibilityHelp
   include ::RuboCop::Cop::DefNode
 
   def module_function_node?(param0 = T.unsafe(nil)); end
@@ -32566,7 +32575,6 @@ class RuboCop::Cop::Style::TopLevelMethodDefinition < ::RuboCop::Cop::Base
 end
 
 RuboCop::Cop::Style::TopLevelMethodDefinition::MSG = T.let(T.unsafe(nil), String)
-RuboCop::Cop::Style::TopLevelMethodDefinition::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Checks for trailing code after the class definition.
 #
@@ -34319,6 +34327,7 @@ class RuboCop::Cop::VariableForce::AssignmentReference < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -34424,6 +34433,7 @@ class RuboCop::Cop::VariableForce::Branch::Base < ::Struct
     def inherited(subclass); end
 
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
     def type; end
@@ -34816,6 +34826,7 @@ class RuboCop::Cop::VariableForce::VariableReference < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -35478,6 +35489,7 @@ class RuboCop::Formatter::HTMLFormatter::Color < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -35543,6 +35555,7 @@ class RuboCop::Formatter::HTMLFormatter::FileOffenses < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -35585,6 +35598,7 @@ class RuboCop::Formatter::HTMLFormatter::Summary < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
