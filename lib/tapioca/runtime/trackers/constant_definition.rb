@@ -17,23 +17,36 @@ module Tapioca
           const :path, String
         end
 
-        @class_files = {}
+        @class_files = {}.compare_by_identity
 
         # Immediately activated upon load. Observes class/module definition.
-        TracePoint.trace(:class) do |tp|
-          unless tp.self.singleton_class?
-            key = name_of(tp.self)
+        TracePoint.trace(:class, :c_return) do |tp|
+          case tp.event
+          when :class
+            unless tp.self.singleton_class?
+              key = tp.self
+              file = tp.path
+              lineno = tp.lineno
+
+              if file == "(eval)"
+                caller_location = T.must(caller_locations)
+                  .drop_while { |loc| loc.path == "(eval)" }
+                  .first
+
+                file = caller_location&.path
+                lineno = caller_location&.lineno
+              end
+
+              @class_files[key] ||= Set.new
+              @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
+            end
+          when :c_return
+            next unless tp.method_id == :new
+            next unless Module === tp.return_value
+
             file = tp.path
             lineno = tp.lineno
-
-            if file == "(eval)"
-              caller_location = T.must(caller_locations)
-                .drop_while { |loc| loc.path == "(eval)" }
-                .first
-
-              file = caller_location&.path
-              lineno = caller_location&.lineno
-            end
+            key = tp.return_value
 
             @class_files[key] ||= Set.new
             @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
@@ -44,14 +57,12 @@ module Tapioca
         # about situations where the class was opened prior to +require+ing,
         # or where metaprogramming was used via +eval+, etc.
         def self.files_for(klass)
-          name = String === klass ? klass : name_of(klass)
-          files = @class_files.fetch(name, [])
+          files = @class_files.fetch(klass, [])
           files.map(&:path).to_set
         end
 
         def self.locations_for(klass)
-          name = String === klass ? klass : name_of(klass)
-          @class_files[name] || Set.new
+          @class_files[klass] || Set.new
         end
       end
     end

@@ -3917,6 +3917,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { void }
           def foo; end
         end
+
+        NewClass = Class.new
       RB
 
       active_support_version = Gem::Specification.find_by_name("activesupport").version
@@ -3976,6 +3978,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           # source://the-dep-1.1.2/lib/foo.rb:7
           def helper_method; end
         end
+
+        # source://the-dep-1.1.2/lib/foo.rb:30
+        class NewClass; end
 
         # source://the-dep-1.1.2/lib/foo.rb:16
         class Quux < ::T::Struct
