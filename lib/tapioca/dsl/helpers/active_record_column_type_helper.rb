@@ -38,12 +38,20 @@ module Tapioca
               "::Time"
             when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
               "::ActiveSupport::TimeWithZone"
+            when ActiveRecord::Enum::EnumType
+              "::String"
             else
               handle_unknown_type(column_type)
             end
 
           column = @constant.columns_hash[column_name]
-          setter_type = getter_type
+          setter_type =
+            case column_type
+            when ActiveRecord::Enum::EnumType
+              enum_setter_type(column_type)
+            else
+              getter_type
+            end
 
           if column&.null
             return [as_nilable_type(getter_type), as_nilable_type(setter_type)]
@@ -107,6 +115,16 @@ module Tapioca
           _, first_argument_type = signature.arg_types.first
 
           first_argument_type.to_s
+        end
+
+        sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }
+        def enum_setter_type(column_type)
+          case column_type.subtype
+          when ActiveRecord::Type::Integer
+            "T.any(::String, ::Symbol, ::Integer)"
+          else
+            "T.any(::String, ::Symbol)"
+          end
         end
       end
     end

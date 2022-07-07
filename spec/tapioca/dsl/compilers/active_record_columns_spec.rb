@@ -225,6 +225,9 @@ module Tapioca
                         t.datetime :datetime_column
                         t.decimal :money_column
                         t.text :serialized_column
+                        # Ideally this would also test t.enum but that is not supported by sqlite
+                        t.integer :integer_enum_column
+                        t.string :string_enum_column
                       end
                     end
                   end
@@ -237,6 +240,8 @@ module Tapioca
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
                     serialize :serialized_column, JSON
+                    enum :integer_enum_column, [ :active, :archived ]
+                    enum :string_enum_column, { high: 'high', low: 'low' }
                   end
                 RUBY
 
@@ -293,6 +298,30 @@ module Tapioca
                 expected = indented(<<~RBI, 4)
                   sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def integer_enum_column; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T.any(::String, ::Symbol, ::Integer))).returns(T.nilable(T.any(::String, ::Symbol, ::Integer))) }
+                  def integer_enum_column=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def string_enum_column; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T.any(::String, ::Symbol))).returns(T.nilable(T.any(::String, ::Symbol))) }
+                  def string_enum_column=(value); end
                 RBI
                 assert_includes(output, expected)
               end
