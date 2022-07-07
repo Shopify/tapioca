@@ -17,8 +17,11 @@ module Tapioca
 
         sig { override.params(event: ScopeNodeAdded).void }
         def on_scope(event)
-          location = Runtime::Trackers::ConstantDefinition.locations_for(event.symbol)
-          location = location.find do |loc|
+          # Instead of using `const_source_location`, which always reports the first place where a constant is defined,
+          # we filter the locations tracked by ConstantDefinition. This allows us to provide the correct location for
+          # constants that are defined by multiple gems.
+          locations = Runtime::Trackers::ConstantDefinition.locations_for(event.symbol)
+          location = locations.find do |loc|
             Pathname.new(loc.path).realpath.to_s.include?(@pipeline.gem.full_gem_path)
           end
 
