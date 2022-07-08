@@ -21,48 +21,45 @@ module Tapioca
 
         # Immediately activated upon load. Observes class/module definition.
         TracePoint.trace(:class, :c_return) do |tp|
+          file = tp.path
+          lineno = tp.lineno
+
           case tp.event
           when :class
-            unless tp.self.singleton_class?
-              key = tp.self
-              file = tp.path
-              lineno = tp.lineno
+            next if tp.self.singleton_class?
 
-              if file == "(eval)"
-                caller_location = T.must(caller_locations)
-                  .drop_while { |loc| loc.path == "(eval)" }
-                  .first
+            key = tp.self
 
-                file = caller_location&.path
-                lineno = caller_location&.lineno
-              end
+            if file == "(eval)"
+              caller_location = T.must(caller_locations)
+                .drop_while { |loc| loc.path == "(eval)" }
+                .first
 
-              @class_files[key] ||= Set.new
-              @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
+              file = caller_location&.path
+              lineno = caller_location&.lineno
             end
           when :c_return
             next unless tp.method_id == :new
             next unless Module === tp.return_value
 
-            file = tp.path
-            lineno = tp.lineno
             key = tp.return_value
-
-            @class_files[key] ||= Set.new
-            @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
+          else
+            next
           end
+
+          @class_files[key] ||= Set.new
+          @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
         end
 
         # Returns the files in which this class or module was opened. Doesn't know
         # about situations where the class was opened prior to +require+ing,
         # or where metaprogramming was used via +eval+, etc.
         def self.files_for(klass)
-          files = @class_files.fetch(klass, [])
-          files.map(&:path).to_set
+          locations_for(klass).map(&:path).to_set
         end
 
         def self.locations_for(klass)
-          @class_files[klass] || Set.new
+          @class_files.fetch(klass, Set.new)
         end
       end
     end
