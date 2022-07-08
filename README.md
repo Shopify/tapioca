@@ -93,6 +93,8 @@ Options:
 
 ## Getting started
 
+**Note:** If you've used other tools to get typing information, such as `sorbet-typed` or `sorbet-rails`, for your project, start at: [Migrating to Tapioca](https://github.com/Shopify/tapioca/wiki/Migrating-to-Tapioca).
+
 Execute this command to get started:
 
 ```shell
