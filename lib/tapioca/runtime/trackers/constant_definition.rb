@@ -21,34 +21,45 @@ module Tapioca
 
         # Immediately activated upon load. Observes class/module definition.
         TracePoint.trace(:class, :c_return) do |tp|
-          file = tp.path
-          lineno = tp.lineno
-
           case tp.event
           when :class
             next if tp.self.singleton_class?
 
             key = tp.self
 
-            if file == "(eval)"
+            if tp.path == "(eval)"
               caller_location = T.must(caller_locations)
                 .drop_while { |loc| loc.path == "(eval)" }
                 .first
 
-              file = caller_location&.path
-              lineno = caller_location&.lineno
+              next unless caller_location
+
+              loc = ConstantLocation.new(
+                path: caller_location.absolute_path || "",
+                lineno: caller_location.lineno
+              )
+            else
+              loc = build_constant_location(tp, caller_locations)
             end
           when :c_return
             next unless tp.method_id == :new
             next unless Module === tp.return_value
 
             key = tp.return_value
+            loc = build_constant_location(tp, caller_locations)
           else
             next
           end
 
           @class_files[key] ||= Set.new
-          @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
+          @class_files[key] << loc
+        end
+
+        def self.build_constant_location(tp, locations)
+          file = resolve_loc(caller_locations)
+          lineno = file == File.realpath(tp.path) ? tp.lineno : 0
+
+          ConstantLocation.new(path: file, lineno: lineno)
         end
 
         # Returns the files in which this class or module was opened. Doesn't know
