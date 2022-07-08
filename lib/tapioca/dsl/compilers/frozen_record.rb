@@ -65,7 +65,7 @@ module Tapioca
       class FrozenRecord < Compiler
         extend T::Sig
 
-        ConstantType = type_member { { fixed: T.class_of(::FrozenRecord::Base) } }
+        ConstantType = type_member { { fixed: T.all(T.class_of(::FrozenRecord::Base), Extensions::FrozenRecord) } }
 
         sig { override.void }
         def decorate
@@ -97,7 +97,7 @@ module Tapioca
 
         sig { params(record: RBI::Scope).void }
         def decorate_scopes(record)
-          scopes = T.unsafe(constant).__tapioca_scope_names
+          scopes = constant.__tapioca_scope_names
           return if scopes.nil?
 
           module_name = "GeneratedRelationMethods"
