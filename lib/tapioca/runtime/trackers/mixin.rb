@@ -42,7 +42,7 @@ module Tapioca
         def self.register(constant, mixin, mixin_type)
           return unless @enabled
 
-          location = Reflection.required_from_location
+          location = Reflection.resolve_loc(caller_locations)
 
           constants = constants_with_mixin(mixin)
           constants.fetch(mixin_type).store(constant, location)

@@ -158,15 +158,14 @@ module Tapioca
       # Examines the call stack to identify the closest location where a "require" is performed
       # by searching for the label "<top (required)>". If none is found, it returns the location
       # labeled "<main>", which is the original call site.
-      sig { returns(String) }
-      def required_from_location
-        locations = Kernel.caller_locations
+      sig { params(locations: T.nilable(T::Array[Thread::Backtrace::Location])).returns(String) }
+      def resolve_loc(locations)
         return "" unless locations
 
-        required_location = locations.find { |loc| REQUIRED_FROM_LABELS.include?(loc.label) }
-        return "" unless required_location
+        resolved_loc = locations.find { |loc| REQUIRED_FROM_LABELS.include?(loc.label) }
+        return "" unless resolved_loc
 
-        required_location.absolute_path || ""
+        resolved_loc.absolute_path || ""
       end
 
       sig { params(constant: Module).returns(T.nilable(String)) }
