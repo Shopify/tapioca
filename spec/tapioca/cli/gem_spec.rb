@@ -1604,7 +1604,7 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "advises of removed file(s) and returns exit_status 1" do
+        it "is aware of exclude option and does not error due to removed files" do
           @project.tapioca("gem")
 
           result = @project.tapioca("gem --verify --exclude foo bar")
@@ -1612,14 +1612,7 @@ module Tapioca
           assert_equal(<<~OUT, result.out)
             Checking for out-of-date RBIs...
 
-            RBI files are out-of-date. In your development environment, please run:
-              `bin/tapioca gem`
-            Once it is complete, be sure to commit and push any changes
-
-            Reason:
-              File(s) removed:
-              - sorbet/rbi/gems/bar@0.3.0.rbi
-              - sorbet/rbi/gems/foo@0.0.1.rbi
+            Nothing to do, all RBIs are up-to-date.
           OUT
 
           # Does not actually modify anything
@@ -1627,7 +1620,7 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
 
           assert_empty_stderr(result)
-          refute_success_status(result)
+          assert_success_status(result)
         end
 
         it "advises of added/removed/changed file(s) and returns exit_status 1" do

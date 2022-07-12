@@ -260,7 +260,7 @@ module Tapioca
         end
 
         if gems.empty? && !all
-          command.sync(should_verify: verify)
+          command.sync(should_verify: verify, exclude: options[:exclude])
         else
           command.execute
         end
