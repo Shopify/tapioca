@@ -14,8 +14,11 @@ module Tapioca
       return unless File.exist?(file)
 
       say("Loading #{kind} RBIs from #{file}... ")
-      parse_and_index_file(index, file)
-      say(" Done", :green)
+      time = Benchmark.realtime do
+        parse_and_index_file(index, file)
+      end
+      say(" Done ", :green)
+      say("(#{time.round(2)}s)")
     end
 
     sig { params(index: RBI::Index, kind: String, dir: String).void }
@@ -27,9 +30,12 @@ module Tapioca
       else
         say("Loading #{kind} RBIs from #{dir}... ")
       end
-      files = Dir.glob("#{dir}/**/*.rbi").sort
-      parse_and_index_files(index, files)
-      say(" Done", :green)
+      time = Benchmark.realtime do
+        files = Dir.glob("#{dir}/**/*.rbi").sort
+        parse_and_index_files(index, files)
+      end
+      say(" Done ", :green)
+      say("(#{time.round(2)}s)")
     end
 
     sig do
@@ -42,13 +48,16 @@ module Tapioca
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
       duplicates = {}
       say("Looking for duplicates... ")
-      index.keys.each do |key|
-        nodes = index[key]
-        next unless shims_or_todos_have_duplicates?(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
+      time = Benchmark.realtime do
+        index.keys.each do |key|
+          nodes = index[key]
+          next unless shims_or_todos_have_duplicates?(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
 
-        duplicates[key] = nodes
+          duplicates[key] = nodes
+        end
       end
-      say(" Done", :green)
+      say(" Done ", :green)
+      say("(#{time.round(2)}s)")
       duplicates
     end
 
