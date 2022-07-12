@@ -159,6 +159,8 @@ module Tapioca
 
     sig { params(index: RBI::Index, file: String).void }
     def parse_and_index_file(index, file)
+      return if Spoom::Sorbet::Sigils.file_strictness(file) == "ignore"
+
       tree = RBI::Parser.parse_file(file)
       index.visit(tree)
     rescue RBI::ParseError => e
