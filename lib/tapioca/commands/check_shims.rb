@@ -51,7 +51,7 @@ module Tapioca
                 exit(1)
               end
 
-              index_payload(index, payload_path)
+              index_rbis(index, "payload", payload_path)
             end
           else
             say_error("The version of Sorbet used in your Gemfile.lock does not support `--print=payload-sources`")

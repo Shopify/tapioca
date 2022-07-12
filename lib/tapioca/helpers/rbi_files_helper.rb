@@ -9,16 +9,6 @@ module Tapioca
     requires_ancestor { Thor::Shell }
     requires_ancestor { SorbetHelper }
 
-    sig { params(index: RBI::Index, dir: String).void }
-    def index_payload(index, dir)
-      return unless Dir.exist?(dir)
-
-      say("Loading Sorbet payload... ")
-      files = Dir.glob("#{dir}/**/*.rbi").sort
-      parse_and_index_files(index, files)
-      say(" Done", :green)
-    end
-
     sig { params(index: RBI::Index, kind: String, file: String).void }
     def index_rbi(index, kind, file)
       return unless File.exist?(file)
@@ -32,7 +22,11 @@ module Tapioca
     def index_rbis(index, kind, dir)
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
 
-      say("Loading #{kind} RBIs from #{dir}... ")
+      if kind == "payload"
+        say("Loading Sorbet payload... ")
+      else
+        say("Loading #{kind} RBIs from #{dir}... ")
+      end
       files = Dir.glob("#{dir}/**/*.rbi").sort
       parse_and_index_files(index, files)
       say(" Done", :green)
