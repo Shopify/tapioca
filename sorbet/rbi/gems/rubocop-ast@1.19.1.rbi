@@ -3905,6 +3905,9 @@ class RuboCop::AST::Token
   def pos; end
 
   # @return [Boolean]
+  def regexp_dots?; end
+
+  # @return [Boolean]
   def rescue_modifier?; end
 
   # @return [Boolean]
