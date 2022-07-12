@@ -608,6 +608,35 @@ module Tapioca
 
           refute_success_status(result)
         end
+
+        it "ignores files typed: ignore" do
+          @project.write("sorbet/rbi/annotations/foo.rbi", <<~RBI)
+            # typed: ignore
+
+            class Foo; end
+          RBI
+
+          @project.write("sorbet/rbi/gems/foo.rbi", <<~RBI)
+            # typed: ignore
+
+            class Foo; end
+          RBI
+
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            # typed: ignore
+
+            class Foo; end
+          RBI
+
+          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+            # typed: ignore
+
+            class Foo; end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+          assert_success_status(result)
+        end
       end
 
       describe "when Sorbet version is too old" do
