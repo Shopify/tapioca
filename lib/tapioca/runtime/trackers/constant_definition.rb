@@ -20,39 +20,33 @@ module Tapioca
         @class_files = {}.compare_by_identity
 
         # Immediately activated upon load. Observes class/module definition.
-        TracePoint.trace(:class, :c_return) do |tp|
-          case tp.event
-          when :class
-            next if tp.self.singleton_class?
+        TracePoint.trace(:class) do |tp|
+          next if tp.self.singleton_class?
 
-            key = tp.self
+          key = tp.self
 
-            if tp.path == "(eval)"
-              caller_location = T.must(caller_locations)
-                .drop_while { |loc| loc.path == "(eval)" }
-                .first
+          if tp.path == "(eval)"
+            caller_location = T.must(caller_locations)
+              .drop_while { |loc| loc.path == "(eval)" }
+              .first
 
-              next unless caller_location
+            next unless caller_location
 
-              loc = ConstantLocation.new(
-                path: caller_location.absolute_path || "",
-                lineno: caller_location.lineno
-              )
-            else
-              loc = build_constant_location(tp, caller_locations)
-            end
-          when :c_return
-            next unless tp.method_id == :new
-            next unless Module === tp.return_value
-
-            key = tp.return_value
-            loc = build_constant_location(tp, caller_locations)
+            loc = ConstantLocation.new(path: caller_location.absolute_path || "", lineno: caller_location.lineno)
           else
-            next
+            loc = build_constant_location(tp, caller_locations)
           end
 
-          @class_files[key] ||= Set.new
-          @class_files[key] << loc
+          (@class_files[key] ||= Set.new) << loc
+        end
+
+        TracePoint.trace(:c_return) do |tp|
+          next unless tp.method_id == :new
+          next unless Module === tp.return_value
+
+          key = tp.return_value
+          loc = build_constant_location(tp, caller_locations)
+          (@class_files[key] ||= Set.new) << loc
         end
 
         def self.build_constant_location(tp, locations)
