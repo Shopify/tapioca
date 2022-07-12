@@ -356,7 +356,7 @@ module Tapioca
 
     sig { params(path: String, content: String).void }
     def assert_project_annotation_equal(path, content)
-      assert_equal(content.strip, @project.read(path).strip)
+      assert_equal(content, @project.read(path))
     end
   end
 end

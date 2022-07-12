@@ -193,7 +193,8 @@ module Tapioca
           # Please run `#{default_command(:annotations)}` to update it.
         COMMENT
 
-        contents = content.split("\n")
+        # Split contents into newlines and ensure trailing empty lines are included
+        contents = content.split("\n", -1)
         if contents[0]&.start_with?("# typed:") && contents[1]&.empty?
           contents.insert(2, header).join("\n")
         else
