@@ -17,41 +17,54 @@ module Tapioca
           const :path, String
         end
 
-        @class_files = {}
+        @class_files = {}.compare_by_identity
 
         # Immediately activated upon load. Observes class/module definition.
         TracePoint.trace(:class) do |tp|
-          unless tp.self.singleton_class?
-            key = name_of(tp.self)
-            file = tp.path
-            lineno = tp.lineno
+          next if tp.self.singleton_class?
 
-            if file == "(eval)"
-              caller_location = T.must(caller_locations)
-                .drop_while { |loc| loc.path == "(eval)" }
-                .first
+          key = tp.self
 
-              file = caller_location&.path
-              lineno = caller_location&.lineno
-            end
+          if tp.path == "(eval)"
+            caller_location = T.must(caller_locations)
+              .drop_while { |loc| loc.path == "(eval)" }
+              .first
 
-            @class_files[key] ||= Set.new
-            @class_files[key] << ConstantLocation.new(path: T.must(file), lineno: T.must(lineno))
+            next unless caller_location
+
+            loc = ConstantLocation.new(path: caller_location.absolute_path || "", lineno: caller_location.lineno)
+          else
+            loc = build_constant_location(tp, caller_locations)
           end
+
+          (@class_files[key] ||= Set.new) << loc
+        end
+
+        TracePoint.trace(:c_return) do |tp|
+          next unless tp.method_id == :new
+          next unless Module === tp.return_value
+
+          key = tp.return_value
+          loc = build_constant_location(tp, caller_locations)
+          (@class_files[key] ||= Set.new) << loc
+        end
+
+        def self.build_constant_location(tp, locations)
+          file = resolve_loc(caller_locations)
+          lineno = file == File.realpath(tp.path) ? tp.lineno : 0
+
+          ConstantLocation.new(path: file, lineno: lineno)
         end
 
         # Returns the files in which this class or module was opened. Doesn't know
         # about situations where the class was opened prior to +require+ing,
         # or where metaprogramming was used via +eval+, etc.
         def self.files_for(klass)
-          name = String === klass ? klass : name_of(klass)
-          files = @class_files.fetch(name, [])
-          files.map(&:path).to_set
+          locations_for(klass).map(&:path).to_set
         end
 
         def self.locations_for(klass)
-          name = String === klass ? klass : name_of(klass)
-          @class_files[name] || Set.new
+          @class_files.fetch(klass, Set.new)
         end
       end
     end

@@ -20,12 +20,15 @@ module Tapioca
           # Instead of using `const_source_location`, which always reports the first place where a constant is defined,
           # we filter the locations tracked by ConstantDefinition. This allows us to provide the correct location for
           # constants that are defined by multiple gems.
-          locations = Runtime::Trackers::ConstantDefinition.locations_for(event.symbol)
+          locations = Runtime::Trackers::ConstantDefinition.locations_for(event.constant)
           location = locations.find do |loc|
             Pathname.new(loc.path).realpath.to_s.include?(@pipeline.gem.full_gem_path)
           end
 
-          add_source_location_comment(event.node, location.path, location.lineno)
+          # The location may still be nil in some situations, like constant aliases (e.g.: MyAlias = OtherConst). These
+          # are quite difficult to attribute a correct location, given that the source location points to the original
+          # constants and not the alias
+          add_source_location_comment(event.node, location.path, location.lineno) unless location.nil?
         end
 
         sig { override.params(event: MethodNodeAdded).void }
