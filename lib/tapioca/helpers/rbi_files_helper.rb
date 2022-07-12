@@ -15,14 +15,14 @@ module Tapioca
 
       say("Loading #{kind} RBIs from #{file}... ")
       time = Benchmark.realtime do
-        parse_and_index_file(index, file)
+        parse_and_index_files(index, [file], number_of_workers: 1)
       end
       say(" Done ", :green)
       say("(#{time.round(2)}s)")
     end
 
-    sig { params(index: RBI::Index, kind: String, dir: String).void }
-    def index_rbis(index, kind, dir)
+    sig { params(index: RBI::Index, kind: String, dir: String, number_of_workers: T.nilable(Integer)).void }
+    def index_rbis(index, kind, dir, number_of_workers:)
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
 
       if kind == "payload"
@@ -32,7 +32,7 @@ module Tapioca
       end
       time = Benchmark.realtime do
         files = Dir.glob("#{dir}/**/*.rbi").sort
-        parse_and_index_files(index, files)
+        parse_and_index_files(index, files, number_of_workers: number_of_workers)
       end
       say(" Done ", :green)
       say("(#{time.round(2)}s)")
@@ -153,21 +153,19 @@ module Tapioca
 
     private
 
-    sig { params(index: RBI::Index, files: T::Array[String]).void }
-    def parse_and_index_files(index, files)
-      files.each do |file|
-        parse_and_index_file(index, file)
+    sig { params(index: RBI::Index, files: T::Array[String], number_of_workers: T.nilable(Integer)).void }
+    def parse_and_index_files(index, files, number_of_workers:)
+      executor = Executor.new(files, number_of_workers: number_of_workers)
+
+      trees = executor.run_in_parallel do |file|
+        next if Spoom::Sorbet::Sigils.file_strictness(file) == "ignore"
+
+        RBI::Parser.parse_file(file)
+      rescue RBI::ParseError => e
+        say_error("\nWarning: #{e} (#{e.location})", :yellow)
       end
-    end
 
-    sig { params(index: RBI::Index, file: String).void }
-    def parse_and_index_file(index, file)
-      return if Spoom::Sorbet::Sigils.file_strictness(file) == "ignore"
-
-      tree = RBI::Parser.parse_file(file)
-      index.visit(tree)
-    rescue RBI::ParseError => e
-      say_error("\nWarning: #{e} (#{e.location})", :yellow)
+      index.visit_all(trees)
     end
 
     sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String, todo_rbi_file: String).returns(T::Boolean) }

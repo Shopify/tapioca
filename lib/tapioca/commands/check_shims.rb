@@ -15,10 +15,19 @@ module Tapioca
           annotations_rbi_dir: String,
           shim_rbi_dir: String,
           todo_rbi_file: String,
-          payload: T::Boolean
+          payload: T::Boolean,
+          number_of_workers: T.nilable(Integer)
         ).void
       end
-      def initialize(gem_rbi_dir:, dsl_rbi_dir:, annotations_rbi_dir:, shim_rbi_dir:, todo_rbi_file:, payload:)
+      def initialize(
+        gem_rbi_dir:,
+        dsl_rbi_dir:,
+        annotations_rbi_dir:,
+        shim_rbi_dir:,
+        todo_rbi_file:,
+        payload:,
+        number_of_workers:
+      )
         super()
         @gem_rbi_dir = gem_rbi_dir
         @dsl_rbi_dir = dsl_rbi_dir
@@ -26,6 +35,7 @@ module Tapioca
         @shim_rbi_dir = shim_rbi_dir
         @todo_rbi_file = todo_rbi_file
         @payload = payload
+        @number_of_workers = number_of_workers
       end
 
       sig { override.void }
@@ -51,7 +61,7 @@ module Tapioca
                 exit(1)
               end
 
-              index_rbis(index, "payload", payload_path)
+              index_rbis(index, "payload", payload_path, number_of_workers: @number_of_workers)
             end
           else
             say_error("The version of Sorbet used in your Gemfile.lock does not support `--print=payload-sources`")
@@ -62,10 +72,10 @@ module Tapioca
         end
 
         index_rbi(index, "todo", @todo_rbi_file)
-        index_rbis(index, "shim", @shim_rbi_dir)
-        index_rbis(index, "gem", @gem_rbi_dir)
-        index_rbis(index, "dsl", @dsl_rbi_dir)
-        index_rbis(index, "annotation", @annotations_rbi_dir)
+        index_rbis(index, "shim", @shim_rbi_dir, number_of_workers: @number_of_workers)
+        index_rbis(index, "gem", @gem_rbi_dir, number_of_workers: @number_of_workers)
+        index_rbis(index, "dsl", @dsl_rbi_dir, number_of_workers: @number_of_workers)
+        index_rbis(index, "annotation", @annotations_rbi_dir, number_of_workers: @number_of_workers)
 
         duplicates = duplicated_nodes_from_index(index, shim_rbi_dir: @shim_rbi_dir, todo_rbi_file: @todo_rbi_file)
         unless duplicates.empty?

@@ -742,6 +742,8 @@ Options:
                                                    # Default: sorbet/rbi/todo.rbi
       [--payload], [--no-payload]                  # Check shims against Sorbet's payload
                                                    # Default: true
+  -w, [--workers=N]                                # EXPERIMENTAL: Number of parallel workers
+                                                   # Default: 1
   -c, [--config=<config file path>]                # Path to the Tapioca configuration file
                                                    # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
@@ -818,6 +820,7 @@ check_shims:
   annotations_rbi_dir: sorbet/rbi/annotations
   todo_rbi_file: sorbet/rbi/todo.rbi
   payload: true
+  workers: 1
 annotations:
   sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
