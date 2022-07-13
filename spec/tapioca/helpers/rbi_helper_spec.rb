@@ -35,7 +35,7 @@ class Tapioca::RBIHelperSpec < Minitest::Spec
         "!", "~", "+@", "**", "-@", "*", "/", "%", "+", "-", "<<", ">>", "&", "|", "^",
         "<", "<=", "=>", ">", ">=", "==", "===", "!=", "=~", "!~", "<=>", "[]", "[]=", "`",
       ].each do |name|
-        refute(valid_parameter_name?(name))
+        refute(valid_parameter_name?(name), "Expected `#{name}` to be an invalid parameter name")
       end
     end
   end
