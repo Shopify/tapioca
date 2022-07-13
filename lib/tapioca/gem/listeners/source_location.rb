@@ -45,6 +45,10 @@ module Tapioca
           path = Pathname.new(file)
           return unless File.exist?(path)
 
+          # On native extensions, the source location may point to a shared object (.so, .bundle) file, which we cannot
+          # use for jump to definition. Only add source comments on Ruby files
+          return unless path.extname == ".rb"
+
           path = if path.realpath.to_s.start_with?(gem.full_gem_path)
             "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
           else

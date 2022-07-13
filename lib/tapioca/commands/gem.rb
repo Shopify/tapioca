@@ -142,13 +142,13 @@ module Tapioca
       sig { params(gem_queue: T::Array[Tapioca::Gemfile::GemSpec]).void }
       def verify_rbi_contents(gem_queue)
         result = Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
-          rbi_string = compile_gem_rbi(gem, silent: true).sub(/^# typed: .*/, "")
+          rbi_string = raw_rbi_content(compile_gem_rbi(gem, silent: true))
           file = T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s).first
           path = gem_rbi_filename(gem.name, gem.version)
 
           if file.nil?
             [path, :added]
-          elsif file.basename.to_s != gem.rbi_file_name || File.read(file).sub(/^# typed: .*/, "") != rbi_string
+          elsif file.basename.to_s != gem.rbi_file_name || raw_rbi_content(File.read(file)) != rbi_string
             [path, :changed]
           end
         end
@@ -157,6 +157,15 @@ module Tapioca
         result.compact!
 
         report_diff_and_exit_if_out_of_date(T.unsafe(result).to_h, :gem, "--all")
+      end
+
+      sig { params(rbi_string: String).returns(String) }
+      def raw_rbi_content(rbi_string)
+        # When verifying RBI content, we have to ignore source locations because they may differ a lot depending on
+        # which OS CI is running on
+        rbi_string
+          .sub(/^\s*# typed: .*/, "")
+          .gsub(%r{\R?# source://.*}, "")
       end
 
       sig { returns(Runtime::Loader) }
