@@ -146,6 +146,16 @@ module Tapioca
           file = T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s).first
           path = gem_rbi_filename(gem.name, gem.version)
 
+          if !file.nil? && raw_rbi_content(File.read(file)) != rbi_string
+            puts "*" * 80
+            puts "Existing RBI"
+            print(raw_rbi_content(File.read(file)))
+            puts "*" * 80
+            puts "Newly created RBI"
+            print(rbi_string)
+            puts "*" * 80
+          end
+
           if file.nil?
             [path, :added]
           elsif file.basename.to_s != gem.rbi_file_name || raw_rbi_content(File.read(file)) != rbi_string
