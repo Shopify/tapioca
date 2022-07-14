@@ -275,6 +275,7 @@ module Tapioca
     option :annotations_rbi_dir, type: :string, desc: "Path to annotations RBIs", default: DEFAULT_ANNOTATIONS_DIR
     option :todo_rbi_file, type: :string, desc: "Path to the generated todo RBI file", default: DEFAULT_TODO_FILE
     option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
+    option :workers, aliases: ["-w"], type: :numeric, desc: "EXPERIMENTAL: Number of parallel workers", default: 1
     def check_shims
       command = Commands::CheckShims.new(
         gem_rbi_dir: options[:gem_rbi_dir],
@@ -282,7 +283,8 @@ module Tapioca
         shim_rbi_dir: options[:shim_rbi_dir],
         annotations_rbi_dir: options[:annotations_rbi_dir],
         todo_rbi_file: options[:todo_rbi_file],
-        payload: options[:payload]
+        payload: options[:payload],
+        number_of_workers: options[:workers]
       )
       command.execute
     end

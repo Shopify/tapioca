@@ -7,6 +7,7 @@ require "tapioca"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"
 
+require "benchmark"
 require "bundler"
 require "erb"
 require "etc"

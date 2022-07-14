@@ -58,7 +58,7 @@ module Tapioca
 
           result = @project.tapioca("check-shims --no-payload")
 
-          assert_equal(<<~OUT, result.out)
+          assert_equal(<<~OUT, strip_timer(result.out))
             Loading shim RBIs from sorbet/rbi/shims...  Done
             Loading gem RBIs from sorbet/rbi/gems...  Done
             Looking for duplicates...  Done
@@ -312,7 +312,7 @@ module Tapioca
 
           result = @project.tapioca("check-shims")
 
-          assert_includes(result.out, <<~OUT)
+          assert_includes(strip_timer(result.out), <<~OUT)
             Loading Sorbet payload...  Done
             Loading shim RBIs from sorbet/rbi/shims...  Done
             Looking for duplicates...  Done
@@ -666,6 +666,11 @@ module Tapioca
 
           refute_success_status(result)
         end
+      end
+
+      sig { params(string: String).returns(String) }
+      def strip_timer(string)
+        string.gsub(/ \(\d+\.\d+s\)/, "")
       end
     end
   end
