@@ -1403,6 +1403,14 @@ module Tapioca
 
           assert_success_status(res)
         end
+
+        it "does not crash while tracking `rbtrace` constants" do
+          @project.require_real_gem("rbtrace", "0.4.14")
+          @project.bundle_install
+          result = @project.tapioca("gem")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
       end
 
       describe "sync" do

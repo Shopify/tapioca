@@ -25,16 +25,16 @@ module Tapioca
 
           key = tp.self
 
-          if tp.path == "(eval)"
+          path = tp.path
+          if File.exist?(path)
+            loc = build_constant_location(tp, caller_locations)
+          else
             caller_location = T.must(caller_locations)
-              .drop_while { |loc| loc.path == "(eval)" }
-              .first
+              .find { |loc| loc.path && File.exist?(loc.path) }
 
             next unless caller_location
 
             loc = ConstantLocation.new(path: caller_location.absolute_path || "", lineno: caller_location.lineno)
-          else
-            loc = build_constant_location(tp, caller_locations)
           end
 
           (@class_files[key] ||= Set.new) << loc
