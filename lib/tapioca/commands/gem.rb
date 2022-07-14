@@ -97,12 +97,12 @@ module Tapioca
         end
       end
 
-      sig { params(should_verify: T::Boolean).void }
-      def sync(should_verify: false)
+      sig { params(should_verify: T::Boolean, exclude: T::Array[String]).void }
+      def sync(should_verify: false, exclude: [])
         if should_verify
           say("Checking for out-of-date RBIs...")
           say("")
-          perform_sync_verification
+          perform_sync_verification(exclude: exclude)
           return
         end
 
@@ -204,11 +204,13 @@ module Tapioca
         end
       end
 
-      sig { void }
-      def perform_sync_verification
+      sig { params(exclude: T::Array[String]).void }
+      def perform_sync_verification(exclude: [])
         diff = {}
 
         removed_rbis.each do |gem_name|
+          next if exclude.include?(gem_name)
+
           filename = existing_rbi(gem_name)
           diff[filename] = :removed
         end
