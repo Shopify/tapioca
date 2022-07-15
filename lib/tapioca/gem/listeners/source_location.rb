@@ -45,11 +45,18 @@ module Tapioca
           path = Pathname.new(file)
           return unless File.exist?(path)
 
+          # On native extensions, the source location may point to a shared object (.so, .bundle) file, which we cannot
+          # use for jump to definition. Only add source comments on Ruby files
+          return unless path.extname == ".rb"
+
           path = if path.realpath.to_s.start_with?(gem.full_gem_path)
             "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
           else
-            path.sub("#{Bundler.bundle_path}/gems/", "")
+            path.sub("#{Bundler.bundle_path}/gems/", "").to_s
           end
+
+          # Strip out the RUBY_ROOT prefix, which is different for each user
+          path = path.sub(RbConfig::CONFIG["rubylibdir"], "RUBY_ROOT")
 
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new("source://#{path}:#{line}")
