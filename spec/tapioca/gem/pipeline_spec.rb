@@ -3868,6 +3868,32 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles proc bindings" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          extend T::Sig
+
+          sig { params(block: T.proc.bind(String).void).void }
+          def bar(&block); end
+
+          sig { params(block: T.proc.params(arg0: Integer).bind(String).void).void }
+          def baz(&block); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(block: T.proc.bind(::String).void).void }
+          def bar(&block); end
+
+          sig { params(block: T.proc.bind(::String).params(arg0: ::Integer).void).void }
+          def baz(&block); end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compile RBIs with location from gem source" do
       add_ruby_file("bar.rb", <<~RB)
         module Bar
