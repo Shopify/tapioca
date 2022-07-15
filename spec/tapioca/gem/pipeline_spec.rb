@@ -3869,6 +3869,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     end
 
     it "compile RBIs with location from gem source" do
+      add_ruby_file("option.rb", <<~RB)
+        class Option
+          include Mutex_m
+        end
+      RB
+
       add_ruby_file("bar.rb", <<~RB)
         module Bar
           extend T::Sig
@@ -3923,6 +3929,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       active_support_version = Gem::Specification.find_by_name("activesupport").version
       sorbet_runtime_version = Gem::Specification.find_by_name("sorbet-runtime").version
+      ruby_version = RUBY_VERSION.sub(/\d$/, "0")
+      mutex = Class.new { |k| k.include(::Mutex_m) }
 
       output = template(<<~RBI)
         # source://the-dep-1.1.2/lib/bar.rb:1
@@ -3981,6 +3989,26 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
         # source://the-dep-1.1.2/lib/foo.rb:30
         class NewClass; end
+
+        # source://the-dep-1.1.2/lib/option.rb:1
+        class Option
+          include ::Mutex_m
+
+          # source://RUBY_ROOT/lib/ruby/#{ruby_version}/mutex_m.rb:#{mutex.instance_method(:lock).source_location&.last}
+          def lock; end
+
+          # source://RUBY_ROOT/lib/ruby/#{ruby_version}/mutex_m.rb:#{mutex.instance_method(:locked?).source_location&.last}
+          def locked?; end
+
+          # source://RUBY_ROOT/lib/ruby/#{ruby_version}/mutex_m.rb:#{mutex.instance_method(:synchronize).source_location&.last}
+          def synchronize(&block); end
+
+          # source://RUBY_ROOT/lib/ruby/#{ruby_version}/mutex_m.rb:#{mutex.instance_method(:try_lock).source_location&.last}
+          def try_lock; end
+
+          # source://RUBY_ROOT/lib/ruby/#{ruby_version}/mutex_m.rb:#{mutex.instance_method(:unlock).source_location&.last}
+          def unlock; end
+        end
 
         # source://the-dep-1.1.2/lib/foo.rb:16
         class Quux < ::T::Struct
