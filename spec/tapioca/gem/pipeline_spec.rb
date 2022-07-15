@@ -3875,6 +3875,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           sig { params(block: T.proc.bind(String).void).void }
           def bar(&block); end
+
+          sig { params(block: T.proc.params(arg0: Integer).bind(String).void).void }
+          def baz(&block); end
         end
       RUBY
 
@@ -3882,6 +3885,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Foo
           sig { params(block: T.proc.bind(::String).void).void }
           def bar(&block); end
+
+          sig { params(block: T.proc.bind(::String).params(arg0: ::Integer).void).void }
+          def baz(&block); end
         end
       RBI
 
