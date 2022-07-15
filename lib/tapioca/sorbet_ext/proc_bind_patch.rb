@@ -4,7 +4,7 @@
 module T
   module Types
     module ProcBindPatch
-      def initialize(arg_types, returns, bind)
+      def initialize(arg_types, returns, bind = T::Private::Methods::ARG_NOT_PROVIDED)
         super(arg_types, returns)
 
         unless bind == T::Private::Methods::ARG_NOT_PROVIDED
@@ -13,14 +13,9 @@ module T
       end
 
       def name
-        args = []
-        @arg_types.each do |k, v|
-          args << "#{k}: #{v.name}"
-        end
-
-        base_name = +"T.proc"
-        base_name << ".bind(#{@bind})" if @bind
-        "#{base_name}.params(#{args.join(", ")}).returns(#{@returns})"
+        name = super
+        name = name.sub("T.proc", "T.proc.bind(#{@bind})") unless @bind.nil?
+        name
       end
     end
 
@@ -33,8 +28,7 @@ module T
     module Methods
       module ProcBindPatch
         def finalize_proc(decl)
-          decl.finalized = true
-          decl.params = {} if decl.params == ARG_NOT_PROVIDED
+          super
 
           T.unsafe(T::Types::Proc).new(decl.params, decl.returns, decl.bind)
         end
