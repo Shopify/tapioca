@@ -166,6 +166,7 @@ GEM
     globalid (1.0.0)
       activesupport (>= 5.0)
     google-protobuf (3.21.2)
+    graphql (1.13.15)
     hashdiff (1.0.1)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
@@ -354,6 +355,7 @@ DEPENDENCIES
   config!
   frozen_record
   google-protobuf
+  graphql
   identity_cache
   minitest
   minitest-hooks
