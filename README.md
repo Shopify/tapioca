@@ -30,6 +30,9 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * Find useless definitions in shim RBI files from Sorbet's embedded RBI for core and stdlib
   * Synchronization validation for your CI
 
+<!-- START doctoc -->
+<!-- END doctoc -->
+
 ## Installation
 
 Add this line to your application's `Gemfile`:
