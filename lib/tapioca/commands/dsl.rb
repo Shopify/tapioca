@@ -57,16 +57,15 @@ module Tapioca
         @rbi_formatter = rbi_formatter
 
         super()
-
-        @loader = T.let(nil, T.nilable(Runtime::Loader))
       end
 
       sig { override.void }
       def execute
-        load_dsl_extensions
-        load_application(eager_load: @requested_constants.empty?)
-        abort_if_pending_migrations!
-        load_dsl_compilers
+        Loaders::Dsl.load_application(
+          tapioca_path: @tapioca_path,
+          compilers_path: @compiler_path,
+          eager_load: @requested_constants.empty?
+        )
 
         if @should_verify
           say("Checking for out-of-date RBIs...")
@@ -130,44 +129,6 @@ module Tapioca
       end
 
       private
-
-      sig { params(eager_load: T::Boolean).void }
-      def load_application(eager_load:)
-        say("Loading Rails application... ")
-
-        loader.load_rails_application(
-          environment_load: true,
-          eager_load: eager_load
-        )
-
-        say("Done", :green)
-      end
-
-      sig { void }
-      def abort_if_pending_migrations!
-        return unless File.exist?("config/application.rb")
-        return unless defined?(::Rake)
-
-        Rails.application.load_tasks
-        if Rake::Task.task_defined?("db:abort_if_pending_migrations")
-          Rake::Task["db:abort_if_pending_migrations"].invoke
-        end
-      end
-
-      sig { void }
-      def load_dsl_compilers
-        say("Loading DSL compiler classes... ")
-
-        Dir.glob([
-          "#{@compiler_path}/*.rb",
-          "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
-          "#{@tapioca_path}/compilers/**/*.rb",
-        ]).each do |compiler|
-          require File.expand_path(compiler)
-        end
-
-        say("Done", :green)
-      end
 
       sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
       def existing_rbi_filenames(requested_constants, path: @outpath)
@@ -354,11 +315,6 @@ module Tapioca
         end.sort
       end
 
-      sig { returns(Runtime::Loader) }
-      def loader
-        @loader ||= Runtime::Loader.new
-      end
-
       sig { params(class_name: String).returns(String) }
       def underscore(class_name)
         return class_name unless /[A-Z-]|::/.match?(class_name)
@@ -379,11 +335,6 @@ module Tapioca
       sig { params(constant: String).returns(String) }
       def generate_command_for(constant)
         default_command(:dsl, constant)
-      end
-
-      sig { void }
-      def load_dsl_extensions
-        Dir["#{__dir__}/../dsl/extensions/*.rb"].sort.each { |f| require(f) }
       end
     end
   end

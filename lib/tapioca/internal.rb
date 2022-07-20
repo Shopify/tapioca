@@ -50,6 +50,9 @@ require "tapioca/static/symbol_table_parser"
 require "tapioca/static/symbol_loader"
 require "tapioca/static/requires_compiler"
 
+require "tapioca/loaders/loader"
+require "tapioca/loaders/dsl"
+
 require "tapioca/gem"
 require "tapioca/dsl"
 require "tapioca/commands"
