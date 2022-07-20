@@ -9,6 +9,7 @@ module Tapioca
 
       include Thor::Base
       include CliHelper
+      include Tapioca::GemHelper
 
       abstract!
 
@@ -16,6 +17,21 @@ module Tapioca
       def load; end
 
       private
+
+      sig do
+        params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void
+      end
+      def load_bundle(gemfile, initialize_file, require_file)
+        require_helper(initialize_file)
+
+        load_rails_application
+
+        gemfile.require_bundle
+
+        require_helper(require_file)
+
+        load_rails_engines
+      end
 
       sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
       def load_rails_application(environment_load: false, eager_load: false)
@@ -30,6 +46,43 @@ module Tapioca
         end
 
         eager_load_rails_app if eager_load
+      end
+
+      sig { void }
+      def load_rails_engines
+        rails_engines.each do |engine|
+          errored_files = []
+
+          engine.config.eager_load_paths.each do |load_path|
+            Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
+              require(file)
+            rescue LoadError, StandardError
+              errored_files << file
+            end
+          end
+
+          # Try files that have errored one more time
+          # It might have been a load order problem
+          errored_files.each do |file|
+            require(file)
+          rescue LoadError, StandardError
+            nil
+          end
+        end
+      end
+
+      sig { returns(T::Array[T.untyped]) }
+      def rails_engines
+        return [] unless Object.const_defined?("Rails::Engine")
+
+        safe_require("active_support/core_ext/class/subclasses")
+
+        project_path = Bundler.default_gemfile.parent.expand_path
+        # We can use `Class#descendants` here, since we know Rails is loaded
+        Object.const_get("Rails::Engine")
+          .descendants
+          .reject(&:abstract_railtie?)
+          .reject { |engine| gem_in_app_dir?(project_path, engine.config.root.to_path) }
       end
 
       sig { params(path: String).void }
@@ -71,6 +124,16 @@ module Tapioca
         if application.config.respond_to?(:eager_load_namespaces)
           application.config.eager_load_namespaces.each(&:eager_load!)
         end
+      end
+
+      sig { params(file: T.nilable(String)).void }
+      def require_helper(file)
+        return unless file
+
+        file = File.absolute_path(file)
+        return unless File.exist?(file)
+
+        require(file)
       end
     end
   end

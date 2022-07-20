@@ -55,8 +55,7 @@ module Tapioca
 
         super()
 
-        @loader = T.let(nil, T.nilable(Runtime::Loader))
-        @bundle = T.let(nil, T.nilable(Gemfile))
+        @bundle = T.let(Gemfile.new(exclude), Gemfile)
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @include_doc = T.let(include_doc, T::Boolean)
@@ -66,7 +65,12 @@ module Tapioca
 
       sig { override.void }
       def execute
-        require_gem_file
+        Loaders::Gem.load_application(
+          bundle: @bundle,
+          prerequire: @prerequire,
+          postrequire: @postrequire,
+          default_command: default_command(:require),
+        )
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
         anything_done = [
@@ -87,7 +91,7 @@ module Tapioca
             gem_dir: @outpath.to_s,
             dsl_dir: @dsl_dir,
             auto_strictness: @auto_strictness,
-            gems: bundle.dependencies
+            gems: @bundle.dependencies
           )
 
           say("All operations performed in working directory.", [:green, :bold])
@@ -117,7 +121,7 @@ module Tapioca
             gem_dir: @outpath.to_s,
             dsl_dir: @dsl_dir,
             auto_strictness: @auto_strictness,
-            gems: bundle.dependencies
+            gems: @bundle.dependencies
           )
 
           say("All operations performed in working directory.", [:green, :bold])
@@ -131,42 +135,12 @@ module Tapioca
 
       private
 
-      sig { returns(Runtime::Loader) }
-      def loader
-        @loader ||= Runtime::Loader.new
-      end
-
-      sig { returns(Gemfile) }
-      def bundle
-        @bundle ||= Gemfile.new(@exclude)
-      end
-
-      sig { void }
-      def require_gem_file
-        say("Requiring all gems to prepare for compiling... ")
-        begin
-          loader.load_bundle(bundle, @prerequire, @postrequire)
-        rescue LoadError => e
-          explain_failed_require(@postrequire, e)
-          exit(1)
-        end
-
-        Runtime::Trackers::Autoload.eager_load_all!
-
-        say(" Done", :green)
-        unless bundle.missing_specs.empty?
-          say("  completed with missing specs: ")
-          say(bundle.missing_specs.join(", "), :yellow)
-        end
-        puts
-      end
-
       sig { params(gem_names: T::Array[String]).returns(T::Array[Gemfile::GemSpec]) }
       def gems_to_generate(gem_names)
-        return bundle.dependencies if gem_names.empty?
+        return @bundle.dependencies if gem_names.empty?
 
         gem_names.map do |gem_name|
-          gem = bundle.gem(gem_name)
+          gem = @bundle.gem(gem_name)
           if gem.nil?
             say("Error: Cannot find gem '#{gem_name}'", :red)
             exit(1)
@@ -263,7 +237,12 @@ module Tapioca
           if gems.empty?
             say("Nothing to do.")
           else
-            require_gem_file
+            Loaders::Gem.load_application(
+              bundle: @bundle,
+              prerequire: @prerequire,
+              postrequire: @postrequire,
+              default_command: default_command(:require),
+            )
 
             Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem_name|
               filename = expected_rbi(gem_name)
@@ -273,7 +252,7 @@ module Tapioca
                 move(old_filename, filename) unless old_filename == filename
               end
 
-              gem = T.must(bundle.gem(gem_name))
+              gem = T.must(@bundle.gem(gem_name))
               compile_gem_rbi(gem)
               puts
             end
@@ -285,17 +264,6 @@ module Tapioca
         puts
 
         anything_done
-      end
-
-      sig { params(file: String, error: LoadError).void }
-      def explain_failed_require(file, error)
-        say_error("\n\nLoadError: #{error}", :bold, :red)
-        say_error("\nTapioca could not load all the gems required by your application.", :yellow)
-        say_error("If you populated ", :yellow)
-        say_error("#{file} ", :bold, :blue)
-        say_error("with ", :yellow)
-        say_error("`#{default_command(:require)}`", :bold, :blue)
-        say_error("you should probably review it and remove the faulty line.", :yellow)
       end
 
       sig { returns(T::Array[String]) }
@@ -359,7 +327,7 @@ module Tapioca
 
       sig { returns(T::Hash[String, String]) }
       def expected_rbis
-        @expected_rbis ||= bundle.dependencies
+        @expected_rbis ||= @bundle.dependencies
           .reject { |gem| @exclude.include?(gem.name) }
           .to_h { |gem| [gem.name, gem.version.to_s] }
       end
