@@ -22,7 +22,7 @@ module Tapioca
     def write_empty_body_comment!(file)
       file.comments << RBI::BlankLine.new unless file.comments.empty?
       file.comments << RBI::Comment.new("THIS IS AN EMPTY RBI FILE.")
-      file.comments << RBI::Comment.new("see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires")
+      file.comments << RBI::Comment.new("see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem")
     end
   end
 
