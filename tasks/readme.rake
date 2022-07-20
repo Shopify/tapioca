@@ -148,12 +148,35 @@ task :readme do
     contents
   end
 
+  def convert_to_list_items(elements)
+    elements.flat_map do |elem|
+      level = elem.value.options[:level]
+      text = elem.value.options[:raw_text]
+      id = elem.attr[:id]
+      padding = "  " * (level - 2)
+
+      ["#{padding}* [#{text}](##{id})"] + convert_to_list_items(elem.children)
+    end
+  end
+
+  def print_toc(contents)
+    require "kramdown"
+    section = "TOC"
+
+    doc = Kramdown::Document.new(contents)
+    toc, _ = Kramdown::Converter::Toc.convert(doc.root, auto_id: true, toc_levels: (2..6))
+    toc_list_items = convert_to_list_items(toc.children)
+
+    replace_section(contents, section, toc_list_items.join("\n"))
+  end
+
   path = "#{Dir.pwd}/README.md"
 
   contents = File.read(path)
   contents = print_config_template(contents)
   contents = print_help(contents)
   contents = print_commands_help(contents)
+  contents = print_toc(contents)
   File.write(path, contents)
 
   assert_synchronized(path) if ENV["CI"] == "true"
