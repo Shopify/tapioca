@@ -6,12 +6,18 @@
 
 # A Ruby library implementing OpenBSD's bcrypt()/crypt_blowfish algorithm for
 # hashing passwords.
+#
+# source://bcrypt-3.1.18/lib/bcrypt.rb:3
 module BCrypt; end
 
 # A Ruby wrapper for the bcrypt() C extension calls and the Java calls.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:3
 class BCrypt::Engine
   class << self
     # Autodetects the cost from the salt string.
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:122
     def autodetect_cost(salt); end
 
     # Returns the cost factor which will result in computation times less than +upper_time_limit_in_ms+.
@@ -26,10 +32,14 @@ class BCrypt::Engine
     #
     #   # should take less than 1000ms
     #   BCrypt::Password.create("woo", :cost => 12)
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:112
     def calibrate(upper_time_limit_in_ms); end
 
     # Returns the cost factor that will be used if one is not specified when
     # creating a password hash.  Defaults to DEFAULT_COST if not set.
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:32
     def cost; end
 
     # Set a default cost factor that will be used if one is not specified when
@@ -45,23 +55,33 @@ class BCrypt::Engine
     #
     #   # cost can still be overridden as needed
     #   BCrypt::Password.create('secret', :cost => 6).cost  #=> 6
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:49
     def cost=(cost); end
 
     # Generates a random salt with a given computational cost.
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:74
     def generate_salt(cost = T.unsafe(nil)); end
 
     # Given a secret and a valid salt (see BCrypt::Engine.generate_salt) calculates
     # a bcrypt() password hash. Secrets longer than 72 bytes are truncated.
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:55
     def hash_secret(secret, salt, _ = T.unsafe(nil)); end
 
     # Returns true if +salt+ is a valid bcrypt() salt, false if not.
     #
     # @return [Boolean]
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:91
     def valid_salt?(salt); end
 
     # Returns true if +secret+ is a valid bcrypt() secret, false if not.
     #
     # @return [Boolean]
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/engine.rb:96
     def valid_secret?(secret); end
 
     private
@@ -72,12 +92,18 @@ class BCrypt::Engine
 end
 
 # The default computational expense parameter.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:5
 BCrypt::Engine::DEFAULT_COST = T.let(T.unsafe(nil), Integer)
 
 # The maximum cost supported by the algorithm.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:9
 BCrypt::Engine::MAX_COST = T.let(T.unsafe(nil), Integer)
 
 # Maximum possible size of bcrypt() salts.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:19
 BCrypt::Engine::MAX_SALT_LENGTH = T.let(T.unsafe(nil), Integer)
 
 # Maximum possible size of bcrypt() secrets.
@@ -87,24 +113,39 @@ BCrypt::Engine::MAX_SALT_LENGTH = T.let(T.unsafe(nil), Integer)
 # will not have their user passwords invalidated, for example.
 # A max secret length greater than 255 leads to bcrypt returning nil.
 # https://github.com/bcrypt-ruby/bcrypt-ruby/issues/225#issuecomment-875908425
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:17
 BCrypt::Engine::MAX_SECRET_BYTESIZE = T.let(T.unsafe(nil), Integer)
 
 # The minimum cost supported by the algorithm.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/engine.rb:7
 BCrypt::Engine::MIN_COST = T.let(T.unsafe(nil), Integer)
 
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:3
 class BCrypt::Error < ::StandardError; end
+
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:6
 module BCrypt::Errors; end
 
 # The cost parameter provided to bcrypt() is invalid.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:15
 class BCrypt::Errors::InvalidCost < ::BCrypt::Error; end
 
 # The hash parameter provided to bcrypt() is invalid.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:12
 class BCrypt::Errors::InvalidHash < ::BCrypt::Error; end
 
 # The salt parameter provided to bcrypt() is invalid.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:9
 class BCrypt::Errors::InvalidSalt < ::BCrypt::Error; end
 
 # The secret parameter provided to bcrypt() is invalid.
+#
+# source://bcrypt-3.1.18/lib/bcrypt/error.rb:18
 class BCrypt::Errors::InvalidSecret < ::BCrypt::Error; end
 
 # A password management class which allows you to safely store users' passwords and compare them.
@@ -127,10 +168,14 @@ class BCrypt::Errors::InvalidSecret < ::BCrypt::Error; end
 #   # compare it after retrieval
 #   @db_password == "my grand secret" #=> true
 #   @db_password == "a paltry guess"  #=> false
+#
+# source://bcrypt-3.1.18/lib/bcrypt/password.rb:24
 class BCrypt::Password < ::String
   # Initializes a BCrypt::Password instance with the data from a stored hash.
   #
   # @return [Password] a new instance of Password
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:55
   def initialize(raw_hash); end
 
   # Compares a potential secret against the hash. Returns true if the secret is the original secret, false otherwise.
@@ -145,12 +190,18 @@ class BCrypt::Password < ::String
   #    @password == @password.to_s      # => False
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:76
   def ==(secret); end
 
   # The hash portion of the stored password hash.
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:25
   def checksum; end
 
   # The cost factor used to create the hash.
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:31
   def cost; end
 
   # Compares a potential secret against the hash. Returns true if the secret is the original secret, false otherwise.
@@ -165,12 +216,18 @@ class BCrypt::Password < ::String
   #    @password == @password.to_s      # => False
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:76
   def is_password?(secret); end
 
   # The salt of the store password hash (including version and cost).
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:27
   def salt; end
 
   # The version of the bcrypt() algorithm used to create the hash.
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:29
   def version; end
 
   private
@@ -179,11 +236,15 @@ class BCrypt::Password < ::String
   #   split_hash(raw_hash) -> version, cost, salt, hash
   #
   # Splits +h+ into version, cost, salt, and hash and returns them in that order.
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:92
   def split_hash(h); end
 
   # Returns true if +h+ is a valid hash.
   #
   # @return [Boolean]
+  #
+  # source://bcrypt-3.1.18/lib/bcrypt/password.rb:84
   def valid_hash?(h); end
 
   class << self
@@ -198,9 +259,13 @@ class BCrypt::Password < ::String
     #   @password = BCrypt::Password.create("my secret", :cost => 13)
     #
     # @raise [ArgumentError]
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/password.rb:43
     def create(secret, options = T.unsafe(nil)); end
 
     # @return [Boolean]
+    #
+    # source://bcrypt-3.1.18/lib/bcrypt/password.rb:49
     def valid_hash?(h); end
   end
 end

@@ -12,9 +12,13 @@
 # The Public Suffix List is an initiative of the Mozilla Project,
 # but is maintained as a community resource. It is available for use in any software,
 # but was originally created to meet the needs of browser manufacturers.
+#
+# source://public_suffix-4.0.7/lib/public_suffix/domain.rb:9
 module PublicSuffix
   class << self
     # private
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix.rb:149
     def decompose(name, rule); end
 
     # Attempt to parse the name and returns the domain, if valid.
@@ -25,9 +29,13 @@ module PublicSuffix
     # @param list [PublicSuffix::List] The rule list to search, defaults to the default {PublicSuffix::List}
     # @param ignore_private [Boolean]
     # @return [String]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix.rb:140
     def domain(name, **options); end
 
     # Pretend we know how to deal with user input.
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix.rb:164
     def normalize(name); end
 
     # Parses +name+ and returns the {PublicSuffix::Domain} instance.
@@ -59,6 +67,8 @@ module PublicSuffix
     # @raise [PublicSuffix::DomainInvalid] If domain is not a valid domain.
     # @raise [PublicSuffix::DomainNotAllowed] If a rule for +domain+ is found, but the rule doesn't allow +domain+.
     # @return [PublicSuffix::Domain]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix.rb:67
     def parse(name, list: T.unsafe(nil), default_rule: T.unsafe(nil), ignore_private: T.unsafe(nil)); end
 
     # Checks whether +domain+ is assigned and allowed, without actually parsing it.
@@ -91,14 +101,21 @@ module PublicSuffix
     # @param name [#to_s] The domain name or fully qualified domain name to validate.
     # @param ignore_private [Boolean]
     # @return [Boolean]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix.rb:123
     def valid?(name, list: T.unsafe(nil), default_rule: T.unsafe(nil), ignore_private: T.unsafe(nil)); end
   end
 end
 
+# source://public_suffix-4.0.7/lib/public_suffix.rb:26
 PublicSuffix::BANG = T.let(T.unsafe(nil), String)
+
+# source://public_suffix-4.0.7/lib/public_suffix.rb:25
 PublicSuffix::DOT = T.let(T.unsafe(nil), String)
 
 # Domain represents a domain name, composed by a TLD, SLD and TRD.
+#
+# source://public_suffix-4.0.7/lib/public_suffix/domain.rb:12
 class PublicSuffix::Domain
   # Creates and returns a new {PublicSuffix::Domain} instance.
   #
@@ -117,6 +134,8 @@ class PublicSuffix::Domain
   # @return [Domain] a new instance of Domain
   # @yield [self] Yields on self.
   # @yieldparam self [PublicSuffix::Domain] The newly creates instance
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:65
   def initialize(*args); end
 
   # Returns a domain-like representation of this object
@@ -146,6 +165,8 @@ class PublicSuffix::Domain
   # @return [String]
   # @see #domain?
   # @see #subdomain
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:137
   def domain; end
 
   # Checks whether <tt>self</tt> looks like a domain.
@@ -171,6 +192,8 @@ class PublicSuffix::Domain
   #   # => true
   # @return [Boolean]
   # @see #subdomain?
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:198
   def domain?; end
 
   # Returns the full domain name.
@@ -182,9 +205,13 @@ class PublicSuffix::Domain
   #   PublicSuffix::Domain.new("com", "google", "www").name
   #   # => "www.google.com"
   # @return [String]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:105
   def name; end
 
   # Returns the value of attribute sld.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:33
   def sld; end
 
   # Returns a subdomain-like representation of this object
@@ -214,6 +241,8 @@ class PublicSuffix::Domain
   # @return [String]
   # @see #subdomain?
   # @see #domain
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:169
   def subdomain; end
 
   # Checks whether <tt>self</tt> looks like a subdomain.
@@ -241,9 +270,13 @@ class PublicSuffix::Domain
   #   # => true
   # @return [Boolean]
   # @see #domain?
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:229
   def subdomain?; end
 
   # Returns the value of attribute tld.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:33
   def tld; end
 
   # Returns an array containing the domain parts.
@@ -256,14 +289,20 @@ class PublicSuffix::Domain
   #   PublicSuffix::Domain.new("www.google.com").to_a
   #   # => [nil, "google", "com"]
   # @return [Array<String, nil>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:89
   def to_a; end
 
   # Returns a string representation of this object.
   #
   # @return [String]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:73
   def to_s; end
 
   # Returns the value of attribute trd.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:33
   def trd; end
 
   class << self
@@ -280,6 +319,8 @@ class PublicSuffix::Domain
     #   # => ['example', 'co', 'uk']
     # @param name [String, #to_s] The domain name to split.
     # @return [Array<String>]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/domain.rb:28
     def name_to_labels(name); end
   end
 end
@@ -294,6 +335,8 @@ end
 #
 #   PublicSuffix.parse("http://www.nic.it")
 #   # => PublicSuffix::DomainInvalid
+#
+# source://public_suffix-4.0.7/lib/public_suffix/errors.rb:25
 class PublicSuffix::DomainInvalid < ::PublicSuffix::Error; end
 
 # Raised when trying to parse a name that matches a suffix.
@@ -305,8 +348,11 @@ class PublicSuffix::DomainInvalid < ::PublicSuffix::Error; end
 #
 #   PublicSuffix.parse("www.nic.do")
 #   # => PublicSuffix::Domain
+#
+# source://public_suffix-4.0.7/lib/public_suffix/errors.rb:38
 class PublicSuffix::DomainNotAllowed < ::PublicSuffix::DomainInvalid; end
 
+# source://public_suffix-4.0.7/lib/public_suffix/errors.rb:11
 class PublicSuffix::Error < ::StandardError; end
 
 # A {PublicSuffix::List} is a collection of one
@@ -337,18 +383,24 @@ class PublicSuffix::Error < ::StandardError; end
 # You can create as many {PublicSuffix::List} you want.
 # The {PublicSuffix::List.default} rule list is used
 # to tokenize and validate a domain.
+#
+# source://public_suffix-4.0.7/lib/public_suffix/list.rb:40
 class PublicSuffix::List
   # Initializes an empty {PublicSuffix::List}.
   #
   # @return [List] a new instance of List
   # @yield [self] Yields on self.
   # @yieldparam self [PublicSuffix::List] The newly created instance.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:106
   def initialize; end
 
   # Adds the given object to the list and optionally refreshes the rule index.
   #
   # @param rule [PublicSuffix::Rule::*] the rule to add to the list
   # @return [self]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:141
   def <<(rule); end
 
   # Checks whether two lists are equal.
@@ -359,31 +411,43 @@ class PublicSuffix::List
   #
   # @param other [PublicSuffix::List] the List to compare
   # @return [Boolean]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:120
   def ==(other); end
 
   # Adds the given object to the list and optionally refreshes the rule index.
   #
   # @param rule [PublicSuffix::Rule::*] the rule to add to the list
   # @return [self]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:141
   def add(rule); end
 
   # Removes all rules.
   #
   # @return [self]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:164
   def clear; end
 
   # Gets the default rule.
   #
   # @return [PublicSuffix::Rule::*]
   # @see PublicSuffix::Rule.default_rule
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:226
   def default_rule; end
 
   # Iterates each rule in the list.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:128
   def each(&block); end
 
   # Checks whether the list is empty.
   #
   # @return [Boolean]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:157
   def empty?; end
 
   # Checks whether two lists are equal.
@@ -394,6 +458,8 @@ class PublicSuffix::List
   #
   # @param other [PublicSuffix::List] the List to compare
   # @return [Boolean]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:120
   def eql?(other); end
 
   # Finds and returns the rule corresponding to the longest public suffix for the hostname.
@@ -401,21 +467,30 @@ class PublicSuffix::List
   # @param name [#to_s] the hostname
   # @param default [PublicSuffix::Rule::*] the default rule to return in case no rule matches
   # @return [PublicSuffix::Rule::*]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:174
   def find(name, default: T.unsafe(nil), **options); end
 
   # Gets the number of rules in the list.
   #
   # @return [Integer]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:150
   def size; end
 
   protected
 
   # Returns the value of attribute rules.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:233
   def rules; end
 
   private
 
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:238
   def entry_to_rule(entry, value); end
+
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:242
   def rule_to_entry(rule); end
 
   # Selects all the rules matching given hostame.
@@ -434,6 +509,8 @@ class PublicSuffix::List
   # @param name [#to_s] the hostname
   # @param ignore_private [Boolean]
   # @return [Array<PublicSuffix::Rule::*>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/list.rb:199
   def select(name, ignore_private: T.unsafe(nil)); end
 
   class << self
@@ -443,12 +520,16 @@ class PublicSuffix::List
     # of {PublicSuffix::List.default_list_content}, if required.
     #
     # @return [PublicSuffix::List]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/list.rb:50
     def default(**options); end
 
     # Sets the default rule list to +value+.
     #
     # @param value [PublicSuffix::List] the new list
     # @return [PublicSuffix::List]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/list.rb:58
     def default=(value); end
 
     # Parse given +input+ treating the content as Public Suffix List.
@@ -458,10 +539,13 @@ class PublicSuffix::List
     # @param input [#each_line] the list to parse
     # @param private_domains [Boolean] whether to ignore the private domains section
     # @return [PublicSuffix::List]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/list.rb:69
     def parse(input, private_domains: T.unsafe(nil)); end
   end
 end
 
+# source://public_suffix-4.0.7/lib/public_suffix/list.rb:42
 PublicSuffix::List::DEFAULT_LIST_PATH = T.let(T.unsafe(nil), String)
 
 # A Rule is a special object which holds a single definition
@@ -474,6 +558,8 @@ PublicSuffix::List::DEFAULT_LIST_PATH = T.let(T.unsafe(nil), String)
 #
 #   PublicSuffix::Rule.factory("ar")
 #   # => #<PublicSuffix::Rule::Normal>
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:22
 module PublicSuffix::Rule
   class << self
     # The default rule to use if no rule match.
@@ -483,6 +569,8 @@ module PublicSuffix::Rule
     # > If no rules match, the prevailing rule is "*".
     #
     # @return [PublicSuffix::Rule::Wildcard] The default rule.
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:344
     def default; end
 
     # Takes the +name+ of the rule, detects the specific rule class
@@ -500,6 +588,8 @@ module PublicSuffix::Rule
     #   # => #<PublicSuffix::Rule::Exception>
     # @param content [#to_s] the content of the rule
     # @return [PublicSuffix::Rule::*] A rule instance.
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:326
     def factory(content, private: T.unsafe(nil)); end
   end
 end
@@ -578,12 +668,16 @@ end
 #   # => ["www.google", "com"]
 #
 # @abstract
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:102
 class PublicSuffix::Rule::Base
   # Initializes a new rule.
   #
   # @param value [String]
   # @param private [Boolean]
   # @return [Base] a new instance of Base
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:126
   def initialize(value:, length: T.unsafe(nil), private: T.unsafe(nil)); end
 
   # Checks whether this rule is equal to <tt>other</tt>.
@@ -591,12 +685,16 @@ class PublicSuffix::Rule::Base
   # @param other [PublicSuffix::Rule::*] The rule to compare
   # @return [Boolean] true if this rule and other are instances of the same class
   #   and has the same value, false otherwise.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:137
   def ==(other); end
 
   # @abstract
   # @param domain [#to_s] The domain name to decompose
   # @raise [NotImplementedError]
   # @return [Array<String, nil>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:180
   def decompose(*_arg0); end
 
   # Checks whether this rule is equal to <tt>other</tt>.
@@ -604,9 +702,13 @@ class PublicSuffix::Rule::Base
   # @param other [PublicSuffix::Rule::*] The rule to compare
   # @return [Boolean] true if this rule and other are instances of the same class
   #   and has the same value, false otherwise.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:137
   def eql?(other); end
 
   # @return [String] the length of the rule
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:108
   def length; end
 
   # Checks if this rule matches +name+.
@@ -628,16 +730,24 @@ class PublicSuffix::Rule::Base
   # @param name [String] the domain name to check
   # @return [Boolean]
   # @see https://publicsuffix.org/list/
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:163
   def match?(name); end
 
   # @abstract
   # @raise [NotImplementedError]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:173
   def parts; end
 
   # @return [Boolean] true if the rule is a private domain
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:111
   def private; end
 
   # @return [String] the rule definition
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:105
   def value; end
 
   class << self
@@ -645,11 +755,15 @@ class PublicSuffix::Rule::Base
     #
     # @param content [String] the content of the rule
     # @param private [Boolean]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:118
     def build(content, private: T.unsafe(nil)); end
   end
 end
 
 # @api internal
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
 class PublicSuffix::Rule::Entry < ::Struct
   # Returns the value of attribute length
   #
@@ -660,6 +774,8 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute length to.
   # @return [Object] the newly set value
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def length=(_); end
 
   # Returns the value of attribute private
@@ -671,6 +787,8 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute private to.
   # @return [Object] the newly set value
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def private=(_); end
 
   # Returns the value of attribute type
@@ -682,23 +800,28 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute type to.
   # @return [Object] the newly set value
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
 end
 
 # Exception represents an exception rule (e.g. !parliament.uk).
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:265
 class PublicSuffix::Rule::Exception < ::PublicSuffix::Rule::Base
   # Decomposes the domain name according to rule properties.
   #
   # @param domain [#to_s] The domain name to decompose
   # @return [Array<String>] The array with [trd + sld, tld].
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:286
   def decompose(domain); end
 
   # dot-split rule value and returns all rule parts
@@ -710,11 +833,15 @@ class PublicSuffix::Rule::Exception < ::PublicSuffix::Rule::Base
   # modify it by removing the leftmost label.
   #
   # @return [Array<String>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:301
   def parts; end
 
   # Gets the original rule definition.
   #
   # @return [String] The rule definition.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:278
   def rule; end
 
   class << self
@@ -722,31 +849,43 @@ class PublicSuffix::Rule::Exception < ::PublicSuffix::Rule::Base
     #
     # @param content [#to_s] the content of the rule
     # @param private [Boolean]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:271
     def build(content, private: T.unsafe(nil)); end
   end
 end
 
 # Normal represents a standard rule (e.g. com).
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:187
 class PublicSuffix::Rule::Normal < ::PublicSuffix::Rule::Base
   # Decomposes the domain name according to rule properties.
   #
   # @param domain [#to_s] The domain name to decompose
   # @return [Array<String>] The array with [trd + sld, tld].
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:200
   def decompose(domain); end
 
   # dot-split rule value and returns all rule parts
   # in the order they appear in the value.
   #
   # @return [Array<String>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:210
   def parts; end
 
   # Gets the original rule definition.
   #
   # @return [String] The rule definition.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:192
   def rule; end
 end
 
 # Wildcard represents a wildcard rule (e.g. *.co.uk).
+#
+# source://public_suffix-4.0.7/lib/public_suffix/rule.rb:217
 class PublicSuffix::Rule::Wildcard < ::PublicSuffix::Rule::Base
   # Initializes a new rule.
   #
@@ -754,23 +893,31 @@ class PublicSuffix::Rule::Wildcard < ::PublicSuffix::Rule::Base
   # @param length [Integer]
   # @param private [Boolean]
   # @return [Wildcard] a new instance of Wildcard
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:232
   def initialize(value:, length: T.unsafe(nil), private: T.unsafe(nil)); end
 
   # Decomposes the domain name according to rule properties.
   #
   # @param domain [#to_s] The domain name to decompose
   # @return [Array<String>] The array with [trd + sld, tld].
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:248
   def decompose(domain); end
 
   # dot-split rule value and returns all rule parts
   # in the order they appear in the value.
   #
   # @return [Array<String>]
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:258
   def parts; end
 
   # Gets the original rule definition.
   #
   # @return [String] The rule definition.
+  #
+  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:240
   def rule; end
 
   class << self
@@ -778,11 +925,16 @@ class PublicSuffix::Rule::Wildcard < ::PublicSuffix::Rule::Base
     #
     # @param content [String] the content of the rule
     # @param private [Boolean]
+    #
+    # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:223
     def build(content, private: T.unsafe(nil)); end
   end
 end
 
+# source://public_suffix-4.0.7/lib/public_suffix.rb:27
 PublicSuffix::STAR = T.let(T.unsafe(nil), String)
 
 # @return [String] The current library version.
+#
+# source://public_suffix-4.0.7/lib/public_suffix/version.rb:13
 PublicSuffix::VERSION = T.let(T.unsafe(nil), String)
