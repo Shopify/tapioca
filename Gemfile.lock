@@ -173,6 +173,8 @@ GEM
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
     json (2.6.2)
+    kramdown (2.4.0)
+      rexml
     language_server-protocol (3.16.0.3)
     loofah (2.18.0)
       crass (~> 1.0.2)
@@ -355,6 +357,7 @@ DEPENDENCIES
   frozen_record
   google-protobuf
   identity_cache
+  kramdown (~> 2.4)
   minitest
   minitest-hooks
   minitest-reporters

@@ -51,3 +51,5 @@ end
 group :test do
   gem("webmock")
 end
+
+gem "kramdown", "~> 2.4"
