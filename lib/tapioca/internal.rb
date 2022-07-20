@@ -27,7 +27,6 @@ require "yard-sorbet"
 
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/helpers/gem_helper"
-require "tapioca/runtime/loader"
 
 require "tapioca/helpers/sorbet_helper"
 require "tapioca/helpers/rbi_helper"
@@ -49,6 +48,10 @@ require "tapioca/executor"
 require "tapioca/static/symbol_table_parser"
 require "tapioca/static/symbol_loader"
 require "tapioca/static/requires_compiler"
+
+require "tapioca/loaders/loader"
+require "tapioca/loaders/gem"
+require "tapioca/loaders/dsl"
 
 require "tapioca/gem"
 require "tapioca/dsl"

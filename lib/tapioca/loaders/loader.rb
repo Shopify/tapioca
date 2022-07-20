@@ -1,11 +1,22 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 module Tapioca
-  module Runtime
+  module Loaders
     class Loader
-      extend(T::Sig)
+      extend T::Sig
+      extend T::Helpers
+
+      include Thor::Base
+      include CliHelper
       include Tapioca::GemHelper
+
+      abstract!
+
+      sig { abstract.void }
+      def load; end
+
+      private
 
       sig do
         params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void
@@ -37,16 +48,27 @@ module Tapioca
         eager_load_rails_app if eager_load
       end
 
-      private
+      sig { void }
+      def load_rails_engines
+        rails_engines.each do |engine|
+          errored_files = []
 
-      sig { params(file: T.nilable(String)).void }
-      def require_helper(file)
-        return unless file
+          engine.config.eager_load_paths.each do |load_path|
+            Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
+              require(file)
+            rescue LoadError, StandardError
+              errored_files << file
+            end
+          end
 
-        file = File.absolute_path(file)
-        return unless File.exist?(file)
-
-        require(file)
+          # Try files that have errored one more time
+          # It might have been a load order problem
+          errored_files.each do |file|
+            require(file)
+          rescue LoadError, StandardError
+            nil
+          end
+        end
       end
 
       sig { returns(T::Array[T.untyped]) }
@@ -104,27 +126,14 @@ module Tapioca
         end
       end
 
-      sig { void }
-      def load_rails_engines
-        rails_engines.each do |engine|
-          errored_files = []
+      sig { params(file: T.nilable(String)).void }
+      def require_helper(file)
+        return unless file
 
-          engine.config.eager_load_paths.each do |load_path|
-            Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-              require(file)
-            rescue LoadError, StandardError
-              errored_files << file
-            end
-          end
+        file = File.absolute_path(file)
+        return unless File.exist?(file)
 
-          # Try files that have errored one more time
-          # It might have been a load order problem
-          errored_files.each do |file|
-            require(file)
-          rescue LoadError, StandardError
-            nil
-          end
-        end
+        require(file)
       end
     end
   end
