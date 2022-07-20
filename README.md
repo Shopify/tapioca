@@ -156,8 +156,7 @@ Options:
                                                               # Default: true
           [--exported-gem-rbis], [--no-exported-gem-rbis]     # Include RBIs found in the `rbi/` directory of the gem
                                                               # Default: true
-  -w, [--workers=N]                                           # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
-                                                              # Default: 1
+  -w, [--workers=N]                                           # Number of parallel workers to use when generating RBIs (default: auto)
           [--auto-strictness], [--no-auto-strictness]         # Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs
                                                               # Default: true
   --dsl-dir, [--dsl-dir=directory]                            # The DSL directory used to correct gems strictnesses
@@ -442,8 +441,7 @@ Options:
           [--exclude=compiler [compiler ...]]  # Exclude supplied DSL compiler(s)
           [--verify], [--no-verify]            # Verifies RBIs are up-to-date
   -q, [--quiet], [--no-quiet]                  # Suppresses file creation output
-  -w, [--workers=N]                            # EXPERIMENTAL: Number of parallel workers to use when generating RBIs
-                                               # Default: 1
+  -w, [--workers=N]                            # Number of parallel workers to use when generating RBIs (default: auto)
           [--rbi-max-line-length=N]            # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                # Default: 120
   -e, [--environment=ENVIRONMENT]              # The Rack/Rails environment to use when generating RBIs
@@ -742,8 +740,7 @@ Options:
                                                    # Default: sorbet/rbi/todo.rbi
       [--payload], [--no-payload]                  # Check shims against Sorbet's payload
                                                    # Default: true
-  -w, [--workers=N]                                # EXPERIMENTAL: Number of parallel workers
-                                                   # Default: 1
+  -w, [--workers=N]                                # Number of parallel workers (default: auto)
   -c, [--config=<config file path>]                # Path to the Tapioca configuration file
                                                    # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes

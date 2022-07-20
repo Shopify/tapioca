@@ -105,8 +105,7 @@ module Tapioca
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
-      default: 1
+      desc: "Number of parallel workers to use when generating RBIs (default: auto)"
     option :rbi_max_line_length,
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
@@ -133,13 +132,6 @@ module Tapioca
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options)
       )
-
-      if options[:workers] != 1
-        say(
-          "Using more than one worker is experimental and might produce results that are not deterministic",
-          :red
-        )
-      end
 
       Tapioca.silence_warnings do
         command.execute
@@ -201,8 +193,7 @@ module Tapioca
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      desc: "EXPERIMENTAL: Number of parallel workers to use when generating RBIs",
-      default: 1
+      desc: "Number of parallel workers to use when generating RBIs (default: auto)"
     option :auto_strictness,
       type: :boolean,
       desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
@@ -252,13 +243,6 @@ module Tapioca
           raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
         end
 
-        if options[:workers] != 1
-          say(
-            "Using more than one worker is experimental and might produce results that are not deterministic",
-            :red
-          )
-        end
-
         if gems.empty? && !all
           command.sync(should_verify: verify, exclude: options[:exclude])
         else
@@ -275,7 +259,7 @@ module Tapioca
     option :annotations_rbi_dir, type: :string, desc: "Path to annotations RBIs", default: DEFAULT_ANNOTATIONS_DIR
     option :todo_rbi_file, type: :string, desc: "Path to the generated todo RBI file", default: DEFAULT_TODO_FILE
     option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
-    option :workers, aliases: ["-w"], type: :numeric, desc: "EXPERIMENTAL: Number of parallel workers", default: 1
+    option :workers, aliases: ["-w"], type: :numeric, desc: "Number of parallel workers (default: auto)"
     def check_shims
       command = Commands::CheckShims.new(
         gem_rbi_dir: options[:gem_rbi_dir],

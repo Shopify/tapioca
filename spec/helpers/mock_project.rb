@@ -117,6 +117,8 @@ module Tapioca
         exec_command << "--workers=1" unless command.match?("--workers")
         exec_command << "--no-doc" unless command.match?("--doc")
         exec_command << "--no-loc" unless command.match?("--loc")
+      elsif command.start_with?(/dsl/)
+        exec_command << "--workers=1" unless command.match?("--workers")
       end
       bundle_exec(exec_command.join(" "))
     end
