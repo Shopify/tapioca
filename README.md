@@ -30,6 +30,33 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * Find useless definitions in shim RBI files from Sorbet's embedded RBI for core and stdlib
   * Synchronization validation for your CI
 
+## Table of Contents
+{:.no_toc}
+<!-- the above is so that this header does not appear in the ToC -->
+<!-- START_TOC -->
+* [Installation](#installation)
+* [Getting started](#getting-started)
+* [Usage](#usage)
+  * [Generating RBI files for gems](#generating-rbi-files-for-gems)
+    * [Manually requiring parts of a gem](#manually-requiring-parts-of-a-gem)
+    * [Excluding a gem from RBI generation](#excluding-a-gem-from-rbi-generation)
+    * [Changing the strictness level of the RBI for a gem](#changing-the-strictness-level-of-the-rbi-for-a-gem)
+    * [Keeping RBI files for gems up-to-date](#keeping-rbi-files-for-gems-up-to-date)
+  * [Pulling RBI annotations from remote sources](#pulling-rbi-annotations-from-remote-sources)
+    * [Basic authentication](#basic-authentication)
+    * [Using a .netrc file](#using-a-netrc-file)
+    * [Changing the typed strictness of annotations files](#changing-the-typed-strictness-of-annotations-files)
+  * [Generating RBI files for Rails and other DSLs](#generating-rbi-files-for-rails-and-other-dsls)
+    * [Keeping RBI files for DSLs up-to-date](#keeping-rbi-files-for-dsls-up-to-date)
+    * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
+  * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
+    * [Generating the RBI file for missing constants](#generating-the-rbi-file-for-missing-constants)
+    * [Manually writing RBI definitions (shims)](#manually-writing-rbi-definitions-shims)
+  * [Configuration](#configuration)
+* [Contributing](#contributing)
+* [License](#license)
+<!-- END_TOC -->
+
 ## Installation
 
 Add this line to your application's `Gemfile`:
