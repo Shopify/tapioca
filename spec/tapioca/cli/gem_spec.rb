@@ -770,7 +770,7 @@ module Tapioca
             # Please instead update this file by running `bin/tapioca gem foo`.
 
             # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires
+            # see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
           RBI
 
           assert_empty_stderr(result)
@@ -787,7 +787,7 @@ module Tapioca
             # typed: true
 
             # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires
+            # see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
           RBI
 
           assert_empty_stderr(result)
