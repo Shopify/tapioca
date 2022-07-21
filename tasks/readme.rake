@@ -148,26 +148,37 @@ task :readme do
     contents
   end
 
-  def convert_to_list_items(elements)
-    elements.flat_map do |elem|
-      level = elem.value.options[:level]
-      text = elem.value.options[:raw_text]
-      id = elem.attr[:id]
-      padding = "  " * (level - 2)
+  require "kramdown"
 
-      ["#{padding}* [#{text}](##{id})"] + convert_to_list_items(elem.children)
+  class TocConverter < Kramdown::Converter::Toc
+    def in_toc?(el)
+      super && el.options[:raw_text] !~ /<!--\sno_toc\s-->/
+    end
+
+    def self.convert(doc, options)
+      result, _ = super(doc.root, options)
+      convert_to_list_items(result.children)
+    end
+
+    def self.convert_to_list_items(elements)
+      elements.flat_map do |elem|
+        level = elem.value.options[:level]
+        text = elem.value.options[:raw_text]
+        id = elem.attr[:id]
+        padding = "  " * (level - 2)
+
+        ["#{padding}* [#{text}](##{id})"] + convert_to_list_items(elem.children)
+      end
     end
   end
 
   def print_toc(contents)
-    require "kramdown"
     section = "TOC"
 
     doc = Kramdown::Document.new(contents)
-    toc, _ = Kramdown::Converter::Toc.convert(doc.root, auto_id: true, toc_levels: (2..6))
-    toc_list_items = convert_to_list_items(toc.children)
+    toc = TocConverter.convert(doc, { auto_id: true, toc_levels: (2..6) })
 
-    replace_section(contents, section, toc_list_items.join("\n"))
+    replace_section(contents, section, toc.join("\n"))
   end
 
   path = "#{Dir.pwd}/README.md"

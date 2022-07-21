@@ -30,9 +30,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * Find useless definitions in shim RBI files from Sorbet's embedded RBI for core and stdlib
   * Synchronization validation for your CI
 
-## Table of Contents
-{:.no_toc}
-<!-- the above is so that this header does not appear in the ToC -->
+## Table of Contents <!-- no_toc -->
 <!-- START_TOC -->
 * [Installation](#installation)
 * [Getting started](#getting-started)
