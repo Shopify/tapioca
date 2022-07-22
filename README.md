@@ -591,7 +591,7 @@ Errors: 5
 
 To solve this you will have to create your own DSL compiler able that understands the `Encryptable` DSL and can generate the RBI definitions representing the actual shape of `CreditCard` at runtime.
 
-To do so, create the new DSL compiler inside the `sorbet/tapioca/compilers` directory of your application with the following contents:
+To do so, you need to create a new DSL compiler similar to the following:
 
 ```rb
 module Tapioca
@@ -625,6 +625,8 @@ module Tapioca
   end
 end
 ```
+
+In order for this DSL compiler to be discovered by Tapioca, it either needs to be placed inside the `sorbet/tapioca/compilers` directory of your application or be inside a `tapioca/dsl/compilers` folder on the load path. For example, if `Encryptable` was being exposed by a gem, all the gem needs to do is to place the DSL compiler inside the `lib/tapioca/dsl/compilers` folder and it will be automatically discovered and loaded by Tapioca.
 
 There are two main parts to the DSL compiler API: `gather_constants` and `decorate`:
 
