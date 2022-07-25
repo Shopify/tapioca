@@ -14,7 +14,6 @@ module Tapioca
           only: T::Array[String],
           exclude: T::Array[String],
           file_header: T::Boolean,
-          compilers_path: String,
           tapioca_path: String,
           should_verify: T::Boolean,
           quiet: T::Boolean,
@@ -31,7 +30,6 @@ module Tapioca
         only:,
         exclude:,
         file_header:,
-        compilers_path:,
         tapioca_path:,
         should_verify: false,
         quiet: false,
@@ -46,7 +44,6 @@ module Tapioca
         @only = only
         @exclude = exclude
         @file_header = file_header
-        @compilers_path = compilers_path
         @tapioca_path = tapioca_path
         @should_verify = should_verify
         @quiet = quiet
@@ -63,7 +60,6 @@ module Tapioca
       def execute
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          compilers_path: @compilers_path,
           eager_load: @requested_constants.empty?
         )
 

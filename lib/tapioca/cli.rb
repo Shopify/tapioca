@@ -124,7 +124,6 @@ module Tapioca
         only: options[:only],
         exclude: options[:exclude],
         file_header: options[:file_header],
-        compilers_path: Tapioca::Dsl::Compilers::DIRECTORY,
         tapioca_path: TAPIOCA_DIR,
         should_verify: options[:verify],
         quiet: options[:quiet],

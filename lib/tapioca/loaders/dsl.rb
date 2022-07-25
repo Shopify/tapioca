@@ -6,9 +6,9 @@ module Tapioca
     class Dsl < Loader
       extend T::Sig
 
-      sig { params(tapioca_path: String, compilers_path: String, eager_load: T::Boolean).void }
-      def self.load_application(tapioca_path:, compilers_path:, eager_load: true)
-        loader = new(tapioca_path: tapioca_path, compilers_path: compilers_path)
+      sig { params(tapioca_path: String, eager_load: T::Boolean).void }
+      def self.load_application(tapioca_path:, eager_load: true)
+        loader = new(tapioca_path: tapioca_path)
         loader.load
       end
 
@@ -22,12 +22,11 @@ module Tapioca
 
       protected
 
-      sig { params(tapioca_path: String, compilers_path: String, eager_load: T::Boolean).void }
-      def initialize(tapioca_path:, compilers_path:, eager_load: true)
+      sig { params(tapioca_path: String, eager_load: T::Boolean).void }
+      def initialize(tapioca_path:, eager_load: true)
         super()
 
         @tapioca_path = tapioca_path
-        @compilers_path = compilers_path
         @eager_load = eager_load
       end
 
@@ -41,10 +40,13 @@ module Tapioca
         say("Loading DSL compiler classes... ")
 
         Dir.glob([
-          "#{@compilers_path}/*.rb",
           "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
           "#{@tapioca_path}/compilers/**/*.rb",
         ]).each do |compiler|
+          require File.expand_path(compiler)
+        end
+
+        ::Gem.find_files("tapioca/dsl/compilers/*.rb").each do |compiler|
           require File.expand_path(compiler)
         end
 

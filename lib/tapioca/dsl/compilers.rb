@@ -4,11 +4,6 @@
 module Tapioca
   module Dsl
     module Compilers
-      DIRECTORY = T.let(
-        File.expand_path("compilers", __dir__),
-        String
-      )
-
       # DSL compilers are either built-in to Tapioca and live under the
       # `Tapioca::Dsl::Compilers` namespace (i.e. this namespace), and
       # can be referred to by just using the class name, or they live in
