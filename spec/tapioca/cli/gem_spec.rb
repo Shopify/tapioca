@@ -1358,6 +1358,18 @@ module Tapioca
           assert_success_status(res)
         end
 
+        it "must generate a gem RBI for vendor gems" do
+          foo = MockGem.new("#{@project.path}/vendor/gems/foo", "foo", "0.0.1")
+          foo.gemspec(foo.default_gemspec_contents)
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+        end
+
         it "must generate top-level and namespaced constants from engines" do
           foo = mock_gem("foo", "0.0.2") do
             write("lib/foo.rb", <<~RB)

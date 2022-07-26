@@ -8,12 +8,18 @@ module Tapioca
     sig { params(gemfile_dir: String, full_gem_path: String).returns(T::Boolean) }
     def gem_in_app_dir?(gemfile_dir, full_gem_path)
       !gem_in_bundle_path?(to_realpath(full_gem_path)) &&
-        full_gem_path.start_with?(to_realpath(gemfile_dir))
+        full_gem_path.start_with?(to_realpath(gemfile_dir)) &&
+        !gem_in_vendor_path?(to_realpath(full_gem_path))
     end
 
     sig { params(full_gem_path: String).returns(T::Boolean) }
     def gem_in_bundle_path?(full_gem_path)
       full_gem_path.start_with?(Bundler.bundle_path.to_s, Bundler.app_cache.to_s)
+    end
+
+    sig { params(full_gem_path: String).returns(T::Boolean) }
+    def gem_in_vendor_path?(full_gem_path)
+      full_gem_path.start_with?(Pathname.new(Bundler.root).join("vendor/gems").to_s)
     end
 
     sig { params(path: T.any(String, Pathname)).returns(String) }
