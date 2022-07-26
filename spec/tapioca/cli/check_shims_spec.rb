@@ -235,6 +235,73 @@ module Tapioca
           refute_success_status(result)
         end
 
+        it "detects duplicated includes and extends" do
+          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+            module Bar; end
+
+            class Foo
+              include Bar
+              extend Bar
+              mixes_in_class_methods Bar
+              requires_ancestor { Bar }
+            end
+
+            module Baz; end
+
+            class Qux
+              # RBI does not attempt to resolve constants used in the mixins, so if the constant duplicated in the shim
+              # does not use the same namespace, Tapioca won't catch it. The following lines won't raise duplication
+              # errors.
+              include Baz
+              extend Baz
+              mixes_in_class_methods Baz
+              requires_ancestor { Baz }
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            class Foo
+              include Bar
+              extend Bar
+              mixes_in_class_methods Bar
+              requires_ancestor { Bar }
+            end
+
+            class Qux
+              include ::Baz
+              extend ::Baz
+              mixes_in_class_methods ::Baz
+              requires_ancestor { ::Baz }
+            end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+
+          assert_includes(result.err, <<~ERR)
+            Duplicated RBI for ::Foo.include(Bar):
+             * sorbet/rbi/shims/foo.rbi:2:2-2:13
+             * sorbet/rbi/gems/foo@1.0.0.rbi:4:2-4:13
+
+            Duplicated RBI for ::Foo.extend(Bar):
+             * sorbet/rbi/shims/foo.rbi:3:2-3:12
+             * sorbet/rbi/gems/foo@1.0.0.rbi:5:2-5:12
+
+            Duplicated RBI for ::Foo.mixes_in_class_method(Bar):
+             * sorbet/rbi/shims/foo.rbi:4:2-4:28
+             * sorbet/rbi/gems/foo@1.0.0.rbi:6:2-6:28
+
+            Duplicated RBI for ::Foo.requires_ancestor(Bar):
+             * sorbet/rbi/shims/foo.rbi:5:2-5:27
+             * sorbet/rbi/gems/foo@1.0.0.rbi:7:2-7:27
+          ERR
+
+          assert_includes(result.err, <<~ERR)
+            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
+          ERR
+
+          refute_success_status(result)
+        end
+
         it "detects duplicates from same shim file" do
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
