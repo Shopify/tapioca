@@ -68,13 +68,13 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Integer) }
           def customer_id; end
 
-          sig { params(value: Integer).returns(Integer) }
+          sig { params(value: Integer).void }
           def customer_id=(value); end
 
           sig { returns(Integer) }
           def shop_id; end
 
-          sig { params(value: Integer).returns(Integer) }
+          sig { params(value: Integer).void }
           def shop_id=(value); end
         end
       RBI
@@ -105,7 +105,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(String) }
           def events; end
 
-          sig { params(value: String).returns(String) }
+          sig { params(value: String).void }
           def events=(value); end
         end
       RBI
@@ -139,7 +139,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Google::Protobuf::UInt64Value) }
           def cart_item_index; end
 
-          sig { params(value: Google::Protobuf::UInt64Value).returns(Google::Protobuf::UInt64Value) }
+          sig { params(value: Google::Protobuf::UInt64Value).void }
           def cart_item_index=(value); end
         end
       RBI
@@ -179,7 +179,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Symbol) }
           def value_type; end
 
-          sig { params(value: T.any(Symbol, Integer)).returns(Symbol) }
+          sig { params(value: T.any(Symbol, Integer)).void }
           def value_type=(value); end
         end
       RBI
@@ -230,7 +230,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Symbol) }
           def value_type; end
 
-          sig { params(value: T.any(Symbol, Integer)).returns(Symbol) }
+          sig { params(value: T.any(Symbol, Integer)).void }
           def value_type=(value); end
         end
       RBI
@@ -264,13 +264,13 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Google::Protobuf::RepeatedField[Integer]) }
           def customer_ids; end
 
-          sig { params(value: Google::Protobuf::RepeatedField[Integer]).returns(Google::Protobuf::RepeatedField[Integer]) }
+          sig { params(value: Google::Protobuf::RepeatedField[Integer]).void }
           def customer_ids=(value); end
 
           sig { returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
           def indices; end
 
-          sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+          sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).void }
           def indices=(value); end
         end
       RBI
@@ -304,13 +304,13 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { returns(Google::Protobuf::Map[String, Integer]) }
           def customers; end
 
-          sig { params(value: Google::Protobuf::Map[String, Integer]).returns(Google::Protobuf::Map[String, Integer]) }
+          sig { params(value: Google::Protobuf::Map[String, Integer]).void }
           def customers=(value); end
 
           sig { returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
           def stores; end
 
-          sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]).returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+          sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]).void }
           def stores=(value); end
         end
       RBI
@@ -345,47 +345,47 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
       rbi_output = rbi_for(:Cart)
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: T::Boolean).returns(T::Boolean) }
+        sig { params(value: T::Boolean).void }
         def bool_value=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: String).returns(String) }
+        sig { params(value: String).void }
         def byte_value=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Integer).returns(Integer) }
+        sig { params(value: Integer).void }
         def customer_id=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Integer).returns(Integer) }
+        sig { params(value: Integer).void }
         def id=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Integer).returns(Integer) }
+        sig { params(value: Integer).void }
         def item_id=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Float).returns(Float) }
+        sig { params(value: Float).void }
         def money_value=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Float).returns(Float) }
+        sig { params(value: Float).void }
         def number_value=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: Integer).returns(Integer) }
+        sig { params(value: Integer).void }
         def shop_id=(value); end
       RBI
 
       assert_includes(rbi_output, indented(<<~RBI, 2))
-        sig { params(value: String).returns(String) }
+        sig { params(value: String).void }
         def string_value=(value); end
       RBI
     end

@@ -216,7 +216,7 @@ module Tapioca
           klass.create_method(
             "#{field.name}=",
             parameters: [create_param("value", type: field.setter_type)],
-            return_type: field.type
+            return_type: "void"
           )
 
           field
