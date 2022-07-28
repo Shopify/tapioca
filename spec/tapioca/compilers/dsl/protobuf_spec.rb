@@ -176,7 +176,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
           def initialize(value_type: nil); end
 
-          sig { returns(Symbol) }
+          sig { returns(T.any(Symbol, Integer)) }
           def value_type; end
 
           sig { params(value: T.any(Symbol, Integer)).void }
@@ -227,7 +227,7 @@ class Tapioca::Compilers::Dsl::ProtobufSpec < DslSpec
           sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
           def initialize(value_type: nil); end
 
-          sig { returns(Symbol) }
+          sig { returns(T.any(Symbol, Integer)) }
           def value_type; end
 
           sig { params(value: T.any(Symbol, Integer)).void }

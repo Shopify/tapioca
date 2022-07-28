@@ -131,7 +131,7 @@ module Tapioca
         def type_of(descriptor)
           case descriptor.type
           when :enum
-            "Symbol"
+            "T.any(Symbol, Integer)"
           when :message
             descriptor.subtype.msgclass.name
           when :int32, :int64, :uint32, :uint64
@@ -192,8 +192,8 @@ module Tapioca
             Field.new(
               name: descriptor.name,
               type: type,
-              setter_type: descriptor.type == :enum ? "T.any(#{type}, Integer)" : type,
-              init_type: descriptor.type == :enum ? "T.nilable(T.any(#{type}, Integer))" : "T.nilable(#{type})",
+              setter_type: type,
+              init_type: "T.nilable(#{type})",
               default: "nil"
             )
           end
