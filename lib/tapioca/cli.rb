@@ -260,6 +260,8 @@ module Tapioca
     option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
     option :workers, aliases: ["-w"], type: :numeric, desc: "Number of parallel workers (default: auto)"
     def check_shims
+      Tapioca.disable_traces
+
       command = Commands::CheckShims.new(
         gem_rbi_dir: options[:gem_rbi_dir],
         dsl_rbi_dir: options[:dsl_rbi_dir],
