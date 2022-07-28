@@ -20,7 +20,7 @@ module Tapioca
         @class_files = {}.compare_by_identity
 
         # Immediately activated upon load. Observes class/module definition.
-        TracePoint.trace(:class) do |tp|
+        Tapioca.register_trace(:class) do |tp|
           next if tp.self.singleton_class?
 
           key = tp.self
@@ -40,7 +40,7 @@ module Tapioca
           (@class_files[key] ||= Set.new) << loc
         end
 
-        TracePoint.trace(:c_return) do |tp|
+        Tapioca.register_trace(:c_return) do |tp|
           next unless tp.method_id == :new
           next unless Module === tp.return_value
 
