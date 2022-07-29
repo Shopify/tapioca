@@ -4,8 +4,6 @@ source("https://rubygems.org")
 
 gemspec
 
-rails_version = ENV.fetch("RAILS_VERSION", "7.0")
-
 gem("minitest")
 gem("minitest-hooks")
 gem("minitest-reporters")
@@ -23,13 +21,7 @@ group(:development, :test) do
   gem("smart_properties", require: false)
   gem("frozen_record", require: false)
   gem("sprockets", require: false)
-
-  if rails_version == "main"
-    gem("rails", github: "rails/rails", branch: "main", require: false)
-  else
-    gem("rails", "~> #{rails_version}.0", require: false)
-  end
-
+  gem("rails", require: false)
   gem("state_machines", require: false)
   gem("activerecord-typedstore", require: false)
   gem("sqlite3")
