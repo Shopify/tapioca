@@ -52,3 +52,13 @@ jobs:
         if: ${{ matrix.gemfile == 'Gemfile' }}
       - name: Verify duplicates in shims
         run: bundle exec exe/tapioca check-shims
+
+  buildall:
+    if: ${{ always() && github.event.pull_request }}
+    runs-on: ubuntu-latest
+    name: Build (matrix)
+    needs: build
+    steps:
+      - name: Check build matrix status
+        if: ${{ needs.build.result != 'success' }}
+        run: exit 1
