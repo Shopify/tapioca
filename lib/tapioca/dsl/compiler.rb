@@ -52,7 +52,6 @@ module Tapioca
           T::Set[Module].new(gather_constants).compare_by_identity,
           T.nilable(T::Set[Module])
         )
-        T.must(@processable_constants)
       end
 
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
