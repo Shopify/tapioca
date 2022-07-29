@@ -216,7 +216,6 @@ module Tapioca
         sig { returns(String) }
         def constant_name
           @constant_name ||= T.let(T.must(qualified_name_of(constant)), T.nilable(String))
-          T.must(@constant_name)
         end
 
         sig { params(method_name: Symbol).returns(T::Boolean) }
