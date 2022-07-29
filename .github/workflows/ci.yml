@@ -6,7 +6,30 @@ env:
   SRB_SKIP_GEM_RBIS: true
 
 jobs:
-  build:
+  linters:
+    runs-on: ubuntu-latest
+    name: Linters
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1"
+          bundler-cache: true
+      - name: Run type check
+        run: bin/typecheck
+      - name: Lint Ruby files
+        run: bin/style
+      - name: Verify documentation
+        run: bin/docs
+      - name: Verify README
+        run: bin/readme
+      - name: Verify gem RBIs are up-to-date
+        run: bundle exec exe/tapioca gem --verify
+      - name: Verify duplicates in shims
+        run: bundle exec exe/tapioca check-shims
+
+  tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -36,29 +59,16 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run type check
-        run: bin/typecheck
-      - name: Lint Ruby files
-        run: bin/style
-      - name: Verify documentation
-        run: bin/docs
-      - name: Verify README
-        run: bin/readme
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ matrix.experimental }}
-      - name: Verify gem RBIs are up-to-date
-        run: bundle exec exe/tapioca gem --verify
-        if: ${{ matrix.gemfile == 'Gemfile' }}
-      - name: Verify duplicates in shims
-        run: bundle exec exe/tapioca check-shims
 
   buildall:
     if: ${{ always() && github.event.pull_request }}
     runs-on: ubuntu-latest
     name: Build (matrix)
-    needs: build
+    needs: [linters, tests]
     steps:
       - name: Check build matrix status
-        if: ${{ needs.build.result != 'success' }}
+        if: ${{ needs.tests.result != 'success' || needs.linters.result != 'success' }}
         run: exit 1
