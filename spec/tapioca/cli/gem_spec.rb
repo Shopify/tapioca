@@ -1619,6 +1619,14 @@ module Tapioca
           assert_equal(<<~OUT, result.out)
             Checking for out-of-date RBIs...
 
+          OUT
+
+          # Does not actually modify anything
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.2.0.rbi")
+
+          assert_equal(<<~ERROR, result.err)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca gem`
             Once it is complete, be sure to commit and push any changes
@@ -1630,14 +1638,8 @@ module Tapioca
               - sorbet/rbi/gems/bar@0.3.0.rbi
               File(s) removed:
               - sorbet/rbi/gems/outdated@5.0.0.rbi
-          OUT
+          ERROR
 
-          # Does not actually modify anything
-          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
-          assert_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
-          assert_project_file_exist("sorbet/rbi/gems/bar@0.2.0.rbi")
-
-          assert_empty_stderr(result)
           refute_success_status(result)
         end
       end
