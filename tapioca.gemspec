@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.executables   = ["tapioca"]
   spec.require_paths = ["lib"]
 
-  spec.files         = Dir.glob("lib/**/*.rb") + ["README.md", "Gemfile", "Rakefile"]
+  spec.files         = Dir.glob("lib/**/*.rb") + ["README.md", "LICENSE.txt"]
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
