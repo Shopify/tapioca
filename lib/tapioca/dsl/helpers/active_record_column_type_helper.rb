@@ -119,7 +119,8 @@ module Tapioca
 
         sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }
         def enum_setter_type(column_type)
-          case column_type.subtype
+          # In Rails < 7 this method is private. When support for that is dropped we can call the method directly
+          case column_type.send(:subtype)
           when ActiveRecord::Type::Integer
             "T.any(::String, ::Symbol, ::Integer)"
           else
