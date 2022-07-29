@@ -12,7 +12,10 @@ jobs:
       fail-fast: false
       matrix:
         ruby: [ "2.7", "3.0", "3.1" ]
+        rails: [ "6.1", "7.0", "main"]
     name: Ruby ${{ matrix.ruby }}
+    env:
+      RAILS_VERSION: ${{ matrix.rails }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby

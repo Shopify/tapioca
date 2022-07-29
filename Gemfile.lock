@@ -364,7 +364,7 @@ DEPENDENCIES
   net-smtp (= 0.3.1)
   nokogiri
   pry-byebug
-  rails
+  rails (~> 7.0.0)
   rake
   rubocop-rspec
   rubocop-shopify
