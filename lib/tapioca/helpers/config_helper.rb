@@ -86,8 +86,7 @@ module Tapioca
       end.compact
 
       unless errors.empty?
-        print_errors(config_file, errors)
-        exit(1)
+        raise Thor::Error, build_error_message(config_file, errors)
       end
     ensure
       @validating_config = false
@@ -173,18 +172,19 @@ module Tapioca
       )
     end
 
-    sig { params(config_file: String, errors: T::Array[ConfigError]).void }
-    def print_errors(config_file, errors)
-      say_error("\nConfiguration file ", :red)
-      say_error("#{config_file} ", :blue, :bold)
-      say_error("has the following errors:\n\n", :red)
+    sig { params(config_file: String, errors: T::Array[ConfigError]).returns(String) }
+    def build_error_message(config_file, errors)
+      error_messages = errors.map do |error|
+        "- " + error.message_parts.map do |part|
+          T.unsafe(self).set_color(part.message, *part.colors)
+        end.join
+      end.join("\n")
 
-      errors.each do |error|
-        say_error("- ")
-        error.message_parts.each do |part|
-          T.unsafe(self).say_error(part.message, *part.colors)
-        end
-      end
+      <<~ERROR
+        #{set_color("\nConfiguration file", :red)} #{set_color(config_file, :blue, :bold)} #{set_color("has the following errors:", :red)}
+
+        #{error_messages}
+      ERROR
     end
 
     sig do

@@ -146,7 +146,7 @@ module Tapioca
             Error: Cannot find constant 'NonExistent::Baz'
           OUT
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          assert_equal("\n", result.err)
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/bar.rbi")
@@ -173,7 +173,7 @@ module Tapioca
                   remove  sorbet/rbi/dsl/non_existent/baz.rbi
           OUT
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          assert_equal("\n", result.err)
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/baz.rbi")
@@ -859,10 +859,12 @@ module Tapioca
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
-            Error: Cannot find compiler 'NonexistentCompiler'
           OUT
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          assert_equal(<<~ERROR, result.err)
+            Error: Cannot find compiler 'NonexistentCompiler'
+          ERROR
+
           refute_success_status(result)
         end
 
@@ -944,10 +946,12 @@ module Tapioca
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
-            Error: Cannot find compiler 'NonexistentCompiler'
           OUT
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
+          assert_equal(<<~ERROR, result.err)
+            Error: Cannot find compiler 'NonexistentCompiler'
+          ERROR
+
           refute_success_status(result)
         end
 
@@ -1327,6 +1331,9 @@ module Tapioca
             Checking for out-of-date RBIs...
 
 
+          OUT
+
+          assert_equal(<<~ERROR, result.err)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1334,9 +1341,8 @@ module Tapioca
             Reason:
               File(s) removed:
               - sorbet/rbi/dsl/post.rbi
-          OUT
+          ERROR
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
           refute_success_status(result)
         end
 
@@ -1361,6 +1367,9 @@ module Tapioca
             Checking for out-of-date RBIs...
 
 
+          OUT
+
+          assert_equal(<<~ERROR, result.err)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1368,9 +1377,8 @@ module Tapioca
             Reason:
               File(s) added:
               - sorbet/rbi/dsl/image.rbi
-          OUT
+          ERROR
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
           refute_success_status(result)
 
           @project.remove("lib/image.rb")
@@ -1406,6 +1414,9 @@ module Tapioca
             Checking for out-of-date RBIs...
 
 
+          OUT
+
+          assert_equal(<<~ERROR, result.err)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1413,9 +1424,8 @@ module Tapioca
             Reason:
               File(s) changed:
               - sorbet/rbi/dsl/post.rbi
-          OUT
+          ERROR
 
-          assert_empty_stderr(result) # FIXME: Shouldn't the errors be printed here?
           refute_success_status(result)
         end
       end
@@ -1635,7 +1645,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_includes(result.err, <<~ERR)
+          assert_equal(<<~ERR, result.err)
             ##### INTERNAL ERROR #####
 
             There are parse errors in the generated RBI files.

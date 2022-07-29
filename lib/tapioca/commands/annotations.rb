@@ -88,8 +88,7 @@ module Tapioca
         end
 
         if indexes.empty?
-          say_error("\nCan't fetch annotations without sources (no index fetched)", :bold, :red)
-          exit(1)
+          raise Thor::Error, set_color("Can't fetch annotations without sources (no index fetched)", :bold, :red)
         end
 
         indexes
@@ -117,7 +116,8 @@ module Tapioca
 
         if fetchable_gems.empty?
           say(" Nothing to do")
-          exit(0)
+
+          return []
         end
 
         say("\n")

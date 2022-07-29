@@ -100,14 +100,16 @@ module Tapioca
 
       if errors.empty?
         say("  No errors found\n\n", [:green, :bold])
+
         return
       end
 
       parse_errors = errors.select { |error| error.code < 4000 }
 
-      if parse_errors.any?
-        say_error(<<~ERR, :red)
+      error_messages = []
 
+      if parse_errors.any?
+        error_messages << set_color(<<~ERR, :red)
           ##### INTERNAL ERROR #####
 
           There are parse errors in the generated RBI files.
@@ -119,27 +121,23 @@ module Tapioca
 
           Command:
             #{command}
-
         ERR
 
-        say_error(<<~ERR, :red) if gems.any?
+        error_messages << set_color(<<~ERR, :red) if gems.any?
           Gems:
           #{gems.map { |gem| "  #{gem.name} (#{gem.version})" }.join("\n")}
-
         ERR
 
-        say_error(<<~ERR, :red) if compilers.any?
+        error_messages << set_color(<<~ERR, :red) if compilers.any?
           Compilers:
           #{compilers.map { |compiler| "  #{compiler.name}" }.join("\n")}
-
         ERR
 
-        say_error(<<~ERR, :red)
+        error_messages << set_color(<<~ERR, :red)
           Errors:
           #{parse_errors.map { |error| "  #{error}" }.join("\n")}
 
           ##########################
-
         ERR
       end
 
@@ -148,7 +146,7 @@ module Tapioca
         update_gem_rbis_strictnesses(redef_errors, gem_dir)
       end
 
-      Kernel.exit(1) if parse_errors.any?
+      Kernel.raise Thor::Error, error_messages.join("\n") if parse_errors.any?
     end
 
     private

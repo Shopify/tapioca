@@ -141,10 +141,11 @@ module Tapioca
 
         gem_names.map do |gem_name|
           gem = @bundle.gem(gem_name)
+
           if gem.nil?
-            say("Error: Cannot find gem '#{gem_name}'", :red)
-            exit(1)
+            raise Thor::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
           end
+
           gem
         end
       end
@@ -298,18 +299,18 @@ module Tapioca
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
-          say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{default_command(command)}`", [:green, :bold])
-          say("Once it is complete, be sure to commit and push any changes", :green)
+          reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
+            build_error_for_files(cause, diff_for_cause.map(&:first))
+          end.join("\n")
 
-          say("")
+          raise Thor::Error, <<~ERROR
+            #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
+              #{set_color("`#{default_command(command)}`", [:green, :bold])}
+            #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
 
-          say("Reason:", [:red])
-          diff.group_by(&:last).sort.each do |cause, diff_for_cause|
-            say(build_error_for_files(cause, diff_for_cause.map(&:first)))
-          end
-
-          exit(1)
+            #{set_color("Reason:", :red)}
+            #{reasons}
+          ERROR
         end
       end
 

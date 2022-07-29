@@ -148,6 +148,7 @@ module Tapioca
         end
 
         unprocessable_constants = constant_map.select { |_, v| v.nil? }
+
         unless unprocessable_constants.empty?
           unprocessable_constants.each do |name, _|
             say("Error: Cannot find constant '#{name}'", :red)
@@ -155,7 +156,7 @@ module Tapioca
             remove_file(filename) if File.file?(filename)
           end
 
-          exit(1)
+          raise Thor::Error, ""
         end
 
         constant_map.values
@@ -168,12 +169,13 @@ module Tapioca
         end
 
         unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
-        unless unprocessable_compilers.empty?
-          unprocessable_compilers.each do |name, _|
-            say("Error: Cannot find compiler '#{name}'", :red)
-          end
 
-          exit(1)
+        unless unprocessable_compilers.empty?
+          message = unprocessable_compilers.map do |name, _|
+            set_color("Error: Cannot find compiler '#{name}'", :red)
+          end.join("\n")
+
+          raise Thor::Error, message
         end
 
         T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
@@ -289,18 +291,18 @@ module Tapioca
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
         else
-          say("RBI files are out-of-date. In your development environment, please run:", :green)
-          say("  `#{default_command(command)}`", [:green, :bold])
-          say("Once it is complete, be sure to commit and push any changes", :green)
+          reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
+            build_error_for_files(cause, diff_for_cause.map(&:first))
+          end.join("\n")
 
-          say("")
+          raise Thor::Error, <<~ERROR
+            #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
+              #{set_color("`#{default_command(command)}`", [:green, :bold])}
+            #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
 
-          say("Reason:", [:red])
-          diff.group_by(&:last).sort.each do |cause, diff_for_cause|
-            say(build_error_for_files(cause, diff_for_cause.map(&:first)))
-          end
-
-          exit(1)
+            #{set_color("Reason:", :red)}
+            #{reasons}
+          ERROR
         end
       end
 

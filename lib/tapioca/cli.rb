@@ -288,8 +288,7 @@ module Tapioca
       default: {}
     def annotations
       if !options[:netrc] && options[:netrc_file]
-        say_error("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
-        exit(1)
+        raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
       end
 
       command = Commands::Annotations.new(
