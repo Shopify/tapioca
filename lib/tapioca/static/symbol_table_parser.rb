@@ -37,8 +37,7 @@ module Tapioca
           name = child.fetch("name")
           name = name.fetch("name") if name.is_a?(Hash)
 
-          next if kind.nil? || name.nil?
-
+          next if name.nil?
           next unless SKIP_PARSE_KINDS.include?(kind)
           next if name.match?(/[<>()$]/)
           next if name.match?(/^[0-9]+$/)
