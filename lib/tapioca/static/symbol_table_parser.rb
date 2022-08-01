@@ -6,6 +6,8 @@ module Tapioca
     class SymbolTableParser
       extend T::Sig
 
+      SKIP_PARSE_KINDS = T.let(["CLASS_OR_MODULE", "STATIC_FIELD"].freeze, T::Array[String])
+
       sig { params(json_string: String).returns(T::Set[String]) }
       def self.parse_json(json_string)
         obj = JSON.parse(json_string)
@@ -37,12 +39,9 @@ module Tapioca
 
           next if kind.nil? || name.nil?
 
-          # TODO: CLASS is removed since v0.4.4730 of Sorbet
-          # but keeping here for backward compatibility. Remove
-          # once the minimum version is moved past that.
-          next unless ["CLASS", "CLASS_OR_MODULE", "STATIC_FIELD"].include?(kind)
-          next if name =~ /[<>()$]/
-          next if name =~ /^[0-9]+$/
+          next unless SKIP_PARSE_KINDS.include?(kind)
+          next if name.match?(/[<>()$]/)
+          next if name.match?(/^[0-9]+$/)
           next if name == "T::Helpers"
 
           @symbols.add(fully_qualified_name(name))
