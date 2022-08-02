@@ -49,14 +49,22 @@ module Tapioca
           # use for jump to definition. Only add source comments on Ruby files
           return unless path.extname == ".rb"
 
-          path = if path.realpath.to_s.start_with?(gem.full_gem_path)
-            "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
-          else
-            path.sub("#{Bundler.bundle_path}/gems/", "").to_s
-          end
+          realpath = path.realpath.to_s
 
-          # Strip out the RUBY_ROOT prefix, which is different for each user
-          path = path.sub(RbConfig::CONFIG["rubylibdir"], "RUBY_ROOT")
+          path = if realpath.start_with?(gem.full_gem_path)
+            "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
+          elsif realpath.start_with?(Bundler.home.to_s)
+            realpath.delete_prefix("#{Bundler.home}/gems/")
+          elsif realpath.start_with?(Bundler.bundle_path.to_s)
+            realpath.delete_prefix("#{Bundler.bundle_path}/gems/")
+          elsif realpath.start_with?(RbConfig::CONFIG["rubylibdir"])
+            # Strip out the RUBY_ROOT prefix, which is different for each user
+            realpath.sub(RbConfig::CONFIG["rubylibdir"], "RUBY_ROOT")
+          else
+            # If the path doesn't begin with Bundler home or bundle path, it might be a monkey patch. We're not
+            # interested in trying to link to anything that isn't a gem
+            return
+          end
 
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new("source://#{path}:#{line}")
