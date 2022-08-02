@@ -117,7 +117,7 @@ class Money
   def fraction(rate); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def hash(*args, &block); end
+  def hash(*args, **_arg1, &block); end
 
   # source://shopify-money-0.16.0/lib/money/money.rb:91
   def init_with(coder); end
@@ -126,7 +126,7 @@ class Money
   def inspect; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def negative?(*args, &block); end
+  def negative?(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #
@@ -134,10 +134,10 @@ class Money
   def no_currency?; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def nonzero?(*args, &block); end
+  def nonzero?(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def positive?(*args, &block); end
+  def positive?(*args, **_arg1, &block); end
 
   # source://shopify-money-0.16.0/lib/money/money.rb:248
   def round(ndigits = T.unsafe(nil)); end
@@ -159,10 +159,10 @@ class Money
   def to_d; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def to_f(*args, &block); end
+  def to_f(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def to_i(*args, &block); end
+  def to_i(*args, **_arg1, &block); end
 
   # source://shopify-money-0.16.0/lib/money/money.rb:232
   def to_json(options = T.unsafe(nil)); end
@@ -179,7 +179,7 @@ class Money
   def value; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def zero?(*args, &block); end
+  def zero?(*args, **_arg1, &block); end
 
   private
 
@@ -743,22 +743,22 @@ class Numeric
   def to_money(currency = T.unsafe(nil)); end
 end
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:9
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:9
 Numeric::EXABYTE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:6
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:6
 Numeric::GIGABYTE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:4
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:4
 Numeric::KILOBYTE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:5
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:5
 Numeric::MEGABYTE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:8
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:8
 Numeric::PETABYTE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/numeric/bytes.rb:7
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/numeric/bytes.rb:7
 Numeric::TERABYTE = T.let(T.unsafe(nil), Integer)
 
 # source://shopify-money-0.16.0/lib/rubocop/cop/money/missing_currency.rb:3
@@ -767,7 +767,7 @@ module RuboCop; end
 # source://shopify-money-0.16.0/lib/rubocop/cop/money/missing_currency.rb:4
 module RuboCop::Cop; end
 
-# source://rubocop-1.31.2/lib/rubocop/cop/mixin/allowed_pattern.rb:38
+# source://rubocop-1.32.0/lib/rubocop/cop/mixin/allowed_pattern.rb:38
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://shopify-money-0.16.0/lib/rubocop/cop/money/missing_currency.rb:5
@@ -838,13 +838,13 @@ end
 # source://shopify-money-0.16.0/lib/rubocop/cop/money/zero_money.rb:27
 RuboCop::Cop::Money::ZeroMoney::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:5
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:6
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:7
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:7
 RuboCop::Token = RuboCop::AST::Token
 
 # Allows Writing of '100'.to_money for +String+ types
@@ -860,8 +860,8 @@ class String
   def to_money(currency = T.unsafe(nil)); end
 end
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:104
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:105
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)

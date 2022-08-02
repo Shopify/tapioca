@@ -3308,16 +3308,12 @@ Regexp::TOKEN_KEYS = T.let(T.unsafe(nil), Array)
 # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
 class Regexp::Token < ::Struct
   def conditional_level; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def conditional_level=(_); end
 
   # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:20
   def length; end
 
   def level; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def level=(_); end
 
   # Returns the value of attribute next.
@@ -3348,38 +3344,22 @@ class Regexp::Token < ::Struct
   def previous=(_arg0); end
 
   def set_level; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def set_level=(_); end
-
   def te; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def te=(_); end
-
   def text; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def text=(_); end
-
   def token; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def token=(_); end
-
   def ts; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def ts=(_); end
-
   def type; end
-
-  # source://regexp_parser-2.5.0/lib/regexp_parser/token.rb:13
   def type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

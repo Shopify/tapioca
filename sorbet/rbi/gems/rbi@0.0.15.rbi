@@ -13,8 +13,8 @@ module RBI; end
 class RBI::ASTVisitor
   abstract!
 
-  # source://sorbet-runtime-0.5.10151/lib/types/private/abstract/declare.rb:37
-  def initialize(*args, &blk); end
+  # source://sorbet-runtime-0.5.10233/lib/types/private/abstract/declare.rb:37
+  def initialize(*args, **_arg1, &blk); end
 
   # @abstract
   #
@@ -1761,7 +1761,7 @@ class RBI::Rewriters::Merge::Conflict < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime-0.5.10151/lib/types/struct.rb:13
+    # source://sorbet-runtime-0.5.10233/lib/types/struct.rb:13
     def inherited(s); end
   end
 end
@@ -1978,7 +1978,7 @@ class RBI::Rewriters::RemoveKnownDefinitions::Operation < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime-0.5.10151/lib/types/struct.rb:13
+    # source://sorbet-runtime-0.5.10233/lib/types/struct.rb:13
     def inherited(s); end
   end
 end
@@ -2018,8 +2018,8 @@ class RBI::Scope < ::RBI::Tree
 
   abstract!
 
-  # source://sorbet-runtime-0.5.10151/lib/types/private/abstract/declare.rb:37
-  def initialize(*args, &blk); end
+  # source://sorbet-runtime-0.5.10233/lib/types/private/abstract/declare.rb:37
+  def initialize(*args, **_arg1, &blk); end
 
   # source://rbi-0.0.15/lib/rbi/printer.rb:240
   sig { override.params(v: ::RBI::Printer).void }
@@ -2644,7 +2644,6 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(annotation: ::String, annotate_scopes: T::Boolean, annotate_properties: T::Boolean).void }
   def annotate!(annotation, annotate_scopes: T.unsafe(nil), annotate_properties: T.unsafe(nil)); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:38
   sig do
     params(
       name: ::String,
@@ -2654,19 +2653,15 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_class(name, superclass_name: T.unsafe(nil), &block); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:45
   sig { params(name: ::String, value: ::String).void }
   def create_constant(name, value:); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:55
   sig { params(name: ::String).void }
   def create_extend(name); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:50
   sig { params(name: ::String).void }
   def create_include(name); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:88
   sig do
     params(
       name: ::String,
@@ -2678,19 +2673,15 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil)); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:60
   sig { params(name: ::String).void }
   def create_mixes_in_class_methods(name); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:25
   sig { params(name: ::String, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_module(name, &block); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:9
   sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).void }
   def create_path(constant, &block); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:74
   sig do
     params(
       name: ::String,
@@ -2752,11 +2743,9 @@ class RBI::Tree < ::RBI::NodeWithComments
 
   private
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:108
   sig { params(node: ::RBI::Node).returns(::RBI::Node) }
   def create_node(node); end
 
-  # source:///Users/at/src/github.com/Shopify/tapioca/lib/tapioca/rbi_ext/model.rb:103
   sig { returns(T::Hash[::String, ::RBI::Node]) }
   def nodes_cache; end
 end
@@ -2992,8 +2981,8 @@ end
 class RBI::Visitor
   abstract!
 
-  # source://sorbet-runtime-0.5.10151/lib/types/private/abstract/declare.rb:37
-  def initialize(*args, &blk); end
+  # source://sorbet-runtime-0.5.10233/lib/types/private/abstract/declare.rb:37
+  def initialize(*args, **_arg1, &blk); end
 
   # @abstract
   #

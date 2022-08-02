@@ -10,7 +10,7 @@ module RuboCop; end
 # source://rubocop-sorbet-0.6.11/lib/rubocop/cop/sorbet/binding_constants_without_type_alias.rb:6
 module RuboCop::Cop; end
 
-# source://rubocop-1.31.2/lib/rubocop/cop/mixin/allowed_pattern.rb:38
+# source://rubocop-1.32.0/lib/rubocop/cop/mixin/allowed_pattern.rb:38
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://rubocop-sorbet-0.6.11/lib/rubocop/cop/sorbet/binding_constants_without_type_alias.rb:7
@@ -946,10 +946,10 @@ class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
 end
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:5
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:6
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
 # source://rubocop-sorbet-0.6.11/lib/rubocop/sorbet/version.rb:3
@@ -981,5 +981,5 @@ RuboCop::Sorbet::PROJECT_ROOT = T.let(T.unsafe(nil), Pathname)
 # source://rubocop-sorbet-0.6.11/lib/rubocop/sorbet/version.rb:4
 RuboCop::Sorbet::VERSION = T.let(T.unsafe(nil), String)
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:7
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:7
 RuboCop::Token = RuboCop::AST::Token

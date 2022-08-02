@@ -40,8 +40,8 @@ GetText::PoParser::Racc_debug_parser = T.let(T.unsafe(nil), TrueClass)
 # source://i18n-1.12.0/lib/i18n/gettext/po_parser.rb:200
 GetText::PoParser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
-# heavily based on Masao Mutoh's gettext String interpolation extension
-# http://github.com/mutoh/gettext/blob/f6566738b981fe0952548c421042ad1e0cdfb31e/lib/gettext/core_ext/string.rb
+# Simple Locale tag implementation that computes subtags by simply splitting
+# the locale tag at '-' occurrences.
 #
 # source://i18n-1.12.0/lib/i18n/version.rb:3
 module I18n

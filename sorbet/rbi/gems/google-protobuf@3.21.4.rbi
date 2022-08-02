@@ -1189,36 +1189,36 @@ class Google::Protobuf::RepeatedField
 
   def initialize(*_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def &(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def &(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def *(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def *(*args, **_arg1, &block); end
 
   def +(_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def -(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def -(*args, **_arg1, &block); end
 
   def <<(_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def <=>(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def <=>(*args, **_arg1, &block); end
 
   def ==(_arg0); end
   def [](*_arg0); end
   def []=(_arg0, _arg1); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def assoc(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def assoc(*args, **_arg1, &block); end
 
   def at(*_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def bsearch(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def bsearch(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def bsearch_index(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def bsearch_index(*args, **_arg1, &block); end
 
   def clear; end
   def clone; end
@@ -1226,22 +1226,22 @@ class Google::Protobuf::RepeatedField
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def collect!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def combination(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def combination(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def compact(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def compact(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def compact!(*args, &block); end
 
   def concat(_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def count(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def count(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def cycle(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def cycle(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:128
   def delete(*args, &block); end
@@ -1252,14 +1252,14 @@ class Google::Protobuf::RepeatedField
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def delete_if(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def dig(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def dig(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def drop(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def drop(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def drop_while(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def drop_while(*args, **_arg1, &block); end
 
   def dup; end
   def each; end
@@ -1272,23 +1272,23 @@ class Google::Protobuf::RepeatedField
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:115
   def empty?; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def eql?(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def eql?(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def fetch(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def fetch(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def fill(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def find_index(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def find_index(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:81
   def first(n = T.unsafe(nil)); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def flatten(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def flatten(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def flatten!(*args, &block); end
@@ -1296,20 +1296,20 @@ class Google::Protobuf::RepeatedField
   def freeze; end
   def hash; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def include?(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def include?(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def index(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def index(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def insert(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def inspect(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def inspect(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def join(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def join(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def keep_if(*args, &block); end
@@ -1323,69 +1323,69 @@ class Google::Protobuf::RepeatedField
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def map!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def pack(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def pack(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def permutation(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def permutation(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:104
   def pop(n = T.unsafe(nil)); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def pretty_print(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def pretty_print(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def pretty_print_cycle(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def pretty_print_cycle(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def product(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def product(*args, **_arg1, &block); end
 
   def push(*_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def rassoc(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def rassoc(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def reject!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def repeated_combination(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def repeated_combination(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def repeated_permutation(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def repeated_permutation(*args, **_arg1, &block); end
 
   def replace(_arg0); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def reverse(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def reverse(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def reverse!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def rindex(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def rindex(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def rotate(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def rotate(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def rotate!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def sample(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def sample(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def select!(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def shelljoin(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def shelljoin(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:128
   def shift(*args, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def shuffle(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def shuffle(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def shuffle!(*args, &block); end
@@ -1404,14 +1404,14 @@ class Google::Protobuf::RepeatedField
 
   def to_ary; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def to_s(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def to_s(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def transpose(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def transpose(*args, **_arg1, &block); end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def uniq(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def uniq(*args, **_arg1, &block); end
 
   # source://google-protobuf-3.21.4/lib/google/protobuf/repeated_field.rb:140
   def uniq!(*args, &block); end
@@ -1421,8 +1421,8 @@ class Google::Protobuf::RepeatedField
 
   def values_at; end
 
-  # source://RUBY_ROOT/forwardable.rb:226
-  def |(*args, &block); end
+  # source://RUBY_ROOT/forwardable.rb:229
+  def |(*args, **_arg1, &block); end
 
   private
 

@@ -48,10 +48,10 @@ class ActionView::AbstractRenderer
   def initialize(lookup_context); end
 
   # source://actionview-7.0.3.1/lib/action_view/renderer/abstract_renderer.rb:22
-  def any_templates?(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/renderer/abstract_renderer.rb:22
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
 
   # @raise [NotImplementedError]
   #
@@ -59,7 +59,7 @@ class ActionView::AbstractRenderer
   def render; end
 
   # source://actionview-7.0.3.1/lib/action_view/renderer/abstract_renderer.rb:22
-  def template_exists?(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -383,10 +383,10 @@ class ActionView::Base
   # source://actionview-7.0.3.1/lib/action_view/base.rb:207
   def assign(new_assigns); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
   def assigns; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
   def assigns=(_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:160
@@ -400,10 +400,10 @@ class ActionView::Base
   # source://actionview-7.0.3.1/lib/action_view/base.rb:249
   def compiled_method_container; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
   def config; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attr_internal.rb:33
   def config=(_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/translation_helper.rb:18
@@ -425,7 +425,7 @@ class ActionView::Base
   def field_error_proc=(val); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
   def formats=(arg); end
@@ -434,7 +434,7 @@ class ActionView::Base
   def in_rendering_context(options); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
   def locale=(arg); end
@@ -469,7 +469,7 @@ class ActionView::Base
   def streaming_completion_on_exception=(val); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
-  def view_paths(*_arg0, &_arg1); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/base.rb:205
   def view_paths=(arg); end
@@ -1135,8 +1135,6 @@ class ActionView::FileSystemResolver < ::ActionView::Resolver
   def unbound_templates_from_path(path); end
 end
 
-# = Action View Form Tag Helpers
-#
 # source://actionview-7.0.3.1/lib/action_view/helpers/capture_helper.rb:7
 module ActionView::Helpers
   include ::ActiveSupport::Benchmarkable
@@ -2859,7 +2857,7 @@ end
 # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:9
 module ActionView::Helpers::ControllerHelper
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def action_name(*_arg0, &_arg1); end
+  def action_name(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:18
   def assign_controller(controller); end
@@ -2868,31 +2866,31 @@ module ActionView::Helpers::ControllerHelper
   def controller=(_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def controller_name(*_arg0, &_arg1); end
+  def controller_name(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def controller_path(*_arg0, &_arg1); end
+  def controller_path(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def cookies(*_arg0, &_arg1); end
+  def cookies(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def flash(*_arg0, &_arg1); end
+  def flash(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def headers(*_arg0, &_arg1); end
+  def headers(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:26
   def logger; end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def params(*_arg0, &_arg1); end
+  def params(*_arg0, **_arg1, &_arg2); end
 
   def request; end
   def request=(_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def request_forgery_protection_token(*_arg0, &_arg1); end
+  def request_forgery_protection_token(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -2900,10 +2898,10 @@ module ActionView::Helpers::ControllerHelper
   def respond_to?(method_name, include_private = T.unsafe(nil)); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def response(*_arg0, &_arg1); end
+  def response(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:16
-  def session(*_arg0, &_arg1); end
+  def session(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://actionview-7.0.3.1/lib/action_view/helpers/controller_helper.rb:12
@@ -10455,8 +10453,8 @@ module ActionView::Helpers::UrlHelper
 
   # @return [Boolean]
   #
-  # source://actionview-7.0.3.1/lib/action_view/helpers/url_helper.rb:619
-  def current_page?(*args); end
+  # source://actionview-7.0.3.1/lib/action_view/helpers/url_helper.rb:582
+  def current_page?(options = T.unsafe(nil), check_parameters: T.unsafe(nil), **options_as_kwargs); end
 
   # Creates an anchor element of the given +name+ using a URL created by the set of +options+.
   # See the valid options in the documentation for +url_for+. It's also possible to
@@ -11148,7 +11146,7 @@ module ActionView::Layouts
   def initialize(*_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/layouts.rb:215
-  def _layout_conditions(*_arg0, &_arg1); end
+  def _layout_conditions(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/layouts.rb:350
   def _normalize_options(options); end
@@ -11648,8 +11646,6 @@ class ActionView::MissingTemplate::Results::Result < ::Struct
   #
   # @param value [Object] the value to set the attribute path to.
   # @return [Object] the newly set value
-  #
-  # source://actionview-7.0.3.1/lib/action_view/template/error.rb:60
   def path=(_); end
 
   # Returns the value of attribute score
@@ -11661,13 +11657,12 @@ class ActionView::MissingTemplate::Results::Result < ::Struct
   #
   # @param value [Object] the value to set the attribute score to.
   # @return [Object] the newly set value
-  #
-  # source://actionview-7.0.3.1/lib/action_view/template/error.rb:60
   def score=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -11736,7 +11731,7 @@ class ActionView::OutputBuffer < ::ActiveSupport::SafeBuffer
   # source://actionview-7.0.3.1/lib/action_view/buffers.rb:27
   def append=(value); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/string/output_safety.rb:195
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/string/output_safety.rb:195
   def safe_append=(value); end
 
   # source://actionview-7.0.3.1/lib/action_view/buffers.rb:33
@@ -12088,7 +12083,7 @@ class ActionView::PathSet
   def <<(*args); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:16
-  def [](*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:31
   def compact; end
@@ -12097,7 +12092,7 @@ class ActionView::PathSet
   def concat(*args); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:16
-  def each(*_arg0, &_arg1); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -12111,7 +12106,7 @@ class ActionView::PathSet
   def find_all(path, prefixes, partial, details, details_key, locals); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:16
-  def include?(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:41
   def insert(*args); end
@@ -12122,13 +12117,13 @@ class ActionView::PathSet
   def paths; end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:16
-  def pop(*_arg0, &_arg1); end
+  def pop(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:41
   def push(*args); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:16
-  def size(*_arg0, &_arg1); end
+  def size(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/path_set.rb:27
   def to_ary; end
@@ -12610,6 +12605,9 @@ class ActionView::RenderParser::RipperASTParser::NodeParser < ::Ripper
 
   # source://actionview-7.0.3.1/lib/action_view/ripper_ast_parser.rb:140
   def on_float(tok); end
+
+  # source://actionview-7.0.3.1/lib/action_view/ripper_ast_parser.rb:131
+  def on_fndptn(*args); end
 
   # source://actionview-7.0.3.1/lib/action_view/ripper_ast_parser.rb:131
   def on_for(*args); end
@@ -13105,7 +13103,7 @@ module ActionView::Rendering
   # Override process to set up I18n proxy.
   #
   # source://actionview-7.0.3.1/lib/action_view/rendering.rb:37
-  def process(*_arg0, &_arg1); end
+  def process(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/rendering.rb:101
   def render_to_body(options = T.unsafe(nil)); end
@@ -13190,7 +13188,7 @@ class ActionView::Resolver
   def caching=(val); end
 
   # source://actionview-7.0.3.1/lib/action_view/template/resolver.rb:76
-  def caching?(*_arg0, &_arg1); end
+  def caching?(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/template/resolver.rb:58
   def clear_cache; end
@@ -13249,8 +13247,6 @@ class ActionView::Resolver::PathParser::ParsedPath < ::Struct
   #
   # @param value [Object] the value to set the attribute details to.
   # @return [Object] the newly set value
-  #
-  # source://actionview-7.0.3.1/lib/action_view/template/resolver.rb:17
   def details=(_); end
 
   # Returns the value of attribute path
@@ -13262,13 +13258,12 @@ class ActionView::Resolver::PathParser::ParsedPath < ::Struct
   #
   # @param value [Object] the value to set the attribute path to.
   # @return [Object] the newly set value
-  #
-  # source://actionview-7.0.3.1/lib/action_view/template/resolver.rb:17
   def path=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -14378,7 +14373,7 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   def debug_missing_translation=(val); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://actionpack-7.0.3.1/lib/abstract_controller/helpers.rb:11
@@ -14457,7 +14452,7 @@ module ActionView::TestCase::Behavior
   def controller=(_arg0); end
 
   # source://actionview-7.0.3.1/lib/action_view/test_case.rb:59
-  def lookup_context(*_arg0, &_arg1); end
+  def lookup_context(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute output_buffer.
   #
@@ -14726,16 +14721,16 @@ class ActionView::UnboundTemplate
   def details; end
 
   # source://actionview-7.0.3.1/lib/action_view/unbound_template.rb:8
-  def format(*_arg0, &_arg1); end
+  def format(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/unbound_template.rb:8
-  def handler(*_arg0, &_arg1); end
+  def handler(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/unbound_template.rb:8
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/unbound_template.rb:8
-  def variant(*_arg0, &_arg1); end
+  def variant(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute virtual_path.
   #
@@ -14781,7 +14776,7 @@ module ActionView::ViewPaths
   def _prefixes; end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
-  def any_templates?(*_arg0, &_arg1); end
+  def any_templates?(*_arg0, **_arg1, &_arg2); end
 
   # Append a path to the list of view paths for the current LookupContext.
   #
@@ -14797,13 +14792,13 @@ module ActionView::ViewPaths
   def details_for_lookup; end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
-  def formats(*_arg0, &_arg1); end
+  def formats(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
   def formats=(arg); end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
-  def locale(*_arg0, &_arg1); end
+  def locale(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
   def locale=(arg); end
@@ -14826,10 +14821,10 @@ module ActionView::ViewPaths
   def prepend_view_path(path); end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
-  def template_exists?(*_arg0, &_arg1); end
+  def template_exists?(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:11
-  def view_paths(*_arg0, &_arg1); end
+  def view_paths(*_arg0, **_arg1, &_arg2); end
 
   class << self
     # source://actionview-7.0.3.1/lib/action_view/view_paths.rb:84

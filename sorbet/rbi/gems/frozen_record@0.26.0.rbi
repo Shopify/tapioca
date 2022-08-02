@@ -76,10 +76,10 @@ module FrozenRecord::Backends::Yaml
 
   private
 
-  # source://frozen_record-0.26.0/lib/frozen_record/backends/yaml.rb:74
+  # source://frozen_record-0.26.0/lib/frozen_record/backends/yaml.rb:58
   def load_file(path); end
 
-  # source://frozen_record-0.26.0/lib/frozen_record/backends/yaml.rb:78
+  # source://frozen_record-0.26.0/lib/frozen_record/backends/yaml.rb:62
   def load_string(yaml); end
 end
 
@@ -133,7 +133,7 @@ class FrozenRecord::Base
   def include_root_in_json?; end
 
   # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -210,7 +210,7 @@ class FrozenRecord::Base
     def auto_reloading?; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def average(*_arg0, &_arg1); end
+    def average(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:31
     def backend; end
@@ -231,7 +231,7 @@ class FrozenRecord::Base
     def base_path?; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def count(*_arg0, &_arg1); end
+    def count(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:101
     def current_scope; end
@@ -249,7 +249,7 @@ class FrozenRecord::Base
     def default_attributes?; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def each(*_arg0, &_arg1); end
+    def each(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:153
     def eager_load!; end
@@ -260,28 +260,28 @@ class FrozenRecord::Base
     def file_path; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def find(*_arg0, &_arg1); end
+    def find(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def find_by(*_arg0, &_arg1); end
+    def find_by(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def find_by!(*_arg0, &_arg1); end
+    def find_by!(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def find_by_id(*_arg0, &_arg1); end
+    def find_by_id(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def find_each(*_arg0, &_arg1); end
+    def find_each(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def first(*_arg0, &_arg1); end
+    def first(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def first!(*_arg0, &_arg1); end
+    def first!(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def ids(*_arg0, &_arg1); end
+    def ids(*_arg0, **_arg1, &_arg2); end
 
     # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
     def include_root_in_json; end
@@ -302,13 +302,13 @@ class FrozenRecord::Base
     def index_definitions?; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def last(*_arg0, &_arg1); end
+    def last(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def last!(*_arg0, &_arg1); end
+    def last!(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def limit(*_arg0, &_arg1); end
+    def limit(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:159
     def load_records(force: T.unsafe(nil)); end
@@ -323,25 +323,25 @@ class FrozenRecord::Base
     def max_records_scan?; end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def maximum(*_arg0, &_arg1); end
+    def maximum(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:131
     def memsize(object = T.unsafe(nil), seen = T.unsafe(nil)); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def minimum(*_arg0, &_arg1); end
+    def minimum(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:185
     def new(attrs = T.unsafe(nil)); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def offset(*_arg0, &_arg1); end
+    def offset(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def order(*_arg0, &_arg1); end
+    def order(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def pluck(*_arg0, &_arg1); end
+    def pluck(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:31
     def primary_key; end
@@ -361,10 +361,10 @@ class FrozenRecord::Base
     def scope(name, body); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def sum(*_arg0, &_arg1); end
+    def sum(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:110
-    def where(*_arg0, &_arg1); end
+    def where(*_arg0, **_arg1, &_arg2); end
 
     # source://frozen_record-0.26.0/lib/frozen_record/base.rb:61
     def with_max_records_scan(value); end
@@ -527,22 +527,22 @@ class FrozenRecord::Scope
   def ==(other); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def all?(*_arg0, &_arg1); end
+  def all?(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def as_json(*_arg0, &_arg1); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:84
   def average(attribute); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def collect(*_arg0, &_arg1); end
+  def collect(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def count(*_arg0, &_arg1); end
+  def count(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def each(*_arg0, &_arg1); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -564,10 +564,10 @@ class FrozenRecord::Scope
   def find_by_id(id); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def find_each(*_arg0, &_arg1); end
+  def find_each(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def first(*_arg0, &_arg1); end
+  def first(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:53
   def first!; end
@@ -579,22 +579,22 @@ class FrozenRecord::Scope
   def ids; end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def include?(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def last(*_arg0, &_arg1); end
+  def last(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:57
   def last!; end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def length(*_arg0, &_arg1); end
+  def length(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:116
   def limit(amount); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def map(*_arg0, &_arg1); end
+  def map(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:92
   def maximum(attribute); end
@@ -618,10 +618,10 @@ class FrozenRecord::Scope
   def to_a; end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def to_ary(*_arg0, &_arg1); end
+  def to_ary(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:11
-  def to_json(*_arg0, &_arg1); end
+  def to_json(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:100
   def where(criterias = T.unsafe(nil)); end
@@ -652,7 +652,7 @@ class FrozenRecord::Scope
   def matching_records; end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:241
-  def method_missing(method_name, *args, &block); end
+  def method_missing(method_name, *args, **_arg2, &block); end
 
   # source://frozen_record-0.26.0/lib/frozen_record/scope.rb:278
   def offset!(amount); end

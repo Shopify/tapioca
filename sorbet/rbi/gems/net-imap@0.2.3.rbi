@@ -2040,25 +2040,6 @@ Net::IMAP::ResponseParser::ASTRING_CHARS_TOKENS = T.let(T.unsafe(nil), Array)
 # source://net-imap-0.2.3/lib/net/imap/response_parser.rb:1329
 Net::IMAP::ResponseParser::SPACES_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://net-imap-0.2.3/lib/net/imap/response_parser.rb:87
-class Net::IMAP::ResponseParser::Token < ::Struct
-  # Sets the attribute symbol
-  #
-  # @param value [Object] the value to set the attribute symbol to.
-  # @return [Object] the newly set value
-  #
-  # source://net-imap-0.2.3/lib/net/imap/response_parser.rb:87
-  def symbol=(_); end
-
-  # Sets the attribute value
-  #
-  # @param value [Object] the value to set the attribute value to.
-  # @return [Object] the newly set value
-  #
-  # source://net-imap-0.2.3/lib/net/imap/response_parser.rb:87
-  def value=(_); end
-end
-
 # Mailbox attribute indicating that this mailbox is used to hold copies of
 # messages that have been sent. Some server implementations might put
 # messages here automatically. Alternatively, this might just be advice that

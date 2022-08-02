@@ -321,7 +321,7 @@ class ActiveStorage::AnalyzeJob < ::ActiveStorage::BaseJob
     # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:56
     def queue_name; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
   end
 end
@@ -830,16 +830,16 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def blobs; end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/many.rb:23
-  def detach(*_arg0, &_arg1); end
+  def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
-  def method_missing(method, *args, &block); end
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
+  def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/many.rb:11
-  def purge(*_arg0, &_arg1); end
+  def purge(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/many.rb:17
-  def purge_later(*_arg0, &_arg1); end
+  def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -849,7 +849,7 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage-7.0.3.1/lib/active_storage/attached/many.rb:70
   def purge_many; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -903,16 +903,16 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   def blank?; end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/one.rb:23
-  def detach(*_arg0, &_arg1); end
+  def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
-  def method_missing(method, *args, &block); end
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
+  def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/one.rb:11
-  def purge(*_arg0, &_arg1); end
+  def purge(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/lib/active_storage/attached/one.rb:17
-  def purge_later(*_arg0, &_arg1); end
+  def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -922,7 +922,7 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage-7.0.3.1/lib/active_storage/attached/one.rb:77
   def purge_one; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -937,8 +937,8 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   # source://activerecord-7.0.3.1/lib/active_record/autosave_association.rb:160
   def autosave_associated_records_for_record(*args); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
-  def method_missing(method, *args, &block); end
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
+  def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/attachment.rb:33
   def purge; end
@@ -947,7 +947,7 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def purge_later; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/attachment.rb:25
-  def signed_id(*_arg0, &_arg1); end
+  def signed_id(*_arg0, **_arg1, &_arg2); end
 
   # source://activerecord-7.0.3.1/lib/active_record/autosave_association.rb:160
   def validate_associated_records_for_blob(*args); end
@@ -969,14 +969,14 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   # source://activestorage-7.0.3.1/app/models/active_storage/attachment.rb:78
   def purge_dependent_blob_later; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/attachment.rb:86
   def variants; end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://activerecord-7.0.3.1/lib/active_record/reflection.rb:11
@@ -989,7 +989,7 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
     def defined_enums; end
 
     # source://activerecord-7.0.3.1/lib/active_record/scoping/named.rb:174
-    def with_all_variant_records(*args); end
+    def with_all_variant_records(*args, **_arg1); end
   end
 end
 
@@ -1048,7 +1048,7 @@ class ActiveStorage::BaseController < ::ActionController::Base
   def _layout(lookup_context, formats); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://actionpack-7.0.3.1/lib/action_controller/metal/etag_with_template_digest.rb:27
@@ -1171,10 +1171,10 @@ class ActiveStorage::Current < ::ActiveSupport::CurrentAttributes
   def host=(host); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/current_attributes.rb:118
+    # source://activesupport-7.0.3.1/lib/active_support/current_attributes.rb:118
     def url_options; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/current_attributes.rb:118
+    # source://activesupport-7.0.3.1/lib/active_support/current_attributes.rb:118
     def url_options=(value); end
   end
 end
@@ -1196,7 +1196,7 @@ class ActiveStorage::DirectUploadsController < ::ActiveStorage::BaseController
   def direct_upload_json(blob); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://actionpack-7.0.3.1/lib/action_controller/metal.rb:210
@@ -1232,7 +1232,7 @@ class ActiveStorage::DiskController < ::ActiveStorage::BaseController
   def named_disk_service(name); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://actionpack-7.0.3.1/lib/action_controller/metal.rb:210
@@ -1370,10 +1370,10 @@ class ActiveStorage::FixtureSet
   include ::ActiveRecord::SecureToken
   extend ::ActiveRecord::SecureToken::ClassMethods
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
+  # source://activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
   def file_fixture_path; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
+  # source://activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
   def file_fixture_path?; end
 
   # source://activestorage-7.0.3.1/lib/active_storage/fixture_set.rb:67
@@ -1401,13 +1401,13 @@ class ActiveStorage::FixtureSet
     # source://activestorage-7.0.3.1/lib/active_storage/fixture_set.rb:63
     def blob(filename:, **attributes); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
+    # source://activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
     def file_fixture_path; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
+    # source://activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
     def file_fixture_path=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
+    # source://activesupport-7.0.3.1/lib/active_support/testing/file_fixtures.rb:20
     def file_fixture_path?; end
   end
 end
@@ -1477,7 +1477,7 @@ class ActiveStorage::MirrorJob < ::ActiveStorage::BaseJob
     # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:56
     def queue_name; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
   end
 end
@@ -1621,13 +1621,9 @@ class ActiveStorage::Previewer::MuPDFPreviewer < ::ActiveStorage::Previewer
   def draw_first_page_from(file, &block); end
 
   class << self
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/mupdf_previewer.rb:6
     def accept?(blob); end
 
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/mupdf_previewer.rb:14
     def mutool_exists?; end
 
@@ -1647,13 +1643,9 @@ class ActiveStorage::Previewer::PopplerPDFPreviewer < ::ActiveStorage::Previewer
   def draw_first_page_from(file, &block); end
 
   class << self
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/poppler_pdf_previewer.rb:6
     def accept?(blob); end
 
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/poppler_pdf_previewer.rb:14
     def pdftoppm_exists?; end
 
@@ -1673,13 +1665,9 @@ class ActiveStorage::Previewer::VideoPreviewer < ::ActiveStorage::Previewer
   def draw_relevant_frame_from(file, &block); end
 
   class << self
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/video_previewer.rb:8
     def accept?(blob); end
 
-    # @return [Boolean]
-    #
     # source://activestorage-7.0.3.1/lib/active_storage/previewer/video_previewer.rb:12
     def ffmpeg_exists?; end
 
@@ -1697,7 +1685,7 @@ class ActiveStorage::PurgeJob < ::ActiveStorage::BaseJob
     # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:56
     def queue_name; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
   end
 end
@@ -2148,10 +2136,10 @@ class ActiveStorage::Variant
   def blob; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant.rb:56
-  def content_type(*_arg0, &_arg1); end
+  def content_type(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant.rb:56
-  def content_type_for_serving(*_arg0, &_arg1); end
+  def content_type_for_serving(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant.rb:84
   def download(&block); end
@@ -2172,7 +2160,7 @@ class ActiveStorage::Variant
   def processed; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant.rb:55
-  def service(*_arg0, &_arg1); end
+  def service(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant.rb:78
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
@@ -2198,7 +2186,7 @@ class ActiveStorage::VariantRecord < ::ActiveStorage::Record
   def autosave_associated_records_for_blob(*args); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://activerecord-7.0.3.1/lib/active_record/reflection.rb:11
@@ -2251,13 +2239,13 @@ class ActiveStorage::VariantWithRecord
   def blob; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:30
-  def download(*_arg0, &_arg1); end
+  def download(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:26
   def image; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:30
-  def key(*_arg0, &_arg1); end
+  def key(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:18
   def process; end
@@ -2269,10 +2257,10 @@ class ActiveStorage::VariantWithRecord
   def processed?; end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:7
-  def service(*_arg0, &_arg1); end
+  def service(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:30
-  def url(*_arg0, &_arg1); end
+  def url(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage-7.0.3.1/app/models/active_storage/variant_with_record.rb:6
   def variation; end

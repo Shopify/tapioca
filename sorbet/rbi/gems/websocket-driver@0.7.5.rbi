@@ -150,8 +150,6 @@ class WebSocket::Driver::CloseEvent < ::Struct
   #
   # @param value [Object] the value to set the attribute code to.
   # @return [Object] the newly set value
-  #
-  # source://websocket-driver-0.7.5/lib/websocket/driver.rb:52
   def code=(_); end
 
   # Returns the value of attribute reason
@@ -163,13 +161,12 @@ class WebSocket::Driver::CloseEvent < ::Struct
   #
   # @param value [Object] the value to set the attribute reason to.
   # @return [Object] the newly set value
-  #
-  # source://websocket-driver-0.7.5/lib/websocket/driver.rb:52
   def reason=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -183,6 +180,7 @@ class WebSocket::Driver::ConnectEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -651,13 +649,12 @@ class WebSocket::Driver::MessageEvent < ::Struct
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
-  #
-  # source://websocket-driver-0.7.5/lib/websocket/driver.rb:49
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -668,6 +665,7 @@ class WebSocket::Driver::OpenEvent < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -684,13 +682,12 @@ class WebSocket::Driver::PingEvent < ::Struct
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
-  #
-  # source://websocket-driver-0.7.5/lib/websocket/driver.rb:50
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -707,13 +704,12 @@ class WebSocket::Driver::PongEvent < ::Struct
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
-  #
-  # source://websocket-driver-0.7.5/lib/websocket/driver.rb:51
   def data=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

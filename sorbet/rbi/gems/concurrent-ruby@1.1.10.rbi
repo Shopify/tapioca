@@ -1192,8 +1192,6 @@ class Concurrent::Agent::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute action to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/agent.rb:162
   def action=(_); end
 
   # Returns the value of attribute args
@@ -1205,8 +1203,6 @@ class Concurrent::Agent::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute args to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/agent.rb:162
   def args=(_); end
 
   # Returns the value of attribute caller
@@ -1218,8 +1214,6 @@ class Concurrent::Agent::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute caller to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/agent.rb:162
   def caller=(_); end
 
   # Returns the value of attribute executor
@@ -1231,13 +1225,12 @@ class Concurrent::Agent::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute executor to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/agent.rb:162
   def executor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1684,7 +1677,7 @@ end
 # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/async.rb:269
 module Concurrent::Async::ClassMethods
   # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/async.rb:270
-  def new(*args, &block); end
+  def new(*args, **_arg1, &block); end
 end
 
 # Atoms provide a way to manage shared, synchronous, independent state.
@@ -3601,13 +3594,12 @@ class Concurrent::CyclicBarrier::Generation < ::Struct
   #
   # @param value [Object] the value to set the attribute status to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/atomic/cyclic_barrier.rb:30
   def status=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -9556,8 +9548,6 @@ class Concurrent::SerializedExecution::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute args to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/serialized_execution.rb:16
   def args=(_); end
 
   # Returns the value of attribute block
@@ -9569,8 +9559,6 @@ class Concurrent::SerializedExecution::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute block to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/serialized_execution.rb:16
   def block=(_); end
 
   # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/serialized_execution.rb:17
@@ -9585,13 +9573,12 @@ class Concurrent::SerializedExecution::Job < ::Struct
   #
   # @param value [Object] the value to set the attribute executor to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/serialized_execution.rb:16
   def executor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -11275,8 +11262,6 @@ class Concurrent::Transaction::OpenEntry < ::Struct
   #
   # @param value [Object] the value to set the attribute modified to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/tvar.rb:156
   def modified=(_); end
 
   # Returns the value of attribute value
@@ -11288,13 +11273,12 @@ class Concurrent::Transaction::OpenEntry < ::Struct
   #
   # @param value [Object] the value to set the attribute value to.
   # @return [Object] the newly set value
-  #
-  # source://concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/tvar.rb:156
   def value=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

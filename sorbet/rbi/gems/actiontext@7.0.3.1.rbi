@@ -111,16 +111,16 @@ class ActionText::Attachables::ContentAttachment
   extend ::ActiveModel::Validations::HelperMethods
   extend ::ActiveModel::Conversion::ClassMethods
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks?; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_validate_callbacks(&block); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _validate_callbacks; end
 
   # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
@@ -133,7 +133,7 @@ class ActionText::Attachables::ContentAttachment
   def attachable_plain_text_representation(caption); end
 
   # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute name.
   #
@@ -162,19 +162,19 @@ class ActionText::Attachables::ContentAttachment
   def validation_context=(_arg0); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _validate_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _validate_callbacks=(value); end
 
     # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
@@ -196,7 +196,7 @@ module ActionText::Attachables::MissingAttachable
   extend ::ActiveModel::Naming
 
   # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   class << self
     # source://actiontext-7.0.3.1/lib/action_text/attachables/missing_attachable.rb:8
@@ -227,7 +227,7 @@ class ActionText::Attachables::RemoteImage
   def height; end
 
   # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/attachables/remote_image.rb:41
   def to_partial_path; end
@@ -285,8 +285,8 @@ class ActionText::Attachment
   # source://actiontext-7.0.3.1/lib/action_text/attachment.rb:88
   def inspect; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
-  def method_missing(method, *args, &block); end
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:302
+  def method_missing(method, *args, **_arg2, &block); end
 
   # Returns the value of attribute node.
   #
@@ -303,7 +303,7 @@ class ActionText::Attachment
   def to_html; end
 
   # source://actiontext-7.0.3.1/lib/action_text/attachment.rb:52
-  def to_param(*_arg0, &_arg1); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/attachment.rb:72
   def to_plain_text; end
@@ -322,7 +322,7 @@ class ActionText::Attachment
   # source://actiontext-7.0.3.1/lib/action_text/attachment.rb:93
   def node_attributes; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
+  # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   # source://actiontext-7.0.3.1/lib/action_text/attachment.rb:101
@@ -387,16 +387,16 @@ class ActionText::AttachmentGallery
   # source://actiontext-7.0.3.1/lib/action_text/attachment_gallery.rb:52
   def initialize(node); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks?; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_validate_callbacks(&block); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _validate_callbacks; end
 
   # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
@@ -412,7 +412,7 @@ class ActionText::AttachmentGallery
   def inspect; end
 
   # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute node.
   #
@@ -431,19 +431,19 @@ class ActionText::AttachmentGallery
   def validation_context=(_arg0); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _validate_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _validate_callbacks=(value); end
 
     # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
@@ -581,10 +581,10 @@ class ActionText::Content
   def attachments; end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:9
-  def blank?(*_arg0, &_arg1); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:9
-  def empty?(*_arg0, &_arg1); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute fragment.
   #
@@ -595,7 +595,7 @@ class ActionText::Content
   def gallery_attachments; end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:9
-  def html_safe(*_arg0, &_arg1); end
+  def html_safe(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:102
   def inspect; end
@@ -604,10 +604,10 @@ class ActionText::Content
   def links; end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:9
-  def present?(*_arg0, &_arg1); end
+  def present?(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/rendering.rb:13
-  def render(*_arg0, &_arg1); end
+  def render(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/lib/action_text/content.rb:67
   def render_attachment_galleries(&block); end
@@ -657,10 +657,10 @@ class ActionText::Content
     # source://actiontext-7.0.3.1/lib/action_text/content.rb:12
     def fragment_by_canonicalizing_content(content); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb:48
+    # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb:48
     def renderer; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb:92
+    # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb:92
     def renderer=(obj); end
   end
 end
@@ -736,7 +736,7 @@ class ActionText::EncryptedRichText < ::ActionText::RichText
   include ::ActionText::EncryptedRichText::GeneratedAssociationMethods
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
@@ -1029,13 +1029,13 @@ class ActionText::RichText < ::ActionText::Record
   def autosave_associated_records_for_record(*args); end
 
   # source://actiontext-7.0.3.1/app/models/action_text/rich_text.rb:12
-  def nil?(*_arg0, &_arg1); end
+  def nil?(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/app/models/action_text/rich_text.rb:12
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://activerecord-7.0.3.1/lib/active_record/reflection.rb:11
@@ -1562,7 +1562,7 @@ class ActionView::Helpers::Tags::ActionText < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::Placeholderable
 
   # source://actiontext-7.0.3.1/app/helpers/action_text/tag_helper.rb:47
-  def dom_id(*_arg0, &_arg1); end
+  def dom_id(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext-7.0.3.1/app/helpers/action_text/tag_helper.rb:49
   def render; end

@@ -17,7 +17,7 @@ class GlobalID
   def ==(other); end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:49
-  def app(*_arg0, &_arg1); end
+  def app(*_arg0, **_arg1, &_arg2); end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:63
   def eql?(other); end
@@ -32,19 +32,19 @@ class GlobalID
   def model_class; end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:49
-  def model_id(*_arg0, &_arg1); end
+  def model_id(*_arg0, **_arg1, &_arg2); end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:49
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:49
-  def params(*_arg0, &_arg1); end
+  def params(*_arg0, **_arg1, &_arg2); end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:72
   def to_param; end
 
   # source://globalid-1.0.0/lib/global_id/global_id.rb:49
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute uri.
   #

@@ -170,16 +170,16 @@ class ActionMailbox::Base
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:76
   def initialize(inbound_email); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks?; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _process_callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_process_callbacks(&block); end
 
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
@@ -188,10 +188,10 @@ class ActionMailbox::Base
   def bounce_with(message); end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:68
-  def bounced!(*_arg0, &_arg1); end
+  def bounced!(*_arg0, **_arg1, &_arg2); end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:68
-  def delivered!(*_arg0, &_arg1); end
+  def delivered!(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -204,10 +204,10 @@ class ActionMailbox::Base
   def inbound_email; end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:70
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:68
-  def mail(*_arg0, &_arg1); end
+  def mail(*_arg0, **_arg1, &_arg2); end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:80
   def perform_processing; end
@@ -215,13 +215,13 @@ class ActionMailbox::Base
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:91
   def process; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers=(_arg0); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers?; end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/routing.rb:9
@@ -236,31 +236,31 @@ class ActionMailbox::Base
   def track_status_of_inbound_email; end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _process_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _process_callbacks=(value); end
 
     # source://actionmailbox-7.0.3.1/lib/action_mailbox/base.rb:72
     def receive(inbound_email); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers?; end
 
     # source://actionmailbox-7.0.3.1/lib/action_mailbox/routing.rb:9
@@ -291,7 +291,7 @@ class ActionMailbox::BaseController < ::ActionController::Base
   def password; end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
     # source://actionpack-7.0.3.1/lib/action_controller/metal.rb:210
@@ -434,7 +434,7 @@ class ActionMailbox::IncinerationJob < ::ActiveJob::Base
     # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:56
     def queue_name; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
 
     # source://actionmailbox-7.0.3.1/app/jobs/action_mailbox/incineration_job.rb:17
@@ -492,32 +492,20 @@ class ActionMailbox::Router
   def routes; end
 end
 
-# Encapsulates a route, which can then be matched against an inbound_email and provide a lookup of the matching
-# mailbox class. See examples for the different route addresses and how to use them in the ActionMailbox::Base
-# documentation.
-#
 # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:7
 class ActionMailbox::Router::Route
-  # @return [Route] a new instance of Route
-  #
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:10
   def initialize(address, to:); end
 
-  # Returns the value of attribute address.
-  #
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:8
   def address; end
 
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:31
   def mailbox_class; end
 
-  # Returns the value of attribute mailbox_name.
-  #
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:8
   def mailbox_name; end
 
-  # @return [Boolean]
-  #
   # source://actionmailbox-7.0.3.1/lib/action_mailbox/router/route.rb:16
   def match?(inbound_email); end
 
@@ -1485,10 +1473,10 @@ module Rails
     def groups(*groups); end
 
     # source://railties-7.0.3.1/lib/rails.rb:43
-    def initialize!(*_arg0, &_arg1); end
+    def initialize!(*_arg0, **_arg1, &_arg2); end
 
     # source://railties-7.0.3.1/lib/rails.rb:43
-    def initialized?(*_arg0, &_arg1); end
+    def initialized?(*_arg0, **_arg1, &_arg2); end
 
     # source://railties-7.0.3.1/lib/rails.rb:38
     def logger; end

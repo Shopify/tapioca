@@ -7,7 +7,7 @@
 # source://shopify-money-0.16.0/lib/money/deprecations.rb:3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
-# source://yard-0.9.27/lib/yard.rb:59
+# source://yard-0.9.28/lib/yard.rb:62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
 # Kernel extensions for minitest
@@ -163,10 +163,10 @@ end
 class Minitest::AbstractReporter
   include ::Mutex_m
 
-  # source://RUBY_ROOT/mutex_m.rb:92
+  # source://RUBY_ROOT/mutex_m.rb:93
   def lock; end
 
-  # source://RUBY_ROOT/mutex_m.rb:82
+  # source://RUBY_ROOT/mutex_m.rb:83
   def locked?; end
 
   # Did this run pass?
@@ -200,13 +200,13 @@ class Minitest::AbstractReporter
   # source://minitest-5.16.2/lib/minitest.rb:584
   def start; end
 
-  # source://RUBY_ROOT/mutex_m.rb:77
+  # source://RUBY_ROOT/mutex_m.rb:78
   def synchronize(&block); end
 
-  # source://RUBY_ROOT/mutex_m.rb:87
+  # source://RUBY_ROOT/mutex_m.rb:88
   def try_lock; end
 
-  # source://RUBY_ROOT/mutex_m.rb:97
+  # source://RUBY_ROOT/mutex_m.rb:98
   def unlock; end
 end
 
@@ -694,8 +694,6 @@ end
 # source://minitest-5.16.2/lib/minitest/spec.rb:35
 class Minitest::Expectation < ::Struct
   def ctx; end
-
-  # source://minitest-5.16.2/lib/minitest/spec.rb:35
   def ctx=(_); end
 
   # source://minitest-5.16.2/lib/minitest/spec.rb:20
@@ -756,8 +754,6 @@ class Minitest::Expectation < ::Struct
   def path_wont_exist(*args); end
 
   def target; end
-
-  # source://minitest-5.16.2/lib/minitest/spec.rb:35
   def target=(_); end
 
   # source://minitest-5.16.2/lib/minitest/spec.rb:20
@@ -802,6 +798,7 @@ class Minitest::Expectation < ::Struct
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1980,19 +1977,17 @@ class Module
   def infect_an_assertion(meth, new_name, dont_flip = T.unsafe(nil)); end
 end
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/module/delegation.rb:13
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:13
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/module/delegation.rb:14
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:14
 Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/module/delegation.rb:10
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:10
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://minitest-5.16.2/lib/minitest/spec.rb:341
 class Object < ::BasicObject
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
   include ::Minitest::Expectations
 end

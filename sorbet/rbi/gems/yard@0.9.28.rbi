@@ -25,7 +25,7 @@ class Array
   def place(*values); end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/array/deprecated_conversions.rb:4
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/array/deprecated_conversions.rb:4
 Array::NOT_SET = T.let(T.unsafe(nil), Object)
 
 # source://yard-0.9.28/lib/yard/core_ext/file.rb:4
@@ -97,13 +97,16 @@ end
 # source://yard-0.9.28/lib/yard/rubygems/backports/source_index.rb:363
 Gem::Cache = Gem::SourceIndex
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/site_ruby/2.7.0/rubygems/compatibility.rb:32
+# source://RUBY_ROOT/rubygems/compatibility.rb:30
 Gem::ConfigMap = T.let(T.unsafe(nil), Hash)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/site_ruby/2.7.0/rubygems/compatibility.rb:20
+# source://RUBY_ROOT/rubygems.rb:123
+Gem::KERNEL_WARN_IGNORES_INTERNAL_ENTRIES = T.let(T.unsafe(nil), TrueClass)
+
+# source://RUBY_ROOT/rubygems/compatibility.rb:18
 Gem::RbConfigPriorities = T.let(T.unsafe(nil), Array)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/site_ruby/2.7.0/rubygems/compatibility.rb:17
+# source://RUBY_ROOT/rubygems/compatibility.rb:15
 Gem::RubyGemsVersion = T.let(T.unsafe(nil), String)
 
 # The SourceIndex object indexes all the gems available from a
@@ -288,10 +291,10 @@ class Gem::SourceIndex
   end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/site_ruby/2.7.0/rubygems.rb:120
+# source://RUBY_ROOT/rubygems.rb:120
 Gem::UNTAINT = T.let(T.unsafe(nil), Proc)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/site_ruby/2.7.0/rubygems/exceptions.rb:290
+# source://RUBY_ROOT/rubygems/exceptions.rb:290
 Gem::UnsatisfiableDepedencyError = Gem::UnsatisfiableDependencyError
 
 # source://yard-0.9.28/lib/yard/parser/ruby/legacy/irb/slex.rb:17
@@ -475,13 +478,13 @@ class Module
   def class_name; end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:13
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:13
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:14
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:14
 Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:10
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/module/delegation.rb:10
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://yard-0.9.28/lib/yard.rb:62
@@ -491,19 +494,19 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 #
 # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:85
 class Rack::Request
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:26
+  # source://rack-2.2.4/lib/rack/request.rb:26
   def initialize(env); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:40
+  # source://rack-2.2.4/lib/rack/request.rb:40
   def delete_param(k); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:31
+  # source://rack-2.2.4/lib/rack/request.rb:31
   def params; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:31
+  # source://rack-2.2.4/lib/rack/request.rb:31
   def query; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:35
+  # source://rack-2.2.4/lib/rack/request.rb:35
   def update_param(k, v); end
 
   # Returns the value of attribute version_supplied.
@@ -524,18 +527,18 @@ class Rack::Request
   def xhr?; end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:16
+    # source://rack-2.2.4/lib/rack/request.rb:16
     def ip_filter; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:16
+    # source://rack-2.2.4/lib/rack/request.rb:16
     def ip_filter=(_arg0); end
   end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:20
+# source://rack-2.2.4/lib/rack/request.rb:20
 Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/rack-2.2.4/lib/rack/request.rb:21
+# source://rack-2.2.4/lib/rack/request.rb:21
 Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
 # source://yard-0.9.28/lib/yard/core_ext/string.rb:2
@@ -552,10 +555,10 @@ class String
   def shell_split; end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:104
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:105
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 
 # A subclass of Hash where all keys are converted into Symbols, and
@@ -673,9 +676,10 @@ end
 # source://webrick-1.7.0/lib/webrick/httprequest.rb:449
 WEBrick::HTTPRequest::MAX_HEADER_LENGTH = T.let(T.unsafe(nil), Integer)
 
-# Backward compatibility for gem specification lookup
+# Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
+# upon gem installation.
 #
-# @see Gem::SourceIndex
+# This file is automatically required by RubyGems 1.9 and newer.
 #
 # source://yard-0.9.28/lib/yard.rb:2
 module YARD
@@ -2194,7 +2198,6 @@ class YARD::CLI::Yardoc < ::YARD::CLI::YardoptsCommand
   # @param list [Array<CodeObjects::Base>] a list of code objects
   # @return [Array<CodeObjects::Base>] a list of code objects that match
   #   the verifier. If no verifier is supplied, all objects are returned.
-  # @since 0.2.1
   #
   # source://yard-0.9.28/lib/yard/cli/yardoc.rb:502
   def run_verifier(list); end
@@ -7335,6 +7338,7 @@ end
 #   pot_file.print(pot)
 #   end
 # @see http://www.gnu.org/software/gettext/manual/html_node/PO-Files.html GNU gettext manual about details of PO file
+# @since 0.8.0
 #
 # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:65
 class YARD::I18n::PotGenerator
@@ -7346,6 +7350,7 @@ class YARD::I18n::PotGenerator
   #   directory path from a directory path that has created .pot
   #   file.
   # @return [PotGenerator] a new instance of PotGenerator
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:79
   def initialize(relative_base_path); end
@@ -7363,6 +7368,7 @@ class YARD::I18n::PotGenerator
   # translator-comment line that is started with "# ".
   #
   # @return [String] POT format string
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:122
   def generate; end
@@ -7381,6 +7387,7 @@ class YARD::I18n::PotGenerator
   # @param files [Array<CodeObjects::ExtraFileObject>] a list
   #   of {CodeObjects::ExtraFileObject} objects to be parsed.
   # @return [void]
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:103
   def parse_files(files); end
@@ -7391,47 +7398,72 @@ class YARD::I18n::PotGenerator
   # @param objects [Array<CodeObjects::Base>] a list of
   #   {CodeObjects::Base} to be parsed.
   # @return [void]
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:91
   def parse_objects(objects); end
 
   private
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:160
   def current_time; end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:183
   def escape_message_id(message_id); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:194
   def extract_documents(object); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:268
   def extract_paragraphs(file); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:235
   def extract_tag_documents(tag); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:242
   def extract_tag_name(tag); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:255
   def extract_tag_text(tag); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:168
   def generate_message(pot, message); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:164
   def generate_pot_creation_date_value; end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:136
   def header; end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/pot_generator.rb:190
   def register_message(id); end
 end
 
 # Provides some convenient features for translating a text.
+#
+# @since 0.8.0
 #
 # source://yard-0.9.28/lib/yard/i18n/text.rb:5
 class YARD::I18n::Text
@@ -7442,6 +7474,7 @@ class YARD::I18n::Text
   # @param input [#each_line] a text to be translated.
   # @param options [Hash] a customizable set of options
   # @return [Text] a new instance of Text
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:12
   def initialize(input, options = T.unsafe(nil)); end
@@ -7449,6 +7482,7 @@ class YARD::I18n::Text
   # Extracts translation target messages from +@input+.
   #
   # @return [void]
+  # @since 0.8.0
   # @yield [:attribute, name, value, line_no] the block that
   #   receives extracted an attribute in header. It may called many
   #   times.
@@ -7457,13 +7491,13 @@ class YARD::I18n::Text
   #   block separated by one or more empty lines. Empty line is a
   #   line that contains only zero or more whitespaces. It may
   #   called many times.
+  # @yieldparam text [String] the text of extracted paragraph.
+  # @yieldparam start_line_no [Integer] the start line number of
+  #   extracted paragraph.
   # @yieldparam name [String] the name of extracted attribute.
   # @yieldparam value [String] the value of extracted attribute.
   # @yieldparam line_no [Integer] the defined line number of extracted
   #   attribute.
-  # @yieldparam text [String] the text of extracted paragraph.
-  # @yieldparam start_line_no [Integer] the start line number of
-  #   extracted paragraph.
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:35
   def extract_messages; end
@@ -7472,30 +7506,38 @@ class YARD::I18n::Text
   #
   # @param locale [Locale] the translation target locale.
   # @return [String] translated text.
+  # @since 0.8.0
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:52
   def translate(locale); end
 
   private
 
+  # @since 0.8.0
   # @yield [part]
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:134
   def emit_attribute_event(match_data, line_no); end
 
+  # @since 0.8.0
   # @yield [part]
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:147
   def emit_empty_line_event(line, line_no); end
 
+  # @since 0.8.0
   # @yield [part]
   #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:125
   def emit_markup_event(line, line_no); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:156
   def emit_paragraph_event(paragraph, paragraph_start_line, line_no, &block); end
 
+  # @since 0.8.0
+  #
   # source://yard-0.9.28/lib/yard/i18n/text.rb:76
   def parse(&block); end
 end
@@ -7679,7 +7721,7 @@ class YARD::Logger < ::Logger
   # source://yard-0.9.28/lib/yard/logging.rb:201
   def format_log(sev, _time, _prog, msg); end
 
-  # source://RUBY_ROOT/logger.rb:484
+  # source://RUBY_ROOT/logger.rb:485
   def print_no_newline(msg); end
 
   class << self
@@ -10304,6 +10346,9 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard-0.9.28/lib/yard/parser/ruby/ruby_parser.rb:182
   def on_float(tok); end
 
+  # source://yard-0.9.28/lib/yard/parser/ruby/ruby_parser.rb:171
+  def on_fndptn(*args); end
+
   # source://yard-0.9.28/lib/yard/parser/ruby/ruby_parser.rb:164
   def on_for(*args); end
 
@@ -11164,6 +11209,10 @@ class YARD::Parser::SourceParser
     # To register a callback that is called before the entire list of files
     # is processed, see {before_parse_list}.
     #
+    # @example Cancel parsing of any test_*.rb files
+    #   SourceParser.before_parse_file do |parser|
+    #   return false if parser.file =~ /^test_.+\.rb$/
+    #   end
     # @example Installing a simple callback
     #   SourceParser.before_parse_file do |parser|
     #   puts "I'm parsing #{parser.file}"
@@ -11173,13 +11222,9 @@ class YARD::Parser::SourceParser
     #   "I'm parsing lib/foo.rb"
     #   "I'm parsing lib/foo_bar.rb"
     #   "I'm parsing lib/last_file.rb"
-    # @example Cancel parsing of any test_*.rb files
-    #   SourceParser.before_parse_file do |parser|
-    #   return false if parser.file =~ /^test_.+\.rb$/
-    #   end
     # @return [Proc] the yielded block
-    # @see after_parse_file
     # @see before_parse_list
+    # @see after_parse_file
     # @since 0.7.0
     # @yield [parser] the yielded block is called once before each
     #   file that is parsed. This might happen many times for a single
@@ -11203,12 +11248,6 @@ class YARD::Parser::SourceParser
     # via {parse}. The block passed to this method will be called on
     # subsequent parse calls.
     #
-    # @example Installing a simple callback
-    #   SourceParser.before_parse_list do |files, globals|
-    #   puts "Starting to parse..."
-    #   end
-    #   YARD.parse('lib/**/*.rb')
-    #   # prints "Starting to parse..."
     # @example Setting global state
     #   SourceParser.before_parse_list do |files, globals|
     #   globals.method_count = 0
@@ -11222,6 +11261,12 @@ class YARD::Parser::SourceParser
     #   end
     #   YARD.parse
     #   # Prints: "Found 37 methods"
+    # @example Installing a simple callback
+    #   SourceParser.before_parse_list do |files, globals|
+    #   puts "Starting to parse..."
+    #   end
+    #   YARD.parse('lib/**/*.rb')
+    #   # prints "Starting to parse..."
     # @example Using a global callback to cancel parsing
     #   SourceParser.before_parse_list do |files, globals|
     #   return false if files.include?('foo.rb')
@@ -11230,8 +11275,8 @@ class YARD::Parser::SourceParser
     #   YARD.parse(['foo.rb', 'bar.rb']) # callback cancels this method
     #   YARD.parse('bar.rb') # parses normally
     # @return [Proc] the yielded block
-    # @see after_parse_list
     # @see before_parse_file
+    # @see after_parse_list
     # @since 0.7.0
     # @yield [files, globals] the yielded block is called once before
     #   parsing all files
@@ -11758,22 +11803,22 @@ module YARD::Registry
     # Attempts to find an object by name starting at +namespace+, performing
     # a lookup similar to Ruby's method of resolving a constant in a namespace.
     #
-    # @example Looks for instance method #reverse starting from A::B::C
-    #   Registry.resolve(P("A::B::C"), "#reverse")
     # @example Looks for a constant in the root namespace
     #   Registry.resolve(nil, 'CONSTANT')
     # @example Looks for a class method respecting the inheritance tree
     #   Registry.resolve(myclass, 'mymethod', true)
+    # @example Looks for instance method #reverse starting from A::B::C
+    #   Registry.resolve(P("A::B::C"), "#reverse")
     # @example Looks for a constant but returns a proxy if not found
     #   Registry.resolve(P('A::B::C'), 'D', false, true) # => #<yardoc proxy A::B::C::D>
     # @example Looks for a complex path from a namespace
     #   Registry.resolve(P('A::B'), 'B::D') # => #<yardoc class A::B::D>
+    # @param inheritance [Boolean] Follows inheritance chain (mixins, superclass)
+    #   when performing name resolution if set to +true+.
     # @param namespace [CodeObjects::NamespaceObject, nil] the starting namespace
     #   (module or class). If +nil+ or +:root+, starts from the {root} object.
     # @param name [String, Symbol] the name (or complex path) to look for from
     #   +namespace+.
-    # @param inheritance [Boolean] Follows inheritance chain (mixins, superclass)
-    #   when performing name resolution if set to +true+.
     # @param proxy_fallback [Boolean] If +true+, returns a proxy representing
     #   the unresolved path (namespace + name) if no object is found.
     # @param type [Symbol, nil] the {CodeObjects::Base#type} that the resolved
@@ -11931,12 +11976,12 @@ class YARD::RegistryResolver
   # object can be returned if the lookup fails for future resolution. The
   # proxy will be type hinted with the +type+ used in the original lookup.
   #
+  # @example A lookup on a method through the inheritance tree
+  #   resolver.lookup_by_math("A::B#foo", inheritance: true)
   # @example A lookup from root
   #   resolver.lookup_by_path("A::B::C")
   # @example A lookup from the A::B namespace
   #   resolver.lookup_by_path("C", namespace: P("A::B"))
-  # @example A lookup on a method through the inheritance tree
-  #   resolver.lookup_by_math("A::B#foo", inheritance: true)
   # @option opts
   # @option opts
   # @option opts
@@ -12568,6 +12613,7 @@ end
 # initiate the server backend.
 #
 # @abstract
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/adapter.rb:23
 class YARD::Server::Adapter
@@ -12580,6 +12626,7 @@ class YARD::Server::Adapter
   #   see {#libraries} for formulating this list.
   # @param opts [Hash] extra options to pass to the adapter
   # @return [Adapter] a new instance of Adapter
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:71
   def initialize(libs, opts = T.unsafe(nil), server_opts = T.unsafe(nil)); end
@@ -12589,6 +12636,7 @@ class YARD::Server::Adapter
   # @example Adding a new library to an adapter
   #   adapter.add_library LibraryVersion.new('mylib', '1.0', '/path/to/.yardoc')
   # @param library [LibraryVersion] a library to add
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:88
   def add_library(library); end
@@ -12596,6 +12644,7 @@ class YARD::Server::Adapter
   # @return [String] the location where static files are located, if any.
   #   To set this field on initialization, pass +:DocumentRoot+ to the
   #   +server_opts+ argument in {#initialize}
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:27
   def document_root; end
@@ -12603,6 +12652,7 @@ class YARD::Server::Adapter
   # @return [String] the location where static files are located, if any.
   #   To set this field on initialization, pass +:DocumentRoot+ to the
   #   +server_opts+ argument in {#initialize}
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:27
   def document_root=(_arg0); end
@@ -12610,6 +12660,7 @@ class YARD::Server::Adapter
   # @return [Hash{String=>Array<LibraryVersion>}] a map of libraries.
   # @see LibraryVersion LibraryVersion for information on building a list of libraries
   # @see #add_library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:32
   def libraries; end
@@ -12617,40 +12668,47 @@ class YARD::Server::Adapter
   # @return [Hash{String=>Array<LibraryVersion>}] a map of libraries.
   # @see LibraryVersion LibraryVersion for information on building a list of libraries
   # @see #add_library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:32
   def libraries=(_arg0); end
 
   # @return [Hash] options passed and processed by adapters. The actual
   #   options mostly depend on the adapters themselves.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:36
   def options; end
 
   # @return [Hash] options passed and processed by adapters. The actual
   #   options mostly depend on the adapters themselves.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:36
   def options=(_arg0); end
 
   # @return [Router] the router object used to route URLs to commands
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:43
   def router; end
 
   # @return [Router] the router object used to route URLs to commands
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:43
   def router=(_arg0); end
 
   # @return [Hash] a set of options to pass to the server backend. Note
   #   that +:DocumentRoot+ also sets the {#document_root}.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:40
   def server_options; end
 
   # @return [Hash] a set of options to pass to the server backend. Note
   #   that +:DocumentRoot+ also sets the {#document_root}.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:40
   def server_options=(_arg0); end
@@ -12659,6 +12717,7 @@ class YARD::Server::Adapter
   #
   # @abstract
   # @raise [NotImplementedError]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/adapter.rb:95
   def start; end
@@ -12668,6 +12727,7 @@ class YARD::Server::Adapter
     #
     # @note If you subclass this method, make sure to call +super+.
     # @return [void]
+    # @since 0.6.0
     #
     # source://yard-0.9.28/lib/yard/server/adapter.rb:48
     def setup; end
@@ -12676,6 +12736,7 @@ class YARD::Server::Adapter
     #
     # @note If you subclass this method, make sure to call +super+.
     # @return [void]
+    # @since 0.6.0
     #
     # source://yard-0.9.28/lib/yard/server/adapter.rb:56
     def shutdown; end
@@ -12717,6 +12778,7 @@ module YARD::Server::Commands; end
 #
 # @abstract
 # @see #run
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/commands/base.rb:34
 class YARD::Server::Commands::Base
@@ -12731,36 +12793,43 @@ class YARD::Server::Commands::Base
   # @param opts [Hash] the options hash, saved to {#command_options}
   #   after initialization.
   # @return [Base] a new instance of Base
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:75
   def initialize(opts = T.unsafe(nil)); end
 
   # @return [Adapter] the server adapter
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:41
   def adapter; end
 
   # @return [Adapter] the server adapter
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:41
   def adapter=(_arg0); end
 
   # @return [String] the response body. Defaults to empty string.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:61
   def body; end
 
   # @return [String] the response body. Defaults to empty string.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:61
   def body=(_arg0); end
 
   # @return [Boolean] whether to cache
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:44
   def caching; end
 
   # @return [Boolean] whether to cache
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:44
   def caching=(_arg0); end
@@ -12772,46 +12841,55 @@ class YARD::Server::Commands::Base
   # @param request [Adapter Dependent] the request object
   # @return [Array(Numeric,Hash,Array<String>)] a Rack-style response
   #   of status, headers, and body wrapped in an array.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:89
   def call(request); end
 
   # @return [Hash] the options passed to the command's constructor
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:38
   def command_options; end
 
   # @return [Hash] the options passed to the command's constructor
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:38
   def command_options=(_arg0); end
 
   # @return [Hash{String => String}] response headers
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:55
   def headers; end
 
   # @return [Hash{String => String}] response headers
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:55
   def headers=(_arg0); end
 
   # @return [String] the path after the command base URI
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:52
   def path; end
 
   # @return [String] the path after the command base URI
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:52
   def path=(_arg0); end
 
   # @return [Rack::Request] request object
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:49
   def request; end
 
   # @return [Rack::Request] request object
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:49
   def request=(_arg0); end
@@ -12831,16 +12909,19 @@ class YARD::Server::Commands::Base
   #   end
   # @raise [NotImplementedError]
   # @return [void]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:128
   def run; end
 
   # @return [Numeric] status code. Defaults to 200 per request
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:58
   def status; end
 
   # @return [Numeric] status code. Defaults to 200 per request
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:58
   def status=(_arg0); end
@@ -12857,6 +12938,7 @@ class YARD::Server::Commands::Base
   # @param data [String] the data to cache
   # @return [String] the same cached data (for chaining)
   # @see StaticCaching
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:165
   def cache(data); end
@@ -12865,6 +12947,7 @@ class YARD::Server::Commands::Base
   # body if already set.
   #
   # @return [void]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:180
   def not_found; end
@@ -12873,6 +12956,7 @@ class YARD::Server::Commands::Base
   #
   # @param url [String] the URL to redirect to
   # @raise [FinishRequest] causes the request to terminate.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:192
   def redirect(url); end
@@ -12884,6 +12968,7 @@ class YARD::Server::Commands::Base
   #   an object is provided, or {Templates::Engine.render} if object is nil. Both
   #   receive +#options+ as an argument.
   # @return [String] the resulting output to display
+  # @since 0.6.0
   # @todo This method is dependent on +#options+, it should be in {LibraryCommand}.
   #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:144
@@ -12894,29 +12979,31 @@ class YARD::Server::Commands::Base
   # Add a conservative cache control policy to reduce load on
   # requests served with "?1234567890" style timestamp query strings.
   #
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/base.rb:202
   def add_cache_control; end
 end
 
 # Displays a README or extra file.
 #
+# @since 0.6.0
 # @todo Implement better support for detecting binary (image) filetypes
 #
 # source://yard-0.9.28/lib/yard/server/commands/display_file_command.rb:8
 class YARD::Server::Commands::DisplayFileCommand < ::YARD::Server::Commands::LibraryCommand
-  # Returns the value of attribute index.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/display_file_command.rb:9
   def index; end
 
-  # Sets the attribute index
-  #
-  # @param value the value to set the attribute index to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/display_file_command.rb:9
   def index=(_arg0); end
 
   # @raise [NotFoundError]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/display_file_command.rb:11
   def run; end
@@ -12924,29 +13011,43 @@ end
 
 # Displays documentation for a specific object identified by the path
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/display_object_command.rb:6
 class YARD::Server::Commands::DisplayObjectCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Server::DocServerHelper
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/display_object_command.rb:36
   def index; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/display_object_command.rb:47
   def not_found; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/display_object_command.rb:9
   def run; end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/display_object_command.rb:54
   def object_path; end
 end
 
 # Displays an object wrapped in frames
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/frames_command.rb:6
 class YARD::Server::Commands::FramesCommand < ::YARD::Server::Commands::DisplayObjectCommand
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/frames_command.rb:7
   def run; end
 end
@@ -12957,88 +13058,109 @@ end
 # See {Base} for notes on how to subclass a command.
 #
 # @abstract
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:32
 class YARD::Server::Commands::LibraryCommand < ::YARD::Server::Commands::Base
   # @return [LibraryCommand] a new instance of LibraryCommand
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:63
   def initialize(opts = T.unsafe(nil)); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:68
   def call(request); end
 
   # @return [Boolean] whether to reparse data
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:53
   def incremental; end
 
   # @return [Boolean] whether to reparse data
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:53
   def incremental=(_arg0); end
 
   # @return [LibraryVersion] the object containing library information
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:41
   def library; end
 
   # @return [LibraryVersion] the object containing library information
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:41
   def library=(_arg0); end
 
   # @return [LibraryOptions] default options for the library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:44
   def options; end
 
   # @return [LibraryOptions] default options for the library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:44
   def options=(_arg0); end
 
   # @return [Serializers::Base] the serializer used to perform file linking
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:47
   def serializer; end
 
   # @return [Serializers::Base] the serializer used to perform file linking
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:47
   def serializer=(_arg0); end
 
   # @return [Boolean] whether router should route for multiple libraries
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:50
   def single_library; end
 
   # @return [Boolean] whether router should route for multiple libraries
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:50
   def single_library=(_arg0); end
 
   # @return [Boolean] whether or not this adapter calls +fork+ when serving
   #   library requests. Defaults to false.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:57
   def use_fork; end
 
   # @return [Boolean] whether or not this adapter calls +fork+ when serving
   #   library requests. Defaults to false.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:57
   def use_fork=(_arg0); end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:96
   def call_with_fork(request, &block); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:83
   def call_without_fork(request); end
 
   # @return [Boolean]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:109
   def can_fork?; end
@@ -13047,26 +13169,39 @@ class YARD::Server::Commands::LibraryCommand < ::YARD::Server::Commands::Base
   # not do any rendering/generation. We need this to access the
   # generate_*_list methods.
   #
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:171
   def fulldoc_template; end
 
   # @raise [LibraryNotPreparedError]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:147
   def load_yardoc; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:159
   def not_prepared; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:118
   def restore_template_info; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:113
   def save_default_template_info; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:123
   def setup_library; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:130
   def setup_yardopts; end
 end
@@ -13076,46 +13211,46 @@ YARD::Server::Commands::LibraryCommand::CAN_FORK = T.let(T.unsafe(nil), TrueClas
 
 # Returns the index of libraries served by the server.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:13
 class YARD::Server::Commands::LibraryIndexCommand < ::YARD::Server::Commands::Base
-  # Returns the value of attribute options.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:14
   def options; end
 
-  # Sets the attribute options
-  #
-  # @param value the value to set the attribute options to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:14
   def options=(_arg0); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:16
   def run; end
 end
 
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:5
 class YARD::Server::Commands::LibraryIndexOptions < ::YARD::CLI::YardocOptions
-  # Returns the value of attribute adapter.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:6
   def adapter; end
 
-  # Sets the attribute adapter
-  #
-  # @param value the value to set the attribute adapter to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:6
   def adapter=(_arg0); end
 
-  # Returns the value of attribute libraries.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:6
   def libraries; end
 
-  # Sets the attribute libraries
-  #
-  # @param value the value to set the attribute libraries to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_index_command.rb:6
   def libraries=(_arg0); end
@@ -13139,70 +13274,87 @@ class YARD::Server::Commands::LibraryIndexOptions < ::YARD::CLI::YardocOptions
   def type=(_arg0); end
 end
 
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:7
 class YARD::Server::Commands::LibraryOptions < ::YARD::CLI::YardocOptions
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:8
   def adapter; end
 
-  # Returns the value of attribute command.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:14
   def command; end
 
-  # Sets the attribute command
-  #
-  # @param value the value to set the attribute command to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:14
   def command=(_arg0); end
 
+  # @since 0.6.0
   # @yield [:adapter, adapter]
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:17
   def each(&block); end
 
-  # Returns the value of attribute frames.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:15
   def frames; end
 
-  # Sets the attribute frames
-  #
-  # @param value the value to set the attribute frames to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:15
   def frames=(_arg0); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:9
   def library; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:12
   def serialize; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:11
   def serializer; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/library_command.rb:10
   def single_library; end
 end
 
 # Returns a list of objects of a specific type
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/list_command.rb:6
 class YARD::Server::Commands::ListCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/list_command.rb:9
   def run; end
 end
 
 # Serves requests from the root of the server
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/root_request_command.rb:6
 class YARD::Server::Commands::RootRequestCommand < ::YARD::Server::Commands::Base
   include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/root_request_command.rb:9
   def run; end
 end
@@ -13210,64 +13362,78 @@ end
 # Performs a search over the objects inside of a library and returns
 # the results as HTML or plaintext
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:7
 class YARD::Server::Commands::SearchCommand < ::YARD::Server::Commands::LibraryCommand
   include ::YARD::Templates::Helpers::BaseHelper
   include ::YARD::Templates::Helpers::ModuleHelper
   include ::YARD::Server::DocServerHelper
 
-  # Returns the value of attribute query.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:12
   def query; end
 
-  # Sets the attribute query
-  #
-  # @param value the value to set the attribute query to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:12
   def query=(_arg0); end
 
-  # Returns the value of attribute results.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:12
   def results; end
 
-  # Sets the attribute results
-  #
-  # @param value the value to set the attribute results to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:12
   def results=(_arg0); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:14
   def run; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:26
   def visible_results; end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:58
   def search_for_object; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:47
   def serve_normal; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:37
   def serve_xhr; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/search_command.rb:32
   def url_for(object); end
 end
 
 # Serves static content when no other router matches a request
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/static_file_command.rb:6
 class YARD::Server::Commands::StaticFileCommand < ::YARD::Server::Commands::LibraryCommand
   include ::WEBrick::HTTPUtils
   include ::YARD::Server::Commands::StaticFileHelpers
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/static_file_command.rb:17
   def run; end
 end
@@ -13277,11 +13443,15 @@ end
 # modifying this constant directly. Also note that files in the
 # document root will always take precedence over these paths.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/commands/static_file_command.rb:15
 YARD::Server::Commands::StaticFileCommand::STATIC_PATHS = T.let(T.unsafe(nil), Array)
 
 # Include this module to get access to {#static_template_file?}
 # and {favicon?} helpers.
+#
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/commands/static_file_helpers.rb:9
 module YARD::Server::Commands::StaticFileHelpers
@@ -13292,6 +13462,7 @@ module YARD::Server::Commands::StaticFileHelpers
   # @raise [FinishRequest] finalizes an empty body if the path matches
   #   /favicon.ico so browsers don't complain.
   # @return [Boolean]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/static_file_helpers.rb:15
   def favicon?; end
@@ -13300,16 +13471,21 @@ module YARD::Server::Commands::StaticFileHelpers
   #
   # @raise [FinishRequest] if a file was found and served
   # @return [void]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/commands/static_file_helpers.rb:27
   def static_template_file?; end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/commands/static_file_helpers.rb:43
   def find_file(adapter, url); end
 
   class << self
+    # @since 0.6.0
+    #
     # source://yard-0.9.28/lib/yard/server/commands/static_file_helpers.rb:43
     def find_file(adapter, url); end
   end
@@ -13318,10 +13494,13 @@ end
 # A module that is mixed into {Templates::Template} in order to customize
 # certain template methods.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:6
 module YARD::Server::DocServerHelper
   # @param path_components [Array<String>] components of a URL
   # @return [String] the absolute path from any mounted base URI.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:61
   def abs_url(*path_components); end
@@ -13330,21 +13509,25 @@ module YARD::Server::DocServerHelper
   #   base_path('docs') # => 'docs/foo'
   # @param path [String] the path prefix for a base path URI
   # @return [String] the base URI for a library with an extra +path+ prefix
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:69
   def base_path(path); end
 
   # @return [String] a timestamp for a given file
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:78
   def mtime(file); end
 
   # @return [String] a URL for a file with a timestamp
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:84
   def mtime_url(file); end
 
   # @return [Router] convenience method for accessing the router
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:75
   def router; end
@@ -13356,6 +13539,7 @@ module YARD::Server::DocServerHelper
   # @param anchor [String] the anchor to link to
   # @param relative [Boolean] use a relative or absolute link
   # @return [String] the URL location of the object
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:11
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
@@ -13366,6 +13550,7 @@ module YARD::Server::DocServerHelper
   # @param filename [String, CodeObjects::ExtraFileObject] the filename to link to
   # @param anchor [String] optional anchor
   # @return [String] the URL pointing to the file
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:24
   def url_for_file(filename, anchor = T.unsafe(nil)); end
@@ -13373,6 +13558,7 @@ module YARD::Server::DocServerHelper
   # Returns the frames URL for the page
   #
   # @return [String] the URL pointing to the frames page
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:43
   def url_for_frameset; end
@@ -13381,6 +13567,7 @@ module YARD::Server::DocServerHelper
   #
   # @return [String] the URL pointing to the first main page the
   #   user should see.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:55
   def url_for_index; end
@@ -13390,6 +13577,7 @@ module YARD::Server::DocServerHelper
   #
   # @param type [String, Symbol] the list type to generate a URL for
   # @return [String] the URL pointing to the list
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:37
   def url_for_list(type); end
@@ -13398,6 +13586,7 @@ module YARD::Server::DocServerHelper
   #
   # @return [String] the URL pointing to the first main page the
   #   user should see.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_helper.rb:49
   def url_for_main; end
@@ -13406,18 +13595,25 @@ end
 # A custom {Serializers::Base serializer} which returns resource URLs instead of
 # static relative paths to files on disk.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/doc_server_serializer.rb:6
 class YARD::Server::DocServerSerializer < ::YARD::Serializers::FileSystemSerializer
   # @return [DocServerSerializer] a new instance of DocServerSerializer
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/doc_server_serializer.rb:7
   def initialize(_command = T.unsafe(nil)); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/doc_server_serializer.rb:11
   def serialized_path(object); end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/doc_server_serializer.rb:31
   def urlencode(name); end
 end
@@ -13425,11 +13621,15 @@ end
 # Short circuits a request by raising an error. This exception is caught
 # by {Commands::Base#call} to immediately end a request and return a response.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/adapter.rb:6
 class YARD::Server::FinishRequest < ::RuntimeError; end
 
 # This exception is raised when {LibraryVersion#prepare!} fails, or discovers
 # that the library is not "prepared" to be served by
+#
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/library_version.rb:9
 class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
@@ -13516,6 +13716,7 @@ class YARD::Server::LibraryNotPreparedError < ::RuntimeError; end
 #
 #   # Creating a library of this source type:
 #   LibraryVersion.new('name', '1.0', nil, :http)
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/library_version.rb:94
 class YARD::Server::LibraryVersion
@@ -13527,21 +13728,25 @@ class YARD::Server::LibraryVersion
   # @param source [Symbol] the location of the files used to build the yardoc.
   #   Builtin source types are +:disk+ or +:gem+.
   # @return [LibraryVersion] a new instance of LibraryVersion
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:134
   def initialize(name, version = T.unsafe(nil), yardoc = T.unsafe(nil), source = T.unsafe(nil)); end
 
   # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:153
   def ==(other); end
 
   # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:153
   def eql?(other); end
 
   # @return [Boolean] whether another LibraryVersion is equal to this one
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:153
   def equal?(other); end
@@ -13549,21 +13754,25 @@ class YARD::Server::LibraryVersion
   # @return [Gem::Specification] a gemspec object for a given library. Used
   #   for :gem source types.
   # @return [nil] if there is no installed gem for the library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:191
   def gemspec; end
 
   # @return [Fixnum] used for Hash mapping.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:150
   def hash; end
 
   # @return [String] the name of the library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:96
   def name; end
 
   # @return [String] the name of the library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:96
   def name=(_arg0); end
@@ -13582,12 +13791,14 @@ class YARD::Server::LibraryVersion
   #   displayed. Usually when raising this error, you would simultaneously
   #   begin preparing the library for subsequent requests, although this
   #   is not necessary.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:182
   def prepare!; end
 
   # @return [Boolean] whether the library has been completely processed
   #   and is ready to be served
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:162
   def ready?; end
@@ -13597,6 +13808,7 @@ class YARD::Server::LibraryVersion
   #   may be implemented. This value is used to inform {#prepare!} about how
   #   to load the necessary data in order to display documentation for an object.
   # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:116
   def source; end
@@ -13606,6 +13818,7 @@ class YARD::Server::LibraryVersion
   #   may be implemented. This value is used to inform {#prepare!} about how
   #   to load the necessary data in order to display documentation for an object.
   # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:116
   def source=(_arg0); end
@@ -13614,13 +13827,12 @@ class YARD::Server::LibraryVersion
   #   value is filled by calling +#source_path_for_SOURCE+ on this class.
   # @return [nil] if there is no source code
   # @see LibraryVersion LibraryVersion documentation for "Implementing a Custom Library Source"
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:122
   def source_path; end
 
-  # Sets the attribute source_path
-  #
-  # @param value the value to set the attribute source_path to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:125
   def source_path=(_arg0); end
@@ -13629,16 +13841,19 @@ class YARD::Server::LibraryVersion
   #   format (for appending to a URL). Otherwise, it is given in a more human
   #   readable format.
   # @return [String] the string representation of the library.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:145
   def to_s(url_format = T.unsafe(nil)); end
 
   # @return [String] the version of the specific library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:99
   def version; end
 
   # @return [String] the version of the specific library
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:99
   def version=(_arg0); end
@@ -13648,13 +13863,12 @@ class YARD::Server::LibraryVersion
   #   information from.
   # @return [nil] if no yardoc file exists yet. In this case, {#prepare!} will
   #   be called on this library to build the yardoc file.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:106
   def yardoc_file; end
 
-  # Sets the attribute yardoc_file
-  #
-  # @param value the value to set the attribute yardoc_file to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:109
   def yardoc_file=(_arg0); end
@@ -13667,6 +13881,7 @@ class YARD::Server::LibraryVersion
   #
   # @raise [LibraryNotPreparedError] if the yardoc file has not been
   #   prepared.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:206
   def load_yardoc_from_disk; end
@@ -13677,33 +13892,43 @@ class YARD::Server::LibraryVersion
   #
   # @raise [LibraryNotPreparedError] if the gem does not have an existing
   #   yardoc file.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:226
   def load_yardoc_from_gem; end
 
   # @return [String] the source path for a disk source
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:243
   def source_path_for_disk; end
 
   # @return [String] the source path for a gem source
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:248
   def source_path_for_gem; end
 
   # @return [String] the yardoc file for a gem source
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:253
   def yardoc_file_for_gem; end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:261
   def load_source_path; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:266
   def load_yardoc_file; end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/library_version.rb:271
   def serializer; end
 end
@@ -13712,10 +13937,14 @@ end
 # {Commands::Base#call} to immediately end a request and return a 404 response
 # code. If a message is provided, the body is set to the exception message.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/adapter.rb:11
 class YARD::Server::NotFoundError < ::RuntimeError; end
 
 # A server adapter to respond to requests using the Rack server infrastructure.
+#
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:44
 class YARD::Server::RackAdapter < ::YARD::Server::Adapter
@@ -13724,6 +13953,7 @@ class YARD::Server::RackAdapter < ::YARD::Server::Adapter
   # Responds to Rack requests and builds a response with the {Router}.
   #
   # @return [Array(Numeric,Hash,Array)] the Rack-style response
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:49
   def call(env); end
@@ -13732,12 +13962,15 @@ class YARD::Server::RackAdapter < ::YARD::Server::Adapter
   # block.
   #
   # @return [void]
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:62
   def start; end
 
   private
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:71
   def print_start_message(server); end
 end
@@ -13751,6 +13984,7 @@ end
 # @note You must pass a +:libraries+ option to the RackMiddleware via +#use+. To
 #   read about how to return a list of libraries, see {LibraryVersion} or look
 #   at the example below.
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:17
 class YARD::Server::RackMiddleware
@@ -13762,10 +13996,13 @@ class YARD::Server::RackMiddleware
   # @param app the next Rack middleware in the stack
   # @param opts [Hash] a customizable set of options
   # @return [RackMiddleware] a new instance of RackMiddleware
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:27
   def initialize(app, opts = T.unsafe(nil)); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/rack_adapter.rb:33
   def call(env); end
 end
@@ -13798,6 +14035,7 @@ end
 #
 #   # Using it:
 #   WebrickAdapter.new(libraries, :router => MyRouter).start
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/router.rb:32
 class YARD::Server::Router
@@ -13808,16 +14046,19 @@ class YARD::Server::Router
   #
   # @param adapter [Adapter] the adapter to route requests to
   # @return [Router] a new instance of Router
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:45
   def initialize(adapter); end
 
   # @return [Adapter] the adapter used by the router
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:40
   def adapter; end
 
   # @return [Adapter] the adapter used by the router
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:40
   def adapter=(_arg0); end
@@ -13827,16 +14068,19 @@ class YARD::Server::Router
   #
   # @param request [Adapter Dependent] the request object
   # @return [Array(Numeric,Hash,Array)] the Rack-style server response data
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:54
   def call(request); end
 
   # @return [String] the URI prefix for all object documentation requests
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:63
   def docs_prefix; end
 
   # @return [String] the URI prefix for all class/method/file list requests
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:66
   def list_prefix; end
@@ -13844,26 +14088,31 @@ class YARD::Server::Router
   # @return [Array(LibraryVersion, Array<String>)] the library followed
   #   by the rest of the path components in the request path. LibraryVersion
   #   will be nil if no matching library was found.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:79
   def parse_library_from_path(paths); end
 
   # @return [Adapter Dependent] the request data coming in with the routing
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:37
   def request; end
 
   # @return [Adapter Dependent] the request data coming in with the routing
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:37
   def request=(_arg0); end
 
   # @return [String] the URI prefix for all search requests
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:69
   def search_prefix; end
 
   # @return [String] the URI prefix for all static assets (templates)
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:72
   def static_prefix; end
@@ -13876,6 +14125,7 @@ class YARD::Server::Router
   # @param library [LibraryVersion] the library to route for
   # @param paths [Array<String>] path components (split by '/')
   # @return [Hash] finalized options
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:181
   def final_options(library, paths); end
@@ -13885,6 +14135,7 @@ class YARD::Server::Router
   #
   # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
   # @return [nil] if no route is matched
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:105
   def route(path = T.unsafe(nil)); end
@@ -13895,6 +14146,7 @@ class YARD::Server::Router
   # @param paths [Array<String>] path components (split by '/')
   # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
   # @return [nil] if no route is matched
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:128
   def route_docs(library, paths); end
@@ -13903,6 +14155,7 @@ class YARD::Server::Router
   #
   # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
   # @return [nil] if no route is matched
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:146
   def route_index; end
@@ -13913,6 +14166,7 @@ class YARD::Server::Router
   # @param paths [Array<String>] path components (split by '/')
   # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
   # @return [nil] if no route is matched
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:157
   def route_list(library, paths); end
@@ -13923,10 +14177,13 @@ class YARD::Server::Router
   # @param paths [Array<String>] path components (split by '/')
   # @return [Array(Numeric,Hash,Array<String>)] the Rack-style response
   # @return [nil] if no route is matched
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/router.rb:165
   def route_search(library, paths); end
 
+  # @since 0.6.0
+  #
   # source://yard-0.9.28/lib/yard/server/router.rb:170
   def route_static(library, paths); end
 end
@@ -13934,6 +14191,7 @@ end
 # Implements static caching for requests.
 #
 # @see Router Router documentation for "Caching"
+# @since 0.6.0
 #
 # source://yard-0.9.28/lib/yard/server/static_caching.rb:7
 module YARD::Server::StaticCaching
@@ -13963,6 +14221,7 @@ module YARD::Server::StaticCaching
   # @return [Array(Numeric,Hash,Array)] the Rack-style response
   # @return [nil] if no cache is available and routing should continue
   # @see Commands::Base#cache
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/static_caching.rb:34
   def check_static_cache; end
@@ -13970,10 +14229,14 @@ end
 
 # The main adapter to initialize a WEBrick server.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:9
 class YARD::Server::WebrickAdapter < ::YARD::Server::Adapter
   # Initializes a WEBrick server. If {Adapter#server_options} contains a
   # +:daemonize+ key set to true, the server will be daemonized.
+  #
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:10
   def start; end
@@ -13981,26 +14244,28 @@ end
 
 # The main WEBrick servlet implementation, accepting only GET requests.
 #
+# @since 0.6.0
+#
 # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:20
 class YARD::Server::WebrickServlet < ::WEBrick::HTTPServlet::AbstractServlet
   # @return [WebrickServlet] a new instance of WebrickServlet
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:23
   def initialize(server, adapter); end
 
-  # Returns the value of attribute adapter.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:21
   def adapter; end
 
-  # Sets the attribute adapter
-  #
-  # @param value the value to set the attribute adapter to.
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:21
   def adapter=(_arg0); end
 
   # @private
+  # @since 0.6.0
   #
   # source://yard-0.9.28/lib/yard/server/webrick_adapter.rb:29
   def do_GET(request, response); end
@@ -17325,6 +17590,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def default_return; end
 
+  # @return [String] the default return type for a method with no return tags
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def default_return=(_arg0); end
 
@@ -17338,6 +17605,13 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def embed_mixins; end
 
+  # @example A list of mixin path names (including wildcards)
+  #   opts.embed_mixins #=> ['ClassMethods', '*Helper', 'YARD::*']
+  # @return [Array<String>] an array of module name wildcards to embed into
+  #   class documentation as if their methods were defined directly in the class.
+  #   Useful for modules like ClassMethods. If the name contains '::', the module
+  #   is matched against the full mixin path, otherwise only the module name is used.
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def embed_mixins=(_arg0); end
 
@@ -17354,6 +17628,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def format; end
 
+  # @return [Symbol] the template output format
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def format=(_arg0); end
 
@@ -17363,6 +17639,9 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def globals; end
 
+  # @return [OpenStruct] an open struct containing any global state across all
+  #   generated objects in a template.
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def globals=(_arg0); end
 
@@ -17371,6 +17650,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def hide_void_return; end
 
+  # @return [Boolean] whether void methods should show "void" in their signature
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def hide_void_return=(_arg0); end
 
@@ -17379,6 +17660,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def highlight; end
 
+  # @return [Boolean] whether code blocks should be syntax highlighted
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def highlight=(_arg0); end
 
@@ -17397,6 +17680,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def markup; end
 
+  # @return [Symbol] the markup format to use when parsing docstrings
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def markup=(_arg0); end
 
@@ -17454,6 +17739,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def serialize; end
 
+  # @return [Boolean] whether serialization should be performed
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def serialize=(_arg0); end
 
@@ -17474,6 +17761,8 @@ class YARD::Templates::TemplateOptions < ::YARD::Options
   # source://yard-0.9.28/lib/yard/options.rb:82
   def template; end
 
+  # @return [Symbol] the template name used to render output
+  #
   # source://yard-0.9.28/lib/yard/options.rb:82
   def template=(_arg0); end
 

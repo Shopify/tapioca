@@ -22,7 +22,7 @@ class ProgressBar::Base
   def initialize(options = T.unsafe(nil)); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def clear(*args, &block); end
+  def clear(*args, **_arg1, &block); end
 
   # source://ruby-progressbar-1.11.0/lib/ruby-progressbar/base.rb:88
   def decrement; end
@@ -48,7 +48,7 @@ class ProgressBar::Base
   def inspect; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def log(*args, &block); end
+  def log(*args, **_arg1, &block); end
 
   # source://ruby-progressbar-1.11.0/lib/ruby-progressbar/base.rb:54
   def pause; end
@@ -59,7 +59,7 @@ class ProgressBar::Base
   def paused?; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def progress(*args, &block); end
+  def progress(*args, **_arg1, &block); end
 
   # source://ruby-progressbar-1.11.0/lib/ruby-progressbar/base.rb:96
   def progress=(new_progress); end
@@ -68,7 +68,7 @@ class ProgressBar::Base
   def progress_mark=(mark); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def refresh(*args, &block); end
+  def refresh(*args, **_arg1, &block); end
 
   # source://ruby-progressbar-1.11.0/lib/ruby-progressbar/base.rb:108
   def remainder_mark=(mark); end
@@ -108,7 +108,7 @@ class ProgressBar::Base
   def to_s(new_format = T.unsafe(nil)); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def total(*args, &block); end
+  def total(*args, **_arg1, &block); end
 
   # source://ruby-progressbar-1.11.0/lib/ruby-progressbar/base.rb:100
   def total=(new_total); end

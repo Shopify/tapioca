@@ -502,31 +502,31 @@ class Byebug::Command
   def arguments; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def confirm(*args, &block); end
+  def confirm(*args, **_arg1, &block); end
 
   # source://byebug-11.1.3/lib/byebug/command.rb:43
   def context; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def errmsg(*args, &block); end
+  def errmsg(*args, **_arg1, &block); end
 
   # source://byebug-11.1.3/lib/byebug/command.rb:47
   def frame; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def help(*args, &block); end
+  def help(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def match(*args, &block); end
+  def match(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def pr(*args, &block); end
+  def pr(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def prc(*args, &block); end
+  def prc(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def print(*args, &block); end
+  def print(*args, **_arg1, &block); end
 
   # Returns the value of attribute processor.
   #
@@ -534,10 +534,10 @@ class Byebug::Command
   def processor; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def prv(*args, &block); end
+  def prv(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def puts(*args, &block); end
+  def puts(*args, **_arg1, &block); end
 
   class << self
     # Special methods to allow command filtering in processors
@@ -678,10 +678,10 @@ class Byebug::CommandProcessor
   def command_list; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def commands(*args, &block); end
+  def commands(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def confirm(*args, &block); end
+  def confirm(*args, **_arg1, &block); end
 
   # Returns the value of attribute context.
   #
@@ -689,10 +689,10 @@ class Byebug::CommandProcessor
   def context; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def errmsg(*args, &block); end
+  def errmsg(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def frame(*args, &block); end
+  def frame(*args, **_arg1, &block); end
 
   # Returns the value of attribute interface.
   #
@@ -700,10 +700,10 @@ class Byebug::CommandProcessor
   def interface; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def pr(*args, &block); end
+  def pr(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def prc(*args, &block); end
+  def prc(*args, **_arg1, &block); end
 
   # Returns the value of attribute prev_line.
   #
@@ -731,10 +731,10 @@ class Byebug::CommandProcessor
   def process_commands; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def prv(*args, &block); end
+  def prv(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def puts(*args, &block); end
+  def puts(*args, **_arg1, &block); end
 
   protected
 
@@ -843,7 +843,7 @@ class Byebug::Context
   def dead?; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def file(*args, &block); end
+  def file(*args, **_arg1, &block); end
 
   # Reader for the current frame
   #
@@ -873,7 +873,7 @@ class Byebug::Context
   def interrupt; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def line(*args, &block); end
+  def line(*args, **_arg1, &block); end
 
   # Current file & line information
   #
@@ -2312,16 +2312,16 @@ class Byebug::ListCommand < ::Byebug::Command
   include ::Byebug::Helpers::ParseHelper
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def amend_final(*args, &block); end
+  def amend_final(*args, **_arg1, &block); end
 
   # source://byebug-11.1.3/lib/byebug/commands/list.rb:40
   def execute; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def max_line(*args, &block); end
+  def max_line(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def size(*args, &block); end
+  def size(*args, **_arg1, &block); end
 
   private
 
@@ -3139,7 +3139,7 @@ module Byebug::Subcommands
   def execute; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def subcommand_list(*args, &block); end
+  def subcommand_list(*args, **_arg1, &block); end
 
   class << self
     # @private

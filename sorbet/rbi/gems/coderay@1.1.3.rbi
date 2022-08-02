@@ -1260,8 +1260,6 @@ class CodeRay::Encoders::Statistic::TypeStats < ::Struct
   #
   # @param value [Object] the value to set the attribute count to.
   # @return [Object] the newly set value
-  #
-  # source://coderay-1.1.3/lib/coderay/encoders/statistic.rb:13
   def count=(_); end
 
   # Returns the value of attribute size
@@ -1273,13 +1271,12 @@ class CodeRay::Encoders::Statistic::TypeStats < ::Struct
   #
   # @param value [Object] the value to set the attribute size to.
   # @return [Object] the newly set value
-  #
-  # source://coderay-1.1.3/lib/coderay/encoders/statistic.rb:13
   def size=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

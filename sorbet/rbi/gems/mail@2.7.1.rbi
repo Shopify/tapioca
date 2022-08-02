@@ -127,7 +127,7 @@ module Mail
     # source://mail-2.7.1/lib/mail/mail.rb:151
     def first(*args, &block); end
 
-    # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/from_source.rb:4
+    # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/from_source.rb:4
     def from_source(source); end
 
     # source://mail-2.7.1/lib/mail/mail.rb:233
@@ -279,7 +279,7 @@ class Mail::Address
   # source://mail-2.7.1/lib/mail/elements/address.rb:25
   def initialize(value = T.unsafe(nil)); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/address_equality.rb:5
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/address_equality.rb:5
   def ==(other_address); end
 
   # Returns the address that is in the address itself.  That is, the
@@ -428,7 +428,7 @@ class Mail::Address
   def strip_domain_comments(value); end
 
   class << self
-    # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/address_wrapping.rb:5
+    # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/address_wrapping.rb:5
     def wrap(address); end
   end
 end
@@ -3368,7 +3368,7 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:519
   def bcc=(val); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:21
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:21
   def bcc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Bcc field,
@@ -3477,7 +3477,7 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:560
   def cc=(val); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:17
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:17
   def cc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Cc field,
@@ -3799,7 +3799,7 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:677
   def from=(val); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:5
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:5
   def from_address; end
 
   # Returns an array of addresses (the encoded value) in the From field,
@@ -4202,10 +4202,10 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:758
   def received=(val); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/recipients.rb:5
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/recipients.rb:5
   def recipients; end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:9
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:9
   def recipients_addresses; end
 
   # source://mail-2.7.1/lib/mail/message.rb:762
@@ -4679,7 +4679,7 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:1200
   def to=(val); end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:13
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:13
   def to_addresses; end
 
   # Returns an array of addresses (the encoded value) in the To field,
@@ -4706,7 +4706,7 @@ class Mail::Message
   # source://mail-2.7.1/lib/mail/message.rb:1837
   def without_attachments!; end
 
-  # source://actionmailbox-7.0.3/lib/action_mailbox/mail_ext/addresses.rb:25
+  # source://actionmailbox-7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb:25
   def x_original_to_addresses; end
 
   private
@@ -5911,8 +5911,6 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute addresses to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:10
   def addresses=(_); end
 
   # Returns the value of attribute error
@@ -5924,8 +5922,6 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute group_names
@@ -5937,13 +5933,12 @@ class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute group_names to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:10
   def group_names=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -5960,8 +5955,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute comments to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def comments=(_); end
 
   # Returns the value of attribute display_name
@@ -5973,8 +5966,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute display_name to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def display_name=(_); end
 
   # Returns the value of attribute domain
@@ -5986,8 +5977,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute domain to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def domain=(_); end
 
   # Returns the value of attribute error
@@ -5999,8 +5988,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def error=(_); end
 
   # Returns the value of attribute group
@@ -6012,8 +5999,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute group to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def group=(_); end
 
   # Returns the value of attribute local
@@ -6025,8 +6010,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute local to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def local=(_); end
 
   # Returns the value of attribute obs_domain_list
@@ -6038,8 +6021,6 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute obs_domain_list to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def obs_domain_list=(_); end
 
   # Returns the value of attribute raw
@@ -6051,13 +6032,12 @@ class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute raw to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/address_lists_parser.rb:11
   def raw=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6230,8 +6210,6 @@ class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Stru
   #
   # @param value [Object] the value to set the attribute disposition_type to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_disposition_parser.rb:10
   def disposition_type=(_); end
 
   # Returns the value of attribute error
@@ -6243,8 +6221,6 @@ class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Stru
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_disposition_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute parameters
@@ -6256,13 +6232,12 @@ class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Stru
   #
   # @param value [Object] the value to set the attribute parameters to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_disposition_parser.rb:10
   def parameters=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6435,8 +6410,6 @@ class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_location_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute location
@@ -6448,13 +6421,12 @@ class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute location to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_location_parser.rb:10
   def location=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6627,8 +6599,6 @@ class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruc
   #
   # @param value [Object] the value to set the attribute encoding to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_transfer_encoding_parser.rb:10
   def encoding=(_); end
 
   # Returns the value of attribute error
@@ -6640,13 +6610,12 @@ class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruc
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_transfer_encoding_parser.rb:10
   def error=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6819,8 +6788,6 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_type_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute main_type
@@ -6832,8 +6799,6 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute main_type to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_type_parser.rb:10
   def main_type=(_); end
 
   # Returns the value of attribute parameters
@@ -6845,8 +6810,6 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute parameters to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_type_parser.rb:10
   def parameters=(_); end
 
   # Returns the value of attribute sub_type
@@ -6858,13 +6821,12 @@ class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute sub_type to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/content_type_parser.rb:10
   def sub_type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7039,8 +7001,6 @@ class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute date_string to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/date_time_parser.rb:10
   def date_string=(_); end
 
   # Returns the value of attribute error
@@ -7052,8 +7012,6 @@ class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/date_time_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute time_string
@@ -7065,13 +7023,12 @@ class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute time_string to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/date_time_parser.rb:10
   def time_string=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7244,8 +7201,6 @@ class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute address to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/envelope_from_parser.rb:10
   def address=(_); end
 
   # Returns the value of attribute ctime_date
@@ -7257,8 +7212,6 @@ class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute ctime_date to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/envelope_from_parser.rb:10
   def ctime_date=(_); end
 
   # Returns the value of attribute error
@@ -7270,13 +7223,12 @@ class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/envelope_from_parser.rb:10
   def error=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7451,8 +7403,6 @@ class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/message_ids_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute message_ids
@@ -7464,13 +7414,12 @@ class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute message_ids to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/message_ids_parser.rb:10
   def message_ids=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7643,8 +7592,6 @@ class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/mime_version_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute major
@@ -7656,8 +7603,6 @@ class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute major to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/mime_version_parser.rb:10
   def major=(_); end
 
   # Returns the value of attribute minor
@@ -7669,13 +7614,12 @@ class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute minor to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/mime_version_parser.rb:10
   def minor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7850,8 +7794,6 @@ class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/phrase_lists_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute phrases
@@ -7863,13 +7805,12 @@ class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute phrases to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/phrase_lists_parser.rb:10
   def phrases=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -8044,8 +7985,6 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute date to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/received_parser.rb:10
   def date=(_); end
 
   # Returns the value of attribute error
@@ -8057,8 +7996,6 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute error to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/received_parser.rb:10
   def error=(_); end
 
   # Returns the value of attribute info
@@ -8070,8 +8007,6 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute info to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/received_parser.rb:10
   def info=(_); end
 
   # Returns the value of attribute time
@@ -8083,13 +8018,12 @@ class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   #
   # @param value [Object] the value to set the attribute time to.
   # @return [Object] the newly set value
-  #
-  # source://mail-2.7.1/lib/mail/parsers/received_parser.rb:10
   def time=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -9582,8 +9516,8 @@ class String
   include ::Comparable
 end
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:104
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://activesupport-7.0.3/lib/active_support/core_ext/object/blank.rb:105
+# source://activesupport-7.0.3.1/lib/active_support/core_ext/object/blank.rb:105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)

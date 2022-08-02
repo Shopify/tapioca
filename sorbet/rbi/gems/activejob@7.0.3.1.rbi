@@ -178,22 +178,22 @@ class ActiveJob::Base
   extend ::ActiveJob::Exceptions::ClassMethods
   extend ::ActiveJob::TestHelper::TestQueueAdapter::ClassMethods
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks?; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _enqueue_callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _perform_callbacks; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_enqueue_callbacks(&block); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_perform_callbacks(&block); end
 
   # source://activejob-7.0.3.1/lib/active_job/logging.rb:11
@@ -203,7 +203,7 @@ class ActiveJob::Base
   def logger=(val); end
 
   # source://activejob-7.0.3.1/lib/active_job/queue_adapter.rb:15
-  def queue_adapter(*_arg0, &_arg1); end
+  def queue_adapter(*_arg0, **_arg1, &_arg2); end
 
   # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:58
   def queue_name_prefix; end
@@ -214,35 +214,35 @@ class ActiveJob::Base
   # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:58
   def queue_name_prefix?; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers; end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers=(_arg0); end
 
-  # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+  # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
   def rescue_handlers?; end
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _enqueue_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _enqueue_callbacks=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _perform_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _perform_callbacks=(value); end
 
     # source://activejob-7.0.3.1/lib/active_job/queue_adapter.rb:13
@@ -314,13 +314,13 @@ class ActiveJob::Base
     # source://activejob-7.0.3.1/lib/active_job/queue_name.rb:58
     def queue_name_prefix?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
+    # source://activesupport-7.0.3.1/lib/active_support/rescuable.rb:13
     def rescue_handlers?; end
 
     # source://activejob-7.0.3.1/lib/active_job/exceptions.rb:11
@@ -335,11 +335,11 @@ class ActiveJob::Base
     # source://activejob-7.0.3.1/lib/active_job/callbacks.rb:31
     def return_false_on_aborted_enqueue=(value); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/deprecation/method_wrappers.rb:63
-    def skip_after_callbacks_if_terminated(*args, &block); end
+    # source://activesupport-7.0.3.1/lib/active_support/deprecation/method_wrappers.rb:63
+    def skip_after_callbacks_if_terminated(*args, **_arg1, &block); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/deprecation/method_wrappers.rb:63
-    def skip_after_callbacks_if_terminated=(*args, &block); end
+    # source://activesupport-7.0.3.1/lib/active_support/deprecation/method_wrappers.rb:63
+    def skip_after_callbacks_if_terminated=(*args, **_arg1, &block); end
   end
 end
 
@@ -370,16 +370,16 @@ module ActiveJob::Callbacks
   mixes_in_class_methods ::ActiveJob::Callbacks::ClassMethods
 
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
     def _execute_callbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
     def _run_execute_callbacks(&block); end
   end
 
@@ -535,10 +535,10 @@ class ActiveJob::ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
   # source://activejob-7.0.3.1/lib/active_job/configured_job.rb:14
-  def perform_later(*_arg0, &_arg1); end
+  def perform_later(*_arg0, **_arg1, &_arg2); end
 
   # source://activejob-7.0.3.1/lib/active_job/configured_job.rb:10
-  def perform_now(*_arg0, &_arg1); end
+  def perform_now(*_arg0, **_arg1, &_arg2); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -554,7 +554,7 @@ module ActiveJob::Core
   # passed to the perform method.
   #
   # source://activejob-7.0.3.1/lib/active_job/core.rb:91
-  def initialize(*arguments); end
+  def initialize(*arguments, **_arg1); end
 
   # Job arguments
   #
@@ -846,12 +846,12 @@ module ActiveJob::Enqueuing::ClassMethods
   # @yield [job]
   #
   # source://activejob-7.0.3.1/lib/active_job/enqueuing.rb:28
-  def perform_later(*_arg0, &_arg1); end
+  def perform_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
   # source://activejob-7.0.3.1/lib/active_job/enqueuing.rb:38
-  def job_or_instantiate(*args); end
+  def job_or_instantiate(*args, **_arg1); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -1041,7 +1041,7 @@ module ActiveJob::Execution::ClassMethods
   #   MyJob.perform_now("mike")
   #
   # source://activejob-7.0.3.1/lib/active_job/execution.rb:17
-  def perform_now(*_arg0, &_arg1); end
+  def perform_now(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://activejob-7.0.3.1/lib/active_job/instrumentation.rb:4
@@ -1991,13 +1991,13 @@ class ActiveJob::Serializers::ObjectSerializer
 
   class << self
     # source://activejob-7.0.3.1/lib/active_job/serializers/object_serializer.rb:28
-    def deserialize(*_arg0, &_arg1); end
+    def deserialize(*_arg0, **_arg1, &_arg2); end
 
     # source://activejob-7.0.3.1/lib/active_job/serializers/object_serializer.rb:28
-    def serialize(*_arg0, &_arg1); end
+    def serialize(*_arg0, **_arg1, &_arg2); end
 
     # source://activejob-7.0.3.1/lib/active_job/serializers/object_serializer.rb:28
-    def serialize?(*_arg0, &_arg1); end
+    def serialize?(*_arg0, **_arg1, &_arg2); end
   end
 end
 
@@ -2443,7 +2443,7 @@ module ActiveJob::TestHelper
   def before_setup; end
 
   # source://activejob-7.0.3.1/lib/active_job/test_helper.rb:9
-  def enqueued_jobs(*_arg0, &_arg1); end
+  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
 
   # source://activejob-7.0.3.1/lib/active_job/test_helper.rb:9
   def enqueued_jobs=(arg); end
@@ -2510,7 +2510,7 @@ module ActiveJob::TestHelper
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
   # source://activejob-7.0.3.1/lib/active_job/test_helper.rb:9
-  def performed_jobs(*_arg0, &_arg1); end
+  def performed_jobs(*_arg0, **_arg1, &_arg2); end
 
   # source://activejob-7.0.3.1/lib/active_job/test_helper.rb:9
   def performed_jobs=(arg); end

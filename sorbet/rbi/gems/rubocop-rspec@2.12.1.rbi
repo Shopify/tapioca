@@ -14,7 +14,7 @@ end
 # source://rubocop-rspec-2.12.1/lib/rubocop/cop/rspec/mixin/top_level_group.rb:4
 module RuboCop::Cop; end
 
-# source://rubocop-1.31.2/lib/rubocop/cop/mixin/allowed_pattern.rb:38
+# source://rubocop-1.32.0/lib/rubocop/cop/mixin/allowed_pattern.rb:38
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://rubocop-rspec-2.12.1/lib/rubocop/cop/rspec/mixin/top_level_group.rb:5
@@ -5980,10 +5980,10 @@ end
 # source://rubocop-rspec-2.12.1/lib/rubocop/cop/rspec/yield.rb:18
 RuboCop::Cop::RSpec::Yield::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:5
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:6
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
 # source://rubocop-rspec-2.12.1/lib/rubocop/rspec/version.rb:4
@@ -6559,5 +6559,5 @@ RuboCop::RSpec::Wording::SHOULDNT_BE_PREFIX = T.let(T.unsafe(nil), Regexp)
 # source://rubocop-rspec-2.12.1/lib/rubocop/rspec/wording.rb:7
 RuboCop::RSpec::Wording::SHOULDNT_PREFIX = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop-1.31.2/lib/rubocop/ast_aliases.rb:7
+# source://rubocop-1.32.0/lib/rubocop/ast_aliases.rb:7
 RuboCop::Token = RuboCop::AST::Token

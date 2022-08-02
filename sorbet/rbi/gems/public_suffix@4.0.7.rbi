@@ -774,8 +774,6 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute length to.
   # @return [Object] the newly set value
-  #
-  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def length=(_); end
 
   # Returns the value of attribute private
@@ -787,8 +785,6 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute private to.
   # @return [Object] the newly set value
-  #
-  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def private=(_); end
 
   # Returns the value of attribute type
@@ -800,13 +796,12 @@ class PublicSuffix::Rule::Entry < ::Struct
   #
   # @param value [Object] the value to set the attribute type to.
   # @return [Object] the newly set value
-  #
-  # source://public_suffix-4.0.7/lib/public_suffix/rule.rb:25
   def type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

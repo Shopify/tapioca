@@ -4704,8 +4704,6 @@ class Sprockets::Transformers::Transformer < ::Struct
   #
   # @param value [Object] the value to set the attribute from to.
   # @return [Object] the newly set value
-  #
-  # source://sprockets-4.1.1/lib/sprockets/transformers.rb:22
   def from=(_); end
 
   # Returns the value of attribute proc
@@ -4717,8 +4715,6 @@ class Sprockets::Transformers::Transformer < ::Struct
   #
   # @param value [Object] the value to set the attribute proc to.
   # @return [Object] the newly set value
-  #
-  # source://sprockets-4.1.1/lib/sprockets/transformers.rb:22
   def proc=(_); end
 
   # Returns the value of attribute to
@@ -4730,13 +4726,12 @@ class Sprockets::Transformers::Transformer < ::Struct
   #
   # @param value [Object] the value to set the attribute to to.
   # @return [Object] the newly set value
-  #
-  # source://sprockets-4.1.1/lib/sprockets/transformers.rb:22
   def to=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

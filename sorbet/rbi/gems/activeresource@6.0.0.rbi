@@ -614,10 +614,10 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:1318
   def ==(other); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:68
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
   def __callbacks?; end
 
   # source://activeresource-6.0.0/lib/active_resource/base.rb:331
@@ -629,10 +629,10 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:331
   def _collection_parser?; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _create_callbacks; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _destroy_callbacks; end
 
   # source://activeresource-6.0.0/lib/active_resource/base.rb:330
@@ -644,40 +644,40 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:330
   def _format?; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_create_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_destroy_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_save_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_update_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:928
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:928
   def _run_validation_callbacks(&block); end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _save_callbacks; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _update_callbacks; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _validate_callbacks; end
 
-  # source://activesupport-7.0.3/lib/active_support/callbacks.rb:940
+  # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:940
   def _validation_callbacks; end
 
-  # source://activemodel-7.0.3/lib/active_model/validations.rb:52
+  # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
   def _validators; end
 
-  # source://activemodel-7.0.3/lib/active_model/validations.rb:52
+  # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
   def _validators?; end
 
   # source://activeresource-6.0.0/lib/active_resource/base.rb:1184
@@ -812,10 +812,10 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:332
   def include_format_in_path?; end
 
-  # source://activemodel-7.0.3/lib/active_model/serializers/json.rb:15
+  # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
   def include_root_in_json; end
 
-  # source://activemodel-7.0.3/lib/active_model/serializers/json.rb:15
+  # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
   def include_root_in_json?; end
 
   # This is a list of known attributes for this resource. Either
@@ -856,8 +856,8 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:323
   def logger; end
 
-  # source://activemodel-7.0.3/lib/active_model/naming.rb:244
-  def model_name(*_arg0, &_arg1); end
+  # source://activemodel-7.0.3.1/lib/active_model/naming.rb:244
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
@@ -1025,7 +1025,7 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:1532
   def update_attributes(attributes); end
 
-  # source://activemodel-7.0.3/lib/active_model/validations.rb:48
+  # source://activemodel-7.0.3.1/lib/active_model/validations.rb:48
   def validation_context; end
 
   protected
@@ -1113,17 +1113,17 @@ class ActiveResource::Base
   # source://activeresource-6.0.0/lib/active_resource/base.rb:1697
   def split_options(options = T.unsafe(nil)); end
 
-  # source://activemodel-7.0.3/lib/active_model/validations.rb:48
+  # source://activemodel-7.0.3.1/lib/active_model/validations.rb:48
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks=(value); end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:68
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:68
     def __callbacks?; end
 
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:15
@@ -1153,16 +1153,16 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:23
     def _connection_defined?; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _create_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _create_callbacks=(value); end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _destroy_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _destroy_callbacks=(value); end
 
     # source://activeresource-6.0.0/lib/active_resource/base.rb:330
@@ -1201,10 +1201,10 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:23
     def _proxy_defined?; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _save_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _save_callbacks=(value); end
 
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:15
@@ -1216,10 +1216,10 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:23
     def _site_defined?; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _update_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _update_callbacks=(value); end
 
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:15
@@ -1231,37 +1231,37 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/threadsafe_attributes.rb:23
     def _user_defined?; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _validate_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _validate_callbacks=(value); end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:932
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:932
     def _validation_callbacks; end
 
-    # source://activesupport-7.0.3/lib/active_support/callbacks.rb:936
+    # source://activesupport-7.0.3.1/lib/active_support/callbacks.rb:936
     def _validation_callbacks=(value); end
 
-    # source://activemodel-7.0.3/lib/active_model/validations.rb:52
+    # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
     def _validators; end
 
-    # source://activemodel-7.0.3/lib/active_model/validations.rb:52
+    # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
     def _validators=(value); end
 
-    # source://activemodel-7.0.3/lib/active_model/validations.rb:52
+    # source://activemodel-7.0.3.1/lib/active_model/validations.rb:52
     def _validators?; end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:144
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:144
     def after_create(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:144
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:144
     def after_destroy(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:144
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:144
     def after_save(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:144
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:144
     def after_update(*args, **options, &block); end
 
     # This is an alias for find(:all). You can pass in all the same
@@ -1270,16 +1270,16 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/base.rb:1039
     def all(*args); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:137
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:137
     def around_create(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:137
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:137
     def around_destroy(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:137
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:137
     def around_save(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:137
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:137
     def around_update(*args, **options, &block); end
 
     # source://activeresource-6.0.0/lib/active_resource/base.rb:562
@@ -1298,16 +1298,16 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/base.rb:557
     def bearer_token=(bearer_token); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:130
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:130
     def before_create(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:130
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:130
     def before_destroy(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:130
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:130
     def before_save(*args, **options, &block); end
 
-    # source://activemodel-7.0.3/lib/active_model/callbacks.rb:130
+    # source://activemodel-7.0.3.1/lib/active_model/callbacks.rb:130
     def before_update(*args, **options, &block); end
 
     # Builds a new, unsaved record using the default values from the remote server so
@@ -1623,13 +1623,13 @@ class ActiveResource::Base
     # source://activeresource-6.0.0/lib/active_resource/base.rb:332
     def include_format_in_path?; end
 
-    # source://activemodel-7.0.3/lib/active_model/serializers/json.rb:15
+    # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
     def include_root_in_json; end
 
-    # source://activemodel-7.0.3/lib/active_model/serializers/json.rb:15
+    # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
     def include_root_in_json=(value); end
 
-    # source://activemodel-7.0.3/lib/active_model/serializers/json.rb:15
+    # source://activemodel-7.0.3.1/lib/active_model/serializers/json.rb:15
     def include_root_in_json?; end
 
     # Returns the list of known attributes for this resource, gathered
@@ -2069,121 +2069,121 @@ class ActiveResource::Collection
   def initialize(elements = T.unsafe(nil)); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def &(*_arg0, &_arg1); end
+  def &(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def *(*_arg0, &_arg1); end
+  def *(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def +(*_arg0, &_arg1); end
+  def +(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def -(*_arg0, &_arg1); end
+  def -(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def <<(*_arg0, &_arg1); end
+  def <<(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def <=>(*_arg0, &_arg1); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
   def ==(arg); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def [](*_arg0, &_arg1); end
+  def [](*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def []=(*_arg0, &_arg1); end
+  def []=(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def all?(*_arg0, &_arg1); end
+  def all?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def any?(*_arg0, &_arg1); end
+  def any?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def append(*_arg0, &_arg1); end
+  def append(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def as_json(*_arg0, &_arg1); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def assoc(*_arg0, &_arg1); end
+  def assoc(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def at(*_arg0, &_arg1); end
+  def at(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def blank?(*_arg0, &_arg1); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def bsearch(*_arg0, &_arg1); end
+  def bsearch(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def bsearch_index(*_arg0, &_arg1); end
+  def bsearch_index(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def clear(*_arg0, &_arg1); end
+  def clear(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def collect(*_arg0, &_arg1); end
+  def collect(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:67
   def collect!; end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def combination(*_arg0, &_arg1); end
+  def combination(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def compact(*_arg0, &_arg1); end
+  def compact(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def compact!(*_arg0, &_arg1); end
+  def compact!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def compact_blank!(*_arg0, &_arg1); end
+  def compact_blank!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def concat(*_arg0, &_arg1); end
+  def concat(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def count(*_arg0, &_arg1); end
+  def count(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def cycle(*_arg0, &_arg1); end
+  def cycle(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def deconstruct(*_arg0, &_arg1); end
+  def deconstruct(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def deep_dup(*_arg0, &_arg1); end
+  def deep_dup(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def delete(*_arg0, &_arg1); end
+  def delete(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def delete_at(*_arg0, &_arg1); end
+  def delete_at(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def delete_if(*_arg0, &_arg1); end
+  def delete_if(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def difference(*_arg0, &_arg1); end
+  def difference(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def dig(*_arg0, &_arg1); end
+  def dig(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def drop(*_arg0, &_arg1); end
+  def drop(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def drop_while(*_arg0, &_arg1); end
+  def drop_while(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def each(*_arg0, &_arg1); end
+  def each(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def each_index(*_arg0, &_arg1); end
+  def each_index(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   #
@@ -2196,40 +2196,40 @@ class ActiveResource::Collection
   def elements=(_arg0); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def empty?(*_arg0, &_arg1); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def eql?(*_arg0, &_arg1); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def excluding(*_arg0, &_arg1); end
+  def excluding(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def extract!(*_arg0, &_arg1); end
+  def extract!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def extract_options!(*_arg0, &_arg1); end
+  def extract_options!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def fetch(*_arg0, &_arg1); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def fifth(*_arg0, &_arg1); end
+  def fifth(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def fill(*_arg0, &_arg1); end
+  def fill(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def filter(*_arg0, &_arg1); end
+  def filter(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def filter!(*_arg0, &_arg1); end
+  def filter!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def find_index(*_arg0, &_arg1); end
+  def find_index(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def first(*_arg0, &_arg1); end
+  def first(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:76
   def first_or_create(attributes = T.unsafe(nil)); end
@@ -2238,82 +2238,85 @@ class ActiveResource::Collection
   def first_or_initialize(attributes = T.unsafe(nil)); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def flatten(*_arg0, &_arg1); end
+  def flatten(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def flatten!(*_arg0, &_arg1); end
+  def flatten!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def forty_two(*_arg0, &_arg1); end
+  def forty_two(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def fourth(*_arg0, &_arg1); end
+  def fourth(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def from(*_arg0, &_arg1); end
+  def from(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def hash(*_arg0, &_arg1); end
+  def hash(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def in_groups(*_arg0, &_arg1); end
+  def in_groups(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def in_groups_of(*_arg0, &_arg1); end
+  def in_groups_of(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def include?(*_arg0, &_arg1); end
+  def include?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def including(*_arg0, &_arg1); end
+  def including(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def index(*_arg0, &_arg1); end
+  def index(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def inquiry(*_arg0, &_arg1); end
+  def inquiry(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def insert(*_arg0, &_arg1); end
+  def insert(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def inspect(*_arg0, &_arg1); end
+  def inspect(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def intersection(*_arg0, &_arg1); end
+  def intersect?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def join(*_arg0, &_arg1); end
+  def intersection(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def keep_if(*_arg0, &_arg1); end
+  def join(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def last(*_arg0, &_arg1); end
+  def keep_if(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def length(*_arg0, &_arg1); end
+  def last(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def map(*_arg0, &_arg1); end
+  def length(*_arg0, **_arg1, &_arg2); end
+
+  # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
+  def map(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:67
   def map!; end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def max(*_arg0, &_arg1); end
+  def max(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def min(*_arg0, &_arg1); end
+  def min(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def minmax(*_arg0, &_arg1); end
+  def minmax(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def none?(*_arg0, &_arg1); end
+  def none?(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def one?(*_arg0, &_arg1); end
+  def one?(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   #
@@ -2326,49 +2329,49 @@ class ActiveResource::Collection
   def original_params=(_arg0); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def pack(*_arg0, &_arg1); end
+  def pack(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def permutation(*_arg0, &_arg1); end
+  def permutation(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def place(*_arg0, &_arg1); end
+  def place(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def pop(*_arg0, &_arg1); end
+  def pop(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def prepend(*_arg0, &_arg1); end
+  def prepend(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def pretty_print(*_arg0, &_arg1); end
+  def pretty_print(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def pretty_print_cycle(*_arg0, &_arg1); end
+  def pretty_print_cycle(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def product(*_arg0, &_arg1); end
+  def product(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def push(*_arg0, &_arg1); end
+  def push(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def rassoc(*_arg0, &_arg1); end
+  def rassoc(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def reject(*_arg0, &_arg1); end
+  def reject(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def reject!(*_arg0, &_arg1); end
+  def reject!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def repeated_combination(*_arg0, &_arg1); end
+  def repeated_combination(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def repeated_permutation(*_arg0, &_arg1); end
+  def repeated_permutation(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def replace(*_arg0, &_arg1); end
+  def replace(*_arg0, **_arg1, &_arg2); end
 
   # The array of actual elements returned by index actions
   #
@@ -2381,142 +2384,142 @@ class ActiveResource::Collection
   def resource_class=(_arg0); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def reverse(*_arg0, &_arg1); end
+  def reverse(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def reverse!(*_arg0, &_arg1); end
+  def reverse!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def reverse_each(*_arg0, &_arg1); end
+  def reverse_each(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def rindex(*_arg0, &_arg1); end
+  def rindex(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def rotate(*_arg0, &_arg1); end
+  def rotate(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def rotate!(*_arg0, &_arg1); end
+  def rotate!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def sample(*_arg0, &_arg1); end
+  def sample(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def second(*_arg0, &_arg1); end
+  def second(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def second_to_last(*_arg0, &_arg1); end
+  def second_to_last(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def select(*_arg0, &_arg1); end
+  def select(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def select!(*_arg0, &_arg1); end
+  def select!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def shelljoin(*_arg0, &_arg1); end
+  def shelljoin(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def shift(*_arg0, &_arg1); end
+  def shift(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def shuffle(*_arg0, &_arg1); end
+  def shuffle(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def shuffle!(*_arg0, &_arg1); end
+  def shuffle!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def size(*_arg0, &_arg1); end
+  def size(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def slice(*_arg0, &_arg1); end
+  def slice(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def slice!(*_arg0, &_arg1); end
+  def slice!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def sort(*_arg0, &_arg1); end
+  def sort(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def sort!(*_arg0, &_arg1); end
+  def sort!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def sort_by!(*_arg0, &_arg1); end
+  def sort_by!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def split(*_arg0, &_arg1); end
+  def split(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def sum(*_arg0, &_arg1); end
+  def sum(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def take(*_arg0, &_arg1); end
+  def take(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def take_while(*_arg0, &_arg1); end
+  def take_while(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def third(*_arg0, &_arg1); end
+  def third(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def third_to_last(*_arg0, &_arg1); end
+  def third_to_last(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to(*_arg0, &_arg1); end
+  def to(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:63
   def to_a; end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_ary(*_arg0, &_arg1); end
+  def to_ary(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_default_s(*_arg0, &_arg1); end
+  def to_default_s(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_formatted_s(*_arg0, &_arg1); end
+  def to_formatted_s(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_fs(*_arg0, &_arg1); end
+  def to_fs(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_h(*_arg0, &_arg1); end
+  def to_h(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_param(*_arg0, &_arg1); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_query(*_arg0, &_arg1); end
+  def to_query(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_sentence(*_arg0, &_arg1); end
+  def to_sentence(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_xml(*_arg0, &_arg1); end
+  def to_xml(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def to_yaml(*_arg0, &_arg1); end
+  def to_yaml(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def transpose(*_arg0, &_arg1); end
+  def transpose(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def union(*_arg0, &_arg1); end
+  def union(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def uniq(*_arg0, &_arg1); end
+  def uniq(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def uniq!(*_arg0, &_arg1); end
+  def uniq!(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def unshift(*_arg0, &_arg1); end
+  def unshift(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def values_at(*_arg0, &_arg1); end
+  def values_at(*_arg0, **_arg1, &_arg2); end
 
   # @raise [ArgumentError]
   #
@@ -2524,13 +2527,13 @@ class ActiveResource::Collection
   def where(clauses = T.unsafe(nil)); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def without(*_arg0, &_arg1); end
+  def without(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def zip(*_arg0, &_arg1); end
+  def zip(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource-6.0.0/lib/active_resource/collection.rb:10
-  def |(*_arg0, &_arg1); end
+  def |(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://activeresource-6.0.0/lib/active_resource/collection.rb:8
