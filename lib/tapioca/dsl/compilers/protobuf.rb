@@ -60,6 +60,14 @@ module Tapioca
       #   def number_value=(value); end
       # end
       # ~~~
+      #
+      # Please note that you might have to ignore the originally generated Protobuf Ruby files
+      # to avoid _Redefining constant_ issues when doing type checking.
+      # Do this by extending your Sorbet config file:
+      #
+      # ~~~
+      # --ignore=/path/to/proto/cart_pb.rb
+      # ~~~
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
