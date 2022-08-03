@@ -52,7 +52,7 @@ module Tapioca
           realpath = path.realpath.to_s
 
           path = if realpath.start_with?(gem.full_gem_path)
-            "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
+            "#{gem.name}-VERSION/#{path.realpath.relative_path_from(gem.full_gem_path)}"
           elsif realpath.start_with?(Bundler.home.to_s)
             realpath.delete_prefix("#{Bundler.home}/gems/")
           elsif realpath.start_with?(Bundler.bundle_path.to_s)
@@ -65,6 +65,10 @@ module Tapioca
             # interested in trying to link to anything that isn't a gem
             return
           end
+
+          # Sanitize the gem version from the comment to avoid excessive churn in the RBI when upgrading gems. The
+          # version is always between a hyphen at the end of the gem name and the `/lib` folder
+          path = path.sub(%r{(?<=-)[\d.]+(?=/lib)}, "VERSION")
 
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new("source://#{path}:#{line}")
