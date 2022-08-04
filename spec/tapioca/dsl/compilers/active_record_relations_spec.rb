@@ -93,7 +93,7 @@ module Tapioca
                     sig { returns(::Post) }
                     def fifth!; end
 
-                    sig { params(args: T.untyped).returns(T.untyped) }
+                    sig { params(args: T.untyped).returns(T.any(::Post, T::Array[::Post])) }
                     def find(*args); end
 
                     sig { params(args: T.untyped).returns(T.nilable(::Post)) }

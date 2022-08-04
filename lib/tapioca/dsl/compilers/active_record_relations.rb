@@ -522,7 +522,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.any(#{constant_name}, T::Array[#{constant_name}])"
               )
             when :find_by
               create_common_method(
