@@ -111,9 +111,11 @@ module Tapioca
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_initialize_by(attributes, &block); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(arg: T.untyped, args: T.untyped).returns(::Post) }
                     def find_sole_by(arg, *args); end
 
+                <% end %>
                     sig { params(limit: T.untyped).returns(T.untyped) }
                     def first(limit = nil); end
 
@@ -183,9 +185,11 @@ module Tapioca
                     sig { returns(::Post) }
                     def second_to_last!; end
 
+                <% if rails_version(">= 7.0") %>
                     sig { returns(::Post) }
                     def sole; end
 
+                <% end %>
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
                     def sum(column_name = nil, &block); end
 
@@ -230,9 +234,11 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def except(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def excluding(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def extending(*args, &blk); end
 
@@ -248,9 +254,11 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def having(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def in_order_of(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def includes(*args, &blk); end
 
@@ -266,9 +274,11 @@ module Tapioca
                     sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
                     def insert_all!(attributes, returning: nil); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def invert_where(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def joins(*args, &blk); end
 
@@ -332,9 +342,11 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def strict_loading(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def structurally_compatible?(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def uniq!(*args, &blk); end
 
@@ -349,9 +361,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
                     def where(*args, &blk); end
+                <% if rails_version(">= 7.0") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def without(*args, &blk); end
+                <% end %>
                   end
 
                   module GeneratedRelationMethods
@@ -376,9 +390,11 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def except(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def excluding(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def extending(*args, &blk); end
 
@@ -394,15 +410,19 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def having(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def in_order_of(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def includes(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def invert_where(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def joins(*args, &blk); end
 
@@ -466,9 +486,11 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def strict_loading(*args, &blk); end
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def structurally_compatible?(*args, &blk); end
 
+                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def uniq!(*args, &blk); end
 
@@ -477,9 +499,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
                     def where(*args, &blk); end
+                <% if rails_version(">= 7.0") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def without(*args, &blk); end
+                <% end %>
                   end
 
                   class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation
@@ -495,9 +519,11 @@ module Tapioca
                   class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
                     Elem = type_member { { fixed: ::Post } }
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def associated(*args); end
 
+                <% end %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def missing(*args); end
 
@@ -564,9 +590,11 @@ module Tapioca
                   class PrivateRelationWhereChain < PrivateRelation
                     Elem = type_member { { fixed: ::Post } }
 
+                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def associated(*args); end
 
+                <% end %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def missing(*args); end
 
@@ -579,6 +607,13 @@ module Tapioca
               assert_equal(expected, rbi_for(:Post))
             end
           end
+        end
+
+        private
+
+        sig { params(selector: String).returns(T::Boolean) }
+        def rails_version(selector)
+          ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
         end
       end
     end

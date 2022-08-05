@@ -269,8 +269,9 @@ module Tapioca
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
                     serialize :serialized_column, JSON
-                    enum :integer_enum_column, [ :active, :archived ]
-                    enum :string_enum_column, { high: 'high', low: 'low' }
+                    # Change enum calls to new syntax when we drop support to Rails 6.
+                    enum integer_enum_column: [ :active, :archived ]
+                    enum string_enum_column: { high: 'high', low: 'low' }
                   end
                 RUBY
 

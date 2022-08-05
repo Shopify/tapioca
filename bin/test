@@ -6,6 +6,7 @@ ENV["DEFAULT_TEST"] = "spec/**/*_spec.rb"
 
 require "bundler/setup"
 
+require "active_support" # Remove this when we drop support to Rails 6.
 require "rails/test_unit/runner"
 
 Rails::TestUnit::Runner.parse_options(ARGV)

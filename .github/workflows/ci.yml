@@ -6,19 +6,15 @@ env:
   SRB_SKIP_GEM_RBIS: true
 
 jobs:
-  build:
+  linters:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ "2.7", "3.0", "3.1" ]
-    name: Ruby ${{ matrix.ruby }}
+    name: Linters
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: "3.1"
           bundler-cache: true
       - name: Run type check
         run: bin/typecheck
@@ -28,9 +24,51 @@ jobs:
         run: bin/docs
       - name: Verify README
         run: bin/readme
-      - name: Run tests
-        run: bin/test
       - name: Verify gem RBIs are up-to-date
         run: bundle exec exe/tapioca gem --verify
       - name: Verify duplicates in shims
         run: bundle exec exe/tapioca check-shims
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["2.7", "3.0", "3.1"]
+        experimental: [false]
+        gemfile:
+          - Gemfile
+          - gemfiles/Gemfile-rails-6-1
+        include:
+          - gemfile: gemfiles/Gemfile-rails-main
+            ruby: "2.7"
+            experimental: true
+          - gemfile: gemfiles/Gemfile-rails-main
+            ruby: "3.0"
+            experimental: true
+          - gemfile: gemfiles/Gemfile-rails-main
+            ruby: "3.1"
+            experimental: true
+    name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests
+        run: bin/test
+        continue-on-error: ${{ matrix.experimental }}
+
+  buildall:
+    if: ${{ always() && github.event.pull_request }}
+    runs-on: ubuntu-latest
+    name: Build (matrix)
+    needs: [linters, tests]
+    steps:
+      - name: Check build matrix status
+        if: ${{ needs.tests.result != 'success' || needs.linters.result != 'success' }}
+        run: exit 1
