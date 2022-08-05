@@ -168,15 +168,14 @@ module Tapioca
         resolved_loc.absolute_path || ""
       end
 
-      sig { params(constant: Module).returns(T.nilable(String)) }
-      def constant_name_from_singleton_class(constant)
-        constant.to_s.match("#<Class:(.+)>")&.captures&.first
-      end
+      sig { params(singleton_class: Module).returns(T.nilable(Module)) }
+      def attached_class_of(singleton_class)
+        # https://stackoverflow.com/a/36622320/98634
+        result = ObjectSpace.each_object(singleton_class).find do |klass|
+          singleton_class_of(T.cast(klass, Module)) == singleton_class
+        end
 
-      sig { params(constant: Module).returns(T.nilable(BasicObject)) }
-      def constant_from_singleton_class(constant)
-        constant_name = constant_name_from_singleton_class(constant)
-        constantize(constant_name) if constant_name
+        T.cast(result, Module)
       end
     end
   end
