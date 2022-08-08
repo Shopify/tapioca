@@ -355,7 +355,7 @@ module Tapioca
       def get_file_candidates(constant)
         wrapped_module = Pry::WrappedModule.new(constant)
 
-        wrapped_module.candidates.map(&:file).to_a.compact
+        wrapped_module.send(:method_candidates).flatten.filter_map(&:source_file).uniq
       rescue ArgumentError, NameError
         []
       end
