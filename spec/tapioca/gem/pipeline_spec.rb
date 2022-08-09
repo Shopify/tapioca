@@ -293,7 +293,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "compiles extensions to BasicObject and Object" do
+    it "compiles extensions to BasicObject, Object and <main> object" do
       add_ruby_file("ext.rb", <<~RUBY)
         class BasicObject
           def hello
@@ -303,6 +303,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Object
           def hello
           end
+        end
+
+        # Addition to <main> object,
+        # which should be a private method on Object
+        def log
         end
       RUBY
 
@@ -317,6 +322,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           include ::Kernel
 
           def hello; end
+
+          private
+
+          def log; end
         end
       RBI
 
