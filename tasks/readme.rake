@@ -54,19 +54,19 @@ task :readme do
   end
 
   def command_options(command)
-    command.options.map do |name, opt|
+    command.options.filter_map do |name, opt|
       next if skip_option?(opt)
 
       [name.to_s, option_value(opt)]
-    end.compact.to_h
+    end.to_h
   end
 
   def config
-    Tapioca::Cli.commands.map do |command_name, command|
+    Tapioca::Cli.commands.filter_map do |command_name, command|
       next if skip_command?(command)
 
       [command_name, command_options(command)]
-    end.compact.to_h
+    end.to_h
   end
 
   def replace_section(contents, section_name, replacement)

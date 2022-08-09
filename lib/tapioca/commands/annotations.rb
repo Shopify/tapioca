@@ -247,13 +247,13 @@ module Tapioca
       sig { returns(T::Hash[String, T.nilable(String)]) }
       def repo_tokens
         @netrc_info = Netrc.read(@netrc_file) if @netrc_file
-        @central_repo_root_uris.map do |uri|
+        @central_repo_root_uris.filter_map do |uri|
           if @auth
             [uri, @auth]
           else
             [uri, token_for(uri)]
           end
-        end.compact.to_h
+        end.to_h
       end
 
       sig { params(repo_uri: String).returns(T.nilable(String)) }

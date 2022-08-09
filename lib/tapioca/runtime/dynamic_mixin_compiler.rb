@@ -178,7 +178,7 @@ module Tapioca
 
       sig { params(tree: RBI::Tree).returns([T::Array[Module], T::Array[Module]]) }
       def compile_mixes_in_class_methods(tree)
-        includes = dynamic_includes.map do |mod|
+        includes = dynamic_includes.filter_map do |mod|
           qname = qualified_name_of(mod)
 
           next if qname.nil? || qname.empty?
@@ -187,7 +187,7 @@ module Tapioca
           tree << RBI::Include.new(qname)
 
           mod
-        end.compact
+        end
 
         # If we can generate multiple mixes_in_class_methods, then we want to use all dynamic extends that are not the
         # constant itself
