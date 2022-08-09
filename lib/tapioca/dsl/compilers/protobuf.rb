@@ -153,6 +153,12 @@ module Tapioca
         def type_of(descriptor)
           case descriptor.type
           when :enum
+            # According to https://developers.google.com/protocol-buffers/docs/reference/ruby-generated#enum
+            # > You may assign either a number or a symbol to an enum field.
+            # > When reading the value back, it will be a symbol if the enum
+            # > value is known, or a number if it is unknown. Since proto3 uses
+            # > open enum semantics, any number may be assigned to an enum
+            # > field, even if it was not defined in the enum.
             "T.any(Symbol, Integer)"
           when :message
             descriptor.subtype.msgclass.name
