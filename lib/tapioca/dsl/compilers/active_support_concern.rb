@@ -55,7 +55,6 @@ module Tapioca
             .filter_map do |concern| # Map to class methods module name, if exists
               "#{qualified_name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods)
             end
-             # Remove non-existent records
 
           return if mixed_in_class_methods.empty?
 
